@@ -1,0 +1,23 @@
+//===================================================================
+// DH_StuartPassenger
+//
+// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
+//
+// M5 Stuart passenger that rides in back
+//===================================================================
+class DH_StuartPassengerOne extends DH_ROPassengerPawn;
+
+defaultproperties
+{
+     PositionInArray=2
+     CameraBone="body"
+     DrivePos=(X=-80.000000,Y=-55.000000,Z=50.000000)
+     DriveRot=(Yaw=-16384)
+     DriveAnim="VHalftrack_Rider4_idle"
+     ExitPositions(2)=(X=-100.000000,Z=100.000000)
+     EntryRadius=375.000000
+     FPCamViewOffset=(X=0.000000,Z=0.000000)
+     TPCamDistance=200.000000
+     VehiclePositionString="riding on a M5 Stuart"
+     VehicleNameString="M5 Stuart passenger"
+}

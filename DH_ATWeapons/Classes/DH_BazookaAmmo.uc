@@ -1,0 +1,15 @@
+//===================================================================
+// DH_BazookaAmmo
+//===================================================================
+
+class DH_BazookaAmmo extends ROAmmunition;
+
+defaultproperties
+{
+     MaxAmmo=1
+     InitialAmount=1
+     PickupClass=Class'DH_ATWeapons.DH_BazookaAmmoPickup'
+     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_ammo'
+     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
+     ItemName="Bazooka Rocket"
+}

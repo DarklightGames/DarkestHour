@@ -1,0 +1,69 @@
+//==============================================================================
+// DH_VehicleMessage
+//
+// Red Orchestra Source - William Miller
+// Copyright (C) 2007 Tripwire Interactive, LLC
+// Modified 2008 - Eric Parris
+//
+// Message class for tanks with passengers.
+//==============================================================================
+
+class DH_VehicleMessage extends ROVehicleMessage;
+
+//==============================================================================
+// Variables
+//==============================================================================
+var(Messages) localized string CannotRide;
+var(Messages) localized string VehicleFull;
+var(Messages) localized string CannotExit;
+var(Messages) localized string AssaultGunExit;
+var(Messages) localized string Sabotaged;
+var(Messages) localized string OverSpeed;
+
+//==============================================================================
+// Functions
+//==============================================================================
+static function string GetString(
+	optional int Switch,
+	optional PlayerReplicationInfo RelatedPRI_1,
+	optional PlayerReplicationInfo RelatedPRI_2,
+	optional Object OptionalObject
+	)
+{
+	switch (Switch)
+	{
+		case 0:
+			return default.NotQualified;
+		case 1:
+			return default.VehicleIsEnemy;
+		case 2:
+		     return default.CannotEnter;
+        case 3:
+             return default.CannotRide;
+        case 4:
+             return default.CannotExit;
+        case 5:
+             return default.AssaultGunExit;
+        case 6:
+             return default.Sabotaged;
+        case 7:
+             return default.OverSpeed;
+        default:
+             return default.VehicleFull;
+    }
+
+}
+
+//==============================================================================
+// defaultproperties
+//==============================================================================
+
+defaultproperties
+{
+     CannotRide="Cannot Ride This Vehicle"
+     VehicleFull="All Rider Positions are Occupied"
+     CannotExit="You Must Unbutton the Hatch to Exit"
+     AssaultGunExit="You Must Exit Through Commander's Hatch"
+     Sabotaged="Booby Trapped!"
+     OverSpeed="Slow Down!"
+}

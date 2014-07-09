@@ -1,0 +1,21 @@
+//=============================================================================
+// DH_BARBashDamType
+//=============================================================================
+
+class DH_BARBashDamType extends ROWeaponBashDamageType
+	abstract;
+
+//=============================================================================
+// defaultproperties
+//=============================================================================
+
+defaultproperties
+{
+     WeaponClass=Class'DH_Weapons.DH_BARWeapon'
+     DeathString="%o was smacked by %k's M1918A2 Browning Automatic Rifle."
+     FemaleSuicide="%o turned the gun on herself."
+     MaleSuicide="%o turned the gun on himself."
+     GibModifier=0.000000
+     KDamageImpulse=400.000000
+     HumanObliterationThreshhold=1000001
+}

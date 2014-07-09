@@ -1,0 +1,23 @@
+//====================================================================
+//  DHBrowser_PlayersListBox
+// ====================================================================
+class DHBrowser_PlayersListBox extends UT2K4Browser_PlayersListBox;
+
+defaultproperties
+{
+     Begin Object Class=GUIMultiColumnListHeader Name=MyHeader
+         BarStyleName="DHMultiColBar"
+         StyleName="DHMultiColBar"
+     End Object
+     Header=GUIMultiColumnListHeader'DH_Interface.DHBrowser_PlayersListBox.MyHeader'
+
+     SelectedStyleName="DHListSelectionStyle"
+     DefaultListClass="DH_Interface.DHBrowser_PlayersList"
+     Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar
+         bVisible=False
+         OnPreDraw=TheScrollbar.GripPreDraw
+     End Object
+     MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHBrowser_PlayersListBox.TheScrollbar'
+
+     StyleName="DHComboListBox"
+}

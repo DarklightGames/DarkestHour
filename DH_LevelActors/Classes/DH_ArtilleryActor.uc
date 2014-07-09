@@ -1,0 +1,139 @@
+// class: DH_ArtilleryActor
+// Auther: Theel
+// Date: 9-25-10
+// Purpose:
+// Allows easier random artillery and not have to deal with scripted trigger BS (not event based!)
+// Limitations:
+// Quite featured
+// Radius is square based not vector (I like so you can have rectangles)
+
+class DH_ArtilleryActor extends DH_LevelActors;
+
+var()	int							XWidth, YWidth, PercentToSucceed, CallIntervalMin, CallIntervalMax;
+var()	bool						bAutoStart;
+var()	array<name>					AttachedArtilleryTags;
+var()	int							MaxRounds; //0 = infinite
+var		int							NumRoundsFired; //default to 0
+var array<DH_ArtilleryActor>		ArtyReferences; //References of attached
+
+function PostBeginPlay()
+{
+	local DH_ArtilleryActor RAA;
+	local int	i;
+
+	super.PostBeginPlay();
+
+	for(i=0; i<AttachedArtilleryTags.Length; i++)
+	{
+		foreach AllActors(class'DH_ArtilleryActor', RAA, AttachedArtilleryTags[i])
+		{
+			ArtyReferences.Insert(0,1); //Adds a new spot at index for the attached arty
+			ArtyReferences[0] = RAA; //Sets the attached arty in the reference array
+			break;
+		}
+	}
+}
+
+function Reset()
+{
+	super.Reset();
+
+	NumRoundsFired = 0;
+	gotostate('Initialize'); //Needed for reseting the state
+}
+
+event Trigger(Actor Other, Pawn EventInstigator)
+{
+	if( IsInState('Activated') )
+		gotostate('Deactivated');
+	else
+		gotostate('Activated');
+}
+
+auto state Initialize
+{
+	function BeginState()
+	{
+		if( bAutoStart )
+			gotostate('Activated');
+		else
+			gotostate('Deactivated');
+	}
+}
+
+state Activated
+{
+	function BeginState()
+	{
+		local int	RanIntervalTime;
+
+		RanIntervalTime = RandRange( CallIntervalMin, CallIntervalMax );
+		SetTimer( RanIntervalTime, false );
+	}
+	function Timer()
+	{
+		local int RandomNum;
+		local vector FallOffset;
+
+		RandomNum = Rand(101);  // gets a random # between 0 & 100
+
+		if( RandomNum <= PercentToSucceed )
+		{
+			if( NumRoundsFired >= MaxRounds && MaxRounds != 0 )
+			{
+				gotostate('Deactivated');
+			}
+			NumRoundsFired++;
+			if( ArtyReferences.Length > 0 )
+			{
+				//Select the location to send the round
+				RandomNum = Rand(ArtyReferences.Length);
+
+				//Randomize the location offset
+				FallOffset = vect(0,0,0);
+				FallOffset.X += Rand(ArtyReferences[RandomNum].XWidth);
+				if(Frand() > 0.5)
+					FallOffset.X *= -1;
+
+				FallOffset.Y += Rand(ArtyReferences[RandomNum].YWidth);
+				if(Frand() > 0.5)
+					FallOffset.Y *= -1;
+
+				Spawn(class 'ROArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity));
+			}
+			else
+			{
+				//Randomize the location offset
+				FallOffset = vect(0,0,0);
+			    FallOffset.X += Rand(XWidth);
+			    if(Frand() > 0.5)
+		           FallOffset.X *= -1;
+
+			    FallOffset.Y += Rand(YWidth);
+			    if(Frand() > 0.5)
+		           FallOffset.Y *= -1;
+		        //Spawn the artillery round with the random offset
+				Spawn(class 'ROArtilleryShell',,, Location + FallOffset, rotator(PhysicsVolume.Gravity));
+			}
+		}
+		RandomNum = RandRange( CallIntervalMin, CallIntervalMax );
+		SetTimer( RandomNum, false ); //Recall the timer with a new random Call interval
+		//Level.Game.Broadcast( self, "RandomVector: X:"$RandVector.X$" Y:"$RandVector.Y$" Z:"$RandVector.Z );
+	}
+}
+
+state Deactivated
+{
+	//do nothing
+}
+
+defaultproperties
+{
+     XWidth=512
+     YWidth=512
+     PercentToSucceed=80
+     CallIntervalMin=10
+     CallIntervalMax=20
+     bAutoStart=True
+     MaxRounds=50
+}

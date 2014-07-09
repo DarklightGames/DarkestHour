@@ -1,0 +1,34 @@
+//==============================================================================
+// DH_ShermanTank_British
+//
+// Darkest Hour Source - (c) Darkest Hour Team 2010
+// Red Orchestra Source - (c) Tripwire Interactive 2006
+//
+// British Mk. II (Sherman) 75mm tank
+//==============================================================================
+class DH_ShermanTank_British extends DH_ShermanTank;
+
+#exec OBJ LOAD FILE=..\textures\DH_VehiclesUK_tex.utx
+
+static function StaticPrecache(LevelInfo L)
+{
+    	Super.StaticPrecache(L);
+
+    	L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext');
+}
+
+simulated function UpdatePrecacheMaterials()
+{
+    	Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext');
+
+	Super.UpdatePrecacheMaterials();
+}
+
+defaultproperties
+{
+     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanCannonPawn_British')
+     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Brit_Sherman_Dest'
+     VehiclePositionString="in a Sherman Mk.II"
+     VehicleNameString="Sherman Mk.II "
+     Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext'
+}

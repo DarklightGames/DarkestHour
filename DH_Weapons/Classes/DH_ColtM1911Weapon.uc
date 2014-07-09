@@ -1,0 +1,56 @@
+//=============================================================================
+// DH_ColtM1911Weapon
+//=============================================================================
+
+class DH_ColtM1911Weapon extends DH_PistolWeapon;
+
+#exec OBJ LOAD FILE=..\Animations\DH_Colt1911_1st.ukx
+
+defaultproperties
+{
+     MagEmptyReloadAnim="reload_empty"
+     MagPartialReloadAnim="reload_half"
+     IronIdleAnim="Iron_idle"
+     IronBringUp="iron_in"
+     IronPutDown="iron_out"
+     IdleEmptyAnim="idle_empty"
+     IronIdleEmptyAnim="iron_idle_empty"
+     IronBringUpEmpty="Iron_In_empty"
+     IronPutDownEmpty="Iron_Out_empty"
+     SprintStartEmptyAnim="Sprint_Start_Empty"
+     SprintLoopEmptyAnim="Sprint_Middle_Empty"
+     SprintEndEmptyAnim="Sprint_End_Empty"
+     CrawlForwardEmptyAnim="crawlF_empty"
+     CrawlBackwardEmptyAnim="crawlB_empty"
+     CrawlStartEmptyAnim="crawl_in_empty"
+     CrawlEndEmptyAnim="crawl_out_empty"
+     SelectEmptyAnim="Draw_empty"
+     PutDownEmptyAnim="putaway_empty"
+     MaxNumPrimaryMags=5
+     InitialNumPrimaryMags=5
+     bPlusOneLoading=True
+     PlayerIronsightFOV=70.000000
+     CrawlForwardAnim="crawlF"
+     CrawlBackwardAnim="crawlB"
+     CrawlStartAnim="crawl_in"
+     CrawlEndAnim="crawl_out"
+     IronSightDisplayFOV=40.000000
+     ZoomInTime=0.400000
+     ZoomOutTime=0.200000
+     FireModeClass(0)=Class'DH_Weapons.DH_ColtM1911Fire'
+     FireModeClass(1)=Class'DH_Weapons.DH_ColtM1911MeleeFire'
+     SelectAnim="Draw"
+     PutDownAnim="putaway"
+     SelectAnimRate=1.000000
+     PutDownAnimRate=1.000000
+     SelectForce="SwitchToAssaultRifle"
+     AIRating=0.350000
+     CurrentRating=0.350000
+     DisplayFOV=70.000000
+     bCanRestDeploy=True
+     PickupClass=Class'DH_Weapons.DH_ColtM1911Pickup'
+     BobDamping=1.600000
+     AttachmentClass=Class'DH_Weapons.DH_ColtM1911Attachment'
+     ItemName="Colt M1911 Pistol"
+     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
+}

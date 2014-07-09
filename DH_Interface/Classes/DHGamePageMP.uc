@@ -1,0 +1,129 @@
+// *************************************************************************
+//
+//	***   DHGamePageMP   ***
+//
+// *************************************************************************
+
+class DHGamePageMP extends UT2K4GamePageMP;
+
+function InitComponent(GUIController InController, GUIComponent InOwner)
+{
+	Super.InitComponent(InController, InOwner);
+    	class'DHInterfaceUtil'.static.SetROStyle(InController, Controls);
+ 	RuleInfo = new(None) class'Engine.PlayInfo';
+    	c_Tabs.RemoveTab(PanelCaption[0]);
+    	c_Tabs.RemoveTab(PanelCaption[4]);
+
+	mcRules = DHIAMultiColumnRulesPanel(c_Tabs.ReplaceTab(c_Tabs.TabStack[1], PanelCaption[2], "DH_Interface.DHIAMultiColumnRulesPanel",, PanelHint[2]));
+
+    	DHTab_MainSP(c_Tabs.BorrowPanel(PanelCaption[1])).bHideDifficultyControl = True;
+
+    p_game = none;
+    Controller.LastGameType = "DH_Engine.DarkestHourGame";
+    changeGameType(false);
+}
+
+// we only have one game type so it is never locked
+function bool GameTypeLocked()
+{
+	local int i;
+	local GUITabButton tb;
+
+		for ( i = 0; i < c_Tabs.TabStack.Length; i++ )
+		{
+			tb = c_Tabs.TabStack[i];
+			if ( tb != None )
+			{
+				EnableComponent(tb);
+			}
+		}
+
+		EnableComponent(b_Primary);
+		EnableComponent(b_Secondary);
+
+		if ( RuleInfo != None && mcRules != None )
+		{
+			i = RuleInfo.FindIndex("BotMode");
+			if ( i != -1 )
+				mcRules.UpdateBotSetting(i);
+		}
+
+
+    return false;
+}
+
+function StartGame(string GameURL, bool bAlt)
+{
+	local GUIController C;
+
+	C = Controller;
+
+    	if (bAlt)
+	{
+	    	if ( mcServerRules != None )
+			GameURL $= mcServerRules.Play();
+        			log("GameURL is "$GameURL);
+        			log("ConsoleCommand  is "$"relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
+			PlayerOwner().ConsoleCommand("relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
+	}
+    	else
+        		PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute,False);
+    		C.CloseAll(false,True);
+}
+
+defaultproperties
+{
+     Begin Object Class=DHGUITabControl Name=PageTabs
+         bFillSpace=False
+         bDockPanels=True
+         TabHeight=0.060000
+         BackgroundStyleName="DHHeader"
+         WinHeight=0.044000
+         RenderWeight=0.490000
+         TabOrder=3
+         bAcceptsInput=True
+         OnActivate=PageTabs.InternalOnActivate
+         OnChange=DHGamePageMP.InternalOnChange
+     End Object
+     c_Tabs=DHGUITabControl'DH_Interface.DHGamePageMP.PageTabs'
+
+     Begin Object Class=DHGUIHeader Name=GamePageHeader
+         StyleName="DHTopper"
+         WinHeight=32.000000
+         RenderWeight=0.300000
+     End Object
+     t_Header=DHGUIHeader'DH_Interface.DHGamePageMP.GamePageHeader'
+
+     Begin Object Class=DHGameFooterMP Name=MPFooter
+         PrimaryCaption="Listen"
+         SecondaryCaption="Dedicated"
+         Spacer=0.010000
+         TextIndent=5
+         FontScale=FNS_Small
+         StyleName="DHFooter"
+         WinTop=0.950000
+         WinHeight=0.045000
+         RenderWeight=0.300000
+         TabOrder=8
+         OnPreDraw=MPFooter.InternalOnPreDraw
+     End Object
+     t_Footer=DHGameFooterMP'DH_Interface.DHGamePageMP.MPFooter'
+
+     Begin Object Class=GUIImage Name=BkChar
+         Image=Texture'DH_GUI_Tex.Menu.menuBackground'
+         ImageStyle=ISTY_Scaled
+         X1=0
+         Y1=0
+         X2=1024
+         Y2=1024
+         WinHeight=1.000000
+         RenderWeight=0.020000
+     End Object
+     i_bkChar=GUIImage'DH_Interface.DHGamePageMP.BkChar'
+
+     PanelClass(1)="DH_Interface.DHTab_MainMP"
+     PanelClass(2)="DH_Interface.DHIAMultiColumnRulesPanel"
+     PanelClass(3)="DH_Interface.DHTab_MutatorMP"
+     PanelClass(4)="ROInterface.ROUT2K4Tab_BotConfigMP"
+     PanelClass(5)="DH_Interface.DHTab_ServerRulesPanel"
+}
