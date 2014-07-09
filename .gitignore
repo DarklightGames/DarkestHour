@@ -23,3 +23,5 @@ tools/make/Release/
 tools/make/make/Debug/
 tools/make/make/Release/
 *.tlog
+DarkestHourDev/
+*.opensdf
