@@ -126,8 +126,10 @@ int main(int argc, char** argv)
 
     std::map<boost::filesystem::path, time_t> package_write_times;
 
-    for (auto& edit_package : edit_packages)
+	for (size_t i = 0; i < edit_packages.size(); ++i)
     {
+		const auto& edit_package = edit_packages[i];
+
         auto src_dir = red_orchestra_root_directory;
         src_dir += "\\" + edit_package + "\\Classes";
 
@@ -165,9 +167,11 @@ int main(int argc, char** argv)
 
         return 1;
     }
-
-    for (auto& package : packages_to_compile)
+	
+	for (size_t i = 0; i < packages_to_compile.size(); ++i)
     {
+		const auto& package = packages_to_compile[i];
+
         path package_path = mod_system_directory;
         package_path += "\\" + package;
         package_path.replace_extension("u");
@@ -204,8 +208,10 @@ int main(int argc, char** argv)
     //copy compiled .u files to mod system directory and delete them
     for (auto itr = directory_iterator(red_orchestra_system_directory); itr != directory_iterator(); ++itr)
     {
-        for (auto& package : packages_to_compile)
-        {
+		for (size_t i = 0; i < packages_to_compile.size(); ++i)
+		{
+			const auto& package = packages_to_compile[i];
+
             if (itr->path().filename() == package + ".u")
             {
                 boost::system::error_code error_code;
