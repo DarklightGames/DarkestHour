@@ -24,6 +24,8 @@ int main(int argc, char** argv)
     std::string mod_name;
     bool is_silent = false;
     bool should_close_on_finish = false;
+	bool should_clean_packages = false;
+	bool should_compile = true;
 
     for (auto i = 0; i < argc; ++i)
     {
@@ -37,9 +39,17 @@ int main(int argc, char** argv)
                 mod_name = tokens[1];
             }
         }
-        else if (_strcmpi(argv[i], "--close") == 0)
+        else if (_strcmpi(argv[i], "--noprompt") == 0)
         {
             should_close_on_finish = true;
+        }
+        else if (_strcmpi(argv[i], "--clean") == 0)
+        {
+            should_clean_packages = true;
+        }
+        else if (_strcmpi(argv[i], "--nocompile") == 0)
+        {
+            should_compile = false;
         }
     }
 
@@ -159,15 +169,22 @@ int main(int argc, char** argv)
 
         if (exists(mod_package_path))
         {
-            for (auto itr = directory_iterator(src_dir); itr != directory_iterator(); ++itr)
-            {
-                if (last_write_time(itr->path()) > last_write_time(mod_package_path))
-                {
-                    packages_to_compile.push_back(edit_package);
+			if(should_clean_packages)
+			{
+				packages_to_compile.push_back(edit_package);
+			}
+			else
+			{
+				for (auto itr = directory_iterator(src_dir); itr != directory_iterator(); ++itr)
+				{
+					if (last_write_time(itr->path()) > last_write_time(mod_package_path))
+					{
+						packages_to_compile.push_back(edit_package);
 
-                    break;
-                }
-            }
+						break;
+					}
+				}
+			}
         }
         else if (!exists(root_package_path))
         {
@@ -207,17 +224,20 @@ int main(int argc, char** argv)
         }
     }
 
-    std::string cmd = "cd %RODIR%\\System && ucc make -mod=" + mod_name;
+	if(should_compile)
+	{
+		std::string cmd = "cd %RODIR%\\System && ucc make -mod=" + mod_name;
 
-    auto stream = _popen(cmd.c_str(), "r");
-    char buffer[255];
+		auto stream = _popen(cmd.c_str(), "r");
+		char buffer[255];
 
-    while (fgets(buffer, sizeof(buffer), stream) != NULL)
-    {
-        std::string line = buffer;
+		while (fgets(buffer, sizeof(buffer), stream) != NULL)
+		{
+			std::string line = buffer;
 
-        std::cout << buffer;
-    }
+			std::cout << buffer;
+		}
+	}
 
     //copy compiled .u files to mod system directory and delete them
     for (auto itr = directory_iterator(root_system_directory); itr != directory_iterator(); ++itr)
