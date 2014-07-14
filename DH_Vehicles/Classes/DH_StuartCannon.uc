@@ -19,52 +19,52 @@ var    bool         bLastShot;  // Prevents shoot effects playing for each proje
 // Special tracer handling for this type of cannon
 /*simulated function UpdateTracer()
 {
-	local rotator SpawnDir;
+    local rotator SpawnDir;
 
-	if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-		return;
+    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
+        return;
 
 
- 	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-	{
-		if (Instigator != None && Instigator.IsLocallyControlled())
-		{
-			SpawnDir = WeaponFireRotation;
-		}
-		else
-		{
-			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-		}
+    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
+    {
+        if (Instigator != None && Instigator.IsLocallyControlled())
+        {
+            SpawnDir = WeaponFireRotation;
+        }
+        else
+        {
+            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
+        }
 
         if (Instigator != None && !Instigator.PlayerReplicationInfo.bBot)
         {
-        	SpawnDir.Pitch += AddedPitch;
+            SpawnDir.Pitch += AddedPitch;
         }
 
         Spawn(DummyTracerClass,,, WeaponFireLocation, SpawnDir);
 
-		mLastTracerTime = Level.TimeSeconds;
-	}
+        mLastTracerTime = Level.TimeSeconds;
+    }
 }
 */
 
 state ProjectileFireMode
 {
-	function Fire(Controller C)
-	{
-	    local int SpawnCount, ProjectileID;
-	    local rotator InitialRot, R;
-	    local vector X;
+    function Fire(Controller C)
+    {
+        local int SpawnCount, ProjectileID;
+        local rotator R;
+        local vector X;
 
-		if(ProjectileClass == class'DH_TankCannonShellCanisterAmerican')
+        if(ProjectileClass == class'DH_TankCannonShellCanisterAmerican')
         {
             SpawnCount = ProjPerFire;// DH_TankCannonShellCanister.ProjPerFire;
 
             X = vector(WeaponFireRotation);
 
-       	    for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-  	            R.Yaw = CSpread * (FRand()-0.5);
+                R.Yaw = CSpread * (FRand()-0.5);
                 R.Pitch = CSpread * (FRand()-0.5);
                 R.Roll = CSpread * (FRand()-0.5);
 
@@ -79,19 +79,19 @@ state ProjectileFireMode
                     log("Firing Canister shot with angle: "@WeaponFireRotation);
 
                 SpawnProjectile(ProjectileClass, False);
-       	    }
+            }
         }
         else
             SpawnProjectile(ProjectileClass, False);
-	}
+    }
 
-	function AltFire(Controller C)
-	{
-		if (AltFireProjectileClass == None)
-		  	Fire(C);
-		else
-		  	SpawnProjectile(AltFireProjectileClass, True);
-	}
+    function AltFire(Controller C)
+    {
+        if (AltFireProjectileClass == None)
+            Fire(C);
+        else
+            SpawnProjectile(AltFireProjectileClass, True);
+    }
 }
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
@@ -214,20 +214,20 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 /*state ProjectileFireMode
 {
     function Fire(Controller C)
-	{
-	    local int SpawnCount, ProjectileID;
-	    local rotator InitialRot, R;
-	    local vector X;
+    {
+        local int SpawnCount, ProjectileID;
+        local rotator InitialRot, R;
+        local vector X;
 
-		if(ProjectileClass == class'DH_TankCannonShellCanister')
+        if(ProjectileClass == class'DH_TankCannonShellCanister')
         {
             SpawnCount = ProjPerFire;// DH_TankCannonShellCanister.ProjPerFire;
 
             X = vector(WeaponFireRotation);
 
-       	    for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-  	            R.Yaw = CSpread * (FRand()-0.5);
+                R.Yaw = CSpread * (FRand()-0.5);
                 R.Pitch = CSpread * (FRand()-0.5);
                 R.Roll = CSpread * (FRand()-0.5);
 
@@ -241,19 +241,19 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                     SpawnCanisterProjectile(ProjectileClass, True);
                 else
                     SpawnCanisterProjectile(ProjectileClass, False);
-       	    }
+            }
         }
         else
             SpawnProjectile(ProjectileClass, False);
-	}
+    }
 
-	function AltFire(Controller C)
-	{
-		if (AltFireProjectileClass == None)
-		  	Fire(C);
-		else
-		  	SpawnProjectile(AltFireProjectileClass, True);
-	}
+    function AltFire(Controller C)
+    {
+        if (AltFireProjectileClass == None)
+            Fire(C);
+        else
+            SpawnProjectile(AltFireProjectileClass, True);
+    }
 }
 
 
@@ -264,10 +264,10 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
     local vector StartLocation, HitLocation, HitNormal, Extent;
     local rotator FireRot;
     local Vector ProjectileDir, End, PTHitLocation, PTHitNormal;
-    local array<int>	HitPoints;
-	local Actor Other;
-	local DH_Pawn HitPawn;
-	local ROWeaponAttachment WeapAttach;
+    local array<int>    HitPoints;
+    local Actor Other;
+    local DH_Pawn HitPawn;
+    local ROWeaponAttachment WeapAttach;
 
         FireRot = WeaponFireRotation;
 
@@ -318,88 +318,88 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
 
 
     if ( bUsePreLaunchTrace ) // Leaving this function as optional in case we want to disable it for reasons of penetration in future
-	{
-		ProjectileDir = Vector(FireRot);
-		End = StartLocation + PreLaunchTraceDistance * ProjectileDir;
+    {
+        ProjectileDir = Vector(FireRot);
+        End = StartLocation + PreLaunchTraceDistance * ProjectileDir;
 
         log("Running Trace");
 
-		// Lets avoid all that casting
-//		WeapAttach =  ROWeaponAttachment(Weapon.ThirdPersonActor);
+        // Lets avoid all that casting
+//      WeapAttach =  ROWeaponAttachment(Weapon.ThirdPersonActor);
 
-		// Do precision hit point pre-launch trace to see if we hit a player or something else
-		Other = Trace(PTHitLocation, PTHitNormal, End, StartLocation);
+        // Do precision hit point pre-launch trace to see if we hit a player or something else
+        Other = Trace(PTHitLocation, PTHitNormal, End, StartLocation);
 
- 		//Instigator.DrawStayingDebugLine(Start, End, 255,0,0);
-		// This is a bit of a hack, but it prevents bots from killing other players in most instances
-		// Bots with a giant tank mounted shotgun... yeah, I'm leaving this check in place - PsYcH0_Ch!cKeN
-		if( !Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
-		{
-			//log(Instigator$"'s shot would hit "$Other$" who is on the same team");
-			return none;
-		}
+        //Instigator.DrawStayingDebugLine(Start, End, 255,0,0);
+        // This is a bit of a hack, but it prevents bots from killing other players in most instances
+        // Bots with a giant tank mounted shotgun... yeah, I'm leaving this check in place - PsYcH0_Ch!cKeN
+        if( !Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
+        {
+            //log(Instigator$"'s shot would hit "$Other$" who is on the same team");
+            return none;
+        }
 
-		if ( Other != None && Other != Instigator && Other.Base != Instigator)
-		{
-			if ( !Other.bWorldGeometry )
-			{
-				// Update hit effect except for pawns (blood) other than vehicles.
-				if ( Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') &&
-				 !Other.IsA('ROVehicleWeapon')))
-				{
-//					WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
-				}
+        if ( Other != None && Other != Instigator && Other.Base != Instigator)
+        {
+            if ( !Other.bWorldGeometry )
+            {
+                // Update hit effect except for pawns (blood) other than vehicles.
+                if ( Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') &&
+                 !Other.IsA('ROVehicleWeapon')))
+                {
+//                  WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
+                }
 
-				if(Other.IsA('ROVehicleWeapon') && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, ProjectileDir))
-				{
-//				    WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
-				}
+                if(Other.IsA('ROVehicleWeapon') && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, ProjectileDir))
+                {
+//                  WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
+                }
 
-				if( Other.IsA('ROVehicle'))
-				{
-					Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),class<ROBullet>(ProjectileClass).default.MyVehicleDamage);
-				}
-				else
-				{
-					HitPawn = DH_Pawn(Other);
+                if( Other.IsA('ROVehicle'))
+                {
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),class<ROBullet>(ProjectileClass).default.MyVehicleDamage);
+                }
+                else
+                {
+                    HitPawn = DH_Pawn(Other);
 
-			    	if ( HitPawn != none )
-			    	{
-	                     // Hit detection debugging
-						 //log("PreLaunchTrace hit "$HitPawn.PlayerReplicationInfo.PlayerName);
-						 //HitPawn.HitStart = Start;
-						 //HitPawn.HitEnd = End;
+                    if ( HitPawn != none )
+                    {
+                         // Hit detection debugging
+                         //log("PreLaunchTrace hit "$HitPawn.PlayerReplicationInfo.PlayerName);
+                         //HitPawn.HitStart = Start;
+                         //HitPawn.HitEnd = End;
                          if(!HitPawn.bDeleteMe)
-						 	HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType,HitPoints);
+                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType,HitPoints);
 
                          // Hit detection debugging
-						 //if( Level.NetMode == NM_Standalone)
-						 //	  HitPawn.DrawBoneLocation();
-			    	}
-			    	else
-			    	{
-						Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
-					}
-				}
-			}
-			else
-			{
-				if ( WeapAttach != None )
-				{
-//					WeapAttach.UpdateHit(Other,HitLocation,HitNormal);
-				}
+                         //if( Level.NetMode == NM_Standalone)
+                         //   HitPawn.DrawBoneLocation();
+                    }
+                    else
+                    {
+                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
+                    }
+                }
+            }
+            else
+            {
+                if ( WeapAttach != None )
+                {
+//                  WeapAttach.UpdateHit(Other,HitLocation,HitNormal);
+                }
 
-				if( RODestroyableStaticMesh(Other) != none )
-				{
-				    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
-				    if( RODestroyableStaticMesh(Other).bWontStopBullets )
-				    {
-				    	Other = none;
-				    }
-				}
-			}
+                if( RODestroyableStaticMesh(Other) != none )
+                {
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
+                    if( RODestroyableStaticMesh(Other).bWontStopBullets )
+                    {
+                        Other = none;
+                    }
+                }
+            }
 
-			if( PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass )
+            if( PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass )
             {
                 ProjectileClass = PendingProjectileClass;
                 if( bGunFireDebug )
@@ -415,12 +415,12 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
                     PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);
                 }
             }
-		}
+        }
 
-		// Return because we already hit something
-		if ( Other != none )
-			return none;
-	}
+        // Return because we already hit something
+        if ( Other != none )
+            return none;
+    }
 
     P = spawn(ProjClass, none, , StartLocation, FireRot);
 
@@ -463,30 +463,30 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
 // American tanks must use the actual sight markings to aim!
 simulated function int GetRange()
 {
-	return RangeSettings[0];
+    return RangeSettings[0];
 }
 
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-	if( CurrentRangeIndex < RangeSettings.Length - 1 )
-	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
-			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if( CurrentRangeIndex < RangeSettings.Length - 1 )
+    {
+        if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		CurrentRangeIndex++;
-	}
+        CurrentRangeIndex++;
+    }
 }
 
 function DecrementRange()
 {
-	if( CurrentRangeIndex > 0 )
-	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
-			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if( CurrentRangeIndex > 0 )
+    {
+        if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		CurrentRangeIndex --;
-	}
+        CurrentRangeIndex --;
+    }
 }
 
 defaultproperties

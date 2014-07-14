@@ -13,81 +13,81 @@ class DH_AT57CannonPawn extends DH_ATGunTwoCannonPawn;
 
 simulated function DrawHUD(Canvas Canvas)
 {
-	local PlayerController PC;
-	local vector CameraLocation;
-	local rotator CameraRotation;
-	local Actor ViewActor;
-	local float	SavedOpacity;
-	local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
+    local PlayerController PC;
+    local vector CameraLocation;
+    local rotator CameraRotation;
+    local Actor ViewActor;
+    local float SavedOpacity;
+    local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
-	PC = PlayerController(Controller);
-	if( PC == none )
-	{
-		Super.RenderOverlays(Canvas);
-		//log("PanzerTurret PlayerController was none, returning");
-		return;
-	}
-	else if (!PC.bBehindView)
-	{
-		// store old opacity and set to 1.0 for map overlay rendering
-		SavedOpacity = Canvas.ColorModulate.W;
-		Canvas.ColorModulate.W = 1.0;
+    PC = PlayerController(Controller);
+    if( PC == none )
+    {
+        Super.RenderOverlays(Canvas);
+        //log("PanzerTurret PlayerController was none, returning");
+        return;
+    }
+    else if (!PC.bBehindView)
+    {
+        // store old opacity and set to 1.0 for map overlay rendering
+        SavedOpacity = Canvas.ColorModulate.W;
+        Canvas.ColorModulate.W = 1.0;
 
-		Canvas.DrawColor.A = 255;
-		Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
 
         if ( DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
-			if( DriverPositionIndex == 0 )
-			{
+            if( DriverPositionIndex == 0 )
+            {
 
                // Calculate reticle drawing position (and position to draw black bars at)
               ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-			  OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-			  OverlayCenterTexStart = (1 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2;
-			  OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
+              OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
+              OverlayCenterTexStart = (1 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2;
+              OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
 
-			  Canvas.SetPos(0, 0);
-			  Canvas.DrawTile( CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+              Canvas.SetPos(0, 0);
+              Canvas.DrawTile( CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-     		}
-			else
-			{
-               	DrawBinocsOverlay(Canvas);
-			}
-	    }
+            }
+            else
+            {
+                DrawBinocsOverlay(Canvas);
+            }
+        }
 
-    	// reset HudOpacity to original value
-		Canvas.ColorModulate.W = SavedOpacity;
+        // reset HudOpacity to original value
+        Canvas.ColorModulate.W = SavedOpacity;
 
         // Draw tank, turret, ammo count, passenger list
-	    if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
-	}
+    }
 
      // Zap the lame crosshair - Ramm
-	if (IsLocallyControlled() && Gun != None && Gun.bCorrectAim && Gun.bShowAimCrosshair)
-	{
-		Canvas.DrawColor = CrosshairColor;
-		Canvas.DrawColor.A = 255;
-		Canvas.Style = ERenderStyle.STY_Alpha;
-		Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-		Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-	}
+    if (IsLocallyControlled() && Gun != None && Gun.bCorrectAim && Gun.bShowAimCrosshair)
+    {
+        Canvas.DrawColor = CrosshairColor;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
+        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
+    }
 
 
-	if (PC != None && !PC.bBehindView && HUDOverlay != None)
-	{
+    if (PC != None && !PC.bBehindView && HUDOverlay != None)
+    {
         if (!Level.IsSoftwareRendering())
         {
-    		CameraRotation = PC.Rotation;
-    		SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-    		HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-    		HUDOverlay.SetRotation(CameraRotation);
-    		Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
-    	}
-	}
-	else
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetRotation(CameraRotation);
+            Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
+        }
+    }
+    else
         ActivateOverlay(False);
 }
 
@@ -102,7 +102,7 @@ defaultproperties
      AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
      AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
      DriverPositions(0)=(ViewLocation=(X=20.000000,Y=-12.000000,Z=10.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=True,bExposed=True)
-     DriverPositions(1)=(ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=True)
+     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=True)
      DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=True,bExposed=True)
      GunClass=Class'DH_Guns.DH_AT57Cannon'
      CameraBone="Gun"

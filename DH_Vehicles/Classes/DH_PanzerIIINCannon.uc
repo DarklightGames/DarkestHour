@@ -19,52 +19,52 @@ var    bool         bLastShot;  // Prevents shoot effects playing for each proje
 // Special tracer handling for this type of cannon
 /*simulated function UpdateTracer()
 {
-	local rotator SpawnDir;
+    local rotator SpawnDir;
 
-	if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-		return;
+    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
+        return;
 
 
- 	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-	{
-		if (Instigator != None && Instigator.IsLocallyControlled())
-		{
-			SpawnDir = WeaponFireRotation;
-		}
-		else
-		{
-			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-		}
+    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
+    {
+        if (Instigator != None && Instigator.IsLocallyControlled())
+        {
+            SpawnDir = WeaponFireRotation;
+        }
+        else
+        {
+            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
+        }
 
         if (Instigator != None && !Instigator.PlayerReplicationInfo.bBot)
         {
-        	SpawnDir.Pitch += AddedPitch;
+            SpawnDir.Pitch += AddedPitch;
         }
 
         Spawn(DummyTracerClass,,, WeaponFireLocation, SpawnDir);
 
-		mLastTracerTime = Level.TimeSeconds;
-	}
+        mLastTracerTime = Level.TimeSeconds;
+    }
 }
 */
 
 state ProjectileFireMode
 {
-	function Fire(Controller C)
-	{
-	    local int SpawnCount, ProjectileID;
-	    local rotator InitialRot, R;
-	    local vector X;
+    function Fire(Controller C)
+    {
+        local int SpawnCount, ProjectileID;
+        local rotator R;
+        local vector X;
 
-		if(ProjectileClass == class'DH_TankCannonShellCanisterGerman')
+        if(ProjectileClass == class'DH_TankCannonShellCanisterGerman')
         {
             SpawnCount = ProjPerFire;// DH_TankCannonShellCanister.ProjPerFire;
 
             X = vector(WeaponFireRotation);
 
-       	    for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-  	            R.Yaw = CSpread * (FRand()-0.5);
+                R.Yaw = CSpread * (FRand()-0.5);
                 R.Pitch = CSpread * (FRand()-0.5);
                 R.Roll = CSpread * (FRand()-0.5);
 
@@ -79,19 +79,19 @@ state ProjectileFireMode
                     log("Firing Canister shot with angle: "@WeaponFireRotation);
 
                 SpawnProjectile(ProjectileClass, False);
-       	    }
+            }
         }
         else
             SpawnProjectile(ProjectileClass, False);
-	}
+    }
 
-	function AltFire(Controller C)
-	{
-		if (AltFireProjectileClass == None)
-		  	Fire(C);
-		else
-		  	SpawnProjectile(AltFireProjectileClass, True);
-	}
+    function AltFire(Controller C)
+    {
+        if (AltFireProjectileClass == None)
+            Fire(C);
+        else
+            SpawnProjectile(AltFireProjectileClass, True);
+    }
 }
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)

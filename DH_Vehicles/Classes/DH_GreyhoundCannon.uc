@@ -19,21 +19,21 @@ var    bool         bLastShot;  // Prevents shoot effects playing for each proje
 
 state ProjectileFireMode
 {
-	function Fire(Controller C)
-	{
-	    local int SpawnCount, projectileID;
-	    local rotator InitialRot, R;
-	    local vector X;
+    function Fire(Controller C)
+    {
+        local int SpawnCount, projectileID;
+        local rotator R;
+        local vector X;
 
-		if(ProjectileClass == class'DH_TankCannonShellCanisterAmerican')
+        if(ProjectileClass == class'DH_TankCannonShellCanisterAmerican')
         {
             SpawnCount = ProjPerFire;// DH_TankCannonShellCanister.ProjPerFire;
 
             X = vector(WeaponFireRotation);
 
-       	    for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-  	            R.Yaw = CSpread * (FRand()-0.5);
+                R.Yaw = CSpread * (FRand()-0.5);
                 R.Pitch = CSpread * (FRand()-0.5);
                 R.Roll = CSpread * (FRand()-0.5);
 
@@ -48,19 +48,19 @@ state ProjectileFireMode
                     log("Firing Canister shot with angle: "@WeaponFireRotation);
 
                 SpawnProjectile(ProjectileClass, False);
-       	    }
+            }
         }
         else
             SpawnProjectile(ProjectileClass, False);
-	}
+    }
 
-	function AltFire(Controller C)
-	{
-		if (AltFireProjectileClass == None)
-		  	Fire(C);
-		else
-		  	SpawnProjectile(AltFireProjectileClass, True);
-	}
+    function AltFire(Controller C)
+    {
+        if (AltFireProjectileClass == None)
+            Fire(C);
+        else
+            SpawnProjectile(AltFireProjectileClass, True);
+    }
 }
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
@@ -181,28 +181,28 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 // American tanks must use the actual sight markings to aim!
 simulated function int GetRange()
 {
-	return RangeSettings[0];
+    return RangeSettings[0];
 }
 
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-	if( CurrentRangeIndex < RangeSettings.Length - 1 )
-	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+    if( CurrentRangeIndex < RangeSettings.Length - 1 )
+    {
+        if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
 
-		CurrentRangeIndex++;
-	}
+        CurrentRangeIndex++;
+    }
 }
 
 function DecrementRange()
 {
-	if( CurrentRangeIndex > 0 )
-	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+    if( CurrentRangeIndex > 0 )
+    {
+        if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
 
-		CurrentRangeIndex --;
-	}
+        CurrentRangeIndex --;
+    }
 }
 
 defaultproperties

@@ -21,7 +21,7 @@ defaultproperties
      HUDMortarTexture=Texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2Side'
      HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcA'
      WeaponFov=80.000000
-     DriverPositions(0)=(ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Mortars_3rd.M2_Mortar_turret',ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bDrawOverlays=True,bExposed=True)
+     DriverPositions(0)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Mortars_3rd.M2_Mortar_turret',ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bDrawOverlays=True,bExposed=True)
      bMustBeTankCrew=False
      GunClass=Class'DH_Mortars.DH_M2MortarVehicleWeapon'
      CameraBone="Camera"
