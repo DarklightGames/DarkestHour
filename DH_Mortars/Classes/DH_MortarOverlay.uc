@@ -3,5 +3,5 @@ abstract;
 
 defaultproperties
 {
-     bDramaticLighting=False
+     bDramaticLighting=false
 }

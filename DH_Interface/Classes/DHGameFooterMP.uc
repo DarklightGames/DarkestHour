@@ -16,7 +16,7 @@ defaultproperties
          WinWidth=0.120000
          WinHeight=0.033203
          TabOrder=0
-         bBoundToParent=True
+         bBoundToParent=true
          OnKeyEvent=GamePrimaryButton.InternalOnKeyEvent
      End Object
      b_Primary=GUIButton'DH_Interface.DHGameFooterMP.GamePrimaryButton'
@@ -29,7 +29,7 @@ defaultproperties
          WinWidth=0.120000
          WinHeight=0.033203
          TabOrder=1
-         bBoundToParent=True
+         bBoundToParent=true
          OnKeyEvent=GameSecondaryButton.InternalOnKeyEvent
      End Object
      b_Secondary=GUIButton'DH_Interface.DHGameFooterMP.GameSecondaryButton'
@@ -41,7 +41,7 @@ defaultproperties
          WinWidth=0.120000
          WinHeight=0.033203
          TabOrder=2
-         bBoundToParent=True
+         bBoundToParent=true
          OnKeyEvent=GameBackButton.InternalOnKeyEvent
      End Object
      b_Back=GUIButton'DH_Interface.DHGameFooterMP.GameBackButton'

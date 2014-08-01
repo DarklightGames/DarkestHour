@@ -18,9 +18,9 @@ simulated function int GetRange()
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-	if( CurrentRangeIndex < RangeSettings.Length - 1 )
+	if (CurrentRangeIndex < RangeSettings.Length - 1)
 	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
 			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
 		CurrentRangeIndex++;
@@ -29,9 +29,9 @@ function IncrementRange()
 
 function DecrementRange()
 {
-	if( CurrentRangeIndex > 0 )
+	if (CurrentRangeIndex > 0)
 	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
 			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
 		CurrentRangeIndex --;
@@ -98,8 +98,8 @@ defaultproperties
      ShakeOffsetMag=(Z=1.000000)
      ShakeOffsetRate=(Z=100.000000)
      ShakeOffsetTime=10.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=5461
      CustomPitchDownLimit=63715
      BeginningIdleAnim="com_idle_close"

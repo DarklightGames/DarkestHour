@@ -13,10 +13,10 @@ class DH_StielGranateFire extends ROThrownExplosiveFire;
 defaultproperties
 {
      AddedFuseTime=0.380000
-     bPullAnimCompensation=True
+     bPullAnimCompensation=true
      ProjSpawnOffset=(X=25.000000)
-     bUsePreLaunchTrace=False
-     bWaitForRelease=True
+     bUsePreLaunchTrace=false
+     bWaitForRelease=true
      PreFireAnim="Pre_Fire"
      FireAnim="Throw"
      TweenTime=0.010000

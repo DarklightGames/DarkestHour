@@ -50,12 +50,12 @@ simulated function Tick(float DeltaTime)
 
     Super.Tick(DeltaTime);
 
-    if( bOnFire && HullMGFireEffect == None )
+    if (bOnFire && HullMGFireEffect == none)
     {
         // Lets randomise the fire start times to desync them with the driver and engine ones
-        if( Level.TimeSeconds - BurnTime > 0.2 )
+        if (Level.TimeSeconds - BurnTime > 0.2)
         {
-            if( FRand() < 0.1 )
+            if (FRand() < 0.1)
             {
                 HullMGFireEffect = Spawn(FireEffectClass);
                 AttachToBone(HullMGFireEffect, FireAttachBone);
@@ -72,7 +72,7 @@ simulated function DestroyEffects()
 {
 	super.DestroyEffects();
 
-    if (HullMGFireEffect != None)
+    if (HullMGFireEffect != none)
     	HullMGFireEffect.Destroy();
 }
 
@@ -82,7 +82,7 @@ simulated function int LimitYaw(int yaw)
     local int NewYaw;
     local int VehYaw;
 
-    if ( !bLimitYaw )
+    if (!bLimitYaw)
     {
         return yaw;
     }
@@ -91,11 +91,11 @@ simulated function int LimitYaw(int yaw)
 
     NewYaw = yaw;
 
-   	if(yaw > VehYaw + MaxPositiveYaw )
+   	if (yaw > VehYaw + MaxPositiveYaw)
    	{
    		NewYaw = VehYaw + MaxPositiveYaw;
    	}
-   	else if( yaw < VehYaw + MaxNegativeYaw )
+   	else if (yaw < VehYaw + MaxNegativeYaw)
    	{
    		NewYaw = VehYaw + MaxNegativeYaw;
   	}
@@ -113,7 +113,7 @@ simulated function bool ReadyToFire(bool bAltFire)
 {
 	//log("bReloading = "$bReloading);
 
-	if( bReloading )
+	if (bReloading)
 		return false;
 
 	return super.ReadyToFire(bAltFire);
@@ -123,27 +123,27 @@ function CeaseFire(Controller C, bool bWasAltFire)
 {
 	super.CeaseFire(C, bWasAltFire);
 
-	if( !bReloading && !HasAmmo(0) )
+	if (!bReloading && !HasAmmo(0))
 		HandleReload();
 }
 
 function HandleReload()
 {
-	if( NumMags > 0 && !bReloading)
+	if (NumMags > 0 && !bReloading)
 	{
 		bReloading = true;
 		NumMags--;
 		NetUpdateTime = Level.TimeSeconds - 1;
-		SetTimer(GetSoundDuration( ReloadSound ), false);
-		PlaySound(ReloadSound, SLOT_None,1.5,, 25, ,true);
+		SetTimer(GetSoundDuration(ReloadSound), false);
+		PlaySound(ReloadSound, SLOT_none,1.5,, 25, ,true);
 	}
 }
 
 simulated function Timer()
 {
-   if ( bReloading )
+   if (bReloading)
    {
-	    if( Role == ROLE_Authority )
+	    if (Role == ROLE_Authority)
 	    {
 			bReloading=false;
 			MainAmmoCharge[0] = InitialPrimaryAmmo;
@@ -154,8 +154,8 @@ simulated function Timer()
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-  	if(Role != ROLE_Authority || bForceCenterAim)
-		return False;
+  	if (Role != ROLE_Authority || bForceCenterAim)
+		return false;
 
 	if (FireCountdown <= 0)
 	{
@@ -163,9 +163,9 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		if (bCorrectAim)
 			WeaponFireRotation = AdjustAim(bAltFire);
 
-		if( bAltFire )
+		if (bAltFire)
 		{
-			if( AltFireSpread > 0 )
+			if (AltFireSpread > 0)
 				WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
 		}
 		else if (Spread > 0)
@@ -178,7 +178,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		Instigator.MakeNoise(1.0);
 		if (bAltFire)
 		{
-			if( !ConsumeAmmo(2) )
+			if (!ConsumeAmmo(2))
 			{
 				VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 				return false;
@@ -188,11 +188,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		}
 		else
 		{
-			if( bMultipleRoundTypes )
+			if (bMultipleRoundTypes)
 			{
 				if (ProjectileClass == PrimaryProjectileClass)
 				{
-					if( !ConsumeAmmo(0) )
+					if (!ConsumeAmmo(0))
 					{
 						VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 						return false;
@@ -200,14 +200,14 @@ event bool AttemptFire(Controller C, bool bAltFire)
 			    }
 			    else if (ProjectileClass == SecondaryProjectileClass)
 			    {
-					if( !ConsumeAmmo(1) )
+					if (!ConsumeAmmo(1))
 					{
 						VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 						return false;
 					}
 			    }
 			}
-			else if( !ConsumeAmmo(0) )
+			else if (!ConsumeAmmo(0))
 			{
 				VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 				HandleReload();
@@ -219,10 +219,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		}
 		AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
-	    return True;
+	    return true;
 	}
 
-	return False;
+	return false;
 }
 
 // Fill the ammo up to the initial ammount
@@ -230,7 +230,7 @@ function bool GiveInitialAmmo()
 {
 	local bool bDidResupply;
 
-	if( NumMags != default.NumMags )
+	if (NumMags != default.NumMags)
 	{
 		bDidResupply = true;
 	}
@@ -258,9 +258,9 @@ defaultproperties
      VehicleBurningDamType=Class'DH_Vehicles.DH_VehicleBurningDamType'
      DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
-     bUsesTracers=True
+     bUsesTracers=true
      VehHitpoints(0)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(Z=-16.000000))
-     bIsMountedTankMG=True
+     bIsMountedTankMG=true
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
      YawBone="Turret"
      PitchBone="Gun"
@@ -270,10 +270,10 @@ defaultproperties
      GunnerAttachmentBone="loader_attachment"
      WeaponFireOffset=3.000000
      RotationsPerSecond=0.050000
-     bInstantRotation=True
-     bDoOffsetTrace=True
-     bAmbientFireSound=True
-     bIsRepeatingFF=True
+     bInstantRotation=true
+     bDoOffsetTrace=true
+     bAmbientFireSound=true
+     bIsRepeatingFF=true
      Spread=0.002000
      FireInterval=0.070580
      AltFireInterval=0.070580
@@ -293,7 +293,7 @@ defaultproperties
      ShakeOffsetMag=(X=0.500000,Z=0.200000)
      ShakeOffsetRate=(X=500.000000,Y=500.000000,Z=500.000000)
      ShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,bFireOnRelease=True,aimerror=800.000000,RefireRate=0.070580)
+     AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.000000,RefireRate=0.070580)
      CustomPitchUpLimit=4500
      CustomPitchDownLimit=63500
      MaxPositiveYaw=5500
@@ -304,9 +304,9 @@ defaultproperties
      Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote'
      Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
      Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
-     bCollideActors=True
-     bBlockActors=True
-     bProjTarget=True
-     bBlockZeroExtentTraces=True
-     bBlockNonZeroExtentTraces=True
+     bCollideActors=true
+     bBlockActors=true
+     bProjTarget=true
+     bBlockZeroExtentTraces=true
+     bBlockNonZeroExtentTraces=true
 }

@@ -25,12 +25,12 @@ simulated function PostBeginPlay()
 simulated event ThirdPersonEffects()
 {
 
-	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == None )
+	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
 		return;
 
-	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash) )
+	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
 	{
-		if( (Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == None))
+		if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
 			return;
 
 		WeaponLight();
@@ -192,6 +192,6 @@ defaultproperties
      WA_Reload="reloadS_panzerschreck"
      menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
      MenuDescription="RPzB.54 Panzerschreck 'Tank Terror': German recoiless anti-tank weapon patterned after the American 'Bazooka'. Fires a 8.8cm rocket-assisted HEAT warhead up to 700 meters, but officially recommended engagement ranges were 150-250 meters. Armor penetration: 175mm of effective armor. Sights are calibrated at 100, 150, and 200 meters."
-     bRapidFire=False
+     bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.Panzerschreck_3rd'
 }

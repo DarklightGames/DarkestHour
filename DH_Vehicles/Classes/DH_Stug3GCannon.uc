@@ -17,31 +17,31 @@ simulated function int LimitYaw(int yaw)
 
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
-    if ( !bLimitYaw )
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
     NewYaw = yaw;
 
-    if( PwningPawn != none )
+    if (PwningPawn != none)
     {
-	   	if( yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
+	   	if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
 	   	}
-	   	else if( yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit )
+	   	else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
 	  	}
   	}
   	else
   	{
-	   	if( yaw > MaxPositiveYaw )
+	   	if (yaw > MaxPositiveYaw)
 	   	{
 	   		NewYaw = MaxPositiveYaw;
 	   	}
-	   	else if( yaw < MaxNegativeYaw )
+	   	else if (yaw < MaxNegativeYaw)
 	   	{
 	   		NewYaw = MaxNegativeYaw;
 	  	}
@@ -58,7 +58,7 @@ defaultproperties
      TertiarySpread=0.003570
      ManualRotationsPerSecond=0.025000
      PoweredRotationsPerSecond=0.025000
-     bIsAssaultGun=True
+     bIsAssaultGun=true
      FrontArmorFactor=5.000000
      RightArmorFactor=3.000000
      LeftArmorFactor=3.000000
@@ -105,8 +105,8 @@ defaultproperties
      NumAltMags=4
      DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
-     bUsesTracers=True
-     bAltFireTracersOnly=True
+     bUsesTracers=true
+     bAltFireTracersOnly=true
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-1.000000,Z=12.000000))
      VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-1.000000,Z=-10.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -121,12 +121,12 @@ defaultproperties
      WeaponFireOffset=30.000000
      AltFireOffset=(X=-145.000000,Y=-10.000000,Z=15.000000)
      RotationsPerSecond=0.025000
-     bAmbientAltFireSound=True
+     bAmbientAltFireSound=true
      FireInterval=4.000000
      AltFireInterval=0.070000
      EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
      AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=True
+     bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
      AltFireSoundScaling=3.000000
@@ -147,13 +147,13 @@ defaultproperties
      AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      AltShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=3641
      CustomPitchDownLimit=64444
      MaxPositiveYaw=1820
      MaxNegativeYaw=-1820
-     bLimitYaw=True
+     bLimitYaw=true
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=27
      InitialSecondaryAmmo=23
@@ -166,6 +166,6 @@ defaultproperties
      SoundVolume=130
      SoundRadius=200.000000
      HighDetailOverlay=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=1
 }

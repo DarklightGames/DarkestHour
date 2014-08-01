@@ -10,13 +10,13 @@ function InitComponent(GUIController InController, GUIComponent InOwner)
 {
 	Super.InitComponent(InController, InOwner);
     	class'DHInterfaceUtil'.static.SetROStyle(InController, Controls);
- 	RuleInfo = new(None) class'Engine.PlayInfo';
+ 	RuleInfo = new(none) class'Engine.PlayInfo';
     	c_Tabs.RemoveTab(PanelCaption[0]);
     	c_Tabs.RemoveTab(PanelCaption[4]);
 
 	mcRules = DHIAMultiColumnRulesPanel(c_Tabs.ReplaceTab(c_Tabs.TabStack[1], PanelCaption[2], "DH_Interface.DHIAMultiColumnRulesPanel",, PanelHint[2]));
 
-    	DHTab_MainSP(c_Tabs.BorrowPanel(PanelCaption[1])).bHideDifficultyControl = True;
+    	DHTab_MainSP(c_Tabs.BorrowPanel(PanelCaption[1])).bHideDifficultyControl = true;
 
     p_game = none;
     Controller.LastGameType = "DH_Engine.DarkestHourGame";
@@ -29,10 +29,10 @@ function bool GameTypeLocked()
 	local int i;
 	local GUITabButton tb;
 
-		for ( i = 0; i < c_Tabs.TabStack.Length; i++ )
+		for (i = 0; i < c_Tabs.TabStack.Length; i++)
 		{
 			tb = c_Tabs.TabStack[i];
-			if ( tb != None )
+			if (tb != none)
 			{
 				EnableComponent(tb);
 			}
@@ -41,10 +41,10 @@ function bool GameTypeLocked()
 		EnableComponent(b_Primary);
 		EnableComponent(b_Secondary);
 
-		if ( RuleInfo != None && mcRules != None )
+		if (RuleInfo != none && mcRules != none)
 		{
 			i = RuleInfo.FindIndex("BotMode");
-			if ( i != -1 )
+			if (i != -1)
 				mcRules.UpdateBotSetting(i);
 		}
 
@@ -60,28 +60,28 @@ function StartGame(string GameURL, bool bAlt)
 
     	if (bAlt)
 	{
-	    	if ( mcServerRules != None )
+	    	if (mcServerRules != none)
 			GameURL $= mcServerRules.Play();
         			log("GameURL is "$GameURL);
         			log("ConsoleCommand  is "$"relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
 			PlayerOwner().ConsoleCommand("relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
 	}
     	else
-        		PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute,False);
-    		C.CloseAll(false,True);
+        		PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute,false);
+    		C.CloseAll(false,true);
 }
 
 defaultproperties
 {
      Begin Object Class=DHGUITabControl Name=PageTabs
-         bFillSpace=False
-         bDockPanels=True
+         bFillSpace=false
+         bDockPanels=true
          TabHeight=0.060000
          BackgroundStyleName="DHHeader"
          WinHeight=0.044000
          RenderWeight=0.490000
          TabOrder=3
-         bAcceptsInput=True
+         bAcceptsInput=true
          OnActivate=PageTabs.InternalOnActivate
          OnChange=DHGamePageMP.InternalOnChange
      End Object

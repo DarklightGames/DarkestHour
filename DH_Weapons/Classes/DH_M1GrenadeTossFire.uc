@@ -11,8 +11,8 @@ defaultproperties
      speedFromHoldingPerSec=800.000000
      ProjSpawnOffset=(X=25.000000)
      AddedPitch=0
-     bUsePreLaunchTrace=False
-     bWaitForRelease=True
+     bUsePreLaunchTrace=false
+     bWaitForRelease=true
      PreFireAnim="Pre_Fire"
      FireAnim="Toss"
      TweenTime=0.010000

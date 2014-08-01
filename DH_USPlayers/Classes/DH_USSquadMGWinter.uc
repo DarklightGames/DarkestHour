@@ -25,12 +25,12 @@ defaultproperties
      Models(2)="US_WinterInf3"
      Models(3)="US_WinterInf4"
      Models(4)="US_WinterInf5"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_BARWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet1stEMa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmetWinter'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_SMG
      limit=2
 }

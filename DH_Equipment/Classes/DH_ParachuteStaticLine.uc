@@ -37,7 +37,7 @@ simulated function Tick(float DeltaTime)
 		if (Instigator.Physics == PHYS_Falling)
 		{
 			Instigator.Velocity.Z=-400;
-			if( Instigator.Weapon != class'DH_Equipment.DH_ParachuteItem' )
+			if (Instigator.Weapon != class'DH_Equipment.DH_ParachuteItem')
 			    Instigator.SwitchWeapon(12);
 		}
 		else
@@ -45,11 +45,11 @@ simulated function Tick(float DeltaTime)
 			Instigator.AccelRate = Instigator.default.AccelRate;
 			Instigator.AirControl=Instigator.default.AirControl;
 			Instigator.PlaySound(soundgroup'Inf_Player.footsteps.LandGrass', SLOT_Misc,512,true,128);
-//			Instigator.bJustLanded = True;
+//			Instigator.bJustLanded = true;
 			RemoveChute(Instigator);
 
 			// Make 100% sure that the chute is gone, as it occasionally isn't being removed the first time
-			if(ThirdPersonActor != None)
+			if (ThirdPersonActor != none)
 			    RemoveChute(Instigator);
 
 			DHPlayer(Instigator.Controller).ClientSwitchToBestWeapon();
@@ -62,9 +62,9 @@ simulated function Tick(float DeltaTime)
 	else
 	{
 		//If player is falling then deploy parachute
-		if( Instigator.Physics == PHYS_Falling && Instigator.Velocity.Z < (-1)*Instigator.MaxFallSpeed )
+		if (Instigator.Physics == PHYS_Falling && Instigator.Velocity.Z < (-1)*Instigator.MaxFallSpeed)
 		{
-			bChuteDeployed = True;
+			bChuteDeployed = true;
             DH_Pawn(Instigator).Stamina=0; // This is set back to default in DH_ParachuteItem.RaisingWeapon so that any sprinting is forcibly stopped, allowing a weaponswap
             DHPlayer(Instigator.Controller).bCrawl=0;
             Instigator.ShouldProne(false);
@@ -85,9 +85,9 @@ function AttachChute(Pawn P)
 {
 	Instigator = P;
 
-	if ( bChuteDeployed )
+	if (bChuteDeployed)
 	{
-		if ( ThirdPersonActor == None )
+		if (ThirdPersonActor == none)
 		{
 			ThirdPersonActor = Spawn(AttachmentClass,Owner);
 			InventoryAttachment(ThirdPersonActor).InitFor(self);
@@ -105,10 +105,10 @@ function AttachChute(Pawn P)
 
 function RemoveChute(Pawn P)
 {
-	if ( ThirdPersonActor != None )
+	if (ThirdPersonActor != none)
 	{
 		ThirdPersonActor.Destroy();
-		ThirdPersonActor = None;
+		ThirdPersonActor = none;
 		Destroyed();
 	}
 }
@@ -122,7 +122,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
 
     bPendingSwitch = bPossiblySwitch;
 
-    if( Instigator == None )
+    if (Instigator == none)
     {
         GotoState('PendingClientWeaponSet');
         return;
@@ -131,39 +131,39 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     ClientState = WS_Hidden;
     GotoState('Hidden');
 
-    if( Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled() )
+    if (Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled())
         return;
 
-    if( Instigator.Weapon == self || Instigator.PendingWeapon == self ) // this weapon was switched to while waiting for replication, switch to it now
+    if (Instigator.Weapon == self || Instigator.PendingWeapon == self) // this weapon was switched to while waiting for replication, switch to it now
     {
-		if (Instigator.PendingWeapon != None)
+		if (Instigator.PendingWeapon != none)
             Instigator.ChangedWeapon();
         else
             BringUp();
         return;
     }
 
-    if( Instigator.PendingWeapon != None && Instigator.PendingWeapon.bForceSwitch )
+    if (Instigator.PendingWeapon != none && Instigator.PendingWeapon.bForceSwitch)
         return;
 
-    if( Instigator.Weapon == None )
+    if (Instigator.Weapon == none)
     {
         Instigator.PendingWeapon = self;
         Instigator.ChangedWeapon();
     }
-    else if ( bPossiblySwitch && !Instigator.Weapon.IsFiring() )
+    else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
     {
-		if ( PlayerController(Instigator.Controller) != None && PlayerController(Instigator.Controller).bNeverSwitchOnPickup )
+		if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
 			return;
-        if ( Instigator.PendingWeapon != None )
+        if (Instigator.PendingWeapon != none)
         {
-            if ( RateSelf() > Instigator.PendingWeapon.RateSelf() )
+            if (RateSelf() > Instigator.PendingWeapon.RateSelf())
             {
                 Instigator.PendingWeapon = self;
                 Instigator.Weapon.PutDown();
             }
         }
-        else if ( RateSelf() > Instigator.Weapon.RateSelf() )
+        else if (RateSelf() > Instigator.Weapon.RateSelf())
         {
             Instigator.PendingWeapon = self;
             Instigator.Weapon.PutDown();
@@ -229,7 +229,7 @@ simulated function AnimEnd(int channel)
 {
     if (ClientState == WS_ReadyToFire)
     {
-		if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+		if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         {
             PlayIdle();
         }

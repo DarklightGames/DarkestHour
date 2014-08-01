@@ -22,38 +22,38 @@ function bool TryToDrive(Pawn P)
 	local int x;
 
 	//Don't allow vehicle to be stolen when somebody is in a turret
-	if(!bTeamLocked && P.GetTeamNum() != VehicleTeam)
+	if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
 	{
 		for (x = 0; x < WeaponPawns.length; x++)
-			if (WeaponPawns[x].Driver != None )
+			if (WeaponPawns[x].Driver != none)
 			{
-				DenyEntry( P, 2 );
+				DenyEntry(P, 2);
 				return false;
 			}
 	}
 
 	//Override crouching requirement to enter
-	if(P.bIsCrouched || bNonHumanControl || (P.Controller == None) || !P.Controller.bIsPlayer || P.IsA('Vehicle') || Health <= 0 || !Level.Game.CanEnterVehicle(self, P) )
+	if (P.bIsCrouched || bNonHumanControl || (P.Controller == none) || !P.Controller.bIsPlayer || P.IsA('Vehicle') || Health <= 0 || !Level.Game.CanEnterVehicle(self, P))
 		return false;
 
-	if( !Level.Game.CanEnterVehicle(self, P) )
+	if (!Level.Game.CanEnterVehicle(self, P))
 		return false;
 
 	//Check vehicle Locking....
-	if( bTeamLocked && ( P.GetTeamNum() != VehicleTeam ))
+	if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
 	{
-		DenyEntry( P, 1 );
+		DenyEntry(P, 1);
 		return false;
 	}
 
 	//Is ran when bMustBeSL && is not the leader
-	else if( bMustBeSL && !DH_Pawn(P).GetRoleInfo().bIsSquadLeader )
+	else if (bMustBeSL && !DH_Pawn(P).GetRoleInfo().bIsSquadLeader)
 	{
 		//Cycle through the available passenger positions.  Check the class type to see if it is ROPassengerPawn
 		for (x = 0; x < WeaponPawns.length; x++)
 		{
 			//If riders are allowed, the WeaponPawn is free and it is a passenger pawn class then climb aboard.
-			if ( WeaponPawns[x].Driver == none && WeaponPawns[x].IsA('ROPassengerPawn'))
+			if (WeaponPawns[x].Driver == none && WeaponPawns[x].IsA('ROPassengerPawn'))
 			{
 				WeaponPawns[x].KDriverEnter(P);
 				return true;
@@ -64,13 +64,13 @@ function bool TryToDrive(Pawn P)
 	}
 
 	//Is ran when driver is present for when 1 SL tries to enter a MDV with a SL already driving
-	else if( (Driver != None) || (P.DrivenVehicle != None) )
+	else if ((Driver != none) || (P.DrivenVehicle != none))
 	{
 		//Cycle through the available passenger positions.  Check the class type to see if it is ROPassengerPawn
 		for (x = 0; x < WeaponPawns.length; x++)
 		{
 			//If riders are allowed, the WeaponPawn is free and it is a passenger pawn class then climb aboard.
-			if ( WeaponPawns[x].Driver == none && WeaponPawns[x].IsA('ROPassengerPawn'))
+			if (WeaponPawns[x].Driver == none && WeaponPawns[x].IsA('ROPassengerPawn'))
 			{
 				WeaponPawns[x].KDriverEnter(P);
 				return true;
@@ -82,10 +82,10 @@ function bool TryToDrive(Pawn P)
 	//Is ran when no driver is present (basically just for the leader)
 	else
 	{
-		if( bEnterringUnlocks && bTeamLocked )
+		if (bEnterringUnlocks && bTeamLocked)
 			bTeamLocked = false;
 
-		KDriverEnter( P );
+		KDriverEnter(P);
 		return true;
 	}
 }
@@ -94,7 +94,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
 	super.ClientKDriverEnter(PC);
 
-	if(DHPlayer(PC) == none)
+	if (DHPlayer(PC) == none)
 		return;
 
 	DHPlayer(PC).QueueHint(14, true);
@@ -110,8 +110,8 @@ simulated function ClientKDriverLeave(PlayerController PC)
 
 defaultproperties
 {
-     bMustBeSL=True
+     bMustBeSL=true
      PointValue=3.000000
-     bNeverReset=True
+     bNeverReset=true
      Skins(0)=Texture'DH_MDV_Tex.AlliedMDV.Brit_M3A1Halftrack_MDV_body_ext'
 }

@@ -22,12 +22,12 @@ function InitComponent(GUIController pMyController, GUIComponent MyOwner)
 function HandleParameters(string s, string s2)
 {
 	if (s != "")
-		ed_Data.SetText( StripProtocol(s) );
+		ed_Data.SetText(StripProtocol(s));
 }
 
 function bool InternalOnClick(GUIComponent Sender)
 {
-	if ( Sender == b_OK )
+	if (Sender == b_OK)
 		Execute();
 	else Controller.CloseMenu(true);
 
@@ -39,32 +39,32 @@ function Execute()
 	local string URL;
 
 	URL = ed_Data.GetText();
-	if ( URL == "" )
+	if (URL == "")
 		return;
 
 	URL = StripProtocol(URL);
-	if ( InStr( URL, ":" ) == -1 )
+	if (InStr(URL, ":") == -1)
 		URL $= ":7777";
 
-	ApplyURL( URL );
+	ApplyURL(URL);
 }
 
-function ApplyURL(string URL )
+function ApplyURL(string URL)
 {
-	if ( URL == "" || Left(URL,1) == ":" )
+	if (URL == "" || Left(URL,1) == ":")
 		return;
 
-	PlayerOwner().ClientTravel( URL, TRAVEL_Absolute, false );
-	Controller.CloseAll(false,True);
+	PlayerOwner().ClientTravel(URL, TRAVEL_Absolute, false);
+	Controller.CloseAll(false,true);
 }
 
-function bool InternalOnKeyEvent( out byte Key, out byte State, float Delta )
+function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 {
-	if ( !Super.InternalOnKeyEvent(Key,State,Delta) )
+	if (!Super.InternalOnKeyEvent(Key,State,Delta))
 		return ed_Data.MyEditBox.InternalOnKeyEvent(Key,State,Delta);
 }
 
-function string StripProtocol( string s )
+function string StripProtocol(string s)
 {
 	local string Protocol;
 

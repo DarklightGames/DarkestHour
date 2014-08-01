@@ -13,20 +13,20 @@ simulated event ThirdPersonEffects()
 	local PlayerController PC;
 	local ROVehicleHitEffect VehEffect;
 
-	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == None )
+	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
 		return;
 
 	// new Trace FX - Ramm
 	if (FiringMode == 0)
 	{
-		if ( OldSpawnHitCount != SpawnHitCount )
+		if (OldSpawnHitCount != SpawnHitCount)
 		{
 			OldSpawnHitCount = SpawnHitCount;
 			GetHitInfo();
 			PC = Level.GetLocalPlayerController();
-			if ( ((Instigator != None) && (Instigator.Controller == PC)) || (VSize(PC.ViewTarget.Location - mHitLocation) < 4000) )
+			if (((Instigator != none) && (Instigator.Controller == PC)) || (VSize(PC.ViewTarget.Location - mHitLocation) < 4000))
 			{
-				if( mHitActor != none && (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none) )
+				if (mHitActor != none && (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none))
 				{
 					if (Level.NetMode != NM_DedicatedServer)
 					{
@@ -34,7 +34,7 @@ simulated event ThirdPersonEffects()
 						VehEffect.InitHitEffects(mHitLocation,mVehHitNormal);
 			 		}
 				}
-				else if( mHitActor == none && GetVehicleHitInfo() != none)
+				else if (mHitActor == none && GetVehicleHitInfo() != none)
 				{
 					GetVehicleHitInfo(); // Isn't this redundant? - Possibly remove
 					if (Level.NetMode != NM_DedicatedServer)
@@ -53,20 +53,20 @@ simulated event ThirdPersonEffects()
 	}
 
 
-	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash) )
+	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
 	{
-		if( (Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == None))
+		if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
 			return;
 
 		WeaponLight();
 
-		if (mMuzFlash3rd != None)
-			mMuzFlash3rd.Trigger(self, None);
+		if (mMuzFlash3rd != none)
+			mMuzFlash3rd.Trigger(self, none);
 
-		if( !bAnimNotifiedShellEjects )
+		if (!bAnimNotifiedShellEjects)
 			SpawnShells(1.0);
 
-		/*if( ROSmoke != none )
+		/*if (ROSmoke != none)
 		{
 			log("spawning a smoke particle");
 			ROSmoke.SpawnParticle(2);

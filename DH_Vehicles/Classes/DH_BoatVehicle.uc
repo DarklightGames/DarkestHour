@@ -41,7 +41,7 @@ simulated function PostBeginPlay()
 {
 
 	// RO functionality
-	if( HasAnim(BeginningIdleAnim))
+	if (HasAnim(BeginningIdleAnim))
 	{
 	    LoopAnim(BeginningIdleAnim);
 	}
@@ -51,31 +51,31 @@ simulated function PostBeginPlay()
 
 	Super.PostBeginPlay();
 
-	if ( Level.NetMode != NM_DedicatedServer )
+	if (Level.NetMode != NM_DedicatedServer)
 	{
-     		if ( WashSoundAttachL == none )
+     		if (WashSoundAttachL == none)
      		{
              		WashSoundAttachL = Spawn(class 'ROSoundAttachment');
              		WashSoundAttachL.AmbientSound = WashSound;
 		            WashSoundAttachL.SoundVolume = 75;
 		            WashSoundAttachL.SoundRadius = 300;
-             		AttachToBone(WashSoundAttachL, WashSoundBoneL );
+             		AttachToBone(WashSoundAttachL, WashSoundBoneL);
       		}
-     		if ( WashSoundAttachR == none )
+     		if (WashSoundAttachR == none)
      		{
              		WashSoundAttachR = Spawn(class 'ROSoundAttachment');
              		WashSoundAttachR.AmbientSound = WashSound;
 		            WashSoundAttachR.SoundVolume = 75;
 		            WashSoundAttachR.SoundRadius = 300;
-             		AttachToBone(WashSoundAttachR, WashSoundBoneR );
+             		AttachToBone(WashSoundAttachR, WashSoundBoneR);
       		}
-     		if ( EngineSoundAttach == none )
+     		if (EngineSoundAttach == none)
      		{
              		EngineSoundAttach = Spawn(class 'ROSoundAttachment');
              		EngineSoundAttach.AmbientSound = EngineSound;
              		EngineSoundAttach.SoundVolume = 150;
              		EngineSoundAttach.SoundRadius = 1000;
-             		AttachToBone(EngineSoundAttach, EngineSoundBone );
+             		AttachToBone(EngineSoundAttach, EngineSoundBone);
       		}
 	}
 }
@@ -94,7 +94,7 @@ simulated function PostNetReceive()
 {
 	super.PostNetReceive();
 
-	if ( DriverPositionIndex != SavedPositionIndex )
+	if (DriverPositionIndex != SavedPositionIndex)
 	{
 		PreviousPositionIndex = SavedPositionIndex;
 		SavedPositionIndex = DriverPositionIndex;
@@ -102,28 +102,28 @@ simulated function PostNetReceive()
 	}
 
 	// Kill the engine sounds if the engine is dead
-	if( EngineHealth <= 0 )
+	if (EngineHealth <= 0)
 	{
-		if( IdleSound != none )
+		if (IdleSound != none)
 			IdleSound=none;
 
-		if( StartUpSound != none )
+		if (StartUpSound != none)
 			StartUpSound=none;
 
-		if( ShutDownSound != none )
+		if (ShutDownSound != none)
 			ShutDownSound=none;
 
-		if( AmbientSound != none )
+		if (AmbientSound != none)
 			AmbientSound=none;
 
-		if( EngineSound != none )
+		if (EngineSound != none)
 			EngineSound=none;
 	}
 }
 
 // Overriden for locking the player to the camerabone
 //altered slightly to allow change of camera bone name - Fennich
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
 	local quat CarQuat, LookQuat, ResultQuat;
 	local vector VehicleZ, CamViewOffsetWorld, x, y, z;
@@ -148,7 +148,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 	CameraBoneLocation = GetBoneCoords(DriverCameraBoneName).Origin;
 	CameraLocation = CameraBoneLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-	if(bFPNoZFromCameraPitch)
+	if (bFPNoZFromCameraPitch)
 	{
 		VehicleZ = vect(0,0,1) >> Rotation;
 		CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
@@ -162,11 +162,11 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
 simulated function Destroyed()
 {
-    if( EngineSoundAttach != none )
+    if (EngineSoundAttach != none)
 		EngineSoundAttach.Destroy();
-    if( WashSoundAttachL != none )
+    if (WashSoundAttachL != none)
 		WashSoundAttachL.Destroy();
-    if( WashSoundAttachR != none )
+    if (WashSoundAttachR != none)
 		WashSoundAttachR.Destroy();
 
 	Super.Destroyed();
@@ -176,7 +176,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 {
 	super.Died(Killer, DamageType, HitLocation);
 
-	if(Killer == none)
+	if (Killer == none)
 		return;
 
 	DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
@@ -184,7 +184,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
 simulated function UpdateMovementSound()
 {
-    	if ( EngineSoundAttach != none)
+    	if (EngineSoundAttach != none)
     	{
        		 EngineSoundAttach.SoundVolume= MotionSoundVolume;
     	}
@@ -201,27 +201,27 @@ simulated event DrivingStatusChanged()
 	{
 		BoatSpray.length = Wheels.length;
 		for(i=0; i<Wheels.Length; i++)
-			if (BoatSpray[i] == None)
+			if (BoatSpray[i] == none)
 			{
 				// Create wheel dust emitters. ************************************************************
 				WheelCoords = GetBoneCoords(Wheels[i].BoneName);
 				BoatSpray[i] = spawn(class'BoatSprayEffect', self,, WheelCoords.Origin + ((vect(0,0,-1) * Wheels[i].WheelRadius) >> Rotation));
 				Dust[i] = none;
-				if( Level.bDropDetail || Level.DetailMode == DM_Low )
+				if (Level.bDropDetail || Level.DetailMode == DM_Low)
 				{
 				 	BoatSpray[i].MaxSpritePPS=3;
 				 	BoatSpray[i].MaxMeshPPS=3;
 				}
 
 				BoatSpray[i].SetBase(self);
-			    BoatSpray[i].SetDirtColor( Level.DustColor );
+			    BoatSpray[i].SetDirtColor(Level.DustColor);
 			}
 
 		 for(i=0; i<ExhaustPipes.Length; i++)
-			if (ExhaustPipes[i].ExhaustEffect == None)
+			if (ExhaustPipes[i].ExhaustEffect == none)
 			{
 				// Create exhaust emitters.
-	    	    if( Level.bDropDetail || Level.DetailMode == DM_Low )
+	    	    if (Level.bDropDetail || Level.DetailMode == DM_Low)
 					ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
 				else
 					ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
@@ -235,7 +235,7 @@ simulated event DrivingStatusChanged()
 		{
 			for(i=0; i<BoatSpray.Length; i++)
 			{
-				if( BoatSpray[i] != none )
+				if (BoatSpray[i] != none)
 					BoatSpray[i].Kill();
 			}
 
@@ -243,7 +243,7 @@ simulated event DrivingStatusChanged()
 
 			for(i=0; i<ExhaustPipes.Length; i++)
 			{
-			    if (ExhaustPipes[i].ExhaustEffect != None)
+			    if (ExhaustPipes[i].ExhaustEffect != none)
 			    {
 					ExhaustPipes[i].ExhaustEffect.Kill();
 				}
@@ -261,7 +261,7 @@ simulated event DestroyAppearance()
 	local KarmaParams KP;
 
 	// For replication
-	bDestroyAppearance = True;
+	bDestroyAppearance = true;
 
 	// Put brakes on
     Throttle=0;
@@ -273,7 +273,7 @@ simulated event DestroyAppearance()
     {
     	for(i=0;i<Weapons.Length;i++)
 		{
-			if ( Weapons[i] != None )
+			if (Weapons[i] != none)
 				Weapons[i].Destroy();
 		}
 		for(i=0;i<WeaponPawns.Length;i++)
@@ -284,7 +284,7 @@ simulated event DestroyAppearance()
     WeaponPawns.Length = 0;
 
     // Destroy the effects
-	if(Level.NetMode != NM_DedicatedServer)
+	if (Level.NetMode != NM_DedicatedServer)
 	{
 		bNoTeamBeacon = true;
 
@@ -292,12 +292,12 @@ simulated event DestroyAppearance()
 			HeadlightCorona[i].Destroy();
 		HeadlightCorona.Length = 0;
 
-		if(HeadlightProjector != None)
+		if (HeadlightProjector != none)
 			HeadlightProjector.Destroy();
 
 		for(i = 0; i < ExhaustPipes.Length; i++)
 		{
-			if (ExhaustPipes[i].ExhaustEffect != None)
+			if (ExhaustPipes[i].ExhaustEffect != none)
 			{
 				ExhaustPipes[i].ExhaustEffect.Destroy();
 			}
@@ -306,25 +306,25 @@ simulated event DestroyAppearance()
 
     // Copy linear velocity from actor so it doesn't just stop.
     KP = KarmaParams(KParams);
-    if(KP != None)
+    if (KP != none)
         KP.KStartLinVel = Velocity;
 
-    if( DamagedEffect != none )
+    if (DamagedEffect != none)
     {
     	DamagedEffect.Kill();
     }
 
     //Become the dead vehicle mesh
-    SetPhysics(PHYS_None);
-    KSetBlockKarma(False);
+    SetPhysics(PHYS_none);
+    KSetBlockKarma(false);
     SetDrawType(DT_Mesh);
-    KSetBlockKarma(True);
+    KSetBlockKarma(true);
     SetPhysics(PHYS_Karma);
 //    Skins.length = 1;
 	NetPriority = 2;
 
     Skins[0]=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest';
-	LoopAnim( DestAnimName, DestAnimRate );
+	LoopAnim(DestAnimName, DestAnimRate);
 }
 
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
@@ -335,7 +335,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 	RandomExplModifier = FRand();
 
 	// Don't hurt us when we are destroying our own vehicle // why ?
-	// if( !bSpikedVehicle )
+	// if (!bSpikedVehicle)
 	HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
 
 	AmbientSound=DestroyedBurningSound; // test
@@ -347,7 +347,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 		ExplosionCount++;
 
 		if (Level.NetMode != NM_DedicatedServer)
-			ClientVehicleExplosion(False);
+			ClientVehicleExplosion(false);
 
 		LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
 		AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
@@ -385,8 +385,8 @@ defaultproperties
      VehicleSpikeTime=15.000000
      VehHitpoints(0)=(PointBone="Driver")
      VehicleMass=12.000000
-     bKeyVehicle=True
-     bFPNoZFromCameraPitch=True
+     bKeyVehicle=true
+     bFPNoZFromCameraPitch=true
      CenterSpringForce="SpringONSSRV"
      VehiclePositionString="in a Boat"
      VehicleNameString="Boat"
@@ -394,7 +394,7 @@ defaultproperties
      MaxDesireability=0.100000
      ObjectiveGetOutDist=1500.000000
      WaterDamage=0.000000
-     bCanSwim=True
+     bCanSwim=true
      GroundSpeed=200.000000
      WaterSpeed=200.000000
      PitchUpLimit=500

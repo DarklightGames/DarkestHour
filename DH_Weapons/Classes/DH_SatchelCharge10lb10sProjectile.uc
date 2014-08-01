@@ -23,7 +23,7 @@ class DH_SatchelCharge10lb10sProjectile extends SatchelCharge10lb10sProjectile;
 	if (Level.NetMode != NM_DedicatedServer)
 	{
 		PC = Level.GetLocalPlayerController();
-		if (PC != None && PC.ViewTarget != None)
+		if (PC != none && PC.ViewTarget != none)
 		{
 			Dist = VSize(Location - PC.ViewTarget.Location);
 			if (Dist < DamageRadius * ShakeScale)
@@ -33,7 +33,7 @@ class DH_SatchelCharge10lb10sProjectile extends SatchelCharge10lb10sProjectile;
 
 				PC.ShakeView(ShakeRotMag*Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag*Scale, ShakeOffsetRate, ShakeOffsetTime);
 
-				if( PC.Pawn != none && DH_Pawn(PC.Pawn) != none )
+				if (PC.Pawn != none && DH_Pawn(PC.Pawn) != none)
 				{
 					scale = scale - (Scale * 0.50 - ((Scale * 0.50) * DH_Pawn(PC.Pawn).GetExposureTo(Location + 15 * -Normal(PhysicsVolume.Gravity))));
 				}
@@ -56,7 +56,7 @@ simulated function Landed(vector HitNormal)
 {
 	if (Bounces <= 0)
 	{
-		SetPhysics(PHYS_None);
+		SetPhysics(PHYS_none);
 		SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
 
 		if (Role == ROLE_Authority)
@@ -68,7 +68,7 @@ simulated function Landed(vector HitNormal)
 	}
 	else
 	{
-		HitWall(HitNormal, None);
+		HitWall(HitNormal, none);
 	}
 }
 

@@ -5,7 +5,7 @@ var	name	ChuteIdleAnim;
 
 simulated function PlayIdle()
 {
-	PlayAnim( ChuteDeployAnim );
+	PlayAnim(ChuteDeployAnim);
 }
 
 defaultproperties

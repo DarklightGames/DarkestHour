@@ -16,7 +16,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Squad Leader"
      AltName="Unteroffizier"
      Article="a "
@@ -27,7 +27,7 @@ defaultproperties
      Models(1)="WH_C2"
      Models(2)="WH_C3"
      Models(3)="WH_C4"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
@@ -38,6 +38,6 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_HeerCamoCap'
      Headgear(1)=Class'ROInventory.ROGermanHat'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

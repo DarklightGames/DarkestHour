@@ -17,16 +17,16 @@ final simulated static function int SetROStyle(GUIController MyController, array
     // temp hax
     return Components.Length;
 
-    if(MyController == None)
+    if (MyController == none)
     {
         return -1;
     }
 
 	for (i = 0; i < Components.Length; i++)
 	{
-	    if(Components[i] != None)
+	    if (Components[i] != none)
 	    {
-    		if (moComboBox(Components[i]) != None)
+    		if (moComboBox(Components[i]) != none)
     		{
     	        tFontScale = moComboBox(Components[i]).MyComboBox.List.FontScale;
                 myStyleName = "RO2ComboListBox";
@@ -71,13 +71,13 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 moComboBox(Components[i]).MyComboBox.MyListBox.MyScrollBar.MyDecreaseButton.StyleName = myStyleName;
                 moComboBox(Components[i]).MyComboBox.MyListBox.MyScrollBar.MyDecreaseButton.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (moCheckBox(Components[i]) != None)
+    		if (moCheckBox(Components[i]) != none)
     		{
                 myStyleName = "CheckBox";
                 moCheckBox(Components[i]).MyCheckBox.StyleName = myStyleName;
                 moCheckBox(Components[i]).MyCheckBox.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (moSlider(Components[i]) != None)
+    		if (moSlider(Components[i]) != none)
     		{
     	        tFontScale = moSlider(Components[i]).MySlider.FontScale;
                 myStyleName = "SliderKnob";
@@ -88,21 +88,21 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 moSlider(Components[i]).MySlider.BarStyleName = myStyleName;
                 moSlider(Components[i]).MySlider.BarStyle = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (moButton(Components[i]) != None)
+    		if (moButton(Components[i]) != none)
     		{
     	        tFontScale = moButton(Components[i]).MyButton.FontScale;
                 myStyleName = "RO2ComboListBox";
                 moButton(Components[i]).MyButton.StyleName = myStyleName;
                 moButton(Components[i]).MyButton.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (moEditBox(Components[i]) != None)
+    		if (moEditBox(Components[i]) != none)
     		{
     	        tFontScale = moEditBox(Components[i]).MyEditBox.FontScale;
                 myStyleName = "EditBox";
                 moEditBox(Components[i]).MyEditBox.StyleName = myStyleName;
                 moEditBox(Components[i]).MyEditBox.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (moFloatEdit(Components[i]) != None)
+    		if (moFloatEdit(Components[i]) != none)
     		{
     	        tFontScale = moFloatEdit(Components[i]).MyNumericEdit.MyEditBox.FontScale;
                 myStyleName = "RO2ComboListBox";
@@ -114,21 +114,21 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 moFloatEdit(Components[i]).MyNumericEdit.MySpinner.StyleName = myStyleName;
                 moFloatEdit(Components[i]).MyNumericEdit.MySpinner.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (GUIButton(Components[i]) != None)
+    		if (GUIButton(Components[i]) != none)
     		{
     	        tFontScale = GUIButton(Components[i]).FontScale;
                 myStyleName = "ROSquareButton";
                 GUIButton(Components[i]).StyleName = myStyleName;
                 GUIButton(Components[i]).Style = MyController.GetStyle(myStyleName,GUIButton(Components[i]).FontScale);
             }
-    		if (GUIHeader(Components[i]) != None)
+    		if (GUIHeader(Components[i]) != none)
     		{
     	        tFontScale = GUIHeader(Components[i]).FontScale;
                 myStyleName = "TitleBar";
                 GUIHeader(Components[i]).StyleName = myStyleName;
                 GUIHeader(Components[i]).Style = MyController.GetStyle(myStyleName,GUIHeader(Components[i]).FontScale);
             }
-    		if (moNumericEdit(Components[i]) != None)
+    		if (moNumericEdit(Components[i]) != none)
     		{
     	        tFontScale = moNumericEdit(Components[i]).MyNumericEdit.MyEditBox.FontScale;
                 myStyleName = "RO2ComboListBox";
@@ -140,7 +140,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 moNumericEdit(Components[i]).MyNumericEdit.MySpinner.StyleName = myStyleName;
                 moNumericEdit(Components[i]).MyNumericEdit.MySpinner.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (GUIVertImageListBox(Components[i]) != None)
+    		if (GUIVertImageListBox(Components[i]) != none)
     		{
     	        tFontScale = GUIVertImageListBox(Components[i]).List.MyScrollBar.MyScrollZone.FontScale;
                 myStyleName = "ROScrollZone";
@@ -161,7 +161,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 GUIVertImageListBox(Components[i]).List.MyScrollBar.MyDecreaseButton.StyleName = myStyleName;
                 GUIVertImageListBox(Components[i]).List.MyScrollBar.MyDecreaseButton.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (GUIMultiColumnListBox(Components[i]) != None)
+    		if (GUIMultiColumnListBox(Components[i]) != none)
     		{
     	        tFontScale = GUIMultiColumnListBox(Components[i]).List.MyScrollBar.MyScrollZone.FontScale;
                 myStyleName = "ROScrollZone";
@@ -200,7 +200,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 GUIMultiColumnListBox(Components[i]).List.SelectedStyleName = myStyleName;
                 GUIMultiColumnListBox(Components[i]).List.SelectedStyle = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (GUIListHeader(Components[i]) != None)
+    		if (GUIListHeader(Components[i]) != none)
     		{
     	        tFontScale = GUIListHeader(Components[i]).FontScale;
                 myStyleName = "ROListSection";
@@ -210,7 +210,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 GUIListHeader(Components[i]).LabelStyleName = myStyleName;
                 GUIListHeader(Components[i]).MyLabel.Style = MyController.GetStyle(myStyleName,GUIListHeader(Components[i]).FontScale);
             }
-    		if (GUITreeListBox(Components[i]) != None)
+    		if (GUITreeListBox(Components[i]) != none)
     		{
     	        tFontScale = GUITreeListBox(Components[i]).List.FontScale;
                 myStyleName = "ROItemOutline";
@@ -238,7 +238,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 GUITreeListBox(Components[i]).MyScrollBar.MyDecreaseButton.StyleName = myStyleName;
                 GUITreeListBox(Components[i]).MyScrollBar.MyDecreaseButton.Style = MyController.GetStyle(myStyleName,tFontScale);
            }
-    		if (GUIComboBox(Components[i]) != None)
+    		if (GUIComboBox(Components[i]) != none)
     		{
     	        tFontScale = GUIComboBox(Components[i]).List.FontScale;
                 myStyleName = "RO2ComboListBox";
@@ -282,7 +282,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 GUIComboBox(Components[i]).MyListBox.MyScrollBar.MyDecreaseButton.StyleName = myStyleName;
                 GUIComboBox(Components[i]).MyListBox.MyScrollBar.MyDecreaseButton.Style = MyController.GetStyle(myStyleName,tFontScale);
             }
-    		if (GUIScrollTextBox(Components[i]) != None)
+    		if (GUIScrollTextBox(Components[i]) != none)
     		{
                 tFontScale = GUIScrollTextBox(Components[i]).MyScrollBar.MyScrollZone.FontScale;
                 myStyleName = "ROScrollZone";
@@ -300,7 +300,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 GUIScrollTextBox(Components[i]).MyScrollBar.MyDecreaseButton.StyleName = myStyleName;
                 GUIScrollTextBox(Components[i]).MyScrollBar.MyDecreaseButton.Style = MyController.GetStyle(myStyleName,tFontScale);
            }
-    	   if (GUIScrollText(Components[i]) != None)
+    	   if (GUIScrollText(Components[i]) != none)
     	   {
                 tFontScale = GUIScrollText(Components[i]).MyScrollBar.MyScrollZone.FontScale;
                 myStyleName = "ROScrollZone";
@@ -318,7 +318,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 GUIScrollText(Components[i]).MyScrollBar.MyDecreaseButton.StyleName = myStyleName;
                 GUIScrollText(Components[i]).MyScrollBar.MyDecreaseButton.Style = MyController.GetStyle(myStyleName,tFontScale);
            }
-    	   if (GUISectionBackground(Components[i]) != None)
+    	   if (GUISectionBackground(Components[i]) != none)
     	   {
                 GUISectionBackground(Components[i]).HeaderTop = default.HeaderTop;
                 GUISectionBackground(Components[i]).HeaderBar = default.HeaderBar;
@@ -340,7 +340,7 @@ final simulated static function int ReformatLists(GUIController MyController, GU
     return -1;
 
     myReturnValue = -1;
-	if( (MyListBox != none) && (MyListBox.List != none))
+	if ((MyListBox != none) && (MyListBox.List != none))
 	{
         myReturnValue = 1;
         tFontScale = MyListBox.List.MyScrollBar.MyScrollZone.FontScale;

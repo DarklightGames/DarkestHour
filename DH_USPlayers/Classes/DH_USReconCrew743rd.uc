@@ -14,7 +14,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bCanBeReconCrew=True
+     bCanBeReconCrew=true
      MyName="Reconnaissance Crewman"
      AltName="Reconnaissance Crewman"
      Article="a "
@@ -30,6 +30,6 @@ defaultproperties
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet'
      Headgear(1)=Class'DH_USPlayers.DH_USTankerHat'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

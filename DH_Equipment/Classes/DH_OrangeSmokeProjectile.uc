@@ -17,12 +17,12 @@ simulated function Landed(vector HitNormal)
 {
 	if (Bounces <= 0)
 	{
-		SetPhysics(PHYS_None);
+		SetPhysics(PHYS_none);
 		SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
 	}
 	else
 	{
-		HitWall(HitNormal, None);
+		HitWall(HitNormal, none);
 	}
 }
 
@@ -39,7 +39,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
     GetDampenAndSoundValue(ST);
 
 	// Return here, this was causing the famous "Nade bug"
-	if(ROCollisionAttachment(Wall) != none)
+	if (ROCollisionAttachment(Wall) != none)
 	{
 		return;
 	}
@@ -53,7 +53,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
 	if (Bounces <= 0)
 	{
 		bBounce = false;
-		//SetPhysics(PHYS_None);
+		//SetPhysics(PHYS_none);
 	}
 	else
 	{
@@ -65,7 +65,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
 		Speed = VSize(Velocity);
 	}
 
-	if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none )
+	if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none)
 	{
 		PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
 	}
@@ -91,7 +91,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
 	BlowUp(HitLocation);
 
-	if( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 	{
 		AmbientSound = SmokeSound;
 	}
@@ -119,7 +119,7 @@ simulated function Destroyed()
 {
     super(ROThrowableExplosiveProjectile).Destroyed();
 
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
     	SmokeEmitter.Kill();
     }
@@ -127,7 +127,7 @@ simulated function Destroyed()
 
 function Reset()
 {
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
     	SmokeEmitter.Destroy();
     }
@@ -165,7 +165,7 @@ defaultproperties
      DamageRadius=0.000000
      MyDamageType=Class'DH_Equipment.DH_OrangeSmokeDamType'
      StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Ger_OrangeSmokeGrenade_throw'
-     bAlwaysRelevant=True
+     bAlwaysRelevant=true
      LifeSpan=50.000000
      SoundVolume=255
      SoundRadius=300.000000

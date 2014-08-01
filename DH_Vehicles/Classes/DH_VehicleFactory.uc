@@ -17,10 +17,10 @@ function SpawnVehicle()
 {
 	super.SpawnVehicle();
 
-	if(FactoryDepletedEvent == '')
+	if (FactoryDepletedEvent == '')
 		return;
 
-	if(TotalSpawnedVehicles >= VehicleRespawnLimit)
+	if (TotalSpawnedVehicles >= VehicleRespawnLimit)
 		TriggerEvent(FactoryDepletedEvent, self, none);
 }
 

@@ -22,7 +22,7 @@ state FireLoop
 
         RPW = DH_ProjectileWeapon(Weapon);
 
-		if(!Instigator.bBipodDeployed)
+		if (!Instigator.bBipodDeployed)
         	weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
         else
         	Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
@@ -38,9 +38,9 @@ function PlayFireEnd()
 
 	RPW = DH_ProjectileWeapon(Weapon);
 
-	if ( RPW.HasAnim(FireEndAnim) && !Instigator.bBipodDeployed )
+	if (RPW.HasAnim(FireEndAnim) && !Instigator.bBipodDeployed)
 		RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);
-	else if ( RPW.HasAnim(FireIronEndAnim) && Instigator.bBipodDeployed )
+	else if (RPW.HasAnim(FireIronEndAnim) && Instigator.bBipodDeployed)
 		RPW.PlayAnim(FireIronEndAnim, FireEndAnimRate, TweenTime);
 }
 
@@ -51,63 +51,63 @@ simulated function HandleRecoil()
 	local ROPlayer ROP;
 	local ROPawn ROPwn;
 
-    if( Instigator != none )
+    if (Instigator != none)
     {
 		ROP = ROPlayer(Instigator.Controller);
 		ROPwn = ROPawn(Instigator);
 	}
 
-    if( ROP == none || ROPwn == none )
+    if (ROP == none || ROPwn == none)
     	return;
 
-	if( !ROP.bFreeCamera )
+	if (!ROP.bFreeCamera)
 	{
-      	NewRecoilRotation.Pitch = RandRange( maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle );
-     	NewRecoilRotation.Yaw = RandRange( maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle );
+      	NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
+     	NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
 
-      	if( Rand( 2 ) == 1 )
+      	if (Rand(2) == 1)
          	NewRecoilRotation.Yaw *= -1;
 
-        if( Instigator.Physics == PHYS_Falling )
+        if (Instigator.Physics == PHYS_Falling)
         {
       		NewRecoilRotation *= 3;
         }
 
 		// WeaponTODO: Put bipod and resting modifiers in here
-	    if( Instigator.bIsCrouched )
+	    if (Instigator.bIsCrouched)
 	    {
 	        NewRecoilRotation *= PctCrouchRecoil;
 
 			// player is crouched and in iron sights
-	        if( Weapon.bUsingSights )
+	        if (Weapon.bUsingSights)
 	        {
 	            NewRecoilRotation *= PctHipMGPenalty;
 	        }
 	    }
-	    else if( Instigator.bIsCrawling )
+	    else if (Instigator.bIsCrawling)
 	    {
 	        NewRecoilRotation *= PctProneRecoil;
 
 	        // player is prone and in iron sights
-	        if( Weapon.bUsingSights )
+	        if (Weapon.bUsingSights)
 	        {
 	            NewRecoilRotation *= PctHipMGPenalty;
 	        }
 	    }
-	    else if( Weapon.bUsingSights )
+	    else if (Weapon.bUsingSights)
 	    {
 	        NewRecoilRotation *= PctHipMGPenalty;
 	    }
 
-        if( ROPwn.bRestingWeapon )
+        if (ROPwn.bRestingWeapon)
         	NewRecoilRotation *= PctRestDeployRecoil;
 
-        if( Instigator.bBipodDeployed )
+        if (Instigator.bBipodDeployed)
 		{
 			NewRecoilRotation *= PctBipodDeployRecoil;
 		}
 
-		if( ROPwn.LeanAmount != 0 )
+		if (ROPwn.LeanAmount != 0)
 		{
 			NewRecoilRotation *= PctLeanPenalty;
 		}
@@ -120,9 +120,9 @@ simulated function HandleRecoil()
 // overriden to support ironsight mode being hipped mode for MGs
 function DoFireEffect()
 {
-    local Vector StartProj, StartTrace, X,Y,Z;
+    local vector StartProj, StartTrace, X,Y,Z;
     local Rotator R, Aim;
-    local Vector HitLocation, HitNormal;
+    local vector HitLocation, HitNormal;
     local Actor Other;
     local int projectileID;
     local int SpawnCount;
@@ -133,14 +133,14 @@ function DoFireEffect()
     Weapon.GetViewAxes(X,Y,Z);
 
 	// if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
- 	if( Instigator.bBipodDeployed )
+ 	if (Instigator.bBipodDeployed)
 	{
 		StartTrace = Instigator.Location + Instigator.EyePosition();
 		StartProj = StartTrace + X * ProjSpawnOffset.X;
 
 		// check if projectile would spawn through a wall and adjust start location accordingly
 		Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-		if (Other != none )
+		if (Other != none)
 		{
 	   		StartProj = HitLocation;
 		}
@@ -164,7 +164,7 @@ function DoFireEffect()
 
 		// Instead of just checking walls, lets check all actors. That way we won't have rounds
 		// spawning on the other side of players and missing them altogether - Ramm 10/14/04
-		if( Other != none )
+		if (Other != none)
 		{
 			StartProj = HitLocation;
 		}
@@ -172,7 +172,7 @@ function DoFireEffect()
     Aim = AdjustAim(StartProj, AimError);
 
 	// For free-aim, just use where the muzzlebone is pointing
-	if( !Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim
+	if (!Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim
 		&& Instigator.IsHumanControlled())
 	{
 		Aim = rotator(MuzzlePosition.XAxis);
@@ -182,7 +182,7 @@ function DoFireEffect()
 
     CalcSpreadModifiers();
 
-	if( (DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged )
+	if ((DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged)
 	{
 		AppliedSpread = 4 * Spread;
 	}
@@ -194,7 +194,7 @@ function DoFireEffect()
     switch (SpreadStyle)
     {
         case SS_Random:
-           	X = Vector(Aim);
+           	X = vector(Aim);
            	for (projectileID = 0; projectileID < SpawnCount; projectileID++)
            	{
               	R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
@@ -226,7 +226,7 @@ function CalcSpreadModifiers()
 {
 	super.CalcSpreadModifiers();
 
-	if( !Instigator.bBipodDeployed )
+	if (!Instigator.bBipodDeployed)
 	{
 	 	Spread *= HipSpreadModifier;
 	}
@@ -240,9 +240,9 @@ simulated function EjectShell()
 	local rotator EjectRot;
 	local ROShellEject Shell;
 
-	if( Instigator.bBipodDeployed )
+	if (Instigator.bBipodDeployed)
 	{
-    	if ( ShellEjectClass != None )
+    	if (ShellEjectClass != none)
     	{
 			Weapon.GetViewAxes(X,Y,Z);
 
@@ -264,7 +264,7 @@ simulated function EjectShell()
 	}
 	else
 	{
-	    if ( ShellEjectClass != None )
+	    if (ShellEjectClass != none)
 	    {
         	EjectCoords = Weapon.GetBoneCoords(ShellEmitBone);
 

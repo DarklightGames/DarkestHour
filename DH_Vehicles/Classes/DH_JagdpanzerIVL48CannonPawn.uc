@@ -12,7 +12,7 @@ class DH_JagdpanzerIVL48CannonPawn extends DH_AssaultGunCannonPawn;
 // Commander cannot fire cannon when he is on the scissors scope or binocs (because he's not mounted on the damn gun!)
 function Fire(optional float F)
 {
-	if( DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none )
+	if (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
 	{
         return;
 	}
@@ -26,7 +26,7 @@ defaultproperties
      OverlayCenterSize=0.555000
      PeriscopePositionIndex=1
      DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
-     bManualTraverseOnly=True
+     bManualTraverseOnly=true
      PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
      PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
@@ -34,17 +34,17 @@ defaultproperties
      WeaponFov=14.400000
      AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
      AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
-     DriverPositions(0)=(ViewLocation=(X=-20.000000,Y=-30.000000,Z=25.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=2731,ViewPitchDownLimit=64653,ViewPositiveYawLimit=1820,ViewNegativeYawLimit=-1820,bDrawOverlays=True)
-     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VStug3_com_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65300,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=True)
-     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=True)
-     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=True,bExposed=True)
+     DriverPositions(0)=(ViewLocation=(X=-20.000000,Y=-30.000000,Z=25.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=2731,ViewPitchDownLimit=64653,ViewPositiveYawLimit=1820,ViewNegativeYawLimit=-1820,bDrawOverlays=true)
+     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VStug3_com_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65300,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true)
+     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
+     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true,bExposed=true)
      GunClass=Class'DH_Vehicles.DH_JagdpanzerIVL48Cannon'
-     bHasAltFire=False
+     bHasAltFire=false
      CameraBone="Turret"
      MinRotateThreshold=0.500000
      MaxRotateThreshold=3.000000
-     bPCRelativeFPRotation=True
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=5.000000,Z=-30.000000)
      DriveAnim="VStug3_com_idle_close"
      ExitPositions(0)=(Y=-150.000000,Z=150.000000)

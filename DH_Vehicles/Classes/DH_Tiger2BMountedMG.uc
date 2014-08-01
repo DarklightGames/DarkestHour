@@ -25,7 +25,7 @@ defaultproperties
      WeaponFireAttachmentBone="mg_yaw"
      WeaponFireOffset=20.000000
      RotationsPerSecond=1.000000
-     bInstantFire=False
+     bInstantFire=false
      Spread=0.002000
      FireInterval=0.070580
      FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
@@ -36,11 +36,11 @@ defaultproperties
      ShakeRotRate=(X=400.000000,Y=400.000000,Z=400.000000)
      ShakeOffsetMag=(X=0.400000,Y=0.400000,Z=0.400000)
      ShakeOffsetRate=(X=100.000000,Y=100.000000,Z=100.000000)
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      MaxPositiveYaw=7000
      MaxNegativeYaw=-7000
-     bLimitYaw=True
+     bLimitYaw=true
      InitialPrimaryAmmo=150
      Mesh=SkeletalMesh'axis_panzer4F1_anm.Panzer4F1_mg_ext'
 }

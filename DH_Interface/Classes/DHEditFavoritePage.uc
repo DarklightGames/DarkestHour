@@ -13,21 +13,21 @@ function HandleParameters(string ServerIP, string ServerName)
 	if (ServerIP != "")
 		ed_Data.SetText(StripProtocol(ServerIP));
 
-	if ( ServerName == "" )
+	if (ServerName == "")
 		ServerName = UnknownText;
 
 	l_Name.Caption = ServerName;
 }
 
-function ApplyURL( string URL )
+function ApplyURL(string URL)
 {
 	local string IP, port;
 
-	if ( URL == "" )
+	if (URL == "")
 		return;
 
 	URL = StripProtocol(URL);
-	if ( !Divide( URL, ":", IP, Port ) )
+	if (!Divide(URL, ":", IP, Port))
 	{
 		IP = URL;
 		Port = "7777";
@@ -37,7 +37,7 @@ function ApplyURL( string URL )
 	Server.Port = int(Port);
 	Server.QueryPort = Server.Port + 1;
 	Server.ServerName = l_name.Caption;
-	Controller.CloseMenu(False);
+	Controller.CloseMenu(false);
 }
 
 defaultproperties

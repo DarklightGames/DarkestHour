@@ -12,7 +12,7 @@ class DHBot extends ROBot;
 // Overridden to force bots out rather than being trapped by our "must be unbuttoned" requirement
 function GetOutOfVehicle()
 {
-	if ( Vehicle(Pawn) == None )
+	if (Vehicle(Pawn) == none)
 		return;
 
 	Vehicle(Pawn).PlayerStartTime = Level.TimeSeconds + 20;
@@ -26,13 +26,13 @@ ignores HearNoise, Bump;
 
    function NotifyIneffectiveAttack(optional Pawn Other)
    {
-	  if(VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).VehicleBase != none && VehicleWeaponPawn(Pawn).VehicleBase.Controller != none)
+	  if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).VehicleBase != none && VehicleWeaponPawn(Pawn).VehicleBase.Controller != none)
 	  {
 		 DHBot(VehicleWeaponPawn(Pawn).VehicleBase.Controller).NotifyIneffectiveAttack(Other);
 		 return;
 	  }
 
-//      if(ROPawn(Other) == none)
+//      if (ROPawn(Other) == none)
 //      {
 		 Target = Enemy;
 		 GoalString = "Position Myself";
@@ -48,17 +48,17 @@ ignores HearNoise, Bump;
 
 		StopStartTime = Level.TimeSeconds;
 		bHasFired = false;
-		if ( (Pawn.Physics != PHYS_Flying) || (Pawn.MinFlySpeed == 0) )
+		if ((Pawn.Physics != PHYS_Flying) || (Pawn.MinFlySpeed == 0))
 		Pawn.Acceleration = vect(0,0,0); //stop
 
-		if ( (Pawn.Weapon != None) && Pawn.Weapon.FocusOnLeader(false) )
+		if ((Pawn.Weapon != none) && Pawn.Weapon.FocusOnLeader(false))
 			Target = Focus;
-		else if ( Target == None )
+		else if (Target == none)
 			Target = Enemy;
-		if ( Target == None )
+		if (Target == none)
 			log(GetHumanReadableName()$" no target in ranged attack");
 
-		if ( ROVehicle(Pawn) != None )
+		if (ROVehicle(Pawn) != none)
 		{
 			Vehicle(Pawn).Steering = 0;
 			Vehicle(Pawn).Throttle = 0;
@@ -67,28 +67,28 @@ ignores HearNoise, Bump;
 		 V = ROVehicle(Pawn);
 		 P = V.Driver;
 	  }
-	  else if(ROVehicleWeaponPawn(Pawn) != none)
+	  else if (ROVehicleWeaponPawn(Pawn) != none)
 	  {
 		 V = ROVehicleWeaponPawn(Pawn).VehicleBase;
 		 P = ROVehicleWeaponPawn(Pawn).Driver;
 	  }
 
-	  if(V != none)
+	  if (V != none)
 	  {
 		   for(i=0; i < V.WeaponPawns.Length; i++)
 		   {
-		      if(V.WeaponPawns[i] == none)
+		      if (V.WeaponPawns[i] == none)
 		          break;
-		      if(ROVehicleWeaponPawn(V.WeaponPawns[i]).Driver == none)
+		      if (ROVehicleWeaponPawn(V.WeaponPawns[i]).Driver == none)
 		      {
-			   if(V.WeaponPawns[i].isA('ROTankCannonPawn'))
+			   if (V.WeaponPawns[i].isA('ROTankCannonPawn'))
 			   {
 				  V.KDriverLeave(true);
 				  V.WeaponPawns[i].KDriverEnter(P);
 				  break;
 			   }
 
-               if(DH_Pawn(Enemy) != none && V.bIsApc && ROVehicleWeaponPawn(V.WeaponPawns[i]).bIsMountedTankMG)
+               if (DH_Pawn(Enemy) != none && V.bIsApc && ROVehicleWeaponPawn(V.WeaponPawns[i]).bIsMountedTankMG)
                {
                   V.KDriverLeave(true);
                   V.WeaponPawns[i].KDriverEnter(P);
@@ -98,7 +98,7 @@ ignores HearNoise, Bump;
 		}
 		}
 		// Cause bots to use thier ironsights when they do this
-		if( Pawn.Weapon != none &&  DH_ProjectileWeapon(Pawn.Weapon) != none )
+		if (Pawn.Weapon != none &&  DH_ProjectileWeapon(Pawn.Weapon) != none)
 		{
 			DH_ProjectileWeapon(Pawn.Weapon).ZoomIn(false);
 		}
@@ -108,7 +108,7 @@ ignores HearNoise, Bump;
 function Possess(Pawn aPawn)
 {
 	Super.Possess(aPawn);
-	if ( DH_Pawn(aPawn) != None )
+	if (DH_Pawn(aPawn) != none)
 		DH_Pawn(aPawn).Setup(PawnSetupRecord);
 }
 
@@ -118,7 +118,7 @@ function SetPawnClass(string inClass, string inCharacter)
 	local class<DH_Pawn> pClass;
 
 	pClass = class<DH_Pawn>(DynamicLoadObject(inClass, class'Class'));
-	if (pClass != None)
+	if (pClass != none)
 		PawnClass = pClass;
 
 	PawnSetupRecord = class'xUtil'.static.FindPlayerRecord(inCharacter);

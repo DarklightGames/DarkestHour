@@ -9,12 +9,12 @@
 class DH_DestroyableSM extends RODestroyableStaticMeshBase;
 
 //Overridden Trigger function to allow toggling
-function Trigger( actor Other, pawn EventInstigator )
+function Trigger(actor Other, pawn EventInstigator)
 {
-	if(EventInstigator != None)
+	if (EventInstigator != none)
 		MakeNoise(1.0);
 	//if destroyed goto state working (basically repairs it)
-	if(bDamaged)
+	if (bDamaged)
 		Gotostate('Working');
 	else //it's not destroyed, lets destroy it
 	{
@@ -29,7 +29,7 @@ function DestroyDSM()
 {
 	Health = 0;
 	TriggerEvent(DestroyedEvent, self, none);
-	BroadcastCriticalMessage(None);
+	BroadcastCriticalMessage(none);
 	BreakApart(Location);
 }
 

@@ -16,10 +16,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     	Super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
     	class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
-    	RuleInfo = new(None) class'Engine.PlayInfo';
+    	RuleInfo = new(none) class'Engine.PlayInfo';
 
     	i = 1;
-    	p_Main        = UT2K4Tab_MainBase(c_Tabs.AddTab(PanelCaption[i],PanelClass[i],,PanelHint[i++]) );
+    	p_Main        = UT2K4Tab_MainBase(c_Tabs.AddTab(PanelCaption[i],PanelClass[i],,PanelHint[i++]));
 	mcRules       = DHIAMultiColumnRulesPanel(c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i++]));
     	p_Mutators    = UT2K4Tab_MutatorBase(c_Tabs.AddTab(PanelCaption[i],PanelClass[i],,PanelHint[i++]));
 
@@ -44,21 +44,21 @@ function PrepareToPlay(out string GameURL, optional string OverrideMap)
 
 	i = RuleInfo.FindIndex("BotMode");
 
-	if ( i != -1 )
+	if (i != -1)
 	{
 		Value = byte(RuleInfo.Settings[i].Value) & 3;
 
-		if ( Value == 1 )
-			GameURL $= "?bAutoNumBots=True";
+		if (Value == 1)
+			GameURL $= "?bAutoNumBots=true";
 
-		else if ( Value == 2 )
+		else if (Value == 2)
 			GameURL $= p_BotConfig.Play();
 
 		else
 		{
 			i = RuleInfo.FindIndex("MinPlayers");
-			if ( i >= 0 )
-				GameURL $= "?bAutoNumBots=False?NumBots="$RuleInfo.Settings[i].Value;
+			if (i >= 0)
+				GameURL $= "?bAutoNumBots=false?NumBots="$RuleInfo.Settings[i].Value;
 		}
 	}
 	log("Prepare to play GameURL= "$GameURL);
@@ -103,14 +103,14 @@ defaultproperties
 {
      PageCaption="Practice"
      Begin Object Class=DHGUITabControl Name=PageTabs
-         bFillSpace=False
-         bDockPanels=True
+         bFillSpace=false
+         bDockPanels=true
          TabHeight=0.060000
          BackgroundStyleName="DHHeader"
          WinHeight=0.044000
          RenderWeight=0.490000
          TabOrder=3
-         bAcceptsInput=True
+         bAcceptsInput=true
          OnActivate=PageTabs.InternalOnActivate
          OnChange=DHGamePageSP.InternalOnChange
      End Object

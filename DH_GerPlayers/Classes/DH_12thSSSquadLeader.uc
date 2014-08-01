@@ -8,7 +8,7 @@ class DH_12thSSSquadLeader extends DH_12thSS;
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Squad Leader"
      AltName="Unterscharführer"
      Article="a "
@@ -21,7 +21,7 @@ defaultproperties
      Models(3)="12SS_4"
      Models(4)="12SS_5"
      Models(5)="12SS_6"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
@@ -31,7 +31,7 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_SSHelmetOne'
      Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetTwo'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
      Limit33to44=2
      LimitOver44=2

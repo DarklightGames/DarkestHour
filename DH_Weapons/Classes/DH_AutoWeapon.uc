@@ -8,49 +8,56 @@
 //=====================================================
 
 class DH_AutoWeapon extends DH_ProjectileWeapon
-	abstract;
+    abstract;
 
 simulated function ZoomIn(bool bAnimateTransition)
 {
-	// Make the weapon stop firing when we transition to/from iron sights
-	if( FireMode[0] != none && FireMode[0].IsInState('FireLoop') )
-	{
-		FireMode[0].GotoState('');
-	}
+    // Make the weapon stop firing when we transition to/from iron sights
+    if (FireMode[0] != none && FireMode[0].IsInState('FireLoop'))
+    {
+        FireMode[0].GotoState('');
+    }
 
-	if( bAnimateTransition )
-		GotoState('IronSightZoomIn');
+    if (bAnimateTransition)
+    {
+        GotoState('IronSightZoomIn');
+    }
 
-	bUsingSights = true;
-	ROPawn(Instigator).SetIronSightAnims(true);
+    bUsingSights = true;
+
+    ROPawn(Instigator).SetIronSightAnims(true);
 }
 
 simulated function ZoomOut(bool bAnimateTransition)
 {
-	// Make the weapon stop firing when we transition to/from iron sights
-	if( FireMode[0] != none && FireMode[0].IsInState('FireLoop') )
-	{
-		FireMode[0].GotoState('');
-	}
+    // Make the weapon stop firing when we transition to/from iron sights
+    if (FireMode[0] != none && FireMode[0].IsInState('FireLoop'))
+    {
+        FireMode[0].GotoState('');
+    }
 
-	if( bAnimateTransition )
-		GotoState('IronSightZoomOut');
+    if (bAnimateTransition)
+    {
+        GotoState('IronSightZoomOut');
+    }
 
-	bUsingSights = false;
-	ROPawn(Instigator).SetIronSightAnims(false);
-	ResetPlayerFOV();
+    bUsingSights = false;
+
+    ROPawn(Instigator).SetIronSightAnims(false);
+
+    ResetPlayerFOV();
 }
 
 // Take the weapon out of iron sights if you jump
 simulated function NotifyOwnerJumped()
 {
-	// Make the weapon stop firing when we transition to/from iron sights
-	if( FireMode[0] != none && FireMode[0].IsInState('FireLoop') )
-	{
-		FireMode[0].GotoState('');
-	}
+    // Make the weapon stop firing when we transition to/from iron sights
+    if (FireMode[0] != none && FireMode[0].IsInState('FireLoop'))
+    {
+        FireMode[0].GotoState('');
+    }
 
-	super.NotifyOwnerJumped();
+    super.NotifyOwnerJumped();
 }
 
 
@@ -68,7 +75,7 @@ function float SuggestDefenseStyle()
 
 function float MaxRange()
 {
-	return 1000; // about 150 meters
+    return 1000; // about 150 meters
 }
 
 // Ovveridden to prevent auto weapons from playing fireend anims while looping
@@ -89,7 +96,7 @@ simulated function AnimEnd(int channel)
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
-        else if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+        else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         {
             PlayIdle();
         }
@@ -98,5 +105,5 @@ simulated function AnimEnd(int channel)
 
 defaultproperties
 {
-     bCanAttachOnBack=True
+     bCanAttachOnBack=true
 }

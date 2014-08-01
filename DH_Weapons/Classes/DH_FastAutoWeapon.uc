@@ -30,20 +30,20 @@ function float MaxRange()
 
 simulated function bool StartFire(int Mode)
 {
-	if( FireMode[Mode].bMeleeMode )
+	if (FireMode[Mode].bMeleeMode)
 		return super.StartFire(Mode);
 
-	if( !super.StartFire(Mode) )  // returns false when mag is empty
+	if (!super.StartFire(Mode))  // returns false when mag is empty
 	   return false;
 
-	if( AmmoAmount(0) <= 0 )
+	if (AmmoAmount(0) <= 0)
 	{
     	return false;
     }
 
 	AnimStopLooping();
 
-	if( !FireMode[Mode].IsInState('FireLoop') && (AmmoAmount(0) > 0) )
+	if (!FireMode[Mode].IsInState('FireLoop') && (AmmoAmount(0) > 0))
 	{
 		FireMode[Mode].StartFiring();
 		return true;
@@ -58,7 +58,7 @@ simulated function bool StartFire(int Mode)
 
 simulated function AnimEnd(int channel)
 {
-	if(!FireMode[0].IsInState('FireLoop'))
+	if (!FireMode[0].IsInState('FireLoop'))
 	{
 	  	super(DH_ProjectileWeapon).AnimEnd(channel);
 	}

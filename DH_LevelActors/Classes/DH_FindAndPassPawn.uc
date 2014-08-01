@@ -65,16 +65,16 @@ auto state DelayBeforeFind
 
 state FindClass
 {
-	event Touch( Actor Other )
+	event Touch(Actor Other)
 	{
 		local int 			i;
 
-		if(Pawn(Other) == None)
+		if (Pawn(Other) == none)
 			return;
 
 		for(i=0; i<PawnClassToFind.Length; i++)
 		{
-			if(Other.IsA(PawnClassToFind[i].Name))
+			if (Other.IsA(PawnClassToFind[i].Name))
 			{
        			//Other is of type to find and we need to pass it and goto passed
 				CatchActorRef.PassPawnRef(Pawn(Other));
@@ -86,12 +86,12 @@ state FindClass
 
 state FindTag
 {
-	event Touch( Actor Other )
+	event Touch(Actor Other)
 	{
-		if(Pawn(Other) == None)
+		if (Pawn(Other) == none)
 			return;
 
-		if(Pawn(Other).Tag == TagToFind)
+		if (Pawn(Other).Tag == TagToFind)
 		{
 			//we have a matching tag this is the pawn we want!
 			CatchActorRef.PassPawnRef(Pawn(Other));
@@ -104,7 +104,7 @@ state FindFactory
 {
 	function BeginState()
 	{
-		if(VehicleFactoryRef.LastSpawnedVehicle != None && VehicleFactoryRef.LastSpawnedVehicle.Health >= 0)
+		if (VehicleFactoryRef.LastSpawnedVehicle != none && VehicleFactoryRef.LastSpawnedVehicle.Health >= 0)
 		{
 			CatchActorRef.PassPawnRef(VehicleFactoryRef.LastSpawnedVehicle);
 			gotostate('Passed');

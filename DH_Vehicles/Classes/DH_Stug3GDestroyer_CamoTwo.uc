@@ -11,7 +11,7 @@ class DH_Stug3GDestroyer_CamoTwo extends DH_Stug3GDestroyer;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[LeftTreadIndex];
 		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -19,7 +19,7 @@ simulated function SetupTreads()
 		Skins[LeftTreadIndex] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[RightTreadIndex];
 		RightTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -40,36 +40,36 @@ simulated function Tick(float DeltaTime)
 	LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 
     // Damaged treads cause vehicle to swerve and turn without control
-	if ( Controller != None )
+	if (Controller != none)
 	{
-        if( bLeftTrackDamaged )
+        if (bLeftTrackDamaged)
 		{
-			Throttle = FClamp( Throttle, -0.50, 0.50);
-			if( Controller.IsA('ROPlayer') )
+			Throttle = FClamp(Throttle, -0.50, 0.50);
+			if (Controller.IsA('ROPlayer'))
 				ROPlayer(Controller).aStrafe = -32768;
-			else if( Controller.IsA('ROBot') )
+			else if (Controller.IsA('ROBot'))
 				Steering = 1;
 		}
-		else if( bRightTrackDamaged )
+		else if (bRightTrackDamaged)
 		{
-			Throttle = FClamp( Throttle, -0.50, 0.50);
-			if( Controller.IsA('ROPlayer') )
+			Throttle = FClamp(Throttle, -0.50, 0.50);
+			if (Controller.IsA('ROPlayer'))
 				ROPlayer(Controller).aStrafe = 32768;
-			else if( Controller.IsA('ROBot') )
+			else if (Controller.IsA('ROBot'))
 				Steering = -1;
 		}
 	}
 
     // Only need these effects client side
-	if( Level.Netmode != NM_DedicatedServer )
+	if (Level.Netmode != NM_DedicatedServer)
 	{
-		if( bDisableThrottle)
+		if (bDisableThrottle)
 		{
-			if(bWantsToThrottle)
+			if (bWantsToThrottle)
 			{
 				IntendedThrottle=1.0;
 			}
-			else if( IntendedThrottle > 0)
+			else if (IntendedThrottle > 0)
 			{
 				IntendedThrottle -= (DeltaTime * 0.5);
 			}
@@ -80,16 +80,16 @@ simulated function Tick(float DeltaTime)
 		}
         else
         {
-            if( bLeftTrackDamaged )
+            if (bLeftTrackDamaged)
 			{
-				 if( LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
+				 if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
 				 	LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
 			     LeftTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
 			}
 
-			if( bRightTrackDamaged )
+			if (bRightTrackDamaged)
 			{
-				 if( RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
+				 if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
 				 	RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
 				 RightTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
 			}
@@ -101,10 +101,10 @@ simulated function Tick(float DeltaTime)
 				SoundVolume = default.SoundVolume;
 			}
 
-			if( bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner )
+			if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
 		        Skins[LeftTreadIndex]=DamagedTreadPanner;
 
-	        if( bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner )
+	        if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
 		        Skins[RightTreadIndex]=DamagedTreadPanner;
         }
 
@@ -115,7 +115,7 @@ simulated function Tick(float DeltaTime)
 
 		// Setup sounds that are dependent on velocity
 		MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
-		if ( MySpeed > 0.1 )
+		if (MySpeed > 0.1)
 		{
 		  	MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
 		}
@@ -125,18 +125,18 @@ simulated function Tick(float DeltaTime)
 		}
 		UpdateMovementSound();
 
-		if ( LeftTreadPanner != None )
+		if (LeftTreadPanner != none)
 		{
 			LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-			if (Velocity dot Vector(Rotation) < 0)
+			if (Velocity dot vector(Rotation) < 0)
 				LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
 			LeftTreadPanner.PanRate += LinTurnSpeed;
 		}
 
-		if ( RightTreadPanner != None )
+		if (RightTreadPanner != none)
 		{
 			RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-			if (Velocity Dot Vector(Rotation) < 0)
+			if (Velocity Dot vector(Rotation) < 0)
 				RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
 			RightTreadPanner.PanRate -= LinTurnSpeed;
 		}
@@ -155,20 +155,20 @@ simulated function Tick(float DeltaTime)
 			  SetBoneRotation(RightWheelBones[i], RightWheelRot);
 		}
 
-		if( MySpeed >= MaxCriticalSpeed )
+		if (MySpeed >= MaxCriticalSpeed)
 		{
-		    if( Controller.IsA('ROPlayer') )
+		    if (Controller.IsA('ROPlayer'))
 				ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
 		}
 	}
 
     // This will slow the tank way down when it tries to turn at high speeds
-	if( ForwardVel > 0.0)
+	if (ForwardVel > 0.0)
      	WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
     else
      	WheelLatFrictionScale = default.WheelLatFrictionScale;
 
-    if( bEngineOnFire || (bOnFire && Health > 0) )
+    if (bEngineOnFire || (bOnFire && Health > 0))
 	{
 	    if (DamagedEffectHealthFireFactor != 1.0)
         {
@@ -176,12 +176,12 @@ simulated function Tick(float DeltaTime)
             DamagedEffect.UpdateDamagedEffect(true, 0, false, false);
         }
 
-        if (bOnFire && DriverHatchFireEffect == None)
+        if (bOnFire && DriverHatchFireEffect == none)
         {
             // Lets randomise the fire start times to desync them with the turret and engine ones
-            if( Level.TimeSeconds - DriverHatchBurnTime > 0.2 )
+            if (Level.TimeSeconds - DriverHatchBurnTime > 0.2)
             {
-                if( FRand() < 0.1 )
+                if (FRand() < 0.1)
                 {
                     DriverHatchFireEffect = Spawn(FireEffectClass);
                     AttachToBone(DriverHatchFireEffect, FireAttachBone);
@@ -192,15 +192,15 @@ simulated function Tick(float DeltaTime)
                 DriverHatchBurnTime = Level.TimeSeconds;
             }
 
-            if( !bTurretFireTriggered && WeaponPawns[0] != none)
+            if (!bTurretFireTriggered && WeaponPawns[0] != none)
             {
-                DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = True;
-                bTurretFireTriggered = True;
+                DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
+                bTurretFireTriggered = true;
             }
-            else if( !bHullMGFireTriggered && WeaponPawns[1] != none)
+            else if (!bHullMGFireTriggered && WeaponPawns[1] != none)
             {
-                DH_StuH42MountedMG(WeaponPawns[1].Gun).bOnFire = True;
-                bHullMGFireTriggered = True;
+                DH_StuH42MountedMG(WeaponPawns[1].Gun).bOnFire = true;
+                bHullMGFireTriggered = true;
             }
         }
 
@@ -219,9 +219,9 @@ simulated function Tick(float DeltaTime)
 
 	Super(ROWheeledVehicle).Tick(DeltaTime);
 
-    if( bEngineDead || bEngineOff || ( bLeftTrackDamaged && bRightTrackDamaged ) )
+    if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=Vect(0,0,0);
+        velocity=vect(0,0,0);
         Throttle=0;
         ThrottleAmount=0;
         bWantsToThrottle=false;
@@ -229,7 +229,7 @@ simulated function Tick(float DeltaTime)
         Steering=0;
     }
 
-	if(Level.NetMode != NM_DedicatedServer)
+	if (Level.NetMode != NM_DedicatedServer)
 	{
 		CheckEmitters();
 	}
@@ -286,7 +286,7 @@ defaultproperties
 {
      GunMantletArmorFactor=8.000000
      GunMantletSlope=45.000000
-     bHasAddedSideArmor=True
+     bHasAddedSideArmor=true
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GCannonPawn_CamoTwo')
      PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuH42MountedMGPawn')
      DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destlate'

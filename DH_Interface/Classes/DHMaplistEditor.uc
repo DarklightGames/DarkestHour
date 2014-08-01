@@ -12,7 +12,7 @@ function AddSystemMenu()
 {
 	local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent( "XInterface.GUIButton" ));
+	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
 	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
 	b_ExitButton.OnClick = XButtonClicked;
 	b_ExitButton.bNeverFocus=true;
@@ -23,7 +23,7 @@ function AddSystemMenu()
 	b_ExitButton.bStandardized=true;
 	b_ExitButton.StandardHeight=0.03;
 	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = False;
+	b_ExitButton.bRepeatClick = false;
 }
 
 
@@ -54,7 +54,7 @@ defaultproperties
      sb_container=ROGUIContainerNoSkinAlt'DH_Interface.DHMaplistEditor.subcontainer'
 
      Begin Object Class=DHGUITreeListBox Name=ActiveMaps
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=ActiveMaps.InternalOnCreateComponent
          WinTop=0.108021
          WinLeft=0.605861
@@ -64,8 +64,8 @@ defaultproperties
      lb_ActiveMaps=DHGUITreeListBox'DH_Interface.DHMaplistEditor.ActiveMaps'
 
      Begin Object Class=DHGUITreeListBox Name=InactiveMaps
-         bVisibleWhenEmpty=True
-         bSorted=True
+         bVisibleWhenEmpty=true
+         bSorted=true
          OnCreateComponent=InactiveMaps.InternalOnCreateComponent
          WinTop=0.138078
          WinLeft=0.113794
@@ -83,8 +83,8 @@ defaultproperties
          WinWidth=0.145000
          WinHeight=0.050000
          TabOrder=6
-         bScaleToParent=True
-         bRepeatClick=True
+         bScaleToParent=true
+         bRepeatClick=true
          OnClickSound=CS_Up
          OnClick=DHMaplistEditor.ModifyMapList
          OnKeyEvent=AddButton.InternalOnKeyEvent
@@ -99,7 +99,7 @@ defaultproperties
          WinWidth=0.145000
          WinHeight=0.050000
          TabOrder=5
-         bScaleToParent=True
+         bScaleToParent=true
          OnClickSound=CS_Up
          OnClick=DHMaplistEditor.ModifyMapList
          OnKeyEvent=AddAllButton.InternalOnKeyEvent
@@ -115,8 +115,8 @@ defaultproperties
          WinWidth=0.145000
          WinHeight=0.050000
          TabOrder=10
-         bScaleToParent=True
-         bRepeatClick=True
+         bScaleToParent=true
+         bRepeatClick=true
          OnClickSound=CS_Down
          OnClick=DHMaplistEditor.ModifyMapList
          OnKeyEvent=RemoveButton.InternalOnKeyEvent
@@ -131,7 +131,7 @@ defaultproperties
          WinWidth=0.145000
          WinHeight=0.050000
          TabOrder=11
-         bScaleToParent=True
+         bScaleToParent=true
          OnClickSound=CS_Down
          OnClick=DHMaplistEditor.ModifyMapList
          OnKeyEvent=RemoveAllButton.InternalOnKeyEvent
@@ -146,8 +146,8 @@ defaultproperties
          WinWidth=0.145000
          WinHeight=0.050000
          TabOrder=9
-         bScaleToParent=True
-         bRepeatClick=True
+         bScaleToParent=true
+         bRepeatClick=true
          OnClickSound=CS_Up
          OnClick=DHMaplistEditor.ModifyMapList
          OnKeyEvent=MoveUpButton.InternalOnKeyEvent
@@ -162,8 +162,8 @@ defaultproperties
          WinWidth=0.145000
          WinHeight=0.050000
          TabOrder=8
-         bScaleToParent=True
-         bRepeatClick=True
+         bScaleToParent=true
+         bRepeatClick=true
          OnClickSound=CS_Down
          OnClick=DHMaplistEditor.ModifyMapList
          OnKeyEvent=MoveDownButton.InternalOnKeyEvent
@@ -208,7 +208,7 @@ defaultproperties
      b_Rename=GUIButton'DH_Interface.DHMaplistEditor.RenameMaplistButton'
 
      Begin Object Class=DHGUIComboBox Name=SelectMaplistCombo
-         bReadOnly=True
+         bReadOnly=true
          WinWidth=0.550000
          WinHeight=0.050000
          TabOrder=0
@@ -232,7 +232,7 @@ defaultproperties
      sb_MapList=DHGUISectionBackground'DH_Interface.DHMaplistEditor.MapListSectionBackground'
 
      Begin Object Class=DHGUISectionBackground Name=AvailBackground
-         bFillClient=True
+         bFillClient=true
          Caption="Available Maps"
          LeftPadding=0.002500
          RightPadding=0.002500
@@ -242,14 +242,14 @@ defaultproperties
          WinLeft=0.025156
          WinWidth=0.380859
          WinHeight=0.716073
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnPreDraw=AvailBackground.InternalPreDraw
      End Object
      sb_Avail=DHGUISectionBackground'DH_Interface.DHMaplistEditor.AvailBackground'
 
      Begin Object Class=DHGUISectionBackground Name=ActiveBackground
-         bFillClient=True
+         bFillClient=true
          Caption="Selected Maps"
          LeftPadding=0.002500
          RightPadding=0.002500
@@ -259,22 +259,22 @@ defaultproperties
          WinLeft=0.586876
          WinWidth=0.380859
          WinHeight=0.716073
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnPreDraw=ActiveBackground.InternalPreDraw
      End Object
      sb_Active=DHGUISectionBackground'DH_Interface.DHMaplistEditor.ActiveBackground'
 
      Begin Object Class=DHGUIHeader Name=TitleBar
-         bUseTextHeight=True
+         bUseTextHeight=true
          StyleName="DHNoBox"
          WinTop=0.017000
          WinHeight=0.050000
          RenderWeight=0.100000
-         bBoundToParent=True
-         bScaleToParent=True
-         bAcceptsInput=True
-         bNeverFocus=False
+         bBoundToParent=true
+         bScaleToParent=true
+         bAcceptsInput=true
+         bNeverFocus=false
          ScalingType=SCALE_X
          OnMousePressed=FloatingWindow.FloatingMousePressed
          OnMouseRelease=FloatingWindow.FloatingMouseRelease
@@ -283,7 +283,7 @@ defaultproperties
 
      Begin Object Class=FloatingImage Name=FloatingFrameBackground
          Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
-         DropShadow=None
+         DropShadow=none
          ImageStyle=ISTY_Stretched
          ImageRenderStyle=MSTY_Normal
          WinTop=0.020000

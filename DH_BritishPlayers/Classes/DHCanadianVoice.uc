@@ -14,7 +14,7 @@ static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadL
     else
         myLoc = Controller(PackOwner).Pawn.Location;
 
-    Controller(PackOwner).SendVoiceMessage( Controller(PackOwner).PlayerReplicationInfo, SquadLeader, Type, Index, broadcasttype, Controller(PackOwner).Pawn, myLoc);
+    Controller(PackOwner).SendVoiceMessage(Controller(PackOwner).PlayerReplicationInfo, SquadLeader, Type, Index, broadcasttype, Controller(PackOwner).Pawn, myLoc);
 }
 
 defaultproperties
@@ -75,7 +75,7 @@ defaultproperties
      ExtraSound(2)=SoundGroup'DH_US_Voice_Infantry.insults.insult'
      ShoutRadius=1024.000000
      WhisperRadius=128.000000
-     bUseLocationalVoice=True
+     bUseLocationalVoice=true
      AckSound(0)=SoundGroup'DH_US_Voice_Infantry.responses.yes'
      AckSound(1)=SoundGroup'DH_US_Voice_Infantry.responses.no'
      AckSound(2)=SoundGroup'DH_US_Voice_Infantry.responses.thanks'

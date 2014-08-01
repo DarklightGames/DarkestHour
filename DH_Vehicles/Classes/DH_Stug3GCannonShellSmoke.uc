@@ -36,7 +36,7 @@ defaultproperties
      MechanicalRanges(24)=(Range=2800,RangeValue=708.000000)
      MechanicalRanges(25)=(Range=3000,RangeValue=768.000000)
      ShellDiameter=7.500000
-     bIsAlliedShell=False
+     bIsAlliedShell=false
      ShellImpactDamage=Class'DH_Vehicles.DH_Stug3GCannonShellDamageAP'
      BallisticCoefficient=2.100000
      Speed=33073.000000

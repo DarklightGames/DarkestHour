@@ -8,9 +8,9 @@ function DecrementRange() { }
 
 simulated exec function SwitchFireMode()
 {
-    if( Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
+    if (Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
     {
-        if( Controller != none && ROPlayer(Controller) != none )
+        if (Controller != none && ROPlayer(Controller) != none)
             ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
         ServerToggleExtraRoundType();
@@ -19,7 +19,7 @@ simulated exec function SwitchFireMode()
 
 function ServerToggleExtraRoundType()
 {
-    if(Gun != none && ROTankCannon(Gun) != none )
+    if (Gun != none && ROTankCannon(Gun) != none)
     {
         ROTankCannon(Gun).ToggleRoundType();
     }
@@ -27,7 +27,7 @@ function ServerToggleExtraRoundType()
 
 function Fire(optional float F)
 {
-    if( DriverPositionIndex == 2 || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none )
+    if (DriverPositionIndex == 2 || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
     {
         return;
     }
@@ -46,7 +46,7 @@ simulated function DrawHUD(Canvas Canvas)
     local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
     PC = PlayerController(Controller);
-    if( PC == none )
+    if (PC == none)
     {
         Super.RenderOverlays(Canvas);
         //log("PanzerTurret PlayerController was none, returning");
@@ -61,9 +61,9 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.DrawColor.A = 255;
         Canvas.Style = ERenderStyle.STY_Alpha;
 
-        if ( DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
-            if( DriverPositionIndex == 0 )
+            if (DriverPositionIndex == 0)
             {
 
             // Calculate reticle drawing position (and position to draw black bars at)
@@ -75,7 +75,7 @@ simulated function DrawHUD(Canvas Canvas)
               OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
 
               Canvas.SetPos(0, 0);
-              Canvas.DrawTile( CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+              Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
             }
             else
             {
@@ -92,7 +92,7 @@ simulated function DrawHUD(Canvas Canvas)
     }
 
      // Zap the lame crosshair - Ramm
-    if (IsLocallyControlled() && Gun != None && Gun.bCorrectAim && Gun.bShowAimCrosshair)
+    if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
     {
         Canvas.DrawColor = CrosshairColor;
         Canvas.DrawColor.A = 255;
@@ -102,7 +102,7 @@ simulated function DrawHUD(Canvas Canvas)
     }
 
 
-    if (PC != None && !PC.bBehindView && HUDOverlay != None)
+    if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())
         {
@@ -114,7 +114,7 @@ simulated function DrawHUD(Canvas Canvas)
         }
     }
     else
-        ActivateOverlay(False);
+        ActivateOverlay(false);
 }
 
 defaultproperties
@@ -122,11 +122,11 @@ defaultproperties
      CannonScopeOverlay=Texture'DH_Flakvierling38_tex.flak.flakv38_sight'
      AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
      AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
-     DriverPositions(0)=(ViewLocation=(X=30.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionUpAnim="optic_out",DriverTransitionAnim="Vt3485_driver_idle_close",bDrawOverlays=True,bExposed=True)
-     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionUpAnim="lookover_up",TransitionDownAnim="optic_in",DriverTransitionAnim="Vt3485_driver_idle_close",bExposed=True)
-     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionDownAnim="lookover_down",DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=True)
-     DriverPositions(3)=(ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=True,bExposed=True)
-     bMustBeTankCrew=True
+     DriverPositions(0)=(ViewLocation=(X=30.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionUpAnim="optic_out",DriverTransitionAnim="Vt3485_driver_idle_close",bDrawOverlays=true,bExposed=true)
+     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionUpAnim="lookover_up",TransitionDownAnim="optic_in",DriverTransitionAnim="Vt3485_driver_idle_close",bExposed=true)
+     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionDownAnim="lookover_down",DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+     DriverPositions(3)=(ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+     bMustBeTankCrew=true
      GunClass=Class'DH_Guns.DH_Flakvierling38Cannon'
      CameraBone="Camera_com"
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
@@ -154,5 +154,5 @@ defaultproperties
      TPCamWorldOffset=(Z=0.000000)
      VehiclePositionString="Using a Flakvierling 38"
      VehicleNameString="Flakvierling 38"
-     bKeepDriverAuxCollision=True
+     bKeepDriverAuxCollision=true
 }

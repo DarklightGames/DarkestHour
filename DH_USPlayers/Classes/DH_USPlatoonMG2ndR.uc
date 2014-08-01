@@ -24,13 +24,13 @@ defaultproperties
      Models(2)="US_2R3"
      Models(3)="US_2R4"
      Models(4)="US_2R5"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_30calWeapon',Amount=6)
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet2ndREMa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet2ndREMb'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
      limit=1
 }

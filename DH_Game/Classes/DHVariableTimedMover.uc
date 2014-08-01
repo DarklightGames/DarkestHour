@@ -14,7 +14,7 @@ function PostBeginPlay()
 {
 	local int n;
 
-	for ( n = 0; n < KeyMoveTime.length; n++ )
+	for (n = 0; n < KeyMoveTime.length; n++)
 	{
 		KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
 	}
@@ -25,10 +25,10 @@ function PostBeginPlay()
 
 	MoveTime = KeyMoveSpeed[ KeyNum ];
 
-	if ( bActAsClientMover && Level.NetMode == NM_DedicatedServer )
+	if (bActAsClientMover && Level.NetMode == NM_DedicatedServer)
 	{
-		SetTimer( 0, false );
-		SetPhysics( PHYS_None );
+		SetTimer(0, false);
+		SetPhysics(PHYS_none);
 		GotoState('ServerIdle');
 	}
 }

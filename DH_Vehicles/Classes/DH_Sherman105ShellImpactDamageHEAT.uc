@@ -13,5 +13,5 @@ defaultproperties
 {
      APCDamageModifier=0.750000
      DeathString="%o was killed by %k's Sherman(105) HEAT shell."
-     bArmorStops=True
+     bArmorStops=true
 }

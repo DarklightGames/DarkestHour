@@ -9,7 +9,7 @@ class DH_M1GrenadeWeapon extends DH_GrenadeWeapon;
 defaultproperties
 {
      PreFireHoldAnim="pre_fire_idle"
-     bHasReleaseLever=True
+     bHasReleaseLever=true
      FuzeLength=4.000000
      LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
      LeverReleaseVolume=1.000000

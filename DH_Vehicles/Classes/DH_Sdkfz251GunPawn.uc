@@ -26,7 +26,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
 	local vector VehicleZ, CamViewOffsetWorld;
@@ -38,7 +38,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     WeaponAimRot = Gun.GetBoneRotation(CameraBone);
 
-	if( ROPlayer(Controller) != none )
+	if (ROPlayer(Controller) != none)
 	{
 		 ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
 		 ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
@@ -49,11 +49,11 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
 	CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-	if(CameraBone != '' && Gun != None)
+	if (CameraBone != '' && Gun != none)
 	{
 		CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
 
-		if(bFPNoZFromCameraPitch)
+		if (bFPNoZFromCameraPitch)
 		{
 			VehicleZ = vect(0,0,1) >> WeaponAimRot;
 
@@ -65,7 +65,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 	{
 		CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-		if(bFPNoZFromCameraPitch)
+		if (bFPNoZFromCameraPitch)
 		{
 			VehicleZ = vect(0,0,1) >> Rotation;
 			CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
@@ -90,7 +90,7 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
 
 	UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
-	if( ROPlayer(Controller) != none )
+	if (ROPlayer(Controller) != none)
 	{
          ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
 		 ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
@@ -108,7 +108,7 @@ simulated function DrawHUD(Canvas Canvas)
     PC = PlayerController(Controller);
 
     // Zap the lame crosshair - Ramm
-/*	if (IsLocallyControlled() && Gun != None && Gun.bCorrectAim)
+/*	if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim)
 	{
 		Canvas.DrawColor = CrosshairColor;
 		Canvas.DrawColor.A = 255;
@@ -118,7 +118,7 @@ simulated function DrawHUD(Canvas Canvas)
 	}  */
 
 
-	if (PC != None && !PC.bBehindView && HUDOverlay != None)
+	if (PC != none && !PC.bBehindView && HUDOverlay != none)
 	{
         if (!Level.IsSoftwareRendering())
         {
@@ -140,7 +140,7 @@ simulated function DrawHUD(Canvas Canvas)
     	 }
 	}
 	else
-        ActivateOverlay(False);
+        ActivateOverlay(false);
 
     if (PC != none)
 	    // Draw tank, turret, ammo count, passenger list
@@ -153,9 +153,9 @@ simulated state ViewTransition
 {
 	simulated function BeginState()
 	{
-		if( Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer )
+		if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
 		{
-    		if( DriverPositionIndex > 0 )
+    		if (DriverPositionIndex > 0)
     		{
     		  Gun.AmbientEffectEmitter.bHidden = true;
     		}
@@ -166,9 +166,9 @@ simulated state ViewTransition
 
 	simulated function EndState()
 	{
-		if( Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer )
+		if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
 		{
-    		if( DriverPositionIndex == 0 )
+    		if (DriverPositionIndex == 0)
     		{
     		  Gun.AmbientEffectEmitter.bHidden = false;
     		}
@@ -199,16 +199,16 @@ defaultproperties
 {
      FirstPersonGunShakeScale=2.000000
      WeaponFov=72.000000
-     DriverPositions(0)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=True)
-     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=True)
-     bMultiPosition=True
-     bMustBeTankCrew=False
+     DriverPositions(0)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+     bMultiPosition=true
+     bMustBeTankCrew=false
      GunClass=Class'DH_Vehicles.DH_Sdkfz251Gun'
-     bCustomAiming=True
+     bCustomAiming=true
      PositionInArray=0
-     bHasAltFire=False
+     bHasAltFire=false
      CameraBone="Camera_com"
-     bDesiredBehindView=False
+     bDesiredBehindView=false
      DriveRot=(Yaw=16384)
      DriveAnim="VHalftrack_com_idle"
      ExitPositions(0)=(X=50.000000,Y=150.000000,Z=100.000000)

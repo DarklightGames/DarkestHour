@@ -60,8 +60,8 @@ defaultproperties
      OpticalRanges(23)=(Range=2600)
      OpticalRanges(24)=(Range=2800)
      OpticalRanges(25)=(Range=3000)
-     bMechanicalAiming=True
-     bOpticalAiming=True
+     bMechanicalAiming=true
+     bOpticalAiming=true
      DHPenetrationTable(0)=4.500000
      DHPenetrationTable(1)=4.200000
      DHPenetrationTable(2)=3.500000
@@ -74,7 +74,7 @@ defaultproperties
      DHPenetrationTable(9)=1.200000
      DHPenetrationTable(10)=1.000000
      ShellDiameter=7.500000
-     bIsAlliedShell=False
+     bIsAlliedShell=false
      PenetrationMag=920.000000
      ShellImpactDamage=Class'DH_Vehicles.DH_PantherCannonShellDamageAP'
      ImpactDamage=455

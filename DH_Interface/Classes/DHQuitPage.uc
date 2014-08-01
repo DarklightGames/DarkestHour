@@ -22,8 +22,8 @@ function bool InternalOnClick(GUIComponent Sender)
 
 defaultproperties
 {
-     bRenderWorld=True
-     bRequire640x480=False
+     bRenderWorld=true
+     bRequire640x480=false
      InactiveFadeColor=(B=255,G=255,R=255)
      Begin Object Class=GUIButton Name=QuitBackground
          StyleName="DHExitPageStyle"
@@ -31,10 +31,10 @@ defaultproperties
          WinLeft=0.270000
          WinWidth=0.470000
          WinHeight=0.800000
-         bBoundToParent=True
-         bScaleToParent=True
-         bAcceptsInput=False
-         bNeverFocus=True
+         bBoundToParent=true
+         bScaleToParent=true
+         bAcceptsInput=false
+         bNeverFocus=true
          OnKeyEvent=QuitBackground.InternalOnKeyEvent
      End Object
      Controls(0)=GUIButton'DH_Interface.DHQuitPage.QuitBackground'
@@ -46,7 +46,7 @@ defaultproperties
          WinLeft=0.280000
          WinWidth=0.200000
          WinHeight=0.080000
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHQuitPage.InternalOnClick
          OnKeyEvent=YesButton.InternalOnKeyEvent
      End Object
@@ -59,7 +59,7 @@ defaultproperties
          WinLeft=0.520000
          WinWidth=0.200000
          WinHeight=0.080000
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHQuitPage.InternalOnClick
          OnKeyEvent=NoButton.InternalOnKeyEvent
      End Object

@@ -20,8 +20,8 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsATGunner=True
-     bCarriesATAmmo=False
+     bIsATGunner=true
+     bCarriesATAmmo=false
      MyName="Tank Hunter"
      AltName="Tank Hunter"
      Article="a "

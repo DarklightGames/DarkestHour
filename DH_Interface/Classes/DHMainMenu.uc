@@ -84,7 +84,7 @@ function ShowSubMenu(int menu_id)
 
 function bool MyKeyEvent(out byte Key,out byte State,float delta)
 {
-	if(Key == 0x1B && State == 1)
+	if (Key == 0x1B && State == 1)
 	{
 		AllowClose = true;
 		return true;
@@ -105,12 +105,12 @@ function bool CanClose(optional Bool bCanceled)
 function bool ButtonClick(GUIComponent Sender)
 {
     	local GUIButton selected;
-    	if (GUIButton(Sender) != None)
+    	if (GUIButton(Sender) != none)
 	selected = GUIButton(Sender);
 	switch (sender)
 	{
         		case b_Practice:
-       			if ( class'LevelInfo'.static.IsDemoBuild() )
+       			if (class'LevelInfo'.static.IsDemoBuild())
        			{
 	    			Controller.OpenMenu(Controller.QuestionMenuClass);
 				GUIQuestionPage(Controller.TopPage()).SetupQuestion(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
@@ -124,7 +124,7 @@ function bool ButtonClick(GUIComponent Sender)
             			break;
 
         		case b_MultiPlayer:
-        			if( !Controller.CheckSteam() )
+        			if (!Controller.CheckSteam())
         			{
             				Controller.OpenMenu(Controller.QuestionMenuClass);
 		  		GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
@@ -138,7 +138,7 @@ function bool ButtonClick(GUIComponent Sender)
 				break;
 
 		case b_Host:
-        			if( !Controller.CheckSteam() )
+        			if (!Controller.CheckSteam())
         			{
             				Controller.OpenMenu(Controller.QuestionMenuClass);
 		   		GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
@@ -199,10 +199,10 @@ event Opened(GUIComponent Sender)
     //l_Version.Caption = VersionString;
     //sb_ShowVersion.SetVisibility(true);
 
-	if ( bDebugging )
+	if (bDebugging)
 		log(Name$".Opened()   Sender:"$Sender,'Debug');
 
-   	 if ( Sender != None && PlayerOwner().Level.IsPendingConnection() )
+   	 if (Sender != none && PlayerOwner().Level.IsPendingConnection())
     		PlayerOwner().ConsoleCommand("CANCEL");
 	   	 ShowSubMenu(0);
    		 Super.Opened(Sender);
@@ -214,7 +214,7 @@ function LoadMenuLevel()
 
 event bool NotifyLevelChange()
 {
-	if ( bDebugging )
+	if (bDebugging)
 		log(Name@"NotifyLevelChange  PendingConnection:"$PlayerOwner().Level.IsPendingConnection());
 		return PlayerOwner().Level.IsPendingConnection();
 }
@@ -223,7 +223,7 @@ defaultproperties
 {
      Begin Object Class=FloatingImage Name=FloatingBackground
          Image=Texture'DH_GUI_Tex.Menu.MainBackGround'
-         DropShadow=None
+         DropShadow=none
          ImageStyle=ISTY_Scaled
          WinTop=0.000000
          WinLeft=0.000000
@@ -245,12 +245,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=ServerButton
          CaptionAlign=TXTA_Left
          Caption="Multiplayer"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=1
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=ServerButton.InternalOnKeyEvent
      End Object
@@ -259,12 +259,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=InstantActionButton
          CaptionAlign=TXTA_Left
          Caption="Practice"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=2
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=InstantActionButton.InternalOnKeyEvent
      End Object
@@ -273,12 +273,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=SettingsButton
          CaptionAlign=TXTA_Left
          Caption="Configuration"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=3
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=SettingsButton.InternalOnKeyEvent
      End Object
@@ -287,12 +287,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=HelpButton
          CaptionAlign=TXTA_Left
          Caption="Help & Game Management"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=4
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=HelpButton.InternalOnKeyEvent
      End Object
@@ -301,12 +301,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=HostButton
          CaptionAlign=TXTA_Left
          Caption="Host Game"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=5
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=HostButton.InternalOnKeyEvent
      End Object
@@ -315,12 +315,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=QuitButton
          CaptionAlign=TXTA_Left
          Caption="Exit"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=6
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=QuitButton.InternalOnKeyEvent
      End Object
@@ -338,12 +338,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=CreditsButton
          CaptionAlign=TXTA_Left
          Caption="Credits"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=11
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=CreditsButton.InternalOnKeyEvent
      End Object
@@ -352,12 +352,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=ManualButton
          CaptionAlign=TXTA_Left
          Caption="Manual"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=12
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=ManualButton.InternalOnKeyEvent
      End Object
@@ -366,12 +366,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=DemosButton
          CaptionAlign=TXTA_Left
          Caption="Demo Management"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=13
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=DemosButton.InternalOnKeyEvent
      End Object
@@ -380,12 +380,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=WebsiteButton
          CaptionAlign=TXTA_Left
          Caption="Visit Website"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=14
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=WebsiteButton.InternalOnKeyEvent
      End Object
@@ -394,12 +394,12 @@ defaultproperties
      Begin Object Class=GUIButton Name=BackButton
          CaptionAlign=TXTA_Left
          Caption="Back"
-         bAutoShrink=False
-         bUseCaptionHeight=True
+         bAutoShrink=false
+         bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
          TabOrder=15
-         bFocusOnWatch=True
+         bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=BackButton.InternalOnKeyEvent
      End Object
@@ -430,7 +430,7 @@ defaultproperties
      SinglePlayerDisabledText="Practice mode is only available in the full version."
      MenuSong="DH_Menu_Music"
      VersionString="DH Version: Beta 3.0"
-     AcceptedEULA=True
+     AcceptedEULA=true
      BackgroundColor=(B=0,G=0,R=0)
      InactiveFadeColor=(B=0,G=0,R=0)
      OnOpen=DHMainMenu.InternalOnOpen

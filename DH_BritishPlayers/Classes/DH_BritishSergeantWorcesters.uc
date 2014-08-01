@@ -13,7 +13,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Corporal"
      AltName="Corporal"
      Article="a "
@@ -22,7 +22,7 @@ defaultproperties
      Models(0)="Wor_Sarg1"
      Models(1)="Wor_Sarg2"
      Models(2)="Wor_Sarg3"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_ThompsonWeapon',Amount=6)
@@ -33,6 +33,6 @@ defaultproperties
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishInfantryBeretWorcesters'
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

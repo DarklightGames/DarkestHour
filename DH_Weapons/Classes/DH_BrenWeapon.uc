@@ -17,11 +17,11 @@ simulated function AnimEnd(int channel)
 
     	if (ClientState == WS_ReadyToFire)
     	{
-        		if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        		if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         		{
             			PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         		}
-        		else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        		else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         		{
             			PlayIdle();
         		}
@@ -29,7 +29,7 @@ simulated function AnimEnd(int channel)
         		{
             			PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         		}
-        		else if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+        		else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         		{
             			PlayIdle();
         		}
@@ -44,11 +44,11 @@ simulated function BringUp(optional Weapon PrevWeapon)
 {
 	super.BringUp(PrevWeapon);
 
-	if( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 	{
 		ROPawn(Instigator).bWeaponCanBeResupplied = true;
 
-		if( CurrentMagCount != (MaxNumPrimaryMags - 1) )
+		if (CurrentMagCount != (MaxNumPrimaryMags - 1))
 		{
 			ROPawn(Instigator).bWeaponNeedsResupply = true;
 		}
@@ -73,7 +73,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 	ROPawn(Instigator).bWeaponCanBeResupplied = true;
 
-	if( CurrentMagCount <= (MaxNumPrimaryMags - 1) )
+	if (CurrentMagCount <= (MaxNumPrimaryMags - 1))
 	{
 		ROPawn(Instigator).bWeaponNeedsResupply = true;
 	}
@@ -85,7 +85,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 function DropFrom(vector StartLocation)
 {
-    if (!bCanThrow )
+    if (!bCanThrow)
         return;
 
  	ROPawn(Instigator).bWeaponCanBeResupplied = false;
@@ -96,7 +96,7 @@ function DropFrom(vector StartLocation)
 
 simulated function Destroyed()
 {
-	if( Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none )
+	if (Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none)
 	{
 	 	ROPawn(Instigator).bWeaponCanBeResupplied = false;
 	 	ROPawn(Instigator).bWeaponNeedsResupply = false;
@@ -112,9 +112,9 @@ function bool ResupplyAmmo()
 
     InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-	for( i=NumMagsToResupply; i>0; i-- )
+	for(i=NumMagsToResupply; i>0; i--)
 	{
-		if( PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+		if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
 		{
 			PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
 		}

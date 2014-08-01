@@ -43,10 +43,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
 	local int RandomNum, i;
 
-	if(UseRandomness)
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //Leave script randomly failed
 	}
 	// RandomPercentToFail was not higher than randomnum

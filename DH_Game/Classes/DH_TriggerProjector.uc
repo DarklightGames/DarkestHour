@@ -48,8 +48,8 @@ simulated event PostBeginPlay()
 
    	// Allocate a new scripted texture from the pool
    	// and have it call us for updates.
-   	ScriptTexture = ScriptedTexture( Level.ObjectPool.AllocateObject( class'ScriptedTexture' ) );
-   	ScriptTexture.SetSize( ProjTexture.MaterialUSize( ), ProjTexture.MaterialVSize( ) );
+   	ScriptTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+   	ScriptTexture.SetSize(ProjTexture.MaterialUSize(), ProjTexture.MaterialVSize());
    	ScriptTexture.Client = Self;
 
    	// Set the scripted texture properties to
@@ -72,7 +72,7 @@ simulated event PostBeginPlay()
 
    	// If we're on the client side, start in
    	// the right mode based on its trigger:
-   	if ( ROLE != ROLE_Authority && bClientTrigger )
+   	if (ROLE != ROLE_Authority && bClientTrigger)
 	{
       		bIsOn = !bIsOn;
    	}
@@ -91,7 +91,7 @@ simulated event PostBeginPlay()
    	startTint.A = 255;
 
    	// Set the color:
-   	SetColors( startColor, startTint );
+   	SetColors(startColor, startTint);
 
    	// If we're fading, we tick:
    	if (bInitiallyFading)
@@ -111,17 +111,17 @@ simulated event Destroyed()
    	// You should disconnect the object
    	// pool texture from everything you've
    	// assigned it to.
-   	ProjTexture = None;
+   	ProjTexture = none;
 
    	// Clean up else you will leak resources.
-   	assert( ScriptTexture != None );
-   	Level.ObjectPool.FreeObject( ScriptTexture );
-   	ScriptTexture = None;
+   	assert(ScriptTexture != none);
+   	Level.ObjectPool.FreeObject(ScriptTexture);
+   	ScriptTexture = none;
 
    	Super.Destroyed();
 }
 
-simulated function SetColors( Color NewColor, Color NewTint )
+simulated function SetColors(Color NewColor, Color NewTint)
 {
    	// Check to see if it's a new color:
    	if ((CurrentColor == NewColor) && (CurrentTint == NewTint))
@@ -132,20 +132,20 @@ simulated function SetColors( Color NewColor, Color NewTint )
    	// frame that it's visible.
    	CurrentColor = NewColor;
    	CurrentTint = NewTint;
-   	assert( ScriptedTexture(ProjTexture) != None );
+   	assert(ScriptedTexture(ProjTexture) != none);
    	++ScriptedTexture(ProjTexture).Revision;
 
 }
 
-simulated event RenderTexture( ScriptedTexture Tex )
+simulated event RenderTexture(ScriptedTexture Tex)
 {
-   	assert( Tex == ProjTexture );
+   	assert(Tex == ProjTexture);
 
-   	Tex.DrawTile(0,0,Tex.USize,Tex.VSize,0,0,Tex.USize,Tex.VSize,None,CurrentColor);
+   	Tex.DrawTile(0,0,Tex.USize,Tex.VSize,0,0,Tex.USize,Tex.VSize,none,CurrentColor);
    	Tex.DrawTile(0,0,Tex.USize,Tex.VSize,0,0,Tex.USize,Tex.VSize,MaskTexture,CurrentTint);
 }
 
-simulated function Tick( float DeltaTime )
+simulated function Tick(float DeltaTime)
 {
    	local float percent;
    	local Color newColor;
@@ -160,11 +160,11 @@ simulated function Tick( float DeltaTime )
      		Disable('Tick');
      		if (bIsOn)
 		{
-       			SetColors( ProjColorOn, ProjTintOn );
+       			SetColors(ProjColorOn, ProjTintOn);
 		}
      		else
 		{
-       			SetColors( ProjColorOff, ProjTintOff );
+       			SetColors(ProjColorOff, ProjTintOff);
 		}
 
     	 	return;
@@ -197,7 +197,7 @@ simulated function Tick( float DeltaTime )
    	SetColors(newColor,newTint);
 }
 
-simulated function Trigger( Actor Other, Pawn EventInstigator )
+simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
 
 	if (bIsOn)
@@ -216,7 +216,7 @@ simulated function Trigger( Actor Other, Pawn EventInstigator )
    	bClientTrigger = !bClientTrigger;
 }
 
-simulated event ClientTrigger( )
+simulated event ClientTrigger()
 {
 
 	if (bIsOn)
@@ -252,10 +252,10 @@ defaultproperties
      ChangeTime=60.000000
      ChangeTimeTwo=0.001000
      SwapTime=0.001000
-     bClipBSP=True
-     bStatic=False
-     bNoDelete=True
-     bAlwaysRelevant=True
+     bClipBSP=true
+     bStatic=false
+     bNoDelete=true
+     bAlwaysRelevant=true
      RemoteRole=ROLE_SimulatedProxy
-     bGameRelevant=True
+     bGameRelevant=true
 }

@@ -19,26 +19,26 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
     local int           i, pos;
 
     bTemp = Controller.bCurMenuInitialized;
-    Controller.bCurMenuInitialized = False;
+    Controller.bCurMenuInitialized = false;
 
     switch (NewRule.RenderType)
     {
         case PIT_Check:
-            ch = moCheckbox(li_Rules.AddItem("DH_Interface.DHmoCheckbox",,NewRule.DisplayName, True));
-            if (ch == None)
+            ch = moCheckbox(li_Rules.AddItem("DH_Interface.DHmoCheckbox",,NewRule.DisplayName, true));
+            if (ch == none)
                 break;
 
             ch.Tag = Index;
-            ch.bAutoSizeCaption = True;
+            ch.bAutoSizeCaption = true;
             break;
 
         case PIT_Select:
-            co = moCombobox(li_Rules.AddItem("DH_Interface.DHmoComboBox",,NewRule.DisplayName, True));
-            if (co == None)
+            co = moCombobox(li_Rules.AddItem("DH_Interface.DHmoComboBox",,NewRule.DisplayName, true));
+            if (co == none)
                 break;
 
-            co.ReadOnly(True);
-            co.bAutoSizeCaption = True;
+            co.ReadOnly(true);
+            co.bAutoSizeCaption = true;
             co.Tag = Index;
             co.CaptionWidth=0.5;
             GamePI.SplitStringToArray(Range, NewRule.Data, ";");
@@ -48,7 +48,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
             break;
 
         case PIT_Text:
-        	if ( !Divide(NewRule.Data, ";", Width, Op) )
+        	if (!Divide(NewRule.Data, ";", Width, Op))
         		Width = NewRule.Data;
 
             pos = InStr(Width, ",");
@@ -65,52 +65,52 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
                 if (InStr(Range[0], ".") != -1)
                 {
                     // float edit
-                    fl = moFloatEdit(li_Rules.AddItem("DH_Interface.DHmoFloatEdit",,NewRule.DisplayName, True));
-                    if (fl == None) break;
+                    fl = moFloatEdit(li_Rules.AddItem("DH_Interface.DHmoFloatEdit",,NewRule.DisplayName, true));
+                    if (fl == none) break;
                     fl.Tag = Index;
-                    fl.bAutoSizeCaption = True;
+                    fl.bAutoSizeCaption = true;
                     fl.ComponentWidth = 0.25;
                     if (i != -1)
-                        fl.Setup( float(Range[0]), float(Range[1]), fl.MyNumericEdit.Step);
+                        fl.Setup(float(Range[0]), float(Range[1]), fl.MyNumericEdit.Step);
                 }
 
                 else
                 {
-                    nu = moNumericEdit(li_Rules.AddItem("DH_Interface.DHmoNumericEdit",,NewRule.DisplayName, True));
-                    if (nu == None) break;
+                    nu = moNumericEdit(li_Rules.AddItem("DH_Interface.DHmoNumericEdit",,NewRule.DisplayName, true));
+                    if (nu == none) break;
                     nu.Tag = Index;
-                    nu.bAutoSizeCaption = True;
+                    nu.bAutoSizeCaption = true;
                     nu.ComponentWidth = 0.25;
                     if (i != -1)
-                        nu.Setup( int(Range[0]), int(Range[1]), nu.MyNumericEdit.Step);
+                        nu.Setup(int(Range[0]), int(Range[1]), nu.MyNumericEdit.Step);
                 }
             }
             else if (NewRule.ArrayDim != -1)
             {
-                bu = moButton(li_Rules.AddItem("DH_Interface.DHmoButton",,NewRule.DisplayName, True));
-                if (bu == None) break;
+                bu = moButton(li_Rules.AddItem("DH_Interface.DHmoButton",,NewRule.DisplayName, true));
+                if (bu == none) break;
                 bu.Tag = Index;
-                bu.bAutoSizeCaption = True;
+                bu.bAutoSizeCaption = true;
                 bu.ComponentWidth = 0.25;
                 bu.OnChange = ArrayPropClicked;
             }
 
             else
             {
-                ed = moEditbox(li_Rules.AddItem("DH_Interface.DHmoEditBox",,NewRule.DisplayName, True));
-                if (ed == None) break;
+                ed = moEditbox(li_Rules.AddItem("DH_Interface.DHmoEditBox",,NewRule.DisplayName, true));
+                if (ed == none) break;
                 ed.Tag = Index;
-                ed.bAutoSizeCaption = True;
+                ed.bAutoSizeCaption = true;
                 if (i != -1)
                     ed.MyEditBox.MaxWidth = i;
             }
             break;
 
         default:
-            bu = moButton(li_Rules.AddItem("DH_Interface.DHmoButton",,NewRule.DisplayName, True));
-            if (bu == None) break;
+            bu = moButton(li_Rules.AddItem("DH_Interface.DHmoButton",,NewRule.DisplayName, true));
+            if (bu == none) break;
             bu.Tag = Index;
-            bu.bAutoSizeCaption = True;
+            bu.bAutoSizeCaption = true;
             bu.ComponentWidth = 0.25;
             bu.OnChange = CustomClicked;
     }
@@ -143,7 +143,7 @@ function Refresh()
 defaultproperties
 {
      Begin Object Class=DHGUIProportionalContainer Name=myBackgroundGroup
-         bNoCaption=True
+         bNoCaption=true
          WinTop=0.036614
          WinLeft=0.025156
          WinWidth=0.949688
@@ -207,23 +207,23 @@ defaultproperties
          WinHeight=0.040000
          RenderWeight=1.000000
          TabOrder=1
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnChange=DHTab_ServerRulesPanel.InternalOnChange
      End Object
      ch_Advanced=DHmoCheckBox'DH_Interface.DHTab_ServerRulesPanel.AdvancedButton'
 
-     i_bk=None
+     i_bk=none
 
      Begin Object Class=DHGUIMultiOptionListBox Name=RuleListBox
          SelectedStyleName="DHListSelectionStyle"
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=DHTab_ServerRulesPanel.ListBoxCreateComponent
          StyleName="DHNoBox"
          WinHeight=0.850000
          TabOrder=0
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnChange=DHTab_ServerRulesPanel.InternalOnChange
      End Object
      lb_Rules=DHGUIMultiOptionListBox'DH_Interface.DHTab_ServerRulesPanel.RuleListBox'

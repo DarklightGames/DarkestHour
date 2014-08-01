@@ -52,7 +52,7 @@ var		byte			NextTracerCounter;		// when this equals TracerFrequency, spawn a tra
 replication
 {
 	// Bullet whiz var - Server to client
-	reliable if( bNetDirty && (Role==ROLE_Authority) )
+	reliable if (bNetDirty && (Role==ROLE_Authority))
 		SavedDualShot, DualShotCount;
 }
 
@@ -83,11 +83,11 @@ simulated function Rot2Int(rotator R, out int N)
 // Here we spawn our client side effect rounds if the shot count has changed
 simulated function PostNetReceive()
 {
-	if( DualShotCount != SavedDualShotCount )
+	if (DualShotCount != SavedDualShotCount)
 	{
-		if(Level.NetMode == NM_Client)
+		if (Level.NetMode == NM_Client)
 		{
-		 	if( DualShotCount < 254 )
+		 	if (DualShotCount < 254)
 		    	SpawnClientRounds(false);
 		    else
 		    	SpawnClientRounds(true);
@@ -102,15 +102,15 @@ simulated function bool ShouldSpawnTracer()
 {
 	NextTracerCounter++;
 
-	if( !bUsesTracers )
+	if (!bUsesTracers)
 	{
 		return false;
 	}
-	else if( NextTracerCounter != TracerFrequency )
+	else if (NextTracerCounter != TracerFrequency)
 	{
 		return false;
 	}
-	else if( ClientTracerClass != none )
+	else if (ClientTracerClass != none)
 	{
        	NextTracerCounter = 0;			// reset for next tracer spawn
        	return true;
@@ -122,19 +122,19 @@ simulated function bool ShouldSpawnTracer()
 // Handles unpacking and spawning the correct client side hit effect rounds
 simulated function SpawnClientRounds(bool bFirstRoundOnly)
 {
-	local Vector Start, HitLocation, TestHitLocation, HitNormal;
+	local vector Start, HitLocation, TestHitLocation, HitNormal;
 	local rotator ProjectileDir;
 	local rotator R;
 	local Actor Other;
 
 	// First shot, or single shot
-	if( ShouldSpawnTracer() )
+	if (ShouldSpawnTracer())
 	{
 		Start = SavedDualShot.FirstShot.ShotLocation;
 
 		Int2Rot(SavedDualShot.FirstShot.ShotRotation, ProjectileDir);
 
-        if( Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsFirstPerson() )
+        if (Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsFirstPerson())
         {
         	// do nothing
 		}
@@ -143,14 +143,14 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
 		{
 			Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start,true);
 
-			if( Other != none )
+			if (Other != none)
 			{
 				Other = none;
 
 				// Make sure tracer wouldn't spawn inside of something
 				Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin,true);
 
-                if( Other == none )
+                if (Other == none)
 				{
 					Start = GetBoneCoords(MuzzleBoneName).Origin;
 					ProjectileDir = rotator(Normal(HitLocation - Start));
@@ -172,14 +172,14 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
 	}
 
 	// Second shot
-	if( !bFirstRoundOnly )
+	if (!bFirstRoundOnly)
 	{
-		if( ShouldSpawnTracer() )
+		if (ShouldSpawnTracer())
 		{
 			Start = SavedDualShot.Secondshot.ShotLocation;
 			Int2Rot(SavedDualShot.Secondshot.ShotRotation, ProjectileDir);
 
-			if( Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsFirstPerson() )
+			if (Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsFirstPerson())
 	        {
 	        	// do nothing
 			}
@@ -188,14 +188,14 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
 			{
 				Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start,true);
 
-				if( Other != none )
+				if (Other != none)
 				{
 					Other = none;
 
 					// Make sure tracer wouldn't spawn inside of something
 					Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin,true);
 
-	                if( Other == none )
+	                if (Other == none)
 					{
 						Start = GetBoneCoords(MuzzleBoneName).Origin;
 						ProjectileDir = rotator(Normal(HitLocation - Start));
@@ -220,7 +220,7 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
 }
 
 // This function will take the information about a shot and turn it into a shotinfo struct
-function ShotInfo MakeShotInfo( vector NewLocation, rotator SetRotation)
+function ShotInfo MakeShotInfo(vector NewLocation, rotator SetRotation)
 {
 	local ShotInfo SI;
 
@@ -234,5 +234,5 @@ function ShotInfo MakeShotInfo( vector NewLocation, rotator SetRotation)
 defaultproperties
 {
      TracerFrequency=4
-     bNetNotify=True
+     bNetNotify=true
 }

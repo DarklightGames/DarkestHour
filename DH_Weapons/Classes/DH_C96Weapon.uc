@@ -14,13 +14,13 @@ var 	name 	SelectFireIronAnim;
 //=============================================================================
 replication
 {
-    reliable if( Role<ROLE_Authority )
+    reliable if (Role<ROLE_Authority)
     	ServerChangeFireMode;
 }
 
 simulated exec function SwitchFireMode()
 {
-	if( IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring )
+	if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
 		return;
 
     GotoState('SwitchingFireMode');
@@ -52,7 +52,7 @@ simulated state SwitchingFireMode extends Busy
     {
 		local name Anim;
 
-		if( bUsingSights )
+		if (bUsingSights)
 		{
 			Anim = SelectFireIronAnim;
 		}
@@ -61,16 +61,16 @@ simulated state SwitchingFireMode extends Busy
 			Anim = SelectFireAnim;
 		}
 
-		if( Instigator.IsLocallyControlled() )
+		if (Instigator.IsLocallyControlled())
 		{
-	    	PlayAnim(Anim, 1.0, FastTweenTime );
+	    	PlayAnim(Anim, 1.0, FastTweenTime);
 		}
 
 	    SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
 
   		ServerChangeFireMode();
 
-	    if( Role < ROLE_Authority )
+	    if (Role < ROLE_Authority)
   		{
   			FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
   		}
@@ -80,7 +80,7 @@ simulated state SwitchingFireMode extends Busy
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-	if( FireMode[0].bWaitForRelease )
+	if (FireMode[0].bWaitForRelease)
 	{
 		return false;
 	}
@@ -99,11 +99,11 @@ simulated function AnimEnd(int channel)
 
     if (ClientState == WS_ReadyToFire)
     {
-        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         {
             PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         }
-        else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         {
             PlayIdle();
         }
@@ -111,7 +111,7 @@ simulated function AnimEnd(int channel)
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
-        else if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+        else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         {
             PlayIdle();
         }
@@ -121,11 +121,11 @@ simulated function AnimEnd(int channel)
 // Overriden to handle the stop firing anims especially for the STG
 simulated event StopFire(int Mode)
 {
-	if ( FireMode[Mode].bIsFiring )
+	if (FireMode[Mode].bIsFiring)
 	    FireMode[Mode].bInstantStop = true;
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-     	if( !IsAnimating(0) )
+     	if (!IsAnimating(0))
      	{
      		PlayIdle();
      	}
@@ -161,7 +161,7 @@ defaultproperties
      PutDownEmptyAnim="putaway_empty"
      MaxNumPrimaryMags=5
      InitialNumPrimaryMags=5
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      PlayerIronsightFOV=70.000000
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
@@ -170,7 +170,7 @@ defaultproperties
      IronSightDisplayFOV=45.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     bHasSelectFire=True
+     bHasSelectFire=true
      FireModeClass(0)=Class'DH_Weapons.DH_C96Fire'
      FireModeClass(1)=Class'DH_Weapons.DH_C96MeleeFire'
      SelectAnim="Draw"
@@ -181,7 +181,7 @@ defaultproperties
      AIRating=0.400000
      CurrentRating=0.400000
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_C96Pickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_C96Attachment'

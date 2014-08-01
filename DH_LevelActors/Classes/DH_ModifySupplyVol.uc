@@ -20,7 +20,7 @@ function PostBeginPlay()
 
 	super.PostBeginPlay();
 
-	if(SupplyVolumeToModify == '')
+	if (SupplyVolumeToModify == '')
 		return; //end script because volumename was not set
 
 	//Volume are static so use the all actor list
@@ -35,10 +35,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
 	local int RandomNum;
 
-	if(UseRandomness)
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //Leave script as it randomly failed
 	}
 	switch(HowToModify)
@@ -50,7 +50,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 			SupplyVolumeReference.bActive = false;
 		break;
 		case SMT_Toggle: //Check volume status and toggle it
-			if(SupplyVolumeReference.bActive == true)
+			if (SupplyVolumeReference.bActive == true)
 				SupplyVolumeReference.bActive = false;
 			else
 				SupplyVolumeReference.bActive = true;

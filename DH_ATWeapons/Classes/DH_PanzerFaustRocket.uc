@@ -14,12 +14,12 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	if ( SmokeTrail != None )
+	if (SmokeTrail != none)
 	{
 		SmokeTrail.HandleOwnerDestroyed();
 	}
 
-	if ( Corona != None )
+	if (Corona != none)
 	{
 		Corona.Destroyed();
 	}
@@ -35,9 +35,9 @@ defaultproperties
      DHPenetrationTable(4)=21.500000
      DHPenetrationTable(5)=21.500000
      DHPenetrationTable(6)=21.500000
-     bIsHEATRound=True
-     bIsAlliedShell=False
-     bHasTracer=False
+     bIsHEATRound=true
+     bIsAlliedShell=false
+     bHasTracer=false
      ShellImpactDamage=Class'DH_ATWeapons.DH_PanzerFaustImpactDamType'
      ImpactDamage=650
      BallisticCoefficient=0.075000

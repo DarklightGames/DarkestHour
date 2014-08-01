@@ -10,7 +10,7 @@ defaultproperties
 {
      Begin Object Class=GUIEditBox Name=EditBox1
          StyleName="DHEditBox"
-         bNeverScale=True
+         bNeverScale=true
          OnActivate=EditBox1.InternalActivate
          OnDeActivate=EditBox1.InternalDeactivate
          OnKeyType=EditBox1.InternalOnKeyType
@@ -21,7 +21,7 @@ defaultproperties
      Begin Object Class=GUIComboButton Name=ShowList
          StyleName="DHGripButton"
          RenderWeight=0.600000
-         bNeverScale=True
+         bNeverScale=true
          OnKeyEvent=ShowList.InternalOnKeyEvent
      End Object
      MyShowListBtn=GUIComboButton'DH_Interface.DHGUIComboBox.ShowList'
@@ -31,9 +31,9 @@ defaultproperties
          OnCreateComponent=ListBox1.InternalOnCreateComponent
          StyleName="DHComboListBox"
          RenderWeight=0.700000
-         bTabStop=False
-         bVisible=False
-         bNeverScale=True
+         bTabStop=false
+         bVisible=false
+         bNeverScale=true
      End Object
      MyListBox=GUIListBox'DH_Interface.DHGUIComboBox.ListBox1'
 

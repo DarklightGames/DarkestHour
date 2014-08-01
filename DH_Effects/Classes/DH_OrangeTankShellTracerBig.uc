@@ -17,7 +17,7 @@ auto state Start
 
 defaultproperties
 {
-     bTrailerSameRotation=True
+     bTrailerSameRotation=true
      Physics=PHYS_Trailer
      Texture=Texture'DH_FX_Tex.Effects.FlareOrange'
      DrawScale=0.010000

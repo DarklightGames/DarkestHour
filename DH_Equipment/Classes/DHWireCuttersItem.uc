@@ -50,7 +50,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
 
     bPendingSwitch = bPossiblySwitch;
 
-    if( Instigator == none )
+    if (Instigator == none)
     {
         GotoState('PendingClientWeaponSet');
         return;
@@ -59,10 +59,10 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     ClientState = WS_Hidden;
     GotoState('Hidden');
 
-    if( Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled() )
+    if (Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled())
         return;
 
-    if( Instigator.Weapon == self || Instigator.PendingWeapon == self ) // this weapon was switched to while waiting for replication, switch to it now
+    if (Instigator.Weapon == self || Instigator.PendingWeapon == self) // this weapon was switched to while waiting for replication, switch to it now
     {
         if (Instigator.PendingWeapon != none)
             Instigator.ChangedWeapon();
@@ -71,27 +71,27 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
         return;
     }
 
-    if( Instigator.PendingWeapon != none && Instigator.PendingWeapon.bForceSwitch )
+    if (Instigator.PendingWeapon != none && Instigator.PendingWeapon.bForceSwitch)
         return;
 
-    if( Instigator.Weapon == none )
+    if (Instigator.Weapon == none)
     {
         Instigator.PendingWeapon = self;
         Instigator.ChangedWeapon();
     }
-    else if ( bPossiblySwitch && !Instigator.Weapon.IsFiring() )
+    else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
     {
-        if ( PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup )
+        if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
             return;
-        if ( Instigator.PendingWeapon != none )
+        if (Instigator.PendingWeapon != none)
         {
-            if ( RateSelf() > Instigator.PendingWeapon.RateSelf() )
+            if (RateSelf() > Instigator.PendingWeapon.RateSelf())
             {
                 Instigator.PendingWeapon = self;
                 Instigator.Weapon.PutDown();
             }
         }
-        else if ( RateSelf() > Instigator.Weapon.RateSelf() )
+        else if (RateSelf() > Instigator.Weapon.RateSelf())
         {
             Instigator.PendingWeapon = self;
             Instigator.Weapon.PutDown();
@@ -148,13 +148,13 @@ simulated function Fire(float F)
 //=============================================================================
 simulated function SetSprinting(bool bNewSprintStatus)
 {
-    if( bNewSprintStatus && !IsInState('WeaponSprinting') && !IsInState('RaisingWeapon')
-        && !IsInState('LoweringWeapon') && ClientState != WS_PutDown && ClientState != WS_Hidden )
+    if (bNewSprintStatus && !IsInState('WeaponSprinting') && !IsInState('RaisingWeapon')
+        && !IsInState('LoweringWeapon') && ClientState != WS_PutDown && ClientState != WS_Hidden)
     {
         GotoState('StartSprinting');
     }
-    else if ( !bNewSprintStatus && IsInState('WeaponSprinting') ||
-        IsInState('StartSprinting') )
+    else if (!bNewSprintStatus && IsInState('WeaponSprinting') ||
+        IsInState('StartSprinting'))
     {
         GotoState('EndSprinting');
     }

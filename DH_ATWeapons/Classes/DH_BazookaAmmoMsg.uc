@@ -27,8 +27,8 @@ static function string GetString(
 defaultproperties
 {
      RocketLoaded="Rocket Loaded"
-     bIsUnique=True
-     bIsConsoleMessage=False
+     bIsUnique=true
+     bIsConsoleMessage=false
      Lifetime=2
      PosX=0.280000
      PosY=0.930000

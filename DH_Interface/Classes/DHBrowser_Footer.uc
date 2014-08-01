@@ -15,22 +15,22 @@ defaultproperties
          WinWidth=0.243945
          WinHeight=0.308203
          TabOrder=5
-         bBoundToParent=True
-         bScaleToParent=True
-         bStandardized=False
+         bBoundToParent=true
+         bScaleToParent=true
+         bStandardized=false
      End Object
      ch_Standard=DHmoCheckBox'DH_Interface.DHBrowser_Footer.OnlyStandardCheckBox'
 
      Begin Object Class=GUITitleBar Name=BrowserStatus
-         bUseTextHeight=False
+         bUseTextHeight=false
          Justification=TXTA_Right
          FontScale=FNS_Small
          WinTop=0.030495
          WinLeft=0.238945
          WinWidth=0.761055
          WinHeight=0.450000
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
      End Object
      t_StatusBar=GUITitleBar'DH_Interface.DHBrowser_Footer.BrowserStatus'
 
@@ -43,7 +43,7 @@ defaultproperties
          WinHeight=0.036482
          RenderWeight=2.000000
          TabOrder=2
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHBrowser_Footer.InternalOnClick
          OnKeyEvent=BrowserJoin.InternalOnKeyEvent
      End Object
@@ -58,7 +58,7 @@ defaultproperties
          WinHeight=0.036482
          RenderWeight=2.000000
          TabOrder=1
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHBrowser_Footer.InternalOnClick
          OnKeyEvent=BrowserSpec.InternalOnKeyEvent
      End Object
@@ -71,7 +71,7 @@ defaultproperties
          WinHeight=0.036482
          RenderWeight=2.000000
          TabOrder=4
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHBrowser_Footer.InternalOnClick
          OnKeyEvent=BrowserBack.InternalOnKeyEvent
      End Object
@@ -86,7 +86,7 @@ defaultproperties
          WinHeight=0.036482
          RenderWeight=2.000000
          TabOrder=3
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHBrowser_Footer.InternalOnClick
          OnKeyEvent=BrowserRefresh.InternalOnKeyEvent
      End Object
@@ -94,13 +94,13 @@ defaultproperties
 
      Begin Object Class=GUIButton Name=BrowserFilter
          Caption="FILTERS"
-         bAutoSize=True
+         bAutoSize=true
          StyleName="DHSmallTextButtonStyle"
          WinTop=0.500000
          WinHeight=0.036482
          RenderWeight=2.000000
          TabOrder=0
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHBrowser_Footer.InternalOnClick
          OnKeyEvent=BrowserFilter.InternalOnKeyEvent
      End Object

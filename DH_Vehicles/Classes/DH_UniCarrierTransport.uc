@@ -17,7 +17,7 @@ class DH_UniCarrierTransport extends DH_ROTransportCraft;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[1];
 		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -25,7 +25,7 @@ simulated function SetupTreads()
 		Skins[1] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[2];
 		RightTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -59,28 +59,28 @@ simulated state ViewTransition
 {
 	simulated function HandleTransition()
 	{
-	     if( Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer )
+	     if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
 	     {
-	         if( DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+	         if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
 	             LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
 	     }
 
-		 if( PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+		 if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
 		 {
 		 	 //log("HandleTransition Player Transition Up!");
 			 PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
 		 }
-		 else if ( HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim) )
+		 else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
 		 {
 		 	 //log("HandleTransition Player Transition Down!");
 			 PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
 		 }
 
-		 if( Driver != none && PreviousPositionIndex < DriverPositionIndex && DriverPositionIndex == InitialPositionIndex)
+		 if (Driver != none && PreviousPositionIndex < DriverPositionIndex && DriverPositionIndex == InitialPositionIndex)
 		 {
 			 Driver.PlayAnim(DriveAnim);
 		 }
-		 else if(Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
+		 else if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
 		 {
 	         Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 	     }
@@ -170,9 +170,9 @@ defaultproperties
      VehicleTeam=1
      SteeringScaleFactor=4.000000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=True,ViewFOV=85.000000,bDrawOverlays=True)
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=True,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,ViewFOV=85.000000,bDrawOverlays=true)
+     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=85.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=85.000000)
      VehicleHudImage=Texture'InterfaceArt2_tex.Tank_Hud.Carrier_body'
      VehicleHudOccupantsX(0)=0.580000
      VehicleHudOccupantsX(1)=0.460000
@@ -187,7 +187,7 @@ defaultproperties
      VehicleHudOccupantsY(4)=0.500000
      VehicleHudOccupantsY(5)=0.650000
      VehicleHudEngineY=0.750000
-     VehHitpoints(0)=(PointOffset=(X=-9.000000,Y=3.000000,Z=35.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointOffset=(X=-9.000000,Y=3.000000,Z=35.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=20.000000,PointBone="Engine",PointOffset=(X=-15.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="Engine",PointOffset=(X=22.000000),DamageMultiplier=1.000000,HitPointType=HP_Engine)
      VehHitpoints(3)=(PointRadius=15.000000,PointScale=1.000000,PointBone="Engine",PointOffset=(Z=30.000000),DamageMultiplier=1.000000,HitPointType=HP_Engine)
@@ -196,7 +196,7 @@ defaultproperties
      EngineHealth=125
      DriverAttachmentBone="driver_player"
      Begin Object Class=SVehicleWheel Name=LF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_LF"
          BoneRollAxis=AXIS_Y
@@ -206,7 +206,7 @@ defaultproperties
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_RF"
          BoneRollAxis=AXIS_Y
@@ -216,7 +216,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_LR"
          BoneRollAxis=AXIS_Y
@@ -226,7 +226,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_RR"
          BoneRollAxis=AXIS_Y
@@ -236,7 +236,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.RR_Steering'
 
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="Wheel_T_L_3"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=10.000000)
@@ -245,7 +245,7 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="Wheel_T_R_3"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=10.000000)
@@ -254,7 +254,7 @@ defaultproperties
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_UniCarrierTransport.Right_Drive_Wheel'
 
      VehicleMass=5.000000
-     bHasHandbrake=True
+     bHasHandbrake=true
      DriveAnim="VUC_driver_idle_close"
      ExitPositions(0)=(Y=165.000000,Z=40.000000)
      ExitPositions(1)=(Y=-165.000000,Z=40.000000)
@@ -289,20 +289,20 @@ defaultproperties
          KCOMOffset=(Z=-0.500000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=2.000000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_UniCarrierTransport.KParams0'
 
      HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=3
 }

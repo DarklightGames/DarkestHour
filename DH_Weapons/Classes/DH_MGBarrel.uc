@@ -36,9 +36,9 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-    if( (Role == ROLE_Authority) && (DarkestHourGame(Level.Game).LevelInfo != none) )
+    if ((Role == ROLE_Authority) && (DarkestHourGame(Level.Game).LevelInfo != none))
     {
-    	LevelCTemp = FtoCelsiusConversion( DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit );
+    	LevelCTemp = FtoCelsiusConversion(DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit);
 		DH_MGCelsiusTemp = LevelCTemp;
 		//log("ROMGBarrel::PostBeginPlay - ROMGCelsiusTemp is "$ROMGCelsiusTemp);
 	}
@@ -47,10 +47,10 @@ simulated function PostBeginPlay()
 simulated function Destroyed()
 {
 	// if the barrel is destroyed and is steaming, de-activate the steam effect
-	if( bBarrelSteaming )
+	if (bBarrelSteaming)
 		DH_MGBase(Owner).ToggleBarrelSteam(false);
 
-	if( bBarrelDamaged )
+	if (bBarrelDamaged)
 		DH_MGBase(Owner).bBarrelDamaged = false;
 
 	super.Destroyed();
@@ -60,7 +60,7 @@ simulated function Destroyed()
 // FtoCelciusConversion(RO) - This is executed on the authority, used to set the
 //	MG C temp using the map ambient Fahrenheit temp
 //------------------------------------------------------------------------------
-function float FtoCelsiusConversion( INT Fahrenheit )
+function float FtoCelsiusConversion(INT Fahrenheit)
 {
 	local float NewCTemp;
 
@@ -82,39 +82,39 @@ function WeaponFired()
 	DH_MGCelsiusTemp += FiringHeatIncrement;
 
 	// Only CheckBarrelSteaming if the barrel isn't steaming yet
-	if( !bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp) )
+	if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
 	{
     	bBarrelSteaming = true;
     	DH_MGBase(Owner).ToggleBarrelSteam(bBarrelSteaming);
 	}
 
-    if( DH_MGCelsiusTemp > DH_MGFailTemp )
+    if (DH_MGCelsiusTemp > DH_MGFailTemp)
     {
     	bBarrelFailed = true;
 	}
 
     UpdateBarrelStatus();
 
-	//log( "ROMGCelsiusTemp on the server is "$ROMGCelsiusTemp);
+	//log("ROMGCelsiusTemp on the server is "$ROMGCelsiusTemp);
     //log("bBarrelFailed is "$bBarrelFailed);
 }
 
 // Will update this barrel and the weapons's barrel status
 function UpdateBarrelStatus()
 {
-    if( bBarrelFailed )
+    if (bBarrelFailed)
 	{
-    	if( DH_MGbase(Owner) != none )
+    	if (DH_MGbase(Owner) != none)
 			DH_MGbase(Owner).bBarrelFailed = true;
 	}
 
-	if( !bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp) )
+	if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
 	{
     	bBarrelSteaming = true;
         DH_MGBase(Owner).ToggleBarrelSteam(bBarrelSteaming);
 	}
 
-	if( !bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp) )
+	if (!bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp))
 	{
 		bBarrelDamaged = true;
 		DH_MGBase(Owner).bBarrelDamaged = true;
@@ -124,12 +124,12 @@ function UpdateBarrelStatus()
 // Will update this barrel status when it's not currently in use without affecting the weapon
 function UpdateSpareBarrelStatus()
 {
-	if( !bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp) )
+	if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
 	{
     	bBarrelSteaming = true;
 	}
 
-	if( !bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp) )
+	if (!bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp))
 	{
 		bBarrelDamaged = true;
 	}
@@ -140,12 +140,12 @@ state BarrelInUse
     function BeginState()
     {
     	// if the barrel is being put on and is steaming, turn on the steam emitter
-        if( bBarrelSteaming )
+        if (bBarrelSteaming)
         	DH_MGBase(Owner).ToggleBarrelSteam(true);
 
         // if the barrel is being put on and is damaged, set the weapon to have
         // a damaged barrel
-        if( bBarrelDamaged )
+        if (bBarrelDamaged)
 			DH_MGBase(Owner).bBarrelDamaged = true;
 
 		SetTimer(BarrelTimerRate, true);
@@ -159,30 +159,30 @@ state BarrelInUse
 	{
 		// make sure this is done on the authority
 		// if temp is at the level temp, don't bother with anything else
-		if( (Role < ROLE_Authority) || (DH_MGCelsiusTemp == LevelCTemp))
+		if ((Role < ROLE_Authority) || (DH_MGCelsiusTemp == LevelCTemp))
 		{
 			return;
 		}
 
 		// lower the barrel temp or set to Level ambient temp if it goes below
-		if( DH_MGCelsiusTemp > LevelCTemp )
+		if (DH_MGCelsiusTemp > LevelCTemp)
 		{
 			//log("In ROMGBarrel tick, time is "$level.timeseconds$" ROMGCelsiusTemp is "$ROMGCelsiusTemp);
 			DH_MGCelsiusTemp -= (BarrelTimerRate * BarrelCoolingRate);
 		}
-		else if( DH_MGCelsiusTemp < LevelCTemp )
+		else if (DH_MGCelsiusTemp < LevelCTemp)
 		{
 			DH_MGCelsiusTemp = LevelCTemp;
 		}
 
-		if( bBarrelSteaming && (DH_MGCelsiusTemp < DH_MGSteamTemp) )
+		if (bBarrelSteaming && (DH_MGCelsiusTemp < DH_MGSteamTemp))
 		{
 	    	bBarrelSteaming = false;
 	    	DH_MGBase(Owner).ToggleBarrelSteam(bBarrelSteaming);
 		}
 
 		// Questionable, once the barrel is damaged, does it ever really get better again?
-		if( bBarrelDamaged && (DH_MGCelsiusTemp < DH_MGCriticalTemp) )
+		if (bBarrelDamaged && (DH_MGCelsiusTemp < DH_MGCriticalTemp))
 		{
 			bBarrelDamaged = false;
 			DH_MGBase(Owner).bBarrelDamaged = false;
@@ -200,7 +200,7 @@ state BarrelOff
 	{
 		// if the barrel is being removed and is steaming, shut off the steam
 		// emitter
-		if( bBarrelSteaming )
+		if (bBarrelSteaming)
 		{
 		    DH_MGBase(Owner).ToggleBarrelSteam(false);
 		}
@@ -211,29 +211,29 @@ state BarrelOff
 	function Timer()
 	{
 		// make sure this is done on the authority
-		if( (Role < ROLE_Authority) || (DH_MGCelsiusTemp == LevelCTemp))
+		if ((Role < ROLE_Authority) || (DH_MGCelsiusTemp == LevelCTemp))
 		{
 			return;
 		}
 
 		// lower the barrel temp or set to Level ambient temp if it goes below
-		if( DH_MGCelsiusTemp > LevelCTemp )
+		if (DH_MGCelsiusTemp > LevelCTemp)
 		{
 			//log("In ROMGBarrel tick, time is "$level.timeseconds$" ROMGCelsiusTemp is "$ROMGCelsiusTemp);
 			DH_MGCelsiusTemp -= (BarrelTimerRate * BarrelCoolingRate);
 		}
 
-		else if( DH_MGCelsiusTemp < LevelCTemp )
+		else if (DH_MGCelsiusTemp < LevelCTemp)
 		{
 			DH_MGCelsiusTemp = LevelCTemp;
 		}
 
-		if( bBarrelSteaming && (DH_MGCelsiusTemp < DH_MGSteamTemp) )
+		if (bBarrelSteaming && (DH_MGCelsiusTemp < DH_MGSteamTemp))
 		{
     		bBarrelSteaming = false;
 		}
 
-		if( bBarrelDamaged && (DH_MGCelsiusTemp < DH_MGCriticalTemp) )
+		if (bBarrelDamaged && (DH_MGCelsiusTemp < DH_MGCriticalTemp))
 		{
 			bBarrelDamaged = false;
 		}
@@ -248,9 +248,9 @@ defaultproperties
      BarrelCoolingRate=1.000000
      FiringHeatIncrement=1.000000
      BarrelTimerRate=0.100000
-     DrawType=DT_None
-     bHidden=True
-     bReplicateMovement=False
-     RemoteRole=ROLE_None
+     DrawType=DT_none
+     bHidden=true
+     bReplicateMovement=false
+     RemoteRole=ROLE_none
      NetPriority=1.400000
 }

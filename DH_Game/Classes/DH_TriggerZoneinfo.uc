@@ -29,7 +29,7 @@ simulated event PostBeginPlay()
 
    	// If we're on the client side, start in
    	// the right mode based on its trigger:
-   	if ( ROLE != ROLE_Authority && bClientTrigger )
+   	if (ROLE != ROLE_Authority && bClientTrigger)
 	{
       		bIsOn = !bIsOn;
    	}
@@ -59,7 +59,7 @@ simulated event PostBeginPlay()
 
 
 
-simulated function Tick( float DeltaTime )
+simulated function Tick(float DeltaTime)
 {
    	local float percent;
 
@@ -102,7 +102,7 @@ simulated function Tick( float DeltaTime )
 
 }
 
-simulated function Trigger( Actor Other, Pawn EventInstigator )
+simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
    	Log("ZoneInfo Triggered");
    	Enable('Tick');
@@ -121,7 +121,7 @@ simulated function Trigger( Actor Other, Pawn EventInstigator )
 
 }
 
-simulated event ClientTrigger( )
+simulated event ClientTrigger()
 {
    	// This is called client-side when triggered server-side
    	// because in Trigger() we updated bClientTrigger.
@@ -155,9 +155,9 @@ defaultproperties
      ChangeTime=60.000000
      ChangeTimeTwo=0.001000
      SwapTime=0.001000
-     bStatic=False
-     bAlwaysRelevant=True
-     bSkipActorPropertyReplication=False
+     bStatic=false
+     bAlwaysRelevant=true
+     bSkipActorPropertyReplication=false
      RemoteRole=ROLE_SimulatedProxy
-     bGameRelevant=True
+     bGameRelevant=true
 }

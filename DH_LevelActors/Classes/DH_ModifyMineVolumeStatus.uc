@@ -22,7 +22,7 @@ function PostBeginPlay()
 
 	super.PostBeginPlay();
 
-	if(MineVolumeToModify == '')
+	if (MineVolumeToModify == '')
 		return; //end script because volumename was not set
 
 	//Volume are static so use the all actor list
@@ -37,21 +37,21 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
 	local int RandomNum;
 
-	//Level.Game.Broadcast( self, "ChangeMineVolumeStatus was triggered" );
-	if(UseRandomness)
+	//Level.Game.Broadcast(self, "ChangeMineVolumeStatus was triggered");
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //Leave script as it randomly failed
 	}
 	switch(HowToModify)
 	{
 		case SMT_Activate:
-			//Level.Game.Broadcast( self, "Activated Minefield" );
+			//Level.Game.Broadcast(self, "Activated Minefield");
 			MineVolumeReference.bActive = true;
 		break;
 		case SMT_Deactivate:
-			//Level.Game.Broadcast( self, "Deactivated Minefield" );
+			//Level.Game.Broadcast(self, "Deactivated Minefield");
 			MineVolumeReference.bActive = false;
 		break;
 		case SMT_Toggle:
@@ -60,7 +60,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 		default:
 		break;
 	}
-	//Level.Game.Broadcast( self, "Minefield bActive variable is "$MineVolumeReference.bActive );
+	//Level.Game.Broadcast(self, "Minefield bActive variable is "$MineVolumeReference.bActive);
 }
 
 defaultproperties

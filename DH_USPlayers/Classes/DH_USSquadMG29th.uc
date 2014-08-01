@@ -29,12 +29,12 @@ defaultproperties
      Models(2)="US_29Inf3"
      Models(3)="US_29Inf4"
      Models(4)="US_29Inf5"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_BARWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet29thEMa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet29thEMb'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_SMG
      limit=2
 }

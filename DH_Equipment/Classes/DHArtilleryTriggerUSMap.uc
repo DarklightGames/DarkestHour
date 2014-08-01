@@ -9,7 +9,7 @@ var   float TriggerTime;
 
 var DH_Pawn Carrier; // Player carrying the radio
 
-function UsedBy( Pawn user )
+function UsedBy(Pawn user)
 {
     local DHPlayer DHP;
     local ROVolumeTest RVT;
@@ -21,25 +21,25 @@ function UsedBy( Pawn user )
 
     SavedUser = none;
 
-    if( user.Controller != none )
+    if (user.Controller != none)
         DHP = DHPlayer(user.Controller);
 
     // Bots can't call arty yet
-    if( DHP == none )
+    if (DHP == none)
         return;
 
     PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
 
-    if(DH_Pawn(user) == none)
+    if (DH_Pawn(user) == none)
         return;
 
     RI = DH_Pawn(user).GetRoleInfo();
 
     // Don't let non-commanders call in arty
-    if ( PRI == none || RI == none || !RI.bIsArtilleryOfficer)
+    if (PRI == none || RI == none || !RI.bIsArtilleryOfficer)
         return;
 
-    if ( DHP != none && DHP.SavedArtilleryCoords == vect(0,0,0))
+    if (DHP != none && DHP.SavedArtilleryCoords == vect(0,0,0))
     {
        DHP.ReceiveLocalizedMessage(class'ROArtilleryMsg', 4);
        return;
@@ -47,7 +47,7 @@ function UsedBy( Pawn user )
 
     // Don't let the player call in an arty strike on a location that has become an active
     // NoArtyVolume after they marked the location.
-    if ( DHP != none )
+    if (DHP != none)
     {
         RVT = Spawn(class'ROVolumeTest',self,,DHP.SavedArtilleryCoords);
 
@@ -61,25 +61,25 @@ function UsedBy( Pawn user )
         RVT.Destroy();
     }
 
-    if ( ApprovePlayerTeam( user.GetTeamNum() ) )
+    if (ApprovePlayerTeam(user.GetTeamNum()))
     {
          SavedUser = user;
          bAvailable = false;
 
-         if( SavedUser.Controller != none )
+         if (SavedUser.Controller != none)
             DHP = DHPlayer(SavedUser.Controller);
 
-         if( DHP != none )
+         if (DHP != none)
              DHPlayer(SavedUser.Controller).ReceiveLocalizedMessage(class'ROArtilleryMsg', 1);
 
-         if ( user.GetTeamNum() == AXIS_TEAM_INDEX )
+         if (user.GetTeamNum() == AXIS_TEAM_INDEX)
          {
-              user.PlaySound( GermanRequestSound, Slot_None, 3.0, false, 100, 1.0,true);
+              user.PlaySound(GermanRequestSound, Slot_none, 3.0, false, 100, 1.0,true);
               SetTimer(GetSoundDuration(GermanRequestSound), false);
          }
          else
          {
-              user.PlaySound(RussianRequestSound,Slot_None, 3.0, false, 100, 1.0,true );
+              user.PlaySound(RussianRequestSound,Slot_none, 3.0, false, 100, 1.0,true);
               SetTimer(GetSoundDuration(RussianRequestSound), false);
          }
 
@@ -87,7 +87,7 @@ function UsedBy( Pawn user )
     }
 }
 
-function Touch( Actor Other )
+function Touch(Actor Other)
 {
     local DHPlayerReplicationInfo PRI;
     local Pawn P;
@@ -95,28 +95,28 @@ function Touch( Actor Other )
 
     P = Pawn(Other);
 
-    if ( P != none )
+    if (P != none)
         PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-    if(PRI == none || PRI.RoleInfo == none)
+    if (PRI == none || PRI.RoleInfo == none)
         return;
 
     RI = DH_RoleInfo(PRI.RoleInfo);
 
-    if ( RI.bIsArtilleryOfficer && ApprovePlayerTeam(Pawn(Other).GetTeamNum()) )
+    if (RI.bIsArtilleryOfficer && ApprovePlayerTeam(Pawn(Other).GetTeamNum()))
     {
-        if ( ReTriggerDelay > 0 )
+        if (ReTriggerDelay > 0)
         {
-            if ( Level.TimeSeconds - TriggerTime < ReTriggerDelay )
+            if (Level.TimeSeconds - TriggerTime < ReTriggerDelay)
                 return;
             TriggerTime = Level.TimeSeconds;
         }
 
         // Send a string message to the toucher.
-        if( Message != "" )
-            Pawn(Other).ClientMessage( Message );
+        if (Message != "")
+            Pawn(Other).ClientMessage(Message);
 
-        if ( AIController(Pawn(Other).Controller) != None )
+        if (AIController(Pawn(Other).Controller) != none)
             UsedBy(Pawn(Other));
     }
 }

@@ -16,16 +16,16 @@ class DH_TankMediumHEHitEffect extends Emitter;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          Opacity=0.750000
@@ -50,16 +50,16 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          Acceleration=(Z=-100.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -86,16 +86,16 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          Acceleration=(X=200.000000,Y=200.000000,Z=50.000000)
          ColorScale(0)=(Color=(B=107,G=107,R=107,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -118,17 +118,17 @@ defaultproperties
      Emitters(2)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter2'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter3
-         UseColorScale=True
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         UseColorScale=true
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          Acceleration=(X=50.000000,Y=50.000000,Z=50.000000)
          ColorScale(0)=(Color=(A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(A=255))
@@ -157,15 +157,15 @@ defaultproperties
      Emitters(3)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter3'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter4
-         FadeOut=True
-         RespawnDeadParticles=False
-         UseRevolution=True
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         FadeOut=true
+         RespawnDeadParticles=false
+         UseRevolution=true
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          Acceleration=(Z=-1000.000000)
          DampingFactorRange=(X=(Min=0.200000,Max=0.200000),Y=(Min=0.200000,Max=0.200000),Z=(Min=0.200000,Max=0.200000))
          ColorScale(0)=(Color=(B=25,G=25,R=25,A=255))
@@ -187,13 +187,13 @@ defaultproperties
      Emitters(4)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter4'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter5
-         FadeOut=True
-         RespawnDeadParticles=False
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
+         FadeOut=true
+         RespawnDeadParticles=false
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
          Acceleration=(Z=50.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -213,14 +213,14 @@ defaultproperties
      Emitters(5)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter5'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter6
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(Z=-75.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -239,14 +239,14 @@ defaultproperties
      Emitters(6)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter6'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter7
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
          Acceleration=(Z=50.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -270,14 +270,14 @@ defaultproperties
      Emitters(7)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter7'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter8
-         UseColorScale=True
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=50.000000,Y=50.000000,Z=0.500000)
          ColorScale(0)=(Color=(B=104,G=123,R=132,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -299,10 +299,10 @@ defaultproperties
      End Object
      Emitters(8)=SpriteEmitter'DH_Effects.DH_TankMediumHEHitEffect.SpriteEmitter8'
 
-     bNoDelete=False
-     bNetTemporary=True
+     bNoDelete=false
+     bNetTemporary=true
      LifeSpan=16.000000
      Style=STY_Masked
-     bHardAttach=True
-     bDirectional=True
+     bHardAttach=true
+     bDirectional=true
 }

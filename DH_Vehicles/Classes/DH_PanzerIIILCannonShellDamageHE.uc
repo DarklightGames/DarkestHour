@@ -15,7 +15,7 @@ defaultproperties
      VehicleDamageModifier=1.000000
      TreadDamageModifier=0.500000
      DeathString="%o was ripped by shrapnel from %k's Panzer III Ausf.L HE shell."
-     bArmorStops=True
+     bArmorStops=true
      KDamageImpulse=3000.000000
      VehicleMomentumScaling=1.100000
      HumanObliterationThreshhold=180

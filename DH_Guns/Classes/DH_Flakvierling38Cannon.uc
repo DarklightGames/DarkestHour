@@ -14,7 +14,7 @@ var name					ElevationWheelBone;
 
 replication
 {
-	reliable if(Role == ROLE_Authority)
+	reliable if (Role == ROLE_Authority)
 		FireAnimationIndex;
 }
 
@@ -63,7 +63,7 @@ state ProjectileFireMode
 		SpawnProjectile(ProjectileClass, false);
 
 		// Swap animation index
-		if(FireAnimationIndex == 0)
+		if (FireAnimationIndex == 0)
 			FireAnimationIndex = 1;
 		else
 			FireAnimationIndex = 0;
@@ -77,13 +77,13 @@ state ProjectileFireMode
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-	if(bAltFire)
+	if (bAltFire)
 		return false;
 
-  	if(Role != ROLE_Authority || bForceCenterAim)
-		return False;
+  	if (Role != ROLE_Authority || bForceCenterAim)
+		return false;
 
-	if ( (!bAltFire && CannonReloadState == CR_ReadyToFire && FireCountdown <= 0) || (bAltFire && FireCountdown <= 0))
+	if ((!bAltFire && CannonReloadState == CR_ReadyToFire && FireCountdown <= 0) || (bAltFire && FireCountdown <= 0))
 	{
 		CalcWeaponFire(bAltFire);
 
@@ -101,7 +101,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
         if (ProjectileClass == PrimaryProjectileClass)
 	    {
-		    if( !ConsumeAmmo(0) )
+		    if (!ConsumeAmmo(0))
 		    {
 			    VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 
@@ -110,7 +110,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		    }
 		    else
 		    {
-			    if( MainAmmoCharge[0] == 0 && !HasMagazines(0) && HasMagazines(1) )
+			    if (MainAmmoCharge[0] == 0 && !HasMagazines(0) && HasMagazines(1))
 			    {
 				    ToggleRoundType();
                 	HandleSecondaryCannonReload();
@@ -120,14 +120,14 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		    FireCountdown = FireInterval;
             Fire(C);
 
-	        if( MainAmmoCharge[0] < 1 )
+	        if (MainAmmoCharge[0] < 1)
 	        {
 		        HandlePrimaryCannonReload();
 		    }
         }
 	    else if (ProjectileClass == SecondaryProjectileClass)
 	    {
-		    if( !ConsumeAmmo(1) )
+		    if (!ConsumeAmmo(1))
 		    {
 			    VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 
@@ -136,7 +136,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		    }
 		    else
 		    {
-			    if( MainAmmoCharge[1] == 0 && !HasMagazines(1) && HasMagazines(0) )
+			    if (MainAmmoCharge[1] == 0 && !HasMagazines(1) && HasMagazines(0))
 			    {
 				    ToggleRoundType();
 		        	HandlePrimaryCannonReload();
@@ -146,7 +146,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		    FireCountdown = FireInterval;
             Fire(C);
 
-	        if( MainAmmoCharge[1] < 1 )
+	        if (MainAmmoCharge[1] < 1)
 	        {
 		        HandleSecondaryCannonReload();
 		    }
@@ -154,10 +154,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
         AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
-	    return True;
+	    return true;
 	}
 
-	return False;
+	return false;
 }
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
@@ -170,7 +170,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     local vector BarrelLocation[2];
     local rotator BarrelRotation[2];
 
-    if(FireAnimationIndex == 0)
+    if (FireAnimationIndex == 0)
     {
     	GetBarrelLocationAndRotation(0, BarrelLocation[0], BarrelRotation[0]);
     	GetBarrelLocationAndRotation(3, BarrelLocation[1], BarrelRotation[1]);
@@ -186,7 +186,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 		FireRot = BarrelRotation[i];
 
 		// used only for Human players. Lets cannons with non centered aim points have a different aiming location
-		if( Instigator != none && Instigator.IsHumanControlled() )
+		if (Instigator != none && Instigator.IsHumanControlled())
 		{
 	  		FireRot.Pitch += AddedPitch;
 		}
@@ -198,7 +198,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
 	    P = spawn(ProjClass, none, , StartLocation, FireRot); //self
 
-	    if (P != None)
+	    if (P != none)
 	    {
 	        if (bInheritVelocity)
 	            P.Velocity = Instigator.Velocity;
@@ -216,7 +216,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 	                AmbientSoundScaling = AltFireSoundScaling;
 	            }
 	            else
-	                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
+	                PlayOwnedSound(AltFireSoundClass, SLOT_none, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
 	        }
 	        else
 	        {
@@ -224,7 +224,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 	                AmbientSound = FireSoundClass;
 	            else
 	            {
-	                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);
+	                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume/255.0,, FireSoundRadius,, false);
 	            }
 	        }
 	    }
@@ -237,7 +237,7 @@ simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLoca
 	local coords BarrelBoneCoords;
 	local vector CurrentFireOffset;
 
-	if(Index < 0 || Index >= ArrayCount(BarrelBones))
+	if (Index < 0 || Index >= ArrayCount(BarrelBones))
 		return;
 
 	BarrelBoneCoords = GetBoneCoords(BarrelBones[Index]);
@@ -256,10 +256,10 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 	// Calculate fire offset in world space
 	WeaponBoneCoords = GetBoneCoords(BarrelBones[BarrelBoneIndex++]);
 
-	if(BarrelBoneIndex >= 4)
+	if (BarrelBoneIndex >= 4)
 		BarrelBoneIndex = 0;
 
-	if( bWasAltFire )
+	if (bWasAltFire)
 		CurrentFireOffset = AltFireOffset + (WeaponFireOffset * vect(1,0,0));
 	else
 		CurrentFireOffset = (WeaponFireOffset * vect(1,0,0)) + (DualFireOffset * vect(0,1,0));
@@ -291,10 +291,10 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
     else
         CalcWeaponFire(bWasAltFire);
 
-	if(HasAnim(FireAnimations[FireAnimationIndex]))
+	if (HasAnim(FireAnimations[FireAnimationIndex]))
 		PlayAnim(FireAnimations[FireAnimationIndex]);
 
-	if(FireAnimationIndex == 0)
+	if (FireAnimationIndex == 0)
 	{
         FlashEmitters[0].Trigger(Self, Instigator);
         FlashEmitters[3].Trigger(Self, Instigator);
@@ -318,7 +318,7 @@ simulated function InitEffects()
 
 	for(i = 0 ; i < 4; i++)
 	{
-		if ((FlashEmitterClass != None) && (FlashEmitters[i] == None))
+		if ((FlashEmitterClass != none) && (FlashEmitters[i] == none))
 		{
 			FlashEmitters[i] = Spawn(FlashEmitterClass);
 			FlashEmitters[i].SetDrawScale(DrawScale);
@@ -330,14 +330,14 @@ simulated function InitEffects()
 
 function ToggleRoundType()
 {
-	if( !HasMagazines(0) && !HasMagazines(1) )
+	if (!HasMagazines(0) && !HasMagazines(1))
     	return;
 
-    if( (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none) && HasMagazines(1) )
+    if ((PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none) && HasMagazines(1))
     {
 		PendingProjectileClass = SecondaryProjectileClass;
     }
-    else if( PendingProjectileClass == SecondaryProjectileClass && HasMagazines(0) )
+    else if (PendingProjectileClass == SecondaryProjectileClass && HasMagazines(0))
     {
 		PendingProjectileClass = PrimaryProjectileClass;
     }
@@ -377,7 +377,7 @@ defaultproperties
      FireInterval=0.150000
      FlashEmitterClass=Class'DH_Guns.DH_Flakvierling38MuzzleFlash'
      ProjectileClass=Class'DH_Guns.DH_Flakvierling38CannonShellAP'
-     AltFireProjectileClass=None
+     AltFireProjectileClass=none
      CustomPitchUpLimit=15474
      CustomPitchDownLimit=64990
      InitialPrimaryAmmo=40

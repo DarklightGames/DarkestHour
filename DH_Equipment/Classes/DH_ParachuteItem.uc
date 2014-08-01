@@ -22,7 +22,7 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
 
     bPendingSwitch = bPossiblySwitch;
 
-    if( Instigator == None )
+    if (Instigator == none)
     {
         GotoState('PendingClientWeaponSet');
         return;
@@ -31,39 +31,39 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     ClientState = WS_Hidden;
     GotoState('Hidden');
 
-    if( Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled() )
+    if (Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled())
         return;
 
-    if( Instigator.Weapon == self || Instigator.PendingWeapon == self ) // this weapon was switched to while waiting for replication, switch to it now
+    if (Instigator.Weapon == self || Instigator.PendingWeapon == self) // this weapon was switched to while waiting for replication, switch to it now
     {
-		if (Instigator.PendingWeapon != None)
+		if (Instigator.PendingWeapon != none)
             Instigator.ChangedWeapon();
         else
             BringUp();
         return;
     }
 
-    if( Instigator.PendingWeapon != None && Instigator.PendingWeapon.bForceSwitch )
+    if (Instigator.PendingWeapon != none && Instigator.PendingWeapon.bForceSwitch)
         return;
 
-    if( Instigator.Weapon == None )
+    if (Instigator.Weapon == none)
     {
         Instigator.PendingWeapon = self;
         Instigator.ChangedWeapon();
     }
-    else if ( bPossiblySwitch && !Instigator.Weapon.IsFiring() )
+    else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
     {
-		if ( PlayerController(Instigator.Controller) != None && PlayerController(Instigator.Controller).bNeverSwitchOnPickup )
+		if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
 			return;
-        if ( Instigator.PendingWeapon != None )
+        if (Instigator.PendingWeapon != none)
         {
-            if ( RateSelf() > Instigator.PendingWeapon.RateSelf() )
+            if (RateSelf() > Instigator.PendingWeapon.RateSelf())
             {
                 Instigator.PendingWeapon = self;
                 Instigator.Weapon.PutDown();
             }
         }
-        else if ( RateSelf() > Instigator.Weapon.RateSelf() )
+        else if (RateSelf() > Instigator.Weapon.RateSelf())
         {
             Instigator.PendingWeapon = self;
             Instigator.Weapon.PutDown();
@@ -91,14 +91,14 @@ simulated state RaisingWeapon
 		}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	    if ( ClientState == WS_Hidden )
+	    if (ClientState == WS_Hidden)
 	    {
 	        PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
 			ClientPlayForceFeedback(SelectForce);  // jdf
 
-	        if ( Instigator.IsLocallyControlled() )
+	        if (Instigator.IsLocallyControlled())
 	        {
-	            if ( (Mesh!=None) && HasAnim(SelectAnim) )
+	            if ((Mesh!=none) && HasAnim(SelectAnim))
 	                PlayAnim(SelectAnim, SelectAnimRate, 0.0);
 	        }
 
@@ -136,9 +136,9 @@ simulated state LoweringWeapon
 	    {
 	        if (Instigator.IsLocallyControlled())
 	        {
-				if ( ClientState == WS_BringUp )
+				if (ClientState == WS_BringUp)
 					TweenAnim(SelectAnim,PutDownTime);
-				else if ( HasAnim(PutDownAnim) )
+				else if (HasAnim(PutDownAnim))
 					PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
 	        }
 
@@ -152,7 +152,7 @@ simulated state LoweringWeapon
     {
 		if (ClientState == WS_PutDown)
 	    {
-			if ( Instigator.PendingWeapon == none )
+			if (Instigator.PendingWeapon == none)
 			{
 				PlayIdle();
 				ClientState = WS_ReadyToFire;
@@ -161,7 +161,7 @@ simulated state LoweringWeapon
 			{
 				ClientState = WS_Hidden;
 				Instigator.ChangedWeapon();
-				if ( Instigator.Weapon == self )
+				if (Instigator.Weapon == self)
 				{
 					PlayIdle();
 					ClientState = WS_ReadyToFire;
@@ -179,7 +179,7 @@ simulated state LoweringWeapon
 
 //******************************************************************************
 // Overwritten to prevent 1st person arms & chute changing pitch rotation
-simulated event RenderOverlays( Canvas Canvas )
+simulated event RenderOverlays(Canvas Canvas)
 {
 //	local int m;
     	local rotator RollMod;
@@ -187,17 +187,17 @@ simulated event RenderOverlays( Canvas Canvas )
     	local ROPlayer Playa;
 
 
-    	if (Instigator == None)
+    	if (Instigator == none)
     		return;
 
     	// Lets avoid having to do multiple casts every tick - Ramm
     	Playa = ROPlayer(Instigator.Controller);
 
-	Canvas.DrawActor(None, false, true); 	// amb: Clear the z-buffer here
-	SetLocation( Instigator.Location + Instigator.CalcDrawOffset(self) );
+	Canvas.DrawActor(none, false, true); 	// amb: Clear the z-buffer here
+	SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
 	RollMod = Instigator.GetViewRotation();
 	YawMod.Yaw = RollMod.Yaw;
-    	SetRotation( YawMod );
+    	SetRotation(YawMod);
 
     	bDrawingFirstPerson = true;
     	Canvas.DrawActor(self, false, false, 90);	//DisplayFOV);
@@ -209,7 +209,7 @@ simulated function AnimEnd(int channel)
 {
     if (ClientState == WS_ReadyToFire)
     {
-		if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+		if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         {
             PlayIdle();
         }
@@ -276,7 +276,7 @@ simulated function Fire(float F)
 defaultproperties
 {
      PutDownAnim="PutDown"
-     bCanThrow=False
+     bCanThrow=false
      InventoryGroup=12
      ItemName="Parachute"
      AttachmentBone="HIP"

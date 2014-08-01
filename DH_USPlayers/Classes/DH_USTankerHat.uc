@@ -13,7 +13,7 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     bIsHelmet=False
+     bIsHelmet=false
      Mesh=SkeletalMesh'dhgear_anm.US_TankerHat'
      Skins(0)=Texture'DHUSCharactersTex.Gear.US_Tanker_Headgear'
      Skins(1)=Texture'DH_GUI_Tex.Menu.DHSectionTopper'

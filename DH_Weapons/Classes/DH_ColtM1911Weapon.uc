@@ -28,7 +28,7 @@ defaultproperties
      PutDownEmptyAnim="putaway_empty"
      MaxNumPrimaryMags=5
      InitialNumPrimaryMags=5
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      PlayerIronsightFOV=70.000000
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
@@ -47,7 +47,7 @@ defaultproperties
      AIRating=0.350000
      CurrentRating=0.350000
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_ColtM1911Pickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_ColtM1911Attachment'

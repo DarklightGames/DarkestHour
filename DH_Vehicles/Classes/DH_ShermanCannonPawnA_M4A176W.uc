@@ -9,7 +9,7 @@
 class DH_ShermanCannonPawnA_M4A176W extends DH_AmericanTankCannonPawn;
 
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
     local vector VehicleZ, CamViewOffsetWorld;
@@ -24,7 +24,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
     WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
 
-    if( ROPlayer(Controller) != none )
+    if (ROPlayer(Controller) != none)
     {
         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
@@ -57,18 +57,18 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     else
         CameraRotation = PC.Rotation;
 
-    if( IsInState('ViewTransition') && bLockCameraDuringTransition )
+    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
     {
-        CameraRotation = Gun.GetBoneRotation( 'Camera_com' );
+        CameraRotation = Gun.GetBoneRotation('Camera_com');
     }
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-    if(CameraBone != '' && Gun != None)
+    if (CameraBone != '' && Gun != none)
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-        if( DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
         {
             CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
@@ -77,7 +77,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
             CameraLocation = Gun.GetBoneCoords('Camera_com').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
 
-        if(bFPNoZFromCameraPitch)
+        if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0,0,1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
@@ -88,7 +88,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     {
         CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-        if(bFPNoZFromCameraPitch)
+        if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0,0,1) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
@@ -111,15 +111,15 @@ defaultproperties
      WeaponFov=14.400000
      AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
      AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
-     DriverPositions(0)=(ViewLocation=(X=18.000000,Y=20.000000,Z=7.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',ViewPitchUpLimit=5461,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=True)
-     DriverPositions(1)=(ViewLocation=(Z=10.000000),ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=True)
-     DriverPositions(2)=(ViewLocation=(Z=4.000000),ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=True)
-     DriverPositions(3)=(ViewLocation=(Z=4.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=True,bExposed=True)
+     DriverPositions(0)=(ViewLocation=(X=18.000000,Y=20.000000,Z=7.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',ViewPitchUpLimit=5461,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+     DriverPositions(1)=(ViewLocation=(Z=10.000000),ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
+     DriverPositions(2)=(ViewLocation=(Z=4.000000),ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+     DriverPositions(3)=(ViewLocation=(Z=4.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-95000.000000)
      GunClass=Class'DH_Vehicles.DH_ShermanCannonA_M4A176W'
      CameraBone="Gun"
-     bPCRelativeFPRotation=True
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=3.000000,Z=-8.000000)
      DriveAnim="stand_idlehip_binoc"
      ExitPositions(0)=(Y=-100.000000,Z=186.000000)

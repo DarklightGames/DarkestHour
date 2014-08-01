@@ -4,7 +4,7 @@ class DHVoiceChatRoom extends UnrealChatRoom;
 // NOTE: Overriden to eliminate "has left channel" chat messages
 function RemoveMember(PlayerReplicationInfo PRI)
 {
-	if ( PRI != None && PRI.VoiceID < 32 && IsMember(PRI, True) )
+	if (PRI != none && PRI.VoiceID < 32 && IsMember(PRI, true))
 	{
 		SetMask(GetMask() & ~(1<<PRI.VoiceID));
 	}

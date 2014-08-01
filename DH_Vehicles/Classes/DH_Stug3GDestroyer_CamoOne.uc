@@ -29,7 +29,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     bHasAddedSideArmor=True
+     bHasAddedSideArmor=true
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GCannonPawn_CamoOne')
      PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GMountedMGPawn_CamoOne')
      DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_dest2'

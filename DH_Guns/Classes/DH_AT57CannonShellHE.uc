@@ -41,7 +41,7 @@ defaultproperties
      DHPenetrationTable(9)=0.900000
      DHPenetrationTable(10)=0.700000
      ShellDiameter=5.700000
-     bHasTracer=True
+     bHasTracer=true
      PenetrationMag=630.000000
      ShellImpactDamage=Class'DH_Guns.DH_AT57CannonShellDamageAP'
      ImpactDamage=295

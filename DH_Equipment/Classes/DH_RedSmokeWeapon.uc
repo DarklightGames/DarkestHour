@@ -19,7 +19,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 	DHP = DHPlayer(Instigator.Controller);
 
-	if(DHP != none)
+	if (DHP != none)
 		DHP.QueueHint(3, false);
 }
 
@@ -40,7 +40,7 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bCanThrow=False
+     bCanThrow=false
      DisplayFOV=70.000000
      InventoryGroup=8
      PickupClass=Class'DH_Equipment.DH_RedSmokePickup'

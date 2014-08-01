@@ -51,7 +51,7 @@ defaultproperties
      OpticalRanges(18)=(Range=1800)
      OpticalRanges(19)=(Range=1900)
      OpticalRanges(20)=(Range=2000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=11.500000
      DHPenetrationTable(1)=11.000000
      DHPenetrationTable(2)=10.300000
@@ -64,7 +64,7 @@ defaultproperties
      DHPenetrationTable(9)=6.000000
      DHPenetrationTable(10)=5.200000
      ShellDiameter=5.700000
-     bShatterProne=True
+     bShatterProne=true
      ShellShatterEffectClass=Class'DH_Effects.DH_TankAPShellShatterSmall'
      TracerEffect=Class'DH_Effects.DH_RedTankShellTracer'
      ShellImpactDamage=Class'DH_Guns.DH_6PounderCannonShellDamageAP'

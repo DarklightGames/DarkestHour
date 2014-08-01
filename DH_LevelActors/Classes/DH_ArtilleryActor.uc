@@ -44,7 +44,7 @@ function Reset()
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {
-	if( IsInState('Activated') )
+	if (IsInState('Activated'))
 		gotostate('Deactivated');
 	else
 		gotostate('Activated');
@@ -54,7 +54,7 @@ auto state Initialize
 {
 	function BeginState()
 	{
-		if( bAutoStart )
+		if (bAutoStart)
 			gotostate('Activated');
 		else
 			gotostate('Deactivated');
@@ -67,8 +67,8 @@ state Activated
 	{
 		local int	RanIntervalTime;
 
-		RanIntervalTime = RandRange( CallIntervalMin, CallIntervalMax );
-		SetTimer( RanIntervalTime, false );
+		RanIntervalTime = RandRange(CallIntervalMin, CallIntervalMax);
+		SetTimer(RanIntervalTime, false);
 	}
 	function Timer()
 	{
@@ -77,14 +77,14 @@ state Activated
 
 		RandomNum = Rand(101);  // gets a random # between 0 & 100
 
-		if( RandomNum <= PercentToSucceed )
+		if (RandomNum <= PercentToSucceed)
 		{
-			if( NumRoundsFired >= MaxRounds && MaxRounds != 0 )
+			if (NumRoundsFired >= MaxRounds && MaxRounds != 0)
 			{
 				gotostate('Deactivated');
 			}
 			NumRoundsFired++;
-			if( ArtyReferences.Length > 0 )
+			if (ArtyReferences.Length > 0)
 			{
 				//Select the location to send the round
 				RandomNum = Rand(ArtyReferences.Length);
@@ -92,11 +92,11 @@ state Activated
 				//Randomize the location offset
 				FallOffset = vect(0,0,0);
 				FallOffset.X += Rand(ArtyReferences[RandomNum].XWidth);
-				if(Frand() > 0.5)
+				if (Frand() > 0.5)
 					FallOffset.X *= -1;
 
 				FallOffset.Y += Rand(ArtyReferences[RandomNum].YWidth);
-				if(Frand() > 0.5)
+				if (Frand() > 0.5)
 					FallOffset.Y *= -1;
 
 				Spawn(class 'ROArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity));
@@ -106,19 +106,19 @@ state Activated
 				//Randomize the location offset
 				FallOffset = vect(0,0,0);
 			    FallOffset.X += Rand(XWidth);
-			    if(Frand() > 0.5)
+			    if (Frand() > 0.5)
 		           FallOffset.X *= -1;
 
 			    FallOffset.Y += Rand(YWidth);
-			    if(Frand() > 0.5)
+			    if (Frand() > 0.5)
 		           FallOffset.Y *= -1;
 		        //Spawn the artillery round with the random offset
 				Spawn(class 'ROArtilleryShell',,, Location + FallOffset, rotator(PhysicsVolume.Gravity));
 			}
 		}
-		RandomNum = RandRange( CallIntervalMin, CallIntervalMax );
-		SetTimer( RandomNum, false ); //Recall the timer with a new random Call interval
-		//Level.Game.Broadcast( self, "RandomVector: X:"$RandVector.X$" Y:"$RandVector.Y$" Z:"$RandVector.Z );
+		RandomNum = RandRange(CallIntervalMin, CallIntervalMax);
+		SetTimer(RandomNum, false); //Recall the timer with a new random Call interval
+		//Level.Game.Broadcast(self, "Randomvector: X:"$Randvector.X$" Y:"$Randvector.Y$" Z:"$Randvector.Z);
 	}
 }
 
@@ -134,6 +134,6 @@ defaultproperties
      PercentToSucceed=80
      CallIntervalMin=10
      CallIntervalMax=20
-     bAutoStart=True
+     bAutoStart=true
      MaxRounds=50
 }

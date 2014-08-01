@@ -10,7 +10,7 @@ var() bool bExactProjectileCollision;		// nonzero extent projectiles should shri
 
 simulated function PostBeginPlay() 
 { 
-	LoopAnim( AnimName, AnimRate );
+	LoopAnim(AnimName, AnimRate);
      	Super.PostBeginPlay();
 }
 
@@ -18,16 +18,16 @@ defaultproperties
 {
      AnimName="Higgins-Idle"
      AnimRate=1.000000
-     bExactProjectileCollision=True
+     bExactProjectileCollision=true
      DrawType=DT_Mesh
-     bUseDynamicLights=True
-     bNoDelete=True
+     bUseDynamicLights=true
+     bNoDelete=true
      Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
-     bShadowCast=True
+     bShadowCast=true
      CollisionRadius=200.000000
      CollisionHeight=200.000000
-     bCollideActors=True
-     bBlockActors=True
-     bBlockKarma=True
-     bEdShouldSnap=True
+     bCollideActors=true
+     bBlockActors=true
+     bBlockKarma=true
+     bEdShouldSnap=true
 }

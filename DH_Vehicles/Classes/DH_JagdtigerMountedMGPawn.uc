@@ -13,10 +13,10 @@ defaultproperties
      MGOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
      WeaponFov=41.000000
      GunClass=Class'DH_Vehicles.DH_JagdtigerMountedMG'
-     bHasAltFire=False
+     bHasAltFire=false
      CameraBone="mg_yaw"
-     bDrawDriverInTP=False
-     bDesiredBehindView=False
+     bDrawDriverInTP=false
+     bDesiredBehindView=false
      DrivePos=(Z=130.000000)
      ExitPositions(0)=(X=-45.000000,Y=20.000000,Z=150.000000)
      ExitPositions(1)=(X=-125.000000,Y=20.000000,Z=125.000000)

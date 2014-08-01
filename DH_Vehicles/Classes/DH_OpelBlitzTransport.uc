@@ -39,13 +39,13 @@ simulated function PostBeginPlay()
 {
      super.PostBeginPlay();
 
-     if (  ResupplyAttach == none )
+     if (ResupplyAttach == none)
      {
            ResupplyAttach = Spawn(class 'DH_OpelBlitzResupplyAttachment');
            AttachToBone(ResupplyAttach, ResupplyAttachBone);
      }
 
-     if (DecorationAttach == none )
+     if (DecorationAttach == none)
      {
            DecorationAttach = Spawn(class 'DH_OpelBlitzDecoAttachment');
            AttachToBone(DecorationAttach, DecorationAttachBone);
@@ -56,10 +56,10 @@ simulated function PostBeginPlay()
 simulated function Destroyed()
 {
 
-	if( ResupplyAttach != none )
+	if (ResupplyAttach != none)
 	    ResupplyAttach.Destroy();
 
-	if( DecorationAttach != none )
+	if (DecorationAttach != none)
         DecorationAttach.Destroy();
 
 	super.Destroyed();
@@ -68,7 +68,7 @@ simulated function Destroyed()
 simulated event DestroyAppearance()
 {
 
-   	if( ResupplyAttach != none )
+   	if (ResupplyAttach != none)
    	{
 	    ResupplyAttach.Destroy();
 	}
@@ -85,37 +85,37 @@ function bool TryToDrive(Pawn P)
 	if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
 	{
 		for (x = 0; x < WeaponPawns.length; x++)
-			if (WeaponPawns[x].Driver != None)
+			if (WeaponPawns[x].Driver != none)
 			{
-				DenyEntry( P, 2 );
+				DenyEntry(P, 2);
 				return false;
 			}
 	}
 
-	if ( P.bIsCrouched ||  bNonHumanControl || (P.Controller == None) || (Driver != None) || (P.DrivenVehicle != None) || !P.Controller.bIsPlayer
-	     || P.IsA('Vehicle') || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')) )
+	if (P.bIsCrouched ||  bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
+	     || P.IsA('Vehicle') || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')))
 		return false;
 
-	if( !Level.Game.CanEnterVehicle(self, P) )
+	if (!Level.Game.CanEnterVehicle(self, P))
 		return false;
 
 	// Check vehicle Locking....
-	if ( bTeamLocked && ( P.GetTeamNum() != VehicleTeam ))
+	if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
 	{
-		DenyEntry( P, 1 );
+		DenyEntry(P, 1);
 		return false;
 	}
-	else if( bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
+	else if (bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
 	{
-	   DenyEntry( P, 0 );
+	   DenyEntry(P, 0);
 	   return false;
 	}
 	else
 	{
-		if ( bEnterringUnlocks && bTeamLocked )
+		if (bEnterringUnlocks && bTeamLocked)
 			bTeamLocked = false;
 
-		KDriverEnter( P );
+		KDriverEnter(P);
 		return true;
 	}
 }
@@ -125,7 +125,7 @@ defaultproperties
      ResupplyAttachBone="supply"
      DecorationAttachBone="Deco"
      EngineHealthMax=35
-     bResupplyVehicle=True
+     bResupplyVehicle=true
      WheelSoftness=0.025000
      WheelPenScale=1.200000
      WheelPenOffset=0.010000
@@ -187,8 +187,8 @@ defaultproperties
      ImpactDamageMult=0.001000
      SteeringScaleFactor=4.000000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=True,ViewFOV=85.000000)
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=85.000000)
+     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=85.000000)
      InitialPositionIndex=0
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
      VehicleHudOccupantsX(0)=0.450000
@@ -200,7 +200,7 @@ defaultproperties
      VehicleHudOccupantsY(2)=0.800000
      VehicleHudOccupantsY(3)=0.800000
      VehicleHudEngineY=0.250000
-     VehHitpoints(0)=(PointBone="Camera_driver",bPenetrationPoint=False)
+     VehHitpoints(0)=(PointBone="Camera_driver",bPenetrationPoint=false)
      VehHitpoints(1)=(PointBone="Engine",PointOffset=(X=16.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=40.000000,PointScale=1.000000,PointBone="body",PointOffset=(Y=50.000000,Z=15.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      EngineHealth=35
@@ -226,8 +226,8 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_OpelBlitzTransport.LFWheel'
 
      Begin Object Class=SVehicleWheel Name=RRWheel
-         bPoweredWheel=True
-         bHandbrakeWheel=True
+         bPoweredWheel=true
+         bHandbrakeWheel=true
          BoneName="wheel_RR"
          BoneRollAxis=AXIS_Y
          WheelRadius=26.000000
@@ -237,8 +237,8 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_OpelBlitzTransport.RRWheel'
 
      Begin Object Class=SVehicleWheel Name=LRWheel
-         bPoweredWheel=True
-         bHandbrakeWheel=True
+         bPoweredWheel=true
+         bHandbrakeWheel=true
          BoneName="wheel_LR"
          BoneRollAxis=AXIS_Y
          WheelRadius=26.000000
@@ -248,7 +248,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_OpelBlitzTransport.LRWheel'
 
      VehicleMass=3.500000
-     bFPNoZFromCameraPitch=True
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=6.000000)
      DriveAnim="VUC_driver_idle_close"
      ExitPositions(0)=(X=150.000000,Y=-150.000000,Z=75.000000)
@@ -287,13 +287,13 @@ defaultproperties
          KInertiaTensor(5)=3.000000
          KLinearDamping=0.500000
          KAngularDamping=0.500000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

@@ -12,7 +12,7 @@ var()   bool    bReconnaissanceSpawnArea;
 
 function PostBeginPlay()
 {
-	if (DarkestHourGame(Level.Game) != None)
+	if (DarkestHourGame(Level.Game) != none)
 	{
 		if (bTankCrewSpawnArea)
 			DarkestHourGame(Level.Game).TankCrewSpawnAreas[DarkestHourGame(Level.Game).TankCrewSpawnAreas.Length] = self;

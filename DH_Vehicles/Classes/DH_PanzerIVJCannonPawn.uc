@@ -15,7 +15,7 @@ defaultproperties
      CenterRotationFactor=985
      OverlayCenterSize=0.870000
      DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
-     bManualTraverseOnly=True
+     bManualTraverseOnly=true
      PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
      PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
@@ -25,14 +25,14 @@ defaultproperties
      WeaponFov=28.799999
      AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
      AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
-     DriverPositions(0)=(ViewLocation=(X=12.000000,Y=-27.000000,Z=3.000000),ViewFOV=28.799999,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=64080,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=True)
+     DriverPositions(0)=(ViewLocation=(X=12.000000,Y=-27.000000,Z=3.000000),ViewFOV=28.799999,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=64080,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
      DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VTiger_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
-     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VTiger_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=True)
-     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=True,bExposed=True)
+     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VTiger_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_turret_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      GunClass=Class'DH_Vehicles.DH_PanzerIVJCannon'
      CameraBone="Gun"
-     bPCRelativeFPRotation=True
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bFPNoZFromCameraPitch=true
      DriveAnim="VTiger_com_idle_close"
      ExitPositions(0)=(Y=-100.000000,Z=160.000000)
      ExitPositions(1)=(Y=100.000000,Z=160.000000)

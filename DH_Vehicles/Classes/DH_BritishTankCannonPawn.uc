@@ -30,7 +30,7 @@ simulated function DrawHUD(Canvas Canvas)
 	local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
 	PC = PlayerController(Controller);
-	if( PC == none )
+	if (PC == none)
 	{
 		Super.RenderOverlays(Canvas);
 		//log("PanzerTurret PlayerController was none, returning");
@@ -47,9 +47,9 @@ simulated function DrawHUD(Canvas Canvas)
 
         scale = Canvas.SizeY / 1200.0;
 
-        if ( DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
-             if( DriverPositionIndex < GunsightPositions )
+             if (DriverPositionIndex < GunsightPositions)
 			 {
  			     // Calculate reticle drawing position (and position to draw black bars at)
 				if (bShowCenter)
@@ -77,19 +77,19 @@ simulated function DrawHUD(Canvas Canvas)
 				OverlayCenterTexStart = (1 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2;
 				OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
 				Canvas.SetPos(0, 0);
-				Canvas.DrawTile( CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+				Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-				if( Gun != none && Gun.ProjectileClass != none )
+				if (Gun != none && Gun.ProjectileClass != none)
 					Canvas.SetPos(0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY);
-                    //Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, ( Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY / ScreenRatio / OverlayCenterScale ) - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale - 1) / 2 );
+                    //Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, (Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY / ScreenRatio / OverlayCenterScale) - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale - 1) / 2);
 				else
 					Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, ScopePositionY  * Canvas.ClipY / ScreenRatio / OverlayCenterScale - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale-1)/2);
 
-                Canvas.DrawTile( CannonScopeCenter , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+                Canvas.DrawTile(CannonScopeCenter , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
                     //Canvas.DrawTileScaled(CannonScopeCenter, scale * ScopeCenterScaleX / ScreenRatio / OverlayCenterScale, scale * ScopeCenterScaleY / ScreenRatio / OverlayCenterScale);
 
 				// Draw the range setting
-				if( Gun != none && bShowRangeText)
+				if (Gun != none && bShowRangeText)
 				{
 					Canvas.Style = ERenderStyle.STY_Normal;
 
@@ -105,7 +105,7 @@ simulated function DrawHUD(Canvas Canvas)
 					Canvas.DrawColor = SavedColor;
 				}
 			}
-			else if( DriverPositionIndex == PeriscopePositionIndex )
+			else if (DriverPositionIndex == PeriscopePositionIndex)
 			{
 
  				DrawPeriscopeOverlay(Canvas);
@@ -126,7 +126,7 @@ simulated function DrawHUD(Canvas Canvas)
 	}
 
      // Zap the lame crosshair - Ramm
-	if (IsLocallyControlled() && Gun != None && Gun.bCorrectAim && Gun.bShowAimCrosshair)
+	if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
 	{
 		Canvas.DrawColor = CrosshairColor;
 		Canvas.DrawColor.A = 255;
@@ -136,7 +136,7 @@ simulated function DrawHUD(Canvas Canvas)
 	}
 
 
-	if (PC != None && !PC.bBehindView && HUDOverlay != None)
+	if (PC != none && !PC.bBehindView && HUDOverlay != none)
 	{
         if (!Level.IsSoftwareRendering())
         {
@@ -148,7 +148,7 @@ simulated function DrawHUD(Canvas Canvas)
     	}
 	}
 	else
-        ActivateOverlay(False);
+        ActivateOverlay(false);
 }
 
 simulated function DrawPeriscopeOverlay(Canvas Canvas)
@@ -157,7 +157,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
 	Canvas.SetPos(0,0);
-	Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio );
+	Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties

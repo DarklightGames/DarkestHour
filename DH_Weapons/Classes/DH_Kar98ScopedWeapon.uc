@@ -52,15 +52,15 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_Kar98ScopedPickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_Kar98ScopedAttachment'
      ItemName="Karabiner 98k"
      Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k-scoped-mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

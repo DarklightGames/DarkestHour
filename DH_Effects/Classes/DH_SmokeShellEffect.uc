@@ -16,14 +16,14 @@ class DH_SmokeShellEffect extends Emitter;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=10.000000,Y=10.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -45,14 +45,14 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(Z=-0.200000)
          ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -78,14 +78,14 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(Z=-0.200000)
          ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -110,14 +110,14 @@ defaultproperties
      Emitters(2)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter2'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter3
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=1.000000,Y=1.000000)
          ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
@@ -141,12 +141,12 @@ defaultproperties
      End Object
      Emitters(3)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter3'
 
-     AutoDestroy=True
-     bNoDelete=False
-     bNetTemporary=True
+     AutoDestroy=true
+     bNoDelete=false
+     bNetTemporary=true
      RemoteRole=ROLE_SimulatedProxy
      LifeSpan=160.000000
      Style=STY_Masked
-     bHardAttach=True
-     bDirectional=True
+     bHardAttach=true
+     bDirectional=true
 }

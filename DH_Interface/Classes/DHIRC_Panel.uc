@@ -22,8 +22,8 @@ defaultproperties
          WinHeight=0.300000
          RenderWeight=3.000000
          TabOrder=0
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnChange=DHIRC_Panel.InternalOnChange
      End Object
      co_Server=DHmoComboBox'DH_Interface.DHIRC_Panel.MyServerCombo'
@@ -38,8 +38,8 @@ defaultproperties
          WinHeight=0.300000
          RenderWeight=3.000000
          TabOrder=1
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
      End Object
      co_Channel=DHmoComboBox'DH_Interface.DHIRC_Panel.MyChannelCombo'
 
@@ -52,8 +52,8 @@ defaultproperties
          WinHeight=0.300000
          RenderWeight=3.000000
          TabOrder=2
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnClick=DHIRC_Panel.InternalOnClick
          OnKeyEvent=MyConnectButton.InternalOnKeyEvent
      End Object
@@ -68,8 +68,8 @@ defaultproperties
          WinHeight=0.300000
          RenderWeight=3.000000
          TabOrder=4
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnClick=DHIRC_Panel.InternalOnClick
          OnKeyEvent=MyRemoveServerButton.InternalOnKeyEvent
      End Object
@@ -84,8 +84,8 @@ defaultproperties
          WinHeight=0.300000
          RenderWeight=3.000000
          TabOrder=3
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnClick=DHIRC_Panel.InternalOnClick
          OnKeyEvent=MyJoinChannelButton.InternalOnKeyEvent
      End Object
@@ -100,8 +100,8 @@ defaultproperties
          WinHeight=0.300000
          RenderWeight=3.000000
          TabOrder=5
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnClick=DHIRC_Panel.InternalOnClick
          OnKeyEvent=MyRemoveChannelButton.InternalOnKeyEvent
      End Object

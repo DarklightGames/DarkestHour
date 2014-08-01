@@ -50,7 +50,7 @@ defaultproperties
      OpticalRanges(18)=(Range=1800)
      OpticalRanges(19)=(Range=1900)
      OpticalRanges(20)=(Range=2000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=2.700000
      DHPenetrationTable(1)=2.500000
      DHPenetrationTable(2)=2.100000
@@ -63,7 +63,7 @@ defaultproperties
      DHPenetrationTable(9)=0.500000
      DHPenetrationTable(10)=0.300000
      ShellDiameter=5.000000
-     bIsAlliedShell=False
+     bIsAlliedShell=false
      PenetrationMag=565.000000
      ShellImpactDamage=Class'DH_Vehicles.DH_Sdkfz2342CannonShellDamageAP'
      ImpactDamage=315

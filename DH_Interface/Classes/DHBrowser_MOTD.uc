@@ -12,7 +12,7 @@ function NewsParse(out string page)
     Caps(junk);
     i = InStr(junk, "<BODY>");
 
-    if(i > -1)
+    if (i > -1)
     {
          // remove all header from string
          page = Right(page, len(page) - i - 6);
@@ -22,7 +22,7 @@ function NewsParse(out string page)
     Caps(junk);
     i = InStr(junk, "</BODY>");
 
-    if(i > -1)
+    if (i > -1)
     {
          // remove all footers from string
          page = Left(page,i);
@@ -36,10 +36,10 @@ defaultproperties
      getRequest="GET /ingamenews.php HTTP/1.1"
      newsIPAddr="darkesthourgame.com"
      Begin Object Class=DHGUIScrollTextBox Name=MyMOTDText
-         bNoTeletype=True
+         bNoTeletype=true
          CharDelay=0.050000
          EOLDelay=0.100000
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=MyMOTDText.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinTop=0.002679
@@ -48,7 +48,7 @@ defaultproperties
          WinHeight=1.000000
          RenderWeight=0.600000
          TabOrder=1
-         bNeverFocus=True
+         bNeverFocus=true
      End Object
      lb_MOTD=DHGUIScrollTextBox'DH_Interface.DHBrowser_MOTD.MyMOTDText'
 

@@ -18,14 +18,14 @@ defaultproperties
      Models(1)="WK_2"
      Models(2)="WK_3"
      Models(3)="WK_4"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MG42Weapon',Amount=6)
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MG34Weapon',Amount=6)
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
      SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
      Headgear(0)=Class'DH_GerPlayers.DH_KriegsmarineHelmet'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
      limit=3
 }

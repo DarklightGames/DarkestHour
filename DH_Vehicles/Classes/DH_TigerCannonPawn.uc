@@ -24,14 +24,14 @@ defaultproperties
      WeaponFov=28.799999
      AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell'
      AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
-     DriverPositions(0)=(ViewLocation=(X=35.000000,Y=-32.000000,Z=3.000000),ViewFOV=28.799999,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=3095,ViewPitchDownLimit=64353,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=True)
+     DriverPositions(0)=(ViewLocation=(X=35.000000,Y=-32.000000,Z=3.000000),ViewFOV=28.799999,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=3095,ViewPitchDownLimit=64353,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
      DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VTiger_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
-     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VTiger_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=True)
-     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=True,bExposed=True)
+     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VTiger_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
+     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-110000.000000)
      GunClass=Class'DH_Vehicles.DH_TigerCannon'
      CameraBone="Gun"
-     bPCRelativeFPRotation=True
+     bPCRelativeFPRotation=true
      DriveAnim="VTiger_com_idle_close"
      ExitPositions(0)=(X=-150.000000,Z=130.000000)
      ExitPositions(1)=(X=-50.000000,Y=20.000000,Z=150.000000)

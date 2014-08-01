@@ -3,8 +3,8 @@ class DHGUIFloatEdit extends GUIFloatEdit;
 defaultproperties
 {
      Begin Object Class=DHGUIEditBox Name=cMyEditBox
-         bFloatOnly=True
-         bNeverScale=True
+         bFloatOnly=true
+         bNeverScale=true
          OnActivate=cMyEditBox.InternalActivate
          OnDeActivate=cMyEditBox.InternalDeactivate
          OnKeyType=cMyEditBox.InternalOnKeyType
@@ -14,8 +14,8 @@ defaultproperties
 
      Begin Object Class=GUISpinnerButton Name=cMySpinner
          StyleName="DHSpinner"
-         bTabStop=False
-         bNeverScale=True
+         bTabStop=false
+         bNeverScale=true
          OnClick=cMySpinner.InternalOnClick
          OnKeyEvent=cMySpinner.InternalOnKeyEvent
      End Object

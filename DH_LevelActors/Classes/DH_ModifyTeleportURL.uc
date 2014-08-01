@@ -34,13 +34,13 @@ function PostBeginPlay()
 		break;
 	}
 
-	if(bAutoStart)
+	if (bAutoStart)
 		Trigger(self, none);
 }
 
 function Reset()
 {
-	if(bAutoStart)
+	if (bAutoStart)
 		Trigger(self, none);
 
 	SetTimer(3,false);
@@ -48,7 +48,7 @@ function Reset()
 
 function Timer()
 {
-	if(bCallCorrelatedEvents && CorrelatedEvents[PreviousEventIndex] != '')
+	if (bCallCorrelatedEvents && CorrelatedEvents[PreviousEventIndex] != '')
 		TriggerEvent(CorrelatedEvents[PreviousEventIndex], self, none); //Triggers the correlated event
 }
 
@@ -56,20 +56,20 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
 	local int RandomNum;
 
-	if(UseRandomness)
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //Leave script randomly failed
 	}
-	if(TeleReference != None)
+	if (TeleReference != none)
 	{
 		RandomNum = rand(NewURLs.Length);
-		if(NewURLs[RandomNum] != "")
+		if (NewURLs[RandomNum] != "")
 			TeleReference.URL = NewURLs[RandomNum];
 
 		/*bEventsByTrigger &&*/
-		if(bCallCorrelatedEvents && CorrelatedEvents[RandomNum] != '')
+		if (bCallCorrelatedEvents && CorrelatedEvents[RandomNum] != '')
 		{
 			TriggerEvent(CorrelatedEvents[RandomNum], self, none); //Triggers the correlated event
 		}

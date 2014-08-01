@@ -6,42 +6,42 @@
 
 class DH_GiveChuteTrigger extends Trigger;
 
-function Touch( actor Other )
+function Touch(actor Other)
 {
 	local int i;
 	local Pawn EventInstigator;
 
-	if( IsRelevant( Other ) )
+	if (IsRelevant(Other))
 	{
-		Other = FindInstigator( Other );
+		Other = FindInstigator(Other);
 
-		if ( ReTriggerDelay > 0 )
+		if (ReTriggerDelay > 0)
 		{
-			if ( Level.TimeSeconds - TriggerTime < ReTriggerDelay )
+			if (Level.TimeSeconds - TriggerTime < ReTriggerDelay)
 				return;
 			TriggerTime = Level.TimeSeconds;
 		}
 		// Broadcast the Trigger message to all matching actors.
 		TriggerEvent(Event, self, Other.Instigator);
 
-		if ( (Pawn(Other) != None) && (Pawn(Other).Controller != None) )
+		if ((Pawn(Other) != none) && (Pawn(Other).Controller != none))
 		{
-			for ( i=0;i<4;i++ )
-				if ( Pawn(Other).Controller.GoalList[i] == self )
+			for (i=0;i<4;i++)
+				if (Pawn(Other).Controller.GoalList[i] == self)
 				{
-					Pawn(Other).Controller.GoalList[i] = None;
+					Pawn(Other).Controller.GoalList[i] = none;
 					break;
 				}
 		}
 
-		if( (Message != "") && (Other.Instigator != None) )
+		if ((Message != "") && (Other.Instigator != none))
 			// Send a string message to the toucher.
-			Other.Instigator.ClientMessage( Message );
+			Other.Instigator.ClientMessage(Message);
 
-		if( bTriggerOnceOnly )
+		if (bTriggerOnceOnly)
 			// Ignore future touches.
-			SetCollision(False);
-		else if ( RepeatTriggerTime > 0 )
+			SetCollision(false);
+		else if (RepeatTriggerTime > 0)
 			SetTimer(RepeatTriggerTime, false);
 
 		EventInstigator = Other.Instigator;

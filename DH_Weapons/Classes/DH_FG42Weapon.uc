@@ -15,13 +15,13 @@ var 	name 	SightUpSelectFireIronAnim;
 //=============================================================================
 replication
 {
-    reliable if( Role<ROLE_Authority )
+    reliable if (Role<ROLE_Authority)
     	ServerChangeFireMode;
 }
 
 simulated exec function SwitchFireMode()
 {
-	if( IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring )
+	if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
 		return;
 
     GotoState('SwitchingFireMode');
@@ -54,9 +54,9 @@ simulated state SwitchingFireMode extends Busy
 	{
 		local name Anim;
 
-		if( bUsingSights || Instigator.bBipodDeployed )
+		if (bUsingSights || Instigator.bBipodDeployed)
 		{
-			if( Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim) )
+			if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
 			{
 				Anim = SightUpSelectFireIronAnim;
 			}
@@ -70,16 +70,16 @@ simulated state SwitchingFireMode extends Busy
 			Anim = SelectFireAnim;
 		}
 
-		if( Instigator.IsLocallyControlled() )
+		if (Instigator.IsLocallyControlled())
 		{
-	    		PlayAnim(Anim, 1.0, FastTweenTime );
+	    		PlayAnim(Anim, 1.0, FastTweenTime);
 		}
 
 	    	SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
 
 		ServerChangeFireMode();
 
-	    if( Role < ROLE_Authority )
+	    if (Role < ROLE_Authority)
 		{
 			FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
 		}
@@ -89,7 +89,7 @@ simulated state SwitchingFireMode extends Busy
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-	if( FireMode[0].bWaitForRelease )
+	if (FireMode[0].bWaitForRelease)
 	{
 		return false;
 	}
@@ -111,7 +111,7 @@ defaultproperties
      SightUpMagPartialReloadAnim="deploy_reload_half"
      MaxNumPrimaryMags=11
      InitialNumPrimaryMags=11
-     bHasSelectFire=True
+     bHasSelectFire=true
      FireModeClass(0)=Class'DH_Weapons.DH_FG42Fire'
      FireModeClass(1)=Class'DH_Weapons.DH_FG42MeleeFire'
      PickupClass=Class'DH_Weapons.DH_FG42Pickup'

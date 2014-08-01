@@ -13,6 +13,6 @@ defaultproperties
      AttachmentClass=Class'DH_Equipment.DH_USSmokeGrenadeAttachment'
      ItemName="M15 Smoke Grenade"
      Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.smokegrenade'
-     HighDetailOverlay=None
-     bUseHighDetailOverlayIndex=False
+     HighDetailOverlay=none
+     bUseHighDetailOverlayIndex=false
 }

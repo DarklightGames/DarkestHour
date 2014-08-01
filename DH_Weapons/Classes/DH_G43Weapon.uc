@@ -23,7 +23,7 @@ defaultproperties
      BayonetBoneName="bayonet"
      MaxNumPrimaryMags=7
      InitialNumPrimaryMags=7
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
@@ -40,15 +40,15 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_G43Pickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_G43Attachment'
      ItemName="Gewehr 43"
      Mesh=SkeletalMesh'Axis_G43_1st.G-43-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Rifles.G43_S'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

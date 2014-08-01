@@ -66,7 +66,7 @@ simulated function UpdateTurretReferences()
 
 defaultproperties
 {
-     bSpecialExiting=True
+     bSpecialExiting=true
      MaxCriticalSpeed=1039.000000
      EngineHealthMax=100
      UFrontArmorFactor=3.000000
@@ -113,7 +113,7 @@ defaultproperties
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,ViewFOV=85.000000)
      DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true,ViewFOV=85.000000)
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.234_body'
      VehicleHudOccupantsX(0)=0.480000
      VehicleHudOccupantsX(2)=0.000000
@@ -121,11 +121,11 @@ defaultproperties
      VehicleHudOccupantsY(1)=0.430000
      VehicleHudOccupantsY(2)=0.000000
      VehicleHudEngineX=0.510000
-     VehHitpoints(0)=(PointOffset=(X=5.000000,Z=-5.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointOffset=(X=5.000000,Z=-5.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointOffset=(X=-150.000000,Z=52.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=15.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=30.000000,Y=-30.000000,Z=52.000000),DamageMultiplier=3.000000,HitPointType=HP_AmmoStore)
      EngineHealth=100
-     bIsApc=True
+     bIsApc=true
      DriverAttachmentBone="driver_attachment"
      Begin Object Class=SVehicleWheel Name=RFWheel
          SteerType=VST_Steered
@@ -150,7 +150,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.LFWheel'
 
      Begin Object Class=SVehicleWheel Name=MFRWheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="Wheel_R_1"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=11.000000)
@@ -161,7 +161,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MFRWheel'
 
      Begin Object Class=SVehicleWheel Name=MFLWheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="Wheel_L_1"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=-11.000000)
@@ -172,7 +172,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MFLWheel'
 
      Begin Object Class=SVehicleWheel Name=MRRWheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="Wheel_R_2"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=11.000000)
@@ -183,7 +183,7 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MRRWheel'
 
      Begin Object Class=SVehicleWheel Name=MRLWheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="Wheel_L_2"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=-11.000000)
@@ -194,7 +194,7 @@ defaultproperties
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MRLWheel'
 
      Begin Object Class=SVehicleWheel Name=RRWheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="wheel_RR"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=11.000000)
@@ -205,7 +205,7 @@ defaultproperties
      Wheels(6)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.RRWheel'
 
      Begin Object Class=SVehicleWheel Name=RLWheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="Wheel_RL"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=-11.000000)
@@ -249,13 +249,13 @@ defaultproperties
          KCOMOffset=(X=0.300000,Z=-0.525000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

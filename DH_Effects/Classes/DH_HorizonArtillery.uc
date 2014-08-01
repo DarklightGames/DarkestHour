@@ -13,13 +13,13 @@ class DH_HorizonArtillery extends Emitter;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         UseColorScale=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=1.000000)
          Opacity=0.700000
@@ -38,14 +38,14 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         UseColorScale=True
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=174,G=228,R=255,A=255))
          ColorScale(1)=(RelativeTime=0.200000,Color=(B=255,G=255,R=255,A=255))
          ColorScale(2)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -65,14 +65,14 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-         UseColorScale=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         UseColorScale=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=1.000000)
          MaxParticles=2
@@ -91,14 +91,14 @@ defaultproperties
      Emitters(2)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter2'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter3
-         UseColorScale=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         UseColorScale=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=1.000000)
          MaxParticles=1
@@ -119,14 +119,14 @@ defaultproperties
      Emitters(3)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter3'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter4
-         UseColorScale=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         UseColorScale=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=1.000000)
          MaxParticles=1
@@ -146,8 +146,8 @@ defaultproperties
      End Object
      Emitters(4)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter4'
 
-     AutoDestroy=True
-     bNoDelete=False
-     bNetTemporary=True
+     AutoDestroy=true
+     bNoDelete=false
+     bNetTemporary=true
      RemoteRole=ROLE_SimulatedProxy
 }

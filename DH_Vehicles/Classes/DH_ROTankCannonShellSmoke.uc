@@ -45,7 +45,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 simulated function KillSmoke()
 {
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
     	SmokeEmitter.Kill();
     }
@@ -54,7 +54,7 @@ simulated function KillSmoke()
 //is this function needed?
 function Reset()
 {
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
     	SmokeEmitter.Destroyed();
     }
@@ -83,8 +83,8 @@ defaultproperties
 {
      DestroyTimer=20.000000
      SmokeEffectClass=Class'DH_Effects.DH_SmokeShellEffect'
-     bMechanicalAiming=True
-     bOpticalAiming=True
+     bMechanicalAiming=true
+     bOpticalAiming=true
      ImpactDamage=20
      BallisticCoefficient=0.600000
      SpeedFudgeScale=0.750000

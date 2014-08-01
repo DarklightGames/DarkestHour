@@ -22,16 +22,16 @@ function bool AlignBK(Canvas C)
 
 /*defaultproperties
 {
-     i_MapListBackground=None
+     i_MapListBackground=none
 
      Begin Object Class=MapVoteCountMultiColumnListBox Name=VoteCountListBox
          WinTop=0.077369
          WinLeft=0.020000
          WinWidth=0.960000
          WinHeight=0.267520
-         bVisibleWhenEmpty=True
-         bBoundToParent=True
-         bScaleToParent=True
+         bVisibleWhenEmpty=true
+         bBoundToParent=true
+         bScaleToParent=true
          HeaderColumnPerc(0)=0.400000
          HeaderColumnPerc(1)=0.200000
          FontScale=FNS_Small
@@ -42,8 +42,8 @@ function bool AlignBK(Canvas C)
      Begin Object Class=moComboBox Name=GameTypeCombo
          CaptionWidth=0.350000
          Caption="Filter Game Type:"
-         bScaleToParent=True
-         bVisible=False
+         bScaleToParent=true
+         bVisible=false
      End Object
      co_GameType=GameTypeCombo
 
@@ -63,14 +63,14 @@ defaultproperties
          HeaderColumnPerc(0)=0.400000
          HeaderColumnPerc(1)=0.200000
          DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=VoteCountListBox.InternalOnCreateComponent
          WinTop=0.077369
          WinLeft=0.020000
          WinWidth=0.960000
          WinHeight=0.267520
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnRightClick=VoteCountListBox.InternalOnRightClick
      End Object
      lb_VoteCountListBox=MapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
@@ -79,12 +79,12 @@ defaultproperties
          CaptionWidth=0.350000
          Caption="Filter Game Type:"
          OnCreateComponent=GameTypeCombo.InternalOnCreateComponent
-         bScaleToParent=True
-         bVisible=False
+         bScaleToParent=true
+         bVisible=false
      End Object
      co_GameType=moComboBox'DH_Interface.DHMapVotingPage.GameTypeCombo'
 
-     i_MapListBackground=None
+     i_MapListBackground=none
 
      Begin Object Class=GUIImage Name=MapCountListBackground
          Image=Texture'InterfaceArt_tex.Menu.buttonGreyDark01'

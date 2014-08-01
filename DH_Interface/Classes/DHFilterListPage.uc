@@ -9,7 +9,7 @@ function AddSystemMenu()
 {
 	local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent( "XInterface.GUIButton" ));
+	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
 	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
 	b_ExitButton.OnClick = XButtonClicked;
 	b_ExitButton.bNeverFocus=true;
@@ -20,7 +20,7 @@ function AddSystemMenu()
 	b_ExitButton.bStandardized=true;
 	b_ExitButton.StandardHeight=0.03;
 	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = False;
+	b_ExitButton.bRepeatClick = false;
 }
 
 
@@ -35,7 +35,7 @@ function InitFilterList()
 	for (i = 0; i < FilterNames.Length; i++)
 	{
 		ch = moCheckBox(li_Filters.AddItem("DH_Interface.DHmoCheckbox",,FilterNames[i]));
-		if (ch != None)
+		if (ch != none)
 			ch.Checked(FM.IsActiveAt(i));
 	}
 
@@ -57,7 +57,7 @@ function bool CreateClick(GUIComponent Sender)
 	cnt = 0;
 	for (i=0;i<li_Filters.ItemCount;i++)
 	{
-		cb = moCheckbox( li_Filters.GetItem(i) );
+		cb = moCheckbox(li_Filters.GetItem(i));
 		if (inStr(cb.Caption,"New Filter")>=0)
 			cnt++;
 	}
@@ -81,7 +81,7 @@ function bool EditClick(GUIComponent Sender)
 	local int i;
 	local moCheckbox cb;
 
-	cb = moCheckbox( li_Filters.Get() );
+	cb = moCheckbox(li_Filters.Get());
 	FN = cb.Caption;
     i= FM.FindFilterIndex(FN);
     Controller.OpenMenu("DH_Interface.DHFilterEdit",""$i,FN);
@@ -92,8 +92,8 @@ function bool EditClick(GUIComponent Sender)
 defaultproperties
 {
      Begin Object Class=DHGUIPlainBackground Name=sbBackground
-         bFillClient=True
-         bNoCaption=True
+         bFillClient=true
+         bNoCaption=true
          Caption="Filters..."
          LeftPadding=0.002500
          RightPadding=0.002500
@@ -179,15 +179,15 @@ defaultproperties
      lb_Filters=DHGUIMultiOptionListBox'DH_Interface.DHFilterListPage.lbFilters'
 
      Begin Object Class=DHGUIHeader Name=TitleBar
-         bUseTextHeight=True
+         bUseTextHeight=true
          StyleName="DHNoBox"
          WinTop=0.017000
          WinHeight=0.050000
          RenderWeight=0.100000
-         bBoundToParent=True
-         bScaleToParent=True
-         bAcceptsInput=True
-         bNeverFocus=False
+         bBoundToParent=true
+         bScaleToParent=true
+         bAcceptsInput=true
+         bNeverFocus=false
          ScalingType=SCALE_X
          OnMousePressed=FloatingWindow.FloatingMousePressed
          OnMouseRelease=FloatingWindow.FloatingMouseRelease
@@ -196,7 +196,7 @@ defaultproperties
 
      Begin Object Class=FloatingImage Name=FloatingFrameBackground
          Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
-         DropShadow=None
+         DropShadow=none
          ImageStyle=ISTY_Stretched
          ImageRenderStyle=MSTY_Normal
          WinTop=0.020000

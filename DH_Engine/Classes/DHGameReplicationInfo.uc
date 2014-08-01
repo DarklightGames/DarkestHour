@@ -52,7 +52,7 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 {
    local int  count;
 
-   if(TeamNum >= NEUTRAL_TEAM_INDEX)
+   if (TeamNum >= NEUTRAL_TEAM_INDEX)
       return -1;
 
    for(count = 0 ; count < ArrayCount(DHAxisRoles) ; count++)
@@ -60,11 +60,11 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
         switch(TeamNum)
         {
            case AXIS_TEAM_INDEX : // Axis
-           if(DHAxisRoles[count] != none && DHAxisRoles[count] == ROInf)
+           if (DHAxisRoles[count] != none && DHAxisRoles[count] == ROInf)
               return count;
            break;
            case ALLIES_TEAM_INDEX : // Allies
-           if(DHAlliesRoles[count] != none && DHAlliesRoles[count] == ROInf)
+           if (DHAlliesRoles[count] != none && DHAlliesRoles[count] == ROInf)
               return count;
            break;
         }
@@ -75,5 +75,5 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 
 defaultproperties
 {
-     bShowPublicVoiceIcon=True
+     bShowPublicVoiceIcon=true
 }

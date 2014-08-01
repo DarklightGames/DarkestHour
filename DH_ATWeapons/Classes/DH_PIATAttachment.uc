@@ -21,15 +21,15 @@ simulated event ThirdPersonEffects()
 {
 
 	// Only switch to the empty mesh if its not a melee attack
-	if(FiringMode == 0)
-		LinkMesh( EmptyMesh );
+	if (FiringMode == 0)
+		LinkMesh(EmptyMesh);
 
-	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == None )
+	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
 		return;
 
-/*	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash) )
+/*	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
 	{
-		if( (Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == None))
+		if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
 			return;
 
 		WeaponLight();
@@ -222,7 +222,7 @@ defaultproperties
      WA_ProneReload="idle_PIAT"
      menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
      MenuDescription="P.I.A.T.: Projector, Infantry Anti-Tank. Man portable anti-tank weapon used by British and Commonwealth forces. Uses a manually set spigot system to launch a hollow charge bomb up to 350 yards, although only accurate to about 100 yards. Armor penetration: 85 to 90mm of effective armor. Sights are calibrated at 50, 80, and 110 yards."
-     bHeavy=True
-     bRapidFire=False
+     bHeavy=true
+     bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_3rd'
 }

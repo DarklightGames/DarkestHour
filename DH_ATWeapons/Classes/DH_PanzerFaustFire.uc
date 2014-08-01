@@ -26,9 +26,9 @@ event ModeDoFire()
 	local Actor Other;
 	local RODestroyableStaticMesh DestroMesh;
 
-    if ( Level.NetMode != NM_DedicatedServer )
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        if ( RORocketWeapon(Owner).RocketAttachment  != none)
+        if (RORocketWeapon(Owner).RocketAttachment  != none)
            RORocketWeapon(Owner).RocketAttachment.Destroy();
     }
 
@@ -36,39 +36,39 @@ event ModeDoFire()
 
     WeapLoc=Weapon.ThirdPersonActor.Location; // Get the location of the panzerfaust
    	WeapRot=Weapon.ThirdPersonActor.Rotation; // Get the rotation of the panzerfaust
-    FlameDir = Vector(WeapRot); // Set direction of exhaust
+    FlameDir = vector(WeapRot); // Set direction of exhaust
 
     Other = Trace(HitLoc, HitNorm, WeapLoc - FlameDir * 300, WeapLoc, false);
     DestroMesh = RODestroyableStaticMesh(Other);
 
     // Check if the firer is too close to an object and if so, simulate exhaust spreading out along, and reflecting from, the wall
     // Do not reflect off players or breakable objects like windows
-    if( Other != none && DH_Pawn(Other) == none && DestroMesh == none )
+    if (Other != none && DH_Pawn(Other) == none && DestroMesh == none)
     {
        	FlameLen = VSize(HitLoc - WeapLoc); // Exhaust stream length when it hit an object
-	    FlameReflectDir = 2 * (HitNorm * FlameDir) * HitNorm - FlameDir; // Vector back towards firer from hit object
+	    FlameReflectDir = 2 * (HitNorm * FlameDir) * HitNorm - FlameDir; // vector back towards firer from hit object
 
-       	if( FlameLen < 200 )
+       	if (FlameLen < 200)
        	{
-           	Weapon.HurtRadius(ExhaustDamage, ExhaustDamageRadius * 3, ExhaustDamageType, ExhaustMomentumTransfer, HitLoc + FlameReflectDir * FlameLen / 2 );
+           	Weapon.HurtRadius(ExhaustDamage, ExhaustDamageRadius * 3, ExhaustDamageType, ExhaustMomentumTransfer, HitLoc + FlameReflectDir * FlameLen / 2);
         }
     }
     else
         FlameLen = 400; // Didn't hit anything, so exhaust is max length
 
-    if( FlameLen > 100 )
+    if (FlameLen > 100)
     {
-      	Weapon.HurtRadius(ExhaustDamage, ExhaustDamageRadius, ExhaustDamageType, ExhaustMomentumTransfer, WeapLoc - FlameDir * 100 );
+      	Weapon.HurtRadius(ExhaustDamage, ExhaustDamageRadius, ExhaustDamageType, ExhaustMomentumTransfer, WeapLoc - FlameDir * 100);
     }
 
-    if( FlameLen > 200 )
+    if (FlameLen > 200)
     {
-       	Weapon.HurtRadius(ExhaustDamage / 2, ExhaustDamageRadius * 2, ExhaustDamageType, ExhaustMomentumTransfer, WeapLoc - FlameDir * 200 );
+       	Weapon.HurtRadius(ExhaustDamage / 2, ExhaustDamageRadius * 2, ExhaustDamageType, ExhaustMomentumTransfer, WeapLoc - FlameDir * 200);
     }
 
-    if( FlameLen > 400 )
+    if (FlameLen > 400)
     {
-       	Weapon.HurtRadius(ExhaustDamage / 3, ExhaustDamageRadius * 3, ExhaustDamageType, ExhaustMomentumTransfer, WeapLoc - FlameDir * 200 );
+       	Weapon.HurtRadius(ExhaustDamage / 3, ExhaustDamageRadius * 3, ExhaustDamageType, ExhaustMomentumTransfer, WeapLoc - FlameDir * 200);
     }
 
 	DH_PanzerFaustWeapon(Weapon).PostFire();
@@ -78,17 +78,17 @@ function PlayFiring()
 {
 	local name Anim;
 
-	if ( Weapon.Mesh != None )
+	if (Weapon.Mesh != none)
 	{
-		if ( FireCount > 0 )
+		if (FireCount > 0)
 		{
-			if( Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+			if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
 			{
 			 	Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
 			}
 			else
 			{
-				if ( Weapon.HasAnim(FireLoopAnim) )
+				if (Weapon.HasAnim(FireLoopAnim))
 				{
 					Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
 				}
@@ -100,7 +100,7 @@ function PlayFiring()
 		}
 		else
 		{
-			if( Weapon.bUsingSights )
+			if (Weapon.bUsingSights)
 			{
 				switch(DH_PanzerFaustWeapon(Weapon).RangeIndex)
 				{
@@ -123,7 +123,7 @@ function PlayFiring()
 		}
 	}
 
-	Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+	Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
 
     ClientPlayForceFeedback(FireForce);  // jdf
 
@@ -141,7 +141,7 @@ defaultproperties
      FireIronAnimThree="shoot90"
      ProjSpawnOffset=(X=25.000000)
      FAProjSpawnOffset=(X=-25.000000)
-     bUsePreLaunchTrace=False
+     bUsePreLaunchTrace=false
      FireIronAnim="shoot"
      MuzzleBone="Warhead"
      FireSounds(0)=SoundGroup'Inf_Weapons.panzerfaust60.panzerfaust60_fire01'
@@ -149,7 +149,7 @@ defaultproperties
      FireSounds(2)=SoundGroup'Inf_Weapons.panzerfaust60.panzerfaust60_fire03'
      maxVerticalRecoilAngle=1000
      maxHorizontalRecoilAngle=600
-     bWaitForRelease=True
+     bWaitForRelease=true
      FireAnim="shoothip"
      TweenTime=0.000000
      FireForce="RocketLauncherFire"

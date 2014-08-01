@@ -30,7 +30,7 @@ defaultproperties
      Models(1)="WL_2"
      Models(2)="WL_3"
      Models(3)="WL_4"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MG42Weapon',Amount=6)
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MG34Weapon',Amount=6)

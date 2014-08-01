@@ -21,32 +21,32 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
         		}
     	}
 
-    	if (ExistingPanel==None)
+    	if (ExistingPanel==none)
         		NewPanelClass = class<GUITabPanel>(Controller.AddComponentClass(PanelClass));
 
-    	if ( (ExistingPanel!=None) || (NewPanelClass != None) )
+    	if ((ExistingPanel!=none) || (NewPanelClass != none))
     	{
-        		if (ExistingPanel != None)
-            			NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,True));
+        		if (ExistingPanel != none)
+            			NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,true));
         		
-		else if (NewPanelClass != None)
-            			NewTabPanel = GUITabPanel(AddComponent(PanelClass,True));
+		else if (NewPanelClass != none)
+            			NewTabPanel = GUITabPanel(AddComponent(PanelClass,true));
 
-        		if (NewTabPanel == None)
+        		if (NewTabPanel == none)
         		{
             			log("Could not create panel for"@NewPanelClass);
-            			return None;
+            			return none;
         		}
 
-        		if (NewTabPanel.MyButton != None)
+        		if (NewTabPanel.MyButton != none)
             			NewTabButton = DHGUITabButton(NewTabPanel.MyButton);
         
 		else
         		{
             			NewTabButton = new class'DHGUITabButton';
-            			if (NewTabButton==None)
+            			if (NewTabButton==none)
             			{
-                			return None;
+                			return none;
             			}
 
             			NewTabButton.InitComponent(Controller, Self);
@@ -54,7 +54,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
             			NewTabPanel.MyButton = NewTabButton;
             			if (!bDrawTabAbove)
             			{
-                			NewTabPanel.MyButton.bBoundToParent = False;
+                			NewTabPanel.MyButton.bBoundToParent = false;
                 			NewTabPanel.MyButton.Style = Controller.GetStyle("FlippedTabButton",NewTabPanel.FontScale);
             			}
         		}
@@ -68,7 +68,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
         		NewTabPanel.InitPanel();
 		TabStack[TabStack.Length] = NewTabPanel.MyButton;
         
-		if ( (TabStack.Length==1 && bVisible) || (bForceActive) )
+		if ((TabStack.Length==1 && bVisible) || (bForceActive))
             			ActivateTab(NewTabPanel.MyButton,true);
 
         		else NewTabPanel.Hide();
@@ -84,31 +84,31 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
     	local GUITabPanel NewTabPanel;
     	local DHGUITabButton NewTabButton;
 
-    	if (ExistingPanel == None)
+    	if (ExistingPanel == none)
         		NewPanelClass = class<GUITabPanel>(Controller.AddComponentClass(PanelClass));
 
-    		if ( ExistingPanel != None || NewPanelClass != None)
+    		if (ExistingPanel != none || NewPanelClass != none)
     		{
-        			if (ExistingPanel != None)
-            				NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,True));
+        			if (ExistingPanel != none)
+            				NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,true));
 
-        			else if (NewPanelClass != None)
-            				NewTabPanel = GUITabPanel(AddComponent(PanelClass,True));
+        			else if (NewPanelClass != none)
+            				NewTabPanel = GUITabPanel(AddComponent(PanelClass,true));
 
-        			if (NewTabPanel == None)
+        			if (NewTabPanel == none)
         			{
-            				return None;
+            				return none;
         			}
 
-        			if (NewTabPanel.MyButton != None)
+        			if (NewTabPanel.MyButton != none)
             				NewTabButton = DHGUITabButton(NewTabPanel.MyButton);
 
         			else
         			{
             				NewTabButton = new class'DHGUITabButton';
-            				if (NewTabButton==None)
+            				if (NewTabButton==none)
             				{
-					return None;
+					return none;
             				}
 
             				NewTabButton.InitComponent(Controller, Self);
@@ -132,14 +132,14 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
 			else NewTabPanel.Hide();
         				return NewTabPanel;
     		}
-		 return None;
+		 return none;
 }
 
 function bool InternalTabClick(GUIComponent Sender)
 {
     	local DHGUITabButton But;
     	But = DHGUITabButton(Sender);
-    	if (But==None)
+    	if (But==none)
         		return false;
     	ActivateTab(But,true);
     	return true;
@@ -147,7 +147,7 @@ function bool InternalTabClick(GUIComponent Sender)
 
 defaultproperties
 {
-     bFillSpace=True
+     bFillSpace=true
      StyleName="DHHeader"
      OnActivate=DHGUITabControl.InternalOnActivate
 }

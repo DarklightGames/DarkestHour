@@ -20,7 +20,7 @@ simulated function UpdateTracer()
 
  	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
 	{
-		if (Instigator != None && Instigator.IsLocallyControlled())
+		if (Instigator != none && Instigator.IsLocallyControlled())
 		{
 			SpawnDir = WeaponFireRotation;
 		}
@@ -29,7 +29,7 @@ simulated function UpdateTracer()
 			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
 		}
 
-        if (Instigator != None && !Instigator.PlayerReplicationInfo.bBot)
+        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
         {
         	SpawnDir.Pitch += AddedPitch;
         }
@@ -96,8 +96,8 @@ defaultproperties
      NumAltMags=8
      DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
-     bUsesTracers=True
-     bAltFireTracersOnly=True
+     bUsesTracers=true
+     bAltFireTracersOnly=true
      VehHitpoints(0)=(PointRadius=10.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-7.000000,Z=10.000000))
      VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-7.000000,Z=-12.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -110,12 +110,12 @@ defaultproperties
      WeaponFireOffset=155.000000
      AltFireOffset=(X=22.000000,Y=18.500000,Z=3.000000)
      RotationsPerSecond=0.040000
-     bAmbientAltFireSound=True
+     bAmbientAltFireSound=true
      FireInterval=4.000000
      AltFireInterval=0.070580
      EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
      AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=True
+     bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
      AltFireSoundScaling=3.000000
@@ -136,8 +136,8 @@ defaultproperties
      AltShakeOffsetMag=(X=0.100000,Y=0.100000,Z=0.100000)
      AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      AltShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=3641
      CustomPitchDownLimit=63715
      BeginningIdleAnim="com_idle_close"
@@ -153,5 +153,5 @@ defaultproperties
      SoundVolume=130
      SoundRadius=200.000000
      HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
 }

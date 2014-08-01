@@ -28,7 +28,7 @@ simulated function SetupTreads();                  //removed due to no need to s
 simulated function DestroyTreads();                //removed due to no need to setup treads
 function DamageTrack(bool bLeftTrack);             //removed due to no need to damage treads
 event TakeFireDamage(float DeltaTime);             //removed due to no need for fire damage
-function DamageEngine(int Damage, Pawn instigatedBy, Vector Hitlocation, Vector Momentum, class<DamageType> DamageType);   //removed due to no need to damage engine
+function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType);   //removed due to no need to damage engine
 //function bool ResupplyAmmo();                    //removed due to no need to resupply the gun
 function MaybeDestroyVehicle();                    //removed so we don't destroy the Gun if abandoned
 //function EnteredResupply();                      //removed due to no need to resupply the gun
@@ -48,7 +48,7 @@ simulated function bool IsDisabled()
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     //Make sure there is a least one WeaponPawn.
-    if ( WeaponPawns.length > 0 )
+    if (WeaponPawns.length > 0)
     {
         WeaponPawns[0].ClientKDriverEnter(PC);            //attach to the first WeaponPawn, do not pass "Go".  :-)
     }
@@ -58,28 +58,28 @@ simulated function ClientKDriverEnter(PlayerController PC)
 function KDriverEnter(Pawn P)
 {
     //Make sure there is a least one WeaponPawn.
-    if ( WeaponPawns.length > 0 )
+    if (WeaponPawns.length > 0)
     {
         WeaponPawns[0].KDriverEnter(P);                   //attach to the first WeaponPawn, do not pass "Go".  :-)
 	}
 }
 
-simulated function bool DHShouldPenetrateAPC( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne )
+simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
    return true;
 }
 
-simulated function bool DHShouldPenetrateHVAP( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne )
+simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
     return true;
 }
 
-simulated function bool DHShouldPenetrateAPDS( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne )
+simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
     return true;
 }
 
-simulated function bool DHShouldPenetrateHEAT( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bIsHEATRound )
+simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bIsHEATRound)
 {
     return true;
 }
@@ -90,7 +90,7 @@ simulated function PostBeginPlay()
     super(ROWheeledVehicle).PostBeginPlay();
 
     //Allow level designers to designate AT Guns as captureable or non-captureable
-    if ( ROParentFactory != none && ROParentFactory.bAllowOpposingForceCapture )
+    if (ROParentFactory != none && ROParentFactory.bAllowOpposingForceCapture)
     {
 	    bTeamLocked=false;
 	}
@@ -113,10 +113,10 @@ simulated function Tick(float DeltaTime)
 {
 	// Only need these effects client side
 	// Reworked from the original code in ROTreadCraft to drop evaluations
-    if( Level.Netmode == NM_DedicatedServer && SoundVolume != default.SoundVolume)
+    if (Level.Netmode == NM_DedicatedServer && SoundVolume != default.SoundVolume)
         SoundVolume = default.SoundVolume;
 
-	Super(ROWheeledVehicle).Tick( DeltaTime );
+	Super(ROWheeledVehicle).Tick(DeltaTime);
 }
 
 // Overridden due to the Onslaught team lock not working in RO
@@ -124,17 +124,17 @@ function bool TryToDrive(Pawn P)
 {
 	local int x;
 
-	if(DH_Pawn(P).bOnFire)
+	if (DH_Pawn(P).bOnFire)
 		return false;
 
 /*	Deny entry to bots - cos on Benouville Bridge map - the Brit bots all go for gun & ignore bridge
-	if ( !p.IsHumanControlled() )
+	if (!p.IsHumanControlled())
 	{
 		bTeamLocked=true;
-		DenyEntry( P, 3 );
+		DenyEntry(P, 3);
 		return false;
 	}
-	if ( p.IsHumanControlled() )
+	if (p.IsHumanControlled())
 	{
 		bTeamLocked=false;
 	}
@@ -146,37 +146,37 @@ function bool TryToDrive(Pawn P)
 	if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
 	{
 		for (x = 0; x < WeaponPawns.length; x++)
-			if (WeaponPawns[x].Driver != None)
+			if (WeaponPawns[x].Driver != none)
 			{
-				DenyEntry( P, 2 );
+				DenyEntry(P, 2);
 				return false;
 			}
 	}
 
     //Removed "P.bIsCrouched" to allow players to connect while crouched.
-	if ( bNonHumanControl || (P.Controller == None) || (Driver != None) || (P.DrivenVehicle != None) || !P.Controller.bIsPlayer
-	     || P.IsA('Vehicle') || Health <= 0 )
+	if (bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
+	     || P.IsA('Vehicle') || Health <= 0)
 		return false;
 
-	if ( bHasBeenSabotaged )
+	if (bHasBeenSabotaged)
         return false;
 
-	if ( !Level.Game.CanEnterVehicle(self, P) )
+	if (!Level.Game.CanEnterVehicle(self, P))
 		return false;
 
 	// Check vehicle Locking....
-	if ( bTeamLocked && ( P.GetTeamNum() != VehicleTeam ))
+	if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
 	{
 
-        DenyEntry( P, 1 );
+        DenyEntry(P, 1);
 		return false;
 	}
 	else
 	{
         //Check for sabotage...
-        if( DHParentFactory != none && DHParentFactory.bEnableSabotageRandomizer && ( P.GetTeamNum() != VehicleTeam ) )
+        if (DHParentFactory != none && DHParentFactory.bEnableSabotageRandomizer && (P.GetTeamNum() != VehicleTeam))
         {
-            if ( FRand() < SabotageProbability && Health > 0 && !bHasBeenSabotaged )
+            if (FRand() < SabotageProbability && Health > 0 && !bHasBeenSabotaged)
             {
                 bHasBeenSabotaged=true;
                 P.ReceiveLocalizedMessage(class'DH_VehicleMessage', 6); //Give sabotage message
@@ -189,40 +189,40 @@ function bool TryToDrive(Pawn P)
         }
 
         //At this point we know the pawn is not a tanker, so let's see if they can use the gun
-    	if ( bEnterringUnlocks && bTeamLocked )
+    	if (bEnterringUnlocks && bTeamLocked)
 			bTeamLocked = false;
 
         //The gun is manned and it is a human - deny entry
-        if ( WeaponPawns[0].Driver != none && WeaponPawns[0].IsHumanControlled() )
+        if (WeaponPawns[0].Driver != none && WeaponPawns[0].IsHumanControlled())
 		{
-            DenyEntry( P, 3 );
+            DenyEntry(P, 3);
 			return false;
 		}
         //The gun is manned by a bot and the requesting pawn is human controlled - kick the bot off the gun
-        else if ( WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && p.IsHumanControlled() )
+        else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && p.IsHumanControlled())
         {
             WeaponPawns[0].KDriverLeave(true);
 
-            KDriverEnter( P );
+            KDriverEnter(P);
 		    return true;
         }
         //The gun is manned by a bot and a bot is trying to use it, deny entry.
-        else if ( WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && !p.IsHumanControlled() )
+        else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && !p.IsHumanControlled())
         {
-            DenyEntry( P, 3 );
+            DenyEntry(P, 3);
 			return false;
 		}
 		//The gun is unmanned, so let who ever is there first can use it.
         else
 		{
-            KDriverEnter( P );
+            KDriverEnter(P);
 		    return true;
         }
 	}
 }
 
 // Send a message on why they can't get in the vehicle
-function DenyEntry( Pawn P, int MessageNum )
+function DenyEntry(Pawn P, int MessageNum)
 {
 	P.ReceiveLocalizedMessage(class'DH_ATCannonMessage', MessageNum);
 }
@@ -251,24 +251,24 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 
     /*
 	// Don't allow your own teammates to destroy vehicles in spawns - HACK: Allow friendly fire for AT Guns
-	if( !bDriverAlreadyEntered )
+	if (!bDriverAlreadyEntered)
 	{
-		if ( InstigatedBy != None )
+		if (InstigatedBy != none)
 			InstigatorController = instigatedBy.Controller;
 
-		if ( InstigatorController == None )
+		if (InstigatorController == none)
 		{
-			if ( DamageType.default.bDelayedDamage )
+			if (DamageType.default.bDelayedDamage)
 				InstigatorController = DelayedDamageInstigatorController;
 		}
 
-		if ( InstigatorController != None )
+		if (InstigatorController != none)
 		{
 			InstigatorTeam = InstigatorController.GetTeamNum();
 
-			if ( (GetTeamNum() != 255) && (InstigatorTeam != 255) )
+			if ((GetTeamNum() != 255) && (InstigatorTeam != 255))
 			{
-				if ( GetTeamNum() == InstigatorTeam )
+				if (GetTeamNum() == InstigatorTeam)
 				{
 					return;
 				}
@@ -278,33 +278,33 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     */
 
 	// Hacked in APC damage mods for AT Guns, but bullets/bayo/bashing still shouldn't work...
-	if (DamageType != none )
+	if (DamageType != none)
 	{
-	   if(class<ROWeaponDamageType>(DamageType) != none &&
+	   if (class<ROWeaponDamageType>(DamageType) != none &&
        class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.05)
 	   {
 	      VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
        }
-	   else if(class<ROVehicleDamageType>(DamageType) != none &&
+	   else if (class<ROVehicleDamageType>(DamageType) != none &&
 	   class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.05)
        {
           VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
        }
 	}
 
-	if(bLogPenetration)
+	if (bLogPenetration)
 		log("VehHitpoints and HitPointDamage start, damage = "$Damage);
 
 	for(i=0; i<VehHitpoints.Length; i++)
 	{
     	HitPointDamage=Damage;
 
-		if ( VehHitpoints[i].HitPointType == HP_Driver )
+		if (VehHitpoints[i].HitPointType == HP_Driver)
 		{
 			// Damage for large weapons
-			if(	class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25 )
+			if (	class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
 			{
-				if ( Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
+				if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
 				{
 					//Level.Game.Broadcast(self, "Hit Driver"); //re-comment when fixed
 					Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
@@ -313,7 +313,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 			// Damage for small (non penetrating) arms
 			else
 			{
-                if ( Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
 				{
                     //Level.Game.Broadcast(self, "Hit Driver");  //re-comment when fixed
                     Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
@@ -322,14 +322,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 		}
      	//An At-Gun does not have an engine. We will however, leave the ammo store because we need it to get around a
 		//  collision issue with the gunner (player).
-        else if ( IsPointShot(Hitlocation,Momentum, 1.0, i))
+        else if (IsPointShot(Hitlocation,Momentum, 1.0, i))
 		{
 			HitPointDamage *= VehHitpoints[i].DamageMultiplier;
 			HitPointDamage *= VehicleDamageMod;
 
             //log("We hit "$GetEnum(enum'EPawnHitPointType',VehHitpoints[i].HitPointType));
 
-            if ( VehHitpoints[i].HitPointType == HP_AmmoStore )
+            if (VehHitpoints[i].HitPointType == HP_AmmoStore)
 			{
 				Damage *= VehHitpoints[i].DamageMultiplier;
 				break;
@@ -369,7 +369,7 @@ defaultproperties
      RearLeftAngle=238.000000
      IdleRPM=0.000000
      EngineRPMSoundRange=0.000000
-     bSpecialTankTurning=False
+     bSpecialTankTurning=false
      ViewShakeRadius=100.000000
      ViewShakeOffsetFreq=1.000000
      DisintegrationEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
@@ -378,23 +378,23 @@ defaultproperties
      DestructionLinearMomentum=(Min=0.000000,Max=0.000000)
      DestructionAngularMomentum=(Min=0.000000,Max=0.000000)
      DamagedEffectClass=Class'AHZ_ROVehicles.ATCannonDamagedEffect'
-     bMustBeTankCommander=False
+     bMustBeTankCommander=false
      VehicleHudEngineX=0.000000
      VehicleHudEngineY=0.000000
      EngineHealth=1
-     bMultiPosition=False
+     bMultiPosition=false
      TouchMessage="Use the "
      VehicleMass=5.000000
      VehiclePositionString="using an AT-Gun"
      VehicleNameString="AT-Gun"
-     RanOverDamageType=None
-     CrushedDamageType=None
-     RanOverSound=None
+     RanOverDamageType=none
+     CrushedDamageType=none
+     RanOverSound=none
      StolenAnnouncement=
      MaxDesireability=1.900000
      WaterDamage=0.000000
-     VehicleDrowningDamType=None
-     bSpecialHUD=False
+     VehicleDrowningDamType=none
+     bSpecialHUD=false
      CollisionRadius=75.000000
      CollisionHeight=100.000000
      Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -404,14 +404,14 @@ defaultproperties
          KCOMOffset=(Z=-0.500000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=0.000000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

@@ -11,15 +11,15 @@ var 	name		FireIronAnimThree;  // Iron Fire animation for range setting three
 
 event ModeDoFire()
 {
-    if ( !Weapon.bUsingSights )
+    if (!Weapon.bUsingSights)
         return;
 
-    if( !Instigator.bIsCrawling && !Instigator.bRestingWeapon )
+    if (!Instigator.bIsCrawling && !Instigator.bRestingWeapon)
     	return;
 
-    if ( Level.NetMode != NM_DedicatedServer )
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        if ( DH_RocketWeapon(Owner).RocketAttachment  != none)
+        if (DH_RocketWeapon(Owner).RocketAttachment  != none)
            DH_RocketWeapon(Owner).RocketAttachment.Destroy();
     }
 
@@ -32,17 +32,17 @@ function PlayFiring()
 {
 	local name Anim;
 
-	if ( Weapon.Mesh != None )
+	if (Weapon.Mesh != none)
 	{
-		if ( FireCount > 0 )
+		if (FireCount > 0)
 		{
-			if( Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+			if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
 			{
 			 	Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
 			}
 			else
 			{
-				if ( Weapon.HasAnim(FireLoopAnim) )
+				if (Weapon.HasAnim(FireLoopAnim))
 				{
 					Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
 				}
@@ -54,7 +54,7 @@ function PlayFiring()
 		}
 		else
 		{
-			if( Weapon.bUsingSights )
+			if (Weapon.bUsingSights)
 			{
 				switch(DH_PIATWeapon(Weapon).RangeIndex)
 				{
@@ -77,7 +77,7 @@ function PlayFiring()
 		}
 	}
 
-	Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+	Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
 
     ClientPlayForceFeedback(FireForce);  // jdf
 
@@ -95,13 +95,13 @@ defaultproperties
      FireIronAnimThree="iron_shootFar"
      ProjSpawnOffset=(X=25.000000)
      FAProjSpawnOffset=(X=-25.000000)
-     bUsePreLaunchTrace=False
+     bUsePreLaunchTrace=false
      FireIronAnim="iron_shoot"
      MuzzleBone="Warhead"
      FireSounds(0)=SoundGroup'DH_WeaponSounds.PIAT.PIAT_Fire01'
      maxVerticalRecoilAngle=2500
      maxHorizontalRecoilAngle=1000
-     bWaitForRelease=True
+     bWaitForRelease=true
      FireAnim="shoothip"
      TweenTime=0.000000
      FireForce="RocketLauncherFire"

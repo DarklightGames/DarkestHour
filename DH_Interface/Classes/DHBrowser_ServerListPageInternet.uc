@@ -23,6 +23,6 @@ defaultproperties
 
      RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
      PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
-     bStandardized=True
+     bStandardized=true
      StandardHeight=0.800000
 }

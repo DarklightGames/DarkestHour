@@ -61,17 +61,17 @@ function Trigger(Actor Other, Pawn EventInstigator)
 {
   local int i;
 
-  if ( Other == None )
+  if (Other == none)
     Other = Self;
 
-  if ( TriggerAction == TriggerTriggers ) {
+  if (TriggerAction == TriggerTriggers) {
     for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
-      if ( ReplicatedMaterialTriggers[i] != None )
+      if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
   }
-  else if ( TriggerAction == TriggerResets ) {
+  else if (TriggerAction == TriggerResets) {
     for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
-      if ( ReplicatedMaterialTriggers[i] != None )
+      if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].ResetMaterial();
   }
 }
@@ -87,17 +87,17 @@ function Untrigger(Actor Other, Pawn EventInstigator)
 {
   local int i;
 
-  if ( Other == None )
+  if (Other == none)
     Other = Self;
 
-  if ( UntriggerAction == UntriggerTriggers ) {
+  if (UntriggerAction == UntriggerTriggers) {
     for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
-      if ( ReplicatedMaterialTriggers[i] != None )
+      if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
   }
-  else if ( UntriggerAction == UntriggerResets ) {
+  else if (UntriggerAction == UntriggerResets) {
     for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
-      if ( ReplicatedMaterialTriggers[i] != None )
+      if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].ResetMaterial();
   }
 }

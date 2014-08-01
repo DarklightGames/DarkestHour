@@ -46,12 +46,12 @@ function ProcessActorLeave()
     local bool bFound;
     local Pawn R;
 
-    if(ResupplyActors.Length == 0)
+    if (ResupplyActors.Length == 0)
         return;
 
     for(i = 0; i < ResupplyActors.Length; i++)
     {
-        if(ResupplyActors[i] == none)
+        if (ResupplyActors[i] == none)
             continue;
 
         R = ResupplyActors[i];
@@ -59,23 +59,23 @@ function ProcessActorLeave()
         foreach VisibleCollidingActors(class'Pawn', P, 300.0)
         {
             // This stops us from the vehicle resupplying itself.
-            if(Base != none && Base == P)
+            if (Base != none && Base == P)
                 continue;
 
             bFound = false;
 
-            if(P == R)
+            if (P == R)
             {
                 bFound = true;
                 break;
             }
         }
 
-        if(!bFound)
+        if (!bFound)
         {
-            if(DH_Pawn(R) != none)
+            if (DH_Pawn(R) != none)
                 DH_Pawn(R).bTouchingResupply = false;
-            else if(Vehicle(R) != none)
+            else if (Vehicle(R) != none)
                 Vehicle(R).LeftResupply();
         }
     }
@@ -98,7 +98,7 @@ function Timer()
     foreach VisibleCollidingActors(class'Pawn', recvr, 300.0)
     {
         // This stops us from the vehicle resupplying itself.
-        if(Base != none && Base == P)
+        if (Base != none && Base == P)
             continue;
 
         if (Team==OWNER_Neutral || recvr.GetTeamNum()==Team)
@@ -107,31 +107,31 @@ function Timer()
             P = DH_Pawn(recvr);
             V = Vehicle(recvr);
 
-            if(P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
+            if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
             {
                 //Add him into our resupply list.
                 ResupplyActors[ResupplyActors.Length] = P;
 
-                if(!P.bTouchingResupply)
+                if (!P.bTouchingResupply)
                     P.bTouchingResupply = true;
             }
-            else if(V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
+            else if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
             {
                 ResupplyActors[ResupplyActors.Length] = V;
 
-                if(!V.bTouchingResupply)
+                if (!V.bTouchingResupply)
                     V.bTouchingResupply = true;
             }
 
             if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
             {
-                if(P != none)
+                if (P != none)
                     DHRI = P.GetRoleInfo();
 
-                if( P != none && (ResupplyType == RT_Players || ResupplyType == RT_All) )
+                if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
                 {
                     //Resupply weapons
-                    for ( recvr_inv = P.Inventory; recvr_inv != None; recvr_inv = recvr_inv.Inventory )
+                    for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
                     {
                         recvr_weapon = ROWeapon(recvr_inv);
 
@@ -139,24 +139,24 @@ function Timer()
                         if (recvr_weapon.IsGrenade() == true && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetGrenadeWeapon())
                            && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetSecGrenadeWeapon()))
                         {
-                           if ( recvr_weapon.Name == 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name == 'DH_OrangeSmokeGrenadeWeapon' )
+                           if (recvr_weapon.Name == 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name == 'DH_OrangeSmokeGrenadeWeapon')
                                bEnemySmokeFound = true;
                            else
                                bEnemyGrenadeFound = true;
                         }
-                        else if (recvr_weapon != None && recvr_weapon.FillAmmo())
+                        else if (recvr_weapon != none && recvr_weapon.FillAmmo())
                                 bResupplied=true;
                     }
 
-                    if( DHRI != none )
+                    if (DHRI != none)
                     {
-                        if( !P.bHasATAmmo /*&& DHRI.bCarriesATAmmo*/ )
+                        if (!P.bHasATAmmo /*&& DHRI.bCarriesATAmmo*/)
                         {
                             P.bHasATAmmo = true;
                             bResupplied = true;
                         }
 
-                        if( !P.bHasMGAmmo /*&& DHRI.bCarriesMGAmmo*/ )
+                        if (!P.bHasMGAmmo /*&& DHRI.bCarriesMGAmmo*/)
                         {
                             P.bHasMGAmmo =true;
                             bResupplied=true;
@@ -164,28 +164,28 @@ function Timer()
                     }
 
                     // Resupply explosive weapons
-                    if( P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound,bEnemySmokeFound) )
+                    if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound,bEnemySmokeFound))
                         bResupplied=true;
                 }
 
-                if( V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All) )
+                if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
                 {
 
                     // Resupply vehicles
-                    if( V.ResupplyAmmo() )
+                    if (V.ResupplyAmmo())
                         bResupplied=true;
                 }
 
                 //Mortar specific resupplying.
-                if( P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none )
+                if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none)
                 {
-                    if( DHRI.bCanUseMortars )
+                    if (DHRI.bCanUseMortars)
                     {
                         P.FillMortarAmmunition();
                         bResupplied = true;
                     }
 
-                    if( !P.bHasMortarAmmo /*&& DHRI.bCarriesMortarAmmo*/ )
+                    if (!P.bHasMortarAmmo /*&& DHRI.bCarriesMortarAmmo*/)
                     {
                         P.bHasMortarAmmo = true;
                         bResupplied = true;
@@ -212,19 +212,19 @@ event Destroyed()
 
     for(i = 0; i < ResupplyActors.Length; i++)
     {
-        if(ResupplyActors[i] == none)
+        if (ResupplyActors[i] == none)
             continue;
 
         P = ResupplyActors[i];
 
-        if(DH_Pawn(P) != none)
+        if (DH_Pawn(P) != none)
             DH_Pawn(P).bTouchingResupply = false;
-        else if(Vehicle(P) != none)
+        else if (Vehicle(P) != none)
             Vehicle(P).LeftResupply();
     }
 }
 
-event Touch( Actor Other )
+event Touch(Actor Other)
 {
     local ROPawn ROP;
     local Vehicle V;
@@ -233,10 +233,10 @@ event Touch( Actor Other )
     V = Vehicle(Other);
 
     // This stops us from the vehicle resupplying itself.
-    if(Base != none && Base == Other)
+    if (Base != none && Base == Other)
         return;
 
-    if( ROP != none )
+    if (ROP != none)
     {
         if (Team == OWNER_Neutral ||
            (ROP.PlayerReplicationInfo != none && ROP.PlayerReplicationInfo.Team != none
@@ -247,7 +247,7 @@ event Touch( Actor Other )
         }
     }
 
-    if( V != none )
+    if (V != none)
     {
         if (Team == OWNER_Neutral ||
            ((V.GetTeamNum() == AXIS_TEAM_INDEX && Team == OWNER_Axis) ||
@@ -258,7 +258,7 @@ event Touch( Actor Other )
     }
 }
 
-event UnTouch( Actor Other )
+event UnTouch(Actor Other)
 {
     local ROPawn ROP;
     local Vehicle V;
@@ -267,15 +267,15 @@ event UnTouch( Actor Other )
     V = Vehicle(Other);
 
     // This stops us from the vehicle resupplying itself.
-    if(Base != none && Base == Other)
+    if (Base != none && Base == Other)
         return;
 
-    if( ROP != none )
+    if (ROP != none)
     {
         ROP.bTouchingResupply = false;
     }
 
-    if( V != none )
+    if (V != none)
     {
         V.LeftResupply();
     }
@@ -290,5 +290,5 @@ defaultproperties
      Team=OWNER_Neutral
      UpdateTime=20.000000
      ResupplyType=RT_All
-     bDramaticLighting=True
+     bDramaticLighting=true
 }

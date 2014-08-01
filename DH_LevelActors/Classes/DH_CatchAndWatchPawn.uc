@@ -4,7 +4,7 @@
 // Purpose:
 // Waits for a pawn reference and then watches it's health.  Calls event if it's dead, doesn't call if round not in play
 // Problems/Limitations:
-// None so far
+// none so far
 
 class DH_CatchAndWatchPawn extends DH_LevelActors;
 
@@ -36,7 +36,7 @@ state Watch
 	}
 	function Timer()
 	{
-		if(PawnReference.Health <= 0)
+		if (PawnReference.Health <= 0)
 			PawnReferenceIsDead();
 	}
 }
@@ -50,9 +50,9 @@ state Done
 	}
 }
 
-function PassPawnRef( pawn PassedPawn )
+function PassPawnRef(pawn PassedPawn)
 {
-	if( !Level.Game.IsInState('RoundInPlay') || bFired || PassedPawn.health <= 0 )
+	if (!Level.Game.IsInState('RoundInPlay') || bFired || PassedPawn.health <= 0)
 		return; //Leave as the game was not in Play was already fired or the pawn was alredy dead
 	else
 	{
@@ -63,10 +63,10 @@ function PassPawnRef( pawn PassedPawn )
 
 function PawnReferenceIsDead()
 {
-	if( Level.Game.IsInState('RoundInPlay') && !bFired )
+	if (Level.Game.IsInState('RoundInPlay') && !bFired)
 	{
 		TriggerEvent(EventToTriggerOnDeath, self, PawnReference);
-		bFired = True;
+		bFired = true;
 		//Messages
 		gotostate('Done');
 	}

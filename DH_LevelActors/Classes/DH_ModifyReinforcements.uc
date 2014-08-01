@@ -15,7 +15,7 @@ var()	bool			UseRandomness;
 var()	int 			RandomPercent; // 100 for always succeed, 0 for always fail
 var()   int             ModifyNum;
 var()	NumModifyType	HowToModify;
-var()	bool			bUseTeamMessage; //Default = True
+var()	bool			bUseTeamMessage; //Default = true
 var() localized string	Message; //Message to send to team when door is opened
 var()	name			MessageType; //Say,TeamSay,SayDead,TeamSayDead,VehicleSay,CriticalEvent,DeathMessage,
 var()	sound			sound; //sound to play when door is opened
@@ -27,10 +27,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 	local Controller		C;
 	local PlayerController	P;
 
-	if(UseRandomness)
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //Leave script randomly failed
 	}
 	//Setup reference to the GameType
@@ -38,35 +38,35 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 	//Add check if spawncount is greater than spawnlimit
 	//We do this because the game will spawn an entire team initially in the round and can go above spawnlimit
-	if(ROTeamGameRep.SpawnCount[AXIS_TEAM_INDEX] >= ROTeamGameRep.LevelInfo.Axis.SpawnLimit)
+	if (ROTeamGameRep.SpawnCount[AXIS_TEAM_INDEX] >= ROTeamGameRep.LevelInfo.Axis.SpawnLimit)
 	{
-		if(!bModifyIfDepleted)
+		if (!bModifyIfDepleted)
 			return;	//return since reinforcements have been depleted
 
 		ROTeamGameRep.SpawnCount[AXIS_TEAM_INDEX] = ROTeamGameRep.LevelInfo.Axis.SpawnLimit;
 	}
 
-	if(ROTeamGameRep.SpawnCount[ALLIES_TEAM_INDEX] >= ROTeamGameRep.LevelInfo.Allies.SpawnLimit)
+	if (ROTeamGameRep.SpawnCount[ALLIES_TEAM_INDEX] >= ROTeamGameRep.LevelInfo.Allies.SpawnLimit)
 	{
-		if(!bModifyIfDepleted)
+		if (!bModifyIfDepleted)
 			return; //return since reinforcements have been depleted
 
 		ROTeamGameRep.SpawnCount[ALLIES_TEAM_INDEX] = ROTeamGameRep.LevelInfo.Allies.SpawnLimit;
 	}
 
 	//Notify the players that they were reinforced
-	if(bUseTeamMessage)
+	if (bUseTeamMessage)
 	{
-		if(TeamToModify == NEUTRAL)
+		if (TeamToModify == NEUTRAL)
 		{
 			Level.Game.Broadcast(self, Message, MessageType);
 		}
 		else
 		{
-			for(C=Level.ControllerList;C!=None;C=C.NextController)
+			for(C=Level.ControllerList;C!=none;C=C.NextController)
 			{
 				P = PlayerController(C);
-				if (P != None && P.GetTeamNum() == TeamToModify)
+				if (P != none && P.GetTeamNum() == TeamToModify)
 				{
 					P.TeamMessage(C.PlayerReplicationInfo, Message, MessageType);
 					p.PlayAnnouncement(sound, 1, true);
@@ -77,10 +77,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 	ReinforceNum = ModifyNum;
 	//Start adding the reinforcements
-	if(bRespawnPlayersRandomly)
+	if (bRespawnPlayersRandomly)
 	{
 		ReinforceNum = AddRespawnsRandomly(); //Try to respawn the PCs randomly, returns # if not enough dead to respawn
-		if(ReinforceNum <= 0) //if no need to add reinforcements to the pool we can leave function
+		if (ReinforceNum <= 0) //if no need to add reinforcements to the pool we can leave function
 			return;
 			//SendReinforcementMessage(i, 1);
 	}
@@ -88,7 +88,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 	switch(HowToModify)
 	{
 		case NMT_Add: //Because SpawnCount goes up, to add reinforcements you must subtract from SpawnCount
-			if(TeamToModify == NEUTRAL){
+			if (TeamToModify == NEUTRAL){
 				ROTeamGameRep.SpawnCount[AXIS_TEAM_INDEX] -= ReinforceNum;
 				ROTeamGameRep.SpawnCount[ALLIES_TEAM_INDEX] -= ReinforceNum;
 			}
@@ -96,7 +96,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 				ROTeamGameRep.SpawnCount[TeamToModify] -= ReinforceNum;
 		break;
 		case NMT_Subtract:
-			if(TeamToModify == NEUTRAL){
+			if (TeamToModify == NEUTRAL){
 				ROTeamGameRep.SpawnCount[AXIS_TEAM_INDEX] += ReinforceNum;
 				ROTeamGameRep.SpawnCount[ALLIES_TEAM_INDEX] += ReinforceNum;
 			}
@@ -104,10 +104,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 				ROTeamGameRep.SpawnCount[TeamToModify] += ReinforceNum;
 		break;
 		case NMT_Set:
-			if(TeamToModify == AXIS){
+			if (TeamToModify == AXIS){
 				ROTeamGameRep.SpawnCount[AXIS_TEAM_INDEX] = ROTeamGameRep.LevelInfo.Axis.SpawnLimit - ReinforceNum;
 			}
-			else if(TeamToModify == Allies){
+			else if (TeamToModify == Allies){
 				ROTeamGameRep.SpawnCount[ALLIES_TEAM_INDEX] = ROTeamGameRep.LevelInfo.Allies.SpawnLimit - ReinforceNum;
 			}
 			else
@@ -129,12 +129,12 @@ function int AddRespawnsRandomly()
  	local	ROTeamGame					ROGame;
 
 	//Construct the local Dead PC list
-	for(C=Level.ControllerList; C!=None; C=C.NextController)
+	for(C=Level.ControllerList; C!=none; C=C.NextController)
 	{
-		if(!C.bIsPlayer || C.Pawn != None || C.PlayerReplicationInfo == None || C.PlayerReplicationInfo.Team == None || C.PlayerReplicationInfo.Team.TeamIndex != TeamToModify)
+		if (!C.bIsPlayer || C.Pawn != none || C.PlayerReplicationInfo == none || C.PlayerReplicationInfo.Team == none || C.PlayerReplicationInfo.Team.TeamIndex != TeamToModify)
 			continue;
 
-		if(ROPlayer(C) != None && ROPlayer(C).CanRestartPlayer())
+		if (ROPlayer(C) != none && ROPlayer(C).CanRestartPlayer())
    			lDeadPCList.Insert(0,1); //Adds a new spot at index for the lDeadPCList
 			lDeadPCList[0] = C; //Sets the Player Controller in the lDeadPCList
 			//RestartPlayer(P);
@@ -149,7 +149,7 @@ function int AddRespawnsRandomly()
 		ROGame.RestartPlayer(lDeadPCList[randomnum]);
 	 	lDeadPCList.Remove(randomnum, 1);
 
-	 	if(i >= ModifyNum)
+	 	if (i >= ModifyNum)
 	 		return 0;
 	}
 	return ModifyNum - i;
@@ -157,8 +157,8 @@ function int AddRespawnsRandomly()
 
 defaultproperties
 {
-     bModifyIfDepleted=True
-     bUseTeamMessage=True
+     bModifyIfDepleted=true
+     bUseTeamMessage=true
      messagetype="CriticalEvent"
      Sound=Sound'Miscsounds.Music.notify_drum'
 }

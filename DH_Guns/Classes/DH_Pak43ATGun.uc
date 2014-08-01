@@ -26,7 +26,7 @@ defaultproperties
      DisintegrationEffectClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
      DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
      DestructionAngularMomentum=(Min=50.000000,Max=150.000000)
-     DamagedEffectClass=None
+     DamagedEffectClass=none
      DamagedEffectScale=0.850000
      DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
      BeginningIdleAnim=
@@ -38,10 +38,10 @@ defaultproperties
      VehicleHudOccupantsY(0)=0.000000
      VehicleHudOccupantsY(1)=0.600000
      VehicleHudOccupantsY(2)=0.000000
-     VehHitpoints(0)=(PointRadius=0.000000,PointBone="turret_attachment",bPenetrationPoint=False)
+     VehHitpoints(0)=(PointRadius=0.000000,PointBone="turret_attachment",bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=0.000000,PointBone="turret_attachment")
      VehicleMass=11.000000
-     bFPNoZFromCameraPitch=True
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
      DriveAnim=
      ExitPositions(0)=(Y=-200.000000,Z=100.000000)
@@ -70,14 +70,14 @@ defaultproperties
          KCOMOffset=(Z=-0.900000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=0.000000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=50.000000
          KImpactThreshold=700.000000
      End Object

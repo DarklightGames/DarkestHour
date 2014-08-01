@@ -4,7 +4,7 @@
 // Purpose:
 // A damagetype that easily detracks armor and has mine info
 // Problems/Limitations:
-// None known
+// none known
 
 class DHATMineDamage extends ROTankShellExplosionDamage
       abstract;
@@ -17,7 +17,7 @@ defaultproperties
      VehicleDamageModifier=0.850000
      TreadDamageModifier=1.000000
      DeathString="%o was ripped apart by an anti-tank mine."
-     bLocationalHit=True
+     bLocationalHit=true
      KDeathVel=300.000000
      KDeathUpKick=100.000000
      KDeadLinZVelScale=0.002000

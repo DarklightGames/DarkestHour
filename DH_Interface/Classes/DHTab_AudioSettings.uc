@@ -72,7 +72,7 @@ defaultproperties
      sl_VOIP=moSlider'DH_Interface.DHTab_AudioSettings.VoiceVolume'
 
      Begin Object Class=DHmoComboBox Name=AudioMode
-         bReadOnly=True
+         bReadOnly=true
          Caption="Audio Mode"
          OnCreateComponent=AudioMode.InternalOnCreateComponent
          IniOption="@Internal"
@@ -87,7 +87,7 @@ defaultproperties
      co_Mode=DHmoComboBox'DH_Interface.DHTab_AudioSettings.AudioMode'
 
      Begin Object Class=DHmoComboBox Name=AudioPlayVoices
-         bReadOnly=True
+         bReadOnly=true
          Caption="Play Voice Messages"
          OnCreateComponent=AudioPlayVoices.InternalOnCreateComponent
          IniOption="@Internal"
@@ -107,7 +107,7 @@ defaultproperties
          Caption="Reverse Stereo"
          OnCreateComponent=AudioReverseStereo.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="False"
+         IniDefault="false"
          WinTop=0.405678
          WinLeft=0.018164
          WinWidth=0.450000
@@ -123,7 +123,7 @@ defaultproperties
          Caption="Message Beep"
          OnCreateComponent=AudioMessageBeep.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.405678
          WinLeft=0.524024
          WinWidth=0.450000
@@ -139,7 +139,7 @@ defaultproperties
          Caption="Disable Music During Gameplay"
          OnCreateComponent=DisableGameMusic.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="False"
+         IniDefault="false"
          WinTop=0.235052
          WinLeft=0.018164
          WinWidth=0.450000
@@ -155,7 +155,7 @@ defaultproperties
          Caption="Low Sound Detail"
          OnCreateComponent=AudioLowDetail.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="False"
+         IniDefault="false"
          WinTop=0.235052
          WinLeft=0.018164
          WinWidth=0.450000
@@ -171,7 +171,7 @@ defaultproperties
          Caption="System Driver"
          OnCreateComponent=AudioDefaultDriver.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="False"
+         IniDefault="false"
          WinTop=0.320365
          WinLeft=0.018164
          WinWidth=0.450000
@@ -218,8 +218,8 @@ defaultproperties
          WinWidth=0.442638
          WinHeight=0.060000
          TabOrder=24
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnChange=DHTab_AudioSettings.InternalOnChange
          OnLoadINI=DHTab_AudioSettings.InternalOnLoadINI
      End Object
@@ -268,7 +268,7 @@ defaultproperties
      ed_ChatPassword=DHmoEditBox'DH_Interface.DHTab_AudioSettings.ChatPasswordEdit'
 
      Begin Object Class=DHmoComboBox Name=VoiceQuality
-         bReadOnly=True
+         bReadOnly=true
          CaptionWidth=0.600000
          Caption="Internet Quality"
          OnCreateComponent=VoiceQuality.InternalOnCreateComponent
@@ -283,7 +283,7 @@ defaultproperties
      co_Quality=DHmoComboBox'DH_Interface.DHTab_AudioSettings.VoiceQuality'
 
      Begin Object Class=DHmoComboBox Name=VoiceQualityLAN
-         bReadOnly=True
+         bReadOnly=true
          CaptionWidth=0.600000
          Caption="LAN Quality"
          OnCreateComponent=VoiceQualityLAN.InternalOnCreateComponent

@@ -27,7 +27,7 @@ var    bool         bLastShot;  // Prevents shoot effects playing for each proje
 
     if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
     {
-        if (Instigator != None && Instigator.IsLocallyControlled())
+        if (Instigator != none && Instigator.IsLocallyControlled())
         {
             SpawnDir = WeaponFireRotation;
         }
@@ -36,7 +36,7 @@ var    bool         bLastShot;  // Prevents shoot effects playing for each proje
             SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
         }
 
-        if (Instigator != None && !Instigator.PlayerReplicationInfo.bBot)
+        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
         {
             SpawnDir.Pitch += AddedPitch;
         }
@@ -56,7 +56,7 @@ state ProjectileFireMode
         local rotator R;
         local vector X;
 
-        if(ProjectileClass == class'DH_TankCannonShellCanisterAmerican')
+        if (ProjectileClass == class'DH_TankCannonShellCanisterAmerican')
         {
             SpawnCount = ProjPerFire;// DH_TankCannonShellCanister.ProjPerFire;
 
@@ -70,27 +70,27 @@ state ProjectileFireMode
 
                 WeaponFireRotation = Rotator(X >> R);
 
-                if( projectileID == 0 )
-                    bLastShot = False;
-                if( projectileID == SpawnCount - 1)
-                    bLastShot = True;
+                if (projectileID == 0)
+                    bLastShot = false;
+                if (projectileID == SpawnCount - 1)
+                    bLastShot = true;
 
-                if(bGunFireDebug)
+                if (bGunFireDebug)
                     log("Firing Canister shot with angle: "@WeaponFireRotation);
 
-                SpawnProjectile(ProjectileClass, False);
+                SpawnProjectile(ProjectileClass, false);
             }
         }
         else
-            SpawnProjectile(ProjectileClass, False);
+            SpawnProjectile(ProjectileClass, false);
     }
 
     function AltFire(Controller C)
     {
-        if (AltFireProjectileClass == None)
+        if (AltFireProjectileClass == none)
             Fire(C);
         else
-            SpawnProjectile(AltFireProjectileClass, True);
+            SpawnProjectile(AltFireProjectileClass, true);
     }
 }
 
@@ -111,12 +111,12 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
 
         // used only for Human players. Lets cannons with non centered aim points have a different aiming location
-        if( Instigator != none && Instigator.IsHumanControlled() )
+        if (Instigator != none && Instigator.IsHumanControlled())
         {
                   FireRot.Pitch += AddedPitch;
         }
 
-        if( !bAltFire )
+        if (!bAltFire)
                 FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
 
                 // new tank shell dispersion function somwhere here...
@@ -124,7 +124,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         if (bGunFireDebug)
                 log("After pitch corrections FireRot "$FireRot);
 
-    if( bGunFireDebug )
+    if (bGunFireDebug)
                 log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
 
     if (bDoOffsetTrace)
@@ -132,7 +132,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                Extent = ProjClass.default.CollisionRadius * vect(1,1,0);
         Extent.Z = ProjClass.default.CollisionHeight;
                WeaponPawn = VehicleWeaponPawn(Owner);
-            if (WeaponPawn != None && WeaponPawn.VehicleBase != None)
+            if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
             {
                     if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
                         StartLocation = HitLocation;
@@ -150,8 +150,8 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     else
             StartLocation = WeaponFireLocation;
 
-        if( bCannonShellDebugging )
-                Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * Vector(WeaponFireRotation), WeaponFireLocation, false);
+        if (bCannonShellDebugging)
+                Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
 
 
    P = spawn(ProjClass, none, , StartLocation, FireRot);
@@ -162,24 +162,24 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
    //swap to the next round type after firing (hmm shoudn't I have this moved? Or REMOVED ???)
 
-    if( bLastShot )
+    if (bLastShot)
     {
-        if( PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass )
+        if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
         {
                 ProjectileClass = PendingProjectileClass;
-                if( bGunFireDebug )
+                if (bGunFireDebug)
                         log("Projectile class was changed to PendingProjClass by SpawnProjectile function");
         }
     }
 
     //log("WeaponFireRotation = "$WeaponFireRotation);
 
-    if (P != None)
+    if (P != none)
     {
         if (bInheritVelocity)
             P.Velocity = Instigator.Velocity;
 
-        if( bLastShot )
+        if (bLastShot)
         {
             FlashMuzzleFlash(bAltFire);
 
@@ -194,7 +194,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                     AmbientSoundScaling = AltFireSoundScaling;
                 }
                 else
-                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
+                    PlayOwnedSound(AltFireSoundClass, SLOT_none, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
             }
             else
             {
@@ -202,7 +202,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                     AmbientSound = FireSoundClass;
                 else
                 {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);
+                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume/255.0,, FireSoundRadius,, false);
                 }
             }
         }
@@ -219,7 +219,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         local rotator InitialRot, R;
         local vector X;
 
-        if(ProjectileClass == class'DH_TankCannonShellCanister')
+        if (ProjectileClass == class'DH_TankCannonShellCanister')
         {
             SpawnCount = ProjPerFire;// DH_TankCannonShellCanister.ProjPerFire;
 
@@ -233,26 +233,26 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
                 WeaponFireRotation = Rotator(X >> R);
 
-                if(bGunFireDebug)
+                if (bGunFireDebug)
                     log("Firing Canister shot proj with angle: "@WeaponFireRotation);
 
                 // Only play shooting sound & effects on the first projectile
-                if( projectileID == 0 )
-                    SpawnCanisterProjectile(ProjectileClass, True);
+                if (projectileID == 0)
+                    SpawnCanisterProjectile(ProjectileClass, true);
                 else
-                    SpawnCanisterProjectile(ProjectileClass, False);
+                    SpawnCanisterProjectile(ProjectileClass, false);
             }
         }
         else
-            SpawnProjectile(ProjectileClass, False);
+            SpawnProjectile(ProjectileClass, false);
     }
 
     function AltFire(Controller C)
     {
-        if (AltFireProjectileClass == None)
+        if (AltFireProjectileClass == none)
             Fire(C);
         else
-            SpawnProjectile(AltFireProjectileClass, True);
+            SpawnProjectile(AltFireProjectileClass, true);
     }
 }
 
@@ -263,7 +263,7 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
     local VehicleWeaponPawn WeaponPawn;
     local vector StartLocation, HitLocation, HitNormal, Extent;
     local rotator FireRot;
-    local Vector ProjectileDir, End, PTHitLocation, PTHitNormal;
+    local vector ProjectileDir, End, PTHitLocation, PTHitNormal;
     local array<int>    HitPoints;
     local Actor Other;
     local DH_Pawn HitPawn;
@@ -279,7 +279,7 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
         }
 
         // used only for Human players. Lets cannons with non centered aim points have a different aiming location
-        if( Instigator != none && Instigator.IsHumanControlled() )
+        if (Instigator != none && Instigator.IsHumanControlled())
         {
                   FireRot.Pitch += AddedPitch;
         }
@@ -287,7 +287,7 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
         if (bGunFireDebug)
                 log("After pitch corrections FireRot "$FireRot);
 
-    if( bGunFireDebug )
+    if (bGunFireDebug)
                 log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
 
     if (bDoOffsetTrace)
@@ -295,7 +295,7 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
                Extent = ProjClass.default.CollisionRadius * vect(1,1,0);
         Extent.Z = ProjClass.default.CollisionHeight;
                WeaponPawn = VehicleWeaponPawn(Owner);
-            if (WeaponPawn != None && WeaponPawn.VehicleBase != None)
+            if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
             {
                     if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
                         StartLocation = HitLocation;
@@ -313,13 +313,13 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
     else
             StartLocation = WeaponFireLocation;
 
-        if( bCannonShellDebugging )
-                Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * Vector(WeaponFireRotation), WeaponFireLocation, false);
+        if (bCannonShellDebugging)
+                Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
 
 
-    if ( bUsePreLaunchTrace ) // Leaving this function as optional in case we want to disable it for reasons of penetration in future
+    if (bUsePreLaunchTrace) // Leaving this function as optional in case we want to disable it for reasons of penetration in future
     {
-        ProjectileDir = Vector(FireRot);
+        ProjectileDir = vector(FireRot);
         End = StartLocation + PreLaunchTraceDistance * ProjectileDir;
 
         log("Running Trace");
@@ -333,29 +333,29 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
         //Instigator.DrawStayingDebugLine(Start, End, 255,0,0);
         // This is a bit of a hack, but it prevents bots from killing other players in most instances
         // Bots with a giant tank mounted shotgun... yeah, I'm leaving this check in place - PsYcH0_Ch!cKeN
-        if( !Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
+        if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
         {
             //log(Instigator$"'s shot would hit "$Other$" who is on the same team");
             return none;
         }
 
-        if ( Other != None && Other != Instigator && Other.Base != Instigator)
+        if (Other != none && Other != Instigator && Other.Base != Instigator)
         {
-            if ( !Other.bWorldGeometry )
+            if (!Other.bWorldGeometry)
             {
                 // Update hit effect except for pawns (blood) other than vehicles.
-                if ( Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') &&
+                if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') &&
                  !Other.IsA('ROVehicleWeapon')))
                 {
 //                  WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
                 }
 
-                if(Other.IsA('ROVehicleWeapon') && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, ProjectileDir))
+                if (Other.IsA('ROVehicleWeapon') && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, ProjectileDir))
                 {
 //                  WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
                 }
 
-                if( Other.IsA('ROVehicle'))
+                if (Other.IsA('ROVehicle'))
                 {
                     Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),class<ROBullet>(ProjectileClass).default.MyVehicleDamage);
                 }
@@ -363,17 +363,17 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
                 {
                     HitPawn = DH_Pawn(Other);
 
-                    if ( HitPawn != none )
+                    if (HitPawn != none)
                     {
                          // Hit detection debugging
                          //log("PreLaunchTrace hit "$HitPawn.PlayerReplicationInfo.PlayerName);
                          //HitPawn.HitStart = Start;
                          //HitPawn.HitEnd = End;
-                         if(!HitPawn.bDeleteMe)
+                         if (!HitPawn.bDeleteMe)
                             HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType,HitPoints);
 
                          // Hit detection debugging
-                         //if( Level.NetMode == NM_Standalone)
+                         //if (Level.NetMode == NM_Standalone)
                          //   HitPawn.DrawBoneLocation();
                     }
                     else
@@ -384,47 +384,47 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
             }
             else
             {
-                if ( WeapAttach != None )
+                if (WeapAttach != none)
                 {
 //                  WeapAttach.UpdateHit(Other,HitLocation,HitNormal);
                 }
 
-                if( RODestroyableStaticMesh(Other) != none )
+                if (RODestroyableStaticMesh(Other) != none)
                 {
                     Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
-                    if( RODestroyableStaticMesh(Other).bWontStopBullets )
+                    if (RODestroyableStaticMesh(Other).bWontStopBullets)
                     {
                         Other = none;
                     }
                 }
             }
 
-            if( PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass )
+            if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
             {
                 ProjectileClass = PendingProjectileClass;
-                if( bGunFireDebug )
+                if (bGunFireDebug)
                         log("Projectile class was changed to PendingProjClass by SpawnProjectile function");
             }
 
-            if( bPlayShootEffects )
+            if (bPlayShootEffects)
             {
                 if (bAmbientFireSound)
                     AmbientSound = FireSoundClass;
                 else
                 {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);
+                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume/255.0,, FireSoundRadius,, false);
                 }
             }
         }
 
         // Return because we already hit something
-        if ( Other != none )
+        if (Other != none)
             return none;
     }
 
     P = spawn(ProjClass, none, , StartLocation, FireRot);
 
-    if(P!=none) log("Spawned Projectile");
+    if (P!=none) log("Spawned Projectile");
 
 
         if (bGunFireDebug)
@@ -432,27 +432,27 @@ function Projectile SpawnCanisterProjectile(class<Projectile> ProjClass, bool bP
 
    //swap to the next round type after firing (hmm shoudn't I have this moved? Or REMOVED ???)
 
-    if( PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass )
+    if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
         {
                 ProjectileClass = PendingProjectileClass;
-                if( bGunFireDebug )
+                if (bGunFireDebug)
                         log("Projectile class was changed to PendingProjClass by SpawnProjectile function");
         }
 
     //log("WeaponFireRotation = "$WeaponFireRotation);
 
-    if (P != None)
+    if (P != none)
     {
         if (bInheritVelocity)
             P.Velocity = Instigator.Velocity;
 
-        if( bPlayShootEffects )
+        if (bPlayShootEffects)
         {
             if (bAmbientFireSound)
                 AmbientSound = FireSoundClass;
             else
             {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);
+                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume/255.0,, FireSoundRadius,, false);
             }
         }
     }
@@ -469,9 +469,9 @@ simulated function int GetRange()
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-    if( CurrentRangeIndex < RangeSettings.Length - 1 )
+    if (CurrentRangeIndex < RangeSettings.Length - 1)
     {
-        if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
             //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
         CurrentRangeIndex++;
@@ -480,9 +480,9 @@ function IncrementRange()
 
 function DecrementRange()
 {
-    if( CurrentRangeIndex > 0 )
+    if (CurrentRangeIndex > 0)
     {
-        if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
             //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
         CurrentRangeIndex --;
@@ -493,7 +493,7 @@ defaultproperties
 {
      CSpread=500
      ProjPerFire=20
-     bLastShot=True
+     bLastShot=true
      InitialTertiaryAmmo=15
      TertiaryProjectileClass=Class'DH_Vehicles.DH_TankCannonShellCanister'
      SecondarySpread=0.001450
@@ -526,8 +526,8 @@ defaultproperties
      NumAltMags=6
      DummyTracerClass=Class'DH_Vehicles.DH_30CalVehicleClientTracer'
      mTracerInterval=0.600000
-     bUsesTracers=True
-     bAltFireTracersOnly=True
+     bUsesTracers=true
+     bAltFireTracersOnly=true
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=10.000000))
      VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-12.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -540,12 +540,12 @@ defaultproperties
      WeaponFireOffset=85.000000
      AltFireOffset=(X=26.000000,Y=7.000000,Z=1.000000)
      RotationsPerSecond=0.083000
-     bAmbientAltFireSound=True
+     bAmbientAltFireSound=true
      FireInterval=3.000000
      AltFireInterval=0.120000
      EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
      AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=True
+     bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
      AltFireSoundScaling=3.000000
@@ -566,8 +566,8 @@ defaultproperties
      AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      AltShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=3641
      CustomPitchDownLimit=63352
      BeginningIdleAnim="com_idle_close"

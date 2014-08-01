@@ -58,7 +58,7 @@ defaultproperties
      OpticalRanges(22)=(Range=2400)
      OpticalRanges(23)=(Range=2600)
      OpticalRanges(24)=(Range=2800)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=2.900000
      DHPenetrationTable(1)=2.700000
      DHPenetrationTable(2)=2.400000
@@ -71,7 +71,7 @@ defaultproperties
      DHPenetrationTable(9)=0.900000
      DHPenetrationTable(10)=0.700000
      ShellDiameter=5.700000
-     bHasTracer=True
+     bHasTracer=true
      PenetrationMag=630.000000
      ShellImpactDamage=Class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAP'
      ImpactDamage=295

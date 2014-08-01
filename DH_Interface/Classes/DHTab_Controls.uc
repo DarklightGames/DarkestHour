@@ -20,14 +20,14 @@ defaultproperties
 
      Begin Object Class=GUILabel Name=HintLabel
          TextAlign=TXTA_Center
-         bMultiLine=True
+         bMultiLine=true
          VertAlign=TXTA_Center
          FontScale=FNS_Small
          StyleName="DHSmallText"
          WinTop=0.950000
          WinHeight=0.050000
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
      End Object
      l_Hint=GUILabel'DH_Interface.DHTab_Controls.HintLabel'
 
@@ -40,8 +40,8 @@ defaultproperties
          StyleName="DHNoBox"
          WinHeight=0.900000
          TabOrder=0
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
      End Object
      lb_Binds=DHGUIMultiColumnListBox'DH_Interface.DHTab_Controls.BindListBox'
 

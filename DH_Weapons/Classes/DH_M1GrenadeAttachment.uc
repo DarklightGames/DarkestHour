@@ -8,7 +8,7 @@ simulated event ThirdPersonEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-		if ( ROPawn(Instigator) == None )
+		if (ROPawn(Instigator) == none)
 			return;
         if (FlashCount == 0)
         {
@@ -250,8 +250,8 @@ defaultproperties
      WA_Fire="Idle_m1"
      menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.M1Grenades'
      MenuDescription="The Mk. II was the standard Allied fragmentation grenade available throughout the war. Can be 'cooked'. Normally set with about a 4.5-second fuse. Effective casuality radius of 2-3 metres in the open."
-     bRapidFire=False
-     LightType=LT_None
-     LightEffect=LE_None
+     bRapidFire=false
+     LightType=LT_none
+     LightEffect=LE_none
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.M1_Grenade_3rd'
 }

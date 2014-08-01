@@ -34,7 +34,7 @@ defaultproperties
      OpticalRanges(10)=(Range=1000)
      OpticalRanges(11)=(Range=1100)
      OpticalRanges(12)=(Range=1200)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=2.500000
      DHPenetrationTable(1)=2.100000
      DHPenetrationTable(2)=1.800000
@@ -47,7 +47,7 @@ defaultproperties
      DHPenetrationTable(9)=0.100000
      DHPenetrationTable(10)=0.100000
      ShellDiameter=2.000000
-     bHasTracer=False
+     bHasTracer=false
      ShellImpactDamage=Class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
      ImpactDamage=175
      VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'

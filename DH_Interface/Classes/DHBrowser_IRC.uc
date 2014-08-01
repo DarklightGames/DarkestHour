@@ -13,16 +13,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 	// Change the Style of the Tabs
 	c_Channel.TabHeight=0.06;
-	c_Channel.BackgroundStyle = None;
+	c_Channel.BackgroundStyle = none;
 	c_Channel.BackgroundStyleName = "";
-	for ( i = 0; i < c_Channel.TabStack.Length; i++ )
+	for (i = 0; i < c_Channel.TabStack.Length; i++)
 	{
-		if ( c_Channel.TabStack[i] != None )
+		if (c_Channel.TabStack[i] != none)
 		{
-	        		c_Channel.TabStack[i].Style=None;   // needed to reset style
+	        		c_Channel.TabStack[i].Style=none;   // needed to reset style
 			c_Channel.TabStack[i].FontScale=FNS_Medium;
-			c_Channel.TabStack[i].bAutoSize=True;
-			c_Channel.TabStack[i].bAutoShrink=False;
+			c_Channel.TabStack[i].bAutoSize=true;
+			c_Channel.TabStack[i].bAutoShrink=false;
 			c_Channel.TabStack[i].StyleName="DHTabTextButtonStyle";
 			c_Channel.TabStack[i].Initcomponent(MyController, c_Channel);
         }
@@ -32,9 +32,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 defaultproperties
 {
      Begin Object Class=DHGUITabControl Name=ChannelTabControl
-         bDockPanels=True
+         bDockPanels=true
          WinHeight=1.000000
-         bAcceptsInput=True
+         bAcceptsInput=true
          OnActivate=ChannelTabControl.InternalOnActivate
      End Object
      c_Channel=DHGUITabControl'DH_Interface.DHBrowser_IRC.ChannelTabControl'

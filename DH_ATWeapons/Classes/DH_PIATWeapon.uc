@@ -18,7 +18,7 @@ var	int		NumMagsToResupply;			// Number of ammo mags to add when this weapon has
 //=============================================================================
 replication
 {
-	reliable if( Role<ROLE_Authority )
+	reliable if (Role<ROLE_Authority)
 		ServerSetRange;
 }
 
@@ -30,14 +30,14 @@ function bool IsATWeapon()
 simulated function bool AllowReload()
 {
 	//Cannot reload without being prone or rested.
-	if( !Instigator.bIsCrawling && !Instigator.bRestingWeapon )
+	if (!Instigator.bIsCrawling && !Instigator.bRestingWeapon)
 	{
 		class'DH_PIATWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 2);
 		return false;
 	}
 
     // Don't allow a reload if bomb already loaded
-	if( AmmoAmount(0) > 0)
+	if (AmmoAmount(0) > 0)
 		return false;
 
 	return super.AllowReload();
@@ -46,7 +46,7 @@ simulated function bool AllowReload()
 // Overridden to support cycling the panzerfaust aiming ranges
 simulated exec function Deploy()
 {
-	if( IsBusy() || !bUsingSights )
+	if (IsBusy() || !bUsingSights)
 		return;
 
 	CycleRange();
@@ -55,7 +55,7 @@ simulated exec function Deploy()
 // switch the PIAT aiming ranges
 simulated function CycleRange()
 {
-	if( RangeIndex < 2 )
+	if (RangeIndex < 2)
 	{
 		RangeIndex++;
 	}
@@ -66,12 +66,12 @@ simulated function CycleRange()
 
 	DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
-	if(Instigator.IsLocallyControlled())
+	if (Instigator.IsLocallyControlled())
 	{
 		PlayIdle();
 	}
 
-	if( Role < ROLE_Authority)
+	if (Role < ROLE_Authority)
 		ServerSetRange(RangeIndex);
 }
 
@@ -80,7 +80,7 @@ function ServerSetRange(int NewIndex)
 {
 	RangeIndex=NewIndex;
 
-	if( bUsingSights )
+	if (bUsingSights)
 	{
 		DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 	}
@@ -96,7 +96,7 @@ simulated function PlayIdle()
 {
 	local name Anim;
 
-	if( bUsingSights )
+	if (bUsingSights)
 	{
 		switch(RangeIndex)
 		{
@@ -111,11 +111,11 @@ simulated function PlayIdle()
 				break;
 		}
 
-		LoopAnim(Anim, IdleAnimRate, 0.2 );
+		LoopAnim(Anim, IdleAnimRate, 0.2);
 	}
 	else
 	{
-		LoopAnim(IdleAnim, IdleAnimRate, 0.2 );
+		LoopAnim(IdleAnim, IdleAnimRate, 0.2);
 	}
 }
 
@@ -127,26 +127,26 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 	Instigator = Other;
 	W = Weapon(Instigator.FindInventoryType(class));
-	if ( W == None || W.Class != Class ) // added class check because somebody made FindInventoryType() return subclasses for some reason
+	if (W == none || W.Class != Class) // added class check because somebody made FindInventoryType() return subclasses for some reason
 	{
 		bJustSpawned = true;
 		super(Inventory).GiveTo(Other);
 		bPossiblySwitch = true;
 		W = self;
 	}
-	else if ( !W.HasAmmo() )
+	else if (!W.HasAmmo())
 	    bPossiblySwitch = true;
 
-	if ( Pickup == None )
+	if (Pickup == none)
 		bPossiblySwitch = true;
 
 	for (m = 0; m < NUM_FIRE_MODES; m++)
 	{
-		if ( FireMode[m] != None )
+		if (FireMode[m] != none)
 		{
 			FireMode[m].Instigator = Instigator;
 
-			if( Ammo(Pickup) != none )
+			if (Ammo(Pickup) != none)
 			{
 				DH_PIATWeapon(W).GiveAmmoPickupAmmo(m,Ammo(Pickup),bJustSpawned);
 			}
@@ -157,19 +157,19 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 		}
 	}
 
-	if ( Instigator.Weapon != W )
+	if (Instigator.Weapon != W)
 		W.ClientWeaponSet(bPossiblySwitch);
 
-	if ( !bJustSpawned )
+	if (!bJustSpawned)
 	{
 		for (m = 0; m < NUM_FIRE_MODES; m++)
-			Ammo[m] = None;
+			Ammo[m] = none;
 		Destroy();
 	}
 
 	ROPawn(Instigator).bWeaponCanBeResupplied = true;
 
-	if( (CurrentMagCount <= (MaxNumPrimaryMags - 2) && AmmoAmount(0) <= 0) || CurrentMagCount <= (MaxNumPrimaryMags - 3 ) )
+	if ((CurrentMagCount <= (MaxNumPrimaryMags - 2) && AmmoAmount(0) <= 0) || CurrentMagCount <= (MaxNumPrimaryMags - 3))
 	{
 		ROPawn(Instigator).bWeaponNeedsResupply = true;
 	}
@@ -181,7 +181,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 function DropFrom(vector StartLocation)
 {
-    if (!bCanThrow )
+    if (!bCanThrow)
         return;
 
  	ROPawn(Instigator).bWeaponCanBeResupplied = false;
@@ -192,7 +192,7 @@ function DropFrom(vector StartLocation)
 
 simulated function Destroyed()
 {
-	if( Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none )
+	if (Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none)
 	{
 	 	ROPawn(Instigator).bWeaponCanBeResupplied = false;
 	 	ROPawn(Instigator).bWeaponNeedsResupply = false;
@@ -206,20 +206,20 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
 	local bool bJustSpawnedAmmo;
 	local int addAmount, InitialAmount, i;
 
-	if ( FireMode[m] != None && FireMode[m].AmmoClass != None )
+	if (FireMode[m] != none && FireMode[m].AmmoClass != none)
 	{
 		Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
 		bJustSpawnedAmmo = false;
 
-		if ( (FireMode[m].AmmoClass == None) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)) )
+		if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
 			return;
 
 		InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
 
-		if( bJustSpawned && AP == None)
+		if (bJustSpawned && AP == none)
 		{
 			PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-			for( i=0; i<PrimaryAmmoArray.Length; i++ )
+			for(i=0; i<PrimaryAmmoArray.Length; i++)
 			{
 				PrimaryAmmoArray[i] = InitialAmount;
 			}
@@ -227,13 +227,13 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
 			CurrentMagCount = PrimaryAmmoArray.Length - 1;
 		}
 
-		if ( (AP != None)  )
+		if ((AP != none) )
 		{
 			InitialAmount = AP.AmmoAmount;
 			PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
 		}
 
-		if ( Ammo[m] != None )
+		if (Ammo[m] != none)
 		{
 			addamount = InitialAmount + Ammo[m].AmmoAmount;
 			Ammo[m].Destroy();
@@ -249,7 +249,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
 function coords GetMuzzleCoords()
 {
 	// have to update the location of the weapon before getting the coords
-	SetLocation( Instigator.Location + Instigator.CalcDrawOffset(self) );
+	SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
 	return GetBoneCoords('Warhead');
 }
 
@@ -267,7 +267,7 @@ function SelfDestroy()
 			StopFire(m);
 	}
 
-	if( Instigator != none )
+	if (Instigator != none)
 	{
 		DetachFromPawn(Instigator);
 	}
@@ -283,19 +283,19 @@ function float GetAIRating()
 
 	B = Bot(Instigator.Controller);
 
-	if ( (B == None) || (B.Enemy == None) )
+	if ((B == none) || (B.Enemy == none))
 		return AIRating;
 
-	if (Vehicle(B.Enemy) == None)
+	if (Vehicle(B.Enemy) == none)
 		return 0;
 
 	result = AIRating;
 	ZDiff = Instigator.Location.Z - B.Enemy.Location.Z;
-	if ( ZDiff > -300 )
+	if (ZDiff > -300)
 		result += 0.2;
 	dist = VSize(B.Enemy.Location - Instigator.Location);
-	if ( dist > 400 && dist < 6000)
-		return ( FMin(2.0,result + (6000 - dist) * 0.0001) );
+	if (dist > 400 && dist < 6000)
+		return (FMin(2.0,result + (6000 - dist) * 0.0001));
 
 	return result;
 }
@@ -304,16 +304,16 @@ simulated function Fire(float F)
 {
 	//Level.Game.Broadcast(self, "Fire");
 
-	if( !bUsingSights )
+	if (!bUsingSights)
 	{
 		class'DH_PIATWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
 		return;
 	}
 
-	if( bUsingSights )
+	if (bUsingSights)
 	{
 
-		if( !Instigator.bIsCrawling && !Instigator.bRestingWeapon )
+		if (!Instigator.bIsCrawling && !Instigator.bRestingWeapon)
 		{
 			class'DH_PIATWarningMsg'.static.ClientReceive(PlayerController(Instigator.Controller), 1);
 			return;
@@ -321,14 +321,14 @@ simulated function Fire(float F)
 
 		DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
-		if( Role < ROLE_Authority)
+		if (Role < ROLE_Authority)
 			ServerSetRange(RangeIndex);
 	}
 	else
 	{
 	DH_ProjectileFire(FireMode[0]).AddedPitch = 0;
 
-		if( Role < ROLE_Authority)
+		if (Role < ROLE_Authority)
 			ServerSetRange(RangeIndex);
 	}
 
@@ -340,11 +340,11 @@ simulated function Fire(float F)
 //************************************************************************
 simulated function PostBeginPlay()
 {
-	local Vector RocketLoc;
+	local vector RocketLoc;
 
 	super.PostBeginPlay();
 
-	if ( Level.NetMode != NM_DedicatedServer )
+	if (Level.NetMode != NM_DedicatedServer)
 	{
 
 	   RocketLoc = GetBoneCoords('Warhead').Origin;
@@ -357,35 +357,35 @@ simulated function PostBeginPlay()
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-	local Vector RocketLoc;
+	local vector RocketLoc;
 
 	HandleSleeveSwapping();
 
-	if( ROPlayer(Instigator.Controller) != none )
+	if (ROPlayer(Instigator.Controller) != none)
 	{
      		ROPlayer(Instigator.Controller).FAAWeaponRotationFactor = FreeAimRotationSpeed;
     	}
 
 	GotoState('RaisingWeapon');
 
-	if ( (PrevWeapon != None) && PrevWeapon.HasAmmo() && !PrevWeapon.bNoVoluntarySwitch )
+	if ((PrevWeapon != none) && PrevWeapon.HasAmmo() && !PrevWeapon.bNoVoluntarySwitch)
 		OldWeapon = PrevWeapon;
 	else
-		OldWeapon = None;
+		OldWeapon = none;
 
-	if ( Level.NetMode != NM_DedicatedServer )
+	if (Level.NetMode != NM_DedicatedServer)
 	{
-		if (/*WP != None && WP.AmmoAmount[m] < 1 && */AmmoAmount(0) < 1)
+		if (/*WP != none && WP.AmmoAmount[m] < 1 && */AmmoAmount(0) < 1)
 		{
 			//log("Destroyed the fp ammoround");
-			if (RocketAttachment != None)
+			if (RocketAttachment != none)
 				RocketAttachment.Destroy();
 		}
 		else
 		{
 
 		   //log("didnt Destroyed the fp ammoround");
-		   if (RocketAttachment == None)
+		   if (RocketAttachment == none)
 		   {
 
 	           		RocketLoc = GetBoneCoords('Warhead').Origin;
@@ -397,11 +397,11 @@ simulated function BringUp(optional Weapon PrevWeapon)
 		}
 	}
 
-	if( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 	{
 		ROPawn(Instigator).bWeaponCanBeResupplied = true;
 
-		if( (CurrentMagCount <= (MaxNumPrimaryMags - 2) && AmmoAmount(0) <= 0) || CurrentMagCount <= (MaxNumPrimaryMags - 3 ) )
+		if ((CurrentMagCount <= (MaxNumPrimaryMags - 2) && AmmoAmount(0) <= 0) || CurrentMagCount <= (MaxNumPrimaryMags - 3))
 		{
 			ROPawn(Instigator).bWeaponNeedsResupply = true;
 		}
@@ -422,9 +422,9 @@ simulated function bool PutDown()
 
 simulated function SpawnBomb()
 {
-	local Vector RocketLoc;
+	local vector RocketLoc;
 
-	if ( Level.NetMode != NM_DedicatedServer )
+	if (Level.NetMode != NM_DedicatedServer)
 	{
 
 	   RocketLoc = GetBoneCoords('Warhead').Origin;
@@ -452,29 +452,29 @@ simulated function SpawnBomb()
 
 // Overridden to prevent picking up more than the intended max ammo count
 // MaxNumMags is actually set 1 higher than intended max, to facilitate unusual resupply/fillammo
-function bool HandlePickupQuery( pickup Item )
+function bool HandlePickupQuery(pickup Item)
 {
 //    local WeaponPickup wpu;
 	local int i, j;
 	local bool bAddedMags;
 
-	if ( bNoAmmoInstances )
+	if (bNoAmmoInstances)
 	{
 		// handle ammo pickups
-		for ( i=0; i<2; i++ )
+		for (i=0; i<2; i++)
 		{
-			if ( (item.inventorytype == AmmoClass[i]) && (AmmoClass[i] != None) )
+			if ((item.inventorytype == AmmoClass[i]) && (AmmoClass[i] != none))
 			{
-				if( (AmmoAmount(0) <= 0 && PrimaryAmmoArray.Length < MaxNumPrimaryMags) || PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1 )
+				if ((AmmoAmount(0) <= 0 && PrimaryAmmoArray.Length < MaxNumPrimaryMags) || PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1)
 				{
 					// Handle multi mag ammo type pickups
-					if( ROMultiMagAmmoPickup(Item) != none )
+					if (ROMultiMagAmmoPickup(Item) != none)
 					{
-						for( j=0; j<ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++ )
+						for(j=0; j<ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
 						{
 							if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
 					        {
-					            PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];//DropAmmo( StartLocation, PrimaryAmmoArray[i]);
+					            PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];//DropAmmo(StartLocation, PrimaryAmmoArray[i]);
 					        	bAddedMags=true;
 							}
 							else
@@ -496,7 +496,7 @@ function bool HandlePickupQuery( pickup Item )
 				}
 
 				// if we added mags, update the mag count and force a net update
-				if( bAddedMags )
+				if (bAddedMags)
 				{
 					CurrentMagCount = PrimaryAmmoArray.Length - 1;
 					NetUpdateTime = Level.TimeSeconds - 1;
@@ -512,14 +512,14 @@ function bool HandlePickupQuery( pickup Item )
 /*	if (class == Item.InventoryType)
     {
         wpu = WeaponPickup(Item);
-        if (wpu != None)
+        if (wpu != none)
             return !wpu.AllowRepeatPickup();
         else
             return false;
     }*/
 
     // Drop current weapon and pickup the one on the ground
-    if( Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup &&
+    if (Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup &&
 		Item.InventoryType.default.InventoryGroup == InventoryGroup && Instigator.CanThrowWeapon())
 	{
 		ROPlayer(Instigator.Controller).ThrowWeapon();
@@ -530,7 +530,7 @@ function bool HandlePickupQuery( pickup Item )
     if (Item.InventoryType.default.InventoryGroup == InventoryGroup)
 		return true;
 
-    if ( Inventory == None )
+    if (Inventory == none)
 		return false;
 
 	return Inventory.HandlePickupQuery(Item);
@@ -542,18 +542,18 @@ function bool ResupplyAmmo()
 	local int InitialAmount, i;
 	local bool bIsLoaded;
 
-	if( AmmoAmount(0) > 0 )
+	if (AmmoAmount(0) > 0)
 	    bIsLoaded = true;
 
     InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-	for( i=NumMagsToResupply; i>0; i-- )
+	for(i=NumMagsToResupply; i>0; i--)
 	{
-	    if( !bIsLoaded && PrimaryAmmoArray.Length < MaxNumPrimaryMags )
+	    if (!bIsLoaded && PrimaryAmmoArray.Length < MaxNumPrimaryMags)
 	    {
 		    PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
       	}
-     	else if( PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1 )
+     	else if (PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1)
 		{
 		    PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
 	    }
@@ -572,24 +572,24 @@ function bool FillAmmo()
 	local int InitialAmount, i;
 	local bool bIsLoaded;
 
-	if( AmmoAmount(0) > 0 )
+	if (AmmoAmount(0) > 0)
 	    bIsLoaded = true;
 
-    if( PrimaryAmmoArray.Length == MaxNumPrimaryMags )
+    if (PrimaryAmmoArray.Length == MaxNumPrimaryMags)
     {
     	return false;
     }
 
-    if( !bIsLoaded || (CurrentMagCount < MaxNumPrimaryMags - 2) )
+    if (!bIsLoaded || (CurrentMagCount < MaxNumPrimaryMags - 2))
     {
 	InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-    if( !bIsLoaded )
+    if (!bIsLoaded)
         PrimaryAmmoArray.Length = MaxNumPrimaryMags;
     else
         PrimaryAmmoArray.Length = MaxNumPrimaryMags - 1;
 
-	for( i=0; i<PrimaryAmmoArray.Length; i++ )
+	for(i=0; i<PrimaryAmmoArray.Length; i++)
 	{
 		PrimaryAmmoArray[i] = InitialAmount;
 	}
@@ -599,10 +599,10 @@ function bool FillAmmo()
 
 	DH_Pawn(Instigator).bWeaponNeedsResupply = false;   // Use this if ammo dump doesn't remove reload message
 
-	if(!bIsLoaded)
+	if (!bIsLoaded)
 		DH_Pawn(Instigator).bWeaponNeedsReload = true;
 
-/*	if( !bIsLoaded )
+/*	if (!bIsLoaded)
 	    CurrentMagCount = PrimaryAmmoArray.Length - 1;
     else
         CurrentMagCount = PrimaryAmmoArray.Length - 2;
@@ -649,8 +649,8 @@ defaultproperties
      AIRating=0.600000
      CurrentRating=0.600000
      DisplayFOV=70.000000
-     bCanAttachOnBack=True
-     bCanRestDeploy=True
+     bCanAttachOnBack=true
+     bCanRestDeploy=true
      PickupClass=Class'DH_ATWeapons.DH_PIATPickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_ATWeapons.DH_PIATAttachment'

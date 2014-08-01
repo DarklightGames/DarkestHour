@@ -29,7 +29,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     bHasAddedSideArmor=True
+     bHasAddedSideArmor=true
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIVHCannonPawn_SnowTwo')
      DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_Destroyed2'
      VehicleHudImage=Texture'InterfaceArt2_tex.Tank_Hud.panzer4H_body'

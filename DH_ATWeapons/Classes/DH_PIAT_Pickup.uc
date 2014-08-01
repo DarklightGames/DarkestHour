@@ -22,22 +22,22 @@ auto state Pickup
 		return true;
 	}
 
-	function bool ValidTouch( actor Other )
+	function bool ValidTouch(actor Other)
 	{
 		// make sure its a live player
-		if ( (Pawn(Other) == None) || !Pawn(Other).bCanPickupInventory || (Pawn(Other).Health <= 0) || (Pawn(Other).DrivenVehicle == None && Pawn(Other).Controller == None))
+		if ((Pawn(Other) == none) || !Pawn(Other).bCanPickupInventory || (Pawn(Other).Health <= 0) || (Pawn(Other).DrivenVehicle == none && Pawn(Other).Controller == none))
 			return false;
 
-		if( ROPawn(Other) != none && ROPawn(Other).AutoTraceActor != none && ROPawn(Other).AutoTraceActor == self )
+		if (ROPawn(Other) != none && ROPawn(Other).AutoTraceActor != none && ROPawn(Other).AutoTraceActor == self)
 		{
 			// do nothing
 		}
 		// make sure not touching through wall
-		else if ( !FastTrace(Other.Location, Location) )
+		else if (!FastTrace(Other.Location, Location))
 			return false;
 
 		// make sure game will let player pick me up
-		if( Level.Game.PickupQuery(Pawn(Other), self) )
+		if (Level.Game.PickupQuery(Pawn(Other), self))
 		{
 			TriggerEvent(Event, self, Pawn(Other));
 			return true;
@@ -46,7 +46,7 @@ auto state Pickup
 	}
 
 	// When touched by an actor.
-	function Touch( actor Other )
+	function Touch(actor Other)
 	{
 	}
 
@@ -54,25 +54,25 @@ auto state Pickup
 	{
 	}
 
-	function UsedBy( Pawn user )
+	function UsedBy(Pawn user)
 	{
     	local Inventory Copy;
     	local inventory Inv;
     	local bool bHasWeapon;
 
-		if( user == none )
+		if (user == none)
 			return;
 
 	   	// check if Other has a primary weapon
-		if( user != none && user.Inventory != none )
+		if (user != none && user.Inventory != none)
 		{
-			for ( Inv=user.Inventory; Inv!=None; Inv=Inv.Inventory )
+			for (Inv=user.Inventory; Inv!=none; Inv=Inv.Inventory)
 			{
-				if ( Inv != none && Weapon(Inv) != None )
+				if (Inv != none && Weapon(Inv) != none)
 				{
-					if( Inv.class == WeaponType)
+					if (Inv.class == WeaponType)
 					{
-						if( Weapon(Inv).AmmoMaxed(0) )
+						if (Weapon(Inv).AmmoMaxed(0))
 							return;
 						else
 							bHasWeapon = true;
@@ -82,15 +82,15 @@ auto state Pickup
 		}
 
 		// valid touch will pickup the object
-		if( ValidTouch( user ) )
+		if (ValidTouch(user))
 		{
-			if( bHasWeapon )
+			if (bHasWeapon)
 				Copy = SpawnCopy(user);
 			else
 				Copy = SpawnWeaponCopy(user);
 
 			AnnouncePickup(user);
-            if ( Copy != None )
+            if (Copy != none)
 				Copy.PickupFunction(user);
 
 			SetRespawn();
@@ -99,14 +99,14 @@ auto state Pickup
 
 	function Timer()
 	{
-		if ( bDropped )
+		if (bDropped)
 			GotoState('FadeOut');
 	}
 
 	function BeginState()
 	{
-		UntriggerEvent(Event, self, None);
-		if ( bDropped )
+		UntriggerEvent(Event, self, none);
+		if (bDropped)
         {
 			AddToNavigation();
 		    SetTimer(DropLifeTime, false);
@@ -115,7 +115,7 @@ auto state Pickup
 
 	function EndState()
 	{
-		if ( bDropped )
+		if (bDropped)
 			RemoveFromNavigation();
 	}
 
@@ -131,19 +131,19 @@ function SetRespawn()
 	StartSleeping();
 }
 
-function inventory SpawnWeaponCopy( pawn Other )
+function inventory SpawnWeaponCopy(pawn Other)
 {
 	local inventory Copy;
 
-	if ( Inventory != None )
+	if (Inventory != none)
 	{
 		Copy = Inventory;
-		Inventory = None;
+		Inventory = none;
 	}
 	else
 		Copy = Other.spawn(WeaponType,Other,,,rot(0,0,0));
 
-	Copy.GiveTo( Other, self );
+	Copy.GiveTo(Other, self);
 
 	return Copy;
 }
@@ -152,7 +152,7 @@ defaultproperties
 {
      WeaponType=Class'DH_ATWeapons.DH_PIATWeapon'
      TouchMessage="Pick Up: PIAT"
-     bAmmoPickupIsWeapon=True
+     bAmmoPickupIsWeapon=true
      AmmoAmount=1
      MaxDesireability=0.780000
      InventoryType=Class'DH_ATWeapons.DH_PIATAmmo'

@@ -13,9 +13,9 @@ defaultproperties
      MGOverlay=Texture'DH_VehicleOptics_tex.Allied.BesaMG_sight'
      WeaponFov=38.000000
      GunClass=Class'DH_Vehicles.DH_CromwellMountedMG'
-     bHasAltFire=False
+     bHasAltFire=false
      CameraBone="mg_yaw"
-     bDrawDriverInTP=False
+     bDrawDriverInTP=false
      DrivePos=(Z=130.000000)
      ExitPositions(0)=(X=100.000000,Y=-100.000000,Z=100.000000)
      ExitPositions(1)=(Y=-100.000000,Z=100.000000)

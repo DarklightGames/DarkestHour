@@ -15,13 +15,13 @@ simulated state Reloading
 {
 	simulated function PlayIdle()
 	{
-		if( bUsingSights )
+		if (bUsingSights)
 	    {
-			LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2 );
+			LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
 	    }
 		else
 	    {
-			LoopAnim(IdleAnim, IdleAnimRate, 0.2 );
+			LoopAnim(IdleAnim, IdleAnimRate, 0.2);
 	    }
 	}
 }
@@ -36,7 +36,7 @@ simulated function AnimEnd(int channel)
 
     if (ClientState == WS_ReadyToFire)
     {
-        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring )
+        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
         {
             PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         }
@@ -48,7 +48,7 @@ simulated function AnimEnd(int channel)
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
-        else if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+        else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         {
             PlayIdle();
         }
@@ -58,11 +58,11 @@ simulated function AnimEnd(int channel)
 // Overriden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
-	if ( FireMode[Mode].bIsFiring )
+	if (FireMode[Mode].bIsFiring)
 	    FireMode[Mode].bInstantStop = true;
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-     	if( !IsAnimating(0) )
+     	if (!IsAnimating(0))
      	{
      		PlayIdle();
      	}

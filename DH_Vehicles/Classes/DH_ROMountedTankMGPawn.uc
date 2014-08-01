@@ -54,23 +54,23 @@ function bool PlaceExitingDriver()
 	ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
 
 	//avoid running driver over by placing in direction perpendicular to velocity
-/*	if (VehicleBase != None && VSize(VehicleBase.Velocity) > 100)
+/*	if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
 	{
 		tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
 		if (FRand() < 0.5)
 			tryPlace *= -1; //randomly prefer other side
-		if ( (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == None && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
-		     || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == None && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)) )
+		if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
+		     || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
 			return true;
 	}*/
 
 	for(i=0; i<ExitPositions.Length; i++)
 	{
-		if ( bRelativeExitPos )
+		if (bRelativeExitPos)
 		{
-		    if (VehicleBase != None)
+		    if (VehicleBase != none)
 		    	tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-        	    else if (Gun != None)
+        	    else if (Gun != none)
                 	tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
 	            else
         	        tryPlace = Location + (ExitPositions[i] >> Rotation);
@@ -79,20 +79,20 @@ function bool PlaceExitingDriver()
 			tryPlace = ExitPositions[i];
 
 		// First, do a line check (stops us passing through things on exit).
-		if ( bRelativeExitPos )
+		if (bRelativeExitPos)
 		{
-			if (VehicleBase != None)
+			if (VehicleBase != none)
 			{
-				if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != None)
+				if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
 					continue;
 			}
 			else
-				if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != None)
+				if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
 					continue;
 		}
 
 		// Then see if we can place the player there.
-		if ( !Driver.SetLocation(tryPlace) )
+		if (!Driver.SetLocation(tryPlace))
 			continue;
 
 		return true;
@@ -112,7 +112,7 @@ simulated function DrawHUD(Canvas Canvas)
 	local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
 	PC = PlayerController(Controller);
-	if( PC == none )
+	if (PC == none)
 	{
 		Super.RenderOverlays(Canvas);
 		//log("PanzerTurret PlayerController was none, returning");
@@ -134,13 +134,13 @@ simulated function DrawHUD(Canvas Canvas)
         OverlayCenterTexSize =  float(MGOverlay.USize) * OverlayCenterScale;
 
         Canvas.SetPos(0, 0);
-        Canvas.DrawTile( MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+        Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
     	// reset HudOpacity to original value
 		Canvas.ColorModulate.W = SavedOpacity;
     }
 
-	if (PC != None && !PC.bBehindView && HUDOverlay != None)
+	if (PC != none && !PC.bBehindView && HUDOverlay != none)
 	{
 		if (!Level.IsSoftwareRendering())
 		{
@@ -156,7 +156,7 @@ simulated function DrawHUD(Canvas Canvas)
 		}
 	}
 	else
-		ActivateOverlay(False);
+		ActivateOverlay(false);
 
 	if (PC != none)
 	    // Draw tank, turret, ammo count, passenger list

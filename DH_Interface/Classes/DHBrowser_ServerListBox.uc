@@ -15,7 +15,7 @@ defaultproperties
      SelectedStyleName="DHListSelectionStyle"
      DefaultListClass="DH_Interface.DHBrowser_ServersList"
      Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar
-         bVisible=False
+         bVisible=false
          OnPreDraw=TheScrollbar.GripPreDraw
      End Object
      MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHBrowser_ServerListBox.TheScrollbar'

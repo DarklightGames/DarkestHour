@@ -21,7 +21,7 @@ defaultproperties
      BayoAttachAnim="Bayonet_on"
      BayoDetachAnim="Bayonet_off"
      BayonetBoneName="bayonet"
-     bHasBayonet=True
+     bHasBayonet=true
      BoltHipAnim="bolt"
      BoltIronAnim="iron_boltrest"
      PostFireIronIdleAnim="Iron_idlerest"
@@ -44,15 +44,15 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_Kar98Pickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_Kar98Attachment'
      ItemName="Karabiner 98k"
      Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k_mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

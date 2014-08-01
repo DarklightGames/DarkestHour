@@ -41,7 +41,7 @@ defaultproperties
      MechanicalRanges(28)=(Range=3600,RangeValue=280.000000)
      MechanicalRanges(29)=(Range=3800,RangeValue=300.000000)
      MechanicalRanges(30)=(Range=4000,RangeValue=324.000000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=5.200000
      DHPenetrationTable(1)=4.900000
      DHPenetrationTable(2)=4.300000
@@ -54,7 +54,7 @@ defaultproperties
      DHPenetrationTable(9)=1.900000
      DHPenetrationTable(10)=1.500000
      ShellDiameter=8.800000
-     bIsAlliedShell=False
+     bIsAlliedShell=false
      PenetrationMag=1020.000000
      ShellImpactDamage=Class'DH_Vehicles.DH_JagdpantherCannonShellDamageAP'
      ImpactDamage=550

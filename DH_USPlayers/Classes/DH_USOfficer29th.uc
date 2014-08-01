@@ -5,7 +5,7 @@ class DH_USOfficer29th extends DH_US_29th_Infantry;
 
 defaultproperties
 {
-     bIsArtilleryOfficer=True
+     bIsArtilleryOfficer=true
      MyName="Artillery Officer"
      AltName="Artillery Officer"
      Article="an "
@@ -21,6 +21,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet29thOfficer'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
 }

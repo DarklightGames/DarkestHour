@@ -14,7 +14,7 @@ class DH_CromwellTank extends DH_ROTreadCraft;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[LeftTreadIndex];
 		LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
@@ -22,7 +22,7 @@ simulated function SetupTreads()
 		Skins[LeftTreadIndex] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[RightTreadIndex];
 		RightTreadPanner.PanDirection = rot(32768, 0, 16384);
@@ -118,22 +118,22 @@ defaultproperties
      VehicleTeam=1
      SteeringScaleFactor=0.750000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchDownLimit=65535,ViewFOV=85.000000,bDrawOverlays=True)
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchDownLimit=65535,ViewFOV=85.000000,bDrawOverlays=true)
+     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true,ViewFOV=85.000000)
      InitialPositionIndex=0
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
      VehicleHudOccupantsX(0)=0.560000
      VehicleHudOccupantsX(1)=0.520000
      VehicleHudOccupantsX(2)=0.460000
      VehicleHudEngineX=0.510000
-     VehHitpoints(0)=(PointBone="body",PointOffset=(X=128.000000,Y=27.000000,Z=25.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointBone="body",PointOffset=(X=128.000000,Y=27.000000,Z=25.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=35.000000,PointOffset=(X=-95.000000,Z=2.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=25.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-20.000000,Y=40.000000,Z=3.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(3)=(PointRadius=25.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-20.000000,Y=-40.000000,Z=3.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(4)=(PointRadius=25.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=40.000000,Z=-8.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      DriverAttachmentBone="driver_attachment"
      Begin Object Class=SVehicleWheel Name=LF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_LF"
          BoneRollAxis=AXIS_Y
@@ -143,7 +143,7 @@ defaultproperties
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_RF"
          BoneRollAxis=AXIS_Y
@@ -153,7 +153,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_LR"
          BoneRollAxis=AXIS_Y
@@ -163,7 +163,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_RR"
          BoneRollAxis=AXIS_Y
@@ -173,7 +173,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.RR_Steering'
 
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_L"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=10.000000,Z=2.000000)
@@ -182,7 +182,7 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_R"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=-10.000000,Z=2.000000)
@@ -191,7 +191,7 @@ defaultproperties
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.Right_Drive_Wheel'
 
      VehicleMass=13.000000
-     bFPNoZFromCameraPitch=True
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=-2.000000,Y=-5.000000,Z=2.000000)
      DriveAnim="VUC_driver_idle_close"
      ExitPositions(0)=(X=100.000000,Y=150.000000,Z=156.000000)
@@ -232,14 +232,14 @@ defaultproperties
          KCOMOffset=(Z=-0.600000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=0.900000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

@@ -6,8 +6,8 @@ class DH_Vehicle30CalMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)
 {
-	Emitters[0].UseCollision = ( !Level.bDropDetail && (Level.DetailMode != DM_Low) && (VSize(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 1600));
-	if(bEnabled)
+	Emitters[0].UseCollision = (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (VSize(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 1600));
+	if (bEnabled)
 	{
 		Emitters[0].ParticlesPerSecond = 7.0; //400 RPM
 		Emitters[0].InitialParticlesPerSecond = 7.0; //400 RPM
@@ -31,11 +31,11 @@ defaultproperties
 {
      Begin Object Class=MeshEmitter Name=MeshEmitter0
          StaticMesh=StaticMesh'WeaponPickupSM.shells.S762_Rifle_MG'
-         UseCollision=True
-         RespawnDeadParticles=False
-         SpawnOnlyInDirectionOfNormal=True
-         SpinParticles=True
-         AutomaticInitialSpawning=False
+         UseCollision=true
+         RespawnDeadParticles=false
+         SpawnOnlyInDirectionOfNormal=true
+         SpinParticles=true
+         AutomaticInitialSpawning=false
          Acceleration=(Z=-500.000000)
          DampingFactorRange=(X=(Min=0.500000,Max=0.500000),Y=(Min=0.500000,Max=0.500000),Z=(Min=0.500000,Max=0.500000))
          MaxParticles=30
@@ -50,14 +50,14 @@ defaultproperties
      Emitters(0)=MeshEmitter'DH_Vehicles.DH_Vehicle30CalMGEmitter.MeshEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
-         UseRandomSubdivision=True
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
+         UseRandomSubdivision=true
          Opacity=0.450000
          CoordinateSystem=PTCS_Relative
          StartLocationOffset=(X=10.500000)
@@ -77,7 +77,7 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Vehicles.DH_Vehicle30CalMGEmitter.SpriteEmitter1'
 
      CullDistance=4000.000000
-     bNoDelete=False
-     bUnlit=False
-     bHardAttach=True
+     bNoDelete=false
+     bUnlit=false
+     bHardAttach=true
 }

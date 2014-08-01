@@ -25,7 +25,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Squad Leader"
      AltName="Unteroffizier"
      Article="a "
@@ -37,7 +37,7 @@ defaultproperties
      Models(2)="FJ453"
      Models(3)="FJ454"
      Models(4)="FJ455"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_STG44Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROSTG44AmmoPouch')
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
@@ -51,7 +51,7 @@ defaultproperties
      Headgear(1)=Class'DH_GerPlayers.DH_FJHelmet2'
      Headgear(2)=Class'DH_GerPlayers.DH_FJHelmetNet1'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
      Limit33to44=2
      LimitOver44=2

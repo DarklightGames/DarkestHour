@@ -12,7 +12,7 @@ class DH_Pak40Factory extends DH_ATCannonFactoryBase;
 defaultproperties
 {
      RespawnTime=1.000000
-     bFactoryActive=True
+     bFactoryActive=true
      VehicleClass=Class'DH_Guns.DH_Pak40ATGun'
      Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body'
 }

@@ -21,9 +21,7 @@ var name SelectFireIronAnim;// Animation for selecting the firing mode in ironsi
 replication
 {
     reliable if (Role < ROLE_Authority)
-    {
         ServerChangeFireMode;
-    }
 }
 
 simulated exec function SwitchFireMode()
@@ -102,11 +100,11 @@ simulated function AnimEnd(int channel)
 
     if (ClientState == WS_ReadyToFire)
     {
-        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         {
             PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         }
-        else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         {
             PlayIdle();
         }
@@ -114,7 +112,7 @@ simulated function AnimEnd(int channel)
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
-        else if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+        else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         {
             PlayIdle();
         }
@@ -131,7 +129,7 @@ simulated event StopFire(int Mode)
 
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-        if(!IsAnimating(0))
+        if (!IsAnimating(0))
         {
             PlayIdle();
         }
@@ -157,7 +155,7 @@ defaultproperties
      IronPutDown="iron_out"
      MaxNumPrimaryMags=7
      InitialNumPrimaryMags=7
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      PlayerIronsightFOV=65.000000
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
@@ -167,7 +165,7 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.100000
      FreeAimRotationSpeed=7.000000
-     bHasSelectFire=True
+     bHasSelectFire=true
      FireModeClass(0)=Class'DH_Weapons.DH_STG44Fire'
      FireModeClass(1)=Class'DH_Weapons.DH_STG44MeleeFire'
      SelectAnim="Draw"
@@ -177,15 +175,15 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.700000
      CurrentRating=0.700000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_STG44Pickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_STG44Attachment'
      ItemName="Sturmgewehr 44"
      Mesh=SkeletalMesh'Axis_Stg44_1st.STG44-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

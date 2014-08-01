@@ -16,7 +16,7 @@ defaultproperties
      VehicleDamageModifier=1.000000
      TreadDamageModifier=1.000000
      DeathString="%o was ripped by shrapnel from %k's Cromwell HE shell."
-     bArmorStops=True
+     bArmorStops=true
      KDeathVel=300.000000
      KDeathUpKick=60.000000
      KDeadLinZVelScale=0.002000

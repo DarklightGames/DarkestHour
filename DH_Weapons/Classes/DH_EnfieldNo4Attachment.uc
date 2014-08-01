@@ -147,6 +147,6 @@ defaultproperties
      WA_BayonetWorkBolt="idle_enfieldno4_bayo"
      menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4_icon'
      MenuDescription="Lee-Enfield No.4 Mk I. Bolt-action rifle. Standard battle rifle for the British and Commonwealth forces. Fires a .303 cartridge from a 10-round mag, or from two 5-round stripper clips. Mounts a 7-inch spike bayonet for close quarters combat. Effective range: 500-550 metres."
-     bRapidFire=False
+     bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_3rd'
 }

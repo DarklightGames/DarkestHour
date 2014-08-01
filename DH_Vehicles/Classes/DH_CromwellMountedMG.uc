@@ -23,7 +23,7 @@ defaultproperties
      PitchDownLimit=45000
      WeaponFireAttachmentBone="mg_yaw"
      WeaponFireOffset=24.000000
-     bInstantFire=False
+     bInstantFire=false
      Spread=0.002000
      FireInterval=0.092000
      FireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
@@ -33,7 +33,7 @@ defaultproperties
      ShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      MaxPositiveYaw=7000
      MaxNegativeYaw=-6000
-     bLimitYaw=True
+     bLimitYaw=true
      InitialPrimaryAmmo=225
      Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell_MG'
 }

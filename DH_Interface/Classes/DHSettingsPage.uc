@@ -34,7 +34,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     	PlayerRot.Roll = 0;
     	PlayerOwner().SetRotation(PlayerRot);
 
-	for ( i = 0; i < PanelCaption.Length && i < PanelClass.Length && i < PanelHint.Length; i++ )
+	for (i = 0; i < PanelCaption.Length && i < PanelClass.Length && i < PanelHint.Length; i++)
 	{
 		Profile("Settings_" $ PanelCaption[i]);
 		c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i]);
@@ -46,13 +46,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 function GetSizingButton()
 {
     	local int i;
-    	SizingButton = None;
+    	SizingButton = none;
     	for (i = 0; i < Components.Length; i++)
     	{
-        		if (GUIButton(Components[i]) == None)
+        		if (GUIButton(Components[i]) == none)
             			continue;
 
-        		if ( SizingButton == None || Len(GUIButton(Components[i]).Caption) > Len(SizingButton.Caption))
+        		if (SizingButton == none || Len(GUIButton(Components[i]).Caption) > Len(SizingButton.Caption))
             			SizingButton = GUIButton(Components[i]);
     	}
 }
@@ -62,7 +62,7 @@ function bool InternalOnPreDraw(Canvas Canvas)
     	local int X, i;
     	local float XL,YL;
 
-    	if (SizingButton == None)
+    	if (SizingButton == none)
         		return false;
 
     	SizingButton.Style.TextSize(Canvas, SizingButton.MenuState, SizingButton.Caption, XL, YL, SizingButton.FontScale);
@@ -71,7 +71,7 @@ function bool InternalOnPreDraw(Canvas Canvas)
     	X = Canvas.ClipX - XL;
     	for (i = Components.Length - 1; i >= 0; i--)
     	{
-       	 	if (GUIButton(Components[i]) == None)
+       	 	if (GUIButton(Components[i]) == none)
             			continue;
         			Components[i].WinWidth = XL;
         			Components[i].WinLeft = X;
@@ -98,17 +98,17 @@ function InternalOnChange(GUIComponent Sender)
 {
 	Super.InternalOnChange(Sender);
 
-	if ( c_Tabs.ActiveTab == None )
-		ActivePanel = None;
+	if (c_Tabs.ActiveTab == none)
+		ActivePanel = none;
 	else ActivePanel = Settings_Tabs(c_Tabs.ActiveTab.MyPanel);
 }
 
 function BackButtonClicked()
 {
-	if ( InternalOnCanClose(False) )
+	if (InternalOnCanClose(false))
 	{
     		c_Tabs.ActiveTab.OnDeActivate();
-        		Controller.CloseMenu(False);
+        		Controller.CloseMenu(false);
     	}
 }
 
@@ -134,14 +134,14 @@ event bool NotifyLevelChange()
 defaultproperties
 {
      Begin Object Class=DHGUITabControl Name=SettingTabs
-         bFillSpace=False
-         bDockPanels=True
+         bFillSpace=false
+         bDockPanels=true
          TabHeight=0.060000
          BackgroundStyleName="DHHeader"
          WinHeight=0.044000
          RenderWeight=0.490000
          TabOrder=3
-         bAcceptsInput=True
+         bAcceptsInput=true
          OnActivate=SettingTabs.InternalOnActivate
          OnChange=DHSettingsPage.InternalOnChange
      End Object

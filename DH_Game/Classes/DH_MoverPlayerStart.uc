@@ -5,6 +5,6 @@ class DH_MoverPlayerStart extends PlayerStart;
 
 defaultproperties
 {
-     bStatic=False
-     bGameRelevant=True
+     bStatic=false
+     bGameRelevant=true
 }

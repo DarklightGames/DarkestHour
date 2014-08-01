@@ -17,7 +17,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
     GetDampenAndSoundValue(ST);
 
 	// Return here, this was causing the famous "Nade bug"
-	if(ROCollisionAttachment(Wall) != none)
+	if (ROCollisionAttachment(Wall) != none)
 	{
 		return;
 	}
@@ -31,7 +31,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
 	if (Bounces <= 0)
 	{
 		bBounce = false;
-		//SetPhysics(PHYS_None);
+		//SetPhysics(PHYS_none);
 	}
 	else
 	{
@@ -43,7 +43,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
 		Speed = VSize(Velocity);
 	}
 
-	if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none )
+	if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none)
 	{
 		PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
 	}
@@ -62,7 +62,7 @@ function BlowUp(vector HitLocation)
 	foreach RadiusActors(class'DH_Pawn', DHP, 5)
 	{
 		// Make sure player is actually lying on the grenade, not just standing over it
-        if( DHP.bIsCrawling )
+        if (DHP.bIsCrawling)
 		{
 			DamageRadius *= 0.25; // Shrink the radius so that no-one but the proned player is touched
 		}
@@ -78,7 +78,7 @@ simulated function Landed(vector HitNormal)
 {
 	if (Bounces <= 0)
 	{
-		SetPhysics(PHYS_None);
+		SetPhysics(PHYS_none);
 		SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
 
 		if (Role == ROLE_Authority)
@@ -90,7 +90,7 @@ simulated function Landed(vector HitNormal)
 	}
 	else
 	{
-		HitWall(HitNormal, None);
+		HitWall(HitNormal, none);
 	}
 }
 

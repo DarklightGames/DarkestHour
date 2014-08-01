@@ -149,6 +149,6 @@ defaultproperties
      WA_BayonetDetachProne="idle_garand_bayo"
      menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
      MenuDescription="M1 Garand: Main battle rifle of the United States armed forces. A semi-automatic rifle firing a full 30-06 cartidge from an 8-round en bloc clip. Good killing power with an effective range of 500-600 metres. Mounts a 10-inch blade bayonet for close quarters combat."
-     bRapidFire=False
+     bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.Garand_3rd'
 }

@@ -4,7 +4,7 @@
 // Purpose:
 // Ability to modify factorys respawnlimit (reinforcements)
 // Problems/Limitations:
-// None known
+// none known
 
 class DH_ModifyFactoryRespawn extends DH_ModifyActors;
 
@@ -38,10 +38,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
 	local int i, RandomNum, ModifyActual;
 
-	if(UseRandomness)
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //Leave script as it randomly failed
 	}
 

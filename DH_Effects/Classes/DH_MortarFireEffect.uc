@@ -13,13 +13,13 @@ class DH_MortarFireEffect extends Emitter;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter21
-         UseColorScale=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=1.000000)
          MaxParticles=1
@@ -36,14 +36,14 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter21'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter31
-         UseColorScale=True
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=174,G=228,R=255,A=255))
          ColorScale(1)=(RelativeTime=0.200000,Color=(B=255,G=255,R=255,A=255))
          ColorScale(2)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -62,14 +62,14 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter31'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter37
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          Acceleration=(X=25.000000,Y=25.000000)
          ColorScale(0)=(Color=(B=95,G=95,R=95,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=150,G=150,R=150))
@@ -93,6 +93,6 @@ defaultproperties
      End Object
      Emitters(2)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter37'
 
-     AutoDestroy=True
-     bNoDelete=False
+     AutoDestroy=true
+     bNoDelete=false
 }

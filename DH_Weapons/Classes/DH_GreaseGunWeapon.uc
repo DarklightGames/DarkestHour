@@ -14,7 +14,7 @@ defaultproperties
      IronPutDown="iron_out"
      MaxNumPrimaryMags=7
      InitialNumPrimaryMags=7
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      PlayerIronsightFOV=65.000000
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
@@ -33,13 +33,13 @@ defaultproperties
      AIRating=0.700000
      CurrentRating=0.700000
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_GreaseGunPickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_GreaseGunAttachment'
      ItemName="M3 Grease Gun"
      Mesh=SkeletalMesh'DH_M3GreaseGun_1st.M3GreaseGun'
      HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.M3GeaseGun_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

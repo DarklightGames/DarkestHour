@@ -5,9 +5,9 @@ defaultproperties
      Begin Object Class=SparkEmitter Name=SparkEmitter0
          LineSegmentsRange=(Min=1.000000,Max=3.000000)
          TimeBetweenSegmentsRange=(Min=0.100000,Max=0.300000)
-         FadeOut=True
-         RespawnDeadParticles=False
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         RespawnDeadParticles=false
+         AutomaticInitialSpawning=false
          Acceleration=(Z=-10.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -25,14 +25,14 @@ defaultproperties
      End Object
      Emitters(1)=SparkEmitter'DH_Effects.DH_TankAPShellShatter.SparkEmitter0'
 
-     AutoDestroy=True
-     bLightChanged=True
-     bNoDelete=False
-     bNetTemporary=True
+     AutoDestroy=true
+     bLightChanged=true
+     bNoDelete=false
+     bNetTemporary=true
      RemoteRole=ROLE_SimulatedProxy
      LifeSpan=4.000000
      Style=STY_Masked
-     bHardAttach=True
-     bDirectional=True
-     bSelected=True
+     bHardAttach=true
+     bDirectional=true
+     bSelected=true
 }

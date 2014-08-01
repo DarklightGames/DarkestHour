@@ -27,7 +27,7 @@ function PlayerExit(Controller Exiting)
 
 				ExitingPlayerIndex = i;
 
-				if (bMapVote && MVRI[ExitingPlayerIndex].MapVote > -1 && MVRI[ExitingPlayerIndex].GameVote > -1 )
+				if (bMapVote && MVRI[ExitingPlayerIndex].MapVote > -1 && MVRI[ExitingPlayerIndex].GameVote > -1)
 				{
 					for (x = 0; x < MapVoteCount.Length; x++)
 					{
@@ -47,7 +47,7 @@ function PlayerExit(Controller Exiting)
 
 					// decrease votecount for player that the exiting player voted against
 					if (MVRI[ExitingPlayerIndex].KickVote > -1 && MVRI[MVRI[ExitingPlayerIndex].KickVote] != none)
-						UpdateKickVoteCount( MVRI[MVRI[ExitingPlayerIndex].KickVote].PlayerID, -1);
+						UpdateKickVoteCount(MVRI[MVRI[ExitingPlayerIndex].KickVote].PlayerID, -1);
 				}
 			}
 

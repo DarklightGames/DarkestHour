@@ -4,7 +4,7 @@
 // Purpose:
 // Placeholder for any possible future for the class
 // Problems/Limitations:
-// None known
+// none known
 
 class DHMinefield extends ROMinefield;
 

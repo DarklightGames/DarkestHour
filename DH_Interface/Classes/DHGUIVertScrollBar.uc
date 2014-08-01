@@ -10,7 +10,7 @@ defaultproperties
      MyScrollZone=GUIVertScrollZone'DH_Interface.DHGUIVertScrollBar.ScrollZone'
 
      Begin Object Class=DHGUIVertScrollButton Name=DownBut
-         bIncreaseButton=True
+         bIncreaseButton=true
          OnClick=GUIVertScrollBar.IncreaseClick
          OnKeyEvent=DownBut.InternalOnKeyEvent
      End Object

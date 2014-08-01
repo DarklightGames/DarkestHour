@@ -34,7 +34,7 @@ defaultproperties
          WinHeight=0.036482
          RenderWeight=2.000000
          TabOrder=1
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHSettings_Footer.InternalOnClick
          OnKeyEvent=BackB.InternalOnKeyEvent
      End Object
@@ -49,7 +49,7 @@ defaultproperties
          WinHeight=0.036482
          RenderWeight=2.000000
          TabOrder=0
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHSettings_Footer.InternalOnClick
          OnKeyEvent=DefaultB.InternalOnKeyEvent
      End Object

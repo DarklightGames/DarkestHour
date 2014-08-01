@@ -32,7 +32,7 @@ static function string GetString(
 
 	// If for whatever reason there's no DH_RoundTimeModifier object passed in
 	// we'll just dump the generic message.
-	if(OptionalObject == none || DH_ModifyRoundTime(OptionalObject) == none)
+	if (OptionalObject == none || DH_ModifyRoundTime(OptionalObject) == none)
 		return "Round time has been modified.";
 
 	CreateTimeString(TimeString, DH_ModifyRoundTime(OptionalObject).Seconds);
@@ -59,7 +59,7 @@ static simulated function ClientReceive(
 {
 	super.ClientReceive(P, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 
-	if(OptionalObject == none || DH_ModifyRoundTime(OptionalObject) == none || !DH_ModifyRoundTime(OptionalObject).bPlaySound)
+	if (OptionalObject == none || DH_ModifyRoundTime(OptionalObject) == none || !DH_ModifyRoundTime(OptionalObject).bPlaySound)
 		return;
 
 	P.PlayAnnouncement(DH_ModifyRoundTime(OptionalObject).Sound, 1, true);
@@ -70,40 +70,40 @@ static function CreateTimeString(out string TimeString, int Seconds)
 	local	int					Hours;
 	local	int					Minutes;
 
-	if(Seconds >= 3600)
+	if (Seconds >= 3600)
 	{
 		Hours = Seconds / 3600;
 		Seconds = Seconds % 3600;
 	}
 
 	//Minutes
-	if(Seconds >= 60)
+	if (Seconds >= 60)
 	{
 		Minutes = Seconds / 60;
 		Seconds = Seconds % 60;
 	}
 
-	if(Hours > 0)
+	if (Hours > 0)
 	{
 		TimeString @= Hours @ "hour";
 
-		if(Hours > 1)
+		if (Hours > 1)
 			TimeString $= "s";
 	}
 
-	if(Minutes > 0)
+	if (Minutes > 0)
 	{
 		TimeString @= Minutes @ "minute";
 
-		if(Minutes > 1)
+		if (Minutes > 1)
 			TimeString $= "s";
 	}
 
-	if(Seconds > 0)
+	if (Seconds > 0)
 	{
 		TimeString @= Seconds @ "second";
 
-		if(Seconds > 1)
+		if (Seconds > 1)
 			TimeString $= "s";
 	}
 

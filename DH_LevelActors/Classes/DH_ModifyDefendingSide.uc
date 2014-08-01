@@ -4,7 +4,7 @@
 // Purpose:
 // Ability to change the defending team from event.  Helps with getting counter attack setups
 // Problems/Limitations:
-// None
+// none
 
 class DH_ModifyDefendingSide extends DH_ModifyActors;
 
@@ -14,9 +14,9 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
 	switch(NewDefendingSide)
 	{
-		//Change Defending Side To None
+		//Change Defending Side To none
 		case NEUTRAL:
-				ROTeamGame(Level.Game).LevelInfo.DefendingSide = SIDE_None;
+				ROTeamGame(Level.Game).LevelInfo.DefendingSide = SIDE_none;
 			break;
 		//Change Defending Side To Axis
 		case AXIS:

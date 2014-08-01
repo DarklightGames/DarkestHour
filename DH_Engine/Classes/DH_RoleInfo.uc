@@ -24,7 +24,7 @@ var()	bool	bCarriesMortarAmmo;		// Enable player to carry mortar ammunition.
 
 function PostBeginPlay()
 {
-	if (DarkestHourGame(Level.Game) != None)
+	if (DarkestHourGame(Level.Game) != none)
 		DarkestHourGame(Level.Game).AddRole(self);
 
 	HandlePrecache();
@@ -32,7 +32,7 @@ function PostBeginPlay()
 
 defaultproperties
 {
-     bCarriesATAmmo=True
-     bCarriesMortarAmmo=True
-     bCarriesMGAmmo=True
+     bCarriesATAmmo=true
+     bCarriesMortarAmmo=true
+     bCarriesMGAmmo=true
 }

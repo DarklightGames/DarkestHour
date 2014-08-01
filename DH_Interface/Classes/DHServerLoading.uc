@@ -46,12 +46,12 @@ simulated function SetText()
 		GC.LCDRePaint();
 	}
 
-	if(Level.IsSoftwareRendering())
+	if (Level.IsSoftwareRendering())
 		return;
 
 	HintOp = DrawOpText(Operations[3]);
 
-	if(HintOp == None)
+	if (HintOp == none)
 		return;
 
 	HintOp.Text = "";

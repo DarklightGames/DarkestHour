@@ -13,7 +13,7 @@ simulated function Fire(float F)
 {
 	super.Fire(F);
 
-    if(AmmoAmount(0)==1)
+    if (AmmoAmount(0)==1)
 		bIsLastRound=true;
 	else
 		bIsLastRound=false;
@@ -22,7 +22,7 @@ simulated function Fire(float F)
 //overwritten to support garand last round clip eject for Server only
 simulated function bool WasLastRound()
 {
-    if(AmmoAmount(0)==0)
+    if (AmmoAmount(0)==0)
 		return true;
 
 	return false;
@@ -32,7 +32,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 {
 	super.BringUp(PrevWeapon);
 
-	if(Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+	if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
 		DHPlayer(Instigator.Controller).QueueHint(4, true);
 }
 
@@ -44,12 +44,12 @@ function PerformReload()
 
     CurrentMagLoad = AmmoAmount(0);
 
-	if( PrimaryAmmoArray.Length == 0 )
+	if (PrimaryAmmoArray.Length == 0)
 	{
 		return;
 	}
 
-	if ( CurrentMagLoad < FireMode[0].AmmoClass.Default.InitialAmount )
+	if (CurrentMagLoad < FireMode[0].AmmoClass.Default.InitialAmount)
 	{
 		PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 	}
@@ -59,39 +59,39 @@ function PerformReload()
 		AmmoCharge[0] = 0;
 	}
 
-	if( PrimaryAmmoArray.Length == 0 )
+	if (PrimaryAmmoArray.Length == 0)
 	{
 		return;
 	}
 
 	CurrentMagIndex++;
 
-	if ( CurrentMagIndex > PrimaryAmmoArray.Length - 1)
+	if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
 	{
 		CurrentMagIndex = 0;
 	}
 
 	AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
 
-	if( Instigator.IsHumanControlled() )
+	if (Instigator.IsHumanControlled())
 	{
-		if( AmmoStatus(0) > 0.5 )
+		if (AmmoStatus(0) > 0.5)
 		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'ROAmmoWeightMessage',0);
+			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',0);
 		}
-		else if(  AmmoStatus(0) > 0.2 )
+		else if (AmmoStatus(0) > 0.2)
 		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'ROAmmoWeightMessage',1);
+			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',1);
 		}
 		else
 		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'ROAmmoWeightMessage',2);
+			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',2);
 		}
 	}
 
-	if( AmmoAmount(0) > 0 )
+	if (AmmoAmount(0) > 0)
 	{
-		if( DHWeaponAttachment(ThirdPersonActor) != none )
+		if (DHWeaponAttachment(ThirdPersonActor) != none)
 		{
 			DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
 		}
@@ -112,7 +112,7 @@ defaultproperties
      BayoAttachAnim="Bayonet_on"
      BayoDetachAnim="Bayonet_off"
      BayonetBoneName="bayonet"
-     bHasBayonet=True
+     bHasBayonet=true
      IdleEmptyAnim="idle_empty"
      IronIdleEmptyAnim="iron_idle_empty"
      MaxNumPrimaryMags=11
@@ -134,9 +134,9 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_M1GarandPickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_M1GarandAttachment'

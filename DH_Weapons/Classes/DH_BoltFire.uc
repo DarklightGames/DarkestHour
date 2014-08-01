@@ -29,10 +29,10 @@ event ModeDoFire()
         Weapon.ConsumeAmmo(ThisModeNum, Load);
         DoFireEffect();
 		HoldTime = 0;	// if bot decides to stop firing, HoldTime must be reset first
-        if ( (Instigator == None) || (Instigator.Controller == None) )
+        if ((Instigator == none) || (Instigator.Controller == none))
 			return;
 
-        if ( AIController(Instigator.Controller) != None )
+        if (AIController(Instigator.Controller) != none)
             AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
 
         Instigator.DeactivateSpawnProtection();
@@ -41,18 +41,18 @@ event ModeDoFire()
     // client
     if (Instigator.IsLocallyControlled())
     {
-		if( !bDelayedRecoil )
+		if (!bDelayedRecoil)
       		HandleRecoil();
 		else
-			SetTimer(DelayedRecoilTime, False);
+			SetTimer(DelayedRecoilTime, false);
 
 
         ShakeView();
         PlayFiring();
 
-        if( !bMeleeMode )
+        if (!bMeleeMode)
         {
-	        if(Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
+	        if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
 				EjectShell();
 			FlashMuzzleFlash();
 	        StartMuzzleSmoke();
@@ -69,7 +69,7 @@ event ModeDoFire()
     Load = AmmoPerFire;
     HoldTime = 0;
 
-    if (Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != None)
+    if (Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none)
     {
         bIsFiring = false;
         Weapon.PutDown();
@@ -79,7 +79,7 @@ event ModeDoFire()
 defaultproperties
 {
      PctRestDeployRecoil=0.650000
-     bDelayedRecoil=True
+     bDelayedRecoil=true
      DelayedRecoilTime=0.050000
-     bAnimNotifiedShellEjects=True
+     bAnimNotifiedShellEjects=true
 }

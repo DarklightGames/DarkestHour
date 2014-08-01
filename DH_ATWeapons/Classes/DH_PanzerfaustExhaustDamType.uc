@@ -7,7 +7,7 @@ class DH_PanzerfaustExhaustDamType extends ROGrenadeDamType
 defaultproperties
 {
      HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.backblastkill'
-     bCauseViewJarring=True
+     bCauseViewJarring=true
      WeaponClass=Class'DH_ATWeapons.DH_PanzerFaustWeapon'
      DeathString="%o was cooked by the exhaust from %k's Panzerfaust."
      FemaleSuicide="%o was cooked by the exhaust from her own Panzerfaust."

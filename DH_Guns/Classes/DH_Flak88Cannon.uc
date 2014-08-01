@@ -66,8 +66,8 @@ defaultproperties
      ShakeOffsetMag=(Z=5.000000)
      ShakeOffsetRate=(Z=100.000000)
      ShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=15474
      CustomPitchDownLimit=64990
      BeginningIdleAnim="Vt3485_driver_idle_close"

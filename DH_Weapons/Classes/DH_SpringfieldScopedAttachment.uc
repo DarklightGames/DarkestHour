@@ -11,7 +11,7 @@ simulated function AnimEnd(int Channel)
 
 	GetAnimParams(0, anim, frame, rate);
 
-	if( anim == WA_Reload || anim == WA_PreReload )
+	if (anim == WA_Reload || anim == WA_PreReload)
 	{
 		return;
 	}
@@ -26,7 +26,7 @@ defaultproperties
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdNagant'
      MuzzleBoneName="Muzzle"
      ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mmGreen'
-     bAnimNotifiedShellEjects=True
+     bAnimNotifiedShellEjects=true
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"
      PA_MovementAnims(2)="stand_jogL_kar"
@@ -164,6 +164,6 @@ defaultproperties
      WA_WorkBolt="bolt_springfield"
      menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Springfield_icon'
      MenuDescription="M1903 Springfield: Reliable pre-war 30-06 American bolt-action rifle converted for marksman's role. Mounted with a 4x scope, the rifle is effective to 600 metres."
-     bRapidFire=False
+     bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.Springfield_3rd'
 }

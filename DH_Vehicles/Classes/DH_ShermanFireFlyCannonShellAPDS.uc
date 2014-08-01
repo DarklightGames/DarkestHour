@@ -41,7 +41,7 @@ defaultproperties
      OpticalRanges(13)=(Range=3200)
      OpticalRanges(14)=(Range=3600)
      OpticalRanges(15)=(Range=4000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=27.500000
      DHPenetrationTable(1)=26.799999
      DHPenetrationTable(2)=25.600000

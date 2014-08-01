@@ -19,13 +19,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     	class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-		if ( lb_Maps != None )
+		if (lb_Maps != none)
 			li_Maps = lb_Maps.List;
 
-		if ( li_Maps != None )
+		if (li_Maps != none)
 		{
 	    		li_Maps.OnDblClick = MapListDblClick;
-	   		 li_Maps.bSorted = True;
+	   		 li_Maps.bSorted = true;
 	    		lb_Maps.NotifyContextSelect = HandleContextSelect;
 		}
 	lb_Maps.bBoundToParent=false;
@@ -67,7 +67,7 @@ function InitGameType()
     	}
 	log("Current game type = "$CurrentGameType.ClassName);
 
-   	 if ( i == Games.Length )
+   	 if (i == Games.Length)
     		return;
 
 
@@ -77,7 +77,7 @@ function InitGameType()
    		InitMaps();
 
     	i = li_Maps.FindIndexByValue(LastSelectedMap);
-    	if ( i == -1 )
+    	if (i == -1)
     		i = 0;
     		li_Maps.SetIndex(i);
     		li_Maps.Expand(i);
@@ -94,9 +94,9 @@ function MapListChange(GUIComponent Sender)
     	if (!Controller.bCurMenuInitialized)
         		return;
 
-	if ( Sender == lb_Maps )
+	if (Sender == lb_Maps)
 	{
-		if ( li_Maps.IsValid() )
+		if (li_Maps.IsValid())
 		{
 		   // Puma 05-03-2004
 		   // changed to the Anchor's Primary and Secondary
@@ -112,16 +112,16 @@ function MapListChange(GUIComponent Sender)
 	}
 }
 
-function MaplistConfigClick( GUIComponent Sender )
+function MaplistConfigClick(GUIComponent Sender)
 {
 	local DHMaplistEditor MaplistPage;
 
       	MaplistEditorMenu="DH_Interface.DHMaplistEditor";
 
-	if ( Controller.OpenMenu(MaplistEditorMenu) )
+	if (Controller.OpenMenu(MaplistEditorMenu))
 	{
 		MaplistPage = DHMaplistEditor(Controller.ActivePage);
-		if ( MaplistPage != None )
+		if (MaplistPage != none)
 		{
 			MaplistPage.MainPanel = self;
 			MaplistPage.bOnlyShowOfficial = bOnlyShowOfficial;
@@ -185,7 +185,7 @@ function SilentSetDifficulty(int index)
 defaultproperties
 {
      Begin Object Class=DHGUISectionBackground Name=OptionsContainer
-         bFillClient=True
+         bFillClient=true
          Caption="Options"
          WinTop=0.634726
          WinLeft=0.016993
@@ -196,7 +196,7 @@ defaultproperties
      sb_options2=DHGUISectionBackground'DH_Interface.DHTab_MainSP.OptionsContainer'
 
      Begin Object Class=DHmoComboBox Name=DifficultyCombo
-         bReadOnly=True
+         bReadOnly=true
          Caption="Difficulty"
          OnCreateComponent=DifficultyCombo.InternalOnCreateComponent
          WinTop=0.750547
@@ -209,7 +209,7 @@ defaultproperties
      co_Difficulty=DHmoComboBox'DH_Interface.DHTab_MainSP.DifficultyCombo'
 
      Begin Object Class=DHGUISectionBackground Name=SelectionGroup
-         bFillClient=True
+         bFillClient=true
          Caption="Map Selection"
          WinTop=0.018125
          WinLeft=0.016993
@@ -220,7 +220,7 @@ defaultproperties
      sb_Selection=DHGUISectionBackground'DH_Interface.DHTab_MainSP.SelectionGroup'
 
      Begin Object Class=DHGUISectionBackground Name=PreviewGroup
-         bFillClient=True
+         bFillClient=true
          Caption="Preview"
          WinTop=0.018125
          WinLeft=0.515743
@@ -230,10 +230,10 @@ defaultproperties
      End Object
      sb_Preview=DHGUISectionBackground'DH_Interface.DHTab_MainSP.PreviewGroup'
 
-     sb_Options=None
+     sb_Options=none
 
      Begin Object Class=DHGUINoBackground Name=ScrollSection
-         bFillClient=True
+         bFillClient=true
          Caption="Map Description"
          WinTop=0.525219
          WinLeft=0.546118
@@ -244,7 +244,7 @@ defaultproperties
      asb_Scroll=DHGUINoBackground'DH_Interface.DHTab_MainSP.ScrollSection'
 
      Begin Object Class=DHGUIScrollTextBox Name=MapDescription
-         bNoTeletype=True
+         bNoTeletype=true
          CharDelay=0.002500
          EOLDelay=0.500000
          OnCreateComponent=MapDescription.InternalOnCreateComponent
@@ -254,13 +254,13 @@ defaultproperties
          WinLeft=0.561065
          WinWidth=0.379993
          WinHeight=0.268410
-         bTabStop=False
-         bNeverFocus=True
+         bTabStop=false
+         bNeverFocus=true
      End Object
      lb_MapDesc=DHGUIScrollTextBox'DH_Interface.DHTab_MainSP.MapDescription'
 
      Begin Object Class=DHGUITreeListBox Name=AvailableMaps
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=AvailableMaps.InternalOnCreateComponent
          WinTop=0.169272
          WinLeft=0.045671
@@ -283,7 +283,7 @@ defaultproperties
      End Object
      b_Maplist=DHmoButton'DH_Interface.DHTab_MainSP.MaplistButton'
 
-     b_Tutorial=None
+     b_Tutorial=none
 
      Begin Object Class=GUILabel Name=MapAuthorLabel
          Caption="Testing"
@@ -314,8 +314,8 @@ defaultproperties
          TextAlign=TXTA_Center
          TextColor=(B=0,G=255,R=247)
          TextFont="DHSmallFont"
-         bTransparent=False
-         bMultiLine=True
+         bTransparent=false
+         bMultiLine=true
          VertAlign=TXTA_Center
          WinTop=0.107691
          WinLeft=0.562668
@@ -325,6 +325,6 @@ defaultproperties
      l_NoPreview=GUILabel'DH_Interface.DHTab_MainSP.NoPreview'
 
      LastSelectedMap="DH-Brecourt"
-     ch_OfficialMapsOnly=None
+     ch_OfficialMapsOnly=none
 
 }

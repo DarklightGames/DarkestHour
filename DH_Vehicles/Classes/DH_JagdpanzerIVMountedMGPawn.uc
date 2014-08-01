@@ -14,9 +14,9 @@ defaultproperties
      MGOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
      WeaponFov=72.000000
      GunClass=Class'DH_Vehicles.DH_JagdpanzerIVMountedMG'
-     bHasAltFire=False
+     bHasAltFire=false
      CameraBone="mg_yaw"
-     bDrawDriverInTP=False
+     bDrawDriverInTP=false
      DrivePos=(Z=130.000000)
      ExitPositions(0)=(X=-45.000000,Y=20.000000,Z=150.000000)
      ExitPositions(1)=(X=-125.000000,Y=20.000000,Z=125.000000)

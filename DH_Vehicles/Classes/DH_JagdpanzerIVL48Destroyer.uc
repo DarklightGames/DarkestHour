@@ -16,7 +16,7 @@ class DH_JagdpanzerIVL48Destroyer extends DH_ROTreadCraftB;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[LeftTreadIndex];
 		LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
@@ -24,7 +24,7 @@ simulated function SetupTreads()
 		Skins[LeftTreadIndex] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[RightTreadIndex];
 		RightTreadPanner.PanDirection = rot(32768, 0, 16384);
@@ -60,10 +60,10 @@ defaultproperties
      NewVehHitpoints(0)=(PointRadius=5.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=40.000000,Y=10.500000,Z=65.000000),NewHitPointType=NHP_GunOptics)
      NewVehHitpoints(1)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=100.000000,Y=10.000000,Z=35.000000),NewHitPointType=NHP_Traverse)
      NewVehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=100.000000,Y=10.000000,Z=35.000000),NewHitPointType=NHP_GunPitch)
-     bAllowRiders=False
-     bIsAssaultGun=True
+     bAllowRiders=false
+     bIsAssaultGun=true
      UnbuttonedPositionIndex=1
-     bSpecialExiting=True
+     bSpecialExiting=true
      LeftTreadIndex=4
      RightTreadIndex=3
      MaxCriticalSpeed=730.000000
@@ -141,7 +141,7 @@ defaultproperties
      DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
      SteeringScaleFactor=0.750000
      BeginningIdleAnim="Overlay_Idle"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=85.000000,bDrawOverlays=True)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=85.000000,bDrawOverlays=true)
      DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-5500,ViewFOV=85.000000)
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.JPIV_body'
      VehicleHudOccupantsX(0)=0.430000
@@ -150,14 +150,14 @@ defaultproperties
      VehicleHudOccupantsY(0)=0.420000
      VehicleHudOccupantsY(1)=0.560000
      VehicleHudOccupantsY(2)=0.420000
-     VehHitpoints(0)=(PointRadius=2.000000,PointOffset=(X=-15.000000,Z=-22.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointRadius=2.000000,PointOffset=(X=-15.000000,Z=-22.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=35.000000,PointOffset=(X=-100.000000,Z=10.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(Y=50.000000,Z=40.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(3)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(Y=-50.000000,Z=40.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(4)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-20.000000,Y=-40.000000,Z=20.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      DriverAttachmentBone="driver_attachment"
      Begin Object Class=SVehicleWheel Name=LF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_LF"
          BoneRollAxis=AXIS_Y
@@ -167,7 +167,7 @@ defaultproperties
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_RF"
          BoneRollAxis=AXIS_Y
@@ -177,7 +177,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_LR"
          BoneRollAxis=AXIS_Y
@@ -187,7 +187,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_RR"
          BoneRollAxis=AXIS_Y
@@ -197,7 +197,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.RR_Steering'
 
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_L"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=6.000000)
@@ -206,7 +206,7 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_R"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=6.000000)
@@ -215,8 +215,8 @@ defaultproperties
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.Right_Drive_Wheel'
 
      VehicleMass=12.000000
-     bDrawDriverInTP=False
-     bFPNoZFromCameraPitch=True
+     bDrawDriverInTP=false
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=-5.000000,Y=-5.000000,Z=0.000000)
      DriveAnim="VStug3_driver_idle_close"
      ExitPositions(0)=(Y=-125.000000,Z=100.000000)
@@ -255,14 +255,14 @@ defaultproperties
          KCOMOffset=(Z=-1.500000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=0.900000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

@@ -31,7 +31,7 @@ static function string AssembleString(
 // GetDHConsoleColor
 //-----------------------------------------------------------------------------
 
-static function Color GetDHConsoleColor( PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours )
+static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
 	return default.DrawColor;
 }
@@ -43,7 +43,7 @@ static function Color GetDHConsoleColor( PlayerReplicationInfo RelatedPRI_1, int
 
 defaultproperties
 {
-     bIsSpecial=False
+     bIsSpecial=false
      Lifetime=8
      PosY=0.700000
 }

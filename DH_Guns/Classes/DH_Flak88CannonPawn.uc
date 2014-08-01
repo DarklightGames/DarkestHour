@@ -9,7 +9,7 @@
 //==============================================================================
 class DH_Flak88CannonPawn extends DH_ATGunTwoCannonPawn;
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
         local vector VehicleZ, CamViewOffsetWorld;
@@ -24,7 +24,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
     WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
 
-        if( ROPlayer(Controller) != none )
+        if (ROPlayer(Controller) != none)
         {
                  ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
                  ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
@@ -57,17 +57,17 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         else
                 CameraRotation = PC.Rotation;
 
-        if( IsInState('ViewTransition') && bLockCameraDuringTransition )
+        if (IsInState('ViewTransition') && bLockCameraDuringTransition)
         {
-                CameraRotation = Gun.GetBoneRotation( 'com_player' );
+                CameraRotation = Gun.GetBoneRotation('com_player');
         }
 
         CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-        if(CameraBone != '' && Gun != None)
+        if (CameraBone != '' && Gun != none)
         {
                 CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-                if( DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < 1 && !IsInState('ViewTransition'))
+                if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < 1 && !IsInState('ViewTransition'))
                 {
                         CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
                 }
@@ -76,7 +76,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
                         CameraLocation = Gun.GetBoneCoords('com_player').Origin;
                 }
 
-                if(bFPNoZFromCameraPitch)
+                if (bFPNoZFromCameraPitch)
                 {
                         VehicleZ = vect(0,0,1) >> WeaponAimRot;
 
@@ -88,7 +88,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         {
                 CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-                if(bFPNoZFromCameraPitch)
+                if (bFPNoZFromCameraPitch)
                 {
                         VehicleZ = vect(0,0,1) >> Rotation;
                         CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
@@ -113,15 +113,15 @@ defaultproperties
      WeaponFov=18.000000
      AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell'
      AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
-     DriverPositions(0)=(ViewLocation=(X=70.000000,Y=20.000000,Z=5.000000),ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=15474,ViewPitchDownLimit=64990,ViewPositiveYawLimit=3000,ViewNegativeYawLimit=-3000,bDrawOverlays=True,bExposed=True)
-     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=True)
-     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=True,bExposed=True)
+     DriverPositions(0)=(ViewLocation=(X=70.000000,Y=20.000000,Z=5.000000),ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=15474,ViewPitchDownLimit=64990,ViewPositiveYawLimit=3000,ViewNegativeYawLimit=-3000,bDrawOverlays=true,bExposed=true)
+     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
+     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=true,bExposed=true)
      GunClass=Class'DH_Guns.DH_Flak88Cannon'
      CameraBone="Gun"
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
      RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-     bFPNoZFromCameraPitch=True
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=-15.000000,Z=-5.000000)
      DriveAnim="Vt3485_driver_idle_close"
      ExitPositions(0)=(X=-150.000000,Y=0.000000,Z=0.000000)
@@ -143,6 +143,6 @@ defaultproperties
      EntryRadius=325.000000
      VehiclePositionString="Using a FlaK 36 Gun"
      VehicleNameString="FlaK 36 Gun"
-     bKeepDriverAuxCollision=True
+     bKeepDriverAuxCollision=true
      SoundVolume=100
 }

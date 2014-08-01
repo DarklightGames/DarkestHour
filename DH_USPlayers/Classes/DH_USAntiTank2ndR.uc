@@ -18,8 +18,8 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsATGunner=True
-     bCarriesATAmmo=False
+     bIsATGunner=true
+     bCarriesATAmmo=false
      MyName="Anti-Tank Soldier"
      AltName="Anti-Tank Soldier"
      Article="an "
@@ -31,7 +31,7 @@ defaultproperties
      Models(2)="US_2R3"
      Models(3)="US_2R4"
      Models(4)="US_2R5"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_GreaseGunWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_ThompsonAmmoPouch')

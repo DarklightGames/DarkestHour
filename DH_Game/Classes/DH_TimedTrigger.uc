@@ -5,11 +5,11 @@
 
 class DH_TimedTrigger extends Trigger;
 
-var( ) 	float 	DelayTime;
+var() 	float 	DelayTime;
 
-var( )	bool	bIsStateOne;
+var()	bool	bIsStateOne;
 
-simulated function PostBeginPlay( )
+simulated function PostBeginPlay()
 {
    	// Set up the timer, then tell our parent:
    	SetTimer(DelayTime, false);
@@ -18,10 +18,10 @@ simulated function PostBeginPlay( )
 }
 
 // The timer will go off every 'DelayTime' seconds:
-simulated function Timer( )
+simulated function Timer()
 {
    	// Trigger:
-	if(bIsStateOne)
+	if (bIsStateOne)
 	{
    		TriggerEvent(Event, self, none);
    		Log("TRIGGERED EVENT!");
@@ -36,10 +36,10 @@ function Reset()
 
 	// collision, bInitiallyactive
 	bInitiallyActive = bSavedInitialActive;
-	SetCollision(bSavedInitialCollision, bBlockActors );
+	SetCollision(bSavedInitialCollision, bBlockActors);
 
 	//re-trigger event to revert back to initial state then reset timer:
-	if( !bIsStateOne )
+	if (!bIsStateOne)
 	{
    		TriggerEvent(Event, self, none);
    		Log("TRIGGERED EVENT TO RESET!");
@@ -52,5 +52,5 @@ function Reset()
 defaultproperties
 {
      DelayTime=60.000000
-     bIsStateOne=True
+     bIsStateOne=true
 }

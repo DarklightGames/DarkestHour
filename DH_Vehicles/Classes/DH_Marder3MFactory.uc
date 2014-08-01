@@ -8,7 +8,7 @@
 defaultproperties
 {
      RespawnTime=1.000000
-     bFactoryActive=True
+     bFactoryActive=true
      VehicleClass=Class'DH_Vehicles.DH_Marder3MDestroyer'
      Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'

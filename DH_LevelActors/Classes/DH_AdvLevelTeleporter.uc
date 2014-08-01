@@ -46,12 +46,12 @@ function PostBeginPlay()
 	if (URL ~= "")
 		SetCollision(false, false, false); //destination only
 
-	if ( !bEnabled )
+	if (!bEnabled)
 		FindTriggerActor();
 
 	//for keeping bots in vehicles from trying to use teleporters
-	for ( i=0; i<PathList.Length; i++ ){
-		if ( Teleporter(PathList[i].End) != None ){
+	for (i=0; i<PathList.Length; i++){
+		if (Teleporter(PathList[i].End) != none){
 			PathList[i].bForced = true;
 			PathList[i].reachFlags = PathList[i].reachFlags | 256;
 		}
@@ -62,7 +62,7 @@ function PostBeginPlay()
 	//Teleporter is bStatic so use AllActors list
 	foreach AllActors(class'Teleporter', Tele)
 	{
-		if(string(Tele.tag)~=URL)
+		if (string(Tele.tag)~=URL)
 		{
 			URLRef.Insert(0,1); //Adds a new spot at index for the attached tele
 			URLRef[0] = Tele; //Sets the tele reference in the reference array
@@ -71,7 +71,7 @@ function PostBeginPlay()
 
 	foreach AllActors(class'Teleporter', Tele)
 	{
-		if(string(Tele.tag)~=AlternateURL)
+		if (string(Tele.tag)~=AlternateURL)
 		{
 			AltURLRef.Insert(0,1); //Adds a new spot at index for the attached tele
 			AltURLRef[0] = Tele; //Sets the tele reference in the reference array
@@ -92,35 +92,35 @@ function Reset()
 
 // Teleporter was touched by an actor.
 // Overridden for extra functionatlity and optimazation
-simulated function PostTouch( actor Other )
+simulated function PostTouch(actor Other)
 {
 	local int i, RandomNum;
 
-	if(Pawn(Other)== None)
+	if (Pawn(Other)== none)
 		return; //Leave function as Other isn't a pawn
 
-	if( (InStr( URL, "/" ) >= 0) || (InStr( URL, "#" ) >= 0) )
+	if ((InStr(URL, "/") >= 0) || (InStr(URL, "#") >= 0))
 	{	// Teleport to a level on the net.
-		if( (Role == ROLE_Authority) && (Pawn(Other) != None) && Pawn(Other).IsHumanControlled() )
+		if ((Role == ROLE_Authority) && (Pawn(Other) != none) && Pawn(Other).IsHumanControlled())
 			Level.Game.SendPlayer(PlayerController(Pawn(Other).Controller), URL);
 	}
 	else
 	{
 
 		//if AltURLRef has length then we need to check pawn class
-		if(AltURLRef.Length > 0 || (bCatchAlternate && !bCaught))
+		if (AltURLRef.Length > 0 || (bCatchAlternate && !bCaught))
 		{
 			for(i=0;i<AlternatePawnClasses.Length;i++)
 			{
-				if(Other.IsA(AlternatePawnClasses[i].Name)) //Then the actor is of type in AlternatePawnClasses
+				if (Other.IsA(AlternatePawnClasses[i].Name)) //Then the actor is of type in AlternatePawnClasses
 				{
-					if(bCatchAlternate && !bCaught) //We caught the actor and need to send refernce to catch
+					if (bCatchAlternate && !bCaught) //We caught the actor and need to send refernce to catch
 					{
 						WatchPawnRef.PassPawnRef(pawn(Other));
-						bCaught = True;
+						bCaught = true;
 					}
 
-					if(AltURLRef.Length > 0)
+					if (AltURLRef.Length > 0)
 					{
 						//We need to send them to the correct place
 						RandomNum = rand(AltURLRef.Length);
@@ -142,7 +142,7 @@ simulated function PostTouch( actor Other )
 
 defaultproperties
 {
-	bInitTeleStatus=True
+	bInitTeleStatus=true
 }
 */
 

@@ -35,6 +35,6 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_SSHelmetCover'
      Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetNoCover'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=4
 }

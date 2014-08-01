@@ -13,39 +13,39 @@ function ServerChangeViewPoint(bool bForward)
 {
 	if (bForward)
 	{
-		if ( DriverPositionIndex < (DriverPositions.Length - 1) )
+		if (DriverPositionIndex < (DriverPositions.Length - 1))
 		{
 			LastPositionIndex = DriverPositionIndex;
 			DriverPositionIndex++;
 
-			if(  Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer )
+			if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
 			{
 				NextViewPoint();
 			}
 
-			if( Level.NetMode == NM_DedicatedServer )
+			if (Level.NetMode == NM_DedicatedServer)
 			{
 				AnimateTransition();
 
                 // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-				if( DriverPositionIndex == UnbuttonedPositionIndex )
+				if (DriverPositionIndex == UnbuttonedPositionIndex)
 				    GoToState('ViewTransition');
 			}
 		}
      }
      else
      {
-		if ( DriverPositionIndex > 0 )
+		if (DriverPositionIndex > 0)
 		{
 			LastPositionIndex = DriverPositionIndex;
 			DriverPositionIndex--;
 
-			if(  Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer )
+			if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
 			{
 				NextViewPoint();
 			}
 
-			if( Level.NetMode == NM_DedicatedServer )
+			if (Level.NetMode == NM_DedicatedServer)
 			{
 				AnimateTransition();
 			}
@@ -66,15 +66,15 @@ defaultproperties
      WeaponFov=14.400000
      AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
      AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
-     DriverPositions(0)=(ViewLocation=(X=25.000000,Y=-16.000000,Z=5.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=True)
-     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=True)
-     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=True,bExposed=True)
+     DriverPositions(0)=(ViewLocation=(X=25.000000,Y=-16.000000,Z=5.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)
+     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-95000.000000)
      GunClass=Class'DH_Vehicles.DH_HellcatCannon'
-     bHasAltFire=False
+     bHasAltFire=false
      CameraBone="Gun"
-     bPCRelativeFPRotation=True
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bFPNoZFromCameraPitch=true
      DrivePos=(Z=10.000000)
      DriveAnim="VSU76_com_idle_close"
      ExitPositions(0)=(Y=-100.000000,Z=186.000000)

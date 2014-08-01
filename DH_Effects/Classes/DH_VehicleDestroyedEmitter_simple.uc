@@ -13,14 +13,14 @@ class DH_VehicleDestroyedEmitter_simple extends Emitter;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=100.000000,Z=100.000000)
          ColorScale(0)=(Color=(B=47,G=100,R=149,A=255))
          ColorScale(1)=(RelativeTime=0.271429,Color=(A=255))
@@ -48,16 +48,16 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
-         UseRandomSubdivision=True
-         UseVelocityScale=True
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
+         UseRandomSubdivision=true
+         UseVelocityScale=true
          Acceleration=(Z=150.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=0.250000,Color=(B=100,G=177,R=230,A=255))
@@ -85,16 +85,16 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          ColorScale(0)=(Color=(B=82,G=82,R=82,A=255))
          ColorScale(1)=(RelativeTime=0.500000,Color=(B=128,G=128,R=128,A=255))
          ColorScale(2)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -120,17 +120,17 @@ defaultproperties
      Emitters(2)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter2'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter3
-         UseColorScale=True
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         UseColorScale=true
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          Acceleration=(X=100.000000,Y=100.000000)
          ColorScale(0)=(Color=(B=35,G=35,R=35,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=128,G=128,R=128,A=255))
@@ -155,15 +155,15 @@ defaultproperties
      Emitters(3)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter3'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter4
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
          Acceleration=(Z=50.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -188,13 +188,13 @@ defaultproperties
      Emitters(4)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter4'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter5
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          FadeOutStartTime=0.500000
@@ -213,14 +213,14 @@ defaultproperties
      Emitters(5)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter5'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter6
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
          Acceleration=(Z=50.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -243,15 +243,15 @@ defaultproperties
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter7
          ProjectionNormal=(X=200.000000,Y=200.000000)
-         UseColorScale=True
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseVelocityScale=True
+         UseColorScale=true
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseVelocityScale=true
          Acceleration=(Z=5.000000)
          ColorScale(0)=(Color=(A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192))
@@ -277,14 +277,14 @@ defaultproperties
      Emitters(7)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter7'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter8
-         UseColorScale=True
-         RespawnDeadParticles=False
-         UseRevolution=True
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         RespawnDeadParticles=false
+         UseRevolution=true
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(Z=-1200.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -301,12 +301,12 @@ defaultproperties
      End Object
      Emitters(8)=SpriteEmitter'DH_Effects.DH_VehicleDestroyedEmitter_simple.SpriteEmitter8'
 
-     AutoDestroy=True
-     bNoDelete=False
-     bNetTemporary=True
+     AutoDestroy=true
+     bNoDelete=false
+     bNetTemporary=true
      RemoteRole=ROLE_SimulatedProxy
      LifeSpan=8.000000
      Style=STY_Masked
-     bHardAttach=True
-     bDirectional=True
+     bHardAttach=true
+     bDirectional=true
 }

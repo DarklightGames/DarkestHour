@@ -123,15 +123,15 @@ replication
 	reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
 		bHasATAmmo, bHasMGAmmo, bHasMortarAmmo;
 
-	reliable if ( bNetDirty && !bNetOwner && (Role == ROLE_Authority) )
+	reliable if (bNetDirty && !bNetOwner && (Role == ROLE_Authority))
 		bWeaponCanBeReloaded, bWeaponNeedsReload, bWeaponIsMG, bWeaponIsAT;
 
-	reliable if ( bNetDirty && Role == ROLE_Authority )
+	reliable if (bNetDirty && Role == ROLE_Authority)
 		bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
 
 		// MantleDist, MantleMidPoint, bReachedMidPoint, MantleBobDepthMod, MantleEndPoint, bIsMantling, MantleYaw,
 
-//	reliable if ( bNetDirty && Role < ROLE_Authority )
+//	reliable if (bNetDirty && Role < ROLE_Authority)
 //		NewAcceleration;
 		//  bSetMantleEyeHeight; //bStartMantleBob, bEndMantleBob;
 }
@@ -145,7 +145,7 @@ simulated function PostBeginPlay()
 	Super.PostBeginPlay();
 
 	// From UnrealPawn
-	if ( Level.bStartup && !bNoDefaultInventory )
+	if (Level.bStartup && !bNoDefaultInventory)
 		AddDefaultInventory();
 
 	AssignInitialPose();
@@ -156,7 +156,7 @@ simulated function PostBeginPlay()
 
 	SavedBreathSound = 0;
 
-	if (  AuxCollisionCylinder == none )
+	if (AuxCollisionCylinder == none)
 	{
 		AuxCollisionCylinder = Spawn(class 'DH_BulletWhipAttachment',self);
 		AttachToBone(AuxCollisionCylinder, 'spine');
@@ -171,34 +171,34 @@ simulated function Tick(float DeltaTime)
 {
 	Super.Tick(DeltaTime);
 
-	//if( bIsMantling )
+	//if (bIsMantling)
 	  //  DoMantle(DeltaTime);
 
 	// Lets keep the effects client side, the server has enough to deal with
 	if (level.NetMode != NM_DEDICATEDSERVER)
 	{
-		if(bOnFire && !bBurnFXOn)
+		if (bOnFire && !bBurnFXOn)
 		{
 			BurningDropWeaps(); // If you're on fire, the last thing you'll be doing is continuing to fight!
 			StartBurnFX();
 		}
-		else if(!bOnFire && bBurnFXOn)
+		else if (!bOnFire && bBurnFXOn)
 			EndBurnFX();
 	}
 
 	//ClientMessage("NetMode:" @ Level.NetMode @ "HasMortar:" @ HasMortarInInventory());
 
 	//Forces us to equip a mortar if we have one on us.
-	if( Level.NetMode != NM_DedicatedServer && HasMortarInInventory() && Weapon.Name != 'DH_Kz8cmGrW42Weapon' && Weapon.Name != 'DH_M2MortarWeapon' )
+	if (Level.NetMode != NM_DedicatedServer && HasMortarInInventory() && Weapon.Name != 'DH_Kz8cmGrW42Weapon' && Weapon.Name != 'DH_M2MortarWeapon')
 		SwitchWeapon(9);	//Mortars are inventory group 9, deal with it.
 
 	// Would prefer to do this in a Timer but too many states hijack timer and reset it on us
 	// I don't want to have to override over a dozen functions just to do damage every half second
-	if( bOnFire && (Level.TimeSeconds - LastBurnTime > 1) && Health > 0 )
+	if (bOnFire && (Level.TimeSeconds - LastBurnTime > 1) && Health > 0)
 	{
 		TakeDamage(FireDamage, FireStarter, Location, vect(0,0,0), FireDamageClass);
 
-		if(Weapon != none)
+		if (Weapon != none)
 			BurningDropWeaps();
 	}
 }
@@ -207,11 +207,11 @@ simulated function bool HasMortarInInventory()
 {
 	local Inventory I;
 
-	if(!CanUseMortars())	//If you can't use mortars, probably not gonna have one, are ya?
+	if (!CanUseMortars())	//If you can't use mortars, probably not gonna have one, are ya?
 		return false;
 
 	for(I = Inventory; I != none; I = I.Inventory)
-		if(I.Name == 'DH_Kz8cmGrW42Weapon' || I.Name == 'DH_M2MortarWeapon')
+		if (I.Name == 'DH_Kz8cmGrW42Weapon' || I.Name == 'DH_M2MortarWeapon')
 			return true;
 
 	return false;
@@ -230,7 +230,7 @@ function PossessedBy(Controller C)
 	Super(Pawn).PossessedBy(C);
 
 	// From XPawn
-	if ( Controller != None )
+	if (Controller != none)
 		OldController = Controller;
 
 	// MergeTODO: Refactor this, I don't think this is the best place to spawn attachments
@@ -240,15 +240,15 @@ function PossessedBy(Controller C)
 	{
 		ClientForceStaminaUpdate(Stamina);
 
-		if(Controller != none)
+		if (Controller != none)
 		{
-			if (ROPlayer(Controller) != None)
+			if (ROPlayer(Controller) != none)
 			{
 				Prim = ROPlayer(Controller).PrimaryWeapon;
 				Sec = ROPlayer(Controller).SecondaryWeapon;
 				Gren = ROPlayer(Controller).GrenadeWeapon;
 			}
-			else if (ROBot(Controller) != None)
+			else if (ROBot(Controller) != none)
 			{
 				Prim = ROBot(Controller).PrimaryWeapon;
 				Sec = ROBot(Controller).SecondaryWeapon;
@@ -259,8 +259,8 @@ function PossessedBy(Controller C)
 		HeadgearClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.GetHeadgear();
 		ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.GetAmmoPouches(AmmoClasses, Prim, Sec, Gren);
 
-		if( ROPlayerReplicationInfo(PlayerReplicationInfo) != none &&
-			ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo != none )
+		if (ROPlayerReplicationInfo(PlayerReplicationInfo) != none &&
+			ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo != none)
 		{
 			DetachedArmClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.static.GetArmClass();
 			DetachedLegClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.static.GetLegClass();
@@ -277,12 +277,12 @@ function PossessedBy(Controller C)
 		// holding functionality of the pouch is put in - Erik
 		if (Level.NetMode != NM_DedicatedServer)
 		{
-			if (HeadgearClass != None && Headgear == none && !bHatShotOff)
+			if (HeadgearClass != none && Headgear == none && !bHatShotOff)
 				Headgear = Spawn(HeadgearClass, self);
 
 			for (i = 0; i < ArrayCount(AmmoPouchClasses); i++)
 			{
-				if (AmmoPouchClasses[i] == None)
+				if (AmmoPouchClasses[i] == none)
 					break;
 
 				AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
@@ -291,7 +291,7 @@ function PossessedBy(Controller C)
 
 
 		//We just check if we've already been possessed once.  If not, we run this.
-		if(!bHasBeenPossessed)
+		if (!bHasBeenPossessed)
 		{
 			DHRI = GetRoleInfo();
 
@@ -299,17 +299,17 @@ function PossessedBy(Controller C)
 			bHasBeenPossessed = true;
 
 			//Give resupply ammunition.
-			if( DHRI.bCarriesATAmmo )
+			if (DHRI.bCarriesATAmmo)
 				bHasATAmmo = true;
-			if( DHRI.bCarriesMGAmmo )
+			if (DHRI.bCarriesMGAmmo)
 				bHasMGAmmo = true;
-			if( DHRI.bCarriesMortarAmmo )
+			if (DHRI.bCarriesMortarAmmo)
 				bHasMortarAmmo = true;
 
 			//Give default mortar ammunition.
-			if(DHRI.bCanUseMortars)
+			if (DHRI.bCanUseMortars)
 			{
-				if(C.GetTeamNum() == 0)	//Axis
+				if (C.GetTeamNum() == 0)	//Axis
 				{
 					MortarHEAmmo=16;
 					MortarSmokeAmmo=4;
@@ -327,7 +327,7 @@ function PossessedBy(Controller C)
 	NetUpdateTime = Level.TimeSeconds - 1;
 
 	// Slip this in here
-	if(Controller != none && DHPlayer(Controller) != none)
+	if (Controller != none && DHPlayer(Controller) != none)
 		bMantleDebug = DHPlayer(Controller).bMantleDebug;
 }
 
@@ -335,18 +335,18 @@ simulated function HelmetShotOff(Rotator Rotation)
 {
 	local DroppedHeadGear Hat;
 
-	if( HeadGear == none )
+	if (HeadGear == none)
 	{
 		return;
 	}
 
-	Hat = Spawn( class'DroppedHeadGear',,, HeadGear.Location, HeadGear.Rotation );
-	if( Hat == none )
+	Hat = Spawn(class'DroppedHeadGear',,, HeadGear.Location, HeadGear.Rotation);
+	if (Hat == none)
 		return;
 
 	Hat.LinkMesh(HeadGear.Mesh);
 	Hat.Skins[0] = Headgear.Skins[0];
-	if( bOnFire )
+	if (bOnFire)
 		Hat.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.000000, true);
 
 	HeadGear.Destroy();
@@ -372,7 +372,7 @@ static function name StaticGetWeaponBoneFor(class<Inventory> I)
 
 function bool TeleSpawnProtected()
 {
-	if( TeleSpawnProtEnds > Level.TimeSeconds )
+	if (TeleSpawnProtEnds > Level.TimeSeconds)
 		return true;
 	else
 		return false;
@@ -393,7 +393,7 @@ ClientMessage("Level.TimeSeconds: "@Level.TimeSeconds);
 ClientMessage("LastWhippedTime: "@LastWhippedTime);
 ClientMessage("Level.TimeSeconds - LastWhippedTime: "@Level.TimeSeconds - LastWhippedTime);*/
 
-	if((Level.TimeSeconds - LastWhippedTime) > (0.1 + FRand() * 0.15)) // (0.15 + FRand() * 0.15))
+	if ((Level.TimeSeconds - LastWhippedTime) > (0.1 + FRand() * 0.15)) // (0.15 + FRand() * 0.15))
 	{
 		LastWhippedTime = Level.TimeSeconds;
 		mWhizSoundLocation = WhizLocation;
@@ -411,15 +411,15 @@ ClientMessage("Level.TimeSeconds - LastWhippedTime: "@Level.TimeSeconds - LastWh
 simulated event HandleSnapSound(int WhizType)
 {
  	// Don't play whiz sounds for bots, or from other players
-	if ( IsHumanControlled() && IsLocallyControlled() )
+	if (IsHumanControlled() && IsLocallyControlled())
 	{
-	    if( WhizType == 1 )
+	    if (WhizType == 1)
 	        Spawn(class'DH_BulletSnap',,, mWhizSoundLocation);    // Supersonic rounds
 		else
    	        Spawn(class'DH_BulletWhiz',,, mWhizSoundLocation);     // Subsonic rounds
 
 		// Anything above WhizType of 2 is a friendly bullet at very close range, so don't suppress
-		if( WhizType == 1 || WhizType == 2 )
+		if (WhizType == 1 || WhizType == 2)
 			DHPlayer(Controller).PlayerWhizzed(VSizeSquared(Location - mWhizSoundLocation));
 
 //        ClientMessage("Played Snap with WhizType: "@WhizType);
@@ -431,11 +431,11 @@ simulated event HandleSnapSound(int WhizType)
 simulated event HandleWhizSound()
 {
  	// Don't play whiz sounds for bots, or from other players
-/*	if ( IsHumanControlled() && IsLocallyControlled() )
+/*	if (IsHumanControlled() && IsLocallyControlled())
 	{
 		ClientMessage("Playing PawnWhizType: " @PawnWhizType);
 
-	    if( PawnWhizType == 1 )
+	    if (PawnWhizType == 1)
 	        Spawn(class'DH_BulletSnap',,, mWhizSoundLocation);    // Supersonic rounds
 		else
    	        Spawn(class'DH_BulletWhiz',,, mWhizSoundLocation);     // Subsonic rounds
@@ -458,98 +458,98 @@ simulated function ProcessHitFX()
 	local int j;//i,j;
 	local float GibPerterbation;
 
-	if( (Level.NetMode == NM_DedicatedServer) )
+	if ((Level.NetMode == NM_DedicatedServer))
 	{
 		SimHitFxTicker = HitFxTicker;
 		return;
 	}
 
-	for ( SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % ArrayCount(HitFX) )
+	for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % ArrayCount(HitFX))
 	{
 		j++;
-		if ( j > 30 )
+		if (j > 30)
 		{
 			SimHitFxTicker = HitFxTicker;
 			return;
 		}
 
-		if( (HitFX[SimHitFxTicker].damtype == None) || (Level.bDropDetail && (Level.TimeSeconds - LastRenderTime > 3) && !IsHumanControlled()) )
+		if ((HitFX[SimHitFxTicker].damtype == none) || (Level.bDropDetail && (Level.TimeSeconds - LastRenderTime > 3) && !IsHumanControlled()))
 			continue;
 
 		//log("Processing effects for damtype "$HitFX[SimHitFxTicker].damtype);
 
-		if( HitFX[SimHitFxTicker].bone == 'obliterate' && !class'GameInfo'.static.UseLowGore())
+		if (HitFX[SimHitFxTicker].bone == 'obliterate' && !class'GameInfo'.static.UseLowGore())
 		{
-			SpawnGibs( HitFX[SimHitFxTicker].rotDir, 0);
+			SpawnGibs(HitFX[SimHitFxTicker].rotDir, 0);
 			bGibbed = true;
 			Destroy();
 			return;
 		}
 
-		boneCoords = GetBoneCoords( HitFX[SimHitFxTicker].bone );
+		boneCoords = GetBoneCoords(HitFX[SimHitFxTicker].bone);
 
-		if ( !Level.bDropDetail && !class'GameInfo'.static.NoBlood())
+		if (!Level.bDropDetail && !class'GameInfo'.static.NoBlood())
 		{
-			AttachEffect( BleedingEmitterClass, HitFX[SimHitFxTicker].bone, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir );
+			AttachEffect(BleedingEmitterClass, HitFX[SimHitFxTicker].bone, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
 
 
-//			HitFX[SimHitFxTicker].damtype.static.GetHitEffects( HitEffects, Health );
+//			HitFX[SimHitFxTicker].damtype.static.GetHitEffects(HitEffects, Health);
 //
-//			if( !PhysicsVolume.bWaterVolume ) // don't attach effects under water
+//			if (!PhysicsVolume.bWaterVolume) // don't attach effects under water
 //			{
-//				for( i = 0; i < ArrayCount(HitEffects); i++ )
+//				for(i = 0; i < ArrayCount(HitEffects); i++)
 //				{
-//					if( HitEffects[i] == none )
+//					if (HitEffects[i] == none)
 //						continue;
 //
-//					AttachEffect( HitEffects[i], HitFX[SimHitFxTicker].bone, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir );
+//					AttachEffect(HitEffects[i], HitFX[SimHitFxTicker].bone, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
 //				}
 //			}
 		}
-		if ( class'GameInfo'.static.UseLowGore() )
+		if (class'GameInfo'.static.UseLowGore())
 			HitFX[SimHitFxTicker].bSever = false;
 
-		if( HitFX[SimHitFxTicker].bSever )
+		if (HitFX[SimHitFxTicker].bSever)
 		{
 			GibPerterbation = HitFX[SimHitFxTicker].damtype.default.GibPerterbation;
 
-			switch( HitFX[SimHitFxTicker].bone )
+			switch(HitFX[SimHitFxTicker].bone)
 			{
 				case 'obliterate':
 					break;
 
 				case 'lthigh':
 				case 'lupperthigh':
-					if( !bLeftLegGibbed )
+					if (!bLeftLegGibbed)
 					{
-	                    SpawnGiblet( DetachedLegClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation );
+	                    SpawnGiblet(DetachedLegClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
 	                    bLeftLegGibbed=true;
 					}
 					break;
 
 				case 'rthigh':
 				case 'rupperthigh':
-					if( !bRightLegGibbed )
+					if (!bRightLegGibbed)
 					{
-	                    SpawnGiblet( DetachedLegClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation );
+	                    SpawnGiblet(DetachedLegClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
 	                    bRightLegGibbed=true;
 					}
 					break;
 
 				case 'lfarm':
 				case 'lupperarm':
-					if( !bLeftArmGibbed )
+					if (!bLeftArmGibbed)
 					{
-	                    SpawnGiblet( DetachedArmClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation );
+	                    SpawnGiblet(DetachedArmClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
 	                    bLeftArmGibbed=true;
 					}
 					break;
 
 				case 'rfarm':
 				case 'rupperarm':
-					if( !bRightArmGibbed )
+					if (!bRightArmGibbed)
 					{
-	                    SpawnGiblet( DetachedArmClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation );
+	                    SpawnGiblet(DetachedArmClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
 	                    bRightArmGibbed=true;
 					}
 					break;
@@ -560,29 +560,29 @@ simulated function ProcessHitFX()
 
 //                case 'spine':
 //                case 'Upperspine':
-//                case 'None':
+//                case 'none':
 //					  bGibbed = true;
 //                    break;
 			}
 			//never hide the head
-//            if(HitFX[SimHitFXTicker].bone == 'head')
+//            if (HitFX[SimHitFXTicker].bone == 'head')
 //            {
-//            	if( Headgear != none )
+//            	if (Headgear != none)
 //            	{
 //            		Headgear.Destroy();
 //            	}
 //            }
 
-			if( HitFX[SimHitFXTicker].bone != 'Spine' && HitFX[SimHitFXTicker].bone != 'UpperSpine' )
+			if (HitFX[SimHitFXTicker].bone != 'Spine' && HitFX[SimHitFXTicker].bone != 'UpperSpine')
 				HideBone(HitFX[SimHitFxTicker].bone);
 		}
 
-		if(HitFX[SimHitFXTicker].bone == 'head')// && Health < 0)
+		if (HitFX[SimHitFXTicker].bone == 'head')// && Health < 0)
 		{
-			if( Headgear != none )
+			if (Headgear != none)
 			{
-				if( DH_Headgear(HeadGear).bIsHelmet)
-					DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 100.0);
+				if (DH_Headgear(HeadGear).bIsHelmet)
+					DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
 				HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
 			}
 		}
@@ -608,33 +608,33 @@ simulated function ProcessHitFX()
 	{
 		count++;
 
-		if(Inv.IsA('Weapon'))
+		if (Inv.IsA('Weapon'))
 		{
 			invWeapon = Weapon(Inv);
 
 			ClientMessage("Current weapon check is "$invWeapon.Class);
 
-			if(invWeapon.IsA('DH_ParachuteStaticLine') || invWeapon.IsA('DH_ParachuteItem')) // ParachuteItem does secondary check in its own RaisingWeapon function in case of lag
+			if (invWeapon.IsA('DH_ParachuteStaticLine') || invWeapon.IsA('DH_ParachuteItem')) // ParachuteItem does secondary check in its own RaisingWeapon function in case of lag
 			{
 			//ClientMessage("Weapon should be a chute: "$invWeapon.Class);
-				for ( i=0;i<DeletedClasses.Length;i++ )
+				for (i=0;i<DeletedClasses.Length;i++)
 				{
 					//ClientMessage("Deleted classes "$i$" = "$DeletedClasses[i]);
-					if( invWeapon.Class == DeletedClasses[i] )
+					if (invWeapon.Class == DeletedClasses[i])
 					{
 						bAlreadyUsedClass = true;
 						break;
 					}
 				}
 
-				if( !bAlreadyUsedClass )
+				if (!bAlreadyUsedClass)
 				{
 					// because the weapon is destroyed from inventory need to start over again
 					// and search through the inventory from the beginning.
 					DeletedClasses[DeletedClasses.Length] = invWeapon.Class;
 					Controller.ClientSwitchToBestWeapon();
 					Instigator.DeleteInventory(invWeapon);
-//                    if( invWeapon.IsA('DH_ParachuteStaticLine') )
+//                    if (invWeapon.IsA('DH_ParachuteStaticLine'))
 						invWeapon.Destroy();
 					Inv = Inventory;
 					ClientMessage("Just deleted weapon "$invWeapon.Class);
@@ -660,7 +660,7 @@ simulated function ProcessHitFX()
 }*/
 
 // Process a precision hit
-function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocation, Vector momentum, class<DamageType> damageType, array<int> PointsHit)
+function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocation, vector momentum, class<DamageType> damageType, array<int> PointsHit)
 {
 	local int actualDamage, originalDamage, cumulativeDamage, totalDamage, i;
 	local int HighestDamagePoint, HighestDamageAmount;
@@ -673,13 +673,13 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 	originalDamage = damage;
 
 	// If someone else has killed this player , return
-	if( bDeleteMe || PointsHit.Length < 1 || Health <= 0 )
+	if (bDeleteMe || PointsHit.Length < 1 || Health <= 0)
 		return;
 
 	for(i=0; i<PointsHit.Length; i++)
 	{
 		// If someone else has killed this player , return
-		if( bDeleteMe || Health <= 0 )
+		if (bDeleteMe || Health <= 0)
 			return;
 
 		actualDamage = originalDamage;
@@ -689,7 +689,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 		actualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
 		cumulativeDamage += actualDamage;
 
-		if( actualDamage > HighestDamageAmount )
+		if (actualDamage > HighestDamageAmount)
 		{
 			HighestDamageAmount = actualDamage;
 			HighestDamagePoint = PointsHit[i];
@@ -698,7 +698,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 		//log("We hit "$GetEnum(enum'EPawnHitPointType',Hitpoints[PointsHit[i]].HitPointType));
 
 		// Hit detection debugging
-		/*if( PointsHit[i] != 0 && !bFirstHit )
+		/*if (PointsHit[i] != 0 && !bFirstHit)
 		{
 	        CO = GetBoneCoords(Hitpoints[PointsHit[i]].PointBone);
 			HeadLoc = CO.Origin;
@@ -720,7 +720,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 				If we've been shot in the foot or the leg, we have a chance to 'fall' and drop our weapon.
 				It's guaranteed to trigger if we're sprinting, but only 50/50 chance if we're not.
 				*/
-		    	if(DHPlayer(Controller) != none && !bIsCrawling && bIsSprinting)
+		    	if (DHPlayer(Controller) != none && !bIsCrawling && bIsSprinting)
 		    	{
 		    		//Zero stamina and fall to the ground if
 		    		Stamina = 0;
@@ -728,12 +728,12 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 					DHPlayer(Controller).ClientProne();
 				}
 
-				//SetLimping( FMin( ActualDamage / 5.0, 10.0) );
+				//SetLimping(FMin(ActualDamage / 5.0, 10.0));
 		    }
 		}
 		else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Hand && FRand() > 0.5)
 		{
-			if( (DHPlayer(Controller) != none) && (DarkestHourGame(Level.Game).FriendlyFireScale > 0.0) && !InGodMode())
+			if ((DHPlayer(Controller) != none) && (DarkestHourGame(Level.Game).FriendlyFireScale > 0.0) && !InGodMode())
 			{
 	            DHPlayer(Controller).ThrowWeapon();
 	            DHPlayer(Controller).ReceiveLocalizedMessage(class'ROWeaponLostMessage');
@@ -741,7 +741,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 		}
 		else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Head)
 		{
-			if( (DHPlayer(Controller) != none) && (DarkestHourGame(Level.Game).FriendlyFireScale > 0.0) && !InGodMode())
+			if ((DHPlayer(Controller) != none) && (DarkestHourGame(Level.Game).FriendlyFireScale > 0.0) && !InGodMode())
 			{
 				HitDirection = Location - HitLocation;
 				HitDirection.Z = 0.0f;
@@ -752,7 +752,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 		}
 		else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Torso)
 		{
-			if( (DHPlayer(Controller) != none) && (DarkestHourGame(Level.Game).FriendlyFireScale > 0.0) && !InGodMode())
+			if ((DHPlayer(Controller) != none) && (DarkestHourGame(Level.Game).FriendlyFireScale > 0.0) && !InGodMode())
 			{
 				//Lose half your stamina if you're shot in the chest. -Basnett
 		    	Stamina = 0;
@@ -766,22 +766,22 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, Vector hitlocati
 		UpdateDamageList(PointsHit[i] - 1);
 
 		// Lets exit out if one of the shots killed the player
-		if ( cumulativeDamage >=  Health )
+		if (cumulativeDamage >=  Health)
 		{
-	    	if( damageType.default.HumanObliterationThreshhold != 1000001 ) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-	    	    PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+	    	if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
+	    	    PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
 			TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
 		}
 	}
 
-	if( totalDamage > 0 )
+	if (totalDamage > 0)
 	{
 		// If someone else has killed this player , return
-		if( bDeleteMe || Health <= 0 )
+		if (bDeleteMe || Health <= 0)
 			return;
 
-		if( damageType.default.HumanObliterationThreshhold != 1000001 ) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-	    	PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+		if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
+	    	PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
 		TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
 	}
 }
@@ -795,59 +795,59 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 	local int actualDamage;
 	local Controller Killer;
 
-	if ( damagetype == None )
+	if (damagetype == none)
 	{
-		if ( InstigatedBy != None )
+		if (InstigatedBy != none)
 			warn("No damagetype for damage by "$instigatedby$" with weapon "$InstigatedBy.Weapon);
 		DamageType = class'DamageType';
 	}
 
-	if ( Role < ROLE_Authority )
+	if (Role < ROLE_Authority)
 	{
 		//log(self$" client damage type "$damageType$" by "$instigatedBy);
 		return;
 	}
 
-	if ( Health <= 0 )
+	if (Health <= 0)
 		return;
 
-	if ((instigatedBy == None || instigatedBy.Controller == None) && DamageType.default.bDelayedDamage && DelayedDamageInstigatorController != None)
+	if ((instigatedBy == none || instigatedBy.Controller == none) && DamageType.default.bDelayedDamage && DelayedDamageInstigatorController != none)
 		instigatedBy = DelayedDamageInstigatorController.Pawn;
 
-	if ( (Physics == PHYS_None) && (DrivenVehicle == None) )
+	if ((Physics == PHYS_none) && (DrivenVehicle == none))
 		SetMovementPhysics();
 	if (Physics == PHYS_Walking && damageType.default.bExtraMomentumZ)
 		momentum.Z = FMax(momentum.Z, 0.4 * VSize(momentum));
-	if ( instigatedBy == self )
+	if (instigatedBy == self)
 		momentum *= 0.6;
 	momentum = momentum/Mass;
 
-	if (Weapon != None)
-		Weapon.AdjustPlayerDamage( Damage, InstigatedBy, HitLocation, Momentum, DamageType );
+	if (Weapon != none)
+		Weapon.AdjustPlayerDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-	if (DrivenVehicle != None)
-		DrivenVehicle.AdjustDriverDamage( Damage, InstigatedBy, HitLocation, Momentum, DamageType );
+	if (DrivenVehicle != none)
+		DrivenVehicle.AdjustDriverDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
 	ActualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
 
 	if (ActualDamage > 0 && (DamageType.Name == 'Fell') || (DamageType.Name == 'DH_ExitMovingVehicleDamType'))
 	{
-		if( !bIsCrawling && !bIsCrouched && DHPlayer(Controller) != none )
+		if (!bIsCrawling && !bIsCrouched && DHPlayer(Controller) != none)
 		{
 			Stamina = 0;
 			ClientForceStaminaUpdate(Stamina);
 			DHPlayer(Controller).ClientProne();
 		}
 
-		SetLimping( FMin(ActualDamage / 5.0, 10.0) );
+		SetLimping(FMin(ActualDamage / 5.0, 10.0));
 	}
-	else if ( DamageType.Name == 'DH_BurningDamType') // || (DamageType.Name == 'DH_Whatever') // This is for later - Ch!cken
+	else if (DamageType.Name == 'DH_BurningDamType') // || (DamageType.Name == 'DH_Whatever') // This is for later - Ch!cken
 	{
-		if( ActualDamage <= 0 && bOnFire )
+		if (ActualDamage <= 0 && bOnFire)
 			bOnFire = false;
 		else
 		{
-			if( !bOnFire )
+			if (!bOnFire)
 				bOnFire = true;
 
 			FireDamage = Damage;
@@ -858,11 +858,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 	}
 	else if (DamageType.Name == 'DamTypeVehicleExplosion')
 	{
-		if( ActualDamage <= 0 && bOnFire )
+		if (ActualDamage <= 0 && bOnFire)
 			bOnFire = false;
 		else
 		{
-			if(!bOnFire)
+			if (!bOnFire)
    				bOnFire = true;
 
 			FireDamage = Damage;
@@ -875,16 +875,16 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 	//ClientMessage("Hit area:" @ HitBone @ "Damage:" @ ActualDamage);
 
 	Health -= actualDamage;
-	if ( HitLocation == vect(0,0,0) )
+	if (HitLocation == vect(0,0,0))
 		HitLocation = Location;
 
 	LastHitIndex = HitIndex;
 
 	PlayHit(actualDamage,InstigatedBy, hitLocation, damageType, Momentum, HitIndex);
 
-	if ( Health <= 0 )
+	if (Health <= 0)
 	{
-		if( bOnFire )
+		if (bOnFire)
 		{
 			BurnTimeLeft = 10;
 			SetTimer(1.0,false);
@@ -892,29 +892,29 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 		}
 
 		// pawn died
-		if ( DamageType.default.bCausedByWorld && (instigatedBy == None || instigatedBy == self) && LastHitBy != None )
+		if (DamageType.default.bCausedByWorld && (instigatedBy == none || instigatedBy == self) && LastHitBy != none)
 			Killer = LastHitBy;
-		else if ( instigatedBy != None )
+		else if (instigatedBy != none)
 			Killer = instigatedBy.GetKillerController();
-		if ( Killer == None && DamageType.Default.bDelayedDamage )
+		if (Killer == none && DamageType.Default.bDelayedDamage)
 			Killer = DelayedDamageInstigatorController;
-		if ( bPhysicsAnimUpdate && !DamageType.default.bRagdollBullet )
+		if (bPhysicsAnimUpdate && !DamageType.default.bRagdollBullet)
 			SetTearOffMomemtum(momentum);
 		Died(Killer, damageType, HitLocation);
 	}
 	else
 	{
-		AddVelocity( momentum );
-		if ( Controller != None )
+		AddVelocity(momentum);
+		if (Controller != none)
 			Controller.NotifyTakeHit(instigatedBy, HitLocation, actualDamage, DamageType, Momentum);
 
-		if ( instigatedBy != None && instigatedBy != self )
+		if (instigatedBy != none && instigatedBy != self)
 			LastHitBy = instigatedBy.Controller;
 	}
 	MakeNoise(1.0);
 
 	// Force cancellation of mantling
-	if( bIsMantling )
+	if (bIsMantling)
 	{
 		CancelMantle();
 		DHPlayer(Controller).GoToState('PlayerWalking');
@@ -924,35 +924,35 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 
 // Handle ammo resupply
-function TossAmmo( Pawn Gunner, optional bool bIsATWeapon )
+function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
 {
 	local bool bResupplySuccessful;
 
 	bResupplySuccessful = false;
 
-	if( (!bHasATAmmo && bIsATWeapon) || (!bHasMGAmmo && !bIsATWeapon) )
+	if ((!bHasATAmmo && bIsATWeapon) || (!bHasMGAmmo && !bIsATWeapon))
 	{
 		return;
 	}
 
-	if( DHWeapon(Gunner.Weapon) != none && DHWeapon(Gunner.Weapon).ResupplyAmmo() )
+	if (DHWeapon(Gunner.Weapon) != none && DHWeapon(Gunner.Weapon).ResupplyAmmo())
 	{
-	    if( bHasATAmmo && bIsATWeapon )
+	    if (bHasATAmmo && bIsATWeapon)
 		{
 		  	bResupplySuccessful=true;
 		  	bHasATAmmo = false;
 		}
-	    else if( bHasMGAmmo && !bIsATWeapon )
+	    else if (bHasMGAmmo && !bIsATWeapon)
 		{
 			bResupplySuccessful=true;
 			bHasMGAmmo = false;
 		}
 	}
 
-	if( bResupplySuccessful )
+	if (bResupplySuccessful)
 	{
-		if( (DarkestHourGame(Level.Game) != none) && (Controller != none)
-			&& (Gunner.Controller != none) )
+		if ((DarkestHourGame(Level.Game) != none) && (Controller != none)
+			&& (Gunner.Controller != none))
 		{
 		    // Send notification message to gunner & remove resupply request
 		    if (DHPlayer(Gunner.Controller) != none)
@@ -970,7 +970,7 @@ function TossAmmo( Pawn Gunner, optional bool bIsATWeapon )
 			// Send notification message to supplier
 			if (PlayerController(Controller) != none)
 			{
-				if(Gunner.Controller == none)
+				if (Gunner.Controller == none)
 					PlayerController(Controller).ReceiveLocalizedMessage(
 					class'DHResupplyMessage', 0);
 				else
@@ -979,7 +979,7 @@ function TossAmmo( Pawn Gunner, optional bool bIsATWeapon )
 		    }
 
 		    // Score point
-			if( bIsATWeapon )
+			if (bIsATWeapon)
 			    DarkestHourGame(Level.Game).ScoreATResupply(Controller, Gunner.Controller);
 			else
 				DarkestHourGame(Level.Game).ScoreMGResupply(Controller, Gunner.Controller);
@@ -991,11 +991,11 @@ function TossAmmo( Pawn Gunner, optional bool bIsATWeapon )
 
 function TossMortarAmmo(DH_Pawn P)
 {
-	if( bHasMortarAmmo && P != none && P.ResupplyMortarAmmunition() )
+	if (bHasMortarAmmo && P != none && P.ResupplyMortarAmmunition())
 	{
 		bHasMortarAmmo = false;
 
-		if( DarkestHourGame(Level.Game) != none && Controller != none && P.Controller != none )
+		if (DarkestHourGame(Level.Game) != none && Controller != none && P.Controller != none)
 		{
 		    // Send notification message to gunner & remove resupply request
 		    if (DHPlayer(P.Controller) != none)
@@ -1019,11 +1019,11 @@ function TossMortarAmmo(DH_Pawn P)
 
 function TossMortarVehicleAmmo(DH_MortarVehicle V)
 {
-	if( bHasMortarAmmo && V != none && ResupplyMortarVehicleWeapon(V) )
+	if (bHasMortarAmmo && V != none && ResupplyMortarVehicleWeapon(V))
 	{
 		bHasMortarAmmo = false;
 
-		if( DarkestHourGame(Level.Game) != none && Controller != none )
+		if (DarkestHourGame(Level.Game) != none && Controller != none)
 		{
 		    // Send notification message to gunner & remove resupply request
 		    if (V.WeaponPawns[0].Controller != none && DHPlayer(V.WeaponPawns[0].Controller) != none)
@@ -1049,12 +1049,12 @@ function bool ResupplyMortarVehicleWeapon(DH_MortarVehicle V)
 {
 	local VehicleWeapon VW;
 
-	if(V == none || V.WeaponPawns[0] == none || V.WeaponPawns[0].Gun == none)
+	if (V == none || V.WeaponPawns[0] == none || V.WeaponPawns[0].Gun == none)
 		return false;
 
 	VW = V.WeaponPawns[0].Gun;
 
-	if(VW.MainAmmoCharge[0] == VW.default.InitialPrimaryAmmo && VW.MainAmmoCharge[1] == VW.default.InitialSecondaryAmmo)
+	if (VW.MainAmmoCharge[0] == VW.default.InitialPrimaryAmmo && VW.MainAmmoCharge[1] == VW.default.InitialSecondaryAmmo)
 		return false;
 
 	V.PlayerResupply();
@@ -1063,21 +1063,21 @@ function bool ResupplyMortarVehicleWeapon(DH_MortarVehicle V)
 }
 
 // Handle assisted reload
-function LoadWeapon( Pawn Gunner )
+function LoadWeapon(Pawn Gunner)
 {
 	local bool bReloadSuccessful;
 
 	bReloadSuccessful = false;
 
-	if( ROWeapon(Gunner.Weapon) != none && DHWeapon(Gunner.Weapon).AssistedReload() )
+	if (ROWeapon(Gunner.Weapon) != none && DHWeapon(Gunner.Weapon).AssistedReload())
 	{
 		bReloadSuccessful=true;
 	}
 
-	if( bReloadSuccessful )
+	if (bReloadSuccessful)
 	{
-		if( (DarkestHourGame(Level.Game) != none) && (Controller != none)
-			&& (Gunner.Controller != none) )
+		if ((DarkestHourGame(Level.Game) != none) && (Controller != none)
+			&& (Gunner.Controller != none))
 		{
 		    // Send notification message to gunner
 		    if (DHPlayer(Gunner.Controller) != none)
@@ -1120,10 +1120,10 @@ simulated function SetWeaponAttachment(ROWeaponAttachment NewAtt)
 	if (!bInitializedWeaponAttachment && NewAtt != none)
 		bInitializedWeaponAttachment = true;
 
-	if( WeaponAttachment == none )
+	if (WeaponAttachment == none)
 		return;
 
-	if( DH_ProjectileWeapon(Weapon) != none )
+	if (DH_ProjectileWeapon(Weapon) != none)
 		WeaponAttachment.bBayonetAttached = DH_ProjectileWeapon(Weapon).bBayonetMounted;
 	WeaponAttachment.AnimEnd(0);
 }
@@ -1136,7 +1136,7 @@ function HandleStamina(float DeltaTime)
 	local byte NewBreathSound;
 
 	// Prone
-	if( bIsCrawling )
+	if (bIsCrawling)
 	{
 		if (Stamina < default.Stamina && Acceleration == vect(0,0,0))
 		{
@@ -1153,7 +1153,7 @@ function HandleStamina(float DeltaTime)
 		if (bIsSprinting)
 		{
 			// Use more stamina when crouch sprinting
-			if ( bIsCrouched )
+			if (bIsCrouched)
 			{
 				Stamina = FMax(0.0, Stamina - (DeltaTime * 1.25));
 			}
@@ -1164,26 +1164,26 @@ function HandleStamina(float DeltaTime)
 		}
 		else
 		{
-			if (bIsMantling )
+			if (bIsMantling)
 			{
-				if( (Physics == PHYS_RootMotion || Physics == PHYS_Flying) && Stamina > 0 )
+				if ((Physics == PHYS_RootMotion || Physics == PHYS_Flying) && Stamina > 0)
 				{
 					Stamina = FMax(0.0, Stamina - DeltaTime * 1.5);
 				}
-				else if( Stamina < 0 )
+				else if (Stamina < 0)
 				{
 					Stamina = 0;
 				}
 			}
 			else
 			{
-				if (Stamina < default.Stamina && !bIsWalking && !bIsCrouched && VSizeSquared(Velocity) > 0.0 )
+				if (Stamina < default.Stamina && !bIsWalking && !bIsCrouched && VSizeSquared(Velocity) > 0.0)
 			    {
 				    Stamina = FMin(default.Stamina, Stamina + (DeltaTime * SlowStaminaRecoveryRate));
 			    }
 			    else
 			    {
-				    if ( bIsCrouched )
+				    if (bIsCrouched)
 				    {
 					    Stamina = FMin(default.Stamina, Stamina + (DeltaTime * CrouchStaminaRecoveryRate));
 				    }
@@ -1197,30 +1197,30 @@ function HandleStamina(float DeltaTime)
 	}
 
 	// Only set this flag on the server
-	if ( Level.NetMode != NM_Client )
+	if (Level.NetMode != NM_Client)
 	{
 		bCanStartSprint = Stamina > 2.0;
 	}
 
-	if( Stamina == 0.0 || Acceleration == vect(0,0,0) )
+	if (Stamina == 0.0 || Acceleration == vect(0,0,0))
 	{
 		SetSprinting(false);
 	}
 
 	// Stamina sound handling. Sets the ambient breathing sound based on stamina level
-	if ( Level.NetMode != NM_Client )
+	if (Level.NetMode != NM_Client)
 	{
 		if (Health > 0 && Stamina < 10.0)
 		{
-		    if ( Stamina <= 2.0 )
+		    if (Stamina <= 2.0)
 			{
 		    	NewBreathSound = 1;
 			}
-			else if (Stamina < 5.0 )
+			else if (Stamina < 5.0)
 			{
 				NewBreathSound = 2;
 			}
-			else if ( Stamina < 7.5 )
+			else if (Stamina < 7.5)
 			{
 		        NewBreathSound = 3;
 			}
@@ -1235,7 +1235,7 @@ function HandleStamina(float DeltaTime)
 		    NewBreathSound = 5;
 		}
 
-		if( SavedBreathSound != NewBreathSound )
+		if (SavedBreathSound != NewBreathSound)
 			SetBreathingSound(NewBreathSound);
 	}
 }
@@ -1245,56 +1245,56 @@ state Dying
 {
 	simulated function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 	{
-		local Vector SelfToHit, SelfToInstigator, CrossPlaneNormal;
+		local vector SelfToHit, SelfToInstigator, CrossPlaneNormal;
 		local float W;
 		local float YawDir;
 
-		local Vector HitNormal, shotDir;
-		local Vector PushLinVel, PushAngVel;
+		local vector HitNormal, shotDir;
+		local vector PushLinVel, PushAngVel;
 		local Name HitBone;
 		local float HitBoneDist;
 		local int MaxCorpseYawRate;
 
-		if (DamageType == None)
+		if (DamageType == none)
 			return;
 
-		if(Physics == PHYS_KarmaRagdoll)
+		if (Physics == PHYS_KarmaRagdoll)
 		{
 			// Can't shoot corpses during de-res
-			if(bDeRes)
+			if (bDeRes)
 				return;
 
 			//log("HIT RAGDOLL. M:"$Momentum);
 			// Throw the body if its a rocket explosion or shock combo
-			if(damageType.Name == 'ROSMineDamType' || damageType.Name == 'DH_StielGranateDamType' || damageType.Name == 'ROMineDamType' || damageType.Name == 'DH_M1GrenadeDamType')
+			if (damageType.Name == 'ROSMineDamType' || damageType.Name == 'DH_StielGranateDamType' || damageType.Name == 'ROMineDamType' || damageType.Name == 'DH_M1GrenadeDamType')
 			{
 				shotDir = Normal(Momentum);
 				PushLinVel = (RagDeathVel * shotDir) +  vect(0, 0, 250);
 				PushAngVel = Normal(shotDir Cross vect(0, 0, 1)) * -18000;
-				KSetSkelVel( PushLinVel, PushAngVel );
+				KSetSkelVel(PushLinVel, PushAngVel);
 			}
-			else if( damageType.Default.bRagdollBullet )
+			else if (damageType.Default.bRagdollBullet)
 			{
-				if ( Momentum == vect(0,0,0) )
+				if (Momentum == vect(0,0,0))
 					Momentum = HitLocation - InstigatedBy.Location;
-				if ( FRand() < 0.65 )
+				if (FRand() < 0.65)
 				{
-					if ( Velocity.Z <= 0 )
+					if (Velocity.Z <= 0)
 						PushLinVel = vect(0,0,40);
 					PushAngVel = Normal(Normal(Momentum) Cross vect(0, 0, 1)) * -8000 ;
 					PushAngVel.X *= 0.5;
 					PushAngVel.Y *= 0.5;
 					PushAngVel.Z *= 4;
-					KSetSkelVel( PushLinVel, PushAngVel );
+					KSetSkelVel(PushLinVel, PushAngVel);
 				}
 				PushLinVel = RagShootStrength*Normal(Momentum);
 				KAddImpulse(PushLinVel, HitLocation);
-				if ( (LifeSpan > 0) && (LifeSpan < DeResTime + 2) )
+				if ((LifeSpan > 0) && (LifeSpan < DeResTime + 2))
 					LifeSpan += 0.2;
 			}
-			else if ( DamageType.Name == 'DH_BurningDamType' ) // || (DamageType.Name == 'DH_Flamethrower') // This is for later - Ch!cken
+			else if (DamageType.Name == 'DH_BurningDamType') // || (DamageType.Name == 'DH_Flamethrower') // This is for later - Ch!cken
 			{
-			    if( !bOnFire )
+			    if (!bOnFire)
 					bOnFire = true;
 
 				BurnTimeLeft = 10;
@@ -1305,62 +1305,62 @@ state Dying
 				PushLinVel = RagShootStrength*Normal(Momentum);
 				KAddImpulse(PushLinVel, HitLocation);
 			}
-			if ( (DamageType.Default.DamageOverlayMaterial != None) && (Level.DetailMode != DM_Low) && !Level.bDropDetail && !bOnFire )
+			if ((DamageType.Default.DamageOverlayMaterial != none) && (Level.DetailMode != DM_Low) && !Level.bDropDetail && !bOnFire)
 				SetOverlayMaterial(DamageType.Default.DamageOverlayMaterial, DamageType.default.DamageOverlayTime, true);
 			return;
 		}
 
 		if (Damage > 0)
 		{
-			if ( InstigatedBy != None )
+			if (InstigatedBy != none)
 			{
 
 				// Figure out which direction to spin:
 
-				if( InstigatedBy.Location != Location )
+				if (InstigatedBy.Location != Location)
 				{
 					SelfToInstigator = InstigatedBy.Location - Location;
 					SelfToHit = HitLocation - Location;
 
-					CrossPlaneNormal = Normal( SelfToInstigator cross Vect(0,0,1) );
+					CrossPlaneNormal = Normal(SelfToInstigator cross vect(0,0,1));
 					W = CrossPlaneNormal dot Location;
 
-					if( HitLocation dot CrossPlaneNormal < W )
+					if (HitLocation dot CrossPlaneNormal < W)
 						YawDir = -1.0;
 					else
 						YawDir = 1.0;
 				}
 			}
-			if( VSize(Momentum) < 10 )
+			if (VSize(Momentum) < 10)
 			{
 				Momentum = - Normal(SelfToInstigator) * Damage * 1000.0;
-				Momentum.Z = Abs( Momentum.Z );
+				Momentum.Z = Abs(Momentum.Z);
 			}
 
 			SetPhysics(PHYS_Falling);
 			Momentum = Momentum / Mass;
-			AddVelocity( Momentum );
+			AddVelocity(Momentum);
 			bBounce = true;
 
 			RotationRate.Pitch = 0;
 			RotationRate.Yaw += VSize(Momentum) * YawDir;
 
 			MaxCorpseYawRate = 150000;
-			RotationRate.Yaw = Clamp( RotationRate.Yaw, -MaxCorpseYawRate, MaxCorpseYawRate );
+			RotationRate.Yaw = Clamp(RotationRate.Yaw, -MaxCorpseYawRate, MaxCorpseYawRate);
 			RotationRate.Roll = 0;
 
 			bFixedRotationDir = true;
 			bRotateToDesired = false;
 
 			Health -= Damage;
-			CalcHitLoc( HitLocation, vect(0,0,0), HitBone, HitBoneDist );
+			CalcHitLoc(HitLocation, vect(0,0,0), HitBone, HitBoneDist);
 
-			if( InstigatedBy != None )
-				HitNormal = Normal( Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0,0,2.8) );
+			if (InstigatedBy != none)
+				HitNormal = Normal(Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0,0,2.8));
 			else
-				HitNormal = Normal( Vect(0,0,1) + VRand() * 0.2 + vect(0,0,2.8) );
+				HitNormal = Normal(vect(0,0,1) + VRand() * 0.2 + vect(0,0,2.8));
 
-			DoDamageFX( HitBone, Damage, DamageType, Rotator(HitNormal) );
+			DoDamageFX(HitBone, Damage, DamageType, Rotator(HitNormal));
 		}
 	}
 
@@ -1368,14 +1368,14 @@ state Dying
 	{
 		local int i;
 
-		if( BurnTimeLeft > 5 )
+		if (BurnTimeLeft > 5)
 		{
 			BurnTimeLeft--;
 			SetTimer(1.0, false);
 		}
-		else if( BurnTimeLeft > 0 )
+		else if (BurnTimeLeft > 0)
 		{
-			if( OverlayMaterial != DeadBurningOverlayMaterial )
+			if (OverlayMaterial != DeadBurningOverlayMaterial)
 			{
 				SetOverlayMaterial(DeadBurningOverlayMaterial, 999.000000, true);
 
@@ -1389,7 +1389,7 @@ state Dying
 			BurnTimeLeft--;
 			SetTimer(1.0, false);
 		}
-		else if( bOnFire )
+		else if (bOnFire)
 		{
 			bOnFire = false;
 		}
@@ -1401,7 +1401,7 @@ state Dying
 // Prevented damage overlay from overriding burning overlay
 function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<DamageType> damageType, vector Momentum, optional int HitIndex)
 {
-	local Vector HitNormal;
+	local vector HitNormal;
 	local Name HitBone;
 	local float HitBoneDist;
 	local PlayerController PC;
@@ -1414,17 +1414,17 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 	// Call the modified version of the original Pawn playhit
 	OldPlayHit(Damage,InstigatedBy,HitLocation,DamageType,Momentum);
 
-	if ( Damage <= 0 )
+	if (Damage <= 0)
 		return;
 
 	PC = PlayerController(Controller);
-	bShowEffects = ( (Level.NetMode != NM_Standalone) || (Level.TimeSeconds - LastRenderTime < 2.5)
-					|| ((InstigatedBy != None) && (PlayerController(InstigatedBy.Controller) != None))
-					|| (PC != None) );
-	if ( !bShowEffects )
+	bShowEffects = ((Level.NetMode != NM_Standalone) || (Level.TimeSeconds - LastRenderTime < 2.5)
+					|| ((InstigatedBy != none) && (PlayerController(InstigatedBy.Controller) != none))
+					|| (PC != none));
+	if (!bShowEffects)
 		return;
 
-	if( DamageType.default.bLocationalHit )
+	if (DamageType.default.bLocationalHit)
 	{
 		HitBone = GetHitBoneFromIndex(HitIndex);
 		HitBoneDist = 0.0f;
@@ -1432,27 +1432,27 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 	else
 	{
 		HitLocation = Location;
-		HitBone = 'None';
+		HitBone = 'none';
 		HitBoneDist = 0.0f;
 	}
 
-	if( DamageType.default.bAlwaysSevers && DamageType.default.bSpecial )
+	if (DamageType.default.bAlwaysSevers && DamageType.default.bSpecial)
 		HitBone = 'head';
 
-	if( InstigatedBy != None )
-		HitNormal = Normal( Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0,0,2.8) );
+	if (InstigatedBy != none)
+		HitNormal = Normal(Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0,0,2.8));
 	else
-		HitNormal = Normal( Vect(0,0,1) + VRand() * 0.2 + vect(0,0,2.8) );
+		HitNormal = Normal(vect(0,0,1) + VRand() * 0.2 + vect(0,0,2.8));
 
-	if ( DamageType.Default.bCausesBlood && (!bRecentHit || (bRecentHit && (FRand() > 0.8))))
+	if (DamageType.Default.bCausesBlood && (!bRecentHit || (bRecentHit && (FRand() > 0.8))))
 	{
-		if ( !class'GameInfo'.static.NoBlood() ) //class'GameInfo'.static.UseLowGore()
+		if (!class'GameInfo'.static.NoBlood()) //class'GameInfo'.static.UseLowGore()
 		{
-			if ( Momentum != vect(0,0,0) )
+			if (Momentum != vect(0,0,0))
 				SplatRot = rotator(Normal(Momentum));
 			else
 			{
-				if ( InstigatedBy != None )
+				if (InstigatedBy != none)
 					SplatRot = rotator(Normal(Location - InstigatedBy.Location));
 				else
 					SplatRot = rotator(Normal(Location - HitLocation));
@@ -1462,10 +1462,10 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 		}
 	}
 
-	DoDamageFX( HitBone, Damage, DamageType, Rotator(HitNormal) );
+	DoDamageFX(HitBone, Damage, DamageType, Rotator(HitNormal));
 
-	if (DamageType.default.DamageOverlayMaterial != None && Damage > 0 && !bOnFire ) // additional check in case shield absorbed
-				SetOverlayMaterial( DamageType.default.DamageOverlayMaterial, DamageType.default.DamageOverlayTime, false );
+	if (DamageType.default.DamageOverlayMaterial != none && Damage > 0 && !bOnFire) // additional check in case shield absorbed
+				SetOverlayMaterial(DamageType.default.DamageOverlayMaterial, DamageType.default.DamageOverlayTime, false);
 }
 
 // Overridden for our limited burning screams group
@@ -1477,25 +1477,25 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 	// This doesn't really fit our system - Ramm
 	//PlayDirectionalHit(HitLocation);
 
-	if( Level.TimeSeconds - LastPainSound < MinTimeBetweenPainSounds )
+	if (Level.TimeSeconds - LastPainSound < MinTimeBetweenPainSounds)
 		return;
 
 	LastPainSound = Level.TimeSeconds;
 
-	if( HeadVolume.bWaterVolume )
+	if (HeadVolume.bWaterVolume)
 	{
-		if( DamageType.IsA('Drowned') )
-			PlaySound( GetSound(EST_Drown), SLOT_Pain,1.5*TransientSoundVolume );
+		if (DamageType.IsA('Drowned'))
+			PlaySound(GetSound(EST_Drown), SLOT_Pain,1.5*TransientSoundVolume);
 		else
-			PlaySound( GetSound(EST_HitUnderwater), SLOT_Pain,1.5*TransientSoundVolume );
+			PlaySound(GetSound(EST_HitUnderwater), SLOT_Pain,1.5*TransientSoundVolume);
 		return;
 	}
 
 	// for standalone and client
 	// Cooney
-	if ( Level.NetMode != NM_DedicatedServer )
+	if (Level.NetMode != NM_DedicatedServer)
 	{
-	   if ( class<ROWeaponDamageType>(DamageType) != none )
+	   if (class<ROWeaponDamageType>(DamageType) != none)
 	   {
 		   if (class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring == true
 			  && ROPlayer(Controller) != none)
@@ -1518,7 +1518,7 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 			   direction = direction >> InvRotation;
 
 			   jarscale = 0.1f + (Damage/50.0f);
-			   if ( jarscale > 1.0f ) jarscale = 1.0f;
+			   if (jarscale > 1.0f) jarscale = 1.0f;
 
 			   ROPlayer(Controller).PlayerJarred(direction,jarscale);
 		   }
@@ -1536,19 +1536,19 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 
 function Died(Controller Killer, class<DamageType> damageType, vector HitLocation)
 {
-	local Vector			TossVel;
+	local vector			TossVel;
 	local Trigger			T;
 	local NavigationPoint	N;
 	local float	DamageBeyondZero;
 	local vector HitDirection;
 	local DHGameReplicationInfo GRI;
 
-	if ( bDeleteMe || Level.bLevelChange || Level.Game == None )
+	if (bDeleteMe || Level.bLevelChange || Level.Game == none)
 		return; // already destroyed, or level is being cleaned up
 
-	if ( DamageType.default.bCausedByWorld && (Killer == None || Killer == Controller) && LastHitBy != None )
+	if (DamageType.default.bCausedByWorld && (Killer == none || Killer == Controller) && LastHitBy != none)
 		Killer = LastHitBy;
-	else if ( bOnFire ) // Person who starts the fire always gets the credit
+	else if (bOnFire) // Person who starts the fire always gets the credit
 	{
  	    Killer = FireStarter.Controller;
  	    damageType = FireDamageClass;
@@ -1556,18 +1556,18 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 
 	// mutator hook to prevent deaths
 	// WARNING - don't prevent bot suicides - they suicide when really needed
-	if ( Level.Game.PreventDeath(self, Killer, damageType, HitLocation) )
+	if (Level.Game.PreventDeath(self, Killer, damageType, HitLocation))
 	{
 		Health = max(Health, 1); //mutator should set this higher
 		return;
 	}
 
 	// Reset root bone if mantling when killed
-	if( bIsMantling )
+	if (bIsMantling)
 		ResetRootBone();
 
 	// Turn off the auxilary collision when the player dies
-	if (  AuxCollisionCylinder != none )
+	if (AuxCollisionCylinder != none)
 	{
 	    AuxCollisionCylinder.SetCollision(false,false,false);
 	}
@@ -1580,37 +1580,37 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 	if (DamageType == class'Suicided')
 	    DamageType = class'ROSuicided';
 
-	if ( Weapon != None && (DrivenVehicle == None || DrivenVehicle.bAllowWeaponToss) )
+	if (Weapon != none && (DrivenVehicle == none || DrivenVehicle.bAllowWeaponToss))
 	{
-		if ( Controller != None )
+		if (Controller != none)
 			Controller.LastPawnWeapon = Weapon.Class;
 		Weapon.HolderDied();
-		TossVel = Vector(GetViewRotation());
-		TossVel = TossVel * ((Velocity Dot TossVel) + 50) + Vect(0,0,200);
+		TossVel = vector(GetViewRotation());
+		TossVel = TossVel * ((Velocity Dot TossVel) + 50) + vect(0,0,200);
 		TossWeapon(TossVel);
 	}
 
 	DropWeaponInventory(TossVel);		// drops all weapons in inventory
 
-	if(CarriedRadioTrigger != none)		//Remove artillery trigger
+	if (CarriedRadioTrigger != none)		//Remove artillery trigger
 		DestroyRadioTrigger();
 
-	if(OwnedMortar != none)
+	if (OwnedMortar != none)
 		OwnedMortar.GotoState('PendingDestroy');
 
 	//Clear any mortar targetting information in the GRI and our own pawn.
-	if(DHPlayer(Controller) != none)
+	if (DHPlayer(Controller) != none)
 	{
-		if(DHPlayer(Controller).MortarHitLocation != vect(0,0,0))
+		if (DHPlayer(Controller).MortarHitLocation != vect(0,0,0))
 			DHPlayer(Controller).MortarHitLocation = vect(0,0,0);
 
-		if(DHPlayer(Controller).MortarTargetIndex != 255)
+		if (DHPlayer(Controller).MortarTargetIndex != 255)
 		{
 			GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-			if(GRI != none)
+			if (GRI != none)
 			{
-				if(GetTeamNum() == 0)
+				if (GetTeamNum() == 0)
 				{
 					GRI.GermanMortarTargets[DHPlayer(Controller).MortarTargetIndex].Controller = none;
 					GRI.GermanMortarTargets[DHPlayer(Controller).MortarTargetIndex].HitLocation = vect(0,0,0);
@@ -1632,13 +1632,13 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 		}
 	}
 
-	if ( DrivenVehicle != None )
+	if (DrivenVehicle != none)
 	{
 		Velocity = DrivenVehicle.Velocity;
 		DrivenVehicle.DriverDied();
 	}
 
-	if ( Controller != None )
+	if (Controller != none)
 	{
 		Controller.WasKilledBy(Killer);
 		Level.Game.Killed(Killer, Controller, self, damageType);
@@ -1646,15 +1646,15 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 	else
 		Level.Game.Killed(Killer, Controller(Owner), self, damageType);
 
-	DrivenVehicle = None;
+	DrivenVehicle = none;
 
-	if ( Killer != None )
+	if (Killer != none)
 		TriggerEvent(Event, self, Killer.Pawn);
 	else
-		TriggerEvent(Event, self, None);
+		TriggerEvent(Event, self, none);
 
 	// make sure to untrigger any triggers requiring player touch
-	if ( IsPlayerPawn() || WasPlayerPawn() )
+	if (IsPlayerPawn() || WasPlayerPawn())
 	{
 		PhysicsVolume.PlayerPawnDiedInVolume(self);
 		ForEach TouchingActors(class'Trigger',T)
@@ -1662,19 +1662,19 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 
 		// event for HoldObjectives
 		foreach TouchingActors(class'NavigationPoint', N)
-			if ( N.bReceivePlayerToucherDiedNotify )
-				N.PlayerToucherDied( Self );
+			if (N.bReceivePlayerToucherDiedNotify)
+				N.PlayerToucherDied(Self);
 	}
 
 	// remove powerup effects, etc.
 	RemovePowerups();
 
 	Velocity.Z *= 1.3;
-	if ( IsHumanControlled() )
+	if (IsHumanControlled())
 		PlayerController(Controller).ForceDeathUpdate();
-	if ( DHPlayer(Controller) != none
+	if (DHPlayer(Controller) != none
 		 && class<ROWeaponDamageType>(DamageType) != none
-		 && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring == true )
+		 && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring == true)
 	{
 		HitDirection = Location - HitLocation;
 		HitDirection.Z = 0.0f;
@@ -1682,26 +1682,26 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 
 	    DHPlayer(Controller).PlayerJarred(HitDirection,3.0f);
 	}
-	if ( (DamageType != None) && DamageType.default.bAlwaysGibs && !class'GameInfo'.static.UseLowGore())
+	if ((DamageType != none) && DamageType.default.bAlwaysGibs && !class'GameInfo'.static.UseLowGore())
 	{
-		if ( Level.NetMode == NM_DedicatedServer )
+		if (Level.NetMode == NM_DedicatedServer)
 		   DoDamageFX('obliterate',1010,class'RODiedInTankDamType', Rotation);
-		ChunkUp( Rotation, DamageType.default.GibPerterbation );
+		ChunkUp(Rotation, DamageType.default.GibPerterbation);
 	}
 	else if (DamageType != none && (Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold &&
 		!class'GameInfo'.static.UseLowGore())
 	{
-	    if ( Level.NetMode == NM_DedicatedServer )
+	    if (Level.NetMode == NM_DedicatedServer)
 	       DoDamageFX('obliterate',1010,class'RODiedInTankDamType', Rotation);
-		ChunkUp( rotator(GetTearOffMomemtum()), DamageType.default.GibPerterbation );
+		ChunkUp(rotator(GetTearOffMomemtum()), DamageType.default.GibPerterbation);
 	}
 	else
 	{
 		NetUpdateFrequency = Default.NetUpdateFrequency;
 		PlayDying(DamageType, HitLocation);
-		if ( Level.Game.bGameEnded )
+		if (Level.Game.bGameEnded)
 			return;
-		if ( !bPhysicsAnimUpdate && !IsLocallyControlled() )
+		if (!bPhysicsAnimUpdate && !IsLocallyControlled())
 			ClientDying(DamageType, HitLocation);
 	}
 }
@@ -1709,11 +1709,11 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 // Stop damage overlay from overriding burning overlay if necessary
 simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 {
-	WeaponState = GS_None;
-	if( PlayerController(Controller) != none )
+	WeaponState = GS_none;
+	if (PlayerController(Controller) != none)
 		PlayerController(Controller).bFreeCamera = false;
 
-	AmbientSound = None;
+	AmbientSound = none;
 	bCanTeleport = false; // sjs - fix karma going crazy when corpses land on teleporters
 	bReplicateMovement = false;
 	bTearOff = true;
@@ -1722,11 +1722,11 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 	HitDamageType = DamageType; // these are replicated to other clients
 	TakeHitLocation = HitLoc;
 
-	if ( DamageType != None && !bOnFire )
+	if (DamageType != none && !bOnFire)
 	{
-		if ( DamageType.Default.DeathOverlayMaterial != None && !class'GameInfo'.static.UseLowGore() )
+		if (DamageType.Default.DeathOverlayMaterial != none && !class'GameInfo'.static.UseLowGore())
 			SetOverlayMaterial(DamageType.Default.DeathOverlayMaterial, DamageType.default.DeathOverlayTime, true);
-		else if ( (DamageType.Default.DamageOverlayMaterial != None) && (Level.DetailMode != DM_Low) && !Level.bDropDetail )
+		else if ((DamageType.Default.DamageOverlayMaterial != none) && (Level.DetailMode != DM_Low) && !Level.bDropDetail)
 			SetOverlayMaterial(DamageType.Default.DamageOverlayMaterial, 2*DamageType.default.DamageOverlayTime, true);
 	}
 
@@ -1742,22 +1742,22 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 // Prevent damage overlay from overriding burnt overlay
 simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momentum, float Strength)
 {
-	local Vector shotDir;
-	local Vector PushLinVel, PushAngVel;
+	local vector shotDir;
+	local vector PushLinVel, PushAngVel;
 
-	if( (RagdollLifeSpan - LifeSpan) < 1.0 )
+	if ((RagdollLifeSpan - LifeSpan) < 1.0)
 	{
 		return;
 	}
 
-	if ( Level.NetMode != NM_DedicatedServer )
+	if (Level.NetMode != NM_DedicatedServer)
 	{
-		if ( class'GameInfo'.static.UseLowGore() )
+		if (class'GameInfo'.static.UseLowGore())
 			return;
 
-		if( DamageType != none )
+		if (DamageType != none)
 		{
-			if( DamageType.default.bKUseOwnDeathVel )
+			if (DamageType.default.bKUseOwnDeathVel)
 			{
 				RagDeathVel = DamageType.default.KDeathVel;
 				RagDeathUpKick = DamageType.default.KDeathUpKick;
@@ -1776,9 +1776,9 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momen
 		PushLinVel *= Strength;
 		PushAngVel *= Strength;
 
-		KSetSkelVel( PushLinVel, PushAngVel );
+		KSetSkelVel(PushLinVel, PushAngVel);
 
-		if ( DamageType.Default.DeathOverlayMaterial != None && !bOnFire )
+		if (DamageType.Default.DeathOverlayMaterial != none && !bOnFire)
 			SetOverlayMaterial(DamageType.Default.DeathOverlayMaterial, DamageType.default.DeathOverlayTime, true);
 	}
 }
@@ -1787,7 +1787,7 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momen
 // Without these, premature Pawn DeRes can cause emitter to not destroy and results in a GPF crash
 simulated function SpawnGibs(Rotator HitRotation, float ChunkPerterbation)
 {
-	if( FlameFX != None )
+	if (FlameFX != none)
 	{
 		FlameFX.Emitters[0].SkeletalMeshActor = none;
 		FlameFX.Emitters[1].SkeletalMeshActor = none;
@@ -1800,7 +1800,7 @@ simulated function SpawnGibs(Rotator HitRotation, float ChunkPerterbation)
 
 simulated event Destroyed()
 {
-	if( FlameFX != None )
+	if (FlameFX != none)
 	{
 		FlameFX.Emitters[0].SkeletalMeshActor = none;
 		FlameFX.Emitters[1].SkeletalMeshActor = none;
@@ -1825,22 +1825,22 @@ singular function GiveChute()
 	RI = P.GetRoleInfo();
 
 	// Make sure player doesn't already have a parachute
-	if (RI != None)
+	if (RI != none)
 	{
 		for (i = RI.GivenItems.Length - 1; i >= 0; i--)
 		{
 			ItemString = RI.GivenItems[i];
 
-			if( ItemString == "DH_Equipment.DH_ParachuteStaticLine")
-				bHasPSL = True;
-			else if( ItemString == "DH_Equipment.DH_ParachuteItem" )
-				bHasPI = True;
+			if (ItemString == "DH_Equipment.DH_ParachuteStaticLine")
+				bHasPSL = true;
+			else if (ItemString == "DH_Equipment.DH_ParachuteItem")
+				bHasPI = true;
 		}
 	}
 
-	if( !bHasPSL )
+	if (!bHasPSL)
 		GiveWeapon("DH_Equipment.DH_ParachuteStaticLine");
-	if( !bHasPI )
+	if (!bHasPI)
 		GiveWeapon("DH_Equipment.DH_ParachuteItem");
 
 }
@@ -1854,10 +1854,10 @@ function DestroyRadioTrigger()
 
 	if (TmpGRI != none)
 	{
-		if(CarriedRadioTrigger.TeamCanUse == AT_Allies)
-			TmpGRI.CarriedAlliedRadios[GRIRadioPos] = None;
-		if(CarriedRadioTrigger.TeamCanUse == AT_Axis)
-			TmpGRI.CarriedAxisRadios[GRIRadioPos] = None;
+		if (CarriedRadioTrigger.TeamCanUse == AT_Allies)
+			TmpGRI.CarriedAlliedRadios[GRIRadioPos] = none;
+		if (CarriedRadioTrigger.TeamCanUse == AT_Axis)
+			TmpGRI.CarriedAxisRadios[GRIRadioPos] = none;
 	}
 
 	CarriedRadioTrigger.Destroy();
@@ -1875,7 +1875,7 @@ function AddDefaultInventory()
 	local DHBot B;
 	local RORoleInfo RI;
 
-	if (Controller == None)
+	if (Controller == none)
 		return;
 
 	P = DHPlayer(Controller);
@@ -1883,7 +1883,7 @@ function AddDefaultInventory()
 
 	if (IsLocallyControlled())
 	{
-		if (P != None)
+		if (P != none)
 		{
 			RI = P.GetRoleInfo();
 
@@ -1902,7 +1902,7 @@ function AddDefaultInventory()
 			{
 				S = string(RI.Grenades[i].Item);
 
-				if(S != "")
+				if (S != "")
 					CreateInventory(S);
 			}
 
@@ -1912,7 +1912,7 @@ function AddDefaultInventory()
 			{
 			    if (T != "")
 			    {
-				    if( (S == "DH_Equipment.DH_RedSmokeWeapon" || S == "DH_Equipment.DH_OrangeSmokeWeapon") ^^ (T == "DH_Equipment.DH_RedSmokeWeapon" || T == "DH_Equipment.DH_OrangeSmokeWeapon") )
+				    if ((S == "DH_Equipment.DH_RedSmokeWeapon" || S == "DH_Equipment.DH_OrangeSmokeWeapon") ^^ (T == "DH_Equipment.DH_RedSmokeWeapon" || T == "DH_Equipment.DH_OrangeSmokeWeapon"))
 				        CreateInventory(T);
 			    }
 
@@ -1921,13 +1921,13 @@ function AddDefaultInventory()
 */
 
 
-			if (RI != None)
+			if (RI != none)
 			{
 				for (i = 0; i < RI.GivenItems.Length; i++)
 					CreateInventory(RI.GivenItems[i]);
 			}
 		}
-		else if (B != None)
+		else if (B != none)
 		{
 			S = B.GetPrimaryWeapon();
 
@@ -1952,7 +1952,7 @@ function AddDefaultInventory()
 
 			RI = B.GetRoleInfo();
 
-			if (RI != None)
+			if (RI != none)
 			{
 				for (i = 0; i < RI.GivenItems.Length; i++)
 					CreateInventory(RI.GivenItems[i]);
@@ -1965,11 +1965,11 @@ function AddDefaultInventory()
 	{
 		Level.Game.AddGameSpecificInventory(self);
 
-		if (P != None)
+		if (P != none)
 		{
 			RI = P.GetRoleInfo();
 
-			if (RI != None)
+			if (RI != none)
 			{
 				for (i = RI.GivenItems.Length - 1; i >= 0; i--)
 					CreateInventory(RI.GivenItems[i]);
@@ -1992,7 +1992,7 @@ function AddDefaultInventory()
 			{
 				S = string(RI.Grenades[i].Item);
 
-				if(S != "")
+				if (S != "")
 				{
 					CreateInventory(S);
 				}
@@ -2013,10 +2013,10 @@ function AddDefaultInventory()
 	NetUpdateTime = Level.TimeSeconds - 1;
 
 	// HACK FIXME
-	if (Inventory != None)
+	if (Inventory != none)
 		Inventory.OwnerEvent('LoadOut');
 
-	if( Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer && IsLocallyControlled())
+	if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer && IsLocallyControlled())
 	{
 		bRecievedInitialLoadout = true;
 		Controller.ClientSwitchToBestWeapon();
@@ -2034,29 +2034,29 @@ function bool DHResupplyExplosiveWeapons(bool bHasEnemyNade, bool bHasEnemySmoke
 	local bool bDidResupply;
 	local class<Inventory> InventoryClass;
 
-	if (Controller == None)
+	if (Controller == none)
 		return false;
 
 	P = DHPlayer(Controller);
 
 	// For now we don't give bots nades until they know how to use them
-	if( P == none )
+	if (P == none)
 		return false;
 
 	S = P.GetGrenadeWeapon();
 
-	if( S != "" )
+	if (S != "")
 	{
-		if( !bHasEnemyNade )
+		if (!bHasEnemyNade)
 			InventoryClass = Level.Game.BaseMutator.GetInventoryClass(S);
-		else if( S == "DH_Equipment.DH_RedSmokeWeapon" || S == "DH_Equipment.DH_OrangeSmokeWeapon" )
+		else if (S == "DH_Equipment.DH_RedSmokeWeapon" || S == "DH_Equipment.DH_OrangeSmokeWeapon")
 		{
-			if( !bHasEnemySmokeNade )
+			if (!bHasEnemySmokeNade)
 				InventoryClass = Level.Game.BaseMutator.GetInventoryClass(S);
 		}
 	}
 
-	if( (InventoryClass!=None) && (FindInventoryType(InventoryClass)==None) )
+	if ((InventoryClass!=none) && (FindInventoryType(InventoryClass)==none))
 	{
 		CreateInventory(S);
 		bDidResupply=true;
@@ -2065,18 +2065,18 @@ function bool DHResupplyExplosiveWeapons(bool bHasEnemyNade, bool bHasEnemySmoke
 	InventoryClass = none;
 	S = P.GetSecGrenadeWeapon();
 
-	if( S != "" )
+	if (S != "")
 	{
-		if( !bHasEnemyNade )
+		if (!bHasEnemyNade)
 			InventoryClass = Level.Game.BaseMutator.GetInventoryClass(S);
-		else if( S == "DH_Equipment.DH_RedSmokeWeapon" || S == "DH_Equipment.DH_OrangeSmokeWeapon" )
+		else if (S == "DH_Equipment.DH_RedSmokeWeapon" || S == "DH_Equipment.DH_OrangeSmokeWeapon")
 		{
-			if( !bHasEnemySmokeNade )
+			if (!bHasEnemySmokeNade)
 				InventoryClass = Level.Game.BaseMutator.GetInventoryClass(S);
 		}
 	}
 
-	if( (InventoryClass!=None) && (FindInventoryType(InventoryClass)==None) )
+	if ((InventoryClass!=none) && (FindInventoryType(InventoryClass)==none))
 	{
 		CreateInventory(S);
 		bDidResupply=true;
@@ -2084,7 +2084,7 @@ function bool DHResupplyExplosiveWeapons(bool bHasEnemyNade, bool bHasEnemySmoke
 
 	RI = P.GetRoleInfo();
 
-	if (RI != None)
+	if (RI != none)
 	{
 		for (i = RI.GivenItems.Length - 1; i >= 0; i--)
 		{
@@ -2093,14 +2093,14 @@ function bool DHResupplyExplosiveWeapons(bool bHasEnemyNade, bool bHasEnemySmoke
 
 			// Checks Given Item against a String before it's converted to a class to avoid cyclic dependency
 			// DH_Equipment and DH_Weapons are dependent on DH_Engine already and to check against their classes requires making them dependencies also, which is impossible
-			if( (ItemString != "DH_Equipment.DH_ParachuteItem") && (ItemString != "DH_Equipment.DH_ParachuteStaticLine")
+			if ((ItemString != "DH_Equipment.DH_ParachuteItem") && (ItemString != "DH_Equipment.DH_ParachuteStaticLine")
 			 && (ItemString != "DH_ATWeapons.DH_BazookaWeapon") && (ItemString != "DH_ATWeapons.DH_PanzerschreckWeapon") && (ItemString != "DH_ATWeapons.DH_PIATWeapon")
 			 && (ItemString != "DH_Mortars.DH_M2MortarWeapon") && (ItemString != "DH_Mortars.DH_Kz8cmGrW42Weapon"))
 			{
 			    InventoryClass = Level.Game.BaseMutator.GetInventoryClass(RI.GivenItems[i]);
 			}
 
-			if(	(InventoryClass!=None) && (FindInventoryType(InventoryClass)==None) )
+			if (	(InventoryClass!=none) && (FindInventoryType(InventoryClass)==none))
 			{
 			    CreateInventory(RI.GivenItems[i]);
 			    bDidResupply=true;
@@ -2123,24 +2123,24 @@ function TakeFallingDamage()
 
 	if (Velocity.Z < -0.5 * MaxFallSpeed)
 	{
-		if ( Role == ROLE_Authority )
+		if (Role == ROLE_Authority)
 		{
 		    MakeNoise(1.0);
 		    if (Velocity.Z < -1 * MaxFallSpeed)
 		    {
 				EffectiveSpeed = Velocity.Z;
-				if ( TouchingWaterVolume() )
+				if (TouchingWaterVolume())
 					EffectiveSpeed = FMin(0, EffectiveSpeed + 100);
-				if ( EffectiveSpeed < -1 * MaxFallSpeed )
+				if (EffectiveSpeed < -1 * MaxFallSpeed)
 				{
-					TakeDamage(-100 * (1.5 * EffectiveSpeed + MaxFallSpeed)/MaxFallSpeed, None, Location, vect(0,0,0), class'Fell');
+					TakeDamage(-100 * (1.5 * EffectiveSpeed + MaxFallSpeed)/MaxFallSpeed, none, Location, vect(0,0,0), class'Fell');
 					// Damaged the legs
 					UpdateDamageList(254);
 
 				}
 		    }
 		}
-		if ( Controller != None )
+		if (Controller != none)
 		{
 			Shake = FMin(1, -1 * Velocity.Z/MaxFallSpeed);
 			Controller.DamageShake(Shake);
@@ -2148,22 +2148,22 @@ function TakeFallingDamage()
 	}
 	else if (TotalSpeed > 0.75 * MinHurtSpeed)
 	{
-		if ( Role == ROLE_Authority )
+		if (Role == ROLE_Authority)
 		{
 		    MakeNoise(1.0);
 		    if (TotalSpeed > MinHurtSpeed)
 		    {
-				if ( TouchingWaterVolume() )
+				if (TouchingWaterVolume())
 					TotalSpeed = FMin(0, TotalSpeed + 100);
-				if ( TotalSpeed > MinHurtSpeed )
+				if (TotalSpeed > MinHurtSpeed)
 				{
-					TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, None, Location, vect(0,0,0), class'DH_ExitMovingVehicleDamType');
+					TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0,0,0), class'DH_ExitMovingVehicleDamType');
 					// Damaged the legs
 					UpdateDamageList(254);
 				}
 		    }
 		}
-		if ( Controller != None )
+		if (Controller != none)
 		{
 			Shake = FMin(1, TotalSpeed/MinHurtSpeed);
 			Controller.DamageShake(Shake);
@@ -2180,9 +2180,9 @@ function HandleAssistedReload()
 	local name PlayerAnim;
 
 	// Set the anim blend time so the server will make this player relevant for third person reload sounds to be heard
-	if( Level.NetMode != NM_StandAlone )
+	if (Level.NetMode != NM_StandAlone)
 	{
-		if (WeaponAttachment != None)
+		if (WeaponAttachment != none)
 		{
 			PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
 
@@ -2199,7 +2199,7 @@ simulated function PlayAssistedReload()
 	local name PlayerAnim;
 	local name WeaponAnim;
 
-	if (WeaponAttachment != None)
+	if (WeaponAttachment != none)
 	{
 	 	PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
 
@@ -2261,20 +2261,20 @@ simulated function PlayMantle()
     bPhysicsAnimUpdate = false;
 	LockRootMotion(1); // Lock the rendering of the root bone to where it is (it will still translate for calculation purposes)
 
-    if( IsLocallyControlled() )
+    if (IsLocallyControlled())
 		PlayOwnedSound(MantleSound, SLOT_Interact, 1.0,, 10);
 
 	Anim = SetMantleAnim();
     AnimTimer = GetAnimDuration(Anim, 1.0) + 0.1;
 
-	if( Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !IsLocallyControlled()) )
+	if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !IsLocallyControlled()))
 	{
 		SetTimer(AnimTimer,false);
 	}
 	else
 	{
 		// Instigator gets a slightly longer blend time to allow other clients to better sync animation with movement
-		if( Role < ROLE_Authority && IsLocallyControlled() )
+		if (Role < ROLE_Authority && IsLocallyControlled())
 		{
 			SetTimer(AnimTimer + 0.05,false);
 			PlayAnim(Anim,1.0,0.15,0);
@@ -2286,9 +2286,9 @@ simulated function PlayMantle()
 		}
 	}
 
-	if( bMantleDebug )
+	if (bMantleDebug)
 	{
-		if(Role == ROLE_Authority)
+		if (Role == ROLE_Authority)
 		{
 			ClientMessage("SERVER Playing anim: "@Anim);
 			log("SERVER Playing anim: "@Anim);
@@ -2303,44 +2303,44 @@ simulated function PlayMantle()
 
 simulated function PlayEndMantle()
 {
-	if( Weapon != none && WeaponAttachment != none )
+	if (Weapon != none && WeaponAttachment != none)
 	{
-		if( bCrouchMantle )
+		if (bCrouchMantle)
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayAnim(WeaponAttachment.PA_IdleCrouchAnim, 1.0, 0, 0);
 			SetCollisionSize(CollisionRadius,CrouchHeight);
 			//LockRootMotion(0);
 		}
 		else
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayAnim(WeaponAttachment.PA_IdleWeaponAnim, 1.0, 0.1, 0);
 
-			if( IsLocallyControlled() )
+			if (IsLocallyControlled())
 				PlayOwnedSound(StandToCrouchSound, SLOT_Misc, 1.0,, 10);
 		}
 	}
 	else
 	{
-		if( bCrouchMantle )
+		if (bCrouchMantle)
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayAnim(IdleCrouchAnim, 1.0, 0, 0);
 			SetCollisionSize(CollisionRadius,CrouchHeight);
 			//LockRootMotion(0);
 		}
 		else
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayAnim(IdleWeaponAnim, 1.0, 0.1, 0);
 
-			if( IsLocallyControlled() )
+			if (IsLocallyControlled())
 				PlayOwnedSound(StandToCrouchSound, SLOT_Misc, 1.0,, 10);
 		}
 	}
 
-	//if( Role == ROLE_Authority )
+	//if (Role == ROLE_Authority)
 		SetTimer(0.1,false);
 
 //	bPhysicsAnimUpdate = true;
@@ -2350,19 +2350,19 @@ simulated function PlayEndMantle()
 // Run this here, after the new animation has had a chance to change the root position before we lock it
 simulated function ResetRootBone()
 {
-	if( bCrouchMantle )
+	if (bCrouchMantle)
 	{
 		SetCollisionSize(CollisionRadius,default.CollisionHeight);
 		CrouchMantleAdjust();
 	}
 
 	bPhysicsAnimUpdate = true;
-	//if( !bCrouchMantle )
+	//if (!bCrouchMantle)
 		LockRootMotion(0);
 
 	//	CrouchMantlePrePivot();
 
-	if( bCrouchMantle && Physics == PHYS_Walking )
+	if (bCrouchMantle && Physics == PHYS_Walking)
 		ShouldCrouch(true);
 }
 
@@ -2381,7 +2381,7 @@ simulated event SetAnimAction(name NewAction)
 		// Since you can't call SetAnimAction for the same action twice in a row (it won't get replicated)
 		// For animations that need to happen twice in a row (such as working the bolt of a rifle)
 		// we alternate animaction names for these actions so they replicate properly
-		if( Level.Netmode == NM_Client )
+		if (Level.Netmode == NM_Client)
 		{
 			UsedAction = GetAnimActionName(NewAction);
 		}
@@ -2389,7 +2389,7 @@ simulated event SetAnimAction(name NewAction)
 		{
 			UsedAction = NewAction;
 
-			if( AnimAction == NewAction )
+			if (AnimAction == NewAction)
 			{
 				NewAction = GetAltName(NewAction);
 			}
@@ -2398,141 +2398,141 @@ simulated event SetAnimAction(name NewAction)
 	    AnimAction = NewAction;
 
 	    // Weapon switching actions
-		if ( IsDrawAnim(UsedAction) )
+		if (IsDrawAnim(UsedAction))
 		{
 			AnimBlendParams(1,1.0 , 0.0, 0.2, SpineBone1);
 			AnimBlendParams(1,1.0, 0.0, 0.2, SpineBone2);
-			PlayUpperBodyAnim( UsedAction, 1.0, 0.0 );
+			PlayUpperBodyAnim(UsedAction, 1.0, 0.0);
 		 }
-		else if ( IsPutAwayAnim(UsedAction) )
+		else if (IsPutAwayAnim(UsedAction))
 		{
 			AnimBlendParams(1,1.0 , 0.0, 0.2, SpineBone1);
 			AnimBlendParams(1,1.0, 0.0, 0.2, SpineBone2);
 			WeaponState = GS_IgnoreAnimend;
-			PlayUpperBodyAnim( UsedAction, 1.0, 0.1, GetAnimDuration(AnimAction,1.0) * 2);
+			PlayUpperBodyAnim(UsedAction, 1.0, 0.1, GetAnimDuration(AnimAction,1.0) * 2);
 
 		}
-		else if ( UsedAction == 'ClearAnims' )
+		else if (UsedAction == 'ClearAnims')
 		{
    			AnimBlendToAlpha(1, 0.0, 0.12);
 		}
-		else if ( UsedAction == 'TossedWeapon' )
+		else if (UsedAction == 'TossedWeapon')
 		{
 			SetWeaponAttachment(none);
 		}
-		else if ( UsedAction == 'DoStandardReload' )
+		else if (UsedAction == 'DoStandardReload')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayStandardReload();
 		}
-		else if ( UsedAction == 'DoAssistedReload' )
+		else if (UsedAction == 'DoAssistedReload')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayAssistedReload();
 		}
-		else if ( UsedAction == 'DoBayoAttach' )
+		else if (UsedAction == 'DoBayoAttach')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayBayonetAttach();
 		}
-		else if ( UsedAction == 'DoBayoDetach' )
+		else if (UsedAction == 'DoBayoDetach')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayBayonetDetach();
 		}
-		else if ( UsedAction == 'DoBipodDeploy' )
+		else if (UsedAction == 'DoBipodDeploy')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayBipodDeploy();
 		}
-		else if ( UsedAction == 'DoBipodUnDeploy' )
+		else if (UsedAction == 'DoBipodUnDeploy')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayBipodUnDeploy();
 		}
-		else if ( UsedAction == 'DoBoltAction' )
+		else if (UsedAction == 'DoBoltAction')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayBoltAction();
 		}
-		else if ( UsedAction == 'DoLoopingReload' )
+		else if (UsedAction == 'DoLoopingReload')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayStartReloading();
 		}
-		else if ( UsedAction == 'DoReloadEnd' )
+		else if (UsedAction == 'DoReloadEnd')
 		{
-			if( Level.NetMode != NM_DedicatedServer )
+			if (Level.NetMode != NM_DedicatedServer)
 				PlayStopReloading();
 		}
-		else if ( UsedAction == 'StartCrawling')
+		else if (UsedAction == 'StartCrawling')
 		{
 			bWaitForAnim = true;
 			GotoState('StartProning');
 		}
-		else if ( UsedAction == 'EndCrawling')
+		else if (UsedAction == 'EndCrawling')
 		{
 			bWaitForAnim = true;
 			GotoState('EndProning');
 		}
-		else if ( UsedAction == 'DiveToProne')
+		else if (UsedAction == 'DiveToProne')
 		{
 			bWaitForAnim = true;
 			GotoState('DivingToProne');
 		}
-		else if ( UsedAction == 'ProneToCrouch')
+		else if (UsedAction == 'ProneToCrouch')
 		{
 			bWaitForAnim = true;
 			GotoState('CrouchingFromProne');
 		}
-		else if ( UsedAction == 'CrouchToProne')
+		else if (UsedAction == 'CrouchToProne')
 		{
 			bWaitForAnim = true;
 			GotoState('ProningFromCrouch');
 		}
 		// MANTLING
-	    else if ( UsedAction == 'StartMantle')
+	    else if (UsedAction == 'StartMantle')
 		{
-			if( Role == ROLE_Authority || !IsLocallyControlled() )
+			if (Role == ROLE_Authority || !IsLocallyControlled())
 			{
 				PlayMantle();
 			}
 			GotoState('Mantling');
 		}
-		else if ( UsedAction == 'EndMantle')
+		else if (UsedAction == 'EndMantle')
 		{
-			if( Role == ROLE_Authority || !IsLocallyControlled() )
+			if (Role == ROLE_Authority || !IsLocallyControlled())
 			{
 				PostMantle();
 				PlayEndMantle();
 			}
 			//GoToState('');
 		}
-		else if ( UsedAction == 'ResetRoot')
+		else if (UsedAction == 'ResetRoot')
 		{
 			ResetRootBone();
 			GoToState('');
 		}
-		else if ( (Physics == PHYS_None)
-			|| ((Level.Game != None) && Level.Game.IsInState('MatchOver')) )
+		else if ((Physics == PHYS_none)
+			|| ((Level.Game != none) && Level.Game.IsInState('MatchOver')))
 		{
 			PlayAnim(UsedAction,,0.1);
 			AnimBlendToAlpha(1,0.0,0.05);
 		}
-		else if ( (Physics == PHYS_Falling) || ((Physics == PHYS_Walking) && (Velocity.Z != 0)) )
+		else if ((Physics == PHYS_Falling) || ((Physics == PHYS_Walking) && (Velocity.Z != 0)))
 		{
-			if ( CheckTauntValid(UsedAction) )
+			if (CheckTauntValid(UsedAction))
 			{
-				if (WeaponState == GS_None || WeaponState == GS_Ready)
+				if (WeaponState == GS_none || WeaponState == GS_Ready)
 				{
 					AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
 					PlayAnim(UsedAction,, 0.1, 1);
 					WeaponState = GS_Ready;
 				}
 			}
-			else if ( PlayAnim(UsedAction) )
+			else if (PlayAnim(UsedAction))
 			{
-				if ( Physics != PHYS_None )
+				if (Physics != PHYS_none)
 				{
 					bWaitForAnim = true;
 				}
@@ -2542,14 +2542,14 @@ simulated event SetAnimAction(name NewAction)
 				AnimAction = '';
 			}
 		}
-		else if (bIsIdle && !bIsCrouched && (Bot(Controller) == None) ) // standing taunt
+		else if (bIsIdle && !bIsCrouched && (Bot(Controller) == none)) // standing taunt
 		{
 			PlayAnim(UsedAction,,0.1);
 			AnimBlendToAlpha(1,0.0,0.05);
 		}
 		else // running taunt
 		{
-			if (WeaponState == GS_None || WeaponState == GS_Ready)
+			if (WeaponState == GS_none || WeaponState == GS_Ready)
 			{
 				AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
 				PlayAnim(UsedAction,, 0.1, 1);
@@ -2570,7 +2570,7 @@ simulated event SetAnimAction(name NewAction)
 simulated function HUDCheckMantle()
 {
 	// Only run this on the client, otherwise we'll bring servers to their knees
-	if( IsLocallyControlled() )
+	if (IsLocallyControlled())
 		bCanMantle = CanMantle();
 }
 
@@ -2584,7 +2584,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
 	DHW = DHWeapon(Weapon);
 
-	if ( bOnFire || !bForceTest && ( Velocity != vect(0,0,0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') || (Level.TimeSeconds + 1 < NextJumpTime) || Stamina < 2
+	if (bOnFire || !bForceTest && (Velocity != vect(0,0,0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') || (Level.TimeSeconds + 1 < NextJumpTime) || Stamina < 2
 	 || bIsMantling || Physics != PHYS_Walking || bBipodDeployed || (Weapon != none && (Weapon.bUsingSights || !Weapon.IsInState('Idle') ||
 	 (DHW != none && !DHW.WeaponAllowMantle())))))
 	{
@@ -2592,7 +2592,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 	}
 	else
 	{
-		if( bMantleDebug && bForceTest )
+		if (bMantleDebug && bForceTest)
 		{
 			ClientMessage("Client mantle test is being forced");
 			log("Client mantle test is being forced");
@@ -2612,13 +2612,13 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 		EndLoc = StartLoc + X * 15;
 
 		// This is the initial trace to see if there's anything in front of the pawn
-		if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, False, Extent) == None ) // * 50
+		if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) == none) // * 50
 		{
 			return false;
 		}
 
 		/*Spawn(class 'RODebugTracer',self,,StartLoc,NonPitchRot);
-		Spawn(class 'RODebugTracer',self,,StartLoc + Vector(NonPitchRot) * 50,NonPitchRot);
+		Spawn(class 'RODebugTracer',self,,StartLoc + vector(NonPitchRot) * 50,NonPitchRot);
 		Spawn(class 'RODebugTracer',self,,HitLoc,Rotator(HitNorm));
 		Spawn(class 'RODebugTracer',self,,StartLoc + vect(0,0,27),NonPitchRot);
 		Spawn(class 'RODebugTracer',self,,StartLoc - vect(0,0,27),NonPitchRot);*/
@@ -2638,7 +2638,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 		StartLoc.Z = Location.Z + 31.1; // ~89 uu above ground, roughly shoulder height - 0.55 higher than max climb height
 		EndLoc = StartLoc + X * 30;
 
-		if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none )
+		if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
 		{
 			//Spawn(class 'RODebugTracer',self,,HitLoc,Rotator(HitNorm));
 			//ClientMessage("Object is too high to mantle");
@@ -2650,14 +2650,14 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 		EndLoc.Z = Location.Z - 22; // 36 uu above ground, which is just above MAXSTEPHEIGHT - NOTE: testing shows that you can actually step higher than MAXSTEPHEIGHT... Nevermind, this is staying as-is
 
 		// Trace downward to find the top of the object - coming from above to prevent false positives from uneven surfaces
-		if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, False, Extent) == none )
+		if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) == none)
 		{
 		    //ClientMessage("Downward trace failed to find the top of the object");
 			return false;
 		}
 
 		// Check whether the object is sloped too steeply to stand on
-		if( HitNorm.Z < MINFLOORZ )
+		if (HitNorm.Z < MINFLOORZ)
 		{
 			//ClientMessage("Surface is too steep to stand on");
 			return false;
@@ -2671,7 +2671,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 		EndLoc.Z += CollisionHeight * 2;
 
 		// Trace back up to ensure that there's enough room to stand on the object
-		if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, False, Extent) != none )
+		if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
 		{
 		    //ClientMessage("Upward trace was obstructed - we can't stand!");
 
@@ -2679,7 +2679,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 			EndLoc.Z += CrouchHeight * 2;
 
 			// if we can't stand, see if there's room to crouch on it instead
-			if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none )
+			if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
 		    {
 		        //ClientMessage("Upward trace was obstructed - we can't fit by crouching!");
 				return false;
@@ -2697,7 +2697,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 		/*StartLoc = Location;
         EndLoc = MantleEndPoint;
 
-		if( bCrouchMantle )
+		if (bCrouchMantle)
 		{
 			Extent.Z = CrouchHeight - 1; // Allow for inaccurate endpoint reporting
 			EndLoc.Z = MantleEndPoint.Z + CrouchHeight;
@@ -2712,7 +2712,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
 		// Ensure that there's a clear path for the player to climb through to the final location
 		// by doing a roughly player sized trace from the start location to the final location at the latter's height
-		if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, False, Extent) != none )
+		if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
 		{
 			//ClientMessage("Path check obstructed - climbing path is blocked");
 			return false;
@@ -2724,9 +2724,9 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 		// Only run when server initiates an actual mantle
 		// -----
 
-		if( bActualMantle )
+		if (bActualMantle)
 		{
-			if(bMantleDebug && IsLocallyControlled())
+			if (bMantleDebug && IsLocallyControlled())
 			{
 				ClientMessage("------------- Start Mantle Debug -------------");
 				log("------------- Start Mantle Debug -------------");
@@ -2742,11 +2742,11 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 			StartLoc.Z = MantleEndPoint.Z - 1;
 			EndLoc = StartLoc + X * 30;
 
-			for( i=0; i<5; i++ )
+			for(i=0; i<5; i++)
 			{
 				//Spawn(class 'RODebugTracer',self,,EndLoc,NonPitchRot);
 
-				if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none )
+				if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
 				{
 		            //ClientMessage("Hit object at reported MantleEndPoint - "@i);
 		            //Spawn(class 'RODebugTracer',self,,HitLoc,Rotator(HitNorm));
@@ -2761,9 +2761,9 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
 			MantleHeight = (HitLoc.Z + 58) - Location.Z;
 
-			if( bMantleDebug )
+			if (bMantleDebug)
 			{
-				if(Role == ROLE_Authority)
+				if (Role == ROLE_Authority)
 				{
 					ClientMessage("SERVER MantleHeight (approx): "@MantleHeight);
 					log("SERVER MantleHeight (approx): "@MantleHeight);
@@ -2788,20 +2788,20 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
 
 			// if stepping up a low object into a non-confined space, no need to "crouch"
-			/*if( MantleHeight < 45 )
+			/*if (MantleHeight < 45)
 			{
 				Extent.Z =  56; // Half of 112, which is min for standing
 				StartLoc.Z += 8;
 				EndLoc.Z += 8;
 
 				// Is space high enough to stand?
-				if( Trace(HitLoc, HitNorm, EndLoc, StartLoc, False, Extent) != none )
+				if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
 				{
 					MantleEndPoint.Z += CrouchHeight + 1;
 				}
 				else
 				{
-					//bUprightMantle = True;
+					//bUprightMantle = true;
 					MantleEndPoint.Z += CollisionHeight;
 				}
 			}
@@ -2811,7 +2811,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 			MantleMidPoint = Location;
 			MantleMidPoint.Z = MantleEndPoint.Z - (MantleHeight / 2);
 
-			bReachedMidPoint = False;
+			bReachedMidPoint = false;
 
 			MantleBobDepthMod = 1 - MantleHeight / 100;*/
 
@@ -2820,19 +2820,19 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 			bCanMantle = false; // Removes icon while mantling
 			MantleYaw = Rotation.Yaw;
 
-		   	if( IsLocallyControlled() )
+		   	if (IsLocallyControlled())
 				MantleLowerWeapon();
 
 			bSetMantleEyeHeight = true;
 
-			if( Role == ROLE_Authority )
+			if (Role == ROLE_Authority)
 			{
-			    if ( (Level.Game != None) && (Level.Game.GameDifficulty > 2) )
+			    if ((Level.Game != none) && (Level.Game.GameDifficulty > 2))
 				    MakeNoise(0.1 * Level.Game.GameDifficulty);
-			    if ( bCountJumps && (Inventory != None) )
+			    if (bCountJumps && (Inventory != none))
 				    Inventory.OwnerEvent('Jumped');
 
-			    if( Weapon != none )
+			    if (Weapon != none)
 			    {
 				    Weapon.NotifyOwnerJumped();
 			    }
@@ -2844,7 +2844,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 		Player = DHPlayer(Controller);
 
 		//Mantling hint, yay.
-		if(Player != none)
+		if (Player != none)
 			Player.QueueHint(1, true);
 
 		return true;
@@ -2859,7 +2859,7 @@ function PreMantle()
 	//SetPhysics(PHYS_RootMotion);
 	SetPhysics(PHYS_Flying);
 	bCollideWorld = false;
-	WeaponAttachment.SetDrawType(DT_None);
+	WeaponAttachment.SetDrawType(DT_none);
 	AirSpeed = default.GroundSpeed;
 	AccelRate = 50000;
 
@@ -2867,10 +2867,10 @@ function PreMantle()
 //	MantleStartLocation = Location;
 //	MantleStartLocation.Z += 25;
 
-	if( Role < ROLE_Authority )
+	if (Role < ROLE_Authority)
 		PlayMantle();
 
-	if( Role == ROLE_Authority && IsLocallyControlled() )
+	if (Role == ROLE_Authority && IsLocallyControlled())
     {
 		HandleMantle();
 		bMantleAnimRun = true;
@@ -2886,18 +2886,18 @@ function DoMantle(float DeltaTime)
 	RootDelta = GetRootLocationDelta();
 
 	// This prevents us from starting the anim on other clients until the movement has started replicating, to maintain anim sync
-   	if( Role == ROLE_Authority && !bMantleAnimRun && Physics == PHYS_Flying && Velocity != vect(0,0,0) )
+   	if (Role == ROLE_Authority && !bMantleAnimRun && Physics == PHYS_Flying && Velocity != vect(0,0,0))
    	{
 	    HandleMantle();
 	    bMantleAnimRun = true;
 	}
 
-	if(Physics == PHYS_RootMotion)
+	if (Physics == PHYS_RootMotion)
 		MoveSmooth(RootDelta);
 
-	if( IsLocallyControlled() && Physics == PHYS_Flying )
+	if (IsLocallyControlled() && Physics == PHYS_Flying)
 	{
-		if( RootDelta == vect(0,0,0) )
+		if (RootDelta == vect(0,0,0))
 		{
 			NewAcceleration = vect(0,0,0);
 		}
@@ -2909,7 +2909,7 @@ function DoMantle(float DeltaTime)
 			NewAcceleration -= Acceleration; // The engine seems to treat new acceleration values as cumulative, not absolute, so this anticipates that
 		}
 
-		if( NewAcceleration.Z > 0 && (MantleHeight >= 80 || bCrouchMantle) )
+		if (NewAcceleration.Z > 0 && (MantleHeight >= 80 || bCrouchMantle))
 			NewAcceleration.Z += 500; // Try to compensate for the slight errors caused by varying DeltaTime
 	}
 
@@ -2919,17 +2919,17 @@ function DoMantle(float DeltaTime)
 
 function PostMantle()
 {
-	if( bCrouchMantle )
+	if (bCrouchMantle)
 		SetCollisionSize(CollisionRadius,CrouchHeight);
 
 	bIsMantling = false;
 	bCollideWorld = true;
 	SetPhysics(PHYS_Falling);
 
-	if( IsLocallyControlled() )
+	if (IsLocallyControlled())
 		MantleRaiseWeapon();
 
-	if( !bCancelledMantle )
+	if (!bCancelledMantle)
 		Velocity = vect(0,0,0);
 
 	NewAcceleration = vect(0,0,0);
@@ -2943,9 +2943,9 @@ function PostMantle()
 
 	bMantleAnimRun = false;
 
-	if( bMantleDebug )
+	if (bMantleDebug)
 	{
-		if(Role == ROLE_Authority)
+		if (Role == ROLE_Authority)
 		{
 			ClientMessage("SERVER Running PostMantle");
 			log("SERVER Running PostMantle");
@@ -2962,26 +2962,26 @@ function PostMantle()
 // This should catch instances of packet loss or screenshots that cause iffy behaviour
 function TestMantleSuccess()
 {
-	if( bCrouchMantle )
+	if (bCrouchMantle)
 		MantleEndPoint += CrouchHeight * vect(0,0,1);
 	else
 		MantleEndPoint += CollisionHeight * vect(0,0,1);
 
-	if( Location.Z < MantleEndPoint.Z - 10 || Location.Z > MantleEndPoint.Z + 15 || VSize(Location - MantleEndPoint) > CollisionRadius * 2.5 )
+	if (Location.Z < MantleEndPoint.Z - 10 || Location.Z > MantleEndPoint.Z + 15 || VSize(Location - MantleEndPoint) > CollisionRadius * 2.5)
 	{
-		if( bMantleDebug )
+		if (bMantleDebug)
 		{
-			if( Location.Z < MantleEndPoint.Z - 10 )
+			if (Location.Z < MantleEndPoint.Z - 10)
 			{
 				ClientMessage("We've finished too low");
 				log("We've finished too low");
 			}
-			else if( Location.Z > MantleEndPoint.Z + 15 )
+			else if (Location.Z > MantleEndPoint.Z + 15)
 			{
 				ClientMessage("We've finished too high");
 				log("We've finished too high");
 			}
-			else if( VSize(Location - MantleEndPoint) > CollisionRadius * 2.5 )
+			else if (VSize(Location - MantleEndPoint) > CollisionRadius * 2.5)
 			{
 				ClientMessage("We've finished too far away");
 				log("We've finished too far away");
@@ -2998,19 +2998,19 @@ function TestMantleSuccess()
 
 simulated function CancelMantle()
 {
-	local Vector tmpVel;
+	local vector tmpVel;
 
 	SetTimer(0.0, false);
 
 	// Make sure our feet haven't clipped through the ground, else we'll fall through the world
-	if( !FastTrace((Location - (vect(0,0,1) * CollisionHeight)),Location) )
+	if (!FastTrace((Location - (vect(0,0,1) * CollisionHeight)),Location))
 		MoveSmooth(vect(0,0,20));
 
 	// To prevent people from falling through scenery, give them a shove backwards
-	if( bCrouchMantle )
-		tmpVel = Normal(Vector(Rotation)) * -150;
+	if (bCrouchMantle)
+		tmpVel = Normal(vector(Rotation)) * -150;
 	else
-		tmpVel = Normal(Vector(Rotation)) * -100;
+		tmpVel = Normal(vector(Rotation)) * -100;
 
 	tmpVel.Z = 150;
 
@@ -3018,17 +3018,17 @@ simulated function CancelMantle()
 	SetPhysics(PHYS_Falling);
     bCancelledMantle = true;
 
-	if( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 	{
 		HandleEndMantle();
 	}
-	else if( IsLocallyControlled() )
+	else if (IsLocallyControlled())
 	{
 	    PostMantle();
 		PlayEndMantle();
 	}
 
-	if( bMantleDebug )
+	if (bMantleDebug)
 	{
 		ClientMessage("Mantle was cancelled");
 		log("Mantle was cancelled");
@@ -3047,60 +3047,60 @@ simulated function name SetMantleAnim()
 {
 	local name MantleAnim;
 
-	if( bCrouchMantle )
+	if (bCrouchMantle)
 	{
-		if( MantleHeight > 84 )
+		if (MantleHeight > 84)
 			MantleAnim = MantleAnim_88C;
-		else if( MantleHeight > 80 )
+		else if (MantleHeight > 80)
 			MantleAnim = MantleAnim_84C;
-		else if( MantleHeight > 76 )
+		else if (MantleHeight > 76)
 			MantleAnim = MantleAnim_80C;
-		else if( MantleHeight > 72 )
+		else if (MantleHeight > 72)
 			MantleAnim = MantleAnim_76C;
-		else if( MantleHeight > 68 )
+		else if (MantleHeight > 68)
 			MantleAnim = MantleAnim_72C;
-		else if( MantleHeight > 64 )
+		else if (MantleHeight > 64)
 			MantleAnim = MantleAnim_68C;
-		else if( MantleHeight > 60 )
+		else if (MantleHeight > 60)
 			MantleAnim = MantleAnim_64C;
-		else if( MantleHeight > 56 )
+		else if (MantleHeight > 56)
 			MantleAnim = MantleAnim_60C;
-		else if( MantleHeight > 52 )
+		else if (MantleHeight > 52)
 			MantleAnim = MantleAnim_56C;
-		else if( MantleHeight > 48 )
+		else if (MantleHeight > 48)
 			MantleAnim = MantleAnim_52C;
-		else if( MantleHeight > 44 )
+		else if (MantleHeight > 44)
 			MantleAnim = MantleAnim_48C;
-		else if( MantleHeight > 40 )
+		else if (MantleHeight > 40)
 			MantleAnim = MantleAnim_44C;
 		else
 			MantleAnim = MantleAnim_40C;
 	}
 	else
 	{
-		if( MantleHeight > 84 )
+		if (MantleHeight > 84)
 			MantleAnim = MantleAnim_88S;
-		else if( MantleHeight > 80 )
+		else if (MantleHeight > 80)
 			MantleAnim = MantleAnim_84S;
-		else if( MantleHeight > 76 )
+		else if (MantleHeight > 76)
 			MantleAnim = MantleAnim_80S;
-		else if( MantleHeight > 72 )
+		else if (MantleHeight > 72)
 			MantleAnim = MantleAnim_76S;
-		else if( MantleHeight > 68 )
+		else if (MantleHeight > 68)
 			MantleAnim = MantleAnim_72S;
-		else if( MantleHeight > 64 )
+		else if (MantleHeight > 64)
 			MantleAnim = MantleAnim_68S;
-		else if( MantleHeight > 60 )
+		else if (MantleHeight > 60)
 			MantleAnim = MantleAnim_64S;
-		else if( MantleHeight > 56 )
+		else if (MantleHeight > 56)
 			MantleAnim = MantleAnim_60S;
-		else if( MantleHeight > 52 )
+		else if (MantleHeight > 52)
 			MantleAnim = MantleAnim_56S;
-		else if( MantleHeight > 48 )
+		else if (MantleHeight > 48)
 			MantleAnim = MantleAnim_52S;
-		else if( MantleHeight > 44 )
+		else if (MantleHeight > 44)
 			MantleAnim = MantleAnim_48S;
-		else if( MantleHeight > 40 )
+		else if (MantleHeight > 40)
 			MantleAnim = MantleAnim_44S;
 		else
 			MantleAnim = MantleAnim_40S;
@@ -3113,9 +3113,9 @@ simulated state Mantling
 {
 	simulated function Timer()
 	{
-		if( bMantleDebug )
+		if (bMantleDebug)
 		{
-			if(Role == ROLE_Authority)
+			if (Role == ROLE_Authority)
 			{
 				ClientMessage("SERVER Running Timer");
 				log("SERVER Running Timer");
@@ -3127,16 +3127,16 @@ simulated state Mantling
 			}
 		}
 
-		if( Physics == PHYS_Flying || Physics == PHYS_RootMotion )
+		if (Physics == PHYS_Flying || Physics == PHYS_RootMotion)
 		{
-			if( Role == ROLE_Authority )
+			if (Role == ROLE_Authority)
 				TestMantleSuccess();
 
 			bCancelledMantle = false;
 
-			if( Role == ROLE_Authority )
+			if (Role == ROLE_Authority)
 				HandleEndMantle();
-			else if( IsLocallyControlled() )
+			else if (IsLocallyControlled())
 			{
 				PostMantle();
 				PlayEndMantle();
@@ -3147,9 +3147,9 @@ simulated state Mantling
 		}
 		else
 		{
-		    if( Role == ROLE_Authority )// && !bCrouchMantle )
+		    if (Role == ROLE_Authority)// && !bCrouchMantle)
 				HandleResetRoot();
-			else if( IsLocallyControlled() )
+			else if (IsLocallyControlled())
 				ResetRootBone();
 		}
 	}
@@ -3162,14 +3162,14 @@ simulated state Mantling
 	simulated function EndState()
 	{
 	    // Just in case the server/client get out of sync for any reason
-	    if( bIsMantling )
+	    if (bIsMantling)
 	    {
-	        if( Role == ROLE_Authority )
+	        if (Role == ROLE_Authority)
 	        {
 				HandleEndMantle();
 				HandleResetRoot();
 			}
-			else if( IsLocallyControlled() )
+			else if (IsLocallyControlled())
 			{
 				PostMantle();
 				PlayEndMantle();
@@ -3196,9 +3196,9 @@ simulated state Mantling
 
 	// Allow greater air speed to facilitate our "climb"
 	// Adjust speed depending on height of the climb
-	if( MantleHeight < 45 )
+	if (MantleHeight < 45)
 		AirSpeed = 220;
-	else if( MantleHeight < 65 )
+	else if (MantleHeight < 65)
 		AirSpeed = 130;
 	else
 		AirSpeed = 90;
@@ -3209,45 +3209,45 @@ function bool DoMantle()
 {
 	local vector NoZLoc, NoZDest;
 
-	if(Controller.Rotation.Pitch != 0)
+	if (Controller.Rotation.Pitch != 0)
 		return true;
 
-	if(!bMantleSetPitch)
+	if (!bMantleSetPitch)
 	{
-		bStartMantleBob = True;
-		bMantleSetPitch = True;
+		bStartMantleBob = true;
+		bMantleSetPitch = true;
 	}
 
-	if(bStartMantleBob && !bEndMantleBob)
+	if (bStartMantleBob && !bEndMantleBob)
 		return true;
 
-	if( Physics != PHYS_Flying )
+	if (Physics != PHYS_Flying)
 	{
 		SetPhysics(PHYS_Flying);
 		bCollideWorld = false;
 
-		//if( !bUprightMantle )
+		//if (!bUprightMantle)
 			MantleAdjustHeight(true);
 	}
 
-	if( !bReachedMidPoint && Location.Z < MantleMidPoint.Z )
+	if (!bReachedMidPoint && Location.Z < MantleMidPoint.Z)
 	{
 		NoZLoc = Location;
 		NoZLoc.Z = 0;
 		NoZDest = MantleEndPoint;
 		NoZDest.Z = 0;
 
-		if( VSize(NoZDest - NoZLoc) > MantleDist * 0.75 )
+		if (VSize(NoZDest - NoZLoc) > MantleDist * 0.75)
 			NewAcceleration = 50 * Normal(NoZDest - NoZLoc);
 		else
 			NewAcceleration = 50 * Normal(NoZLoc - NoZDest);
 		NewAcceleration.Z = 2000;
 	}
-	else if( Location.Z < MantleEndPoint.Z + 5 )
+	else if (Location.Z < MantleEndPoint.Z + 5)
 	{
-		if( !bReachedMidPoint )
+		if (!bReachedMidPoint)
 		{
-			bReachedMidPoint = True;
+			bReachedMidPoint = true;
 		}
 
 		NoZLoc = Location;
@@ -3255,12 +3255,12 @@ function bool DoMantle()
 		NoZDest = MantleEndPoint;
 		NoZDest.Z = 0;
 
-		if( VSize(NoZDest - NoZLoc) > MantleDist * 0.25 )
+		if (VSize(NoZDest - NoZLoc) > MantleDist * 0.25)
 			NewAcceleration = 75 * Normal(NoZDest - NoZLoc);
 		else
 			NewAcceleration = 40 * Normal(NoZLoc - NoZDest);
 
-		if( Velocity.Z < 65 )
+		if (Velocity.Z < 65)
 			NewAcceleration.Z = 0;
 		else
 			NewAcceleration.Z = -175;
@@ -3268,7 +3268,7 @@ function bool DoMantle()
 	else
 	{
 		NewAcceleration = vect(0,0,0);
-		Velocity = 50 * Vector(GetViewRotation());
+		Velocity = 50 * vector(GetViewRotation());
 		SetPhysics(PHYS_Falling);
 		bCollideWorld = true;
 
@@ -3291,34 +3291,34 @@ function PostMantle()
 	NextJumpTime = Level.TimeSeconds + 2.0;
 	bMantleSetPitch = false;
 
-	if( !bIsCrouched )
+	if (!bIsCrouched)
 		MantleAdjustHeight(false);
 
 	BaseEyeheight = default.BaseEyeheight;
 
 	// Allows eyeheight to properly reset when cancelling mantle during the bob phase
-	if( bStartMantleBob && !bEndMantleBob )
+	if (bStartMantleBob && !bEndMantleBob)
 		bEndMantleBob = true;
 }*/
 
 simulated function MantleLowerWeapon()
 {
-	if( DHWeapon(Weapon) != none )
+	if (DHWeapon(Weapon) != none)
 	{
 		DHWeapon(Weapon).bIsMantling = true;
 		DHWeapon(Weapon).GoToState('StartMantle');
 	}
-	else if( DH_GrenadeWeapon(Weapon) != none )
+	else if (DH_GrenadeWeapon(Weapon) != none)
 	{
 		DH_GrenadeWeapon(Weapon).bIsMantling = true;
 		DH_GrenadeWeapon(Weapon).GoToState('StartMantle');
 	}
-	else if( DH_SatchelChargeMantleWeapon(Weapon) != none )
+	else if (DH_SatchelChargeMantleWeapon(Weapon) != none)
 	{
 		DH_SatchelChargeMantleWeapon(Weapon).bIsMantling = true;
 		DH_SatchelChargeMantleWeapon(Weapon).GoToState('StartMantle');
 	}
-	else if( DH_BinocularsItem(Weapon) != none )
+	else if (DH_BinocularsItem(Weapon) != none)
 	{
 		DH_BinocularsItem(Weapon).bIsMantling = true;
 		DH_BinocularsItem(Weapon).GoToState('StartMantle');
@@ -3327,13 +3327,13 @@ simulated function MantleLowerWeapon()
 
 simulated function MantleRaiseWeapon()
 {
-	if( DHWeapon(Weapon) != none )
+	if (DHWeapon(Weapon) != none)
 		DHWeapon(Weapon).bIsMantling = false;
-	else if( DH_GrenadeWeapon(Weapon) != none )
+	else if (DH_GrenadeWeapon(Weapon) != none)
 		DH_GrenadeWeapon(Weapon).bIsMantling = false;
-	else if( DH_SatchelChargeMantleWeapon(Weapon) != none )
+	else if (DH_SatchelChargeMantleWeapon(Weapon) != none)
 		DH_SatchelChargeMantleWeapon(Weapon).bIsMantling = false;
-	else if( DH_BinocularsItem(Weapon) != none )
+	else if (DH_BinocularsItem(Weapon) != none)
 		DH_BinocularsItem(Weapon).bIsMantling = false;
 }
 
@@ -3341,7 +3341,7 @@ simulated function MantleRaiseWeapon()
 {
 	local float HeightAdjust;
 
-	if( bLowerHeight )
+	if (bLowerHeight)
 	{
 		// Can't crouch in midair, so emulate the stance change here instead
 		//HeightAdjust = default.CollisionHeight - CrouchHeight;
@@ -3370,21 +3370,21 @@ simulated function CrouchMantleAdjust()
 
 simulated function DoMantleCrouch()
 {
-	if( !bIsCrouched && !bWantsToCrouch )
+	if (!bIsCrouched && !bWantsToCrouch)
 	{
 		ShouldCrouch(true);
 	}
 }
 
 // Added a pre-mantle bob
-event UpdateEyeHeight( float DeltaTime )
+event UpdateEyeHeight(float DeltaTime)
 {
 	local float smooth, MaxEyeHeight;
 	local float OldEyeHeight;
 	local Actor HitActor;
 	local vector HitLocation,HitNormal;
 
-	if ( Controller == None )
+	if (Controller == none)
 	{
 		EyeHeight = 0;
 		return;
@@ -3393,14 +3393,14 @@ event UpdateEyeHeight( float DeltaTime )
 	// start DH
 
 	// Lower eye height here to hide crouch transition at end of mantle
-	if( bSetMantleEyeHeight )
+	if (bSetMantleEyeHeight)
 	{
-		if( bCrouchMantle )
+		if (bCrouchMantle)
 		{
 			smooth = FMin(0.65, 10.0 * DeltaTime);
 			EyeHeight = EyeHeight * (1 - 0.1 * smooth);
 
-			if ( Eyeheight < CrouchEyeHeightMod * CrouchHeight + 1 )
+			if (Eyeheight < CrouchEyeHeightMod * CrouchHeight + 1)
 			{
 				BaseEyeheight = CrouchEyeHeightMod * CrouchHeight;
 				bSetMantleEyeHeight = false;
@@ -3410,14 +3410,14 @@ event UpdateEyeHeight( float DeltaTime )
 		 		bLandRecovery = false;
 		    }
 		}
-		else if( bEndMantleBob )
+		else if (bEndMantleBob)
 		{
 		    smooth = FMin(0.9, 10.0 * DeltaTime);
 		    OldEyeHeight = EyeHeight;
-	        EyeHeight = FMin(EyeHeight * ( 1 - 0.6*smooth) + BaseEyeHeight * 0.6*smooth, BaseEyeHeight);
+	        EyeHeight = FMin(EyeHeight * (1 - 0.6*smooth) + BaseEyeHeight * 0.6*smooth, BaseEyeHeight);
 		    LandBob *= (1 - smooth);
 
-			if ( Eyeheight >= BaseEyeheight - 1)
+			if (Eyeheight >= BaseEyeheight - 1)
 		    {
 		    	bSetMantleEyeHeight = false;
 		     	bEndMantleBob = false;
@@ -3435,7 +3435,7 @@ event UpdateEyeHeight( float DeltaTime )
 			EyeHeight = EyeHeight * (1 - 0.1 * smooth);
 			LandBob += 0.03 * (OldEyeHeight - Eyeheight);
 
-			if ( (Eyeheight < 0.5 * default.BaseEyeheight + 1) || (LandBob > 3)  )
+			if ((Eyeheight < 0.5 * default.BaseEyeheight + 1) || (LandBob > 3) )
 			{
 		    	bEndMantleBob = true;
 		    	Eyeheight = 0.5 * BaseEyeheight + 1;
@@ -3451,16 +3451,16 @@ event UpdateEyeHeight( float DeltaTime )
 
 
 	// Pre-mantle head bob - this really isn't the best place to do this, but it'll do for now
-	/*if( bStartMantleBob )
+	/*if (bStartMantleBob)
 	{
-		if ( bEndMantleBob )
+		if (bEndMantleBob)
 	    {
 		    smooth = FMin(0.9, 10.0 * DeltaTime);
 		    OldEyeHeight = EyeHeight;
-	        EyeHeight = FMin(EyeHeight * ( 1 - 0.6*smooth) + BaseEyeHeight * 0.6*smooth, BaseEyeHeight);
+	        EyeHeight = FMin(EyeHeight * (1 - 0.6*smooth) + BaseEyeHeight * 0.6*smooth, BaseEyeHeight);
 		    LandBob *= (1 - smooth);
 
-			if ( Eyeheight >= BaseEyeheight - 1)
+			if (Eyeheight >= BaseEyeheight - 1)
 		    {
 		    	bStartMantleBob = false;
 		     	bEndMantleBob = false;
@@ -3478,11 +3478,11 @@ event UpdateEyeHeight( float DeltaTime )
 			EyeHeight = EyeHeight * (1 - 0.25 * smooth);
 			LandBob += 0.03 * (OldEyeHeight - Eyeheight);
 
-			if ( (Eyeheight < MantleBobDepthMod * default.BaseEyeheight + 1) || (LandBob > 3)  )
+			if ((Eyeheight < MantleBobDepthMod * default.BaseEyeheight + 1) || (LandBob > 3) )
 			{
 		    	bEndMantleBob = true;
 		     	//Eyeheight = 0.25 * BaseEyeheight + 1;
-		     	//if( !bUprightMantle )
+		     	//if (!bUprightMantle)
 				//{
 					// HACK - Lower the eye height for the climb to hide the transition to crouch at the end (crouch can't be set while PHYS_Flying during the "climb")
 					// This _needs_ to be running after the down bob though otherwise the heights are screwed
@@ -3498,7 +3498,7 @@ event UpdateEyeHeight( float DeltaTime )
 	// end DH
 
 
-	if ( bTearOff )
+	if (bTearOff)
 	{
 		EyeHeight = Default.BaseEyeheight;
 		bUpdateEyeHeight = false;
@@ -3506,39 +3506,39 @@ event UpdateEyeHeight( float DeltaTime )
 	}
 	HitActor = trace(HitLocation,HitNormal,Location + (CollisionHeight + MAXSTEPHEIGHT + 14) * vect(0,0,1),
 					Location + CollisionHeight * vect(0,0,1),true);
-	if ( HitActor == None )
+	if (HitActor == none)
 		MaxEyeHeight = CollisionHeight + MAXSTEPHEIGHT;
 	else
 		MaxEyeHeight = HitLocation.Z - Location.Z - 14;
 
-	if ( abs(Location.Z - OldZ) > 15 )
+	if (abs(Location.Z - OldZ) > 15)
 	{
 		bJustLanded = false;
 		bLandRecovery = false;
 	}
 
 	// smooth up/down stairs
-	if ( !bJustLanded )
+	if (!bJustLanded)
 	{
 		smooth = FMin(0.9, 10.0 * DeltaTime/Level.TimeDilation);
 		LandBob *= (1 - smooth);
-		if( Controller.WantsSmoothedView() )
+		if (Controller.WantsSmoothedView())
 		{
 			OldEyeHeight = EyeHeight;
 			EyeHeight = FClamp((EyeHeight - Location.Z + OldZ) * (1 - smooth) + BaseEyeHeight * smooth,
 								-0.5 * CollisionHeight, MaxEyeheight);
 		}
 	    else
-		    EyeHeight = FMin(EyeHeight * ( 1 - smooth) + BaseEyeHeight * smooth, MaxEyeHeight);
+		    EyeHeight = FMin(EyeHeight * (1 - smooth) + BaseEyeHeight * smooth, MaxEyeHeight);
 	}
-	else if ( bLandRecovery )
+	else if (bLandRecovery)
 	{
 		smooth = FMin(0.9, 10.0 * DeltaTime);
 		OldEyeHeight = EyeHeight;
-	    EyeHeight = FMin(EyeHeight * ( 1 - 0.6*smooth) + BaseEyeHeight * 0.6*smooth, BaseEyeHeight);
+	    EyeHeight = FMin(EyeHeight * (1 - 0.6*smooth) + BaseEyeHeight * 0.6*smooth, BaseEyeHeight);
 		LandBob *= (1 - smooth);
 
-		if ( Eyeheight >= BaseEyeheight - 1)
+		if (Eyeheight >= BaseEyeheight - 1)
 		{
 			bJustLanded = false;
 			bLandRecovery = false;
@@ -3552,7 +3552,7 @@ event UpdateEyeHeight( float DeltaTime )
 		EyeHeight = FMin(EyeHeight * (1 - 1.5*smooth), MaxEyeHeight);
 		LandBob += 0.03 * (OldEyeHeight - Eyeheight);
 
-		if ( (Eyeheight < 0.25 * BaseEyeheight + 1) || (LandBob > 3)  )
+		if ((Eyeheight < 0.25 * BaseEyeheight + 1) || (LandBob > 3) )
 		{
 			bLandRecovery = true;
 			Eyeheight = 0.25 * BaseEyeheight + 1;
@@ -3568,32 +3568,32 @@ function LimitYaw(out int yaw)
 	local	int MaxBipodYaw;
 	local	int MinBipodYaw;
 
-	if( bBipodDeployed )
+	if (bBipodDeployed)
 	{
 		MaxBipodYaw = InitialDeployedRotation.Yaw + DeployedPositiveYawLimit;
 		MinBipodYaw = InitialDeployedRotation.Yaw + DeployedNegativeYawLimit;
 
-		if( yaw > MaxBipodYaw )
+		if (yaw > MaxBipodYaw)
 		{
 			yaw = MaxBipodYaw;
 			return;
 		}
-		else if( yaw < MinBipodYaw )
+		else if (yaw < MinBipodYaw)
 		{
 			yaw = MinBipodYaw;
 			return;
 		}
 	}
-	else if( bIsMantling )
+	else if (bIsMantling)
 	{
-		if( yaw != MantleYaw )
+		if (yaw != MantleYaw)
 		{
 			yaw = MantleYaw;
 			return;
 		}
 	}
 
-	if( bDeployingMortar )
+	if (bDeployingMortar)
 	{
 		yaw = MortarDeployYaw;
 		return;
@@ -3607,56 +3607,56 @@ function int LimitPitch(int pitch, optional float DeltaTime)
 
 	pitch = pitch & 65535;
 
-	if( bBipodDeployed )
+	if (bBipodDeployed)
 	{
 
 		MaxBipodPitch = InitialDeployedRotation.Pitch + DeployedPitchUpLimit;
 		MinBipodPitch = InitialDeployedRotation.Pitch + DeployedPitchDownLimit;
 
-		if( MaxBipodPitch > 65535 )
+		if (MaxBipodPitch > 65535)
 			MaxBipodPitch -= 65535;
 
-		if( MinBipodPitch < 0 )
+		if (MinBipodPitch < 0)
 			MinBipodPitch += 65535;
 
-		if( (MaxBipodPitch > PitchUpLimit) && (MaxBipodPitch < PitchDownLimit) )
+		if ((MaxBipodPitch > PitchUpLimit) && (MaxBipodPitch < PitchDownLimit))
 			MaxBipodPitch = PitchUpLimit;
 
-		if( (MinBipodPitch < PitchDownLimit) && (MinBipodPitch > PitchUpLimit) )
+		if ((MinBipodPitch < PitchDownLimit) && (MinBipodPitch > PitchUpLimit))
 			MinBipodPitch = PitchDownLimit;
 
 		// handles areas where newPitchUpLimit is less than newPitchDownLimit
-		if( (pitch > MaxBipodPitch) && (pitch < MinBipodPitch) )
+		if ((pitch > MaxBipodPitch) && (pitch < MinBipodPitch))
 		{
-			if( (pitch - MaxBipodPitch) < (MinBipodPitch - pitch) )
+			if ((pitch - MaxBipodPitch) < (MinBipodPitch - pitch))
 				pitch = MaxBipodPitch;
 			else
 				pitch = MinBipodPitch;
 		}
 		// following 2 if's handle when newPitchUpLimit is greater than newPitchDownLimit
-		else if( (pitch > MaxBipodPitch) && (MaxBipodPitch > MinBipodPitch) )
+		else if ((pitch > MaxBipodPitch) && (MaxBipodPitch > MinBipodPitch))
 		{
 			pitch = MaxBipodPitch;
 		}
-		else if( (pitch < MinBipodPitch) && (MaxBipodPitch > MinBipodPitch) )
+		else if ((pitch < MinBipodPitch) && (MaxBipodPitch > MinBipodPitch))
 		{
 			pitch = MinBipodPitch;
 		}
 	}
 	else
 	{
-		if( bIsCrawling )
+		if (bIsCrawling)
 		{
 			// Smoothly rotate the player to the pitch limit when you start crawling.
 			// This prevents the jarring "pop" when the pitch limit kicks in to
 			// prevent you from looking through your arms
-			if( Weapon != none && Weapon.IsCrawling() )
+			if (Weapon != none && Weapon.IsCrawling())
 			{
 				if (pitch > CrawlingPitchUpLimit && pitch < CrawlingPitchDownLimit)
 		    	{
 		        	if (pitch - CrawlingPitchUpLimit < CrawlingPitchDownLimit - pitch)
 		        	{
-						if( Level.TimeSeconds - Weapon.LastStartCrawlingTime < 0.15 )
+						if (Level.TimeSeconds - Weapon.LastStartCrawlingTime < 0.15)
 						{
 							pitch -= CrawlPitchTweenRate * deltatime;
 						}
@@ -3667,7 +3667,7 @@ function int LimitPitch(int pitch, optional float DeltaTime)
 		            }
 		        	else
 		        	{
-						if( Level.TimeSeconds - Weapon.LastStartCrawlingTime < 0.15 )
+						if (Level.TimeSeconds - Weapon.LastStartCrawlingTime < 0.15)
 						{
 							pitch += CrawlPitchTweenRate * deltatime;
 						}
@@ -3689,16 +3689,16 @@ function int LimitPitch(int pitch, optional float DeltaTime)
 		    	}
 	    	}
 		}
-		else if( bIsMantling )
+		else if (bIsMantling)
 		{
 			// As above, but for mantling
-			if( pitch != 0 )
+			if (pitch != 0)
 			{
 				if (pitch > 100 && pitch < 65435)
 		    	{
-					if( pitch < 65435 - pitch ) //65536
+					if (pitch < 65435 - pitch) //65536
 					{
-						if( Level.TimeSeconds - StartMantleTime < 0.15 )
+						if (Level.TimeSeconds - StartMantleTime < 0.15)
 					    {
 						    pitch -= 50000 * deltatime;
 					    }
@@ -3709,7 +3709,7 @@ function int LimitPitch(int pitch, optional float DeltaTime)
 	  				}
 					else
 					{
-					    if( Level.TimeSeconds - StartMantleTime < 0.15 )
+					    if (Level.TimeSeconds - StartMantleTime < 0.15)
 					    {
 						    pitch += 50000 * deltatime;
 					    }
@@ -3734,7 +3734,7 @@ function int LimitPitch(int pitch, optional float DeltaTime)
 		}
 	}
 
-	if( bDeployingMortar )
+	if (bDeployingMortar)
 		pitch = 0;
 
 	return pitch;
@@ -3744,7 +3744,7 @@ function int LimitPitch(int pitch, optional float DeltaTime)
 simulated function bool CanProneTransition()
 {
 	//TODO: Remove PHYS_Falling.
-	if( (Physics == PHYS_Walking || Physics == PHYS_Falling) && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange()) )
+	if ((Physics == PHYS_Walking || Physics == PHYS_Falling) && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange()))
 	{
 		return true;
 	}
@@ -3755,12 +3755,12 @@ simulated function bool CanProneTransition()
 // Returns true if the player can switch the crouch state.
 simulated function bool CanCrouchTransition()
 {
-	if( IsTransitioningToProne() || bIsMantling )
+	if (IsTransitioningToProne() || bIsMantling)
 	{
 		return false;
 	}
 
-	if( Weapon == none || Weapon.WeaponAllowCrouchChange() )
+	if (Weapon == none || Weapon.WeaponAllowCrouchChange())
 	{
 		return true;
 	}
@@ -3770,25 +3770,25 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-	if ( TraceWall(16384, 64) || bLeaningLeft || bIsSprinting || bIsMantling || bDeployingMortar )
+	if (TraceWall(16384, 64) || bLeaningLeft || bIsSprinting || bIsMantling || bDeployingMortar)
 	{
 		bLeanRight=false;
 		return;
 	}
 
-	if ( !bLeanLeft )
+	if (!bLeanLeft)
 		bLeanRight=true;
 }
 
 simulated function LeanLeft()
 {
-	if ( TraceWall(-16384, 64) || bLeaningRight || bIsSprinting || bIsMantling || bDeployingMortar )
+	if (TraceWall(-16384, 64) || bLeaningRight || bIsSprinting || bIsMantling || bDeployingMortar)
 	{
 		bLeanLeft=false;
 		return;
 	}
 
-	if ( !bLeanRight )
+	if (!bLeanRight)
 		bLeanLeft=true;
 }
 
@@ -3803,7 +3803,7 @@ simulated function StartBurnFX()
 {
 	local int i;
 
-	if( FlameFX == None )
+	if (FlameFX == none)
 	{
 		FlameFX = Spawn(FlameEffect);
 		FlameFX.SetBase(Self);
@@ -3823,14 +3823,14 @@ simulated function StartBurnFX()
 		AmmoPouches[i].SetOverlayMaterial(BurningOverlayMaterial, 999.000000, true);
 	}
 
-	bBurnFXOn = True;
+	bBurnFXOn = true;
 }
 
 simulated function EndBurnFX()
 {
 	local int i;
 
-	if( FlameFX != None )
+	if (FlameFX != none)
 		FlameFX.Kill();
 
 	//FadeColor(DeadBurningOverlayMaterial.Material1).FadePhase = 0.000000; // Sort this out
@@ -3841,7 +3841,7 @@ simulated function EndBurnFX()
 		AmmoPouches[i].SetOverlayMaterial(CharredOverlayMaterial, 999.000000, true);
 	}
 
-	bBurnFXOn = False;
+	bBurnFXOn = false;
 }
 
 // Burning players drop everything they have - they're on fire after all!
@@ -3849,13 +3849,13 @@ function BurningDropWeaps()
 {
 	local vector TossVel;
 
-	if ( Weapon != None && (DrivenVehicle == None || DrivenVehicle.bAllowWeaponToss) )
+	if (Weapon != none && (DrivenVehicle == none || DrivenVehicle.bAllowWeaponToss))
 	{
-		if ( Controller != None )
+		if (Controller != none)
 			Controller.LastPawnWeapon = Weapon.Class;
 		Weapon.HolderDied();
-		TossVel = Vector(GetViewRotation());
-		TossVel = TossVel * ((Velocity Dot TossVel) + 50) + Vect(0,0,200);
+		TossVel = vector(GetViewRotation());
+		TossVel = TossVel * ((Velocity Dot TossVel) + 50) + vect(0,0,200);
 		TossWeapon(TossVel);
 	}
 
@@ -3863,11 +3863,11 @@ function BurningDropWeaps()
 }
 
 // Modified to also destroy inventory items, necessary for burning players
-function DropWeaponInventory(Vector TossVel)
+function DropWeaponInventory(vector TossVel)
 {
 	local Inventory Inv;
 	local Weapon invWeapon;
-	local Vector X,Y,Z;
+	local vector X,Y,Z;
 	local int count, i;
 	local array<class> DroppedClasses;
 	local bool bAlreadyUsedClass;
@@ -3882,23 +3882,23 @@ function DropWeaponInventory(Vector TossVel)
 	while((Inv != none) && (count < 15))// 500
 	{
 		count++;
-		if(Inv.IsA('Weapon'))
+		if (Inv.IsA('Weapon'))
 		{
 			invWeapon = Weapon(Inv);
 
-			if(invWeapon != none && invWeapon.bCanThrow)
+			if (invWeapon != none && invWeapon.bCanThrow)
 			{
-				for ( i=0;i<DroppedClasses.Length;i++ )
+				for (i=0;i<DroppedClasses.Length;i++)
 				{
 					//log("Dropped classes "$i$" = "$DroppedClasses[i]);
-					if( invWeapon.Class == DroppedClasses[i] )
+					if (invWeapon.Class == DroppedClasses[i])
 					{
 						bAlreadyUsedClass = true;
 						break;
 					}
 				}
 
-				if( !bAlreadyUsedClass )
+				if (!bAlreadyUsedClass)
 				{
 					// because the weapon is destroyed from inventory need to start over again
 					// and search through the inventory from the beginning.
@@ -3912,19 +3912,19 @@ function DropWeaponInventory(Vector TossVel)
 					Inv=Inv.Inventory;
 				}
 			}
-			else if(invWeapon != none && invWeapon.IsA('BinocularsItem'))
+			else if (invWeapon != none && invWeapon.IsA('BinocularsItem'))
 			{
-				for ( i=0;i<DroppedClasses.Length;i++ )
+				for (i=0;i<DroppedClasses.Length;i++)
 				{
 					//log("Dropped classes "$i$" = "$DroppedClasses[i]);
-					if( invWeapon.Class == DroppedClasses[i] )
+					if (invWeapon.Class == DroppedClasses[i])
 					{
 						bAlreadyUsedClass = true;
 						break;
 					}
 				}
 
-				if( !bAlreadyUsedClass )
+				if (!bAlreadyUsedClass)
 				{
 					// because the weapon is destroyed from inventory need to start over again
 					// and search through the inventory from the beginning.
@@ -3962,25 +3962,25 @@ function bool ResupplyMortarAmmunition()
 
 	RI = GetRoleInfo();
 
-	if(!bMortarCanBeResupplied || RI == none || !RI.bCanUseMortars)
+	if (!bMortarCanBeResupplied || RI == none || !RI.bCanUseMortars)
 		return false;
 
-	if(GetTeamNum() == 0)	//Axis
+	if (GetTeamNum() == 0)	//Axis
 	{
 		MortarHEAmmo = Clamp(MortarHEAmmo + 4, 0, 16);
 		MortarSmokeAmmo = Clamp(MortarSmokeAmmo + 1, 0, 4);
 
-		if(MortarHEAmmo == 16 && MortarSmokeAmmo == 4)
+		if (MortarHEAmmo == 16 && MortarSmokeAmmo == 4)
 			bMortarCanBeResupplied = false;
 
 		return true;
 	}
-	else if(GetTeamNum() == 1)	//Allies
+	else if (GetTeamNum() == 1)	//Allies
 	{
 		MortarHEAmmo = Clamp(MortarHEAmmo + 6, 0, 24);
 		MortarSmokeAmmo = Clamp(MortarSmokeAmmo + 1, 0, 4);
 
-		if(MortarHEAmmo == 24 && MortarSmokeAmmo == 4)
+		if (MortarHEAmmo == 24 && MortarSmokeAmmo == 4)
 			bMortarCanBeResupplied = false;
 
 		return true;
@@ -3991,7 +3991,7 @@ function bool ResupplyMortarAmmunition()
 
 function FillMortarAmmunition()
 {
-	if(GetTeamNum() == 0)	//Axis
+	if (GetTeamNum() == 0)	//Axis
 	{
 		MortarHEAmmo = 16;
 		MortarSmokeAmmo = 4;
@@ -4009,9 +4009,9 @@ function CheckIfMortarCanBeResupplied()
 {
 	bMortarCanBeResupplied = false;
 
-	if(GetTeamNum() == 0 && MortarHEAmmo < 16 || MortarSmokeAmmo < 4)	//Axis
+	if (GetTeamNum() == 0 && MortarHEAmmo < 16 || MortarSmokeAmmo < 4)	//Axis
 		bMortarCanBeResupplied = true;
-	else if(GetTeamNum() == 1 && MortarHEAmmo < 24 || MortarSmokeAmmo < 4)	//Allies
+	else if (GetTeamNum() == 1 && MortarHEAmmo < 24 || MortarSmokeAmmo < 4)	//Allies
 		bMortarCanBeResupplied = true;
 }
 
@@ -4029,12 +4029,12 @@ simulated function DH_RoleInfo GetRoleInfo()
 	local DH_RoleInfo RI;
 	local DHPlayerReplicationInfo PRI;
 
-	if(PlayerReplicationInfo == none)
+	if (PlayerReplicationInfo == none)
 		return none;
 
 	PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-	if(PRI == none || PRI.RoleInfo == none)
+	if (PRI == none || PRI.RoleInfo == none)
 		return none;
 
 	RI = DH_RoleInfo(PRI.RoleInfo);
@@ -4044,10 +4044,10 @@ simulated function DH_RoleInfo GetRoleInfo()
 
 simulated function bool AllowSprint()
 {
-	if(bIsWalking && !Weapon.bUsingSights)
+	if (bIsWalking && !Weapon.bUsingSights)
 		return false;
 
-	if (!bIsCrawling &&((Weapon == None || Weapon.WeaponAllowSprint()) && Acceleration != vect(0,0,0)))
+	if (!bIsCrawling &&((Weapon == none || Weapon.WeaponAllowSprint()) && Acceleration != vect(0,0,0)))
 	{
 		return true;
 	}
@@ -4057,7 +4057,7 @@ simulated function bool AllowSprint()
 
 function SetWalking(bool bNewIsWalking)
 {
-	if(bNewIsWalking && bIsSprinting)
+	if (bNewIsWalking && bIsSprinting)
 		return;
 
 	if (bNewIsWalking != bIsWalking)	//Fixed bug where players could sprint backwards are ridiculous speeds.

@@ -49,24 +49,24 @@ simulated exec function DHDebugTeleport()
 function ServerDHDebugTeleport()
 {
 	local Controller C;
-	local Vector TraceStart, TraceEnd;
+	local vector TraceStart, TraceEnd;
 	local Pawn P;
 	local float A;
 	local vector HitLocation, HitNormal;
 
 	Level.Game.Broadcast(self, "Teleporting...");
 
-	if(!PlayerReplicationInfo.bAdmin)
+	if (!PlayerReplicationInfo.bAdmin)
 		return;
 
 	for(C = Level.ControllerList; C != none; C = C.NextController)
 	{
 		P = C.Pawn;
 
-		if(DH_Pawn(P) == none)
+		if (DH_Pawn(P) == none)
 			continue;
 
-		if(VSize(P.Location - Pawn.Location) < 1024)	//64 feet
+		if (VSize(P.Location - Pawn.Location) < 1024)	//64 feet
 			continue;
 
 		do
@@ -81,7 +81,7 @@ function ServerDHDebugTeleport()
 
 			A += 0.0628318;
 
-			if(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
+			if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
 				HitLocation.Z += 32.0;
 		}
 		until(P.SetLocation(HitLocation) || A > (PI * 2))
@@ -102,18 +102,18 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 	local float	FreeAimBlendAmount;
 	local rotator AppliedRecoil;
 
-	if( Pawn == none || DH_ProjectileWeapon(Pawn.Weapon) == none ||
-		!DH_ProjectileWeapon(Pawn.Weapon).ShouldUseFreeAim() )
+	if (Pawn == none || DH_ProjectileWeapon(Pawn.Weapon) == none ||
+		!DH_ProjectileWeapon(Pawn.Weapon).ShouldUseFreeAim())
 	{
 		LastFreeAimSuspendTime=Level.TimeSeconds;
 
-		if( WeaponBufferRotation.Yaw != 0 )
+		if (WeaponBufferRotation.Yaw != 0)
 		{
-			if( WeaponBufferRotation.Yaw > 32768 )
+			if (WeaponBufferRotation.Yaw > 32768)
 			{
 				WeaponBufferRotation.Yaw +=	YawTweenRate * deltatime;
 
-				if( WeaponBufferRotation.Yaw > 65536 )
+				if (WeaponBufferRotation.Yaw > 65536)
 				{
 					WeaponBufferRotation.Yaw = 0;
 				}
@@ -122,20 +122,20 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 			{
 				WeaponBufferRotation.Yaw -=	YawTweenRate * deltatime;
 
-				if( WeaponBufferRotation.Yaw <  0)
+				if (WeaponBufferRotation.Yaw <  0)
 				{
 					WeaponBufferRotation.Yaw = 0;
 				}
 			}
 		}
 
-		if( WeaponBufferRotation.Pitch != 0 )
+		if (WeaponBufferRotation.Pitch != 0)
 		{
-			if( WeaponBufferRotation.Pitch > 32768 )
+			if (WeaponBufferRotation.Pitch > 32768)
 			{
 				WeaponBufferRotation.Pitch += PitchTweenRate * deltatime;
 
-				if( WeaponBufferRotation.Pitch > 65536 )
+				if (WeaponBufferRotation.Pitch > 65536)
 				{
 					WeaponBufferRotation.Pitch = 0;
 				}
@@ -144,7 +144,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 			{
 				WeaponBufferRotation.Pitch -= PitchTweenRate * deltatime;
 
-				if( WeaponBufferRotation.Pitch <  0)
+				if (WeaponBufferRotation.Pitch <  0)
 				{
 					WeaponBufferRotation.Pitch = 0;
 				}
@@ -153,12 +153,12 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 
 		// Process recoil
 		// Handle recoil if the framerate is really low causing deltatime to be really high
-/*		if( deltatime >= RecoilSpeed && ((Level.TimeSeconds - LastRecoilTime) <= (deltatime + (deltatime * 0.03))))
+/*		if (deltatime >= RecoilSpeed && ((Level.TimeSeconds - LastRecoilTime) <= (deltatime + (deltatime * 0.03))))
 		{
 			NewRotation += (RecoilRotator/RecoilSpeed) * deltatime/(deltatime/RecoilSpeed);
 		}
 		// Standard recoil
-		else*/ if( Level.TimeSeconds - LastRecoilTime <= RecoilSpeed )
+		else*/ if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
 		{
 			NewRotation += (RecoilRotator/RecoilSpeed) * deltatime;
 		}
@@ -172,7 +172,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 
 	NewPlayerRotation = NewRotation;
 
-//	if( Level.TimeSeconds - LastFreeAimSuspendTime < 0.5 )
+//	if (Level.TimeSeconds - LastFreeAimSuspendTime < 0.5)
 //	{
 //		FreeAimBlendAmount = (Level.TimeSeconds - LastFreeAimSuspendTime)/0.5;
 //	}
@@ -190,13 +190,13 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 
 	// Process recoil
 	// Handle recoil if the framerate is really low causing deltatime to be really high
-/*	if( deltatime >= RecoilSpeed && ((Level.TimeSeconds - LastRecoilTime) <= (deltatime + (deltatime * 0.03))))
+/*	if (deltatime >= RecoilSpeed && ((Level.TimeSeconds - LastRecoilTime) <= (deltatime + (deltatime * 0.03))))
 	{
 	    AppliedRecoil = (RecoilRotator/RecoilSpeed) * deltatime/(deltatime/RecoilSpeed);
 		WeaponBufferRotation += AppliedRecoil;
 	}
 	// standard recoil
-	else*/ if( Level.TimeSeconds - LastRecoilTime <= RecoilSpeed )
+	else*/ if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
 	{
 	    AppliedRecoil = (RecoilRotator/RecoilSpeed) * deltatime;
 		WeaponBufferRotation += AppliedRecoil;
@@ -260,13 +260,13 @@ exec function PlayerMenu(optional int Tab)
 
 
 // Overridden to increase max name length from 20 to 32 chars
-function ChangeName( coerce string S )
+function ChangeName(coerce string S)
 {
-	if ( Len(S) > 32 )
+	if (Len(S) > 32)
 		S = left(S,32);
 //    ReplaceText(S, " ", "_");
 	ReplaceText(S, "\"", "");
-	DarkestHourGame(Level.Game).ChangeName( self, S, true );
+	DarkestHourGame(Level.Game).ChangeName(self, S, true);
 }
 
 // Give the player a quick flinch and blur effect
@@ -292,18 +292,18 @@ simulated function PlayerFlinched(float Intensity)
 	local float FlinchIntensity;
 	local int MaxFlinch;
 
-	if( !Pawn.bBipodDeployed )
+	if (!Pawn.bBipodDeployed)
 	{
 		MaxFlinch = 150; // Max distance that flinch can ever move
 
 		FlinchIntensity = Intensity * MaxFlinch;
 
-	   	AfterFlinchRotation.Pitch = RandRange( FlinchIntensity, MaxFlinch );
-		AfterFlinchRotation.Yaw = RandRange( FlinchIntensity, MaxFlinch );
+	   	AfterFlinchRotation.Pitch = RandRange(FlinchIntensity, MaxFlinch);
+		AfterFlinchRotation.Yaw = RandRange(FlinchIntensity, MaxFlinch);
 
-		if( Rand(2) == 1 )
+		if (Rand(2) == 1)
 			AfterFlinchRotation.Pitch *= -1;
-		if( Rand(2) == 1 )
+		if (Rand(2) == 1)
 			AfterFlinchRotation.Yaw *= -1;
 
 		FlinchRate = 0.075;
@@ -315,18 +315,18 @@ simulated function PlayerFlinched(float Intensity)
 		FlinchRotMag *= Intensity;
 		FlinchOffsetMag *= Intensity;
 
-		if( Rand(2) == 1 )
+		if (Rand(2) == 1)
 		{
 			FlinchRotMag.X *= -1;
 			FlinchOffsetMag.X *= -1;
 		}
-		if( Rand(2) == 1 )
+		if (Rand(2) == 1)
 		{
 			FlinchRotMag.Z *= -1;
 			FlinchOffsetMag.Z *= -1;
 		}
 
-		ShakeView( FlinchRotMag, FlinchRotRate, FlinchRotTime, FlinchOffsetMag, FlinchOffsetRate, FlinchOffsetTime);
+		ShakeView(FlinchRotMag, FlinchRotRate, FlinchRotTime, FlinchOffsetMag, FlinchOffsetRate, FlinchOffsetTime);
 	}
 }
 
@@ -341,10 +341,10 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
 	// Lets avoid casting 20 times every tick - Ramm
 	ROPwn = DH_Pawn(Pawn);
-	if(Pawn != none)
+	if (Pawn != none)
 		ROWeap = ROWeapon(Pawn.Weapon);
 
-	if( bSway && (Pawn != none)
+	if (bSway && (Pawn != none)
 		  && !Pawn.bBipodDeployed
 		  && Pawn.Weapon != none
 		  && Pawn.Weapon.bCanSway
@@ -363,24 +363,24 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 	}
 
 
-	if ( bInterpolating || ((Pawn != None) && Pawn.bInterpolating) )
+	if (bInterpolating || ((Pawn != none) && Pawn.bInterpolating))
 	{
 		ViewShake(deltaTime);
 		return;
 	}
 
 	// Added FreeCam control for better view control
-	if (bFreeCam == True)
+	if (bFreeCam == true)
 	{
 		if (bHudLocksPlayerRotation)
 		{
 			// No camera change if we're locking rotation
 		}
-		else if (bFreeCamZoom == True)
+		else if (bFreeCamZoom == true)
 		{
 			CameraDeltaRad += DeltaTime * 0.25 * aLookUp;
 		}
-		else if (bFreeCamSwivel == True)
+		else if (bFreeCamSwivel == true)
 		{
 			CameraSwivel.Yaw += 16.0 * DeltaTime * aTurn;
 			CameraSwivel.Pitch += 16.0 * DeltaTime * aLookUp;
@@ -395,26 +395,26 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 	{
 	    ViewRotation = Rotation;
 
-		if(Pawn != none && Pawn.Physics != PHYS_Flying) // mmmmm
+		if (Pawn != none && Pawn.Physics != PHYS_Flying) // mmmmm
 		{
 			// Ensure we are not setting the pawn to a rotation beyond its desired
-			if(	Pawn.DesiredRotation.Roll < 65535 &&
+			if (	Pawn.DesiredRotation.Roll < 65535 &&
 				(ViewRotation.Roll < Pawn.DesiredRotation.Roll || ViewRotation.Roll > 0))
 				ViewRotation.Roll = 0;
-			else if( Pawn.DesiredRotation.Roll > 0 &&
+			else if (Pawn.DesiredRotation.Roll > 0 &&
 				(ViewRotation.Roll > Pawn.DesiredRotation.Roll || ViewRotation.Roll < 65535))
 				ViewRotation.Roll = 0;
 		}
 
 		DesiredRotation = ViewRotation; //save old rotation
 
-		if ( bTurnToNearest != 0 )
+		if (bTurnToNearest != 0)
 			TurnTowardNearestEnemy();
-		else if ( bTurn180 != 0 )
+		else if (bTurn180 != 0)
 			TurnAround();
 		else
 		{
-			TurnTarget = None;
+			TurnTarget = none;
 			bRotateToDesired = false;
 			bSetTurnRot = false;
 
@@ -422,7 +422,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 			{
 				// No camera change if we're locking rotation
 			}
-			else if( ROPwn!= none && ROPwn.bRestingWeapon )
+			else if (ROPwn!= none && ROPwn.bRestingWeapon)
 			{
 	           	ViewRotation.Yaw += 16.0 * DeltaTime * aTurn;
 		       	ViewRotation.Pitch += 16.0 * DeltaTime * aLookUp;
@@ -433,29 +433,29 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 		       	ViewRotation.Pitch += 32.0 * DeltaTime * aLookUp;
 	       	}
 
-			if( (Pawn != none ) && (Pawn.Weapon != none) && (ROPwn != none))
+			if ((Pawn != none) && (Pawn.Weapon != none) && (ROPwn != none))
 			{
 				ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
 			}
 		}
 
-		if( ROPwn != none )
+		if (ROPwn != none)
 			ViewRotation.Pitch = ROPwn.LimitPitch(ViewRotation.Pitch,DeltaTime); //amb
 
-		if( ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bDeployingMortar))
+		if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bDeployingMortar))
 		{
 			ROPwn.LimitYaw(ViewRotation.Yaw);
 		}
 
 		// Limit Pitch and yaw for the ROVehicles - Ramm
-		if ( Pawn != none )
+		if (Pawn != none)
 		{
-			 if( Pawn.IsA('ROVehicle'))
+			 if (Pawn.IsA('ROVehicle'))
 			 {
 				  ROVeh = ROVehicle(Pawn);
 
 				  ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
-				  ViewRotation.Pitch = ROVeh.LimitPawnPitch( ViewRotation.Pitch );
+				  ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
 			 }
 		}
 
@@ -471,7 +471,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
 		NewRotation.Roll = Rotation.Roll;
 
-		if ( !bRotateToDesired && (Pawn != None) && (!bFreeCamera || !bBehindView) )
+		if (!bRotateToDesired && (Pawn != none) && (!bFreeCamera || !bBehindView))
 			Pawn.FaceRotation(NewRotation, deltatime);
 	}
 }
@@ -501,7 +501,7 @@ function ServerSaveArtilleryPosition()
 	GRI = DHGameReplicationInfo(GameReplicationInfo);
 	PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-	if(DH_Pawn(Pawn) == none)
+	if (DH_Pawn(Pawn) == none)
 		return;
 
 	RI = DH_Pawn(Pawn).GetRoleInfo();
@@ -510,22 +510,22 @@ function ServerSaveArtilleryPosition()
 		return;
 
 	// If a player tries to mark artillery on a level with no arty for their team, give them a message
-	if ( PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX )
+	if (PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
 	{
-	    for ( i = 0; i < ArrayCount(GRI.AlliedRadios); i++)
+	    for (i = 0; i < ArrayCount(GRI.AlliedRadios); i++)
 		{
-			if( GRI.AlliedRadios[i] != none )
+			if (GRI.AlliedRadios[i] != none)
 			{
 				bFoundARadio = true;
 				break;
 			}
 		}
 
-		if(!bFoundARadio)
+		if (!bFoundARadio)
 		{
-		    for ( i = 0; i < ArrayCount(GRI.CarriedAlliedRadios); i++)
+		    for (i = 0; i < ArrayCount(GRI.CarriedAlliedRadios); i++)
 		    {
-	  			if( GRI.CarriedAlliedRadios[i] != none )
+	  			if (GRI.CarriedAlliedRadios[i] != none)
 		 		{
 		   			bFoundARadio = true;
 			  		break;
@@ -533,22 +533,22 @@ function ServerSaveArtilleryPosition()
 			}
 		}
 	}
-	else if ( PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX )
+	else if (PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
 	{
-	    for ( i = 0; i < ArrayCount(GRI.AxisRadios); i++)
+	    for (i = 0; i < ArrayCount(GRI.AxisRadios); i++)
 		{
-			if( GRI.AxisRadios[i] != none )
+			if (GRI.AxisRadios[i] != none)
 			{
 				bFoundARadio = true;
 				break;
 			}
 		}
 
-		if(!bFoundARadio)
+		if (!bFoundARadio)
 		{
-		    for ( i = 0; i < ArrayCount(GRI.CarriedAxisRadios); i++)
+		    for (i = 0; i < ArrayCount(GRI.CarriedAxisRadios); i++)
 		    {
-	  			if( GRI.CarriedAxisRadios[i] != none )
+	  			if (GRI.CarriedAxisRadios[i] != none)
 		 		{
 		   			bFoundARadio = true;
 			  		break;
@@ -564,19 +564,19 @@ function ServerSaveArtilleryPosition()
 	}
 
 	// if you don't have binocs can't call arty strike
-	if ( Pawn.Weapon != none && Pawn.Weapon.IsA('BinocularsItem' ))
+	if (Pawn.Weapon != none && Pawn.Weapon.IsA('BinocularsItem'))
 	{
 		TraceDist = GetMaxViewDistance();
 	  	StartTrace = Pawn.Location + Pawn.EyePosition();
 	  	AimRot = Rotation;
 	}
-	/*else if ( Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon' ))
+	/*else if (Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon'))
 	{
 	  	TraceDist = GetMaxViewDistance();
 	  	StartTrace = Pawn.Location + Pawn.EyePosition();
 	  	AimRot = Rotation;
 	}*/
-	else if( Pawn.IsA('ROVehicleWeaponPawn') )
+	else if (Pawn.IsA('ROVehicleWeaponPawn'))
 	{
 		TraceDist = GetMaxViewDistance();
 		AimRot = ROVehicleWeaponPawn(Pawn).CustomAim;
@@ -592,7 +592,7 @@ function ServerSaveArtilleryPosition()
 
 	 RVT = Spawn(class'ROVolumeTest',self,,HitLocation);
 
-	/*if ( Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon' ))
+	/*if (Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon'))
 	{
 	}
 	else*/ if ((RVT != none && RVT.IsInNoArtyVolume()) || HitActor == none || HitNormal == vect(0, 0, -1))
@@ -606,7 +606,7 @@ function ServerSaveArtilleryPosition()
 
 	 	ReceiveLocalizedMessage(class'ROArtilleryMsg', 0);
 
-	/*if ( Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon' ))
+	/*if (Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon'))
 	{
 	}
 	else
@@ -618,7 +618,7 @@ function ServerSaveArtilleryPosition()
 
 simulated function float GetMaxViewDistance()
 {
-	if(Pawn != none && Pawn.Region.Zone != none && Pawn.Region.Zone.bDistanceFog)
+	if (Pawn != none && Pawn.Region.Zone != none && Pawn.Region.Zone.bDistanceFog)
 		return Pawn.Region.Zone.DistanceFogEnd;
 
 	switch (Level.ViewDistanceLevel)
@@ -651,21 +651,21 @@ function ServerCancelMortarTarget()
 	local bool bTargetCancelled;
 
 	//Null target index.  No target to cancel.
-	if(MortarTargetIndex == 255)
+	if (MortarTargetIndex == 255)
 	{
 		ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 7);
 		return;
 	}
 
-	if(GameReplicationInfo != none)
+	if (GameReplicationInfo != none)
 		GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-	if(PlayerReplicationInfo != none)
+	if (PlayerReplicationInfo != none)
 		PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-	if(GetTeamNum() == 0)
+	if (GetTeamNum() == 0)
 	{
-		if(Level.TimeSeconds - GRI.GermanMortarTargets[MortarTargetIndex].Time < 15)
+		if (Level.TimeSeconds - GRI.GermanMortarTargets[MortarTargetIndex].Time < 15)
 		{
 			//------------------------------------------------------------------
 			//You cannot cancel your mortar target yet.
@@ -681,7 +681,7 @@ function ServerCancelMortarTarget()
 	}
 	else
 	{
-		if(Level.TimeSeconds - GRI.AlliedMortarTargets[MortarTargetIndex].Time < 15)
+		if (Level.TimeSeconds - GRI.AlliedMortarTargets[MortarTargetIndex].Time < 15)
 		{
 			//------------------------------------------------------------------
 			//You cannot cancel your mortar target yet.
@@ -696,7 +696,7 @@ function ServerCancelMortarTarget()
 		}
 	}
 
-	if(bTargetCancelled)
+	if (bTargetCancelled)
 	{
 		//----------------------------------------------------------------------
 		//[DH]Basnett has cancelled a mortar target.
@@ -721,24 +721,24 @@ function ServerSaveMortarTarget()
 
 	TeamIndex = GetTeamNum();
 
-	if(Pawn != none)
+	if (Pawn != none)
 		P = DH_Pawn(Pawn);
 
-	if(GameReplicationInfo != none)
+	if (GameReplicationInfo != none)
 		GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-	if(PlayerReplicationInfo != none)
+	if (PlayerReplicationInfo != none)
 		PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
 	TraceStart = Pawn.Location + Pawn.EyePosition();
 	TraceEnd = TraceStart + (vector(Rotation) * GetMaxViewDistance());
-	HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true, , );
+	HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true, ,);
 
 	VT = Spawn(class'ROVolumeTest', self,, HitLocation);
 
 	//--------------------------------------------------------------------------
 	//Check that the artillery target is not in a no artillery volume.
-	if((VT != none && VT.IsInNoArtyVolume()) || HitActor == none)
+	if ((VT != none && VT.IsInNoArtyVolume()) || HitActor == none)
 	{
 		//----------------------------------------------------------------------
 		//Invalid mortar target.
@@ -752,11 +752,11 @@ function ServerSaveMortarTarget()
 	//--------------------------------------------------------------------------
 	//Check that there are mortar operators available and that we haven't set
 	//a mortar target in the last 30 seconds.
-	if(TeamIndex == 0)	//Axis
+	if (TeamIndex == 0)	//Axis
 	{
 		for(i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
 		{
-			if(GRI.GermanMortarTargets[i].Controller == self &&
+			if (GRI.GermanMortarTargets[i].Controller == self &&
 			GRI.GermanMortarTargets[i].Time != 0 &&
 			Level.TimeSeconds - GRI.GermanMortarTargets[i].Time < 15)
 			{
@@ -771,7 +771,7 @@ function ServerSaveMortarTarget()
 		//Go through the roles and find a mortar operator role that has someone
 		//on it.
 		for(i = 0; i < ArrayCount(GRI.DHAxisRoles); i++)
-			if(GRI.DHAxisRoles[i]!= none && GRI.DHAxisRoles[i].bCanUseMortars && GRI.DHAxisRoleCount[i] > 0)
+			if (GRI.DHAxisRoles[i]!= none && GRI.DHAxisRoles[i].bCanUseMortars && GRI.DHAxisRoleCount[i] > 0)
 			{
 				//--------------------------------------------------------------
 				//Mortar operator available!
@@ -783,7 +783,7 @@ function ServerSaveMortarTarget()
 	{
 		for(i = 0; i < ArrayCount(GRI.AlliedMortarTargets); i++)
 		{
-			if(GRI.AlliedMortarTargets[i].Controller == self &&
+			if (GRI.AlliedMortarTargets[i].Controller == self &&
 			GRI.AlliedMortarTargets[i].Time != 0 &&
 			Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time < 15)
 			{
@@ -793,14 +793,14 @@ function ServerSaveMortarTarget()
 		}
 
 		for(i = 0; i < ArrayCount(GRI.DHAlliesRoles); i++)
-			if(GRI.DHAlliesRoles[i] != none && GRI.DHAlliesRoles[i].bCanUseMortars && GRI.DHAlliesRoleCount[i] > 0)
+			if (GRI.DHAlliesRoles[i] != none && GRI.DHAlliesRoles[i].bCanUseMortars && GRI.DHAlliesRoleCount[i] > 0)
 			{
 				bMortarsAvailable = true;
 				break;
 			}
 	}
 
-	if(!bMortarsAvailable)
+	if (!bMortarsAvailable)
 	{
 		//----------------------------------------------------------------------
 		//No mortar operators available.
@@ -812,11 +812,11 @@ function ServerSaveMortarTarget()
 	// Zero out the z coordinate for 2D distance checking on round hits.
 	HitLocation.Z = 0;
 
-	if(TeamIndex == 0)	//Axis
+	if (TeamIndex == 0)	//Axis
 	{
 		for(i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
 		{
-			if(GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self)
+			if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self)
 			{
 				GRI.GermanMortarTargets[i].Controller = self;
 				GRI.GermanMortarTargets[i].HitLocation = vect(0,0,0);
@@ -833,7 +833,7 @@ function ServerSaveMortarTarget()
 	{
 		for(i = 0; i < ArrayCount(GRI.AlliedMortarTargets); i++)
 		{
-			if(GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self)
+			if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self)
 			{
 				GRI.AlliedMortarTargets[i].Controller = self;
 				GRI.AlliedMortarTargets[i].HitLocation = vect(0,0,0);
@@ -848,10 +848,10 @@ function ServerSaveMortarTarget()
 		}
 	}
 
-	if(bMortarTargetMarked)
+	if (bMortarTargetMarked)
 	{
 		//[DH]Basnett has marked a mortar target.
-		Level.Game.BroadcastLocalizedMessage(class'DH_MortarTargetMessage', 2, PlayerReplicationInfo, , );
+		Level.Game.BroadcastLocalizedMessage(class'DH_MortarTargetMessage', 2, PlayerReplicationInfo, ,);
 	}
 	else
 		//----------------------------------------------------------------------
@@ -865,18 +865,18 @@ function ServerSaveMortarTarget()
 // Overridden to handle separate MG and AT resupply as well as assisted AT loading
 exec function ThrowMGAmmo()
 {
-	if( DH_Pawn(Pawn) == none )
+	if (DH_Pawn(Pawn) == none)
 		return;
 
-	if( DHHud(myHud).NamedPlayer != none )
+	if (DHHud(myHud).NamedPlayer != none)
 	{
-		if( DH_Pawn(Pawn).bCanATReload )
+		if (DH_Pawn(Pawn).bCanATReload)
 		   	ServerLoadATAmmo(DHHud(myHud).NamedPlayer);
-		else if( DH_Pawn(Pawn).bCanATResupply && DH_Pawn(Pawn).bHasATAmmo )
+		else if (DH_Pawn(Pawn).bCanATResupply && DH_Pawn(Pawn).bHasATAmmo)
 		   	ServerThrowATAmmo(DHHud(myHud).NamedPlayer);
-		else if( DH_Pawn(Pawn).bCanMGResupply && (DH_Pawn(Pawn).bHasMGAmmo ) )
+		else if (DH_Pawn(Pawn).bCanMGResupply && (DH_Pawn(Pawn).bHasMGAmmo))
 		  	ServerThrowMGAmmo(DHHud(myHud).NamedPlayer);
-		else if(DH_Pawn(Pawn).bCanMortarResupply && (DH_Pawn(Pawn).bHasMortarAmmo ))
+		else if (DH_Pawn(Pawn).bCanMortarResupply && (DH_Pawn(Pawn).bHasMortarAmmo))
 			ServerThrowMortarAmmo(DHHud(myHud).NamedPlayer);
 	}
 }
@@ -893,9 +893,9 @@ function ServerThrowATAmmo(Pawn Gunner)
 
 function ServerThrowMortarAmmo(Pawn Gunner)
 {
-	if(DH_MortarVehicle(Gunner) != none)
+	if (DH_MortarVehicle(Gunner) != none)
 		DH_Pawn(Pawn).TossMortarVehicleAmmo(DH_MortarVehicle(Gunner));
-	else if(DH_Pawn(Gunner) != none)
+	else if (DH_Pawn(Gunner) != none)
 		DH_Pawn(Pawn).TossMortarAmmo(DH_Pawn(Gunner));
 }
 
@@ -929,7 +929,7 @@ state PlayerWalking
 
 		P = DH_Pawn(Pawn);
 
-		if (P == None)
+		if (P == none)
 			return;
 
 		OldAccel = Pawn.Acceleration;
@@ -941,7 +941,7 @@ state PlayerWalking
 
 		// Failsafe in case client passes mantle test but server fails, so client isn't left in limbo
 		// Also triggers if player cancels mantle before the client has actually entered the mantling state
-		if( Role < ROLE_Authority && bWaitingToMantle && Level.TimeSeconds > MantleFailTimer )
+		if (Role < ROLE_Authority && bWaitingToMantle && Level.TimeSeconds > MantleFailTimer)
 		{
 			bWaitingToMantle = false;
 			DH_Pawn(Pawn).ClientMantleFail();
@@ -949,12 +949,12 @@ state PlayerWalking
 
 		if (bPressedJump && !bWaitingToMantle)
 		{
-			if( P.CanMantle(true) )
+			if (P.CanMantle(true))
 			{
-				if( Role == ROLE_Authority )
+				if (Role == ROLE_Authority)
 					GoToState('Mantling');
 
-				if( Role < ROLE_Authority )
+				if (Role < ROLE_Authority)
 				{
 					bWaitingToMantle = true;
 					MantleFailTimer = Level.TimeSeconds + 1;
@@ -967,25 +967,25 @@ state PlayerWalking
 			}
 		}
 
-		if ( Pawn.Physics != PHYS_Falling )
+		if (Pawn.Physics != PHYS_Falling)
 		{
-			if (bDuck == 0 )
+			if (bDuck == 0)
 				Pawn.ShouldCrouch(false);
-			else if ( Pawn.bCanCrouch )
+			else if (Pawn.bCanCrouch)
 				Pawn.ShouldCrouch(true);
 
 			if (bCrawl == 0)
 				Pawn.ShouldProne(false);
-			else if ( Pawn.bCanProne )
+			else if (Pawn.bCanProne)
 				Pawn.ShouldProne(true);
 		}
 
-		if(bDidMantle && Role < ROLE_Authority)
+		if (bDidMantle && Role < ROLE_Authority)
 			ClientMessage("processmove Vel: "@Pawn.Velocity);
 	}
 
 	// Client side
-	function PlayerMove( float DeltaTime )
+	function PlayerMove(float DeltaTime)
 	{
 		local vector X,Y,Z, NewAccel;
 		local eDoubleClickDir DoubleClickMove;
@@ -995,7 +995,7 @@ state PlayerWalking
 
 		P = DH_Pawn(Pawn);
 
-		if (P == None)
+		if (P == none)
 		{
 			GotoState('Dead'); // this was causing instant respawns in mp games
 			return;
@@ -1005,7 +1005,7 @@ state PlayerWalking
 			HandleMousePlayerMove(DeltaTime);
 
 		// Probably want to move this elsewhere, but here will do for now
-		if ( Level.TimeSeconds - MantleCheckTimer > 0.125 && !P.bIsMantling )
+		if (Level.TimeSeconds - MantleCheckTimer > 0.125 && !P.bIsMantling)
 		{
 			P.HUDCheckMantle();
 			MantleCheckTimer = Level.TimeSeconds;
@@ -1016,7 +1016,7 @@ state PlayerWalking
 		// Update acceleration.
 		NewAccel = aForward*X + aStrafe*Y;
 		NewAccel.Z = 0;
-		if ( VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bDeployingMortar)
+		if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bDeployingMortar)
 			NewAccel = vect(0,0,0);
 
 		//DoubleClickMove = PlayerInput.CheckForDoubleClickMove(1.1*DeltaTime/Level.TimeDilation);
@@ -1024,10 +1024,10 @@ state PlayerWalking
 		GroundPitch = 0;
 		ViewRotation = Rotation;
 
-		if ( Pawn.Physics == PHYS_Walking )
+		if (Pawn.Physics == PHYS_Walking)
 		{
 			// Take the bipod weapon out of deployed if the player tries to move
- 			if( Pawn.bBipodDeployed && NewAccel != vect(0,0,0) )
+ 			if (Pawn.bBipodDeployed && NewAccel != vect(0,0,0))
  			{
  				ROBipodWeapon(Pawn.Weapon).ForceUndeploy();
 // 				DH_BipodAutoWeapon(Pawn.Weapon).ForceUndeploy();
@@ -1035,10 +1035,10 @@ state PlayerWalking
 
 			// tell pawn about any direction changes to give it a chance to play appropriate animation
 			//if walking, look up/down stairs - unless player is rotating view
-			 if ( (bLook == 0)
-				&& (((Pawn.Acceleration != Vect(0,0,0)) && bSnapToLevel) || !bKeyboardLook) )
+			 if ((bLook == 0)
+				&& (((Pawn.Acceleration != vect(0,0,0)) && bSnapToLevel) || !bKeyboardLook))
 			{
-				if ( bLookUpStairs || bSnapToLevel )
+				if (bLookUpStairs || bSnapToLevel)
 				{
 					GroundPitch = FindStairRotation(deltaTime);
 					ViewRotation.Pitch = GroundPitch;
@@ -1054,7 +1054,7 @@ state PlayerWalking
 		UpdateRotation(DeltaTime, 1);
 		bDoubleJump = false;
 
-		if ( bPressedJump && Pawn.CannotJumpNow() )
+		if (bPressedJump && Pawn.CannotJumpNow())
 		{
 			bSaveJump = true;
 			bPressedJump = false;
@@ -1062,7 +1062,7 @@ state PlayerWalking
 		else
 			bSaveJump = false;
 
-		if ( Role < ROLE_Authority ) // then save this move and replicate it
+		if (Role < ROLE_Authority) // then save this move and replicate it
 			ReplicateMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
 		else
 			ProcessMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
@@ -1072,17 +1072,17 @@ state PlayerWalking
 	 function EndState()
 	 {
 		GroundPitch = 0;
-		if ( Pawn != None )
+		if (Pawn != none)
 		{
-			if( bDuck==0 )
+			if (bDuck==0)
 				Pawn.ShouldCrouch(false);
 
 			// Not sure if we need this or not - Ramm
-			if( bCrawl==0 )
+			if (bCrawl==0)
 				Pawn.ShouldProne(false);
 		}
 
-		if( Role < ROLE_Authority )
+		if (Role < ROLE_Authority)
 			bWaitingToMantle = false;
 	 }
 }
@@ -1092,11 +1092,11 @@ state Mantling
 	/* For reasons unknown, native prediction on the server insists on altering the client's velocity once
 	its animation finishes. This forcibly resets that velocity just long enough for the
 	server to catch up and end the state */
-	event PlayerTick( float DeltaTime )
+	event PlayerTick(float DeltaTime)
 	{
-	    if(bDidMantle && Role < ROLE_Authority)
+	    if (bDidMantle && Role < ROLE_Authority)
 	    {
-			if( Pawn.Velocity != vect(0,0,0) )
+			if (Pawn.Velocity != vect(0,0,0))
 				Pawn.Velocity = vect(0,0,0);
 	    }
 
@@ -1109,10 +1109,10 @@ state Mantling
 
 		DHP = DH_Pawn(Pawn);
 
-		if( DHP.Physics == PHYS_Walking )
+		if (DHP.Physics == PHYS_Walking)
 		{
 			// This is just in case we fall further than expected and are unable to set crouch in DH_Pawn.ResetRootBone()
-			if( !bDidCrouchCheck && DHP.bCrouchMantle )
+			if (!bDidCrouchCheck && DHP.bCrouchMantle)
 			{
 				DHP.DoMantleCrouch();
 
@@ -1122,7 +1122,7 @@ state Mantling
 			else
 			{
 				// Extremely important to not let the client exit the state before the server - BIG sync problems othewise
-				if( Role == ROLE_Authority )
+				if (Role == ROLE_Authority)
 					GotoState('PlayerWalking');
 			}
 		}
@@ -1130,7 +1130,7 @@ state Mantling
 		{
 			// Wait for player to finish falling
 			// If they don't do so within a set period, assume something's gone wrong and abort
-			if( MantleLoopCount < 6 )
+			if (MantleLoopCount < 6)
 			{
 				SetTimer(0.1, false);
 				MantleLoopCount++;
@@ -1140,7 +1140,7 @@ state Mantling
 				SetTimer(0.0, false);
 				DHP.CancelMantle();
 
-				if( Role == ROLE_Authority )
+				if (Role == ROLE_Authority)
 					GotoState('PlayerWalking');
 
 				bLockJump = true;
@@ -1155,52 +1155,52 @@ state Mantling
 
 		DHP = DH_Pawn(Pawn);
 
-		/*if( !bLockJump && Level.TimeSeconds - LastMantleUpdate > 0.3 )
+		/*if (!bLockJump && Level.TimeSeconds - LastMantleUpdate > 0.3)
 		{
 			DHP.SetLocation(DHP.MantleStartLocation);
 			SetTimer(0.0, false);
 			DHP.CancelMantle();
 
-			if( Role == ROLE_Authority )
+			if (Role == ROLE_Authority)
 				GotoState('PlayerWalking');
 
 			bLockJump = true;
-			if( Role == ROLE_Authority )
+			if (Role == ROLE_Authority)
 				ClientMessage("WARNING: Packet Loss Detected - Mantle Aborted!");
 			return;
 		}
 		else
 			LastMantleUpdate = Level.TimeSeconds;*/
 
-		if ( bPressedJump && !bLockJump )
+		if (bPressedJump && !bLockJump)
 		{
 			SetTimer(0.0, false);
 			DHP.CancelMantle();
 
-			if( Role == ROLE_Authority )
+			if (Role == ROLE_Authority)
 				GotoState('PlayerWalking');
 
 			bLockJump = true;
 			return;
 		}
 
-		if ( Pawn.Acceleration != NewAccel )
+		if (Pawn.Acceleration != NewAccel)
 			Pawn.Acceleration = NewAccel;
 
 		DHP.SetViewPitch(Rotation.Pitch);
 
-		if( !bDidMantle && !bLockJump )
+		if (!bDidMantle && !bLockJump)
 		{
 			DHP.DoMantle(DeltaTime);
 		}
-		/*else if( DH_Pawn(Pawn).bIsMantling )
+		/*else if (DH_Pawn(Pawn).bIsMantling)
 		{
 			SetTimer(0.1, false);
 		}*/
 
-		/*if( !bDidMantle )
+		/*if (!bDidMantle)
 		{
-			if ( !DH_Pawn(Pawn).DoMantle(DeltaTime) )
+			if (!DH_Pawn(Pawn).DoMantle(DeltaTime))
 			{
 				bDidMantle = true;
 				DH_Pawn(Pawn).MantleAdjustHeight(false);
@@ -1209,7 +1209,7 @@ state Mantling
 		}
 		else
 		{
-			if( Physics != PHYS_Flying && Physics != PHYS_Falling && !DH_Pawn(Pawn).bIsCrouched )
+			if (Physics != PHYS_Flying && Physics != PHYS_Falling && !DH_Pawn(Pawn).bIsCrouched)
 			{
 				DH_Pawn(Pawn).ShouldCrouch(true);
 				SetTimer(0.5,false);
@@ -1218,7 +1218,7 @@ state Mantling
 		}*/
 	}
 
-	function PlayerMove( float DeltaTime )
+	function PlayerMove(float DeltaTime)
 	{
 		local vector NewAccel;
 		local eDoubleClickDir DoubleClickMove;
@@ -1229,7 +1229,7 @@ state Mantling
 
 		ViewRotation = Rotation;
 
-		if( !bDidMantle && DHP.bIsMantling )
+		if (!bDidMantle && DHP.bIsMantling)
 			NewAccel = DHP.NewAcceleration;
 		else
 			NewAccel = vect(0,0,0);
@@ -1238,22 +1238,22 @@ state Mantling
 		SetRotation(ViewRotation);
 		OldRotation = Rotation;
 		UpdateRotation(DeltaTime, 1);
-		if( bSprint > 0 )
+		if (bSprint > 0)
 			bSprint = 0;
 
-		if ( Role < ROLE_Authority ) // then save this move and replicate it
+		if (Role < ROLE_Authority) // then save this move and replicate it
 			ReplicateMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
 		else
 			ProcessMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
 
-		bPressedJump = False;
+		bPressedJump = false;
 	}
 
 	function BeginState()
 	{
-	    if( bMantleDebug )
+	    if (bMantleDebug)
 		{
-			if(Role == ROLE_Authority)
+			if (Role == ROLE_Authority)
 			{
 				ClientMessage("SERVER ENTER Controller Mantling state");
 				log("SERVER ENTER Controller Mantling state");
@@ -1267,12 +1267,12 @@ state Mantling
 
 		// If the client has failed the mantle check conditions but the server has not,
 		// this should force it to bypass the start conditions and resync with the server
-		if( Role < ROLE_Authority && !DH_Pawn(Pawn).bIsMantling )
+		if (Role < ROLE_Authority && !DH_Pawn(Pawn).bIsMantling)
 			DH_Pawn(Pawn).CanMantle(true, true);
 
 		bSprint = 0;
 		DH_Pawn(Pawn).PreMantle();
-		if(bLockJump)
+		if (bLockJump)
 			bLockJump = false;
 		MantleLoopCount = 0;
 		//LastMantleUpdate = Level.TimeSeconds;
@@ -1280,9 +1280,9 @@ state Mantling
 
 	function EndState()
 	{
-		if( bMantleDebug )
+		if (bMantleDebug)
 		{
-			if(Role == ROLE_Authority)
+			if (Role == ROLE_Authority)
 			{
 				ClientMessage("SERVER EXIT Controller Mantling state");
 				log("SERVER EXIT Controller Mantling state");
@@ -1298,10 +1298,10 @@ state Mantling
 		bDidCrouchCheck = false;
 		bLockJump = false;
 
-		if( DH_Pawn(Pawn).bIsMantling )
+		if (DH_Pawn(Pawn).bIsMantling)
 			DH_Pawn(Pawn).CancelMantle();
 
-		if( bMantleDebug && Pawn.IsLocallyControlled() )
+		if (bMantleDebug && Pawn.IsLocallyControlled())
 		{
 			ClientMessage("------------- End Mantle Debug -------------");
 			log("------------- End Mantle Debug -------------");
@@ -1315,29 +1315,29 @@ state Mantling
 {
 ignores SeePlayer, HearNoise, Bump;
 
-	function bool NotifyPhysicsVolumeChange( PhysicsVolume NewVolume )
+	function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
 	{
 		local actor HitActor;
 		local vector HitLocation, HitNormal, checkpoint;
 
-		if ( !NewVolume.bWaterVolume )
+		if (!NewVolume.bWaterVolume)
 		{
 			Pawn.SetPhysics(PHYS_Falling);
-			if ( Pawn.Velocity.Z > 0 )
+			if (Pawn.Velocity.Z > 0)
 			{     */
 				/*if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) //check for waterjump
 				{
 					Pawn.velocity.Z = FMax(Pawn.JumpZ,420) + 2 * Pawn.CollisionRadius; //set here so physics uses this for remainder of tick
 					GotoState(Pawn.LandMovementState);
 				}
-				else*/ /*if ( (Pawn.Velocity.Z > 160) || !Pawn.TouchingWaterVolume() )
+				else*/ /*if ((Pawn.Velocity.Z > 160) || !Pawn.TouchingWaterVolume())
 					GotoState(Pawn.LandMovementState);
 				else //check if in deep water
 				{
 					checkpoint = Pawn.Location;
 					checkpoint.Z -= (Pawn.CollisionHeight + 6.0);
 					HitActor = Trace(HitLocation, HitNormal, checkpoint, Pawn.Location, false);
-					if (HitActor != None)
+					if (HitActor != none)
 						GotoState(Pawn.LandMovementState);
 					else
 					{
@@ -1362,7 +1362,7 @@ ignores SeePlayer, HearNoise, Bump;
 
 		if (bPressedJump)
 		{
-			if( DH_Pawn(Pawn).CanMantle(true) )
+			if (DH_Pawn(Pawn).CanMantle(true))
 			{
    	            GoToState('Mantling');
    	            return;
@@ -1371,12 +1371,12 @@ ignores SeePlayer, HearNoise, Bump;
 
 		GetAxes(Rotation,X,Y,Z);
 		OldAccel = Pawn.Acceleration;
-		if ( Pawn.Acceleration != NewAccel )
+		if (Pawn.Acceleration != NewAccel)
 			Pawn.Acceleration = NewAccel;     */
 		/*bUpAndOut = ((X Dot Pawn.Acceleration) > 0) && ((Pawn.Acceleration.Z > 0) || (Rotation.Pitch > 2048));
-		if ( Pawn.bUpAndOut != bUpAndOut )
+		if (Pawn.bUpAndOut != bUpAndOut)
 			Pawn.bUpAndOut = bUpAndOut;*/
-	/*    if ( !Pawn.PhysicsVolume.bWaterVolume ) //check for waterjump
+	/*    if (!Pawn.PhysicsVolume.bWaterVolume) //check for waterjump
 			NotifyPhysicsVolumeChange(Pawn.PhysicsVolume);
 	}
 
@@ -1394,7 +1394,7 @@ ignores SeePlayer, HearNoise, Bump;
 		GetAxes(Rotation,X,Y,Z);
 
 		NewAccel = aForward*X + aStrafe*Y + aUp*vect(0,0,1);
-		if ( VSize(NewAccel) < 1.0 )
+		if (VSize(NewAccel) < 1.0)
 			NewAccel = vect(0,0,0);
 
 		//add bobbing when swimming
@@ -1404,10 +1404,10 @@ ignores SeePlayer, HearNoise, Bump;
 		oldRotation = Rotation;
 		UpdateRotation(DeltaTime, 2);
 
-		if ( Role < ROLE_Authority ) // then save this move and replicate it
-			ReplicateMove(DeltaTime, NewAccel, DCLICK_None, OldRotation - Rotation);
+		if (Role < ROLE_Authority) // then save this move and replicate it
+			ReplicateMove(DeltaTime, NewAccel, DCLICK_none, OldRotation - Rotation);
 		else
-			ProcessMove(DeltaTime, NewAccel, DCLICK_None, OldRotation - Rotation);
+			ProcessMove(DeltaTime, NewAccel, DCLICK_none, OldRotation - Rotation);
 		bPressedJump = false;
 	}
 }  */
@@ -1440,7 +1440,7 @@ function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int objID, int reque
 	{
 		// If not, check if we're a MG requesting ammo
 		// Basnett, added mortar operators requesting resupply.
-		if (requestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars)) // && !DH_PRI.DHRoleInfo.bIsATGunner )
+		if (requestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars)) // && !DH_PRI.DHRoleInfo.bIsATGunner)
 			return;
 	}
 
@@ -1466,7 +1466,7 @@ function string GetSecGrenadeWeapon()
 
 	RI = GetRoleInfo();
 
-	if (RI == None || GrenadeWeapon + 1 < 1)
+	if (RI == none || GrenadeWeapon + 1 < 1)
 		return "";
 
 	return string(RI.Grenades[GrenadeWeapon + 1].Item);
@@ -1482,7 +1482,7 @@ function int GetSecGrenadeAmmo()
 
 	RI = GetRoleInfo();
 
-	if (RI == None || GrenadeWeapon < 0 || RI.Grenades[GrenadeWeapon + 1].Item != none)
+	if (RI == none || GrenadeWeapon < 0 || RI.Grenades[GrenadeWeapon + 1].Item != none)
 		return -1;
 
 	return RI.Grenades[GrenadeWeapon + 1].Amount;
@@ -1519,23 +1519,23 @@ function CalcBehindView(out vector CameraLocation, out rotator CameraRotation, f
 
 		RPawn = ROPawn(ViewTarget);
 
-		if( RPawn != none )
+		if (RPawn != none)
 		{
 			CameraRotation.Pitch = RPawn.SmoothViewPitch;
 			CameraRotation.Yaw = RPawn.SmoothViewYaw;
 		}
 		//Dist *= 0.5;
 	}
-	else if ( IsInState('Dead') && bLockedBehindView )
+	else if (IsInState('Dead') && bLockedBehindView)
 	{
 		RPawn = ROPawn(ViewTarget);
 
-		if( RPawn != none )
+		if (RPawn != none)
 		{
 			C = ViewTarget.GetBoneCoords(RPawn.HeadBone);
 
 			// Rotate the view the proper direction
-			ViewRot = OrthoRotation( -C.YAxis, -C.ZAxis, C.XAxis );
+			ViewRot = OrthoRotation(-C.YAxis, -C.ZAxis, C.XAxis);
 
 			CameraRotation = ViewRot;
 		}
@@ -1562,12 +1562,12 @@ function CalcBehindView(out vector CameraLocation, out rotator CameraRotation, f
 	RealDist = Dist;
 	Dist += CameraDeltaRad;
 
-	if( Trace( HitLocation, HitNormal, CameraLocation - Dist * vector(CameraRotation), CameraLocation,false,vect(10,10,10) ) != none )
-		ViewDist = FMin( (CameraLocation - HitLocation) dot View, Dist );
+	if (Trace(HitLocation, HitNormal, CameraLocation - Dist * vector(CameraRotation), CameraLocation,false,vect(10,10,10)) != none)
+		ViewDist = FMin((CameraLocation - HitLocation) dot View, Dist);
 	else
 		ViewDist = Dist;
 
-	if ( !bBlockCloseCamera || !bValidBehindCamera || (ViewDist > 10 + FMax(ViewTarget.CollisionRadius, ViewTarget.CollisionHeight)) )
+	if (!bBlockCloseCamera || !bValidBehindCamera || (ViewDist > 10 + FMax(ViewTarget.CollisionRadius, ViewTarget.CollisionHeight)))
 	{
 		//Log("Update Cam ");
 		bValidBehindCamera = true;
@@ -1594,17 +1594,17 @@ function CalcBehindView(out vector CameraLocation, out rotator CameraRotation, f
 /**
 * Smooth field of view transition.
 */
-function AdjustView(float DeltaTime )
+function AdjustView(float DeltaTime)
 {
-    if ( FOVAngle != DesiredFOV )
+    if (FOVAngle != DesiredFOV)
     {
 		FOVAngle -= (10.0 * DeltaTime * (FOVAngle - DesiredFOV));	//TODO: Arbitrary number.
 
-        if ( Abs(FOVAngle - DesiredFOV) <= 0.0625 )
+        if (Abs(FOVAngle - DesiredFOV) <= 0.0625)
             FOVAngle = DesiredFOV;
     }
 
-    if ( bZooming )
+    if (bZooming)
     {
         ZoomLevel = FMin(ZoomLevel + DeltaTime, DesiredZoomLevel);
         DesiredFOV = FClamp(90.0 - (ZoomLevel * 88.0), 1, 170);

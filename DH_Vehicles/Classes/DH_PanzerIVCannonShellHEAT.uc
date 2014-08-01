@@ -60,7 +60,7 @@ defaultproperties
      OpticalRanges(23)=(Range=2600)
      OpticalRanges(24)=(Range=2800)
      OpticalRanges(25)=(Range=3000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=10.000000
      DHPenetrationTable(1)=10.000000
      DHPenetrationTable(2)=10.000000
@@ -73,7 +73,7 @@ defaultproperties
      DHPenetrationTable(9)=10.000000
      DHPenetrationTable(10)=10.000000
      ShellDiameter=7.500000
-     bIsAlliedShell=False
+     bIsAlliedShell=false
      TracerEffect=Class'DH_Effects.DH_OrangeTankShellTracer'
      ShellImpactDamage=Class'DH_Vehicles.DH_PanzerIVCannonShellImpactDamageHEAT'
      ImpactDamage=650

@@ -37,7 +37,7 @@ defaultproperties
      Models(2)="FJ453"
      Models(3)="FJ454"
      Models(4)="FJ455"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MG42Weapon',Amount=6)
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MG34Weapon',Amount=6)
@@ -45,7 +45,7 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_FJHelmet1'
      Headgear(1)=Class'DH_GerPlayers.DH_FJHelmetNet1'
      Headgear(2)=Class'DH_GerPlayers.DH_FJHelmetNet2'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
      limit=2
 }

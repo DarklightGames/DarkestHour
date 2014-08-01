@@ -13,12 +13,12 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	if ( SmokeTrail != None )
+	if (SmokeTrail != none)
 	{
 		SmokeTrail.HandleOwnerDestroyed();
 	}
 
-	if ( Corona != None )
+	if (Corona != none)
 	{
 		Corona.Destroyed();
 	}
@@ -34,8 +34,8 @@ defaultproperties
      DHPenetrationTable(4)=9.100000
      DHPenetrationTable(5)=9.100000
      DHPenetrationTable(6)=9.100000
-     bIsHEATRound=True
-     bHasTracer=False
+     bIsHEATRound=true
+     bHasTracer=false
      ShellImpactDamage=Class'DH_ATWeapons.DH_PIATImpactDamType'
      ImpactDamage=650
      Speed=4526.000000

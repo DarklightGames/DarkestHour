@@ -11,7 +11,7 @@ simulated function AnimEnd(int Channel)
 
 	GetAnimParams(0, anim, frame, rate);
 
-	if( anim == WA_Reload || anim == WA_PreReload )
+	if (anim == WA_Reload || anim == WA_PreReload)
 	{
 		return;
 	}
@@ -26,7 +26,7 @@ defaultproperties
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdNagant'
      MuzzleBoneName="Muzzle"
      ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mmGreen'
-     bAnimNotifiedShellEjects=True
+     bAnimNotifiedShellEjects=true
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"
      PA_MovementAnims(2)="stand_jogL_kar"
@@ -163,6 +163,6 @@ defaultproperties
      WA_WorkBolt="idle_enfieldno4_scoped"
      menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Scoped_icon'
      MenuDescription="Scoped Enfield No.4: Bolt-action rifle with sniper scope"
-     bRapidFire=False
+     bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_Scoped_3rd'
 }

@@ -31,7 +31,7 @@ defaultproperties
      MechanicalRanges(18)=(Range=1800,RangeValue=408.000000)
      MechanicalRanges(19)=(Range=1900,RangeValue=438.000000)
      MechanicalRanges(20)=(Range=2000,RangeValue=468.000000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=3.300000
      DHPenetrationTable(1)=3.100000
      DHPenetrationTable(2)=2.800000
@@ -44,7 +44,7 @@ defaultproperties
      DHPenetrationTable(9)=0.500000
      DHPenetrationTable(10)=0.300000
      ShellDiameter=7.500000
-     bIsAlliedShell=False
+     bIsAlliedShell=false
      PenetrationMag=1000.000000
      ShellImpactDamage=Class'DH_Guns.DH_Pak40CannonShellDamageAP'
      ImpactDamage=455

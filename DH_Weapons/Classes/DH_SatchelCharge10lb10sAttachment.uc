@@ -14,7 +14,7 @@ simulated event ThirdPersonEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-		if ( ROPawn(Instigator) == None )
+		if (ROPawn(Instigator) == none)
 			return;
         if (FlashCount == 0)
         {
@@ -250,8 +250,8 @@ defaultproperties
      WA_Fire="idle_satchel"
      menuImage=Texture'InterfaceArt_tex.Menu_weapons.satchel'
      MenuDescription="Satchel charge: 10 lb of explosives in a simple canvas bag. Primed for use, with a 10-second fuse. Destructive force based on concussion rather than fragmentation. Used primarily for demolitions, but can be used effectively against personnel and light vehicles."
-     bRapidFire=False
-     LightType=LT_None
-     LightEffect=LE_None
+     bRapidFire=false
+     LightType=LT_none
+     LightEffect=LE_none
      Mesh=SkeletalMesh'Weapons3rd_anm.satchel'
 }

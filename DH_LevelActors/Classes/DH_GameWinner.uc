@@ -18,12 +18,12 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 	ROTeamGame = ROTeamGame(Level.Game); //Get Game Info
 
-	if(ROTeamGame.Teams[AXIS_TEAM_INDEX].Score > ROTeamGame.Teams[ALLIES_TEAM_INDEX].Score)
+	if (ROTeamGame.Teams[AXIS_TEAM_INDEX].Score > ROTeamGame.Teams[ALLIES_TEAM_INDEX].Score)
 		TriggerEvent(AxisWonEvent, Other, EventInstigator);
-	else if(ROTeamGame.Teams[AXIS_TEAM_INDEX].Score < ROTeamGame.Teams[ALLIES_TEAM_INDEX].Score)
+	else if (ROTeamGame.Teams[AXIS_TEAM_INDEX].Score < ROTeamGame.Teams[ALLIES_TEAM_INDEX].Score)
 		TriggerEvent(AlliesWonEvent, Other, EventInstigator);
 	else
-		Level.Game.Broadcast( self, "The Game Was Tie!" );
+		Level.Game.Broadcast(self, "The Game Was Tie!");
 }
 
 defaultproperties

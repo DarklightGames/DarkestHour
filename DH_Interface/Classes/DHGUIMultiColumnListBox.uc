@@ -13,7 +13,7 @@ defaultproperties
 
      DefaultListClass="DH_Interface.DHGUIMultiColumnList"
      Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar
-         bVisible=False
+         bVisible=false
          OnPreDraw=TheScrollbar.GripPreDraw
      End Object
      MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHGUIMultiColumnListBox.TheScrollbar'

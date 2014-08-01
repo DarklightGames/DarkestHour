@@ -40,13 +40,13 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 	for(i=0;i<ConditionReferenceArray.Length;i++)
 	{
-		if(UseRandomness)
+		if (UseRandomness)
 		{
 			RandomNum = Rand(101);  //Gets a random # between 0 & 100
-			if(RandomPercent <= RandomNum)
+			if (RandomPercent <= RandomNum)
 				continue; //continue for loop, but skip this one
 		}
-		if(ConditionReferenceArray[i].bEnabled == bTriggerIf)
+		if (ConditionReferenceArray[i].bEnabled == bTriggerIf)
 			TriggerEvent(EventToTrigger, self, none);
 	}
 }

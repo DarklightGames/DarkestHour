@@ -14,12 +14,12 @@ class DH_ATGunCannon extends DH_ROTankCannon
 
 simulated function Timer()
 {
-   if ( VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none )
+   if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
    {
       //log(" Returning because there is no controller");
       SetTimer(0.05,true);
    }
-   else if ( CannonReloadState == CR_Empty )
+   else if (CannonReloadState == CR_Empty)
    {
          if (Role == ROLE_Authority)
 	     {
@@ -33,7 +33,7 @@ simulated function Timer()
          GetSoundDuration(ReloadSoundTwo) + GetSoundDuration(ReloadSoundThree);
          SetTimer(GetSoundDuration(ReloadSoundOne),false);
    }
-   else if ( CannonReloadState == CR_ReloadedPart1 )
+   else if (CannonReloadState == CR_ReloadedPart1)
    {
          if (Role == ROLE_Authority)
 	     {
@@ -48,7 +48,7 @@ simulated function Timer()
          GetSoundDuration(ReloadSoundThree);
          SetTimer(GetSoundDuration(ReloadSoundTwo),false);
    }
-   else if ( CannonReloadState == CR_ReloadedPart2 )
+   else if (CannonReloadState == CR_ReloadedPart2)
    {
          if (Role == ROLE_Authority)
 	     {
@@ -62,9 +62,9 @@ simulated function Timer()
          CannonReloadState = CR_ReloadedPart3;
          SetTimer(GetSoundDuration(ReloadSoundThree),false);
    }
-   else if ( CannonReloadState == CR_ReloadedPart3 )
+   else if (CannonReloadState == CR_ReloadedPart3)
    {
-		if(Role == ROLE_Authority)
+		if (Role == ROLE_Authority)
 		{
 			bClientCanFireCannon = true;
 		}
@@ -73,22 +73,22 @@ simulated function Timer()
    }
 }
 
-simulated function bool DHShouldPenetrateAPC( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne )
+simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
    return true;
 }
 
-simulated function bool DHShouldPenetrateHVAP( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne )
+simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
     return true;
 }
 
-simulated function bool DHShouldPenetrateAPDS( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne )
+simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
     return true;
 }
 
-simulated function bool DHShouldPenetrateHEAT( vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bIsHEATRound )
+simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bIsHEATRound)
 {
     return true;
 }
@@ -109,7 +109,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     //Added ability for gunner to take nade, bash, and bayonet damage
     /*   Removed this if/then to fix player vulnerability bug that was fixed in the After-Hourz AT-Gun fixes.
-    if( HitDriver(Hitlocation, Momentum) || ClassIsChildOf(DamageType,class'ROGrenadeDamType') || ClassIsChildOf(DamageType,class'ROWeaponBashDamageType') || ClassIsChildOf(DamageType,class'ROWeaponBayonetDamageType') )
+    if (HitDriver(Hitlocation, Momentum) || ClassIsChildOf(DamageType,class'ROGrenadeDamType') || ClassIsChildOf(DamageType,class'ROWeaponBashDamageType') || ClassIsChildOf(DamageType,class'ROWeaponBayonetDamageType'))
 	{
          ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
 	}
@@ -130,31 +130,31 @@ simulated function int LimitYaw(int yaw)
 
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
-    if ( !bLimitYaw )
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
     NewYaw = yaw;
 
-    if( PwningPawn != none )
+    if (PwningPawn != none)
     {
-	   	if( yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
+	   	if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
 	   	}
-	   	else if( yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit )
+	   	else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
 	  	}
   	}
   	else
   	{
-	   	if( yaw > MaxPositiveYaw )
+	   	if (yaw > MaxPositiveYaw)
 	   	{
 	   		NewYaw = MaxPositiveYaw;
 	   	}
-	   	else if( yaw < MaxNegativeYaw )
+	   	else if (yaw < MaxNegativeYaw)
 	   	{
 	   		NewYaw = MaxNegativeYaw;
 	  	}

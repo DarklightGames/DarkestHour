@@ -32,7 +32,7 @@ defaultproperties
      Models(3)="WH_C4"
      Models(4)="WH_C5"
      Models(5)="WH_C6"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MG42Weapon',Amount=6)
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MG34Weapon',Amount=6)
@@ -40,7 +40,7 @@ defaultproperties
      SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
      Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetOne'
      Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
      limit=2
 }

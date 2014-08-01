@@ -15,7 +15,7 @@ defaultproperties
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
      Headgear(0)=Class'DH_BritishPlayers.DH_CanadianTankerBeret'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
-     bCanBeTankCrew=True
+     bEnhancedAutomaticControl=true
+     bCanBeTankCrew=true
      limit=3
 }

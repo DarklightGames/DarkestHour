@@ -12,7 +12,7 @@ class DH_UniCarrierGun extends UniCarrierGun;
 // Play the reload animation on the client
 simulated function ClientDoReload()
 {
-    if(Owner != none && VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).HUDOverlay != none )
+    if (Owner != none && VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).HUDOverlay != none)
 		VehicleWeaponPawn(Owner).HUDOverlay.PlayAnim('reload_empty'); //'Reload'
 }
 

@@ -8,8 +8,8 @@ class DH_USMortarBinocularsItem extends DH_BinocularsItem;
 simulated function Fire(float F)
 {
     // added check for player to be in iron view to save arty coords - Antarian
-    if ( (Instigator == None) || (Instigator.Controller == None)
-		|| ( AIController(Instigator.Controller) != none ) || !bUsingSights )
+    if ((Instigator == none) || (Instigator.Controller == none)
+		|| (AIController(Instigator.Controller) != none) || !bUsingSights)
    	   return;
 
         // server
@@ -29,11 +29,11 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 	super.BringUp(PrevWeapon);
 
-	if(Instigator.IsLocallyControlled())
+	if (Instigator.IsLocallyControlled())
 	{
 		DHP = DHPlayer(Instigator.Controller);
 
-		if(DHP != none)
+		if (DHP != none)
 			DHP.QueueHint(11, true);
 	}
 }

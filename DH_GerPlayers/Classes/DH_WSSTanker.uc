@@ -38,7 +38,7 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_WSSHatPanzerA'
      Headgear(1)=Class'DH_GerPlayers.DH_WSSHatPanzerB'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
-     bCanBeTankCrew=True
+     bEnhancedAutomaticControl=true
+     bCanBeTankCrew=true
      limit=3
 }

@@ -38,7 +38,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 	local	ROGameReplicationInfo	GameReplicationInfoInstance;
 	local	float					ElapsedTimeDelta;
 
-	if( !Level.Game.IsInState('RoundInPlay') )
+	if (!Level.Game.IsInState('RoundInPlay'))
     	return; //Don't modify time if it's not in play state
 
 	GameInstance = ROTeamGame(Level.Game);
@@ -73,7 +73,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 	}
 
 	//If we want to broadcast the round time modification.
-	if(bShowMessage)
+	if (bShowMessage)
 		Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', 0, none, none, self);
 }
 
@@ -84,8 +84,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
 defaultproperties
 {
      Seconds=60
-     bShowMessage=True
-     bPlaySound=True
+     bShowMessage=true
+     bPlaySound=true
      Sound=Sound'Miscsounds.Music.notify_drum'
      Texture=Texture'Engine.S_Trigger'
 }

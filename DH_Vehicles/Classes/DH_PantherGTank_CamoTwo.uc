@@ -25,7 +25,7 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    if( HullDecoAttachment != none )
+    if (HullDecoAttachment != none)
     {
 
                 HullDecoAttachment=Spawn(DecoAttachmentClass, self,, Location + (DecoAttachOffset >> Rotation));

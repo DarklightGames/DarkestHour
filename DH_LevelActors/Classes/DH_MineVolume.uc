@@ -20,14 +20,14 @@ function PostBeginPlay()
 //Override to prevent ROTeamGame from changing bActive
 function Activate()
 {
-	if(bUsesSpawnAreas)
+	if (bUsesSpawnAreas)
 		bActive = true;
 }
 
 //Override to prevent ROTeamGame from changing bActive
 function Deactivate()
 {
-	if(bUsesSpawnAreas)
+	if (bUsesSpawnAreas)
 		bActive = false;
 }
 
@@ -38,5 +38,5 @@ function Reset()
 
 defaultproperties
 {
-     bInitiallyActive=True
+     bInitiallyActive=true
 }

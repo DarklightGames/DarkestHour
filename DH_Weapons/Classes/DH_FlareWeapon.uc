@@ -20,7 +20,7 @@ defaultproperties
      IronPutDown="iron_out"
      MaxNumPrimaryMags=7
      InitialNumPrimaryMags=7
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
@@ -38,13 +38,13 @@ defaultproperties
      AIRating=0.700000
      CurrentRating=0.700000
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_FlarePickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_FlareAttachment'
      ItemName="Flare Gun"
      Mesh=SkeletalMesh'Axis_Mp40_1st.mp40-mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

@@ -3,7 +3,7 @@ class DH_MortarWeapon extends DHWeapon
 
 replication
 {
-	reliable if(Role < ROLE_Authority)
+	reliable if (Role < ROLE_Authority)
 		ServerDeployEnd, ServerDeployBegin;
 }
 
@@ -41,7 +41,7 @@ simulated function bool WeaponAllowCrouchChange()
 {
 	//-------------------------------------------------
 	//Not if we're deploying, homie.
-	if(bDeploying)
+	if (bDeploying)
 		return false;
 
 	return super.WeaponAllowCrouchChange();
@@ -65,7 +65,7 @@ simulated event AnimEnd(int Channel)
 {
 	//-----------------------------------------------------------------------
 	//If the deploy animation ended, then let's let the server know about it.
-	if(bDeploying)
+	if (bDeploying)
 	{
 		DH_Pawn(Instigator).bDeployingMortar = false;
 		ServerDeployEnd();
@@ -82,7 +82,7 @@ simulated exec function ROManualReload() { return; }
 
 simulated exec function Deploy()
 {
-	if(!bDeploying)
+	if (!bDeploying)
 		ClientDeploy();
 }
 
@@ -94,7 +94,7 @@ simulated function ClientDeploy()
 
 	P = DH_Pawn(Instigator);
 
-	if(IsBusy() || !CanDeploy() || P == none )
+	if (IsBusy() || !CanDeploy() || P == none)
 		return;
 
 	PlayAnim(DeployAnimation);
@@ -131,7 +131,7 @@ simulated function ServerDeployEnd()
 	SpawnRotation.Pitch = 0;
 	SpawnRotation.Roll = 0;
 
-	if(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
+	if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
 	{
 		GotoState('Idle');
 
@@ -157,7 +157,7 @@ simulated function bool CanDeploy()
 
 	VolumeTest = Spawn(class'ROVolumeTest', , , P.Location);
 
-	if(VolumeTest.IsInNoArtyVolume())
+	if (VolumeTest.IsInNoArtyVolume())
 	{
 		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 11);
 		VolumeTest.Destroy();
@@ -170,12 +170,12 @@ simulated function bool CanDeploy()
 	//If we're busy, don't bother.  Check 'RaisingWeapon' state.  Before this,
 	//not checking this state was allowing the player to almost instantaneously
 	//redeploy a mortar after undeploying.
-	if(IsBusy() || IsInState('RaisingWeapon'))
+	if (IsBusy() || IsInState('RaisingWeapon'))
 		return false;
 
 	//-----------------------------
 	//Check that we're not in water
-	if(Instigator.PhysicsVolume.bWaterVolume)
+	if (Instigator.PhysicsVolume.bWaterVolume)
 	{
 		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 7);
 		return false;
@@ -183,7 +183,7 @@ simulated function bool CanDeploy()
 
 	//---------------------------
 	//Check that we're crouching.
-	if(!P.bIsCrouched)
+	if (!P.bIsCrouched)
 	{
 		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 1);
 		return false;
@@ -191,7 +191,7 @@ simulated function bool CanDeploy()
 
 	//---------------------------
 	//Check that we're not moving
-	if(P.Velocity != vect(0, 0, 0))
+	if (P.Velocity != vect(0, 0, 0))
 	{
 		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 3);
 		return false;
@@ -199,7 +199,7 @@ simulated function bool CanDeploy()
 
 	//----------------------------
 	//Check that we're not leaning
-	if(P.bLeaningLeft || P.bLeaningRight)
+	if (P.bLeaningLeft || P.bLeaningRight)
 	{
 		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 6);
 		return false;
@@ -214,7 +214,7 @@ simulated function bool CanDeploy()
 
 	//----------------------------------------------
 	//Check that our surface exists and it is static
-	if(HitActor == none || !HitActor.bStatic)
+	if (HitActor == none || !HitActor.bStatic)
 	{
 		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
 		return false;
@@ -222,7 +222,7 @@ simulated function bool CanDeploy()
 
 	//------------------------------------------------------------------
 	//Check that the surface angle is less than our deploy angle maximum
-	if(Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+	if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
 	{
 		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
 		return false;
@@ -240,7 +240,7 @@ simulated function bool CanDeploy()
 
 		//-----------------------------------------------------------
 		//Check that we haven't hit anything static along this trace.
-		if(HitActor != none && HitActor.bStatic)
+		if (HitActor != none && HitActor.bStatic)
 		{
 			//--------------------------
 			//Not enough toom to deploy.
@@ -257,7 +257,7 @@ simulated function bool CanDeploy()
 
 		//----------------------------------------------
 		//Check that our surface exists and it is static
-		if(HitActor == none || !HitActor.bStatic)
+		if (HitActor == none || !HitActor.bStatic)
 		{
 			//------------------------------
 			//Cannot deploy on this surface.
@@ -266,7 +266,7 @@ simulated function bool CanDeploy()
 		}
 		//------------------------------------------------------------------
 		//Check that the surface angle is less than our deploy angle maximum
-		if(Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+		if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
 		{
 			//------------------------------
 			//Cannot deploy on this surface.
@@ -282,7 +282,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 {
 	super.BringUp(PrevWeapon);
 
-	if(DHPlayer(Instigator.Controller) != none)
+	if (DHPlayer(Instigator.Controller) != none)
 		DHPlayer(Instigator.Controller).QueueHint(6, false);
 }
 
@@ -297,7 +297,7 @@ function bool ResupplyAmmo()
 
 	P = DH_Pawn(Instigator);
 
-	if(P == none)
+	if (P == none)
 		return false;
 
 	return P.ResupplyMortarAmmunition();
@@ -321,8 +321,8 @@ defaultproperties
      FireModeClass(1)=Class'DH_Mortars.DH_MortarWeaponFire'
      AIRating=1.000000
      CurrentRating=1.000000
-     bCanThrow=False
-     bCanSway=False
+     bCanThrow=false
+     bCanSway=false
      InventoryGroup=9
      BobDamping=1.600000
 }

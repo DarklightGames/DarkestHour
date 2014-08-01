@@ -35,6 +35,6 @@ defaultproperties
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
      Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
      Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
-     bCanBeTankCrew=True
+     bCanBeTankCrew=true
      limit=5
 }

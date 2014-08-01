@@ -11,7 +11,7 @@ class DH_PanzerIVJFactory extends DH_GermanVehicles;
 defaultproperties
 {
      RespawnTime=1.000000
-     bFactoryActive=True
+     bFactoryActive=true
      VehicleClass=Class'DH_Vehicles.DH_PanzerIVJTank'
      Mesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.panzer4J_body_ext'

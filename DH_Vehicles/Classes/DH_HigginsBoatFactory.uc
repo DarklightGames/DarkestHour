@@ -11,7 +11,7 @@ class DH_HigginsBoatFactory extends DH_USVehicles;
 defaultproperties
 {
      RespawnTime=20.000000
-     bFactoryActive=True
+     bFactoryActive=true
      VehicleClass=Class'DH_Vehicles.DH_HigginsBoat'
      Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
 }

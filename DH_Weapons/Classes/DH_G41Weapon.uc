@@ -14,7 +14,7 @@ class DH_G41Weapon extends DH_SemiAutoWeapon;
 simulated function bool AllowReload()
 {
 	// Don't allow a reload unless 5 rounds have been shot off (strippers hold 5 bullets)
-	if( AmmoAmount(0) > 5)
+	if (AmmoAmount(0) > 5)
 		return false;
 
     return super.AllowReload();
@@ -26,7 +26,7 @@ simulated function PlayReload()
 	local name Anim;
 	local float AnimTimer;
 
-    if( AmmoAmount(0) > 0 || CurrentMagCount < 2)
+    if (AmmoAmount(0) > 0 || CurrentMagCount < 2)
     {
 		Anim = MagPartialReloadAnim;
 	}
@@ -37,12 +37,12 @@ simulated function PlayReload()
 
     AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
-	if( Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+	if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
 		SetTimer(AnimTimer - (AnimTimer * 0.1),false);
 	else
 		SetTimer(AnimTimer,false);
 
-	if( Instigator.IsLocallyControlled() )
+	if (Instigator.IsLocallyControlled())
 	{
 		PlayAnim(Anim, 1.0, FastTweenTime);
 	}
@@ -55,23 +55,23 @@ function PerformReload()
 
     CurrentMagLoad = AmmoAmount(0);
 
-	if( PrimaryAmmoArray.Length == 0 )
+	if (PrimaryAmmoArray.Length == 0)
 	{
 		return;
 	}
 
-	if( CurrentMagLoad > 0 )
+	if (CurrentMagLoad > 0)
 	{
 		PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 
-		if( PrimaryAmmoArray.Length == 0 )
+		if (PrimaryAmmoArray.Length == 0)
 		{
 			return;
 		}
 
 		CurrentMagIndex++;
 
-		if ( CurrentMagIndex > PrimaryAmmoArray.Length - 1)
+		if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
 		{
 			CurrentMagIndex = 0;
 		}
@@ -83,27 +83,27 @@ function PerformReload()
 	{
 		PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 
-		if( PrimaryAmmoArray.Length == 0 )
+		if (PrimaryAmmoArray.Length == 0)
 		{
 			return;
 		}
 
 		CurrentMagIndex++;
 
-		if ( CurrentMagIndex > PrimaryAmmoArray.Length - 1)
+		if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
 		{
 			CurrentMagIndex = 0;
 		}
 
 		AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
 
-		if( PrimaryAmmoArray.Length > 1 )
+		if (PrimaryAmmoArray.Length > 1)
 		{
 			PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 
 			CurrentMagIndex++;
 
-			if ( CurrentMagIndex > PrimaryAmmoArray.Length - 1)
+			if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
 			{
 				CurrentMagIndex = 0;
 			}
@@ -112,25 +112,25 @@ function PerformReload()
 		}
 	}
 
-	if( Instigator.IsHumanControlled() )
+	if (Instigator.IsHumanControlled())
 	{
-		if( AmmoStatus(0) > 0.5 )
+		if (AmmoStatus(0) > 0.5)
 		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'ROAmmoWeightMessage',0);
+			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',0);
 		}
-		else if(  AmmoStatus(0) > 0.2 )
+		else if (AmmoStatus(0) > 0.2)
 		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'ROAmmoWeightMessage',1);
+			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',1);
 		}
 		else
 		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'ROAmmoWeightMessage',2);
+			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',2);
 		}
 	}
 
-	if( AmmoAmount(0) > 0 )
+	if (AmmoAmount(0) > 0)
 	{
-		if( DHWeaponAttachment(ThirdPersonActor) != none )
+		if (DHWeaponAttachment(ThirdPersonActor) != none)
 		{
 			DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
 		}
@@ -148,7 +148,7 @@ function bool FillAmmo()
 {
 	local int InitialAmount, i;
 
-    if( PrimaryAmmoArray.Length == MaxNumPrimaryMags )
+    if (PrimaryAmmoArray.Length == MaxNumPrimaryMags)
     {
     	return false;
     }
@@ -156,7 +156,7 @@ function bool FillAmmo()
 	InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
     PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-	for( i=0; i<PrimaryAmmoArray.Length; i++ )
+	for(i=0; i<PrimaryAmmoArray.Length; i++)
 	{
 		PrimaryAmmoArray[i] = InitialAmount;
 	}
@@ -176,20 +176,20 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
     local bool bJustSpawnedAmmo;
     local int addAmount, InitialAmount, i;
 
-    if ( FireMode[m] != None && FireMode[m].AmmoClass != None )
+    if (FireMode[m] != none && FireMode[m].AmmoClass != none)
     {
         Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
 		bJustSpawnedAmmo = false;
 
-		if ( (FireMode[m].AmmoClass == None) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)) )
+		if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
 			return;
 
 		InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
 
-		if( bJustSpawned && WP == None)
+		if (bJustSpawned && WP == none)
 		{
 			PrimaryAmmoArray.Length = InitialNumPrimaryMags;
-			for( i=0; i<PrimaryAmmoArray.Length; i++ )
+			for(i=0; i<PrimaryAmmoArray.Length; i++)
 			{
 				PrimaryAmmoArray[i] = InitialAmount;
 			}
@@ -201,13 +201,13 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
 			InitialAmount = InitialAmount * 2;
 		}
 
-		if ( (WP != None) /*&& ((WP.AmmoAmount[0] > 0) || (WP.AmmoAmount[1] > 0)) */ )
+		if ((WP != none) /*&& ((WP.AmmoAmount[0] > 0) || (WP.AmmoAmount[1] > 0)) */)
 		{
 			InitialAmount = WP.AmmoAmount[m];
 			PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
 		}
 
-		if ( Ammo[m] != None )
+		if (Ammo[m] != none)
 		{
 			addamount = InitialAmount + Ammo[m].AmmoAmount;
 			Ammo[m].Destroy();
@@ -248,15 +248,15 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_G41Pickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_G41Attachment'
      ItemName="Gewehr 41(W)"
      Mesh=SkeletalMesh'Axis_G41_1st.G41_mesh'
      HighDetailOverlay=Shader'Weapons1st_tex2.Rifles.G41_S'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

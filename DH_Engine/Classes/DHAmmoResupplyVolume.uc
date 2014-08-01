@@ -32,7 +32,7 @@ function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-    if( !bUsesSpawnAreas )
+    if (!bUsesSpawnAreas)
     	Activate();
 
 	SetTimer(1.0, true);
@@ -49,7 +49,7 @@ function Timer()
 	local Vehicle V;
 	local DH_RoleInfo DHRI;
 
-    if(Role < ROLE_Authority || !bActive)
+    if (Role < ROLE_Authority || !bActive)
     	return;
 
 	foreach TouchingActors(class'Pawn', recvr)
@@ -63,13 +63,13 @@ function Timer()
 				P = DH_Pawn(recvr);
 				V = Vehicle(recvr);
 
-				if(P != none)
+				if (P != none)
 					DHRI = P.GetRoleInfo();
 
-				if( P != none && (ResupplyType == RT_Players || ResupplyType == RT_All) )
+				if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
 				{
 					//Resupply weapons
-					for ( recvr_inv = P.Inventory; recvr_inv != None; recvr_inv = recvr_inv.Inventory )
+					for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
 					{
 						recvr_weapon = ROWeapon(recvr_inv);
 
@@ -77,24 +77,24 @@ function Timer()
 						if (recvr_weapon.IsGrenade() == true && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetGrenadeWeapon())
                            && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetSecGrenadeWeapon()))
                         {
-						   if ( recvr_weapon.Name == 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name == 'DH_OrangeSmokeGrenadeWeapon' )
+						   if (recvr_weapon.Name == 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name == 'DH_OrangeSmokeGrenadeWeapon')
 						       bEnemySmokeFound = true;
 						   else
                                bEnemyGrenadeFound = true;
 			   			}
-						else if (recvr_weapon != None && recvr_weapon.FillAmmo())
+						else if (recvr_weapon != none && recvr_weapon.FillAmmo())
 								bResupplied=true;
 					}
 
-					if( DHRI != none )
+					if (DHRI != none)
 					{
-						if( !P.bHasATAmmo && DHRI.bCarriesATAmmo )
+						if (!P.bHasATAmmo && DHRI.bCarriesATAmmo)
 						{
 							P.bHasATAmmo = true;
 							bResupplied = true;
 						}
 
-						if( !P.bHasMGAmmo && DHRI.bCarriesMGAmmo )
+						if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
 						{
 							P.bHasMGAmmo =true;
 							bResupplied=true;
@@ -102,27 +102,27 @@ function Timer()
 					}
 
 					// Resupply explosive weapons
-					if( P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound,bEnemySmokeFound) )
+					if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound,bEnemySmokeFound))
 						bResupplied=true;
 				}
 
-				if( V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All) )
+				if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
 				{
 					// Resupply vehicles
-					if( V.ResupplyAmmo() )
+					if (V.ResupplyAmmo())
 						bResupplied=true;
 				}
 
 				//Mortar specific resupplying.
-				if( P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none )
+				if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none)
 				{
-					if( DHRI.bCanUseMortars )
+					if (DHRI.bCanUseMortars)
 					{
 						P.FillMortarAmmunition();
 						bResupplied = true;
 					}
 
-					if( !P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo )
+					if (!P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo)
 					{
 						P.bHasMortarAmmo = true;
 						bResupplied = true;
@@ -140,18 +140,18 @@ function Timer()
 	}
 }
 
-event Touch( Actor Other )
+event Touch(Actor Other)
 {
 	local ROPawn ROP;
 	local Vehicle V;
 
-    if(!bActive)
+    if (!bActive)
     	return;
 
 	ROP=ROPawn(Other);
 	V = Vehicle(Other);
 
-	if( ROP != none )
+	if (ROP != none)
 	{
 	    if (Team == OWNER_Neutral ||
 	       (ROP.PlayerReplicationInfo != none && ROP.PlayerReplicationInfo.Team != none
@@ -162,7 +162,7 @@ event Touch( Actor Other )
 		}
 	}
 
-	if( V != none )
+	if (V != none)
 	{
 	    if (Team == OWNER_Neutral ||
 	       ((V.GetTeamNum() == AXIS_TEAM_INDEX && Team == OWNER_Axis) ||
@@ -173,7 +173,7 @@ event Touch( Actor Other )
 	}
 }
 
-event UnTouch( Actor Other )
+event UnTouch(Actor Other)
 {
 	local ROPawn ROP;
 	local Vehicle V;
@@ -181,12 +181,12 @@ event UnTouch( Actor Other )
 	ROP=ROPawn(Other);
 	V = Vehicle(Other);
 
-	if( ROP != none )
+	if (ROP != none)
 	{
 		ROP.bTouchingResupply = false;
 	}
 
-	if( V != none )
+	if (V != none)
 	{
 		V.LeftResupply();
 	}
@@ -194,17 +194,17 @@ event UnTouch( Actor Other )
 
 function Activate()
 {
-    bActive = True;
+    bActive = true;
 }
 
 function Deactivate()
 {
-    bActive = False;
+    bActive = false;
 }
 
 function Reset()
 {
-    if( !bUsesSpawnAreas )
+    if (!bUsesSpawnAreas)
     	Activate();
 }
 
@@ -217,5 +217,5 @@ defaultproperties
      Team=OWNER_Neutral
      UpdateTime=30.000000
      ResupplyType=RT_All
-     bStatic=False
+     bStatic=false
 }

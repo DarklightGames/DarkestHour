@@ -28,21 +28,21 @@ simulated function Timer()
     Emitters[0].LifetimeRange.Max -= 1;
     Emitters[0].FadeOutStartTime -= 1;
 
-    if(Emitters[0].StartVelocityRange.X.Min < 0)
+    if (Emitters[0].StartVelocityRange.X.Min < 0)
         SetTimer(1,false);
 }
 
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=7.000000)
          ColorScale(0)=(Color=(G=155,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(G=155,R=255,A=255))
@@ -66,12 +66,12 @@ defaultproperties
      End Object
      Emitters(0)=SpriteEmitter'DH_Effects.DH_OrangeSmokeEffect.SpriteEmitter0'
 
-     AutoDestroy=True
-     bNoDelete=False
-     bNetTemporary=True
+     AutoDestroy=true
+     bNoDelete=false
+     bNetTemporary=true
      RemoteRole=ROLE_SimulatedProxy
      LifeSpan=80.000000
      Style=STY_Masked
-     bHardAttach=True
-     bDirectional=True
+     bHardAttach=true
+     bDirectional=true
 }

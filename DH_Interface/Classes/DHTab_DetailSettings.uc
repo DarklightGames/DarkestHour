@@ -58,7 +58,7 @@ defaultproperties
          Caption="HDR Bloom"
          OnCreateComponent=HDRCheckbox.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.479308
          WinLeft=0.600000
          WinWidth=0.300000
@@ -75,7 +75,7 @@ defaultproperties
          Caption="Show Advanced Options"
          OnCreateComponent=Advanced.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.479308
          WinLeft=0.600000
          WinWidth=0.300000
@@ -92,7 +92,7 @@ defaultproperties
          Caption="Motion Blur"
          OnCreateComponent=MotionBlur.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.479308
          WinLeft=0.600000
          WinWidth=0.300000
@@ -126,7 +126,7 @@ defaultproperties
      sb_Section2=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection2'
 
      Begin Object Class=DHGUISectionBackground Name=sbSection3
-         bFillClient=True
+         bFillClient=true
          Caption="Gamma Test"
          ImageOffset(3)=10.000000
          WinTop=0.562000
@@ -242,7 +242,7 @@ defaultproperties
      co_MeshLOD=DHmoComboBox'DH_Interface.DHTab_DetailSettings.MeshLOD'
 
      Begin Object Class=DHmoComboBox Name=VideoResolution
-         bReadOnly=True
+         bReadOnly=true
          CaptionWidth=0.550000
          Caption="Resolution"
          OnCreateComponent=VideoResolution.InternalOnCreateComponent
@@ -282,8 +282,8 @@ defaultproperties
          WinLeft=0.547773
          WinWidth=0.401953
          TabOrder=0
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnChange=DHTab_DetailSettings.InternalOnChange
          OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
      End Object
@@ -340,7 +340,7 @@ defaultproperties
          Caption="Decals"
          OnCreateComponent=DetailDecals.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.479308
          WinLeft=0.600000
          WinWidth=0.300000
@@ -357,7 +357,7 @@ defaultproperties
          Caption="Dynamic Lighting"
          OnCreateComponent=DetailDynamicLighting.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.526716
          WinLeft=0.600000
          WinWidth=0.300000
@@ -374,7 +374,7 @@ defaultproperties
          Caption="Coronas"
          OnCreateComponent=DetailCoronas.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.624136
          WinLeft=0.600000
          WinWidth=0.300000
@@ -391,7 +391,7 @@ defaultproperties
          Caption="Detail Textures"
          OnCreateComponent=DetailDetailTextures.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.575425
          WinLeft=0.600000
          WinWidth=0.300000
@@ -408,7 +408,7 @@ defaultproperties
          Caption="Projectors"
          OnCreateComponent=DetailProjectors.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.721195
          WinLeft=0.600000
          WinWidth=0.300000
@@ -425,7 +425,7 @@ defaultproperties
          Caption="Foliage"
          OnCreateComponent=DetailDecoLayers.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.769906
          WinLeft=0.599727
          WinWidth=0.300000
@@ -442,7 +442,7 @@ defaultproperties
          Caption="Trilinear Filtering"
          OnCreateComponent=DetailTrilinear.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="False"
+         IniDefault="false"
          WinTop=0.673263
          WinLeft=0.600000
          WinWidth=0.300000
@@ -459,7 +459,7 @@ defaultproperties
          Caption="Full Screen"
          OnCreateComponent=VideoFullScreen.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="True"
+         IniDefault="true"
          WinTop=0.169531
          WinLeft=0.030976
          WinWidth=0.387500
@@ -475,7 +475,7 @@ defaultproperties
          Caption="Weather Effects"
          OnCreateComponent=WeatherEffects.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="False"
+         IniDefault="false"
          WinTop=0.864910
          WinLeft=0.599727
          WinWidth=0.300000
@@ -492,7 +492,7 @@ defaultproperties
          Caption="Force FSAA Screenshots"
          OnCreateComponent=DetailForceFSAASS.InternalOnCreateComponent
          IniOption="@Internal"
-         IniDefault="False"
+         IniDefault="false"
          WinTop=0.499308
          WinLeft=0.600000
          WinWidth=0.300000

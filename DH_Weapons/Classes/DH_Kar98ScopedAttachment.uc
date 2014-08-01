@@ -17,7 +17,7 @@ simulated function AnimEnd(int Channel)
 
 	GetAnimParams(0, anim, frame, rate);
 
-	if( anim == WA_Reload || anim == WA_PreReload )
+	if (anim == WA_Reload || anim == WA_PreReload)
 	{
 		return;
 	}
@@ -31,8 +31,8 @@ defaultproperties
 {
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdKar'
      ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
-     bAnimNotifiedShellEjects=True
-     bLoopReloadAnim=True
+     bAnimNotifiedShellEjects=true
+     bLoopReloadAnim=true
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"
      PA_MovementAnims(2)="stand_jogL_kar"
@@ -169,6 +169,6 @@ defaultproperties
      WA_WorkBolt="bolt_kar98scope"
      menuImage=Texture'InterfaceArt_tex.Menu_weapons.kar98scope'
      MenuDescription="Sniper version of the Mauser 98K. Bolt-action rifle fitted with either a 4x or 6x sniper scope. Slow-firing, but very accurate. 5-round mag/clip."
-     bRapidFire=False
+     bRapidFire=false
      Mesh=SkeletalMesh'Weapons3rd_anm.Kar98_Scoped'
 }

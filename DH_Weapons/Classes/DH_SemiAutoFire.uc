@@ -27,6 +27,6 @@ class DH_SemiAutoFire extends DH_ProjectileFire;
 defaultproperties
 {
      PctRestDeployRecoil=0.750000
-     bDelayedRecoil=True
+     bDelayedRecoil=true
      DelayedRecoilTime=0.050000
 }

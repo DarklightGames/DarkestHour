@@ -49,7 +49,7 @@ defaultproperties
      ed_PlayerName=DHmoEditBox'DH_Interface.DHTab_GameSettings.OnlineStatsName'
 
      Begin Object Class=DHmoComboBox Name=GameGoreLevel
-         bReadOnly=True
+         bReadOnly=true
          Caption="Gore Level"
          OnCreateComponent=GameGoreLevel.InternalOnCreateComponent
          IniOption="@Internal"
@@ -79,7 +79,7 @@ defaultproperties
      ch_DynNetspeed=DHmoCheckBox'DH_Interface.DHTab_GameSettings.NetworkDynamicNetspeed'
 
      Begin Object Class=DHmoComboBox Name=OnlineNetSpeed
-         bReadOnly=True
+         bReadOnly=true
          ComponentJustification=TXTA_Left
          Caption="Connection"
          OnCreateComponent=OnlineNetSpeed.InternalOnCreateComponent

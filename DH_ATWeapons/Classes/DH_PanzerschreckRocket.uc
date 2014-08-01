@@ -18,8 +18,8 @@ defaultproperties
      DHPenetrationTable(4)=17.500000
      DHPenetrationTable(5)=17.500000
      DHPenetrationTable(6)=17.500000
-     bIsHEATRound=True
-     bIsAlliedShell=False
+     bIsHEATRound=true
+     bIsAlliedShell=false
      ShellImpactDamage=Class'DH_ATWeapons.DH_PanzerschreckImpactDamType'
      ImpactDamage=625
      Speed=6337.000000

@@ -20,7 +20,7 @@ simulated function UpdateTracer()
 
  	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
 	{
-		if (Instigator != None && Instigator.IsLocallyControlled())
+		if (Instigator != none && Instigator.IsLocallyControlled())
 		{
 			SpawnDir = WeaponFireRotation;
 		}
@@ -29,7 +29,7 @@ simulated function UpdateTracer()
 			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
 		}
 
-        if (Instigator != None && !Instigator.PlayerReplicationInfo.bBot)
+        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
         {
         	SpawnDir.Pitch += AddedPitch;
         }
@@ -91,8 +91,8 @@ defaultproperties
      NumAltMags=10
      DummyTracerClass=Class'DH_Vehicles.DH_MG42VehicleClientTracer'
      mTracerInterval=0.350000
-     bUsesTracers=True
-     bAltFireTracersOnly=True
+     bUsesTracers=true
+     bAltFireTracersOnly=true
      VehHitpoints(0)=(PointRadius=14.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=4.000000,Z=-14.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
      YawBone="Turret"
@@ -104,12 +104,12 @@ defaultproperties
      WeaponFireOffset=175.000000
      AltFireOffset=(X=21.000000,Y=14.500000,Z=1.500000)
      RotationsPerSecond=0.040000
-     bAmbientAltFireSound=True
+     bAmbientAltFireSound=true
      FireInterval=4.000000
      AltFireInterval=0.050000
      EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
      AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=True
+     bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
      AltFireSoundScaling=3.000000
@@ -130,8 +130,8 @@ defaultproperties
      AltShakeOffsetMag=(X=0.100000,Y=0.100000,Z=0.100000)
      AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      AltShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=3640
      CustomPitchDownLimit=63715
      BeginningIdleAnim="com_idle_close"

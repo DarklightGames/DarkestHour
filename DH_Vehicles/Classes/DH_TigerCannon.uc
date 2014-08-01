@@ -19,7 +19,7 @@ simulated function UpdateTracer()
 
  	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
 	{
-		if (Instigator != None && Instigator.IsLocallyControlled())
+		if (Instigator != none && Instigator.IsLocallyControlled())
 		{
 			SpawnDir = WeaponFireRotation;
 		}
@@ -28,7 +28,7 @@ simulated function UpdateTracer()
 			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
 		}
 
-        if (Instigator != None && !Instigator.PlayerReplicationInfo.bBot)
+        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
         {
         	SpawnDir.Pitch += AddedPitch;
         }
@@ -95,8 +95,8 @@ defaultproperties
      NumAltMags=8
      DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
-     bUsesTracers=True
-     bAltFireTracersOnly=True
+     bUsesTracers=true
+     bAltFireTracersOnly=true
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-3.000000,Z=12.000000))
      VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-3.000000,Z=-11.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -109,12 +109,12 @@ defaultproperties
      WeaponFireOffset=265.000000
      AltFireOffset=(X=10.000000,Y=31.000000,Z=2.000000)
      RotationsPerSecond=0.025000
-     bAmbientAltFireSound=True
+     bAmbientAltFireSound=true
      FireInterval=7.000000
      AltFireInterval=0.070580
      EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
      AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=True
+     bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
      AltFireSoundScaling=3.000000
@@ -148,6 +148,6 @@ defaultproperties
      SoundVolume=120
      SoundRadius=300.000000
      HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=1
 }

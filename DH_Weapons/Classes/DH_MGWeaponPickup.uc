@@ -25,21 +25,21 @@ function InitDroppedPickupFor(Inventory Inv)
     local DHWeapon W;
     W = DHWeapon(Inv);
 
-    if( (DH_MGBase(W) != none) && (DH_MGBase(W).BarrelArray[DH_MGBase(W).ActiveBarrel] != none) )
+    if ((DH_MGBase(W) != none) && (DH_MGBase(W).BarrelArray[DH_MGBase(W).ActiveBarrel] != none))
     {
     	DH_MGCelsiusTemp = DH_MGBase(W).BarrelArray[DH_MGBase(W).ActiveBarrel].DH_MGCelsiusTemp;
     	BarrelCoolingRate = DH_MGBase(W).BarrelArray[DH_MGBase(W).ActiveBarrel].BarrelCoolingRate;
 		bBarrelFailed = DH_MGBase(W).BarrelArray[DH_MGBase(W).ActiveBarrel].bBarrelFailed;
 
-		if( DH_MGBase(W).RemainingBarrels > 1)
+		if (DH_MGBase(W).RemainingBarrels > 1)
 		{
-            if( DH_MGBase(W).ActiveBarrel == 0 )
+            if (DH_MGBase(W).ActiveBarrel == 0)
     	        RemainingBarrel = 1;
 	        else
 	            RemainingBarrel = 0;
 
             DH_MGCelsiusTemp2 = DH_MGBase(W).BarrelArray[RemainingBarrel].DH_MGCelsiusTemp;
-            bHasSpareBarrel = True;
+            bHasSpareBarrel = true;
 		}
     }
 
@@ -47,16 +47,16 @@ function InitDroppedPickupFor(Inventory Inv)
 }
 
 
-function Tick( float dt )
+function Tick(float dt)
 {
 	// make sure it's run on the
-	if( Role < ROLE_Authority )
+	if (Role < ROLE_Authority)
 		return;
 
 	// continue to lower the barrel temp
 	DH_MGCelsiusTemp -= dt * BarrelCoolingRate;
 
-    if( bHasSpareBarrel )
+    if (bHasSpareBarrel)
         DH_MGCelsiusTemp2 -= dt * BarrelCoolingRate;
 }
 

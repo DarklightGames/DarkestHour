@@ -7,8 +7,8 @@ class DH_M1GrenadeFire extends ROThrownExplosiveFire;
 defaultproperties
 {
      ProjSpawnOffset=(X=25.000000)
-     bUsePreLaunchTrace=False
-     bWaitForRelease=True
+     bUsePreLaunchTrace=false
+     bWaitForRelease=true
      PreFireAnim="Pre_Fire"
      FireAnim="Throw"
      TweenTime=0.010000

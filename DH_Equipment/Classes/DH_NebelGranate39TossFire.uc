@@ -14,17 +14,17 @@ event ModeTick(float dt)
 {
 	local ROExplosiveWeapon Exp;
 
-	if( Weapon.Role == ROLE_Authority )
+	if (Weapon.Role == ROLE_Authority)
 	{
 		Exp = ROExplosiveWeapon(Weapon);
 
-		if( Exp.bPrimed && HoldTime > 0 )
+		if (Exp.bPrimed && HoldTime > 0)
 		{
-			if( Exp.CurrentFuzeTime  > (AddedFuseTime * -1) )
+			if (Exp.CurrentFuzeTime  > (AddedFuseTime * -1))
 			{
 				Exp.CurrentFuzeTime -= dt;
 			}
-			else if( !Exp.bAlreadyExploded )
+			else if (!Exp.bAlreadyExploded)
 			{
 				Exp.bAlreadyExploded = true;
 			}
@@ -34,9 +34,9 @@ event ModeTick(float dt)
 
 function DoFireEffect()
 {
-    local Vector StartProj, StartTrace, X,Y,Z;
+    local vector StartProj, StartTrace, X,Y,Z;
     local Rotator R, Aim;
-    local Vector HitLocation, HitNormal;
+    local vector HitLocation, HitNormal;
     local Actor Other;
     local int projectileID;
     local int SpawnCount;
@@ -50,7 +50,7 @@ function DoFireEffect()
 
 	// check if projectile would spawn through a wall and adjust start location accordingly
 	Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-	if (Other != none )
+	if (Other != none)
 	{
    		StartProj = HitLocation;
 	}
@@ -74,7 +74,7 @@ function DoFireEffect()
     switch (SpreadStyle)
     {
         case SS_Random:
-           	X = Vector(Aim);
+           	X = vector(Aim);
            	for (projectileID = 0; projectileID < SpawnCount; projectileID++)
            	{
               	R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
@@ -102,8 +102,8 @@ function DoFireEffect()
 
 defaultproperties
 {
-     bSplashDamage=False
-     bRecommendSplashDamage=False
+     bSplashDamage=false
+     bRecommendSplashDamage=false
      MaxHoldTime=4.950000
      AmmoClass=Class'DH_Equipment.DH_NebelGranate39Ammo'
      ProjectileClass=Class'DH_Equipment.DH_NebelGranate39Projectile'

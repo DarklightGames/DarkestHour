@@ -23,7 +23,7 @@ defaultproperties
      PitchDownLimit=45000
      WeaponFireAttachmentBone="mg_yaw"
      WeaponFireOffset=20.000000
-     bInstantFire=False
+     bInstantFire=false
      Spread=0.002000
      FireInterval=0.070580
      FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
@@ -34,7 +34,7 @@ defaultproperties
      ShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      MaxPositiveYaw=4500
      MaxNegativeYaw=-4500
-     bLimitYaw=True
+     bLimitYaw=true
      InitialPrimaryAmmo=150
      Mesh=SkeletalMesh'axis_panzer4F1_anm.Panzer4F1_mg_ext'
 }

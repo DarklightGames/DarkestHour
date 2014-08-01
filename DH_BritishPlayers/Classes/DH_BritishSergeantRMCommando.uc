@@ -5,7 +5,7 @@ class DH_BritishSergeantRMCommando extends DH_RoyalMarineCommandos;
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Corporal"
      AltName="Corporal"
      Article="a "
@@ -15,7 +15,7 @@ defaultproperties
      Models(0)="RMCSarg1"
      Models(1)="RMCSarg2"
      Models(2)="RMCSarg3"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
@@ -24,6 +24,6 @@ defaultproperties
      Grenades(2)=(Item=Class'DH_Equipment.DH_RedSmokeWeapon',Amount=1)
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

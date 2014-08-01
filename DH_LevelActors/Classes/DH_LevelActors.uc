@@ -34,6 +34,6 @@ enum StatusModifyType
 
 defaultproperties
 {
-     bHidden=True
-     RemoteRole=ROLE_None
+     bHidden=true
+     RemoteRole=ROLE_none
 }

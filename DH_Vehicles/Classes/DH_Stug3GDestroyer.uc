@@ -14,7 +14,7 @@ class DH_Stug3GDestroyer extends DH_ROTreadCraft;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[LeftTreadIndex];
 		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -22,7 +22,7 @@ simulated function SetupTreads()
 		Skins[LeftTreadIndex] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[RightTreadIndex];
 		RightTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -43,36 +43,36 @@ simulated function Tick(float DeltaTime)
 	LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 
     // Damaged treads cause vehicle to swerve and turn without control
-	if ( Controller != None )
+	if (Controller != none)
 	{
-        if( bLeftTrackDamaged )
+        if (bLeftTrackDamaged)
 		{
-			Throttle = FClamp( Throttle, -0.50, 0.50);
-			if( Controller.IsA('ROPlayer') )
+			Throttle = FClamp(Throttle, -0.50, 0.50);
+			if (Controller.IsA('ROPlayer'))
 				ROPlayer(Controller).aStrafe = -32768;
-			else if( Controller.IsA('ROBot') )
+			else if (Controller.IsA('ROBot'))
 				Steering = 1;
 		}
-		else if( bRightTrackDamaged )
+		else if (bRightTrackDamaged)
 		{
-			Throttle = FClamp( Throttle, -0.50, 0.50);
-			if( Controller.IsA('ROPlayer') )
+			Throttle = FClamp(Throttle, -0.50, 0.50);
+			if (Controller.IsA('ROPlayer'))
 				ROPlayer(Controller).aStrafe = 32768;
-			else if( Controller.IsA('ROBot') )
+			else if (Controller.IsA('ROBot'))
 				Steering = -1;
 		}
 	}
 
     // Only need these effects client side
-	if( Level.Netmode != NM_DedicatedServer )
+	if (Level.Netmode != NM_DedicatedServer)
 	{
-		if( bDisableThrottle)
+		if (bDisableThrottle)
 		{
-			if(bWantsToThrottle)
+			if (bWantsToThrottle)
 			{
 				IntendedThrottle=1.0;
 			}
-			else if( IntendedThrottle > 0)
+			else if (IntendedThrottle > 0)
 			{
 				IntendedThrottle -= (DeltaTime * 0.5);
 			}
@@ -83,16 +83,16 @@ simulated function Tick(float DeltaTime)
 		}
         else
         {
-            if( bLeftTrackDamaged )
+            if (bLeftTrackDamaged)
 			{
-				 if( LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
+				 if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
 				 	LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
 			     LeftTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
 			}
 
-			if( bRightTrackDamaged )
+			if (bRightTrackDamaged)
 			{
-				 if( RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
+				 if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
 				 	RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
 				 RightTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
 			}
@@ -104,10 +104,10 @@ simulated function Tick(float DeltaTime)
 				SoundVolume = default.SoundVolume;
 			}
 
-			if( bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner )
+			if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
 		        Skins[LeftTreadIndex]=DamagedTreadPanner;
 
-	        if( bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner )
+	        if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
 		        Skins[RightTreadIndex]=DamagedTreadPanner;
         }
 
@@ -118,7 +118,7 @@ simulated function Tick(float DeltaTime)
 
 		// Setup sounds that are dependent on velocity
 		MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
-		if ( MySpeed > 0.1 )
+		if (MySpeed > 0.1)
 		{
 		  	MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
 		}
@@ -128,18 +128,18 @@ simulated function Tick(float DeltaTime)
 		}
 		UpdateMovementSound();
 
-		if ( LeftTreadPanner != None )
+		if (LeftTreadPanner != none)
 		{
 			LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-			if (Velocity dot Vector(Rotation) < 0)
+			if (Velocity dot vector(Rotation) < 0)
 				LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
 			LeftTreadPanner.PanRate += LinTurnSpeed;
 		}
 
-		if ( RightTreadPanner != None )
+		if (RightTreadPanner != none)
 		{
 			RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-			if (Velocity Dot Vector(Rotation) < 0)
+			if (Velocity Dot vector(Rotation) < 0)
 				RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
 			RightTreadPanner.PanRate -= LinTurnSpeed;
 		}
@@ -158,20 +158,20 @@ simulated function Tick(float DeltaTime)
 			  SetBoneRotation(RightWheelBones[i], RightWheelRot);
 		}
 
-		if( MySpeed >= MaxCriticalSpeed )
+		if (MySpeed >= MaxCriticalSpeed)
 		{
-		    if( Controller.IsA('ROPlayer') )
+		    if (Controller.IsA('ROPlayer'))
 				ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
 		}
 	}
 
     // This will slow the tank way down when it tries to turn at high speeds
-	if( ForwardVel > 0.0)
+	if (ForwardVel > 0.0)
      	WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
     else
      	WheelLatFrictionScale = default.WheelLatFrictionScale;
 
-    if( bEngineOnFire || (bOnFire && Health > 0) )
+    if (bEngineOnFire || (bOnFire && Health > 0))
 	{
 	    if (DamagedEffectHealthFireFactor != 1.0)
         {
@@ -179,12 +179,12 @@ simulated function Tick(float DeltaTime)
             DamagedEffect.UpdateDamagedEffect(true, 0, false, false);
         }
 
-        if (bOnFire && DriverHatchFireEffect == None)
+        if (bOnFire && DriverHatchFireEffect == none)
         {
             // Lets randomise the fire start times to desync them with the turret and engine ones
-            if( Level.TimeSeconds - DriverHatchBurnTime > 0.2 )
+            if (Level.TimeSeconds - DriverHatchBurnTime > 0.2)
             {
-                if( FRand() < 0.1 )
+                if (FRand() < 0.1)
                 {
                     DriverHatchFireEffect = Spawn(FireEffectClass);
                     AttachToBone(DriverHatchFireEffect, FireAttachBone);
@@ -195,15 +195,15 @@ simulated function Tick(float DeltaTime)
                 DriverHatchBurnTime = Level.TimeSeconds;
             }
 
-            if( !bTurretFireTriggered && WeaponPawns[0] != none)
+            if (!bTurretFireTriggered && WeaponPawns[0] != none)
             {
-                DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = True;
-                bTurretFireTriggered = True;
+                DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
+                bTurretFireTriggered = true;
             }
-            else if( !bHullMGFireTriggered && WeaponPawns[1] != none)
+            else if (!bHullMGFireTriggered && WeaponPawns[1] != none)
             {
-                DH_Stug3GMountedMG(WeaponPawns[1].Gun).bOnFire = True;
-                bHullMGFireTriggered = True;
+                DH_Stug3GMountedMG(WeaponPawns[1].Gun).bOnFire = true;
+                bHullMGFireTriggered = true;
             }
         }
 
@@ -222,9 +222,9 @@ simulated function Tick(float DeltaTime)
 
 	Super(ROWheeledVehicle).Tick(DeltaTime);
 
-    if( bEngineDead || bEngineOff || ( bLeftTrackDamaged && bRightTrackDamaged ) )
+    if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=Vect(0,0,0);
+        velocity=vect(0,0,0);
         Throttle=0;
         ThrottleAmount=0;
         bWantsToThrottle=false;
@@ -232,7 +232,7 @@ simulated function Tick(float DeltaTime)
         Steering=0;
     }
 
-	if(Level.NetMode != NM_DedicatedServer)
+	if (Level.NetMode != NM_DedicatedServer)
 	{
 		CheckEmitters();
 	}
@@ -292,9 +292,9 @@ defaultproperties
      NewVehHitpoints(0)=(PointRadius=5.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=22.000000,Y=-30.500000,Z=61.000000),NewHitPointType=NHP_GunOptics)
      NewVehHitpoints(1)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=15.000000,Y=5.000000,Z=35.000000),NewHitPointType=NHP_Traverse)
      NewVehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=15.000000,Y=5.000000,Z=35.000000),NewHitPointType=NHP_GunPitch)
-     bIsAssaultGun=True
+     bIsAssaultGun=true
      UnbuttonedPositionIndex=1
-     bSpecialExiting=True
+     bSpecialExiting=true
      LeftTreadIndex=3
      MaxCriticalSpeed=729.000000
      UFrontArmorFactor=8.200000
@@ -378,13 +378,13 @@ defaultproperties
      VehicleHudOccupantsY(0)=0.400000
      VehicleHudOccupantsY(1)=0.550000
      VehicleHudOccupantsY(2)=0.560000
-     VehHitpoints(0)=(PointRadius=2.000000,PointOffset=(X=-15.000000,Z=-22.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointRadius=2.000000,PointOffset=(X=-15.000000,Z=-22.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=20.000000,PointHeight=25.000000,PointOffset=(X=-90.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=10.000000,PointHeight=15.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-60.000000,Y=-30.000000,Z=15.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(3)=(PointRadius=10.000000,PointHeight=15.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=5.000000,Y=30.000000,Z=30.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      DriverAttachmentBone="driver_attachment"
      Begin Object Class=SVehicleWheel Name=LF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_LF"
          BoneRollAxis=AXIS_Y
@@ -394,7 +394,7 @@ defaultproperties
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_RF"
          BoneRollAxis=AXIS_Y
@@ -404,7 +404,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_LR"
          BoneRollAxis=AXIS_Y
@@ -414,7 +414,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_RR"
          BoneRollAxis=AXIS_Y
@@ -424,7 +424,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.RR_Steering'
 
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_L"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=6.000000)
@@ -433,7 +433,7 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_R"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=6.000000)
@@ -442,8 +442,8 @@ defaultproperties
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.Right_Drive_Wheel'
 
      VehicleMass=12.000000
-     bDrawDriverInTP=False
-     bFPNoZFromCameraPitch=True
+     bDrawDriverInTP=false
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=-5.000000,Y=-5.000000,Z=0.000000)
      DriveAnim="VStug3_driver_idle_close"
      ExitPositions(0)=(Y=-125.000000,Z=100.000000)
@@ -482,14 +482,14 @@ defaultproperties
          KCOMOffset=(Z=-1.500000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=0.900000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

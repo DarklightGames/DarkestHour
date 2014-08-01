@@ -25,5 +25,5 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     bDramaticLighting=True
+     bDramaticLighting=true
 }

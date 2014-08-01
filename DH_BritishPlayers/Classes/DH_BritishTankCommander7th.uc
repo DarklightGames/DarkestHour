@@ -18,8 +18,8 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_USBinocularsItem"
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishTankerHat'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
-     bCanBeTankCrew=True
-     bCanBeTankCommander=True
+     bEnhancedAutomaticControl=true
+     bCanBeTankCrew=true
+     bCanBeTankCommander=true
      limit=1
 }

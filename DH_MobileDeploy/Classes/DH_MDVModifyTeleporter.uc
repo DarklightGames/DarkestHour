@@ -51,5 +51,5 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 defaultproperties
 {
-     bHidden=True
+     bHidden=true
 }

@@ -27,6 +27,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_GerBinocularsItem"
      Headgear(0)=Class'DH_GerPlayers.DH_KriegsmarineCap'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

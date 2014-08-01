@@ -20,7 +20,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsArtilleryOfficer=True
+     bIsArtilleryOfficer=true
      MyName="Artillery Officer"
      AltName="Artillery Officer"
      Article="an "
@@ -38,6 +38,6 @@ defaultproperties
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
      Headgear(2)=Class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
 }

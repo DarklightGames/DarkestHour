@@ -11,9 +11,9 @@ class DH_EnfieldNo4ScopedWeapon extends DH_BoltSniperWeapon;
 simulated function UpdateScopeMode()
 {
 	if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() &&
-		Instigator.IsHumanControlled() )
+		Instigator.IsHumanControlled())
     {
-	    if( ScopeDetail == RO_ModelScope )
+	    if (ScopeDetail == RO_ModelScope)
 		{
 			scopePortalFOV = default.scopePortalFOV;
 			IronSightDisplayFOV = default.IronSightDisplayFOV;
@@ -23,7 +23,7 @@ simulated function UpdateScopeMode()
 				PlayerViewOffset = XoffsetScoped;
 			}
 
-			if( ScopeScriptedTexture == none )
+			if (ScopeScriptedTexture == none)
 			{
 	        	ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
 			}
@@ -32,7 +32,7 @@ simulated function UpdateScopeMode()
 	        ScopeScriptedTexture.SetSize(512,512);
 	        ScopeScriptedTexture.Client = Self;
 
-			if( ScriptedScopeCombiner == none )
+			if (ScriptedScopeCombiner == none)
 			{
 				// Construct the Combiner
 				ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
@@ -43,7 +43,7 @@ simulated function UpdateScopeMode()
 	            ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
 	        }
 
-			if( ScopeScriptedShader == none )
+			if (ScopeScriptedShader == none)
 			{
 	            // Construct the scope shader
 				ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
@@ -54,7 +54,7 @@ simulated function UpdateScopeMode()
 
 	        bInitializedScope = true;
 		}
-		else if( ScopeDetail == RO_ModelScopeHigh )
+		else if (ScopeDetail == RO_ModelScopeHigh)
 		{
 			scopePortalFOV = scopePortalFOVHigh;
 			IronSightDisplayFOV = default.IronSightDisplayFOVHigh;
@@ -64,7 +64,7 @@ simulated function UpdateScopeMode()
 				PlayerViewOffset = XoffsetHighDetail;
 			}
 
-			if( ScopeScriptedTexture == none )
+			if (ScopeScriptedTexture == none)
 			{
 	        	ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
 	        }
@@ -72,7 +72,7 @@ simulated function UpdateScopeMode()
 	        ScopeScriptedTexture.SetSize(1024,1024);
 	        ScopeScriptedTexture.Client = Self;
 
-			if( ScriptedScopeCombiner == none )
+			if (ScriptedScopeCombiner == none)
 			{
 				// Construct the Combiner
 				ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
@@ -83,7 +83,7 @@ simulated function UpdateScopeMode()
 	            ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
 	        }
 
-			if( ScopeScriptedShader == none )
+			if (ScopeScriptedShader == none)
 			{
 	            // Construct the scope shader
 				ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
@@ -114,7 +114,7 @@ function int GetRoundsToLoad()
 
     CurrentMagLoad = AmmoAmount(0);
 
-	if( PrimaryAmmoArray.Length == 0 )
+	if (PrimaryAmmoArray.Length == 0)
 	{
 		return 0;
 	}
@@ -135,7 +135,7 @@ function bool FillAmmo()
 {
 	local int InitialAmount, i;
 
-    if( PrimaryAmmoArray.Length == MaxNumPrimaryMags )
+    if (PrimaryAmmoArray.Length == MaxNumPrimaryMags)
     {
     	return false;
     }
@@ -143,7 +143,7 @@ function bool FillAmmo()
 	InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
     PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-	for( i=0; i<PrimaryAmmoArray.Length; i++ )
+	for(i=0; i<PrimaryAmmoArray.Length; i++)
 	{
 		PrimaryAmmoArray[i] = InitialAmount;
 	}
@@ -164,20 +164,20 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
     local bool bJustSpawnedAmmo;
     local int addAmount, InitialAmount, i;
 
-    if ( FireMode[m] != None && FireMode[m].AmmoClass != None )
+    if (FireMode[m] != none && FireMode[m].AmmoClass != none)
     {
         Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
 		bJustSpawnedAmmo = false;
 
-		if ( (FireMode[m].AmmoClass == None) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)) )
+		if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
 			return;
 
 		InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
 
-		if( bJustSpawned && WP == None)
+		if (bJustSpawned && WP == none)
 		{
 			PrimaryAmmoArray.Length = InitialNumPrimaryMags;
-			for( i=0; i<PrimaryAmmoArray.Length; i++ )
+			for(i=0; i<PrimaryAmmoArray.Length; i++)
 			{
 				PrimaryAmmoArray[i] = InitialAmount;
 			}
@@ -189,13 +189,13 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
 			InitialAmount = InitialAmount * 2;
 		}
 
-		if ( (WP != None) /*&& ((WP.AmmoAmount[0] > 0) || (WP.AmmoAmount[1] > 0)) */ )
+		if ((WP != none) /*&& ((WP.AmmoAmount[0] > 0) || (WP.AmmoAmount[1] > 0)) */)
 		{
 			InitialAmount = WP.AmmoAmount[m];
 			PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
 		}
 
-		if ( Ammo[m] != None )
+		if (Ammo[m] != none)
 		{
 			addamount = InitialAmount + Ammo[m].AmmoAmount;
 			Ammo[m].Destroy();
@@ -249,9 +249,9 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'

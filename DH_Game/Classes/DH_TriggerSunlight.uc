@@ -53,7 +53,7 @@ event PostBeginPlay()
    	}
 }
 
-function Tick( float DeltaTime )
+function Tick(float DeltaTime)
 {
    	local float percent;
 
@@ -95,7 +95,7 @@ function Tick( float DeltaTime )
    	}
 
    	// Convert the current color from RGB to HSL:
-   	RGBSetColor( CurrentColor );
+   	RGBSetColor(CurrentColor);
 }
 
 simulated function RGBSetColor(color inRGB)
@@ -114,7 +114,7 @@ simulated function RGBSetColor(color inRGB)
 
 // Function ColorMap - code courtesy of DWeather by
 // Mazerium, from the file: DWParent.uc
-simulated function vector ColourMap ( vector rgb)
+simulated function vector ColourMap (vector rgb)
  {
   local float min;
   local float max;
@@ -153,10 +153,10 @@ simulated function vector ColourMap ( vector rgb)
   hls.y=(l*255);
   hls.z=(255-s*255);
 
-  return( hls);
+  return(hls);
 }
 
-function Trigger( Actor Other, Pawn EventInstigator )
+function Trigger(Actor Other, Pawn EventInstigator)
 {
    	Enable('Tick');
    	TimeSinceTriggered = 0;
@@ -186,7 +186,7 @@ defaultproperties
      ChangeTime=60.000000
      ChangeTimeTwo=0.001000
      SwapTime=0.001000
-     bStatic=False
-     bDynamicLight=True
-     bAlwaysRelevant=True
+     bStatic=false
+     bDynamicLight=true
+     bAlwaysRelevant=true
 }

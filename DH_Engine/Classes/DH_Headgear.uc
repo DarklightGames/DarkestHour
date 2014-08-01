@@ -18,5 +18,5 @@ var bool bIsHelmet;
 
 defaultproperties
 {
-     bIsHelmet=True
+     bIsHelmet=true
 }

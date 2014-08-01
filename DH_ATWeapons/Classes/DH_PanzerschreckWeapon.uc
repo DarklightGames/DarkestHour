@@ -17,10 +17,10 @@ var     int         NumMagsToResupply;			// Number of ammo mags to add when this
 
 replication
 {
-	reliable if( Role<ROLE_Authority )
+	reliable if (Role<ROLE_Authority)
 		ServerSetRange;
 
-    reliable if( Role==ROLE_Authority )
+    reliable if (Role==ROLE_Authority)
         ClientDoAssistedReload;
 }
 
@@ -29,14 +29,14 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	if( PrimaryAmmoArray.Length > MaxNumPrimaryMags)
+	if (PrimaryAmmoArray.Length > MaxNumPrimaryMags)
 	    PrimaryAmmoArray.Remove(MaxNumPrimaryMags, (PrimaryAmmoArray.Length - MaxNumPrimaryMags));
 }
 
 // Overridden to support cycling the Panzerschreck aiming ranges
 simulated exec function Deploy()
 {
-	if( IsBusy() || !bUsingSights )
+	if (IsBusy() || !bUsingSights)
 		return;
 
 	CycleRange();
@@ -45,7 +45,7 @@ simulated exec function Deploy()
 // switch the Panzerschreck aiming ranges
 simulated function CycleRange()
 {
-	if( RangeIndex < 2 )
+	if (RangeIndex < 2)
 	{
 		RangeIndex++;
 	}
@@ -56,12 +56,12 @@ simulated function CycleRange()
 
 	DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
-	if(Instigator.IsLocallyControlled())
+	if (Instigator.IsLocallyControlled())
 	{
 		PlayIdle();
 	}
 
-	if( Role < ROLE_Authority)
+	if (Role < ROLE_Authority)
 		ServerSetRange(RangeIndex);
 }
 
@@ -78,7 +78,7 @@ simulated function PlayIdle()
 {
 	local name Anim;
 
-	if( bUsingSights )
+	if (bUsingSights)
 	{
 		switch(RangeIndex)
 		{
@@ -93,11 +93,11 @@ simulated function PlayIdle()
 				break;
 		}
 
-		LoopAnim(Anim, IdleAnimRate, 0.2 );
+		LoopAnim(Anim, IdleAnimRate, 0.2);
 	}
 	else
 	{
-		LoopAnim(IdleAnim, IdleAnimRate, 0.2 );
+		LoopAnim(IdleAnim, IdleAnimRate, 0.2);
 	}
 }
 
@@ -110,29 +110,29 @@ simulated state RaisingWeapon
 	   	local int Mode;
 		local name Anim;
 
-        if( PrimaryAmmoArray.Length > 1 ) // This prevents rocket being lost on vehicle exit and when spawning with no other weapons
+        if (PrimaryAmmoArray.Length > 1) // This prevents rocket being lost on vehicle exit and when spawning with no other weapons
         	AmmoCharge[0] = 0;
 
         // If we have quickly raised our sights right after putting the weapon away,
         // take us out of ironsight mode
-        if( bUsingSights )
+        if (bUsingSights)
         	ZoomOut(false);
 
 		// Reset any zoom values
-		if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+		if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 		{
-			if( DisplayFOV != default.DisplayFOV )
+			if (DisplayFOV != default.DisplayFOV)
 			{
 				DisplayFOV = default.DisplayFOV;
 			}
 
-			if( bPlayerFOVZooms )
+			if (bPlayerFOVZooms)
 			{
 		    	PlayerViewZoom(false);
 			}
 		}
 
-		if( AmmoAmount(0) < 1 && HasAnim(SelectEmptyAnim))
+		if (AmmoAmount(0) < 1 && HasAnim(SelectEmptyAnim))
 		{
 			Anim = SelectEmptyAnim;
 		}
@@ -141,17 +141,17 @@ simulated state RaisingWeapon
 			Anim = SelectAnim;
 		}
 
-		if ( ClientState == WS_Hidden )
+		if (ClientState == WS_Hidden)
 		{
 		    PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
 			ClientPlayForceFeedback(SelectForce);  // jdf
 
-		    if ( Instigator.IsLocallyControlled() )
+		    if (Instigator.IsLocallyControlled())
 		    {
 		       	// determines if bayonet capable weapon should come up with bayonet on or off
-		       	if( bHasBayonet )
+		       	if (bHasBayonet)
 		       	{
-		           	if( bBayonetMounted )
+		           	if (bBayonetMounted)
 		           	{
 						ShowBayonet();
 		           	}
@@ -161,7 +161,7 @@ simulated state RaisingWeapon
 		            }
 		        }
 
-		        if ( (Mesh!=None) && HasAnim(Anim) )
+		        if ((Mesh!=none) && HasAnim(Anim))
 		            PlayAnim(Anim, SelectAnimRate, 0.0);
 		    }
 
@@ -192,17 +192,17 @@ simulated state LoweringWeapon
 
     	InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-        if ( AmmoAmount(0) > 0 && CurrentMagCount < InitialNumPrimaryMags - 1 )
+        if (AmmoAmount(0) > 0 && CurrentMagCount < InitialNumPrimaryMags - 1)
         {
 		    PrimaryAmmoArray.Insert(CurrentMagIndex, 1);
 		    PrimaryAmmoArray[CurrentMagIndex] = InitialAmount;
 		    CurrentMagCount++;
 
-		    if(Instigator.IsLocallyControlled())
-   		    	PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'DHATLoadMessage', 2);
+		    if (Instigator.IsLocallyControlled())
+   		    	PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 2);
 		}
 
-		if( AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
+		if (AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
 		{
 			Anim = PutDownEmptyAnim;
 		}
@@ -218,13 +218,13 @@ simulated state LoweringWeapon
 	        {
 	            for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
 	            {
-	                if ( FireMode[Mode].bIsFiring )
+	                if (FireMode[Mode].bIsFiring)
 	                    ClientStopFire(Mode);
 	            }
 
-				if ( ClientState == WS_BringUp )
+				if (ClientState == WS_BringUp)
 					TweenAnim(SelectAnim,PutDownTime);
-				else if ( HasAnim(Anim) )
+				else if (HasAnim(Anim))
 					PlayAnim(Anim, PutDownAnimRate, 0.0);
 	        }
 
@@ -245,17 +245,17 @@ simulated function BringUp(optional Weapon PrevWeapon)
 {
 	super.BringUp(PrevWeapon);
 
-	if( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 	{
 		ROPawn(Instigator).bWeaponCanBeResupplied = true;
 		DH_Pawn(Instigator).bWeaponCanBeReloaded = true;
 
-        if( CurrentMagCount > 0 && AmmoAmount(0) <= 0 )
+        if (CurrentMagCount > 0 && AmmoAmount(0) <= 0)
         {
             ROPawn(Instigator).bWeaponNeedsResupply = false;
             DH_Pawn(Instigator).bWeaponNeedsReload = true;
         }
-        else if( CurrentMagCount < MaxNumPrimaryMags - 1 )
+        else if (CurrentMagCount < MaxNumPrimaryMags - 1)
         {
         	ROPawn(Instigator).bWeaponNeedsResupply = true;
             DH_Pawn(Instigator).bWeaponNeedsReload = false;
@@ -280,15 +280,15 @@ simulated function bool PutDown()
 
 simulated function Fire(float F)
 {
-	if( instigator.bIsCrawling )
+	if (instigator.bIsCrawling)
 	{
         class'DH_PanzerschreckWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller),0);
         return;
 	}
-	else if( bUsingSights )
+	else if (bUsingSights)
 	{
 		/*
-		if( !Instigator.bIsCrouched && !Instigator.bRestingWeapon )
+		if (!Instigator.bIsCrouched && !Instigator.bRestingWeapon)
 		{
         	class'DH_PanzerschreckWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller),1);
         	return;
@@ -297,7 +297,7 @@ simulated function Fire(float F)
 
 		DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
-		if( Role < ROLE_Authority)
+		if (Role < ROLE_Authority)
 			ServerSetRange(RangeIndex);
     }
     else
@@ -311,9 +311,9 @@ simulated function Fire(float F)
 
 simulated function PostFire()
 {
-    if( Role == ROLE_Authority )
+    if (Role == ROLE_Authority)
 	{
-        if( CurrentMagCount > 0 && AmmoAmount(0) <= 0 )
+        if (CurrentMagCount > 0 && AmmoAmount(0) <= 0)
         {
             ROPawn(Instigator).bWeaponNeedsResupply = false;
             DH_Pawn(Instigator).bWeaponNeedsReload = true;
@@ -329,28 +329,28 @@ simulated function PostFire()
 // Don't autoswitch when we run out of ammo
 simulated function OutOfAmmo()
 {
-	if( !HasAmmo() )
+	if (!HasAmmo())
 	{
-		if( DHWeaponAttachment(ThirdPersonActor) != none )
+		if (DHWeaponAttachment(ThirdPersonActor) != none)
 		{
 			DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
 		}
 	}
 
-	if ( !Instigator.IsLocallyControlled() || HasAmmo() )
+	if (!Instigator.IsLocallyControlled() || HasAmmo())
     	return;
 }
 
 // Overridden to prevent reloading unless weapon is empty and player is not proned
 simulated function bool AllowReload()
 {
-	if( Instigator.bIsCrawling )
+	if (Instigator.bIsCrawling)
 	{
 	    PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DH_PanzerschreckWarningMsg', 4);
         return false;
     }
 
-    if( AmmoAmount(0) > 0 )
+    if (AmmoAmount(0) > 0)
     {
 		return false;
 	}
@@ -366,16 +366,16 @@ simulated state Reloading
 	}
 
 Begin:
-	if( bUsingSights )
+	if (bUsingSights)
     {
-		if( Role == ROLE_Authority)
+		if (Role == ROLE_Authority)
 			ServerZoomOut(false);
 		else
-			ZoomOut(False);
+			ZoomOut(false);
 
-		if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+		if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 		{
-			if( bPlayerFOVZooms )
+			if (bPlayerFOVZooms)
 			{
 		    	PlayerViewZoom(false);
 			}
@@ -385,14 +385,14 @@ Begin:
 
 	// Sometimes the client will get switched out of ironsight mode before getting to
 	// the reload function. This should catch that.
-	if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+	if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 	{
-		if( DisplayFOV != default.DisplayFOV )
+		if (DisplayFOV != default.DisplayFOV)
 		{
 			SmoothZoom(false);
 		}
 
-		if( bPlayerFOVZooms )
+		if (bPlayerFOVZooms)
 		{
 	    	PlayerViewZoom(false);
 		}
@@ -409,7 +409,7 @@ simulated state AssistedReloading extends Reloading
 {
     simulated function BeginState()
     {
-		if( Role == ROLE_Authority )
+		if (Role == ROLE_Authority)
 		{
 			DH_Pawn(Instigator).HandleAssistedReload();
 		}
@@ -418,7 +418,7 @@ simulated state AssistedReloading extends Reloading
 
 // Overridden to avoid taking player out of sights
 Begin:
-	if( bUsingSights )
+	if (bUsingSights)
     {
 	}
 	DH_Pawn(Instigator).bWeaponNeedsReload = false;
@@ -430,7 +430,7 @@ simulated function PlayAssistedReload()
 	local name Anim;
 	local float AnimTimer;
 
-    if( AmmoAmount(0) > 0 )
+    if (AmmoAmount(0) > 0)
     {
 		Anim = AssistedMagPartialReloadAnim;
 	}
@@ -441,12 +441,12 @@ simulated function PlayAssistedReload()
 
     AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
-	if( Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+	if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
 		SetTimer(AnimTimer - (AnimTimer * 0.1),false);
 	else
 		SetTimer(AnimTimer,false);
 
-	if( Instigator.IsLocallyControlled() )
+	if (Instigator.IsLocallyControlled())
 	{
 		PlayAnim(Anim, 1.0, FastTweenTime);
 	}
@@ -460,24 +460,24 @@ function PerformReload()
 
     CurrentMagLoad = AmmoAmount(0);
 
-	if( PrimaryAmmoArray.Length == 0 )
+	if (PrimaryAmmoArray.Length == 0)
 	{
 		return;
 	}
 
     // new if statement to prevent reloading unless weapon rested or sighted and crouched
-//	if( bUsingSights  && (instigator.bIsCrouched || instigator.bRestingWeapon)  )
+//	if (bUsingSights  && (instigator.bIsCrouched || instigator.bRestingWeapon) )
 //	{
-    if ( CurrentMagLoad <= 0 )
+    if (CurrentMagLoad <= 0)
 	{
 		PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 	}
 	else
 	{
-		if( bPlusOneLoading )
+		if (bPlusOneLoading)
 		{
 		    //If there's only one bullet left(the one in the chamber), discard the clip
-		    if ( CurrentMagLoad == 1 )
+		    if (CurrentMagLoad == 1)
 		        PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
 		    else
     			PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad - 1;
@@ -492,19 +492,19 @@ function PerformReload()
 		}
 	}
 
-	if( PrimaryAmmoArray.Length == 0 )
+	if (PrimaryAmmoArray.Length == 0)
 	{
 		return;
 	}
 
 	CurrentMagIndex++;
 
-	if ( CurrentMagIndex > PrimaryAmmoArray.Length - 1)
+	if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
 	{
 		CurrentMagIndex = 0;
 	}
 
-	if( bDidPlusOneReload )
+	if (bDidPlusOneReload)
 	{
 		AddAmmo(PrimaryAmmoArray[CurrentMagIndex] + 1, 0);
 	}
@@ -515,14 +515,14 @@ function PerformReload()
 
 	AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
 
-	if( Instigator.IsHumanControlled() )
+	if (Instigator.IsHumanControlled())
 	{
-		PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'DH_BazookaAmmoMsg',0);
+		PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DH_BazookaAmmoMsg',0);
 	}
 
-	if( AmmoAmount(0) > 0 )
+	if (AmmoAmount(0) > 0)
 	{
-		if( DHWeaponAttachment(ThirdPersonActor) != none )
+		if (DHWeaponAttachment(ThirdPersonActor) != none)
 		{
 			DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
 		}
@@ -535,9 +535,9 @@ function PerformReload()
 /*	}
 	else
 	{
-	    if( Instigator.IsHumanControlled() )
+	    if (Instigator.IsHumanControlled())
 		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'DH_PanzerschreckWarningMsg',3);
+			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DH_PanzerschreckWarningMsg',3);
 		}
 	}*/
 }
@@ -545,7 +545,7 @@ function PerformReload()
 simulated state PendingAction
 {
 Begin:
-	if( bUsingSights )
+	if (bUsingSights)
     {
  }
 }
@@ -560,13 +560,13 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 	super.GiveTo(Other,Pickup);
 
-	if ( CurrentMagCount > 0 )
+	if (CurrentMagCount > 0)
     {
 		bJustSpawned = true;
 		AmmoCharge[0] = 0;
 	}
 
-    if ( HasAmmo() && !bJustSpawned )
+    if (HasAmmo() && !bJustSpawned)
     {
        	AmmoCharge[0] = 0;
         PrimaryAmmoArray.Insert(CurrentMagIndex, 1);
@@ -577,12 +577,12 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 /*	ROPawn(Instigator).bWeaponCanBeResupplied = true;
  	DH_Pawn(Instigator).bWeaponCanBeReloaded = true;
 
-    if( CurrentMagCount > 0 && AmmoAmount(0) <= 0 )
+    if (CurrentMagCount > 0 && AmmoAmount(0) <= 0)
     {
         DH_Pawn(Instigator).bWeaponNeedsReload = true;
         ROPawn(Instigator).bWeaponNeedsResupply = false;
     }
-	else if( CurrentMagCount < (MaxNumPrimaryMags - 1) )
+	else if (CurrentMagCount < (MaxNumPrimaryMags - 1))
 	{
 		ROPawn(Instigator).bWeaponNeedsResupply = true;
 		DH_Pawn(Instigator).bWeaponNeedsReload = false;
@@ -596,7 +596,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 function DropFrom(vector StartLocation)
 {
-    if (!bCanThrow )
+    if (!bCanThrow)
         return;
 
  	ROPawn(Instigator).bWeaponCanBeResupplied = false;
@@ -609,7 +609,7 @@ function DropFrom(vector StartLocation)
 
 simulated function Destroyed()
 {
-	if( Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none )
+	if (Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none)
 	{
 	 	ROPawn(Instigator).bWeaponCanBeResupplied = false;
 	 	ROPawn(Instigator).bWeaponNeedsResupply = false;
@@ -622,29 +622,29 @@ simulated function Destroyed()
 
 // Overridden to prevent picking up more than the intended max ammo count
 // MaxNumMags is actually set 1 higher than intended max, to facilitate unusual resupply/fillammo
-function bool HandlePickupQuery( pickup Item )
+function bool HandlePickupQuery(pickup Item)
 {
 //    local WeaponPickup wpu;
 	local int i, j;
 	local bool bAddedMags;
 
-	if ( bNoAmmoInstances )
+	if (bNoAmmoInstances)
 	{
 		// handle ammo pickups
-		for ( i=0; i<2; i++ )
+		for (i=0; i<2; i++)
 		{
-			if ( (item.inventorytype == AmmoClass[i]) && (AmmoClass[i] != None) )
+			if ((item.inventorytype == AmmoClass[i]) && (AmmoClass[i] != none))
 			{
-				if( (AmmoAmount(0) <= 0 && PrimaryAmmoArray.Length < MaxNumPrimaryMags) || PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1 )
+				if ((AmmoAmount(0) <= 0 && PrimaryAmmoArray.Length < MaxNumPrimaryMags) || PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1)
 				{
 					// Handle multi mag ammo type pickups
-					if( ROMultiMagAmmoPickup(Item) != none )
+					if (ROMultiMagAmmoPickup(Item) != none)
 					{
-						for( j=0; j<ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++ )
+						for(j=0; j<ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
 						{
 							if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
 					        {
-					            PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];//DropAmmo( StartLocation, PrimaryAmmoArray[i]);
+					            PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];//DropAmmo(StartLocation, PrimaryAmmoArray[i]);
 					        	bAddedMags=true;
 							}
 							else
@@ -666,7 +666,7 @@ function bool HandlePickupQuery( pickup Item )
 				}
 
 				// if we added mags, update the mag count and force a net update
-				if( bAddedMags )
+				if (bAddedMags)
 				{
 					CurrentMagCount = PrimaryAmmoArray.Length - 1;
 					NetUpdateTime = Level.TimeSeconds - 1;
@@ -682,14 +682,14 @@ function bool HandlePickupQuery( pickup Item )
 /*	if (class == Item.InventoryType)
     {
         wpu = WeaponPickup(Item);
-        if (wpu != None)
+        if (wpu != none)
             return !wpu.AllowRepeatPickup();
         else
             return false;
     }*/
 
     // Drop current weapon and pickup the one on the ground
-    if( Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup &&
+    if (Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup &&
 		Item.InventoryType.default.InventoryGroup == InventoryGroup && Instigator.CanThrowWeapon())
 	{
 		ROPlayer(Instigator.Controller).ThrowWeapon();
@@ -700,7 +700,7 @@ function bool HandlePickupQuery( pickup Item )
     if (Item.InventoryType.default.InventoryGroup == InventoryGroup)
 		return true;
 
-    if ( Inventory == None )
+    if (Inventory == none)
 		return false;
 
 	return Inventory.HandlePickupQuery(Item);
@@ -710,10 +710,10 @@ function bool AssistedReload()
 {
     local bool bReloadAllowed;
 
-    if ( bUsingSights && AmmoAmount(0) == 0 && CurrentMagCount > 0 ) //&& (instigator.bIsCrouched || instigator.bRestingWeapon)
-        bReloadAllowed = True;
+    if (bUsingSights && AmmoAmount(0) == 0 && CurrentMagCount > 0) //&& (instigator.bIsCrouched || instigator.bRestingWeapon)
+        bReloadAllowed = true;
 
-    if( bReloadAllowed )
+    if (bReloadAllowed)
     {
 		NetUpdateTime = Level.TimeSeconds - 1;
 
@@ -723,7 +723,7 @@ function bool AssistedReload()
     }
     else
     {
-        PlayerController(Instigator.Controller).ReceiveLocalizedMessage( class'DH_PanzerschreckWarningMsg',3 );
+        PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DH_PanzerschreckWarningMsg',3);
         return false;
     }
 }
@@ -736,11 +736,11 @@ function bool ResupplyAmmo()
 
     InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-	if( CurrentMagCount < MaxNumPrimaryMags - 1 && AmmoAmount(0) == 0 )
+	if (CurrentMagCount < MaxNumPrimaryMags - 1 && AmmoAmount(0) == 0)
 	{
-		for( i=NumMagsToResupply; i>0; i-- )
+		for(i=NumMagsToResupply; i>0; i--)
 		{
-			if( PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+			if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
 			{
 				PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
 			}
@@ -763,11 +763,11 @@ function bool FillAmmo()
  	local int InitialAmount, i;
     	InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-	if( (CurrentMagCount == 0) && AmmoAmount(0) == 0 )
+	if ((CurrentMagCount == 0) && AmmoAmount(0) == 0)
     {
-		for( i=NumMagsToResupply; i>0; i-- )
+		for(i=NumMagsToResupply; i>0; i--)
 		{
-			if( PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+			if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
 			{
 				PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
 			}
@@ -823,10 +823,10 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.600000
      CurrentRating=0.600000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
      Priority=8
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      InventoryGroup=5
      PickupClass=Class'DH_ATWeapons.DH_PanzerschreckPickup'
      BobDamping=1.600000

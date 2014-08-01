@@ -16,8 +16,8 @@ defaultproperties
      VehicleDamageModifier=0.850000
      TreadDamageModifier=0.200000
      DeathString="%o was burnt up by %k's Sherman(105) HEAT shell."
-     bArmorStops=True
-     bExtraMomentumZ=False
+     bArmorStops=true
+     bExtraMomentumZ=false
      KDeathVel=150.000000
      HumanObliterationThreshhold=400
 }

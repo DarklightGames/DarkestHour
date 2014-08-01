@@ -4,7 +4,7 @@
 // Purpose:
 // A new mine that only explodes on vehicles and can damage them (large tanks often detracts)
 // Problems/Limitations:
-// None known
+// none known
 
 class DHMinefield_ATMine extends ROMine;
 
@@ -13,7 +13,7 @@ singular function Touch(Actor Other)
 {
 	local int 	RandomNum;
 
-	if (Pawn(Other) == None || Vehicle(Other) == None)
+	if (Pawn(Other) == none || Vehicle(Other) == none)
 		return;
 
 	if (Role == ROLE_Authority)
@@ -23,12 +23,12 @@ singular function Touch(Actor Other)
 
 		//Lets possibly detract the vehicle (80% chance)
 		RandomNum = Rand(101);
-		if( DH_ROTreadCraft(Other) != None && RandomNum <= 80)
+		if (DH_ROTreadCraft(Other) != none && RandomNum <= 80)
 		{
-			if( vector(Other.Rotation) dot Normal(Location - Other.Location) > 0 )
-				DH_ROTreadCraft(Other).DamageTrack(True);
+			if (vector(Other.Rotation) dot Normal(Location - Other.Location) > 0)
+				DH_ROTreadCraft(Other).DamageTrack(true);
 			else
-			    DH_ROTreadCraft(Other).DamageTrack(False);
+			    DH_ROTreadCraft(Other).DamageTrack(false);
 		}
 
 		//Hurt other around it
@@ -39,7 +39,7 @@ singular function Touch(Actor Other)
 	SpawnExplosionEffects();
 }
 
-simulated function HurtRadius( float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation )
+simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
 	local actor Victims, LastTouched;
 	local float damageScale, dist;
@@ -51,18 +51,18 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 	local actor	 TraceHitActor;
 
 
-	if ( bHurtEntry )
+	if (bHurtEntry)
 		return;
 
 	bHurtEntry = true;
-	foreach VisibleCollidingActors( class 'Actor', Victims, DamageRadius, HitLocation )
+	foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
 	{
 		// don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
-		if( (Victims != self) && (Victims.Role == ROLE_Authority) && !Victims.IsA('FluidSurfaceInfo') )
+		if ((Victims != self) && (Victims.Role == ROLE_Authority) && !Victims.IsA('FluidSurfaceInfo'))
 		{
 			// if there's a vehicle between the player and explosion, don't apply damage
 			TraceHitActor = Trace(TraceHitLocation, TraceHitNormal, Victims.Location, Location);
-			if( (Vehicle(TraceHitActor) != none) && (TraceHitActor != Victims) )
+			if ((Vehicle(TraceHitActor) != none) && (TraceHitActor != Victims))
 				continue;
 			// end of Antarian's 9/12/2004 contribution
 
@@ -70,8 +70,8 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 			dist = FMax(1,VSize(dir));
 			dir = dir/dist;
 			damageScale = 1 - FMax(0,(dist - Victims.CollisionRadius)/DamageRadius);
-			if ( Victims == LastTouched )
-				LastTouched = None;
+			if (Victims == LastTouched)
+				LastTouched = none;
 			Victims.TakeDamage
 			(
 				damageScale * DamageAmount,
@@ -80,12 +80,12 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 				(damageScale * Momentum * dir),
 				DamageType
 			);
-			if (Vehicle(Victims) != None && Vehicle(Victims).Health > 0)
+			if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
 				Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, Instigator.Controller, DamageType, Momentum, HitLocation);
 
 		}
 	}
-	if ( (LastTouched != None) && (LastTouched != self) && (LastTouched.Role == ROLE_Authority) && !LastTouched.IsA('FluidSurfaceInfo') )
+	if ((LastTouched != none) && (LastTouched != self) && (LastTouched.Role == ROLE_Authority) && !LastTouched.IsA('FluidSurfaceInfo'))
 	{
 		Victims = LastTouched;
 		LastTouched = none;
@@ -93,7 +93,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 		dist = FMax(1,VSize(dir));
 		dir = dir/dist;
 		damageScale = FMax(Victims.CollisionRadius/(Victims.CollisionRadius + Victims.CollisionHeight),1 - FMax(0,(dist - Victims.CollisionRadius)/DamageRadius));
-		if ( Instigator == None || Instigator.Controller == None )
+		if (Instigator == none || Instigator.Controller == none)
 			Victims.SetDelayedDamageInstigatorController(Instigator.Controller);
 		Victims.TakeDamage
 		(
@@ -103,7 +103,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 			(damageScale * Momentum * dir),
 			DamageType
 		);
-		if (Vehicle(Victims) != None && Vehicle(Victims).Health > 0)
+		if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
 			Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, Instigator.Controller, DamageType, Momentum, HitLocation);
 	}
 
@@ -116,5 +116,5 @@ defaultproperties
      DamageRadius=512
      MyDamageType=Class'DH_LevelActors.DHATMineDamage'
      Momentum=3000
-     bHidden=True
+     bHidden=true
 }

@@ -13,7 +13,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Corporal"
      AltName="Corporal"
      Article="a "
@@ -23,7 +23,7 @@ defaultproperties
      Models(0)="RNB_Sarg1"
      Models(1)="RNB_Sarg2"
      Models(2)="RNB_Sarg3"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
@@ -33,6 +33,6 @@ defaultproperties
      Headgear(0)=Class'DH_BritishPlayers.DH_CanadianInfantryBeretRoyalNewBrunswicks'
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

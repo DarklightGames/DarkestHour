@@ -30,7 +30,7 @@ simulated state Idle
     // Players can still use crouch to undeploy instantly while proned however - PsYcH0_CH!cKeN
     simulated function bool WeaponAllowCrouchChange()
     {
-        if( Instigator.bBipodDeployed && !Instigator.bIsCrawling )
+        if (Instigator.bBipodDeployed && !Instigator.bIsCrawling)
             return false;
         else
             return true;
@@ -41,9 +41,9 @@ simulated state Idle
 //// client only ////
 simulated event ClientStartFire(int Mode)
 {
-    if ( Pawn(Owner).Controller.IsInState('GameEnded') || Pawn(Owner).Controller.IsInState('RoundEnded') )
+    if (Pawn(Owner).Controller.IsInState('GameEnded') || Pawn(Owner).Controller.IsInState('RoundEnded'))
         return;
-    if ( FireMode[Mode].bMeleeMode && Instigator.bBipodDeployed )
+    if (FireMode[Mode].bMeleeMode && Instigator.bBipodDeployed)
         return;
 
     if (Role < ROLE_Authority)
@@ -64,7 +64,7 @@ simulated event ClientStartFire(int Mode)
 // Players can still use crouch to undeploy instantly while proned however
 simulated function bool WeaponAllowCrouchChange()
 {
-    if( Instigator.bBipodDeployed && !Instigator.bIsCrawling )
+    if (Instigator.bBipodDeployed && !Instigator.bIsCrawling)
         return false;
     else
         return true;
@@ -79,11 +79,11 @@ simulated function AnimEnd(int channel)
 
     	if (ClientState == WS_ReadyToFire)
     	{
-        		if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        		if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         		{
             			PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         		}
-        		else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()) )
+        		else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         		{
             			PlayIdle();
         		}
@@ -91,7 +91,7 @@ simulated function AnimEnd(int channel)
         		{
             			PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         		}
-        		else if ((FireMode[0] == None || !FireMode[0].bIsFiring) && (FireMode[1] == None || !FireMode[1].bIsFiring))
+        		else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
         		{
             			PlayIdle();
         		}
@@ -101,12 +101,12 @@ simulated function AnimEnd(int channel)
 // Overriden to handle the stop firing anims especially for the STG
 simulated event StopFire(int Mode)
 {
-	if ( FireMode[Mode].bIsFiring )
+	if (FireMode[Mode].bIsFiring)
 	    	FireMode[Mode].bInstantStop = true;
 
 	if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     	{
-     		if( !IsAnimating(0) )
+     		if (!IsAnimating(0))
      		{
      			PlayIdle();
      		}
@@ -124,9 +124,9 @@ simulated event StopFire(int Mode)
 
 simulated function ROIronSights()
 {
- if ( !Instigator.bBipodDeployed )
+ if (!Instigator.bBipodDeployed)
  {
-	if( bUsingSights )
+	if (bUsingSights)
 	{
         PerformZoom(false);
 	}
@@ -145,12 +145,12 @@ simulated function ROIronSights()
 // returns true if this weapon should use free-aim in this particular state
 simulated function bool ShouldUseFreeAim()
 {
-	if( FireMode[1].bMeleeMode && FireMode[1].IsFiring())
+	if (FireMode[1].bMeleeMode && FireMode[1].IsFiring())
 	{
 		return false;
 	}
 
-	if(bUsesFreeAim && !(bUsingSights || Instigator.bBipodDeployed))
+	if (bUsesFreeAim && !(bUsingSights || Instigator.bBipodDeployed))
 	{
 		return true;
 	}
@@ -161,38 +161,38 @@ simulated function bool ShouldUseFreeAim()
 simulated function PlayIdle()
 {
 
-    if( Instigator.bBipodDeployed )
+    if (Instigator.bBipodDeployed)
     {
-        LoopAnim(SightUpIronIdleAnim, IdleAnimRate, 0.2 );
+        LoopAnim(SightUpIronIdleAnim, IdleAnimRate, 0.2);
     }
-	else if( bUsingSights )
+	else if (bUsingSights)
 	{
-    	if( bWaitingToBolt && HasAnim(PostFireIronIdleAnim))
+    	if (bWaitingToBolt && HasAnim(PostFireIronIdleAnim))
 	    {
-         	LoopAnim(PostFireIronIdleAnim, IdleAnimRate, 0.2 );
+         	LoopAnim(PostFireIronIdleAnim, IdleAnimRate, 0.2);
 	    }
-		else if( AmmoAmount(0) < 1 && HasAnim(IronIdleEmptyAnim) )
+		else if (AmmoAmount(0) < 1 && HasAnim(IronIdleEmptyAnim))
 	    {
-			LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2 );
+			LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
 		}
 		else
 		{
-			LoopAnim(IronIdleAnim, IdleAnimRate, 0.2 );
+			LoopAnim(IronIdleAnim, IdleAnimRate, 0.2);
 		}
     }
 	else
     {
-	    if( bWaitingToBolt && HasAnim(PostFireIdleAnim))
+	    if (bWaitingToBolt && HasAnim(PostFireIdleAnim))
 	    {
-            LoopAnim(PostFireIdleAnim, IdleAnimRate, 0.2 );
+            LoopAnim(PostFireIdleAnim, IdleAnimRate, 0.2);
 	    }
-	    else if(  AmmoAmount(0) < 1 && HasAnim(IdleEmptyAnim))
+	    else if (AmmoAmount(0) < 1 && HasAnim(IdleEmptyAnim))
 	    {
-	        LoopAnim(IdleEmptyAnim, IdleAnimRate, 0.2 );
+	        LoopAnim(IdleEmptyAnim, IdleAnimRate, 0.2);
 	    }
 		else
 	    {
-		   	LoopAnim(IdleAnim, IdleAnimRate, 0.2 );
+		   	LoopAnim(IdleAnim, IdleAnimRate, 0.2);
         }
     }
 }
@@ -200,17 +200,17 @@ simulated function PlayIdle()
 // Take the weapon out of iron sights if you jump
 simulated function NotifyOwnerJumped()
 {
-	if( !Instigator.bBipodDeployed )
+	if (!Instigator.bBipodDeployed)
 	{
 		super.NotifyOwnerJumped();
 	}
-	else if( !IsBusy() || IsInState('DeployingBipod') )
+	else if (!IsBusy() || IsInState('DeployingBipod'))
 	{
-		if( Instigator.bBipodDeployed )
+		if (Instigator.bBipodDeployed)
 		{
 			BipodDeploy(false);
 
-			if( Role < ROLE_Authority)
+			if (Role < ROLE_Authority)
 				ServerBipodDeploy(false);
 		}
 	}
@@ -218,9 +218,9 @@ simulated function NotifyOwnerJumped()
 
 function ServerRequestReload()
 {
-	if( AllowReload() )
+	if (AllowReload())
 	{
-        if ( Instigator.bBipodDeployed )
+        if (Instigator.bBipodDeployed)
         {
 		    GotoState('ReloadingBipod');
 		    ClientDoReload();
@@ -239,7 +239,7 @@ function ServerRequestReload()
 
 simulated function ClientDoReload(optional int NumRounds)
 {
-    if ( Instigator.bBipodDeployed )
+    if (Instigator.bBipodDeployed)
     {
         GotoState('ReloadingBipod');
     }
@@ -288,7 +288,7 @@ simulated state ReloadingBipod extends Busy
 
     	simulated function BeginState()
     	{
-		if( Role == ROLE_Authority )
+		if (Role == ROLE_Authority)
 		{
 			ROPawn(Instigator).HandleStandardReload();
 		}
@@ -299,20 +299,20 @@ simulated state ReloadingBipod extends Busy
 
     	simulated function EndState()
     	{
-            if( Role == ROLE_Authority )
+            if (Role == ROLE_Authority)
 			   PerformReload();
 
 	        bWaitingToBolt = false;
 
-		    if ( Instigator.bBipodDeployed && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled() )
+		    if (Instigator.bBipodDeployed && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 			{
 				DisplayFOV = IronSightDisplayFOV;
 //				bUsingSights=true;
 			}
 
-			if( Role == ROLE_Authority)
+			if (Role == ROLE_Authority)
 	    	{
-		    	if( CurrentMagCount != (MaxNumPrimaryMags - 1) )
+		    	if (CurrentMagCount != (MaxNumPrimaryMags - 1))
 			    {
 				    ROPawn(Instigator).bWeaponNeedsResupply = true;
 			    }
@@ -327,14 +327,14 @@ simulated state ReloadingBipod extends Busy
 
 // Take the player out of iron sights if they are in ironsights
 Begin:
-	if( Instigator.bBipodDeployed && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+	if (Instigator.bBipodDeployed && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
-		if( DisplayFOV != default.DisplayFOV )
+		if (DisplayFOV != default.DisplayFOV)
 		{
 		 	SmoothZoom(false);
 		}
 
-		if( AmmoAmount(0) < 1 && HasAnim(MagEmptyReloadAnim))
+		if (AmmoAmount(0) < 1 && HasAnim(MagEmptyReloadAnim))
 		{
 			Sleep(((GetAnimDuration(SightUpMagEmptyReloadAnim, 1.0)) * 1.0) - (default.ZoomInTime + default.ZoomOutTime));
 		}
@@ -354,9 +354,9 @@ simulated function PlayReload()
 	local name Anim;
 	local float AnimTimer;
 
-    if( AmmoAmount(0) > 0 )
+    if (AmmoAmount(0) > 0)
     	{
-		if( Instigator.bBipodDeployed && HasAnim(SightUpMagPartialReloadAnim) )
+		if (Instigator.bBipodDeployed && HasAnim(SightUpMagPartialReloadAnim))
 		{
 			Anim = SightUpMagPartialReloadAnim;
 		}
@@ -367,7 +367,7 @@ simulated function PlayReload()
 	}
 	else
 	{
-		if( Instigator.bBipodDeployed && HasAnim(SightUpMagEmptyReloadAnim) )
+		if (Instigator.bBipodDeployed && HasAnim(SightUpMagEmptyReloadAnim))
 		{
 		Anim = SightUpMagEmptyReloadAnim;
 		}
@@ -379,12 +379,12 @@ simulated function PlayReload()
 
     	AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
-	if( Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+	if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
 		SetTimer(AnimTimer - (AnimTimer * 0.1),false);
 	else
 		SetTimer(AnimTimer,false);
 
-	if( Instigator.IsLocallyControlled() )
+	if (Instigator.IsLocallyControlled())
 	{
 		PlayAnim(Anim, 1.0, FastTweenTime);
 	}
@@ -397,9 +397,9 @@ simulated state Reloading
     {
 		super.EndState();
 
-		if( Role == ROLE_Authority)
+		if (Role == ROLE_Authority)
 		{
-			if( CurrentMagCount != (MaxNumPrimaryMags - 1) )
+			if (CurrentMagCount != (MaxNumPrimaryMags - 1))
 			{
 				ROPawn(Instigator).bWeaponNeedsResupply = true;
 			}
@@ -416,21 +416,21 @@ simulated state Reloading
 
 simulated exec function Deploy()
 {
-	if( IsBusy() )
+	if (IsBusy())
 		return;
 
-	if( Instigator.bBipodDeployed )
+	if (Instigator.bBipodDeployed)
 	{
         BipodDeploy(false);
 
-		if( Role < ROLE_Authority)
+		if (Role < ROLE_Authority)
 			ServerBipodDeploy(false);
 	}
-	else if( Instigator.bCanBipodDeploy )
+	else if (Instigator.bCanBipodDeploy)
 	{
         BipodDeploy(true);
 
-		if( Role < ROLE_Authority)
+		if (Role < ROLE_Authority)
 			ServerBipodDeploy(true);
 	}
 }
@@ -438,24 +438,24 @@ simulated exec function Deploy()
 // Forces the bipod to undeploy when needed
 simulated function ForceUndeploy()
 {
-	if( IsBusy() )
+	if (IsBusy())
 		return;
 
-	if( Instigator.bBipodDeployed )
+	if (Instigator.bBipodDeployed)
 	{
 		BipodDeploy(false);
 
-		if( Role < ROLE_Authority)
+		if (Role < ROLE_Authority)
 			ServerBipodDeploy(false);
 	}
 }
 
 // Called by the client on the server
-simulated function BipodDeploy( bool bNewDeployedStatus )
+simulated function BipodDeploy(bool bNewDeployedStatus)
 {
-	ROPawn(Instigator).SetBipodDeployed( bNewDeployedStatus );
+	ROPawn(Instigator).SetBipodDeployed(bNewDeployedStatus);
 
-	if( bNewDeployedStatus )
+	if (bNewDeployedStatus)
 	{
 	 	GotoState('DeployingBipod');
 	}
@@ -465,10 +465,10 @@ simulated function BipodDeploy( bool bNewDeployedStatus )
 	}
 }
 
-function ServerBipodDeploy( bool bNewDeployedStatus )
+function ServerBipodDeploy(bool bNewDeployedStatus)
 {
-	if( Instigator.bCanBipodDeploy )
-		BipodDeploy( bNewDeployedStatus );
+	if (Instigator.bCanBipodDeploy)
+		BipodDeploy(bNewDeployedStatus);
 }
 
 simulated state DeployingBipod extends Busy
@@ -493,7 +493,7 @@ simulated state DeployingBipod extends Busy
     // Players can still use crouch to undeploy instantly while proned however - PsYcH0_CH!cKeN
     simulated function bool WeaponAllowCrouchChange()
     {
-        if( Instigator.bBipodDeployed && !Instigator.bIsCrawling )
+        if (Instigator.bBipodDeployed && !Instigator.bIsCrawling)
             return false;
         else
             return true;
@@ -509,11 +509,11 @@ simulated state DeployingBipod extends Busy
 		local name Anim;
 		local float AnimTimer;
 
-		if( bUsingSights )
+		if (bUsingSights)
 	    {
 	    	Anim = SightUpIronBringUp;
 		}
-		else if( AmmoAmount(0) < 1 && HasAnim(IdleToBipodDeployEmpty) )
+		else if (AmmoAmount(0) < 1 && HasAnim(IdleToBipodDeployEmpty))
 		{
 			Anim = IdleToBipodDeployEmpty;
 		}
@@ -522,14 +522,14 @@ simulated state DeployingBipod extends Busy
 			Anim = SightUpIronBringUp;
 		}
 
-		if( Instigator.IsLocallyControlled() )
+		if (Instigator.IsLocallyControlled())
 		{
-	    	PlayAnim(Anim, IronSwitchAnimRate, FastTweenTime );
+	    	PlayAnim(Anim, IronSwitchAnimRate, FastTweenTime);
 		}
 
 	    AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
-		if( Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+		if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
 			SetTimer(AnimTimer - (AnimTimer * 0.1),false);
 		else
 			SetTimer(AnimTimer,false);
@@ -542,14 +542,14 @@ simulated state DeployingBipod extends Busy
 		local float TargetDisplayFOV;
 		local vector TargetPVO;
 
-		if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled() )
+		if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 		{
-			if( ScopeDetail == RO_ModelScopeHigh )
+			if (ScopeDetail == RO_ModelScopeHigh)
 			{
 				TargetDisplayFOV = Default.IronSightDisplayFOVHigh;
 				TargetPVO = Default.XoffsetHighDetail;
 			}
-			else if( ScopeDetail == RO_ModelScope )
+			else if (ScopeDetail == RO_ModelScope)
 			{
 				TargetDisplayFOV = Default.IronSightDisplayFOV;
 				TargetPVO = Default.XoffsetScoped;
@@ -567,19 +567,19 @@ simulated state DeployingBipod extends Busy
 	}
 
 Begin:
-	if( bUsingSights )
+	if (bUsingSights)
     {
-		if( Role == ROLE_Authority)
+		if (Role == ROLE_Authority)
 			ServerZoomOut(false);
 		else
 		{
-			ZoomOut(False);
+			ZoomOut(false);
 		}
 
 		SetPlayerFOV(PlayerIronsightFOV);
 	}
 
-	if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled() )
+	if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 	{
 		// Later this will be a latent function to zoom
 		SmoothZoom(true);
@@ -614,7 +614,7 @@ simulated state UndeployingBipod extends Busy
 		local name Anim;
 		local float AnimTimer;
 
-		if( AmmoAmount(0) < 1 && HasAnim(BipodDeployToIdleEmpty) )
+		if (AmmoAmount(0) < 1 && HasAnim(BipodDeployToIdleEmpty))
 		{
 			Anim = BipodDeployToIdleEmpty;
 		}
@@ -623,14 +623,14 @@ simulated state UndeployingBipod extends Busy
 			Anim = SightUpIronPutDown;
 		}
 
-		if( Instigator.IsLocallyControlled() )
+		if (Instigator.IsLocallyControlled())
 		{
-	    	PlayAnim(Anim, IronSwitchAnimRate, FastTweenTime );
+	    	PlayAnim(Anim, IronSwitchAnimRate, FastTweenTime);
 		}
 
 	    AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
-		if( Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+		if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
 			SetTimer(AnimTimer - (AnimTimer * 0.1),false);
 		else
 			SetTimer(AnimTimer,false);
@@ -640,17 +640,17 @@ simulated state UndeployingBipod extends Busy
 
     simulated function EndState()
     {
-		if( Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0 )
+		if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
 			NotifyCrawlMoving();
 
-		if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled() )
+		if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 		{
 			DisplayFOV = default.DisplayFOV;
 			PlayerViewOffset = default.PlayerViewOffset;
 		}
 	}
 Begin:
-	if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+	if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 	{
 		SmoothZoom(false);
 		//DisplayFOV = default.DisplayFOV;
@@ -669,7 +669,7 @@ defaultproperties
      IronIdleAnim="Iron_idle"
      IronBringUp="iron_in"
      IronPutDown="iron_out"
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
@@ -684,9 +684,9 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.700000
      CurrentRating=0.700000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
-     bCanBipodDeploy=True
+     bCanRestDeploy=true
+     bCanBipodDeploy=true
      BobDamping=1.600000
 }

@@ -12,7 +12,7 @@ class DH_StuH42CannonPawn extends DH_AssaultGunCannonPawn;
 // Commander cannot fire cannon when he is on the scissors scope or binocs
 function Fire(optional float F)
 {
-	if( DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none )
+	if (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
 	{
         return;
 	}
@@ -22,7 +22,7 @@ function Fire(optional float F)
 
 function AltFire(optional float F)
 {
-	if( DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none )
+	if (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
 	{
         return;
 	}
@@ -30,8 +30,8 @@ function AltFire(optional float F)
 	Super.AltFire(F);
 }
 
-// modification allowing dual-magnification optics is here ( look for "GunsightPositions" )
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
+// modification allowing dual-magnification optics is here (look for "GunsightPositions")
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
         local vector x, y, z;
         local vector VehicleZ, CamViewOffsetWorld;
@@ -46,7 +46,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
         WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
 
-        if( ROPlayer(Controller) != none )
+        if (ROPlayer(Controller) != none)
         {
                  ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
                  ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
@@ -79,18 +79,18 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         else
                 CameraRotation = PC.Rotation;
 
-        if( IsInState('ViewTransition') && bLockCameraDuringTransition )
+        if (IsInState('ViewTransition') && bLockCameraDuringTransition)
         {
-                CameraRotation = Gun.GetBoneRotation( 'Camera_com' );
+                CameraRotation = Gun.GetBoneRotation('Camera_com');
         }
 
         CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-        if(CameraBone != '' && Gun != None)
+        if (CameraBone != '' && Gun != none)
         {
                 CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-                if( DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+                if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
                 {
                         CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
                 }
@@ -100,7 +100,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
                         //CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
                 }
 
-                if(bFPNoZFromCameraPitch)
+                if (bFPNoZFromCameraPitch)
                 {
                         VehicleZ = vect(0,0,1) >> WeaponAimRot;
                         CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
@@ -111,7 +111,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         {
                 CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-                if(bFPNoZFromCameraPitch)
+                if (bFPNoZFromCameraPitch)
                 {
                         VehicleZ = vect(0,0,1) >> Rotation;
                         CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
@@ -129,7 +129,7 @@ defaultproperties
      PeriscopePositionIndex=1
      UnbuttonedPositionIndex=3
      DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
-     bManualTraverseOnly=True
+     bManualTraverseOnly=true
      PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
      PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
@@ -138,17 +138,17 @@ defaultproperties
      WeaponFov=14.400000
      AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
      AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
-     DriverPositions(0)=(ViewLocation=(Y=-32.000000,Z=30.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=64444,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000,bDrawOverlays=True)
-     DriverPositions(1)=(ViewLocation=(Z=10.000000),ViewFOV=7.200000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',ViewPitchUpLimit=1200,ViewPitchDownLimit=64500,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=True)
+     DriverPositions(0)=(ViewLocation=(Y=-32.000000,Z=30.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=64444,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000,bDrawOverlays=true)
+     DriverPositions(1)=(ViewLocation=(Z=10.000000),ViewFOV=7.200000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',ViewPitchUpLimit=1200,ViewPitchDownLimit=64500,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
      DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536)
-     DriverPositions(3)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=True)
-     DriverPositions(4)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=True,bExposed=True)
+     DriverPositions(3)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
+     DriverPositions(4)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
      GunClass=Class'DH_Vehicles.DH_StuH42Cannon'
      CameraBone="Turret"
      MinRotateThreshold=0.500000
      MaxRotateThreshold=2.500000
-     bPCRelativeFPRotation=True
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bFPNoZFromCameraPitch=true
      DrivePos=(Z=-6.000000)
      DriveAnim="stand_idlehip_binoc"
      ExitPositions(0)=(Y=-150.000000,Z=150.000000)

@@ -14,7 +14,7 @@ defaultproperties
 {
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdKar'
      ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
-     bAnimNotifiedShellEjects=True
+     bAnimNotifiedShellEjects=true
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"
      PA_MovementAnims(2)="stand_jogL_kar"
@@ -151,6 +151,6 @@ defaultproperties
      WA_BayonetWorkBolt="bolt_kar98_bayo"
      menuImage=Texture'InterfaceArt_tex.Menu_weapons.kar98'
      MenuDescription="Bolt-action rifle made by the millions. Standard German rifle throughout the war, loved for its reliability and accuracy. 5-round mag/clip and bayonet attachment."
-     bRapidFire=False
+     bRapidFire=false
      Mesh=SkeletalMesh'Weapons3rd_anm.kar98'
 }

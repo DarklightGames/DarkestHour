@@ -29,7 +29,7 @@ function PurgeObjectReferences()
 
 static simulated event Validate()
 {
-	if ( default.MainMenuOptions.Length < 5 )
+	if (default.MainMenuOptions.Length < 5)
 		ResetConfig();
 }
 

@@ -24,7 +24,7 @@ defaultproperties
      PitchDownLimit=45000
      WeaponFireAttachmentBone="mg_yaw"
      WeaponFireOffset=8.000000
-     bInstantFire=False
+     bInstantFire=false
      Spread=0.002000
      FireInterval=0.120000
      FireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30Cal_FireLoop01'
@@ -34,7 +34,7 @@ defaultproperties
      ShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      MaxPositiveYaw=4000
      MaxNegativeYaw=-7000
-     bLimitYaw=True
+     bLimitYaw=true
      InitialPrimaryAmmo=200
      Mesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_MG_ext'
 }

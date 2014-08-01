@@ -32,14 +32,14 @@ var struct TTriggerData {
 
 replication
 {
-  reliable if ( Role == ROLE_Authority )
+  reliable if (Role == ROLE_Authority)
     TriggerCount, LastTriggerings, MaterialName;
 }
 
 
 simulated function PostBeginPlay()
 {
-  SetTimer(0.1, True);
+  SetTimer(0.1, true);
 }
 
 
@@ -67,16 +67,16 @@ function ResetMaterial()
 
 simulated function Timer()
 {
-  if ( MaterialName != "" && MaterialToTrigger == None ) {
+  if (MaterialName != "" && MaterialToTrigger == none) {
     MaterialToTrigger = Material(DynamicLoadObject(MaterialName, class'Material'));
-    if ( MaterialToTrigger != None )
+    if (MaterialToTrigger != none)
       MaterialToTrigger.Reset();
   }
 
-  if ( MaterialToTrigger != None && TriggerCount > ClientTriggerCount
-      && LastTriggerings[(ClientTriggerCount + 1) % 10].TriggerAction != 0 ) {
+  if (MaterialToTrigger != none && TriggerCount > ClientTriggerCount
+      && LastTriggerings[(ClientTriggerCount + 1) % 10].TriggerAction != 0) {
     ClientTriggerCount++;
-    if ( LastTriggerings[ClientTriggerCount % 10].TriggerAction == 2 )
+    if (LastTriggerings[ClientTriggerCount % 10].TriggerAction == 2)
       MaterialToTrigger.Reset();
     else
       MaterialToTrigger.Trigger(LastTriggerings[ClientTriggerCount % 10].Triggerer,

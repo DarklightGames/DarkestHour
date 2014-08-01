@@ -17,31 +17,31 @@ simulated function int LimitYaw(int yaw)
 
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
-    if ( !bLimitYaw )
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
     NewYaw = yaw;
 
-    if( PwningPawn != none )
+    if (PwningPawn != none)
     {
-	   	if( yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
+	   	if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
 	   	}
-	   	else if( yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit )
+	   	else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
 	  	}
   	}
   	else
   	{
-	   	if( yaw > MaxPositiveYaw )
+	   	if (yaw > MaxPositiveYaw)
 	   	{
 	   		NewYaw = MaxPositiveYaw;
 	   	}
-	   	else if( yaw < MaxNegativeYaw )
+	   	else if (yaw < MaxNegativeYaw)
 	   	{
 	   		NewYaw = MaxNegativeYaw;
 	  	}
@@ -55,7 +55,7 @@ defaultproperties
      SecondarySpread=0.001290
      ManualRotationsPerSecond=0.010000
      PoweredRotationsPerSecond=0.010000
-     bIsAssaultGun=True
+     bIsAssaultGun=true
      FrontArmorFactor=10.000000
      RightArmorFactor=10.000000
      LeftArmorFactor=10.000000
@@ -124,13 +124,13 @@ defaultproperties
      ShakeOffsetMag=(Z=1.000000)
      ShakeOffsetRate=(Z=100.000000)
      ShakeOffsetTime=10.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=2731
      CustomPitchDownLimit=64171
      MaxPositiveYaw=1820
      MaxNegativeYaw=-1820
-     bLimitYaw=True
+     bLimitYaw=true
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=20
      InitialSecondaryAmmo=20

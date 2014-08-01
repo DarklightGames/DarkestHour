@@ -11,7 +11,7 @@ class DH_StuH42Factory extends DH_GermanVehicles;
 defaultproperties
 {
      RespawnTime=1.000000
-     bFactoryActive=True
+     bFactoryActive=true
      VehicleClass=Class'DH_Vehicles.DH_StuH42Destroyer'
      Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
 }

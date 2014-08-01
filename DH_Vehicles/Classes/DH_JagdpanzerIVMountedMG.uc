@@ -23,7 +23,7 @@ defaultproperties
      PitchDownLimit=45000
      WeaponFireAttachmentBone="mg_yaw"
      WeaponFireOffset=11.000000
-     bInstantFire=False
+     bInstantFire=false
      Spread=0.002000
      FireInterval=0.050000
      FireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
@@ -34,7 +34,7 @@ defaultproperties
      ShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      MaxPositiveYaw=4000
      MaxNegativeYaw=-4000
-     bLimitYaw=True
+     bLimitYaw=true
      BeginningIdleAnim="Idle"
      InitialPrimaryAmmo=150
      Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer_mg_ext'

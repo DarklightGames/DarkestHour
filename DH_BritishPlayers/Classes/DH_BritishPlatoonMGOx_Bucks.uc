@@ -32,14 +32,14 @@ defaultproperties
      Models(3)="para4"
      Models(4)="para5"
      Models(5)="para6"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_30calWeapon',Amount=6)
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishParaHelmet1'
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishParaHelmet2'
      Headgear(2)=Class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
      limit=1
 }

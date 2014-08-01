@@ -20,9 +20,9 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bCanBeReconCrew=True
-     bCanBeReconOfficer=True
-     bIsArtilleryOfficer=True
+     bCanBeReconCrew=true
+     bCanBeReconOfficer=true
+     bIsArtilleryOfficer=true
      MyName="Reconnaissance Commander"
      AltName="Spähwagenoffizier"
      Article="a "
@@ -45,6 +45,6 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_WSSTankerCrushercap'
      Headgear(1)=Class'DH_GerPlayers.DH_SSCap'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
 }

@@ -40,7 +40,7 @@ defaultproperties
      MechanicalRanges(28)=(Range=3600,RangeValue=262.000000)
      MechanicalRanges(29)=(Range=3800,RangeValue=282.000000)
      MechanicalRanges(30)=(Range=4000,RangeValue=304.000000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=25.700001
      DHPenetrationTable(1)=24.900000
      DHPenetrationTable(2)=23.500000

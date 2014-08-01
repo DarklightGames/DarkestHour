@@ -25,7 +25,7 @@ var			Material    AmmoIcon;               // Icon to use instead of regular ammo
 
 enum EReloadState
 {
-	RS_None,
+	RS_none,
 	RS_PreReload,
 	RS_ReloadLooped,
 	RS_PostReload,
@@ -35,7 +35,7 @@ var		EReloadState			ReloadState;
 
 replication
 {
-    reliable if( bNetDirty && bNetOwner && (Role==ROLE_Authority) )
+    reliable if (bNetDirty && bNetOwner && (Role==ROLE_Authority))
 		CurrentBulletCount;
 
     reliable if (Role < ROLE_Authority)
@@ -63,7 +63,7 @@ function CalculateBulletCount()
 // Overriden because we don't want to allow reloading unless the weapon is out of
 simulated function bool AllowReload()
 {
-    if( ReloadState != RS_None || AmmoMaxed(0) )
+    if (ReloadState != RS_none || AmmoMaxed(0))
     {
 		return false;
 	}
@@ -73,10 +73,10 @@ simulated function bool AllowReload()
 
 simulated exec function ROManualReload()
 {
-	if( !AllowReload() )
+	if (!AllowReload())
 		return;
 
-	if( Level.Netmode == NM_Client && !IsBusy())
+	if (Level.Netmode == NM_Client && !IsBusy())
 	{
 		GotoState('PendingAction');
 	}
@@ -87,11 +87,11 @@ simulated exec function ROManualReload()
 function ServerRequestReload()
 {
 	local int ReloadAmount;
-	if( AllowReload() )
+	if (AllowReload())
 	{
 		ReloadAmount = GetRoundsToLoad();
 
-		if( Level.NetMode == NM_DedicatedServer )
+		if (Level.NetMode == NM_DedicatedServer)
 		{
 			NumRoundsToLoad = ReloadAmount;
 			GotoState('Reloading');
@@ -134,16 +134,16 @@ simulated state Reloading
     // Overridden to allow interruption of reloads
     simulated function Fire(float F)
     {
-        if( ReloadState != RS_PostReload )
+        if (ReloadState != RS_PostReload)
         {
-            bInterruptReload = True;
+            bInterruptReload = true;
             ServerSetInterruptReload();
         }
     }
 
     function ServerSetInterruptReload()
     {
-        bInterruptReload = True;
+        bInterruptReload = true;
     }
 
 	// Overriden to support playing proper anims after bolting
@@ -154,35 +154,35 @@ simulated state Reloading
 
 	    GetAnimParams(0, anim, frame, rate);
 
-        if( Instigator.IsLocallyControlled() && ( anim == PreReloadAnim || anim == SingleReloadAnim ))
+        if (Instigator.IsLocallyControlled() && (anim == PreReloadAnim || anim == SingleReloadAnim))
 		{
-            if( anim == PreReloadAnim )
+            if (anim == PreReloadAnim)
 			{
-				SetTimer(0.0,False);
+				SetTimer(0.0,false);
 				ReloadState = RS_ReloadLooped;
 				PlayReload();
 			}
-			else if ( anim == SingleReloadAnim  )
+			else if (anim == SingleReloadAnim )
 			{
-				if( NumRoundsToLoad == 0 || bInterruptReload )
+				if (NumRoundsToLoad == 0 || bInterruptReload)
 				{
-					SetTimer(0.0,False);
+					SetTimer(0.0,false);
 					ReloadState = RS_PostReload;
 					PlayPostReload();
 
-					if( Role == ROLE_Authority )
+					if (Role == ROLE_Authority)
 					{
 						ROPawn(Instigator).StopReload();
 						LoadBullet();
 					}
 
-					bInterruptReload = False;
+					bInterruptReload = false;
 				}
 				else
 				{
 				 	PlayReload();
 
-                    if( Role == ROLE_Authority )
+                    if (Role == ROLE_Authority)
 					{
 						LoadBullet();
 					}
@@ -200,32 +200,32 @@ simulated state Reloading
     simulated function Timer()
     {
 
-		if( ReloadState == RS_PostReload )
+		if (ReloadState == RS_PostReload)
 		{
-			if( Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0 )
+			if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
 				GotoState('StartCrawling');
 			else
     			GotoState('Idle');
     	}
-		else if( ReloadState == RS_PreReload )
+		else if (ReloadState == RS_PreReload)
 		{
 			ReloadState = RS_ReloadLooped;
 			PlayReload();
 
-			if( Role == ROLE_Authority )
+			if (Role == ROLE_Authority)
 			{
                 NumRoundsToLoad--;
             }
 		}
-		else if( ReloadState == RS_ReloadLooped )
+		else if (ReloadState == RS_ReloadLooped)
 		{
-            if( NumRoundsToLoad <= 0 || bInterruptReload )
+            if (NumRoundsToLoad <= 0 || bInterruptReload)
             {
-                if( Role == ROLE_Authority )
+                if (Role == ROLE_Authority)
 			    {
 				    ROPawn(Instigator).StopReload();
 				    LoadBullet();
-    		        bInterruptReload = False;
+    		        bInterruptReload = false;
 			    }
 
 			    ReloadState = RS_PostReload;
@@ -235,7 +235,7 @@ simulated state Reloading
 			{
 			    PlayReload();
 
-			    if( Role == ROLE_Authority )
+			    if (Role == ROLE_Authority)
 			    {
 				    LoadBullet();
 				    NumRoundsToLoad--;
@@ -246,12 +246,12 @@ simulated state Reloading
 
     simulated function BeginState()
     {
-		if( Role == ROLE_Authority )
+		if (Role == ROLE_Authority)
 		{
 			ROPawn(Instigator).StartReload();
 		}
 
-		if( ReloadState == RS_None )
+		if (ReloadState == RS_none)
 		{
 			ReloadState = RS_PreReload;
 			PlayPreReload();
@@ -260,26 +260,26 @@ simulated state Reloading
 
     simulated function EndState()
     {
-		if( ReloadState == RS_PostReload )
+		if (ReloadState == RS_PostReload)
 		{
 			NumRoundsToLoad=0;
 			bWaitingToBolt = false;
-			ReloadState = RS_None;
+			ReloadState = RS_none;
 		}
     }
 
 // Take the player out of iron sights if they are in ironsights
 Begin:
-	if( bUsingSights )
+	if (bUsingSights)
     {
-		if( Role == ROLE_Authority)
+		if (Role == ROLE_Authority)
 			ServerZoomOut(false);
 		else
-			ZoomOut(False);
+			ZoomOut(false);
 
-		if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+		if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 		{
-			if( bPlayerFOVZooms )
+			if (bPlayerFOVZooms)
 			{
 		    	PlayerViewZoom(false);
 			}
@@ -289,14 +289,14 @@ Begin:
 
 	// Sometimes the client will get switched out of ironsight mode before getting to
 	// the reload function. This should catch that.
-	if( Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+	if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
 	{
-		if( DisplayFOV != default.DisplayFOV )
+		if (DisplayFOV != default.DisplayFOV)
 		{
 			SmoothZoom(false);
 		}
 
-		if( bPlayerFOVZooms )
+		if (bPlayerFOVZooms)
 		{
 	    	PlayerViewZoom(false);
 		}
@@ -307,7 +307,7 @@ simulated function PlayPreReload()
 {
 	SetTimer(GetAnimDuration(PreReloadAnim, 1.0) + FastTweenTime,false);
 
-	if( Instigator.IsLocallyControlled() )
+	if (Instigator.IsLocallyControlled())
 	{
 		PlayAnim(PreReloadAnim, 1.0, FastTweenTime);
 	}
@@ -318,7 +318,7 @@ simulated function PlayReload()
 	// Need to add tween time to this
 	SetTimer(GetAnimDuration(SingleReloadAnim, 1.0)/* + FastTweenTime*/,false);
 
-	if( Instigator.IsLocallyControlled() )
+	if (Instigator.IsLocallyControlled())
 	{
 		NumRoundsToLoad--;
 		PlayAnim(SingleReloadAnim, 1.0/*, FastTweenTime*/);
@@ -329,7 +329,7 @@ simulated function PlayPostReload()
 {
 	SetTimer(GetAnimDuration(PostReloadAnim, 1.0) /*+ FastTweenTime*/,false);
 
-	if( Instigator.IsLocallyControlled() )
+	if (Instigator.IsLocallyControlled())
 	{
 		PlayAnim(PostReloadAnim, 1.0/*, FastTweenTime*/);
 	}
@@ -343,7 +343,7 @@ function int GetRoundsToLoad()
 
     CurrentMagLoad = AmmoAmount(0);
 
-	if( PrimaryAmmoArray.Length == 0 )
+	if (PrimaryAmmoArray.Length == 0)
 	{
 		return 0;
 	}
@@ -363,7 +363,7 @@ function int GetRoundsToLoad()
 // Loads one bullet each time through
 function LoadBullet()
 {
-	if( PrimaryAmmoArray[CurrentMagIndex + 1] == 1 )
+	if (PrimaryAmmoArray[CurrentMagIndex + 1] == 1)
 	{
         PrimaryAmmoArray.Remove(CurrentMagIndex + 1, 1);
     }
@@ -374,9 +374,9 @@ function LoadBullet()
 
     AddAmmo(1, 0);
 
-	if( AmmoAmount(0) > 0 )
+	if (AmmoAmount(0) > 0)
 	{
-		if( DHWeaponAttachment(ThirdPersonActor) != none )
+		if (DHWeaponAttachment(ThirdPersonActor) != none)
 		{
 			DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
 		}
@@ -392,7 +392,7 @@ simulated function Fire(float F)
 {
 	super.Fire(F);
 
-	if( IsBusy() || !bWaitingToBolt )
+	if (IsBusy() || !bWaitingToBolt)
 		return;
 
 	WorkBolt();
@@ -401,12 +401,12 @@ simulated function Fire(float F)
 // Work the bolt
 simulated function WorkBolt()
 {
-	if( !bWaitingToBolt || AmmoAmount(0) < 1 )
+	if (!bWaitingToBolt || AmmoAmount(0) < 1)
 		return;
 
 	GotoState('WorkingBolt');
 
-	if( Role < ROLE_Authority)
+	if (Role < ROLE_Authority)
 		ServerWorkBolt();
 
 }
@@ -448,7 +448,7 @@ simulated state WorkingBolt extends Busy
 
 	    GetAnimParams(0, anim, frame, rate);
 
-		if( Instigator.IsLocallyControlled() && ( anim == BoltIronAnim || anim == BoltHipAnim ))
+		if (Instigator.IsLocallyControlled() && (anim == BoltIronAnim || anim == BoltHipAnim))
 		{
 			bWaitingToBolt = false;
 		}
@@ -462,11 +462,11 @@ simulated state WorkingBolt extends Busy
 		local name Anim;
 		local float BoltWaitTime;
 
-		if( bUsingSights )
+		if (bUsingSights)
 		{
-			if( Instigator.IsLocallyControlled() )
+			if (Instigator.IsLocallyControlled())
 			{
-		    	if( bPlayerFOVZooms )
+		    	if (bPlayerFOVZooms)
 		    		PlayerViewZoom(false);
 			}
 
@@ -477,20 +477,20 @@ simulated state WorkingBolt extends Busy
 			Anim = BoltHipAnim;
 		}
 
-		if( Instigator.IsLocallyControlled() )
+		if (Instigator.IsLocallyControlled())
 		{
-	    	PlayAnim(Anim, 1.0, FastTweenTime );
+	    	PlayAnim(Anim, 1.0, FastTweenTime);
 		}
 
 		// Play the animation on the pawn
-		if( Role == ROLE_Authority )
+		if (Role == ROLE_Authority)
 		{
 			ROPawn(Instigator).HandleBoltAction();
 		}
 
     	BoltWaitTime = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
-		if( Instigator.IsLocallyControlled() )
+		if (Instigator.IsLocallyControlled())
 		{
 	    	SetTimer(BoltWaitTime,false);
 	    }
@@ -500,16 +500,16 @@ simulated state WorkingBolt extends Busy
 	    	// Since the client can't attempt to fire until he is done bolting, this will
 	    	// help alleviate situations where the client finishes bolting before the
 	    	// server registers the bolting as finished
-			BoltWaitTime = BoltWaitTime - ( BoltWaitTime * 0.1 );
+			BoltWaitTime = BoltWaitTime - (BoltWaitTime * 0.1);
 			SetTimer(BoltWaitTime,false);
 	    }
 	}
 
     simulated function EndState()
     {
-		if( bUsingSights && Instigator.IsLocallyControlled())
+		if (bUsingSights && Instigator.IsLocallyControlled())
 		{
-	    	if( bPlayerFOVZooms )
+	    	if (bPlayerFOVZooms)
 	    		PlayerViewZoom(true);
 		}
 
@@ -540,9 +540,9 @@ simulated state PostFiring
 
     simulated function Timer()
     {
-		if( !Instigator.IsHumanControlled() )
+		if (!Instigator.IsHumanControlled())
 		{
-			if( AmmoAmount(0) > 0 )
+			if (AmmoAmount(0) > 0)
 			{
 				GotoState('WorkingBolt');
 			}
@@ -560,7 +560,7 @@ simulated state PostFiring
     simulated function BeginState()
     {
 	    bWaitingToBolt=true;
-	    if( bUsingSights )
+	    if (bUsingSights)
 	    {
 	    	SetTimer(GetAnimDuration(DH_ProjectileFire(FireMode[0]).FireIronAnim, 1.0),false);
 	    }
@@ -587,7 +587,7 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
     CalculateBulletCount();
 }
 
-function bool HandlePickupQuery( pickup Item )
+function bool HandlePickupQuery(pickup Item)
 {
     local bool Temp;
 

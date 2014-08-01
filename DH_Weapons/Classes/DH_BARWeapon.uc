@@ -5,119 +5,120 @@ class DH_BARWeapon extends DH_BipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_BAR_1st.ukx
 
-var  	name  	SelectFireAnim;
-var 	name 	SelectFireIronAnim;
-var 	name 	SightUpSelectFireIronAnim;
-
-var 	bool	bSlowFireRate;
-
-var		int		NumMagsToResupply;		// Number of ammo mags to add when this weapon has been resupplied
+var     name    SelectFireAnim;
+var     name    SelectFireIronAnim;
+var     name    SightUpSelectFireIronAnim;
+var     bool    bSlowFireRate;
+var     int     NumMagsToResupply;      // Number of ammo mags to add when this weapon has been resupplied
 
 //=============================================================================
 // replication
 //=============================================================================
 replication
 {
-    reliable if( Role<ROLE_Authority )
-    	ServerChangeFireMode;
+    reliable if (Role < ROLE_Authority)
+        ServerChangeFireMode;
 }
 
 simulated exec function SwitchFireMode()
 {
-	if( IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring )
-		return;
+    if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
+    {
+        return;
+    }
 
     GotoState('SwitchingFireMode');
 }
 
 function ServerChangeFireMode()
 {
-	bSlowFireRate = !bSlowFireRate;
-	if( bSlowFireRate )
-	{
-		FireMode[0].FireRate = 0.2; //slow rate 300rpm
+    bSlowFireRate = !bSlowFireRate;
 
-	}
-	else
-	{
-		FireMode[0].FireRate = 0.12; //fast rate 500rpm
-	}
+    if (bSlowFireRate)
+    {
+        FireMode[0].FireRate = 0.2; //slow rate 300rpm
+
+    }
+    else
+    {
+        FireMode[0].FireRate = 0.12; //fast rate 500rpm
+    }
 
 }
 
 simulated state SwitchingFireMode extends Busy
 {
-	simulated function bool ReadyToFire(int Mode)
-	{
-		return false;
-	}
+    simulated function bool ReadyToFire(int Mode)
+    {
+        return false;
+    }
 
-	simulated function bool ShouldUseFreeAim()
-	{
-		return false;
-	}
+    simulated function bool ShouldUseFreeAim()
+    {
+        return false;
+    }
 
-    	simulated function Timer()
-    	{
-    		GotoState('Idle');
-    	}
+        simulated function Timer()
+        {
+            GotoState('Idle');
+        }
 
-    	simulated function BeginState()
-    	{
-		local name Anim;
+        simulated function BeginState()
+        {
+        local name Anim;
 
-		if( bUsingSights || Instigator.bBipodDeployed )
-		{
-			if( Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim) )
-			{
-			Anim = SightUpSelectFireIronAnim;
-			}
-			else
-			{
-			Anim = SelectFireIronAnim;
-			}
-		}
-		else
-		{
-			Anim = SelectFireAnim;
-		}
+        if (bUsingSights || Instigator.bBipodDeployed)
+        {
+            if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
+            {
+            Anim = SightUpSelectFireIronAnim;
+            }
+            else
+            {
+            Anim = SelectFireIronAnim;
+            }
+        }
+        else
+        {
+            Anim = SelectFireAnim;
+        }
 
-		if( Instigator.IsLocallyControlled() )
-		{
-	    		PlayAnim(Anim, 1.0, FastTweenTime );
-		}
+        if (Instigator.IsLocallyControlled())
+        {
+                PlayAnim(Anim, 1.0, FastTweenTime);
+        }
 
-	    	SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
+            SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
 
-  		ServerChangeFireMode();
+        ServerChangeFireMode();
 
-	    	if( Role < ROLE_Authority )
-  		{
-			bSlowFireRate = !bSlowFireRate;
-			if( bSlowFireRate )
-			{
-				FireMode[0].FireRate = 0.2;
+            if (Role < ROLE_Authority)
+        {
+            bSlowFireRate = !bSlowFireRate;
+            if (bSlowFireRate)
+            {
+                FireMode[0].FireRate = 0.2;
 
-			}
-			else
-			{
-				FireMode[0].FireRate = 0.12;
-			}
-  		}
-	}
+            }
+            else
+            {
+                FireMode[0].FireRate = 0.12;
+            }
+        }
+    }
 }
 
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-	if( bSlowFireRate )
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+    if (bSlowFireRate)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 //================================================
@@ -125,65 +126,65 @@ simulated function bool UsingAutoFire()
 //================================================
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-	super.BringUp(PrevWeapon);
+    super.BringUp(PrevWeapon);
 
-	if( Role == ROLE_Authority )
-	{
-		ROPawn(Instigator).bWeaponCanBeResupplied = true;
+    if (Role == ROLE_Authority)
+    {
+        ROPawn(Instigator).bWeaponCanBeResupplied = true;
 
-		if( CurrentMagCount != (MaxNumPrimaryMags - 1) )
-		{
-			ROPawn(Instigator).bWeaponNeedsResupply = true;
-		}
-		else
-		{
-			ROPawn(Instigator).bWeaponNeedsResupply = false;
-		}
-	}
+        if (CurrentMagCount != (MaxNumPrimaryMags - 1))
+        {
+            ROPawn(Instigator).bWeaponNeedsResupply = true;
+        }
+        else
+        {
+            ROPawn(Instigator).bWeaponNeedsResupply = false;
+        }
+    }
 }
 
 simulated function bool PutDown()
 {
- 	ROPawn(Instigator).bWeaponCanBeResupplied = false;
- 	ROPawn(Instigator).bWeaponNeedsResupply = false;
+    ROPawn(Instigator).bWeaponCanBeResupplied = false;
+    ROPawn(Instigator).bWeaponNeedsResupply = false;
 
-	return super.PutDown();
+    return super.PutDown();
 }
 
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
-	super.GiveTo(Other,Pickup);
+    super.GiveTo(Other,Pickup);
 
-	ROPawn(Instigator).bWeaponCanBeResupplied = true;
+    ROPawn(Instigator).bWeaponCanBeResupplied = true;
 
-	if( CurrentMagCount <= (MaxNumPrimaryMags - 1) )
-	{
-		ROPawn(Instigator).bWeaponNeedsResupply = true;
-	}
-	else
-	{
-		ROPawn(Instigator).bWeaponNeedsResupply = false;
-	}
+    if (CurrentMagCount <= (MaxNumPrimaryMags - 1))
+    {
+        ROPawn(Instigator).bWeaponNeedsResupply = true;
+    }
+    else
+    {
+        ROPawn(Instigator).bWeaponNeedsResupply = false;
+    }
 }
 
 function DropFrom(vector StartLocation)
 {
-    if (!bCanThrow )
+    if (!bCanThrow)
         return;
 
- 	ROPawn(Instigator).bWeaponCanBeResupplied = false;
- 	ROPawn(Instigator).bWeaponNeedsResupply = false;
+    ROPawn(Instigator).bWeaponCanBeResupplied = false;
+    ROPawn(Instigator).bWeaponNeedsResupply = false;
 
- 	super.DropFrom(StartLocation);
+    super.DropFrom(StartLocation);
 }
 
 simulated function Destroyed()
 {
-	if( Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none )
-	{
-	 	ROPawn(Instigator).bWeaponCanBeResupplied = false;
-	 	ROPawn(Instigator).bWeaponNeedsResupply = false;
- 	}
+    if (Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none)
+    {
+        ROPawn(Instigator).bWeaponCanBeResupplied = false;
+        ROPawn(Instigator).bWeaponNeedsResupply = false;
+    }
 
     Super.Destroyed();
 }
@@ -191,22 +192,22 @@ simulated function Destroyed()
 // This MG has been resupplied either by an ammo resupply area or another player
 function bool ResupplyAmmo()
 {
-	local int InitialAmount, i;
+    local int InitialAmount, i;
 
     InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-	for( i=NumMagsToResupply; i>0; i-- )
-	{
-		if( PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-		{
-			PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
-		}
-	}
+    for(i=NumMagsToResupply; i>0; i--)
+    {
+        if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+        {
+            PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
+        }
+    }
 
-	CurrentMagCount = PrimaryAmmoArray.Length - 1;
-	NetUpdateTime = Level.TimeSeconds - 1;
+    CurrentMagCount = PrimaryAmmoArray.Length - 1;
+    NetUpdateTime = Level.TimeSeconds - 1;
 
-	return true;
+    return true;
 }
 
 function bool IsMGWeapon()
@@ -219,13 +220,13 @@ defaultproperties
      SelectFireAnim="switch_fire"
      SelectFireIronAnim="Iron_switch_fire"
      SightUpSelectFireIronAnim="SightUp_iron_switch_fire"
-     bSlowFireRate=True
+     bSlowFireRate=true
      NumMagsToResupply=2
      MaxNumPrimaryMags=12
      InitialNumPrimaryMags=12
      IronSightDisplayFOV=25.000000
      FreeAimRotationSpeed=2.000000
-     bHasSelectFire=True
+     bHasSelectFire=true
      FireModeClass(0)=Class'DH_Weapons.DH_BARFire'
      FireModeClass(1)=Class'DH_Weapons.DH_BARMeleeFire'
      PickupClass=Class'DH_Weapons.DH_BARPickup'

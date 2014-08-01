@@ -15,7 +15,7 @@ class DH_M3A1HalftrackTransport extends DH_ROTransportCraft;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[LeftTreadIndex];
 		LeftTreadPanner.PanDirection = rot(0, 32768, -16384);
@@ -23,7 +23,7 @@ simulated function SetupTreads()
 		Skins[LeftTreadIndex] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[RightTreadIndex];
 		RightTreadPanner.PanDirection = rot(0, 32768, -16384);
@@ -146,7 +146,7 @@ defaultproperties
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,ViewFOV=85.000000)
      DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=85.000000)
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.M3A1Halftrack_body'
      VehicleHudOccupantsX(0)=0.450000
      VehicleHudOccupantsX(1)=0.550000
@@ -164,7 +164,7 @@ defaultproperties
      VehicleHudOccupantsY(6)=0.700000
      VehicleHudOccupantsY(7)=0.800000
      VehicleHudEngineY=0.250000
-     VehHitpoints(0)=(PointOffset=(X=2.000000,Z=19.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointOffset=(X=2.000000,Z=19.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=15.000000,PointBone="driver_player",PointOffset=(X=2.000000,Z=-2.000000),HitPointType=HP_Driver)
      VehHitpoints(2)=(PointRadius=35.000000,PointScale=1.000000,PointBone="Engine",PointOffset=(Z=-20.000000),DamageMultiplier=1.000000,HitPointType=HP_Engine)
      EngineHealth=125
@@ -190,7 +190,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.LFWheel'
 
      Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="steer_wheel_L_F"
          BoneRollAxis=AXIS_Z
          BoneOffset=(Y=-3.000000,Z=-12.000000)
@@ -199,7 +199,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FLeft_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="steer_wheel_R_F"
          BoneRollAxis=AXIS_Z
          BoneOffset=(Y=-3.000000,Z=12.000000)
@@ -208,7 +208,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FRight_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="steer_wheel_L_F"
          BoneRollAxis=AXIS_Z
          BoneOffset=(X=-120.000000,Y=-3.000000,Z=-12.000000)
@@ -217,7 +217,7 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RLeft_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="steer_wheel_R_F"
          BoneRollAxis=AXIS_Z
          BoneOffset=(X=-120.000000,Y=-3.000000,Z=12.000000)
@@ -264,13 +264,13 @@ defaultproperties
          KCOMOffset=(Z=-0.700000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

@@ -18,7 +18,7 @@ var     ROFPAmmoRound            RocketAttachment;     // The first person ammo 
 
 simulated function Destroyed()
 {
-    if (RocketAttachment != None)
+    if (RocketAttachment != none)
         RocketAttachment.Destroy();
 
 	Super.Destroyed();

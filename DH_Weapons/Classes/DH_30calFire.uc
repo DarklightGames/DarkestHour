@@ -9,93 +9,103 @@ var DH_30calWeapon MGWeapon;
 
 simulated function PostBeginPlay()
 {
-	super.PostBeginPlay();
+    super.PostBeginPlay();
 
-	MGWeapon = DH_30calWeapon(Weapon);
+    MGWeapon = DH_30calWeapon(Weapon);
 }
 
 event ModeDoFire()
 {
-	Super.ModeDoFire();
+    Super.ModeDoFire();
 
-	if( Level.NetMode != NM_DedicatedServer )
-		MGWeapon.UpdateAmmoBelt();
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        MGWeapon.UpdateAmmoBelt();
+    }
 }
 
 simulated function HandleRecoil()
 {
-	local rotator NewRecoilRotation;
-	local ROPlayer ROP;
-	local ROPawn ROPwn;
+    local rotator NewRecoilRotation;
+    local ROPlayer ROP;
+    local ROPawn ROPwn;
 
-    if( Instigator != none )
+    if (Instigator != none)
     {
-		ROP = ROPlayer(Instigator.Controller);
-		ROPwn = ROPawn(Instigator);
-	}
+        ROP = ROPlayer(Instigator.Controller);
+        ROPwn = ROPawn(Instigator);
+    }
 
-    if( ROP == none || ROPwn == none )
-    	return;
+    if (ROP == none || ROPwn == none)
+    {
+        return;
+    }
 
-	if( !ROP.bFreeCamera )
-	{
-      	NewRecoilRotation.Pitch = RandRange( maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle );
-     	NewRecoilRotation.Yaw = RandRange( maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle );
+    if (!ROP.bFreeCamera)
+    {
+        NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
+        NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
 
-      	if( Rand( 2 ) == 1 )
-         	NewRecoilRotation.Yaw *= -1;
-
-        if( Instigator.Physics == PHYS_Falling )
+        if (Rand(2) == 1)
         {
-      		NewRecoilRotation *= 3;
+            NewRecoilRotation.Yaw *= -1;
         }
 
-		// WeaponTODO: Put bipod and resting modifiers in here
-	    if( Instigator.bIsCrouched )
-	    {
-	        NewRecoilRotation *= PctCrouchRecoil;
+        if (Instigator.Physics == PHYS_Falling)
+        {
+            NewRecoilRotation *= 3;
+        }
 
-			// player is crouched and in iron sights
-	        if( Weapon.bUsingSights )
-	        {
-	            NewRecoilRotation *= PctCrouchIronRecoil;
-	        }
-	    }
-	    else if( Instigator.bIsCrawling )
-	    {
-	        NewRecoilRotation *= PctProneRecoil;
+        // WeaponTODO: Put bipod and resting modifiers in here
+        if (Instigator.bIsCrouched)
+        {
+            NewRecoilRotation *= PctCrouchRecoil;
 
-	        // player is prone and in iron sights
-	        if( Weapon.bUsingSights )
-	        {
-	            NewRecoilRotation *= PctProneIronRecoil;
-	        }
-	    }
-	    else if( Weapon.bUsingSights )
-	    {
-	        NewRecoilRotation *= PctStandIronRecoil;
-	    }
+            // player is crouched and in iron sights
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctCrouchIronRecoil;
+            }
+        }
+        else if (Instigator.bIsCrawling)
+        {
+            NewRecoilRotation *= PctProneRecoil;
 
-        if( ROPwn.bRestingWeapon )
-        	NewRecoilRotation *= PctRestDeployRecoil;
+            // player is prone and in iron sights
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctProneIronRecoil;
+            }
+        }
+        else if (Weapon.bUsingSights)
+        {
+            NewRecoilRotation *= PctStandIronRecoil;
+        }
 
-        if( Instigator.bBipodDeployed )
-		{
-			NewRecoilRotation *= PctBipodDeployRecoil;
-		}
+        if (ROPwn.bRestingWeapon)
+        {
+            NewRecoilRotation *= PctRestDeployRecoil;
+        }
 
-		if( ROPwn.LeanAmount != 0 )
-		{
-			NewRecoilRotation *= PctLeanPenalty;
-		}
+        if (Instigator.bBipodDeployed)
+        {
+            NewRecoilRotation *= PctBipodDeployRecoil;
+        }
 
-		// Need to set this value per weapon
- 		ROP.SetRecoil(NewRecoilRotation,RecoilRate);
- 	}
+        if (ROPwn.LeanAmount != 0)
+        {
+            NewRecoilRotation *= PctLeanPenalty;
+        }
 
-// Add Fire Blur
-    if( Level.NetMode != NM_DedicatedServer && Instigator != None && ROPlayer( Instigator.Controller ) != None )
-		ROPlayer( Instigator.Controller ).AddBlur( 0.04, 0.1 );
+        // Need to set this value per weapon
+        ROP.SetRecoil(NewRecoilRotation,RecoilRate);
+    }
+
+    // Add Fire Blur
+    if (Level.NetMode != NM_DedicatedServer && Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        ROPlayer(Instigator.Controller).AddBlur(0.04, 0.1);
+    }
 }
 
 defaultproperties
@@ -108,7 +118,7 @@ defaultproperties
      ServerProjectileClass=Class'DH_Weapons.DH_30calBullet_S'
      ProjSpawnOffset=(X=25.000000)
      FAProjSpawnOffset=(X=-145.000000,Y=-15.000000,Z=-15.000000)
-     bUsesTracers=True
+     bUsesTracers=true
      TracerFrequency=5
      DummyTracerClass=Class'DH_Weapons.DH_30CalClientTracer'
      FireIronAnim="Shoot_Loop"

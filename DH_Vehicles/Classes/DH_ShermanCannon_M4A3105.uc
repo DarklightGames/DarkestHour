@@ -20,7 +20,7 @@ simulated function UpdateTracer()
 
  	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
 	{
-		if (Instigator != None && Instigator.IsLocallyControlled())
+		if (Instigator != none && Instigator.IsLocallyControlled())
 		{
 			SpawnDir = WeaponFireRotation;
 		}
@@ -29,7 +29,7 @@ simulated function UpdateTracer()
 			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
 		}
 
-        if (Instigator != None && !Instigator.PlayerReplicationInfo.bBot)
+        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
         {
         	SpawnDir.Pitch += AddedPitch;
         }
@@ -50,9 +50,9 @@ simulated function int GetRange()
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-	if( CurrentRangeIndex < RangeSettings.Length - 1 )
+	if (CurrentRangeIndex < RangeSettings.Length - 1)
 	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
 			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
 		CurrentRangeIndex++;
@@ -61,9 +61,9 @@ function IncrementRange()
 
 function DecrementRange()
 {
-	if( CurrentRangeIndex > 0 )
+	if (CurrentRangeIndex > 0)
 	{
-		if( Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none )
+		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
 			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
 		CurrentRangeIndex --;
@@ -111,8 +111,8 @@ defaultproperties
      NumAltMags=5
      DummyTracerClass=Class'DH_Vehicles.DH_30CalVehicleClientTracer'
      mTracerInterval=0.600000
-     bUsesTracers=True
-     bAltFireTracersOnly=True
+     bUsesTracers=true
+     bAltFireTracersOnly=true
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=6.000000))
      VehHitpoints(1)=(PointRadius=12.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-5.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -125,13 +125,13 @@ defaultproperties
      WeaponFireOffset=12.000000
      AltFireOffset=(X=-70.000000,Y=-17.000000,Z=7.500000)
      RotationsPerSecond=0.012500
-     bAmbientAltFireSound=True
+     bAmbientAltFireSound=true
      Spread=0.002250
      FireInterval=10.000000
      AltFireInterval=0.120000
      EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
      AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=True
+     bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
      AltFireSoundScaling=3.000000
@@ -152,8 +152,8 @@ defaultproperties
      AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      AltShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=6372
      CustomPitchDownLimit=63716
      BeginningIdleAnim="com_idle_close"

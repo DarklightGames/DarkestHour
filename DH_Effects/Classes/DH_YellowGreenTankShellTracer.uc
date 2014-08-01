@@ -19,7 +19,7 @@ auto state Start
 
 defaultproperties
 {
-     bTrailerSameRotation=True
+     bTrailerSameRotation=true
      Physics=PHYS_Trailer
      Texture=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
      DrawScale=0.010000

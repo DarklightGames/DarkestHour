@@ -8,8 +8,8 @@ class DH_USArtyBinocularsItem extends DH_BinocularsItem;
 simulated function Fire(float F)
 {
     // added check for player to be in iron view to save arty coords - Antarian
-    if ( (Instigator == None) || (Instigator.Controller == None)
-		|| ( AIController(Instigator.Controller) != none ) || !bUsingSights )
+    if ((Instigator == none) || (Instigator.Controller == none)
+		|| (AIController(Instigator.Controller) != none) || !bUsingSights)
    	   return;
 
         // server

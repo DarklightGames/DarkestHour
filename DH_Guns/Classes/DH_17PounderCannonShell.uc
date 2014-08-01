@@ -52,7 +52,7 @@ defaultproperties
      OpticalRanges(18)=(Range=1800)
      OpticalRanges(19)=(Range=1900)
      OpticalRanges(20)=(Range=2000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=18.500000
      DHPenetrationTable(1)=17.700001
      DHPenetrationTable(2)=16.600000
@@ -65,7 +65,7 @@ defaultproperties
      DHPenetrationTable(9)=10.300000
      DHPenetrationTable(10)=8.700000
      ShellDiameter=7.620000
-     bShatterProne=True
+     bShatterProne=true
      ShellImpactDamage=Class'DH_Guns.DH_17PounderCannonShellDamageAP'
      ImpactDamage=580
      BallisticCoefficient=2.450000

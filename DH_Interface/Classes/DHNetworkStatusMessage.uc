@@ -29,7 +29,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function bool InternalOnClick(GUIComponent Sender)
 {
-	if(Sender==Controls[1]) // OK
+	if (Sender==Controls[1]) // OK
 	{
 		Controller.OpenMenu("DH_Interface.DHServerBrowser");
 	}
@@ -45,15 +45,15 @@ event HandleParameters(string Param1, string Param2)
 
 defaultproperties
 {
-     bIgnoreEsc=True
-     bRequire640x480=False
+     bIgnoreEsc=true
+     bRequire640x480=false
      OpenSound=Sound'ROMenuSounds.Generic.msfxEdit'
      Begin Object Class=GUIButton Name=NetStatBackground
          StyleName="SquareBar"
          WinTop=0.375000
          WinHeight=0.250000
-         bAcceptsInput=False
-         bNeverFocus=True
+         bAcceptsInput=false
+         bNeverFocus=true
          OnKeyEvent=NetStatBackground.InternalOnKeyEvent
      End Object
      Controls(0)=GUIButton'DH_Interface.DHNetworkStatusMessage.NetStatBackground'
@@ -65,7 +65,7 @@ defaultproperties
          WinLeft=0.375000
          WinWidth=0.250000
          WinHeight=0.050000
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHNetworkStatusMessage.InternalOnClick
          OnKeyEvent=NetStatOk.InternalOnKeyEvent
      End Object
@@ -75,10 +75,10 @@ defaultproperties
          TextAlign=TXTA_Center
          TextColor=(B=255,G=255,R=255)
          TextFont="UT2HeaderFont"
-         bMultiLine=True
+         bMultiLine=true
          WinTop=0.125000
          WinHeight=0.500000
-         bBoundToParent=True
+         bBoundToParent=true
      End Object
      Controls(2)=GUILabel'DH_Interface.DHNetworkStatusMessage.NetStatLabel'
 

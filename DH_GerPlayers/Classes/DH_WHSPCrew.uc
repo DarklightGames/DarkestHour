@@ -41,7 +41,7 @@ defaultproperties
      Headgear(1)=Class'DH_GerPlayers.DH_HeerCamoCap'
      RolePawnClass="DH_GerPlayers.DH_WH_TankerPawn"
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
-     bCanBeTankCrew=True
+     bEnhancedAutomaticControl=true
+     bCanBeTankCrew=true
      limit=3
 }

@@ -6,13 +6,13 @@ function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
-	if ( (EntrySound == None) && (EntrySoundName != "") )
+	if ((EntrySound == none) && (EntrySoundName != ""))
 		EntrySound = Sound(DynamicLoadObject(EntrySoundName,class'Sound'));
-	if ( (ExitSound == None) && (ExitSoundName != "") )
+	if ((ExitSound == none) && (ExitSoundName != ""))
 		ExitSound = Sound(DynamicLoadObject(ExitSoundName,class'Sound'));
-	if ( (EntryActor == None) && (EntryActorName != "") )
+	if ((EntryActor == none) && (EntryActorName != ""))
 		EntryActor = class<Actor>(DynamicLoadObject(EntryActorName,class'Class'));
-	if ( (PawnEntryActor == None) && (PawnEntryActorName != "") )
+	if ((PawnEntryActor == none) && (PawnEntryActorName != ""))
 		PawnEntryActor = class<Actor>(DynamicLoadObject(PawnEntryActorName,class'Class'));
 }
 
@@ -24,7 +24,7 @@ defaultproperties
      PawnEntryActorName="DH_Game.DHWakeEmitter"
      GroundFriction=0.000000
      FluidFriction=0.000000
-     bWaterVolume=True
+     bWaterVolume=true
      KExtraLinearDamping=2.500000
      KExtraAngularDamping=0.400000
      LocationName="at sea"

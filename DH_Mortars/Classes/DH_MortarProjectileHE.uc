@@ -98,7 +98,7 @@ simulated function BlowUp(vector HitLocation)
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
 	//Explode in water.
-	if(NewVolume.bWaterVolume)
+	if (NewVolume.bWaterVolume)
 		Explode(Location, vect(0, 0, 1));
 }
 
@@ -108,7 +108,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 	VT = Spawn(class'ROVolumeTest', , , HitLocation);
 
-	if(VT.IsInNoArtyVolume())
+	if (VT.IsInNoArtyVolume())
 	{
 		bDud = true;
 		VT.Destroy();
@@ -116,7 +116,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 	VT.Destroy();
 
-	if(bDud)
+	if (bDud)
 	{
 		DoHitEffects(HitLocation, HitNormal);
 		Destroy();
@@ -139,7 +139,7 @@ simulated function DoShakeEffect()
 	{
 		PC = Level.GetLocalPlayerController();
 
-		if (PC != None && PC.ViewTarget != None)
+		if (PC != none && PC.ViewTarget != none)
 		{
 			Dist = VSize(Location - PC.ViewTarget.Location);
 
@@ -156,7 +156,7 @@ simulated function DoShakeEffect()
 	}
 }
 
-simulated function HurtRadius( float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation )
+simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
 	local actor Victims;
 	local float damageScale, dist;
@@ -174,22 +174,22 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 				 TraceHitNormal;
 	local actor	 TraceHitActor;
 
-	if ( bHurtEntry )
+	if (bHurtEntry)
 		return;
 
 	bHurtEntry = true;
 
-	foreach VisibleCollidingActors( class 'Actor', Victims, DamageRadius, HitLocation )
+	foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
 	{
 		// don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
-		if( (Victims != self) && (Hurtwall != Victims) && (Victims.Role == ROLE_Authority) && !Victims.IsA('FluidSurfaceInfo') )
+		if ((Victims != self) && (Hurtwall != Victims) && (Victims.Role == ROLE_Authority) && !Victims.IsA('FluidSurfaceInfo'))
 		{
 			// Antarian 9/12/2004
 			// do a trace to the actor
 			TraceHitActor = Trace(TraceHitLocation, TraceHitNormal, Victims.Location, Location);
 
 			// if there's a vehicle between the player and explosion, don't apply damage
-			if( (Vehicle(TraceHitActor) != none) && (TraceHitActor != Victims) )
+			if ((Vehicle(TraceHitActor) != none) && (TraceHitActor != Victims))
 				continue;
 			// end of Antarian's 9/12/2004 contribution
 
@@ -200,12 +200,12 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 
 			P = ROPawn(Victims);
 
-			if( P == none )
+			if (P == none)
 			{
 				P = ROPawn(Victims.Base);
 			}
 
-			if( P != none )
+			if (P != none)
 			{
 		        for (i = 0; i < CheckedROPawns.Length; i++)
 				{
@@ -216,7 +216,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 					}
 				}
 
-				if( bAlreadyChecked )
+				if (bAlreadyChecked)
 				{
 					bAlreadyChecked = false;
 					P = none;
@@ -224,7 +224,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 				}
 
 				//Check if this pawn is already dead.
-				if(P.Health > 0)
+				if (P.Health > 0)
 					bAlreadyDead = false;
 				else
 					bAlreadyDead = true;
@@ -235,7 +235,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 
 				CheckedROPawns[CheckedROPawns.Length] = P;
 
-				if ( damageScale <= 0)
+				if (damageScale <= 0)
 				{
 					P = none;
 					continue;
@@ -247,11 +247,11 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 				}
 			}
 
-			if ( Instigator == None || Instigator.Controller == None )
-				Victims.SetDelayedDamageInstigatorController( DamageInstigator );
+			if (Instigator == none || Instigator.Controller == none)
+				Victims.SetDelayedDamageInstigatorController(DamageInstigator);
 
-			if ( Victims == LastTouched )
-				LastTouched = None;
+			if (Victims == LastTouched)
+				LastTouched = none;
 
 			Victims.TakeDamage
 			(
@@ -262,32 +262,32 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 				DamageType
 			);
 
-			if (Vehicle(Victims) != None && Vehicle(Victims).Health > 0)
+			if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
 				Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, DamageInstigator, DamageType, Momentum, HitLocation);
 
 			//------------------------------------------------------------------
 			//Give additional points to the observer and the mortarman for
 			//working together for a kill!
-			if(!bAlreadyDead && Pawn(Victims) != none && Pawn(Victims).Health <= 0 && (DamageInstigator.GetTeamNum() != Pawn(Victims).GetTeamNum()))
+			if (!bAlreadyDead && Pawn(Victims) != none && Pawn(Victims).Health <= 0 && (DamageInstigator.GetTeamNum() != Pawn(Victims).GetTeamNum()))
 			{
 				GetClosestMortarTargetController(C);
 
-				if(C != none)
+				if (C != none)
 					DarkestHourGame(Level.Game).ScoreMortarSpotAssist(C, DamageInstigator);
 			}
 		}
 	}
 
-	if ( (LastTouched != None) && (LastTouched != self) && (LastTouched.Role == ROLE_Authority) && !LastTouched.IsA('FluidSurfaceInfo') )
+	if ((LastTouched != none) && (LastTouched != self) && (LastTouched.Role == ROLE_Authority) && !LastTouched.IsA('FluidSurfaceInfo'))
 	{
 		Victims = LastTouched;
-		LastTouched = None;
+		LastTouched = none;
 		dir = Victims.Location - HitLocation;
 		dist = FMax(1,VSize(dir));
 		dir = dir/dist;
 		damageScale = FMax(Victims.CollisionRadius/(Victims.CollisionRadius + Victims.CollisionHeight),1 - FMax(0,(dist - Victims.CollisionRadius)/DamageRadius));
 
-		if ( Instigator == None || Instigator.Controller == None )
+		if (Instigator == none || Instigator.Controller == none)
 			Victims.SetDelayedDamageInstigatorController(DamageInstigator);
 
 		Victims.TakeDamage
@@ -299,7 +299,7 @@ simulated function HurtRadius( float DamageAmount, float DamageRadius, class<Dam
 			DamageType
 		);
 
-		if (Vehicle(Victims) != None && Vehicle(Victims).Health > 0)
+		if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
 			Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, DamageInstigator, DamageType, Momentum, HitLocation);
 	}
 
@@ -317,26 +317,26 @@ simulated function GetClosestMortarTargetController(out Controller C)
 
 	GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-	if(GRI == none)
+	if (GRI == none)
 		return;
 
-	if(DamageInstigator.GetTeamNum() == 0)
+	if (DamageInstigator.GetTeamNum() == 0)
 	{
 		for(i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
 		{
-			if(GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].bCancelled != 0)
+			if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].bCancelled != 0)
 				continue;
 
 			Distance = VSize(Location - GRI.GermanMortarTargets[i].Location);
 
-			if(Distance <= ClosestDistance)
+			if (Distance <= ClosestDistance)
 			{
 				ClosestDistance = Distance;
 				ClosestIndex = i;
 			}
 		}
 
-		if(ClosestIndex == 255)
+		if (ClosestIndex == 255)
 			return;
 
 		C = GRI.GermanMortarTargets[ClosestIndex].Controller;
@@ -345,19 +345,19 @@ simulated function GetClosestMortarTargetController(out Controller C)
 	{
 		for(i = 0; i < ArrayCount(GRI.AlliedMortarTargets); i++)
 		{
-			if(GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].bCancelled != 0)
+			if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].bCancelled != 0)
 				continue;
 
 			Distance = VSize(Location - GRI.AlliedMortarTargets[i].Location);
 
-			if(Distance <= ClosestDistance)
+			if (Distance <= ClosestDistance)
 			{
 				ClosestDistance = Distance;
 				ClosestIndex = i;
 			}
 		}
 
-		if(ClosestIndex == 255)
+		if (ClosestIndex == 255)
 			return;
 
 		C = GRI.AlliedMortarTargets[ClosestIndex].Controller;
@@ -366,7 +366,7 @@ simulated function GetClosestMortarTargetController(out Controller C)
 
 simulated function Destroyed()
 {
-	if(!bDud && Role == ROLE_Authority)
+	if (!bDud && Role == ROLE_Authority)
 		DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, Location);
 
 	super.Destroyed();

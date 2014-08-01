@@ -2,7 +2,7 @@ class DH_CanadianReconCrewRoyalCanadianHussars extends DH_RoyalCanadianHussars;
 
 defaultproperties
 {
-     bCanBeReconCrew=True
+     bCanBeReconCrew=true
      MyName="Reconnaissance Crewman"
      AltName="Reconnaissance Crewman"
      Article="a "
@@ -17,6 +17,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_USBinocularsItem"
      Headgear(0)=Class'DH_BritishPlayers.DH_CanadianTankerBeret'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

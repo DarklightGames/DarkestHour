@@ -9,7 +9,7 @@ function PostBeginPlay()
 	local float F;
 	Super.PostBeginPlay();
 
-	if ( Instigator != None )
+	if (Instigator != none)
 	{
 		F = (70 + 30*FRand()) * sqrt(Instigator.CollisionRadius/25);
 		Emitters[0].StartSizeRange.X.Min = F;
@@ -26,16 +26,16 @@ defaultproperties
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
          UseDirectionAs=PTDU_Normal
          ProjectionNormal=(X=1.000000,Z=0.000000)
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         DampRotation=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
-         UseSubdivisionScale=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         DampRotation=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
+         UseSubdivisionScale=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=195))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=195))
          MaxParticles=1
@@ -56,7 +56,7 @@ defaultproperties
      End Object
      Emitters(0)=SpriteEmitter'DH_Game.DHWakeEmitter.SpriteEmitter0'
 
-     AutoDestroy=True
-     bNoDelete=False
-     bHighDetail=True
+     AutoDestroy=true
+     bNoDelete=false
+     bHighDetail=true
 }

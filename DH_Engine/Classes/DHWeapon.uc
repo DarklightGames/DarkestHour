@@ -19,7 +19,7 @@ simulated function bool IsMortarWeapon() { return false; }
 
 replication
 {
-    reliable if( bNetDirty && Role == ROLE_Authority )
+    reliable if (bNetDirty && Role == ROLE_Authority)
         bIsMantling;
 }
 
@@ -37,13 +37,13 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 simulated function ResetPlayerFOV()
 {
-	if(Instigator != none && Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
+	if (Instigator != none && Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
 		SetPlayerFOV(PlayerController(Instigator.Controller).DefaultFOV);
 }
 
 simulated function SetPlayerFOV(float PlayerFOV)
 {
-	if(Instigator == none || Instigator.Controller == none || PlayerController(Instigator.Controller) == none)
+	if (Instigator == none || Instigator.Controller == none || PlayerController(Instigator.Controller) == none)
 		return;
 
 	PlayerController(Instigator.Controller).DesiredFOV = PlayerFOV;
@@ -54,7 +54,7 @@ simulated state StartMantle extends Busy
     simulated function Timer()
     {
 	    // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
-    	if(!bIsMantling)
+    	if (!bIsMantling)
             GoToState('RaisingWeapon');
         else
             SetTimer(0.2, false);
@@ -70,13 +70,13 @@ simulated state StartMantle extends Busy
 	        {
 	            for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
 	            {
-	                if ( FireMode[Mode].bIsFiring )
+	                if (FireMode[Mode].bIsFiring)
 	                    ClientStopFire(Mode);
 	            }
 
-				if ( ClientState == WS_BringUp )
+				if (ClientState == WS_BringUp)
 					TweenAnim(SelectAnim,PutDownTime);
-				else if ( HasAnim(PutDownAnim) )
+				else if (HasAnim(PutDownAnim))
 					PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
 	        }
 

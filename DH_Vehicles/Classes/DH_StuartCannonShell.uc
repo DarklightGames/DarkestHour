@@ -14,7 +14,7 @@ defaultproperties
      MechanicalRanges(2)=(Range=800)
      MechanicalRanges(3)=(Range=1200)
      MechanicalRanges(4)=(Range=1600)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=7.100000
      DHPenetrationTable(1)=6.700000
      DHPenetrationTable(2)=6.300000
@@ -27,7 +27,7 @@ defaultproperties
      DHPenetrationTable(9)=3.500000
      DHPenetrationTable(10)=3.000000
      ShellDiameter=3.700000
-     bShatterProne=True
+     bShatterProne=true
      ShellShatterEffectClass=Class'DH_Effects.DH_TankAPShellShatterSmall'
      TracerEffect=Class'DH_Effects.DH_RedTankShellTracer'
      ShellImpactDamage=Class'DH_Vehicles.DH_StuartCannonShellDamageAP'

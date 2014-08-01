@@ -18,7 +18,7 @@ class DH_PanzerIVJTank extends DH_ROTreadCraft;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[LeftTreadIndex];
 		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -26,7 +26,7 @@ simulated function SetupTreads()
 		Skins[LeftTreadIndex] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[RightTreadIndex];
 		RightTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -115,7 +115,7 @@ defaultproperties
      RightWheelBones(11)="Wheel_R_12"
      RightWheelBones(12)="Wheel_R_13"
      WheelRotationScale=2500
-     bHasAddedSideArmor=True
+     bHasAddedSideArmor=true
      TreadHitMinAngle=1.800000
      FrontLeftAngle=332.000000
      RearLeftAngle=208.000000
@@ -145,18 +145,18 @@ defaultproperties
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=85.000000)
      DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=61000,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-10000,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.panzer4J_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=85.000000)
      VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2_body'
      VehicleHudOccupantsX(0)=0.430000
      VehicleHudOccupantsX(2)=0.570000
-     VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=82.000000,Y=-40.000000,Z=63.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=82.000000,Y=-40.000000,Z=63.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=32.000000,PointOffset=(X=-100.000000,Z=12.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=30.000000,Y=-27.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(3)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-20.000000,Y=-27.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(4)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-30.000000,Y=27.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      DriverAttachmentBone="driver_attachment"
      Begin Object Class=SVehicleWheel Name=LF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_LF"
          BoneRollAxis=AXIS_Y
@@ -166,7 +166,7 @@ defaultproperties
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIVJTank.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_RF"
          BoneRollAxis=AXIS_Y
@@ -176,7 +176,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIVJTank.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_LR"
          BoneRollAxis=AXIS_Y
@@ -186,7 +186,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIVJTank.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_RR"
          BoneRollAxis=AXIS_Y
@@ -196,7 +196,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIVJTank.RR_Steering'
 
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_L"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=10.000000)
@@ -205,7 +205,7 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIVJTank.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_R"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Z=10.000000)
@@ -213,7 +213,7 @@ defaultproperties
      End Object
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIVJTank.Right_Drive_Wheel'
 
-     bFPNoZFromCameraPitch=True
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
      ExitPositions(0)=(Y=-200.000000,Z=100.000000)
      ExitPositions(1)=(Y=200.000000,Z=100.000000)
@@ -254,20 +254,20 @@ defaultproperties
          KCOMOffset=(Z=-0.600000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=0.900000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_PanzerIVJTank.KParams0'
 
      HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=6
 }

@@ -2,7 +2,7 @@ class DHRoleSelection extends ROGUIRoleSelection;
 
 //*************************************************************************************************************************************************************
 //*************************************************************************************************************************************************************
-function bool InternalOnClick( GUIComponent Sender )
+function bool InternalOnClick(GUIComponent Sender)
 {
     local ROPlayer player;
 
@@ -32,7 +32,7 @@ function bool InternalOnClick( GUIComponent Sender )
             break;
 
         case b_Disconnect:
-            PlayerOwner().ConsoleCommand( "DISCONNECT" );
+            PlayerOwner().ConsoleCommand("DISCONNECT");
 	        CloseMenu();
 	        break;
 
@@ -64,7 +64,7 @@ function bool InternalOnClick( GUIComponent Sender )
 
             case b_AddFavorite:
                 if (b_AddFavorite.bVisible && player != none)
-                    player.ConsoleCommand( "ADDCURRENTTOFAVORITES" );
+                    player.ConsoleCommand("ADDCURRENTTOFAVORITES");
                 break;
 
             case b_MapVoting:
@@ -142,7 +142,7 @@ function UpdateRoleEquipment()
             WeaponAttach = class<ROWeaponAttachment>(desiredRole.Grenades[i].Item.default.AttachmentClass);
             if (WeaponAttach != none)
             {
-                if (WeaponAttach.default.menuImage != None)
+                if (WeaponAttach.default.menuImage != none)
                 {
                     b_Equipment[count].Graphic = WeaponAttach.default.menuImage;
                     b_Equipment[count].bVisible = true;
@@ -201,12 +201,12 @@ function UpdateRoleEquipment()
 /*                if (desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteStaticLine" || desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteStaticline"
                      || desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteStaticline" || desiredRole.GivenItems[i] == "DH_Equipment.DH_Parachutestaticline") //|| desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteItem")
                 {
-                    bHideItem = True;
+                    bHideItem = true;
                 }*/
 
-                if( !bHideItem )
+                if (!bHideItem)
                 {
-                if (WeaponAttach.default.menuImage != None)
+                if (WeaponAttach.default.menuImage != none)
                 {
                     b_Equipment[count].Graphic = WeaponAttach.default.menuImage;
                     b_Equipment[count].bVisible = true;
@@ -225,13 +225,13 @@ function UpdateRoleEquipment()
             // This check needs to be done here because DH_ParachuteItem has no attachment
             if (desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteItem" || desiredRole.GivenItems[i] == "DH_Equipment.DH_Parachuteitem")
             {
-                bHideItem = True;
+                bHideItem = true;
             }
 
-            if(!bHideItem)
+            if (!bHideItem)
                 count++;
             else
-                bHideItem = False;
+                bHideItem = false;
         }
 
         if (count > arraycount(b_Equipment))
@@ -340,7 +340,7 @@ function FillRoleList()
         if (role == none)
             continue;
 
-		if( ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).bUseNativeRoleNames )
+		if (ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).bUseNativeRoleNames)
         	li_Roles.Add(role.default.AltName, role);
         else
         	li_Roles.Add(role.default.MyName, role);
@@ -530,7 +530,7 @@ defaultproperties
 
      Begin Object Class=DHGUIButton Name=DisconnectButton
          Caption="Disconnect"
-         bAutoShrink=False
+         bAutoShrink=false
          StyleName="DHSmallTextButtonStyle"
          WinTop=0.958750
          WinLeft=0.012000
@@ -543,7 +543,7 @@ defaultproperties
 
      Begin Object Class=DHGUIButton Name=MapButton
          Caption="Situation Map"
-         bAutoShrink=False
+         bAutoShrink=false
          StyleName="DHSmallTextButtonStyle"
          WinTop=0.958750
          WinLeft=0.220000
@@ -556,7 +556,7 @@ defaultproperties
 
      Begin Object Class=DHGUIButton Name=ScoreButton
          Caption="Score"
-         bAutoShrink=False
+         bAutoShrink=false
          StyleName="DHSmallTextButtonStyle"
          WinTop=0.958750
          WinLeft=0.410000
@@ -568,7 +568,7 @@ defaultproperties
      b_Score=DHGUIButton'DH_Interface.DHRoleSelection.ScoreButton'
 
      Begin Object Class=DHGUIButton Name=ConfigButton
-         bAutoShrink=False
+         bAutoShrink=false
          StyleName="DHSmallTextButtonStyle"
          WinTop=0.958750
          WinLeft=0.600000
@@ -581,7 +581,7 @@ defaultproperties
 
      Begin Object Class=DHGUIButton Name=ContinueButton
          Caption="Continue"
-         bAutoShrink=False
+         bAutoShrink=false
          StyleName="DHSmallTextButtonStyle"
          WinTop=0.958750
          WinLeft=0.808000
@@ -642,8 +642,8 @@ defaultproperties
      Begin Object Class=ROGUIListBoxPlus Name=Roles
          SelectedStyleName="DHListSelectionStyle"
          OutlineStyleName="ItemOutline"
-         bVisibleWhenEmpty=True
-         bSorted=True
+         bVisibleWhenEmpty=true
+         bSorted=true
          OnCreateComponent=Roles.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinHeight=1.000000
@@ -663,7 +663,7 @@ defaultproperties
      i_PlayerImage=GUIImage'DH_Interface.DHRoleSelection.PlayerImage'
 
      Begin Object Class=DHGUIScrollTextBox Name=RoleDescriptionTextBox
-         bNoTeletype=True
+         bNoTeletype=true
          OnCreateComponent=RoleDescriptionTextBox.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinHeight=1.000000
@@ -702,7 +702,7 @@ defaultproperties
      i_WeaponImages(1)=GUIImage'DH_Interface.DHRoleSelection.WeaponImage'
 
      Begin Object Class=DHGUIScrollTextBox Name=WeaponDescription
-         bNoTeletype=True
+         bNoTeletype=true
          OnCreateComponent=WeaponDescription.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinTop=0.550000
@@ -715,7 +715,7 @@ defaultproperties
      Begin Object Class=ROGUIListBoxPlus Name=WeaponListBox
          SelectedStyleName="DHListSelectionStyle"
          OutlineStyleName="ItemOutline"
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=WeaponListBox.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinLeft=0.700000
@@ -731,12 +731,12 @@ defaultproperties
      Begin Object Class=GUIGFXButton Name=EquipButton0
          Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
          Position=ICP_Scaled
-         bClientBound=True
+         bClientBound=true
          StyleName="DHGripButtonNB"
          WinWidth=0.200000
          WinHeight=0.495000
          TabOrder=21
-         bTabStop=True
+         bTabStop=true
          OnClick=DHRoleSelection.InternalOnClick
          OnKeyEvent=EquipButton0.InternalOnKeyEvent
      End Object
@@ -745,13 +745,13 @@ defaultproperties
      Begin Object Class=GUIGFXButton Name=EquipButton1
          Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
          Position=ICP_Scaled
-         bClientBound=True
+         bClientBound=true
          StyleName="DHGripButtonNB"
          WinLeft=0.210000
          WinWidth=0.200000
          WinHeight=0.495000
          TabOrder=22
-         bTabStop=True
+         bTabStop=true
          OnClick=DHRoleSelection.InternalOnClick
          OnKeyEvent=EquipButton1.InternalOnKeyEvent
      End Object
@@ -760,13 +760,13 @@ defaultproperties
      Begin Object Class=GUIGFXButton Name=EquipButton2
          Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
          Position=ICP_Scaled
-         bClientBound=True
+         bClientBound=true
          StyleName="DHGripButtonNB"
          WinLeft=0.420000
          WinWidth=0.200000
          WinHeight=0.495000
          TabOrder=23
-         bTabStop=True
+         bTabStop=true
          OnClick=DHRoleSelection.InternalOnClick
          OnKeyEvent=EquipButton2.InternalOnKeyEvent
      End Object
@@ -775,20 +775,20 @@ defaultproperties
      Begin Object Class=GUIGFXButton Name=EquipButton3
          Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
          Position=ICP_Scaled
-         bClientBound=True
+         bClientBound=true
          StyleName="DHGripButtonNB"
          WinTop=0.505000
          WinWidth=0.410000
          WinHeight=0.495000
          TabOrder=24
-         bTabStop=True
+         bTabStop=true
          OnClick=DHRoleSelection.InternalOnClick
          OnKeyEvent=EquipButton3.InternalOnKeyEvent
      End Object
      b_Equipment(3)=GUIGFXButton'DH_Interface.DHRoleSelection.EquipButton3'
 
      Begin Object Class=DHGUIScrollTextBox Name=EquipDescTextBox
-         bNoTeletype=True
+         bNoTeletype=true
          OnCreateComponent=EquipDescTextBox.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinLeft=0.440000

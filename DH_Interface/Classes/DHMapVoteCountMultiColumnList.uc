@@ -14,36 +14,35 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     local float CellLeft, CellWidth;
     local GUIStyles DrawStyle;
 
-    if( VRI == none )
-    	return;
+    if (VRI == none)
+        return;
 
     // Draw the selection border
-    if( bSelected )
+    if (bSelected)
     {
-        SelectedStyle.Draw(Canvas,MenuState, X, Y-2, W, H+2 );
+        SelectedStyle.Draw(Canvas,MenuState, X, Y-2, W, H+2);
         DrawStyle = SelectedStyle;
     }
     else
         DrawStyle = Style;
 
-    GetCellLeftWidth( 0, CellLeft, CellWidth );
-    DrawStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left,
-		VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, FontScale );
+    GetCellLeftWidth(0, CellLeft, CellWidth);
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left,
+        VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, FontScale);
 
-    GetCellLeftWidth( 1, CellLeft, CellWidth );
-    DrawStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left,
-		string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale );
+    GetCellLeftWidth(1, CellLeft, CellWidth);
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left,
+        string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
 }
 //------------------------------------------------------------------------------------------------
-function string GetSortString( int i )
+function string GetSortString(int i)
 {
-	local string ColumnData[5];
+    local string ColumnData[5];
 
-	//ColumnData[0] = left(Caps(VRI.GameConfig[VRI.MapVoteCount[i].GameConfigIndex].GameName),15);
-	ColumnData[0] = left(Caps(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName),20);
-	ColumnData[1] = right("0000" $ VRI.MapVoteCount[i].VoteCount,4);
+    ColumnData[0] = Left(Caps(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName), 20);
+    ColumnData[1] = Right("0000" $ VRI.MapVoteCount[i].VoteCount, 4);
 
-	return ColumnData[SortColumn] $ ColumnData[PrevSortColumn];
+    return ColumnData[SortColumn] $ ColumnData[PrevSortColumn];
 }
 
 defaultproperties

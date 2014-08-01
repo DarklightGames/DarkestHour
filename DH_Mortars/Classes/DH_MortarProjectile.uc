@@ -42,7 +42,7 @@ simulated function Timer()
 {
 	super.Timer();
 
-	if(bDebug)
+	if (bDebug)
 	{
 		DrawStayingDebugLine(DebugLocation, Location, 255, 0, 0);
 		DebugLocation = Location;
@@ -61,7 +61,7 @@ simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation
 	Pitch = 0.75;
 	P = Level.GetLocalPlayerController().Pawn;
 
-	if(P != none)
+	if (P != none)
 	{
 		CameraLocation = P.Location + (P.BaseEyeHeight * vect(0, 0, 1));
 		ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0, 5249.0);
@@ -76,7 +76,7 @@ simulated function GetHitSurfaceType(out ESurfaceTypes SurfaceType)
 
 	Trace(HitLocation, HitNormal, Location + vect(0, 0, -16), Location + vect(0, 0, 16), false, , M);
 
-	if(M == none)
+	if (M == none)
 		SurfaceType = EST_Default;
 	else
 		SurfaceType = ESurfaceTypes(M.SurfaceType);
@@ -84,19 +84,19 @@ simulated function GetHitSurfaceType(out ESurfaceTypes SurfaceType)
 
 simulated function PostBeginPlay()
 {
-	if(Level.NetMode != NM_DedicatedServer)
+	if (Level.NetMode != NM_DedicatedServer)
 	{
-		if(Location != vect(0,0,0))
+		if (Location != vect(0,0,0))
 			Spawn(class'DH_Effects.DH_MortarFireEffect', , , Location, Rotation);
 
 		Enable('Tick');
 	}
 
 	// Chance to dud.
-	if(Role == ROLE_Authority && FRand() < DudChance)
+	if (Role == ROLE_Authority && FRand() < DudChance)
 		bDud = true;
 
-	if(bDebug)
+	if (bDebug)
 	{
 		DebugLocation = Location;
 		SetTimer(0.25, true);
@@ -112,10 +112,10 @@ simulated function Tick(float DeltaTime)
 	local vector HitLocation;
 	local float Pitch;
 
-	if(Level.NetMode != NM_DedicatedServer && Velocity.Z < 0 && ShouldPlayDescendingSound(HitLocation))
+	if (Level.NetMode != NM_DedicatedServer && Velocity.Z < 0 && ShouldPlayDescendingSound(HitLocation))
 	{
 		GetDescendingSoundPitch(Pitch, HitLocation);
-		PlaySound(DescendingSound, SLOT_None, 8.0, false, 512, Pitch, true);
+		PlaySound(DescendingSound, SLOT_none, 8.0, false, 512, Pitch, true);
 		Disable('Tick');
 	}
 
@@ -127,7 +127,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 	//--------------------------------------------------------------------------
 	// This is to prevent jerks from walking infront of the mortar and blowing
 	// us up.
-	if(DH_Pawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384)
+	if (DH_Pawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384)
 		return;
 
 	super.ProcessTouch(Other, HitLocation);
@@ -144,12 +144,12 @@ simulated function HitWall(vector HitNormal, actor Wall)
 
 simulated function bool ShouldPlayDescendingSound(out vector OutHitLocation)
 {
-	local vector HitLocation, HitNormal, TraceEnd, HalfVector;
+	local vector HitLocation, HitNormal, TraceEnd, Halfvector;
 
-	HalfVector = Normal(Normal(Velocity) + vect(0, 0, -1));
-	TraceEnd = Location + ( HalfVector * ( VSize(Velocity) * ( GetSoundDuration(DescendingSound) + 0.50 )));
+	Halfvector = Normal(Normal(Velocity) + vect(0, 0, -1));
+	TraceEnd = Location + (Halfvector * (VSize(Velocity) * (GetSoundDuration(DescendingSound) + 0.50)));
 
-	if(Trace(HitLocation, HitNormal, TraceEnd, Location, true) != none)
+	if (Trace(HitLocation, HitNormal, TraceEnd, Location, true) != none)
 	{
 		OutHitLocation = HitLocation;
 		return true;
@@ -160,14 +160,14 @@ simulated function bool ShouldPlayDescendingSound(out vector OutHitLocation)
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-	if( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 		SetHitLocation(HitLocation);
 
-	if(bDebug)
+	if (bDebug)
 	{
 		DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
 
-		log((DebugForward dot (Location - OrigLoc) * UU2M ) @ (DebugRight dot (Location - OrigLoc) * UU2M));
+		log((DebugForward dot (Location - OrigLoc) * UU2M) @ (DebugRight dot (Location - OrigLoc) * UU2M));
 	}
 }
 
@@ -184,15 +184,15 @@ function SetHitLocation(vector HitLocation)
 
 	GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-	if(GRI == none || DamageInstigator == none || DamageInstigator.PlayerReplicationInfo == none)
+	if (GRI == none || DamageInstigator == none || DamageInstigator.PlayerReplicationInfo == none)
 		return;
 
 	PRI = DHPlayerReplicationInfo(DamageInstigator.PlayerReplicationInfo);
 
-	if(PRI == none || PRI.RoleInfo == none)
+	if (PRI == none || PRI.RoleInfo == none)
 		return;
 
-	if(DamageInstigator.Pawn == none)
+	if (DamageInstigator.Pawn == none)
 		return;
 
 	C = DHPlayer(DamageInstigator);
@@ -208,18 +208,18 @@ function SetHitLocation(vector HitLocation)
 	ClosestMortarTargetIndex = 255;
 	ClosestMortarTargetDistance = TargetHitDistanceThreshold;
 
-	if(TeamIndex == 0)
+	if (TeamIndex == 0)
 	{
 		//----------------------------------------------------------------------
 		// Find the closest mortar target.
 		for(i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
 		{
-			if(GRI.GermanMortarTargets[i].Location == vect(0,0,0))
+			if (GRI.GermanMortarTargets[i].Location == vect(0,0,0))
 				continue;
 
 			MortarTargetDistance = VSize(GRI.GermanMortarTargets[i].Location - HitLocation);
 
-			if(MortarTargetDistance < ClosestMortarTargetDistance)
+			if (MortarTargetDistance < ClosestMortarTargetDistance)
 			{
 				ClosestMortarTargetDistance = MortarTargetDistance;
 				ClosestMortarTargetIndex = i;
@@ -229,7 +229,7 @@ function SetHitLocation(vector HitLocation)
 		//----------------------------------------------------------------------
 		// If we still have a mortar target index of 255, it means none of the
 		// targets were close enough.
-		if(ClosestMortarTargetIndex == 255)
+		if (ClosestMortarTargetIndex == 255)
 		{
 			C.MortarHitLocation = vect(0,0,0);
 			return;
@@ -243,12 +243,12 @@ function SetHitLocation(vector HitLocation)
 		// Find the closest mortar target.
 		for(i = 0; i < ArrayCount(GRI.AlliedMortarTargets); I++)
 		{
-			if(GRI.AlliedMortarTargets[i].Location == vect(0,0,0))
+			if (GRI.AlliedMortarTargets[i].Location == vect(0,0,0))
 				continue;
 
 			MortarTargetDistance = VSize(GRI.AlliedMortarTargets[i].Location - HitLocation);
 
-			if(MortarTargetDistance < ClosestMortarTargetDistance)
+			if (MortarTargetDistance < ClosestMortarTargetDistance)
 			{
 				ClosestMortarTargetDistance = MortarTargetDistance;
 				ClosestMortarTargetIndex = i;
@@ -258,7 +258,7 @@ function SetHitLocation(vector HitLocation)
 		//----------------------------------------------------------------------
 		// If we still have a mortar target index of 255, it means none of the
 		// targets were close enough.
-		if(ClosestMortarTargetIndex == 255)
+		if (ClosestMortarTargetIndex == 255)
 		{
 			C.MortarHitLocation = vect(0,0,0);
 			return;
@@ -281,7 +281,7 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
 	GetHitSound(HitSound, HitSurfaceType);
 
 	Spawn(HitEmitterClass, , , HitLocation, rotator(HitNormal));
-	PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
+	PlaySound(HitSound, SLOT_none, 4.0 * TransientSoundVolume);
 }
 
 simulated function GetHitEmitterClass(out class<Emitter> HitEmitterClass, ESurfaceTypes SurfaceType)
@@ -341,7 +341,7 @@ defaultproperties
      HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
      HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
      HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-     DrawType=DT_None
+     DrawType=DT_none
      LifeSpan=60.000000
-     bBlockHitPointTraces=False
+     bBlockHitPointTraces=false
 }

@@ -11,9 +11,9 @@ class DH_SpringfieldScopedWeapon extends DH_BoltSniperWeapon;
 simulated function UpdateScopeMode()
 {
 	if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() &&
-		Instigator.IsHumanControlled() )
+		Instigator.IsHumanControlled())
     {
-	    if( ScopeDetail == RO_ModelScope )
+	    if (ScopeDetail == RO_ModelScope)
 		{
 			scopePortalFOV = default.scopePortalFOV;
 			IronSightDisplayFOV = default.IronSightDisplayFOV;
@@ -23,7 +23,7 @@ simulated function UpdateScopeMode()
 				PlayerViewOffset = XoffsetScoped;
 			}
 
-			if( ScopeScriptedTexture == none )
+			if (ScopeScriptedTexture == none)
 			{
 	        	ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
 			}
@@ -32,7 +32,7 @@ simulated function UpdateScopeMode()
 	        ScopeScriptedTexture.SetSize(512,512);
 	        ScopeScriptedTexture.Client = Self;
 
-			if( ScriptedScopeCombiner == none )
+			if (ScriptedScopeCombiner == none)
 			{
 				// Construct the Combiner
 				ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
@@ -43,7 +43,7 @@ simulated function UpdateScopeMode()
 	            ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
 	        }
 
-			if( ScopeScriptedShader == none )
+			if (ScopeScriptedShader == none)
 			{
 	            // Construct the scope shader
 				ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
@@ -54,7 +54,7 @@ simulated function UpdateScopeMode()
 
 	        bInitializedScope = true;
 		}
-		else if( ScopeDetail == RO_ModelScopeHigh )
+		else if (ScopeDetail == RO_ModelScopeHigh)
 		{
 			scopePortalFOV = scopePortalFOVHigh;
 			IronSightDisplayFOV = default.IronSightDisplayFOVHigh;
@@ -64,7 +64,7 @@ simulated function UpdateScopeMode()
 				PlayerViewOffset = XoffsetHighDetail;
 			}
 
-			if( ScopeScriptedTexture == none )
+			if (ScopeScriptedTexture == none)
 			{
 	        	ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
 	        }
@@ -72,7 +72,7 @@ simulated function UpdateScopeMode()
 	        ScopeScriptedTexture.SetSize(1024,1024);
 	        ScopeScriptedTexture.Client = Self;
 
-			if( ScriptedScopeCombiner == none )
+			if (ScriptedScopeCombiner == none)
 			{
 				// Construct the Combiner
 				ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
@@ -83,7 +83,7 @@ simulated function UpdateScopeMode()
 	            ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
 	        }
 
-			if( ScopeScriptedShader == none )
+			if (ScopeScriptedShader == none)
 			{
 	            // Construct the scope shader
 				ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
@@ -146,9 +146,9 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_SpringfieldScopedPickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_SpringfieldScopedAttachment'

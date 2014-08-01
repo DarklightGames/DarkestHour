@@ -8,11 +8,11 @@ class DHGUITreeScrollBar extends DHGUIVertScrollBar;
 
 var() editconst noexport GUITreeList List;
 
-function SetList( GUIListBase InList )
+function SetList(GUIListBase InList)
 {
 	Super.SetList(InList);
 	List = GUITreeList(InList);
-	if ( List != None )
+	if (List != none)
 		ItemCount = List.VisibleCount;
 }
 
@@ -49,7 +49,7 @@ delegate MoveGripBy(int items)
 		CurPos = 0;
 	if (CurPos > ItemCount-ItemsPerPage)
 		CurPos = ItemCount-ItemsPerPage;
-	if ( List == None && ItemCount > 0 )
+	if (List == none && ItemCount > 0)
 		AlignThumb();
 	PositionChanged(CurPos);
 }

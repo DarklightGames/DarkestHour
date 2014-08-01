@@ -59,13 +59,13 @@ function PostBeginPlay()
 function Reset()
 {
 	//Stops the timer
-	SetTimer(0.0, False);
+	SetTimer(0.0, false);
 
 	//Reset needed variables
 	CurrentPriority = InitialPriority;
-	bCheckForQueue = False;
+	bCheckForQueue = false;
 	QueuedPriority = 0;
-	CurrentMDVReference = None;
+	CurrentMDVReference = none;
 
 	//Reset to activated because it's the auto state anyway
 	GotoState('Activated');
@@ -81,18 +81,18 @@ auto state Activated
 	{
 		texture = DeployTexture; //Set the texture can deploy
 	}
-	simulated function PostTouch( actor Other )
+	simulated function PostTouch(actor Other)
 	{
-		if(Pawn(Other)== None)
+		if (Pawn(Other)== none)
 			return; //Leave function as Other isn't a pawn
 
 		//If the vehicle exists send the pawn
-		if(MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle != None)
+		if (MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle != none)
 		{
 			//Send Other to the vehicle that the factory last spawned
-			if( !MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.TryToDrive(Pawn(Other)) )
+			if (!MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.TryToDrive(Pawn(Other)))
 			{
-				if(bUseURLAsBackup)
+				if (bUseURLAsBackup)
 					super.PostTouch(Other); //Send the pawn to the normal URL
 				//We could goto deactivated at this point, but it's a bad idea because players can crouch in this actor
 				//and cause other players temporary delay before they can teleport, so we must rely on Timer
@@ -108,15 +108,15 @@ state Deactivated
 		texture = NoDeployTexture; //Set the can't deploy texture
 	}
 	//Overridden so if it's deactivated the function doesn't do unnesessary checks
-	simulated function PostTouch( actor Other )
+	simulated function PostTouch(actor Other)
 	{
 		//If vehicle exists and pawn is a SL
-		if(MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle != None && DH_Pawn(Other).GetRoleInfo().bIsSquadLeader)
+		if (MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle != none && DH_Pawn(Other).GetRoleInfo().bIsSquadLeader)
 		{
 			//Send Other to the vehicle that the factory last spawned
-			if( !MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.TryToDrive(Pawn(Other)) )
+			if (!MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.TryToDrive(Pawn(Other)))
 			{
-				if(bUseURLAsBackup)
+				if (bUseURLAsBackup)
 					super.PostTouch(Other); //Send the pawn to the normal URL
 				return;
 			}
@@ -124,7 +124,7 @@ state Deactivated
 
 		Pawn(Other).ReceiveLocalizedMessage(class'DH_MobileDeployMessage', ReasonCantDeploy); //Reason why the pawn can't tele
 
-		if(bUseURLAsBackup)
+		if (bUseURLAsBackup)
 			super.PostTouch(Other); //Send the pawn to the normal URL
 	}
 }
@@ -133,11 +133,11 @@ state TurnOff
 {
 	function BeginState()
 	{
-		SetTimer(0.0, False); //Stops the timer (until reset is called)
+		SetTimer(0.0, false); //Stops the timer (until reset is called)
 		texture = NoTexture; //Set no texture
 	}
 	//Overridden so if it's deactivated the function doesn't do unnesessary checks
-	simulated function PostTouch( actor Other )
+	simulated function PostTouch(actor Other)
 	{
 
 	}
@@ -150,20 +150,20 @@ function Timer()
 	//Deactivate all active factories but current factory
 	for(i=0; i<MDVFactoryReferences.Length; i++)
 	{
-		if(i != CurrentPriority && MDVFactoryReferences[i].bFactoryActive)
+		if (i != CurrentPriority && MDVFactoryReferences[i].bFactoryActive)
 		{
 			MDVFactoryReferences[i].Deactivate();
-			if( MDVFactoryReferences[i].LastSpawnedVehicle != none && ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle) != none && ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).IsVehicleEmpty() )
+			if (MDVFactoryReferences[i].LastSpawnedVehicle != none && ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle) != none && ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).IsVehicleEmpty())
 				ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).Destroy(); //Destroy the vehicle
 		}
 	}
 
 	//Check for queue
-	if(bCheckForQueue)
+	if (bCheckForQueue)
 	{
-		if( CurrentMDVReference != MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle ||
-		 MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle == None ||
-		 MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.bVehicleDestroyed )
+		if (CurrentMDVReference != MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle ||
+		 MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle == none ||
+		 MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.bVehicleDestroyed)
 		{
 			CurrentPriority = QueuedPriority;
   			MDVFactoryReferences[CurrentPriority].Activate(MDVFactoryReferences[CurrentPriority].TeamNum); //Activates the new factory
@@ -173,14 +173,14 @@ function Timer()
 	}
 
 	//Check if the vehicle is dead, in capture area, or enemies near it
-	if(CanDeploy())
+	if (CanDeploy())
 	{
-		if(IsInState('Deactivated'))
+		if (IsInState('Deactivated'))
 			GotoState('Activated'); //We can deploy so lets goto Activated state if we aren't already there
 	}
 	else
 	{
-		if(IsInState('Activated'))
+		if (IsInState('Activated'))
 			GotoState('Deactivated'); //We can't deploy so lets goto Deactivated state if we aren't already there
 	}
 
@@ -188,7 +188,7 @@ function Timer()
 }
 
 //Overridden so if it's deactivated the function doesn't do anything
-simulated function PostTouch( actor Other )
+simulated function PostTouch(actor Other)
 {
 }
 
@@ -198,14 +198,14 @@ function bool CanDeploy()
 	local ROPawn P;
 
 	//Check to make sure the vehicle even exists or if it's destroyed
-	if(MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle == None || MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.bVehicleDestroyed)
+	if (MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle == none || MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.bVehicleDestroyed)
 	{
 		ReasonCantDeploy = 1; //Vehicle is destroyed
 		return false;
 	}
 
 	//Check to make sure the vehicle isn't in a capture area (255 means it's not)
-	if(ROVehicle(MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle).CurrentCapArea != 255)
+	if (ROVehicle(MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle).CurrentCapArea != 255)
 	{
 		ReasonCantDeploy = 2; //Vehicle is in capture area
 		return false;
@@ -213,7 +213,7 @@ function bool CanDeploy()
 
 	//Check to see if the Pawn is human and if not on the same team as the vehicle
 	foreach CollidingActors(class'ROPawn', P, EnemyRadius, MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.Location)
-		if(P.GetTeamNum() != MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.GetTeamNum() && P.IsHumanControlled())
+		if (P.GetTeamNum() != MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.GetTeamNum() && P.IsHumanControlled())
 		{
 			ReasonCantDeploy = 3; //Vehicle has enemy nearby
 			return false;
@@ -224,31 +224,31 @@ function bool CanDeploy()
 
 function IncrementPriorityUp()
 {
-	if( !(CurrentPriority+1 > MDVFactoryReferences.Length) && !bCheckForQueue ) //Check if an increment would send the value greater than length
+	if (!(CurrentPriority+1 > MDVFactoryReferences.Length) && !bCheckForQueue) //Check if an increment would send the value greater than length
 		ChangePriority(CurrentPriority+1); //if not then increment
-	else if( !(QueuedPriority+1 > MDVFactoryReferences.Length) && bCheckForQueue )
+	else if (!(QueuedPriority+1 > MDVFactoryReferences.Length) && bCheckForQueue)
 		ChangePriority(QueuedPriority+1);
 }
 
 function IncrementPriorityDown()
 {
-	if( !(CurrentPriority-1 < 0) && !bCheckForQueue ) //Check if an increment down would send value lower than 0
+	if (!(CurrentPriority-1 < 0) && !bCheckForQueue) //Check if an increment down would send value lower than 0
 		ChangePriority(CurrentPriority-1); //if not then increment down
-	else if( !(QueuedPriority-1 < 0) && bCheckForQueue )
+	else if (!(QueuedPriority-1 < 0) && bCheckForQueue)
 		ChangePriority(QueuedPriority-1);
 }
 
-function ChangePriority( int NewPriority )
+function ChangePriority(int NewPriority)
 {
 	local int i;
 
 	//Activate the new priority one if current mdv is gone or dead
-	if( MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle == None || MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.bVehicleDestroyed )
+	if (MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle == none || MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.bVehicleDestroyed)
 	{
 		//The MDV is dead, now lets deactivate all factories
 		for(i=0; i<MDVFactoryReferences.Length; i++)
 			MDVFactoryReferences[i].Deactivate();
-			if( ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).IsVehicleEmpty() )
+			if (ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).IsVehicleEmpty())
 				ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).Destroy(); //Destroy the vehicle
 
 		//Change priority
@@ -267,9 +267,9 @@ function ChangePriority( int NewPriority )
 defaultproperties
 {
      EnemyRadius=4096.000000
-     bStatic=False
-     bHidden=False
-     bAlwaysRelevant=True
+     bStatic=false
+     bHidden=false
+     bAlwaysRelevant=true
      Texture=Texture'DH_MDV_Tex.TeleMDV.MobileTele_Deny'
      DrawScale=0.330000
 }

@@ -31,7 +31,7 @@ function AddSystemMenu()
 {
 	local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent( "XInterface.GUIButton" ));
+	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
 	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
 	b_ExitButton.OnClick = XButtonClicked;
 	b_ExitButton.bNeverFocus=true;
@@ -42,7 +42,7 @@ function AddSystemMenu()
 	b_ExitButton.bStandardized=true;
 	b_ExitButton.StandardHeight=0.03;
 	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = False;
+	b_ExitButton.bRepeatClick = false;
 }
 
 function InitComponent(GUIController MyC, GUIComponent MyO)
@@ -89,7 +89,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
     class'CacheManager'.static.GetMutatorList(MutRecords);
     for (i=0;i<MutRecords.Length;i++)
     {
-    	cb = moComboBox(li_Mutators.AddItem("DH_Interface.DHmoCombobox",,MutREcords[i].FriendlyName) );
+    	cb = moComboBox(li_Mutators.AddItem("DH_Interface.DHmoCombobox",,MutREcords[i].FriendlyName));
     	cb.AddItem(ComboOpts[0]);
     	cb.AddItem(ComboOpts[1]);
     	cb.AddItem(ComboOpts[2]);
@@ -121,54 +121,54 @@ event HandleParameters(string Param1, string Param2)
 	for (i=0;i<Rules.Length;i++)
 	{
 		FilterItem = Rules[i].FilterItem;
-		if ( FilterItem.Key~="currentplayers" && FilterItem.Value=="0" && FilterItem.QueryType==QT_GreaterThan )
+		if (FilterItem.Key~="currentplayers" && FilterItem.Value=="0" && FilterItem.QueryType==QT_GreaterThan)
 			ck_Empty.Checked(true);
 
-		if ( FilterItem.Key~="password" && FilterItem.Value=="false" && FilterItem.QueryType==QT_Equals )
+		if (FilterItem.Key~="password" && FilterItem.Value=="false" && FilterItem.QueryType==QT_Equals)
 			ck_Passworded.Checked(true);
 
-		if ( FilterItem.Key~="freespace" && FilterItem.Value =="0" && FilterItem.QueryType==QT_GreaterThan )
+		if (FilterItem.Key~="freespace" && FilterItem.Value =="0" && FilterItem.QueryType==QT_GreaterThan)
 			ck_Full.Checked(true);
 
-		if ( FilterItem.Key~="nobots" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
+		if (FilterItem.Key~="nobots" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
 			ck_Bots.Checked(true);
 
 // if _RO_
-		if ( FilterItem.Key~="vacsecure" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
+		if (FilterItem.Key~="vacsecure" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
 			ck_VACOnly.Checked(true);
 // end if _RO_
 
-		if ( FilterItem.Key~="stats" ) //( && FilterITem.Value=="true" )
+		if (FilterItem.Key~="stats") //(&& FilterITem.Value=="true")
 		{
-			 if ( FilterITem.Value~="true" )
+			 if (FilterITem.Value~="true")
 				cb_Stats.MyComboBox.SetIndex(1);
 			else
 				cb_Stats.MyComboBox.SetIndex(2);
 		}
 
-		if ( FilterItem.Key~="weaponstay" )
+		if (FilterItem.Key~="weaponstay")
 		{
-			 if ( FilterItem.Value~="true" )
+			 if (FilterItem.Value~="true")
 				cb_WeaponStay.MyComboBox.SetIndex(1);
 			else
 				cb_WeaponStay.MyComboBox.SetIndex(2);
 		}
 
-		if ( FilterItem.Key~="transloc" )
+		if (FilterItem.Key~="transloc")
 		{
-			 if ( FilterItem.Value~="true" )
+			 if (FilterItem.Value~="true")
 				cb_Translocator.MyComboBox.SetIndex(1);
 			else
 				cb_Translocator.MyComboBox.SetIndex(2);
 		}
 
-		if (FilterItem.Key~="nomutators" && FilterItem.Value=="true" )
+		if (FilterItem.Key~="nomutators" && FilterItem.Value=="true")
 			cb_Mutators.MyComboBox.SetIndex(0);
 
 		if (FilterItem.Key~="mutator")
 		{
 			cb_Mutators.MyComboBox.SetIndex(2);
-			if ( FilterITem.QueryType==QT_Equals)
+			if (FilterITem.QueryType==QT_Equals)
 				SetMutator(FilterItem.Value,1);
 			else if (FilterItem.QueryType==QT_NotEquals)
 				SetMutator(FilterItem.Value,2);
@@ -190,7 +190,7 @@ function SetMutator(string ClassName, int index)
 		{
 			for (j=0;j<li_Mutators.ItemCount;j++)
 			{
-				Box = moComboBox( li_Mutators.GetItem(j) );
+				Box = moComboBox(li_Mutators.GetItem(j));
 				if (Box.Caption ~= MutRecords[i].FriendlyName)
 				{
 					Box.SetIndex(Index);
@@ -246,20 +246,20 @@ function bool OkClick(GUIComponent Server)
 
 	// Build Query lists
 
-	if ( ck_Empty.IsChecked() )
+	if (ck_Empty.IsChecked())
 		Rules[Cnt++] = BuildRule("currentplayers","0",QT_GreaterThan);
 
-	if ( ck_Full.IsChecked() )
+	if (ck_Full.IsChecked())
 		Rules[Cnt++] = BuildRule("freespace","0",QT_GreaterThan);
 
-	if ( ck_Passworded.IsChecked() )
+	if (ck_Passworded.IsChecked())
 		Rules[Cnt++] = BuildRule("password","false",QT_Equals);
 
-	if ( ck_Bots.IsChecked() )
+	if (ck_Bots.IsChecked())
 		Rules[Cnt++] = BuildRule("nobots","true", QT_Equals);
 
 // if _RO_
-    if ( ck_VACOnly.IsChecked() )
+    if (ck_VACOnly.IsChecked())
 		Rules[Cnt++] = BuildRule("vacsecure","true", QT_Equals);
 // end if _RO_
 
@@ -336,7 +336,7 @@ function bool ebPreDraw(canvas Canvas)
 defaultproperties
 {
      Begin Object Class=DHGUISectionBackground Name=sbOptions
-         bFillClient=True
+         bFillClient=true
          Caption="Options..."
          LeftPadding=0.002500
          RightPadding=0.002500
@@ -355,7 +355,7 @@ defaultproperties
      sb_Options=DHGUISectionBackground'DH_Interface.DHFilterEdit.sbOptions'
 
      Begin Object Class=DHGUISectionBackground Name=sbMutators
-         bFillClient=True
+         bFillClient=true
          Caption="Custom Mutator Config"
          LeftPadding=0.002500
          RightPadding=0.002500
@@ -385,7 +385,7 @@ defaultproperties
      eb_Name=DHmoEditBox'DH_Interface.DHFilterEdit.ebName'
 
      Begin Object Class=DHmoComboBox Name=cbStats
-         bReadOnly=True
+         bReadOnly=true
          ComponentWidth=0.550000
          Caption="Stats Servers:"
          OnCreateComponent=cbStats.InternalOnCreateComponent
@@ -396,7 +396,7 @@ defaultproperties
      cb_Stats=DHmoComboBox'DH_Interface.DHFilterEdit.cbStats'
 
      Begin Object Class=DHmoComboBox Name=cbWeaponStay
-         bReadOnly=True
+         bReadOnly=true
          ComponentWidth=0.550000
          Caption="Weapon Stay:"
          OnCreateComponent=cbWeaponStay.InternalOnCreateComponent
@@ -407,7 +407,7 @@ defaultproperties
      cb_WeaponStay=DHmoComboBox'DH_Interface.DHFilterEdit.cbWeaponStay'
 
      Begin Object Class=DHmoComboBox Name=cbTranslocator
-         bReadOnly=True
+         bReadOnly=true
          ComponentWidth=0.550000
          Caption="Translocator:"
          OnCreateComponent=cbTranslocator.InternalOnCreateComponent
@@ -418,7 +418,7 @@ defaultproperties
      cb_Translocator=DHmoComboBox'DH_Interface.DHFilterEdit.cbTranslocator'
 
      Begin Object Class=DHmoComboBox Name=cbMutators
-         bReadOnly=True
+         bReadOnly=true
          ComponentWidth=0.550000
          Caption="Mutators:"
          OnCreateComponent=cbMutators.InternalOnCreateComponent
@@ -519,15 +519,15 @@ defaultproperties
      MutOpts(1)="Any Mutator"
      MutOpts(2)="Custom"
      Begin Object Class=DHGUIHeader Name=TitleBar
-         bUseTextHeight=True
+         bUseTextHeight=true
          StyleName="DHNoBox"
          WinTop=0.017000
          WinHeight=0.050000
          RenderWeight=0.100000
-         bBoundToParent=True
-         bScaleToParent=True
-         bAcceptsInput=True
-         bNeverFocus=False
+         bBoundToParent=true
+         bScaleToParent=true
+         bAcceptsInput=true
+         bNeverFocus=false
          ScalingType=SCALE_X
          OnMousePressed=FloatingWindow.FloatingMousePressed
          OnMouseRelease=FloatingWindow.FloatingMouseRelease
@@ -537,7 +537,7 @@ defaultproperties
      WindowName="Edit Filter Rules..."
      Begin Object Class=FloatingImage Name=FloatingFrameBackground
          Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
-         DropShadow=None
+         DropShadow=none
          ImageStyle=ISTY_Stretched
          ImageRenderStyle=MSTY_Normal
          WinTop=0.020000

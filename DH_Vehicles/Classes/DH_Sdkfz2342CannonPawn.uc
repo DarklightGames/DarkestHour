@@ -16,7 +16,7 @@ replication
 {
 
     // Red Orchestra replication
-	reliable if ( bNetInitial && Role==ROLE_Authority)
+	reliable if (bNetInitial && Role==ROLE_Authority)
 		bMustBeReconCrew;
 }
 
@@ -24,7 +24,7 @@ function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
 
-	if( !bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')) )
+	if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
 	{
 	    Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
         return false;
@@ -48,7 +48,7 @@ function bool TryToDrive(Pawn P)
     DHP = DH_Pawn(P);
     DHRI = DH_RoleInfo(DHPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo);
 
-    if (VehicleBase != None)
+    if (VehicleBase != none)
 	{
 		if (VehicleBase.NeedsFlip())
 		{
@@ -58,7 +58,7 @@ function bool TryToDrive(Pawn P)
 
 		if (P.GetTeamNum() != Team)
 		{
-			if (VehicleBase.Driver == None)
+			if (VehicleBase.Driver == none)
 				return VehicleBase.TryToDrive(P);
 
 			VehicleLocked(P);
@@ -66,9 +66,9 @@ function bool TryToDrive(Pawn P)
 		}
 	}
 
-    if( bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
+    if (bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
     {
-        DenyEntry( P, 0 );
+        DenyEntry(P, 0);
         return false;
     }
 
@@ -82,11 +82,11 @@ function DriverDied()
 	ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
 
 	// Kill the rotation sound if the driver dies but the vehicle doesnt
-    if ( GetVehicleBase().Health > 0 )
+    if (GetVehicleBase().Health > 0)
 		SetRotatingStatus(0);
 }
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
     local vector VehicleZ, CamViewOffsetWorld;
@@ -101,7 +101,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
     WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
 
-    if( ROPlayer(Controller) != none )
+    if (ROPlayer(Controller) != none)
     {
         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
@@ -134,18 +134,18 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     else
         CameraRotation = PC.Rotation;
 
-    if( IsInState('ViewTransition') && bLockCameraDuringTransition )
+    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
     {
-        CameraRotation = Gun.GetBoneRotation( 'Camera_com' );
+        CameraRotation = Gun.GetBoneRotation('Camera_com');
     }
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-    if(CameraBone != '' && Gun != None)
+    if (CameraBone != '' && Gun != none)
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-        if( DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
         {
             CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
@@ -154,7 +154,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
             CameraLocation = Gun.GetBoneCoords('Camera_com').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
 
-        if(bFPNoZFromCameraPitch)
+        if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0,0,1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
@@ -165,7 +165,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     {
         CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-        if(bFPNoZFromCameraPitch)
+        if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0,0,1) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
@@ -194,7 +194,7 @@ simulated function DrawHUD(Canvas Canvas)
 	local float posx, posy;
 
 	PC = PlayerController(Controller);
-	if( PC == none )
+	if (PC == none)
 	{
 		Super.RenderOverlays(Canvas);
 		//log("PanzerTurret PlayerController was none, returning");
@@ -211,9 +211,9 @@ simulated function DrawHUD(Canvas Canvas)
 
         scale = Canvas.SizeY / 1200.0;
 
-        if ( DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
-			if( DriverPositionIndex < GunsightPositions )
+			if (DriverPositionIndex < GunsightPositions)
 			{
 
                 // Draw Scope Overlay
@@ -222,35 +222,35 @@ simulated function DrawHUD(Canvas Canvas)
 			    OverlayCenterTexStart = (1 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2;
 			    OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
 			    Canvas.SetPos(0, 0);
- 			    Canvas.DrawTile( CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+ 			    Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
                 // Draw the moving Aiming Graticule
-                if( Gun != none && Gun.ProjectileClass != none )
+                if (Gun != none && Gun.ProjectileClass != none)
                     Canvas.SetPos(0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY);
-                //Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, ( Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY / ScreenRatio / OverlayCenterScale ) - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale - 1) / 2 );
+                //Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, (Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY / ScreenRatio / OverlayCenterScale) - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale - 1) / 2);
                 else
                     Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, ScopePositionY  * Canvas.ClipY / ScreenRatio / OverlayCenterScale - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale-1)/2);
 
-                    Canvas.DrawTile( CannonScopeCenter , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+                    Canvas.DrawTile(CannonScopeCenter , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
                     //Canvas.DrawTileScaled(CannonScopeCenter, scale * ScopeCenterScaleX / ScreenRatio / OverlayCenterScale, scale * ScopeCenterScaleY / ScreenRatio / OverlayCenterScale);
 
                     // Draw the Range Ring
-		            posx = ( float(Canvas.SizeX) - float(Canvas.SizeY) * 4/OverlayCenterScale/3) / 2.0;
-		            posy = ( float(Canvas.SizeY) - float(Canvas.SizeY) * 4/OverlayCenterScale/3) / 2.0;
-                    Canvas.SetPos( OverlayCorrectionX + Posx + (Canvas.SizeY * (1.0 - ScopeCenterScale ) * 4/OverlayCenterScale/3 / 2.0 ) , OverlayCorrectionY + Canvas.SizeY * (1.0 - ScopeCenterScale * 4/OverlayCenterScale/3 ) / 2.0);
+		            posx = (float(Canvas.SizeX) - float(Canvas.SizeY) * 4/OverlayCenterScale/3) / 2.0;
+		            posy = (float(Canvas.SizeY) - float(Canvas.SizeY) * 4/OverlayCenterScale/3) / 2.0;
+                    Canvas.SetPos(OverlayCorrectionX + Posx + (Canvas.SizeY * (1.0 - ScopeCenterScale) * 4/OverlayCenterScale/3 / 2.0) , OverlayCorrectionY + Canvas.SizeY * (1.0 - ScopeCenterScale * 4/OverlayCenterScale/3) / 2.0);
 			        // to do: above, the OverlayCorrectionX should be recalculated with resolution, it's in overlay pixels not screen pixels
 
                     RotationFactor = 0;
 
-                    if( Gun != none )
+                    if (Gun != none)
 				    {
-  		                if( Gun.CurrentRangeIndex < 20 )  //20
+  		                if (Gun.CurrentRangeIndex < 20)  //20
     	                {
-						   RotationFactor += ( Gun.CurrentRangeIndex * CenterRotationFactor );
+						   RotationFactor += (Gun.CurrentRangeIndex * CenterRotationFactor);
 					    }
 					    else
 					    {
-						   RotationFactor += ( CenterRotationFactor * 20 ) + ((( Gun.CurrentRangeIndex - 20 ) * 2 ) * CenterRotationFactor );
+						   RotationFactor += (CenterRotationFactor * 20) + (((Gun.CurrentRangeIndex - 20) * 2) * CenterRotationFactor);
 					    }
 			        }
 
@@ -259,7 +259,7 @@ simulated function DrawHUD(Canvas Canvas)
                     Canvas.DrawTileScaled(ScopeCenterRotator, Canvas.SizeY / 512.0 * ScopeCenterScale * 4/OverlayCenterScale/3, Canvas.SizeY / 512.0 * ScopeCenterScale * 4/OverlayCenterScale/3);
 
                     // Draw the range setting
-                    if( Gun != none && bShowRangeText)
+                    if (Gun != none && bShowRangeText)
                     {
                        Canvas.Style = ERenderStyle.STY_Normal;
                        SavedColor = Canvas.DrawColor;
@@ -274,7 +274,7 @@ simulated function DrawHUD(Canvas Canvas)
                        Canvas.DrawColor = SavedColor;
                     }
 			}
-			else if( DriverPositionIndex == PeriscopePositionIndex )
+			else if (DriverPositionIndex == PeriscopePositionIndex)
 			{
 
  				DrawPeriscopeOverlay(Canvas);
@@ -295,7 +295,7 @@ simulated function DrawHUD(Canvas Canvas)
 	}
 
      // Zap the lame crosshair - Ramm
-	if (IsLocallyControlled() && Gun != None && Gun.bCorrectAim && Gun.bShowAimCrosshair)
+	if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
 	{
 		Canvas.DrawColor = CrosshairColor;
 		Canvas.DrawColor.A = 255;
@@ -304,7 +304,7 @@ simulated function DrawHUD(Canvas Canvas)
 		Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
 	}
 
-	if (PC != None && !PC.bBehindView && HUDOverlay != None)
+	if (PC != none && !PC.bBehindView && HUDOverlay != none)
 	{
         if (!Level.IsSoftwareRendering())
         {
@@ -316,7 +316,7 @@ simulated function DrawHUD(Canvas Canvas)
     	}
 	}
 	else
-        ActivateOverlay(False);
+        ActivateOverlay(false);
 }
 
 simulated function DrawPeriscopeOverlay(Canvas Canvas)
@@ -325,12 +325,12 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
 	Canvas.SetPos(0,0);
-	Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio );
+	Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties
 {
-     bMustBeReconCrew=True
+     bMustBeReconCrew=true
      PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
      ScopeCenterScale=0.635000
      ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
@@ -338,29 +338,29 @@ defaultproperties
      OverlayCenterSize=0.830000
      PeriscopePositionIndex=1
      DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'
-     bManualTraverseOnly=True
+     bManualTraverseOnly=true
      PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
      PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
      ScopePositionX=0.237000
      ScopePositionY=0.150000
-     bLockCameraDuringTransition=True
+     bLockCameraDuringTransition=true
      WeaponFov=30.000000
      AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
      AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
-     DriverPositions(0)=(ViewLocation=(X=30.000000,Y=-14.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=True)
-     DriverPositions(1)=(ViewLocation=(X=16.000000,Y=-2.500000,Z=14.000000),ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=True)
-     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=True)
-     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=True,bExposed=True)
-     bMustBeTankCrew=False
+     DriverPositions(0)=(ViewLocation=(X=30.000000,Y=-14.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+     DriverPositions(1)=(ViewLocation=(X=16.000000,Y=-2.500000,Z=14.000000),ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true)
+     DriverPositions(2)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+     bMustBeTankCrew=false
      FireImpulse=(X=-15000.000000)
      GunClass=Class'DH_Vehicles.DH_Sdkfz2342Cannon'
      CameraBone="Gun"
      MinRotateThreshold=0.500000
      MaxRotateThreshold=2.300000
-     bPCRelativeFPRotation=True
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=4.000000,Z=-8.000000)
      DriveAnim="VPanzer3_com_idle_close"
      ExitPositions(0)=(Y=-100.000000,Z=160.000000)

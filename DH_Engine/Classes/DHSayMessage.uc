@@ -32,7 +32,7 @@ static function RenderComplexMessage(
 	optional Object OptionalObject
 	)
 {
-	if (RelatedPRI_1 == None)
+	if (RelatedPRI_1 == none)
 		return;
 
 	if (RelatedPRI_1.Team.TeamIndex == 0)
@@ -57,9 +57,9 @@ static function string AssembleString(
 	optional String MessageString
 	)
 {
-	if ( RelatedPRI_1 == None )
+	if (RelatedPRI_1 == none)
 		return "";
-	if ( RelatedPRI_1.PlayerName == "" )
+	if (RelatedPRI_1.PlayerName == "")
 		return "";
 	return RelatedPRI_1.PlayerName$": "$MessageString;
 }
@@ -68,9 +68,9 @@ static function string AssembleString(
 // GetDHConsoleColor
 //-----------------------------------------------------------------------------
 
-static function Color GetDHConsoleColor( PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours )
+static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
-	if ( (RelatedPRI_1 == None) || (RelatedPRI_1.Team == None) )
+	if ((RelatedPRI_1 == none) || (RelatedPRI_1.Team == none))
 		return default.DrawColor;
 
 	if (RelatedPRI_1.Team.TeamIndex == 0)
@@ -98,6 +98,6 @@ defaultproperties
      USColour=(B=75,G=170,R=85,A=255)
      BritishColour=(B=190,G=140,R=64,A=255)
      CanadianColour=(B=20,G=155,R=160,A=255)
-     bComplexString=True
-     bBeep=True
+     bComplexString=true
+     bBeep=true
 }

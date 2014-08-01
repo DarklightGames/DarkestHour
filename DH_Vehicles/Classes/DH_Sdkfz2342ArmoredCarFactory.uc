@@ -11,7 +11,7 @@ class DH_Sdkfz2342ArmoredCarFactory extends DH_GermanVehicles;
 defaultproperties
 {
      RespawnTime=1.000000
-     bFactoryActive=True
+     bFactoryActive=true
      VehicleClass=Class'DH_Vehicles.DH_Sdkfz2342ArmoredCar'
      Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
 }

@@ -62,15 +62,15 @@ var     bool	bLogPenetration;
 //=============================================================================
 replication
 {
-    reliable if(bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetDirty && Role==ROLE_Authority)
         UnbuttonedPositionIndex;
 
     // functions called by client on server
-    reliable if( Role<ROLE_Authority )
+    reliable if (Role<ROLE_Authority)
         ServerToggleExtraRoundType,	ServerChangeDriverPos, DamageCannonOverlay; //
 
 	// Functions called by server on client
-    reliable if( Role==ROLE_Authority )
+    reliable if (Role==ROLE_Authority)
         bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
 
 }
@@ -95,9 +95,9 @@ simulated function PostBeginPlay()
 
 simulated exec function SwitchFireMode()
 {
-	if( Gun != none && DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).bMultipleRoundTypes)
+	if (Gun != none && DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).bMultipleRoundTypes)
 	{
-		if( Controller != none && ROPlayer(Controller) != none )
+		if (Controller != none && ROPlayer(Controller) != none)
 			ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
 		ServerToggleExtraRoundType();
@@ -106,7 +106,7 @@ simulated exec function SwitchFireMode()
 
 function ServerToggleExtraRoundType()
 {
-	if( Gun != none && ROTankCannon(Gun) != none )
+	if (Gun != none && ROTankCannon(Gun) != none)
 	{
 		ROTankCannon(Gun).ToggleRoundType();
 	}
@@ -116,36 +116,36 @@ function ServerToggleExtraRoundType()
 simulated exec function Deploy()
 {
 
-    if( bTurretRingDamaged )
+    if (bTurretRingDamaged)
     return;
 
-    if( Gun != none && DH_ROTankCannon(Gun) != none && !bManualTraverseOnly && !bEngineOff  )
+    if (Gun != none && DH_ROTankCannon(Gun) != none && !bManualTraverseOnly && !bEngineOff )
     {
-		if( Controller != none && ROPlayer(Controller) != none )
+		if (Controller != none && ROPlayer(Controller) != none)
 			ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-        if( DH_ROTankCannon(Gun).bManualTurret )
+        if (DH_ROTankCannon(Gun).bManualTurret)
 	    {
 		    ToggleTurretMode(true);
 
-		    if( Role < ROLE_Authority)
+		    if (Role < ROLE_Authority)
 			    ServerToggleTurretMode(true);
         }
 	    else
 	    {
 		    ToggleTurretMode(false);
 
-		    if( Role < ROLE_Authority)
+		    if (Role < ROLE_Authority)
 			    ServerToggleTurretMode(false);
         }
     }
 }
 
-simulated function ToggleTurretMode( bool bPowerOn )
+simulated function ToggleTurretMode(bool bPowerOn)
 {
-     if( Gun != none && DH_ROTankCannon(Gun) != none )
+     if (Gun != none && DH_ROTankCannon(Gun) != none)
      {
-        if( bPowerOn )
+        if (bPowerOn)
         {
             DH_ROTankCannon(Gun).bManualTurret=false;
             bTurretPowerOn=true;
@@ -174,31 +174,31 @@ simulated function ClientDamageCannonOverlay()
 // Override HandleTurretRotation to allow turret traverse seizure if turret ring is struck
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    if(bTurretRingDamaged && bGunPivotDamaged)
+    if (bTurretRingDamaged && bGunPivotDamaged)
     {
-       if(bDebuggingText && Role == ROLE_Authority)
+       if (bDebuggingText && Role == ROLE_Authority)
           Level.Game.Broadcast(self, "Gun & Turret disabled");
        super.HandleTurretRotation(DeltaTime,0,0);
     }
-    else if(!bTurretRingDamaged && bGunPivotDamaged)
+    else if (!bTurretRingDamaged && bGunPivotDamaged)
     {
-       if(bDebuggingText && Role == ROLE_Authority)
+       if (bDebuggingText && Role == ROLE_Authority)
           Level.Game.Broadcast(self, "Gun disabled");
        super.HandleTurretRotation(DeltaTime,YawChange,0);
     }
-    else if(bTurretRingDamaged && !bGunPivotDamaged)
+    else if (bTurretRingDamaged && !bGunPivotDamaged)
     {
-       if(bDebuggingText && Role == ROLE_Authority)
+       if (bDebuggingText && Role == ROLE_Authority)
           Level.Game.Broadcast(self, "Turret disabled");
        super.HandleTurretRotation(DeltaTime,0,PitchChange);
     }
-    else if(!bTurretRingDamaged && !bGunPivotDamaged)
+    else if (!bTurretRingDamaged && !bGunPivotDamaged)
      super.HandleTurretRotation(DeltaTime,YawChange,PitchChange);
 }
 
 //AB CODE
-// modification allowing dual-magnification optics is here ( look for "GunsightPositions" )
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
+// modification allowing dual-magnification optics is here (look for "GunsightPositions")
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
     local vector VehicleZ, CamViewOffsetWorld;
@@ -213,7 +213,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
     WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
 
-    if( ROPlayer(Controller) != none )
+    if (ROPlayer(Controller) != none)
     {
         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
@@ -247,18 +247,18 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     else
         CameraRotation = PC.Rotation;
 
-    if( IsInState('ViewTransition') && bLockCameraDuringTransition )
+    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
     {
-        CameraRotation = Gun.GetBoneRotation( 'Camera_com' );
+        CameraRotation = Gun.GetBoneRotation('Camera_com');
     }
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-    if(CameraBone != '' && Gun != None)
+    if (CameraBone != '' && Gun != none)
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-        if( DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
         {
             CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
@@ -267,7 +267,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
             CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
         }
 
-        if(bFPNoZFromCameraPitch)
+        if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0,0,1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
@@ -278,7 +278,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     {
         CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-        if(bFPNoZFromCameraPitch)
+        if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0,0,1) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
@@ -297,7 +297,7 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
 	Canvas.SetPos(0,0);
-	Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio );
+	Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Recalls that optics are still non-functioning when players jump in and out
@@ -306,7 +306,7 @@ function KDriverEnter(Pawn P)
 
      super.KDriverEnter(P);
 
-     if(bOpticsDamaged)
+     if (bOpticsDamaged)
         ClientDamageCannonOverlay();
 }
 
@@ -314,23 +314,23 @@ simulated state EnteringVehicle
 {
 	simulated function HandleEnter()
 	{
-    		//if( DriverPositions[0].PositionMesh != none)
+    		//if (DriverPositions[0].PositionMesh != none)
          	//	LinkMesh(DriverPositions[0].PositionMesh);
-		if( Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone ||  Level.Netmode == NM_ListenServer)
+		if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone ||  Level.Netmode == NM_ListenServer)
 		{
- 			if( DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
+ 			if (DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
  			{
 				Gun.LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
 			}
 		}
 
-		if( Gun.HasAnim(Gun.BeginningIdleAnim))
+		if (Gun.HasAnim(Gun.BeginningIdleAnim))
 		{
 		    Gun.PlayAnim(Gun.BeginningIdleAnim);
 	    }
 
 		WeaponFOV = DriverPositions[InitialPositionIndex].ViewFOV;
-		PlayerController(Controller).SetFOV( WeaponFOV );
+		PlayerController(Controller).SetFOV(WeaponFOV);
 
 		FPCamPos = DriverPositions[InitialPositionIndex].ViewLocation;
 	}
@@ -380,23 +380,23 @@ function bool PlaceExitingDriver()
 	ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
 
 	//avoid running driver over by placing in direction perpendicular to velocity
-/*	if (VehicleBase != None && VSize(VehicleBase.Velocity) > 100)
+/*	if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
 	{
 		tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
 		if (FRand() < 0.5)
 			tryPlace *= -1; //randomly prefer other side
-		if ( (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == None && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
-		     || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == None && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)) )
+		if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
+		     || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
 			return true;
 	}*/
 
 	for(i=0; i<ExitPositions.Length; i++)
 	{
-		if ( bRelativeExitPos )
+		if (bRelativeExitPos)
 		{
-		    if (VehicleBase != None)
+		    if (VehicleBase != none)
 		    	tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-        	    else if (Gun != None)
+        	    else if (Gun != none)
                 	tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
 	            else
         	        tryPlace = Location + (ExitPositions[i] >> Rotation);
@@ -405,20 +405,20 @@ function bool PlaceExitingDriver()
 			tryPlace = ExitPositions[i];
 
 		// First, do a line check (stops us passing through things on exit).
-		if ( bRelativeExitPos )
+		if (bRelativeExitPos)
 		{
-			if (VehicleBase != None)
+			if (VehicleBase != none)
 			{
-				if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != None)
+				if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
 					continue;
 			}
 			else
-				if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != None)
+				if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
 					continue;
 		}
 
 		// Then see if we can place the player there.
-		if ( !Driver.SetLocation(tryPlace) )
+		if (!Driver.SetLocation(tryPlace))
 			continue;
 
 		return true;
@@ -435,7 +435,7 @@ function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
 
-	if( !bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')) )
+	if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
 	{
 	    Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
         return false;
@@ -459,7 +459,7 @@ function DriverDied()
 	DH_ROTreadCraft(GetVehicleBase()).MaybeDestroyVehicle();
 
 	// Kill the rotation sound if the driver dies but the vehicle doesnt
-    if ( GetVehicleBase().Health > 0 )
+    if (GetVehicleBase().Health > 0)
 		SetRotatingStatus(0);
 }
 
@@ -468,32 +468,32 @@ function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
 	{
-		if ( DriverPositionIndex < (DriverPositions.Length - 1) )
+		if (DriverPositionIndex < (DriverPositions.Length - 1))
 		{
 			LastPositionIndex = DriverPositionIndex;
 			DriverPositionIndex++;
 
-			if( Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer )
+			if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
 			{
 				NextViewPoint();
 			}
 
-            if( Level.NetMode == NM_DedicatedServer )
+            if (Level.NetMode == NM_DedicatedServer)
 			{
                 // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-				if( DriverPositionIndex == UnbuttonedPositionIndex )
+				if (DriverPositionIndex == UnbuttonedPositionIndex)
 				    GoToState('ViewTransition');
    			}
 		}
      }
      else
      {
-		if ( DriverPositionIndex > 0 )
+		if (DriverPositionIndex > 0)
 		{
 			LastPositionIndex = DriverPositionIndex;
 			DriverPositionIndex--;
 
-			if( Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer )
+			if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
 			{
 				NextViewPoint();
 			}
@@ -507,15 +507,15 @@ simulated state ViewTransition
 	{
 	    StoredVehicleRotation = VehicleBase.Rotation;
 
-		if( Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer )
+		if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
 		{
- 			if( DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+ 			if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
 				Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
 		}
 
          // bDrawDriverinTP=true;//Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
-		if(Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
+		if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
 			&& Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
 		{
 			Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
@@ -526,28 +526,28 @@ simulated state ViewTransition
 		FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
 		//FPCamViewOffset = DriverPositions[DriverPositionIndex].ViewOffset; // depractated
 
-		if( DriverPositionIndex != 0 )
+		if (DriverPositionIndex != 0)
 		{
-			if( DriverPositions[DriverPositionIndex].bDrawOverlays )
-				PlayerController(Controller).SetFOV( WeaponFOV );
+			if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+				PlayerController(Controller).SetFOV(WeaponFOV);
 			else
 				PlayerController(Controller).DesiredFOV = WeaponFOV;
 		}
 
-		if( LastPositionIndex < DriverPositionIndex)
+		if (LastPositionIndex < DriverPositionIndex)
 		{
-			if( Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim) )
+			if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
 			{
-//           	    if( IsLocallyControlled() )
+//           	    if (IsLocallyControlled())
                     Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
 				SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0),false);
 			}
 			else
 				GotoState('');
 		}
-		else if ( Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim) )
+		else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
 		{
-//           	if( IsLocallyControlled() )
+//           	if (IsLocallyControlled())
 			    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
 			SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0),false);
 		}
@@ -564,16 +564,16 @@ simulated state ViewTransition
 
 	simulated function AnimEnd(int channel)
 	{
-		if( IsLocallyControlled() )
+		if (IsLocallyControlled())
             GotoState('');
 	}
 
    	simulated function EndState()
 	{
-		if( PlayerController(Controller) != none )
+		if (PlayerController(Controller) != none)
 		{
-			PlayerController(Controller).SetFOV( DriverPositions[DriverPositionIndex].ViewFOV );
-			//PlayerController(Controller).SetRotation( Gun.GetBoneRotation( 'Camera_com' ));
+			PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+			//PlayerController(Controller).SetRotation(Gun.GetBoneRotation('Camera_com'));
 		}
 	}
 
@@ -589,7 +589,7 @@ simulated state LeavingVehicle
 		local rotator TurretYaw, TurretPitch;
 		// Make the new mesh you swap to have the same rotation as the old one
 
- 		if( Gun != none)
+ 		if (Gun != none)
  		{
 			TurretYaw.Yaw = GetVehicleBase().Rotation.Yaw - CustomAim.Yaw;
 			TurretPitch.Pitch = GetVehicleBase().Rotation.Pitch - CustomAim.Pitch;
@@ -602,7 +602,7 @@ simulated state LeavingVehicle
 
 		//LinkMesh(Default.Mesh);
 
-		if( Gun.HasAnim(Gun.BeginningIdleAnim))
+		if (Gun.HasAnim(Gun.BeginningIdleAnim))
 		{
 		    Gun.PlayAnim(Gun.BeginningIdleAnim);
 	    }
@@ -611,7 +611,7 @@ simulated state LeavingVehicle
 
 defaultproperties
 {
-     bShowRangeText=True
+     bShowRangeText=true
      GunsightPositions=1
      GunsightOpticsName="ScopeNameHere"
      UnbuttonedPositionIndex=2
@@ -626,5 +626,5 @@ defaultproperties
      PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
      RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      MaxRotateThreshold=1.500000
-     bDesiredBehindView=False
+     bDesiredBehindView=false
 }

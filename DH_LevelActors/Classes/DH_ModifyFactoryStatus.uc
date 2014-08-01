@@ -4,7 +4,7 @@
 // Purpose:
 // Ability to activate, deactivate, and toggle status of a vehicle factory based on event.  Now supports multiple factories
 // Problems/Limitations:
-// None known
+// none known
 
 class DH_ModifyFactoryStatus extends DH_ModifyActors;
 
@@ -39,10 +39,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
 	local int i, RandomNum;
 
-	if(UseRandomness)
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //Leave script as it randomly failed
 	}
 	switch(HowToModify)
@@ -51,7 +51,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 			for(i=0; i<FactoryReference.Length; i++)
 			{
 				FactoryReference[i].Activate(FactoryReference[i].TeamNum); //Activates the factory
-				if(bChangeUseSpawnArea)
+				if (bChangeUseSpawnArea)
 					FactoryReference[i].bUsesSpawnAreas = bUseSpawnArea;
 			}
 		break;
@@ -60,31 +60,31 @@ event Trigger(Actor Other, Pawn EventInstigator)
 			{
 				FactoryReference[i].Deactivate(); //Deactivates the factory
 
-				if(bChangeUseSpawnArea)
+				if (bChangeUseSpawnArea)
 					FactoryReference[i].bUsesSpawnAreas = bUseSpawnArea;
 
 				//Check to see if leveler set bInstantDestroyEmpty and if the vehicle is empty
-				if( bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty() )
+				if (bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty())
 					ROVehicle(FactoryReference[i].LastSpawnedVehicle).Destroy(); //Destroy the vehicle
 			}
 		break;
 		case SMT_Toggle: //Check factory status and toggle it
 			for(i=0; i<FactoryReference.Length; i++)
 			{
-				if(!FactoryReference[i].bFactoryActive)
+				if (!FactoryReference[i].bFactoryActive)
 				{
 					FactoryReference[i].Activate(FactoryReference[i].TeamNum);
-					if(bChangeUseSpawnArea)
+					if (bChangeUseSpawnArea)
 						FactoryReference[i].bUsesSpawnAreas = bUseSpawnArea;
 				}
 				else
 				{
 					FactoryReference[i].Deactivate();
 
-					if(bChangeUseSpawnArea)
+					if (bChangeUseSpawnArea)
 						FactoryReference[i].bUsesSpawnAreas = bUseSpawnArea;
 
-					if( bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty() )
+					if (bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty())
 						ROVehicle(FactoryReference[i].LastSpawnedVehicle).Destroy();
 				}
 			}

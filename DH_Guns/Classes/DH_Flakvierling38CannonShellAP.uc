@@ -9,6 +9,6 @@ defaultproperties
      LightHue=28
      LightBrightness=255.000000
      LightRadius=32.000000
-     bDynamicLight=True
+     bDynamicLight=true
      DrawScale=4.000000
 }

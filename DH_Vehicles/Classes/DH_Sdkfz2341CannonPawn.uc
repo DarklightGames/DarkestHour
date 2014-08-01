@@ -14,15 +14,15 @@ replication
 {
 
     // Red Orchestra replication
-	reliable if ( bNetInitial && Role==ROLE_Authority)
+	reliable if (bNetInitial && Role==ROLE_Authority)
 		bMustBeReconCrew;
 }
 
 simulated exec function SwitchFireMode()
 {
-	if( Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
+	if (Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
 	{
-		if( Controller != none && ROPlayer(Controller) != none )
+		if (Controller != none && ROPlayer(Controller) != none)
 			ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
 		ServerToggleExtraRoundType();
@@ -34,15 +34,15 @@ function bool ResupplyAmmo()
 	local bool bResupplied;
 	local DH_Sdkfz2341Cannon G;
 
-	if(Gun == none)
+	if (Gun == none)
 		return false;
 
 	G = DH_Sdkfz2341Cannon(Gun);
 
-	if(G == none)
+	if (G == none)
 		return false;
 
-	if(G.NumMags != G.default.NumMags || G.NumSecMags != G.default.NumSecMags || G.NumAltMags != G.default.NumAltMags)
+	if (G.NumMags != G.default.NumMags || G.NumSecMags != G.default.NumSecMags || G.NumAltMags != G.default.NumAltMags)
 	{
 		G.NumMags = G.default.NumMags;
 		G.NumSecMags = G.default.NumSecMags;
@@ -58,7 +58,7 @@ function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
 
-	if( !bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')) )
+	if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
 	{
 	    Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
         return false;
@@ -82,7 +82,7 @@ function bool TryToDrive(Pawn P)
     DHP = DH_Pawn(P);
     DHRI = DH_RoleInfo(DHPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo);
 
-    if (VehicleBase != None)
+    if (VehicleBase != none)
 	{
 		if (VehicleBase.NeedsFlip())
 		{
@@ -92,7 +92,7 @@ function bool TryToDrive(Pawn P)
 
 		if (P.GetTeamNum() != Team)
 		{
-			if (VehicleBase.Driver == None)
+			if (VehicleBase.Driver == none)
 				return VehicleBase.TryToDrive(P);
 
 			VehicleLocked(P);
@@ -100,9 +100,9 @@ function bool TryToDrive(Pawn P)
 		}
 	}
 
-    if( bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
+    if (bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
     {
-        DenyEntry( P, 0 );
+        DenyEntry(P, 0);
         return false;
     }
 
@@ -116,7 +116,7 @@ function DriverDied()
 	ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
 
 	// Kill the rotation sound if the driver dies but the vehicle doesnt
-    if ( GetVehicleBase().Health > 0 )
+    if (GetVehicleBase().Health > 0)
 		SetRotatingStatus(0);
 }
 
@@ -146,7 +146,7 @@ function float getAmmoReloadState()
 
 defaultproperties
 {
-     bMustBeReconCrew=True
+     bMustBeReconCrew=true
      ScopeCenterScale=0.635000
      ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
      CenterRotationFactor=2048
@@ -163,16 +163,16 @@ defaultproperties
      WeaponFov=30.000000
      AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
      AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
-     DriverPositions(0)=(ViewLocation=(X=40.000000,Y=12.000000,Z=3.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=True)
-     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=True)
-     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=True,bExposed=True)
-     bMustBeTankCrew=False
+     DriverPositions(0)=(ViewLocation=(X=40.000000,Y=12.000000,Z=3.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=true)
+     DriverPositions(1)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+     bMustBeTankCrew=false
      FireImpulse=(X=-15000.000000)
      GunClass=Class'DH_Vehicles.DH_Sdkfz2341Cannon'
-     bHasFireImpulse=False
+     bHasFireImpulse=false
      CameraBone="Gun"
-     bPCRelativeFPRotation=True
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=4.000000,Y=-2.000000)
      DriveAnim="VSU76_com_idle_close"
      ExitPositions(0)=(Y=-100.000000,Z=160.000000)

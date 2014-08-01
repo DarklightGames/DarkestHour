@@ -3,15 +3,15 @@ class DH_VehicleDamagedEffect extends VehicleDamagedEffect;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         UseColorScale=True
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=10.000000,Z=10.000000)
          ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=192,G=192,R=192,A=255))
@@ -37,16 +37,16 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_VehicleDamagedEffect.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
-         UseRandomSubdivision=True
-         UseVelocityScale=True
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
+         UseRandomSubdivision=true
+         UseVelocityScale=true
          Acceleration=(Z=50.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=0.250000,Color=(B=100,G=177,R=230,A=255))
@@ -73,14 +73,14 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_VehicleDamagedEffect.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=10.000000,Z=10.000000)
          ColorScale(0)=(Color=(A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(A=255))

@@ -5,7 +5,7 @@ class DH_BritishSergeantOx_Bucks extends DH_Ox_Bucks;
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Corporal"
      AltName="Corporal"
      Article="a "
@@ -15,7 +15,7 @@ defaultproperties
      Models(0)="paraSarg1"
      Models(1)="paraSarg2"
      Models(2)="paraSarg3"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_ThompsonWeapon',Amount=6)
@@ -25,6 +25,6 @@ defaultproperties
      Grenades(2)=(Item=Class'DH_Equipment.DH_RedSmokeWeapon',Amount=1)
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

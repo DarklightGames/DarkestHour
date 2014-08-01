@@ -110,7 +110,7 @@ defaultproperties
      l_TeamCount(1)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount2'
 
      Begin Object Class=DHGUIScrollTextBox Name=TeamsBriefing
-         bNoTeletype=True
+         bNoTeletype=true
          OnCreateComponent=TeamsBriefing.InternalOnCreateComponent
          StyleName="DHBlackText"
          WinTop=0.530000
@@ -121,7 +121,7 @@ defaultproperties
      l_TeamBriefing(0)=DHGUIScrollTextBox'DH_Interface.DHGUITeamSelection.TeamsBriefing'
 
      Begin Object Class=DHGUIScrollTextBox Name=TeamsBriefing2
-         bNoTeletype=True
+         bNoTeletype=true
          OnCreateComponent=TeamsBriefing2.InternalOnCreateComponent
          StyleName="DHBlackText"
          WinTop=0.078333

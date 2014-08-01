@@ -23,7 +23,7 @@ defaultproperties
      IronIdleEmptyAnim="iron_idle_empty"
      MaxNumPrimaryMags=9
      InitialNumPrimaryMags=9
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      CrawlForwardAnim="crawlF"
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
@@ -41,14 +41,14 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
-     bCanRestDeploy=True
+     bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_M1CarbinePickup'
      BobDamping=1.600000
      AttachmentClass=Class'DH_Weapons.DH_M1CarbineAttachment'
      ItemName="M1 Carbine"
      Mesh=SkeletalMesh'DH_M1Carbine_1st.M1Carbine'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

@@ -26,7 +26,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsMortarObserver=True
+     bIsMortarObserver=true
      MyName="Mortar Observer"
      AltName="Werferbeobachter"
      Article="a "

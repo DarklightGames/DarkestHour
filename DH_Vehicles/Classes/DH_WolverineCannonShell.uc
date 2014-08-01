@@ -19,7 +19,7 @@ defaultproperties
      MechanicalRanges(7)=(Range=2800)
      MechanicalRanges(8)=(Range=3200)
      MechanicalRanges(9)=(Range=4200)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=12.400000
      DHPenetrationTable(1)=12.100000
      DHPenetrationTable(2)=11.500000
@@ -32,7 +32,7 @@ defaultproperties
      DHPenetrationTable(9)=7.600000
      DHPenetrationTable(10)=6.800000
      ShellDiameter=7.620000
-     bShatterProne=True
+     bShatterProne=true
      ShellImpactDamage=Class'DH_Vehicles.DH_WolverineCannonShellDamageAP'
      ImpactDamage=580
      BallisticCoefficient=1.627000

@@ -16,7 +16,7 @@ var()   	bool		bLimitPitch;         			// limit pitching up and down
 
 replication
 {
-	reliable if ( bNetInitial && Role==ROLE_Authority)
+	reliable if (bNetInitial && Role==ROLE_Authority)
 		bLimitYaw, bLimitPitch;
 }
 
@@ -31,7 +31,7 @@ simulated function DrawHUD(Canvas Canvas)
 
     	PC = PlayerController(Controller);
 
-   		if( PC == none )
+   		if (PC == none)
         {
 		    Super.RenderOverlays(Canvas);
 		    //log("PanzerTurret PlayerController was none, returning");
@@ -48,9 +48,9 @@ simulated function DrawHUD(Canvas Canvas)
 
         		scale = Canvas.SizeY / 1200.0;
 
-            if ( DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+            if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
             {
-			   if( DriverPositionIndex == 0 )
+			   if (DriverPositionIndex == 0)
 			   {
                }
 			   else
@@ -67,7 +67,7 @@ simulated function DrawHUD(Canvas Canvas)
 	    }
 
     // Zap the lame crosshair - Ramm
-	if (IsLocallyControlled() && Gun != None && Gun.bCorrectAim && Gun.bShowAimCrosshair)
+	if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
 	{
 		Canvas.DrawColor = CrosshairColor;
 		Canvas.DrawColor.A = 255;
@@ -77,7 +77,7 @@ simulated function DrawHUD(Canvas Canvas)
 	}
 
 
-	if (PC != None && !PC.bBehindView && HUDOverlay != None)
+	if (PC != none && !PC.bBehindView && HUDOverlay != none)
 	{
         if (!Level.IsSoftwareRendering())
         {
@@ -89,7 +89,7 @@ simulated function DrawHUD(Canvas Canvas)
     	}
 	}
 	else
-        ActivateOverlay(False);
+        ActivateOverlay(false);
 
 }
 
@@ -100,7 +100,7 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
 	Canvas.SetPos(0,0);
-	Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio );
+	Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Limit the left and right movement of the driver
@@ -108,18 +108,18 @@ simulated function int LimitYaw(int yaw)
 {
     local int NewYaw;
 
-    if ( !bLimitYaw )
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
     NewYaw = yaw;
 
-   	if( yaw > DriverPositions[DriverPositionIndex].ViewPositiveYawLimit)
+   	if (yaw > DriverPositions[DriverPositionIndex].ViewPositiveYawLimit)
    	{
    		NewYaw = DriverPositions[DriverPositionIndex].ViewPositiveYawLimit;
    	}
-   	else if( yaw < DriverPositions[DriverPositionIndex].ViewNegativeYawLimit )
+   	else if (yaw < DriverPositions[DriverPositionIndex].ViewNegativeYawLimit)
    	{
    		NewYaw = DriverPositions[DriverPositionIndex].ViewNegativeYawLimit;
   	}
@@ -132,7 +132,7 @@ function int LimitPawnPitch(int pitch)
 {
     pitch = pitch & 65535;
 
-    if ( !bLimitPitch )
+    if (!bLimitPitch)
     {
         return pitch;
     }
@@ -151,12 +151,12 @@ function int LimitPawnPitch(int pitch)
 defaultproperties
 {
      BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-     bLimitYaw=True
-     bLimitPitch=True
+     bLimitYaw=true
+     bLimitPitch=true
      HudName="Engineer"
      DriverPositions(0)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000)
-     DriverPositions(1)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=True)
-     bMultiPosition=True
+     DriverPositions(1)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+     bMultiPosition=true
      CameraBone="Camera_com"
      DrivePos=(X=0.000000,Y=0.000000,Z=-15.000000)
      DriveAnim="stand_idlehip_satchel"

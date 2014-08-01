@@ -15,12 +15,12 @@ defaultproperties
          TrailLocation=PTTL_FollowEmitter
          MaxPointsPerTrail=150
          DistanceThreshold=80.000000
-         UseCrossedSheets=True
+         UseCrossedSheets=true
          PointLifeTime=0.200000
-         UseColorScale=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=20,G=209,R=235))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=20,G=209,R=235))
          Opacity=0.650000
@@ -35,8 +35,8 @@ defaultproperties
      End Object
      Emitters(0)=TrailEmitter'DH_Weapons.DH_GermanYellowOrangeTracer.TrailEmitter0'
 
-     AutoDestroy=True
-     bNoDelete=False
+     AutoDestroy=true
+     bNoDelete=false
      Physics=PHYS_Trailer
-     bHardAttach=True
+     bHardAttach=true
 }

@@ -12,7 +12,7 @@ class DH_AT57Factory extends DH_ATCannonFactoryBase;
 defaultproperties
 {
      RespawnTime=1.000000
-     bFactoryActive=True
+     bFactoryActive=true
      VehicleClass=Class'DH_Guns.DH_AT57Gun'
      Mesh=SkeletalMesh'DH_AT57_anm.AT57_body'
 }

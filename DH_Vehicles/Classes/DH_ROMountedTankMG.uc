@@ -25,7 +25,7 @@ var     float               PlayerFireDamagePerSec;
 //==============================================================================
 replication
 {
-     reliable if( bNetDirty && Role==ROLE_Authority)
+     reliable if (bNetDirty && Role==ROLE_Authority)
        bOnFire;
 }
 
@@ -35,12 +35,12 @@ simulated function Tick(float DeltaTime)
 
     Super.Tick(DeltaTime);
 
-    if( bOnFire && HullMGFireEffect == None )
+    if (bOnFire && HullMGFireEffect == none)
     {
         // Lets randomise the fire start times to desync them with the driver and engine ones
-        if( Level.TimeSeconds - BurnTime > 0.2 )
+        if (Level.TimeSeconds - BurnTime > 0.2)
         {
-            if( FRand() < 0.1 )
+            if (FRand() < 0.1)
             {
                 HullMGFireEffect = Spawn(FireEffectClass);
                 AttachToBone(HullMGFireEffect, FireAttachBone);
@@ -57,7 +57,7 @@ simulated function DestroyEffects()
 {
 	super.DestroyEffects();
 
-    if (HullMGFireEffect != None)
+    if (HullMGFireEffect != none)
     	HullMGFireEffect.Destroy();
 }
 

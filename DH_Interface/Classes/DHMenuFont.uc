@@ -9,7 +9,7 @@ class DHMenuFont extends GUIFont;
 defaultproperties
 {
      KeyName="DHMenuFont"
-     bFixedSize=True
+     bFixedSize=true
      FontArrayNames(0)="DHFonts.DHFontB18"
      FontArrayNames(1)="DHFonts.DHFontB18"
      FontArrayNames(2)="DHFonts.DHFontB18"

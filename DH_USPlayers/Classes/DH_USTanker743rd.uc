@@ -24,7 +24,7 @@ defaultproperties
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet'
      Headgear(1)=Class'DH_USPlayers.DH_USTankerHat'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
-     bCanBeTankCrew=True
+     bEnhancedAutomaticControl=true
+     bCanBeTankCrew=true
      limit=3
 }

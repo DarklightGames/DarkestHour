@@ -74,8 +74,8 @@ defaultproperties
 
      Begin Object Class=GUIListBox Name=IAMutatorAvailList
          SelectedStyleName="DHListSelectionStyle"
-         bVisibleWhenEmpty=True
-         bSorted=True
+         bVisibleWhenEmpty=true
+         bSorted=true
          HandleContextMenuOpen=UT2K4Tab_MutatorBase.ContextMenuOpen
          OnCreateComponent=IAMutatorAvailList.InternalOnCreateComponent
          StyleName="DHSmallText"
@@ -94,8 +94,8 @@ defaultproperties
 
      Begin Object Class=GUIListBox Name=IAMutatorSelectedList
          SelectedStyleName="DHListSelectionStyle"
-         bVisibleWhenEmpty=True
-         bSorted=True
+         bVisibleWhenEmpty=true
+         bSorted=true
          OnCreateComponent=IAMutatorSelectedList.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinTop=0.144937
@@ -110,18 +110,18 @@ defaultproperties
      lb_Active=GUIListBox'DH_Interface.DHTab_MutatorSP.IAMutatorSelectedList'
 
      Begin Object Class=DHGUIScrollTextBox Name=IAMutatorScroll
-         bNoTeletype=True
+         bNoTeletype=true
          CharDelay=0.002500
          EOLDelay=0.500000
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=IAMutatorScroll.InternalOnCreateComponent
          StyleName="DHSmallText"
          WinTop=0.648595
          WinLeft=0.028333
          WinWidth=0.938254
          WinHeight=0.244296
-         bTabStop=False
-         bNeverFocus=True
+         bTabStop=false
+         bNeverFocus=true
      End Object
      lb_MutDesc=DHGUIScrollTextBox'DH_Interface.DHTab_MutatorSP.IAMutatorScroll'
 
@@ -133,7 +133,7 @@ defaultproperties
          WinWidth=0.239063
          WinHeight=0.054648
          TabOrder=6
-         bVisible=False
+         bVisible=false
          OnClick=UT2K4Tab_MutatorBase.MutConfigClick
          OnKeyEvent=IAMutatorConfig.InternalOnKeyEvent
      End Object

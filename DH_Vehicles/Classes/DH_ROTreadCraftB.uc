@@ -17,7 +17,7 @@ simulated function DrawHUD(Canvas Canvas)
     local Actor ViewActor;
     local float	SavedOpacity;   //to keep players from seeing outside the periscope overlay
 
-	if (IsLocallyControlled() && ActiveWeapon < Weapons.length && Weapons[ActiveWeapon] != None && Weapons[ActiveWeapon].bShowAimCrosshair && Weapons[ActiveWeapon].bCorrectAim)
+	if (IsLocallyControlled() && ActiveWeapon < Weapons.length && Weapons[ActiveWeapon] != none && Weapons[ActiveWeapon].bShowAimCrosshair && Weapons[ActiveWeapon].bCorrectAim)
 	{
 		Canvas.DrawColor = CrosshairColor;
 		Canvas.DrawColor.A = 255;
@@ -29,7 +29,7 @@ simulated function DrawHUD(Canvas Canvas)
 
     PC = PlayerController(Controller);
 
-    if( PC == none )
+    if (PC == none)
 	{
 		Super.RenderOverlays(Canvas);
 		//log("PanzerTurret PlayerController was none, returning");
@@ -41,7 +41,7 @@ simulated function DrawHUD(Canvas Canvas)
        SavedOpacity = Canvas.ColorModulate.W;
        Canvas.ColorModulate.W = 1.0;
 
-       if( DriverPositions[DriverPositionIndex].bDrawOverlays && HUDOverlay == none && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+       if (DriverPositions[DriverPositionIndex].bDrawOverlays && HUDOverlay == none && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
        {
            DrawPeriscopeOverlay(Canvas);
        }
@@ -51,7 +51,7 @@ simulated function DrawHUD(Canvas Canvas)
 	    DrawPassengers(Canvas);
     }
 
-    if (PC != None && !PC.bBehindView && HUDOverlay != none && DriverPositions[DriverPositionIndex].bDrawOverlays)
+    if (PC != none && !PC.bBehindView && HUDOverlay != none && DriverPositions[DriverPositionIndex].bDrawOverlays)
 	{
 		if (!Level.IsSoftwareRendering())
         {
@@ -63,7 +63,7 @@ simulated function DrawHUD(Canvas Canvas)
     	}
 	}
 	else
-         ActivateOverlay(False);
+         ActivateOverlay(false);
 }
 
 simulated function DrawPeriscopeOverlay(Canvas Canvas)
@@ -72,7 +72,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
 	Canvas.SetPos(0,0);
-	Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio );
+	Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties

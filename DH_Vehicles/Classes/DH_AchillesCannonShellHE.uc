@@ -51,7 +51,7 @@ defaultproperties
      OpticalRanges(18)=(Range=1800)
      OpticalRanges(19)=(Range=1900)
      OpticalRanges(20)=(Range=2000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=4.500000
      DHPenetrationTable(1)=4.200000
      DHPenetrationTable(2)=3.800000
@@ -64,7 +64,7 @@ defaultproperties
      DHPenetrationTable(9)=1.100000
      DHPenetrationTable(10)=1.000000
      ShellDiameter=7.620000
-     bHasTracer=True
+     bHasTracer=true
      PenetrationMag=880.000000
      ShellImpactDamage=Class'DH_Vehicles.DH_AchillesCannonShellDamageAP'
      ImpactDamage=450

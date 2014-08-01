@@ -25,12 +25,12 @@ simulated function Landed(vector HitNormal)
 {
 	if (Bounces <= 0)
 	{
-		SetPhysics(PHYS_None);
+		SetPhysics(PHYS_none);
 		SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
 	}
 	else
 	{
-		HitWall(HitNormal, None);
+		HitWall(HitNormal, none);
 	}
 }
 
@@ -54,7 +54,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
 	BlowUp(HitLocation);
 
-	if( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 	{
 		AmbientSound = SmokeSound;
 	}
@@ -74,7 +74,7 @@ simulated function Destroyed()
 {
     super(ROThrowableExplosiveProjectile).Destroyed();
 
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
     	SmokeEmitter.Kill();
     }
@@ -82,7 +82,7 @@ simulated function Destroyed()
 
 function Reset()
 {
-    if( SmokeEmitter != none )
+    if (SmokeEmitter != none)
     {
     	SmokeEmitter.Destroy();
     }
@@ -120,7 +120,7 @@ defaultproperties
      DamageRadius=0.000000
      MyDamageType=Class'DH_Equipment.DH_NebelGranate39DamType'
      StaticMesh=StaticMesh'WeaponPickupSM.Projectile.gersmokenade_throw'
-     bAlwaysRelevant=True
+     bAlwaysRelevant=true
      LifeSpan=30.000000
      SoundVolume=255
      SoundRadius=200.000000

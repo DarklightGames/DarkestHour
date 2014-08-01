@@ -2,9 +2,9 @@ class DH_CanadianReconOfficer1stHussars extends DH_1stHussars;
 
 defaultproperties
 {
-     bCanBeReconCrew=True
-     bCanBeReconOfficer=True
-     bIsArtilleryOfficer=True
+     bCanBeReconCrew=true
+     bCanBeReconOfficer=true
+     bIsArtilleryOfficer=true
      MyName="Reconnaissance Commander"
      AltName="Reconnaissance Commander"
      Article="a "
@@ -21,6 +21,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
      Headgear(0)=Class'DH_BritishPlayers.DH_CanadianTankerHat'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
 }

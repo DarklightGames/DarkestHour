@@ -12,14 +12,14 @@ function bool InternalOnCanClose(optional bool bCanceled)
 defaultproperties
 {
      Begin Object Class=DHGUITabControl Name=SettingTabs
-         bFillSpace=False
-         bDockPanels=True
+         bFillSpace=false
+         bDockPanels=true
          TabHeight=0.060000
          BackgroundStyleName="DHHeader"
          WinHeight=0.044000
          RenderWeight=0.490000
          TabOrder=3
-         bAcceptsInput=True
+         bAcceptsInput=true
          OnActivate=SettingTabs.InternalOnActivate
          OnChange=DHSettingsPage_new.InternalOnChange
      End Object

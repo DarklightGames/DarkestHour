@@ -15,9 +15,9 @@ simulated function BeginPlay()
 {
 	local AntiPortalActor AntiPortalA;
 
-LoopAnim( AnimName, AnimRate );				//DH - loop the anim
+LoopAnim(AnimName, AnimRate);				//DH - loop the anim
 
-	if(AntiPortalTag != '')
+	if (AntiPortalTag != '')
 	{
 		foreach AllActors(class'AntiPortalActor',AntiPortalA,AntiPortalTag)
 		{
@@ -27,13 +27,13 @@ LoopAnim( AnimName, AnimRate );				//DH - loop the anim
 	}
 
 	// timer updates real position every second in network play
-	if ( Level.NetMode != NM_Standalone )
+	if (Level.NetMode != NM_Standalone)
 	{
-		if ( Level.NetMode == NM_Client && bClientAuthoritative )
+		if (Level.NetMode == NM_Client && bClientAuthoritative)
 			settimer(4.0, true);
 		else
 			settimer(1.0, true);
-		if ( Role < ROLE_Authority )
+		if (Role < ROLE_Authority)
 			return;
 	}
 
@@ -42,21 +42,21 @@ LoopAnim( AnimName, AnimRate );				//DH - loop the anim
 
 	// Init key info.
 	Super.BeginPlay();
-	KeyNum         = Clamp( KeyNum, 0, ArrayCount(KeyPos)-1 );
+	KeyNum         = Clamp(KeyNum, 0, ArrayCount(KeyPos)-1);
 	PhysAlpha      = 0.0;
 	StartKeyNum = KeyNum;
 
 	// Set initial location.
-	Move( BasePos + KeyPos[KeyNum] - Location );
+	Move(BasePos + KeyPos[KeyNum] - Location);
 
 	// Initial rotation.
-	SetRotation( BaseRot + KeyRot[KeyNum] );
+	SetRotation(BaseRot + KeyRot[KeyNum]);
 
 	// find movers in same group
-	if ( ReturnGroup == '' )
+	if (ReturnGroup == '')
 		ReturnGroup = tag;
-	Leader = None;
-	Follower = None;
+	Leader = none;
+	Follower = none;
 }
 
 /*
@@ -65,19 +65,19 @@ function PostBeginPlay()
 	local int n;
 
      	AnimName='c47_in_flight';
-	LoopAnim( AnimName, 1 );				//DH - loop the anim
+	LoopAnim(AnimName, 1);				//DH - loop the anim
 
-	for ( n = 0; n < KeyMoveTime.length; n++ )
+	for (n = 0; n < KeyMoveTime.length; n++)
 		KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
 
 	Super.PostBeginPlay();
 
 	MoveTime = KeyMoveSpeed[ KeyNum ];
 
-	if ( bActAsClientMover && Level.NetMode == NM_DedicatedServer )
+	if (bActAsClientMover && Level.NetMode == NM_DedicatedServer)
 	{
-		SetTimer( 0, false );
-		SetPhysics( PHYS_None );
+		SetTimer(0, false);
+		SetPhysics(PHYS_none);
 		GotoState('ServerIdle');
 	}
 }
@@ -92,5 +92,5 @@ defaultproperties
      Mesh=SkeletalMesh'DH_C47_anm.FlyingC47'
      CollisionRadius=1800.000000
      CollisionHeight=400.000000
-     bBlockKarma=True
+     bBlockKarma=true
 }

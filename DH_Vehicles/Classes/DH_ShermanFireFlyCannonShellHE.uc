@@ -41,7 +41,7 @@ defaultproperties
      OpticalRanges(13)=(Range=3200)
      OpticalRanges(14)=(Range=3600)
      OpticalRanges(15)=(Range=4000)
-     bMechanicalAiming=True
+     bMechanicalAiming=true
      DHPenetrationTable(0)=4.500000
      DHPenetrationTable(1)=4.200000
      DHPenetrationTable(2)=3.800000
@@ -54,7 +54,7 @@ defaultproperties
      DHPenetrationTable(9)=1.100000
      DHPenetrationTable(10)=1.000000
      ShellDiameter=7.620000
-     bHasTracer=True
+     bHasTracer=true
      PenetrationMag=880.000000
      ShellImpactDamage=Class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAP'
      ImpactDamage=450

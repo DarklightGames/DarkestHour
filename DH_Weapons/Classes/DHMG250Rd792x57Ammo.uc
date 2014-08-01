@@ -19,3 +19,4 @@ defaultproperties
      IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
      ItemName="MG 250 Round 7.92x57 Belt"
 }
+

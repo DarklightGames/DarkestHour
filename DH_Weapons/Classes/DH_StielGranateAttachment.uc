@@ -14,7 +14,7 @@ simulated event ThirdPersonEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-		if ( ROPawn(Instigator) == None )
+		if (ROPawn(Instigator) == none)
 			return;
         if (FlashCount == 0)
         {
@@ -256,8 +256,8 @@ defaultproperties
      WA_Fire="idle_potato"
      menuImage=Texture'InterfaceArt_tex.Menu_weapons.Sticknade'
      MenuDescription="Stielhandgranate 39/43: basic German stick-grenade. Works on blast effect rather than fragmentation. The handle allows it to be thrown a good distance. Effective casuality radius of 4-5 metres in the open."
-     bRapidFire=False
-     LightType=LT_None
-     LightEffect=LE_None
+     bRapidFire=false
+     LightType=LT_none
+     LightEffect=LE_none
      Mesh=SkeletalMesh'Weapons3rd_anm.Stielhandgranate'
 }

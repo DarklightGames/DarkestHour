@@ -8,7 +8,7 @@ function AddSystemMenu()
 {
 	local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent( "XInterface.GUIButton" ));
+	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
 	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
 	b_ExitButton.OnClick = XButtonClicked;
 	b_ExitButton.bNeverFocus=true;
@@ -19,22 +19,22 @@ function AddSystemMenu()
 	b_ExitButton.bStandardized=true;
 	b_ExitButton.StandardHeight=0.03;
 	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = False;
+	b_ExitButton.bRepeatClick = false;
 }
 
 defaultproperties
 {
      MOType="DH_Interface.DHmoEditBox"
      Begin Object Class=DHGUIMultiOptionListBox Name=ValueListBox
-         bVisibleWhenEmpty=True
+         bVisibleWhenEmpty=true
          OnCreateComponent=DHMOTDConfigPage.InternalOnCreateComponent
          WinTop=0.140209
          WinLeft=0.021250
          WinWidth=0.865001
          WinHeight=0.714452
          TabOrder=0
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnChange=DHMOTDConfigPage.InternalOnChange
      End Object
      lb_Values=DHGUIMultiOptionListBox'DH_Interface.DHMOTDConfigPage.ValueListBox'
@@ -63,13 +63,13 @@ defaultproperties
 
      Begin Object Class=GUIButton Name=LockedCancelButton
          Caption="Cancel"
-         bAutoShrink=False
+         bAutoShrink=false
          StyleName="DHMenuTextButtonStyle"
          WinTop=0.872397
          WinLeft=0.512695
          WinWidth=0.159649
          TabOrder=99
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHMOTDConfigPage.InternalOnClick
          OnKeyEvent=LockedCancelButton.InternalOnKeyEvent
      End Object
@@ -77,28 +77,28 @@ defaultproperties
 
      Begin Object Class=GUIButton Name=LockedOKButton
          Caption="OK"
-         bAutoShrink=False
+         bAutoShrink=false
          StyleName="DHMenuTextButtonStyle"
          WinTop=0.872397
          WinLeft=0.742188
          WinWidth=0.159649
          TabOrder=100
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHMOTDConfigPage.InternalOnClick
          OnKeyEvent=LockedOKButton.InternalOnKeyEvent
      End Object
      b_OK=GUIButton'DH_Interface.DHMOTDConfigPage.LockedOKButton'
 
      Begin Object Class=DHGUIHeader Name=TitleBar
-         bUseTextHeight=True
+         bUseTextHeight=true
          StyleName="DHNoBox"
          WinTop=0.017000
          WinHeight=0.050000
          RenderWeight=0.100000
-         bBoundToParent=True
-         bScaleToParent=True
-         bAcceptsInput=True
-         bNeverFocus=False
+         bBoundToParent=true
+         bScaleToParent=true
+         bAcceptsInput=true
+         bNeverFocus=false
          ScalingType=SCALE_X
          OnMousePressed=FloatingWindow.FloatingMousePressed
          OnMouseRelease=FloatingWindow.FloatingMouseRelease
@@ -107,7 +107,7 @@ defaultproperties
 
      Begin Object Class=FloatingImage Name=FloatingFrameBackground
          Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
-         DropShadow=None
+         DropShadow=none
          ImageStyle=ISTY_Stretched
          ImageRenderStyle=MSTY_Normal
          WinTop=0.020000

@@ -41,7 +41,7 @@ Exploitation would be completetly beneign and pointless.
 */
 simulated function ClientReplicateElevation(float Elevation)
 {
-	if(bDebug && Role == ROLE_Authority)
+	if (bDebug && Role == ROLE_Authority)
 		Level.Game.Broadcast(self, Role @ "ClientReplicateElevation" @ Elevation);
 
 	self.Elevation = Elevation;
@@ -51,7 +51,7 @@ simulated function PostNetReceive()
 {
 	super.PostNetReceive();
 
-	if(Role == ROLE_Authority && Elevation != NewElevation)
+	if (Role == ROLE_Authority && Elevation != NewElevation)
 	{
 		Level.Game.Broadcast(self, "PostNetReceive" @ Elevation @ NewElevation);
 
@@ -93,7 +93,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 	DebugForward = vector(R);
 	DebugRight = vect(0, 0, 1) cross DebugForward;
 
-	if(!bDebugNoSpread)
+	if (!bDebugNoSpread)
 	{
 		SpreadYaw = Abs(((Elevation - ElevationMinimum) / (ElevationMaximum - ElevationMinimum)) - 1);
 		SpreadYaw = SpreadYawMin + ((SpreadYawMax - SpreadYawMin) * SpreadYaw);
@@ -101,7 +101,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 	}
 
 	SpawnLocation = MuzzleBoneCoords.Origin;
-	SpawnRotation = rotator(QuatRotateVector(QuatFromAxisAndAngle(Y, -Elevation * DEG2RAD), X));
+	SpawnRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, -Elevation * DEG2RAD), X));
 	SpawnRotation.Yaw += SpreadYaw;
 
 	/* After careful consideration, it was determined that universal pitch adjustments did
@@ -112,16 +112,16 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
 	P = Spawn(ProjClass, Owner, , SpawnLocation, SpawnRotation);
 
-	if(!bDebugNoSpread)
+	if (!bDebugNoSpread)
 		P.Velocity = vector(P.Rotation) * ((ProjClass.default.MaxSpeed) + ((FRand() - 0.5) * 2.0 * (ProjClass.default.MaxSpeed * 0.05)));
 	else
 		P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
 
-	if( DH_MortarProjectile(P) != none && Pawn(Owner) != none )
+	if (DH_MortarProjectile(P) != none && Pawn(Owner) != none)
 	{
 		DH_MortarProjectile(P).DamageInstigator = PlayerController(Pawn(Owner).Controller);
 
-		if(bDebug)
+		if (bDebug)
 		{
 			DH_MortarProjectile(P).DebugForward = DebugForward;
 			DH_MortarProjectile(P).DebugRight = DebugRight;
@@ -135,22 +135,22 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
 simulated function Elevate()
 {
-	if(Elevation < ElevationMaximum)
+	if (Elevation < ElevationMaximum)
 	{
 		Elevation += ElevationStride;
 
-		if(Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+		if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
 			DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 	}
 }
 
 simulated function Depress()
 {
-	if(Elevation > ElevationMinimum)
+	if (Elevation > ElevationMinimum)
 	{
 		Elevation -= ElevationStride;
 
-		if(Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+		if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
 			DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 	}
 }
@@ -163,16 +163,16 @@ state ProjectileFireMode
 {
 	function Fire(Controller C)
 	{
-		if(bDebugCalibrate)
+		if (bDebugCalibrate)
 		{
 			for(Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
-				SpawnProjectile(PendingProjectileClass, False);
+				SpawnProjectile(PendingProjectileClass, false);
 		}
 		else
 		{
-			if(HasPendingAmmo())
+			if (HasPendingAmmo())
 			{
-				SpawnProjectile(PendingProjectileClass, False);
+				SpawnProjectile(PendingProjectileClass, false);
 				MainAmmoCharge[GetPendingRoundIndex()]--;
 
 				//Shake view here, (proper timing and all)
@@ -189,7 +189,7 @@ state ProjectileFireMode
 
 function ToggleRoundType()
 {
-	if( PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none )
+	if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
 		PendingProjectileClass = SecondaryProjectileClass;
 	else
 	   	PendingProjectileClass = PrimaryProjectileClass;
@@ -219,5 +219,5 @@ defaultproperties
      FireEmitterClass=Class'DH_Effects.DH_MortarFireEffect'
      PitchUpLimit=0
      PitchDownLimit=0
-     bOwnerNoSee=True
+     bOwnerNoSee=true
 }

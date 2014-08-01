@@ -16,31 +16,31 @@ simulated function int LimitYaw(int yaw)
 
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
-    if ( !bLimitYaw )
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
     NewYaw = yaw;
 
-    if( PwningPawn != none )
+    if (PwningPawn != none)
     {
-	   	if( yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
+	   	if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
 	   	}
-	   	else if( yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit )
+	   	else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
 	  	}
   	}
   	else
   	{
-	   	if( yaw > MaxPositiveYaw )
+	   	if (yaw > MaxPositiveYaw)
 	   	{
 	   		NewYaw = MaxPositiveYaw;
 	   	}
-	   	else if( yaw < MaxNegativeYaw )
+	   	else if (yaw < MaxNegativeYaw)
 	   	{
 	   		NewYaw = MaxNegativeYaw;
 	  	}
@@ -55,7 +55,7 @@ defaultproperties
      YawEndConstraint=25000.000000
      MaxPositiveYaw=23666
      MaxNegativeYaw=-23666
-     bLimitYaw=True
+     bLimitYaw=true
      InitialPrimaryAmmo=35
      InitialSecondaryAmmo=50
 }

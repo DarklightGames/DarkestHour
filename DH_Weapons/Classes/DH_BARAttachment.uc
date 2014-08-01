@@ -3,45 +3,45 @@
 //=============================================================================
 class DH_BARAttachment extends DHWeaponAttachment;
 
-var()	name		WA_SightUp_Idle;
-var()	name		WA_SightUp_Fire;
-var()	name		WA_SightUp_Reload;
-var()	name		WA_SightUp_ReloadEmpty;
-
-var()	name		WA_SightDown_Idle;
-var()	name		WA_SightDown_Fire;
-var()	name		WA_SightDown_Reload;
-var()	name		WA_SightDown_ReloadEmpty;
-
-
+var()   name        WA_SightUp_Idle;
+var()   name        WA_SightUp_Fire;
+var()   name        WA_SightUp_Reload;
+var()   name        WA_SightUp_ReloadEmpty;
+var()   name        WA_SightDown_Idle;
+var()   name        WA_SightDown_Fire;
+var()   name        WA_SightDown_Reload;
+var()   name        WA_SightDown_ReloadEmpty;
 
 // Overwritten to allow for BAR deployed anims - not the best way of doing this but saves having to overwrite functions in ROPawn
 simulated function PlayIdle()
 {
-	if (instigator.bBipodDeployed)
-	{
-		LoopAnim(WA_SightUp_Idle);
+    if (instigator.bBipodDeployed)
+    {
+        LoopAnim(WA_SightUp_Idle);
 
-     		WA_Fire=WA_SightUp_Fire;
-     		WA_Reload=WA_SightUp_Reload;
-     		WA_ReloadEmpty=WA_SightUp_ReloadEmpty;
-     		WA_ProneReload=WA_SightUp_Reload;
-     		WA_ProneReloadEmpty=WA_SightUp_ReloadEmpty;
+        WA_Fire = WA_SightUp_Fire;
+        WA_Reload = WA_SightUp_Reload;
+        WA_ReloadEmpty = WA_SightUp_ReloadEmpty;
+        WA_ProneReload = WA_SightUp_Reload;
+        WA_ProneReloadEmpty = WA_SightUp_ReloadEmpty;
+    }
+    else
+    {
+        if (bOutOfAmmo && HasAnim(WA_IdleEmpty))
+        {
+            LoopAnim(WA_IdleEmpty);
+        }
+        else
+        {
+            LoopAnim(WA_Idle);
+        }
 
-	}
-	else
-	{
-		if (bOutOfAmmo && HasAnim(WA_IdleEmpty))
-			LoopAnim(WA_IdleEmpty);
-		else
-			LoopAnim(WA_Idle);
-
-     		WA_Fire=WA_SightDown_Fire;
-     		WA_Reload=WA_SightDown_Reload;
-     		WA_ReloadEmpty=WA_SightDown_ReloadEmpty;
-     		WA_ProneReload=WA_SightDown_Reload;
-     		WA_ProneReloadEmpty=WA_SightDown_ReloadEmpty;
-	}
+        WA_Fire = WA_SightDown_Fire;
+        WA_Reload = WA_SightDown_Reload;
+        WA_ReloadEmpty = WA_SightDown_ReloadEmpty;
+        WA_ProneReload = WA_SightDown_Reload;
+        WA_ProneReloadEmpty = WA_SightDown_ReloadEmpty;
+    }
 }
 
 defaultproperties
@@ -230,3 +230,4 @@ defaultproperties
      MenuDescription="The American M1918A2 Browning Automatic Rifle firing .30 calibre rounds from a 20-round detachable box magazine. Primarily used to enhance the fire power of a standard US rifle squad. The selective fire switch allows for a reduced rate of fire. Accurate out to about 550 metres."
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.BAR_3rd'
 }
+

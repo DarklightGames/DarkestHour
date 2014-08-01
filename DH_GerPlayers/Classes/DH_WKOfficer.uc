@@ -8,7 +8,7 @@ class DH_WKOfficer extends DH_Kriegsmarine;
 
 defaultproperties
 {
-     bIsArtilleryOfficer=True
+     bIsArtilleryOfficer=true
      MyName="Officer"
      AltName="Zugführer"
      Article="a "
@@ -28,6 +28,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_GerMortarBinocularsItem"
      Headgear(0)=Class'DH_GerPlayers.DH_KriegsmarineCap'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
 }

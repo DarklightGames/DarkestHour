@@ -13,7 +13,7 @@ var bool	bEnteredOnce;
 
 replication
 {
-	reliable if(bNetDirty && Role == ROLE_Authority)
+	reliable if (bNetDirty && Role == ROLE_Authority)
 		bCanBeResupplied;
 }
 
@@ -38,7 +38,7 @@ function PlayerResupply()
 	WeaponPawns[0].Gun.MainAmmoCharge[1] = Clamp(WeaponPawns[0].Gun.MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, WeaponPawns[0].GunClass.default.InitialSecondaryAmmo);
 
 	//If we're full of ammo now, then we can't be resupplied.
-	if(WeaponPawns[0].Gun.MainAmmoCharge[0] == WeaponPawns[0].GunClass.default.InitialPrimaryAmmo && WeaponPawns[0].Gun.MainAmmoCharge[1] == WeaponPawns[0].GunClass.default.InitialSecondaryAmmo)
+	if (WeaponPawns[0].Gun.MainAmmoCharge[0] == WeaponPawns[0].GunClass.default.InitialPrimaryAmmo && WeaponPawns[0].Gun.MainAmmoCharge[1] == WeaponPawns[0].GunClass.default.InitialSecondaryAmmo)
 		bCanBeResupplied = false;
 }
 
@@ -52,28 +52,28 @@ function bool TryToDrive(Pawn P)
 	PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
 	RI = DH_RoleInfo(PRI.RoleInfo);
 
-	if(DHP == none || PRI == none || RI == none || (!RI.bCanUseMortars && bRequiresMortarOperator))
+	if (DHP == none || PRI == none || RI == none || (!RI.bCanUseMortars && bRequiresMortarOperator))
 	{
 		P.ReceiveLocalizedMessage(class'DH_MortarMessage', 8);
 		return false;
 	}
 
-	if(DHP.bIsCrawling)
+	if (DHP.bIsCrawling)
 		return false;
 
-	if(WeaponPawns[0].Driver != none)
+	if (WeaponPawns[0].Driver != none)
 	{
 		P.ReceiveLocalizedMessage(class'DH_MortarMessage', 9);
 		return false;
 	}
 
-	if(VehicleTeam != P.GetTeamNum())
+	if (VehicleTeam != P.GetTeamNum())
 	{
 		P.ReceiveLocalizedMessage(class'DH_MortarMessage', 10);
 		return false;
 	}
 
-	if(bEnteredOnce && DHP.Weapon.IsA('DH_MortarWeapon'))
+	if (bEnteredOnce && DHP.Weapon.IsA('DH_MortarWeapon'))
 		return false;
 
 	WeaponPawns[0].KDriverEnter(DHP);
@@ -87,13 +87,13 @@ function bool TryToDrive(Pawn P)
 
 simulated function SetMortarOwner(DH_Pawn P)
 {
-	if(OwningPawn != none && OwningPawn != P)	//New owner.
+	if (OwningPawn != none && OwningPawn != P)	//New owner.
 		OwningPawn.OwnedMortar = none;	//Remove previous ownership.
 
 	OwningPawn = P;
 	P.OwnedMortar = self;
 
-	if(IsInState('PendingDestroy'))
+	if (IsInState('PendingDestroy'))
 		GotoState('');
 }
 
@@ -105,7 +105,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
-     bRequiresMortarOperator=True
+     bRequiresMortarOperator=true
      ExplosionSoundRadius=0.000000
      ExplosionDamage=0.000000
      ExplosionRadius=0.000000
@@ -113,8 +113,8 @@ defaultproperties
      TouchMessage="Operate "
      MaxDesireability=0.000000
      GroundSpeed=0.000000
-     bOwnerNoSee=False
+     bOwnerNoSee=false
      CollisionRadius=16.000000
      CollisionHeight=48.000000
-     bUseCylinderCollision=True
+     bUseCylinderCollision=true
 }

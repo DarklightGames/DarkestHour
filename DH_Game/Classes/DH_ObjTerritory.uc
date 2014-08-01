@@ -22,7 +22,7 @@ function PostBeginPlay()
 	//people needed to capture point index 15, then CurrentCapArea = 0XFF which
 	//is the flag for no capture area.  This truncation avoids this and throws
 	//a warning for the mapper.
-	if(PlayersNeededToCapture > 14)
+	if (PlayersNeededToCapture > 14)
 	{
 		warn(self @ " players needed to capture greater than 14, truncating.");
 		PlayersNeededToCapture = 14;
@@ -51,44 +51,44 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 	}
 
 	// Give players points for helping with the capture
-	for (C = Level.ControllerList; C != None; C = C.NextController)
+	for (C = Level.ControllerList; C != none; C = C.NextController)
 	{
 		P = DH_Pawn(C.Pawn);
 
-		if(P == none)
+		if (P == none)
 		{
 			P = ROVehicle(C.Pawn);
 
-			if(P == none)
+			if (P == none)
 			{
 				P = ROVehicleWeaponPawn(C.Pawn);
 
 				// This check might be a little redundant, since we do it in the next line - Ramm
-				if(P == none)
+				if (P == none)
 					continue;
-				else if(!bVehiclesCanCapture)
+				else if (!bVehiclesCanCapture)
 					continue;
 			}
-			else if(!bVehiclesCanCapture)
+			else if (!bVehiclesCanCapture)
 				continue;
 		}
 
 		PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
 		RI = DH_RoleInfo(PRI.RoleInfo);
 
-		if (!C.bIsPlayer || P == None || !WithinArea(P) || C.PlayerReplicationInfo.Team == None || C.PlayerReplicationInfo.Team.TeamIndex != Team)
+		if (!C.bIsPlayer || P == none || !WithinArea(P) || C.PlayerReplicationInfo.Team == none || C.PlayerReplicationInfo.Team.TeamIndex != Team)
 			continue;
 
-		if(!bTankersCanCapture && (RI.bCanBeTankCrew || RI.bCanBeTankCommander))
+		if (!bTankersCanCapture && (RI.bCanBeTankCrew || RI.bCanBeTankCommander))
 			continue;
 
 		Level.Game.ScoreObjective(C.PlayerReplicationInfo, 10);
 	}
 
-	BroadcastLocalizedMessage(class'DHObjectiveMsg', Team, None, None, self);
+	BroadcastLocalizedMessage(class'DHObjectiveMsg', Team, none, none, self);
     /*
 	// Notify our analytics server.
-	if(DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).Analytics != none)
+	if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).Analytics != none)
 		DarkestHourGame(Level.Game).Analytics.NotifyCapture(self, Team);
 	*/
 }
@@ -109,7 +109,7 @@ function Timer()
 	local ROPlayerReplicationInfo PRI;
 	local DH_RoleInfo RI;
 
-	if (!bActive || ROTeamGame(Level.Game) == None || !ROTeamGame(Level.Game).IsInState('RoundInPlay'))
+	if (!bActive || ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay'))
 		return;
 
 	oldCapProgress = CurrentCapProgress;
@@ -119,9 +119,9 @@ function Timer()
 
 	// Loop through the Controller list and determine how many players from each team are inside the attached volume, if any, or if there is no volume,
 	// within the Radius that was set.
-	for (C = Level.ControllerList; C != None; C = C.NextController)
+	for (C = Level.ControllerList; C != none; C = C.NextController)
 	{
-        if (C.bIsPlayer && C.PlayerReplicationInfo.Team != None && ((ROPlayer(C) != None && ROPlayer(C).GetRoleInfo() != None) || ROBot(C) != None))
+        if (C.bIsPlayer && C.PlayerReplicationInfo.Team != none && ((ROPlayer(C) != none && ROPlayer(C).GetRoleInfo() != none) || ROBot(C) != none))
 		{
             pawn = C.Pawn;
 			P = DH_Pawn(C.Pawn);
@@ -131,10 +131,10 @@ function Timer()
 		    PRI = ROPlayerReplicationInfo(C.PlayerReplicationInfo);
 		    RI = DH_RoleInfo(PRI.RoleInfo);
 
-			if (pawn != None && pawn.Health > 0 && WithinArea(pawn))
+			if (pawn != none && pawn.Health > 0 && WithinArea(pawn))
 			{
-				if( (!bTankersCanCapture && RI != none && (RI.bCanBeTankCrew || RI.bCanBeTankCommander)) ||
-				(!bVehiclesCanCapture && (ROVeh != none || VehWepPawn != none)) )
+				if ((!bTankersCanCapture && RI != none && (RI.bCanBeTankCrew || RI.bCanBeTankCommander)) ||
+				(!bVehiclesCanCapture && (ROVeh != none || VehWepPawn != none)))
 				{
 					pawn = none;
 					continue;
@@ -221,10 +221,10 @@ function Timer()
 	if (CurrentCapProgress == 0.0)
 		CurrentCapTeam = NEUTRAL_TEAM_INDEX;
 	else if (CurrentCapProgress == 1.0)
-    	ObjectiveCompleted(None, CurrentCapTeam);
+    	ObjectiveCompleted(none, CurrentCapTeam);
 
 	// Go through and update capture bars
-	for (C = Level.ControllerList; C != None; C = C.NextController)
+	for (C = Level.ControllerList; C != none; C = C.NextController)
 	{
 		P = DH_Pawn(C.Pawn);
 		ROVeh = ROVehicle(C.Pawn);
@@ -235,7 +235,7 @@ function Timer()
 			continue;
 		}
 
-		if ( P != none )
+		if (P != none)
         {
     		if (!bActive || !WithinArea(P))
     		{
@@ -265,7 +265,7 @@ function Timer()
 		}
 
 		// Draw the capture bar for rovehicles and rovehiclepawns
-		if (  P == none && ROVeh != none )
+		if (P == none && ROVeh != none)
 		{
 			if (!bActive || !WithinArea(ROVeh))
 			{
@@ -294,7 +294,7 @@ function Timer()
 			}
 		}
 
-		if (  P == none && ROVeh == none && VehWepPawn != none)
+		if (P == none && ROVeh == none && VehWepPawn != none)
 		{
 			if (!bActive || !WithinArea(VehWepPawn))
 			{
@@ -325,7 +325,7 @@ function Timer()
 	}
 
 	// Check if we should send map info change notification to players
-	if ( !(oldCapProgress ~= CurrentCapProgress) )
+	if (!(oldCapProgress ~= CurrentCapProgress))
 	{
         // Check if we changed from 1.0 or from 0.0 (no need to send events
         // otherwise)
@@ -342,7 +342,7 @@ function Timer()
 
 defaultproperties
 {
-     bVehiclesCanCapture=True
-     bTankersCanCapture=True
+     bVehiclesCanCapture=true
+     bTankersCanCapture=true
      PlayersNeededToCapture=1
 }

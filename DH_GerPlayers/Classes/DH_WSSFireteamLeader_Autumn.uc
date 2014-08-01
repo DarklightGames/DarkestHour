@@ -37,7 +37,7 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetCover'
      Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetNoCover'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
      Limit33to44=2
      LimitOver44=2

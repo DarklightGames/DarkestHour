@@ -20,7 +20,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Squad Leader"
      AltName="Unteroffizier"
      Article="a "
@@ -33,7 +33,7 @@ defaultproperties
      Models(3)="WHS_4"
      Models(4)="WHS_5"
      Models(5)="WHS_6"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
@@ -44,6 +44,6 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetSnow'
      Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetCover'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

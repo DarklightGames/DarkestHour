@@ -55,7 +55,7 @@ function SaveSettings()
 	PC = PlayerOwner();
     H = DHHud(PlayerOwner().myHud);
 
-	if ( bUseNativeRoleNamesD != bUseNativeRoleNames )
+	if (bUseNativeRoleNamesD != bUseNativeRoleNames)
 	{
         if (DHPlayer(PC) != none)
         {
@@ -69,7 +69,7 @@ function SaveSettings()
         }
 	}
 
-	if ( bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn )
+	if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
 	{
         if (DHPlayer(PC) != none)
         {
@@ -92,19 +92,19 @@ function SaveSettings()
 		return;
 	}
 
-	if ( H.bShowCompass != bShowCompass )
+	if (H.bShowCompass != bShowCompass)
 	{
 		H.bShowCompass = bShowCompass;
-		bSave = True;
+		bSave = true;
 	}
 
-	if ( H.bShowMapUpdatedText != bShowMapUpdatedText )
+	if (H.bShowMapUpdatedText != bShowMapUpdatedText)
 	{
 		H.bShowMapUpdatedText = bShowMapUpdatedText;
-		bSave = True;
+		bSave = true;
 	}
 
-	if ( HintLevelD != HintLevel )
+	if (HintLevelD != HintLevel)
 	{
 	    if (HintLevel == 0)
 	    {
@@ -139,53 +139,53 @@ function SaveSettings()
 	    }
 	}
 
-	if ( H.bSimpleColours != bSimpleColours )
+	if (H.bSimpleColours != bSimpleColours)
 	{
 		H.bSimpleColours = bSimpleColours;
 		H.bSetColour = false;
 		bSave = true;
 	}
 
-	if(H.bShowDeathMessages != bShowDeathMessages )
+	if (H.bShowDeathMessages != bShowDeathMessages)
 	{
 		H.bShowDeathMessages = bShowDeathMessages;
 		bSave = true;
 	}
 
-	if(H.bShowVoiceIcon != bShowVoiceIcon)
+	if (H.bShowVoiceIcon != bShowVoiceIcon)
 	{
 		H.bShowVoiceIcon = bShowVoiceIcon;
 		bSave = true;
 	}
 
-	if ( bSave )
+	if (bSave)
     	H.SaveConfig();
 
 	//Red Orchestra SaveSettings End
 
-    if( H != None )
+    if (H != none)
 	{
 		/*
-		if ( H.bSimpleColours != bSimpleColours )
+		if (H.bSimpleColours != bSimpleColours)
 		{
 			H.bSimpleColours = bSimpleColours;
 			H.bSetColour = false;
 			bSave = true;
 		}
 
-		if(H.bShowDeathMessages != bShowDeathMessages )
+		if (H.bShowDeathMessages != bShowDeathMessages)
 		{
 			H.bShowDeathMessages = bShowDeathMessages;
 			bSave = true;
 		}
 
-		if(H.bShowVoiceIcon != bShowVoiceIcon)
+		if (H.bShowVoiceIcon != bShowVoiceIcon)
 		{
 			H.bShowVoiceIcon = bShowVoiceIcon;
 			bSave = true;
 		}
 
-		if(bSave)
+		if (bSave)
 			H.SaveConfig();
 		*/
 	}
@@ -197,15 +197,15 @@ function SaveSettings()
 			class'DHHud'.static.StaticSaveConfig();
 	}
 
-/*    if ( H.bSimpleColours != bSimpleColours )
+/*    if (H.bSimpleColours != bSimpleColours)
 	{
 		H.bSimpleColours = bSimpleColours;
 		H.SetAlliedColour();
-		//H.bSetColour = False;
-		bSave = True;
+		//H.bSetColour = false;
+		bSave = true;
 	}
 
-	if ( bSave )
+	if (bSave)
     	H.SaveConfig();
 */
 }
@@ -349,8 +349,8 @@ defaultproperties
          WinLeft=0.547773
          WinWidth=0.401953
          TabOrder=0
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
          OnChange=DHTab_Hud.InternalOnChange
          OnLoadINI=DHTab_Hud.InternalOnLoadINI
      End Object

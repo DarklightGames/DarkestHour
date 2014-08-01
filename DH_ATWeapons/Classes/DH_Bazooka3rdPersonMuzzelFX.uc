@@ -13,14 +13,14 @@ class DH_Bazooka3rdPersonMuzzelFX extends Emitter;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         UseColorScale=True
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=50.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -41,14 +41,14 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonMuzzelFX.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         UseColorScale=True
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=174,G=228,R=255,A=255))
          ColorScale(1)=(RelativeTime=0.200000,Color=(B=255,G=255,R=255,A=255))
          ColorScale(2)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -70,14 +70,14 @@ defaultproperties
      End Object
      Emitters(1)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonMuzzelFX.SpriteEmitter1'
 
-     AutoDestroy=True
-     bLightChanged=True
-     bNoDelete=False
-     bNetTemporary=True
+     AutoDestroy=true
+     bLightChanged=true
+     bNoDelete=false
+     bNetTemporary=true
      RemoteRole=ROLE_SimulatedProxy
      LifeSpan=8.000000
      Style=STY_Masked
-     bHardAttach=True
-     bDirectional=True
-     bSelected=True
+     bHardAttach=true
+     bDirectional=true
+     bSelected=true
 }

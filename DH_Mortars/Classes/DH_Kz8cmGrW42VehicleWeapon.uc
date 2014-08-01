@@ -15,10 +15,11 @@ defaultproperties
      ProjectileClass=Class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
      MaxPositiveYaw=1820
      MaxNegativeYaw=-1820
-     bLimitYaw=True
+     bLimitYaw=true
      InitialPrimaryAmmo=16
      InitialSecondaryAmmo=4
      PrimaryProjectileClass=Class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
      SecondaryProjectileClass=Class'DH_Mortars.DH_Kz8cmGrW42ProjectileSmoke'
      Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_turret'
 }
+

@@ -15,7 +15,7 @@ var bool bIsMantling;
 
 replication
 {
-    reliable if( bNetDirty && Role == ROLE_Authority )
+    reliable if (bNetDirty && Role == ROLE_Authority)
         bIsMantling;
 }
 
@@ -24,7 +24,7 @@ simulated state StartMantle extends Busy
     simulated function Timer()
     {
 	    // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
-    	if(!bIsMantling)
+    	if (!bIsMantling)
             GoToState('RaisingWeapon');
         else
             SetTimer(0.2, false);
@@ -40,13 +40,13 @@ simulated state StartMantle extends Busy
 	        {
 	            for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
 	            {
-	                if ( FireMode[Mode].bIsFiring )
+	                if (FireMode[Mode].bIsFiring)
 	                    ClientStopFire(Mode);
 	            }
 
-				if ( ClientState == WS_BringUp )
+				if (ClientState == WS_BringUp)
 					TweenAnim(SelectAnim,PutDownTime);
-				else if ( HasAnim(PutDownAnim) )
+				else if (HasAnim(PutDownAnim))
 					PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
 	        }
 

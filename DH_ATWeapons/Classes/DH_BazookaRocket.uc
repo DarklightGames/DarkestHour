@@ -18,7 +18,7 @@ defaultproperties
      DHPenetrationTable(4)=9.800000
      DHPenetrationTable(5)=9.800000
      DHPenetrationTable(6)=9.800000
-     bIsHEATRound=True
+     bIsHEATRound=true
      ShellImpactDamage=Class'DH_ATWeapons.DH_BazookaImpactDamType'
      ImpactDamage=575
      Speed=6337.000000

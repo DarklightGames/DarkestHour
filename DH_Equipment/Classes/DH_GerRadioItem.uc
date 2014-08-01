@@ -36,7 +36,7 @@ function AttachToPawn(Pawn P)
 
     for(i = 0; i < ArrayCount(GRI.CarriedAxisRadios); i++)
    	{
-        if(GRI.CarriedAxisRadios[i] == none)
+        if (GRI.CarriedAxisRadios[i] == none)
         {
             GRI.CarriedAxisRadios[i] = RadioTrigger;
             DH_Pawn(P).GRIRadioPos = i;

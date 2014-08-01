@@ -14,11 +14,11 @@ class DH_MG34Weapon extends DH_MGbase;
 // Overriden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
-	if ( FireMode[Mode].bIsFiring )
+	if (FireMode[Mode].bIsFiring)
 	    FireMode[Mode].bInstantStop = true;
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-     	if( !IsAnimating(0) )
+     	if (!IsAnimating(0))
      	{
      		PlayIdle();
      	}
@@ -32,7 +32,7 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-     bTrackBarrelHeat=True
+     bTrackBarrelHeat=true
      ROBarrelClass=Class'DH_Weapons.DH_MG34Barrel'
      BarrelSteamBone="Barrel"
      BarrelChangeAnim="Bipod_Barrel_Change"
@@ -47,7 +47,7 @@ defaultproperties
      IronPutDown="Hip_2_Rest"
      MaxNumPrimaryMags=7
      InitialNumPrimaryMags=7
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      PlayerIronsightFOV=80.000000
      SprintStartAnim="Rest_Sprint_Start"
      SprintLoopAnim="Rest_Sprint_Middle"
@@ -70,7 +70,7 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
      PickupClass=Class'DH_Weapons.DH_MG34Pickup'
      BobDamping=1.600000

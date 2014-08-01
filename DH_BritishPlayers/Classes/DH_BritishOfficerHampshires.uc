@@ -5,7 +5,7 @@ class DH_BritishOfficerHampshires extends DH_Hampshires;
 
 defaultproperties
 {
-     bIsArtilleryOfficer=True
+     bIsArtilleryOfficer=true
      MyName="Artillery Officer"
      AltName="Artillery Officer"
      Article="an "
@@ -21,6 +21,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishTommyHelmet'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
 }

@@ -17,7 +17,7 @@ function PostBeginPlay()
 
 	super.PostBeginPlay();
 
-	if(ActorToReset == '')
+	if (ActorToReset == '')
 		return; //Actor tag wasn't set no reason to continue
 
 	foreach AllActors(class'Actor', A, ActorToReset)
@@ -27,7 +27,7 @@ function PostBeginPlay()
 	}
 }
 
-function Trigger( Actor Other, Pawn EventInstigator )
+function Trigger(Actor Other, Pawn EventInstigator)
 {
 	ActorReference.reset();
 }

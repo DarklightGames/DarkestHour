@@ -2,9 +2,9 @@ class DH_BritishReconnaissanceOfficer7th extends DH_British_7thArmouredDivision;
 
 defaultproperties
 {
-     bCanBeReconCrew=True
-     bCanBeReconOfficer=True
-     bIsArtilleryOfficer=True
+     bCanBeReconCrew=true
+     bCanBeReconOfficer=true
+     bIsArtilleryOfficer=true
      MyName="Reconnaissance Commander"
      AltName="Reconnaissance Commander"
      Article="a "
@@ -21,6 +21,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishTankerHat'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

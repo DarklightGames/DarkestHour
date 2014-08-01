@@ -8,10 +8,10 @@ defaultproperties
 {
      ClientProjectileClass=Class'DH_Weapons.DH_MG34Bullet_C'
      ClientTracerClass=Class'DH_Weapons.DH_MG34ClientTracer'
-     bUsesTracers=True
+     bUsesTracers=true
      TracerFrequency=7
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdMG'
-     bAltFireFlash=True
+     bAltFireFlash=true
      ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
      PA_MovementAnims(0)="stand_jogF_mg34"
      PA_MovementAnims(1)="stand_jogB_mg34"

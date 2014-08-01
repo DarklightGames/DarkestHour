@@ -44,3 +44,4 @@ defaultproperties
      MenuDescription="Kurz 8cm Granatwerfer 42"
      Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_chr'
 }
+

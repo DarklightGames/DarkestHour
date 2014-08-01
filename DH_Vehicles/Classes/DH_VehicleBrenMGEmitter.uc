@@ -7,7 +7,7 @@ class DH_VehicleBrenMGEmitter extends WeaponAmbientEmitter;
 simulated function SetEmitterStatus(bool bEnabled)
 {
 
-	if(bEnabled)
+	if (bEnabled)
 	{
 		Emitters[0].ParticlesPerSecond = 20.0; //500 RPM
 		Emitters[0].InitialParticlesPerSecond = 20.0; //500 RPM
@@ -24,14 +24,14 @@ simulated function SetEmitterStatus(bool bEnabled)
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
-         UseRandomSubdivision=True
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
+         UseRandomSubdivision=true
          Opacity=0.450000
          CoordinateSystem=PTCS_Relative
          StartLocationOffset=(X=10.500000)
@@ -51,7 +51,7 @@ defaultproperties
      Emitters(0)=SpriteEmitter'ROVehicles.TankMGEmitter.SpriteEmitter0'
 
      CullDistance=4000.000000
-     bNoDelete=False
-     bUnlit=False
-     bHardAttach=True
+     bNoDelete=false
+     bUnlit=false
+     bHardAttach=true
 }

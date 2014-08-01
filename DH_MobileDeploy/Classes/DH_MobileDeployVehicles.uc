@@ -11,9 +11,9 @@ function SpawnVehicle()
 	super.SpawnVehicle();
 
 	//Because RequiresLeader is defaulted to true, lets only change it to false if needed
-	if( !bRequiresSLToDrive )
+	if (!bRequiresSLToDrive)
 	{
-		if( LastSpawnedVehicle != None )
+		if (LastSpawnedVehicle != none)
 		{
 			DH_MobileDeployVehicle_Allies(LastSpawnedVehicle).bMustBeSL = bRequiresSLToDrive;
 			DH_MobileDeployVehicle_UK(LastSpawnedVehicle).bMustBeSL = bRequiresSLToDrive;
@@ -24,5 +24,5 @@ function SpawnVehicle()
 
 defaultproperties
 {
-     bRequiresSLToDrive=True
+     bRequiresSLToDrive=true
 }

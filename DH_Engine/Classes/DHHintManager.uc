@@ -79,14 +79,14 @@ function QueueHint(byte HintIndex, bool bForceNext)
 {
 	local int i;
 
-	if(bUsedUpHints[HintIndex] == 1)
+	if (bUsedUpHints[HintIndex] == 1)
 		return;
 
 	for(i = 0; i < QueuedHintIndices.Length; i++)
-		if(QueuedHintIndices[i] == HintIndex)
+		if (QueuedHintIndices[i] == HintIndex)
 			return;
 
-	if(bForceNext)
+	if (bForceNext)
 	{
 		QueuedHintIndices.Insert(0, 1);
 		QueuedHintIndices[0] = HintIndex;
@@ -106,7 +106,7 @@ function NotifyHintRenderingDone() { }
 
 simulated function Timer()
 {
-	if(QueuedHintIndices.Length > 0)
+	if (QueuedHintIndices.Length > 0)
 		GotoState('WaitHintDone');
 }
 

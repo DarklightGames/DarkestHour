@@ -7,7 +7,7 @@ defaultproperties
 {
      ClientProjectileClass=Class'DH_Weapons.DH_30calBullet_C'
      ClientTracerClass=Class'DH_Weapons.DH_30CalClientTracer'
-     bUsesTracers=True
+     bUsesTracers=true
      TracerFrequency=5
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdMG'
      MuzzleBoneName="Muzzle"

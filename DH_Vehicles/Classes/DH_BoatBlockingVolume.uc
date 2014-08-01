@@ -2,7 +2,7 @@ class DH_BoatBlockingVolume extends BlockingVolume;
 
 defaultproperties
 {
-     bClassBlocker=True
+     bClassBlocker=true
      BlockedClasses(0)=Class'DH_Vehicles.DH_HigginsBoat'
-     bBlockZeroExtentTraces=True
+     bBlockZeroExtentTraces=true
 }

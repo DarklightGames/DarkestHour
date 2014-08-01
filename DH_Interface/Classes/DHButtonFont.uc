@@ -9,7 +9,7 @@ class DHButtonFont extends GUIFont;
 defaultproperties
 {
      KeyName="DHButtonFont"
-     bFixedSize=True
+     bFixedSize=true
      FontArrayNames(0)="DHFonts.DHFontB22"
      FontArrayNames(1)="DHFonts.DHFontB22"
      FontArrayNames(2)="DHFonts.DHFontB22"

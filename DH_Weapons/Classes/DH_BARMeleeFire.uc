@@ -15,3 +15,4 @@ defaultproperties
      BotRefireRate=0.250000
      aimerror=800.000000
 }
+

@@ -9,13 +9,13 @@
 class DH_ROTankCannonShellAPDS extends DH_ROTankCannonShell;
 
 
-simulated function ProcessTouch(Actor Other, Vector HitLocation)
+simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
 	local ROVehicle HitVehicle;
 	local ROVehicleWeapon HitVehicleWeapon;
 	local bool bHitVehicleDriver;
 
-	local Vector TempHitLocation, HitNormal;
+	local vector TempHitLocation, HitNormal;
 	local array<int>	HitPoints;
 
     local float         TouchAngle;     // dummy variable
@@ -25,24 +25,24 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 
 	TouchAngle=1.57;
 
-    if( Other == none || (SavedTouchActor != none && SavedTouchActor == Other) || Other.bDeleteMe ||
-		ROBulletWhipAttachment(Other) != none  )
+    if (Other == none || (SavedTouchActor != none && SavedTouchActor == Other) || Other.bDeleteMe ||
+		ROBulletWhipAttachment(Other) != none )
     {
     	return;
     }
 
     SavedTouchActor = Other;
 
-	if ( (Other != instigator) && (Other.Base != instigator) && (Other.Owner != instigator) && (!Other.IsA('Projectile') || Other.bProjTarget) )
+	if ((Other != instigator) && (Other.Base != instigator) && (Other.Owner != instigator) && (!Other.IsA('Projectile') || Other.bProjTarget))
 	{
-	    if( HitVehicleWeapon != none && HitVehicle != none )
+	    if (HitVehicleWeapon != none && HitVehicle != none)
 	    {
 		    SavedHitActor = Pawn(Other.Base);
 
-			if ( HitVehicleWeapon.HitDriverArea(HitLocation, Velocity) )
+			if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
 			{
 
-				if( HitVehicleWeapon.HitDriver(HitLocation, Velocity) )
+				if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
 				{
 					bHitVehicleDriver = true;
 				}
@@ -52,9 +52,9 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
                 }
 			}
 
-            if(bDebuggingText && Role == ROLE_Authority)
+            if (bDebuggingText && Role == ROLE_Authority)
             {
-               if(!bIsAlliedShell)
+               if (!bIsAlliedShell)
                {
                   Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/60.352)$" m, ImpactVel: "$VSize(Velocity) / 60.352$" m/s");
                }
@@ -64,17 +64,17 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
                }
             }
 
-            if ( HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPDS( HitLocation, Normal(Velocity), GetPenetration(LaunchLocation-HitLocation), TouchAngle, ShellImpactDamage, bShatterProne))
+            if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPDS(HitLocation, Normal(Velocity), GetPenetration(LaunchLocation-HitLocation), TouchAngle, ShellImpactDamage, bShatterProne))
             {
-                if(bDebuggingText && Role == ROLE_Authority)
+                if (bDebuggingText && Role == ROLE_Authority)
                 {
                     Level.Game.Broadcast(self, "Turret Ricochet!");
                 }
 
-                if( Drawdebuglines && Firsthit )
+                if (Drawdebuglines && Firsthit)
 				{
 					FirstHit=false;
-					DrawStayingDebugLine( Location, Location-(Normal(Velocity)*500), 0, 255, 0);
+					DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
 				}
 
                 if (!bShatterProne || !DH_ROTankCannon(HitVehicleWeapon).bRoundShattered)
@@ -86,7 +86,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 
                     DoShakeEffect();
 			        DeflectWithoutNormal(Other, HitLocation);
-                    if( Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none )
+                    if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
         			   ROBot(Instigator.Controller).NotifyIneffectiveAttack(HitVehicle);
                     return;
                 }
@@ -96,11 +96,11 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 
 				    // Don't update the position any more and don't move the projectile any more.
 				    bUpdateSimulatedPosition=false;
-				    SetPhysics(PHYS_None);
-				    SetDrawType(DT_None);
+				    SetPhysics(PHYS_none);
+				    SetDrawType(DT_none);
 
-				    HurtWall = None;
-				    if ( Role == ROLE_Authority )
+				    HurtWall = none;
+				    if (Role == ROLE_Authority)
 				    {
 					   MakeNoise(1.0);
 				    }
@@ -110,41 +110,41 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 
 	        // Don't update the position any more and don't move the projectile any more.
 		    bUpdateSimulatedPosition=false;
-		    SetPhysics(PHYS_None);
-		    SetDrawType(DT_None);
+		    SetPhysics(PHYS_none);
+		    SetDrawType(DT_none);
 
-		    if ( Role == ROLE_Authority )
+		    if (Role == ROLE_Authority)
 		    {
-			    if ( !Other.Base.bStatic && !Other.Base.bWorldGeometry )
+			    if (!Other.Base.bStatic && !Other.Base.bWorldGeometry)
 			    {
-				    if ( Instigator == None || Instigator.Controller == None )
+				    if (Instigator == none || Instigator.Controller == none)
 				    {
-					    Other.Base.SetDelayedDamageInstigatorController( InstigatorController );
-					    if( bHitVehicleDriver )
+					    Other.Base.SetDelayedDamageInstigatorController(InstigatorController);
+					    if (bHitVehicleDriver)
 					    {
-					       Other.SetDelayedDamageInstigatorController( InstigatorController );
+					       Other.SetDelayedDamageInstigatorController(InstigatorController);
 		                }
 	                }
 
-				    if( Drawdebuglines && Firsthit )
+				    if (Drawdebuglines && Firsthit)
 				    {
 					    FirstHit=false;
-					    DrawStayingDebugLine( Location, Location-(Normal(Velocity)*500), 255, 0, 0);
+					    DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 255, 0, 0);
 				    }
 
-				    if ( savedhitactor != none )
+				    if (savedhitactor != none)
 				    {
 					    Other.Base.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
 			        }
 
-				    if( bHitVehicleDriver )
+				    if (bHitVehicleDriver)
 				    {
 					    Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
 			        }
 
-				    if( Other != none && !Other.bDeleteMe )
+				    if (Other != none && !Other.bDeleteMe)
 				    {
-					    if (DamageRadius > 0 && Vehicle(Other.Base) != None && Vehicle(Other.Base).Health > 0)
+					    if (DamageRadius > 0 && Vehicle(Other.Base) != none && Vehicle(Other.Base).Health > 0)
 						    Vehicle(Other.Base).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, HitLocation);
 				        HurtWall = Other.Base;
 				    }
@@ -153,22 +153,22 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
             }
 
             Explode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
-            HurtWall = None;
+            HurtWall = none;
 
             return;
 	    }
 	    else
 	    {
-			if ( (Pawn(Other) != none || RODestroyableStaticMesh(Other) != none) && Role==Role_Authority )
+			if ((Pawn(Other) != none || RODestroyableStaticMesh(Other) != none) && Role==Role_Authority)
 			{
-		        if( ROPawn(Other) != none )
+		        if (ROPawn(Other) != none)
 		        {
 
-					if(!Other.bDeleteMe)
+					if (!Other.bDeleteMe)
 			        {
 				        Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535 * Normal(Velocity)), HitPoints, HitLocation,, 0);
 
-						if( Other == none )
+						if (Other == none)
 							return;
 						else
 							ROPawn(Other).ProcessLocationalDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
@@ -184,13 +184,13 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 				 	Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
 				}
 			}
-			else if(Role==Role_Authority )
+			else if (Role==Role_Authority)
 			{
-		        if( Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none )
+		        if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
 					ROBot(Instigator.Controller).NotifyIneffectiveAttack(HitVehicle);
 			}
 
-	        Explode(HitLocation,Vect(0,0,1));
+	        Explode(HitLocation,vect(0,0,1));
 	    }
 	}
 }
@@ -204,14 +204,14 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
 	HitAngle=1.57;
 
-    if ( Wall.Base != none && Wall.Base == instigator )
+    if (Wall.Base != none && Wall.Base == instigator)
      	return;
 
     SavedVelocity = Velocity;
 
-    if(bDebuggingText && Role == ROLE_Authority)
+    if (bDebuggingText && Role == ROLE_Authority)
     {
-        if(!bIsAlliedShell)
+        if (!bIsAlliedShell)
         {
           Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/60.352)$"m, ImpactVel: "$VSize(Velocity) / 60.352$" m/s");
         }
@@ -221,19 +221,19 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
         }
     }
 
-    if ( Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrateAPDS( Location, Normal(Velocity), GetPenetration(LaunchLocation-Location), HitAngle, ShellImpactDamage, bShatterProne))
+    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrateAPDS(Location, Normal(Velocity), GetPenetration(LaunchLocation-Location), HitAngle, ShellImpactDamage, bShatterProne))
     {
 
-        if(bDebuggingText && Role == ROLE_Authority)
+        if (bDebuggingText && Role == ROLE_Authority)
         {
             Level.Game.Broadcast(self, "Hull Ricochet!");
         }
 
-        if( Drawdebuglines && Firsthit )
+        if (Drawdebuglines && Firsthit)
         {
 			FirstHit=false;
-			DrawStayingDebugLine( Location, Location-(Normal(Velocity)*500), 0, 255, 0);
-			// DrawStayingDebugLine( Location, Location + 1000*HitNormal, 255, 0, 255);
+			DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
+			// DrawStayingDebugLine(Location, Location + 1000*HitNormal, 255, 0, 255);
         }
 
         if (!bShatterProne || !DH_ROTreadCraft(Wall).bRoundShattered)
@@ -247,14 +247,14 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
             DoShakeEffect();
 		    Deflect(HitNormal, Wall);
 
-		    if( Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none )
+		    if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
 			   ROBot(Instigator.Controller).NotifyIneffectiveAttack(ROVehicle(Wall));
 
             return;
         }
         else
         {
-        	if ( Role == ROLE_Authority )
+        	if (Role == ROLE_Authority)
 		    {
                 MakeNoise(1.0);
             }
@@ -263,50 +263,50 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
 		    // Don't update the position any more and don't move the projectile any more.
 		    bUpdateSimulatedPosition=false;
-		    SetPhysics(PHYS_None);
-		    SetDrawType(DT_None);
+		    SetPhysics(PHYS_none);
+		    SetDrawType(DT_none);
 
-		    HurtWall = None;
+		    HurtWall = none;
             return;
         }
     }
 
-    if ((SavedHitActor == Wall) || (Wall.bDeleteMe) )
+    if ((SavedHitActor == Wall) || (Wall.bDeleteMe))
      	return;
 
     // Don't update the position any more and don't move the projectile any more.
 	bUpdateSimulatedPosition=false;
-	SetPhysics(PHYS_None);
-	SetDrawType(DT_None);
+	SetPhysics(PHYS_none);
+	SetDrawType(DT_none);
 
     SavedHitActor = Pawn(Wall);
 
 	Super(ROBallisticProjectile).HitWall(HitNormal, Wall);
 
-	if ( Role == ROLE_Authority )
+	if (Role == ROLE_Authority)
 	{
 		if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
 		{
-			if ( Instigator == None || Instigator.Controller == None )
-				Wall.SetDelayedDamageInstigatorController( InstigatorController );
+			if (Instigator == none || Instigator.Controller == none)
+				Wall.SetDelayedDamageInstigatorController(InstigatorController);
 
-			if ( savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+			if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
 			{
-				if( Drawdebuglines && Firsthit )
+				if (Drawdebuglines && Firsthit)
 				{
 					FirstHit=false;
-					DrawStayingDebugLine( Location, Location-(Normal(SavedVelocity)*500), 255, 0, 0);
+					DrawStayingDebugLine(Location, Location-(Normal(SavedVelocity)*500), 255, 0, 0);
 				}
 				Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
 			}
 
-			if (DamageRadius > 0 && Vehicle(Wall) != None && Vehicle(Wall).Health > 0)
+			if (DamageRadius > 0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
 				Vehicle(Wall).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, Location);
 			HurtWall = Wall;
 		}
 		else
 		{
-			if( Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none )
+			if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
 	        	ROBot(Instigator.Controller).NotifyIneffectiveAttack();
 		}
 		MakeNoise(1.0);
@@ -314,11 +314,11 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
 	Explode(Location + ExploWallOut * HitNormal, HitNormal);
 
-	HurtWall = None;
+	HurtWall = none;
 
 }
 
 defaultproperties
 {
-     bShatterProne=True
+     bShatterProne=true
 }

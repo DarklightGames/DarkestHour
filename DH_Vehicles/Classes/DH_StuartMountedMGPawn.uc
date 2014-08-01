@@ -14,10 +14,10 @@ defaultproperties
      MGOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
      WeaponFov=72.000000
      GunClass=Class'DH_Vehicles.DH_StuartMountedMG'
-     bHasAltFire=False
+     bHasAltFire=false
      CameraBone="mg_yaw"
-     bDrawDriverInTP=False
-     bDesiredBehindView=False
+     bDrawDriverInTP=false
+     bDesiredBehindView=false
      DrivePos=(Z=130.000000)
      ExitPositions(0)=(X=90.000000,Y=100.000000,Z=156.000000)
      ExitPositions(1)=(Y=100.000000,Z=156.000000)

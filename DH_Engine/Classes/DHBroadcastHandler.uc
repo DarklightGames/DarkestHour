@@ -21,19 +21,19 @@ event AllowBroadcastLocalized(actor Sender, class<LocalMessage> Message,
 	local PlayerController P;
 	local DH_RoleInfo RI;
 
-	for ( C=Level.ControllerList; C!=None; C=C.NextController )
+	for (C=Level.ControllerList; C!=none; C=C.NextController)
 	{
 		P = PlayerController(C);
 
 		// Only broadcast rally point messages to your same team, and only to other players
-		if((class<RORallyMsg>(Message) != none) && switch == 1 )
+		if ((class<RORallyMsg>(Message) != none) && switch == 1)
 		{
-			if ( P != None && Controller(Sender) != none && P != Sender && P.PlayerReplicationInfo.Team == Controller(Sender).PlayerReplicationInfo.Team )
+			if (P != none && Controller(Sender) != none && P != Sender && P.PlayerReplicationInfo.Team == Controller(Sender).PlayerReplicationInfo.Team)
 				BroadcastLocalized(Sender, P, Message, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 		}
 
 		// Send correct last-objective message depending on who's winning and on the reciever's team
-		else if (class<ROLastObjectiveMsg>(Message) != none && P != None && P.PlayerReplicationInfo != none
+		else if (class<ROLastObjectiveMsg>(Message) != none && P != none && P.PlayerReplicationInfo != none
             && P.PlayerReplicationInfo.Team != none)
 		{
 		    // If P.PRI.Team == switch, then that team is about to win. Broadcast an about-to-win
@@ -45,7 +45,7 @@ event AllowBroadcastLocalized(actor Sender, class<LocalMessage> Message,
 		}
 
 		// Only send demo charge placed msg to teammates
-		else if (class<RODemolitionChargePlacedMsg>(Message) != none && P != None && P.PlayerReplicationInfo != none
+		else if (class<RODemolitionChargePlacedMsg>(Message) != none && P != none && P.PlayerReplicationInfo != none
             && P.PlayerReplicationInfo.Team != none)
 		{
 		    if (P.PlayerReplicationInfo.Team.TeamIndex == switch)
@@ -90,19 +90,19 @@ event AllowBroadcastLocalized(actor Sender, class<LocalMessage> Message,
 	        }
 		}
 
-		else if(class<DH_MortarTargetMessage>(Message) != none)
+		else if (class<DH_MortarTargetMessage>(Message) != none)
 		{
-			if( P.Pawn == none ||
+			if (P.Pawn == none ||
 				P.Pawn.PlayerReplicationInfo == none ||
 				DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo) == none ||
-				DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo == none )
+				DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo == none)
 				continue;
 
 			RI = DH_RoleInfo(DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo);
 
 			//------------------------------------------------------------------
 			//Only show these messages to people involved with the mortars.
-			if( P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars) )
+			if (P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
 			{
 				switch(Switch)
 				{
@@ -115,7 +115,7 @@ event AllowBroadcastLocalized(actor Sender, class<LocalMessage> Message,
 				}
 			}
 		}
-        else if ( P != None )
+        else if (P != none)
 		{
 			BroadcastLocalized(Sender, P, Message, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 		}

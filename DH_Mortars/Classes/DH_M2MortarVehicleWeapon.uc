@@ -16,7 +16,7 @@ defaultproperties
      ProjectileClass=Class'DH_Mortars.DH_M2MortarProjectileHE'
      MaxPositiveYaw=1274
      MaxNegativeYaw=-1274
-     bLimitYaw=True
+     bLimitYaw=true
      InitialPrimaryAmmo=24
      InitialSecondaryAmmo=4
      PrimaryProjectileClass=Class'DH_Mortars.DH_M2MortarProjectileHE'

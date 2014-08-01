@@ -8,7 +8,7 @@ simulated event ThirdPersonEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-		if ( ROPawn(Instigator) == None )
+		if (ROPawn(Instigator) == none)
 			return;
         if (FlashCount == 0)
         {
@@ -164,8 +164,8 @@ defaultproperties
      WA_Fire="idle_binocs"
      menuImage=Texture'InterfaceArt_tex.Menu_weapons.Binocs'
      MenuDescription="Used to spot enemy movements and mark artillery targets."
-     bRapidFire=False
-     LightType=LT_None
-     LightEffect=LE_None
+     bRapidFire=false
+     LightType=LT_none
+     LightEffect=LE_none
      Mesh=SkeletalMesh'Weapons3rd_anm.Binocs_ger'
 }

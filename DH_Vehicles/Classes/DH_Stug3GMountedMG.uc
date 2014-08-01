@@ -27,7 +27,7 @@ var     float               PlayerFireDamagePerSec;
 replication
 {
 	// Functions server can call.
-	reliable if( Role==ROLE_Authority )
+	reliable if (Role==ROLE_Authority)
 		ClientDoReload;
 
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
@@ -42,12 +42,12 @@ simulated function Tick(float DeltaTime)
 
     Super.Tick(DeltaTime);
 
-    if( bOnFire && HullMGFireEffect == None )
+    if (bOnFire && HullMGFireEffect == none)
     {
         // Lets randomise the fire start times to desync them with the driver and engine ones
-        if( Level.TimeSeconds - BurnTime > 0.2 )
+        if (Level.TimeSeconds - BurnTime > 0.2)
         {
-            if( FRand() < 0.1 )
+            if (FRand() < 0.1)
             {
                 HullMGFireEffect = Spawn(FireEffectClass);
                 AttachToBone(HullMGFireEffect, FireAttachBone);
@@ -67,31 +67,31 @@ simulated function int LimitYaw(int yaw)
 
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
-    if ( !bLimitYaw )
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
     NewYaw = yaw;
 
-    if( PwningPawn != none )
+    if (PwningPawn != none)
     {
-	   	if( yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
+	   	if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
 	   	}
-	   	else if( yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit )
+	   	else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
 	   	{
 	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
 	  	}
   	}
   	else
   	{
-	   	if( yaw > MaxPositiveYaw )
+	   	if (yaw > MaxPositiveYaw)
 	   	{
 	   		NewYaw = MaxPositiveYaw;
 	   	}
-	   	else if( yaw < MaxNegativeYaw )
+	   	else if (yaw < MaxNegativeYaw)
 	   	{
 	   		NewYaw = MaxNegativeYaw;
 	  	}
@@ -103,7 +103,7 @@ simulated function int LimitYaw(int yaw)
 // Returns true if this weapon is ready to fire
 simulated function bool ReadyToFire(bool bAltFire)
 {
-	if( bReloading )
+	if (bReloading)
 		return false;
 
 	return super.ReadyToFire(bAltFire);
@@ -113,13 +113,13 @@ function CeaseFire(Controller C, bool bWasAltFire)
 {
 	super.CeaseFire(C, bWasAltFire);
 
-	if( !bReloading && !HasAmmo(0) )
+	if (!bReloading && !HasAmmo(0))
 		HandleReload();
 }
 
 function HandleReload()
 {
-	if( NumMags > 0 && !bReloading)
+	if (NumMags > 0 && !bReloading)
 	{
 		bReloading = true;
 		NumMags--;
@@ -135,15 +135,15 @@ function HandleReload()
 // Play the reload animation on the client
 simulated function ClientDoReload()
 {
-    if(Owner != none && VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).HUDOverlay != none )
+    if (Owner != none && VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).HUDOverlay != none)
 		VehicleWeaponPawn(Owner).HUDOverlay.PlayAnim('Bipod_Reload_s');
 }
 
 simulated function Timer()
 {
-   if ( bReloading )
+   if (bReloading)
    {
-	    if( Role == ROLE_Authority )
+	    if (Role == ROLE_Authority)
 	    {
 			bReloading=false;
 			MainAmmoCharge[0] = InitialPrimaryAmmo;
@@ -154,8 +154,8 @@ simulated function Timer()
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-  	if(Role != ROLE_Authority || bForceCenterAim)
-		return False;
+  	if (Role != ROLE_Authority || bForceCenterAim)
+		return false;
 
 	if (FireCountdown <= 0)
 	{
@@ -163,9 +163,9 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		if (bCorrectAim)
 			WeaponFireRotation = AdjustAim(bAltFire);
 
-		if( bAltFire )
+		if (bAltFire)
 		{
-			if( AltFireSpread > 0 )
+			if (AltFireSpread > 0)
 				WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
 		}
 		else if (Spread > 0)
@@ -178,7 +178,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		Instigator.MakeNoise(1.0);
 		if (bAltFire)
 		{
-			if( !ConsumeAmmo(2) )
+			if (!ConsumeAmmo(2))
 			{
 				VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 				return false;
@@ -188,11 +188,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		}
 		else
 		{
-			if( bMultipleRoundTypes )
+			if (bMultipleRoundTypes)
 			{
 				if (ProjectileClass == PrimaryProjectileClass)
 				{
-					if( !ConsumeAmmo(0) )
+					if (!ConsumeAmmo(0))
 					{
 						VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 						return false;
@@ -200,14 +200,14 @@ event bool AttemptFire(Controller C, bool bAltFire)
 			    }
 			    else if (ProjectileClass == SecondaryProjectileClass)
 			    {
-					if( !ConsumeAmmo(1) )
+					if (!ConsumeAmmo(1))
 					{
 						VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 						return false;
 					}
 			    }
 			}
-			else if( !ConsumeAmmo(0) )
+			else if (!ConsumeAmmo(0))
 			{
 				VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 				HandleReload();
@@ -219,10 +219,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		}
 		AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
-	    return True;
+	    return true;
 	}
 
-	return False;
+	return false;
 }
 
 // Fill the ammo up to the initial ammount
@@ -230,7 +230,7 @@ function bool GiveInitialAmmo()
 {
 	local bool bDidResupply;
 
-	if( NumMags != default.NumMags )
+	if (NumMags != default.NumMags)
 	{
 		bDidResupply = true;
 	}
@@ -252,7 +252,7 @@ simulated function DestroyEffects()
 {
 	super.DestroyEffects();
 
-    if (HullMGFireEffect != None)
+    if (HullMGFireEffect != none)
     	HullMGFireEffect.Destroy();
 }
 
@@ -266,10 +266,10 @@ defaultproperties
      VehicleBurningDamType=Class'DH_Vehicles.DH_VehicleBurningDamType'
      DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
-     bUsesTracers=True
+     bUsesTracers=true
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=10.000000,Y=-5.000000,Z=23.000000))
      VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=10.000000,Y=-5.000000,Z=1.000000))
-     bIsMountedTankMG=True
+     bIsMountedTankMG=true
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
      YawBone="mg_pitch"
      PitchBone="mg_pitch"
@@ -278,10 +278,10 @@ defaultproperties
      WeaponFireAttachmentBone="tip"
      GunnerAttachmentBone="loader_attachment"
      RotationsPerSecond=0.050000
-     bInstantRotation=True
-     bDoOffsetTrace=True
-     bAmbientFireSound=True
-     bIsRepeatingFF=True
+     bInstantRotation=true
+     bDoOffsetTrace=true
+     bAmbientFireSound=true
+     bIsRepeatingFF=true
      Spread=0.002000
      FireInterval=0.070580
      AltFireInterval=0.070580
@@ -301,21 +301,21 @@ defaultproperties
      ShakeOffsetMag=(X=0.500000,Z=0.200000)
      ShakeOffsetRate=(X=500.000000,Y=500.000000,Z=500.000000)
      ShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=True,bFireOnRelease=True,aimerror=800.000000,RefireRate=0.070580)
+     AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.000000,RefireRate=0.070580)
      CustomPitchUpLimit=4500
      CustomPitchDownLimit=63500
      MaxPositiveYaw=5500
      MaxNegativeYaw=-5500
-     bLimitYaw=True
+     bLimitYaw=true
      BeginningIdleAnim="loader_button_idle"
      InitialPrimaryAmmo=75
      CullDistance=8000.000000
      Mesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
      Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
-     bCollideActors=True
-     bBlockActors=True
-     bProjTarget=True
-     bBlockZeroExtentTraces=True
-     bBlockNonZeroExtentTraces=True
+     bCollideActors=true
+     bBlockActors=true
+     bProjTarget=true
+     bBlockZeroExtentTraces=true
+     bBlockNonZeroExtentTraces=true
 }

@@ -5,8 +5,8 @@ class DH_BritishMortarmanWorcesters extends DH_Worcesters;
 
 defaultproperties
 {
-     bCanUseMortars=True
-     bCarriesMortarAmmo=False
+     bCanUseMortars=true
+     bCarriesMortarAmmo=false
      MyName="Mortar Operator"
      AltName="Mortar Operator"
      Article="a "

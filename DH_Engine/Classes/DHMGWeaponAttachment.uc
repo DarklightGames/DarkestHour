@@ -15,14 +15,14 @@ simulated function SpawnShells(float amountPerSec)
   	local 	rotator 	ejectorrot;
   	local 	vector		spawnlocation;
 
-	if( !bSpawnShellsOutBottom )
+	if (!bSpawnShellsOutBottom)
 	{
 		super.SpawnShells(amountPerSec);
 		return;
 	}
 
-    if( (Instigator != none) && !Instigator.IsFirstPerson()
-		&& ROShellCaseClass != none )
+    if ((Instigator != none) && !Instigator.IsFirstPerson()
+		&& ROShellCaseClass != none)
     {
   		ejectorloc = GetBoneCoords(ShellEjectionBoneName);
   		ejectorrot = rotator(Normal(PhysicsVolume.Gravity));//GetBoneRotation(ShellEjectionBoneName);
@@ -40,5 +40,5 @@ simulated function SpawnShells(float amountPerSec)
 
 defaultproperties
 {
-     bSpawnShellsOutBottom=True
+     bSpawnShellsOutBottom=true
 }

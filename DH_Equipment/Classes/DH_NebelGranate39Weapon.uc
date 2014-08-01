@@ -19,6 +19,6 @@ defaultproperties
      AttachmentClass=Class'DH_Equipment.DH_NebelGranate39Attachment'
      ItemName="Nebelhandgranate 39"
      Skins(2)=Texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
-     HighDetailOverlay=None
-     bUseHighDetailOverlayIndex=False
+     HighDetailOverlay=none
+     bUseHighDetailOverlayIndex=false
 }

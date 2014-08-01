@@ -24,13 +24,13 @@ simulated function DouseFlames()
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         FadeOut=True
-         FadeIn=True
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         UseRandomSubdivision=True
+         FadeOut=true
+         FadeIn=true
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         UseRandomSubdivision=true
          Acceleration=(Z=150.000000)
          ColorScale(1)=(RelativeTime=0.300000,Color=(B=255,G=255,R=255))
          ColorScale(2)=(RelativeTime=0.667857,Color=(B=89,G=172,R=247,A=255))
@@ -61,13 +61,13 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_PlayerFlame.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         FadeOut=True
-         FadeIn=True
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         UseRandomSubdivision=True
+         FadeOut=true
+         FadeIn=true
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         UseRandomSubdivision=true
          Acceleration=(Z=150.000000)
          ColorScale(1)=(RelativeTime=0.300000,Color=(B=255,G=255,R=255))
          ColorScale(2)=(RelativeTime=0.667857,Color=(B=89,G=172,R=247,A=255))
@@ -99,14 +99,14 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_PlayerFlame.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=10.000000,Z=10.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255))
          ColorScale(1)=(RelativeTime=0.250000,Color=(B=100,G=177,R=230,A=255))
@@ -136,11 +136,11 @@ defaultproperties
      LightSaturation=100
      LightBrightness=200.000000
      LightRadius=2.000000
-     bNoDelete=False
-     bDynamicLight=True
-     bOnlyDrawIfAttached=True
+     bNoDelete=false
+     bDynamicLight=true
+     bOnlyDrawIfAttached=true
      AmbientSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-     bFullVolume=True
+     bFullVolume=true
      SoundVolume=255
-     bNotOnDedServer=False
+     bNotOnDedServer=false
 }

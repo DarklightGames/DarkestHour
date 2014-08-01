@@ -38,6 +38,6 @@ defaultproperties
      End Object
      ContextMenu=ROGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
 
-     bStandardized=True
+     bStandardized=true
      StandardHeight=0.800000
 }

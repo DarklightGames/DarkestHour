@@ -20,10 +20,10 @@ function InitComponent(GUIController InController, GUIComponent InOwner)
 	b_Back.OnClick = Owner.InternalOnClick;
 }
 
-function SetupButtons( optional string bPerButtonSizes )
+function SetupButtons(optional string bPerButtonSizes)
 {
 	b_Primary.Caption = PrimaryCaption;
-	b_Primary.SetHint( PrimaryHint );
+	b_Primary.SetHint(PrimaryHint);
 	Super.SetupButtons(bPerButtonSizes);
 }
 
@@ -36,7 +36,7 @@ defaultproperties
          WinWidth=0.120000
          WinHeight=0.036482
          TabOrder=0
-         bBoundToParent=True
+         bBoundToParent=true
          OnKeyEvent=GamePrimaryButton.InternalOnKeyEvent
      End Object
      b_Primary=GUIButton'DH_Interface.DHGameFooterSP.GamePrimaryButton'
@@ -48,7 +48,7 @@ defaultproperties
          WinWidth=0.120000
          WinHeight=0.036482
          TabOrder=2
-         bBoundToParent=True
+         bBoundToParent=true
          OnKeyEvent=GameBackButton.InternalOnKeyEvent
      End Object
      b_Back=GUIButton'DH_Interface.DHGameFooterSP.GameBackButton'

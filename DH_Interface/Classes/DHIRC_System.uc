@@ -13,7 +13,7 @@ defaultproperties
 {
      Begin Object Class=GUISplitter Name=SplitterA
          SplitPosition=0.800000
-         bFixedSplitter=True
+         bFixedSplitter=true
          DefaultPanels(0)="DH_Interface.DHGUIScrollTextBox"
          DefaultPanels(1)="DH_Interface.DHIRC_Panel"
          OnCreateComponent=DHIRC_System.InternalOnCreateComponent

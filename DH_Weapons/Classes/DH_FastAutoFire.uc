@@ -41,9 +41,9 @@ var() class<ROServerBullet> 	ServerProjectileClass; 		// class for the server on
 // overriden to support packing two shots together to save net bandwidth
 function DoFireEffect()
 {
-    local Vector StartProj, StartTrace, X,Y,Z;
+    local vector StartProj, StartTrace, X,Y,Z;
     local Rotator R, Aim;
-    local Vector HitLocation, HitNormal;
+    local vector HitLocation, HitNormal;
     local Actor Other;
     local int projectileID;
     local int SpawnCount;
@@ -54,14 +54,14 @@ function DoFireEffect()
     Weapon.GetViewAxes(X,Y,Z);
 
 	// if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
- 	if( Instigator.weapon.bUsingSights || Instigator.bBipodDeployed )
+ 	if (Instigator.weapon.bUsingSights || Instigator.bBipodDeployed)
 	{
 		StartTrace = Instigator.Location + Instigator.EyePosition();
 		StartProj = StartTrace + X * ProjSpawnOffset.X;
 
 		// check if projectile would spawn through a wall and adjust start location accordingly
 		Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-		if (Other != none )
+		if (Other != none)
 		{
 	   		StartProj = HitLocation;
 		}
@@ -85,7 +85,7 @@ function DoFireEffect()
 
 		// Instead of just checking walls, lets check all actors. That way we won't have rounds
 		// spawning on the other side of players and missing them altogether - Ramm 10/14/04
-		if( Other != none )
+		if (Other != none)
 		{
 			StartProj = HitLocation;
 		}
@@ -93,7 +93,7 @@ function DoFireEffect()
     Aim = AdjustAim(StartProj, AimError);
 
 	// For free-aim, just use where the muzzlebone is pointing
-	if( !Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim
+	if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim
 		&& Instigator.IsHumanControlled())
 	{
 		Aim = rotator(MuzzlePosition.XAxis);
@@ -103,7 +103,7 @@ function DoFireEffect()
 
     CalcSpreadModifiers();
 
-	if( (DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged )
+	if ((DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged)
 	{
 		AppliedSpread = 4 * Spread;
 	}
@@ -115,7 +115,7 @@ function DoFireEffect()
     switch (SpreadStyle)
     {
         case SS_Random:
-           	X = Vector(Aim);
+           	X = vector(Aim);
            	for (projectileID = 0; projectileID < SpawnCount; projectileID++)
            	{
               	R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
@@ -145,31 +145,31 @@ function DoFireEffect()
 // This function handles combining the shots and when to replicate them
 function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
 {
-	if( Level.NetMode == NM_Standalone )
+	if (Level.NetMode == NM_Standalone)
 	{
 	   super(DH_ProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
 	   return;
 	}
 
-	if( HiROFWeaponAttachment == none )
+	if (HiROFWeaponAttachment == none)
 	{
 		HiROFWeaponAttachment = DHHighROFWeaponAttachment(Weapon.ThirdPersonActor);
 	}
 
 	SpawnProjectile(SpawnPoint, SpawnAim);
 
-	if( Level.NetMode == NM_Standalone )
+	if (Level.NetMode == NM_Standalone)
 	{
 	   return;
 	}
-	else if((Level.TimeSeconds - LastCalcTime ) > PackingThresholdTime)
+	else if ((Level.TimeSeconds - LastCalcTime) > PackingThresholdTime)
 	{
 		HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
 		HiROFWeaponAttachment.bUnReplicatedShot = true;
 	}
 	else
 	{
-		if( HiROFWeaponAttachment.bFirstShot )
+		if (HiROFWeaponAttachment.bFirstShot)
 		{
 			HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
 			HiROFWeaponAttachment.bFirstShot = false;
@@ -182,7 +182,7 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
 			HiROFWeaponAttachment.bFirstShot = true;
 
 			// Skip 255 as we will use it for a special trigger
-			if( HiROFWeaponAttachment.DualShotCount < 254 )
+			if (HiROFWeaponAttachment.DualShotCount < 254)
 			{
 				HiROFWeaponAttachment.DualShotCount ++;
 			}
@@ -206,9 +206,9 @@ function PlayFireEnd()
 
 	RPW = DH_ProjectileWeapon(Weapon);
 
-	if ( RPW.HasAnim(FireEndAnim) && !RPW.bUsingSights && !Instigator.bBipodDeployed )
+	if (RPW.HasAnim(FireEndAnim) && !RPW.bUsingSights && !Instigator.bBipodDeployed)
 		RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);
-	else if ( RPW.HasAnim(FireIronEndAnim) && ( RPW.bUsingSights || Instigator.bBipodDeployed))
+	else if (RPW.HasAnim(FireIronEndAnim) && (RPW.bUsingSights || Instigator.bBipodDeployed))
 		RPW.PlayAnim(FireIronEndAnim, FireEndAnimRate, TweenTime);
 }
 
@@ -225,10 +225,10 @@ function PlayAmbientSound(Sound aSound)
 
 	WA = WeaponAttachment(Weapon.ThirdPersonActor);
 
-    if ( Weapon == none || (WA == none))
+    if (Weapon == none || (WA == none))
         return;
 
-	if(aSound == None)
+	if (aSound == none)
 	{
 		WA.SoundVolume = WA.default.SoundVolume;
 		WA.SoundRadius = WA.default.SoundRadius;
@@ -245,11 +245,11 @@ function PlayAmbientSound(Sound aSound)
 // Make sure we are in the fire looping state when we fire
 event ModeDoFire()
 {
-	if( !ROWeapon(Owner).IsBusy() && AllowFire() && IsInState('FireLoop'))
+	if (!ROWeapon(Owner).IsBusy() && AllowFire() && IsInState('FireLoop'))
 	{
 	    Super.ModeDoFire();
 	}
-//    else if( abs(ROWeaponPtr.mouseClickTime - Level.TimeSeconds ) < 0.02 )
+//    else if (abs(ROWeaponPtr.mouseClickTime - Level.TimeSeconds) < 0.02)
 //    {
 //		PlayWeaponEmptySound();
 //    }
@@ -272,7 +272,7 @@ state FireLoop
 
         RPW = DH_ProjectileWeapon(Weapon);
 
-		if( !RPW.bUsingSights && !Instigator.bBipodDeployed)
+		if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
         	weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
         else
         	Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
@@ -288,11 +288,11 @@ state FireLoop
     {
         Weapon.AnimStopLooping();
         PlayAmbientSound(none);
-        Weapon.PlayOwnedSound(FireEndSound,SLOT_None,FireVolume,,AmbientFireSoundRadius);
+        Weapon.PlayOwnedSound(FireEndSound,SLOT_none,FireVolume,,AmbientFireSoundRadius);
         Weapon.StopFire(ThisModeNum);
 
         //If we are not switching weapons, go to the idle state
-        if ( !Weapon.IsInState('LoweringWeapon') )
+        if (!Weapon.IsInState('LoweringWeapon'))
             ROWeapon(Weapon).GotoState('Idle');
     }
 
@@ -301,7 +301,7 @@ state FireLoop
         if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment.bUnReplicatedShot == true)
         {
 			HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
-         	if( HiROFWeaponAttachment.DualShotCount == 255)
+         	if (HiROFWeaponAttachment.DualShotCount == 255)
          	{
 				HiROFWeaponAttachment.DualShotCount = 254;
 			}
@@ -320,7 +320,7 @@ state FireLoop
 	    Super.ModeTick(dt);
 
 		// WeaponTODO: See how to properly reimplement this
-		if ( !bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed) )  // stopped firing, magazine empty or barrel overheat
+		if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
         {
 			GotoState('');
 			return;
@@ -337,10 +337,10 @@ state FireLoop
 *
 * modified by: Ramm 1/17/05
 * =================================================================================== */
-function projectile SpawnProjectile(Vector Start, Rotator Dir)
+function projectile SpawnProjectile(vector Start, Rotator Dir)
 {
 	local Projectile spawnedprojectile;
-	local Vector ProjectileDir, End, HitLocation, HitNormal, SnapTraceEnd;
+	local vector ProjectileDir, End, HitLocation, HitNormal, SnapTraceEnd;
 	local Actor Other;
 	local ROPawn HitPawn;
 	local DHWeaponAttachment WeapAttach;
@@ -350,9 +350,9 @@ function projectile SpawnProjectile(Vector Start, Rotator Dir)
 	Dir.Pitch += AddedPitch;
 
 	// Perform prelaunch trace
-	if ( bUsePreLaunchTrace )
+	if (bUsePreLaunchTrace)
 	{
-		ProjectileDir = Vector(Dir);
+		ProjectileDir = vector(Dir);
 		End = Start + PreLaunchTraceDistance * ProjectileDir;
 		SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir;
 
@@ -362,11 +362,11 @@ function projectile SpawnProjectile(Vector Start, Rotator Dir)
 		// Do precision hit point pre-launch trace to see if we hit a player or something else
 		Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound trigger
 
-		if ( Other != None && Other != Instigator && Other.Base != Instigator)
+		if (Other != none && Other != Instigator && Other.Base != Instigator)
 		{
-			if ( !Other.bWorldGeometry )
+			if (!Other.bWorldGeometry)
 			{
-				if( Other.IsA('ROVehicle'))
+				if (Other.IsA('ROVehicle'))
 				{
 					Other.TakeDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyVehicleDamage);
 				}
@@ -374,9 +374,9 @@ function projectile SpawnProjectile(Vector Start, Rotator Dir)
 				{
 					HitPawn = ROPawn(Other);
 
-			    	if ( HitPawn != none  )
+			    	if (HitPawn != none )
 			    	{
-				    	if(!HitPawn.bDeleteMe)
+				    	if (!HitPawn.bDeleteMe)
 							HitPawn.ProcessLocationalDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyDamageType,HitPoints);
 			    	}
 			    	else
@@ -387,10 +387,10 @@ function projectile SpawnProjectile(Vector Start, Rotator Dir)
 			}
 			else
 			{
-				if( RODestroyableStaticMesh(Other) != none )
+				if (RODestroyableStaticMesh(Other) != none)
 				{
 				    Other.TakeDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyDamageType);
-				    if( RODestroyableStaticMesh(Other).bWontStopBullets )
+				    if (RODestroyableStaticMesh(Other).bWontStopBullets)
 				    {
 				    	Other = none;
 				    }
@@ -399,15 +399,15 @@ function projectile SpawnProjectile(Vector Start, Rotator Dir)
 		}
 
 		// Return because we already hit something
-		if ( Other != none )
+		if (Other != none)
 			return none;
 	}
 
-   	if( ServerProjectileClass != none )
+   	if (ServerProjectileClass != none)
        	spawnedprojectile = Spawn(ServerProjectileClass,,, Start, Dir);
 
-    if( spawnedprojectile == none )
-        return None;
+    if (spawnedprojectile == none)
+        return none;
 
     return spawnedprojectile;
 }

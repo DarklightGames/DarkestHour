@@ -36,7 +36,7 @@ static function RenderComplexMessage(
 {
 	local string LocationName;
 
-	if (RelatedPRI_1 == None)
+	if (RelatedPRI_1 == none)
 		return;
 
 	if (RelatedPRI_1.Team.TeamIndex == 0)
@@ -59,9 +59,9 @@ static function RenderComplexMessage(
 	else
 		Canvas.DrawText(": ", false);
 
-	Canvas.SetPos( Canvas.CurX, Canvas.CurY - YL );
+	Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
 	Canvas.SetDrawColor(255,255,255,255); //DrawColor = default.DrawColor;
-	Canvas.DrawText( MessageString, False );
+	Canvas.DrawText(MessageString, false);
 }
 
 //-----------------------------------------------------------------------------
@@ -77,10 +77,10 @@ static function string AssembleString(
 {
 	local string LocationName;
 
-	if (RelatedPRI_1 == None)
+	if (RelatedPRI_1 == none)
 		return "";
 	LocationName = RelatedPRI_1.GetLocationName();
-	if ( LocationName == "" )
+	if (LocationName == "")
 		return default.MessagePrefix$RelatedPRI_1.PlayerName@":"@MessageString;
 	else
 		return default.MessagePrefix$RelatedPRI_1.PlayerName$" ("$LocationName$"): "$MessageString;
@@ -90,9 +90,9 @@ static function string AssembleString(
 // GetDHConsoleColor
 //-----------------------------------------------------------------------------
 
-static function Color GetDHConsoleColor( PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours )
+static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
-	if ( (RelatedPRI_1 == None) || (RelatedPRI_1.Team == None) )
+	if ((RelatedPRI_1 == none) || (RelatedPRI_1.Team == none))
 		return default.DrawColor;
 
 	if (RelatedPRI_1.Team.TeamIndex == 0)
@@ -121,6 +121,6 @@ defaultproperties
      BritishColour=(B=140,G=105,R=50,A=255)
      CanadianColour=(B=20,G=120,R=125,A=255)
      MessagePrefix="(DEAD) *PLATOON* "
-     bComplexString=True
-     bBeep=True
+     bComplexString=true
+     bBeep=true
 }

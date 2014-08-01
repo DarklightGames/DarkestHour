@@ -11,6 +11,6 @@ defaultproperties
      DeathString="%o was burned to a crisp by a fire that %k lit."
      FemaleSuicide="%o burned himself to a crisp."
      MaleSuicide="%o burned himself to a crisp."
-     bLocationalHit=False
+     bLocationalHit=false
      GibModifier=0.000000
 }

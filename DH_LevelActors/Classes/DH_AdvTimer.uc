@@ -27,7 +27,7 @@ function Reset()
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {
-	if( !IsInState('Timing') )
+	if (!IsInState('Timing'))
 		gotostate('Timing'); //Not Timing? Then start
 	else
 		gotostate('Initialize'); //Timing? Then lets stop and only restart if bAutoStart is true
@@ -37,7 +37,7 @@ auto state Initialize
 {
 	function BeginState()
 	{
-		if(bAutoStart)
+		if (bAutoStart)
 			gotostate('Timing');
 	}
 }
@@ -49,7 +49,7 @@ state Timing
 		TimeActual = RandRange(TimeMin, TimeMax);
 		TimeElapsed = 0;
 
-		if(!bFireOnce || (bFireOnce && !bFired))
+		if (!bFireOnce || (bFireOnce && !bFired))
 		{
 			bFired = true;
 			SetTimer(1, true);
@@ -65,26 +65,26 @@ state Timing
 		TimeElapsed++; //Increment time elapsed by 1
 
 		//Timer is over lets do the work
-		if(TimeElapsed >= TimeActual)
+		if (TimeElapsed >= TimeActual)
 		{
 			TriggerEvent(nEventToTrigger, self, none); //Triggers the event
 
-			if(bUseEndMessage)
+			if (bUseEndMessage)
 			{
-				if(EndMessageTeam == NEUTRAL)
+				if (EndMessageTeam == NEUTRAL)
 					Level.Game.Broadcast(self, EndMessage, MessageType);
 				else
 				{
-					for(C=Level.ControllerList;C!=None;C=C.NextController)
+					for(C=Level.ControllerList;C!=none;C=C.NextController)
 					{
 						PC = PlayerController(C);
-						if (PC != None && PC.GetTeamNum() == EndMessageTeam)
+						if (PC != none && PC.GetTeamNum() == EndMessageTeam)
 							PC.TeamMessage(C.PlayerReplicationInfo, EndMessage, MessageType);
 					}
 				}
 			}
 
-			if(bRepeatTimer && !bFireOnce)
+			if (bRepeatTimer && !bFireOnce)
 			{
 				TimeActual = RandRange(TimeMin, TimeMax);
 				TimeElapsed = 0;
@@ -95,25 +95,25 @@ state Timing
 		}
 		else
 		{
-			if(bUseMessage && (TimeElapsed % MessageIntervalTime == 0)) //If use interval message and is it time to show it?
+			if (bUseMessage && (TimeElapsed % MessageIntervalTime == 0)) //If use interval message and is it time to show it?
 			{
 				TimerLeft = TimeActual - TimeElapsed;
 
 				MinutesLeft = TimerLeft / 60;
 				r = TimerLeft - (MinutesLeft * 60);
-				if( r < 10 )
+				if (r < 10)
 					SecondsLeft = "0" $ string(r);
 				else
 					SecondsLeft = string(r);
 
-				if(MessageTeam == NEUTRAL)
+				if (MessageTeam == NEUTRAL)
 					Level.Game.Broadcast(self, MinutesLeft $ ":" $ SecondsLeft @ Message, MessageType);
 				else
 				{
-					for(C=Level.ControllerList;C!=None;C=C.NextController)
+					for(C=Level.ControllerList;C!=none;C=C.NextController)
 					{
 						PC = PlayerController(C);
-						if (PC != None && PC.GetTeamNum() == MessageTeam)
+						if (PC != none && PC.GetTeamNum() == MessageTeam)
 							PC.TeamMessage(C.PlayerReplicationInfo, MinutesLeft $ ":" $ SecondsLeft @ Message, MessageType);
 					}
 				}

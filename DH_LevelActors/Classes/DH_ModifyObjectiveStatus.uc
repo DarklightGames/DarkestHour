@@ -52,7 +52,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 			for(i=0;i<ObjectivesNumsToModify.Length;i++)
 			{
 				RandomNum = Rand(101);  //Gets a random # between 0 & 100
-				if(RandomPercent >= RandomNum)
+				if (RandomPercent >= RandomNum)
 				{
 					switch(HowToModify)
 					{
@@ -76,7 +76,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 			TempObjNumsModify = ObjectivesNumsToModify; //Setup a temp array = to ObjectiveNumsToModify
 			for(i=0;i<MaxNumToModify;i++)
 			{
-				if(TempObjNumsModify.Length <= 0) //Check to make sure we don't do more times than needed
+				if (TempObjNumsModify.Length <= 0) //Check to make sure we don't do more times than needed
 					break; //break out of the for loop because we won't be changing anymore
 
 				RandomNum = Rand(TempObjNumsModify.Length); //Select an element in the array to modify

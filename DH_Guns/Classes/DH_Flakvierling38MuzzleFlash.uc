@@ -15,14 +15,14 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
-         UseRandomSubdivision=True
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          CoordinateSystem=PTCS_Relative
@@ -47,14 +47,14 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Guns.DH_Flakvierling38MuzzleFlash.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          Opacity=0.750000
@@ -79,15 +79,15 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Guns.DH_Flakvierling38MuzzleFlash.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          Opacity=0.600000
@@ -113,15 +113,15 @@ defaultproperties
      Emitters(2)=SpriteEmitter'DH_Guns.DH_Flakvierling38MuzzleFlash.SpriteEmitter2'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter3
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         UseRandomSubdivision=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          Opacity=0.750000
@@ -146,15 +146,15 @@ defaultproperties
      Emitters(3)=SpriteEmitter'DH_Guns.DH_Flakvierling38MuzzleFlash.SpriteEmitter3'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter4
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
-         UseRandomSubdivision=True
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
+         UseRandomSubdivision=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          FadeOutStartTime=0.120000
@@ -180,9 +180,9 @@ defaultproperties
      Emitters(4)=SpriteEmitter'DH_Guns.DH_Flakvierling38MuzzleFlash.SpriteEmitter4'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter5
-         RespawnDeadParticles=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         RespawnDeadParticles=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          Opacity=0.200000

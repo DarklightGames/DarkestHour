@@ -7,8 +7,8 @@ defaultproperties
      APCDamageModifier=0.750000
      VehicleDamageModifier=1.000000
      TreadDamageModifier=0.500000
-     bArmorStops=True
-     bLocationalHit=True
+     bArmorStops=true
+     bLocationalHit=true
      KDamageImpulse=3000.000000
      VehicleMomentumScaling=1.100000
      HumanObliterationThreshhold=180

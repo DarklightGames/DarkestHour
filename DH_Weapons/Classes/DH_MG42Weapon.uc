@@ -24,7 +24,7 @@ simulated function PostBeginPlay()
 {
 	super.PostBeginPlay();
 
-	if( Level.Netmode != NM_DedicatedServer)
+	if (Level.Netmode != NM_DedicatedServer)
 		SpawnAmmoBelt();
 }
 
@@ -33,14 +33,14 @@ simulated function UpdateAmmoBelt()
 {
 	local int i;
 
-	if( AmmoAmount(0) > 9 )
+	if (AmmoAmount(0) > 9)
 	{
 		return;
 	}
 
-    for ( i=AmmoAmount(0); i<10; i++ )
+    for (i=AmmoAmount(0); i<10; i++)
     {
-    	MGBeltArray[i].SetDrawType(DT_None);
+    	MGBeltArray[i].SetDrawType(DT_none);
     }
 }
 
@@ -70,7 +70,7 @@ simulated function RenewAmmoBelt()
 // Overriden so we do faster net updated when we're down to the last few rounds
 simulated function bool ConsumeAmmo(int Mode, float load, optional bool bAmountNeededIsMax)
 {
-	if( AmmoAmount(0) < 11 )
+	if (AmmoAmount(0) < 11)
 		NetUpdateTime = Level.TimeSeconds - 1;
 
 	return super.ConsumeAmmo(Mode, load, bAmountNeededIsMax);
@@ -89,8 +89,8 @@ defaultproperties
      MGBeltBones(8)="Case01"
      MGBeltBones(9)="Case"
      BeltBulletClass=Class'ROInventory.MG42BeltRound'
-     bTrackBarrelHeat=True
-     bCanFireFromHip=False
+     bTrackBarrelHeat=true
+     bCanFireFromHip=false
      ROBarrelClass=Class'DH_Weapons.DH_MG42Barrel'
      BarrelSteamBone="Barrel_Switch"
      BarrelChangeAnim="Bipod_Barrel_Change"
@@ -103,7 +103,7 @@ defaultproperties
      IronPutDown="Bipod_2_Rest"
      MaxNumPrimaryMags=3
      InitialNumPrimaryMags=3
-     bPlusOneLoading=True
+     bPlusOneLoading=true
      SprintStartAnim="Rest_Sprint_Start"
      SprintLoopAnim="Rest_Sprint_Middle"
      SprintEndAnim="Rest_Sprint_End"
@@ -125,7 +125,7 @@ defaultproperties
      SelectForce="SwitchToAssaultRifle"
      AIRating=0.400000
      CurrentRating=0.400000
-     bSniping=True
+     bSniping=true
      DisplayFOV=70.000000
      PickupClass=Class'DH_Weapons.DH_MG42Pickup'
      BobDamping=1.600000

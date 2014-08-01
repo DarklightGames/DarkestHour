@@ -15,7 +15,7 @@ class DH_TigerTank extends DH_ROTreadCraft;
 simulated function SetupTreads()
 {
 	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( LeftTreadPanner != None )
+	if (LeftTreadPanner != none)
 	{
 		LeftTreadPanner.Material = Skins[LeftTreadIndex];
 		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -23,7 +23,7 @@ simulated function SetupTreads()
 		Skins[LeftTreadIndex] = LeftTreadPanner;
 	}
 	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if ( RightTreadPanner != None )
+	if (RightTreadPanner != none)
 	{
 		RightTreadPanner.Material = Skins[RightTreadIndex];
 		RightTreadPanner.PanDirection = rot(0, 0, 16384);
@@ -125,9 +125,9 @@ defaultproperties
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,ViewFOV=85.000000)
      DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VTiger_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=85.000000)
      VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.Tiger_body'
-     VehHitpoints(0)=(PointOffset=(X=-6.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointOffset=(X=-6.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=40.000000,PointHeight=40.000000,PointOffset=(X=-100.000000,Z=10.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=25.000000,PointHeight=10.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=-50.000000,Z=35.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      VehHitpoints(3)=(PointRadius=25.000000,PointHeight=10.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-5.000000,Y=-50.000000,Z=35.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
@@ -135,7 +135,7 @@ defaultproperties
      VehHitpoints(5)=(PointRadius=25.000000,PointHeight=10.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-5.000000,Y=50.000000,Z=35.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
      DriverAttachmentBone="driver_attachment"
      Begin Object Class=SVehicleWheel Name=LF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_LF"
          BoneRollAxis=AXIS_Y
@@ -145,7 +145,7 @@ defaultproperties
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_TigerTank.LF_Steering'
 
      Begin Object Class=SVehicleWheel Name=RF_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Steered
          BoneName="steer_wheel_RF"
          BoneRollAxis=AXIS_Y
@@ -155,7 +155,7 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_TigerTank.RF_Steering'
 
      Begin Object Class=SVehicleWheel Name=LR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_LR"
          BoneRollAxis=AXIS_Y
@@ -165,7 +165,7 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_TigerTank.LR_Steering'
 
      Begin Object Class=SVehicleWheel Name=RR_Steering
-         bPoweredWheel=True
+         bPoweredWheel=true
          SteerType=VST_Inverted
          BoneName="steer_wheel_RR"
          BoneRollAxis=AXIS_Y
@@ -175,7 +175,7 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_TigerTank.RR_Steering'
 
      Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-         bPoweredWheel=True
+         bPoweredWheel=true
          BoneName="drive_wheel_L"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=-10.000000,Z=1.000000)
@@ -184,8 +184,8 @@ defaultproperties
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_TigerTank.Left_Drive_Wheel'
 
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-         bPoweredWheel=True
-         bHandbrakeWheel=True
+         bPoweredWheel=true
+         bHandbrakeWheel=true
          BoneName="drive_wheel_R"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=-10.000000,Z=1.000000)
@@ -194,7 +194,7 @@ defaultproperties
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_TigerTank.Right_Drive_Wheel'
 
      VehicleMass=16.000000
-     bFPNoZFromCameraPitch=True
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
      DriveAnim="VTiger_driver_idle_close"
      ExitPositions(0)=(X=50.000000,Y=-200.000000,Z=100.000000)
@@ -233,20 +233,20 @@ defaultproperties
          KCOMOffset=(Z=-0.600000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
          KMaxAngularSpeed=0.850000
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_TigerTank.KParams0'
 
      HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=3
 }

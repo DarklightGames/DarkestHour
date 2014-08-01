@@ -22,8 +22,8 @@ var bool      bIsOn;
 /*
 replication {
 
-	unreliable if ( (!bSkipActorPropertyReplication || bNetInitial) && (Role==ROLE_Authority)
-					&& bNetDirty )
+	unreliable if ((!bSkipActorPropertyReplication || bNetInitial) && (Role==ROLE_Authority)
+					&& bNetDirty)
 			 DistanceFogColor;
 
 }
@@ -40,7 +40,7 @@ simulated event PostBeginPlay()
 
    // If we're on the client side, start in
    // the right mode based on its trigger:
-   if ( ROLE != ROLE_Authority && bClientTrigger ) {
+   if (ROLE != ROLE_Authority && bClientTrigger) {
       bIsOn = !bIsOn;
    }
 
@@ -64,7 +64,7 @@ simulated event PostBeginPlay()
 
 
 
-simulated function Tick( float DeltaTime )
+simulated function Tick(float DeltaTime)
 {
    local float percent;
 
@@ -103,7 +103,7 @@ simulated function Tick( float DeltaTime )
 
 }
 
-simulated function Trigger( Actor Other, Pawn EventInstigator )
+simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
    Log("SkyZoneInfo Triggered");
    Enable('Tick');
@@ -112,7 +112,7 @@ simulated function Trigger( Actor Other, Pawn EventInstigator )
    bClientTrigger = !bClientTrigger;
 }
 
-simulated event ClientTrigger( ) {
+simulated event ClientTrigger() {
    // This is called client-side when triggered server-side
    // because in Trigger() we updated bClientTrigger.
    Log("Client SkyZoneInfo Triggered");
@@ -133,8 +133,8 @@ defaultproperties
      OnColor=(B=16,G=88,R=112,A=255)
      OffColor=(B=48,G=24,R=16,A=255)
      ChangeTime=10.000000
-     bStatic=False
-     bAlwaysRelevant=True
-     bSkipActorPropertyReplication=False
-     bGameRelevant=True
+     bStatic=false
+     bAlwaysRelevant=true
+     bSkipActorPropertyReplication=false
+     bGameRelevant=true
 }

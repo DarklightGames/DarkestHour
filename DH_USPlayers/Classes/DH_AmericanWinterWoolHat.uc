@@ -13,7 +13,7 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     bIsHelmet=False
+     bIsHelmet=false
      Mesh=SkeletalMesh'dhgear_anm.USWinterWoolly_hat'
      Skins(0)=Texture'DHUSCharactersTex.Gear.Woolcap'
 }

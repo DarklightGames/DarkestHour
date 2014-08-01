@@ -20,7 +20,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bCanBeReconCrew=True
+     bCanBeReconCrew=true
      MyName="Reconnaissance Crewman"
      AltName="Spähwagenbesatzung"
      Article="a "
@@ -40,6 +40,6 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_WSSHatPanzerA'
      Headgear(1)=Class'DH_GerPlayers.DH_WSSHatPanzerB'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

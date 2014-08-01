@@ -32,7 +32,7 @@ function bool InternalPreDraw(Canvas C)
 	local float AL, AT, AW, AH, LPad, RPad, TPad, BPad;
 	local ComponentPosValues values;
 
-	if ( AlignStack.Length == 0 )
+	if (AlignStack.Length == 0)
 		return false;
 	
 	if (bChangingPosValues)
@@ -51,7 +51,7 @@ function bool InternalPreDraw(Canvas C)
 	RPad = (RightPadding  * AW) + ImageOffset[2];
 	BPad = (BottomPadding * AH) + ImageOffset[3];
 
-	if ( Style != none )
+	if (Style != none)
 	{
 		LPad += BorderOffsets[0];
 		TPad += BorderOffsets[1];

@@ -37,6 +37,6 @@ defaultproperties
      ItemName="Stielhandgranate 39/43"
      Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Grenades.stiel_s'
-     bUseHighDetailOverlayIndex=True
+     bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=2
 }

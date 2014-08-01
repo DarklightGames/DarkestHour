@@ -42,8 +42,8 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_WSSTankerCrushercap'
      Headgear(1)=Class'DH_GerPlayers.DH_SSCap'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
-     bCanBeTankCrew=True
-     bCanBeTankCommander=True
+     bEnhancedAutomaticControl=true
+     bCanBeTankCrew=true
+     bCanBeTankCommander=true
      limit=1
 }

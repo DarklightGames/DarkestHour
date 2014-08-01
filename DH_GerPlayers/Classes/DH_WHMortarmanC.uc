@@ -10,8 +10,8 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bCanUseMortars=True
-     bCarriesMortarAmmo=False
+     bCanUseMortars=true
+     bCarriesMortarAmmo=false
      MyName="Mortar Operator"
      AltName="Werferschütze"
      Article="a "

@@ -42,7 +42,7 @@ function PostBeginPlay()
 
 	Super.PostBeginPlay();
 
-	if ( MaxIdleTime > 0 )
+	if (MaxIdleTime > 0)
 		Level.bKickLiveIdlers = true;
 	else
 		Level.bKickLiveIdlers = false;
@@ -50,7 +50,7 @@ function PostBeginPlay()
 	// Find the ROLevelInfo
 	foreach AllActors(class'ROLevelInfo', LI)
 	{
-		if (LevelInfo == None)
+		if (LevelInfo == none)
 		{
 			LevelInfo = LI;
 		}
@@ -64,7 +64,7 @@ function PostBeginPlay()
 	// Find the DH_LevelInfo
 	foreach AllActors(class'DH_LevelInfo', DLI)
 	{
-		if (DHLevelInfo == None)
+		if (DHLevelInfo == none)
 		{
 			DHLevelInfo = DLI;
 		}
@@ -75,7 +75,7 @@ function PostBeginPlay()
 		}
 	}
 
-	if (LevelInfo == None)
+	if (LevelInfo == none)
 	{
 		log("DarkestHourGame: No DH_LevelInfo detected!");
 	}
@@ -96,7 +96,7 @@ function PostBeginPlay()
 		// Setup some GRI stuff
 		DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-		if (DHGRI == None)
+		if (DHGRI == none)
 			return;
 
 		DHGRI.bAllowNetDebug = bAllowNetDebug;
@@ -148,15 +148,15 @@ function PostBeginPlay()
 
 		ResetMortarTargets();
 
-		if( LevelInfo.OverheadOffset == OFFSET_90 )
+		if (LevelInfo.OverheadOffset == OFFSET_90)
 		{
 		    DHGRI.OverheadOffset = 90;
 		}
-		else if( LevelInfo.OverheadOffset == OFFSET_180 )
+		else if (LevelInfo.OverheadOffset == OFFSET_180)
 		{
 			DHGRI.OverheadOffset = 180;
 		}
-		else if( LevelInfo.OverheadOffset == OFFSET_270 )
+		else if (LevelInfo.OverheadOffset == OFFSET_270)
 		{
 			DHGRI.OverheadOffset = 270;
 		}
@@ -166,9 +166,9 @@ function PostBeginPlay()
 		}
 
 		// Store Allied Nationality for customising HUD
-		if( DHLevelInfo.AlliedNation == NATION_Britain )
+		if (DHLevelInfo.AlliedNation == NATION_Britain)
 			DHGRI.AlliedNationID = 1;
-		else if( DHLevelInfo.AlliedNation == NATION_Canada )
+		else if (DHLevelInfo.AlliedNation == NATION_Canada)
 			DHGRI.AlliedNationID = 2;
 		else
 			DHGRI.AlliedNationID = 0;
@@ -179,19 +179,19 @@ function PostBeginPlay()
 		{
 			 //NorthEastCorner = NE;
 			 DHGRI.NorthEastBounds = NE.Location;
-			// log( "Found Northeastcorner");
+			// log("Found Northeastcorner");
 		}
 		foreach AllActors(class'ROMapBoundsSW', SW)
 		{
 			 //SouthWestCorner = SW;
 			 DHGRI.SouthWestBounds = SW.Location;
-			// log( "Found SouthWestcorner");
+			// log("Found SouthWestcorner");
 		}
 
 		// Find all the radios
 		foreach AllActors(class'ROArtilleryTrigger', RAT)
 		{
-				if ( RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both)
+				if (RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both)
 				{
 				   DHGRI.AxisRadios[i] = RAT;
 				   i++;
@@ -201,7 +201,7 @@ function PostBeginPlay()
 
 		foreach AllActors(class'ROArtilleryTrigger', RAT)
 		{
-				if ( RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
+				if (RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
 				{
 				   DHGRI.AlliedRadios[j] = RAT;
 				   j++;
@@ -215,15 +215,15 @@ function PostBeginPlay()
 			DHGRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
 			DHGRI.ResupplyAreas[m].Team = ARV.Team;
 			DHGRI.ResupplyAreas[m].bActive = !ARV.bUsesSpawnAreas;
-			if( ARV.ResupplyType == RT_Players )
+			if (ARV.ResupplyType == RT_Players)
 			{
 			  	DHGRI.ResupplyAreas[m].ResupplyType = 0;
 			}
-			else if ( ARV.ResupplyType == RT_Vehicles )
+			else if (ARV.ResupplyType == RT_Vehicles)
 			{
 			  	DHGRI.ResupplyAreas[m].ResupplyType = 1;
 			}
-			else if ( ARV.ResupplyType == RT_All )
+			else if (ARV.ResupplyType == RT_All)
 			{
 			  	DHGRI.ResupplyAreas[m].ResupplyType = 2;
 			}
@@ -244,15 +244,15 @@ function PostBeginPlay()
 		*/
 		foreach AllActors(class'DHSpawnArea', DHSA)
 		{
-			if(DHSA.bMortarmanSpawnArea)
+			if (DHSA.bMortarmanSpawnArea)
                 DHMortarSpawnAreas[p++] = DHSA;
 
-            if(DHSA.bReconnaissanceSpawnArea)
+            if (DHSA.bReconnaissanceSpawnArea)
                 DHReconSpawnAreas[q++] = DHSA;
 		}
 
 		//Scale the Reinforcement limits based on the server's capacity
-		if ( MaxPlayersOverride != 0 && MaxPlayersOverride < MaxPlayers)
+		if (MaxPlayersOverride != 0 && MaxPlayersOverride < MaxPlayers)
 			MaxPlayerRatio = MaxPlayersOverride / 32.0f;
 		else
 		{
@@ -265,7 +265,7 @@ function PostBeginPlay()
 		log("MaxPlayerRatio = "$MaxPlayerRatio);
 
 		//Make sure MaxTeamDifference is an acceptable value
-		if ( MaxTeamDifference < 1 )
+		if (MaxTeamDifference < 1)
 			MaxTeamDifference = 1;
 
 		//Public voice icon variable.
@@ -280,16 +280,16 @@ function CheckResupplyVolumes()
 
 	// Activate any vehicle factories that are actived based on spawn areas
 	DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-	for( i = 0; i < ArrayCount(DHResupplyAreas); i++)
+	for(i = 0; i < ArrayCount(DHResupplyAreas); i++)
 	{
-		if( DHResupplyAreas[i] == none )
+		if (DHResupplyAreas[i] == none)
 			continue;
 
-	 	if( DHResupplyAreas[i].bUsesSpawnAreas )
+	 	if (DHResupplyAreas[i].bUsesSpawnAreas)
 	 	{
-			if( DHResupplyAreas[i].Team == AXIS_TEAM_INDEX )
+			if (DHResupplyAreas[i].Team == AXIS_TEAM_INDEX)
 	     	{
-	     		if( (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none &&
+	     		if ((CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none &&
 				 	CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag) ||
 				 	CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
 				{
@@ -303,9 +303,9 @@ function CheckResupplyVolumes()
 				}
 	     	}
 
-	     	if( DHResupplyAreas[i].Team == ALLIES_TEAM_INDEX )
+	     	if (DHResupplyAreas[i].Team == ALLIES_TEAM_INDEX)
 	     	{
-	     		if( (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none &&
+	     		if ((CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none &&
 				 	CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag) ||
 				 	CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
 				{
@@ -339,7 +339,7 @@ function CheckMortarmanSpawnAreas()
             continue;
 
 		//axis & (no best | this one has higher precedence)
-		if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == None ||
+		if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none ||
 			DHMortarSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
 		{
 			bReqsMet = true;
@@ -356,18 +356,18 @@ function CheckMortarmanSpawnAreas()
 
 			for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; h++)
 			{
-                if (Objectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis )
+                if (Objectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
 				{
 					bSomeReqsMet = true;
 					break;
 				}
 			}
 
-            if( DHMortarSpawnAreas[i].bIncludeNeutralObjectives )
+            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
             {
     			for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
     			{
-                    if (Objectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (Objectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
     				{
     					bSomeReqsMet = true;
     					break;
@@ -377,12 +377,12 @@ function CheckMortarmanSpawnAreas()
 
 			if (bReqsMet)
 				Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
-			else if ( bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis )
+			else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
 			    Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
 		}
 		//allies & (no best | this one has higher precedence)
 		if (DHMortarSpawnAreas[i].bAlliesSpawn &&
-			(Best[ALLIES_TEAM_INDEX] == None || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
+			(Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
 		{
 			bReqsMet = true;
 			bSomeReqsMet = false;
@@ -411,11 +411,11 @@ function CheckMortarmanSpawnAreas()
 
             // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
             // allows mappers to have spawns be used when objectives are neutral, not just captured
-            if( DHMortarSpawnAreas[i].bIncludeNeutralObjectives )
+            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
             {
     			for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
     			{
-                    if (Objectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (Objectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
     				{
     					bSomeReqsMet = true;
     					break;
@@ -425,7 +425,7 @@ function CheckMortarmanSpawnAreas()
 
 			if (bReqsMet)
 				Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
-			else if ( bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies )
+			else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
 			    Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
 		}
 	}
@@ -446,7 +446,7 @@ function CheckReconnaissanceSpawnAreas()
             continue;
 
 		//axis & (no best | this one has higher precedence)
-		if (DHReconSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == None || DHReconSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
+		if (DHReconSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || DHReconSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
 		{
 			bReqsMet = true;
 			bSomeReqsMet = false;
@@ -462,18 +462,18 @@ function CheckReconnaissanceSpawnAreas()
 
 			for (h = 0; h < DHReconSpawnAreas[i].AxisRequiredObjectives.Length; h++)
 			{
-                if (Objectives[DHReconSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis )
+                if (Objectives[DHReconSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
 				{
 					bSomeReqsMet = true;
 					break;
 				}
 			}
 
-            if( DHReconSpawnAreas[i].bIncludeNeutralObjectives )
+            if (DHReconSpawnAreas[i].bIncludeNeutralObjectives)
             {
     			for (k = 0; k < DHReconSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
     			{
-                    if (Objectives[DHReconSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (Objectives[DHReconSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
     				{
     					bSomeReqsMet = true;
     					break;
@@ -483,12 +483,12 @@ function CheckReconnaissanceSpawnAreas()
 
 			if (bReqsMet)
 				Best[AXIS_TEAM_INDEX] = DHReconSpawnAreas[i];
-			else if ( bSomeReqsMet && DHReconSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis )
+			else if (bSomeReqsMet && DHReconSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
 			    Best[AXIS_TEAM_INDEX] = DHReconSpawnAreas[i];
 		}
 
 		//allies & (no best | this one has higher precedence)
-		if (DHReconSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == None || DHReconSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
+		if (DHReconSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || DHReconSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
 		{
 			bReqsMet = true;
 			bSomeReqsMet = false;
@@ -517,11 +517,11 @@ function CheckReconnaissanceSpawnAreas()
 
             // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
             // allows mappers to have spawns be used when objectives are neutral, not just captured
-            if( DHReconSpawnAreas[i].bIncludeNeutralObjectives )
+            if (DHReconSpawnAreas[i].bIncludeNeutralObjectives)
             {
     			for (k = 0; k < DHReconSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
     			{
-                    if (Objectives[DHReconSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral )
+                    if (Objectives[DHReconSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
     				{
     					bSomeReqsMet = true;
     					break;
@@ -531,7 +531,7 @@ function CheckReconnaissanceSpawnAreas()
 
 			if (bReqsMet)
 				Best[ALLIES_TEAM_INDEX] = DHReconSpawnAreas[i];
-			else if ( bSomeReqsMet && DHReconSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies )
+			else if (bSomeReqsMet && DHReconSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
 			    Best[ALLIES_TEAM_INDEX] = DHReconSpawnAreas[i];
 		}
 	}
@@ -563,14 +563,14 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
 
 	P = PlayerStart(N);
 
-	if(P == none || Player == none)
+	if (P == none || Player == none)
 		return -10000000;
 
 	DHRI = DH_RoleInfo(DHPlayerReplicationInfo(Player.PlayerReplicationInfo).RoleInfo);
 
-	if (LevelInfo.bUseSpawnAreas && CurrentSpawnArea[Team] != None)
+	if (LevelInfo.bUseSpawnAreas && CurrentSpawnArea[Team] != none)
 	{
-		if(CurrentTankCrewSpawnArea[Team]!= None && Player != none && DHRI.bCanBeTankCrew)
+		if (CurrentTankCrewSpawnArea[Team]!= none && Player != none && DHRI.bCanBeTankCrew)
 		{
 			if (P.Tag != CurrentTankCrewSpawnArea[Team].Tag)
 				return -9000000;
@@ -579,15 +579,15 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
 		//----------------------------------------------------------------------
 		//Mortar and recon spawn addition.
 		//Colin Basnett, 2010
-		else if(DHCurrentMortarSpawnArea[Team] != none && Player != none && DHRI != none && DHRI.bCanUseMortars)
+		else if (DHCurrentMortarSpawnArea[Team] != none && Player != none && DHRI != none && DHRI.bCanUseMortars)
 		{
-			if(P.Tag != DHCurrentMortarSpawnArea[Team].Tag)
+			if (P.Tag != DHCurrentMortarSpawnArea[Team].Tag)
 				return -9000000;
 		}
 
-		else if(DHCurrentReconSpawnArea[Team] != none && Player != none && DHRI != none && (DHRI.bCanBeReconCrew || DHRI.bCanBeReconOfficer))
+		else if (DHCurrentReconSpawnArea[Team] != none && Player != none && DHRI != none && (DHRI.bCanBeReconCrew || DHRI.bCanBeReconOfficer))
 		{
-			if(P.Tag != DHCurrentReconSpawnArea[Team].Tag)
+			if (P.Tag != DHCurrentReconSpawnArea[Team].Tag)
 				return -9000000;
 		}
 		else
@@ -617,7 +617,7 @@ function Bot SpawnBot(optional string botName)
 	BotTeam = GetBotTeam();
 	Chosen = BotTeam.ChooseBotClass(botName);
 
-	if (Chosen.PawnClass == None)
+	if (Chosen.PawnClass == none)
 		Chosen.Init(); //amb
 
 	// Change default bot class
@@ -628,30 +628,30 @@ function Bot SpawnBot(optional string botName)
 	NewBot = DHBot(Spawn(Chosen.PawnClass.Default.ControllerClass));
 
 
-	if ( NewBot != None )
+	if (NewBot != none)
 	{
 		InitializeBot(NewBot,BotTeam,Chosen);
 
 		MyRole = GetDHBotNewRole(NewBot,BotTeam.TeamIndex);
 
-		if ( MyRole >= 0 )
+		if (MyRole >= 0)
 		{
 			RI = GetRoleInfo(BotTeam.TeamIndex, MyRole);
 		}
 
-		if( MyRole == -1 || RI == none )
+		if (MyRole == -1 || RI == none)
 		{
 			NewBot.Destroy();
-			return None;
+			return none;
 		}
 
 		NewBot.CurrentRole = MyRole;
 		NewBot.DesiredRole = MyRole;
 
 		// Increment the RoleCounter for the new role
-		if( BotTeam.TeamIndex == AXIS_TEAM_INDEX )
+		if (BotTeam.TeamIndex == AXIS_TEAM_INDEX)
 			DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[NewBot.CurrentRole]++;
-		else if ( BotTeam.TeamIndex == ALLIES_TEAM_INDEX )
+		else if (BotTeam.TeamIndex == ALLIES_TEAM_INDEX)
 			DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[NewBot.CurrentRole]++;
 
 		// Tone down the "gamey" bot parameters
@@ -714,13 +714,13 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 {
 	local int MyRole, Count, AltRole;
 
-	if ( ThisBot != None )
+	if (ThisBot != none)
 	{
 		MyRole = Rand(ArrayCount(DHAxisRoles));
 
 		do
 		{
-			if( FRand() < LevelInfo.VehicleBotRoleBalance /*0.3*/ )
+			if (FRand() < LevelInfo.VehicleBotRoleBalance /*0.3*/)
 			{
 				AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
 
@@ -732,7 +732,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 			}
 
 			// Override to allow bots to use MG/AT for testing purposes
-//			if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) )
+//			if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole))
 
    			// Temp hack to prevent bots from getting MG roles
 			if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || (GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG) ||
@@ -751,7 +751,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 
 					//if (MyRole >= ArrayCount(AxisRoles))
 
-					if((BotTeamNum == 0 && MyRole >= ArrayCount(DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= ArrayCount(DHAxisRoles)))
+					if ((BotTeamNum == 0 && MyRole >= ArrayCount(DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= ArrayCount(DHAxisRoles)))
 						MyRole = 0;
 				}
 			}
@@ -770,9 +770,9 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 //-----------------------------------------------------------------------------
 // ScoreVehicleKill - give player points for destroying an enemy vehicle
 //-----------------------------------------------------------------------------
-function ScoreVehicleKill( Controller Killer, ROVehicle Vehicle, float Points )
+function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
 {
-	if( Killer == none || Points <= 0 || Killer.PlayerReplicationInfo == none || Killer.GetTeamNum() == Vehicle.GetTeamNum())
+	if (Killer == none || Points <= 0 || Killer.PlayerReplicationInfo == none || Killer.GetTeamNum() == Vehicle.GetTeamNum())
 		return;
 
 	Killer.PlayerReplicationInfo.Score += Points;
@@ -782,17 +782,17 @@ function ScoreVehicleKill( Controller Killer, ROVehicle Vehicle, float Points )
 //-----------------------------------------------------------------------------
 // ScoreMGResupply - give player a point for resupplying an MG gunner
 //-----------------------------------------------------------------------------
-function ScoreMGResupply( Controller Dropper, Controller Gunner )
+function ScoreMGResupply(Controller Dropper, Controller Gunner)
 {
 	local int ResupplyAward;
 
-	if( Dropper == Gunner )
+	if (Dropper == Gunner)
 	{
 		return;
 	}
 
-	else if( (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none)
-		&& (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none) )
+	else if ((DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none)
+		&& (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none))
 	{
 		ResupplyAward = 5;
 		Dropper.PlayerReplicationInfo.Score += ResupplyAward;
@@ -804,17 +804,17 @@ function ScoreMGResupply( Controller Dropper, Controller Gunner )
 //-----------------------------------------------------------------------------
 // ScoreATResupply - give player a point for resupplying an AT gunner
 //-----------------------------------------------------------------------------
-function ScoreATResupply( Controller Dropper, Controller Gunner )
+function ScoreATResupply(Controller Dropper, Controller Gunner)
 {
 	local int ResupplyAward;
 
-	if( Dropper == Gunner )
+	if (Dropper == Gunner)
 	{
 		return;
 	}
 
-	else if( (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none)
-		&& (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none) )
+	else if ((DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none)
+		&& (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none))
 	{
 		ResupplyAward = 2;
 		Dropper.PlayerReplicationInfo.Score += ResupplyAward;
@@ -826,17 +826,17 @@ function ScoreATResupply( Controller Dropper, Controller Gunner )
 //-----------------------------------------------------------------------------
 // ScoreATReload - give player a point for loading an AT gunner
 //-----------------------------------------------------------------------------
-function ScoreATReload( Controller Loader, Controller Gunner )
+function ScoreATReload(Controller Loader, Controller Gunner)
 {
 	local int LoadAward;
 
-	if( Loader == Gunner )
+	if (Loader == Gunner)
 	{
 		return;
 	}
 
-	else if( (DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none)
-		&& (DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none) )
+	else if ((DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none)
+		&& (DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none))
 	{
 		LoadAward = 1;
 		Loader.PlayerReplicationInfo.Score += LoadAward;
@@ -848,12 +848,12 @@ function ScoreATReload( Controller Loader, Controller Gunner )
 //-----------------------------------------------------------------------------
 // ScoreRadioUse - give player a point for resupplying an MG gunner
 //-----------------------------------------------------------------------------
-function ScoreRadioUsed( Controller Radioman )
+function ScoreRadioUsed(Controller Radioman)
 {
 	local int RadioUsedAward;
 
-	if( (DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo) != none)
-		&& (DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).RoleInfo != none) )
+	if ((DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo) != none)
+		&& (DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).RoleInfo != none))
 	{
 		RadioUsedAward = 5;
 		Radioman.PlayerReplicationInfo.Score += RadioUsedAward;
@@ -869,7 +869,7 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 {
 	local int ResupplyAward;
 
-	if(Dropper == none || Dropper == Gunner || Dropper.PlayerReplicationInfo == none)
+	if (Dropper == none || Dropper == Gunner || Dropper.PlayerReplicationInfo == none)
 		return;
 
 	Dropper.PlayerReplicationInfo.Score += 2;
@@ -881,7 +881,7 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 //-----------------------------------------------------------------------------
 function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
 {
-	if(Spotter == none || Spotter == Mortarman ||
+	if (Spotter == none || Spotter == Mortarman ||
 	Spotter.PlayerReplicationInfo == none || Mortarman == none ||
 	Mortarman.PlayerReplicationInfo == none)
 		return;
@@ -916,9 +916,9 @@ event PlayerController Login
 	local string InName;
 	local PlayerController NewPlayer;
 
-	InName = Left(ParseOption ( Options, "Name"), 32);
+	InName = Left(ParseOption (Options, "Name"), 32);
 	NewPlayer = Super.Login(Portal, Options, Error);
-	ChangeName( NewPlayer, InName, false );
+	ChangeName(NewPlayer, InName, false);
 
 	return NewPlayer;
 }
@@ -928,7 +928,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 {
 	local Controller APlayer,C, P;
 
-	if ( S == "" )
+	if (S == "")
 		return;
 
 	S = StripColor(s);	// Strip out color codes
@@ -940,9 +940,9 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 	//ReplaceText(S, " ", "_");
 	ReplaceText(S, "\"", "");
 
-	if ( bEpicNames && (Bot(Other) != None) )
+	if (bEpicNames && (Bot(Other) != none))
 	{
-		if ( TotalEpic < 21 )
+		if (TotalEpic < 21)
 		{
 			S = EpicNames[EpicOffset % 21];
 			EpicOffset++;
@@ -955,17 +955,17 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 		}
 	}
 
-	for( APlayer=Level.ControllerList; APlayer!=None; APlayer=APlayer.nextController )
-		if ( APlayer.bIsPlayer && (APlayer.PlayerReplicationInfo.playername~=S) )
+	for(APlayer=Level.ControllerList; APlayer!=none; APlayer=APlayer.nextController)
+		if (APlayer.bIsPlayer && (APlayer.PlayerReplicationInfo.playername~=S))
 		{
-			if ( Other.IsA('PlayerController') )
+			if (Other.IsA('PlayerController'))
 			{
-				PlayerController(Other).ReceiveLocalizedMessage( GameMessageClass, 8 );
+				PlayerController(Other).ReceiveLocalizedMessage(GameMessageClass, 8);
 				return;
 			}
 			else
 			{
-				if ( Other.PlayerReplicationInfo.bIsFemale )
+				if (Other.PlayerReplicationInfo.bIsFemale)
 				{
 					S = FemaleBackupNames[FemaleBackupNameOffset%32];
 					FemaleBackupNameOffset++;
@@ -975,8 +975,8 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 					S = MaleBackupNames[MaleBackupNameOffset%32];
 					MaleBackupNameOffset++;
 				}
-				for( P=Level.ControllerList; P!=None; P=P.nextController )
-					if ( P.bIsPlayer && (P.PlayerReplicationInfo.playername~=S) )
+				for(P=Level.ControllerList; P!=none; P=P.nextController)
+					if (P.bIsPlayer && (P.PlayerReplicationInfo.playername~=S))
 					{
 						S = NamePrefixes[NameNumber%10]$S$NameSuffixes[NameNumber%10];
 						NameNumber++;
@@ -989,17 +989,17 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 			break;
 		}
 
-	if( bNameChange )
+	if (bNameChange)
 		GameEvent("NameChange",s,Other.PlayerReplicationInfo);
 
-	if ( S ~= "CliffyB" )
+	if (S ~= "CliffyB")
 		bEpicNames = true;
 	Other.PlayerReplicationInfo.SetPlayerName(S);
 	// notify local players
-	if  ( bNameChange )
-		for ( C=Level.ControllerList; C!=None; C=C.NextController )
-			if ( (PlayerController(C) != None) && (Viewport(PlayerController(C).Player) != None) )
-				PlayerController(C).ReceiveLocalizedMessage( class'GameMessage', 2, Other.PlayerReplicationInfo );
+	if  (bNameChange)
+		for (C=Level.ControllerList; C!=none; C=C.NextController)
+			if ((PlayerController(C) != none) && (Viewport(PlayerController(C).Player) != none))
+				PlayerController(C).ReceiveLocalizedMessage(class'GameMessage', 2, Other.PlayerReplicationInfo);
 }
 
 function BroadcastLastObjectiveMessage(int team_that_is_about_to_win)
@@ -1013,7 +1013,7 @@ function BroadcastLastObjectiveMessage(int team_that_is_about_to_win)
 
 function AddDefaultInventory(Pawn aPawn)
 {
-	if (DH_Pawn(aPawn) != None)
+	if (DH_Pawn(aPawn) != none)
 		DH_Pawn(aPawn).AddDefaultInventory();
 
 	SetPlayerDefaults(aPawn);
@@ -1035,7 +1035,7 @@ function AddRole(RORoleInfo NewRole)
 
 	if (NewRole.Side == SIDE_Allies)
 	{
-		if(AlliesRoleIndex >= ArrayCount(DHAlliesRoles))
+		if (AlliesRoleIndex >= ArrayCount(DHAlliesRoles))
 		{
 			warn(NewRole @ "ignored when adding Allied roles to the map, exceeded limit");
 			return;
@@ -1047,7 +1047,7 @@ function AddRole(RORoleInfo NewRole)
 	}
 	else
 	{
-		if(AxisRoleIndex >= ArrayCount(DHAxisRoles))
+		if (AxisRoleIndex >= ArrayCount(DHAxisRoles))
 		{
 			warn(NewRole @ "ignored when adding Axis roles to the map, exceeded limit");
 			return;
@@ -1062,14 +1062,14 @@ function AddRole(RORoleInfo NewRole)
 function RORoleInfo GetRoleInfo(int Team, int Num)
 {
 	if (Team > 1 || Num < 0 || Num >= ArrayCount(DHAxisRoles))
-		return None;
+		return none;
 
 	if (Team == AXIS_TEAM_INDEX)
 		return DHAxisRoles[Num];
 	else if (Team == ALLIES_TEAM_INDEX)
 		return DHAlliesRoles[Num];
 
-	return None;
+	return none;
 }
 
 function bool RoleLimitReached(int Team, int Num)
@@ -1077,7 +1077,7 @@ function bool RoleLimitReached(int Team, int Num)
     local DHGameReplicationInfo DHGRI;
 
 	// This shouldn't even happen, but if it does, just say the limit was reached
-	if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == None) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == None) || Num >= ArrayCount(DHAxisRoles))
+	if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= ArrayCount(DHAxisRoles))
 		return true;
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -1097,14 +1097,14 @@ function bool HumanWantsRole(int Team, int Num)
 	local DHGameReplicationInfo DHGRI;
 
 	// This shouldn't even happen, but if it does, just say the limit was reached
-	if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == None) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == None) || Num >= ArrayCount(DHAxisRoles))
+	if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= ArrayCount(DHAxisRoles))
 		return false;
 
-	for (C = Level.ControllerList; C != None; C = C.NextController)
+	for (C = Level.ControllerList; C != none; C = C.NextController)
 	{
-		if (C.PlayerReplicationInfo != None && C.PlayerReplicationInfo.Team != None && C.PlayerReplicationInfo.Team.TeamIndex == Team)
+		if (C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.Team != none && C.PlayerReplicationInfo.Team.TeamIndex == Team)
 		{
-			if (ROBot(C) != None && ROBot(C).CurrentRole == Num)
+			if (ROBot(C) != none && ROBot(C).CurrentRole == Num)
 			{
 				BotHasRole = ROBot(C);
 				break;
@@ -1140,13 +1140,13 @@ function int GetVehicleRole(int Team, int Num)
 	local int i;
 
 	// This shouldn't even happen, but if it does, just say the limit was reached
-	if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == None) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == None) || Num >= ArrayCount(DHAxisRoles))
+	if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= ArrayCount(DHAxisRoles))
 		return -1;
 
 	// Should probably do this team specific in case the teams have different amounts of roles
-	for ( i = 0; i < ArrayCount(DHAxisRoles); i++ )
+	for (i = 0; i < ArrayCount(DHAxisRoles); i++)
 	{
-		if( GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i) )
+		if (GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i))
 		{
 			return i;
 		}
@@ -1159,13 +1159,13 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 {
 	local int MyRole, Count, AltRole;
 
-	if ( ThisBot != None )
+	if (ThisBot != none)
 	{
 		MyRole = Rand(ArrayCount(DHAxisRoles));
 
 		do
 		{
-			if( FRand() < LevelInfo.VehicleBotRoleBalance /*0.3*/ )
+			if (FRand() < LevelInfo.VehicleBotRoleBalance /*0.3*/)
 			{
 				AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
 
@@ -1217,7 +1217,7 @@ function UpdateRoleCounts()
 
 	for (i = 0; i < ArrayCount(DHAxisRoles); i++)
 	{
-		if (DHAxisRoles[i] != None)
+		if (DHAxisRoles[i] != none)
 		{
 			DHGRI.DHAxisRoleCount[i] = 0;
 			DHGRI.DHAxisRoleBotCount[i] = 0;
@@ -1226,18 +1226,18 @@ function UpdateRoleCounts()
 
 	for (i = 0; i < ArrayCount(DHAlliesRoles); i++)
 	{
-		if (DHAlliesRoles[i] != None)
+		if (DHAlliesRoles[i] != none)
 		{
 			DHGRI.DHAlliesRoleCount[i] = 0;
 			DHGRI.DHAlliesRoleBotCount[i] = 0;
 		}
 	}
 
-	for (C = Level.ControllerList; C != None; C = C.NextController)
+	for (C = Level.ControllerList; C != none; C = C.NextController)
 	{
-		if( C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.Team != none )
+		if (C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.Team != none)
 		{
-			if (ROPlayer(C) != None && ROPlayer(C).CurrentRole != -1)
+			if (ROPlayer(C) != none && ROPlayer(C).CurrentRole != -1)
 			{
 				if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
 				{
@@ -1248,7 +1248,7 @@ function UpdateRoleCounts()
 					DHGRI.DHAxisRoleCount[ROPlayer(C).CurrentRole]++;
 				}
 			}
-			else if (ROBot(C) != None && ROBot(C).CurrentRole != -1)
+			else if (ROBot(C) != none && ROBot(C).CurrentRole != -1)
 			{
 				if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
 				{
@@ -1271,31 +1271,31 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 	local ROPlayer Playa;
 	local ROBot MrRoboto;
 
-	if (aPlayer == None || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == None || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
+	if (aPlayer == none || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == none || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
 		return;
 
 	RI = GetRoleInfo(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i);
 
-	if (RI == None)
+	if (RI == none)
 		return;
 
 	// Lets try and avoid 50 casts - Ramm
 	Playa = ROPlayer(aPlayer);
 
-	if( Playa == none )
+	if (Playa == none)
 	{
 		MrRoboto = ROBot(aPlayer);
 	}
 
 
-	if (Playa != None)
+	if (Playa != none)
 	{
 		Playa.DesiredRole = i;
 
 		//if (Playa.CurrentRole == i)
 		//	return;
 
-		if (aPlayer.Pawn == None)
+		if (aPlayer.Pawn == none)
 		{
 			// Try and kick a bot out of this role if bots are occupying it
 			if (RoleLimitReached(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i))
@@ -1312,20 +1312,20 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                 else
                 {
     				// Decrement the RoleCounter for the old role
-					if(Playa.CurrentRole != -1)
+					if (Playa.CurrentRole != -1)
 					{
-						if( aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX )
+						if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
 							DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]--;
-						else if ( aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX )
+						else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
 							DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]--;
 					}
 
     				Playa.CurrentRole = i;
 
     				// Increment the RoleCounter for the new role
-					if( aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX )
+					if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
 						DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]++;
-					else if ( aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX )
+					else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
 						DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]++;
 
     				ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
@@ -1339,7 +1339,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 			else
 			{
 				Playa.DesiredRole = Playa.CurrentRole;
-				PlayerController(aPlayer).ReceiveLocalizedMessage(GameMessageClass, 17, None, None, RI);
+				PlayerController(aPlayer).ReceiveLocalizedMessage(GameMessageClass, 17, none, none, RI);
 			}
 
 			// Since we're changing roles, clear all associated requests/rally points
@@ -1347,35 +1347,35 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 		}
 		else
 		{
-			PlayerController(aPlayer).ReceiveLocalizedMessage(GameMessageClass, 16, None, None, RI);
+			PlayerController(aPlayer).ReceiveLocalizedMessage(GameMessageClass, 16, none, none, RI);
 		}
 	}
-	else if (MrRoboto != None)
+	else if (MrRoboto != none)
 	{
 		if (MrRoboto.CurrentRole == i)
 			return;
 
 		MrRoboto.DesiredRole = i;
 
-		if (aPlayer.Pawn == None)
+		if (aPlayer.Pawn == none)
 		{
 			if (!RoleLimitReached(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i))
 			{
 				// Decrement the RoleCounter for the old role
-				if(MrRoboto.CurrentRole != -1)
+				if (MrRoboto.CurrentRole != -1)
 				{
-					if( aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX )
+					if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
 						DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]--;
-					else if ( aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX )
+					else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
 						DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]--;
 				}
 
 				MrRoboto.CurrentRole = i;
 
 				// Increment the RoleCounter for the new role
-				if( aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX )
+				if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
 					DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]++;
-				else if ( aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX )
+				else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
 					DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]++;
 
 				ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
@@ -1389,10 +1389,10 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 	}
 }
 
-function Killed( Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType )
+function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
 	/* Removes console spam whenever you kill an empty tank. */
-	if(Killed != none)
+	if (Killed != none)
 		super.Killed(Killer, Killed, KilledPawn, DamageType);
 }
 
@@ -1400,13 +1400,13 @@ function bool RoleExists(byte TeamID, DH_RoleInfo RI)
 {
 	local int i;
 
-	if(TeamID == 0)
+	if (TeamID == 0)
 		for(i = 0; i < ArrayCount(DHAxisRoles); i++)
-			if(DHAxisRoles[i] == RI)
+			if (DHAxisRoles[i] == RI)
 				return true;
-	if(TeamID == 1)
+	if (TeamID == 1)
 		for(i = 0; i < ArrayCount(DHAlliesRoles); i++)
-			if(DHAlliesRoles[i] == RI)
+			if (DHAlliesRoles[i] == RI)
 				return true;
 
 	return false;
@@ -1453,9 +1453,9 @@ state RoundInPlay
 		bMatchOver = true;
 
 		if (RoundLimit != 0 && RoundCount >= RoundLimit)
-			EndGame(None, "RoundLimit");
+			EndGame(none, "RoundLimit");
 		else if (WinLimit != 0 && (Teams[AXIS_TEAM_INDEX].Score >= WinLimit || Teams[ALLIES_TEAM_INDEX].Score >= WinLimit))
-			EndGame(None, "WinLimit");
+			EndGame(none, "WinLimit");
 		else
 		{
 			bMatchOver = false;
@@ -1465,31 +1465,31 @@ state RoundInPlay
 		// Get the MapName out of the URL
 		MapName = Level.GetLocalURL();
 		i = InStr(MapName, "/");
-		if ( i < 0 )
+		if (i < 0)
 		{
 			i = 0;
 		}
 		j = InStr(MapName, "?");
-		if ( j < 0 )
+		if (j < 0)
 		{
 			j = Len(MapName);
 		}
-		if ( Mid(MapName, j - 3, 3) ~= "rom" )
+		if (Mid(MapName, j - 3, 3) ~= "rom")
 		{
 			j -= 5;
 		}
 		MapName = Mid(MapName, i + 1, j - i);
 
 		// Set the map as won in the Steam Stats of everyone on the Winning Team
-		for ( i = 0; i < GameReplicationInfo.PRIArray.Length; i++ )
+		for (i = 0; i < GameReplicationInfo.PRIArray.Length; i++)
 		{
-			if ( ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements) != none )
+			if (ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements) != none)
 			{
-				if ( GameReplicationInfo.PRIArray[i].Team != none && GameReplicationInfo.PRIArray[i].Team.TeamIndex == Winner )
+				if (GameReplicationInfo.PRIArray[i].Team != none && GameReplicationInfo.PRIArray[i].Team.TeamIndex == Winner)
 				{
-					if ( bMatchOver )
+					if (bMatchOver)
 					{
-						if ( GameReplicationInfo.PRIArray[i].Team.TeamIndex == ALLIES_TEAM_INDEX && ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]) != none )
+						if (GameReplicationInfo.PRIArray[i].Team.TeamIndex == ALLIES_TEAM_INDEX && ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]) != none)
 						{
 							bRussianSquadLeader = ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bIsLeader && !ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bCanBeTankCrew;
 						}
@@ -1522,9 +1522,9 @@ state RoundInPlay
 		//----------------------------------------------------------------------
 		// Fixes the unfathomably annoying bug where machine guns would drone on
 		// and on forever at the end of a round. -Colin
-		if(bGameEnded)
+		if (bGameEnded)
 			for(C = Level.ControllerList; C != none; C = C.NextController)
-				if(DHPlayer(C) != none)
+				if (DHPlayer(C) != none)
 					DHPlayer(C).ClientConsoleCommand("pausesounds", false);
 	}
 }
@@ -1534,12 +1534,12 @@ function ResetMortarTargets()
 	local int k;
 	local DHGameReplicationInfo GRI;
 
-	if(GameReplicationInfo == none)
+	if (GameReplicationInfo == none)
 		return;
 
 	GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-	if(GRI == none)
+	if (GRI == none)
 		return;
 
 	//Clear mortar allied targets.
@@ -1564,11 +1564,11 @@ function ResetMortarTargets()
 //------------------------------------------------------------------------------
 // Overridden so we show how many actual individual reinforcements we have.
 // Basnett - January 19th, 2010
-function RestartPlayer( Controller aPlayer )
+function RestartPlayer(Controller aPlayer)
 {
     local ROPlayer playa;
 
-    if( aPlayer == none )
+    if (aPlayer == none)
     	return;
 
     SetCharacter(aPlayer);
@@ -1606,7 +1606,7 @@ function RestartPlayer( Controller aPlayer )
 
 defaultproperties
 {
-     bShowPublicVoiceIcon=True
+     bShowPublicVoiceIcon=true
      WinLimit=3
      ROHints(1)="You can 'cook' an Allied Mk II grenade by pressing the opposite fire button while holding the grenade back."
      ROHints(13)="You cannot change the 30 Cal barrel, be careful not to overheat!"

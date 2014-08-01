@@ -12,17 +12,17 @@ var()	bool						bFireOnce;
 var		bool						bFired;
 var()	array<name>					EventsToTrigger;
 
-function Trigger( Actor Other, Pawn EventInstigator )
+function Trigger(Actor Other, Pawn EventInstigator)
 {
 	local int i;
 
-	if(!bFireOnce && !bFired)
+	if (!bFireOnce && !bFired)
 	{
   		//Start the loop to trigger all the events we need
 		for(i=0;i<EventsToTrigger.Length;i++)
 			TriggerEvent(EventsToTrigger[i], self, none); //Triggers the events
 
-		bFired = True;
+		bFired = true;
 	}
 }
 

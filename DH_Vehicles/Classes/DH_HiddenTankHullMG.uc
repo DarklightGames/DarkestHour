@@ -16,7 +16,7 @@ simulated function bool ReadyToFire(bool bAltFire)
 {
 	//log("bReloading = "$bReloading);
 
-	if( bReloading )
+	if (bReloading)
 		return false;
 
 	return super.ReadyToFire(bAltFire);
@@ -26,27 +26,27 @@ function CeaseFire(Controller C, bool bWasAltFire)
 {
 	super.CeaseFire(C, bWasAltFire);
 
-	if( !bReloading && !HasAmmo(0) )
+	if (!bReloading && !HasAmmo(0))
 		HandleReload();
 }
 
 function HandleReload()
 {
-	if( NumMags > 0 && !bReloading)
+	if (NumMags > 0 && !bReloading)
 	{
 		bReloading = true;
 		NumMags--;
 		NetUpdateTime = Level.TimeSeconds - 1;
-		SetTimer(GetSoundDuration( ReloadSound ), false);
-		PlaySound(ReloadSound, SLOT_None,1.5,, 25, ,true);
+		SetTimer(GetSoundDuration(ReloadSound), false);
+		PlaySound(ReloadSound, SLOT_none,1.5,, 25, ,true);
 	}
 }
 
 simulated function Timer()
 {
-   if ( bReloading )
+   if (bReloading)
    {
-	    if( Role == ROLE_Authority )
+	    if (Role == ROLE_Authority)
 	    {
 			bReloading=false;
 			MainAmmoCharge[0] = InitialPrimaryAmmo;
@@ -57,8 +57,8 @@ simulated function Timer()
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-  	if(Role != ROLE_Authority || bForceCenterAim)
-		return False;
+  	if (Role != ROLE_Authority || bForceCenterAim)
+		return false;
 
 	if (FireCountdown <= 0)
 	{
@@ -66,9 +66,9 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		if (bCorrectAim)
 			WeaponFireRotation = AdjustAim(bAltFire);
 
-		if( bAltFire )
+		if (bAltFire)
 		{
-			if( AltFireSpread > 0 )
+			if (AltFireSpread > 0)
 				WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
 		}
 		else if (Spread > 0)
@@ -81,7 +81,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		Instigator.MakeNoise(1.0);
 		if (bAltFire)
 		{
-			if( !ConsumeAmmo(2) )
+			if (!ConsumeAmmo(2))
 			{
 				VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 				return false;
@@ -91,11 +91,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		}
 		else
 		{
-			if( bMultipleRoundTypes )
+			if (bMultipleRoundTypes)
 			{
 				if (ProjectileClass == PrimaryProjectileClass)
 				{
-					if( !ConsumeAmmo(0) )
+					if (!ConsumeAmmo(0))
 					{
 						VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 						return false;
@@ -103,14 +103,14 @@ event bool AttemptFire(Controller C, bool bAltFire)
 			    }
 			    else if (ProjectileClass == SecondaryProjectileClass)
 			    {
-					if( !ConsumeAmmo(1) )
+					if (!ConsumeAmmo(1))
 					{
 						VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 						return false;
 					}
 			    }
 			}
-			else if( !ConsumeAmmo(0) )
+			else if (!ConsumeAmmo(0))
 			{
 				VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 				HandleReload();
@@ -122,10 +122,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
 		}
 		AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
-	    return True;
+	    return true;
 	}
 
-	return False;
+	return false;
 }
 
 // Fill the ammo up to the initial ammount
@@ -133,7 +133,7 @@ function bool GiveInitialAmmo()
 {
 	local bool bDidResupply;
 
-	if( NumMags != default.NumMags )
+	if (NumMags != default.NumMags)
 	{
 		bDidResupply = true;
 	}

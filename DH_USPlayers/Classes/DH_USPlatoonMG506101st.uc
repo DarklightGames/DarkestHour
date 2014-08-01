@@ -22,13 +22,13 @@ defaultproperties
      Models(0)="US_506101AB1"
      Models(1)="US_506101AB2"
      Models(2)="US_506101AB3"
-     bIsGunner=True
+     bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_30calWeapon',Amount=6)
      SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet506101stEMb'
-     bCarriesMGAmmo=False
+     bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
      limit=1
 }

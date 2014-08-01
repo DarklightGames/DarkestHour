@@ -42,20 +42,20 @@ simulated function PostBeginPlay()
 			break;
 	}
 
-	if ( Level.NetMode != NM_DedicatedServer && bHasTracer)
+	if (Level.NetMode != NM_DedicatedServer && bHasTracer)
 	{
 		Corona = Spawn(TracerEffect,self);
 	}
 
 	if (PhysicsVolume.bWaterVolume)
 	{
-		bHitWater = True;
+		bHitWater = true;
 		Velocity=0.6*Velocity;
 	}
-    if ( Level.bDropDetail )
+    if (Level.bDropDetail)
 	{
 		bDynamicLight = false;
-		LightType = LT_None;
+		LightType = LT_none;
 	}
 
 	super.PostBeginPlay();
@@ -66,12 +66,12 @@ simulated static function int GetPitchForRange(int Range)
 {
 	local int i;
 
-	if( !default.bMechanicalAiming )
+	if (!default.bMechanicalAiming)
 		return 0;
 
 	for (i = 0; i < default.MechanicalRanges.Length; i++)
 	{
-		if( default.MechanicalRanges[i].Range >= Range )
+		if (default.MechanicalRanges[i].Range >= Range)
 		{
 			return default.MechanicalRanges[i].RangeValue;
 		}
@@ -84,12 +84,12 @@ simulated static function float GetYAdjustForRange(int Range)
 {
 	local int i;
 
-	if( !default.bOpticalAiming )
+	if (!default.bOpticalAiming)
 		return 0;
 
 	for (i = 0; i < default.OpticalRanges.Length; i++)
 	{
-		if( default.OpticalRanges[i].Range >= Range )
+		if (default.OpticalRanges[i].Range >= Range)
 		{
 			return default.OpticalRanges[i].RangeValue;
 		}
@@ -105,41 +105,41 @@ simulated function Destroyed()
 	local ESurfaceTypes ST;
 	local bool bShowDecal, bSnowDecal;
 
-	if( DH_ROTankCannonPawn(Instigator) != none && ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun) != none)
+	if (DH_ROTankCannonPawn(Instigator) != none && ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun) != none)
 	{
 		ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun).HandleShellDebug(SavedHitLocation);
 	}
 
-	if( !bDidExplosionFX )
+	if (!bDidExplosionFX)
 	{
-	    if ( SavedHitActor == none )
+	    if (SavedHitActor == none)
 	    {
-	       Trace(TraceHitLocation, TraceHitNormal, Location + Vector(Rotation) * 16, Location, false,, HitMaterial);
+	       Trace(TraceHitLocation, TraceHitNormal, Location + vector(Rotation) * 16, Location, false,, HitMaterial);
 	    }
 
-	    if (HitMaterial == None)
+	    if (HitMaterial == none)
 			ST = EST_Default;
 		else
 			ST = ESurfaceTypes(HitMaterial.SurfaceType);
 
-	    if ( SavedHitActor != none )
+	    if (SavedHitActor != none)
 	    {
 
             DoShakeEffect();
 
             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-	        if ( EffectIsRelevant(SavedHitLocation,false) )
+	        if (EffectIsRelevant(SavedHitLocation,false))
 	        {
 	        	Spawn(ShellHitVehicleEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-	    		if ( (ExplosionDecal != None) && (Level.NetMode != NM_DedicatedServer) )
+	    		if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
 	    			Spawn(ExplosionDecal,self,,SavedHitLocation, rotator(-SavedHitNormal));
 	        }
 	    }
 	    else
 	    {
-	        if ( EffectIsRelevant(SavedHitLocation,false) )
+	        if (EffectIsRelevant(SavedHitLocation,false))
 	        {
-				if( !PhysicsVolume.bWaterVolume )
+				if (!PhysicsVolume.bWaterVolume)
 				{
 					Switch(ST)
 					{
@@ -175,13 +175,13 @@ simulated function Destroyed()
 							break;
 					}
 
-		    		if ( bShowDecal && Level.NetMode != NM_DedicatedServer )
+		    		if (bShowDecal && Level.NetMode != NM_DedicatedServer)
 		    		{
-		    			if( bSnowDecal && ExplosionDecalSnow != None)
+		    			if (bSnowDecal && ExplosionDecalSnow != none)
 						{
 		    				Spawn(ExplosionDecalSnow,self,,SavedHitLocation, rotator(-SavedHitNormal));
 		    			}
-		    			else if( ExplosionDecal != None)
+		    			else if (ExplosionDecal != none)
 						{
 		    				Spawn(ExplosionDecal,self,,SavedHitLocation, rotator(-SavedHitNormal));
 		    			}
@@ -191,21 +191,21 @@ simulated function Destroyed()
 	    }
     }
 
-	if ( Corona != None )
+	if (Corona != none)
 		Corona.Destroy();
 
 	Super.Destroyed();
 }
 
 
-simulated function Landed( vector HitNormal )
+simulated function Landed(vector HitNormal)
 {
 	Explode(Location,HitNormal);
 }
 
 function BlowUp(vector HitLocation)
 {
-	HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation );
+	HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
 	MakeNoise(1.0);
 }
 
@@ -216,41 +216,41 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 	local ESurfaceTypes ST;
 	local bool bShowDecal, bSnowDecal;
 
-	if( DH_ROTankCannonPawn(Instigator) != none && ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun) != none)
+	if (DH_ROTankCannonPawn(Instigator) != none && ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun) != none)
 	{
 		ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun).HandleShellDebug(HitLocation);
 	}
 
-	if( !bDidExplosionFX )
+	if (!bDidExplosionFX)
 	{
-	    if ( SavedHitActor == none )
+	    if (SavedHitActor == none)
 	    {
-	       Trace(TraceHitLocation, TraceHitNormal, Location + Vector(Rotation) * 16, Location, false,, HitMaterial);
+	       Trace(TraceHitLocation, TraceHitNormal, Location + vector(Rotation) * 16, Location, false,, HitMaterial);
 	    }
 
-    	if (HitMaterial == None)
+    	if (HitMaterial == none)
 			ST = EST_Default;
 		else
 			ST = ESurfaceTypes(HitMaterial.SurfaceType);
 
-	    if ( SavedHitActor != none )
+	    if (SavedHitActor != none)
 	    {
 
 	        DoShakeEffect();
 
             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-	        if ( EffectIsRelevant(Location,false) )
+	        if (EffectIsRelevant(Location,false))
 	        {
 	        	Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-	    		if ( (ExplosionDecal != None) && (Level.NetMode != NM_DedicatedServer) )
+	    		if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
 	    			Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
 	        }
 	    }
 	    else
 	    {
-	        if ( EffectIsRelevant(Location,false) )
+	        if (EffectIsRelevant(Location,false))
 	        {
-				if( !PhysicsVolume.bWaterVolume )
+				if (!PhysicsVolume.bWaterVolume)
 				{
 					Switch(ST)
 					{
@@ -285,13 +285,13 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 							break;
 					}
 
-		    		if ( bShowDecal && Level.NetMode != NM_DedicatedServer )
+		    		if (bShowDecal && Level.NetMode != NM_DedicatedServer)
 		    		{
-		    			if( bSnowDecal && ExplosionDecalSnow != None)
+		    			if (bSnowDecal && ExplosionDecalSnow != none)
 						{
 		    				Spawn(ExplosionDecalSnow,self,,Location, rotator(-HitNormal));
 		    			}
-		    			else if( ExplosionDecal != None)
+		    			else if (ExplosionDecal != none)
 						{
 		    				Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
 		    			}
@@ -301,7 +301,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 	    }
     }
 
-	if ( Corona != None )
+	if (Corona != none)
 		Corona.Destroy();
 
 	super.Explode(HitLocation, HitNormal);
@@ -309,7 +309,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
-     bHasTracer=True
+     bHasTracer=true
      TracerEffect=Class'DH_Effects.DH_RedTankShellTracerBig'
      ShellImpactDamage=Class'DH_Vehicles.DH_TankShellImpactDamage'
      ImpactDamage=400
@@ -338,8 +338,8 @@ defaultproperties
      ExplosionDecalSnow=Class'ROEffects.TankAPMarkSnow'
      DrawType=DT_StaticMesh
      StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
-     bNetTemporary=False
-     bUpdateSimulatedPosition=True
+     bNetTemporary=false
+     bUpdateSimulatedPosition=true
      AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01'
      LifeSpan=7.500000
      AmbientGlow=96
@@ -348,8 +348,8 @@ defaultproperties
      SoundRadius=700.000000
      TransientSoundVolume=1.000000
      TransientSoundRadius=1000.000000
-     bUseCollisionStaticMesh=True
-     bFixedRotationDir=True
+     bUseCollisionStaticMesh=true
+     bFixedRotationDir=true
      RotationRate=(Roll=50000)
      DesiredRotation=(Roll=30000)
      ForceType=FT_Constant

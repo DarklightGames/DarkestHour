@@ -40,11 +40,11 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-	if ( Level.NetMode != NM_DedicatedServer )
+	if (Level.NetMode != NM_DedicatedServer)
 	{
 
 	    //add this back in if we add engine sound attachment points
-	    if (  EngineSoundAttach == none )
+	    if (EngineSoundAttach == none)
         {
              EngineSoundAttach = Spawn(class 'ROSoundAttachment');
              EngineSoundAttach.AmbientSound = EngineSound;
@@ -52,19 +52,19 @@ simulated function PostBeginPlay()
              AttachToBone(EngineSoundAttach, EngineSoundBone);
         }
 
-        if (  InteriorRumbleSoundAttach == none )
+        if (InteriorRumbleSoundAttach == none)
         {
              InteriorRumbleSoundAttach = Spawn(class 'ROSoundAttachment');
              InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
              //InteriorRumbleSoundAttach.SoundVolume = default.SoundVolume;
-             AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone );
+             AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
         }
 	}
 }
 
 function DriverLeft()
 {
-    if ( EngineSoundAttach != None )
+    if (EngineSoundAttach != none)
     EngineSoundAttach.SoundVolume = 0;
 
     MotionSoundVolume=0.0;
@@ -76,12 +76,12 @@ function DriverLeft()
 simulated function UpdateMovementSound()
 {
 
-    if (  EngineSoundAttach != none)
+    if (EngineSoundAttach != none)
     {
        EngineSoundAttach.SoundVolume= MotionSoundVolume * 0.75;
     }
 
-    if (  InteriorRumbleSoundAttach != none)
+    if (InteriorRumbleSoundAttach != none)
     {
       InteriorRumbleSoundAttach.SoundVolume= MotionSoundVolume*2.50;
     }
@@ -90,9 +90,9 @@ simulated function UpdateMovementSound()
 simulated function Destroyed()
 {
 
-	if( EngineSoundAttach != none )
+	if (EngineSoundAttach != none)
 	    EngineSoundAttach.Destroy();
-    if( InteriorRumbleSoundAttach != none )
+    if (InteriorRumbleSoundAttach != none)
 	    InteriorRumbleSoundAttach.Destroy();
 
 	super.Destroyed();
@@ -104,13 +104,13 @@ simulated function Tick(float DeltaTime)
 	local float MySpeed;
 
     // Only need these effects client side
-    if( Level.Netmode != NM_DedicatedServer )
+    if (Level.Netmode != NM_DedicatedServer)
 
 		MySpeed = VSize(Velocity);
 
 		// Setup sounds that are dependent on velocity
 		MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
-		if ( MySpeed > 0.1 )
+		if (MySpeed > 0.1)
 		{
 		  	MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
 		}
@@ -120,18 +120,18 @@ simulated function Tick(float DeltaTime)
 		}
 		UpdateMovementSound();
 
-	Super.Tick( DeltaTime );
+	Super.Tick(DeltaTime);
 
-    if( bEngineDead || bEngineOff)
+    if (bEngineDead || bEngineOff)
     {
-      velocity=Vect(0,0,0);
+      velocity=vect(0,0,0);
       Throttle=0;
       ThrottleAmount=0;
       bDisableThrottle=true;
       Steering=0;
     }
 
-    if(Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
     	CheckEmitters();
 }
 
@@ -215,7 +215,7 @@ defaultproperties
      VehicleTeam=1
      SteeringScaleFactor=4.000000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=True,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=85.000000)
      InitialPositionIndex=0
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
      VehicleHudOccupantsX(0)=0.440000
@@ -227,14 +227,14 @@ defaultproperties
      VehicleHudOccupantsY(2)=0.660000
      VehicleHudOccupantsY(3)=0.660000
      VehicleHudEngineY=0.280000
-     VehHitpoints(0)=(PointBone="body",PointOffset=(X=-10.000000,Y=-25.000000,Z=55.000000),bPenetrationPoint=False)
+     VehHitpoints(0)=(PointBone="body",PointOffset=(X=-10.000000,Y=-25.000000,Z=55.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=20.000000,PointOffset=(X=65.000000,Z=15.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=18.000000,PointScale=1.000000,PointBone="LeftFrontWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
      VehHitpoints(3)=(PointRadius=18.000000,PointScale=1.000000,PointBone="RightFrontWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
      VehHitpoints(4)=(PointRadius=18.000000,PointScale=1.000000,PointBone="LeftRearWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
      VehHitpoints(5)=(PointRadius=18.000000,PointScale=1.000000,PointBone="RightRearWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
      EngineHealth=25
-     bMultiPosition=False
+     bMultiPosition=false
      DriverAttachmentBone="driver_attachment"
      Begin Object Class=SVehicleWheel Name=LFWheel
          SteerType=VST_Steered
@@ -259,8 +259,8 @@ defaultproperties
      Wheels(1)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RFWheel'
 
      Begin Object Class=SVehicleWheel Name=LRWheel
-         bPoweredWheel=True
-         bHandbrakeWheel=True
+         bPoweredWheel=true
+         bHandbrakeWheel=true
          BoneName="LeftRearWheel"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=9.000000,Z=1.000000)
@@ -271,8 +271,8 @@ defaultproperties
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LRWheel'
 
      Begin Object Class=SVehicleWheel Name=RRWheel
-         bPoweredWheel=True
-         bHandbrakeWheel=True
+         bPoweredWheel=true
+         bHandbrakeWheel=true
          BoneName="RightRearWheel"
          BoneRollAxis=AXIS_Y
          BoneOffset=(Y=-9.000000,Z=1.000000)
@@ -283,8 +283,8 @@ defaultproperties
      Wheels(3)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RRWheel'
 
      VehicleMass=3.000000
-     bHasHandbrake=True
-     bFPNoZFromCameraPitch=True
+     bHasHandbrake=true
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=5.000000,Z=8.000000)
      DriveAnim="Vhalftrack_driver_idle"
      ExitPositions(0)=(Y=-100.000000,Z=85.000000)
@@ -317,13 +317,13 @@ defaultproperties
          KCOMOffset=(Z=-0.200000)
          KLinearDamping=0.050000
          KAngularDamping=0.050000
-         KStartEnabled=True
-         bKNonSphericalInertia=True
-         bHighDetailOnly=False
-         bClientOnly=False
-         bKDoubleTickRate=True
-         bDestroyOnWorldPenetrate=True
-         bDoSafetime=True
+         KStartEnabled=true
+         bKNonSphericalInertia=true
+         bHighDetailOnly=false
+         bClientOnly=false
+         bKDoubleTickRate=true
+         bDestroyOnWorldPenetrate=true
+         bDoSafetime=true
          KFriction=0.500000
          KImpactThreshold=700.000000
      End Object

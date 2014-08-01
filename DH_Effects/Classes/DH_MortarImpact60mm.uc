@@ -13,16 +13,16 @@ class DH_MortarImpact60mm extends Emitter;
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter40
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          FadeOutStartTime=0.500000
@@ -46,16 +46,16 @@ defaultproperties
      Emitters(0)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter40'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter41
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          Acceleration=(X=32.000000,Y=32.000000,Z=-16.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -82,14 +82,14 @@ defaultproperties
      Emitters(1)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter41'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter42
-         UseColorScale=True
-         FadeOut=True
-         RespawnDeadParticles=False
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         BlendBetweenSubdivisions=True
+         UseColorScale=true
+         FadeOut=true
+         RespawnDeadParticles=false
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         BlendBetweenSubdivisions=true
          Acceleration=(Z=50.000000)
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -111,16 +111,16 @@ defaultproperties
      Emitters(2)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter42'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter43
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          Acceleration=(Y=50.000000,Z=50.000000)
          ColorScale(0)=(Color=(B=129,G=129,R=129,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -145,16 +145,16 @@ defaultproperties
      Emitters(3)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter43'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter44
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
-         TriggerDisabled=False
-         ResetOnTrigger=True
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
+         TriggerDisabled=false
+         ResetOnTrigger=true
          Acceleration=(Y=50.000000,Z=50.000000)
          ColorScale(0)=(Color=(B=96,G=96,R=96,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=121,G=121,R=121,A=255))
@@ -182,16 +182,16 @@ defaultproperties
      Emitters(4)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter44'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter45
-         UseColorScale=True
-         FadeOut=True
-         FadeIn=True
-         RespawnDeadParticles=False
-         AlphaTest=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         FadeIn=true
+         RespawnDeadParticles=false
+         AlphaTest=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=53,G=66,R=74,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=53,G=66,R=74,A=255))
          FadeOutStartTime=0.300000
@@ -211,13 +211,13 @@ defaultproperties
      Emitters(5)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter45'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter46
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
          FadeOutStartTime=0.130000
@@ -237,14 +237,14 @@ defaultproperties
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter47
          ProjectionNormal=(Y=1.000000)
-         UseColorScale=True
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=-10.000000,Y=-10.000000,Z=-1000.000000)
          ColorScale(0)=(Color=(B=61,G=82,R=84,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=96,G=111,R=115,A=255))
@@ -262,14 +262,14 @@ defaultproperties
      Emitters(7)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter47'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter48
-         UseColorScale=True
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          ColorScale(0)=(Color=(B=104,G=123,R=132,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=176,G=182,R=181,A=255))
          FadeOutStartTime=1.140000
@@ -294,14 +294,14 @@ defaultproperties
      Begin Object Class=SpriteEmitter Name=SpriteEmitter67
          UseDirectionAs=PTDU_Normal
          ProjectionNormal=(Y=1.000000)
-         UseColorScale=True
-         FadeOut=True
-         RespawnDeadParticles=False
-         SpinParticles=True
-         UseSizeScale=True
-         UseRegularSizeScale=False
-         UniformSize=True
-         AutomaticInitialSpawning=False
+         UseColorScale=true
+         FadeOut=true
+         RespawnDeadParticles=false
+         SpinParticles=true
+         UseSizeScale=true
+         UseRegularSizeScale=false
+         UniformSize=true
+         AutomaticInitialSpawning=false
          Acceleration=(X=-10.000000,Y=-10.000000,Z=-512.000000)
          ColorScale(0)=(Color=(B=61,G=82,R=84,A=255))
          ColorScale(1)=(RelativeTime=1.000000,Color=(B=96,G=111,R=115,A=255))
@@ -317,6 +317,6 @@ defaultproperties
      End Object
      Emitters(9)=SpriteEmitter'DH_Effects.DH_MortarImpact60mm.SpriteEmitter67'
 
-     AutoDestroy=True
-     bNoDelete=False
+     AutoDestroy=true
+     bNoDelete=false
 }

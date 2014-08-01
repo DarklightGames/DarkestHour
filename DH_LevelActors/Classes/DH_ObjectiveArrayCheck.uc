@@ -32,13 +32,13 @@ event Trigger(Actor Other, Pawn EventInstigator)
 	local int RandomNum, i;
 	local ROTeamGame ROGame;
 
-	if(bFireOnce && IsInState('Done'))
+	if (bFireOnce && IsInState('Done'))
 		return; //stop function because it's already done and should only fire once
 
-	if(UseRandomness)
+	if (UseRandomness)
 	{
 		RandomNum = Rand(101);  //Gets a random # between 0 & 100
-		if(RandomPercent <= RandomNum)
+		if (RandomPercent <= RandomNum)
 			return; //stop function because it randomly failed
 	}
 
@@ -47,9 +47,9 @@ event Trigger(Actor Other, Pawn EventInstigator)
 	//Check the array for the state to check for
 	for(i=0;i<ObjectivesToCheck.Length;i++)
 	{
-		if(ROGame.Objectives[ObjectivesToCheck[i]].ObjState != StateToCheckFor)
+		if (ROGame.Objectives[ObjectivesToCheck[i]].ObjState != StateToCheckFor)
 		{
-			if(EventToTriggerForFail != '')
+			if (EventToTriggerForFail != '')
 				TriggerEvent(EventToTriggerForFail, self, none); //Triggers the event EventToTriggerForFail
 			return; //No reason to continue as not all the objectives were in the state to check for
 		}
@@ -59,7 +59,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 	gotostate('Done');
 
 	//if EventToTrigger is set lets trigger the event
-	if(EventToTrigger != '')
+	if (EventToTrigger != '')
 		TriggerEvent(EventToTrigger, self, none); //Triggers the event
 
 	//Go ahead and status change the objectives you want to change
@@ -78,7 +78,7 @@ auto state Initialize
 {
 	function BeginState()
 	{
-		if(bAutoStartCheck)
+		if (bAutoStartCheck)
 			gotostate('Timing');
 	}
 }

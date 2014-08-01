@@ -22,7 +22,7 @@ function AddSystemMenu()
 {
 	local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent( "XInterface.GUIButton" ));
+	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
 	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
 	b_ExitButton.OnClick = XButtonClicked;
 	b_ExitButton.bNeverFocus=true;
@@ -33,7 +33,7 @@ function AddSystemMenu()
 	b_ExitButton.bStandardized=true;
 	b_ExitButton.StandardHeight=0.03;
 	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = False;
+	b_ExitButton.bRepeatClick = false;
 }
 
 
@@ -56,7 +56,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 function bool InternalOnClick(GUIComponent Sender)
 {
 	//if (Sender==Controls[1])
-	if(Sender == b_close)
+	if (Sender == b_close)
 	{
 		Controller.CloseMenu();
 	}
@@ -65,7 +65,7 @@ function bool InternalOnClick(GUIComponent Sender)
 
 function bool ButtonClick(GUIComponent Sender)
 {
-	if ( Sender == b_close )
+	if (Sender == b_close)
 		Controller.CloseMenu();
 
 	return true;
@@ -79,22 +79,22 @@ defaultproperties
          WinTop=0.900000
          WinLeft=0.400000
          WinWidth=0.200000
-         bBoundToParent=True
+         bBoundToParent=true
          OnClick=DHCreditsPage.InternalOnClick
          OnKeyEvent=CloseButton.InternalOnKeyEvent
      End Object
      b_Close=GUIButton'DH_Interface.DHCreditsPage.CloseButton'
 
      Begin Object Class=DHGUIScrollTextBox Name=CreditText
-         bNoTeletype=True
+         bNoTeletype=true
          OnCreateComponent=CreditText.InternalOnCreateComponent
          StyleName="DHLargeText"
          WinTop=0.080000
          WinLeft=0.070000
          WinWidth=0.860000
          WinHeight=0.800000
-         bBoundToParent=True
-         bScaleToParent=True
+         bBoundToParent=true
+         bScaleToParent=true
      End Object
      lb_credits=DHGUIScrollTextBox'DH_Interface.DHCreditsPage.CreditText'
 
@@ -196,10 +196,10 @@ defaultproperties
          WinTop=0.020000
          WinHeight=0.050000
          RenderWeight=0.100000
-         bBoundToParent=True
-         bScaleToParent=True
-         bAcceptsInput=True
-         bNeverFocus=False
+         bBoundToParent=true
+         bScaleToParent=true
+         bAcceptsInput=true
+         bNeverFocus=false
          ScalingType=SCALE_X
          OnMousePressed=DHCreditsPage.FloatingMousePressed
          OnMouseRelease=DHCreditsPage.FloatingMouseRelease
@@ -209,7 +209,7 @@ defaultproperties
      WindowName="Credits"
      Begin Object Class=FloatingImage Name=FloatingFrameBackground
          Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
-         DropShadow=None
+         DropShadow=none
          ImageStyle=ISTY_Stretched
          ImageRenderStyle=MSTY_Normal
          WinTop=0.020000
@@ -220,7 +220,7 @@ defaultproperties
      End Object
      i_FrameBG=FloatingImage'DH_Interface.DHCreditsPage.FloatingFrameBackground'
 
-     bRequire640x480=False
+     bRequire640x480=false
      WinTop=0.100000
      WinLeft=0.100000
      WinWidth=0.800000

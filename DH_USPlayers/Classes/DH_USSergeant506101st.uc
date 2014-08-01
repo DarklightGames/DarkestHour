@@ -17,7 +17,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-     bIsSquadLeader=True
+     bIsSquadLeader=true
      MyName="Sergeant"
      AltName="Sergeant"
      Article="a "
@@ -27,7 +27,7 @@ defaultproperties
      Models(0)="US_506101ABSarg1"
      Models(1)="US_506101ABSarg2"
      Models(2)="US_506101ABSarg3"
-     bIsLeader=True
+     bIsLeader=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
      PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_ThompsonWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_ThompsonAmmoPouch')
      PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_GreaseGunWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_ThompsonAmmoPouch')
@@ -37,6 +37,6 @@ defaultproperties
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet506101stNCOa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet506101stNCOb'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=2
 }

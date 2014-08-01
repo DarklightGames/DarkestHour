@@ -2,9 +2,9 @@ class DH_USReconOfficer743rd extends DH_US_743rd_TankBattalion;
 
 defaultproperties
 {
-     bCanBeReconCrew=True
-     bCanBeReconOfficer=True
-     bIsArtilleryOfficer=True
+     bCanBeReconCrew=true
+     bCanBeReconOfficer=true
+     bIsArtilleryOfficer=true
      MyName="Reconnaissance Commander"
      AltName="Reconnaissance Commander"
      Article="a "
@@ -22,6 +22,6 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
      Headgear(0)=Class'DH_USPlayers.DH_USTankerHat'
      PrimaryWeaponType=WT_SMG
-     bEnhancedAutomaticControl=True
+     bEnhancedAutomaticControl=true
      limit=1
 }
