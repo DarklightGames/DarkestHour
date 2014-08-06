@@ -14,8 +14,8 @@ class EA_JacksonTank_Snow extends DH_JacksonTank;
 defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_EmbeddedActors.EA_JacksonCannonPawn_Snow',WeaponBone="Turret_placement")
-    Skins(0)=Texture'DH_CheneuxCAVehicle_tex.ext_vehicles.M36_Bodysnow_ext'
-    Skins(1)=Texture'DH_CheneuxCAVehicle_tex.ext_vehicles.M36_turretsnow_ext'
+    //Skins(0)=Texture'DH_CheneuxCAVehicle_tex.ext_vehicles.M36_Bodysnow_ext'
+    //Skins(1)=Texture'DH_CheneuxCAVehicle_tex.ext_vehicles.M36_turretsnow_ext'
     //Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
     //Skins(3)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
     //Skins(4)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
