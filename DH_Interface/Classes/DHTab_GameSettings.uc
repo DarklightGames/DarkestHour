@@ -1,7 +1,78 @@
 class DHTab_GameSettings extends ROTab_GameSettings;
 
+var automated moComboBox co_PurgeCacheDays;
+
+var int PurgeCacheDaysValues[3];
+var localized string PurgeCacheDaysText[3];
+
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    local int i;
+
+    super.InitComponent(MyController, MyOwner);
+
+    i_BG1.ManageComponent(co_PurgeCacheDays);
+
+    for (i = 0; i < ArrayCount(PurgeCacheDaysText); i++)
+    {
+        co_PurgeCacheDays.AddItem(PurgeCacheDaysText[i]);
+    }
+}
+
+function SaveSettings()
+{
+    local int PurgeCacheDaysIndex;
+
+    PurgeCacheDaysIndex = co_PurgeCacheDays.GetIndex();
+
+    PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[PurgeCacheDaysIndex]);
+
+    super.SaveSettings();
+}
+
+function InternalOnLoadINI(GUIComponent Sender, string s)
+{
+    local int i;
+    local int PurgeCacheDays;
+    local int PurgeCacheDaysIndex;
+
+    super.InternalOnLoadINI(Sender, s);
+
+    switch(Sender)
+    {
+        case co_PurgeCacheDays:
+            s = PlayerOwner().ConsoleCommand("get Core.System PurgeCacheDays", false);
+
+            PurgeCacheDays = int(s);
+
+            for(i = 0; i < ArrayCount(PurgeCacheDaysValues); ++i)
+            {
+                if(PurgeCacheDays == PurgeCacheDaysValues[i])
+                {
+                    PurgeCacheDaysIndex = i;
+
+                    break;
+                }
+            }
+
+            PlayerOwner().Level.Game.Broadcast(none, ">>" @ PurgeCacheDays @ "." @ PurgeCacheDaysIndex @ "<<");
+
+            break;
+    }
+
+    co_PurgeCacheDays.SetIndex(PurgeCacheDaysIndex);
+}
+
 defaultproperties
 {
+    PurgeCacheDaysValues(0)=0
+    PurgeCacheDaysValues(1)=7
+    PurgeCacheDaysValues(2)=30
+
+    PurgeCacheDaysText(0)="Never"
+    PurgeCacheDaysText(1)="Weekly"
+    PurgeCacheDaysText(2)="Monthly"
+
      Begin Object Class=DHGUISectionBackground Name=GameBK1
          Caption="Gameplay"
          WinTop=0.050000
@@ -139,4 +210,18 @@ defaultproperties
      End Object
      ch_ManualReloading=DHmoCheckBox'DH_Interface.DHTab_GameSettings.ManualReloading'
 
+     Begin Object Class=DHmoComboBox Name=PurgeCacheDaysComboBox
+         bReadOnly=true
+         ComponentJustification=TXTA_Left
+         Caption="Purge Cache"
+         OnCreateComponent=PurgeCacheDaysComboBox.InternalOnCreateComponent
+         IniOption="@Internal"
+         WinTop=0.122944
+         WinLeft=0.528997
+         WinWidth=0.419297
+         TabOrder=3
+         OnChange=DHTab_GameSettings.InternalOnChange
+         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
+     End Object
+     co_PurgeCacheDays=DHmoComboBox'DH_Interface.DHTab_GameSettings.PurgeCacheDaysComboBox'
 }
