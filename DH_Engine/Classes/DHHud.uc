@@ -26,6 +26,8 @@ var     float                   ObituaryDelayTime;
 
 var     Obituary                DHObituaries[8];
 
+var const float VOICE_ICON_DIST_MAX;
+
 
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
@@ -2075,47 +2077,43 @@ simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
     local ROVehicle ROV;
     local DHGameReplicationInfo GRI;
 
-    if (!bShowVoiceIcon)
+    if(bShowVoiceIcon == false)
+    {
         return;
+    }
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (PRI.TeamID != PawnOwnerPRI.TeamID && !GRI.bShowPublicVoiceIcon)
-        return;
-
-    foreach RadiusActors(class'DH_Pawn', DHP, 1600.0, PlayerOwner.Pawn.Location)    //100 feet
+    foreach RadiusActors(class'DH_Pawn', DHP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)   //100 feet
     {
-        if (
-        DHP.Health <= 0 ||
-        DHP.PlayerReplicationInfo != PRI)
+        if(DHP.Health <= 0 || DHP.PlayerReplicationInfo != PRI)
+        {
             continue;
-
+        }
 
         DrawVoiceIconC(C, DHP);
 
         return;
     }
 
-    foreach RadiusActors(class'ROVehicle', ROV, 1600.0, PlayerOwner.Pawn.Location)
+    foreach RadiusActors(class'ROVehicle', ROV, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
     {
-        if (
-        ROV.Driver == none ||
-        ROV.PlayerReplicationInfo != PRI
-       )
+        if( ROV.Driver == none || ROV.PlayerReplicationInfo != PRI)
+        {
             continue;
+        }
 
         DrawVoiceIconC(C, ROV.Driver);
 
         return;
     }
 
-    foreach RadiusActors(class'ROVehicleWeaponPawn', ROVWP, 1600.0, PlayerOwner.Pawn.Location)
+    foreach RadiusActors(class'ROVehicleWeaponPawn', ROVWP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
     {
-        if (
-        ROVWP.Driver == none ||
-        ROVWP.PlayerReplicationInfo != PRI
-       )
+        if(ROVWP.Driver == none || ROVWP.PlayerReplicationInfo != PRI)
+        {
             continue;
+        }
 
         DrawVoiceIconC(C, ROVWP.Driver);
 
@@ -2567,4 +2565,5 @@ defaultproperties
      CaptureBarTeamIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
      CaptureBarTeamColors(0)=(B=30,G=43,R=213)
      CaptureBarTeamColors(1)=(B=35,G=150,R=40)
+     VOICE_ICON_DIST_MAX = 2624.672119
 }
