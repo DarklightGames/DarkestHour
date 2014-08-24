@@ -1,5 +1,5 @@
 //=============================================================================
-// DH_Bazooka3rdPersonMuzzelFX
+// DH_Bazooka3rdPersonMuzzleFX
 //=============================================================================
 // 3rd person panzerfaust fire effect
 //=============================================================================
@@ -8,7 +8,7 @@
 // - David Hensley & John "Ramm-Jaeger" Gibson
 //=============================================================================
 
-class DH_Bazooka3rdPersonMuzzelFX extends Emitter;
+class DH_Bazooka3rdPersonMuzzleFX extends Emitter;
 
 defaultproperties
 {
@@ -38,7 +38,7 @@ defaultproperties
          LifetimeRange=(Min=1.750000,Max=2.000000)
          StartVelocityRange=(X=(Max=400.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
      End Object
-     Emitters(0)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonMuzzelFX.SpriteEmitter0'
+     Emitters(0)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonMuzzleFX.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
          UseColorScale=true
@@ -68,7 +68,7 @@ defaultproperties
          Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
          LifetimeRange=(Min=0.250000,Max=0.250000)
      End Object
-     Emitters(1)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonMuzzelFX.SpriteEmitter1'
+     Emitters(1)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonMuzzleFX.SpriteEmitter1'
 
      AutoDestroy=true
      bLightChanged=true

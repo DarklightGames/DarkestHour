@@ -63,7 +63,7 @@ defaultproperties
      ExhaustBoneName="exhaust"
      mExhFlashClass=Class'DH_ATWeapons.DH_Bazooka3rdPersonExhaustFX'
      PA_AssistedReloadAnim="crouch_reloadA_bazooka"
-     mMuzFlashClass=Class'DH_ATWeapons.DH_Bazooka3rdPersonMuzzelFX'
+     mMuzFlashClass=Class'DH_ATWeapons.DH_Bazooka3rdPersonMuzzleFX'
      MuzzleBoneName="warhead1"
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"
