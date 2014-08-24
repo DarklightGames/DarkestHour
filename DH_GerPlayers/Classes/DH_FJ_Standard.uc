@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_FJ_Standard   ***
+//  ***   DH_FJ_Standard   ***
 //
 // *************************************************************************
 
 class DH_FJ_Standard extends DH_Fallschirmjager
-	abstract;
+    abstract;
 
 defaultproperties
 {

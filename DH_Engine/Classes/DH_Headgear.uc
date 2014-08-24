@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_Headgear extends ROHeadgear
-	abstract;
+    abstract;
 
 var bool bIsHelmet;
 

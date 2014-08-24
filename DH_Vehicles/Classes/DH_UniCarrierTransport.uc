@@ -16,32 +16,32 @@ class DH_UniCarrierTransport extends DH_ROTransportCraft;
 
 simulated function SetupTreads()
 {
-	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (LeftTreadPanner != none)
-	{
-		LeftTreadPanner.Material = Skins[1];
-		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-		LeftTreadPanner.PanRate = 0.0;
-		Skins[1] = LeftTreadPanner;
-	}
-	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (RightTreadPanner != none)
-	{
-		RightTreadPanner.Material = Skins[2];
-		RightTreadPanner.PanDirection = rot(0, 0, 16384);
-		RightTreadPanner.PanRate = 0.0;
-		Skins[2] = RightTreadPanner;
-	}
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[1];
+        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[1] = LeftTreadPanner;
+    }
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[2];
+        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[2] = RightTreadPanner;
+    }
 }
 
 static function StaticPrecache(LevelInfo L)
 {
     Super.StaticPrecache(L);
 
- 	//L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext');
- 	L.AddPrecacheMaterial(Material'allies_vehicles_tex.Treads.T60_treads');
- 	L.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int');
- 	L.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S');
+    //L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext');
+    L.AddPrecacheMaterial(Material'allies_vehicles_tex.Treads.T60_treads');
+    L.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int');
+    L.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S');
 }
 
 simulated function UpdatePrecacheMaterials()
@@ -51,40 +51,40 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int');
     Level.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 // Overriden to handle the special driver animations for this vehicle
 simulated state ViewTransition
 {
-	simulated function HandleTransition()
-	{
-	     if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
-	     {
-	         if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
-	             LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-	     }
+    simulated function HandleTransition()
+    {
+         if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+         {
+             if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+         }
 
-		 if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
-		 {
-		 	 //log("HandleTransition Player Transition Up!");
-			 PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-		 }
-		 else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
-		 {
-		 	 //log("HandleTransition Player Transition Down!");
-			 PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-		 }
+         if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+         {
+             //log("HandleTransition Player Transition Up!");
+             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+         }
+         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
+         {
+             //log("HandleTransition Player Transition Down!");
+             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+         }
 
-		 if (Driver != none && PreviousPositionIndex < DriverPositionIndex && DriverPositionIndex == InitialPositionIndex)
-		 {
-			 Driver.PlayAnim(DriveAnim);
-		 }
-		 else if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
-		 {
-	         Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-	     }
-	}
+         if (Driver != none && PreviousPositionIndex < DriverPositionIndex && DriverPositionIndex == InitialPositionIndex)
+         {
+             Driver.PlayAnim(DriveAnim);
+         }
+         else if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
+         {
+             Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+         }
+    }
 }
 
 defaultproperties

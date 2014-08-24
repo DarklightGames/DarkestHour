@@ -11,45 +11,45 @@ class DH_JacksonCannonPawn extends DH_AmericanTankCannonPawn;
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {
-	if (bForward)
-	{
-		if (DriverPositionIndex < (DriverPositions.Length - 1))
-		{
-			LastPositionIndex = DriverPositionIndex;
-			DriverPositionIndex++;
+    if (bForward)
+    {
+        if (DriverPositionIndex < (DriverPositions.Length - 1))
+        {
+            LastPositionIndex = DriverPositionIndex;
+            DriverPositionIndex++;
 
-			if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-			{
-				NextViewPoint();
-			}
+            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
 
-			if (Level.NetMode == NM_DedicatedServer)
-			{
-				AnimateTransition();
+            if (Level.NetMode == NM_DedicatedServer)
+            {
+                AnimateTransition();
 
                 // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-				if (DriverPositionIndex == UnbuttonedPositionIndex)
-				    GoToState('ViewTransition');
-			}
-		}
+                if (DriverPositionIndex == UnbuttonedPositionIndex)
+                    GoToState('ViewTransition');
+            }
+        }
      }
      else
      {
-		if (DriverPositionIndex > 0)
-		{
-			LastPositionIndex = DriverPositionIndex;
-			DriverPositionIndex--;
+        if (DriverPositionIndex > 0)
+        {
+            LastPositionIndex = DriverPositionIndex;
+            DriverPositionIndex--;
 
-			if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
-			{
-				NextViewPoint();
-			}
+            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
 
-			if (Level.NetMode == NM_DedicatedServer)
-			{
-				AnimateTransition();
-			}
-		}
+            if (Level.NetMode == NM_DedicatedServer)
+            {
+                AnimateTransition();
+            }
+        }
      }
 }
 

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHGameFooterSP   ***
+//  ***   DHGameFooterSP   ***
 //
 // *************************************************************************
 
@@ -13,18 +13,18 @@ var UT2K4GamePageBase Owner;
 
 function InitComponent(GUIController InController, GUIComponent InOwner)
 {
-	Super.InitComponent(InController, InOwner);
-	Owner = UT2K4GamePageBase(MenuOwner);
-	b_Primary.OnClick = Owner.InternalOnClick;
-	//b_Secondary.OnClick = Owner.InternalOnClick;
-	b_Back.OnClick = Owner.InternalOnClick;
+    Super.InitComponent(InController, InOwner);
+    Owner = UT2K4GamePageBase(MenuOwner);
+    b_Primary.OnClick = Owner.InternalOnClick;
+    //b_Secondary.OnClick = Owner.InternalOnClick;
+    b_Back.OnClick = Owner.InternalOnClick;
 }
 
 function SetupButtons(optional string bPerButtonSizes)
 {
-	b_Primary.Caption = PrimaryCaption;
-	b_Primary.SetHint(PrimaryHint);
-	Super.SetupButtons(bPerButtonSizes);
+    b_Primary.Caption = PrimaryCaption;
+    b_Primary.SetHint(PrimaryHint);
+    Super.SetupButtons(bPerButtonSizes);
 }
 
 defaultproperties

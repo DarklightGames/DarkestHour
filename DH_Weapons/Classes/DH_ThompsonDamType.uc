@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_ThompsonDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

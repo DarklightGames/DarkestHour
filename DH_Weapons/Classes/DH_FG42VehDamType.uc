@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_FG42VehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

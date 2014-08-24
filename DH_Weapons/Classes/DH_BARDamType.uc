@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_BARDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

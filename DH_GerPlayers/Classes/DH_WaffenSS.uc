@@ -1,5 +1,5 @@
 class DH_WaffenSS extends DH_Ger_WaffenSS
-	abstract;
+    abstract;
 
 defaultproperties
 {

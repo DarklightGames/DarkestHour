@@ -1,5 +1,5 @@
 class DH_CanisterShotVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

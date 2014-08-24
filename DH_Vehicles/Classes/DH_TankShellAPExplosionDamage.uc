@@ -1,5 +1,5 @@
 class DH_TankShellAPExplosionDamage extends ROTankShellExplosionDamage
-	abstract;
+    abstract;
 
 defaultproperties
 {

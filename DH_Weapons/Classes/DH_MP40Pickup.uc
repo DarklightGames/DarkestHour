@@ -17,11 +17,11 @@ class DH_MP40Pickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.mp40');
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.mp40pouch');
-	L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.mp40_world');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex.SMG.MP40_S');
-	L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.mg40_ammo');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.mp40');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.mp40pouch');
+    L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.mp40_world');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex.SMG.MP40_S');
+    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.mg40_ammo');
 }
 
 defaultproperties

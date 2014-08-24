@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   Heer crushercap   ***
+//  ***   Heer crushercap   ***
 //
 // *************************************************************************
 
@@ -11,7 +11,7 @@ class DH_HeerArtilleryCrushercap extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_Heer_sp_crashcap');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_Heer_sp_crashcap');
 }
 
 defaultproperties

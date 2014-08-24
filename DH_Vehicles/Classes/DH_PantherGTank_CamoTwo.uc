@@ -5,8 +5,8 @@ class DH_PantherGTank_CamoTwo extends DH_PantherGTank;
 
 /*
 // Stuff for deco meshes - Shurek
-var 	class<DH_VehicleDecoAttachment>     	DecoAttachmentClass;
-var 	DH_VehicleDecoAttachment            	HullDecoAttachment;
+var     class<DH_VehicleDecoAttachment>         DecoAttachmentClass;
+var     DH_VehicleDecoAttachment                HullDecoAttachment;
 var     name                                    DecoAttachBone;
 var     vector                                  DecoAttachOffset;
 
@@ -14,8 +14,8 @@ var     vector                                  DecoAttachOffset;
 replication
 {
 
-	reliable if (bNetDirty && Role == ROLE_Authority)
-		DecoAttachmentClass;
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        DecoAttachmentClass;
 
 }
 
@@ -47,7 +47,7 @@ static function StaticPrecache(LevelInfo L)
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.PantherG_body_camo2');
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

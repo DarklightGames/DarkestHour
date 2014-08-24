@@ -1,7 +1,7 @@
 //=============================================================================
 // DH_BesaVehicleBullet
 //=============================================================================
-class DH_BesaVehicleBullet extends DH_Bullet;	//ROBullet;
+class DH_BesaVehicleBullet extends DH_Bullet;   //ROBullet;
 
 //=============================================================================
 // defaultproperties

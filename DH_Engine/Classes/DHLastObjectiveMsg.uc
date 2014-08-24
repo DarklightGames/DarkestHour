@@ -25,23 +25,23 @@ var(Messages) localized string AboutToLose;
 //-----------------------------------------------------------------------------
 
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	switch (Switch)
-	{
-		case 0: // axis about to win
+    switch (Switch)
+    {
+        case 0: // axis about to win
         case 2: // allies about to win
-			return default.AboutToLose;
-		case 1: // axis about to win (player is therefore allies)
+            return default.AboutToLose;
+        case 1: // axis about to win (player is therefore allies)
         case 3: // allies about to win (player is therefore axis)
-			return default.AboutToWin;
-		default:
-			return "INVALID MESSAGE TYPE: " $ switch;
-	}
+            return default.AboutToWin;
+        default:
+            return "INVALID MESSAGE TYPE: " $ switch;
+    }
 
 }
 
@@ -51,17 +51,17 @@ static function int getIconID(
     optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject)
 {
-	switch (Switch)
-	{
-		case 0: // axis about to win
-		case 1: // axis about to win (player is therefore allies)
-			return default.altIconID;
+    switch (Switch)
+    {
+        case 0: // axis about to win
+        case 1: // axis about to win (player is therefore allies)
+            return default.altIconID;
         case 2: // allies about to win
         case 3: // allies about to win (player is therefore axis)
-			return default.IconID;
-		default:
-			return default.errorIconID;
-	}
+            return default.IconID;
+        default:
+            return default.errorIconID;
+    }
 }
 
 //=============================================================================

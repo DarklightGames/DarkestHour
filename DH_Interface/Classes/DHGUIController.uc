@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHGUIController   ***
+//  ***   DHGUIController   ***
 //
 // *************************************************************************
 
@@ -10,15 +10,15 @@ var Array<string>       RODefaultStyleNames;      // Holds the name of all style
 
 event InitializeController()
 {
-    	Super.InitializeController();
+        Super.InitializeController();
 
-    	RegisterStyle(class'ROInterface.ROSTY2_ImageButton');
-    	RegisterStyle(class'ROInterface.ROSTY2SelectButton');
-    	RegisterStyle(class'ROInterface.ROSTY2SelectTab');
-    	RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
+        RegisterStyle(class'ROInterface.ROSTY2_ImageButton');
+        RegisterStyle(class'ROInterface.ROSTY2SelectButton');
+        RegisterStyle(class'ROInterface.ROSTY2SelectTab');
+        RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
 
-	LastGameType="DH_Engine.DarkestHourGame";
-	log("DHGUIController initialized ");
+    LastGameType="DH_Engine.DarkestHourGame";
+    log("DHGUIController initialized ");
 }
 
 
@@ -29,38 +29,38 @@ function PurgeObjectReferences()
 
 static simulated event Validate()
 {
-	if (default.MainMenuOptions.Length < 5)
-		ResetConfig();
+    if (default.MainMenuOptions.Length < 5)
+        ResetConfig();
 }
 
 static simulated function string GetServerBrowserPage()
 {
-	Validate();
-	return default.MainMenuOptions[0];
+    Validate();
+    return default.MainMenuOptions[0];
 }
 
 static simulated function string GetMultiplayerPage()
 {
-	Validate();
-	return default.MainMenuOptions[1];
+    Validate();
+    return default.MainMenuOptions[1];
 }
 
 static simulated function string GetInstantActionPage()
 {
-	Validate();
-	return default.MainMenuOptions[2];
+    Validate();
+    return default.MainMenuOptions[2];
 }
 
 static simulated function string GetSettingsPage()
 {
-	Validate();
-	return default.MainMenuOptions[3];
+    Validate();
+    return default.MainMenuOptions[3];
 }
 
 static simulated function string GetQuitPage()
 {
-	Validate();
-	return default.MainMenuOptions[4];
+    Validate();
+    return default.MainMenuOptions[4];
 }
 
 defaultproperties
@@ -79,20 +79,20 @@ defaultproperties
      FontStack(10)=fntUT2K4Medium'ROInterface.ROGUIController.GUIMediumMenuFont'
 
      Begin Object Class=DHMenuFont Name=fntDHMenuFont
-	 End Object
-	 FontStack(11)=fntDHMenuFont
+     End Object
+     FontStack(11)=fntDHMenuFont
 
-	 Begin Object Class=DHSmallFont Name=fntDHSmallFont
-	 End Object
-	 FontStack(12)=fntDHSmallFont
+     Begin Object Class=DHSmallFont Name=fntDHSmallFont
+     End Object
+     FontStack(12)=fntDHSmallFont
 
-	 Begin Object Class=DHLargeFont Name=fntDHLargeFont
-	 End Object
-	 FontStack(13)=fntDHLargeFont
+     Begin Object Class=DHLargeFont Name=fntDHLargeFont
+     End Object
+     FontStack(13)=fntDHLargeFont
 
-	 Begin Object Class=DHButtonFont Name=fntDHButtonFont
-	 End Object
-	 FontStack(14)=fntDHButtonFont
+     Begin Object Class=DHButtonFont Name=fntDHButtonFont
+     End Object
+     FontStack(14)=fntDHButtonFont
 
      MouseCursors(0)=Texture'DH_GUI_Tex.Menu.DHPointer'
      MouseCursors(1)=Texture'InterfaceArt_tex.Cursors.ResizeAll'

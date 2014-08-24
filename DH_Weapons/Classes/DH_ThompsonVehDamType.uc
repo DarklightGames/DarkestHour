@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_ThompsonVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

@@ -8,7 +8,7 @@
 //=====================================================
 
 class DH_M1GarandBayonetDamType extends ROWeaponBayonetDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

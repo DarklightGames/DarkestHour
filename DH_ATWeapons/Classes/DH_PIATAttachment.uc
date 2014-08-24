@@ -8,35 +8,35 @@ var   mesh   EmptyMesh;  // The mesh to swap to after the round is fired
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated function PostBeginPlay()
 {
-	if (Role == ROLE_Authority)
-	{
-		bOldBayonetAttached = bBayonetAttached;
-		bOldBarrelSteamActive = bBarrelSteamActive;
-		bUpdated = true;
-	}
+    if (Role == ROLE_Authority)
+    {
+        bOldBayonetAttached = bBayonetAttached;
+        bOldBarrelSteamActive = bBarrelSteamActive;
+        bUpdated = true;
+    }
 }
 
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated event ThirdPersonEffects()
 {
 
-	// Only switch to the empty mesh if its not a melee attack
-	if (FiringMode == 0)
-		LinkMesh(EmptyMesh);
+    // Only switch to the empty mesh if its not a melee attack
+    if (FiringMode == 0)
+        LinkMesh(EmptyMesh);
 
-	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
-		return;
+    if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
+        return;
 
-/*	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
-	{
-		if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
-			return;
+/*  if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
+    {
+        if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
+            return;
 
-		WeaponLight();
+        WeaponLight();
 
-		mMuzFlash3rd = Spawn(mMuzFlashClass);
-		AttachToBone(mMuzFlash3rd, MuzzleBoneName);
-	}*/
+        mMuzFlash3rd = Spawn(mMuzFlashClass);
+        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+    }*/
 
     if (FlashCount == 0)
     {

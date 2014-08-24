@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   LW little boat   ***
+//  ***   LW little boat   ***
 //
 // *************************************************************************
 
@@ -10,7 +10,7 @@ class DH_LWCap extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG');
 }
 
 defaultproperties

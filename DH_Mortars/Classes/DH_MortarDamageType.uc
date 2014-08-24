@@ -1,5 +1,5 @@
 class DH_MortarDamageType extends ROWeaponDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

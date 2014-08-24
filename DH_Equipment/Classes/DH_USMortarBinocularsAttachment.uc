@@ -8,8 +8,8 @@ simulated event ThirdPersonEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-		if (ROPawn(Instigator) == none)
-			return;
+        if (ROPawn(Instigator) == none)
+            return;
         if (FlashCount == 0)
         {
             ROPawn(Instigator).StopFiring();

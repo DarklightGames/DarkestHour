@@ -1,5 +1,5 @@
 class DH_Heer extends DH_Ger_Heer
-	abstract;
+    abstract;
 
 defaultproperties
 {

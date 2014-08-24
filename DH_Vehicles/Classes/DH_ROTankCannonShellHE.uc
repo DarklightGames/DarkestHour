@@ -8,47 +8,47 @@
 //==============================================================================
 class DH_ROTankCannonShellHE extends DH_ROTankCannonShell;
 
-var		sound		ExplosionSound[4];          // sound of the round exploding
-var		bool		bPenetrated;		        // This shell penetrated what it hit
+var     sound       ExplosionSound[4];          // sound of the round exploding
+var     bool        bPenetrated;                // This shell penetrated what it hit
 
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-	local ROVehicle HitVehicle;
-	local ROVehicleWeapon HitVehicleWeapon;
-	local bool bHitVehicleDriver;
+    local ROVehicle HitVehicle;
+    local ROVehicleWeapon HitVehicleWeapon;
+    local bool bHitVehicleDriver;
     local float    TouchAngle; //dummy variable
 
-	HitVehicleWeapon = ROVehicleWeapon(Other);
-	HitVehicle = ROVehicle(Other.Base);
+    HitVehicleWeapon = ROVehicleWeapon(Other);
+    HitVehicle = ROVehicle(Other.Base);
 
-	TouchAngle=1.57;
+    TouchAngle=1.57;
 
     if (Other == none || (SavedTouchActor != none && SavedTouchActor == Other) || Other.bDeleteMe ||
-		ROBulletWhipAttachment(Other) != none)
+        ROBulletWhipAttachment(Other) != none)
     {
-    	return;
+        return;
     }
 
     SavedTouchActor = Other;
 
-	if ((Other != instigator) && (Other.Base != instigator) && (!Other.IsA('Projectile') || Other.bProjTarget))
-	{
+    if ((Other != instigator) && (Other.Base != instigator) && (!Other.IsA('Projectile') || Other.bProjTarget))
+    {
 
-	    if (HitVehicleWeapon != none && HitVehicle != none)
-	    {
-		    SavedHitActor = Pawn(Other.Base);
+        if (HitVehicleWeapon != none && HitVehicle != none)
+        {
+            SavedHitActor = Pawn(Other.Base);
 
             if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
-			{
-				if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
-				{
-					bHitVehicleDriver = true;
-				}
-				else
-				{
-					return;
-				}
-			}
+            {
+                if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
+                {
+                    bHitVehicleDriver = true;
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             if (bDebuggingText && Role == ROLE_Authority)
             {
@@ -63,82 +63,82 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
 
             if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity), GetPenetration(LaunchLocation-HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
-		    {
-				NonPenetrateExplode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
+            {
+                NonPenetrateExplode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
 
-				// Don't update the position any more and don't move the projectile any more.
-				bUpdateSimulatedPosition=false;
-				SetPhysics(PHYS_none);
-				SetDrawType(DT_none);
+                // Don't update the position any more and don't move the projectile any more.
+                bUpdateSimulatedPosition=false;
+                SetPhysics(PHYS_none);
+                SetDrawType(DT_none);
 
-				HurtWall = none;
-				if (Role == ROLE_Authority)
-				{
-					MakeNoise(1.0);
-				}
-		        return;
-		    }
+                HurtWall = none;
+                if (Role == ROLE_Authority)
+                {
+                    MakeNoise(1.0);
+                }
+                return;
+            }
 
             // Don't update the position any more and don't move the projectile any more.
-			bUpdateSimulatedPosition=false;
-			SetPhysics(PHYS_none);
-			SetDrawType(DT_none);
+            bUpdateSimulatedPosition=false;
+            SetPhysics(PHYS_none);
+            SetDrawType(DT_none);
 
-			if (Role == ROLE_Authority)
-			{
-				if (!Other.Base.bStatic && !Other.Base.bWorldGeometry)
-				{
-					if (Instigator == none || Instigator.Controller == none)
-					{
-						Other.Base.SetDelayedDamageInstigatorController(InstigatorController);
-						if (bHitVehicleDriver)
-						{
-						    Other.SetDelayedDamageInstigatorController(InstigatorController);
-						}
-					}
+            if (Role == ROLE_Authority)
+            {
+                if (!Other.Base.bStatic && !Other.Base.bWorldGeometry)
+                {
+                    if (Instigator == none || Instigator.Controller == none)
+                    {
+                        Other.Base.SetDelayedDamageInstigatorController(InstigatorController);
+                        if (bHitVehicleDriver)
+                        {
+                            Other.SetDelayedDamageInstigatorController(InstigatorController);
+                        }
+                    }
 
-					if (savedhitactor != none)
-					{
-						Other.Base.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
-					}
+                    if (savedhitactor != none)
+                    {
+                        Other.Base.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                    }
 
-					if (bHitVehicleDriver)
-					{
-						Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
-					}
+                    if (bHitVehicleDriver)
+                    {
+                        Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                    }
 
-					if (DamageRadius > 0 && Vehicle(Other.Base) != none && Vehicle(Other.Base).Health > 0)
-					{
-						Vehicle(Other.Base).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, HitLocation);
-					}
-					HurtWall = Other.Base;
-				}
-				MakeNoise(1.0);
-			}
-			Explode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
-			HurtWall = none;
+                    if (DamageRadius > 0 && Vehicle(Other.Base) != none && Vehicle(Other.Base).Health > 0)
+                    {
+                        Vehicle(Other.Base).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, HitLocation);
+                    }
+                    HurtWall = Other.Base;
+                }
+                MakeNoise(1.0);
+            }
+            Explode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
+            HurtWall = none;
 
             return;
-	    }
-	    else
-	    {
-			if ((Pawn(Other) != none || RODestroyableStaticMesh(Other) != none) && Role==Role_Authority)
-			{
-		        	Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
-			}
-	        Explode(HitLocation,vect(0,0,1));
-	    }
-	}
+        }
+        else
+        {
+            if ((Pawn(Other) != none || RODestroyableStaticMesh(Other) != none) && Role==Role_Authority)
+            {
+                    Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+            }
+            Explode(HitLocation,vect(0,0,1));
+        }
+    }
 }
 
 simulated singular function HitWall(vector HitNormal, actor Wall)
 {
 
     local PlayerController PC;
-	local float  HitAngle; //just a dummy
+    local float  HitAngle; //just a dummy
 
     if (Wall.Base != none && Wall.Base == instigator)
-     	return;
+        return;
 
     HitAngle=1.57;
 
@@ -156,90 +156,90 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
     if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrateAPC(Location, Normal(Velocity), GetPenetration(LaunchLocation-Location), HitAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
     {
-		if (Role == ROLE_Authority)
-		{
-			MakeNoise(1.0);
-		}
-		NonPenetrateExplode(Location + ExploWallOut * HitNormal, HitNormal);
+        if (Role == ROLE_Authority)
+        {
+            MakeNoise(1.0);
+        }
+        NonPenetrateExplode(Location + ExploWallOut * HitNormal, HitNormal);
 
-		// Don't update the position any more and don't move the projectile any more.
-		bUpdateSimulatedPosition=false;
-		SetPhysics(PHYS_none);
-		SetDrawType(DT_none);
+        // Don't update the position any more and don't move the projectile any more.
+        bUpdateSimulatedPosition=false;
+        SetPhysics(PHYS_none);
+        SetDrawType(DT_none);
 
-		if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer) )
-		{
-			if (ExplosionDecal.Default.CullDistance != 0)
-			{
-				PC = Level.GetLocalPlayerController();
-				if (!PC.BeyondViewDistance(Location, ExplosionDecal.Default.CullDistance))
-					Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-				else if ((Instigator != none) && (PC == Instigator.Controller) && !PC.BeyondViewDistance(Location, 2*ExplosionDecal.Default.CullDistance))
-					Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-			}
-			else
-				Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-		}
-		HurtWall = none;
+        if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer) )
+        {
+            if (ExplosionDecal.Default.CullDistance != 0)
+            {
+                PC = Level.GetLocalPlayerController();
+                if (!PC.BeyondViewDistance(Location, ExplosionDecal.Default.CullDistance))
+                    Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+                else if ((Instigator != none) && (PC == Instigator.Controller) && !PC.BeyondViewDistance(Location, 2*ExplosionDecal.Default.CullDistance))
+                    Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+            }
+            else
+                Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+        }
+        HurtWall = none;
         return;
     }
 
     if ((SavedHitActor == Wall) || (Wall.bDeleteMe))
-     	return;
+        return;
 
     // Don't update the position any more and don't move the projectile any more.
-	bUpdateSimulatedPosition=false;
-	SetPhysics(PHYS_none);
-	SetDrawType(DT_none);
+    bUpdateSimulatedPosition=false;
+    SetPhysics(PHYS_none);
+    SetDrawType(DT_none);
 
     SavedHitActor = Pawn(Wall);
 
 
-	if (Role == ROLE_Authority)
-	{
-		if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
-		{
-			if (Instigator == none || Instigator.Controller == none)
-				Wall.SetDelayedDamageInstigatorController(InstigatorController);
+    if (Role == ROLE_Authority)
+    {
+        if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+        {
+            if (Instigator == none || Instigator.Controller == none)
+                Wall.SetDelayedDamageInstigatorController(InstigatorController);
 
-			if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
-			{
-				Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
-			}
+            if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            {
+                Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+            }
 
-			if (DamageRadius > 0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
-				Vehicle(Wall).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, Location);
-			HurtWall = Wall;
-		}
-		MakeNoise(1.0);
-	}
-	Explode(Location + ExploWallOut * HitNormal, HitNormal);
-	// We do this in the Explode logic
-	if (!bCollided && (ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer) )
-	{
-		if (ExplosionDecal.Default.CullDistance != 0)
-		{
-			PC = Level.GetLocalPlayerController();
-			if (!PC.BeyondViewDistance(Location, ExplosionDecal.Default.CullDistance))
-				Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-			else if ((Instigator != none) && (PC == Instigator.Controller) && !PC.BeyondViewDistance(Location, 2*ExplosionDecal.Default.CullDistance))
-				Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-		}
-		else
-			Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-	}
-	HurtWall = none;
-	//log(" Shell flew "$(VSize(LaunchLocation - Location)/60.352)$" meters total");
+            if (DamageRadius > 0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
+                Vehicle(Wall).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, Location);
+            HurtWall = Wall;
+        }
+        MakeNoise(1.0);
+    }
+    Explode(Location + ExploWallOut * HitNormal, HitNormal);
+    // We do this in the Explode logic
+    if (!bCollided && (ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer) )
+    {
+        if (ExplosionDecal.Default.CullDistance != 0)
+        {
+            PC = Level.GetLocalPlayerController();
+            if (!PC.BeyondViewDistance(Location, ExplosionDecal.Default.CullDistance))
+                Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+            else if ((Instigator != none) && (PC == Instigator.Controller) && !PC.BeyondViewDistance(Location, 2*ExplosionDecal.Default.CullDistance))
+                Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+        }
+        else
+            Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+    }
+    HurtWall = none;
+    //log(" Shell flew "$(VSize(LaunchLocation - Location)/60.352)$" meters total");
 }
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-	local vector TraceHitLocation, TraceHitNormal;
-	local Material HitMaterial;
-	local ESurfaceTypes ST;
-	local bool bShowDecal, bSnowDecal;
+    local vector TraceHitLocation, TraceHitNormal;
+    local Material HitMaterial;
+    local ESurfaceTypes ST;
+    local bool bShowDecal, bSnowDecal;
 
-	bPenetrated = true;
+    bPenetrated = true;
 
     if (SavedHitActor == none)
     {
@@ -248,77 +248,77 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     DoShakeEffect();
 
-	if (!bDidExplosionFX)
-	{
-	    if (HitMaterial == none)
-			ST = EST_Default;
-		else
-			ST = ESurfaceTypes(HitMaterial.SurfaceType);
+    if (!bDidExplosionFX)
+    {
+        if (HitMaterial == none)
+            ST = EST_Default;
+        else
+            ST = ESurfaceTypes(HitMaterial.SurfaceType);
 
-	    if (SavedHitActor != none)
-	    {
-	         PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-	        if (EffectIsRelevant(Location,false))
-	        {
-	        	Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-	    		if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
-	    			Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-	        }
-	    }
-	    else
-	    {
-	    	PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
-	        if (EffectIsRelevant(Location,false))
-	        {
-				Switch(ST)
-				{
-					case EST_Snow:
-					case EST_Ice:
-						Spawn(ShellHitSnowEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-						bShowDecal = true;
-						bSnowDecal = true;
-						break;
-					case EST_Rock:
-					case EST_Gravel:
-					case EST_Concrete:
-						Spawn(ShellHitRockEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-						bShowDecal = true;
-						break;
-					case EST_Wood:
-					case EST_HollowWood:
-						Spawn(ShellHitWoodEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-						bShowDecal = true;
-						break;
-					case EST_Water:
-						Spawn(ShellHitWaterEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-						PlaySound(WaterHitSound,,5.5*TransientSoundVolume);
-						bShowDecal = false;
-						break;
-					default:
-						Spawn(ShellHitDirtEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-						bShowDecal = true;
-						break;
-				}
+        if (SavedHitActor != none)
+        {
+             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
+            if (EffectIsRelevant(Location,false))
+            {
+                Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+                if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
+                    Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+            }
+        }
+        else
+        {
+            PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
+            if (EffectIsRelevant(Location,false))
+            {
+                Switch(ST)
+                {
+                    case EST_Snow:
+                    case EST_Ice:
+                        Spawn(ShellHitSnowEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+                        bShowDecal = true;
+                        bSnowDecal = true;
+                        break;
+                    case EST_Rock:
+                    case EST_Gravel:
+                    case EST_Concrete:
+                        Spawn(ShellHitRockEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+                        bShowDecal = true;
+                        break;
+                    case EST_Wood:
+                    case EST_HollowWood:
+                        Spawn(ShellHitWoodEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+                        bShowDecal = true;
+                        break;
+                    case EST_Water:
+                        Spawn(ShellHitWaterEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+                        PlaySound(WaterHitSound,,5.5*TransientSoundVolume);
+                        bShowDecal = false;
+                        break;
+                    default:
+                        Spawn(ShellHitDirtEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+                        bShowDecal = true;
+                        break;
+                }
 
-	    		if (bShowDecal && Level.NetMode != NM_DedicatedServer)
-	    		{
-	    			if (bSnowDecal && ExplosionDecalSnow != none)
-					{
-	    				Spawn(ExplosionDecalSnow,self,,Location, rotator(-HitNormal));
-	    			}
-	    			else if (ExplosionDecal != none)
-					{
-	    				Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
-	    			}
-	    		}
-	        }
-	    }
-	    PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
+                if (bShowDecal && Level.NetMode != NM_DedicatedServer)
+                {
+                    if (bSnowDecal && ExplosionDecalSnow != none)
+                    {
+                        Spawn(ExplosionDecalSnow,self,,Location, rotator(-HitNormal));
+                    }
+                    else if (ExplosionDecal != none)
+                    {
+                        Spawn(ExplosionDecal,self,,Location, rotator(-HitNormal));
+                    }
+                }
+            }
+        }
+        PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
 
-	}
+    }
 
-	if (Corona != none)
-		Corona.Destroy();
+    if (Corona != none)
+        Corona.Destroy();
 
     super(ROAntiVehicleProjectile).Explode(HitLocation, HitNormal);
 }
@@ -326,176 +326,176 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 // HE Shell explosion for when it hit a tank but didn't penetrate
 simulated function NonPenetrateExplode(vector HitLocation, vector HitNormal)
 {
-	if (bCollided)
-		return;
+    if (bCollided)
+        return;
 
-	DoShakeEffect();
+    DoShakeEffect();
 
-	if (!bDidExplosionFX)
-	{
- 	    PlaySound(VehicleDeflectSound,,5.5*TransientSoundVolume);
-	    if (EffectIsRelevant(Location,false))
-	    {
-	    	Spawn(ShellDeflectEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-	    }
+    if (!bDidExplosionFX)
+    {
+        PlaySound(VehicleDeflectSound,,5.5*TransientSoundVolume);
+        if (EffectIsRelevant(Location,false))
+        {
+            Spawn(ShellDeflectEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+        }
 
-	    PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
+        PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
 
-	    bDidExplosionFX=true;
+        bDidExplosionFX=true;
     }
 
-	if (Corona != none)
-		Corona.Destroy();
+    if (Corona != none)
+        Corona.Destroy();
 
-	// Save the hit info for when the shell is destroyed
-	SavedHitLocation = HitLocation;
-	SavedHitNormal = HitNormal;
-	AmbientSound=none;
+    // Save the hit info for when the shell is destroyed
+    SavedHitLocation = HitLocation;
+    SavedHitNormal = HitNormal;
+    AmbientSound=none;
 
-	BlowUp(HitLocation);
+    BlowUp(HitLocation);
 
-	// Give the bullet a little time to play the hit effect client side before destroying the bullet
-	if (Level.NetMode == NM_DedicatedServer)
-	{
-		bCollided = true;
-		SetCollision(false,false);
-	}
-	else
-	{
-		Destroy();
-	}
+    // Give the bullet a little time to play the hit effect client side before destroying the bullet
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        bCollided = true;
+        SetCollision(false,false);
+    }
+    else
+    {
+        Destroy();
+    }
 }
 
 simulated function Destroyed()
 {
-	local vector TraceHitLocation, TraceHitNormal;
-	local Material HitMaterial;
-	local ESurfaceTypes ST;
-	local bool bShowDecal, bSnowDecal;
-	local ROPawn Victims;
-	local float damageScale, dist;
-	local vector dir, Start;
+    local vector TraceHitLocation, TraceHitNormal;
+    local Material HitMaterial;
+    local ESurfaceTypes ST;
+    local bool bShowDecal, bSnowDecal;
+    local ROPawn Victims;
+    local float damageScale, dist;
+    local vector dir, Start;
 
-	// Move karma ragdolls around when this explodes
-	if (Level.NetMode != NM_DedicatedServer)
-	{
-		Start = Location + 32 * vect(0,0,1);
+    // Move karma ragdolls around when this explodes
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        Start = Location + 32 * vect(0,0,1);
 
-		foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
-		{
-			// don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
-			if (Victims != self)
-			{
-				dir = Victims.Location - Start;
-				dist = FMax(1,VSize(dir));
-				dir = dir/dist;
-				damageScale = 1 - FMax(0,(dist - Victims.CollisionRadius)/DamageRadius);
+        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
+        {
+            // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
+            if (Victims != self)
+            {
+                dir = Victims.Location - Start;
+                dist = FMax(1,VSize(dir));
+                dir = dir/dist;
+                damageScale = 1 - FMax(0,(dist - Victims.CollisionRadius)/DamageRadius);
 
-				if (Victims.Physics == PHYS_KarmaRagDoll)
-				{
-					Victims.DeadExplosionKarma(MyDamageType, damageScale * MomentumTransfer * dir, damageScale);
-				}
-			}
-		}
-	}
-
-	if (!bDidExplosionFX)
-	{
-		if (bPenetrated)
-		{
-			if (bDebugBallistics && DH_ROTankCannonPawn(Instigator) != none && ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun) != none)
-			{
-				ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun).HandleShellDebug(SavedHitLocation);
-			}
-
-		    if (SavedHitActor == none)
-		    {
-		       Trace(TraceHitLocation, TraceHitNormal, Location + vector(Rotation) * 16, Location, false,, HitMaterial);
-		    }
-
-		    if (HitMaterial == none)
-				ST = EST_Default;
-			else
-				ST = ESurfaceTypes(HitMaterial.SurfaceType);
-
-		    if (SavedHitActor != none)
-		    {
-                PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-
-		        if (EffectIsRelevant(SavedHitLocation,false))
-		        {
-		        	Spawn(ShellHitVehicleEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-		    		if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
-		    			Spawn(ExplosionDecal,self,,SavedHitLocation, rotator(-SavedHitNormal));
-		        }
-		    }
-		    else
-		    {
-		    	PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
-		        if (EffectIsRelevant(SavedHitLocation,false))
-		        {
-					Switch(ST)
-					{
-						case EST_Snow:
-						case EST_Ice:
-							Spawn(ShellHitSnowEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-							bShowDecal = true;
-							bSnowDecal = true;
-							break;
-						case EST_Rock:
-						case EST_Gravel:
-						case EST_Concrete:
-							Spawn(ShellHitRockEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-							bShowDecal = true;
-							break;
-						case EST_Wood:
-						case EST_HollowWood:
-							Spawn(ShellHitWoodEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-							bShowDecal = true;
-							break;
-						case EST_Water:
-							Spawn(ShellHitWaterEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-							PlaySound(WaterHitSound,,5.5*TransientSoundVolume);
-							bShowDecal = false;
-							break;
-						default:
-							Spawn(ShellHitDirtEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-							bShowDecal = true;
-							break;
-					}
-
-		    		if (bShowDecal && Level.NetMode != NM_DedicatedServer)
-		    		{
-		    			if (bSnowDecal && ExplosionDecalSnow != none)
-						{
-		    				Spawn(ExplosionDecalSnow,self,,SavedHitLocation, rotator(-SavedHitNormal));
-		    			}
-		    			else if (ExplosionDecal != none)
-						{
-		    				Spawn(ExplosionDecal,self,,SavedHitLocation, rotator(-SavedHitNormal));
-		    			}
-		    		}
-		        }
-		    }
-		    PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
-	    }
-	    else
-	    {
-		    PlaySound(VehicleDeflectSound,,5.5*TransientSoundVolume);
-		    if (EffectIsRelevant(Location,false))
-		    {
-		    	Spawn(ShellDeflectEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-		    }
-
-		    PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
-	    }
+                if (Victims.Physics == PHYS_KarmaRagDoll)
+                {
+                    Victims.DeadExplosionKarma(MyDamageType, damageScale * MomentumTransfer * dir, damageScale);
+                }
+            }
+        }
     }
 
-	if (Corona != none)
-		Corona.Destroy();
+    if (!bDidExplosionFX)
+    {
+        if (bPenetrated)
+        {
+            if (bDebugBallistics && DH_ROTankCannonPawn(Instigator) != none && ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun) != none)
+            {
+                ROTankCannon(DH_ROTankCannonPawn(Instigator).Gun).HandleShellDebug(SavedHitLocation);
+            }
 
-	// Don't want to spawn the effect on the super
-	super(ROAntiVehicleProjectile).Destroyed();
+            if (SavedHitActor == none)
+            {
+               Trace(TraceHitLocation, TraceHitNormal, Location + vector(Rotation) * 16, Location, false,, HitMaterial);
+            }
+
+            if (HitMaterial == none)
+                ST = EST_Default;
+            else
+                ST = ESurfaceTypes(HitMaterial.SurfaceType);
+
+            if (SavedHitActor != none)
+            {
+                PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
+
+                if (EffectIsRelevant(SavedHitLocation,false))
+                {
+                    Spawn(ShellHitVehicleEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
+                    if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
+                        Spawn(ExplosionDecal,self,,SavedHitLocation, rotator(-SavedHitNormal));
+                }
+            }
+            else
+            {
+                PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
+                if (EffectIsRelevant(SavedHitLocation,false))
+                {
+                    Switch(ST)
+                    {
+                        case EST_Snow:
+                        case EST_Ice:
+                            Spawn(ShellHitSnowEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
+                            bShowDecal = true;
+                            bSnowDecal = true;
+                            break;
+                        case EST_Rock:
+                        case EST_Gravel:
+                        case EST_Concrete:
+                            Spawn(ShellHitRockEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
+                            bShowDecal = true;
+                            break;
+                        case EST_Wood:
+                        case EST_HollowWood:
+                            Spawn(ShellHitWoodEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
+                            bShowDecal = true;
+                            break;
+                        case EST_Water:
+                            Spawn(ShellHitWaterEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
+                            PlaySound(WaterHitSound,,5.5*TransientSoundVolume);
+                            bShowDecal = false;
+                            break;
+                        default:
+                            Spawn(ShellHitDirtEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
+                            bShowDecal = true;
+                            break;
+                    }
+
+                    if (bShowDecal && Level.NetMode != NM_DedicatedServer)
+                    {
+                        if (bSnowDecal && ExplosionDecalSnow != none)
+                        {
+                            Spawn(ExplosionDecalSnow,self,,SavedHitLocation, rotator(-SavedHitNormal));
+                        }
+                        else if (ExplosionDecal != none)
+                        {
+                            Spawn(ExplosionDecal,self,,SavedHitLocation, rotator(-SavedHitNormal));
+                        }
+                    }
+                }
+            }
+            PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
+        }
+        else
+        {
+            PlaySound(VehicleDeflectSound,,5.5*TransientSoundVolume);
+            if (EffectIsRelevant(Location,false))
+            {
+                Spawn(ShellDeflectEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
+            }
+
+            PlaySound(ExplosionSound[Rand(4)],,5.5*TransientSoundVolume);
+        }
+    }
+
+    if (Corona != none)
+        Corona.Destroy();
+
+    // Don't want to spawn the effect on the super
+    super(ROAntiVehicleProjectile).Destroyed();
 }
 
 
@@ -505,10 +505,10 @@ simulated function Destroyed()
 //-----------------------------------------------------------------------------
 simulated function PhysicsVolumeChange(PhysicsVolume Volume)
 {
-	if (Volume.bWaterVolume)
-	{
-		Explode(Location, vector(Rotation * -1));
-	}
+    if (Volume.bWaterVolume)
+    {
+        Explode(Location, vector(Rotation * -1));
+    }
 }
 
 defaultproperties

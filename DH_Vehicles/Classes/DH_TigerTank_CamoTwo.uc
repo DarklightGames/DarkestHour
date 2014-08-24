@@ -20,7 +20,7 @@ simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.Tiger_body_222');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

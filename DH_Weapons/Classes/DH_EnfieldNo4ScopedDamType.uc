@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_EnfieldNo4ScopedDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

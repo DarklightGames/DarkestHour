@@ -5,7 +5,7 @@
 // Copyright (C) 2003 Jeffrey Nakai
 //
 // class that holds Semi-Auto Firing properties
-//	subclasses just contain default props
+//  subclasses just contain default props
 //=====================================================
 
 class DH_SemiAutoFire extends DH_ProjectileFire;
@@ -16,7 +16,7 @@ class DH_SemiAutoFire extends DH_ProjectileFire;
 ///* RO SPECIFIC VARIABLES */
 //
 ///* UT VARIABLES THAT WERE CHANGED for RO */
-//	FireEndAnim=none
+//  FireEndAnim=none
 //    FireLoopAnim=none
 //    SmokeEmitterClass=none
 //

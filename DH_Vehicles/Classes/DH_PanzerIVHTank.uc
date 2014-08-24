@@ -15,22 +15,22 @@ class DH_PanzerIVHTank extends DH_ROTreadCraft;
 
 simulated function SetupTreads()
 {
-	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (LeftTreadPanner != none)
-	{
-		LeftTreadPanner.Material = Skins[LeftTreadIndex];
-		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-		LeftTreadPanner.PanRate = 0.0;
-		Skins[LeftTreadIndex] = LeftTreadPanner;
-	}
-	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (RightTreadPanner != none)
-	{
-		RightTreadPanner.Material = Skins[RightTreadIndex];
-		RightTreadPanner.PanDirection = rot(0, 0, 16384);
-		RightTreadPanner.PanRate = 0.0;
-		Skins[RightTreadIndex] = RightTreadPanner;
-	}
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
 }
 
 static function StaticPrecache(LevelInfo L)
@@ -54,7 +54,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

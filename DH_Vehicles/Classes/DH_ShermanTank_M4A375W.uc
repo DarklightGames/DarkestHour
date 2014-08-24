@@ -15,44 +15,44 @@ class DH_ShermanTank_M4A375W extends DH_ROTreadCraftB;
 
 simulated function SetupTreads()
 {
-	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (LeftTreadPanner != none)
-	{
-		LeftTreadPanner.Material = Skins[LeftTreadIndex];
-		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-		LeftTreadPanner.PanRate = 0.0;
-		Skins[LeftTreadIndex] = LeftTreadPanner;
-	}
-	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (RightTreadPanner != none)
-	{
-		RightTreadPanner.Material = Skins[RightTreadIndex];
-		RightTreadPanner.PanDirection = rot(0, 0, 16384);
-		RightTreadPanner.PanRate = 0.0;
-		Skins[RightTreadIndex] = RightTreadPanner;
-	}
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
 }
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3_body_ext');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_wheels');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.Treads.Sherman_treads');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3_body_ext');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_wheels');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.Treads.Sherman_treads');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3_body_ext');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_wheels');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.Treads.Sherman_treads');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3_body_ext');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_wheels');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.Treads.Sherman_treads');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

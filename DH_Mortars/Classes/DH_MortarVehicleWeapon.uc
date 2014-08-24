@@ -26,8 +26,8 @@ var bool bDebugCalibrate;
 
 replication
 {
-	reliable if (Role < ROLE_Authority)
-		ClientReplicateElevation;
+    reliable if (Role < ROLE_Authority)
+        ClientReplicateElevation;
 }
 
 /*
@@ -41,118 +41,118 @@ Exploitation would be completetly beneign and pointless.
 */
 simulated function ClientReplicateElevation(float Elevation)
 {
-	if (bDebug && Role == ROLE_Authority)
-		Level.Game.Broadcast(self, Role @ "ClientReplicateElevation" @ Elevation);
+    if (bDebug && Role == ROLE_Authority)
+        Level.Game.Broadcast(self, Role @ "ClientReplicateElevation" @ Elevation);
 
-	self.Elevation = Elevation;
+    self.Elevation = Elevation;
 }
 
 simulated function PostNetReceive()
 {
-	super.PostNetReceive();
+    super.PostNetReceive();
 
-	if (Role == ROLE_Authority && Elevation != NewElevation)
-	{
-		Level.Game.Broadcast(self, "PostNetReceive" @ Elevation @ NewElevation);
+    if (Role == ROLE_Authority && Elevation != NewElevation)
+    {
+        Level.Game.Broadcast(self, "PostNetReceive" @ Elevation @ NewElevation);
 
-		Elevation = NewElevation;
-	}
+        Elevation = NewElevation;
+    }
 }
 
 simulated function PostBeginPlay()
 {
-	super.PostBeginPlay();
+    super.PostBeginPlay();
 
-	PendingProjectileClass = PrimaryProjectileClass;
+    PendingProjectileClass = PrimaryProjectileClass;
 
-	MainAmmoCharge[0] = 0;
-	MainAmmoCharge[1] = 0;
+    MainAmmoCharge[0] = 0;
+    MainAmmoCharge[1] = 0;
 }
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
-	local Projectile P;
-	local vector X, Y, Z, SpawnLocation;
-	local rotator SpawnRotation;
-	local coords MuzzleBoneCoords;
-	local float SpreadYaw;
-	local rotator R;
-	local vector DebugForward, DebugRight;
+    local Projectile P;
+    local vector X, Y, Z, SpawnLocation;
+    local rotator SpawnRotation;
+    local coords MuzzleBoneCoords;
+    local float SpreadYaw;
+    local rotator R;
+    local vector DebugForward, DebugRight;
 
-	MuzzleBoneCoords = GetBoneCoords(MuzzleBoneName);
-	GetAxes(Rotation - CurrentAim, X, Y, Z);
+    MuzzleBoneCoords = GetBoneCoords(MuzzleBoneName);
+    GetAxes(Rotation - CurrentAim, X, Y, Z);
 
-	X.Z = 0;
-	Y.Z = 0;
+    X.Z = 0;
+    Y.Z = 0;
 
-	X = Normal(X);
-	Y = Normal(Y);
+    X = Normal(X);
+    Y = Normal(Y);
 
-	R = Rotation - CurrentAim;
-	R.Pitch = 0;
-	DebugForward = vector(R);
-	DebugRight = vect(0, 0, 1) cross DebugForward;
+    R = Rotation - CurrentAim;
+    R.Pitch = 0;
+    DebugForward = vector(R);
+    DebugRight = vect(0, 0, 1) cross DebugForward;
 
-	if (!bDebugNoSpread)
-	{
-		SpreadYaw = Abs(((Elevation - ElevationMinimum) / (ElevationMaximum - ElevationMinimum)) - 1);
-		SpreadYaw = SpreadYawMin + ((SpreadYawMax - SpreadYawMin) * SpreadYaw);
-		SpreadYaw = (FRand() - 0.5) * 2.0 * SpreadYaw;
-	}
+    if (!bDebugNoSpread)
+    {
+        SpreadYaw = Abs(((Elevation - ElevationMinimum) / (ElevationMaximum - ElevationMinimum)) - 1);
+        SpreadYaw = SpreadYawMin + ((SpreadYawMax - SpreadYawMin) * SpreadYaw);
+        SpreadYaw = (FRand() - 0.5) * 2.0 * SpreadYaw;
+    }
 
-	SpawnLocation = MuzzleBoneCoords.Origin;
-	SpawnRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, -Elevation * DEG2RAD), X));
-	SpawnRotation.Yaw += SpreadYaw;
+    SpawnLocation = MuzzleBoneCoords.Origin;
+    SpawnRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, -Elevation * DEG2RAD), X));
+    SpawnRotation.Yaw += SpreadYaw;
 
-	/* After careful consideration, it was determined that universal pitch adjustments did
-	not work, because at lower elevations, the differences in pitch angles becomes
-	nearly undetectible, while at high elevations they were overly dramatic.
-	In the end, I opted to go with a slight velocity adjustment, as this scales
-	fairly nicely at all ranges. -Basnett */
+    /* After careful consideration, it was determined that universal pitch adjustments did
+    not work, because at lower elevations, the differences in pitch angles becomes
+    nearly undetectible, while at high elevations they were overly dramatic.
+    In the end, I opted to go with a slight velocity adjustment, as this scales
+    fairly nicely at all ranges. -Basnett */
 
-	P = Spawn(ProjClass, Owner, , SpawnLocation, SpawnRotation);
+    P = Spawn(ProjClass, Owner, , SpawnLocation, SpawnRotation);
 
-	if (!bDebugNoSpread)
-		P.Velocity = vector(P.Rotation) * ((ProjClass.default.MaxSpeed) + ((FRand() - 0.5) * 2.0 * (ProjClass.default.MaxSpeed * 0.05)));
-	else
-		P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
+    if (!bDebugNoSpread)
+        P.Velocity = vector(P.Rotation) * ((ProjClass.default.MaxSpeed) + ((FRand() - 0.5) * 2.0 * (ProjClass.default.MaxSpeed * 0.05)));
+    else
+        P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
 
-	if (DH_MortarProjectile(P) != none && Pawn(Owner) != none)
-	{
-		DH_MortarProjectile(P).DamageInstigator = PlayerController(Pawn(Owner).Controller);
+    if (DH_MortarProjectile(P) != none && Pawn(Owner) != none)
+    {
+        DH_MortarProjectile(P).DamageInstigator = PlayerController(Pawn(Owner).Controller);
 
-		if (bDebug)
-		{
-			DH_MortarProjectile(P).DebugForward = DebugForward;
-			DH_MortarProjectile(P).DebugRight = DebugRight;
-		}
-	}
+        if (bDebug)
+        {
+            DH_MortarProjectile(P).DebugForward = DebugForward;
+            DH_MortarProjectile(P).DebugRight = DebugRight;
+        }
+    }
 
-	PlaySound(FireSound, , 4.0);
+    PlaySound(FireSound, , 4.0);
 
-	return P;
+    return P;
 }
 
 simulated function Elevate()
 {
-	if (Elevation < ElevationMaximum)
-	{
-		Elevation += ElevationStride;
+    if (Elevation < ElevationMaximum)
+    {
+        Elevation += ElevationStride;
 
-		if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
-			DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
-	}
+        if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    }
 }
 
 simulated function Depress()
 {
-	if (Elevation > ElevationMinimum)
-	{
-		Elevation -= ElevationStride;
+    if (Elevation > ElevationMinimum)
+    {
+        Elevation -= ElevationStride;
 
-		if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
-			DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
-	}
+        if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    }
 }
 
 //TODO: Charge settings.
@@ -161,53 +161,53 @@ function DecrementRange() { return; }
 
 state ProjectileFireMode
 {
-	function Fire(Controller C)
-	{
-		if (bDebugCalibrate)
-		{
-			for(Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
-				SpawnProjectile(PendingProjectileClass, false);
-		}
-		else
-		{
-			if (HasPendingAmmo())
-			{
-				SpawnProjectile(PendingProjectileClass, false);
-				MainAmmoCharge[GetPendingRoundIndex()]--;
+    function Fire(Controller C)
+    {
+        if (bDebugCalibrate)
+        {
+            for(Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
+                SpawnProjectile(PendingProjectileClass, false);
+        }
+        else
+        {
+            if (HasPendingAmmo())
+            {
+                SpawnProjectile(PendingProjectileClass, false);
+                MainAmmoCharge[GetPendingRoundIndex()]--;
 
-				//Shake view here, (proper timing and all)
-				DH_MortarVehicleWeaponPawn(Instigator).ClientShakeView();
+                //Shake view here, (proper timing and all)
+                DH_MortarVehicleWeaponPawn(Instigator).ClientShakeView();
 
-				// We fired one off, so we are now eligible for resupply.
-				DH_MortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = true;
-			}
-		}
-	}
+                // We fired one off, so we are now eligible for resupply.
+                DH_MortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = true;
+            }
+        }
+    }
 
-	function AltFire(Controller C) { }
+    function AltFire(Controller C) { }
 }
 
 function ToggleRoundType()
 {
-	if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
-		PendingProjectileClass = SecondaryProjectileClass;
-	else
-	   	PendingProjectileClass = PrimaryProjectileClass;
+    if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
+        PendingProjectileClass = SecondaryProjectileClass;
+    else
+        PendingProjectileClass = PrimaryProjectileClass;
 }
 
 simulated function bool HasPendingAmmo()
 {
-	return MainAmmoCharge[GetPendingRoundIndex()] > 0;
+    return MainAmmoCharge[GetPendingRoundIndex()] > 0;
 }
 
 simulated function bool IsHighExplosivePending()
 {
-	return PendingProjectileClass == PrimaryProjectileClass;
+    return PendingProjectileClass == PrimaryProjectileClass;
 }
 
 simulated function bool IsSmokePending()
 {
-	return PendingProjectileClass == SecondaryProjectileClass;
+    return PendingProjectileClass == SecondaryProjectileClass;
 }
 
 defaultproperties

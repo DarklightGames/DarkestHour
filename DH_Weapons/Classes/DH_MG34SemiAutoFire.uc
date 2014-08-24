@@ -12,92 +12,92 @@ class DH_MG34SemiAutoFire extends DH_MGSingleFire;
 
 simulated function HandleRecoil()
 {
-	local rotator NewRecoilRotation;
-	local ROPlayer ROP;
-	local ROPawn ROPwn;
+    local rotator NewRecoilRotation;
+    local ROPlayer ROP;
+    local ROPawn ROPwn;
 
     if (Instigator != none)
     {
-		ROP = ROPlayer(Instigator.Controller);
-		ROPwn = ROPawn(Instigator);
-	}
+        ROP = ROPlayer(Instigator.Controller);
+        ROPwn = ROPawn(Instigator);
+    }
 
     if (ROP == none || ROPwn == none)
-    	return;
+        return;
 
-	if (!ROP.bFreeCamera)
-	{
-      	NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
-     	NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
+    if (!ROP.bFreeCamera)
+    {
+        NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
+        NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
 
-      	if (Rand(2) == 1)
-         	NewRecoilRotation.Yaw *= -1;
+        if (Rand(2) == 1)
+            NewRecoilRotation.Yaw *= -1;
 
         if (Instigator.Physics == PHYS_Falling)
         {
-      		NewRecoilRotation *= 3;
+            NewRecoilRotation *= 3;
         }
 
-		// WeaponTODO: Put bipod and resting modifiers in here
-	    if (Instigator.bIsCrouched)
-	    {
-	        NewRecoilRotation *= PctCrouchRecoil;
+        // WeaponTODO: Put bipod and resting modifiers in here
+        if (Instigator.bIsCrouched)
+        {
+            NewRecoilRotation *= PctCrouchRecoil;
 
-			// player is crouched and in iron sights
-	        if (Weapon.bUsingSights)
-	        {
-	            NewRecoilRotation *= PctCrouchIronRecoil;
-	        }
-	    }
-	    else if (Instigator.bIsCrawling)
-	    {
-	        NewRecoilRotation *= PctProneRecoil;
+            // player is crouched and in iron sights
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctCrouchIronRecoil;
+            }
+        }
+        else if (Instigator.bIsCrawling)
+        {
+            NewRecoilRotation *= PctProneRecoil;
 
-	        // player is prone and in iron sights
-	        if (Weapon.bUsingSights)
-	        {
-	            NewRecoilRotation *= PctProneIronRecoil;
-	        }
-	    }
-	    else if (Weapon.bUsingSights)
-	    {
-	        NewRecoilRotation *= PctStandIronRecoil;
-	    }
+            // player is prone and in iron sights
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctProneIronRecoil;
+            }
+        }
+        else if (Weapon.bUsingSights)
+        {
+            NewRecoilRotation *= PctStandIronRecoil;
+        }
 
         if (ROPwn.bRestingWeapon)
-        	NewRecoilRotation *= PctRestDeployRecoil;
+            NewRecoilRotation *= PctRestDeployRecoil;
 
         if (Instigator.bBipodDeployed)
-		{
-			NewRecoilRotation *= PctBipodDeployRecoil;
-		}
+        {
+            NewRecoilRotation *= PctBipodDeployRecoil;
+        }
 
-		if (ROPwn.LeanAmount != 0)
-		{
-			NewRecoilRotation *= PctLeanPenalty;
-		}
+        if (ROPwn.LeanAmount != 0)
+        {
+            NewRecoilRotation *= PctLeanPenalty;
+        }
 
-		// Need to set this value per weapon
- 		ROP.SetRecoil(NewRecoilRotation,RecoilRate);
- 	}
+        // Need to set this value per weapon
+        ROP.SetRecoil(NewRecoilRotation,RecoilRate);
+    }
 
 // Add Fire Blur
     if (Level.NetMode != NM_DedicatedServer)
     {
-    	if (Instigator != none)
-    	{
-    		if (ROPlayer(Instigator.Controller) != none)
-    		{
-			    if (Weapon.bUsingSights)
-			    {
-			    	ROPlayer(Instigator.Controller).AddBlur(0.1, 0.1);
-			    }
-			    else
-			    {
-			    	ROPlayer(Instigator.Controller).AddBlur(0.04, 0.1);
-			    }
-			}
-		}
+        if (Instigator != none)
+        {
+            if (ROPlayer(Instigator.Controller) != none)
+            {
+                if (Weapon.bUsingSights)
+                {
+                    ROPlayer(Instigator.Controller).AddBlur(0.1, 0.1);
+                }
+                else
+                {
+                    ROPlayer(Instigator.Controller).AddBlur(0.04, 0.1);
+                }
+            }
+        }
     }
 }
 

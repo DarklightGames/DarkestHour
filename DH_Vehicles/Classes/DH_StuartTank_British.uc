@@ -12,22 +12,22 @@ class DH_StuartTank_British extends DH_StuartTank;
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Brit_M5_body_ext');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_armor');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Brit_M5_body_ext');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_armor');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Brit_M5_body_ext');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_armor');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Brit_M5_body_ext');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_M5_armor');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

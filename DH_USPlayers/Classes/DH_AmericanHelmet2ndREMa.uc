@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_AmericanHelmet2ndREMa   ***
+//  ***   DH_AmericanHelmet2ndREMa   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_AmericanHelmet2ndREMa extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
+//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
 }
 
 defaultproperties

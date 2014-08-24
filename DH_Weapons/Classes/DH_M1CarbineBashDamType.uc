@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_M1CarbineBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

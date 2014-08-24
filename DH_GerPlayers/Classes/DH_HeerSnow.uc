@@ -1,5 +1,5 @@
 class DH_HeerSnow extends DH_Ger_Heer
-	abstract;
+    abstract;
 
 defaultproperties
 {

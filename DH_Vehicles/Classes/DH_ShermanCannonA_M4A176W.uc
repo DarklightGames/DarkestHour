@@ -11,62 +11,62 @@ class DH_ShermanCannonA_M4A176W extends DH_ROTankCannon;
 // Special tracer handling for this type of cannon
 simulated function UpdateTracer()
 {
-	local rotator SpawnDir;
+    local rotator SpawnDir;
 
-	if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-		return;
+    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
+        return;
 
 
- 	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-	{
-		if (Instigator != none && Instigator.IsLocallyControlled())
-		{
-			SpawnDir = WeaponFireRotation;
-		}
-		else
-		{
-			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-		}
+    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
+    {
+        if (Instigator != none && Instigator.IsLocallyControlled())
+        {
+            SpawnDir = WeaponFireRotation;
+        }
+        else
+        {
+            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
+        }
 
         if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
         {
-        	SpawnDir.Pitch += AddedPitch;
+            SpawnDir.Pitch += AddedPitch;
         }
 
         Spawn(DummyTracerClass,,, WeaponFireLocation, SpawnDir);
 
-		mLastTracerTime = Level.TimeSeconds;
-	}
+        mLastTracerTime = Level.TimeSeconds;
+    }
 }
 
 
 // American tanks must use the actual sight markings to aim!
 simulated function int GetRange()
 {
-	return RangeSettings[0];
+    return RangeSettings[0];
 }
 
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-	if (CurrentRangeIndex < RangeSettings.Length - 1)
-	{
-		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if (CurrentRangeIndex < RangeSettings.Length - 1)
+    {
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		CurrentRangeIndex++;
-	}
+        CurrentRangeIndex++;
+    }
 }
 
 function DecrementRange()
 {
-	if (CurrentRangeIndex > 0)
-	{
-		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if (CurrentRangeIndex > 0)
+    {
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		CurrentRangeIndex --;
-	}
+        CurrentRangeIndex --;
+    }
 }
 
 defaultproperties

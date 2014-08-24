@@ -1,5 +1,5 @@
 //=============================================================================
-// DH_EnfieldNo4MeleeFire 
+// DH_EnfieldNo4MeleeFire
 //=============================================================================
 
 class DH_EnfieldNo4MeleeFire extends ROMeleeFire;

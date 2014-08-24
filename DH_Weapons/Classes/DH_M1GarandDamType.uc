@@ -1,9 +1,9 @@
 //=============================================================================
-// DH_M1GarandDamType 
+// DH_M1GarandDamType
 //=============================================================================
 
 class DH_M1GarandDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

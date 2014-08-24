@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_BazookaDamType extends ROAntiTankProjectileDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

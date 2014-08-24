@@ -14,14 +14,14 @@ class DH_MG34Weapon extends DH_MGbase;
 // Overriden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
-	if (FireMode[Mode].bIsFiring)
-	    FireMode[Mode].bInstantStop = true;
+    if (FireMode[Mode].bIsFiring)
+        FireMode[Mode].bInstantStop = true;
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-     	if (!IsAnimating(0))
-     	{
-     		PlayIdle();
-     	}
+        if (!IsAnimating(0))
+        {
+            PlayIdle();
+        }
     }
 
     FireMode[Mode].bIsFiring = false;

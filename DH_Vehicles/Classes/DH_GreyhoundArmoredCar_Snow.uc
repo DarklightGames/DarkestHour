@@ -26,7 +26,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels_snow');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

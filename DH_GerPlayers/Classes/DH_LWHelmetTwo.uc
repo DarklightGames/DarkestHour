@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   LWFD Helmet2   ***
+//  ***   LWFD Helmet2   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_LWHelmetTwo extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG2');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.LW_HG2');
 }
 
 defaultproperties

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   FJ helmet   ***
+//  ***   FJ helmet   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_FJHelmetCamo2 extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.FJ_HelmetCamo2');
+//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.FJ_HelmetCamo2');
 }
 
 defaultproperties

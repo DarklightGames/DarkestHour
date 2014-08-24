@@ -22,9 +22,9 @@ var bool      bIsOn;
 /*
 replication {
 
-	unreliable if ((!bSkipActorPropertyReplication || bNetInitial) && (Role==ROLE_Authority)
-					&& bNetDirty)
-			 DistanceFogColor;
+    unreliable if ((!bSkipActorPropertyReplication || bNetInitial) && (Role==ROLE_Authority)
+                    && bNetDirty)
+             DistanceFogColor;
 
 }
 */
@@ -123,9 +123,9 @@ simulated event ClientTrigger() {
 
 simulated function Reset()
 {
-	super.Reset();
+    super.Reset();
 
-	//TODO: Fix.
+    //TODO: Fix.
 }
 
 defaultproperties

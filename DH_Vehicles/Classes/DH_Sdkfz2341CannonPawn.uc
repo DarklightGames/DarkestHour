@@ -14,63 +14,63 @@ replication
 {
 
     // Red Orchestra replication
-	reliable if (bNetInitial && Role==ROLE_Authority)
-		bMustBeReconCrew;
+    reliable if (bNetInitial && Role==ROLE_Authority)
+        bMustBeReconCrew;
 }
 
 simulated exec function SwitchFireMode()
 {
-	if (Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
-	{
-		if (Controller != none && ROPlayer(Controller) != none)
-			ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if (Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
+    {
+        if (Controller != none && ROPlayer(Controller) != none)
+            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		ServerToggleExtraRoundType();
-	}
+        ServerToggleExtraRoundType();
+    }
 }
 
 function bool ResupplyAmmo()
 {
-	local bool bResupplied;
-	local DH_Sdkfz2341Cannon G;
+    local bool bResupplied;
+    local DH_Sdkfz2341Cannon G;
 
-	if (Gun == none)
-		return false;
+    if (Gun == none)
+        return false;
 
-	G = DH_Sdkfz2341Cannon(Gun);
+    G = DH_Sdkfz2341Cannon(Gun);
 
-	if (G == none)
-		return false;
+    if (G == none)
+        return false;
 
-	if (G.NumMags != G.default.NumMags || G.NumSecMags != G.default.NumSecMags || G.NumAltMags != G.default.NumAltMags)
-	{
-		G.NumMags = G.default.NumMags;
-		G.NumSecMags = G.default.NumSecMags;
-		G.NumAltMags = G.default.NumAltMags;
+    if (G.NumMags != G.default.NumMags || G.NumSecMags != G.default.NumSecMags || G.NumAltMags != G.default.NumAltMags)
+    {
+        G.NumMags = G.default.NumMags;
+        G.NumSecMags = G.default.NumSecMags;
+        G.NumAltMags = G.default.NumAltMags;
 
-		bResupplied = true;
-	}
+        bResupplied = true;
+    }
 
-	return bResupplied;
+    return bResupplied;
 }
 
 function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
 
-	if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-	{
-	    Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
+    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
         return false;
- 	}
+    }
     else
     {
-	    DriverPositionIndex=InitialPositionIndex;
-	    bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
+        DriverPositionIndex=InitialPositionIndex;
+        bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
-	    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-	    return bSuperDriverLeave;
-	}
+        ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+        return bSuperDriverLeave;
+    }
 }
 
 function bool TryToDrive(Pawn P)
@@ -83,22 +83,22 @@ function bool TryToDrive(Pawn P)
     DHRI = DH_RoleInfo(DHPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo);
 
     if (VehicleBase != none)
-	{
-		if (VehicleBase.NeedsFlip())
-		{
-			VehicleBase.Flip(vector(P.Rotation), 1);
-			return false;
-		}
+    {
+        if (VehicleBase.NeedsFlip())
+        {
+            VehicleBase.Flip(vector(P.Rotation), 1);
+            return false;
+        }
 
-		if (P.GetTeamNum() != Team)
-		{
-			if (VehicleBase.Driver == none)
-				return VehicleBase.TryToDrive(P);
+        if (P.GetTeamNum() != Team)
+        {
+            if (VehicleBase.Driver == none)
+                return VehicleBase.TryToDrive(P);
 
-			VehicleLocked(P);
-			return false;
-		}
-	}
+            VehicleLocked(P);
+            return false;
+        }
+    }
 
     if (bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
     {
@@ -106,18 +106,18 @@ function bool TryToDrive(Pawn P)
         return false;
     }
 
-	return Super.TryToDrive(P);
+    return Super.TryToDrive(P);
 }
 
 function DriverDied()
 {
-	DriverPositionIndex=InitialPositionIndex;
-	super.DriverDied();
-	ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+    DriverPositionIndex=InitialPositionIndex;
+    super.DriverDied();
+    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
 
-	// Kill the rotation sound if the driver dies but the vehicle doesnt
+    // Kill the rotation sound if the driver dies but the vehicle doesnt
     if (GetVehicleBase().Health > 0)
-		SetRotatingStatus(0);
+        SetRotatingStatus(0);
 }
 
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)

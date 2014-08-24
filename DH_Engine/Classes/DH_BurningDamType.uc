@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_BurningDamType extends ROWeaponDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

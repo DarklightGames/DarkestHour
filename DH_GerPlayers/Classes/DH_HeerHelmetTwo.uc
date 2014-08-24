@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   Heer Helmet 2 with camo paint   ***
+//  ***   Heer Helmet 2 with camo paint   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_HeerHelmetTwo extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_2');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_2');
 }
 
 defaultproperties

@@ -2,7 +2,7 @@
 //DH_30calVehDamType
 //=============================================================================
 class DH_30CalVehDamType_Tank extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

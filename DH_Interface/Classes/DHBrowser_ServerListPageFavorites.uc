@@ -5,7 +5,7 @@ class DHBrowser_ServerListPageFavorites extends UT2k4Browser_ServerListPageFavor
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-	Super.Initcomponent(MyController, MyOwner);
+    Super.Initcomponent(MyController, MyOwner);
 
     class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 

@@ -10,7 +10,7 @@ auto state Start
         if (DrawScale >= 0.3)
         {
             SetDrawScale(0.3);
-			GotoState('');
+            GotoState('');
         }
     }
 }

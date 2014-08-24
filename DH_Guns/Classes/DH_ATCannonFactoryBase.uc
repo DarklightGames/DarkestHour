@@ -27,7 +27,7 @@ var     array<int> ActivatedIndexes;
 //==============================================================================
 simulated event PostBeginPlay()
 {
-	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
     // Add this AT Gun to the GRI
     if (Role == ROLE_Authority)
@@ -66,52 +66,52 @@ function EvaluateRandom()
 
     ActivatedIndexes.Length = 0;
 
-	if (MaxRandomFactoriesActive > 0)
-	{
-	     MaxToSpawn = MaxRandomFactoriesActive;
-	}
+    if (MaxRandomFactoriesActive > 0)
+    {
+         MaxToSpawn = MaxRandomFactoriesActive;
+    }
 
-	// Build an Array of all of the AT Gun factories with matching group tags
+    // Build an Array of all of the AT Gun factories with matching group tags
     foreach DynamicActors(class'DH_ATCannonFactoryBase', GunFactory)
-	{
-		// Must have a group tag set
+    {
+        // Must have a group tag set
         if (GunFactory.GroupTag == "" && GunFactory.bUseRandomizer)
-		{
-		  log("Error - GroupTag not set");
-		  continue;
-		}
+        {
+          log("Error - GroupTag not set");
+          continue;
+        }
 
         if (GunFactory.GroupTag != "" && GunFactory.GroupTag == GroupTag)
-		{
-			if (GunFactory != self)
-			{
-			      GunFactory.SpecialReset();
-			}
+        {
+            if (GunFactory != self)
+            {
+                  GunFactory.SpecialReset();
+            }
 
             GunFactories[GunFactories.Length] = GunFactory;
 
             if (GunFactory.MaxRandomFactoriesActive > MaxToSpawn)
-        	{
-        	     MaxToSpawn = GunFactory.MaxRandomFactoriesActive;
-        	}
+            {
+                 MaxToSpawn = GunFactory.MaxRandomFactoriesActive;
+            }
 
-        	GunFactory.bRandomEvaluated = true;
-		}
-	}
+            GunFactory.bRandomEvaluated = true;
+        }
+    }
 
     // Calculate the random activation percentage based on how many cannons the mapper
     // wants to spawn and how many total cannons there are in the array.
-	if (MaxToSpawn > 0)
-	{
-	   RandFactor = Min(MaxToSpawn,GunFactories.Length)/Float(GunFactories.Length);
-	}
+    if (MaxToSpawn > 0)
+    {
+       RandFactor = Min(MaxToSpawn,GunFactories.Length)/Float(GunFactories.Length);
+    }
 
     //log(self$" MaxToSpawn = "$MaxToSpawn$" RandFactor = "$RandFactor);
 
     // Loop through all the the factories found for this group tag and calculate
     // whether or not they should be activated.
-	for (i = 0; i < GunFactories.Length; i++)
-	{
+    for (i = 0; i < GunFactories.Length; i++)
+    {
         //log(self$" total active = "$TotalActive$" i = "$i);
 
         if (TotalActive >= MaxToSpawn && MaxToSpawn > 0)
@@ -123,35 +123,35 @@ function EvaluateRandom()
         if (TotalActive < MaxToSpawn && ((GunFactories.Length - i) - 1) < MaxToSpawn)
         {
            ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
-    	   TotalActive++;
-    	   //log(self$" Adding an AT Gun because we're down to the last ones");
-    	   continue;
-    	}
+           TotalActive++;
+           //log(self$" Adding an AT Gun because we're down to the last ones");
+           continue;
+        }
 
         if (MaxToSpawn > 0)
-    	{
+        {
             if (FRand() <= RandFactor)
             {
-        	   ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
+               ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
                TotalActive++;
-        	   //log(self$" Randomly adding ATGun "$i);
-        	   continue;
+               //log(self$" Randomly adding ATGun "$i);
+               continue;
             }
-    	}
-    	else
-    	{
-    	   ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
+        }
+        else
+        {
+           ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
            TotalActive++;
-    	   //log(self$" Spawning every ATGun since the limit was set to zero");
-    	   continue;
-    	}
-	}
+           //log(self$" Spawning every ATGun since the limit was set to zero");
+           continue;
+        }
+    }
 
     //log(self$" Final total active = "$TotalActive);
 
-	bRandomEvaluated = true;
+    bRandomEvaluated = true;
 
-	if (!bUsesSpawnAreas)
+    if (!bUsesSpawnAreas)
         ProcessRandomActivation();
 }
 
@@ -167,46 +167,46 @@ function ProcessRandomActivation()
     if (!bMasterFactory)
         return;
 
-	// Build an Array of all of the AT Gun factories with matching group tags
+    // Build an Array of all of the AT Gun factories with matching group tags
     foreach DynamicActors(class'DH_ATCannonFactoryBase', GunFactory)
-	{
-		// Must have a group tag set
+    {
+        // Must have a group tag set
         if (GunFactory.GroupTag == "")
-		{
-		  log("Error - GroupTag not set");
-		  continue;
-		}
+        {
+          log("Error - GroupTag not set");
+          continue;
+        }
 
         if (GunFactory.GroupTag != "" && GunFactory.GroupTag == GroupTag)
-		{
+        {
             GunFactories[GunFactories.Length] = GunFactory;
-		}
-	}
+        }
+    }
 
     // Loop through the gun factories activating the ones stored in the ActivatedIndexes array
-	for (i = 0; i < ActivatedIndexes.Length; i++)
-	{
-    	for (j = 0; j < GunFactories.Length; j++)
+    for (i = 0; i < ActivatedIndexes.Length; i++)
+    {
+        for (j = 0; j < GunFactories.Length; j++)
         {
             if (GunFactories[j].GunIndex == ActivatedIndexes[i])
             {
-            	TempTeam = class<ROVehicle>(GunFactories[j].VehicleClass).default.VehicleTeam;
+                TempTeam = class<ROVehicle>(GunFactories[j].VehicleClass).default.VehicleTeam;
 
                 if (TempTeam == AXIS_TEAM_INDEX)
-            	{
-            		GunFactories[j].Activate(AXIS);
-            	}
-            	else if (TempTeam == ALLIES_TEAM_INDEX)
-            	{
-            	    GunFactories[j].Activate(ALLIES);
-            	}
-            	else
-            	{
-            		GunFactories[j].Activate(NEUTRAL);
-            	}
-        	}
-	   }
-	}
+                {
+                    GunFactories[j].Activate(AXIS);
+                }
+                else if (TempTeam == ALLIES_TEAM_INDEX)
+                {
+                    GunFactories[j].Activate(ALLIES);
+                }
+                else
+                {
+                    GunFactories[j].Activate(NEUTRAL);
+                }
+            }
+       }
+    }
 }
 
 function ActivatedBySpawn(int Team)
@@ -240,8 +240,8 @@ function Deactivate()
 
     if (Role == ROLE_Authority && LastSpawnedVehicle != none && LastSpawnedVehicle.Health <= 0)
     {
-	   ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,false);
-	}
+       ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,false);
+    }
 }
 
 // Need to handle Reset differently for this actor. If we are using the randomizer,
@@ -301,7 +301,7 @@ event VehicleDestroyed(Vehicle V)
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,false);
     }
 
-	Super.VehicleDestroyed(V);
+    Super.VehicleDestroyed(V);
 }
 
 //=============================================================================

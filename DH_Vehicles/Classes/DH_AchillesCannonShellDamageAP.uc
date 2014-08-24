@@ -7,7 +7,7 @@
 // M10 British tank destroyer "Achilles IC" - 76.2mm APC Shot - Damage Type
 //==============================================================================
 class DH_AchillesCannonShellDamageAP extends ROTankShellImpactDamage //ROWeaponDamageType
-	  abstract;
+      abstract;
 
 defaultproperties
 {

@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_STG44BashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_FG42BashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS ski cap Italian Camo   ***
+//  ***   SS ski cap Italian Camo   ***
 //
 // *************************************************************************
 
@@ -10,7 +10,7 @@ class DH_12SSCap extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_2');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_2');
 }
 
 defaultproperties

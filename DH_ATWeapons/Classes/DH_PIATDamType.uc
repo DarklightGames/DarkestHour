@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_PIATDamType extends ROAntiTankProjectileDamType
-	abstract;
+    abstract;
 
 defaultproperties
 {

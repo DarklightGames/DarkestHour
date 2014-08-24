@@ -8,22 +8,22 @@
 //===================================================================
 
 class DH_PistolWeapon extends DH_ProjectileWeapon
-	abstract;
+    abstract;
 
 // Overridden so we don't play idle empty anims after a reload
 simulated state Reloading
 {
-	simulated function PlayIdle()
-	{
-		if (bUsingSights)
-	    {
-			LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
-	    }
-		else
-	    {
-			LoopAnim(IdleAnim, IdleAnimRate, 0.2);
-	    }
-	}
+    simulated function PlayIdle()
+    {
+        if (bUsingSights)
+        {
+            LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
+        }
+        else
+        {
+            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
+        }
+    }
 }
 
 // Overriden to prevent the exploit of freezing your animations after firing
@@ -58,14 +58,14 @@ simulated function AnimEnd(int channel)
 // Overriden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
-	if (FireMode[Mode].bIsFiring)
-	    FireMode[Mode].bInstantStop = true;
+    if (FireMode[Mode].bIsFiring)
+        FireMode[Mode].bInstantStop = true;
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-     	if (!IsAnimating(0))
-     	{
-     		PlayIdle();
-     	}
+        if (!IsAnimating(0))
+        {
+            PlayIdle();
+        }
     }
 
     FireMode[Mode].bIsFiring = false;

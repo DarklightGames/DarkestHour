@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS ski cap panzer   ***
+//  ***   SS ski cap panzer   ***
 //
 // *************************************************************************
 
@@ -9,7 +9,7 @@ class DH_WSSHatPanzerA extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_1');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_1');
 }
 
 defaultproperties

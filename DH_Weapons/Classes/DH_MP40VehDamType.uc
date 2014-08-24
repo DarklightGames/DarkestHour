@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_MP40VehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

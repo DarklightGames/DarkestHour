@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_US_7th_NavalBeachBattalion   ***
+//  ***   DH_US_7th_NavalBeachBattalion   ***
 //
 // *************************************************************************
 
 class DH_US_7th_NavalBeachBattalion extends DH_US_Infantry_Units
-	abstract;
+    abstract;
 
 defaultproperties
 {

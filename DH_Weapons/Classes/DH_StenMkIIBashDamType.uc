@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_StenMkIIBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

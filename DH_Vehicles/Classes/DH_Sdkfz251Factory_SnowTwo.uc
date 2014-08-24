@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_sdkfz251_CamoSnow2Factory   ***
+//  ***   DH_sdkfz251_CamoSnow2Factory   ***
 //
 // *************************************************************************
 class DH_Sdkfz251Factory_SnowTwo extends DH_Sdkfz251Factory;

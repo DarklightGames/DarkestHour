@@ -20,7 +20,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.panzer4F2_treads');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

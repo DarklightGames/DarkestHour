@@ -1,21 +1,21 @@
 // *************************************************************************
 //
-//	***   DH_Ardennes_WSSReconaissanceCrew  ***
+//  ***   DH_Ardennes_WSSReconaissanceCrew  ***
 //
 // *************************************************************************
 
-class DH_Ardennes_WSSReconaissanceCrew extends DH_WaffenSSTankCrew;	//Forgive me for the spelling error.  Was too late to rectify.
+class DH_Ardennes_WSSReconaissanceCrew extends DH_WaffenSSTankCrew; //Forgive me for the spelling error.  Was too late to rectify.
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		return Headgear[0];
-	}
-	else
-	{
-		return Headgear[1];
-	}
+    if (FRand() < 0.2)
+    {
+        return Headgear[0];
+    }
+    else
+    {
+        return Headgear[1];
+    }
 }
 
 defaultproperties

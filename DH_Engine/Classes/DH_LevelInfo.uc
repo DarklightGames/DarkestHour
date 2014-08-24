@@ -1,5 +1,5 @@
 class DH_LevelInfo extends ROLevelInfo
-	placeable;
+    placeable;
 
 //=============================================================================
 // Variables
@@ -7,13 +7,13 @@ class DH_LevelInfo extends ROLevelInfo
 
 enum EAxisNation
 {
-	NATION_Germany,
+    NATION_Germany,
 };
 
 enum EAlliedNation
 {
-	NATION_USA,
-	NATION_Britain,
+    NATION_USA,
+    NATION_Britain,
     NATION_Canada,
 };
 

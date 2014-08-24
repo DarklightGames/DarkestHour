@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_M1GrenadeDamType extends ROGrenadeDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties  `quit

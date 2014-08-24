@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHSettings_Footer   ***
+//  ***   DHSettings_Footer   ***
 //
 // *************************************************************************
 
@@ -11,18 +11,18 @@ var DHSettingsPage SettingsPage;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-	Super.InitComponent(MyController,MyOwner);
-    	SettingsPage = DHSettingsPage(MyOwner);
+    Super.InitComponent(MyController,MyOwner);
+        SettingsPage = DHSettingsPage(MyOwner);
 }
 
 function bool InternalOnClick(GUIComponent Sender)
 {
-	if (Sender==b_Back)
-    		SettingsPage.BackButtonClicked();
+    if (Sender==b_Back)
+            SettingsPage.BackButtonClicked();
 
-    	else if (Sender==b_Defaults)
-    		SettingsPage.DefaultsButtonClicked();
-		return true;
+        else if (Sender==b_Defaults)
+            SettingsPage.DefaultsButtonClicked();
+        return true;
 }
 
 defaultproperties

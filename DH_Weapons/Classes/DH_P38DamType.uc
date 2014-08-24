@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_P38DamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

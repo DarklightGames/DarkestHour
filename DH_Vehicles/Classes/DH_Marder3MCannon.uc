@@ -13,7 +13,7 @@ class DH_Marder3MCannon extends DH_ROTankCannon;
 simulated function int LimitYaw(int yaw)
 {
     local int NewYaw;
-	local ROVehicleWeaponPawn PwningPawn;
+    local ROVehicleWeaponPawn PwningPawn;
 
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
@@ -26,28 +26,28 @@ simulated function int LimitYaw(int yaw)
 
     if (PwningPawn != none)
     {
-	   	if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
-	   	{
-	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
-	   	}
-	   	else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
-	   	{
-	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
-	  	}
-  	}
-  	else
-  	{
-	   	if (yaw > MaxPositiveYaw)
-	   	{
-	   		NewYaw = MaxPositiveYaw;
-	   	}
-	   	else if (yaw < MaxNegativeYaw)
-	   	{
-	   		NewYaw = MaxNegativeYaw;
-	  	}
-  	}
+        if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
+        {
+            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
+        }
+        else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
+        {
+            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
+        }
+    }
+    else
+    {
+        if (yaw > MaxPositiveYaw)
+        {
+            NewYaw = MaxPositiveYaw;
+        }
+        else if (yaw < MaxNegativeYaw)
+        {
+            NewYaw = MaxNegativeYaw;
+        }
+    }
 
-  	return NewYaw;
+    return NewYaw;
 }
 
 defaultproperties

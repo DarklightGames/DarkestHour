@@ -14,29 +14,29 @@ replication
 
 simulated function PlayerViewZoom(bool ZoomDirection)
 {
-	if (ZoomDirection)
-	{
-    	bPlayerViewIsZoomed = true;
-    	PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
-	}
-	else
-	{
-    	bPlayerViewIsZoomed = false;
+    if (ZoomDirection)
+    {
+        bPlayerViewIsZoomed = true;
+        PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
+    }
+    else
+    {
+        bPlayerViewIsZoomed = false;
 
-    	if (Instigator.Controller != none)
-    	{
-		    PlayerController(Instigator.Controller).DefaultFOV = 72.0;
-		    PlayerController(Instigator.Controller).ResetFOV();
-	    }
-	}
+        if (Instigator.Controller != none)
+        {
+            PlayerController(Instigator.Controller).DefaultFOV = 72.0;
+            PlayerController(Instigator.Controller).ResetFOV();
+        }
+    }
 }
 
 simulated state StartMantle extends Busy
 {
     simulated function Timer()
     {
-	    // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
-    	if (!bIsMantling)
+        // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
+        if (!bIsMantling)
             GoToState('RaisingWeapon');
         else
             SetTimer(0.2, false);
@@ -44,40 +44,40 @@ simulated state StartMantle extends Busy
 
     simulated function BeginState()
     {
-	    local int Mode;
+        local int Mode;
 
-	    if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
-	    {
-	        if (Instigator.IsLocallyControlled())
-	        {
-	            for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
-	            {
-	                if (FireMode[Mode].bIsFiring)
-	                    ClientStopFire(Mode);
-	            }
+        if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
+        {
+            if (Instigator.IsLocallyControlled())
+            {
+                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+                {
+                    if (FireMode[Mode].bIsFiring)
+                        ClientStopFire(Mode);
+                }
 
-				if (ClientState == WS_BringUp)
-					TweenAnim(SelectAnim,PutDownTime);
-				else if (HasAnim(PutDownAnim))
-					PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
-	        }
+                if (ClientState == WS_BringUp)
+                    TweenAnim(SelectAnim,PutDownTime);
+                else if (HasAnim(PutDownAnim))
+                    PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
+            }
 
-	        ClientState = WS_PutDown;
-	    }
+            ClientState = WS_PutDown;
+        }
 
-	    SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate),false);
+        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate),false);
 
-	    for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
-	    {
-			FireMode[Mode].bServerDelayStartFire = false;
-			FireMode[Mode].bServerDelayStopFire = false;
-		}
+        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        {
+            FireMode[Mode].bServerDelayStartFire = false;
+            FireMode[Mode].bServerDelayStopFire = false;
+        }
     }
 
     simulated function EndState()
     {
-		if (ClientState == WS_PutDown)
-			ClientState = WS_Hidden;
+        if (ClientState == WS_PutDown)
+            ClientState = WS_Hidden;
     }
 }
 

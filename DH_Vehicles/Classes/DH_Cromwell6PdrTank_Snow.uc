@@ -28,7 +28,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int2');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_US_2ndRangersBattalion   ***
+//  ***   DH_US_2ndRangersBattalion   ***
 //
 // *************************************************************************
 
 class DH_US_2ndRangersBattalion extends DH_US_Infantry_Units
-	abstract;
+    abstract;
 
 defaultproperties
 {

@@ -21,7 +21,7 @@ simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_snow');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

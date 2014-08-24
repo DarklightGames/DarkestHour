@@ -12,28 +12,28 @@ class DH_HellcatCannon extends DH_ROTankCannon;
 // American tanks must use the actual sight markings to aim!
 simulated function int GetRange()
 {
-	return RangeSettings[0];
+    return RangeSettings[0];
 }
 
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-	if (CurrentRangeIndex < RangeSettings.Length - 1)
-	{
-		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
+    if (CurrentRangeIndex < RangeSettings.Length - 1)
+    {
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
 
-		CurrentRangeIndex++;
-	}
+        CurrentRangeIndex++;
+    }
 }
 
 function DecrementRange()
 {
-	if (CurrentRangeIndex > 0)
-	{
-		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
+    if (CurrentRangeIndex > 0)
+    {
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
 
-		CurrentRangeIndex --;
-	}
+        CurrentRangeIndex --;
+    }
 }
 
 defaultproperties

@@ -4,45 +4,45 @@
 
 class DH_BrenAttachment extends DHWeaponAttachment;
 
-var()	name		WA_SightUp_Idle;
-var()	name		WA_SightUp_Fire;
-var()	name		WA_SightUp_Reload;
-var()	name		WA_SightUp_ReloadEmpty;
+var()   name        WA_SightUp_Idle;
+var()   name        WA_SightUp_Fire;
+var()   name        WA_SightUp_Reload;
+var()   name        WA_SightUp_ReloadEmpty;
 
-var()	name		WA_SightDown_Idle;
-var()	name		WA_SightDown_Fire;
-var()	name		WA_SightDown_Reload;
-var()	name		WA_SightDown_ReloadEmpty;
+var()   name        WA_SightDown_Idle;
+var()   name        WA_SightDown_Fire;
+var()   name        WA_SightDown_Reload;
+var()   name        WA_SightDown_ReloadEmpty;
 
 
 
 // Overwritten to allow for Bren deployed anims
 simulated function PlayIdle()
 {
-	if (instigator.bBipodDeployed)
-	{
-		LoopAnim(WA_SightUp_Idle);
+    if (instigator.bBipodDeployed)
+    {
+        LoopAnim(WA_SightUp_Idle);
 
-     		WA_Fire=WA_SightUp_Fire;
-     		WA_Reload=WA_SightUp_Reload;
-     		WA_ReloadEmpty=WA_SightUp_ReloadEmpty;
-     		WA_ProneReload=WA_SightUp_Reload;
-     		WA_ProneReloadEmpty=WA_SightUp_ReloadEmpty;
+            WA_Fire=WA_SightUp_Fire;
+            WA_Reload=WA_SightUp_Reload;
+            WA_ReloadEmpty=WA_SightUp_ReloadEmpty;
+            WA_ProneReload=WA_SightUp_Reload;
+            WA_ProneReloadEmpty=WA_SightUp_ReloadEmpty;
 
-	}
-	else
-	{
-		if (bOutOfAmmo && HasAnim(WA_IdleEmpty))
-			LoopAnim(WA_IdleEmpty);
-		else
-			LoopAnim(WA_Idle);
+    }
+    else
+    {
+        if (bOutOfAmmo && HasAnim(WA_IdleEmpty))
+            LoopAnim(WA_IdleEmpty);
+        else
+            LoopAnim(WA_Idle);
 
-     		WA_Fire=WA_SightDown_Fire;
-     		WA_Reload=WA_SightDown_Reload;
-     		WA_ReloadEmpty=WA_SightDown_ReloadEmpty;
-     		WA_ProneReload=WA_SightDown_Reload;
-     		WA_ProneReloadEmpty=WA_SightDown_ReloadEmpty;
-	}
+            WA_Fire=WA_SightDown_Fire;
+            WA_Reload=WA_SightDown_Reload;
+            WA_ReloadEmpty=WA_SightDown_ReloadEmpty;
+            WA_ProneReload=WA_SightDown_Reload;
+            WA_ProneReloadEmpty=WA_SightDown_ReloadEmpty;
+    }
 }
 
 defaultproperties

@@ -1,86 +1,86 @@
 // *************************************************************************
 //
-//	***   DHTab_MainSP   ***
+//  ***   DHTab_MainSP   ***
 //
 // *************************************************************************
 
 class DHTab_MainSP extends UT2K4Tab_MainSP;
 
-var automated 	DHGUISectionBackground  	sb_options2;
-var automated 	DHmoComboBox            	co_Difficulty;
-var array<float>    	difficulties;
-var bool     	bHideDifficultyControl;
+var automated   DHGUISectionBackground      sb_options2;
+var automated   DHmoComboBox                co_Difficulty;
+var array<float>        difficulties;
+var bool        bHideDifficultyControl;
 
-delegate 		OnChangeDifficulty(int index);
+delegate        OnChangeDifficulty(int index);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-	Super(UT2K4GameTabBase).InitComponent(MyController, MyOwner);
+    Super(UT2K4GameTabBase).InitComponent(MyController, MyOwner);
 
-    	class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+        class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-		if (lb_Maps != none)
-			li_Maps = lb_Maps.List;
+        if (lb_Maps != none)
+            li_Maps = lb_Maps.List;
 
-		if (li_Maps != none)
-		{
-	    		li_Maps.OnDblClick = MapListDblClick;
-	   		 li_Maps.bSorted = true;
-	    		lb_Maps.NotifyContextSelect = HandleContextSelect;
-		}
-	lb_Maps.bBoundToParent=false;
-	lb_Maps.bScaleToParent=false;
-	sb_Selection.ManageComponent(lb_Maps);
-	asb_Scroll.ManageComponent(lb_MapDesc);
+        if (li_Maps != none)
+        {
+                li_Maps.OnDblClick = MapListDblClick;
+             li_Maps.bSorted = true;
+                lb_Maps.NotifyContextSelect = HandleContextSelect;
+        }
+    lb_Maps.bBoundToParent=false;
+    lb_Maps.bScaleToParent=false;
+    sb_Selection.ManageComponent(lb_Maps);
+    asb_Scroll.ManageComponent(lb_MapDesc);
 
-    	InitMapHandler();
-    	InitGameType();
-    	InitDifficulty();
+        InitMapHandler();
+        InitGameType();
+        InitDifficulty();
 }
 
 function ShowPanel(bool bShow)
 {
-	super.ShowPanel(bShow);
+    super.ShowPanel(bShow);
 
-    	if (bHideDifficultyControl)
-    	{
-	   	co_Difficulty.SetVisibility(false);
-	   	sb_options2.SetVisibility(false);
-	}
+        if (bHideDifficultyControl)
+        {
+        co_Difficulty.SetVisibility(false);
+        sb_options2.SetVisibility(false);
+    }
 }
 
 function InitGameType()
 {
-    	local int i;
-    	local array<CacheManager.GameRecord> Games;
-    	local bool bReloadMaps;
+        local int i;
+        local array<CacheManager.GameRecord> Games;
+        local bool bReloadMaps;
 
-    	class'CacheManager'.static.GetGameTypeList(Games);
-	for (i = 0; i < Games.Length; i++)
-    	{
-        		if (Games[i].ClassName == "DH_Engine.DarkestHourGame")
-        		{
-            			CurrentGameType = Games[i];
-            			bReloadMaps = true;
-            			break;
-        		}
-    	}
-	log("Current game type = "$CurrentGameType.ClassName);
+        class'CacheManager'.static.GetGameTypeList(Games);
+    for (i = 0; i < Games.Length; i++)
+        {
+                if (Games[i].ClassName == "DH_Engine.DarkestHourGame")
+                {
+                        CurrentGameType = Games[i];
+                        bReloadMaps = true;
+                        break;
+                }
+        }
+    log("Current game type = "$CurrentGameType.ClassName);
 
-   	 if (i == Games.Length)
-    		return;
+     if (i == Games.Length)
+            return;
 
 
-    	SetGameTypeCaption();
+        SetGameTypeCaption();
 
-    	if (bReloadMaps)
-   		InitMaps();
+        if (bReloadMaps)
+        InitMaps();
 
-    	i = li_Maps.FindIndexByValue(LastSelectedMap);
-    	if (i == -1)
-    		i = 0;
-    		li_Maps.SetIndex(i);
-    		li_Maps.Expand(i);
+        i = li_Maps.FindIndexByValue(LastSelectedMap);
+        if (i == -1)
+            i = 0;
+            li_Maps.SetIndex(i);
+            li_Maps.Expand(i);
 }
 
 function CheckGameTutorial()
@@ -89,97 +89,97 @@ function CheckGameTutorial()
 
 function MapListChange(GUIComponent Sender)
 {
-	local MaplistRecord.MapItem Item;
+    local MaplistRecord.MapItem Item;
 
-    	if (!Controller.bCurMenuInitialized)
-        		return;
+        if (!Controller.bCurMenuInitialized)
+                return;
 
-	if (Sender == lb_Maps)
-	{
-		if (li_Maps.IsValid())
-		{
-		   // Puma 05-03-2004
-		   // changed to the Anchor's Primary and Secondary
-			EnableComponent(p_Anchor.b_Primary);
-			EnableComponent(p_Anchor.b_Secondary);
-		}
+    if (Sender == lb_Maps)
+    {
+        if (li_Maps.IsValid())
+        {
+           // Puma 05-03-2004
+           // changed to the Anchor's Primary and Secondary
+            EnableComponent(p_Anchor.b_Primary);
+            EnableComponent(p_Anchor.b_Secondary);
+        }
 
-		class'MaplistRecord'.static.CreateMapItem(li_Maps.GetValue(), Item);
+        class'MaplistRecord'.static.CreateMapItem(li_Maps.GetValue(), Item);
 
-		LastSelectedMap = Item.FullURL;
-		SaveConfig();
-		ReadMapInfo(Item.MapName);
-	}
+        LastSelectedMap = Item.FullURL;
+        SaveConfig();
+        ReadMapInfo(Item.MapName);
+    }
 }
 
 function MaplistConfigClick(GUIComponent Sender)
 {
-	local DHMaplistEditor MaplistPage;
+    local DHMaplistEditor MaplistPage;
 
-      	MaplistEditorMenu="DH_Interface.DHMaplistEditor";
+        MaplistEditorMenu="DH_Interface.DHMaplistEditor";
 
-	if (Controller.OpenMenu(MaplistEditorMenu))
-	{
-		MaplistPage = DHMaplistEditor(Controller.ActivePage);
-		if (MaplistPage != none)
-		{
-			MaplistPage.MainPanel = self;
-			MaplistPage.bOnlyShowOfficial = bOnlyShowOfficial;
-			MaplistPage.bOnlyShowCustom = bOnlyShowCustom;
-			MaplistPage.Initialize(MapHandler);
-		}
-	}
+    if (Controller.OpenMenu(MaplistEditorMenu))
+    {
+        MaplistPage = DHMaplistEditor(Controller.ActivePage);
+        if (MaplistPage != none)
+        {
+            MaplistPage.MainPanel = self;
+            MaplistPage.bOnlyShowOfficial = bOnlyShowOfficial;
+            MaplistPage.bOnlyShowCustom = bOnlyShowCustom;
+            MaplistPage.Initialize(MapHandler);
+        }
+    }
 }
 
 function InitDifficulty()
 {
-    	local string props;
-    	local array<string> splits;
-    	local int i, count;
+        local string props;
+        local array<string> splits;
+        local int i, count;
 
-    	props = class'DH_Engine.DarkestHourGame'.static.GetPropsExtra(0);
-    	count = Split(props, ";", splits);
+        props = class'DH_Engine.DarkestHourGame'.static.GetPropsExtra(0);
+        count = Split(props, ";", splits);
 
-	 if (count <= 0 || count % 2 != 0)
-       		 return;
+     if (count <= 0 || count % 2 != 0)
+             return;
 
-	for (i = 0; i < count / 2; i++)
-    	{
-        		difficulties[i] = float(splits[i*2]);
-        		co_Difficulty.AddItem(splits[(i*2)+1],, splits[i*1]);
-    	}
-   	UpdateCurrentGameDifficulty();
+    for (i = 0; i < count / 2; i++)
+        {
+                difficulties[i] = float(splits[i*2]);
+                co_Difficulty.AddItem(splits[(i*2)+1],, splits[i*1]);
+        }
+    UpdateCurrentGameDifficulty();
 }
 
 function UpdateCurrentGameDifficulty()
 {
-    	local float currentDifficulty;
-    	local int i;
+        local float currentDifficulty;
+        local int i;
 
-	currentDifficulty = class'DH_Engine.DarkestHourGame'.default.GameDifficulty;
-    	for (i = 0; i < difficulties.length; i++)
-        	if (currentDifficulty == difficulties[i])
-        	{
-            		co_Difficulty.SilentSetIndex(i);
-            	return;
-        	}
+    currentDifficulty = class'DH_Engine.DarkestHourGame'.default.GameDifficulty;
+        for (i = 0; i < difficulties.length; i++)
+            if (currentDifficulty == difficulties[i])
+            {
+                    co_Difficulty.SilentSetIndex(i);
+                return;
+            }
 
-    	warn("Unable to set current GameDifficulty in difficulty combobox (difficulty not found)");
+        warn("Unable to set current GameDifficulty in difficulty combobox (difficulty not found)");
 }
 
 function OnNewDifficultySelect(GUIComponent Sender)
 {
-    	if (Sender == co_Difficulty)
-    	{
-       		class'DH_Engine.DarkestHourGame'.default.GameDifficulty = difficulties[co_Difficulty.GetIndex()];
-		class'DH_Engine.DarkestHourGame'.static.StaticSaveConfig();
-		OnChangeDifficulty(co_Difficulty.GetIndex());
-    	}
+        if (Sender == co_Difficulty)
+        {
+            class'DH_Engine.DarkestHourGame'.default.GameDifficulty = difficulties[co_Difficulty.GetIndex()];
+        class'DH_Engine.DarkestHourGame'.static.StaticSaveConfig();
+        OnChangeDifficulty(co_Difficulty.GetIndex());
+        }
 }
 
 function SilentSetDifficulty(int index)
 {
-    	co_Difficulty.SilentSetIndex(index);
+        co_Difficulty.SilentSetIndex(index);
 }
 
 defaultproperties

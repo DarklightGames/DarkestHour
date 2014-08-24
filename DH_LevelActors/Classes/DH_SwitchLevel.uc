@@ -8,11 +8,11 @@
 
 class DH_SwitchLevel extends DH_LevelActors;
 
-var()	string		LevelName;
+var()   string      LevelName;
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
-	Level.ServerTravel(LevelName, false);
+    Level.ServerTravel(LevelName, false);
 }
 
 defaultproperties

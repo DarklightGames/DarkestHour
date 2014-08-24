@@ -9,122 +9,122 @@
 
 class DH_ArtilleryActor extends DH_LevelActors;
 
-var()	int							XWidth, YWidth, PercentToSucceed, CallIntervalMin, CallIntervalMax;
-var()	bool						bAutoStart;
-var()	array<name>					AttachedArtilleryTags;
-var()	int							MaxRounds; //0 = infinite
-var		int							NumRoundsFired; //default to 0
-var array<DH_ArtilleryActor>		ArtyReferences; //References of attached
+var()   int                         XWidth, YWidth, PercentToSucceed, CallIntervalMin, CallIntervalMax;
+var()   bool                        bAutoStart;
+var()   array<name>                 AttachedArtilleryTags;
+var()   int                         MaxRounds; //0 = infinite
+var     int                         NumRoundsFired; //default to 0
+var array<DH_ArtilleryActor>        ArtyReferences; //References of attached
 
 function PostBeginPlay()
 {
-	local DH_ArtilleryActor RAA;
-	local int	i;
+    local DH_ArtilleryActor RAA;
+    local int   i;
 
-	super.PostBeginPlay();
+    super.PostBeginPlay();
 
-	for(i=0; i<AttachedArtilleryTags.Length; i++)
-	{
-		foreach AllActors(class'DH_ArtilleryActor', RAA, AttachedArtilleryTags[i])
-		{
-			ArtyReferences.Insert(0,1); //Adds a new spot at index for the attached arty
-			ArtyReferences[0] = RAA; //Sets the attached arty in the reference array
-			break;
-		}
-	}
+    for(i=0; i<AttachedArtilleryTags.Length; i++)
+    {
+        foreach AllActors(class'DH_ArtilleryActor', RAA, AttachedArtilleryTags[i])
+        {
+            ArtyReferences.Insert(0,1); //Adds a new spot at index for the attached arty
+            ArtyReferences[0] = RAA; //Sets the attached arty in the reference array
+            break;
+        }
+    }
 }
 
 function Reset()
 {
-	super.Reset();
+    super.Reset();
 
-	NumRoundsFired = 0;
-	gotostate('Initialize'); //Needed for reseting the state
+    NumRoundsFired = 0;
+    gotostate('Initialize'); //Needed for reseting the state
 }
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {
-	if (IsInState('Activated'))
-		gotostate('Deactivated');
-	else
-		gotostate('Activated');
+    if (IsInState('Activated'))
+        gotostate('Deactivated');
+    else
+        gotostate('Activated');
 }
 
 auto state Initialize
 {
-	function BeginState()
-	{
-		if (bAutoStart)
-			gotostate('Activated');
-		else
-			gotostate('Deactivated');
-	}
+    function BeginState()
+    {
+        if (bAutoStart)
+            gotostate('Activated');
+        else
+            gotostate('Deactivated');
+    }
 }
 
 state Activated
 {
-	function BeginState()
-	{
-		local int	RanIntervalTime;
+    function BeginState()
+    {
+        local int   RanIntervalTime;
 
-		RanIntervalTime = RandRange(CallIntervalMin, CallIntervalMax);
-		SetTimer(RanIntervalTime, false);
-	}
-	function Timer()
-	{
-		local int RandomNum;
-		local vector FallOffset;
+        RanIntervalTime = RandRange(CallIntervalMin, CallIntervalMax);
+        SetTimer(RanIntervalTime, false);
+    }
+    function Timer()
+    {
+        local int RandomNum;
+        local vector FallOffset;
 
-		RandomNum = Rand(101);  // gets a random # between 0 & 100
+        RandomNum = Rand(101);  // gets a random # between 0 & 100
 
-		if (RandomNum <= PercentToSucceed)
-		{
-			if (NumRoundsFired >= MaxRounds && MaxRounds != 0)
-			{
-				gotostate('Deactivated');
-			}
-			NumRoundsFired++;
-			if (ArtyReferences.Length > 0)
-			{
-				//Select the location to send the round
-				RandomNum = Rand(ArtyReferences.Length);
+        if (RandomNum <= PercentToSucceed)
+        {
+            if (NumRoundsFired >= MaxRounds && MaxRounds != 0)
+            {
+                gotostate('Deactivated');
+            }
+            NumRoundsFired++;
+            if (ArtyReferences.Length > 0)
+            {
+                //Select the location to send the round
+                RandomNum = Rand(ArtyReferences.Length);
 
-				//Randomize the location offset
-				FallOffset = vect(0,0,0);
-				FallOffset.X += Rand(ArtyReferences[RandomNum].XWidth);
-				if (Frand() > 0.5)
-					FallOffset.X *= -1;
+                //Randomize the location offset
+                FallOffset = vect(0,0,0);
+                FallOffset.X += Rand(ArtyReferences[RandomNum].XWidth);
+                if (Frand() > 0.5)
+                    FallOffset.X *= -1;
 
-				FallOffset.Y += Rand(ArtyReferences[RandomNum].YWidth);
-				if (Frand() > 0.5)
-					FallOffset.Y *= -1;
+                FallOffset.Y += Rand(ArtyReferences[RandomNum].YWidth);
+                if (Frand() > 0.5)
+                    FallOffset.Y *= -1;
 
-				Spawn(class 'ROArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity));
-			}
-			else
-			{
-				//Randomize the location offset
-				FallOffset = vect(0,0,0);
-			    FallOffset.X += Rand(XWidth);
-			    if (Frand() > 0.5)
-		           FallOffset.X *= -1;
+                Spawn(class 'ROArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity));
+            }
+            else
+            {
+                //Randomize the location offset
+                FallOffset = vect(0,0,0);
+                FallOffset.X += Rand(XWidth);
+                if (Frand() > 0.5)
+                   FallOffset.X *= -1;
 
-			    FallOffset.Y += Rand(YWidth);
-			    if (Frand() > 0.5)
-		           FallOffset.Y *= -1;
-		        //Spawn the artillery round with the random offset
-				Spawn(class 'ROArtilleryShell',,, Location + FallOffset, rotator(PhysicsVolume.Gravity));
-			}
-		}
-		RandomNum = RandRange(CallIntervalMin, CallIntervalMax);
-		SetTimer(RandomNum, false); //Recall the timer with a new random Call interval
-		//Level.Game.Broadcast(self, "Randomvector: X:"$Randvector.X$" Y:"$Randvector.Y$" Z:"$Randvector.Z);
-	}
+                FallOffset.Y += Rand(YWidth);
+                if (Frand() > 0.5)
+                   FallOffset.Y *= -1;
+                //Spawn the artillery round with the random offset
+                Spawn(class 'ROArtilleryShell',,, Location + FallOffset, rotator(PhysicsVolume.Gravity));
+            }
+        }
+        RandomNum = RandRange(CallIntervalMin, CallIntervalMax);
+        SetTimer(RandomNum, false); //Recall the timer with a new random Call interval
+        //Level.Game.Broadcast(self, "Randomvector: X:"$Randvector.X$" Y:"$Randvector.Y$" Z:"$Randvector.Z);
+    }
 }
 
 state Deactivated
 {
-	//do nothing
+    //do nothing
 }
 
 defaultproperties

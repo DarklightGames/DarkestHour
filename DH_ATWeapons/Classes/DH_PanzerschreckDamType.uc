@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_PanzerschreckDamType extends ROAntiTankProjectileDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

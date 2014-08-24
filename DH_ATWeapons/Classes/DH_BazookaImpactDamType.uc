@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_BazookaImpactDamType extends RORocketImpactDamage
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

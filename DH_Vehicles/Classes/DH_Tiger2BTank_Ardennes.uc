@@ -26,7 +26,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.Tiger2B_treads');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.Tiger2B_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

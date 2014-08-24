@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_Kar98DamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

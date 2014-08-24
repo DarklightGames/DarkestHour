@@ -4,7 +4,7 @@
 //=============================================================================
 
 class DH_TriggerSunlight extends Sunlight
-	hidecategories(Emitter,Force,Karma,Corona);
+    hidecategories(Emitter,Force,Karma,Corona);
 
 //-----------------------------------------------------------------------------
 // Variables.
@@ -27,75 +27,75 @@ var float SwapTime;
 
 event PostBeginPlay()
 {
-   	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-   	// Work out the starting light color:
-   	bIsOn = bInitiallyOn;
-   	if (bIsOn)
-	{
-      		RGBSetColor(OnColor);
-	}
-	else
-	{
-      		RGBSetColor(OffColor);
-   	}
+    // Work out the starting light color:
+    bIsOn = bInitiallyOn;
+    if (bIsOn)
+    {
+            RGBSetColor(OnColor);
+    }
+    else
+    {
+            RGBSetColor(OffColor);
+    }
 
-   	// If we're fading, we tick:
-   	if (bInitiallyFading)
-	{
-      		Enable('Tick');
-      		bIsOn = !bIsOn;
-   	}
-   	// Otherwise we don't tick:
-   	else
-	{
-      		Disable('Tick');
-   	}
+    // If we're fading, we tick:
+    if (bInitiallyFading)
+    {
+            Enable('Tick');
+            bIsOn = !bIsOn;
+    }
+    // Otherwise we don't tick:
+    else
+    {
+            Disable('Tick');
+    }
 }
 
 function Tick(float DeltaTime)
 {
-   	local float percent;
+    local float percent;
 
-   	TimeSinceTriggered += DeltaTime;
-   	percent = TimeSinceTriggered / SwapTime;
+    TimeSinceTriggered += DeltaTime;
+    percent = TimeSinceTriggered / SwapTime;
 
-   	// If we're done with the fade, set to final color and leave:
-   	if (percent >= 1)
-	{
-     		Disable('Tick');
-     		if (bIsOn)
-		{
-        			CurrentColor.R = OnColor.R;
-        			CurrentColor.G = OnColor.G;
-        			CurrentColor.B = OnColor.B;
-     		}
-     		else
-		{
-        			CurrentColor.R = OffColor.R;
-        			CurrentColor.G = OffColor.G;
-        			CurrentColor.B = OffColor.B;
-     		}
+    // If we're done with the fade, set to final color and leave:
+    if (percent >= 1)
+    {
+            Disable('Tick');
+            if (bIsOn)
+        {
+                    CurrentColor.R = OnColor.R;
+                    CurrentColor.G = OnColor.G;
+                    CurrentColor.B = OnColor.B;
+            }
+            else
+        {
+                    CurrentColor.R = OffColor.R;
+                    CurrentColor.G = OffColor.G;
+                    CurrentColor.B = OffColor.B;
+            }
 
-     	return;
-   	}
+        return;
+    }
 
-   	// Just fade to the right level:
-   	if (bIsOn)
-	{
-      		CurrentColor.R = percent * OnColor.R + (1-percent) * OffColor.R;
-      		CurrentColor.G = percent * OnColor.G + (1-percent) * OffColor.G;
-      		CurrentColor.B = percent * OnColor.B + (1-percent) * OffColor.B;
-   	}
-   	else
-	{
-      		CurrentColor.R = percent * OffColor.R + (1-percent) * OnColor.R;
-      		CurrentColor.G = percent * OffColor.G + (1-percent) * OnColor.G;
-      		CurrentColor.B = percent * OffColor.B + (1-percent) * OnColor.B;
-   	}
+    // Just fade to the right level:
+    if (bIsOn)
+    {
+            CurrentColor.R = percent * OnColor.R + (1-percent) * OffColor.R;
+            CurrentColor.G = percent * OnColor.G + (1-percent) * OffColor.G;
+            CurrentColor.B = percent * OnColor.B + (1-percent) * OffColor.B;
+    }
+    else
+    {
+            CurrentColor.R = percent * OffColor.R + (1-percent) * OnColor.R;
+            CurrentColor.G = percent * OffColor.G + (1-percent) * OnColor.G;
+            CurrentColor.B = percent * OffColor.B + (1-percent) * OnColor.B;
+    }
 
-   	// Convert the current color from RGB to HSL:
-   	RGBSetColor(CurrentColor);
+    // Convert the current color from RGB to HSL:
+    RGBSetColor(CurrentColor);
 }
 
 simulated function RGBSetColor(color inRGB)
@@ -158,25 +158,25 @@ simulated function vector ColourMap (vector rgb)
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
-   	Enable('Tick');
-   	TimeSinceTriggered = 0;
-   	bIsOn = !bIsOn;
+    Enable('Tick');
+    TimeSinceTriggered = 0;
+    bIsOn = !bIsOn;
 
-	if (bIsOn)
-	{
-		SwapTime = ChangeTime;
-	}
-	else
-	{
-		SwapTime = ChangeTimeTwo;
-	}
+    if (bIsOn)
+    {
+        SwapTime = ChangeTime;
+    }
+    else
+    {
+        SwapTime = ChangeTimeTwo;
+    }
 }
 
 simulated function Reset()
 {
-	super.Reset();
+    super.Reset();
 
-	//TODO: Fix.
+    //TODO: Fix.
 }
 
 defaultproperties

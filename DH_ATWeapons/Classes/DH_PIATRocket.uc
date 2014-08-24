@@ -11,17 +11,17 @@ class DH_PIATRocket extends DH_RocketProj;
 
 simulated function PostBeginPlay()
 {
-	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-	if (SmokeTrail != none)
-	{
-		SmokeTrail.HandleOwnerDestroyed();
-	}
+    if (SmokeTrail != none)
+    {
+        SmokeTrail.HandleOwnerDestroyed();
+    }
 
-	if (Corona != none)
-	{
-		Corona.Destroyed();
-	}
+    if (Corona != none)
+    {
+        Corona.Destroyed();
+    }
 }
 
 defaultproperties

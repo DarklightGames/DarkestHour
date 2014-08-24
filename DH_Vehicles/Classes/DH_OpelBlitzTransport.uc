@@ -21,18 +21,18 @@ var()   name                              DecorationAttachBone;
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
- 	L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext');
- 	L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
 
 }
 
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext');
-   	Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
-	Super.UpdatePrecacheMaterials();
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
+    Super.UpdatePrecacheMaterials();
 }
 
 simulated function PostBeginPlay()
@@ -56,22 +56,22 @@ simulated function PostBeginPlay()
 simulated function Destroyed()
 {
 
-	if (ResupplyAttach != none)
-	    ResupplyAttach.Destroy();
+    if (ResupplyAttach != none)
+        ResupplyAttach.Destroy();
 
-	if (DecorationAttach != none)
+    if (DecorationAttach != none)
         DecorationAttach.Destroy();
 
-	super.Destroyed();
+    super.Destroyed();
 }
 
 simulated event DestroyAppearance()
 {
 
-   	if (ResupplyAttach != none)
-   	{
-	    ResupplyAttach.Destroy();
-	}
+    if (ResupplyAttach != none)
+    {
+        ResupplyAttach.Destroy();
+    }
 
     Super.DestroyAppearance();
 }
@@ -79,45 +79,45 @@ simulated event DestroyAppearance()
 // Overridden due to the Onslaught team lock not working in RO
 function bool TryToDrive(Pawn P)
 {
-	local int x;
+    local int x;
 
-	//don't allow vehicle to be stolen when somebody is in a turret
-	if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
-	{
-		for (x = 0; x < WeaponPawns.length; x++)
-			if (WeaponPawns[x].Driver != none)
-			{
-				DenyEntry(P, 2);
-				return false;
-			}
-	}
+    //don't allow vehicle to be stolen when somebody is in a turret
+    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
+    {
+        for (x = 0; x < WeaponPawns.length; x++)
+            if (WeaponPawns[x].Driver != none)
+            {
+                DenyEntry(P, 2);
+                return false;
+            }
+    }
 
-	if (P.bIsCrouched ||  bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
-	     || P.IsA('Vehicle') || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')))
-		return false;
+    if (P.bIsCrouched ||  bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
+         || P.IsA('Vehicle') || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')))
+        return false;
 
-	if (!Level.Game.CanEnterVehicle(self, P))
-		return false;
+    if (!Level.Game.CanEnterVehicle(self, P))
+        return false;
 
-	// Check vehicle Locking....
-	if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
-	{
-		DenyEntry(P, 1);
-		return false;
-	}
-	else if (bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
-	{
-	   DenyEntry(P, 0);
-	   return false;
-	}
-	else
-	{
-		if (bEnterringUnlocks && bTeamLocked)
-			bTeamLocked = false;
+    // Check vehicle Locking....
+    if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
+    {
+        DenyEntry(P, 1);
+        return false;
+    }
+    else if (bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
+    {
+       DenyEntry(P, 0);
+       return false;
+    }
+    else
+    {
+        if (bEnterringUnlocks && bTeamLocked)
+            bTeamLocked = false;
 
-		KDriverEnter(P);
-		return true;
-	}
+        KDriverEnter(P);
+        return true;
+    }
 }
 
 defaultproperties

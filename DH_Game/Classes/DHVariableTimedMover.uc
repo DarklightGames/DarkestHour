@@ -12,25 +12,25 @@ var array<float> KeyMoveSpeed;
 
 function PostBeginPlay()
 {
-	local int n;
+    local int n;
 
-	for (n = 0; n < KeyMoveTime.length; n++)
-	{
-		KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
-	}
+    for (n = 0; n < KeyMoveTime.length; n++)
+    {
+        KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
+    }
 
     KeyMoveSpeed[KeyMoveTime.length] = 0; // This is to prevent OutofBounds errors on the array
 
-	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-	MoveTime = KeyMoveSpeed[ KeyNum ];
+    MoveTime = KeyMoveSpeed[ KeyNum ];
 
-	if (bActAsClientMover && Level.NetMode == NM_DedicatedServer)
-	{
-		SetTimer(0, false);
-		SetPhysics(PHYS_none);
-		GotoState('ServerIdle');
-	}
+    if (bActAsClientMover && Level.NetMode == NM_DedicatedServer)
+    {
+        SetTimer(0, false);
+        SetPhysics(PHYS_none);
+        GotoState('ServerIdle');
+    }
 }
 
 simulated event KeyFrameReached()

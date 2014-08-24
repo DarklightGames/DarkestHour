@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_G43ScopedDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

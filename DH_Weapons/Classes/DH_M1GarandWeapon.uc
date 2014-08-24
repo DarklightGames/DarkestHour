@@ -6,100 +6,100 @@ class DH_M1GarandWeapon extends DH_SemiAutoWeapon;
 
 #exec OBJ LOAD FILE=..\DarkestHour\Animations\DH_Garand_1st.ukx
 
-var	Bool	bIsLastRound;
+var Bool    bIsLastRound;
 
 //overwritten to support garand last round clip eject for Client only
 simulated function Fire(float F)
 {
-	super.Fire(F);
+    super.Fire(F);
 
     if (AmmoAmount(0)==1)
-		bIsLastRound=true;
-	else
-		bIsLastRound=false;
+        bIsLastRound=true;
+    else
+        bIsLastRound=false;
 }
 
 //overwritten to support garand last round clip eject for Server only
 simulated function bool WasLastRound()
 {
     if (AmmoAmount(0)==0)
-		return true;
+        return true;
 
-	return false;
+    return false;
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-	super.BringUp(PrevWeapon);
+    super.BringUp(PrevWeapon);
 
-	if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
-		DHPlayer(Instigator.Controller).QueueHint(4, true);
+    if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+        DHPlayer(Instigator.Controller).QueueHint(4, true);
 }
 
 // Do the actual ammo swapping
 function PerformReload()
 {
-	local int CurrentMagLoad;
-//	local bool bDidPlusOneReload;
+    local int CurrentMagLoad;
+//  local bool bDidPlusOneReload;
 
     CurrentMagLoad = AmmoAmount(0);
 
-	if (PrimaryAmmoArray.Length == 0)
-	{
-		return;
-	}
+    if (PrimaryAmmoArray.Length == 0)
+    {
+        return;
+    }
 
-	if (CurrentMagLoad < FireMode[0].AmmoClass.Default.InitialAmount)
-	{
-		PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
-	}
-	else
-	{
-		PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad;
-		AmmoCharge[0] = 0;
-	}
+    if (CurrentMagLoad < FireMode[0].AmmoClass.Default.InitialAmount)
+    {
+        PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
+    }
+    else
+    {
+        PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad;
+        AmmoCharge[0] = 0;
+    }
 
-	if (PrimaryAmmoArray.Length == 0)
-	{
-		return;
-	}
+    if (PrimaryAmmoArray.Length == 0)
+    {
+        return;
+    }
 
-	CurrentMagIndex++;
+    CurrentMagIndex++;
 
-	if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
-	{
-		CurrentMagIndex = 0;
-	}
+    if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
+    {
+        CurrentMagIndex = 0;
+    }
 
-	AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
+    AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
 
-	if (Instigator.IsHumanControlled())
-	{
-		if (AmmoStatus(0) > 0.5)
-		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',0);
-		}
-		else if (AmmoStatus(0) > 0.2)
-		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',1);
-		}
-		else
-		{
-			PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',2);
-		}
-	}
+    if (Instigator.IsHumanControlled())
+    {
+        if (AmmoStatus(0) > 0.5)
+        {
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',0);
+        }
+        else if (AmmoStatus(0) > 0.2)
+        {
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',1);
+        }
+        else
+        {
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',2);
+        }
+    }
 
-	if (AmmoAmount(0) > 0)
-	{
-		if (DHWeaponAttachment(ThirdPersonActor) != none)
-		{
-			DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
-		}
-	}
+    if (AmmoAmount(0) > 0)
+    {
+        if (DHWeaponAttachment(ThirdPersonActor) != none)
+        {
+            DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
+        }
+    }
 
-	ClientForceAmmoUpdate(0, AmmoAmount(0));
+    ClientForceAmmoUpdate(0, AmmoAmount(0));
 
-	CurrentMagCount = PrimaryAmmoArray.Length - 1;
+    CurrentMagCount = PrimaryAmmoArray.Length - 1;
 }
 
 defaultproperties

@@ -1,51 +1,51 @@
 // *************************************************************************
 //
-//	***   DHgameReplicationInfo   ***
+//  ***   DHgameReplicationInfo   ***
 //
 // *************************************************************************
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
 // Portable Radios
-var ROArtilleryTrigger		CarriedAlliedRadios[10];       // An array of the player-carried allied radios
-var ROArtilleryTrigger		CarriedAxisRadios[10];       // An array of the player-carried axis radios
+var ROArtilleryTrigger      CarriedAlliedRadios[10];       // An array of the player-carried allied radios
+var ROArtilleryTrigger      CarriedAxisRadios[10];       // An array of the player-carried axis radios
 
-var	int     				AlliedNationID;
+var int                     AlliedNationID;
 
-var	DH_RoleInfo		DHAxisRoles[16];			// Used to replicate assorted role information to the client
-var	DH_RoleInfo		DHAlliesRoles[16];
+var DH_RoleInfo     DHAxisRoles[16];            // Used to replicate assorted role information to the client
+var DH_RoleInfo     DHAlliesRoles[16];
 
-var byte			DHAlliesRoleBotCount[16];
-var byte			DHAlliesRoleCount[16];
-var byte			DHAxisRoleBotCount[16];
-var byte			DHAxisRoleCount[16];
+var byte            DHAlliesRoleBotCount[16];
+var byte            DHAlliesRoleCount[16];
+var byte            DHAxisRoleBotCount[16];
+var byte            DHAxisRoleCount[16];
 
-var bool			bShowPublicVoiceIcon;
+var bool            bShowPublicVoiceIcon;
 
 struct MortarTargetInfo
 {
-	var vector		Location;
-	var vector		HitLocation;
-	var float		Time;
-	var DHPlayer	Controller;
-	var byte		bCancelled;
+    var vector      Location;
+    var vector      HitLocation;
+    var float       Time;
+    var DHPlayer    Controller;
+    var byte        bCancelled;
 };
 
 var MortarTargetInfo AlliedMortarTargets[2];
 var MortarTargetInfo GermanMortarTargets[2];
 
 //Keeps track of the -real- reinforcements left, no longer a percentage.
-var int				DHSpawnCount[2];
+var int             DHSpawnCount[2];
 
 replication
 {
-	reliable if (bNetInitial && Role == ROLE_Authority)
-		bShowPublicVoiceIcon;
+    reliable if (bNetInitial && Role == ROLE_Authority)
+        bShowPublicVoiceIcon;
     reliable if (bNetDirty && Role == ROLE_Authority)
-		CarriedAlliedRadios, CarriedAxisRadios, AlliedNationID, DHAxisRoles,
-		DHAlliesRoles, DHAlliesRoleBotCount, DHAlliesRoleCount,
-		DHAxisRoleBotCount, DHAxisRoleCount, AlliedMortarTargets,
-		GermanMortarTargets, DHSpawnCount;
+        CarriedAlliedRadios, CarriedAxisRadios, AlliedNationID, DHAxisRoles,
+        DHAlliesRoles, DHAlliesRoleBotCount, DHAlliesRoleCount,
+        DHAxisRoleBotCount, DHAxisRoleCount, AlliedMortarTargets,
+        GermanMortarTargets, DHSpawnCount;
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)

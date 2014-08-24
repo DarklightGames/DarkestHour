@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_ThompsonBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

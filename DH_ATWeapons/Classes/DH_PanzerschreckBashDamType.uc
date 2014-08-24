@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_PanzerschreckBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

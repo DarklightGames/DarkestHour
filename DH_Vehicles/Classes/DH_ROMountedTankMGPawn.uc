@@ -7,15 +7,15 @@
 // onslaught functionality that we don't want/need
 //===================================================================
 class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
-	  abstract;
+      abstract;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
 
-var()   float	OverlayCenterScale;
-var()   float	OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float   OverlayCenterScale;
+var()   float   OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 
-var()   float	OverlayCorrectionX;
-var()   float	OverlayCorrectionY;
+var()   float   OverlayCorrectionX;
+var()   float   OverlayCorrectionY;
 
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 /*simulated function PostBeginPlay()
@@ -40,92 +40,92 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-	Super.ClientKDriverLeave(PC);
+    Super.ClientKDriverLeave(PC);
 }
 
 // Overridden to stop the game dumping players off the tank when they exit while moving
 function bool PlaceExitingDriver()
 {
-	local int i;
-	local vector tryPlace, Extent, HitLocation, HitNormal, ZOffset;
+    local int i;
+    local vector tryPlace, Extent, HitLocation, HitNormal, ZOffset;
 
-	Extent = Driver.default.CollisionRadius * vect(1,1,0);
-	Extent.Z = Driver.default.CollisionHeight;
-	ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
+    Extent = Driver.default.CollisionRadius * vect(1,1,0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
 
-	//avoid running driver over by placing in direction perpendicular to velocity
-/*	if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
-	{
-		tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
-		if (FRand() < 0.5)
-			tryPlace *= -1; //randomly prefer other side
-		if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
-		     || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
-			return true;
-	}*/
+    //avoid running driver over by placing in direction perpendicular to velocity
+/*  if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
+    {
+        tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
+        if (FRand() < 0.5)
+            tryPlace *= -1; //randomly prefer other side
+        if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
+             || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
+            return true;
+    }*/
 
-	for(i=0; i<ExitPositions.Length; i++)
-	{
-		if (bRelativeExitPos)
-		{
-		    if (VehicleBase != none)
-		    	tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-        	    else if (Gun != none)
-                	tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-	            else
-        	        tryPlace = Location + (ExitPositions[i] >> Rotation);
-	        }
-		else
-			tryPlace = ExitPositions[i];
+    for(i=0; i<ExitPositions.Length; i++)
+    {
+        if (bRelativeExitPos)
+        {
+            if (VehicleBase != none)
+                tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+                else if (Gun != none)
+                    tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
+                else
+                    tryPlace = Location + (ExitPositions[i] >> Rotation);
+            }
+        else
+            tryPlace = ExitPositions[i];
 
-		// First, do a line check (stops us passing through things on exit).
-		if (bRelativeExitPos)
-		{
-			if (VehicleBase != none)
-			{
-				if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
-					continue;
-			}
-			else
-				if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-					continue;
-		}
+        // First, do a line check (stops us passing through things on exit).
+        if (bRelativeExitPos)
+        {
+            if (VehicleBase != none)
+            {
+                if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
+                    continue;
+            }
+            else
+                if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
+                    continue;
+        }
 
-		// Then see if we can place the player there.
-		if (!Driver.SetLocation(tryPlace))
-			continue;
+        // Then see if we can place the player there.
+        if (!Driver.SetLocation(tryPlace))
+            continue;
 
-		return true;
-	}
-	return false;
+        return true;
+    }
+    return false;
 }
 
 simulated function DrawHUD(Canvas Canvas)
 {
-	local PlayerController PC;
-	local vector CameraLocation;
-	local rotator CameraRotation;
-	local Actor ViewActor;
-	local float	SavedOpacity;
-	local vector x, y, z;
+    local PlayerController PC;
+    local vector CameraLocation;
+    local rotator CameraRotation;
+    local Actor ViewActor;
+    local float SavedOpacity;
+    local vector x, y, z;
 
-	local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
+    local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
-	PC = PlayerController(Controller);
-	if (PC == none)
-	{
-		Super.RenderOverlays(Canvas);
-		//log("PanzerTurret PlayerController was none, returning");
-		return;
-	}
-	else if (!PC.bBehindView)
-	{
-		// store old opacity and set to 1.0 for map overlay rendering
-		SavedOpacity = Canvas.ColorModulate.W;
-		Canvas.ColorModulate.W = 1.0;
+    PC = PlayerController(Controller);
+    if (PC == none)
+    {
+        Super.RenderOverlays(Canvas);
+        //log("PanzerTurret PlayerController was none, returning");
+        return;
+    }
+    else if (!PC.bBehindView)
+    {
+        // store old opacity and set to 1.0 for map overlay rendering
+        SavedOpacity = Canvas.ColorModulate.W;
+        Canvas.ColorModulate.W = 1.0;
 
-		Canvas.DrawColor.A = 255;
-		Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
 
         // Draw reticle
         ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
@@ -136,32 +136,32 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.SetPos(0, 0);
         Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-    	// reset HudOpacity to original value
-		Canvas.ColorModulate.W = SavedOpacity;
+        // reset HudOpacity to original value
+        Canvas.ColorModulate.W = SavedOpacity;
     }
 
-	if (PC != none && !PC.bBehindView && HUDOverlay != none)
-	{
-		if (!Level.IsSoftwareRendering())
-		{
-			CameraRotation = PC.Rotation;
-			SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+    if (PC != none && !PC.bBehindView && HUDOverlay != none)
+    {
+        if (!Level.IsSoftwareRendering())
+        {
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
 
-			CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-			CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+            CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 
-			HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-			HUDOverlay.SetRotation(CameraRotation);
-			Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-		}
-	}
-	else
-		ActivateOverlay(false);
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetRotation(CameraRotation);
+            Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+        }
+    }
+    else
+        ActivateOverlay(false);
 
-	if (PC != none)
-	    // Draw tank, turret, ammo count, passenger list
-	    if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
-			ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+    if (PC != none)
+        // Draw tank, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
 }
 
 defaultproperties

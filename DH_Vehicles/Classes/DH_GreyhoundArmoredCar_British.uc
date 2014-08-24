@@ -25,7 +25,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex2.ext_vehicles.Greyhound_turret_brit');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex2.ext_vehicles.Greyhound_wheels_brit');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

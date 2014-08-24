@@ -12,22 +12,22 @@ class DH_StuH42CannonPawn extends DH_AssaultGunCannonPawn;
 // Commander cannot fire cannon when he is on the scissors scope or binocs
 function Fire(optional float F)
 {
-	if (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
-	{
+    if (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
+    {
         return;
-	}
+    }
 
-	super.Fire(F);
+    super.Fire(F);
 }
 
 function AltFire(optional float F)
 {
-	if (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
-	{
+    if (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
+    {
         return;
-	}
+    }
 
-	Super.AltFire(F);
+    Super.AltFire(F);
 }
 
 // modification allowing dual-magnification optics is here (look for "GunsightPositions")

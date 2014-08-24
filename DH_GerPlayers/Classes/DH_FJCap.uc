@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***  FJ little boat   ***
+//  ***  FJ little boat   ***
 //
 // *************************************************************************
 
@@ -10,8 +10,8 @@ class DH_FJCap extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadgear.LW_HG');
-//	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadgear.FJ_Helmet1');
+//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadgear.LW_HG');
+//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadgear.FJ_Helmet1');
 }
 
 defaultproperties

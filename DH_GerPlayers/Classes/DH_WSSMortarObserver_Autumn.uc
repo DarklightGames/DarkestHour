@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS Mortar Observer   ***
+//  ***   SS Mortar Observer   ***
 //
 // *************************************************************************
 
@@ -8,14 +8,14 @@ class DH_WSSMortarObserver_Autumn extends DH_WaffenSSAutumn;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		return Headgear[0];
-	}
-	else
-	{
-		return Headgear[1];
-	}
+    if (FRand() < 0.2)
+    {
+        return Headgear[0];
+    }
+    else
+    {
+        return Headgear[1];
+    }
 }
 
 defaultproperties

@@ -17,12 +17,12 @@ class DH_M1CarbinePickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-/*	L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.M1_Carbine');
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.kar98pouch');
-	L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.g41_world');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex2.Rifles.G41_S');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex.Bullets.kar98k_stripper_s');
-	L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.kar98_ammo'); */
+/*  L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.M1_Carbine');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.kar98pouch');
+    L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.g41_world');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex2.Rifles.G41_S');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex.Bullets.kar98k_stripper_s');
+    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.kar98_ammo'); */
 }
 
 defaultproperties

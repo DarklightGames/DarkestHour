@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_C96BashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

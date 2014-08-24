@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_BazookaBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

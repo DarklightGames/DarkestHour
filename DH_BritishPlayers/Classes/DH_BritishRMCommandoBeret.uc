@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_BritishRMCommandoBeret   ***
+//  ***   DH_BritishRMCommandoBeret   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_BritishRMCommandoBeret extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_tanker_Headgear');
+//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_tanker_Headgear');
 }
 
 defaultproperties

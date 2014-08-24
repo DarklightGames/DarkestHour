@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS Mortar Observer   ***
+//  ***   SS Mortar Observer   ***
 //
 // *************************************************************************
 
@@ -8,10 +8,10 @@ class DH_12thSSMortarObserver extends DH_12thSS;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-		return Headgear[0];
-	else
-		return Headgear[1];
+    if (FRand() < 0.2)
+        return Headgear[0];
+    else
+        return Headgear[1];
 }
 
 defaultproperties

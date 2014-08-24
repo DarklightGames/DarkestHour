@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_C96DamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

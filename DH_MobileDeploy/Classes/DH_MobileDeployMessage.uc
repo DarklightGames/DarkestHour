@@ -21,27 +21,27 @@ var(Messages) localized string MustBeSquadLeader;
 //-----------------------------------------------------------------------------
 
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	switch (Switch)
-	{
-		case 0:
-			return default.IsFull;
-		case 1:
-			return default.IsDestroyed;
-		case 2:
-			return default.IsInCapture;
-		case 3:
-			return default.EnemyNear;
-		case 4:
-			return default.MustBeSquadLeader;
-		default:
-			return default.IsFull;
-	}
+    switch (Switch)
+    {
+        case 0:
+            return default.IsFull;
+        case 1:
+            return default.IsDestroyed;
+        case 2:
+            return default.IsInCapture;
+        case 3:
+            return default.EnemyNear;
+        case 4:
+            return default.MustBeSquadLeader;
+        default:
+            return default.IsFull;
+    }
 
 }
 

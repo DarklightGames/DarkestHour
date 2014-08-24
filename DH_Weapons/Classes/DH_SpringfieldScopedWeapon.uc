@@ -10,99 +10,99 @@ class DH_SpringfieldScopedWeapon extends DH_BoltSniperWeapon;
 // Handles initializing and swithing between different scope modes
 simulated function UpdateScopeMode()
 {
-	if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() &&
-		Instigator.IsHumanControlled())
+    if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() &&
+        Instigator.IsHumanControlled())
     {
-	    if (ScopeDetail == RO_ModelScope)
-		{
-			scopePortalFOV = default.scopePortalFOV;
-			IronSightDisplayFOV = default.IronSightDisplayFOV;
-			bPlayerFOVZooms = false;
-			if (bUsingSights)
-			{
-				PlayerViewOffset = XoffsetScoped;
-			}
+        if (ScopeDetail == RO_ModelScope)
+        {
+            scopePortalFOV = default.scopePortalFOV;
+            IronSightDisplayFOV = default.IronSightDisplayFOV;
+            bPlayerFOVZooms = false;
+            if (bUsingSights)
+            {
+                PlayerViewOffset = XoffsetScoped;
+            }
 
-			if (ScopeScriptedTexture == none)
-			{
-	        	ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
-			}
+            if (ScopeScriptedTexture == none)
+            {
+                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+            }
 
-	        ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-	        ScopeScriptedTexture.SetSize(512,512);
-	        ScopeScriptedTexture.Client = Self;
+            ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
+            ScopeScriptedTexture.SetSize(512,512);
+            ScopeScriptedTexture.Client = Self;
 
-			if (ScriptedScopeCombiner == none)
-			{
-				// Construct the Combiner
-				ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-	            ScriptedScopeCombiner.Material1 = Texture'DH_ScopeShaders.Zoomblur.Xhair';
-	            ScriptedScopeCombiner.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
-	            ScriptedScopeCombiner.CombineOperation = CO_Multiply;
-	            ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
-	            ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
-	        }
+            if (ScriptedScopeCombiner == none)
+            {
+                // Construct the Combiner
+                ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+                ScriptedScopeCombiner.Material1 = Texture'DH_ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
+                ScriptedScopeCombiner.CombineOperation = CO_Multiply;
+                ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
+                ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
+            }
 
-			if (ScopeScriptedShader == none)
-			{
-	            // Construct the scope shader
-				ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
-				ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
-				ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
-				ScopeScriptedShader.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
-			}
-
-	        bInitializedScope = true;
-		}
-		else if (ScopeDetail == RO_ModelScopeHigh)
-		{
-			scopePortalFOV = scopePortalFOVHigh;
-			IronSightDisplayFOV = default.IronSightDisplayFOVHigh;
-			bPlayerFOVZooms = false;
-			if (bUsingSights)
-			{
-				PlayerViewOffset = XoffsetHighDetail;
-			}
-
-			if (ScopeScriptedTexture == none)
-			{
-	        	ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
-	        }
-			ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-	        ScopeScriptedTexture.SetSize(1024,1024);
-	        ScopeScriptedTexture.Client = Self;
-
-			if (ScriptedScopeCombiner == none)
-			{
-				// Construct the Combiner
-				ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-	            ScriptedScopeCombiner.Material1 = Texture'DH_ScopeShaders.Zoomblur.Xhair';
-	            ScriptedScopeCombiner.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
-	            ScriptedScopeCombiner.CombineOperation = CO_Multiply;
-	            ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
-	            ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
-	        }
-
-			if (ScopeScriptedShader == none)
-			{
-	            // Construct the scope shader
-				ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
-				ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
-				ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
-				ScopeScriptedShader.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
-			}
+            if (ScopeScriptedShader == none)
+            {
+                // Construct the scope shader
+                ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
+                ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
+                ScopeScriptedShader.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
+            }
 
             bInitializedScope = true;
-		}
-		else if (ScopeDetail == RO_TextureScope)
-		{
-			IronSightDisplayFOV = default.IronSightDisplayFOV;
-			PlayerViewOffset.X = default.PlayerViewOffset.X;
-			bPlayerFOVZooms = true;
+        }
+        else if (ScopeDetail == RO_ModelScopeHigh)
+        {
+            scopePortalFOV = scopePortalFOVHigh;
+            IronSightDisplayFOV = default.IronSightDisplayFOVHigh;
+            bPlayerFOVZooms = false;
+            if (bUsingSights)
+            {
+                PlayerViewOffset = XoffsetHighDetail;
+            }
 
-			bInitializedScope = true;
-		}
-	}
+            if (ScopeScriptedTexture == none)
+            {
+                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+            }
+            ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
+            ScopeScriptedTexture.SetSize(1024,1024);
+            ScopeScriptedTexture.Client = Self;
+
+            if (ScriptedScopeCombiner == none)
+            {
+                // Construct the Combiner
+                ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
+                ScriptedScopeCombiner.Material1 = Texture'DH_ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
+                ScriptedScopeCombiner.CombineOperation = CO_Multiply;
+                ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
+                ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
+            }
+
+            if (ScopeScriptedShader == none)
+            {
+                // Construct the scope shader
+                ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
+                ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
+                ScopeScriptedShader.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
+            }
+
+            bInitializedScope = true;
+        }
+        else if (ScopeDetail == RO_TextureScope)
+        {
+            IronSightDisplayFOV = default.IronSightDisplayFOV;
+            PlayerViewOffset.X = default.PlayerViewOffset.X;
+            bPlayerFOVZooms = true;
+
+            bInitializedScope = true;
+        }
+    }
 }
 
 defaultproperties

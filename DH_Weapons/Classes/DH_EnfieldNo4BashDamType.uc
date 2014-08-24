@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_EnfieldNo4BashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

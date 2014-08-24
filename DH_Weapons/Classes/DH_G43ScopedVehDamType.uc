@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_G43ScopedVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

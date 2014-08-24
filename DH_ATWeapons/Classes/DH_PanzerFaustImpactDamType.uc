@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_PanzerFaustImpactDamType extends RORocketImpactDamage
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

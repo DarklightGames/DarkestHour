@@ -5,64 +5,64 @@
 // Copyright (C) 2003 Jeffrey Nakai
 //
 // class that holds Pistol Firing properties
-//	subclasses just contain default props
+//  subclasses just contain default props
 //=====================================================
 
 class DH_PistolFire extends DH_ProjectileFire;
 
-var 		name 		FireLastAnim;        	// anim for weapon firing last shot
-var 		name 		FireIronLastAnim;       // anim for weapon firing last shot
+var         name        FireLastAnim;           // anim for weapon firing last shot
+var         name        FireIronLastAnim;       // anim for weapon firing last shot
 
 function PlayFiring()
 {
-	if (Weapon.Mesh != none)
-	{
-		if (FireCount > 0)
-		{
-			if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
-			{
-			 	Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-			}
-			else
-			{
-				if (Weapon.HasAnim(FireLoopAnim))
-				{
-					Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
-				}
-				else
-				{
-					Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-				}
-			}
-		}
-		else
-		{
-			if (Weapon.bUsingSights)
-			{
-			 	if (Weapon.AmmoAmount(ThisModeNum) < 1)
-			 	{
-				 	Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
-				}
-				else
-				{
-					Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
-				}
-			}
-			else
-			{
-			 	if (Weapon.AmmoAmount(ThisModeNum) < 1)
-			 	{
-				 	Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
-				}
-				else
-				{
-					Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-				}
-			}
-		}
-	}
+    if (Weapon.Mesh != none)
+    {
+        if (FireCount > 0)
+        {
+            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+            {
+                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
+            }
+            else
+            {
+                if (Weapon.HasAnim(FireLoopAnim))
+                {
+                    Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
+                }
+                else
+                {
+                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+                }
+            }
+        }
+        else
+        {
+            if (Weapon.bUsingSights)
+            {
+                if (Weapon.AmmoAmount(ThisModeNum) < 1)
+                {
+                    Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
+                }
+                else
+                {
+                    Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
+                }
+            }
+            else
+            {
+                if (Weapon.AmmoAmount(ThisModeNum) < 1)
+                {
+                    Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
+                }
+                else
+                {
+                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+                }
+            }
+        }
+    }
 
-	Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
 
     ClientPlayForceFeedback(FireForce);  // jdf
 
@@ -83,9 +83,9 @@ event ModeDoFire()
     {
         Weapon.ConsumeAmmo(ThisModeNum, Load);
         DoFireEffect();
-		HoldTime = 0;	// if bot decides to stop firing, HoldTime must be reset first
+        HoldTime = 0;   // if bot decides to stop firing, HoldTime must be reset first
         if ((Instigator == none) || (Instigator.Controller == none))
-			return;
+            return;
 
         if (AIController(Instigator.Controller) != none)
             AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
@@ -96,26 +96,26 @@ event ModeDoFire()
     // client
     if (Instigator.IsLocallyControlled())
     {
-		// This could be dangerous. if we are low on ammo, go ahead and
-		// decriment the ammo client side. This will ensure the proper
-		// anims play for weapon firing in laggy situations.
-		if (Weapon.Role < ROLE_Authority)
-		{
-	        Weapon.ConsumeAmmo(ThisModeNum, Load);
+        // This could be dangerous. if we are low on ammo, go ahead and
+        // decriment the ammo client side. This will ensure the proper
+        // anims play for weapon firing in laggy situations.
+        if (Weapon.Role < ROLE_Authority)
+        {
+            Weapon.ConsumeAmmo(ThisModeNum, Load);
         }
 
-		if (!bDelayedRecoil)
-      		HandleRecoil();
+        if (!bDelayedRecoil)
+            HandleRecoil();
 
         ShakeView();
         PlayFiring();
 
         if (!bMeleeMode)
         {
-	        if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
-				EjectShell();
-	        FlashMuzzleFlash();
-	        StartMuzzleSmoke();
+            if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
+                EjectShell();
+            FlashMuzzleFlash();
+            StartMuzzleSmoke();
         }
     }
     else // server

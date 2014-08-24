@@ -9,8 +9,8 @@ simulated function Fire(float F)
 {
     // added check for player to be in iron view to save arty coords - Antarian
     if ((Instigator == none) || (Instigator.Controller == none)
-		|| (AIController(Instigator.Controller) != none) || !bUsingSights)
-   	   return;
+        || (AIController(Instigator.Controller) != none) || !bUsingSights)
+       return;
 
         // server
     if (Instigator.IsLocallyControlled())
@@ -19,23 +19,23 @@ simulated function Fire(float F)
 
 simulated function AltFire(float F)
 {
-	if (Instigator.IsLocallyControlled())
-		DHPlayer(Instigator.Controller).ServerCancelMortarTarget();
+    if (Instigator.IsLocallyControlled())
+        DHPlayer(Instigator.Controller).ServerCancelMortarTarget();
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-	local DHPlayer DHP;
+    local DHPlayer DHP;
 
-	super.BringUp(PrevWeapon);
+    super.BringUp(PrevWeapon);
 
-	if (Instigator.IsLocallyControlled())
-	{
-		DHP = DHPlayer(Instigator.Controller);
+    if (Instigator.IsLocallyControlled())
+    {
+        DHP = DHPlayer(Instigator.Controller);
 
-		if (DHP != none)
-			DHP.QueueHint(11, true);
-	}
+        if (DHP != none)
+            DHP.QueueHint(11, true);
+    }
 }
 
 defaultproperties

@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_Canadian_Armoured_Units   ***
+//  ***   DH_Canadian_Armoured_Units   ***
 //
 // *************************************************************************
 
 class DH_Canadian_Armoured_Units extends DH_British_Commonwealth_Units
-	abstract;
+    abstract;
 
 defaultproperties
 {

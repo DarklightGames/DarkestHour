@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_FJ_Bandolier   ***
+//  ***   DH_FJ_Bandolier   ***
 //
 // *************************************************************************
 
 class DH_FJ_Bandolier extends DH_Fallschirmjager
-	abstract;
+    abstract;
 
 defaultproperties
 {

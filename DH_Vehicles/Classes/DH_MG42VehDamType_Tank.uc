@@ -2,7 +2,7 @@
 //DH_MG42VehDamType_Tank
 //=============================================================================
 class DH_MG42VehDamType_Tank extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

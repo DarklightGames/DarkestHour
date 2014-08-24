@@ -11,11 +11,11 @@ class DH_HigginsBoat extends DH_BoatVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
-var     	sound       		RampDownSound;
-var     	sound       		RampUpSound;
-var     	float       		RampSoundVolume;
+var         sound               RampDownSound;
+var         sound               RampUpSound;
+var         float               RampSoundVolume;
 
-var	name			RampDownIdleAnim;
+var name            RampDownIdleAnim;
 
 
 static function StaticPrecache(LevelInfo L)
@@ -30,260 +30,260 @@ simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {
-	if (bForward)
-	{
-		if (DriverPositionIndex < (DriverPositions.Length - 1))
-		{
-			PreviousPositionIndex = DriverPositionIndex;
-			DriverPositionIndex++;
+    if (bForward)
+    {
+        if (DriverPositionIndex < (DriverPositions.Length - 1))
+        {
+            PreviousPositionIndex = DriverPositionIndex;
+            DriverPositionIndex++;
 
-			if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-			{
-				NextViewPoint();
-			}
+            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
 
-			if (Level.NetMode == NM_DedicatedServer)
-			{
-				GoToState('ViewTransition');
-			}
-		}
+            if (Level.NetMode == NM_DedicatedServer)
+            {
+                GoToState('ViewTransition');
+            }
+        }
      }
      else
      {
-		if (DriverPositionIndex > 0)
-		{
-			PreviousPositionIndex = DriverPositionIndex;
-			DriverPositionIndex--;
+        if (DriverPositionIndex > 0)
+        {
+            PreviousPositionIndex = DriverPositionIndex;
+            DriverPositionIndex--;
 
-			if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
-			{
-				NextViewPoint();
-			}
+            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
 
-			if (Level.NetMode == NM_DedicatedServer)
-			{
-				GoToState('ViewTransition');
-			}
+            if (Level.NetMode == NM_DedicatedServer)
+            {
+                GoToState('ViewTransition');
+            }
 
-		}
+        }
      }
 }
 
 //Overwritten to add Higgins Boat ramp sounds
 simulated state ViewTransition
 {
-	simulated function HandleTransition()
-	{
-	     	if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
-	     	{
-	         		if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
-	             			LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-	     	}
+    simulated function HandleTransition()
+    {
+            if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            {
+                    if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+                            LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+            }
 
-		 if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
-		 {
-		 	 //log("HandleTransition Player Transition Up!");
-			 PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-			 //ADDED RAMP UP sound HERE
-			 PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume/255.0,, 150, , false);
-		 }
-		 else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
-		 {
-		 	 //log("HandleTransition Player Transition Down!");
-			 PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-			 //ADDED RAMP DOWN sound HERE
-			 PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume/255.0,, 150, , false);
-		}
+         if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+         {
+             //log("HandleTransition Player Transition Up!");
+             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+             //ADDED RAMP UP sound HERE
+             PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume/255.0,, 150, , false);
+         }
+         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
+         {
+             //log("HandleTransition Player Transition Down!");
+             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+             //ADDED RAMP DOWN sound HERE
+             PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume/255.0,, 150, , false);
+        }
 
-	     if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
-	         	Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-	}
+         if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
+                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+    }
 
-	simulated function AnimEnd(int channel)
-	{
-		GotoState('');
-	}
+    simulated function AnimEnd(int channel)
+    {
+        GotoState('');
+    }
 
-	simulated function EndState()
-	{
-		if (PlayerController(Controller) != none)
-		{
-			PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-			PlayerController(Controller).SetRotation(rot(0, 0, 0));
-		}
-	}
+    simulated function EndState()
+    {
+        if (PlayerController(Controller) != none)
+        {
+            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            PlayerController(Controller).SetRotation(rot(0, 0, 0));
+        }
+    }
 
-	Begin:
-	HandleTransition();
-	Sleep(0.2);
+    Begin:
+    HandleTransition();
+    Sleep(0.2);
 }
 
 // overwritten for ramp
 function bool KDriverLeave(bool bForceLeave)
 {
-	local bool bSuperDriverLeave;
+    local bool bSuperDriverLeave;
 
-	InitialPositionIndex=DriverPositionIndex;
-	PreviousPositionIndex=InitialPositionIndex;
+    InitialPositionIndex=DriverPositionIndex;
+    PreviousPositionIndex=InitialPositionIndex;
 
-	bSuperDriverLeave = super.KDriverLeave(bForceLeave);
+    bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
     DriverLeft();
-	MaybeDestroyVehicle();
-	return bSuperDriverLeave;
+    MaybeDestroyVehicle();
+    return bSuperDriverLeave;
 }
 
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-	super.ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
-	//Higgins boat hint.  A long time coming.
-	DHPlayer(PC).QueueHint(42, true);
+    //Higgins boat hint.  A long time coming.
+    DHPlayer(PC).QueueHint(42, true);
 }
 
 // overwritten for ramp
 function DriverDied()
 {
-	InitialPositionIndex=DriverPositionIndex;
-	super.DriverDied();
-	DriverLeft();
-	MaybeDestroyVehicle();
+    InitialPositionIndex=DriverPositionIndex;
+    super.DriverDied();
+    DriverLeft();
+    MaybeDestroyVehicle();
 }
 
 
 // Called by notifies!!
 function RampUpIdle()
 {
-	LoopAnim(BeginningIdleAnim);
-	DestAnimName=BeginningIdleAnim;
+    LoopAnim(BeginningIdleAnim);
+    DestAnimName=BeginningIdleAnim;
 }
 
 function RampDownIdle()
 {
-	LoopAnim(RampDownIdleAnim);
-	DestAnimName=RampDownIdleAnim;
+    LoopAnim(RampDownIdleAnim);
+    DestAnimName=RampDownIdleAnim;
 }
 
 // Overridden from Vehicle.uc to prevent being spawned outside the boat while moving
 function bool PlaceExitingDriver()
 {
-	local int		i, j;
-	local vector	tryPlace, Extent, HitLocation, HitNormal, ZOffset, RandomSphereLoc;
-	local float BestDir, NewDir;
+    local int       i, j;
+    local vector    tryPlace, Extent, HitLocation, HitNormal, ZOffset, RandomSphereLoc;
+    local float BestDir, NewDir;
 
-	if (Driver == none)
-		return false;
-	Extent = Driver.default.CollisionRadius * vect(1,1,0);
-	Extent.Z = Driver.default.CollisionHeight;
-	ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
+    if (Driver == none)
+        return false;
+    Extent = Driver.default.CollisionRadius * vect(1,1,0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
 
-/*	//avoid running driver over by placing in direction perpendicular to velocity
-	if (VSize(Velocity) > 100)
-	{
-		tryPlace = Normal(Velocity cross vect(0,0,1)) * (CollisionRadius + Driver.default.CollisionRadius) * 1.25 ;
-		if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
-		{
-			if ((tryPlace dot Controller.DirectionHint) < 0)
-				tryPlace *= -1;
-		}
-		else if (FRand() < 0.5)
-				tryPlace *= -1; //randomly prefer other side
-		if ((Trace(HitLocation, HitNormal, Location + tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location + tryPlace + ZOffset))
-		     || (Trace(HitLocation, HitNormal, Location - tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location - tryPlace + ZOffset)))
-			return true;
-	}
+/*  //avoid running driver over by placing in direction perpendicular to velocity
+    if (VSize(Velocity) > 100)
+    {
+        tryPlace = Normal(Velocity cross vect(0,0,1)) * (CollisionRadius + Driver.default.CollisionRadius) * 1.25 ;
+        if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
+        {
+            if ((tryPlace dot Controller.DirectionHint) < 0)
+                tryPlace *= -1;
+        }
+        else if (FRand() < 0.5)
+                tryPlace *= -1; //randomly prefer other side
+        if ((Trace(HitLocation, HitNormal, Location + tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location + tryPlace + ZOffset))
+             || (Trace(HitLocation, HitNormal, Location - tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location - tryPlace + ZOffset)))
+            return true;
+    }
 */
-	if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
-	{
-		// first try best position
-		tryPlace = Location;
-		BestDir = 0;
-		for(i=0; i<ExitPositions.Length; i++)
-		{
-			NewDir = Normal(ExitPositions[i] - Location) Dot Controller.DirectionHint;
-			if (NewDir > BestDir)
-			{
-				BestDir = NewDir;
-				tryPlace = ExitPositions[i];
-			}
-		}
-		Controller.DirectionHint = vect(0,0,0);
-		if (tryPlace != Location)
-		{
-			if (bRelativeExitPos)
-			{
-				if (ExitPositions[0].Z != 0)
-					ZOffset = vect(0,0,1) * ExitPositions[0].Z;
-				else
-					ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
+    if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
+    {
+        // first try best position
+        tryPlace = Location;
+        BestDir = 0;
+        for(i=0; i<ExitPositions.Length; i++)
+        {
+            NewDir = Normal(ExitPositions[i] - Location) Dot Controller.DirectionHint;
+            if (NewDir > BestDir)
+            {
+                BestDir = NewDir;
+                tryPlace = ExitPositions[i];
+            }
+        }
+        Controller.DirectionHint = vect(0,0,0);
+        if (tryPlace != Location)
+        {
+            if (bRelativeExitPos)
+            {
+                if (ExitPositions[0].Z != 0)
+                    ZOffset = vect(0,0,1) * ExitPositions[0].Z;
+                else
+                    ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
 
-				tryPlace = Location + ((tryPlace-ZOffset) >> Rotation) + ZOffset;
+                tryPlace = Location + ((tryPlace-ZOffset) >> Rotation) + ZOffset;
 
-				// First, do a line check (stops us passing through things on exit).
-				if ((Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) == none)
-					&& Driver.SetLocation(tryPlace))
-					return true;
-			}
-			else if (Driver.SetLocation(tryPlace))
-				return true;
-		}
-	}
+                // First, do a line check (stops us passing through things on exit).
+                if ((Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) == none)
+                    && Driver.SetLocation(tryPlace))
+                    return true;
+            }
+            else if (Driver.SetLocation(tryPlace))
+                return true;
+        }
+    }
 
-	if (!bRelativeExitPos)
-	{
-		for(i=0; i<ExitPositions.Length; i++)
-		{
-			tryPlace = ExitPositions[i];
+    if (!bRelativeExitPos)
+    {
+        for(i=0; i<ExitPositions.Length; i++)
+        {
+            tryPlace = ExitPositions[i];
 
-			if (Driver.SetLocation(tryPlace))
-				return true;
-			else
-			{
-				for (j=0; j<10; j++) // try random positions in a sphere...
-				{
-					RandomSphereLoc = VRand()*200* FMax(FRand(),0.5);
-					RandomSphereLoc.Z = Extent.Z * FRand();
+            if (Driver.SetLocation(tryPlace))
+                return true;
+            else
+            {
+                for (j=0; j<10; j++) // try random positions in a sphere...
+                {
+                    RandomSphereLoc = VRand()*200* FMax(FRand(),0.5);
+                    RandomSphereLoc.Z = Extent.Z * FRand();
 
-					// First, do a line check (stops us passing through things on exit).
-					if (Trace(HitLocation, HitNormal, tryPlace+RandomSphereLoc, tryPlace, false, Extent) == none)
-					{
-						if (Driver.SetLocation(tryPlace+RandomSphereLoc))
-							return true;
-					}
-					else if (Driver.SetLocation(HitLocation))
-						return true;
-				}
-			}
-		}
-		return false;
-	}
+                    // First, do a line check (stops us passing through things on exit).
+                    if (Trace(HitLocation, HitNormal, tryPlace+RandomSphereLoc, tryPlace, false, Extent) == none)
+                    {
+                        if (Driver.SetLocation(tryPlace+RandomSphereLoc))
+                            return true;
+                    }
+                    else if (Driver.SetLocation(HitLocation))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	for(i=0; i<ExitPositions.Length; i++)
-	{
-		if (ExitPositions[0].Z != 0)
-			ZOffset = vect(0,0,1) * ExitPositions[0].Z;
-		else
-			ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
+    for(i=0; i<ExitPositions.Length; i++)
+    {
+        if (ExitPositions[0].Z != 0)
+            ZOffset = vect(0,0,1) * ExitPositions[0].Z;
+        else
+            ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
 
-		tryPlace = Location + ((ExitPositions[i]-ZOffset) >> Rotation) + ZOffset;
+        tryPlace = Location + ((ExitPositions[i]-ZOffset) >> Rotation) + ZOffset;
 
-		// First, do a line check (stops us passing through things on exit).
-		if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-			continue;
+        // First, do a line check (stops us passing through things on exit).
+        if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
+            continue;
 
-		// Then see if we can place the player there.
-		if (!Driver.SetLocation(tryPlace))
-			continue;
+        // Then see if we can place the player there.
+        if (!Driver.SetLocation(tryPlace))
+            continue;
 
-		return true;
-	}
-	return false;
+        return true;
+    }
+    return false;
 }
 
 event RanInto(Actor Other)

@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***  DH_American_Units    ***
+//  ***  DH_American_Units    ***
 //
 // *************************************************************************
 
 class DH_American_Units extends DH_RoleInfo
-	abstract;
+    abstract;
 
 defaultproperties
 {

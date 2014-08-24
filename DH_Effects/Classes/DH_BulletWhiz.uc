@@ -13,7 +13,7 @@ class DH_BulletWhiz extends ROBulletWhiz;
 
 simulated function PostBeginPlay()
 {
-	PlayOwnedSound(WhizSound, SLOT_none, 30.0, false, 500.0, 1.0, true);
+    PlayOwnedSound(WhizSound, SLOT_none, 30.0, false, 500.0, 1.0, true);
 }
 
 //=============================================================================

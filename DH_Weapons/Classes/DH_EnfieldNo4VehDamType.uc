@@ -1,9 +1,9 @@
 //=============================================================================
-// DH_EnfieldNo4VehDamType 
+// DH_EnfieldNo4VehDamType
 //=============================================================================
 
 class DH_EnfieldNo4VehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

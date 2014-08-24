@@ -13,22 +13,22 @@ class DH_CromwellTank extends DH_ROTreadCraft;
 
 simulated function SetupTreads()
 {
-	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (LeftTreadPanner != none)
-	{
-		LeftTreadPanner.Material = Skins[LeftTreadIndex];
-		LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-		LeftTreadPanner.PanRate = 0.0;
-		Skins[LeftTreadIndex] = LeftTreadPanner;
-	}
-	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (RightTreadPanner != none)
-	{
-		RightTreadPanner.Material = Skins[RightTreadIndex];
-		RightTreadPanner.PanDirection = rot(32768, 0, 16384);
-		RightTreadPanner.PanRate = 0.0;
-		Skins[RightTreadIndex] = RightTreadPanner;
-	}
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = rot(32768, 0, 16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
 }
 
 static function StaticPrecache(LevelInfo L)
@@ -50,7 +50,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int2');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

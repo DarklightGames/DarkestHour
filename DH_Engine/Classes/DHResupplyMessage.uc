@@ -9,23 +9,23 @@ var localized string        ResuppliedNoOperator;
 var localized string        BeenResupplied;
 
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	switch (Switch)
-	{
-		case 0:
-			return default.ResuppliedNoOperator;
-		case 1:
-			return default.ResuppliedMortar $ RelatedPRI_1.PlayerName;
-		case 2:
-			return default.BeenResupplied $ RelatedPRI_1.PlayerName;
-		default:
-			return default.ResuppliedNoOperator;
-	}
+    switch (Switch)
+    {
+        case 0:
+            return default.ResuppliedNoOperator;
+        case 1:
+            return default.ResuppliedMortar $ RelatedPRI_1.PlayerName;
+        case 2:
+            return default.BeenResupplied $ RelatedPRI_1.PlayerName;
+        default:
+            return default.ResuppliedNoOperator;
+    }
 
 }
 
@@ -35,15 +35,15 @@ static function int getIconID(
     optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject)
 {
-	if (RelatedPRI_1 != none && RelatedPRI_1.Team != none)
-	{
-	    if (RelatedPRI_1.Team.TeamIndex == AXIS_TEAM_INDEX)
-	        return default.iconID;
-	    else
-	        return default.altIconID;
-	}
-	else
-	    return default.iconID;
+    if (RelatedPRI_1 != none && RelatedPRI_1.Team != none)
+    {
+        if (RelatedPRI_1.Team.TeamIndex == AXIS_TEAM_INDEX)
+            return default.iconID;
+        else
+            return default.altIconID;
+    }
+    else
+        return default.iconID;
 }
 
 defaultproperties

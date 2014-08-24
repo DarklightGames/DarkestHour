@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS Rifleman   ***
+//  ***   SS Rifleman   ***
 //
 // *************************************************************************
 
@@ -8,10 +8,10 @@ class DH_12thSSFireteamLeader extends DH_12thSS;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-		return Headgear[0];
-	else
-		return Headgear[1];
+    if (FRand() < 0.2)
+        return Headgear[0];
+    else
+        return Headgear[1];
 }
 
 defaultproperties

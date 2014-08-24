@@ -12,18 +12,18 @@ class DH_StuartTank_Snow extends DH_StuartTank;
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.ext_vehicles.M5_body_snow');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.treads.M5_treadsnow');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.ext_vehicles.M5_body_snow');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.treads.M5_treadsnow');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.ext_vehicles.M5_body_snow');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.treads.M5_treadsnow');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.ext_vehicles.M5_body_snow');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex2.treads.M5_treadsnow');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

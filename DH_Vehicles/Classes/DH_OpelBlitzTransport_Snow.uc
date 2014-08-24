@@ -9,7 +9,7 @@ static function StaticPrecache(LevelInfo L)
 {
     Super.StaticPrecache(L);
 
- 	L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.OpelBlitz_body_snow');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.OpelBlitz_body_snow');
 
 
 }
@@ -17,7 +17,7 @@ static function StaticPrecache(LevelInfo L)
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.OpelBlitz_body_snow');
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

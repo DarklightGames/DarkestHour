@@ -17,11 +17,11 @@ class DH_NebelGranate39Pickup extends ROOneShotWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.gersmokenade');
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.gersmokenade_throw');
-	L.AddPrecacheMaterial(Material'Weapons3rd_tex.gersmokenade_world');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.StielGranate_smokenade'); // replaceme
-	L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.gersmokenade_ammo');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.gersmokenade');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.gersmokenade_throw');
+    L.AddPrecacheMaterial(Material'Weapons3rd_tex.gersmokenade_world');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.StielGranate_smokenade'); // replaceme
+    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.gersmokenade_ammo');
 }
 
 defaultproperties

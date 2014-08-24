@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_MG34DamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

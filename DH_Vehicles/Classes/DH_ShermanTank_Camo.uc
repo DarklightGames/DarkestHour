@@ -27,7 +27,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_camo1');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
 
-	super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

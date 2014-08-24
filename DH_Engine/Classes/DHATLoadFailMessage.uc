@@ -12,11 +12,11 @@ class DHATLoadFailMessage extends ROCriticalMessage;
 var localized string        CantLoad;
 
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
     return RelatedPRI_1.PlayerName $ default.CantLoad;
 }

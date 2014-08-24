@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHSettingsPage   ***
+//  ***   DHSettingsPage   ***
 //
 // *************************************************************************
 
@@ -20,64 +20,64 @@ var localized string InvalidStats;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    	local rotator PlayerRot;
-    	local int i;
+        local rotator PlayerRot;
+        local int i;
 
-    	Super.InitComponent(MyController, MyOwner);
-    	PageCaption = t_Header.Caption;
+        Super.InitComponent(MyController, MyOwner);
+        PageCaption = t_Header.Caption;
 
-    	GetSizingButton();
+        GetSizingButton();
 
-    	PlayerRot = PlayerOwner().Rotation;
-    	SavedPitch = PlayerRot.Pitch;
-    	PlayerRot.Pitch = 0;
-    	PlayerRot.Roll = 0;
-    	PlayerOwner().SetRotation(PlayerRot);
+        PlayerRot = PlayerOwner().Rotation;
+        SavedPitch = PlayerRot.Pitch;
+        PlayerRot.Pitch = 0;
+        PlayerRot.Roll = 0;
+        PlayerOwner().SetRotation(PlayerRot);
 
-	for (i = 0; i < PanelCaption.Length && i < PanelClass.Length && i < PanelHint.Length; i++)
-	{
-		Profile("Settings_" $ PanelCaption[i]);
-		c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i]);
-		Profile("Settings_" $ PanelCaption[i]);
-	}
-    	tp_Game = UT2K4Tab_GameSettings(c_Tabs.BorrowPanel(PanelCaption[3]));
+    for (i = 0; i < PanelCaption.Length && i < PanelClass.Length && i < PanelHint.Length; i++)
+    {
+        Profile("Settings_" $ PanelCaption[i]);
+        c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i]);
+        Profile("Settings_" $ PanelCaption[i]);
+    }
+        tp_Game = UT2K4Tab_GameSettings(c_Tabs.BorrowPanel(PanelCaption[3]));
 }
 
 function GetSizingButton()
 {
-    	local int i;
-    	SizingButton = none;
-    	for (i = 0; i < Components.Length; i++)
-    	{
-        		if (GUIButton(Components[i]) == none)
-            			continue;
+        local int i;
+        SizingButton = none;
+        for (i = 0; i < Components.Length; i++)
+        {
+                if (GUIButton(Components[i]) == none)
+                        continue;
 
-        		if (SizingButton == none || Len(GUIButton(Components[i]).Caption) > Len(SizingButton.Caption))
-            			SizingButton = GUIButton(Components[i]);
-    	}
+                if (SizingButton == none || Len(GUIButton(Components[i]).Caption) > Len(SizingButton.Caption))
+                        SizingButton = GUIButton(Components[i]);
+        }
 }
 
 function bool InternalOnPreDraw(Canvas Canvas)
 {
-    	local int X, i;
-    	local float XL,YL;
+        local int X, i;
+        local float XL,YL;
 
-    	if (SizingButton == none)
-        		return false;
+        if (SizingButton == none)
+                return false;
 
-    	SizingButton.Style.TextSize(Canvas, SizingButton.MenuState, SizingButton.Caption, XL, YL, SizingButton.FontScale);
+        SizingButton.Style.TextSize(Canvas, SizingButton.MenuState, SizingButton.Caption, XL, YL, SizingButton.FontScale);
 
-    	XL += 32;
-    	X = Canvas.ClipX - XL;
-    	for (i = Components.Length - 1; i >= 0; i--)
-    	{
-       	 	if (GUIButton(Components[i]) == none)
-            			continue;
-        			Components[i].WinWidth = XL;
-        			Components[i].WinLeft = X;
-        			X -= XL;
-    	}
-    	return false;
+        XL += 32;
+        X = Canvas.ClipX - XL;
+        for (i = Components.Length - 1; i >= 0; i--)
+        {
+            if (GUIButton(Components[i]) == none)
+                        continue;
+                    Components[i].WinWidth = XL;
+                    Components[i].WinLeft = X;
+                    X -= XL;
+        }
+        return false;
 }
 
 function bool InternalOnCanClose(optional bool bCanceled)
@@ -87,48 +87,48 @@ function bool InternalOnCanClose(optional bool bCanceled)
 
 function InternalOnClose(optional Bool bCanceled)
 {
-    	local rotator NewRot;
-    	NewRot = PlayerOwner().Rotation;
-    	NewRot.Pitch = SavedPitch;
-    	PlayerOwner().SetRotation(NewRot);
-    	Super.OnClose(bCanceled);
+        local rotator NewRot;
+        NewRot = PlayerOwner().Rotation;
+        NewRot.Pitch = SavedPitch;
+        PlayerOwner().SetRotation(NewRot);
+        Super.OnClose(bCanceled);
 }
 
 function InternalOnChange(GUIComponent Sender)
 {
-	Super.InternalOnChange(Sender);
+    Super.InternalOnChange(Sender);
 
-	if (c_Tabs.ActiveTab == none)
-		ActivePanel = none;
-	else ActivePanel = Settings_Tabs(c_Tabs.ActiveTab.MyPanel);
+    if (c_Tabs.ActiveTab == none)
+        ActivePanel = none;
+    else ActivePanel = Settings_Tabs(c_Tabs.ActiveTab.MyPanel);
 }
 
 function BackButtonClicked()
 {
-	if (InternalOnCanClose(false))
-	{
-    		c_Tabs.ActiveTab.OnDeActivate();
-        		Controller.CloseMenu(false);
-    	}
+    if (InternalOnCanClose(false))
+    {
+            c_Tabs.ActiveTab.OnDeActivate();
+                Controller.CloseMenu(false);
+        }
 }
 
 
 function DefaultsButtonClicked()
 {
-	ActivePanel.ResetClicked();
+    ActivePanel.ResetClicked();
 }
 
 function bool ButtonClicked(GUIComponent Sender)
 {
-    	ActivePanel.AcceptClicked();
-    	return true;
+        ActivePanel.AcceptClicked();
+        return true;
 }
 
 event bool NotifyLevelChange()
 {
-	bPersistent = false;
-	LevelChanged();
-	return true;
+    bPersistent = false;
+    LevelChanged();
+    return true;
 }
 
 defaultproperties

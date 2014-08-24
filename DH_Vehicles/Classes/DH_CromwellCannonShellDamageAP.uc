@@ -7,7 +7,7 @@
 // British Cromwell Mk.IV tank - 75mm APC M61 - DamageType
 //==============================================================================
 class DH_CromwellCannonShellDamageAP extends ROTankShellImpactDamage
-	  abstract;
+      abstract;
 
 defaultproperties
 {

@@ -5,17 +5,17 @@ class DH_BritishMortarObserverRMCommando extends DH_RoyalMarineCommandos;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		if (FRand() < 0.5)
-			return Headgear[2];
-		else
-			return Headgear[1];
-	}
-	else
-	{
-		return Headgear[0];
-	}
+    if (FRand() < 0.2)
+    {
+        if (FRand() < 0.5)
+            return Headgear[2];
+        else
+            return Headgear[1];
+    }
+    else
+    {
+        return Headgear[0];
+    }
 }
 
 defaultproperties

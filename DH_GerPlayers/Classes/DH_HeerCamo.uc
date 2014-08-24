@@ -1,5 +1,5 @@
 class DH_HeerCamo extends DH_Ger_Heer
-	abstract;
+    abstract;
 
 defaultproperties
 {

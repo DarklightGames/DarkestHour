@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_StielGranateDamType extends ROGrenadeDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

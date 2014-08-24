@@ -7,68 +7,68 @@ class DHFilterListPage extends UT2K4_FilterListPage;
 
 function AddSystemMenu()
 {
-	local eFontScale tFontScale;
+    local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
-	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
-	b_ExitButton.OnClick = XButtonClicked;
-	b_ExitButton.bNeverFocus=true;
-	b_ExitButton.FocusInstead = t_WindowTitle;
-	b_ExitButton.RenderWeight=1;
-	b_ExitButton.bScaleToParent=false;
-	b_ExitButton.OnPreDraw = SystemMenuPreDraw;
-	b_ExitButton.bStandardized=true;
-	b_ExitButton.StandardHeight=0.03;
-	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = false;
+    b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
+    b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
+    b_ExitButton.OnClick = XButtonClicked;
+    b_ExitButton.bNeverFocus=true;
+    b_ExitButton.FocusInstead = t_WindowTitle;
+    b_ExitButton.RenderWeight=1;
+    b_ExitButton.bScaleToParent=false;
+    b_ExitButton.OnPreDraw = SystemMenuPreDraw;
+    b_ExitButton.bStandardized=true;
+    b_ExitButton.StandardHeight=0.03;
+    // Do not want OnClick() called from MousePressed()
+    b_ExitButton.bRepeatClick = false;
 }
 
 
 function InitFilterList()
 {
-	local array<string> FilterNames;
-	local moCheckbox ch;
-	local int i;
+    local array<string> FilterNames;
+    local moCheckbox ch;
+    local int i;
 
-	li_Filters.Clear();
-	FilterNames = FM.GetFilterNames();
-	for (i = 0; i < FilterNames.Length; i++)
-	{
-		ch = moCheckBox(li_Filters.AddItem("DH_Interface.DHmoCheckbox",,FilterNames[i]));
-		if (ch != none)
-			ch.Checked(FM.IsActiveAt(i));
-	}
+    li_Filters.Clear();
+    FilterNames = FM.GetFilterNames();
+    for (i = 0; i < FilterNames.Length; i++)
+    {
+        ch = moCheckBox(li_Filters.AddItem("DH_Interface.DHmoCheckbox",,FilterNames[i]));
+        if (ch != none)
+            ch.Checked(FM.IsActiveAt(i));
+    }
 
-	if (li_Filters.ItemCount==0)
-		DisableComponent(b_Remove);
-	else
-		EnableComponent(b_Remove);
+    if (li_Filters.ItemCount==0)
+        DisableComponent(b_Remove);
+    else
+        EnableComponent(b_Remove);
 
-	li_Filters.SetIndex(0);
+    li_Filters.SetIndex(0);
 
 }
 
 function bool CreateClick(GUIComponent Sender)
 {
-	local string FN;
-	local int i,cnt;
-	local moCheckbox cb;
+    local string FN;
+    local int i,cnt;
+    local moCheckbox cb;
 
-	cnt = 0;
-	for (i=0;i<li_Filters.ItemCount;i++)
-	{
-		cb = moCheckbox(li_Filters.GetItem(i));
-		if (inStr(cb.Caption,"New Filter")>=0)
-			cnt++;
-	}
+    cnt = 0;
+    for (i=0;i<li_Filters.ItemCount;i++)
+    {
+        cb = moCheckbox(li_Filters.GetItem(i));
+        if (inStr(cb.Caption,"New Filter")>=0)
+            cnt++;
+    }
 
-	if (cnt==0)
-		FN ="New Filter";
-	else
-		FN = "New Filter"@cnt;
+    if (cnt==0)
+        FN ="New Filter";
+    else
+        FN = "New Filter"@cnt;
 
-	FM.AddCustomFilter(FN);
-	InitFilterList();
+    FM.AddCustomFilter(FN);
+    InitFilterList();
     i= FM.FindFilterIndex(FN);
     Controller.OpenMenu("DH_Interface.DHFilterEdit",""$i,FN);
 
@@ -77,12 +77,12 @@ function bool CreateClick(GUIComponent Sender)
 
 function bool EditClick(GUIComponent Sender)
 {
-	local string FN;
-	local int i;
-	local moCheckbox cb;
+    local string FN;
+    local int i;
+    local moCheckbox cb;
 
-	cb = moCheckbox(li_Filters.Get());
-	FN = cb.Caption;
+    cb = moCheckbox(li_Filters.Get());
+    FN = cb.Caption;
     i= FM.FindFilterIndex(FN);
     Controller.OpenMenu("DH_Interface.DHFilterEdit",""$i,FN);
 

@@ -12,88 +12,88 @@ var automated moCheckBox ck_VACOnly;
 // end if _RO_
 var automated moCheckBox ck_Full, ck_Bots, ck_Empty, ck_Passworded;
 var automated GUIButton b_Ok, b_Cancel;
-var automated GUIMultiOptionListBox	lb_Mutators;
-var GUIMultiOptionList				li_Mutators;
+var automated GUIMultiOptionListBox lb_Mutators;
+var GUIMultiOptionList              li_Mutators;
 
-var int 			FilterIndex;
-var	BrowserFilters 	FM;
+var int             FilterIndex;
+var BrowserFilters  FM;
 
 var UT2K4_FilterListPage FLP;
 
 var localized string ComboOpts[3];
 var localized string MutOpts[3];
 
-var array<CacheManager.MutatorRecord>			MutRecords;
+var array<CacheManager.MutatorRecord>           MutRecords;
 
 var bool bInitialized;
 
 function AddSystemMenu()
 {
-	local eFontScale tFontScale;
+    local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
-	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
-	b_ExitButton.OnClick = XButtonClicked;
-	b_ExitButton.bNeverFocus=true;
-	b_ExitButton.FocusInstead = t_WindowTitle;
-	b_ExitButton.RenderWeight=1;
-	b_ExitButton.bScaleToParent=false;
-	b_ExitButton.OnPreDraw = SystemMenuPreDraw;
-	b_ExitButton.bStandardized=true;
-	b_ExitButton.StandardHeight=0.03;
-	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = false;
+    b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
+    b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
+    b_ExitButton.OnClick = XButtonClicked;
+    b_ExitButton.bNeverFocus=true;
+    b_ExitButton.FocusInstead = t_WindowTitle;
+    b_ExitButton.RenderWeight=1;
+    b_ExitButton.bScaleToParent=false;
+    b_ExitButton.OnPreDraw = SystemMenuPreDraw;
+    b_ExitButton.bStandardized=true;
+    b_ExitButton.StandardHeight=0.03;
+    // Do not want OnClick() called from MousePressed()
+    b_ExitButton.bRepeatClick = false;
 }
 
 function InitComponent(GUIController MyC, GUIComponent MyO)
 {
-	local int i;
-	local moComboBox CB;
-	Super.InitComponent(MyC, MyO);
+    local int i;
+    local moComboBox CB;
+    Super.InitComponent(MyC, MyO);
 
-	FLP = DHFilterListPage(ParentPage);
+    FLP = DHFilterListPage(ParentPage);
 
-	sb_Options.ManageComponent(ck_Full);
-	sb_Options.ManageComponent(ck_Empty);
-	sb_Options.ManageComponent(ck_Passworded);
-	sb_Options.ManageComponent(ck_Bots);
-	sb_Options.ManageComponent(cb_Stats);
+    sb_Options.ManageComponent(ck_Full);
+    sb_Options.ManageComponent(ck_Empty);
+    sb_Options.ManageComponent(ck_Passworded);
+    sb_Options.ManageComponent(ck_Bots);
+    sb_Options.ManageComponent(cb_Stats);
 // if _RO_
     sb_Options.ManageComponent(ck_VACOnly);
 /*
 // end if _RO_
-	sb_Options.ManageComponent(cb_WeaponStay);
-	sb_Options.ManageComponent(cb_Translocator);
+    sb_Options.ManageComponent(cb_WeaponStay);
+    sb_Options.ManageComponent(cb_Translocator);
 // if _RO_
 */
     RemoveComponent(cb_WeaponStay);
     RemoveComponent(cb_Translocator);
 // end if _RO_
-	sb_Options.ManageComponent(cb_Mutators);
+    sb_Options.ManageComponent(cb_Mutators);
 
-	for (i=0;i<3;i++)
-	{
-		cb_Stats.AddItem(ComboOpts[i]);
-		cb_WeaponStay.AddItem(ComboOpts[i]);
-		cb_Translocator.AddItem(ComboOpts[i]);
-	}
+    for (i=0;i<3;i++)
+    {
+        cb_Stats.AddItem(ComboOpts[i]);
+        cb_WeaponStay.AddItem(ComboOpts[i]);
+        cb_Translocator.AddItem(ComboOpts[i]);
+    }
 
-	cb_Mutators.AddItem(MutOpts[0]);
-	cb_Mutators.AddItem(MutOpts[1]);
-	cb_Mutators.AddItem(MutOpts[2]);
+    cb_Mutators.AddItem(MutOpts[0]);
+    cb_Mutators.AddItem(MutOpts[1]);
+    cb_Mutators.AddItem(MutOpts[2]);
 
-	li_Mutators = lb_Mutators.List;
+    li_Mutators = lb_Mutators.List;
 
-	sb_Mutators.ManageComponent(lb_Mutators);
+    sb_Mutators.ManageComponent(lb_Mutators);
 
     class'CacheManager'.static.GetMutatorList(MutRecords);
     for (i=0;i<MutRecords.Length;i++)
     {
-    	cb = moComboBox(li_Mutators.AddItem("DH_Interface.DHmoCombobox",,MutREcords[i].FriendlyName));
-    	cb.AddItem(ComboOpts[0]);
-    	cb.AddItem(ComboOpts[1]);
-    	cb.AddItem(ComboOpts[2]);
-    	cb.ReadOnly(true);
+        cb = moComboBox(li_Mutators.AddItem("DH_Interface.DHmoCombobox",,MutREcords[i].FriendlyName));
+        cb.AddItem(ComboOpts[0]);
+        cb.AddItem(ComboOpts[1]);
+        cb.AddItem(ComboOpts[2]);
+        cb.ReadOnly(true);
     }
 
     cb_Mutators.OnChange=MutChange;
@@ -103,234 +103,234 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
 
 event HandleParameters(string Param1, string Param2)
 {
-	local int i;
-	local array<CustomFilter.AFilterRule> Rules;
-	local MasterServerClient.QueryData 	FilterItem;
+    local int i;
+    local array<CustomFilter.AFilterRule> Rules;
+    local MasterServerClient.QueryData  FilterItem;
 
     FilterIndex = int(Param1);
-	eb_Name.SetComponentValue(Param2);
+    eb_Name.SetComponentValue(Param2);
 
-	if (Param2~="Default")
-		eb_Name.DisableMe();
-	else
-		eb_Name.EnableMe();
+    if (Param2~="Default")
+        eb_Name.DisableMe();
+    else
+        eb_Name.EnableMe();
 
-	//Get the custom filter
+    //Get the custom filter
 
- 	Rules = FLP.FM.GetFilterRules(FilterIndex);
-	for (i=0;i<Rules.Length;i++)
-	{
-		FilterItem = Rules[i].FilterItem;
-		if (FilterItem.Key~="currentplayers" && FilterItem.Value=="0" && FilterItem.QueryType==QT_GreaterThan)
-			ck_Empty.Checked(true);
+    Rules = FLP.FM.GetFilterRules(FilterIndex);
+    for (i=0;i<Rules.Length;i++)
+    {
+        FilterItem = Rules[i].FilterItem;
+        if (FilterItem.Key~="currentplayers" && FilterItem.Value=="0" && FilterItem.QueryType==QT_GreaterThan)
+            ck_Empty.Checked(true);
 
-		if (FilterItem.Key~="password" && FilterItem.Value=="false" && FilterItem.QueryType==QT_Equals)
-			ck_Passworded.Checked(true);
+        if (FilterItem.Key~="password" && FilterItem.Value=="false" && FilterItem.QueryType==QT_Equals)
+            ck_Passworded.Checked(true);
 
-		if (FilterItem.Key~="freespace" && FilterItem.Value =="0" && FilterItem.QueryType==QT_GreaterThan)
-			ck_Full.Checked(true);
+        if (FilterItem.Key~="freespace" && FilterItem.Value =="0" && FilterItem.QueryType==QT_GreaterThan)
+            ck_Full.Checked(true);
 
-		if (FilterItem.Key~="nobots" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
-			ck_Bots.Checked(true);
+        if (FilterItem.Key~="nobots" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
+            ck_Bots.Checked(true);
 
 // if _RO_
-		if (FilterItem.Key~="vacsecure" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
-			ck_VACOnly.Checked(true);
+        if (FilterItem.Key~="vacsecure" && FilterItem.Value=="true" && FilterItem.QueryType==QT_Equals)
+            ck_VACOnly.Checked(true);
 // end if _RO_
 
-		if (FilterItem.Key~="stats") //(&& FilterITem.Value=="true")
-		{
-			 if (FilterITem.Value~="true")
-				cb_Stats.MyComboBox.SetIndex(1);
-			else
-				cb_Stats.MyComboBox.SetIndex(2);
-		}
+        if (FilterItem.Key~="stats") //(&& FilterITem.Value=="true")
+        {
+             if (FilterITem.Value~="true")
+                cb_Stats.MyComboBox.SetIndex(1);
+            else
+                cb_Stats.MyComboBox.SetIndex(2);
+        }
 
-		if (FilterItem.Key~="weaponstay")
-		{
-			 if (FilterItem.Value~="true")
-				cb_WeaponStay.MyComboBox.SetIndex(1);
-			else
-				cb_WeaponStay.MyComboBox.SetIndex(2);
-		}
+        if (FilterItem.Key~="weaponstay")
+        {
+             if (FilterItem.Value~="true")
+                cb_WeaponStay.MyComboBox.SetIndex(1);
+            else
+                cb_WeaponStay.MyComboBox.SetIndex(2);
+        }
 
-		if (FilterItem.Key~="transloc")
-		{
-			 if (FilterItem.Value~="true")
-				cb_Translocator.MyComboBox.SetIndex(1);
-			else
-				cb_Translocator.MyComboBox.SetIndex(2);
-		}
+        if (FilterItem.Key~="transloc")
+        {
+             if (FilterItem.Value~="true")
+                cb_Translocator.MyComboBox.SetIndex(1);
+            else
+                cb_Translocator.MyComboBox.SetIndex(2);
+        }
 
-		if (FilterItem.Key~="nomutators" && FilterItem.Value=="true")
-			cb_Mutators.MyComboBox.SetIndex(0);
+        if (FilterItem.Key~="nomutators" && FilterItem.Value=="true")
+            cb_Mutators.MyComboBox.SetIndex(0);
 
-		if (FilterItem.Key~="mutator")
-		{
-			cb_Mutators.MyComboBox.SetIndex(2);
-			if (FilterITem.QueryType==QT_Equals)
-				SetMutator(FilterItem.Value,1);
-			else if (FilterItem.QueryType==QT_NotEquals)
-				SetMutator(FilterItem.Value,2);
-		}
-	}
+        if (FilterItem.Key~="mutator")
+        {
+            cb_Mutators.MyComboBox.SetIndex(2);
+            if (FilterITem.QueryType==QT_Equals)
+                SetMutator(FilterItem.Value,1);
+            else if (FilterItem.QueryType==QT_NotEquals)
+                SetMutator(FilterItem.Value,2);
+        }
+    }
 }
 
 function SetMutator(string ClassName, int index)
 {
-	local int i,j;
-	local string s;
-	local moComboBox box;
-	for (i=0;i<MutRecords.Length;i++)
-	{
-		j = Instr(MutRecords[i].ClassName,".");
-		s = mid(MutRecords[i].ClassName,j+1);
+    local int i,j;
+    local string s;
+    local moComboBox box;
+    for (i=0;i<MutRecords.Length;i++)
+    {
+        j = Instr(MutRecords[i].ClassName,".");
+        s = mid(MutRecords[i].ClassName,j+1);
 
-		if (s ~= ClassName)
-		{
-			for (j=0;j<li_Mutators.ItemCount;j++)
-			{
-				Box = moComboBox(li_Mutators.GetItem(j));
-				if (Box.Caption ~= MutRecords[i].FriendlyName)
-				{
-					Box.SetIndex(Index);
-					return;
-				}
-			}
-		}
-	}
+        if (s ~= ClassName)
+        {
+            for (j=0;j<li_Mutators.ItemCount;j++)
+            {
+                Box = moComboBox(li_Mutators.GetItem(j));
+                if (Box.Caption ~= MutRecords[i].FriendlyName)
+                {
+                    Box.SetIndex(Index);
+                    return;
+                }
+            }
+        }
+    }
 }
 
 function MutChange(GUIComponent Sender)
 {
-	if (Sender==cb_Mutators)
-	{
-		if (cb_Mutators.GetIndex() < 2)
-			lb_Mutators.DisableMe();
-		else
-			lb_Mutators.EnableMe();
-	}
+    if (Sender==cb_Mutators)
+    {
+        if (cb_Mutators.GetIndex() < 2)
+            lb_Mutators.DisableMe();
+        else
+            lb_Mutators.EnableMe();
+    }
 }
 
 function bool CancelClick(GUIComponent Sender)
 {
-	Controller.CloseMenu(true);
-	return true;
+    Controller.CloseMenu(true);
+    return true;
 }
 
 function CustomFilter.AFilterRule BuildRule(string Key, string Value, MasterServerClient.EQueryType qType)
 {
-	local CustomFilter.AFilterRule NewRule;
+    local CustomFilter.AFilterRule NewRule;
 
-	NewRule.FilterItem.Key   		= key;
-	NewRule.FilterItem.Value 		= value;
-	NewRule.FilterItem.QueryType	= qtype;
+    NewRule.FilterItem.Key          = key;
+    NewRule.FilterItem.Value        = value;
+    NewRule.FilterItem.QueryType    = qtype;
 
     if (Key=="mutator")
-    	NewRule.FilterType = DT_Multiple;
+        NewRule.FilterType = DT_Multiple;
     else
-		NewRule.FilterType = DT_Unique;
-	NewRule.ItemName = Key;
+        NewRule.FilterType = DT_Unique;
+    NewRule.ItemName = Key;
 
-	return NewRule;
+    return NewRule;
 }
 
 
 function bool OkClick(GUIComponent Server)
 {
-	local array<CustomFilter.AFilterRule> Rules;
-	local int cnt,i;
-	local moComboBox CB;
+    local array<CustomFilter.AFilterRule> Rules;
+    local int cnt,i;
+    local moComboBox CB;
 
-	cnt = 0;
+    cnt = 0;
 
-	// Build Query lists
+    // Build Query lists
 
-	if (ck_Empty.IsChecked())
-		Rules[Cnt++] = BuildRule("currentplayers","0",QT_GreaterThan);
+    if (ck_Empty.IsChecked())
+        Rules[Cnt++] = BuildRule("currentplayers","0",QT_GreaterThan);
 
-	if (ck_Full.IsChecked())
-		Rules[Cnt++] = BuildRule("freespace","0",QT_GreaterThan);
+    if (ck_Full.IsChecked())
+        Rules[Cnt++] = BuildRule("freespace","0",QT_GreaterThan);
 
-	if (ck_Passworded.IsChecked())
-		Rules[Cnt++] = BuildRule("password","false",QT_Equals);
+    if (ck_Passworded.IsChecked())
+        Rules[Cnt++] = BuildRule("password","false",QT_Equals);
 
-	if (ck_Bots.IsChecked())
-		Rules[Cnt++] = BuildRule("nobots","true", QT_Equals);
+    if (ck_Bots.IsChecked())
+        Rules[Cnt++] = BuildRule("nobots","true", QT_Equals);
 
 // if _RO_
     if (ck_VACOnly.IsChecked())
-		Rules[Cnt++] = BuildRule("vacsecure","true", QT_Equals);
+        Rules[Cnt++] = BuildRule("vacsecure","true", QT_Equals);
 // end if _RO_
 
-	if (cb_Stats.GetIndex()==1)
-		Rules[Cnt++] = BuildRule("stats","true", QT_Equals);
-	else if (cb_Stats.GetIndex()==2)
-		Rules[Cnt++] = BuildRule("stats","false", QT_Equals);
+    if (cb_Stats.GetIndex()==1)
+        Rules[Cnt++] = BuildRule("stats","true", QT_Equals);
+    else if (cb_Stats.GetIndex()==2)
+        Rules[Cnt++] = BuildRule("stats","false", QT_Equals);
 
 // if _RO_
 /*
 // end if _RO_
-	if (cb_WeaponStay.GetIndex()==1)
-		Rules[Cnt++] = BuildRule("weaponstay","true", QT_Equals);
-	else if (cb_WeaponStay.GetIndex()==2)
-		Rules[Cnt++] = BuildRule("weaponstay","false", QT_Equals);
+    if (cb_WeaponStay.GetIndex()==1)
+        Rules[Cnt++] = BuildRule("weaponstay","true", QT_Equals);
+    else if (cb_WeaponStay.GetIndex()==2)
+        Rules[Cnt++] = BuildRule("weaponstay","false", QT_Equals);
 
-	if (cb_Translocator.GetIndex()==1)
-		Rules[Cnt++] = BuildRule("transloc","true", QT_Equals);
-	else if (cb_Translocator.GetIndex()==2)
-		Rules[Cnt++] = BuildRule("transloc","false", QT_Equals);
+    if (cb_Translocator.GetIndex()==1)
+        Rules[Cnt++] = BuildRule("transloc","true", QT_Equals);
+    else if (cb_Translocator.GetIndex()==2)
+        Rules[Cnt++] = BuildRule("transloc","false", QT_Equals);
 // if _RO_
 */
 // end if _RO_
 
-	if (cb_Mutators.GetIndex()==0)
-		Rules[Cnt++] = BuildRule("nomutators","true", QT_Equals);
+    if (cb_Mutators.GetIndex()==0)
+        Rules[Cnt++] = BuildRule("nomutators","true", QT_Equals);
 
-	else if (cb_Mutators.GetIndex()==2)
-	{
-		for (i=0;i<li_Mutators.ItemCount;i++)
-		{
-			CB = moComboBox(li_Mutators.GetItem(i));
-			if (cb.GetIndex() == 1)
-				Rules[Cnt++] = BuildRule("mutator",FindMutClassFromFriendly(cb.Caption),QT_Equals);
-			else if (cb.GetIndex() == 2)
-				Rules[Cnt++] = BuildRule("mutator",FindMutClassFromFriendly(cb.Caption),QT_NotEquals);
-		}
-	}
+    else if (cb_Mutators.GetIndex()==2)
+    {
+        for (i=0;i<li_Mutators.ItemCount;i++)
+        {
+            CB = moComboBox(li_Mutators.GetItem(i));
+            if (cb.GetIndex() == 1)
+                Rules[Cnt++] = BuildRule("mutator",FindMutClassFromFriendly(cb.Caption),QT_Equals);
+            else if (cb.GetIndex() == 2)
+                Rules[Cnt++] = BuildRule("mutator",FindMutClassFromFriendly(cb.Caption),QT_NotEquals);
+        }
+    }
 
-	FLP.FM.PostEdit(FilterIndex,eb_Name.GetComponentValue(),Rules);
-	Controller.CloseMenu(true);
-	FLP.InitFilterList();
+    FLP.FM.PostEdit(FilterIndex,eb_Name.GetComponentValue(),Rules);
+    Controller.CloseMenu(true);
+    FLP.InitFilterList();
 
-	FLP.li_Filters.SetIndex(FLP.li_Filters.Find(eb_Name.GetComponentValue()));
+    FLP.li_Filters.SetIndex(FLP.li_Filters.Find(eb_Name.GetComponentValue()));
 
-	return true;
+    return true;
 }
 
 function string FindMutClassFromFriendly(string friendly)
 {
-	local int i,p;
-	local string cls;
+    local int i,p;
+    local string cls;
 
-	for (i=0;i<MutRecords.Length;i++)
-		if (MutRecords[i].FriendlyName ~= Friendly)
-		{
-			cls = MutRecords[i].ClassName;
-			p = Instr(Cls,".");
-			return Mid(cls,p+1);
-		}
+    for (i=0;i<MutRecords.Length;i++)
+        if (MutRecords[i].FriendlyName ~= Friendly)
+        {
+            cls = MutRecords[i].ClassName;
+            p = Instr(Cls,".");
+            return Mid(cls,p+1);
+        }
 
-	return "";
+    return "";
 }
 
 function bool ebPreDraw(canvas Canvas)
 {
 
-	// Reposition
+    // Reposition
 
-	eb_Name.WinTop = sb_Options.ActualTop() + 36;
-	return true;
+    eb_Name.WinTop = sb_Options.ActualTop() + 36;
+    return true;
 }
 
 defaultproperties

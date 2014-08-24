@@ -2,7 +2,7 @@
 // DH_BazookaExhaustDamType
 //=============================================================================
 class DH_BazookaExhaustDamType extends ROGrenadeDamType
-	abstract;
+    abstract;
 
 defaultproperties
 {

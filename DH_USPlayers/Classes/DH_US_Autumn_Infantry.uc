@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_US_Autumn_Infantry   ***
+//  ***   DH_US_Autumn_Infantry   ***
 //
 // *************************************************************************
 
 class DH_US_Autumn_Infantry extends DH_US_Infantry_Units
-	abstract;
+    abstract;
 
 defaultproperties
 {

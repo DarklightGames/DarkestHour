@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_P08LugerVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

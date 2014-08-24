@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_LWRifleman   ***
+//  ***   DH_LWRifleman   ***
 //
 // *************************************************************************
 
@@ -8,14 +8,14 @@ class DH_LWRifleman extends DH_LuftwaffeFlak;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		return Headgear[0];
-	}
-	else
-	{
-		return Headgear[1];
-	}
+    if (FRand() < 0.2)
+    {
+        return Headgear[0];
+    }
+    else
+    {
+        return Headgear[1];
+    }
 }
 
 defaultproperties

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   WH Tank Comander   ***
+//  ***   WH Tank Comander   ***
 //
 // *************************************************************************
 
@@ -8,14 +8,14 @@ class DH_WHTankComander extends DH_HeerTankCrew;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		return Headgear[0];
-	}
-	else
-	{
-		return Headgear[1];
-	}
+    if (FRand() < 0.2)
+    {
+        return Headgear[0];
+    }
+    else
+    {
+        return Headgear[1];
+    }
 }
 
 defaultproperties

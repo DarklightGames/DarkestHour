@@ -1,5 +1,5 @@
 class DH_VehicleCrushedDamType extends ROWeaponDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

@@ -1,5 +1,5 @@
 class DH_CanisterShotDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

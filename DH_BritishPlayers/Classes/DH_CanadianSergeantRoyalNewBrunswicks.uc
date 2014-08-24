@@ -5,10 +5,10 @@ class DH_CanadianSergeantRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.5)
-		return Headgear[1];
-	else
-		return Headgear[0];
+    if (FRand() < 0.5)
+        return Headgear[1];
+    else
+        return Headgear[0];
 }
 
 defaultproperties

@@ -2,35 +2,35 @@ class DH_BoatVehicle extends ROWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\textures\InterfaceArt_tex.utx
 
-var()	    name			DriverCameraBoneName;
-var 	    vector			CameraBoneLocation;
+var()       name            DriverCameraBoneName;
+var         vector          CameraBoneLocation;
 
-var()   	sound               		WashSound;
-var()   	name                		WashSoundBoneL;
-var     	ROSoundAttachment   	    WashSoundAttachL;
-var()   	name                		WashSoundBoneR;
-var     	ROSoundAttachment   	    WashSoundAttachR;
+var()       sound                       WashSound;
+var()       name                        WashSoundBoneL;
+var         ROSoundAttachment           WashSoundAttachL;
+var()       name                        WashSoundBoneR;
+var         ROSoundAttachment           WashSoundAttachR;
 
-var()   	sound               		EngineSound;
-var()   	name                		EngineSoundBone;
-var     	ROSoundAttachment   	    EngineSoundAttach;
-var     	float               		MotionSoundVolume;
+var()       sound                       EngineSound;
+var()       name                        EngineSoundBone;
+var         ROSoundAttachment           EngineSoundAttach;
+var         float                       MotionSoundVolume;
 
-var	        sound		                DestroyedBurningSound;
+var         sound                       DestroyedBurningSound;
 
-var()   float   		MaxPitchSpeed;
-var()	float			BoatFloatTraceDistance;
-var 	float 			HitDist, HoverAdd;
-var 	vector 			TraceStart, TraceEnd, HitLocation, HitNormal;
-var 	actor 			HitActor;
-var 	bool 			bBoatFloat;
+var()   float           MaxPitchSpeed;
+var()   float           BoatFloatTraceDistance;
+var     float           HitDist, HoverAdd;
+var     vector          TraceStart, TraceEnd, HitLocation, HitNormal;
+var     actor           HitActor;
+var     bool            bBoatFloat;
 
 //var     array<BoatSprayEffect> BoatSpray; // FL, FR, RL, RR
 
 var     name DestAnimName;
 var     float DestAnimRate;
 
-var		float		PointValue;
+var     float       PointValue;
 
 //=============================================================================
 // Functions
@@ -40,44 +40,44 @@ var		float		PointValue;
 simulated function PostBeginPlay()
 {
 
-	// RO functionality
-	if (HasAnim(BeginningIdleAnim))
-	{
-	    LoopAnim(BeginningIdleAnim);
-	}
+    // RO functionality
+    if (HasAnim(BeginningIdleAnim))
+    {
+        LoopAnim(BeginningIdleAnim);
+    }
 
-	SetTimer(1.0, false);
-	// End RO functionality
+    SetTimer(1.0, false);
+    // End RO functionality
 
-	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
-     		if (WashSoundAttachL == none)
-     		{
-             		WashSoundAttachL = Spawn(class 'ROSoundAttachment');
-             		WashSoundAttachL.AmbientSound = WashSound;
-		            WashSoundAttachL.SoundVolume = 75;
-		            WashSoundAttachL.SoundRadius = 300;
-             		AttachToBone(WashSoundAttachL, WashSoundBoneL);
-      		}
-     		if (WashSoundAttachR == none)
-     		{
-             		WashSoundAttachR = Spawn(class 'ROSoundAttachment');
-             		WashSoundAttachR.AmbientSound = WashSound;
-		            WashSoundAttachR.SoundVolume = 75;
-		            WashSoundAttachR.SoundRadius = 300;
-             		AttachToBone(WashSoundAttachR, WashSoundBoneR);
-      		}
-     		if (EngineSoundAttach == none)
-     		{
-             		EngineSoundAttach = Spawn(class 'ROSoundAttachment');
-             		EngineSoundAttach.AmbientSound = EngineSound;
-             		EngineSoundAttach.SoundVolume = 150;
-             		EngineSoundAttach.SoundRadius = 1000;
-             		AttachToBone(EngineSoundAttach, EngineSoundBone);
-      		}
-	}
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+            if (WashSoundAttachL == none)
+            {
+                    WashSoundAttachL = Spawn(class 'ROSoundAttachment');
+                    WashSoundAttachL.AmbientSound = WashSound;
+                    WashSoundAttachL.SoundVolume = 75;
+                    WashSoundAttachL.SoundRadius = 300;
+                    AttachToBone(WashSoundAttachL, WashSoundBoneL);
+            }
+            if (WashSoundAttachR == none)
+            {
+                    WashSoundAttachR = Spawn(class 'ROSoundAttachment');
+                    WashSoundAttachR.AmbientSound = WashSound;
+                    WashSoundAttachR.SoundVolume = 75;
+                    WashSoundAttachR.SoundRadius = 300;
+                    AttachToBone(WashSoundAttachR, WashSoundBoneR);
+            }
+            if (EngineSoundAttach == none)
+            {
+                    EngineSoundAttach = Spawn(class 'ROSoundAttachment');
+                    EngineSoundAttach.AmbientSound = EngineSound;
+                    EngineSoundAttach.SoundVolume = 150;
+                    EngineSoundAttach.SoundRadius = 1000;
+                    AttachToBone(EngineSoundAttach, EngineSoundBone);
+            }
+    }
 }
 
 // DriverLeft() called by KDriverLeave()
@@ -92,217 +92,217 @@ function DriverLeft()
 
 simulated function PostNetReceive()
 {
-	super.PostNetReceive();
+    super.PostNetReceive();
 
-	if (DriverPositionIndex != SavedPositionIndex)
-	{
-		PreviousPositionIndex = SavedPositionIndex;
-		SavedPositionIndex = DriverPositionIndex;
-		NextViewPoint();
-	}
+    if (DriverPositionIndex != SavedPositionIndex)
+    {
+        PreviousPositionIndex = SavedPositionIndex;
+        SavedPositionIndex = DriverPositionIndex;
+        NextViewPoint();
+    }
 
-	// Kill the engine sounds if the engine is dead
-	if (EngineHealth <= 0)
-	{
-		if (IdleSound != none)
-			IdleSound=none;
+    // Kill the engine sounds if the engine is dead
+    if (EngineHealth <= 0)
+    {
+        if (IdleSound != none)
+            IdleSound=none;
 
-		if (StartUpSound != none)
-			StartUpSound=none;
+        if (StartUpSound != none)
+            StartUpSound=none;
 
-		if (ShutDownSound != none)
-			ShutDownSound=none;
+        if (ShutDownSound != none)
+            ShutDownSound=none;
 
-		if (AmbientSound != none)
-			AmbientSound=none;
+        if (AmbientSound != none)
+            AmbientSound=none;
 
-		if (EngineSound != none)
-			EngineSound=none;
-	}
+        if (EngineSound != none)
+            EngineSound=none;
+    }
 }
 
 // Overriden for locking the player to the camerabone
 //altered slightly to allow change of camera bone name - Fennich
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-	local quat CarQuat, LookQuat, ResultQuat;
-	local vector VehicleZ, CamViewOffsetWorld, x, y, z;
-	local float CamViewOffsetZAmount;
+    local quat CarQuat, LookQuat, ResultQuat;
+    local vector VehicleZ, CamViewOffsetWorld, x, y, z;
+    local float CamViewOffsetZAmount;
 
-	GetAxes(PC.Rotation, x, y, z);
-	ViewActor = self;
+    GetAxes(PC.Rotation, x, y, z);
+    ViewActor = self;
 
-	if (bPCRelativeFPRotation)
-	{
-		CarQuat = QuatFromRotator(Rotation);
-		CameraRotation = Normalize(PC.Rotation);
-		LookQuat = QuatFromRotator(CameraRotation);
-		ResultQuat = QuatProduct(LookQuat, CarQuat);
-		CameraRotation = QuatToRotator(ResultQuat);
-	}
-	else
-		CameraRotation = PC.Rotation;
+    if (bPCRelativeFPRotation)
+    {
+        CarQuat = QuatFromRotator(Rotation);
+        CameraRotation = Normalize(PC.Rotation);
+        LookQuat = QuatFromRotator(CameraRotation);
+        ResultQuat = QuatProduct(LookQuat, CarQuat);
+        CameraRotation = QuatToRotator(ResultQuat);
+    }
+    else
+        CameraRotation = PC.Rotation;
 
-	// Camera position is locked to car
-	CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-	CameraBoneLocation = GetBoneCoords(DriverCameraBoneName).Origin;
-	CameraLocation = CameraBoneLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
+    // Camera position is locked to car
+    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+    CameraBoneLocation = GetBoneCoords(DriverCameraBoneName).Origin;
+    CameraLocation = CameraBoneLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-	if (bFPNoZFromCameraPitch)
-	{
-		VehicleZ = vect(0,0,1) >> Rotation;
-		CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
-		CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-	}
+    if (bFPNoZFromCameraPitch)
+    {
+        VehicleZ = vect(0,0,1) >> Rotation;
+        CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+        CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+    }
 
-	CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-	CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+    CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
 
 simulated function Destroyed()
 {
     if (EngineSoundAttach != none)
-		EngineSoundAttach.Destroy();
+        EngineSoundAttach.Destroy();
     if (WashSoundAttachL != none)
-		WashSoundAttachL.Destroy();
+        WashSoundAttachL.Destroy();
     if (WashSoundAttachR != none)
-		WashSoundAttachR.Destroy();
+        WashSoundAttachR.Destroy();
 
-	Super.Destroyed();
+    Super.Destroyed();
 }
 
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
-	super.Died(Killer, DamageType, HitLocation);
+    super.Died(Killer, DamageType, HitLocation);
 
-	if (Killer == none)
-		return;
+    if (Killer == none)
+        return;
 
-	DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
+    DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
 simulated function UpdateMovementSound()
 {
-    	if (EngineSoundAttach != none)
-    	{
-       		 EngineSoundAttach.SoundVolume= MotionSoundVolume;
-    	}
+        if (EngineSoundAttach != none)
+        {
+             EngineSoundAttach.SoundVolume= MotionSoundVolume;
+        }
 }
 /*
 simulated event DrivingStatusChanged()
 {
-	local int i;
-	local Coords WheelCoords;
+    local int i;
+    local Coords WheelCoords;
 
-	Super.DrivingStatusChanged();
+    Super.DrivingStatusChanged();
 
-	if (bDriving && Level.NetMode != NM_DedicatedServer && !bDropDetail)
-	{
-		BoatSpray.length = Wheels.length;
-		for(i=0; i<Wheels.Length; i++)
-			if (BoatSpray[i] == none)
-			{
-				// Create wheel dust emitters. ************************************************************
-				WheelCoords = GetBoneCoords(Wheels[i].BoneName);
-				BoatSpray[i] = spawn(class'BoatSprayEffect', self,, WheelCoords.Origin + ((vect(0,0,-1) * Wheels[i].WheelRadius) >> Rotation));
-				Dust[i] = none;
-				if (Level.bDropDetail || Level.DetailMode == DM_Low)
-				{
-				 	BoatSpray[i].MaxSpritePPS=3;
-				 	BoatSpray[i].MaxMeshPPS=3;
-				}
+    if (bDriving && Level.NetMode != NM_DedicatedServer && !bDropDetail)
+    {
+        BoatSpray.length = Wheels.length;
+        for(i=0; i<Wheels.Length; i++)
+            if (BoatSpray[i] == none)
+            {
+                // Create wheel dust emitters. ************************************************************
+                WheelCoords = GetBoneCoords(Wheels[i].BoneName);
+                BoatSpray[i] = spawn(class'BoatSprayEffect', self,, WheelCoords.Origin + ((vect(0,0,-1) * Wheels[i].WheelRadius) >> Rotation));
+                Dust[i] = none;
+                if (Level.bDropDetail || Level.DetailMode == DM_Low)
+                {
+                    BoatSpray[i].MaxSpritePPS=3;
+                    BoatSpray[i].MaxMeshPPS=3;
+                }
 
-				BoatSpray[i].SetBase(self);
-			    BoatSpray[i].SetDirtColor(Level.DustColor);
-			}
+                BoatSpray[i].SetBase(self);
+                BoatSpray[i].SetDirtColor(Level.DustColor);
+            }
 
-		 for(i=0; i<ExhaustPipes.Length; i++)
-			if (ExhaustPipes[i].ExhaustEffect == none)
-			{
-				// Create exhaust emitters.
-	    	    if (Level.bDropDetail || Level.DetailMode == DM_Low)
-					ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
-				else
-					ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+         for(i=0; i<ExhaustPipes.Length; i++)
+            if (ExhaustPipes[i].ExhaustEffect == none)
+            {
+                // Create exhaust emitters.
+                if (Level.bDropDetail || Level.DetailMode == DM_Low)
+                    ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+                else
+                    ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
 
-				ExhaustPipes[i].ExhaustEffect.SetBase(self);
-			}
-	}
-	else
-	{
-		if (Level.NetMode != NM_DedicatedServer)
-		{
-			for(i=0; i<BoatSpray.Length; i++)
-			{
-				if (BoatSpray[i] != none)
-					BoatSpray[i].Kill();
-			}
+                ExhaustPipes[i].ExhaustEffect.SetBase(self);
+            }
+    }
+    else
+    {
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            for(i=0; i<BoatSpray.Length; i++)
+            {
+                if (BoatSpray[i] != none)
+                    BoatSpray[i].Kill();
+            }
 
-			BoatSpray.Length = 0;
+            BoatSpray.Length = 0;
 
-			for(i=0; i<ExhaustPipes.Length; i++)
-			{
-			    if (ExhaustPipes[i].ExhaustEffect != none)
-			    {
-					ExhaustPipes[i].ExhaustEffect.Kill();
-				}
-			}
-		}
+            for(i=0; i<ExhaustPipes.Length; i++)
+            {
+                if (ExhaustPipes[i].ExhaustEffect != none)
+                {
+                    ExhaustPipes[i].ExhaustEffect.Kill();
+                }
+            }
+        }
 
-		TurnDamping = 0.0;
-	}
+        TurnDamping = 0.0;
+    }
 }
 */
 
 simulated event DestroyAppearance()
 {
-	local int i;
-	local KarmaParams KP;
+    local int i;
+    local KarmaParams KP;
 
-	// For replication
-	bDestroyAppearance = true;
+    // For replication
+    bDestroyAppearance = true;
 
-	// Put brakes on
+    // Put brakes on
     Throttle=0;
     Steering=0;
-	Rise=0;
+    Rise=0;
 
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-    	for(i=0;i<Weapons.Length;i++)
-		{
-			if (Weapons[i] != none)
-				Weapons[i].Destroy();
-		}
-		for(i=0;i<WeaponPawns.Length;i++)
-			WeaponPawns[i].Destroy();
+        for(i=0;i<Weapons.Length;i++)
+        {
+            if (Weapons[i] != none)
+                Weapons[i].Destroy();
+        }
+        for(i=0;i<WeaponPawns.Length;i++)
+            WeaponPawns[i].Destroy();
     }
 
     Weapons.Length = 0;
     WeaponPawns.Length = 0;
 
     // Destroy the effects
-	if (Level.NetMode != NM_DedicatedServer)
-	{
-		bNoTeamBeacon = true;
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        bNoTeamBeacon = true;
 
-		for(i=0;i<HeadlightCorona.Length;i++)
-			HeadlightCorona[i].Destroy();
-		HeadlightCorona.Length = 0;
+        for(i=0;i<HeadlightCorona.Length;i++)
+            HeadlightCorona[i].Destroy();
+        HeadlightCorona.Length = 0;
 
-		if (HeadlightProjector != none)
-			HeadlightProjector.Destroy();
+        if (HeadlightProjector != none)
+            HeadlightProjector.Destroy();
 
-		for(i = 0; i < ExhaustPipes.Length; i++)
-		{
-			if (ExhaustPipes[i].ExhaustEffect != none)
-			{
-				ExhaustPipes[i].ExhaustEffect.Destroy();
-			}
-		}
-	}
+        for(i = 0; i < ExhaustPipes.Length; i++)
+        {
+            if (ExhaustPipes[i].ExhaustEffect != none)
+            {
+                ExhaustPipes[i].ExhaustEffect.Destroy();
+            }
+        }
+    }
 
     // Copy linear velocity from actor so it doesn't just stop.
     KP = KarmaParams(KParams);
@@ -311,7 +311,7 @@ simulated event DestroyAppearance()
 
     if (DamagedEffect != none)
     {
-    	DamagedEffect.Kill();
+        DamagedEffect.Kill();
     }
 
     //Become the dead vehicle mesh
@@ -321,41 +321,41 @@ simulated event DestroyAppearance()
     KSetBlockKarma(true);
     SetPhysics(PHYS_Karma);
 //    Skins.length = 1;
-	NetPriority = 2;
+    NetPriority = 2;
 
     Skins[0]=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest';
-	LoopAnim(DestAnimName, DestAnimRate);
+    LoopAnim(DestAnimName, DestAnimRate);
 }
 
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
-	local vector LinearImpulse, AngularImpulse;
-	local float RandomExplModifier;
+    local vector LinearImpulse, AngularImpulse;
+    local float RandomExplModifier;
 
-	RandomExplModifier = FRand();
+    RandomExplModifier = FRand();
 
-	// Don't hurt us when we are destroying our own vehicle // why ?
-	// if (!bSpikedVehicle)
-	HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
+    // Don't hurt us when we are destroying our own vehicle // why ?
+    // if (!bSpikedVehicle)
+    HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
 
-	AmbientSound=DestroyedBurningSound; // test
-	SoundVolume=255.0;
-	SoundRadius=600.0;
+    AmbientSound=DestroyedBurningSound; // test
+    SoundVolume=255.0;
+    SoundRadius=600.0;
 
-	if (!bDisintegrateVehicle)
-	{
-		ExplosionCount++;
+    if (!bDisintegrateVehicle)
+    {
+        ExplosionCount++;
 
-		if (Level.NetMode != NM_DedicatedServer)
-			ClientVehicleExplosion(false);
+        if (Level.NetMode != NM_DedicatedServer)
+            ClientVehicleExplosion(false);
 
-		LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
-		AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
+        LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
+        AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
-		NetUpdateTime = Level.TimeSeconds - 1;
-		KAddImpulse(LinearImpulse, vect(0,0,0));
-		KAddAngularImpulse(AngularImpulse);
-	}
+        NetUpdateTime = Level.TimeSeconds - 1;
+        KAddImpulse(LinearImpulse, vect(0,0,0));
+        KAddAngularImpulse(AngularImpulse);
+    }
 }
 
 defaultproperties

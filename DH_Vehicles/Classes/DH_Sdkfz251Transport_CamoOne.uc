@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_Sdkfz251_Camo2_Transport   ***
+//  ***   DH_Sdkfz251_Camo2_Transport   ***
 //
 // *************************************************************************
 class DH_Sdkfz251Transport_CamoOne extends DH_Sdkfz251Transport;

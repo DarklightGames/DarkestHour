@@ -11,7 +11,7 @@ class DH_GreaseGunPickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms_3rdP.M3GreaseGun_3rdP');
+//  L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms_3rdP.M3GreaseGun_3rdP');
 
 }
 

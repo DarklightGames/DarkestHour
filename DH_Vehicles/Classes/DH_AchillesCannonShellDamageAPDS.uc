@@ -7,7 +7,7 @@
 // M10 British tank destroyer "Achilles IC" - APDS Mk.I - DamageType
 //==============================================================================
 class DH_AchillesCannonShellDamageAPDS extends ROTankShellImpactDamage //ROWeaponDamageType
-	  abstract;
+      abstract;
 
 defaultproperties
 {

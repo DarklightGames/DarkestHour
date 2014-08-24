@@ -12,16 +12,16 @@ class DH_ShermanTank_British extends DH_ShermanTank;
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

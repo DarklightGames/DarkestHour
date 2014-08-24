@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_SpringfieldScopedDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

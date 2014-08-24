@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_OrangeSmokeDamType extends ROGrenadeDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

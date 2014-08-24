@@ -1,10 +1,10 @@
 class DH_MortarWeapon extends DHWeapon
-	abstract;
+    abstract;
 
 replication
 {
-	reliable if (Role < ROLE_Authority)
-		ServerDeployEnd, ServerDeployBegin;
+    reliable if (Role < ROLE_Authority)
+        ServerDeployEnd, ServerDeployBegin;
 }
 
 var bool bDeploying;
@@ -27,49 +27,49 @@ var int SmokeResupplyCount;
 
 simulated function bool HasAmmo()
 {
-	return true;
+    return true;
 }
 
 simulated function bool WeaponCanSwitch()
 {
-	//-------------------------------------------------
-	//No weapon switching, these  things are too heavy.
-	return false;
+    //-------------------------------------------------
+    //No weapon switching, these  things are too heavy.
+    return false;
 }
 
 simulated function bool WeaponAllowCrouchChange()
 {
-	//-------------------------------------------------
-	//Not if we're deploying, homie.
-	if (bDeploying)
-		return false;
+    //-------------------------------------------------
+    //Not if we're deploying, homie.
+    if (bDeploying)
+        return false;
 
-	return super.WeaponAllowCrouchChange();
+    return super.WeaponAllowCrouchChange();
 }
 
 simulated function bool WeaponAllowProneChange()
 {
-	//---------------------------------------------------
-	//You won't be dragging these things through the mud.
-	return false;
+    //---------------------------------------------------
+    //You won't be dragging these things through the mud.
+    return false;
 }
 
 simulated function bool WeaponAllowMantle()
 {
-	//--------------------------------------------------------------------
-	//You can barely get yourself over the wall let alone this thing, too.
-	return false;
+    //--------------------------------------------------------------------
+    //You can barely get yourself over the wall let alone this thing, too.
+    return false;
 }
 
 simulated event AnimEnd(int Channel)
 {
-	//-----------------------------------------------------------------------
-	//If the deploy animation ended, then let's let the server know about it.
-	if (bDeploying)
-	{
-		DH_Pawn(Instigator).bDeployingMortar = false;
-		ServerDeployEnd();
-	}
+    //-----------------------------------------------------------------------
+    //If the deploy animation ended, then let's let the server know about it.
+    if (bDeploying)
+    {
+        DH_Pawn(Instigator).bDeployingMortar = false;
+        ServerDeployEnd();
+    }
 }
 
 simulated function Fire(float F) { return; }
@@ -82,235 +82,235 @@ simulated exec function ROManualReload() { return; }
 
 simulated exec function Deploy()
 {
-	if (!bDeploying)
-		ClientDeploy();
+    if (!bDeploying)
+        ClientDeploy();
 }
 
 //------------------------------
 //Client side attempt to deploy.
 simulated function ClientDeploy()
 {
-	local DH_Pawn P;
+    local DH_Pawn P;
 
-	P = DH_Pawn(Instigator);
+    P = DH_Pawn(Instigator);
 
-	if (IsBusy() || !CanDeploy() || P == none)
-		return;
+    if (IsBusy() || !CanDeploy() || P == none)
+        return;
 
-	PlayAnim(DeployAnimation);
-	bDeploying = true;
+    PlayAnim(DeployAnimation);
+    bDeploying = true;
 
-	//-------------------------------------------------
-	//This is so the pawn knows to limit pitch and yaw.
-	P.bDeployingMortar = true;
-	P.MortarDeployYaw = P.Rotation.Yaw;
+    //-------------------------------------------------
+    //This is so the pawn knows to limit pitch and yaw.
+    P.bDeployingMortar = true;
+    P.MortarDeployYaw = P.Rotation.Yaw;
 
-	//--------------------
-	//Let's start
-	ServerDeployBegin();
+    //--------------------
+    //Let's start
+    ServerDeployBegin();
 }
 
 simulated function ServerDeployBegin()
 {
-	//TODO: Test that we'll be able to get off of this.
+    //TODO: Test that we'll be able to get off of this.
 }
 
 simulated function ServerDeployEnd()
 {
-	local DH_MortarVehicle V;
-	local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-	local rotator SpawnRotation;
-	local DH_Pawn P;
+    local DH_MortarVehicle V;
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local rotator SpawnRotation;
+    local DH_Pawn P;
 
-	P = DH_Pawn(Instigator);
+    P = DH_Pawn(Instigator);
 
-	TraceStart = P.Location + vect(0, 0, 1) * P.CollisionHeight;
-	TraceEnd = TraceStart + vect(0, 0, -128);
+    TraceStart = P.Location + vect(0, 0, 1) * P.CollisionHeight;
+    TraceEnd = TraceStart + vect(0, 0, -128);
 
-	SpawnRotation = P.Rotation;
-	SpawnRotation.Pitch = 0;
-	SpawnRotation.Roll = 0;
+    SpawnRotation = P.Rotation;
+    SpawnRotation.Pitch = 0;
+    SpawnRotation.Roll = 0;
 
-	if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
-	{
-		GotoState('Idle');
+    if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
+    {
+        GotoState('Idle');
 
-		return;
-	}
+        return;
+    }
 
-	V = Spawn(VehicleClass, Instigator, , HitLocation, SpawnRotation);
-	V.TryToDrive(P);
+    V = Spawn(VehicleClass, Instigator, , HitLocation, SpawnRotation);
+    V.TryToDrive(P);
 
-	Destroy();
+    Destroy();
 }
 
 simulated function bool CanDeploy()
 {
-	local DH_Pawn P;
-	local Actor HitActor;
-	local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-	local Material Material;
-	local rotator TraceRotation;
-	local ROVolumeTest VolumeTest;
+    local DH_Pawn P;
+    local Actor HitActor;
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Material Material;
+    local rotator TraceRotation;
+    local ROVolumeTest VolumeTest;
 
-	P = DH_Pawn(Instigator);
+    P = DH_Pawn(Instigator);
 
-	VolumeTest = Spawn(class'ROVolumeTest', , , P.Location);
+    VolumeTest = Spawn(class'ROVolumeTest', , , P.Location);
 
-	if (VolumeTest.IsInNoArtyVolume())
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 11);
-		VolumeTest.Destroy();
-		return false;
-	}
+    if (VolumeTest.IsInNoArtyVolume())
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 11);
+        VolumeTest.Destroy();
+        return false;
+    }
 
-	VolumeTest.Destroy();
+    VolumeTest.Destroy();
 
-	//-----------------------------
-	//If we're busy, don't bother.  Check 'RaisingWeapon' state.  Before this,
-	//not checking this state was allowing the player to almost instantaneously
-	//redeploy a mortar after undeploying.
-	if (IsBusy() || IsInState('RaisingWeapon'))
-		return false;
+    //-----------------------------
+    //If we're busy, don't bother.  Check 'RaisingWeapon' state.  Before this,
+    //not checking this state was allowing the player to almost instantaneously
+    //redeploy a mortar after undeploying.
+    if (IsBusy() || IsInState('RaisingWeapon'))
+        return false;
 
-	//-----------------------------
-	//Check that we're not in water
-	if (Instigator.PhysicsVolume.bWaterVolume)
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 7);
-		return false;
-	}
+    //-----------------------------
+    //Check that we're not in water
+    if (Instigator.PhysicsVolume.bWaterVolume)
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 7);
+        return false;
+    }
 
-	//---------------------------
-	//Check that we're crouching.
-	if (!P.bIsCrouched)
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 1);
-		return false;
-	}
+    //---------------------------
+    //Check that we're crouching.
+    if (!P.bIsCrouched)
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 1);
+        return false;
+    }
 
-	//---------------------------
-	//Check that we're not moving
-	if (P.Velocity != vect(0, 0, 0))
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 3);
-		return false;
-	}
+    //---------------------------
+    //Check that we're not moving
+    if (P.Velocity != vect(0, 0, 0))
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 3);
+        return false;
+    }
 
-	//----------------------------
-	//Check that we're not leaning
-	if (P.bLeaningLeft || P.bLeaningRight)
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 6);
-		return false;
-	}
+    //----------------------------
+    //Check that we're not leaning
+    if (P.bLeaningLeft || P.bLeaningRight)
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 6);
+        return false;
+    }
 
-	//-------------------------------------------------------
-	//Trace straight downwards and see what we're standing on
-	TraceStart = P.Location;
-	TraceEnd = TraceStart - vect(0, 0, 128);
+    //-------------------------------------------------------
+    //Trace straight downwards and see what we're standing on
+    TraceStart = P.Location;
+    TraceEnd = TraceStart - vect(0, 0, 128);
 
-	HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true, , Material);
+    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true, , Material);
 
-	//----------------------------------------------
-	//Check that our surface exists and it is static
-	if (HitActor == none || !HitActor.bStatic)
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
-		return false;
-	}
+    //----------------------------------------------
+    //Check that our surface exists and it is static
+    if (HitActor == none || !HitActor.bStatic)
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+        return false;
+    }
 
-	//------------------------------------------------------------------
-	//Check that the surface angle is less than our deploy angle maximum
-	if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
-		return false;
-	}
+    //------------------------------------------------------------------
+    //Check that the surface angle is less than our deploy angle maximum
+    if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+        return false;
+    }
 
-	//-----------------------
-	//Now check all around us
-	for(TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
-	{
-		//----------------------------------
-		//Trace outwards along the X/Y plane
-		TraceEnd = P.Location + vector(TraceRotation) * DeployRadius;
+    //-----------------------
+    //Now check all around us
+    for(TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
+    {
+        //----------------------------------
+        //Trace outwards along the X/Y plane
+        TraceEnd = P.Location + vector(TraceRotation) * DeployRadius;
 
-		HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+        HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
-		//-----------------------------------------------------------
-		//Check that we haven't hit anything static along this trace.
-		if (HitActor != none && HitActor.bStatic)
-		{
-			//--------------------------
-			//Not enough toom to deploy.
-			Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 5);
-			return false;
-		}
+        //-----------------------------------------------------------
+        //Check that we haven't hit anything static along this trace.
+        if (HitActor != none && HitActor.bStatic)
+        {
+            //--------------------------
+            //Not enough toom to deploy.
+            Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 5);
+            return false;
+        }
 
-		//-----------------------------------------------------------
-		//Now trace downards from the end point of our previous trace
-		TraceStart = TraceEnd;
-		TraceEnd = TraceStart - (vect(0, 0, 128));
+        //-----------------------------------------------------------
+        //Now trace downards from the end point of our previous trace
+        TraceStart = TraceEnd;
+        TraceEnd = TraceStart - (vect(0, 0, 128));
 
-		HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+        HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
-		//----------------------------------------------
-		//Check that our surface exists and it is static
-		if (HitActor == none || !HitActor.bStatic)
-		{
-			//------------------------------
-			//Cannot deploy on this surface.
-			Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
-			return false;
-		}
-		//------------------------------------------------------------------
-		//Check that the surface angle is less than our deploy angle maximum
-		if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
-		{
-			//------------------------------
-			//Cannot deploy on this surface.
-			Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
-			return false;
-		}
-	}
+        //----------------------------------------------
+        //Check that our surface exists and it is static
+        if (HitActor == none || !HitActor.bStatic)
+        {
+            //------------------------------
+            //Cannot deploy on this surface.
+            Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+            return false;
+        }
+        //------------------------------------------------------------------
+        //Check that the surface angle is less than our deploy angle maximum
+        if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+        {
+            //------------------------------
+            //Cannot deploy on this surface.
+            Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+            return false;
+        }
+    }
 
-	return true;
+    return true;
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-	super.BringUp(PrevWeapon);
+    super.BringUp(PrevWeapon);
 
-	if (DHPlayer(Instigator.Controller) != none)
-		DHPlayer(Instigator.Controller).QueueHint(6, false);
+    if (DHPlayer(Instigator.Controller) != none)
+        DHPlayer(Instigator.Controller).QueueHint(6, false);
 }
 
 simulated function bool IsMortarWeapon()
 {
-	return true;
+    return true;
 }
 
 function bool ResupplyAmmo()
 {
-	local DH_Pawn P;
+    local DH_Pawn P;
 
-	P = DH_Pawn(Instigator);
+    P = DH_Pawn(Instigator);
 
-	if (P == none)
-		return false;
+    if (P == none)
+        return false;
 
-	return P.ResupplyMortarAmmunition();
+    return P.ResupplyMortarAmmunition();
 }
 
 function bool FillAmmo()
 {
-	//------------------------------------------------
-	//Give the ammunition to the pawn, not the weapon.
-	DH_Pawn(Instigator).MortarHEAmmo = HighExplosiveMaximum;
-	DH_Pawn(Instigator).MortarSmokeAmmo = SmokeMaximum;
+    //------------------------------------------------
+    //Give the ammunition to the pawn, not the weapon.
+    DH_Pawn(Instigator).MortarHEAmmo = HighExplosiveMaximum;
+    DH_Pawn(Instigator).MortarSmokeAmmo = SmokeMaximum;
 
-	return true;
+    return true;
 }
 
 defaultproperties

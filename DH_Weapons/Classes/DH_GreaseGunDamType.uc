@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_GreaseGunDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

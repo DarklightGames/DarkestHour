@@ -8,7 +8,7 @@
 //==============================================================================
 class DH_Sdkfz2341Cannon extends ROTankCannon;
 
-var		int	  NumMags;  // Number of mags carried for the Coax MG;
+var     int   NumMags;  // Number of mags carried for the Coax MG;
 var     int   NumSecMags;
 
 replication
@@ -16,63 +16,63 @@ replication
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         NumMags, NumSecMags;
 
-	// Functions the server calls on the client side.
-	reliable if (Role==ROLE_Authority)
-		ClientDoCannonReload;
+    // Functions the server calls on the client side.
+    reliable if (Role==ROLE_Authority)
+        ClientDoCannonReload;
 }
 
 simulated function int PrimaryAmmoCount()
 {
-	if (bMultipleRoundTypes)
-	{
-		if (ProjectileClass == PrimaryProjectileClass)
-	        return NumMags;
-	    else if (ProjectileClass == SecondaryProjectileClass)
-	        return NumSecMags;
-	}
-	else
-	{
-		return NumMags;
-	}
+    if (bMultipleRoundTypes)
+    {
+        if (ProjectileClass == PrimaryProjectileClass)
+            return NumMags;
+        else if (ProjectileClass == SecondaryProjectileClass)
+            return NumSecMags;
+    }
+    else
+    {
+        return NumMags;
+    }
 }
 
 function HandlePrimaryCannonReload()
 {
 
-	if (NumMags > 0 && CannonReloadState != CR_Empty)
-	{
-		ClientDoCannonReload();
-		NumMags--;
-		MainAmmoCharge[0] = InitialPrimaryAmmo;
-		NetUpdateTime = Level.TimeSeconds - 1;
+    if (NumMags > 0 && CannonReloadState != CR_Empty)
+    {
+        ClientDoCannonReload();
+        NumMags--;
+        MainAmmoCharge[0] = InitialPrimaryAmmo;
+        NetUpdateTime = Level.TimeSeconds - 1;
 
-		if (PendingProjectileClass == none)
-			PendingProjectileClass = PrimaryProjectileClass;
+        if (PendingProjectileClass == none)
+            PendingProjectileClass = PrimaryProjectileClass;
 
-		ProjectileClass = PendingProjectileClass;
+        ProjectileClass = PendingProjectileClass;
 
-	    CannonReloadState = CR_Empty;
-	    SetTimer(0.01, false);
-	}
+        CannonReloadState = CR_Empty;
+        SetTimer(0.01, false);
+    }
 }
 
 function HandleSecondaryCannonReload()
 {
-	if (NumSecMags > 0 && CannonReloadState != CR_Empty)
-	{
-		ClientDoCannonReload();
-		NumSecMags--;
-		MainAmmoCharge[1] = InitialSecondaryAmmo;
-		NetUpdateTime = Level.TimeSeconds - 1;
+    if (NumSecMags > 0 && CannonReloadState != CR_Empty)
+    {
+        ClientDoCannonReload();
+        NumSecMags--;
+        MainAmmoCharge[1] = InitialSecondaryAmmo;
+        NetUpdateTime = Level.TimeSeconds - 1;
 
-		if (PendingProjectileClass == none)
-			PendingProjectileClass = SecondaryProjectileClass;
+        if (PendingProjectileClass == none)
+            PendingProjectileClass = SecondaryProjectileClass;
 
-		ProjectileClass = PendingProjectileClass;
+        ProjectileClass = PendingProjectileClass;
 
-	    CannonReloadState = CR_Empty;
-	    SetTimer(0.01, false);
-	}
+        CannonReloadState = CR_Empty;
+        SetTimer(0.01, false);
+    }
 }
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
@@ -82,47 +82,47 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     local vector StartLocation, HitLocation, HitNormal, Extent;
     local rotator FireRot;
 
-	FireRot = WeaponFireRotation;
+    FireRot = WeaponFireRotation;
 
-	// used only for Human players. Lets cannons with non centered aim points have a different aiming location
-	if (Instigator != none && Instigator.IsHumanControlled())
-	{
-  		FireRot.Pitch += AddedPitch;
-	}
+    // used only for Human players. Lets cannons with non centered aim points have a different aiming location
+    if (Instigator != none && Instigator.IsHumanControlled())
+    {
+        FireRot.Pitch += AddedPitch;
+    }
 
-	if (!bAltFire)
-		FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    if (!bAltFire)
+        FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
 
     if (bCannonShellDebugging)
-		log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
 
     if (bDoOffsetTrace)
     {
-       	Extent = ProjClass.default.CollisionRadius * vect(1,1,0);
+        Extent = ProjClass.default.CollisionRadius * vect(1,1,0);
         Extent.Z = ProjClass.default.CollisionHeight;
-       	WeaponPawn = VehicleWeaponPawn(Owner);
-    	if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
-    	{
-    		if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
-			StartLocation = HitLocation;
-		else
-			StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
-	}
-	else
-	{
-		if (!Owner.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (Owner.CollisionRadius * 1.5), Extent))
-			StartLocation = HitLocation;
-		else
-			StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
-	}
+        WeaponPawn = VehicleWeaponPawn(Owner);
+        if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
+        {
+            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
+            StartLocation = HitLocation;
+        else
+            StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
     }
     else
-    	StartLocation = WeaponFireLocation;
+    {
+        if (!Owner.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (Owner.CollisionRadius * 1.5), Extent))
+            StartLocation = HitLocation;
+        else
+            StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
+    }
+    }
+    else
+        StartLocation = WeaponFireLocation;
 
-	if (bCannonShellDebugging)
-		Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
+    if (bCannonShellDebugging)
+        Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
 
-	//Level.Game.Broadcast(self, ProjClass);
+    //Level.Game.Broadcast(self, ProjClass);
 
     P = spawn(ProjClass, none, , StartLocation, FireRot); //self
 
@@ -172,87 +172,87 @@ simulated function ClientDoCannonReload()
 // Returns true if this weapon is ready to fire
 simulated function bool ReadyToFire(bool bAltFire)
 {
-	local int Mode;
+    local int Mode;
     /*
     if (CannonReloadState != CR_ReadyToFire)
     {
-		return false;
+        return false;
     }
     */
-	if (	bAltFire)
-		Mode = 2;
-	else if (ProjectileClass == PrimaryProjectileClass)
+    if (    bAltFire)
+        Mode = 2;
+    else if (ProjectileClass == PrimaryProjectileClass)
         Mode = 0;
     else if (ProjectileClass == SecondaryProjectileClass)
         Mode = 1;
 
 
     if (!bAltFire && (CannonReloadState != CR_ReadyToFire || !bClientCanFireCannon))
-    	return false;
+        return false;
 
     //Level.Game.Broadcast(self, "ReadyToFire?" @ bAltFire @ Mode @ HasAmmo(Mode));
 
-	if (HasAmmo(Mode))
-		return true;
+    if (HasAmmo(Mode))
+        return true;
 
-	return false;
+    return false;
 }
 
 
 //do effects (muzzle flash, force feedback, etc) immediately for the weapon's owner (don't wait for replication)
 simulated event OwnerEffects()
 {
-	// Stop the firing effects it we shouldn't be able to fire
-	if ((Role < ROLE_Authority) && !ReadyToFire(bIsAltFire))
-	{
-		VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bIsAltFire);
-	}
+    // Stop the firing effects it we shouldn't be able to fire
+    if ((Role < ROLE_Authority) && !ReadyToFire(bIsAltFire))
+    {
+        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bIsAltFire);
+    }
 
-	if (!bIsRepeatingFF)
-	{
-		if (bIsAltFire)
-			ClientPlayForceFeedback(AltFireForce);
-		else
-			ClientPlayForceFeedback(FireForce);
-	}
+    if (!bIsRepeatingFF)
+    {
+        if (bIsAltFire)
+            ClientPlayForceFeedback(AltFireForce);
+        else
+            ClientPlayForceFeedback(FireForce);
+    }
     ShakeView(bIsAltFire);
 
-	if (Level.NetMode == NM_Standalone && bIsAltFire)
-	{
-		if (AmbientEffectEmitter != none)
-			AmbientEffectEmitter.SetEmitterStatus(true);
-	}
+    if (Level.NetMode == NM_Standalone && bIsAltFire)
+    {
+        if (AmbientEffectEmitter != none)
+            AmbientEffectEmitter.SetEmitterStatus(true);
+    }
 
-	if (Role < ROLE_Authority)
-	{
-		if (bIsAltFire)
-			FireCountdown = AltFireInterval;
-		else
-			FireCountdown = FireInterval;
+    if (Role < ROLE_Authority)
+    {
+        if (bIsAltFire)
+            FireCountdown = AltFireInterval;
+        else
+            FireCountdown = FireInterval;
 
-		AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
+        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
         FlashMuzzleFlash(bIsAltFire);
 
-		if (AmbientEffectEmitter != none && bIsAltFire)
-			AmbientEffectEmitter.SetEmitterStatus(true);
+        if (AmbientEffectEmitter != none && bIsAltFire)
+            AmbientEffectEmitter.SetEmitterStatus(true);
 
         if (bIsAltFire)
-		{
+        {
             if (!bAmbientAltFireSound)
-		    	PlaySound(AltFireSoundClass, SLOT_none, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
-		    else
-		    {
-			    SoundVolume = AltFireSoundVolume;
-	            SoundRadius = AltFireSoundRadius;
-				AmbientSoundScaling = AltFireSoundScaling;
-		    }
+                PlaySound(AltFireSoundClass, SLOT_none, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
+            else
+            {
+                SoundVolume = AltFireSoundVolume;
+                SoundRadius = AltFireSoundRadius;
+                AmbientSoundScaling = AltFireSoundScaling;
+            }
         }
-		else if (!bAmbientFireSound)
+        else if (!bAmbientFireSound)
         {
             PlaySound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume/255.0,, FireSoundRadius,, false);
         }
-	}
+    }
 }
 
 //ClientStartFire() and ClientStopFire() are only called for the client that owns the weapon (and not at all for bots)
@@ -262,139 +262,139 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 
     //Level.Game.Broadcast(self, "ClientStartFire" @ CannonReloadState);
 
-	if ((!bIsAltFire && CannonReloadState == CR_ReadyToFire && FireCountDown <= 0) || (bIsAltFire && FireCountdown <= 0))
-	{
+    if ((!bIsAltFire && CannonReloadState == CR_ReadyToFire && FireCountDown <= 0) || (bIsAltFire && FireCountdown <= 0))
+    {
         if (bIsRepeatingFF)
-		{
-			if (bIsAltFire)
-				ClientPlayForceFeedback(AltFireForce);
-			else
-				ClientPlayForceFeedback(FireForce);
-		}
-		OwnerEffects();
-	}
+        {
+            if (bIsAltFire)
+                ClientPlayForceFeedback(AltFireForce);
+            else
+                ClientPlayForceFeedback(FireForce);
+        }
+        OwnerEffects();
+    }
 }
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
-	//Level.Game.Broadcast(self, "AttemptFire" @ bAltFire);
+    //Level.Game.Broadcast(self, "AttemptFire" @ bAltFire);
 
-  	if (Role != ROLE_Authority || bForceCenterAim)
-		return false;
+    if (Role != ROLE_Authority || bForceCenterAim)
+        return false;
 
-	if ((!bAltFire && CannonReloadState == CR_ReadyToFire && FireCountdown <= 0) || (bAltFire && FireCountdown <= 0))
-	{
-		CalcWeaponFire(bAltFire);
+    if ((!bAltFire && CannonReloadState == CR_ReadyToFire && FireCountdown <= 0) || (bAltFire && FireCountdown <= 0))
+    {
+        CalcWeaponFire(bAltFire);
 
-		if (bCorrectAim)
-			WeaponFireRotation = AdjustAim(bAltFire);
+        if (bCorrectAim)
+            WeaponFireRotation = AdjustAim(bAltFire);
 
-		if (bAltFire)
-		{
-			if (AltFireSpread > 0)
-				WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
-		}
-		else if (Spread > 0)
-		{
-			WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*Spread);
-		}
+        if (bAltFire)
+        {
+            if (AltFireSpread > 0)
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
+        }
+        else if (Spread > 0)
+        {
+            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*Spread);
+        }
 
         DualFireOffset *= -1;
 
-		Instigator.MakeNoise(1.0);
+        Instigator.MakeNoise(1.0);
 
-		if (bAltFire)
-		{
-			if (!ConsumeAmmo(2))
-			{
-				VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
-				HandleReload();
-				return false;
-			}
+        if (bAltFire)
+        {
+            if (!ConsumeAmmo(2))
+            {
+                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                HandleReload();
+                return false;
+            }
 
-			FireCountdown = AltFireInterval;
-			AltFire(C);
+            FireCountdown = AltFireInterval;
+            AltFire(C);
 
-			if (AltAmmoCharge < 1)
-				HandleReload();
-		}
-		else
-		{
-			if (bMultipleRoundTypes)
-			{
+            if (AltAmmoCharge < 1)
+                HandleReload();
+        }
+        else
+        {
+            if (bMultipleRoundTypes)
+            {
                 if (ProjectileClass == PrimaryProjectileClass)
-			    {
-				    if (!ConsumeAmmo(0))
-				    {
-					    VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                {
+                    if (!ConsumeAmmo(0))
+                    {
+                        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 
                         HandlePrimaryCannonReload();
                         return false;
-				    }
-				    else
-				    {
-					    if (!HasMagazines(0) && HasMagazines(1))
-					    {
-						    ToggleRoundType();
-				        }
-				    }
-				    FireCountdown = FireInterval;
-		            Fire(C);
+                    }
+                    else
+                    {
+                        if (!HasMagazines(0) && HasMagazines(1))
+                        {
+                            ToggleRoundType();
+                        }
+                    }
+                    FireCountdown = FireInterval;
+                    Fire(C);
 
-			        if (MainAmmoCharge[0] < 1)
-				        HandlePrimaryCannonReload();
- 		        }
-			    else if (ProjectileClass == SecondaryProjectileClass)
-			    {
-				    if (!ConsumeAmmo(1))
-				    {
-					    VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                    if (MainAmmoCharge[0] < 1)
+                        HandlePrimaryCannonReload();
+                }
+                else if (ProjectileClass == SecondaryProjectileClass)
+                {
+                    if (!ConsumeAmmo(1))
+                    {
+                        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 
                         HandleSecondaryCannonReload();
                         return false;
-				    }
-				    else
-				    {
-					    if (!HasMagazines(1) && HasMagazines(0))
-					    {
-						    ToggleRoundType();
-					    }
-				    }
-				    FireCountdown = FireInterval;
-		            Fire(C);
+                    }
+                    else
+                    {
+                        if (!HasMagazines(1) && HasMagazines(0))
+                        {
+                            ToggleRoundType();
+                        }
+                    }
+                    FireCountdown = FireInterval;
+                    Fire(C);
 
-			        if (MainAmmoCharge[1] < 1)
-				        HandleSecondaryCannonReload();
- 			    }
-		    }
-		    else
-		    {
-				if (!ConsumeAmmo(0))
-				{
-					VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                    if (MainAmmoCharge[1] < 1)
+                        HandleSecondaryCannonReload();
+                }
+            }
+            else
+            {
+                if (!ConsumeAmmo(0))
+                {
+                    VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 
                     HandlePrimaryCannonReload();
                     return false;
-				}
-				FireCountdown = FireInterval;
-		        Fire(C);
+                }
+                FireCountdown = FireInterval;
+                Fire(C);
 
-			    if (MainAmmoCharge[0] < 1)
-				    HandlePrimaryCannonReload();
- 		    }
-		}
+                if (MainAmmoCharge[0] < 1)
+                    HandlePrimaryCannonReload();
+            }
+        }
 
         AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
-	    return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 simulated event FlashMuzzleFlash(bool bWasAltFire)
 {
- 	local ROVehicleWeaponPawn OwningPawn;
+    local ROVehicleWeaponPawn OwningPawn;
 
     if (Role == ROLE_Authority)
     {
@@ -402,17 +402,17 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
             FiringMode = 1;
         else
             FiringMode = 0;
-    	FlashCount++;
-    	NetUpdateTime = Level.TimeSeconds - 1;
+        FlashCount++;
+        NetUpdateTime = Level.TimeSeconds - 1;
     }
     else
         CalcWeaponFire(bWasAltFire);
 
     if (bUsesTracers && (!bWasAltFire && !bAltFireTracersOnly || bWasAltFire))
-		UpdateTracer();
+        UpdateTracer();
 
-	if (bWasAltFire)
-		return;
+    if (bWasAltFire)
+        return;
 
     if (FlashEmitter != none)
         FlashEmitter.Trigger(Self, Instigator);
@@ -420,17 +420,17 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
     if ((EffectEmitterClass != none) && EffectIsRelevant(Location,false))
         EffectEmitter = spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
 
-	OwningPawn = ROVehicleWeaponPawn(Instigator);
+    OwningPawn = ROVehicleWeaponPawn(Instigator);
 
-	if (OwningPawn != none && OwningPawn.DriverPositions[OwningPawn.DriverPositionIndex].bExposed)
-	{
-		if (HasAnim(TankShootOpenAnim))
-			PlayAnim(TankShootOpenAnim);
-	}
-	else if (HasAnim(TankShootClosedAnim))
-	{
-		PlayAnim(TankShootClosedAnim);
-	}
+    if (OwningPawn != none && OwningPawn.DriverPositions[OwningPawn.DriverPositionIndex].bExposed)
+    {
+        if (HasAnim(TankShootOpenAnim))
+            PlayAnim(TankShootOpenAnim);
+    }
+    else if (HasAnim(TankShootClosedAnim))
+    {
+        PlayAnim(TankShootClosedAnim);
+    }
 }
 
 simulated function Tick(float Delta)
@@ -440,39 +440,39 @@ simulated function Tick(float Delta)
 
 function ToggleRoundType()
 {
-	//Switch to second type.
-	if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
-	{
-		if (NumSecMags <= 0)
-			return;
+    //Switch to second type.
+    if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
+    {
+        if (NumSecMags <= 0)
+            return;
 
-		PendingProjectileClass = SecondaryProjectileClass;
-	}
-	//Switch to first type.
-	else
-	{
-		if (NumMags <= 0)
-			return;
+        PendingProjectileClass = SecondaryProjectileClass;
+    }
+    //Switch to first type.
+    else
+    {
+        if (NumMags <= 0)
+            return;
 
-	   	PendingProjectileClass = PrimaryProjectileClass;
-	}
+        PendingProjectileClass = PrimaryProjectileClass;
+    }
 
-	//Level.Game.Broadcast(self, "ToggleRoundType" @ PendingProjectileClass);
+    //Level.Game.Broadcast(self, "ToggleRoundType" @ PendingProjectileClass);
 }
 
 simulated function bool HasMagazines(int Mode)
 {
-	switch(Mode)
-	{
-		case 0:
-			return NumMags > 0;
-		case 1:
-			return NumSecMags > 0;
-		default:
-			return false;
-	}
+    switch(Mode)
+    {
+        case 0:
+            return NumMags > 0;
+        case 1:
+            return NumSecMags > 0;
+        default:
+            return false;
+    }
 
-	return false;
+    return false;
 }
 
 defaultproperties

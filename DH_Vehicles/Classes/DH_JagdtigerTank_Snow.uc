@@ -25,7 +25,7 @@ simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.jagdtiger_body_snow');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.jagdtiger_skirtwinter');
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

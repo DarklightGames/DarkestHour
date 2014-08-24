@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_ObjSatchel extends ROObjSatchel
-	placeable;
+    placeable;
 
 //=============================================================================
 // Functions
@@ -15,19 +15,19 @@ class DH_ObjSatchel extends ROObjSatchel
 
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
-	bActive = false;
+    bActive = false;
 
-	if (CompletePRI != none)
-	{
+    if (CompletePRI != none)
+    {
         Level.Game.ScoreObjective(CompletePRI, 10);
-	}
+    }
 
-	BroadcastLocalizedMessage(class'DHObjectiveMsg', Team + 2, none, none, self);
+    BroadcastLocalizedMessage(class'DHObjectiveMsg', Team + 2, none, none, self);
     /*
-	// Notify our analytics server.
-	if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).Analytics != none)
-		DarkestHourGame(Level.Game).Analytics.NotifyCapture(self, Team);\
-	*/
+    // Notify our analytics server.
+    if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).Analytics != none)
+        DarkestHourGame(Level.Game).Analytics.NotifyCapture(self, Team);\
+    */
 }
 
 

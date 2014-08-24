@@ -1,24 +1,24 @@
 //-----------------------------------------------------------
 //   VehicleMGEmitter - Ambient Emitter class for RO vehicle MGs
-//	Muzzle flash and shell ejection
+//  Muzzle flash and shell ejection
 //-----------------------------------------------------------
 class DH_VehicleBrenMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)
 {
 
-	if (bEnabled)
-	{
-		Emitters[0].ParticlesPerSecond = 20.0; //500 RPM
-		Emitters[0].InitialParticlesPerSecond = 20.0; //500 RPM
-		Emitters[0].AllParticlesDead = false;
+    if (bEnabled)
+    {
+        Emitters[0].ParticlesPerSecond = 20.0; //500 RPM
+        Emitters[0].InitialParticlesPerSecond = 20.0; //500 RPM
+        Emitters[0].AllParticlesDead = false;
     }
     else
-	{
-		Emitters[0].ParticlesPerSecond = 0.0;
-		Emitters[0].InitialParticlesPerSecond = 0.0;
+    {
+        Emitters[0].ParticlesPerSecond = 0.0;
+        Emitters[0].InitialParticlesPerSecond = 0.0;
 
-	}
+    }
 }
 
 defaultproperties

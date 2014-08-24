@@ -16,7 +16,7 @@ var()  float            DestroyTimer;
 var    bool             bCalledDestroy;
 var    Emitter          SmokeEmitter;
 
-var()  class<Emitter>  	SmokeEffectClass;
+var()  class<Emitter>   SmokeEffectClass;
 
 //==============================================================================
 // Functions
@@ -25,29 +25,29 @@ simulated function NonPenetrateExplode(vector HitLocation, vector HitNormal)
 {
     super.NonPenetrateExplode(HitLocation, HitNormal);
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
         SmokeEmitter = Spawn(SmokeEffectClass, self, , HitLocation, rotator(-HitNormal));
         SmokeEmitter.SetBase(Self);
-	}
+    }
 }
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     super.Explode(HitLocation, HitNormal);
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
         SmokeEmitter = Spawn(SmokeEffectClass, self, , HitLocation, rotator(-HitNormal));
         SmokeEmitter.SetBase(Self);
-	}
+    }
 }
 
 simulated function KillSmoke()
 {
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Kill();
+        SmokeEmitter.Kill();
     }
 }
 
@@ -56,23 +56,23 @@ function Reset()
 {
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Destroyed();
+        SmokeEmitter.Destroyed();
     }
 
-	super.Reset();
+    super.Reset();
 }
 
 simulated function Tick(float DeltaTime)
 {
-	super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
-	DestroyTimer -= DeltaTime;
+    DestroyTimer -= DeltaTime;
 
-	if (DestroyTimer <= 0.0 && !bCalledDestroy)
-	{
-		bCalledDestroy = true;
-		KillSmoke();
-	}
+    if (DestroyTimer <= 0.0 && !bCalledDestroy)
+    {
+        bCalledDestroy = true;
+        KillSmoke();
+    }
 }
 
 //==============================================================================

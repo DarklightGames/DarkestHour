@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_EnfieldNo4ScopedVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

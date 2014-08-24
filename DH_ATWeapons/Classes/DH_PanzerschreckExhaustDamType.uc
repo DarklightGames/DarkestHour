@@ -2,7 +2,7 @@
 // DH_PanzerschreckExhaustDamType
 //=============================================================================
 class DH_PanzerschreckExhaustDamType extends ROGrenadeDamType
-	abstract;
+    abstract;
 
 defaultproperties
 {

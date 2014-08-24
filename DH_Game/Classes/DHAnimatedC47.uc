@@ -1,4 +1,4 @@
-//	DHAnimatedActor
+//  DHAnimatedActor
 
 
 class DHAnimatedC47 extends Actor
@@ -6,12 +6,12 @@ class DHAnimatedC47 extends Actor
 
 var(InitialAnimation) name AnimName;
 var(InitialAnimation) float AnimRate;
-var() bool bExactProjectileCollision;		// nonzero extent projectiles should shrink to zero when hitting this actor
+var() bool bExactProjectileCollision;       // nonzero extent projectiles should shrink to zero when hitting this actor
 
 simulated function PostBeginPlay()
 {
-	LoopAnim(AnimName, AnimRate);
-     	Super.PostBeginPlay();
+    LoopAnim(AnimName, AnimRate);
+        Super.PostBeginPlay();
 }
 
 defaultproperties

@@ -11,24 +11,24 @@ class DH_HellcatTank_Snow extends DH_HellcatTank;
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_snow');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_snow');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_snow');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treadsnow');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_snow');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_snow');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_snow');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treadsnow');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_snow');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_snow');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_snow');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treadsnow');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_snow');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_snow');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_snow');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treadsnow');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

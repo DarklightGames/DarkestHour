@@ -7,7 +7,7 @@
 // Requires DH_MobileTeleporter (aka dependent on the MDV package)
 
 class DH_ModifyMDVTele extends Note
-	placeable;
+    placeable;
 
 defaultproperties
 {

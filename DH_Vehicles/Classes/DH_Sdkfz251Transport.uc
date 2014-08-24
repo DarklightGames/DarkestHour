@@ -12,32 +12,32 @@ class DH_Sdkfz251Transport extends DH_ROTransportCraft;
 
 simulated function SetupTreads()
 {
-	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (LeftTreadPanner != none)
-	{
-		LeftTreadPanner.Material = Skins[LeftTreadIndex];
-		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-		LeftTreadPanner.PanRate = 0.0;
-		Skins[LeftTreadIndex] = LeftTreadPanner;
-	}
-	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (RightTreadPanner != none)
-	{
-		RightTreadPanner.Material = Skins[RightTreadIndex];
-		RightTreadPanner.PanDirection = rot(0, 0, 16384);
-		RightTreadPanner.PanRate = 0.0;
-		Skins[RightTreadIndex] = RightTreadPanner;
-	}
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
 }
 
 static function StaticPrecache(LevelInfo L)
 {
     Super.StaticPrecache(L);
 
- 	L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.halftrack_ext');
- 	L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Halftrack_treads');
- 	L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int');
- 	L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int_s');
+    L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.halftrack_ext');
+    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Halftrack_treads');
+    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int');
+    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int_s');
 }
 
 simulated function UpdatePrecacheMaterials()
@@ -47,7 +47,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int_s');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

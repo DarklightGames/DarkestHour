@@ -11,11 +11,11 @@ class DH_BazookaPickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-/*	L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.Bazooka');
-	L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell');
-	L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms_3rdP.Bazooka_3rdP');
-	L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.BazookaShell');
-	L.AddPrecacheMaterial(Material'DH_Weapon_tex.weapon_icons.Bazooka_ammo'); */
+/*  L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.Bazooka');
+    L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell');
+    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms_3rdP.Bazooka_3rdP');
+    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.BazookaShell');
+    L.AddPrecacheMaterial(Material'DH_Weapon_tex.weapon_icons.Bazooka_ammo'); */
 }
 
 defaultproperties

@@ -5,56 +5,56 @@
 
 class DH_PanzerschreckAttachment extends DHWeaponAttachment;
 
-var()	name			ExhaustBoneName;
-var 	class<Emitter>     		mExhFlashClass;
-var 	Emitter            		mExhFlash3rd;
+var()   name            ExhaustBoneName;
+var     class<Emitter>          mExhFlashClass;
+var     Emitter                 mExhFlash3rd;
 
 
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated function PostBeginPlay()
 {
-	if (Role == ROLE_Authority)
-	{
-		bOldBayonetAttached = bBayonetAttached;
-		bOldBarrelSteamActive = bBarrelSteamActive;
-		bUpdated = true;
-	}
+    if (Role == ROLE_Authority)
+    {
+        bOldBayonetAttached = bBayonetAttached;
+        bOldBarrelSteamActive = bBarrelSteamActive;
+        bUpdated = true;
+    }
 }
 
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated event ThirdPersonEffects()
 {
 
-	if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
-		return;
+    if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
+        return;
 
-	if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
-	{
-		if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
-			return;
+    if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
+    {
+        if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
+            return;
 
-		WeaponLight();
+        WeaponLight();
 
-		mMuzFlash3rd = Spawn(mMuzFlashClass);
-		AttachToBone(mMuzFlash3rd, MuzzleBoneName);
+        mMuzFlash3rd = Spawn(mMuzFlashClass);
+        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
 
-		mExhFlash3rd = Spawn(mExhFlashClass);
-		AttachToBone(mExhFlash3rd, ExhaustBoneName);
+        mExhFlash3rd = Spawn(mExhFlashClass);
+        AttachToBone(mExhFlash3rd, ExhaustBoneName);
 
-	}
+    }
 
-		if (FlashCount == 0)
-		{
-				ROPawn(Instigator).StopFiring();
-		}
-		else if (FiringMode == 0)
-		{
-				ROPawn(Instigator).StartFiring(false, bRapidFire);
-		}
-		else
-		{
-				ROPawn(Instigator).StartFiring(true, bAltRapidFire);
-		}
+        if (FlashCount == 0)
+        {
+                ROPawn(Instigator).StopFiring();
+        }
+        else if (FiringMode == 0)
+        {
+                ROPawn(Instigator).StartFiring(false, bRapidFire);
+        }
+        else
+        {
+                ROPawn(Instigator).StartFiring(true, bAltRapidFire);
+        }
 
 }
 

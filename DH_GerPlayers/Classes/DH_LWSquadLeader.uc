@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_LWSquad Leader   ***
+//  ***   DH_LWSquad Leader   ***
 //
 // *************************************************************************
 
@@ -8,10 +8,10 @@ class DH_LWSquadLeader extends DH_LuftwaffeFlak;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-		return Headgear[0];
-	else
-		return Headgear[1];
+    if (FRand() < 0.2)
+        return Headgear[0];
+    else
+        return Headgear[1];
 }
 
 defaultproperties

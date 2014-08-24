@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_BrenVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

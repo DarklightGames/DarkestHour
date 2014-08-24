@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_US_82nd_Airborne   ***
+//  ***   DH_US_82nd_Airborne   ***
 //
 // *************************************************************************
 
 class DH_US_82nd_Airborne extends DH_US_Airborne_Units
-	abstract;
+    abstract;
 
 defaultproperties
 {

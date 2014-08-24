@@ -7,7 +7,7 @@ class DH_M1CarbineAmmoPouch extends ROAmmoPouch;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'Gear_tex.pouches.ger_ammo');
+//  L.AddPrecacheMaterial(Material'Gear_tex.pouches.ger_ammo');
 }
 
 defaultproperties

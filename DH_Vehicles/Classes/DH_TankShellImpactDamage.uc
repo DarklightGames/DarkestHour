@@ -1,5 +1,5 @@
 class DH_TankShellImpactDamage extends ROTankShellImpactDamage //ROWeaponDamageType
-	abstract;
+    abstract;
 
 //Damage class for shells in the 57mm to 75mm calibers (German 75mm L/70 and 17 Pounder caliber are LargeType)
 

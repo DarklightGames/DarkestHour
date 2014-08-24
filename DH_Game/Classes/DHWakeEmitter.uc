@@ -1,24 +1,24 @@
 //=============================================================================
-// 	DHWakeEmitter 
+//  DHWakeEmitter
 //=============================================================================
 
 class DHWakeEmitter extends Emitter;
 
 function PostBeginPlay()
 {
-	local float F;
-	Super.PostBeginPlay();
+    local float F;
+    Super.PostBeginPlay();
 
-	if (Instigator != none)
-	{
-		F = (70 + 30*FRand()) * sqrt(Instigator.CollisionRadius/25);
-		Emitters[0].StartSizeRange.X.Min = F;
-		Emitters[0].StartSizeRange.X.Max = F;
-		Emitters[0].StartSizeRange.Y.Min = F;
-		Emitters[0].StartSizeRange.Y.Max = F;
-		Emitters[0].StartSizeRange.Z.Min = F;
-		Emitters[0].StartSizeRange.Z.Max = F;
-	}
+    if (Instigator != none)
+    {
+        F = (70 + 30*FRand()) * sqrt(Instigator.CollisionRadius/25);
+        Emitters[0].StartSizeRange.X.Min = F;
+        Emitters[0].StartSizeRange.X.Max = F;
+        Emitters[0].StartSizeRange.Y.Min = F;
+        Emitters[0].StartSizeRange.Y.Max = F;
+        Emitters[0].StartSizeRange.Z.Min = F;
+        Emitters[0].StartSizeRange.Z.Max = F;
+    }
 }
 
 defaultproperties

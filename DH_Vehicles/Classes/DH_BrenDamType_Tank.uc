@@ -2,7 +2,7 @@
 // DH_BesaDamType
 //=============================================================================
 class DH_BrenDamType_Tank extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

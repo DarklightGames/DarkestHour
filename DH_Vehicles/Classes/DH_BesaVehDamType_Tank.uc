@@ -2,7 +2,7 @@
 //DH_BesaVehDamType
 //=============================================================================
 class DH_BesaVehDamType_Tank extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

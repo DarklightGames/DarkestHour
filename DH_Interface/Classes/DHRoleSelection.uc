@@ -33,20 +33,20 @@ function bool InternalOnClick(GUIComponent Sender)
 
         case b_Disconnect:
             PlayerOwner().ConsoleCommand("DISCONNECT");
-	        CloseMenu();
-	        break;
+            CloseMenu();
+            break;
 
-	    case b_Score:
-	        if (player != none && ROHud(player.myHUD) != none)
-	            player.myHUD.bShowScoreBoard = !player.myHUD.bShowScoreBoard;
-	        CloseMenu();
-	        break;
+        case b_Score:
+            if (player != none && ROHud(player.myHUD) != none)
+                player.myHUD.bShowScoreBoard = !player.myHUD.bShowScoreBoard;
+            CloseMenu();
+            break;
 
-	    case b_Map:
-	        if (player != none && ROHud(player.myHUD) != none)
+        case b_Map:
+            if (player != none && ROHud(player.myHUD) != none)
                 ROHud(player.myHUD).ShowObjectives();
-	        CloseMenu();
-	        break;
+            CloseMenu();
+            break;
     }
 
     if (bShowingConfigButtons)
@@ -59,8 +59,8 @@ function bool InternalOnClick(GUIComponent Sender)
                 break;
 
             case b_ServerBrowser:
-            	Controller.OpenMenu("DH_Interface.DHServerBrowser");
-            	break;
+                Controller.OpenMenu("DH_Interface.DHServerBrowser");
+                break;
 
             case b_AddFavorite:
                 if (b_AddFavorite.bVisible && player != none)
@@ -340,10 +340,10 @@ function FillRoleList()
         if (role == none)
             continue;
 
-		if (ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).bUseNativeRoleNames)
-        	li_Roles.Add(role.default.AltName, role);
+        if (ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).bUseNativeRoleNames)
+            li_Roles.Add(role.default.AltName, role);
         else
-        	li_Roles.Add(role.default.MyName, role);
+            li_Roles.Add(role.default.MyName, role);
     }
 
     li_Roles.SortList();

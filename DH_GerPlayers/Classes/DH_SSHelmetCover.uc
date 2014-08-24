@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS Helmet with camo cover   ***
+//  ***   SS Helmet with camo cover   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_SSHelmetCover extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'GermanCharactersTex.WSS.WSSParkaCam1');
+//  L.AddPrecacheMaterial(Material'GermanCharactersTex.WSS.WSSParkaCam1');
 }
 
 defaultproperties

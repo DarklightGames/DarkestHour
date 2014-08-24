@@ -7,7 +7,7 @@
 // German 75mm Pzgr.39 APCBC - DamageType
 //==============================================================================
 class DH_PantherCannonShellDamageAP extends ROTankShellImpactDamage
-	  abstract;
+      abstract;
 
 defaultproperties
 {

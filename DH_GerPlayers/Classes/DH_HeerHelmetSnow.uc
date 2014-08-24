@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   Heer Helmet with snow cover   ***
+//  ***   Heer Helmet with snow cover   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_HeerHelmetSnow extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'GermanCharactersTex.Heer.HeerParkaSnow1');
+//  L.AddPrecacheMaterial(Material'GermanCharactersTex.Heer.HeerParkaSnow1');
 }
 
 defaultproperties

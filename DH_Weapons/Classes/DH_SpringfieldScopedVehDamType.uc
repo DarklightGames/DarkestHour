@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_SpringfieldScopedVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

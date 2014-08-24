@@ -11,16 +11,16 @@ class DH_WolverineTank_Snow extends DH_WolverineTank;
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
-    	L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.M10_body_snow');
+        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.M10_body_snow');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.M10_body_snow');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.M10_body_snow');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

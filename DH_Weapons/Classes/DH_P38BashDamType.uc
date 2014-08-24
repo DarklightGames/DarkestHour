@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_P38BashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

@@ -8,10 +8,10 @@ class DHSayMessage extends DHStringMessage;
 // Variables
 //=============================================================================
 
-var()	color		GermanColour;
-var()	color		USColour;
-var()	color		BritishColour;
-var()	color		CanadianColour;
+var()   color       GermanColour;
+var()   color       USColour;
+var()   color       BritishColour;
+var()   color       CanadianColour;
 
 //=============================================================================
 // Functions
@@ -22,28 +22,28 @@ var()	color		CanadianColour;
 //-----------------------------------------------------------------------------
 
 static function RenderComplexMessage(
-	Canvas Canvas,
-	out float XL,
-	out float YL,
-	optional string MessageString,
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    Canvas Canvas,
+    out float XL,
+    out float YL,
+    optional string MessageString,
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	if (RelatedPRI_1 == none)
-		return;
+    if (RelatedPRI_1 == none)
+        return;
 
-	if (RelatedPRI_1.Team.TeamIndex == 0)
-		Canvas.DrawColor = default.GermanColour;
-	else
-		Canvas.DrawColor = default.USColour;
+    if (RelatedPRI_1.Team.TeamIndex == 0)
+        Canvas.DrawColor = default.GermanColour;
+    else
+        Canvas.DrawColor = default.USColour;
 
-	Canvas.DrawText(RelatedPRI_1.PlayerName$": ", false);
-	Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-	Canvas.DrawColor = default.DrawColor;
-	Canvas.DrawText(MessageString, false);
+    Canvas.DrawText(RelatedPRI_1.PlayerName$": ", false);
+    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
+    Canvas.DrawColor = default.DrawColor;
+    Canvas.DrawText(MessageString, false);
 }
 
 //-----------------------------------------------------------------------------
@@ -51,17 +51,17 @@ static function RenderComplexMessage(
 //-----------------------------------------------------------------------------
 
 static function string AssembleString(
-	HUD myHUD,
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional String MessageString
-	)
+    HUD myHUD,
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional String MessageString
+    )
 {
-	if (RelatedPRI_1 == none)
-		return "";
-	if (RelatedPRI_1.PlayerName == "")
-		return "";
-	return RelatedPRI_1.PlayerName$": "$MessageString;
+    if (RelatedPRI_1 == none)
+        return "";
+    if (RelatedPRI_1.PlayerName == "")
+        return "";
+    return RelatedPRI_1.PlayerName$": "$MessageString;
 }
 
 //-----------------------------------------------------------------------------
@@ -70,22 +70,22 @@ static function string AssembleString(
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
-	if ((RelatedPRI_1 == none) || (RelatedPRI_1.Team == none))
-		return default.DrawColor;
+    if ((RelatedPRI_1 == none) || (RelatedPRI_1.Team == none))
+        return default.DrawColor;
 
-	if (RelatedPRI_1.Team.TeamIndex == 0)
-		return default.GermanColour;
-	else if (RelatedPRI_1.Team.TeamIndex == 1)
-	{
+    if (RelatedPRI_1.Team.TeamIndex == 0)
+        return default.GermanColour;
+    else if (RelatedPRI_1.Team.TeamIndex == 1)
+    {
         if (bSimpleColours || AlliedNationID == 1)
-          	return default.BritishColour;
-       	else if (AlliedNationID == 2)
-           	return default.CanadianColour;
-       	else
-           	return default.USColour;
-	}
-	else
-		return default.DrawColor;
+            return default.BritishColour;
+        else if (AlliedNationID == 2)
+            return default.CanadianColour;
+        else
+            return default.USColour;
+    }
+    else
+        return default.DrawColor;
 }
 
 //=============================================================================

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   Heer Helmet with camo cover   ***
+//  ***   Heer Helmet with camo cover   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_HeerHelmetNoCoverTwo extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'GermanCharactersTex.Heer.HeerParkaCam1');
+//  L.AddPrecacheMaterial(Material'GermanCharactersTex.Heer.HeerParkaCam1');
 }
 
 defaultproperties

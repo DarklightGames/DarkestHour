@@ -8,19 +8,19 @@ class DH_OrangeSmokeWeapon extends DH_GrenadeWeapon;
 
 simulated function bool CanThrow()
 {
-	return false;
+    return false;
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-	local DHPlayer DHP;
+    local DHPlayer DHP;
 
-	super.BringUp(PrevWeapon);
+    super.BringUp(PrevWeapon);
 
-	DHP = DHPlayer(Instigator.Controller);
+    DHP = DHPlayer(Instigator.Controller);
 
-	if (DHP != none)
-		DHP.QueueHint(3, false);
+    if (DHP != none)
+        DHP.QueueHint(3, false);
 }
 
 defaultproperties

@@ -11,11 +11,11 @@ class DH_M1GrenadePickup extends ROOneShotWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-/*	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.F1Grenade');
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.F1Grenade-throw');
-	L.AddPrecacheMaterial(Material'Weapons3rd_tex.Soviet.f1grenade_world');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.F1grenade_S');
-	L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.F1nade_ammo'); */
+/*  L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.F1Grenade');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.F1Grenade-throw');
+    L.AddPrecacheMaterial(Material'Weapons3rd_tex.Soviet.f1grenade_world');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.F1grenade_S');
+    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.F1nade_ammo'); */
 }
 
 defaultproperties

@@ -1,9 +1,9 @@
 //=============================================================================
-// DH_M1GarandVehDamType 
+// DH_M1GarandVehDamType
 //=============================================================================
 
 class DH_M1GarandVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

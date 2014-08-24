@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_USSmokeGrenadeDamType extends ROGrenadeDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

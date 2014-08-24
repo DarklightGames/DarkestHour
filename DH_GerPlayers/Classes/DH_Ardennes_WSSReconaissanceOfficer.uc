@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_Ardennes_WSSReconaissanceOfficer   ***
+//  ***   DH_Ardennes_WSSReconaissanceOfficer   ***
 //
 // *************************************************************************
 
@@ -8,14 +8,14 @@ class DH_Ardennes_WSSReconaissanceOfficer extends DH_WaffenSSTankCrew;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		return Headgear[0];
-	}
-	else
-	{
-		return Headgear[1];
-	}
+    if (FRand() < 0.2)
+    {
+        return Headgear[0];
+    }
+    else
+    {
+        return Headgear[1];
+    }
 }
 
 defaultproperties

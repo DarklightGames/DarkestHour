@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_1stHussars   ***
+//  ***   DH_1stHussars   ***
 //
 // *************************************************************************
 
 class DH_1stHussars extends DH_Canadian_Armoured_Units
-	abstract;
+    abstract;
 
 defaultproperties
 {

@@ -8,11 +8,11 @@
 
 class DH_TeamWinRound extends DH_LevelActors;
 
-var() ROSideIndex	TeamToWin;
+var() ROSideIndex   TeamToWin;
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
-	ROTeamGame(Level.Game).EndRound(TeamToWin);
+    ROTeamGame(Level.Game).EndRound(TeamToWin);
 }
 
 defaultproperties

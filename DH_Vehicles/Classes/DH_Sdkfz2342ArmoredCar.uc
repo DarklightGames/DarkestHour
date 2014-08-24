@@ -32,7 +32,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex6.int_vehicles.sdkfz2341_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

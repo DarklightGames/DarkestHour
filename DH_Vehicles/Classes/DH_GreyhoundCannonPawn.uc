@@ -10,27 +10,27 @@ replication
 {
 
     // Red Orchestra replication
-	reliable if (bNetInitial && Role==ROLE_Authority)
-		bMustBeReconCrew;
+    reliable if (bNetInitial && Role==ROLE_Authority)
+        bMustBeReconCrew;
 }
 
 function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
 
-	if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-	{
-	    Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
+    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
         return false;
- 	}
+    }
     else
     {
-	    DriverPositionIndex=InitialPositionIndex;
-	    bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
+        DriverPositionIndex=InitialPositionIndex;
+        bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
-	    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-	    return bSuperDriverLeave;
-	}
+        ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+        return bSuperDriverLeave;
+    }
 }
 
 function bool TryToDrive(Pawn P)
@@ -43,22 +43,22 @@ function bool TryToDrive(Pawn P)
     DHRI = DH_RoleInfo(DHPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo);
 
     if (VehicleBase != none)
-	{
-		if (VehicleBase.NeedsFlip())
-		{
-			VehicleBase.Flip(vector(P.Rotation), 1);
-			return false;
-		}
+    {
+        if (VehicleBase.NeedsFlip())
+        {
+            VehicleBase.Flip(vector(P.Rotation), 1);
+            return false;
+        }
 
-		if (P.GetTeamNum() != Team)
-		{
-			if (VehicleBase.Driver == none)
-				return VehicleBase.TryToDrive(P);
+        if (P.GetTeamNum() != Team)
+        {
+            if (VehicleBase.Driver == none)
+                return VehicleBase.TryToDrive(P);
 
-			VehicleLocked(P);
-			return false;
-		}
-	}
+            VehicleLocked(P);
+            return false;
+        }
+    }
 
     if (bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
     {
@@ -66,18 +66,18 @@ function bool TryToDrive(Pawn P)
         return false;
     }
 
-	return Super.TryToDrive(P);
+    return Super.TryToDrive(P);
 }
 
 function DriverDied()
 {
-	DriverPositionIndex=InitialPositionIndex;
-	super.DriverDied();
-	ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+    DriverPositionIndex=InitialPositionIndex;
+    super.DriverDied();
+    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
 
-	// Kill the rotation sound if the driver dies but the vehicle doesnt
+    // Kill the rotation sound if the driver dies but the vehicle doesnt
     if (GetVehicleBase().Health > 0)
-		SetRotatingStatus(0);
+        SetRotatingStatus(0);
 }
 
 defaultproperties

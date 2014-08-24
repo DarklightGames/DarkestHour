@@ -12,17 +12,17 @@ class DH_PanzerFaustRocket extends DH_RocketProj; //PanzerFaustRocket;
 
 simulated function PostBeginPlay()
 {
-	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-	if (SmokeTrail != none)
-	{
-		SmokeTrail.HandleOwnerDestroyed();
-	}
+    if (SmokeTrail != none)
+    {
+        SmokeTrail.HandleOwnerDestroyed();
+    }
 
-	if (Corona != none)
-	{
-		Corona.Destroyed();
-	}
+    if (Corona != none)
+    {
+        Corona.Destroyed();
+    }
 }
 
 defaultproperties

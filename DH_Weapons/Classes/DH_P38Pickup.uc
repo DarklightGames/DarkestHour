@@ -17,11 +17,11 @@ class DH_P38Pickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.p38');
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.pistolpouch');
-	L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.p38_world');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex.Pistols.p38_S');
-	L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.p38_ammo');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.p38');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.pistolpouch');
+    L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.p38_world');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex.Pistols.p38_S');
+    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.p38_ammo');
 }
 
 defaultproperties

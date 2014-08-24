@@ -1,5 +1,5 @@
 class DH_ExitMovingVehicleDamType extends DamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

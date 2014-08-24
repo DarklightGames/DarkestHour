@@ -11,9 +11,9 @@ class DH_ROMountedTankMG extends ROMountedTankMG
 
 // Stuff for fire effects - Ch!cKeN
 var()   name                                    FireAttachBone;
-var()	vector                                  FireEffectOffset;
-var 	class<VehicleDamagedEffect>     		FireEffectClass;
-var 	VehicleDamagedEffect            		HullMGFireEffect;
+var()   vector                                  FireEffectOffset;
+var     class<VehicleDamagedEffect>             FireEffectClass;
+var     VehicleDamagedEffect                    HullMGFireEffect;
 var     bool                                    bOnFire;   // Set by Treadcraft base to notify when to start fire effects
 var     float                                   BurnTime;
 
@@ -55,10 +55,10 @@ simulated function Tick(float DeltaTime)
 
 simulated function DestroyEffects()
 {
-	super.DestroyEffects();
+    super.DestroyEffects();
 
     if (HullMGFireEffect != none)
-    	HullMGFireEffect.Destroy();
+        HullMGFireEffect.Destroy();
 }
 
 defaultproperties

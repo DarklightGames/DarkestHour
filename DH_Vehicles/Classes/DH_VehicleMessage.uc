@@ -24,20 +24,20 @@ var(Messages) localized string OverSpeed;
 // Functions
 //==============================================================================
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	switch (Switch)
-	{
-		case 0:
-			return default.NotQualified;
-		case 1:
-			return default.VehicleIsEnemy;
-		case 2:
-		     return default.CannotEnter;
+    switch (Switch)
+    {
+        case 0:
+            return default.NotQualified;
+        case 1:
+            return default.VehicleIsEnemy;
+        case 2:
+             return default.CannotEnter;
         case 3:
              return default.CannotRide;
         case 4:

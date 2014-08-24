@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_G41BashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

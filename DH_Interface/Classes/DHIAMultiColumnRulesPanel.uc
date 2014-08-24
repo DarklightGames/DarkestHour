@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHIAMultiColumnRulesPanel   ***
+//  ***   DHIAMultiColumnRulesPanel   ***
 //
 // *************************************************************************
 
@@ -55,8 +55,8 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
             break;
 
         case PIT_Text:
-        	if (!Divide(NewRule.Data, ";", Width, Op))
-        		Width = NewRule.Data;
+            if (!Divide(NewRule.Data, ";", Width, Op))
+                Width = NewRule.Data;
 
             pos = InStr(Width, ",");
             if (pos != -1)
@@ -98,7 +98,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
                 if (bu == none) break;
                 bu.Tag = Index;
                 bu.bAutoSizeCaption = true;
-	bu.ButtonStyleName="DHSmallTextButtonStyle";
+    bu.ButtonStyleName="DHSmallTextButtonStyle";
                 bu.ComponentWidth = 0.25;
                 bu.OnChange = ArrayPropClicked;
             }
@@ -119,7 +119,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
             if (bu == none) break;
             bu.Tag = Index;
             bu.bAutoSizeCaption = true;
-	bu.ButtonStyleName="DHSmallTextButtonStyle";
+    bu.ButtonStyleName="DHSmallTextButtonStyle";
             bu.ComponentWidth = 0.25;
             bu.OnChange = CustomClicked;
     }
@@ -131,32 +131,32 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    	localController = MyController;
-    	Super.InitComponent(MyController, MyOwner);
-    	RemoveComponent(b_Symbols);
-    	sb_background.ManageComponent(ch_Advanced);
-    	sb_background.ManageComponent(lb_Rules);
+        localController = MyController;
+        Super.InitComponent(MyController, MyOwner);
+        RemoveComponent(b_Symbols);
+        sb_background.ManageComponent(ch_Advanced);
+        sb_background.ManageComponent(lb_Rules);
 }
 
 function UpdateSymbolButton()
 {
-	b_Symbols=none;
+    b_Symbols=none;
 }
 
 function InternalOnChange(GUIComponent Sender)
 {
-    	local DHmoComboBox combo;
+        local DHmoComboBox combo;
 
-    	if (GUIMultiOptionList(Sender) != none)
-	{
-		if (Controller.bCurMenuInitialized)
-		{
-		    combo = DHmoComboBox(GUIMultiOptionList(Sender).Get());
-		    if (combo != none)
-		        OnDifficultyChanged(combo.getIndex(), combo.tag);
-		}
-    	}
-    	Super.InternalOnChange(Sender);
+        if (GUIMultiOptionList(Sender) != none)
+    {
+        if (Controller.bCurMenuInitialized)
+        {
+            combo = DHmoComboBox(GUIMultiOptionList(Sender).Get());
+            if (combo != none)
+                OnDifficultyChanged(combo.getIndex(), combo.tag);
+        }
+        }
+        Super.InternalOnChange(Sender);
 }
 
 defaultproperties

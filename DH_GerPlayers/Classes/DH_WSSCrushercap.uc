@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS crushercap   ***
+//  ***   SS crushercap   ***
 //
 // *************************************************************************
 
@@ -10,7 +10,7 @@ class DH_WSSCrushercap extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_ss_crashcap');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_ss_crashcap');
 }
 
 defaultproperties

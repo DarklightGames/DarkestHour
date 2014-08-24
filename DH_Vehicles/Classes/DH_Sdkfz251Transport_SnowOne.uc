@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_Sdkfz251_CamoSnow_Transport   ***
+//  ***   DH_Sdkfz251_CamoSnow_Transport   ***
 //
 // *************************************************************************
 class DH_Sdkfz251Transport_SnowOne extends DH_Sdkfz251Transport;

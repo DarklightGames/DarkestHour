@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   Heer Helmet 3    ***
+//  ***   Heer Helmet 3    ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_HeerHelmetThree extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_3');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_3');
 }
 
 defaultproperties

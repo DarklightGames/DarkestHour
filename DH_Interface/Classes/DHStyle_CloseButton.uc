@@ -1,5 +1,5 @@
 //-----------------------------------------------------------
-//	DHStyle_CloseButton
+//  DHStyle_CloseButton
 //-----------------------------------------------------------
 class DHStyle_CloseButton extends GUI2Styles;
 

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHTab_MutatorSP   ***
+//  ***   DHTab_MutatorSP   ***
 //
 // *************************************************************************
 
@@ -11,8 +11,8 @@ var automated DHGUIPlainBackground  sb_ButtonBackground;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-	Super.InitComponent(MyController, MyOwner);
-    	class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+    Super.InitComponent(MyController, MyOwner);
+        class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 }
 
 defaultproperties

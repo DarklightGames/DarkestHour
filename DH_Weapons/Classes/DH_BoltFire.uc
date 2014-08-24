@@ -28,9 +28,9 @@ event ModeDoFire()
     {
         Weapon.ConsumeAmmo(ThisModeNum, Load);
         DoFireEffect();
-		HoldTime = 0;	// if bot decides to stop firing, HoldTime must be reset first
+        HoldTime = 0;   // if bot decides to stop firing, HoldTime must be reset first
         if ((Instigator == none) || (Instigator.Controller == none))
-			return;
+            return;
 
         if (AIController(Instigator.Controller) != none)
             AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
@@ -41,10 +41,10 @@ event ModeDoFire()
     // client
     if (Instigator.IsLocallyControlled())
     {
-		if (!bDelayedRecoil)
-      		HandleRecoil();
-		else
-			SetTimer(DelayedRecoilTime, false);
+        if (!bDelayedRecoil)
+            HandleRecoil();
+        else
+            SetTimer(DelayedRecoilTime, false);
 
 
         ShakeView();
@@ -52,10 +52,10 @@ event ModeDoFire()
 
         if (!bMeleeMode)
         {
-	        if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
-				EjectShell();
-			FlashMuzzleFlash();
-	        StartMuzzleSmoke();
+            if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
+                EjectShell();
+            FlashMuzzleFlash();
+            StartMuzzleSmoke();
         }
     }
     else // server
@@ -64,7 +64,7 @@ event ModeDoFire()
     }
 
     Weapon.IncrementFlashCount(ThisModeNum);
-	Weapon.PostFire();
+    Weapon.PostFire();
 
     Load = AmmoPerFire;
     HoldTime = 0;

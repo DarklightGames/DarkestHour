@@ -15,15 +15,15 @@ var sound SmokeSound;
 
 simulated function Landed(vector HitNormal)
 {
-	if (Bounces <= 0)
-	{
-		SetPhysics(PHYS_none);
-		SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
-	}
-	else
-	{
-		HitWall(HitNormal, none);
-	}
+    if (Bounces <= 0)
+    {
+        SetPhysics(PHYS_none);
+        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
+    }
+    else
+    {
+        HitWall(HitNormal, none);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -32,43 +32,43 @@ simulated function Landed(vector HitNormal)
 
 simulated function HitWall(vector HitNormal, actor Wall)
 {
-	local vector VNorm;
+    local vector VNorm;
     local ESurfaceTypes ST;
 
-	GetHitSurfaceType(ST, HitNormal);
+    GetHitSurfaceType(ST, HitNormal);
     GetDampenAndSoundValue(ST);
 
-	// Return here, this was causing the famous "Nade bug"
-	if (ROCollisionAttachment(Wall) != none)
-	{
-		return;
-	}
+    // Return here, this was causing the famous "Nade bug"
+    if (ROCollisionAttachment(Wall) != none)
+    {
+        return;
+    }
 
-	// Reflect off Wall w/damping
-	//VNorm = (Velocity dot HitNormal) * HitNormal;
-	//Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-	//Velocity = -HitNormal * Velocity * 0.3;
-	Bounces--;
+    // Reflect off Wall w/damping
+    //VNorm = (Velocity dot HitNormal) * HitNormal;
+    //Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
+    //Velocity = -HitNormal * Velocity * 0.3;
+    Bounces--;
 
-	if (Bounces <= 0)
-	{
-		bBounce = false;
-		//SetPhysics(PHYS_none);
-	}
-	else
-	{
-	    // Reflect off Wall w/damping
-    	VNorm = (Velocity dot HitNormal) * HitNormal;
-    	Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-		//Velocity = 0.3 * (Velocity - 2.0 * HitNormal * (Velocity dot HitNormal));
-		//RandSpin(100000);
-		Speed = VSize(Velocity);
-	}
+    if (Bounces <= 0)
+    {
+        bBounce = false;
+        //SetPhysics(PHYS_none);
+    }
+    else
+    {
+        // Reflect off Wall w/damping
+        VNorm = (Velocity dot HitNormal) * HitNormal;
+        Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
+        //Velocity = 0.3 * (Velocity - 2.0 * HitNormal * (Velocity dot HitNormal));
+        //RandSpin(100000);
+        Speed = VSize(Velocity);
+    }
 
-	if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none)
-	{
-		PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
-	}
+    if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none)
+    {
+        PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -77,10 +77,10 @@ simulated function HitWall(vector HitNormal, actor Wall)
 
 function BlowUp(vector HitLocation)
 {
-	//DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+    //DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
 
-	if (Role == ROLE_Authority)
-		MakeNoise(1.0);
+    if (Role == ROLE_Authority)
+        MakeNoise(1.0);
 }
 
 //-----------------------------------------------------------------------------
@@ -89,28 +89,28 @@ function BlowUp(vector HitLocation)
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-	BlowUp(HitLocation);
+    BlowUp(HitLocation);
 
-	if (Role == ROLE_Authority)
-	{
-		AmbientSound = SmokeSound;
-	}
+    if (Role == ROLE_Authority)
+    {
+        AmbientSound = SmokeSound;
+    }
 
-	PlaySound(ExplosionSound[Rand(3)],, 1.0,,200);
+    PlaySound(ExplosionSound[Rand(3)],, 1.0,,200);
 
     //DoShakeEffect();
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
-	    SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
-	    SmokeEmitter.SetBase(Self);
-	}
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
+        SmokeEmitter.SetBase(Self);
+    }
 
     /*
     // Mark Rally Point
     if (Instigator.IsLocallyControlled())
     {
-    	ROPlayer(Instigator.Controller).ServerSaveRallyPointNoTrace(Location);
+        ROPlayer(Instigator.Controller).ServerSaveRallyPointNoTrace(Location);
     }
     */
 }
@@ -121,7 +121,7 @@ simulated function Destroyed()
 
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Kill();
+        SmokeEmitter.Kill();
     }
 }
 
@@ -129,24 +129,24 @@ function Reset()
 {
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Destroy();
+        SmokeEmitter.Destroy();
     }
 
-	super.Reset();
+    super.Reset();
 }
 
 
 simulated function Tick(float DeltaTime)
 {
-	super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
-	DestroyTimer -= DeltaTime;
+    DestroyTimer -= DeltaTime;
 
-	if (DestroyTimer <= 0.0 && !bCalledDestroy)
-	{
-		bCalledDestroy = true;
-		Destroy();
-	}
+    if (DestroyTimer <= 0.0 && !bCalledDestroy)
+    {
+        bCalledDestroy = true;
+        Destroy();
+    }
 }
 
 //=============================================================================

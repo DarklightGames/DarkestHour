@@ -2,7 +2,7 @@
 // DH_MG42DamType_Tank
 //=============================================================================
 class DH_MG42DamType_Tank extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

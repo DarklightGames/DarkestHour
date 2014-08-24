@@ -10,28 +10,28 @@ var(Messages) localized string NotInIS;
 var(Messages) localized string NoProneReload;
 
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 
 {
-	switch(Switch)
-	{
-    		case 0:
-				return default.NoProneFire;
-    		case 1:
-				return default.NeedSupport;
-           	case 2:
-				return default.NoHipFire;
-           	case 3:
-				return default.NotInIS;
-        	case 4:
-				return default.NoProneReload;
-    		default:
-	    		return default.NeedSupport;
-	}
+    switch(Switch)
+    {
+            case 0:
+                return default.NoProneFire;
+            case 1:
+                return default.NeedSupport;
+            case 2:
+                return default.NoHipFire;
+            case 3:
+                return default.NotInIS;
+            case 4:
+                return default.NoProneReload;
+            default:
+                return default.NeedSupport;
+    }
 }
 
 defaultproperties

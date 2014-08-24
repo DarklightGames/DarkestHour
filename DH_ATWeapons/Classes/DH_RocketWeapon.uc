@@ -8,7 +8,7 @@
 
 
 class DH_RocketWeapon extends DH_ProjectileWeapon
-	abstract;
+    abstract;
 
 //=============================================================================
 // Variables
@@ -21,7 +21,7 @@ simulated function Destroyed()
     if (RocketAttachment != none)
         RocketAttachment.Destroy();
 
-	Super.Destroyed();
+    Super.Destroyed();
 }
 
 defaultproperties

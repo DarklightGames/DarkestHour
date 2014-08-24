@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHGamePageMP   ***
+//  ***   DHGamePageMP   ***
 //
 // *************************************************************************
 
@@ -8,15 +8,15 @@ class DHGamePageMP extends UT2K4GamePageMP;
 
 function InitComponent(GUIController InController, GUIComponent InOwner)
 {
-	Super.InitComponent(InController, InOwner);
-    	class'DHInterfaceUtil'.static.SetROStyle(InController, Controls);
- 	RuleInfo = new(none) class'Engine.PlayInfo';
-    	c_Tabs.RemoveTab(PanelCaption[0]);
-    	c_Tabs.RemoveTab(PanelCaption[4]);
+    Super.InitComponent(InController, InOwner);
+        class'DHInterfaceUtil'.static.SetROStyle(InController, Controls);
+    RuleInfo = new(none) class'Engine.PlayInfo';
+        c_Tabs.RemoveTab(PanelCaption[0]);
+        c_Tabs.RemoveTab(PanelCaption[4]);
 
-	mcRules = DHIAMultiColumnRulesPanel(c_Tabs.ReplaceTab(c_Tabs.TabStack[1], PanelCaption[2], "DH_Interface.DHIAMultiColumnRulesPanel",, PanelHint[2]));
+    mcRules = DHIAMultiColumnRulesPanel(c_Tabs.ReplaceTab(c_Tabs.TabStack[1], PanelCaption[2], "DH_Interface.DHIAMultiColumnRulesPanel",, PanelHint[2]));
 
-    	DHTab_MainSP(c_Tabs.BorrowPanel(PanelCaption[1])).bHideDifficultyControl = true;
+        DHTab_MainSP(c_Tabs.BorrowPanel(PanelCaption[1])).bHideDifficultyControl = true;
 
     p_game = none;
     Controller.LastGameType = "DH_Engine.DarkestHourGame";
@@ -26,27 +26,27 @@ function InitComponent(GUIController InController, GUIComponent InOwner)
 // we only have one game type so it is never locked
 function bool GameTypeLocked()
 {
-	local int i;
-	local GUITabButton tb;
+    local int i;
+    local GUITabButton tb;
 
-		for (i = 0; i < c_Tabs.TabStack.Length; i++)
-		{
-			tb = c_Tabs.TabStack[i];
-			if (tb != none)
-			{
-				EnableComponent(tb);
-			}
-		}
+        for (i = 0; i < c_Tabs.TabStack.Length; i++)
+        {
+            tb = c_Tabs.TabStack[i];
+            if (tb != none)
+            {
+                EnableComponent(tb);
+            }
+        }
 
-		EnableComponent(b_Primary);
-		EnableComponent(b_Secondary);
+        EnableComponent(b_Primary);
+        EnableComponent(b_Secondary);
 
-		if (RuleInfo != none && mcRules != none)
-		{
-			i = RuleInfo.FindIndex("BotMode");
-			if (i != -1)
-				mcRules.UpdateBotSetting(i);
-		}
+        if (RuleInfo != none && mcRules != none)
+        {
+            i = RuleInfo.FindIndex("BotMode");
+            if (i != -1)
+                mcRules.UpdateBotSetting(i);
+        }
 
 
     return false;
@@ -54,21 +54,21 @@ function bool GameTypeLocked()
 
 function StartGame(string GameURL, bool bAlt)
 {
-	local GUIController C;
+    local GUIController C;
 
-	C = Controller;
+    C = Controller;
 
-    	if (bAlt)
-	{
-	    	if (mcServerRules != none)
-			GameURL $= mcServerRules.Play();
-        			log("GameURL is "$GameURL);
-        			log("ConsoleCommand  is "$"relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
-			PlayerOwner().ConsoleCommand("relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
-	}
-    	else
-        		PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute,false);
-    		C.CloseAll(false,true);
+        if (bAlt)
+    {
+            if (mcServerRules != none)
+            GameURL $= mcServerRules.Play();
+                    log("GameURL is "$GameURL);
+                    log("ConsoleCommand  is "$"relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
+            PlayerOwner().ConsoleCommand("relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
+    }
+        else
+                PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute,false);
+            C.CloseAll(false,true);
 }
 
 defaultproperties

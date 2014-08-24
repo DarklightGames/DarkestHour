@@ -20,26 +20,26 @@ var(Messages) localized string NoExit;
 // Functions
 //==============================================================================
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	switch (Switch)
-	{
-		case 0:
-			return default.NotQualified;
-		case 1:
-			return default.VehicleIsEnemy;
-		case 2:
-		     return default.CannotEnter;
+    switch (Switch)
+    {
+        case 0:
+            return default.NotQualified;
+        case 1:
+            return default.VehicleIsEnemy;
+        case 2:
+             return default.CannotEnter;
         case 3:
              return default.GunManned;
         case 4:
-			 return default.CannotUse;
+             return default.CannotUse;
         default:
-			 return default.NoExit;
+             return default.NoExit;
     }
 
 }

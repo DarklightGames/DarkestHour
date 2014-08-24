@@ -42,26 +42,26 @@ var float ElevationAdjustmentDelay;
 var texture HUDMortarTexture;
 var texture HUDHighExplosiveTexture;
 var texture HUDSmokeTexture;
-var	texture HUDArcTexture;
+var texture HUDArcTexture;
 var TexRotator HUDArrowTexture;
 
 var byte CurrentDriverAnimation;
 var byte OldDriverAnimation;
 
-var bool	bCanUndeploy;
-var bool	bPendingFire;
+var bool    bCanUndeploy;
+var bool    bPendingFire;
 
 // View shake vars
-var			float		ShakeScale;		// How much larger than the explosion radius should the view shake
-var			float		BlurTime;       // How long blur effect should last for this projectile
+var         float       ShakeScale;     // How much larger than the explosion radius should the view shake
+var         float       BlurTime;       // How long blur effect should last for this projectile
 // camera shakes //
-var() 		vector 		ShakeRotMag;           	// how far to rot view
-var() 		vector 		ShakeRotRate;          	// how fast to rot view
-var() 		float  		ShakeRotTime;          	// how much time to rot the instigator's view
-var() 		vector 		ShakeOffsetMag;        	// max view offset vertically
-var() 		vector 		ShakeOffsetRate;       	// how fast to offset view vertically
-var() 		float  		ShakeOffsetTime;       	// how much time to offset view
-var()		float		BlurEffectScalar;
+var()       vector      ShakeRotMag;            // how far to rot view
+var()       vector      ShakeRotRate;           // how fast to rot view
+var()       float       ShakeRotTime;           // how much time to rot the instigator's view
+var()       vector      ShakeOffsetMag;         // max view offset vertically
+var()       vector      ShakeOffsetRate;        // how fast to offset view vertically
+var()       float       ShakeOffsetTime;        // how much time to offset view
+var()       float       BlurEffectScalar;
 
 struct DigitSet
 {
@@ -72,10 +72,10 @@ var DigitSet Digits;
 
 replication
 {
-	reliable if (Role < ROLE_Authority)		//Client to Server
-		ServerUndeploy, ServerFire, SetCurrentAnimation;
-	reliable if (Role == ROLE_Authority)	//Server to Client
-		CurrentDriverAnimation, bCanUndeploy, ClientShakeView;
+    reliable if (Role < ROLE_Authority)     //Client to Server
+        ServerUndeploy, ServerFire, SetCurrentAnimation;
+    reliable if (Role == ROLE_Authority)    //Server to Client
+        CurrentDriverAnimation, bCanUndeploy, ClientShakeView;
 }
 
 simulated function IncrementRange() { return; }
@@ -83,505 +83,505 @@ simulated function DecrementRange() { return; }
 
 simulated function PostNetReceive()
 {
-	if (CurrentDriverAnimation != OldDriverAnimation)
-	{
-		switch(CurrentDriverAnimation)
-		{
-		case IdleAnimIndex:
-			Gun.LoopAnim(GunIdleAnim);
-			Driver.LoopAnim(DriverIdleAnim);
-			break;
-		case FiringAnimIndex:
-			Gun.PlayAnim(GunFiringAnim);
-			Driver.PlayAnim(DriverFiringAnim);
-			break;
-		case UnflinchAnimIndex:
-			Gun.LoopAnim(GunIdleAnim);
-			Driver.PlayAnim(DriverUnflinchAnim);
-		default:
-			break;
-		}
+    if (CurrentDriverAnimation != OldDriverAnimation)
+    {
+        switch(CurrentDriverAnimation)
+        {
+        case IdleAnimIndex:
+            Gun.LoopAnim(GunIdleAnim);
+            Driver.LoopAnim(DriverIdleAnim);
+            break;
+        case FiringAnimIndex:
+            Gun.PlayAnim(GunFiringAnim);
+            Driver.PlayAnim(DriverFiringAnim);
+            break;
+        case UnflinchAnimIndex:
+            Gun.LoopAnim(GunIdleAnim);
+            Driver.PlayAnim(DriverUnflinchAnim);
+        default:
+            break;
+        }
 
-		OldDriverAnimation = CurrentDriverAnimation;
-	}
+        OldDriverAnimation = CurrentDriverAnimation;
+    }
 }
 
 simulated function SetCurrentAnimation(byte Index)
 {
-	CurrentDriverAnimation = Index;
+    CurrentDriverAnimation = Index;
 }
 
 simulated function ServerFire()
 {
-	Gun.Fire(Controller);
+    Gun.Fire(Controller);
 }
 
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-	local DHPlayer DHP;
+    local DHPlayer DHP;
 
-	super.ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
-	GotoState('Idle');
+    GotoState('Idle');
 
-	DHP = DHPlayer(PC);
-	DHP.QueueHint(7, false);
-	DHP.QueueHint(8, false);
-	DHP.QueueHint(9, false);
-	DHP.QueueHint(10, false);
+    DHP = DHPlayer(PC);
+    DHP.QueueHint(7, false);
+    DHP.QueueHint(8, false);
+    DHP.QueueHint(9, false);
+    DHP.QueueHint(10, false);
 }
 
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-	local rotator PCRot;
+    local rotator PCRot;
 
-	super.ClientKDriverLeave(PC);
+    super.ClientKDriverLeave(PC);
 
-	DH_MortarVehicleWeapon(Gun).ClientReplicateElevation(DH_MortarVehicleWeapon(Gun).Elevation);
+    DH_MortarVehicleWeapon(Gun).ClientReplicateElevation(DH_MortarVehicleWeapon(Gun).Elevation);
 
-	PCRot = Gun.GetBoneRotation(DH_MortarVehicleWeapon(Gun).MuzzleBoneName);
-	PCRot.Pitch = 0;
-	PCRot.Roll = 0;
-	PC.Pawn.SetRotation(PCRot);
+    PCRot = Gun.GetBoneRotation(DH_MortarVehicleWeapon(Gun).MuzzleBoneName);
+    PCRot.Pitch = 0;
+    PCRot.Roll = 0;
+    PC.Pawn.SetRotation(PCRot);
 
-	GotoState('Idle');
+    GotoState('Idle');
 
-	PC.FixFOV();
+    PC.FixFOV();
 }
 
 simulated state Busy
 {
-	function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
-	function IncrementRange() { }
-	function DecrementRange() { }
-	function Fire(optional float F) { }
-	function AltFire(optional float F) { }
-	simulated exec function SwitchFireMode() { }
-	exec function Deploy() { }
-	function bool KDriverLeave(bool bForceLeave)
-	{
-		local bool bDriverLeft;
-		local Pawn P;
+    function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange) { }
+    function IncrementRange() { }
+    function DecrementRange() { }
+    function Fire(optional float F) { }
+    function AltFire(optional float F) { }
+    simulated exec function SwitchFireMode() { }
+    exec function Deploy() { }
+    function bool KDriverLeave(bool bForceLeave)
+    {
+        local bool bDriverLeft;
+        local Pawn P;
 
-		P = Driver;
+        P = Driver;
 
-		bDriverLeft = false;
+        bDriverLeft = false;
 
-		if (IsInState('Undeploying'))
-		{
-			bDriverLeft = super.KDriverLeave(bForceLeave);
+        if (IsInState('Undeploying'))
+        {
+            bDriverLeft = super.KDriverLeave(bForceLeave);
 
-			if (bDriverLeft)
-			{
-				DriverLeaveAmmunitionTransfer(P);
+            if (bDriverLeft)
+            {
+                DriverLeaveAmmunitionTransfer(P);
 
-				GotoState('Idle');	//Reset state for the next person who comes on.
+                GotoState('Idle');  //Reset state for the next person who comes on.
 
-				if (DHPlayer(P.Controller) != none)
-					DHPlayer(P.Controller).ClientToggleDuck();
+                if (DHPlayer(P.Controller) != none)
+                    DHPlayer(P.Controller).ClientToggleDuck();
 
-				if (DH_Pawn(P) != none)
-					DH_Pawn(P).CheckIfMortarCanBeResupplied();
-			}
-		}
+                if (DH_Pawn(P) != none)
+                    DH_Pawn(P).CheckIfMortarCanBeResupplied();
+            }
+        }
 
-		return bDriverLeft;
-	}
+        return bDriverLeft;
+    }
 }
 
 simulated state Idle
 {
-	simulated function BeginState()
-	{
-		PlayOverlayAnimation(OverlayIdleAnim, true, 1.0);
-	}
+    simulated function BeginState()
+    {
+        PlayOverlayAnimation(OverlayIdleAnim, true, 1.0);
+    }
 
-	simulated function Fire(optional float F)
-	{
-		if (DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
-			GotoState('Firing');
-	}
+    simulated function Fire(optional float F)
+    {
+        if (DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
+            GotoState('Firing');
+    }
 
-	simulated exec function Deploy()
-	{
-		if (bCanUndeploy)
-			GotoState('Undeploying');
-	}
+    simulated exec function Deploy()
+    {
+        if (bCanUndeploy)
+            GotoState('Undeploying');
+    }
 
-	function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
-	{
-		if (YawChange == 0 && PitchChange == 0)
-		{
-			super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
-			return;
-		}
-		else if (PitchChange != 0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay)
-		{
-			LastElevationTime = Level.TimeSeconds;
+    function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
+    {
+        if (YawChange == 0 && PitchChange == 0)
+        {
+            super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
+            return;
+        }
+        else if (PitchChange != 0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay)
+        {
+            LastElevationTime = Level.TimeSeconds;
 
-			if (PitchChange < 0)
-				DH_MortarVehicleWeapon(Gun).Elevate();
-			else
-				DH_MortarVehicleWeapon(Gun).Depress();
-		}
-		else if (YawChange != 0)
-		{
-			GotoState('KnobRaising');
-		}
-	}
+            if (PitchChange < 0)
+                DH_MortarVehicleWeapon(Gun).Elevate();
+            else
+                DH_MortarVehicleWeapon(Gun).Depress();
+        }
+        else if (YawChange != 0)
+        {
+            GotoState('KnobRaising');
+        }
+    }
 }
 
 simulated state FireToIdle extends Busy
 {
-	simulated function Fire(optional float F)
-	{
-		//-----------------------------------------------------------------------
-		// Allows us to queue up a shot in this stage so we don't have an
-		// an arbitrary 'waiting time' before we accept input after firing.
-		bPendingFire = true;
-	}
+    simulated function Fire(optional float F)
+    {
+        //-----------------------------------------------------------------------
+        // Allows us to queue up a shot in this stage so we don't have an
+        // an arbitrary 'waiting time' before we accept input after firing.
+        bPendingFire = true;
+    }
 
-	simulated function EndState()
-	{
-		bPendingFire = false;
-	}
+    simulated function EndState()
+    {
+        bPendingFire = false;
+    }
 
 Begin:
-	if (Level.NetMode == NM_Standalone)	//Single-player.
-	{
-		Gun.LoopAnim(GunIdleAnim);
-		Driver.PlayAnim(DriverUnflinchAnim);
-	}
-	else	//Multi-player
-		SetCurrentAnimation(UnflinchAnimIndex);
+    if (Level.NetMode == NM_Standalone) //Single-player.
+    {
+        Gun.LoopAnim(GunIdleAnim);
+        Driver.PlayAnim(DriverUnflinchAnim);
+    }
+    else    //Multi-player
+        SetCurrentAnimation(UnflinchAnimIndex);
 
-	if (Driver.HasAnim(DriverUnflinchAnim))
-		Sleep(Driver.GetAnimDuration(DriverUnflinchAnim));
-	else
-		ClientMessage("Missing animation: " @ DriverUnflinchAnim);
+    if (Driver.HasAnim(DriverUnflinchAnim))
+        Sleep(Driver.GetAnimDuration(DriverUnflinchAnim));
+    else
+        ClientMessage("Missing animation: " @ DriverUnflinchAnim);
 
-	if (bPendingFire && DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
-		GotoState('Firing');
-	else
-		GotoState('Idle');
+    if (bPendingFire && DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
+        GotoState('Firing');
+    else
+        GotoState('Idle');
 }
 
 simulated function ClientShakeView()
 {
-	if (Controller != none && DHPlayer(Controller) != none)
-	{
-		DHPlayer(Controller).AddBlur(BlurTime, BlurEffectScalar);
-		DHPlayer(Controller).ShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
-	}
+    if (Controller != none && DHPlayer(Controller) != none)
+    {
+        DHPlayer(Controller).AddBlur(BlurTime, BlurEffectScalar);
+        DHPlayer(Controller).ShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
+    }
 }
 
 simulated state KnobRaising extends Busy
 {
 Begin:
-	PlayOverlayAnimation(OverlayKnobRaisingAnim, false, OverlayKnobRaisingAnimRate);
-	Sleep(HUDOverlay.GetAnimDuration(OverlayKnobRaisingAnim, OverlayKnobRaisingAnimRate));
-	GotoState('KnobRaised');
+    PlayOverlayAnimation(OverlayKnobRaisingAnim, false, OverlayKnobRaisingAnimRate);
+    Sleep(HUDOverlay.GetAnimDuration(OverlayKnobRaisingAnim, OverlayKnobRaisingAnimRate));
+    GotoState('KnobRaised');
 }
 
 simulated state KnobRaised
 {
-	simulated function BeginState()
-	{
-		PlayOverlayAnimation(OverlayKnobIdleAnim, true, 1.0);
-	}
+    simulated function BeginState()
+    {
+        PlayOverlayAnimation(OverlayKnobIdleAnim, true, 1.0);
+    }
 
-	simulated function Fire(optional float F)
-	{
-		if (DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
-			GotoState('KnobRaisedToFire');
-	}
+    simulated function Fire(optional float F)
+    {
+        if (DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
+            GotoState('KnobRaisedToFire');
+    }
 
-	simulated exec function Deploy()
-	{
-		if (bCanUndeploy && !bTraversing)
-			GotoState('KnobRaisedToUndeploy');
-	}
+    simulated exec function Deploy()
+    {
+        if (bCanUndeploy && !bTraversing)
+            GotoState('KnobRaisedToUndeploy');
+    }
 
-	function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
-	{
-		if (PitchChange != 0)
-		{
-			GotoState('KnobRaisedToIdle');
-			return;
-		}
+    function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
+    {
+        if (PitchChange != 0)
+        {
+            GotoState('KnobRaisedToIdle');
+            return;
+        }
 
-		if (bTraversing && YawChange == 0)
-		{
-			bTraversing = false;
-			HUDOverlay.StopAnimating(true);
-			return;
-		}
+        if (bTraversing && YawChange == 0)
+        {
+            bTraversing = false;
+            HUDOverlay.StopAnimating(true);
+            return;
+        }
 
-		if (YawChange != 0)
-		{
-			bTraversing = true;
+        if (YawChange != 0)
+        {
+            bTraversing = true;
 
-			if (YawChange > 0)
-				HUDOverlay.LoopAnim(OverlayKnobTurnRightAnim, OverlayKnobTurnAnimRate, 0.125);
-			else
-				HUDOverlay.LoopAnim(OverlayKnobTurnLeftAnim, OverlayKnobTurnAnimRate, 0.125);
+            if (YawChange > 0)
+                HUDOverlay.LoopAnim(OverlayKnobTurnRightAnim, OverlayKnobTurnAnimRate, 0.125);
+            else
+                HUDOverlay.LoopAnim(OverlayKnobTurnLeftAnim, OverlayKnobTurnAnimRate, 0.125);
 
-			super.HandleTurretRotation(DeltaTime, -YawChange, 0);
-		}
-	}
+            super.HandleTurretRotation(DeltaTime, -YawChange, 0);
+        }
+    }
 }
 
 simulated state KnobLowering extends Busy
 {
 Begin:
-	PlayOverlayAnimation(OverlayKnobLoweringAnim, false, OverlayKnobLoweringAnimRate);
-	Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim, OverlayKnobLoweringAnimRate));
-	GotoState('Idle');
+    PlayOverlayAnimation(OverlayKnobLoweringAnim, false, OverlayKnobLoweringAnimRate);
+    Sleep(HUDOverlay.GetAnimDuration(OverlayKnobLoweringAnim, OverlayKnobLoweringAnimRate));
+    GotoState('Idle');
 }
 
 simulated state Firing extends Busy
 {
 Begin:
-	DH_MortarVehicleWeapon(Gun).ClientReplicateElevation(DH_MortarVehicleWeapon(Gun).Elevation);
-	PlayOverlayAnimation(OverlayFiringAnim, false, 1.0);
+    DH_MortarVehicleWeapon(Gun).ClientReplicateElevation(DH_MortarVehicleWeapon(Gun).Elevation);
+    PlayOverlayAnimation(OverlayFiringAnim, false, 1.0);
 
-	if (Level.NetMode == NM_Standalone)	//TODO: Remove, single-player testing?
-	{
-		Gun.PlayAnim(GunFiringAnim);
-		Driver.PlayAnim(DriverFiringAnim);
-	}
-	else
-		SetCurrentAnimation(FiringAnimIndex);
+    if (Level.NetMode == NM_Standalone) //TODO: Remove, single-player testing?
+    {
+        Gun.PlayAnim(GunFiringAnim);
+        Driver.PlayAnim(DriverFiringAnim);
+    }
+    else
+        SetCurrentAnimation(FiringAnimIndex);
 
-	if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
-		Sleep(HUDOverlay.GetAnimDuration(OverlayFiringAnim));
+    if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayFiringAnim))
+        Sleep(HUDOverlay.GetAnimDuration(OverlayFiringAnim));
 
-	ServerFire();
-	GotoState('FireToIdle');
+    ServerFire();
+    GotoState('FireToIdle');
 }
 
 simulated state Undeploying extends Busy
 {
 Begin:
-	PlayOverlayAnimation(OverlayUndeployingAnim, false, 1.0);
-	Sleep(HUDOverlay.GetAnimDuration(OverlayUndeployingAnim));
-	ServerUndeploy();
+    PlayOverlayAnimation(OverlayUndeployingAnim, false, 1.0);
+    Sleep(HUDOverlay.GetAnimDuration(OverlayUndeployingAnim));
+    ServerUndeploy();
 }
 
 function bool KDriverLeave(bool bForceLeave)
 {
-	local Pawn P;
-	local bool bDriverLeft;
+    local Pawn P;
+    local bool bDriverLeft;
 
-	P = Driver;
+    P = Driver;
 
-	bDriverLeft = super.KDriverLeave(bForceLeave);
+    bDriverLeft = super.KDriverLeave(bForceLeave);
 
-	if (bDriverLeft)
-	{
-		DriverLeaveAmmunitionTransfer(P);
+    if (bDriverLeft)
+    {
+        DriverLeaveAmmunitionTransfer(P);
 
-		GotoState('Idle');	//Reset state for the next person who comes on.
+        GotoState('Idle');  //Reset state for the next person who comes on.
 
-		if (DHPlayer(P.Controller) != none)
-			DHPlayer(P.Controller).ClientToggleDuck();
+        if (DHPlayer(P.Controller) != none)
+            DHPlayer(P.Controller).ClientToggleDuck();
 
-		if (DH_Pawn(P) != none)
-			DH_Pawn(P).CheckIfMortarCanBeResupplied();
-	}
+        if (DH_Pawn(P) != none)
+            DH_Pawn(P).CheckIfMortarCanBeResupplied();
+    }
 
-	return bDriverLeft;
+    return bDriverLeft;
 }
 
 simulated function PlayOverlayAnimation(name OverlayAnimation, bool bLoop, float Rate)
 {
-	if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayAnimation))
-	{
-		if (bLoop)
-			HUDOverlay.LoopAnim(OverlayAnimation, Rate);
-		else
-			HUDOverlay.PlayAnim(OverlayAnimation, Rate);
-	}
+    if (HUDOverlay != none && HUDOverlay.HasAnim(OverlayAnimation))
+    {
+        if (bLoop)
+            HUDOverlay.LoopAnim(OverlayAnimation, Rate);
+        else
+            HUDOverlay.PlayAnim(OverlayAnimation, Rate);
+    }
 }
 
 simulated function ServerUndeploy()
 {
-	local DH_MortarWeapon W;
-	local PlayerController PC;
+    local DH_MortarWeapon W;
+    local PlayerController PC;
 
-	PC = PlayerController(Controller);
+    PC = PlayerController(Controller);
 
-	W = Spawn(WeaponClass, PC.Pawn);
+    W = Spawn(WeaponClass, PC.Pawn);
 
-	KDriverLeave(true);
+    KDriverLeave(true);
 
-	W.GiveTo(PC.Pawn);
+    W.GiveTo(PC.Pawn);
 
-	VehicleBase.Destroy();
+    VehicleBase.Destroy();
 }
 
 simulated function DrawHUD(Canvas C)
 {
-	local PlayerController PC;
-	local vector CameraLocation;
-	local rotator CameraRotation;
-	local Actor ViewActor;
-	local float HUDScale;
-	local byte Quotient, Remainder;
-	local int SizeX, SizeY;
-	local vector Loc;
-	local float Elevation, Traverse;
-	local string TraverseString;
-	local int PendingRoundIndex;
+    local PlayerController PC;
+    local vector CameraLocation;
+    local rotator CameraRotation;
+    local Actor ViewActor;
+    local float HUDScale;
+    local byte Quotient, Remainder;
+    local int SizeX, SizeY;
+    local vector Loc;
+    local float Elevation, Traverse;
+    local string TraverseString;
+    local int PendingRoundIndex;
 
-	PC = PlayerController(Controller);
+    PC = PlayerController(Controller);
 
-	if (PC == none)
-	{
-		super.RenderOverlays(C);
-		return;
-	}
-	else
-	{
-		SpecialCalcBehindView(PC, ViewActor, CameraLocation, CameraRotation);
-	}
+    if (PC == none)
+    {
+        super.RenderOverlays(C);
+        return;
+    }
+    else
+    {
+        SpecialCalcBehindView(PC, ViewActor, CameraLocation, CameraRotation);
+    }
 
-	if (PC != none && !PC.bBehindView && HUDOverlay != none)
-	{
-		SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+    if (PC != none && !PC.bBehindView && HUDOverlay != none)
+    {
+        SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
 
         if (!Level.IsSoftwareRendering())
         {
-        	if (DH_MortarVehicleWeapon(Gun) != none)
-				Elevation = DH_MortarVehicleWeapon(Gun).Elevation;
+            if (DH_MortarVehicleWeapon(Gun) != none)
+                Elevation = DH_MortarVehicleWeapon(Gun).Elevation;
 
-			Traverse = Gun.CurrentAim.Yaw;
+            Traverse = Gun.CurrentAim.Yaw;
 
-			if (Traverse > 32768)
-				Traverse -= 65536;
+            if (Traverse > 32768)
+                Traverse -= 65536;
 
-			//Convert to degrees and use make clockwise rotations positive.
-			Traverse /= -182.0444;
+            //Convert to degrees and use make clockwise rotations positive.
+            Traverse /= -182.0444;
 
-			TraverseString = "T: ";
+            TraverseString = "T: ";
 
-			//Add a + at the beginning to explicitly state a positive rotation.
-			if (Traverse > 0)
-				TraverseString $= "+";
+            //Add a + at the beginning to explicitly state a positive rotation.
+            if (Traverse > 0)
+                TraverseString $= "+";
 
-			TraverseString $= string(Traverse);
+            TraverseString $= string(Traverse);
 
-    		CameraRotation = PC.Rotation;
-    		SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
 
-    		//CameraRotation.Pitch += (Elevation - 60) * 182.0444444444444;
+            //CameraRotation.Pitch += (Elevation - 60) * 182.0444444444444;
 
-    		HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
 
-    		HUDOverlay.SetRotation(CameraRotation);
+            HUDOverlay.SetRotation(CameraRotation);
 
-			C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
 
-			if (PC.myHUD != none && PC.myHUD.bHideHUD)
-				return;
+            if (PC.myHUD != none && PC.myHUD.bHideHUD)
+                return;
 
-			C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+            C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 
-			HUDScale = C.SizeY / 1280.0;
+            HUDScale = C.SizeY / 1280.0;
 
-			C.SetPos(0, C.SizeY - (256 * HUDScale));
-			C.SetDrawColor(255, 255, 255, 255);
-			C.DrawTile(HUDArcTexture, 256 * HUDScale, 256 * HUDScale, 0, 0, 512, 512);
+            C.SetPos(0, C.SizeY - (256 * HUDScale));
+            C.SetDrawColor(255, 255, 255, 255);
+            C.DrawTile(HUDArcTexture, 256 * HUDScale, 256 * HUDScale, 0, 0, 512, 512);
 
-			//Draw rounds
-			C.SetPos(256 * HUDScale, C.SizeY - (256 * HUDScale));
+            //Draw rounds
+            C.SetPos(256 * HUDScale, C.SizeY - (256 * HUDScale));
 
-			PendingRoundIndex = DH_MortarVehicleWeapon(Gun).GetPendingRoundIndex();
+            PendingRoundIndex = DH_MortarVehicleWeapon(Gun).GetPendingRoundIndex();
 
-			C.SetDrawColor(0, 0, 0, 255);
-			C.SetPos(HUDScale * 10, C.SizeY - (HUDScale * 94));
-			C.DrawText(DH_MortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
+            C.SetDrawColor(0, 0, 0, 255);
+            C.SetPos(HUDScale * 10, C.SizeY - (HUDScale * 94));
+            C.DrawText(DH_MortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
 
-			if (Gun.HasAmmo(PendingRoundIndex)) C.SetDrawColor(255, 255, 255, 255);
-			else C.SetDrawColor(128, 128, 128, 255);
+            if (Gun.HasAmmo(PendingRoundIndex)) C.SetDrawColor(255, 255, 255, 255);
+            else C.SetDrawColor(128, 128, 128, 255);
 
-			C.SetPos(HUDScale * 256, C.SizeY - HUDScale * 256);
+            C.SetPos(HUDScale * 256, C.SizeY - HUDScale * 256);
 
-			if (PendingRoundIndex == 0)
-				C.DrawTile(HUDHighExplosiveTexture, 128 * HUDScale, 256 * HUDScale, 0, 0, 128, 256);
-			else
-				C.DrawTile(HUDSmokeTexture, 128 * HUDScale, 256 * HUDScale, 0, 0, 128, 256);
+            if (PendingRoundIndex == 0)
+                C.DrawTile(HUDHighExplosiveTexture, 128 * HUDScale, 256 * HUDScale, 0, 0, 128, 256);
+            else
+                C.DrawTile(HUDSmokeTexture, 128 * HUDScale, 256 * HUDScale, 0, 0, 128, 256);
 
-			//Drawing
-			if (Gun.MainAmmoCharge[PendingRoundIndex] < 10)
-		    {
-				C.SetPos(384 * HUDScale, C.SizeY - (160 * HUDScale));
-		    	Quotient = Gun.MainAmmoCharge[PendingRoundIndex];
+            //Drawing
+            if (Gun.MainAmmoCharge[PendingRoundIndex] < 10)
+            {
+                C.SetPos(384 * HUDScale, C.SizeY - (160 * HUDScale));
+                Quotient = Gun.MainAmmoCharge[PendingRoundIndex];
 
-		    	SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-		    	SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
+                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
+                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
 
-		    	C.DrawTile(Digits.DigitTexture, 40 * HUDScale, 64 * HUDScale,
-					Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].X1,
-					Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].Y1,
-					SizeX,
-					SizeY);
-			}
-			else
-		    {
-				C.SetPos(384 * HUDScale, C.SizeY - (160 * HUDScale));
-		    	Quotient = Gun.MainAmmoCharge[PendingRoundIndex] / 10;
-		    	Remainder = Gun.MainAmmoCharge[PendingRoundIndex] % 10;
+                C.DrawTile(Digits.DigitTexture, 40 * HUDScale, 64 * HUDScale,
+                    Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].X1,
+                    Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].Y1,
+                    SizeX,
+                    SizeY);
+            }
+            else
+            {
+                C.SetPos(384 * HUDScale, C.SizeY - (160 * HUDScale));
+                Quotient = Gun.MainAmmoCharge[PendingRoundIndex] / 10;
+                Remainder = Gun.MainAmmoCharge[PendingRoundIndex] % 10;
 
-		    	SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-		    	SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
+                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
+                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
 
-		    	C.DrawTile(Digits.DigitTexture, 40 * HUDScale, 64 * HUDScale,
-					Digits.TextureCoords[Quotient].X1,
-					Digits.TextureCoords[Quotient].Y1,
-					SizeX,
-					SizeY);
+                C.DrawTile(Digits.DigitTexture, 40 * HUDScale, 64 * HUDScale,
+                    Digits.TextureCoords[Quotient].X1,
+                    Digits.TextureCoords[Quotient].Y1,
+                    SizeX,
+                    SizeY);
 
-		    	SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
-		    	SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
+                SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
+                SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
 
-		    	C.DrawTile(Digits.DigitTexture, 40 * HUDScale, 64 * HUDScale,
-					Digits.TextureCoords[Remainder].X1,
-					Digits.TextureCoords[Remainder].Y1,
-					SizeX,
-					SizeY);
-			}
+                C.DrawTile(Digits.DigitTexture, 40 * HUDScale, 64 * HUDScale,
+                    Digits.TextureCoords[Remainder].X1,
+                    Digits.TextureCoords[Remainder].Y1,
+                    SizeX,
+                    SizeY);
+            }
 
-			C.SetDrawColor(255, 255, 255, 255);
-			C.SetPos(HUDScale * 8, C.SizeY - (HUDScale * 96));
-			C.DrawText(DH_MortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8, C.SizeY - (HUDScale * 96));
+            C.DrawText(DH_MortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
 
-			HUDArrowTexture.Rotation.Yaw = (Elevation + 180) * DEG2UU;
-			Loc.X = Cos(Elevation * DEG2RAD) * 256;
-			Loc.Y = Sin(Elevation * DEG2RAD) * 256;
+            HUDArrowTexture.Rotation.Yaw = (Elevation + 180) * DEG2UU;
+            Loc.X = Cos(Elevation * DEG2RAD) * 256;
+            Loc.Y = Sin(Elevation * DEG2RAD) * 256;
 
-			C.SetDrawColor(255, 255, 255, 255);
-			C.SetPos(HUDScale * (Loc.X - 32), C.SizeY - (HUDScale * (Loc.Y + 32)));
-			C.DrawTile(HUDArrowTexture, 64 * HUDScale, 64 * HUDScale, 0, 0, 128, 128);
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * (Loc.X - 32), C.SizeY - (HUDScale * (Loc.Y + 32)));
+            C.DrawTile(HUDArrowTexture, 64 * HUDScale, 64 * HUDScale, 0, 0, 128, 128);
 
-			C.SetDrawColor(0, 0, 0, 255);
-			C.SetPos(HUDScale * 10, C.SizeY - (HUDScale * 30));
-			C.DrawText("E:" @ string(Elevation));
+            C.SetDrawColor(0, 0, 0, 255);
+            C.SetPos(HUDScale * 10, C.SizeY - (HUDScale * 30));
+            C.DrawText("E:" @ string(Elevation));
 
-			C.SetDrawColor(255, 255, 255, 255);
-			C.SetPos(HUDScale * 8, C.SizeY - (HUDScale * 32));
-			C.DrawText("E:" @ string(Elevation));
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8, C.SizeY - (HUDScale * 32));
+            C.DrawText("E:" @ string(Elevation));
 
-			C.SetDrawColor(0, 0, 0, 255);
-			C.SetPos(HUDScale * 10, C.SizeY - (HUDScale * 62));
-			C.DrawText(TraverseString);
+            C.SetDrawColor(0, 0, 0, 255);
+            C.SetPos(HUDScale * 10, C.SizeY - (HUDScale * 62));
+            C.DrawText(TraverseString);
 
-			C.SetDrawColor(255, 255, 255, 255);
-			C.SetPos(HUDScale * 8, C.SizeY - (HUDScale * 64));
-			C.DrawText(TraverseString);
-    	}
-	}
-	else
+            C.SetDrawColor(255, 255, 255, 255);
+            C.SetPos(HUDScale * 8, C.SizeY - (HUDScale * 64));
+            C.DrawText(TraverseString);
+        }
+    }
+    else
         ActivateOverlay(false);
 }
 
@@ -612,33 +612,33 @@ GotoState('Idle');
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
-	local vector VehicleZ, CamViewOffsetWorld;
-	local float CamViewOffsetZAmount;
-	local coords CamBoneCoords;
-	local rotator WeaponAimRot;
-	local quat AQuat, BQuat, CQuat;
+    local vector VehicleZ, CamViewOffsetWorld;
+    local float CamViewOffsetZAmount;
+    local coords CamBoneCoords;
+    local rotator WeaponAimRot;
+    local quat AQuat, BQuat, CQuat;
 
     GetAxes(CameraRotation, x, y, z);
-	ViewActor = self;
+    ViewActor = self;
 
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
     WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
 
-	if (ROPlayer(Controller) != none)
-	{
-		 ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-		 ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-	}
+    if (ROPlayer(Controller) != none)
+    {
+         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
+         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
+    }
 
-	// This makes the camera stick to the cannon, but you have no control
-	if (DriverPositionIndex == 0)
-	{
-		CameraRotation = rotator(Gun.GetBoneCoords(CameraBone).XAxis);
-		// Make the cannon view have no roll
-		CameraRotation.Roll = 0;
-	}
-	else if (bPCRelativeFPRotation)
-	{
+    // This makes the camera stick to the cannon, but you have no control
+    if (DriverPositionIndex == 0)
+    {
+        CameraRotation = rotator(Gun.GetBoneCoords(CameraBone).XAxis);
+        // Make the cannon view have no roll
+        CameraRotation.Roll = 0;
+    }
+    else if (bPCRelativeFPRotation)
+    {
         //__________________________________________
         // First, Rotate the headbob by the player
         // controllers rotation (looking around) ---
@@ -653,45 +653,45 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         //__________________________________________
         // Make it back into a rotator!
         CameraRotation = QuatToRotator(BQuat);
-	}
+    }
     else
         CameraRotation = PC.Rotation;
 
-	if (IsInState('ViewTransition') && bLockCameraDuringTransition)
-	{
-		CameraRotation = Gun.GetBoneRotation('Camera_com');
-	}
+    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
+    {
+        CameraRotation = Gun.GetBoneRotation('Camera_com');
+    }
 
-   	CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-	if (CameraBone != '' && Gun != none)
-	{
-		CamBoneCoords = Gun.GetBoneCoords(CameraBone);
+    if (CameraBone != '' && Gun != none)
+    {
+        CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-		if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
-			CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
-		else
-			CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+            CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
+        else
+            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
 
-		if (bFPNoZFromCameraPitch)
-		{
-			VehicleZ = vect(0,0,1) >> WeaponAimRot;
+        if (bFPNoZFromCameraPitch)
+        {
+            VehicleZ = vect(0,0,1) >> WeaponAimRot;
 
-			CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-			CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-		}
-	}
-	else
-	{
-		CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        }
+    }
+    else
+    {
+        CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-		if (bFPNoZFromCameraPitch)
-		{
-			VehicleZ = vect(0,0,1) >> Rotation;
-			CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
-			CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-		}
-	}
+        if (bFPNoZFromCameraPitch)
+        {
+            VehicleZ = vect(0,0,1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        }
+    }
 
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
@@ -699,81 +699,81 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
 function bool ResupplyAmmo()
 {
-	local bool bResupplySuccessful;
+    local bool bResupplySuccessful;
 
-	bResupplySuccessful = super.ResupplyAmmo();
+    bResupplySuccessful = super.ResupplyAmmo();
 
-	if (bResupplySuccessful)
-		DH_MortarVehicle(VehicleBase).bCanBeResupplied = false;
+    if (bResupplySuccessful)
+        DH_MortarVehicle(VehicleBase).bCanBeResupplied = false;
 
-	return bResupplySuccessful;
+    return bResupplySuccessful;
 }
 
 function KDriverEnter(Pawn P)
 {
-	//Big giant hack to allow us to access the PRI of the gunner.
-	VehicleBase.PlayerReplicationInfo = P.PlayerReplicationInfo;
-	DriverEnterTransferAmmunition(P);
+    //Big giant hack to allow us to access the PRI of the gunner.
+    VehicleBase.PlayerReplicationInfo = P.PlayerReplicationInfo;
+    DriverEnterTransferAmmunition(P);
 
-	super.KDriverEnter(P);
+    super.KDriverEnter(P);
 
-	GotoState('Idle');
+    GotoState('Idle');
 }
 
 //------------------------------------------------------------------------------
 //This transfers the ammunition to the weapon upon entering the mortar.
 function DriverEnterTransferAmmunition(Pawn P)
 {
-	local DH_Pawn DHP;
-	local DH_MortarVehicleWeapon DHMVW;
+    local DH_Pawn DHP;
+    local DH_MortarVehicleWeapon DHMVW;
 
-	DHP = DH_Pawn(P);
-	DHMVW = DH_MortarVehicleWeapon(Gun);
+    DHP = DH_Pawn(P);
+    DHMVW = DH_MortarVehicleWeapon(Gun);
 
-	if (DHP != none && DHMVW != none)
-	{
-		DHMVW.MainAmmoCharge[0] = Clamp(DHMVW.MainAmmoCharge[0] + DHP.MortarHEAmmo, 0, GunClass.default.InitialPrimaryAmmo);
-		DHMVW.MainAmmoCharge[1] = Clamp(DHMVW.MainAmmoCharge[1] + DHP.MortarSmokeAmmo, 0, GunClass.default.InitialSecondaryAmmo);
+    if (DHP != none && DHMVW != none)
+    {
+        DHMVW.MainAmmoCharge[0] = Clamp(DHMVW.MainAmmoCharge[0] + DHP.MortarHEAmmo, 0, GunClass.default.InitialPrimaryAmmo);
+        DHMVW.MainAmmoCharge[1] = Clamp(DHMVW.MainAmmoCharge[1] + DHP.MortarSmokeAmmo, 0, GunClass.default.InitialSecondaryAmmo);
 
-		DHP.MortarHEAmmo = 0;
-		DHP.MortarSmokeAmmo = 0;
-	}
+        DHP.MortarHEAmmo = 0;
+        DHP.MortarSmokeAmmo = 0;
+    }
 
-	CheckCanBeResupplied();
+    CheckCanBeResupplied();
 }
 
 function CheckCanBeResupplied()
 {
-	if (Gun.MainAmmoCharge[0] < GunClass.default.InitialPrimaryAmmo ||
-		Gun.MainAmmoCharge[1] < GunClass.default.InitialSecondaryAmmo)
-		DH_MortarVehicle(VehicleBase).bCanBeResupplied = true;
-	else
-		DH_MortarVehicle(VehicleBase).bCanBeResupplied = false;
+    if (Gun.MainAmmoCharge[0] < GunClass.default.InitialPrimaryAmmo ||
+        Gun.MainAmmoCharge[1] < GunClass.default.InitialSecondaryAmmo)
+        DH_MortarVehicle(VehicleBase).bCanBeResupplied = true;
+    else
+        DH_MortarVehicle(VehicleBase).bCanBeResupplied = false;
 }
 
 //------------------------------------------------------------------------------
 //This transfers the ammunition to the player upon exiting the mortar.
 function DriverLeaveAmmunitionTransfer(Pawn P)
 {
-	local DH_Pawn DHP;
-	local DH_MortarVehicleWeapon G;
+    local DH_Pawn DHP;
+    local DH_MortarVehicleWeapon G;
 
-	DHP = DH_Pawn(P);
-	G = DH_MortarVehicleWeapon(Gun);
+    DHP = DH_Pawn(P);
+    G = DH_MortarVehicleWeapon(Gun);
 
-	if (DHP != none && G != none)
-	{
-		DHP.MortarHEAmmo = G.MainAmmoCharge[0];
-		DHP.MortarSmokeAmmo = G.MainAmmoCharge[1];
-		G.MainAmmoCharge[0] = 0;
-		G.MainAmmoCharge[1] = 0;
+    if (DHP != none && G != none)
+    {
+        DHP.MortarHEAmmo = G.MainAmmoCharge[0];
+        DHP.MortarSmokeAmmo = G.MainAmmoCharge[1];
+        G.MainAmmoCharge[0] = 0;
+        G.MainAmmoCharge[1] = 0;
 
-		if (DH_MortarVehicle(VehicleBase) != none)
-			DH_MortarVehicle(VehicleBase).bCanBeResupplied = true;
+        if (DH_MortarVehicle(VehicleBase) != none)
+            DH_MortarVehicle(VehicleBase).bCanBeResupplied = true;
 
-		//Reset back to none.
-		VehicleBase.PlayerReplicationInfo = none;
-	}
+        //Reset back to none.
+        VehicleBase.PlayerReplicationInfo = none;
+    }
 }
 
 defaultproperties

@@ -25,7 +25,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int_s');
 
-	super(ROTreadCraft).UpdatePrecacheMaterials();
+    super(ROTreadCraft).UpdatePrecacheMaterials();
 }
 
 defaultproperties

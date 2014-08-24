@@ -4,8 +4,8 @@ static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadL
 {
     local name broadcasttype;
     local vector myLoc;
-	//Log("ROVoicePack::PlayerSpeech() Type = "$Type$" Index = "$Index);
-	    broadcasttype = 'GLOBAL';
+    //Log("ROVoicePack::PlayerSpeech() Type = "$Type$" Index = "$Index);
+        broadcasttype = 'GLOBAL';
     if (Controller(PackOwner).Pawn == none)
         myLoc = PackOwner.Location;
     else

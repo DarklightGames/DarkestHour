@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHMaplistEditor   ***
+//  ***   DHMaplistEditor   ***
 //
 // *************************************************************************
 
@@ -10,37 +10,37 @@ var automated GUISectionBackground  sb_container;
 
 function AddSystemMenu()
 {
-	local eFontScale tFontScale;
+    local eFontScale tFontScale;
 
-	b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
-	b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
-	b_ExitButton.OnClick = XButtonClicked;
-	b_ExitButton.bNeverFocus=true;
-	b_ExitButton.FocusInstead = t_WindowTitle;
-	b_ExitButton.RenderWeight=1;
-	b_ExitButton.bScaleToParent=false;
-	b_ExitButton.OnPreDraw = SystemMenuPreDraw;
-	b_ExitButton.bStandardized=true;
-	b_ExitButton.StandardHeight=0.03;
-	// Do not want OnClick() called from MousePressed()
-	b_ExitButton.bRepeatClick = false;
+    b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
+    b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
+    b_ExitButton.OnClick = XButtonClicked;
+    b_ExitButton.bNeverFocus=true;
+    b_ExitButton.FocusInstead = t_WindowTitle;
+    b_ExitButton.RenderWeight=1;
+    b_ExitButton.bScaleToParent=false;
+    b_ExitButton.OnPreDraw = SystemMenuPreDraw;
+    b_ExitButton.bStandardized=true;
+    b_ExitButton.StandardHeight=0.03;
+    // Do not want OnClick() called from MousePressed()
+    b_ExitButton.bRepeatClick = false;
 }
 
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    	Super.InitComponent(MyController, MyOwner);
+        Super.InitComponent(MyController, MyOwner);
 
-    	sb_MapList.ManageComponent(co_Maplist);
-    	sb_MapList.ManageComponent(sb_container);
-    	sb_container.ManageComponent(b_Delete);
-    	sb_container.ManageComponent(b_Rename);
-    	sb_container.ManageComponent(b_New);
+        sb_MapList.ManageComponent(co_Maplist);
+        sb_MapList.ManageComponent(sb_container);
+        sb_container.ManageComponent(b_Delete);
+        sb_container.ManageComponent(b_Rename);
+        sb_container.ManageComponent(b_New);
 }
 
 function bool ButtonPreDraw(Canvas C)
 {
-    	return false;
+        return false;
 }
 
 defaultproperties

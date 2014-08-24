@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_WaffenSS ***
+//  ***   DH_WaffenSS ***
 //
 // *************************************************************************
 
 class DH_Ger_WaffenSS extends DH_RoleInfo
-	abstract;
+    abstract;
 
 defaultproperties
 {

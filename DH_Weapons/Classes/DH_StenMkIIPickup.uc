@@ -11,7 +11,7 @@ class DH_StenMkIIPickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.Sten');
+//  L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.Sten');
 
 }
 

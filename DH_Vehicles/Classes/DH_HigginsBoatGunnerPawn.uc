@@ -8,19 +8,19 @@
 //==============================================================================
 class DH_HigginsBoatGunnerPawn extends DH_ROMountedTankMGPawn;
 
-var     	texture	                      BinocsOverlay;
-//var()   	float                   	  BinocsEnlargementFactor;
+var         texture                       BinocsOverlay;
+//var()     float                         BinocsEnlargementFactor;
 var         int                           BinocsPositionIndex;
 
 // Engineer cannot fire MG when he is in binocs
 function Fire(optional float F)
 {
-	if (DriverPositionIndex == BinocsPositionIndex && ROPlayer(Controller) != none)
-	{
+    if (DriverPositionIndex == BinocsPositionIndex && ROPlayer(Controller) != none)
+    {
         return;
-	}
+    }
 
-	super.Fire(F);
+    super.Fire(F);
 }
 
 /* PointOfView()
@@ -33,9 +33,9 @@ simulated function bool PointOfView()
 
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-	Gotostate('EnteringVehicle');
+    Gotostate('EnteringVehicle');
 
-	Super.ClientKDriverEnter(PC);
+    Super.ClientKDriverEnter(PC);
 
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
@@ -48,113 +48,113 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-	Super.ClientKDriverLeave(PC);
+    Super.ClientKDriverLeave(PC);
 }
 
 // Overridden from Vehicle.uc to prevent being spawned outside the boat while moving and
 // to allow passengers to exit with correct heights and rotations
 function bool PlaceExitingDriver()
 {
-	local int i;
-	local vector tryPlace, Extent, HitLocation, HitNormal, ZOffset;
+    local int i;
+    local vector tryPlace, Extent, HitLocation, HitNormal, ZOffset;
 
-	Extent = Driver.default.CollisionRadius * vect(1,1,0);
-	Extent.Z = Driver.default.CollisionHeight;
-	ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
+    Extent = Driver.default.CollisionRadius * vect(1,1,0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
 
-/*	//avoid running driver over by placing in direction perpendicular to velocity
-	if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
-	{
-		tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
-		if (FRand() < 0.5)
-			tryPlace *= -1; //randomly prefer other side
-		if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
-		     || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
-			return true;
-	}*/
+/*  //avoid running driver over by placing in direction perpendicular to velocity
+    if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
+    {
+        tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
+        if (FRand() < 0.5)
+            tryPlace *= -1; //randomly prefer other side
+        if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
+             || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
+            return true;
+    }*/
 
-	for(i=0; i<ExitPositions.Length; i++)
-	{
-		if (bRelativeExitPos)
-		{
-		    if (VehicleBase != none)
-		    	tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-		    else if (Gun != none)
+    for(i=0; i<ExitPositions.Length; i++)
+    {
+        if (bRelativeExitPos)
+        {
+            if (VehicleBase != none)
+                tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+            else if (Gun != none)
                 tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
             else
-        	    tryPlace = Location + (ExitPositions[i] >> Rotation);
-	    }
-		else
-			tryPlace = ExitPositions[i];
+                tryPlace = Location + (ExitPositions[i] >> Rotation);
+        }
+        else
+            tryPlace = ExitPositions[i];
 
-		// First, do a line check (stops us passing through things on exit).
-		if (bRelativeExitPos)
-		{
-			if (VehicleBase != none)
-			{
-				if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
-					continue;
-			}
-			else
-				if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-					continue;
-		}
+        // First, do a line check (stops us passing through things on exit).
+        if (bRelativeExitPos)
+        {
+            if (VehicleBase != none)
+            {
+                if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
+                    continue;
+            }
+            else
+                if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
+                    continue;
+        }
 
-		// Then see if we can place the player there.
-		if (!Driver.SetLocation(tryPlace))
-			continue;
+        // Then see if we can place the player there.
+        if (!Driver.SetLocation(tryPlace))
+            continue;
 
-		return true;
-	}
-	return false;
+        return true;
+    }
+    return false;
 }
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
-	local vector VehicleZ, CamViewOffsetWorld;
-	local float CamViewOffsetZAmount;
-	local rotator WeaponAimRot;
+    local vector VehicleZ, CamViewOffsetWorld;
+    local float CamViewOffsetZAmount;
+    local rotator WeaponAimRot;
 
     GetAxes(CameraRotation, x, y, z);
-	ViewActor = self;
+    ViewActor = self;
 
     WeaponAimRot = Gun.GetBoneRotation(CameraBone);
 
-	if (ROPlayer(Controller) != none)
-	{
-		 ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-		 ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-	}
+    if (ROPlayer(Controller) != none)
+    {
+         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
+         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
+    }
 
-	CameraRotation =  WeaponAimRot;
+    CameraRotation =  WeaponAimRot;
 
 
-	CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
+    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-	if (CameraBone != '' && Gun != none)
-	{
-		CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
+    if (CameraBone != '' && Gun != none)
+    {
+        CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
 
-		if (bFPNoZFromCameraPitch)
-		{
-			VehicleZ = vect(0,0,1) >> WeaponAimRot;
+        if (bFPNoZFromCameraPitch)
+        {
+            VehicleZ = vect(0,0,1) >> WeaponAimRot;
 
-			CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-			CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-		}
-	}
-	else
-	{
-		CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        }
+    }
+    else
+    {
+        CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-		if (bFPNoZFromCameraPitch)
-		{
-			VehicleZ = vect(0,0,1) >> Rotation;
-			CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
-			CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-		}
-	}
+        if (bFPNoZFromCameraPitch)
+        {
+            VehicleZ = vect(0,0,1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
+        }
+    }
 
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
@@ -162,22 +162,22 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
 function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
 {
-	local rotator NewRotation;
+    local rotator NewRotation;
 
-	NewRotation = Rotation;
-	NewRotation.Yaw += 32.0 * deltaTime * YawChange;
-	NewRotation.Pitch += 32.0 * deltaTime * PitchChange;
-	NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
+    NewRotation = Rotation;
+    NewRotation.Yaw += 32.0 * deltaTime * YawChange;
+    NewRotation.Pitch += 32.0 * deltaTime * PitchChange;
+    NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
 
-	SetRotation(NewRotation);
+    SetRotation(NewRotation);
 
-	UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+    UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
-	if (ROPlayer(Controller) != none)
-	{
+    if (ROPlayer(Controller) != none)
+    {
          ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-		 ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
-	}
+         ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+    }
 }
 
 simulated function DrawHUD(Canvas Canvas)
@@ -191,150 +191,150 @@ simulated function DrawHUD(Canvas Canvas)
     PC = PlayerController(Controller);
 
     // Zap the lame crosshair - Ramm
-/*	if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim)
-	{
-		Canvas.DrawColor = CrosshairColor;
-		Canvas.DrawColor.A = 255;
-		Canvas.Style = ERenderStyle.STY_Alpha;
-		Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-		Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-	}  */
+/*  if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim)
+    {
+        Canvas.DrawColor = CrosshairColor;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
+        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
+    }  */
 
 
-	if (PC != none && !PC.bBehindView && HUDOverlay != none)
-	{
+    if (PC != none && !PC.bBehindView && HUDOverlay != none)
+    {
         if (!Level.IsSoftwareRendering() && DriverPositionIndex < 2)
         {
 
-			CameraRotation = PC.Rotation;
-    		SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
 
-    		CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    		GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
+            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+            GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
 
             // Make the first person gun appear lower when your sticking your head up
  //           GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 3));
-            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1));	//****************************************************
+            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1));    //****************************************************
             GunOffset += HUDOverlayOffset;
 
             // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
-    		HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
 
-    		Canvas.DrawBoundActor(HUDOverlay, false, true,HUDOverlayFOV,CameraRotation,PC.ShakeRot*FirstPersonGunShakeScale,GunOffset*-1);
-    	 }
-    	 else
-    	 {
-    	    DrawBinocsOverlay(Canvas);
-    	 }
-	}
-	else
+            Canvas.DrawBoundActor(HUDOverlay, false, true,HUDOverlayFOV,CameraRotation,PC.ShakeRot*FirstPersonGunShakeScale,GunOffset*-1);
+         }
+         else
+         {
+            DrawBinocsOverlay(Canvas);
+         }
+    }
+    else
         ActivateOverlay(false);
 
     if (PC != none)
-	    // Draw tank, turret, ammo count, passenger list
-	    if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+        // Draw tank, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
 }
 
 // Hack - Turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
 simulated state ViewTransition
 {
-	simulated function BeginState()
-	{
-		if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-		{
-    		if (DriverPositionIndex > 0)
-    		{
-    		  Gun.AmbientEffectEmitter.bHidden = true;
-    		}
-		}
+    simulated function BeginState()
+    {
+        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        {
+            if (DriverPositionIndex > 0)
+            {
+              Gun.AmbientEffectEmitter.bHidden = true;
+            }
+        }
 
         super.BeginState();
-	}
+    }
 
-	simulated function EndState()
-	{
-		if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-		{
-    		if (DriverPositionIndex == 0)
-    		{
-    		  Gun.AmbientEffectEmitter.bHidden = false;
-    		}
-		}
+    simulated function EndState()
+    {
+        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        {
+            if (DriverPositionIndex == 0)
+            {
+              Gun.AmbientEffectEmitter.bHidden = false;
+            }
+        }
 
         super.EndState();
-	}
+    }
 }
 /*
 simulated function DrawHUD(Canvas Canvas)
 {
-    	local PlayerController PC;
-    	local vector CameraLocation;
-    	local rotator CameraRotation;
-    	local float  SavedOpacity;
-    	local float scale;
-    	local Actor ViewActor;
+        local PlayerController PC;
+        local vector CameraLocation;
+        local rotator CameraRotation;
+        local float  SavedOpacity;
+        local float scale;
+        local Actor ViewActor;
 
-    	PC = PlayerController(Controller);
+        PC = PlayerController(Controller);
 
-   		if (PC == none)
+        if (PC == none)
         {
-		    Super.RenderOverlays(Canvas);
-		    //log("PanzerTurret PlayerController was none, returning");
-		    return;
-	    }
-    	else if (!PC.bBehindView)
-	    {
-		    // store old opacity and set to 1.0 for map overlay rendering
-		    SavedOpacity = Canvas.ColorModulate.W;
-		    Canvas.ColorModulate.W = 1.0;
+            Super.RenderOverlays(Canvas);
+            //log("PanzerTurret PlayerController was none, returning");
+            return;
+        }
+        else if (!PC.bBehindView)
+        {
+            // store old opacity and set to 1.0 for map overlay rendering
+            SavedOpacity = Canvas.ColorModulate.W;
+            Canvas.ColorModulate.W = 1.0;
 
-		    Canvas.DrawColor.A = 255;
-		    Canvas.Style = ERenderStyle.STY_Alpha;
+            Canvas.DrawColor.A = 255;
+            Canvas.Style = ERenderStyle.STY_Alpha;
 
-        		scale = Canvas.SizeY / 1200.0;
+                scale = Canvas.SizeY / 1200.0;
 
             if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
             {
-			   if (DriverPositionIndex == 0)
-			   {
+               if (DriverPositionIndex == 0)
+               {
                }
-			   else
-			   {
+               else
+               {
                   DrawBinocsOverlay(Canvas);
-			   }
-	        }
-    	   // reset HudOpacity to original value
-		   Canvas.ColorModulate.W = SavedOpacity;
+               }
+            }
+           // reset HudOpacity to original value
+           Canvas.ColorModulate.W = SavedOpacity;
 
            // Draw tank, turret, ammo count, passenger list
-	       if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+           if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
               ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
-	    }
+        }
 
     // Zap the lame crosshair - Ramm
-	if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
-	{
-		Canvas.DrawColor = CrosshairColor;
-		Canvas.DrawColor.A = 255;
-		Canvas.Style = ERenderStyle.STY_Alpha;
-		Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-		Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-	}
+    if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
+    {
+        Canvas.DrawColor = CrosshairColor;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
+        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
+    }
 
 
-	if (PC != none && !PC.bBehindView && HUDOverlay != none)
-	{
+    if (PC != none && !PC.bBehindView && HUDOverlay != none)
+    {
         if (!Level.IsSoftwareRendering())
         {
-    		CameraRotation = PC.Rotation;
-    		SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-    		HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-    		HUDOverlay.SetRotation(CameraRotation);
-    		Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
-    	}
-	}
-	else
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetRotation(CameraRotation);
+            Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
+        }
+    }
+    else
         ActivateOverlay(false);
 
 }
@@ -345,8 +345,8 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
     local float ScreenRatio;
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-	Canvas.SetPos(0,0);
-	Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    Canvas.SetPos(0,0);
+    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties

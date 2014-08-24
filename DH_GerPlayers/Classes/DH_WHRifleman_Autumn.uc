@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   Heer Rifleman   ***
+//  ***   Heer Rifleman   ***
 //
 // *************************************************************************
 
@@ -8,10 +8,10 @@ class DH_WHRifleman_Autumn extends DH_HeerAutumn;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-		return Headgear[0];
-	else
-		return Headgear[1];
+    if (FRand() < 0.2)
+        return Headgear[0];
+    else
+        return Headgear[1];
 }
 
 defaultproperties

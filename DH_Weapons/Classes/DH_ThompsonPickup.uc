@@ -11,11 +11,11 @@ class DH_ThompsonPickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-/*	L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.M1A1_Thompson');
-	L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.AmmoPouches.Thompson_Ammo_pickup');
-	L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.ThompsonA');
-	L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.ThompsonB');
-	L.AddPrecacheMaterial(Material'DH_Weapon_tex.weapon_icons.Thompson_ammo'); */
+/*  L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.M1A1_Thompson');
+    L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.AmmoPouches.Thompson_Ammo_pickup');
+    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.ThompsonA');
+    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.ThompsonB');
+    L.AddPrecacheMaterial(Material'DH_Weapon_tex.weapon_icons.Thompson_ammo'); */
 }
 
 defaultproperties

@@ -9,8 +9,8 @@ simulated function Fire(float F)
 {
     // added check for player to be in iron view to save arty coords - Antarian
     if ((Instigator == none) || (Instigator.Controller == none)
-		|| (AIController(Instigator.Controller) != none) || !bUsingSights)
-   	   return;
+        || (AIController(Instigator.Controller) != none) || !bUsingSights)
+       return;
 
         // server
     if (Instigator.IsLocallyControlled())

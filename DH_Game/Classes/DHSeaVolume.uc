@@ -4,16 +4,16 @@ var string EntrySoundName, ExitSoundName, EntryActorName, PawnEntryActorName;
 
 function PostBeginPlay()
 {
-	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-	if ((EntrySound == none) && (EntrySoundName != ""))
-		EntrySound = Sound(DynamicLoadObject(EntrySoundName,class'Sound'));
-	if ((ExitSound == none) && (ExitSoundName != ""))
-		ExitSound = Sound(DynamicLoadObject(ExitSoundName,class'Sound'));
-	if ((EntryActor == none) && (EntryActorName != ""))
-		EntryActor = class<Actor>(DynamicLoadObject(EntryActorName,class'Class'));
-	if ((PawnEntryActor == none) && (PawnEntryActorName != ""))
-		PawnEntryActor = class<Actor>(DynamicLoadObject(PawnEntryActorName,class'Class'));
+    if ((EntrySound == none) && (EntrySoundName != ""))
+        EntrySound = Sound(DynamicLoadObject(EntrySoundName,class'Sound'));
+    if ((ExitSound == none) && (ExitSoundName != ""))
+        ExitSound = Sound(DynamicLoadObject(ExitSoundName,class'Sound'));
+    if ((EntryActor == none) && (EntryActorName != ""))
+        EntryActor = class<Actor>(DynamicLoadObject(EntryActorName,class'Class'));
+    if ((PawnEntryActor == none) && (PawnEntryActorName != ""))
+        PawnEntryActor = class<Actor>(DynamicLoadObject(PawnEntryActorName,class'Class'));
 }
 
 defaultproperties

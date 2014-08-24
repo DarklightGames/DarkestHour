@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_PIATImpactDamType extends RORocketImpactDamage
-	abstract;
+    abstract;
 
 defaultproperties
 {

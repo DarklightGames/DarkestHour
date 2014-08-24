@@ -1,8 +1,8 @@
 class DHTab_Hud extends ROTab_Hud;
 
-var automated moCheckBox	ch_SimpleColours;
+var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowDeathMessages;
-var automated moCheckBox	ch_ShowVoiceIcon;
+var automated moCheckBox    ch_ShowVoiceIcon;
 var bool bSimpleColours;
 var bool bShowDeathMessages;
 var bool bShowVoiceIcon;
@@ -10,53 +10,53 @@ var bool bShowVoiceIcon;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-	Super.InitComponent(MyController, MyOwner);
+    Super.InitComponent(MyController, MyOwner);
 
-	i_BG2.ManageComponent(ch_SimpleColours);
-	i_BG1.ManageComponent(ch_ShowDeathMessages);
-	i_BG1.ManageComponent(ch_ShowVoiceIcon);
+    i_BG2.ManageComponent(ch_SimpleColours);
+    i_BG1.ManageComponent(ch_ShowDeathMessages);
+    i_BG1.ManageComponent(ch_ShowVoiceIcon);
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
 {
-//	local DHHud H;
+//  local DHHud H;
 
-//	H = DHHud(PlayerOwner().myHud);
+//  H = DHHud(PlayerOwner().myHud);
 
     switch (Sender)
-	{
-	    case ch_SimpleColours:
+    {
+        case ch_SimpleColours:
             bSimpleColours = class'DHHud'.default.bSimpleColours;
-		    ch_SimpleColours.SetComponentValue(bSimpleColours,true);
-		    break;
-	    case ch_ShowDeathMessages:
-	         bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;
-	         ch_ShowDeathMessages.SetComponentValue(bShowDeathMessages, true);
-	         break;
-	    case ch_ShowVoiceIcon:
-	    	bShowVoiceIcon = class'DHHud'.default.bShowVoiceIcon;
-	    	ch_ShowVoiceIcon.SetComponentValue(bShowVoiceIcon, true);
-	    	break;
+            ch_SimpleColours.SetComponentValue(bSimpleColours,true);
+            break;
+        case ch_ShowDeathMessages:
+             bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;
+             ch_ShowDeathMessages.SetComponentValue(bShowDeathMessages, true);
+             break;
+        case ch_ShowVoiceIcon:
+            bShowVoiceIcon = class'DHHud'.default.bShowVoiceIcon;
+            ch_ShowVoiceIcon.SetComponentValue(bShowVoiceIcon, true);
+            break;
         default:
             super.InternalOnLoadINI(sender, s);
-	}
+    }
 }
 
 function SaveSettings()
 {
-	local PlayerController PC;
+    local PlayerController PC;
     local DHHud H;
-	local bool bSave;
+    local bool bSave;
 
-	super(UT2K4Tab_HudSettings).SaveSettings();
+    super(UT2K4Tab_HudSettings).SaveSettings();
 
-	//Red Orchestra SaveSettings Begin
+    //Red Orchestra SaveSettings Begin
 
-	PC = PlayerOwner();
+    PC = PlayerOwner();
     H = DHHud(PlayerOwner().myHud);
 
-	if (bUseNativeRoleNamesD != bUseNativeRoleNames)
-	{
+    if (bUseNativeRoleNamesD != bUseNativeRoleNames)
+    {
         if (DHPlayer(PC) != none)
         {
             DHPlayer(PC).bUseNativeRoleNames = bUseNativeRoleNames;
@@ -67,10 +67,10 @@ function SaveSettings()
             class'DHPlayer'.default.bUseNativeRoleNames = bUseNativeRoleNames;
             class'DHPlayer'.static.StaticSaveConfig();
         }
-	}
+    }
 
-	if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
-	{
+    if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
+    {
         if (DHPlayer(PC) != none)
         {
             DHPlayer(PC).bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
@@ -81,151 +81,151 @@ function SaveSettings()
             class'DHPlayer'.default.bShowMapOnFirstSpawn = bShowMapOnFirstSpawn;
             class'DHPlayer'.static.StaticSaveConfig();
         }
-	}
+    }
 
-	if (H == none)
-	{
-		class'DHHud'.default.bSimpleColours = bSimpleColours;
-		class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
-		class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
-		class'DHHud'.StaticSaveConfig();
-		return;
-	}
+    if (H == none)
+    {
+        class'DHHud'.default.bSimpleColours = bSimpleColours;
+        class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
+        class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
+        class'DHHud'.StaticSaveConfig();
+        return;
+    }
 
-	if (H.bShowCompass != bShowCompass)
-	{
-		H.bShowCompass = bShowCompass;
-		bSave = true;
-	}
+    if (H.bShowCompass != bShowCompass)
+    {
+        H.bShowCompass = bShowCompass;
+        bSave = true;
+    }
 
-	if (H.bShowMapUpdatedText != bShowMapUpdatedText)
-	{
-		H.bShowMapUpdatedText = bShowMapUpdatedText;
-		bSave = true;
-	}
+    if (H.bShowMapUpdatedText != bShowMapUpdatedText)
+    {
+        H.bShowMapUpdatedText = bShowMapUpdatedText;
+        bSave = true;
+    }
 
-	if (HintLevelD != HintLevel)
-	{
-	    if (HintLevel == 0)
-	    {
-	        if (DHPlayer(PC) != none)
-	        {
-	            DHPlayer(PC).bShowHints = true;
+    if (HintLevelD != HintLevel)
+    {
+        if (HintLevel == 0)
+        {
+            if (DHPlayer(PC) != none)
+            {
+                DHPlayer(PC).bShowHints = true;
                 DHPlayer(PC).UpdateHintManagement(true);
                 if (DHPlayer(PC).DHHintManager != none)
-	                DHPlayer(PC).DHHintManager.NonStaticReset();
+                    DHPlayer(PC).DHHintManager.NonStaticReset();
                 DHPlayer(PC).SaveConfig();
-	        }
-	        else
-	        {
-	            class'DHHintManager'.static.StaticReset();
-	            class'DHPlayer'.default.bShowHints = true;
-	            class'DHPlayer'.static.StaticSaveConfig();
-	        }
-	    }
-	    else
-	    {
-	        if (DHPlayer(PC) != none)
-	        {
-	            DHPlayer(PC).bShowHints = (HintLevel == 1);
-	            DHPlayer(PC).UpdateHintManagement(HintLevel == 1);
-	            DHPlayer(PC).SaveConfig();
-	        }
-	        else
-	        {
-	            class'DHPlayer'.default.bShowHints = (HintLevel == 1);
-	            class'DHPlayer'.static.StaticSaveConfig();
-	        }
-	    }
-	}
+            }
+            else
+            {
+                class'DHHintManager'.static.StaticReset();
+                class'DHPlayer'.default.bShowHints = true;
+                class'DHPlayer'.static.StaticSaveConfig();
+            }
+        }
+        else
+        {
+            if (DHPlayer(PC) != none)
+            {
+                DHPlayer(PC).bShowHints = (HintLevel == 1);
+                DHPlayer(PC).UpdateHintManagement(HintLevel == 1);
+                DHPlayer(PC).SaveConfig();
+            }
+            else
+            {
+                class'DHPlayer'.default.bShowHints = (HintLevel == 1);
+                class'DHPlayer'.static.StaticSaveConfig();
+            }
+        }
+    }
 
-	if (H.bSimpleColours != bSimpleColours)
-	{
-		H.bSimpleColours = bSimpleColours;
-		H.bSetColour = false;
-		bSave = true;
-	}
+    if (H.bSimpleColours != bSimpleColours)
+    {
+        H.bSimpleColours = bSimpleColours;
+        H.bSetColour = false;
+        bSave = true;
+    }
 
-	if (H.bShowDeathMessages != bShowDeathMessages)
-	{
-		H.bShowDeathMessages = bShowDeathMessages;
-		bSave = true;
-	}
+    if (H.bShowDeathMessages != bShowDeathMessages)
+    {
+        H.bShowDeathMessages = bShowDeathMessages;
+        bSave = true;
+    }
 
-	if (H.bShowVoiceIcon != bShowVoiceIcon)
-	{
-		H.bShowVoiceIcon = bShowVoiceIcon;
-		bSave = true;
-	}
+    if (H.bShowVoiceIcon != bShowVoiceIcon)
+    {
+        H.bShowVoiceIcon = bShowVoiceIcon;
+        bSave = true;
+    }
 
-	if (bSave)
-    	H.SaveConfig();
+    if (bSave)
+        H.SaveConfig();
 
-	//Red Orchestra SaveSettings End
+    //Red Orchestra SaveSettings End
 
     if (H != none)
-	{
-		/*
-		if (H.bSimpleColours != bSimpleColours)
-		{
-			H.bSimpleColours = bSimpleColours;
-			H.bSetColour = false;
-			bSave = true;
-		}
+    {
+        /*
+        if (H.bSimpleColours != bSimpleColours)
+        {
+            H.bSimpleColours = bSimpleColours;
+            H.bSetColour = false;
+            bSave = true;
+        }
 
-		if (H.bShowDeathMessages != bShowDeathMessages)
-		{
-			H.bShowDeathMessages = bShowDeathMessages;
-			bSave = true;
-		}
+        if (H.bShowDeathMessages != bShowDeathMessages)
+        {
+            H.bShowDeathMessages = bShowDeathMessages;
+            bSave = true;
+        }
 
-		if (H.bShowVoiceIcon != bShowVoiceIcon)
-		{
-			H.bShowVoiceIcon = bShowVoiceIcon;
-			bSave = true;
-		}
+        if (H.bShowVoiceIcon != bShowVoiceIcon)
+        {
+            H.bShowVoiceIcon = bShowVoiceIcon;
+            bSave = true;
+        }
 
-		if (bSave)
-			H.SaveConfig();
-		*/
-	}
-	else
-	{
-			class'DHHud'.default.bSimpleColours = bSimpleColours;
-			class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
-			class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
-			class'DHHud'.static.StaticSaveConfig();
-	}
+        if (bSave)
+            H.SaveConfig();
+        */
+    }
+    else
+    {
+            class'DHHud'.default.bSimpleColours = bSimpleColours;
+            class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
+            class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
+            class'DHHud'.static.StaticSaveConfig();
+    }
 
 /*    if (H.bSimpleColours != bSimpleColours)
-	{
-		H.bSimpleColours = bSimpleColours;
-		H.SetAlliedColour();
-		//H.bSetColour = false;
-		bSave = true;
-	}
+    {
+        H.bSimpleColours = bSimpleColours;
+        H.SetAlliedColour();
+        //H.bSetColour = false;
+        bSave = true;
+    }
 
-	if (bSave)
-    	H.SaveConfig();
+    if (bSave)
+        H.SaveConfig();
 */
 }
 
 function InternalOnChange(GUIComponent Sender)
 {
-	switch (Sender)
-	{
-    	case ch_SimpleColours:
-    		bSimpleColours = ch_SimpleColours.IsChecked();
-    		break;
-    	case ch_ShowDeathMessages:
-    		bShowDeathMessages = ch_ShowDeathMessages.IsChecked();
-    		break;
-    	case ch_ShowVoiceIcon:
-    		bShowVoiceIcon = ch_ShowVoiceIcon.IsChecked();
-    		break;
-   		default:
-   		    super.InternalOnChange(Sender);
-	}
+    switch (Sender)
+    {
+        case ch_SimpleColours:
+            bSimpleColours = ch_SimpleColours.IsChecked();
+            break;
+        case ch_ShowDeathMessages:
+            bShowDeathMessages = ch_ShowDeathMessages.IsChecked();
+            break;
+        case ch_ShowVoiceIcon:
+            bShowVoiceIcon = ch_ShowVoiceIcon.IsChecked();
+            break;
+        default:
+            super.InternalOnChange(Sender);
+    }
 }
 
 defaultproperties

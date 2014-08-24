@@ -12,37 +12,37 @@ var localized string InUse;
 var localized string EnemyMortar;
 
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	switch(Switch)
-	{
-	case 1:
-		return default.MustCrouch;
-	case 3:
-		return default.MustBeStill;
-	case 4:
-		return default.BadSurface;
-	case 5:
-		return default.NotEnoughRoom;
-	case 6:
-		return default.CannotLean;
-	case 7:
-		return default.InWater;
-	case 8:
-		return default.NotQualified;
-	case 9:
-		return default.InUse;
-	case 10:
-		return default.EnemyMortar;
-	case 11:
-		return default.CannotDeploy;
-	default:
-		return default.CannotDeploy;
-	}
+    switch(Switch)
+    {
+    case 1:
+        return default.MustCrouch;
+    case 3:
+        return default.MustBeStill;
+    case 4:
+        return default.BadSurface;
+    case 5:
+        return default.NotEnoughRoom;
+    case 6:
+        return default.CannotLean;
+    case 7:
+        return default.InWater;
+    case 8:
+        return default.NotQualified;
+    case 9:
+        return default.InUse;
+    case 10:
+        return default.EnemyMortar;
+    case 11:
+        return default.CannotDeploy;
+    default:
+        return default.CannotDeploy;
+    }
 }
 
 defaultproperties

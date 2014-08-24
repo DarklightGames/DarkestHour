@@ -8,32 +8,32 @@
 
 class DH_MineVolume extends ROMineVolume;
 
-var() 	bool			bInitiallyActive; 	//Will start active if true
+var()   bool            bInitiallyActive;   //Will start active if true
 
 function PostBeginPlay()
 {
-	Super.PostBeginPlay();
+    Super.PostBeginPlay();
 
-	bActive = bInitiallyActive;
+    bActive = bInitiallyActive;
 }
 
 //Override to prevent ROTeamGame from changing bActive
 function Activate()
 {
-	if (bUsesSpawnAreas)
-		bActive = true;
+    if (bUsesSpawnAreas)
+        bActive = true;
 }
 
 //Override to prevent ROTeamGame from changing bActive
 function Deactivate()
 {
-	if (bUsesSpawnAreas)
-		bActive = false;
+    if (bUsesSpawnAreas)
+        bActive = false;
 }
 
 function Reset()
 {
-	bActive = bInitiallyActive;
+    bActive = bInitiallyActive;
 }
 
 defaultproperties

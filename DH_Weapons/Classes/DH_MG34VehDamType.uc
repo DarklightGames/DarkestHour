@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_MG34VehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

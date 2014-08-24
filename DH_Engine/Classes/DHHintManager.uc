@@ -21,18 +21,18 @@ struct HintInfo
 };
 
 // Constants
-const							HINT_COUNT = 64;
+const                           HINT_COUNT = 64;
 
 // config variables
 var()   float                   PostHintDisplayDelay;           // How long to wait before displaying any other hint (value higher than 0 needed)
 
 var()   HintInfo                Hints[HINT_COUNT];
-var     config byte  			bUsedUpHints[HINT_COUNT]; // 0 = hint unused, 1 = hint used before
+var     config byte             bUsedUpHints[HINT_COUNT]; // 0 = hint unused, 1 = hint used before
 
 var     int                     CurrentHintIndex; // Index in the SortedHints array
 var     float                   LastHintDisplayTime;
 
-var		array<byte>				QueuedHintIndices;
+var     array<byte>             QueuedHintIndices;
 
 function PostBeginPlay()
 {
@@ -47,7 +47,7 @@ static function StaticReset()
     local int i;
 
     for (i = 0; i < HINT_COUNT; i++)
-		default.bUsedUpHints[i] = 0;
+        default.bUsedUpHints[i] = 0;
 
     StaticSaveConfig();
 }
@@ -60,13 +60,13 @@ function NonStaticReset()
         bUsedUpHints[i] = 0;
 
     SaveConfig();
-	Reload();
+    Reload();
 }
 
 function LoadHints()
 {
-	QueuedHintIndices.Length = 0;
-	QueueHint(0, true);
+    QueuedHintIndices.Length = 0;
+    QueueHint(0, true);
 }
 
 function Reload()
@@ -77,22 +77,22 @@ function Reload()
 
 function QueueHint(byte HintIndex, bool bForceNext)
 {
-	local int i;
+    local int i;
 
-	if (bUsedUpHints[HintIndex] == 1)
-		return;
+    if (bUsedUpHints[HintIndex] == 1)
+        return;
 
-	for(i = 0; i < QueuedHintIndices.Length; i++)
-		if (QueuedHintIndices[i] == HintIndex)
-			return;
+    for(i = 0; i < QueuedHintIndices.Length; i++)
+        if (QueuedHintIndices[i] == HintIndex)
+            return;
 
-	if (bForceNext)
-	{
-		QueuedHintIndices.Insert(0, 1);
-		QueuedHintIndices[0] = HintIndex;
-	}
-	else
-		QueuedHintIndices[QueuedHintIndices.Length] = HintIndex;
+    if (bForceNext)
+    {
+        QueuedHintIndices.Insert(0, 1);
+        QueuedHintIndices[0] = HintIndex;
+    }
+    else
+        QueuedHintIndices[QueuedHintIndices.Length] = HintIndex;
 }
 
 function StopHinting()
@@ -106,8 +106,8 @@ function NotifyHintRenderingDone() { }
 
 simulated function Timer()
 {
-	if (QueuedHintIndices.Length > 0)
-		GotoState('WaitHintDone');
+    if (QueuedHintIndices.Length > 0)
+        GotoState('WaitHintDone');
 }
 
 state WaitHintDone
@@ -121,11 +121,11 @@ state WaitHintDone
         if (player != none && DHHud(player.myHud) != none &&
             !DHHud(player.myHud).bHideHud)
         {
-			CurrentHintIndex = QueuedHintIndices[0];
+            CurrentHintIndex = QueuedHintIndices[0];
 
             DHHud(player.myHud).ShowHint(
-				Hints[CurrentHintIndex].Title,
-				Hints[CurrentHintIndex].Text);
+                Hints[CurrentHintIndex].Title,
+                Hints[CurrentHintIndex].Text);
         }
         else
         {

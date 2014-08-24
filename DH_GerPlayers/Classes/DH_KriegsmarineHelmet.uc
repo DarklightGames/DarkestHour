@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   Kriegsmarine Helmet   ***
+//  ***   Kriegsmarine Helmet   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_KriegsmarineHelmet extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WK_HG_1');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WK_HG_1');
 }
 
 defaultproperties

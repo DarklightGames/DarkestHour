@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DHGamePageSP   ***
+//  ***   DHGamePageSP   ***
 //
 // *************************************************************************
 
@@ -10,93 +10,93 @@ const GAME_DIFFICULTY_INDEX = 3;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    	local int i;
-    	local DHTab_MainSP tab;
-    	local DHIAMultiColumnRulesPanel tab2;
+        local int i;
+        local DHTab_MainSP tab;
+        local DHIAMultiColumnRulesPanel tab2;
 
-    	Super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
-    	class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
-    	RuleInfo = new(none) class'Engine.PlayInfo';
+        Super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
+        class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
+        RuleInfo = new(none) class'Engine.PlayInfo';
 
-    	i = 1;
-    	p_Main        = UT2K4Tab_MainBase(c_Tabs.AddTab(PanelCaption[i],PanelClass[i],,PanelHint[i++]));
-	mcRules       = DHIAMultiColumnRulesPanel(c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i++]));
-    	p_Mutators    = UT2K4Tab_MutatorBase(c_Tabs.AddTab(PanelCaption[i],PanelClass[i],,PanelHint[i++]));
+        i = 1;
+        p_Main        = UT2K4Tab_MainBase(c_Tabs.AddTab(PanelCaption[i],PanelClass[i],,PanelHint[i++]));
+    mcRules       = DHIAMultiColumnRulesPanel(c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i++]));
+        p_Mutators    = UT2K4Tab_MutatorBase(c_Tabs.AddTab(PanelCaption[i],PanelClass[i],,PanelHint[i++]));
 
-   	tab = DHTab_MainSP(p_Main);
-    	if (tab != none)
-        		tab.OnChangeDifficulty = InternalOnChangeDifficulty;
-    		tab2 = DHIAMultiColumnRulesPanel(mcRules);
+    tab = DHTab_MainSP(p_Main);
+        if (tab != none)
+                tab.OnChangeDifficulty = InternalOnChangeDifficulty;
+            tab2 = DHIAMultiColumnRulesPanel(mcRules);
 
-  	if (tab2 != none)
-        		tab2.OnDifficultyChanged = InternalOnDifficultyChanged;
+    if (tab2 != none)
+                tab2.OnDifficultyChanged = InternalOnDifficultyChanged;
 
-	b_Back = DHGameFooterSP(t_Footer).b_Back;
-	b_Primary = DHGameFooterSP(t_Footer).b_Primary;
+    b_Back = DHGameFooterSP(t_Footer).b_Back;
+    b_Primary = DHGameFooterSP(t_Footer).b_Primary;
 }
 
 function PrepareToPlay(out string GameURL, optional string OverrideMap)
 {
-	local int i;
-	local byte Value;
+    local int i;
+    local byte Value;
 
-	Super.PrepareToPlay(GameURL, OverrideMap);
+    Super.PrepareToPlay(GameURL, OverrideMap);
 
-	i = RuleInfo.FindIndex("BotMode");
+    i = RuleInfo.FindIndex("BotMode");
 
-	if (i != -1)
-	{
-		Value = byte(RuleInfo.Settings[i].Value) & 3;
+    if (i != -1)
+    {
+        Value = byte(RuleInfo.Settings[i].Value) & 3;
 
-		if (Value == 1)
-			GameURL $= "?bAutoNumBots=true";
+        if (Value == 1)
+            GameURL $= "?bAutoNumBots=true";
 
-		else if (Value == 2)
-			GameURL $= p_BotConfig.Play();
+        else if (Value == 2)
+            GameURL $= p_BotConfig.Play();
 
-		else
-		{
-			i = RuleInfo.FindIndex("MinPlayers");
-			if (i >= 0)
-				GameURL $= "?bAutoNumBots=false?NumBots="$RuleInfo.Settings[i].Value;
-		}
-	}
-	log("Prepare to play GameURL= "$GameURL);
+        else
+        {
+            i = RuleInfo.FindIndex("MinPlayers");
+            if (i >= 0)
+                GameURL $= "?bAutoNumBots=false?NumBots="$RuleInfo.Settings[i].Value;
+        }
+    }
+    log("Prepare to play GameURL= "$GameURL);
 }
 
 function InternalOnChangeDifficulty(int index)
 {
-    	local DHIAMultiColumnRulesPanel tab;
-    	local int i;
-    	local DHmoComboBox    combo;
+        local DHIAMultiColumnRulesPanel tab;
+        local int i;
+        local DHmoComboBox    combo;
 
-    	tab = DHIAMultiColumnRulesPanel(mcRules);
-    	if (tab != none)
-    	{
-        		i = tab.FindComponentWithTag(GAME_DIFFICULTY_INDEX); // hax: game difficulty control is control #3
-        		if (i == -1)
-            			return;
-        			combo = DHmoComboBox(tab.li_Rules.Elements[i]);
+        tab = DHIAMultiColumnRulesPanel(mcRules);
+        if (tab != none)
+        {
+                i = tab.FindComponentWithTag(GAME_DIFFICULTY_INDEX); // hax: game difficulty control is control #3
+                if (i == -1)
+                        return;
+                    combo = DHmoComboBox(tab.li_Rules.Elements[i]);
 
-		if (combo == none)
-            			return;
-        			combo.SetIndex(index);
-    	}
+        if (combo == none)
+                        return;
+                    combo.SetIndex(index);
+        }
 }
 
 function InternalOnDifficultyChanged(int index, int tag)
 {
-    	local DHTab_MainSP gametab;
+        local DHTab_MainSP gametab;
 
-    	if (tag != GAME_DIFFICULTY_INDEX)
-        		return;
-    		gametab = DHTab_MainSP(p_Main);
+        if (tag != GAME_DIFFICULTY_INDEX)
+                return;
+            gametab = DHTab_MainSP(p_Main);
 
-    	if (gametab != none)
-    	{
-        		gametab.SilentSetDifficulty(index);
-        		log("difficulty changed.");
-    	}
+        if (gametab != none)
+        {
+                gametab.SilentSetDifficulty(index);
+                log("difficulty changed.");
+        }
 }
 
 defaultproperties

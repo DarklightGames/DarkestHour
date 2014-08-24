@@ -23,15 +23,15 @@ var sound SmokeSound;
 
 simulated function Landed(vector HitNormal)
 {
-	if (Bounces <= 0)
-	{
-		SetPhysics(PHYS_none);
-		SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
-	}
-	else
-	{
-		HitWall(HitNormal, none);
-	}
+    if (Bounces <= 0)
+    {
+        SetPhysics(PHYS_none);
+        SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
+    }
+    else
+    {
+        HitWall(HitNormal, none);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -40,10 +40,10 @@ simulated function Landed(vector HitNormal)
 
 function BlowUp(vector HitLocation)
 {
-	//DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+    //DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
 
-	if (Role == ROLE_Authority)
-		MakeNoise(1.0);
+    if (Role == ROLE_Authority)
+        MakeNoise(1.0);
 }
 
 //-----------------------------------------------------------------------------
@@ -52,22 +52,22 @@ function BlowUp(vector HitLocation)
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-	BlowUp(HitLocation);
+    BlowUp(HitLocation);
 
-	if (Role == ROLE_Authority)
-	{
-		AmbientSound = SmokeSound;
-	}
+    if (Role == ROLE_Authority)
+    {
+        AmbientSound = SmokeSound;
+    }
 
-	PlaySound(ExplosionSound[Rand(3)],, 1.0,,200);
+    PlaySound(ExplosionSound[Rand(3)],, 1.0,,200);
 
     //DoShakeEffect();
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
-	    SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
-	    SmokeEmitter.SetBase(Self);
-	}
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
+        SmokeEmitter.SetBase(Self);
+    }
 }
 
 simulated function Destroyed()
@@ -76,7 +76,7 @@ simulated function Destroyed()
 
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Kill();
+        SmokeEmitter.Kill();
     }
 }
 
@@ -84,24 +84,24 @@ function Reset()
 {
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Destroy();
+        SmokeEmitter.Destroy();
     }
 
-	super.Reset();
+    super.Reset();
 }
 
 
 simulated function Tick(float DeltaTime)
 {
-	super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
-	DestroyTimer -= DeltaTime;
+    DestroyTimer -= DeltaTime;
 
-	if (DestroyTimer <= 0.0 && !bCalledDestroy)
-	{
-		bCalledDestroy = true;
-		Destroy();
-	}
+    if (DestroyTimer <= 0.0 && !bCalledDestroy)
+    {
+        bCalledDestroy = true;
+        Destroy();
+    }
 }
 
 //=============================================================================

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   WH Artillery Gunner   ***
+//  ***   WH Artillery Gunner   ***
 //
 // *************************************************************************
 
@@ -8,14 +8,14 @@ class DH_WHArtilleryGunner extends DH_HeerArtilleryCrew;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		return Headgear[0];
-	}
-	else
-	{
-		return Headgear[1];
-	}
+    if (FRand() < 0.2)
+    {
+        return Headgear[0];
+    }
+    else
+    {
+        return Headgear[1];
+    }
 }
 
 defaultproperties

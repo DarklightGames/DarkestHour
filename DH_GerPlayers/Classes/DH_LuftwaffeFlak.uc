@@ -1,5 +1,5 @@
 class DH_LuftwaffeFlak extends DH_Ger_Luftwaffe
-	abstract;
+    abstract;
 
 defaultproperties
 {

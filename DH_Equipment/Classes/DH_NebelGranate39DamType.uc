@@ -9,7 +9,7 @@
 //=============================================================================
 
 class DH_NebelGranate39DamType extends ROGrenadeDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

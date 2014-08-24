@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_MP40DamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

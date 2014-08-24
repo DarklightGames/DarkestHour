@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_BritishAirborneBeretOx_Bucks   ***
+//  ***   DH_BritishAirborneBeretOx_Bucks   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_BritishAirborneBeretOx_Bucks extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_tanker_Headgear');
+//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_tanker_Headgear');
 }
 
 defaultproperties

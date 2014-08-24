@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_M1CarbineVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

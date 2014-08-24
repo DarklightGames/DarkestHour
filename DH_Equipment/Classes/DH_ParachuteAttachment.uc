@@ -1,11 +1,11 @@
-class DH_ParachuteAttachment extends DHWeaponAttachment;	//InventoryAttachment;
+class DH_ParachuteAttachment extends DHWeaponAttachment;    //InventoryAttachment;
 
-var 	name	ChuteDeployAnim;
-var	name	ChuteIdleAnim;
+var     name    ChuteDeployAnim;
+var name    ChuteIdleAnim;
 
 simulated function PlayIdle()
 {
-	PlayAnim(ChuteDeployAnim);
+    PlayAnim(ChuteDeployAnim);
 }
 
 defaultproperties

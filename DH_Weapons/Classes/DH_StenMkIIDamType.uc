@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_StenMkIIDamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

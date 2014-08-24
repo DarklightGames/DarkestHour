@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   WH Squad Leader   ***
+//  ***   WH Squad Leader   ***
 //
 // *************************************************************************
 
@@ -8,10 +8,10 @@ class DH_WHSquadLeader extends DH_Heer;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-		return Headgear[0];
-	else
-		return Headgear[1];
+    if (FRand() < 0.2)
+        return Headgear[0];
+    else
+        return Headgear[1];
 }
 
 defaultproperties

@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_SatchelDamType extends ROSatchelDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

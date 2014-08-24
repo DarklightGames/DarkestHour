@@ -17,11 +17,11 @@ class DH_G43Pickup extends ROWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.g43');
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.g43pouch');
-	L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.g43_world');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex.Rifles.G43_S');
-	L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.G43_ammo');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.g43');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.g43pouch');
+    L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.g43_world');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex.Rifles.G43_S');
+    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.G43_ammo');
 }
 
 defaultproperties

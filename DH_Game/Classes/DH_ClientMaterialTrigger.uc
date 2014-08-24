@@ -104,9 +104,9 @@ function Untrigger(Actor Other, Pawn EventInstigator)
 
 simulated function Reset()
 {
-	super.Reset();
+    super.Reset();
 
-	//TODO: Fix.
+    //TODO: Fix.
 }
 
 defaultproperties

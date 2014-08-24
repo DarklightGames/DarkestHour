@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_Kar98ScopedBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

@@ -10,167 +10,167 @@ class DH_Stug3GDestroyer_CamoTwo extends DH_Stug3GDestroyer;
 
 simulated function SetupTreads()
 {
-	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (LeftTreadPanner != none)
-	{
-		LeftTreadPanner.Material = Skins[LeftTreadIndex];
-		LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-		LeftTreadPanner.PanRate = 0.0;
-		Skins[LeftTreadIndex] = LeftTreadPanner;
-	}
-	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (RightTreadPanner != none)
-	{
-		RightTreadPanner.Material = Skins[RightTreadIndex];
-		RightTreadPanner.PanDirection = rot(0, 0, 16384);
-		RightTreadPanner.PanRate = 0.0;
-		Skins[RightTreadIndex] = RightTreadPanner;
-	}
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
 }
 
 simulated function Tick(float DeltaTime)
 {
-	//local PlayerController PC;
+    //local PlayerController PC;
     local float MotionSoundTemp;
-	local KRigidBodyState BodyState;
-	local float MySpeed;
-	local int i;
+    local KRigidBodyState BodyState;
+    local float MySpeed;
+    local int i;
 
-	KGetRigidBodyState(BodyState);
-	LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
+    KGetRigidBodyState(BodyState);
+    LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 
     // Damaged treads cause vehicle to swerve and turn without control
-	if (Controller != none)
-	{
+    if (Controller != none)
+    {
         if (bLeftTrackDamaged)
-		{
-			Throttle = FClamp(Throttle, -0.50, 0.50);
-			if (Controller.IsA('ROPlayer'))
-				ROPlayer(Controller).aStrafe = -32768;
-			else if (Controller.IsA('ROBot'))
-				Steering = 1;
-		}
-		else if (bRightTrackDamaged)
-		{
-			Throttle = FClamp(Throttle, -0.50, 0.50);
-			if (Controller.IsA('ROPlayer'))
-				ROPlayer(Controller).aStrafe = 32768;
-			else if (Controller.IsA('ROBot'))
-				Steering = -1;
-		}
-	}
+        {
+            Throttle = FClamp(Throttle, -0.50, 0.50);
+            if (Controller.IsA('ROPlayer'))
+                ROPlayer(Controller).aStrafe = -32768;
+            else if (Controller.IsA('ROBot'))
+                Steering = 1;
+        }
+        else if (bRightTrackDamaged)
+        {
+            Throttle = FClamp(Throttle, -0.50, 0.50);
+            if (Controller.IsA('ROPlayer'))
+                ROPlayer(Controller).aStrafe = 32768;
+            else if (Controller.IsA('ROBot'))
+                Steering = -1;
+        }
+    }
 
     // Only need these effects client side
-	if (Level.Netmode != NM_DedicatedServer)
-	{
-		if (bDisableThrottle)
-		{
-			if (bWantsToThrottle)
-			{
-				IntendedThrottle=1.0;
-			}
-			else if (IntendedThrottle > 0)
-			{
-				IntendedThrottle -= (DeltaTime * 0.5);
-			}
-			else
-			{
-				IntendedThrottle=0;
-			}
-		}
+    if (Level.Netmode != NM_DedicatedServer)
+    {
+        if (bDisableThrottle)
+        {
+            if (bWantsToThrottle)
+            {
+                IntendedThrottle=1.0;
+            }
+            else if (IntendedThrottle > 0)
+            {
+                IntendedThrottle -= (DeltaTime * 0.5);
+            }
+            else
+            {
+                IntendedThrottle=0;
+            }
+        }
         else
         {
             if (bLeftTrackDamaged)
-			{
-				 if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
-				 	LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
-			     LeftTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
-			}
+            {
+                 if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                    LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
+                 LeftTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
+            }
 
-			if (bRightTrackDamaged)
-			{
-				 if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
-				 	RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
-				 RightTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
-			}
+            if (bRightTrackDamaged)
+            {
+                 if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                    RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
+                 RightTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
+            }
 
-			SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
+            SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
 
-			if (SoundVolume != default.SoundVolume)
-			{
-				SoundVolume = default.SoundVolume;
-			}
+            if (SoundVolume != default.SoundVolume)
+            {
+                SoundVolume = default.SoundVolume;
+            }
 
-			if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
-		        Skins[LeftTreadIndex]=DamagedTreadPanner;
+            if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
+                Skins[LeftTreadIndex]=DamagedTreadPanner;
 
-	        if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
-		        Skins[RightTreadIndex]=DamagedTreadPanner;
+            if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
+                Skins[RightTreadIndex]=DamagedTreadPanner;
         }
 
 
-		// Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
-		// VSize() is very CPU intensive - Ramm
-		MySpeed = VSize(Velocity);
+        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
+        // VSize() is very CPU intensive - Ramm
+        MySpeed = VSize(Velocity);
 
-		// Setup sounds that are dependent on velocity
-		MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
-		if (MySpeed > 0.1)
-		{
-		  	MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
-		}
-		else
-		{
+        // Setup sounds that are dependent on velocity
+        MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
+        if (MySpeed > 0.1)
+        {
+            MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
+        }
+        else
+        {
             MotionSoundVolume=0;
-		}
-		UpdateMovementSound();
+        }
+        UpdateMovementSound();
 
-		if (LeftTreadPanner != none)
-		{
-			LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-			if (Velocity dot vector(Rotation) < 0)
-				LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
-			LeftTreadPanner.PanRate += LinTurnSpeed;
-		}
+        if (LeftTreadPanner != none)
+        {
+            LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
+            if (Velocity dot vector(Rotation) < 0)
+                LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
+            LeftTreadPanner.PanRate += LinTurnSpeed;
+        }
 
-		if (RightTreadPanner != none)
-		{
-			RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-			if (Velocity Dot vector(Rotation) < 0)
-				RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
-			RightTreadPanner.PanRate -= LinTurnSpeed;
-		}
+        if (RightTreadPanner != none)
+        {
+            RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
+            if (Velocity Dot vector(Rotation) < 0)
+                RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
+            RightTreadPanner.PanRate -= LinTurnSpeed;
+        }
 
-		// Animate the tank wheels
-		LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-		RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
+        // Animate the tank wheels
+        LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
+        RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-		for(i=0; i<LeftWheelBones.Length; i++)
-		{
-			  SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
-		}
+        for(i=0; i<LeftWheelBones.Length; i++)
+        {
+              SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+        }
 
-		for(i=0; i<RightWheelBones.Length; i++)
-		{
-			  SetBoneRotation(RightWheelBones[i], RightWheelRot);
-		}
+        for(i=0; i<RightWheelBones.Length; i++)
+        {
+              SetBoneRotation(RightWheelBones[i], RightWheelRot);
+        }
 
-		if (MySpeed >= MaxCriticalSpeed)
-		{
-		    if (Controller.IsA('ROPlayer'))
-				ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
-		}
-	}
+        if (MySpeed >= MaxCriticalSpeed)
+        {
+            if (Controller.IsA('ROPlayer'))
+                ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
+        }
+    }
 
     // This will slow the tank way down when it tries to turn at high speeds
-	if (ForwardVel > 0.0)
-     	WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
+    if (ForwardVel > 0.0)
+        WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
     else
-     	WheelLatFrictionScale = default.WheelLatFrictionScale;
+        WheelLatFrictionScale = default.WheelLatFrictionScale;
 
     if (bEngineOnFire || (bOnFire && Health > 0))
-	{
-	    if (DamagedEffectHealthFireFactor != 1.0)
+    {
+        if (DamagedEffectHealthFireFactor != 1.0)
         {
             DamagedEffectHealthFireFactor = 1.0;
             DamagedEffect.UpdateDamagedEffect(true, 0, false, false);
@@ -205,19 +205,19 @@ simulated function Tick(float DeltaTime)
         }
 
         TakeFireDamage(DeltaTime);
-	}
-	else if (EngineHealth <= 0 && Health > 0)
-	{
-	    if (DamagedEffectHealthFireFactor != 0)
-     	{
-     	    DamagedEffectHealthFireFactor = 0.0;
+    }
+    else if (EngineHealth <= 0 && Health > 0)
+    {
+        if (DamagedEffectHealthFireFactor != 0)
+        {
+            DamagedEffectHealthFireFactor = 0.0;
             DamagedEffectHealthHeavySmokeFactor = 1.0;
             DamagedEffect.UpdateDamagedEffect(false, 0, false, false); // reset fire effects
             DamagedEffect.UpdateDamagedEffect(false, 0, false, true);  // set the tank to smoke instead of burn
         }
     }
 
-	Super(ROWheeledVehicle).Tick(DeltaTime);
+    Super(ROWheeledVehicle).Tick(DeltaTime);
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
@@ -229,10 +229,10 @@ simulated function Tick(float DeltaTime)
         Steering=0;
     }
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
-		CheckEmitters();
-	}
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        CheckEmitters();
+    }
 }
 
 simulated function UpdateTurretReferences()
@@ -241,26 +241,26 @@ simulated function UpdateTurretReferences()
 
     if (CannonTurret == none)
     {
-    	for (i = 0; i < WeaponPawns.length; i++)
-    	{
-    		if (WeaponPawns[i].Gun.IsA('ROTankCannon'))
-    		{
-    		    CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
-    		    break;
-    		}
-   		}
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            if (WeaponPawns[i].Gun.IsA('ROTankCannon'))
+            {
+                CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
+                break;
+            }
+        }
     }
 
     if (HullMG == none)
     {
-		for (i = 0; i < WeaponPawns.length; i++)
-		{
-			if (WeaponPawns[i].Gun.IsA('DH_StuH42MountedMG'))
-			{
-			    HullMG = WeaponPawns[i].Gun;
-			    break;
-			}
-   		}
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            if (WeaponPawns[i].Gun.IsA('DH_StuH42MountedMG'))
+            {
+                HullMG = WeaponPawns[i].Gun;
+                break;
+            }
+        }
     }
 }
 
@@ -279,7 +279,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.stug3g_treads');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.stug3G_armor_camo2');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

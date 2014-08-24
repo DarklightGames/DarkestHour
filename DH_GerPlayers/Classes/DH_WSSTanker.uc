@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   WSS Tanker  ***
+//  ***   WSS Tanker  ***
 //
 // *************************************************************************
 
@@ -8,14 +8,14 @@ class DH_WSSTanker extends DH_WaffenSSTankCrew;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-	{
-		return Headgear[0];
-	}
-	else
-	{
-		return Headgear[1];
-	}
+    if (FRand() < 0.2)
+    {
+        return Headgear[0];
+    }
+    else
+    {
+        return Headgear[1];
+    }
 }
 
 defaultproperties

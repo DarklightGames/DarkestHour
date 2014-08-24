@@ -27,7 +27,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_wheels_snow');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_extras_snow');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

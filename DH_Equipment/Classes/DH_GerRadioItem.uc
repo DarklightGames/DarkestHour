@@ -4,20 +4,20 @@
 
 class DH_GerRadioItem extends DHWeapon;
 
-var 	DHArtilleryTriggerUSMap 	RadioTrigger;
+var     DHArtilleryTriggerUSMap     RadioTrigger;
 
 function PickupFunction(Pawn Other)
 {
-	Super.PickupFunction(Other);
+    Super.PickupFunction(Other);
 
-	AttachToPawn(Instigator);
-	//Instigator.ClientMessage("Radio Operational");
-	SetTimer(0.1, false);
+    AttachToPawn(Instigator);
+    //Instigator.ClientMessage("Radio Operational");
+    SetTimer(0.1, false);
 }
 
 function Timer()
 {
-	Destroy();
+    Destroy();
 }
 
 function AttachToPawn(Pawn P)
@@ -28,23 +28,23 @@ function AttachToPawn(Pawn P)
     GRI = DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo);
 
     RadioTrigger = Spawn(Class'DHArtilleryTriggerUSMap', P);
-	RadioTrigger.SetCarrier(P);                         // Tell the trigger who's carrying it for the purpose of scoring points
-	DH_Pawn(P).CarriedRadioTrigger = RadioTrigger;         // Assign the new trigger to the pawn carrying it for deleting on death
+    RadioTrigger.SetCarrier(P);                         // Tell the trigger who's carrying it for the purpose of scoring points
+    DH_Pawn(P).CarriedRadioTrigger = RadioTrigger;         // Assign the new trigger to the pawn carrying it for deleting on death
 
-	//Added in last patch so we can have a distinction between Allied and Axis radiomen.
-	RadioTrigger.TeamCanUse = AT_Axis;
+    //Added in last patch so we can have a distinction between Allied and Axis radiomen.
+    RadioTrigger.TeamCanUse = AT_Axis;
 
     for(i = 0; i < ArrayCount(GRI.CarriedAxisRadios); i++)
-   	{
+    {
         if (GRI.CarriedAxisRadios[i] == none)
         {
             GRI.CarriedAxisRadios[i] = RadioTrigger;
             DH_Pawn(P).GRIRadioPos = i;
             break;
         }
-   	}
+    }
 
-	P.AttachToBone(RadioTrigger,'hip');
+    P.AttachToBone(RadioTrigger,'hip');
 }
 
 defaultproperties

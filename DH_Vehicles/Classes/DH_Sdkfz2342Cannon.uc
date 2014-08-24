@@ -12,32 +12,32 @@ class DH_Sdkfz2342Cannon extends DH_ROTankCannon;
 // Special tracer handling for this type of cannon
 simulated function UpdateTracer()
 {
-	local rotator SpawnDir;
+    local rotator SpawnDir;
 
-	if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-		return;
+    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
+        return;
 
 
- 	if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-	{
-		if (Instigator != none && Instigator.IsLocallyControlled())
-		{
-			SpawnDir = WeaponFireRotation;
-		}
-		else
-		{
-			SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-		}
+    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
+    {
+        if (Instigator != none && Instigator.IsLocallyControlled())
+        {
+            SpawnDir = WeaponFireRotation;
+        }
+        else
+        {
+            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
+        }
 
         if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
         {
-        	SpawnDir.Pitch += AddedPitch;
+            SpawnDir.Pitch += AddedPitch;
         }
 
         Spawn(DummyTracerClass,,, WeaponFireLocation, SpawnDir);
 
-		mLastTracerTime = Level.TimeSeconds;
-	}
+        mLastTracerTime = Level.TimeSeconds;
+    }
 }
 */
 

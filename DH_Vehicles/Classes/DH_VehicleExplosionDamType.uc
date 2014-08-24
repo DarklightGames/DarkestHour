@@ -1,5 +1,5 @@
 class DH_VehicleExplosionDamType extends DamTypeVehicleExplosion
-	abstract;
+    abstract;
 
 defaultproperties
 {

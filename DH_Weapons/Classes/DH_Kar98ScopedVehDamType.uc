@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_Kar98ScopedVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

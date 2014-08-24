@@ -1,30 +1,30 @@
 //-----------------------------------------------------------
 //   VehicleMGEmitter - Ambient Emitter class for RO vehicle MGs
-//	Muzzle flash and shell ejection
+//  Muzzle flash and shell ejection
 //-----------------------------------------------------------
 class DH_Vehicle30CalMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)
 {
-	Emitters[0].UseCollision = (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (VSize(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 1600));
-	if (bEnabled)
-	{
-		Emitters[0].ParticlesPerSecond = 7.0; //400 RPM
-		Emitters[0].InitialParticlesPerSecond = 7.0; //400 RPM
-		Emitters[0].AllParticlesDead = false;
+    Emitters[0].UseCollision = (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (VSize(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 1600));
+    if (bEnabled)
+    {
+        Emitters[0].ParticlesPerSecond = 7.0; //400 RPM
+        Emitters[0].InitialParticlesPerSecond = 7.0; //400 RPM
+        Emitters[0].AllParticlesDead = false;
 
-		Emitters[1].ParticlesPerSecond = 14.0;
-		Emitters[1].InitialParticlesPerSecond = 14.0;
-		Emitters[1].AllParticlesDead = false;
-	}
-	else
-	{
-		Emitters[0].ParticlesPerSecond = 0.0;
-		Emitters[0].InitialParticlesPerSecond = 0.0;
+        Emitters[1].ParticlesPerSecond = 14.0;
+        Emitters[1].InitialParticlesPerSecond = 14.0;
+        Emitters[1].AllParticlesDead = false;
+    }
+    else
+    {
+        Emitters[0].ParticlesPerSecond = 0.0;
+        Emitters[0].InitialParticlesPerSecond = 0.0;
 
-		Emitters[1].ParticlesPerSecond = 0.0;
-		Emitters[1].InitialParticlesPerSecond = 0.0;
-	}
+        Emitters[1].ParticlesPerSecond = 0.0;
+        Emitters[1].InitialParticlesPerSecond = 0.0;
+    }
 }
 
 defaultproperties

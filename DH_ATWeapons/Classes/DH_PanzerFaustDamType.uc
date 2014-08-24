@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_PanzerFaustDamType extends ROAntiTankProjectileDamType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

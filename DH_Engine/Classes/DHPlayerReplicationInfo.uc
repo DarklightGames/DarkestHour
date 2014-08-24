@@ -13,7 +13,7 @@ class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 // Variables
 //=============================================================================
 
-var	DH_RoleInfo		DHRoleInfo;
+var DH_RoleInfo     DHRoleInfo;
 
 //=============================================================================
 // replication
@@ -21,8 +21,8 @@ var	DH_RoleInfo		DHRoleInfo;
 
 replication
 {
-	reliable if (bNetDirty && (Role == Role_Authority))
-		DHRoleInfo;
+    reliable if (bNetDirty && (Role == Role_Authority))
+        DHRoleInfo;
 }
 
 //=============================================================================

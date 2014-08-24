@@ -22,7 +22,7 @@ simulated function Timer()
    else if (CannonReloadState == CR_Empty)
    {
          if (Role == ROLE_Authority)
-	     {
+         {
               PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
          }
          else
@@ -36,7 +36,7 @@ simulated function Timer()
    else if (CannonReloadState == CR_ReloadedPart1)
    {
          if (Role == ROLE_Authority)
-	     {
+         {
               PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
          }
          else
@@ -51,7 +51,7 @@ simulated function Timer()
    else if (CannonReloadState == CR_ReloadedPart2)
    {
          if (Role == ROLE_Authority)
-	     {
+         {
               PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
          }
          else
@@ -64,12 +64,12 @@ simulated function Timer()
    }
    else if (CannonReloadState == CR_ReloadedPart3)
    {
-		if (Role == ROLE_Authority)
-		{
-			bClientCanFireCannon = true;
-		}
-		CannonReloadState = CR_ReadyToFire;
-		SetTimer(0.0,false);
+        if (Role == ROLE_Authority)
+        {
+            bClientCanFireCannon = true;
+        }
+        CannonReloadState = CR_ReadyToFire;
+        SetTimer(0.0,false);
    }
 }
 
@@ -99,34 +99,34 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
-	    DamageType = class'ROSuicided';
-	    ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-	}
-	else if (DamageType == class'ROSuicided')
-	{
-		ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-	}
+        DamageType = class'ROSuicided';
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    }
+    else if (DamageType == class'ROSuicided')
+    {
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    }
 
     //Added ability for gunner to take nade, bash, and bayonet damage
     /*   Removed this if/then to fix player vulnerability bug that was fixed in the After-Hourz AT-Gun fixes.
     if (HitDriver(Hitlocation, Momentum) || ClassIsChildOf(DamageType,class'ROGrenadeDamType') || ClassIsChildOf(DamageType,class'ROWeaponBashDamageType') || ClassIsChildOf(DamageType,class'ROWeaponBayonetDamageType'))
-	{
+    {
          ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-	}
+    }
     */
 }
 
 // There aren't any angles that are below the driver angle for the AT Gun cannon
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
-	return false;
+    return false;
 }
 
 // Limit the left and right movement of the gun
 simulated function int LimitYaw(int yaw)
 {
     local int NewYaw;
-	local ROVehicleWeaponPawn PwningPawn;
+    local ROVehicleWeaponPawn PwningPawn;
 
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
@@ -139,28 +139,28 @@ simulated function int LimitYaw(int yaw)
 
     if (PwningPawn != none)
     {
-	   	if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
-	   	{
-	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
-	   	}
-	   	else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
-	   	{
-	   		NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
-	  	}
-  	}
-  	else
-  	{
-	   	if (yaw > MaxPositiveYaw)
-	   	{
-	   		NewYaw = MaxPositiveYaw;
-	   	}
-	   	else if (yaw < MaxNegativeYaw)
-	   	{
-	   		NewYaw = MaxNegativeYaw;
-	  	}
+        if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
+        {
+            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
+        }
+        else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
+        {
+            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
+        }
+    }
+    else
+    {
+        if (yaw > MaxPositiveYaw)
+        {
+            NewYaw = MaxPositiveYaw;
+        }
+        else if (yaw < MaxNegativeYaw)
+        {
+            NewYaw = MaxNegativeYaw;
+        }
     }
 
-  	return NewYaw;
+    return NewYaw;
 }
 
 //==============================================================================

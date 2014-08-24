@@ -11,12 +11,12 @@ class DHMapVotingPage extends MapVotingPage;
 
 function bool AlignBK(Canvas C)
 {
-	i_MapCountListBackground.WinWidth  = lb_VoteCountListbox.MyList.ActualWidth();
-	i_MapCountListBackground.WinHeight = lb_VoteCountListbox.MyList.ActualHeight();
-	i_MapCountListBackground.WinLeft   = lb_VoteCountListbox.MyList.ActualLeft();
-	i_MapCountListBackground.WinTop    = lb_VoteCountListbox.MyList.ActualTop();
+    i_MapCountListBackground.WinWidth  = lb_VoteCountListbox.MyList.ActualWidth();
+    i_MapCountListBackground.WinHeight = lb_VoteCountListbox.MyList.ActualHeight();
+    i_MapCountListBackground.WinLeft   = lb_VoteCountListbox.MyList.ActualLeft();
+    i_MapCountListBackground.WinTop    = lb_VoteCountListbox.MyList.ActualTop();
 
-	return false;
+    return false;
 }
 
 

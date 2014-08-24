@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_P08LugerBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

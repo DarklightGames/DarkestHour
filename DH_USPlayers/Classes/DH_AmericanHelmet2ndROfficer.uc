@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_AmericanHelmet2ndROfficer   ***
+//  ***   DH_AmericanHelmet2ndROfficer   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_AmericanHelmet2ndROfficer extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
+//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
 }
 
 defaultproperties

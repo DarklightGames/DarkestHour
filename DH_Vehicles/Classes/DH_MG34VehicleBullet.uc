@@ -1,7 +1,7 @@
 //=============================================================================
 // DH_MG34VehicleBullet
 //=============================================================================
-class DH_MG34VehicleBullet extends DH_Bullet;	//ROBullet;
+class DH_MG34VehicleBullet extends DH_Bullet;   //ROBullet;
 
 //=============================================================================
 // defaultproperties

@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_Sdkfz251_CamoSnowGunPawn   ***
+//  ***   DH_Sdkfz251_CamoSnowGunPawn   ***
 //
 // *************************************************************************
 class DH_Sdkfz251GunPawn_SnowOne extends DH_Sdkfz251GunPawn;

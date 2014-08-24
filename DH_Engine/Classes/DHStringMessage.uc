@@ -18,13 +18,13 @@ class DHStringMessage extends LocalMessage;
 //-----------------------------------------------------------------------------
 
 static function string AssembleString(
-	HUD myHUD,
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional String MessageString
-	)
+    HUD myHUD,
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional String MessageString
+    )
 {
-	return MessageString;
+    return MessageString;
 }
 
 //-----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ static function string AssembleString(
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
-	return default.DrawColor;
+    return default.DrawColor;
 }
 
 

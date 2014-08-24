@@ -4,9 +4,9 @@
 
 class DH_PIATFire extends DH_ProjectileFire;
 
-var 	name		FireIronAnimOne;  	// Iron Fire animation for range setting one
-var 	name		FireIronAnimTwo;    // Iron Fire animation for range setting two
-var 	name		FireIronAnimThree;  // Iron Fire animation for range setting three
+var     name        FireIronAnimOne;    // Iron Fire animation for range setting one
+var     name        FireIronAnimTwo;    // Iron Fire animation for range setting two
+var     name        FireIronAnimThree;  // Iron Fire animation for range setting three
 
 
 event ModeDoFire()
@@ -15,7 +15,7 @@ event ModeDoFire()
         return;
 
     if (!Instigator.bIsCrawling && !Instigator.bRestingWeapon)
-    	return;
+        return;
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -23,61 +23,61 @@ event ModeDoFire()
            DH_RocketWeapon(Owner).RocketAttachment.Destroy();
     }
 
-	Super.ModeDoFire();
+    Super.ModeDoFire();
 
-//	DH_PIATWeapon(Weapon).PostFire();
+//  DH_PIATWeapon(Weapon).PostFire();
 }
 
 function PlayFiring()
 {
-	local name Anim;
+    local name Anim;
 
-	if (Weapon.Mesh != none)
-	{
-		if (FireCount > 0)
-		{
-			if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
-			{
-			 	Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-			}
-			else
-			{
-				if (Weapon.HasAnim(FireLoopAnim))
-				{
-					Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
-				}
-				else
-				{
-					Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-				}
-			}
-		}
-		else
-		{
-			if (Weapon.bUsingSights)
-			{
-				switch(DH_PIATWeapon(Weapon).RangeIndex)
-				{
-					case 0:
-						Anim = FireIronAnimOne;
-						break;
-					case 1:
-						Anim = FireIronAnimTwo;
-						break;
-					case 2:
-						Anim = FireIronAnimThree;
-						break;
-				}
-			 	Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
-			}
-			else
-			{
-				Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-			}
-		}
-	}
+    if (Weapon.Mesh != none)
+    {
+        if (FireCount > 0)
+        {
+            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+            {
+                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
+            }
+            else
+            {
+                if (Weapon.HasAnim(FireLoopAnim))
+                {
+                    Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
+                }
+                else
+                {
+                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+                }
+            }
+        }
+        else
+        {
+            if (Weapon.bUsingSights)
+            {
+                switch(DH_PIATWeapon(Weapon).RangeIndex)
+                {
+                    case 0:
+                        Anim = FireIronAnimOne;
+                        break;
+                    case 1:
+                        Anim = FireIronAnimTwo;
+                        break;
+                    case 2:
+                        Anim = FireIronAnimThree;
+                        break;
+                }
+                Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
+            }
+            else
+            {
+                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+            }
+        }
+    }
 
-	Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
 
     ClientPlayForceFeedback(FireForce);  // jdf
 

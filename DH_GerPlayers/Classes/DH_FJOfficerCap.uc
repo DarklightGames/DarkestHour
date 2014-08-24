@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   FJ Officer cap ***
+//  ***   FJ Officer cap ***
 //
 // *************************************************************************
 
@@ -10,8 +10,8 @@ class DH_FJOfficercap extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_FJ_crashcap');
-//	L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadgear.FJ_Helmet1');
+//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_FJ_crashcap');
+//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadgear.FJ_Helmet1');
 }
 
 defaultproperties

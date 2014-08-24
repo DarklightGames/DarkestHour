@@ -1,9 +1,9 @@
 // ====================================================================
-//	dhGUIButton 
+//  dhGUIButton
 // ====================================================================
 
 class DHGUIButton extends GUIButton;
-	
+
 
 defaultproperties
 {

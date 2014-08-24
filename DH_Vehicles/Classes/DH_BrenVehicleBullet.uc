@@ -1,7 +1,7 @@
 //=============================================================================
 // DH_30calBullet
 //=============================================================================
-class DH_BrenVehicleBullet extends DH_Bullet;	//ROBullet;
+class DH_BrenVehicleBullet extends DH_Bullet;   //ROBullet;
 
 //=============================================================================
 // defaultproperties

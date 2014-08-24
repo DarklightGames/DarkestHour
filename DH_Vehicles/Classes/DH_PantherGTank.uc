@@ -25,7 +25,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int_s');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

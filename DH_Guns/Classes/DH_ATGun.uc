@@ -41,7 +41,7 @@ simulated function StartEngine();                  //don't need the engine stuff
 // Returns true, an AT-Gun is always disabled (i.e. can not move)
 simulated function bool IsDisabled()
 {
-	return true; //for now just return true.
+    return true; //for now just return true.
 }
 
 // Overriden to bypass attaching as a driver and go straight to the gun.
@@ -61,7 +61,7 @@ function KDriverEnter(Pawn P)
     if (WeaponPawns.length > 0)
     {
         WeaponPawns[0].KDriverEnter(P);                   //attach to the first WeaponPawn, do not pass "Go".  :-)
-	}
+    }
 }
 
 simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
@@ -92,8 +92,8 @@ simulated function PostBeginPlay()
     //Allow level designers to designate AT Guns as captureable or non-captureable
     if (ROParentFactory != none && ROParentFactory.bAllowOpposingForceCapture)
     {
-	    bTeamLocked=false;
-	}
+        bTeamLocked=false;
+    }
 
     bHasBeenSabotaged=false;
 }
@@ -111,68 +111,68 @@ simulated function Destroyed()
 
 simulated function Tick(float DeltaTime)
 {
-	// Only need these effects client side
-	// Reworked from the original code in ROTreadCraft to drop evaluations
+    // Only need these effects client side
+    // Reworked from the original code in ROTreadCraft to drop evaluations
     if (Level.Netmode == NM_DedicatedServer && SoundVolume != default.SoundVolume)
         SoundVolume = default.SoundVolume;
 
-	Super(ROWheeledVehicle).Tick(DeltaTime);
+    Super(ROWheeledVehicle).Tick(DeltaTime);
 }
 
 // Overridden due to the Onslaught team lock not working in RO
 function bool TryToDrive(Pawn P)
 {
-	local int x;
+    local int x;
 
-	if (DH_Pawn(P).bOnFire)
-		return false;
+    if (DH_Pawn(P).bOnFire)
+        return false;
 
-/*	Deny entry to bots - cos on Benouville Bridge map - the Brit bots all go for gun & ignore bridge
-	if (!p.IsHumanControlled())
-	{
-		bTeamLocked=true;
-		DenyEntry(P, 3);
-		return false;
-	}
-	if (p.IsHumanControlled())
-	{
-		bTeamLocked=false;
-	}
+/*  Deny entry to bots - cos on Benouville Bridge map - the Brit bots all go for gun & ignore bridge
+    if (!p.IsHumanControlled())
+    {
+        bTeamLocked=true;
+        DenyEntry(P, 3);
+        return false;
+    }
+    if (p.IsHumanControlled())
+    {
+        bTeamLocked=false;
+    }
 
 
 */
 
     //don't allow vehicle to be stolen when somebody is in a turret
-	if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
-	{
-		for (x = 0; x < WeaponPawns.length; x++)
-			if (WeaponPawns[x].Driver != none)
-			{
-				DenyEntry(P, 2);
-				return false;
-			}
-	}
+    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
+    {
+        for (x = 0; x < WeaponPawns.length; x++)
+            if (WeaponPawns[x].Driver != none)
+            {
+                DenyEntry(P, 2);
+                return false;
+            }
+    }
 
     //Removed "P.bIsCrouched" to allow players to connect while crouched.
-	if (bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
-	     || P.IsA('Vehicle') || Health <= 0)
-		return false;
-
-	if (bHasBeenSabotaged)
+    if (bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
+         || P.IsA('Vehicle') || Health <= 0)
         return false;
 
-	if (!Level.Game.CanEnterVehicle(self, P))
-		return false;
+    if (bHasBeenSabotaged)
+        return false;
 
-	// Check vehicle Locking....
-	if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
-	{
+    if (!Level.Game.CanEnterVehicle(self, P))
+        return false;
+
+    // Check vehicle Locking....
+    if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
+    {
 
         DenyEntry(P, 1);
-		return false;
-	}
-	else
-	{
+        return false;
+    }
+    else
+    {
         //Check for sabotage...
         if (DHParentFactory != none && DHParentFactory.bEnableSabotageRandomizer && (P.GetTeamNum() != VehicleTeam))
         {
@@ -189,159 +189,159 @@ function bool TryToDrive(Pawn P)
         }
 
         //At this point we know the pawn is not a tanker, so let's see if they can use the gun
-    	if (bEnterringUnlocks && bTeamLocked)
-			bTeamLocked = false;
+        if (bEnterringUnlocks && bTeamLocked)
+            bTeamLocked = false;
 
         //The gun is manned and it is a human - deny entry
         if (WeaponPawns[0].Driver != none && WeaponPawns[0].IsHumanControlled())
-		{
+        {
             DenyEntry(P, 3);
-			return false;
-		}
+            return false;
+        }
         //The gun is manned by a bot and the requesting pawn is human controlled - kick the bot off the gun
         else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && p.IsHumanControlled())
         {
             WeaponPawns[0].KDriverLeave(true);
 
             KDriverEnter(P);
-		    return true;
+            return true;
         }
         //The gun is manned by a bot and a bot is trying to use it, deny entry.
         else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && !p.IsHumanControlled())
         {
             DenyEntry(P, 3);
-			return false;
-		}
-		//The gun is unmanned, so let who ever is there first can use it.
-        else
-		{
-            KDriverEnter(P);
-		    return true;
+            return false;
         }
-	}
+        //The gun is unmanned, so let who ever is there first can use it.
+        else
+        {
+            KDriverEnter(P);
+            return true;
+        }
+    }
 }
 
 // Send a message on why they can't get in the vehicle
 function DenyEntry(Pawn P, int MessageNum)
 {
-	P.ReceiveLocalizedMessage(class'DH_ATCannonMessage', MessageNum);
+    P.ReceiveLocalizedMessage(class'DH_ATCannonMessage', MessageNum);
 }
 
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
-//				for Tanks, we'll probably want to prevent bullets from doing damage too
+//              for Tanks, we'll probably want to prevent bullets from doing damage too
 function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
 
     local int i;
     local float VehicleDamageMod;
     local int HitPointDamage;
-	//local int InstigatorTeam;
-	//local controller InstigatorController;
+    //local int InstigatorTeam;
+    //local controller InstigatorController;
 
-	// Fix for suicide death messages
+    // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
-	    DamageType = Class'ROSuicided';
-	    Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-	}
-	else if (DamageType == class'ROSuicided')
-	{
-		super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-	}
+        DamageType = Class'ROSuicided';
+        Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    }
+    else if (DamageType == class'ROSuicided')
+    {
+        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    }
 
     /*
-	// Don't allow your own teammates to destroy vehicles in spawns - HACK: Allow friendly fire for AT Guns
-	if (!bDriverAlreadyEntered)
-	{
-		if (InstigatedBy != none)
-			InstigatorController = instigatedBy.Controller;
+    // Don't allow your own teammates to destroy vehicles in spawns - HACK: Allow friendly fire for AT Guns
+    if (!bDriverAlreadyEntered)
+    {
+        if (InstigatedBy != none)
+            InstigatorController = instigatedBy.Controller;
 
-		if (InstigatorController == none)
-		{
-			if (DamageType.default.bDelayedDamage)
-				InstigatorController = DelayedDamageInstigatorController;
-		}
+        if (InstigatorController == none)
+        {
+            if (DamageType.default.bDelayedDamage)
+                InstigatorController = DelayedDamageInstigatorController;
+        }
 
-		if (InstigatorController != none)
-		{
-			InstigatorTeam = InstigatorController.GetTeamNum();
+        if (InstigatorController != none)
+        {
+            InstigatorTeam = InstigatorController.GetTeamNum();
 
-			if ((GetTeamNum() != 255) && (InstigatorTeam != 255))
-			{
-				if (GetTeamNum() == InstigatorTeam)
-				{
-					return;
-				}
-			}
-		}
-	}
+            if ((GetTeamNum() != 255) && (InstigatorTeam != 255))
+            {
+                if (GetTeamNum() == InstigatorTeam)
+                {
+                    return;
+                }
+            }
+        }
+    }
     */
 
-	// Hacked in APC damage mods for AT Guns, but bullets/bayo/bashing still shouldn't work...
-	if (DamageType != none)
-	{
-	   if (class<ROWeaponDamageType>(DamageType) != none &&
+    // Hacked in APC damage mods for AT Guns, but bullets/bayo/bashing still shouldn't work...
+    if (DamageType != none)
+    {
+       if (class<ROWeaponDamageType>(DamageType) != none &&
        class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.05)
-	   {
-	      VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+       {
+          VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
        }
-	   else if (class<ROVehicleDamageType>(DamageType) != none &&
-	   class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.05)
+       else if (class<ROVehicleDamageType>(DamageType) != none &&
+       class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.05)
        {
           VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
        }
-	}
+    }
 
-	if (bLogPenetration)
-		log("VehHitpoints and HitPointDamage start, damage = "$Damage);
+    if (bLogPenetration)
+        log("VehHitpoints and HitPointDamage start, damage = "$Damage);
 
-	for(i=0; i<VehHitpoints.Length; i++)
-	{
-    	HitPointDamage=Damage;
+    for(i=0; i<VehHitpoints.Length; i++)
+    {
+        HitPointDamage=Damage;
 
-		if (VehHitpoints[i].HitPointType == HP_Driver)
-		{
-			// Damage for large weapons
-			if (	class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
-			{
-				if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
-				{
-					//Level.Game.Broadcast(self, "Hit Driver"); //re-comment when fixed
-					Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-				}
-			}
-			// Damage for small (non penetrating) arms
-			else
-			{
+        if (VehHitpoints[i].HitPointType == HP_Driver)
+        {
+            // Damage for large weapons
+            if (    class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            {
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
+                {
+                    //Level.Game.Broadcast(self, "Hit Driver"); //re-comment when fixed
+                    Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+                }
+            }
+            // Damage for small (non penetrating) arms
+            else
+            {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
-				{
+                {
                     //Level.Game.Broadcast(self, "Hit Driver");  //re-comment when fixed
                     Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-				}
-			}
-		}
-     	//An At-Gun does not have an engine. We will however, leave the ammo store because we need it to get around a
-		//  collision issue with the gunner (player).
+                }
+            }
+        }
+        //An At-Gun does not have an engine. We will however, leave the ammo store because we need it to get around a
+        //  collision issue with the gunner (player).
         else if (IsPointShot(Hitlocation,Momentum, 1.0, i))
-		{
-			HitPointDamage *= VehHitpoints[i].DamageMultiplier;
-			HitPointDamage *= VehicleDamageMod;
+        {
+            HitPointDamage *= VehHitpoints[i].DamageMultiplier;
+            HitPointDamage *= VehicleDamageMod;
 
             //log("We hit "$GetEnum(enum'EPawnHitPointType',VehHitpoints[i].HitPointType));
 
             if (VehHitpoints[i].HitPointType == HP_AmmoStore)
-			{
-				Damage *= VehHitpoints[i].DamageMultiplier;
-				break;
-			}
-		}
+            {
+                Damage *= VehHitpoints[i].DamageMultiplier;
+                break;
+            }
+        }
 
-	}
+    }
 
-	// Add in the Vehicle damage modifier for the actual damage to the vehicle itself
+    // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-	super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
 
 }
 

@@ -1,5 +1,5 @@
 class DH_VehicleBurningDamType extends ROWeaponDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

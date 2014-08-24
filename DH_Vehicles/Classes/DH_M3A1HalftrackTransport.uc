@@ -14,44 +14,44 @@ class DH_M3A1HalftrackTransport extends DH_ROTransportCraft;
 
 simulated function SetupTreads()
 {
-	LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (LeftTreadPanner != none)
-	{
-		LeftTreadPanner.Material = Skins[LeftTreadIndex];
-		LeftTreadPanner.PanDirection = rot(0, 32768, -16384);
-		LeftTreadPanner.PanRate = 0.0;
-		Skins[LeftTreadIndex] = LeftTreadPanner;
-	}
-	RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-	if (RightTreadPanner != none)
-	{
-		RightTreadPanner.Material = Skins[RightTreadIndex];
-		RightTreadPanner.PanDirection = rot(0, 32768, -16384);
-		RightTreadPanner.PanRate = 0.0;
-		Skins[RightTreadIndex] = RightTreadPanner;
-	}
+    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (LeftTreadPanner != none)
+    {
+        LeftTreadPanner.Material = Skins[LeftTreadIndex];
+        LeftTreadPanner.PanDirection = rot(0, 32768, -16384);
+        LeftTreadPanner.PanRate = 0.0;
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+    }
+    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+    if (RightTreadPanner != none)
+    {
+        RightTreadPanner.Material = Skins[RightTreadIndex];
+        RightTreadPanner.PanDirection = rot(0, 32768, -16384);
+        RightTreadPanner.PanRate = 0.0;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
 }
 
 static function StaticPrecache(LevelInfo L)
 {
-    	Super.StaticPrecache(L);
+        Super.StaticPrecache(L);
 
- 	  L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
- 	  L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
- 	  L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
- 	  L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
- 	  L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
+      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
+      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
+      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
+      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
+      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
-    	Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
+        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

@@ -8,7 +8,7 @@
 //=============================================================================
 
 class DH_STG44VehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

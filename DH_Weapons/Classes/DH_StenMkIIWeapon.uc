@@ -5,7 +5,7 @@ class DH_StenMkIIWeapon extends DH_FastAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sten_1st.ukx
 
-var   name     SelectFireAnim;	// Animation for selecting the firing mode
+var   name     SelectFireAnim;  // Animation for selecting the firing mode
 var   name     SelectFireIronAnim;// Animation for selecting the firing mode in ironsights
 
 //=============================================================================
@@ -14,79 +14,79 @@ var   name     SelectFireIronAnim;// Animation for selecting the firing mode in 
 replication
 {
     reliable if (Role<ROLE_Authority)
-    	ServerChangeFireMode;
+        ServerChangeFireMode;
 }
 
 simulated exec function SwitchFireMode()
 {
-	if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
-		return;
+    if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
+        return;
 
     GotoState('SwitchingFireMode');
 }
 
 function ServerChangeFireMode()
 {
-	FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
+    FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
 }
 
 simulated state SwitchingFireMode extends Busy
 {
-	simulated function bool ReadyToFire(int Mode)
-	{
-		return false;
-	}
+    simulated function bool ReadyToFire(int Mode)
+    {
+        return false;
+    }
 
-	simulated function bool ShouldUseFreeAim()
-	{
-		return false;
-	}
+    simulated function bool ShouldUseFreeAim()
+    {
+        return false;
+    }
 
     simulated function Timer()
     {
-    	GotoState('Idle');
+        GotoState('Idle');
     }
 
     simulated function BeginState()
     {
-		local name Anim;
+        local name Anim;
 
-		if (bUsingSights)
-		{
-			Anim = SelectFireIronAnim;
-		}
-		else
-		{
-			Anim = SelectFireAnim;
-		}
+        if (bUsingSights)
+        {
+            Anim = SelectFireIronAnim;
+        }
+        else
+        {
+            Anim = SelectFireAnim;
+        }
 
-		if (Instigator.IsLocallyControlled())
-		{
-	    	PlayAnim(Anim, 1.0, FastTweenTime);
-		}
+        if (Instigator.IsLocallyControlled())
+        {
+            PlayAnim(Anim, 1.0, FastTweenTime);
+        }
 
-	    SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
+        SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
 
-  		ServerChangeFireMode();
+        ServerChangeFireMode();
 
-	    if (Role < ROLE_Authority)
-  		{
-  			FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
-  		}
-	}
+        if (Role < ROLE_Authority)
+        {
+            FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
+        }
+    }
 }
 
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-	if (FireMode[0].bWaitForRelease)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+    if (FireMode[0].bWaitForRelease)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 simulated function AnimEnd(int channel)
@@ -120,14 +120,14 @@ simulated function AnimEnd(int channel)
 // Overriden to handle the stop firing anims especially for the STG
 simulated event StopFire(int Mode)
 {
-	if (FireMode[Mode].bIsFiring)
-	    FireMode[Mode].bInstantStop = true;
+    if (FireMode[Mode].bIsFiring)
+        FireMode[Mode].bInstantStop = true;
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-     	if (!IsAnimating(0))
-     	{
-     		PlayIdle();
-     	}
+        if (!IsAnimating(0))
+        {
+            PlayIdle();
+        }
     }
 
     FireMode[Mode].bIsFiring = false;

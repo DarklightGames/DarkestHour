@@ -13,33 +13,33 @@ class DH_BulletHitEffect extends ROBulletHitEffect;
 //-----------------------------------------------------------------------------
 simulated function PostNetBeginPlay()
 {
-	local ESurfaceTypes ST;
-	local vector HitLoc, HitNormal;
-	local Material HitMat;
+    local ESurfaceTypes ST;
+    local vector HitLoc, HitNormal;
+    local Material HitMat;
 
-	if (Level.NetMode == NM_DedicatedServer)
-		return;
+    if (Level.NetMode == NM_DedicatedServer)
+        return;
     //Velocity
-	Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16, Location, false,, HitMat);
+    Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16, Location, false,, HitMat);
 
-	//Level.Game.Broadcast(self, "HitMat = " $HitMat.SurfaceType$" Effect = "$HitEffects[ST].Effect$" Particle Effect = "$HitEffects[ST].ParticleEffect$" TempEffect = "$HitEffects[ST].TempEffect);
-	//log("
+    //Level.Game.Broadcast(self, "HitMat = " $HitMat.SurfaceType$" Effect = "$HitEffects[ST].Effect$" Particle Effect = "$HitEffects[ST].ParticleEffect$" TempEffect = "$HitEffects[ST].TempEffect);
+    //log("
 
-	if (HitMat == none)
-		ST = EST_Default;
-	else
-		ST = ESurfaceTypes(HitMat.SurfaceType);
+    if (HitMat == none)
+        ST = EST_Default;
+    else
+        ST = ESurfaceTypes(HitMat.SurfaceType);
 
-//	Level.Game.Broadcast(self, "HitMat = " $HitMat.SurfaceType$" Effect = "$HitEffects[ST].Effect$" Particle Effect = "$HitEffects[ST].ParticleEffect$" TempEffect = "$HitEffects[ST].TempEffect);
+//  Level.Game.Broadcast(self, "HitMat = " $HitMat.SurfaceType$" Effect = "$HitEffects[ST].Effect$" Particle Effect = "$HitEffects[ST].ParticleEffect$" TempEffect = "$HitEffects[ST].TempEffect);
 
-	if (HitEffects[ST].HitDecal != none)
-		Spawn(HitEffects[ST].HitDecal, self,, Location, Rotation);
+    if (HitEffects[ST].HitDecal != none)
+        Spawn(HitEffects[ST].HitDecal, self,, Location, Rotation);
 
-	if (HitEffects[ST].HitSound != none)
-		PlaySound(HitEffects[ST].HitSound, SLOT_none, 30.0, false, 100.0);
+    if (HitEffects[ST].HitSound != none)
+        PlaySound(HitEffects[ST].HitSound, SLOT_none, 30.0, false, 100.0);
 
-	if (HitEffects[ST].HitEffect != none)
-		Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
+    if (HitEffects[ST].HitEffect != none)
+        Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
 }
 
 //=============================================================================

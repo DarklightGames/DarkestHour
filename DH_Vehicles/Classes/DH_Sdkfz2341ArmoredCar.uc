@@ -32,7 +32,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex6.int_vehicles.sdkfz2341_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 simulated function UpdateTurretReferences()
@@ -41,26 +41,26 @@ simulated function UpdateTurretReferences()
 
     if (CannonTurret == none)
     {
-    	for (i = 0; i < WeaponPawns.length; i++)
-    	{
-    		if (WeaponPawns[i].Gun.IsA('ROTankCannon'))
-    		{
-    		    CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
-    		    break;
-    		}
-   		}
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            if (WeaponPawns[i].Gun.IsA('ROTankCannon'))
+            {
+                CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
+                break;
+            }
+        }
     }
 
     if (HullMG == none)
     {
-		for (i = 0; i < WeaponPawns.length; i++)
-		{
-			if (WeaponPawns[i].Gun.IsA('ROMountedTankMG'))
-			{
-			    HullMG = WeaponPawns[i].Gun;
-			    break;
-			}
-   		}
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            if (WeaponPawns[i].Gun.IsA('ROMountedTankMG'))
+            {
+                HullMG = WeaponPawns[i].Gun;
+                break;
+            }
+        }
     }
 }
 

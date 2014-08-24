@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_PIATBashDamType extends ROWeaponBashDamageType
-	abstract;
+    abstract;
 
 defaultproperties
 {

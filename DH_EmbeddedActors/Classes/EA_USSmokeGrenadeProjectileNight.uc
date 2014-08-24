@@ -15,17 +15,17 @@ var sound SmokeSound;
 
 simulated function Landed(vector HitNormal)
 {
-	if (Bounces <= 0)
-	{
-		SetPhysics(PHYS_None);
+    if (Bounces <= 0)
+    {
+        SetPhysics(PHYS_None);
 
-		if(Role == ROLE_Authority)
-			SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
-	}
-	else
-	{
-		HitWall(HitNormal, None);
-	}
+        if(Role == ROLE_Authority)
+            SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)),QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
+    }
+    else
+    {
+        HitWall(HitNormal, None);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -34,43 +34,43 @@ simulated function Landed(vector HitNormal)
 
 simulated function HitWall(vector HitNormal, actor Wall)
 {
-	local vector VNorm;
-	local ESurfaceTypes ST;
+    local vector VNorm;
+    local ESurfaceTypes ST;
 
-	GetHitSurfaceType(ST, HitNormal);
-	GetDampenAndSoundValue(ST);
+    GetHitSurfaceType(ST, HitNormal);
+    GetDampenAndSoundValue(ST);
 
-	// Return here, this was causing the famous "Nade bug"
-	if(ROCollisionAttachment(Wall) != none)
-	{
-		return;
-	}
+    // Return here, this was causing the famous "Nade bug"
+    if(ROCollisionAttachment(Wall) != none)
+    {
+        return;
+    }
 
-	// Reflect off Wall w/damping
-	//VNorm = (Velocity dot HitNormal) * HitNormal;
-	//Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-	//Velocity = -HitNormal * Velocity * 0.3;
-	Bounces--;
+    // Reflect off Wall w/damping
+    //VNorm = (Velocity dot HitNormal) * HitNormal;
+    //Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
+    //Velocity = -HitNormal * Velocity * 0.3;
+    Bounces--;
 
-	if (Bounces <= 0)
-	{
-		bBounce = false;
-		//SetPhysics(PHYS_None);
-	}
-	else
-	{
-	    // Reflect off Wall w/damping
-		VNorm = (Velocity dot HitNormal) * HitNormal;
-		Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-		//Velocity = 0.3 * (Velocity - 2.0 * HitNormal * (Velocity dot HitNormal));
-		//RandSpin(100000);
-		Speed = VSize(Velocity);
-	}
+    if (Bounces <= 0)
+    {
+        bBounce = false;
+        //SetPhysics(PHYS_None);
+    }
+    else
+    {
+        // Reflect off Wall w/damping
+        VNorm = (Velocity dot HitNormal) * HitNormal;
+        Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
+        //Velocity = 0.3 * (Velocity - 2.0 * HitNormal * (Velocity dot HitNormal));
+        //RandSpin(100000);
+        Speed = VSize(Velocity);
+    }
 
-	if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none )
-	{
-		PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
-	}
+    if ((Level.NetMode != NM_DedicatedServer) && (Speed > 150) && ImpactSound != none )
+    {
+        PlaySound(ImpactSound, SLOT_Misc, 1.1); // Increase volume of impact
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -79,10 +79,10 @@ simulated function HitWall(vector HitNormal, actor Wall)
 
 function BlowUp(vector HitLocation)
 {
-	//DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+    //DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
 
-	if (Role == ROLE_Authority)
-		MakeNoise(1.0);
+    if (Role == ROLE_Authority)
+        MakeNoise(1.0);
 }
 
 //-----------------------------------------------------------------------------
@@ -91,56 +91,56 @@ function BlowUp(vector HitLocation)
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-	BlowUp(HitLocation);
+    BlowUp(HitLocation);
 
-	if( Role == ROLE_Authority )
-	{
-		AmbientSound = SmokeSound;
-	}
+    if( Role == ROLE_Authority )
+    {
+        AmbientSound = SmokeSound;
+    }
 
-	PlaySound(ExplosionSound[Rand(3)],, 1.0,,200);
+    PlaySound(ExplosionSound[Rand(3)],, 1.0,,200);
 
-	//DoShakeEffect();
+    //DoShakeEffect();
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
-	    SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
-	    SmokeEmitter.SetBase(Self);
-	}
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
+        SmokeEmitter.SetBase(Self);
+    }
 }
 
 simulated function Destroyed()
 {
-	super(ROThrowableExplosiveProjectile).Destroyed();
+    super(ROThrowableExplosiveProjectile).Destroyed();
 
-	if( SmokeEmitter != none )
-	{
-		SmokeEmitter.Kill();
-	}
+    if( SmokeEmitter != none )
+    {
+        SmokeEmitter.Kill();
+    }
 }
 
 function Reset()
 {
-	if( SmokeEmitter != none )
-	{
-		SmokeEmitter.Destroy();
-	}
+    if( SmokeEmitter != none )
+    {
+        SmokeEmitter.Destroy();
+    }
 
-	super.Reset();
+    super.Reset();
 }
 
 
 simulated function Tick(float DeltaTime)
 {
-	super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
-	DestroyTimer -= DeltaTime;
+    DestroyTimer -= DeltaTime;
 
-	if (DestroyTimer <= 0.0 && !bCalledDestroy)
-	{
-		bCalledDestroy = true;
-		Destroy();
-	}
+    if (DestroyTimer <= 0.0 && !bCalledDestroy)
+    {
+        bCalledDestroy = true;
+        Destroy();
+    }
 }
 
 //=============================================================================
@@ -149,18 +149,18 @@ simulated function Tick(float DeltaTime)
 
 defaultproperties
 {
-	 DestroyTimer=30.000000
-	 SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-	 ExplodeDirtEffectClass=Class'EA_GrenadeSmokeEffectNight'
-	 ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-	 ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-	 ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-	 Damage=0.000000
-	 DamageRadius=0.000000
-	 MyDamageType=class'EA_USSmokeGrenadeDamTypeNight'
-	 StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.US_SmokeGrenade_throw'
-	 bAlwaysRelevant=True
-	 LifeSpan=30.000000
-	 SoundVolume=255
-	 SoundRadius=200.000000
+     DestroyTimer=30.000000
+     SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+     ExplodeDirtEffectClass=Class'EA_GrenadeSmokeEffectNight'
+     ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+     ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+     ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+     Damage=0.000000
+     DamageRadius=0.000000
+     MyDamageType=class'EA_USSmokeGrenadeDamTypeNight'
+     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.US_SmokeGrenade_throw'
+     bAlwaysRelevant=True
+     LifeSpan=30.000000
+     SoundVolume=255
+     SoundRadius=200.000000
 }

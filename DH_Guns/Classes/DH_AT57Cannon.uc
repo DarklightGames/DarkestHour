@@ -14,30 +14,30 @@ class DH_AT57Cannon extends DH_ATGunCannon;
 // American tanks must use the actual sight markings to aim!
 simulated function int GetRange()
 {
-	return RangeSettings[0];
+    return RangeSettings[0];
 }
 
 // Disable clicking sound for range adjustment
 function IncrementRange()
 {
-	if (CurrentRangeIndex < RangeSettings.Length - 1)
-	{
-		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if (CurrentRangeIndex < RangeSettings.Length - 1)
+    {
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		CurrentRangeIndex++;
-	}
+        CurrentRangeIndex++;
+    }
 }
 
 function DecrementRange()
 {
-	if (CurrentRangeIndex > 0)
-	{
-		if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-			//ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if (CurrentRangeIndex > 0)
+    {
+        if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		CurrentRangeIndex --;
-	}
+        CurrentRangeIndex --;
+    }
 }
 
 defaultproperties

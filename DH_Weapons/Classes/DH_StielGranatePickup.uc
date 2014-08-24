@@ -17,11 +17,11 @@ class DH_StielGranatePickup extends ROOneShotWeaponPickup
 
 static function StaticPrecache(LevelInfo L)
 {
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate');
-	L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw');
-	L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.Stielhandgranate');
-	L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.Stiel_S');
-	L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.sticknade_ammo');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate');
+    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw');
+    L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.Stielhandgranate');
+    L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.Stiel_S');
+    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.sticknade_ammo');
 }
 
 defaultproperties

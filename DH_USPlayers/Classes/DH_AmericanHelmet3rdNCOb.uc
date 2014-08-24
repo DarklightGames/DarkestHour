@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_AmericanHelmet3rdNCOb  ***
+//  ***   DH_AmericanHelmet3rdNCOb  ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_AmericanHelmet3rdNCOb extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
+//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
 }
 
 defaultproperties

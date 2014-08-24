@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_ColtM1911DamType extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

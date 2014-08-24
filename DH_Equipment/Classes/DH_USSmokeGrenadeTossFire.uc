@@ -6,24 +6,24 @@ class DH_USSmokeGrenadeTossFire extends StielGranateTossFire;
 
 event ModeTick(float dt)
 {
-	local ROExplosiveWeapon Exp;
+    local ROExplosiveWeapon Exp;
 
-	if (Weapon.Role == ROLE_Authority)
-	{
-		Exp = ROExplosiveWeapon(Weapon);
+    if (Weapon.Role == ROLE_Authority)
+    {
+        Exp = ROExplosiveWeapon(Weapon);
 
-		if (Exp.bPrimed && HoldTime > 0)
-		{
-			if (Exp.CurrentFuzeTime  > (AddedFuseTime * -1))
-			{
-				Exp.CurrentFuzeTime -= dt;
-			}
-			else if (!Exp.bAlreadyExploded)
-			{
-				Exp.bAlreadyExploded = true;
-			}
-		}
-	}
+        if (Exp.bPrimed && HoldTime > 0)
+        {
+            if (Exp.CurrentFuzeTime  > (AddedFuseTime * -1))
+            {
+                Exp.CurrentFuzeTime -= dt;
+            }
+            else if (!Exp.bAlreadyExploded)
+            {
+                Exp.bAlreadyExploded = true;
+            }
+        }
+    }
 }
 
 function DoFireEffect()
@@ -39,21 +39,21 @@ function DoFireEffect()
     Instigator.MakeNoise(1.0);
     Weapon.GetViewAxes(X,Y,Z);
 
-	StartTrace = Instigator.Location + Instigator.EyePosition();
-	StartProj = StartTrace + X * ProjSpawnOffset.X;
+    StartTrace = Instigator.Location + Instigator.EyePosition();
+    StartProj = StartTrace + X * ProjSpawnOffset.X;
 
-	// check if projectile would spawn through a wall and adjust start location accordingly
-	Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-	if (Other != none)
-	{
-   		StartProj = HitLocation;
-	}
+    // check if projectile would spawn through a wall and adjust start location accordingly
+    Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
+    if (Other != none)
+    {
+        StartProj = HitLocation;
+    }
 
 
     Aim = AdjustAim(StartProj, AimError);
 
-	//log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
-	//PlayerController(Instigator.Controller).ClientMessage("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
+    //log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
+    //PlayerController(Instigator.Controller).ClientMessage("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
 
 //    Instigator.ClearStayingDebugLines();
 //    Instigator.DrawStayingDebugLine(StartProj, StartProj+65535* MuzzlePosition.XAxis, 0,0,255);
@@ -61,36 +61,36 @@ function DoFireEffect()
 
     SpawnCount = Max(1, ProjPerFire * int(Load));
 
-	CalcSpreadModifiers();
+    CalcSpreadModifiers();
 
-	AppliedSpread = Spread;
+    AppliedSpread = Spread;
 
     switch (SpreadStyle)
     {
         case SS_Random:
-           	X = vector(Aim);
-           	for (projectileID = 0; projectileID < SpawnCount; projectileID++)
-           	{
-              	R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
-              	R.Pitch = AppliedSpread * (FRand()-0.5);
-              	R.Roll = AppliedSpread * (FRand()-0.5);
-              	SpawnProjectile(StartProj, Rotator(X >> R));
-           	}
-           	break;
+            X = vector(Aim);
+            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            {
+                R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
+                R.Pitch = AppliedSpread * (FRand()-0.5);
+                R.Roll = AppliedSpread * (FRand()-0.5);
+                SpawnProjectile(StartProj, Rotator(X >> R));
+            }
+            break;
 
         case SS_Line:
-           	for (projectileID = 0; projectileID < SpawnCount; projectileID++)
-           	{
-              	theta = AppliedSpread*PI/32768*(projectileID - float(SpawnCount-1)/2.0);
-              	X.X = Cos(theta);
-              	X.Y = Sin(theta);
-              	X.Z = 0.0;
-              	SpawnProjectile(StartProj, Rotator(X >> Aim));
-           	}
-           	break;
+            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            {
+                theta = AppliedSpread*PI/32768*(projectileID - float(SpawnCount-1)/2.0);
+                X.X = Cos(theta);
+                X.Y = Sin(theta);
+                X.Z = 0.0;
+                SpawnProjectile(StartProj, Rotator(X >> Aim));
+            }
+            break;
 
         default:
-           	SpawnProjectile(StartProj, Aim);
+            SpawnProjectile(StartProj, Aim);
     }
 }
 

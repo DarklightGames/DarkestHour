@@ -2,7 +2,7 @@
 // DH_30calDamType
 //=============================================================================
 class DH_30CalDamType_Tank extends ROWeaponProjectileDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

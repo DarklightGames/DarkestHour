@@ -4,53 +4,53 @@ class DH_Flakvierling38Gun extends DH_ATGun;
 #exec OBJ LOAD FILE=..\Animations\DH_Flakvierling38_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Flakvierling38_tex.utx
 
-var	int	PrimaryMagazineCount;
-var	int	SecondaryMagazineCount;
+var int PrimaryMagazineCount;
+var int SecondaryMagazineCount;
 
 simulated function Destroyed()
 {
-	super(ROVehicle).Destroyed();
+    super(ROVehicle).Destroyed();
 }
 
 // Overridden due to the Onslaught team lock not working in RO
 function bool TryToDrive(Pawn P)
 {
-	local int x;
+    local int x;
 
-	if (DH_Pawn(P).bOnFire)
-		return false;
-
-    //don't allow vehicle to be stolen when somebody is in a turret
-	if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
-	{
-		for (x = 0; x < WeaponPawns.length; x++)
-			if (WeaponPawns[x].Driver != none)
-			{
-				DenyEntry(P, 2);
-				return false;
-			}
-	}
-
-    //Removed "P.bIsCrouched" to allow players to connect while crouched.
-	if (bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
-	     || P.IsA('Vehicle') || Health <= 0)
-		return false;
-
-	if (bHasBeenSabotaged)
+    if (DH_Pawn(P).bOnFire)
         return false;
 
-	if (!Level.Game.CanEnterVehicle(self, P))
-		return false;
+    //don't allow vehicle to be stolen when somebody is in a turret
+    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
+    {
+        for (x = 0; x < WeaponPawns.length; x++)
+            if (WeaponPawns[x].Driver != none)
+            {
+                DenyEntry(P, 2);
+                return false;
+            }
+    }
 
-	// Check vehicle Locking....
-	if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
-	{
+    //Removed "P.bIsCrouched" to allow players to connect while crouched.
+    if (bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
+         || P.IsA('Vehicle') || Health <= 0)
+        return false;
+
+    if (bHasBeenSabotaged)
+        return false;
+
+    if (!Level.Game.CanEnterVehicle(self, P))
+        return false;
+
+    // Check vehicle Locking....
+    if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
+    {
 
         DenyEntry(P, 1);
-		return false;
-	}
-	else
-	{
+        return false;
+    }
+    else
+    {
         //Check for sabotage...
         if (DHParentFactory != none && DHParentFactory.bEnableSabotageRandomizer && (P.GetTeamNum() != VehicleTeam))
         {
@@ -67,41 +67,41 @@ function bool TryToDrive(Pawn P)
         }
 
         //At this point we know the pawn is not a tanker, so let's see if they can use the gun
-    	if (bEnterringUnlocks && bTeamLocked)
-			bTeamLocked = false;
+        if (bEnterringUnlocks && bTeamLocked)
+            bTeamLocked = false;
 
         //The gun is manned and it is a human - deny entry
         if (WeaponPawns[0].Driver != none && WeaponPawns[0].IsHumanControlled())
-		{
+        {
             DenyEntry(P, 3);
-			return false;
-		}
+            return false;
+        }
         //The gun is manned by a bot and the requesting pawn is human controlled - kick the bot off the gun
         else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && p.IsHumanControlled())
         {
             WeaponPawns[0].KDriverLeave(true);
 
             KDriverEnter(P);
-		    return true;
+            return true;
         }
         //The gun is manned by a bot and a bot is trying to use it, deny entry.
         else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && !p.IsHumanControlled())
         {
             DenyEntry(P, 3);
-			return false;
-		}
-		//The gun is unmanned, so let who ever is there first can use it.
-        else
-		{
-            KDriverEnter(P);
-		    return true;
+            return false;
         }
-	}
+        //The gun is unmanned, so let who ever is there first can use it.
+        else
+        {
+            KDriverEnter(P);
+            return true;
+        }
+    }
 }
 
 function DenyEntry(Pawn P, int MessageNum)
 {
-	P.ReceiveLocalizedMessage(class'DH_AAGunMessage', MessageNum);
+    P.ReceiveLocalizedMessage(class'DH_AAGunMessage', MessageNum);
 }
 
 defaultproperties

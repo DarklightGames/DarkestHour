@@ -48,8 +48,8 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
             break;
 
         case PIT_Text:
-        	if (!Divide(NewRule.Data, ";", Width, Op))
-        		Width = NewRule.Data;
+            if (!Divide(NewRule.Data, ";", Width, Op))
+                Width = NewRule.Data;
 
             pos = InStr(Width, ",");
             if (pos != -1)
@@ -123,21 +123,21 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    	localController = MyController;
-    	super(IAMultiColumnRulesPanel).InitComponent(MyController, MyOwner);
-    	RemoveComponent(b_Symbols);
-    	sb_background.ManageComponent(lb_Rules);
-    	sb_background.ManageComponent(nu_Port);
-    	sb_background.ManageComponent(ch_Webadmin);
-    	sb_background.ManageComponent(ch_LANServer);
-    	sb_background.ManageComponent(ch_Advanced);
+        localController = MyController;
+        super(IAMultiColumnRulesPanel).InitComponent(MyController, MyOwner);
+        RemoveComponent(b_Symbols);
+        sb_background.ManageComponent(lb_Rules);
+        sb_background.ManageComponent(nu_Port);
+        sb_background.ManageComponent(ch_Webadmin);
+        sb_background.ManageComponent(ch_LANServer);
+        sb_background.ManageComponent(ch_Advanced);
 }
 
 function Refresh()
 {
-    	Super.Refresh();
+        Super.Refresh();
 
-    	sb_background.ManageComponent(lb_Rules);
+        sb_background.ManageComponent(lb_Rules);
 }
 
 defaultproperties

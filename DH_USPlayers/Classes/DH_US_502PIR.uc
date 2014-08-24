@@ -1,11 +1,11 @@
 // *************************************************************************
 //
-//	***   DH_US_502PIR   ***
+//  ***   DH_US_502PIR   ***
 //
 // *************************************************************************
 
-class DH_US_502PIR extends DH_US_101st_Airborne 
-	abstract;
+class DH_US_502PIR extends DH_US_101st_Airborne
+    abstract;
 
 defaultproperties
 {

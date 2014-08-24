@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   DH_WSSAssault   ***
+//  ***   DH_WSSAssault   ***
 //
 // *************************************************************************
 
@@ -8,10 +8,10 @@ class DH_WSSAssault_Snow extends DH_WaffenSSSnow;
 
 function class<ROHeadgear> GetHeadgear()
 {
-	if (FRand() < 0.2)
-		return Headgear[0];
-	else
-		return Headgear[1];
+    if (FRand() < 0.2)
+        return Headgear[0];
+    else
+        return Headgear[1];
 }
 
 defaultproperties

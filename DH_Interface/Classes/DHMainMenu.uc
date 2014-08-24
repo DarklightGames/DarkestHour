@@ -1,24 +1,24 @@
 // *************************************************************************
 //
-//	***   DHMainMenu   ***
+//  ***   DHMainMenu   ***
 //
 // *************************************************************************
 
 class DHMainMenu extends UT2K4GUIPage;
 
-var automated   	FloatingImage 		i_background;
-var automated   	GUISectionBackground 	sb_MainMenu;
-var automated 	    GUIButton		b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
-var automated   	GUISectionBackground 	sb_HelpMenu;
-var automated   	GUIButton   		b_Credits, b_Manual, b_Demos, b_Website, b_Back;
+var automated       FloatingImage       i_background;
+var automated       GUISectionBackground    sb_MainMenu;
+var automated       GUIButton       b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
+var automated       GUISectionBackground    sb_HelpMenu;
+var automated       GUIButton           b_Credits, b_Manual, b_Demos, b_Website, b_Back;
 var automated       GUISectionBackground           sb_ShowVersion;
 var automated       GUILabel        l_Version;
-var bool	    	AllowClose;
-var localized string	ManualURL;
-var string      	WebsiteURL;
+var bool            AllowClose;
+var localized string    ManualURL;
+var string          WebsiteURL;
 var localized string SteamMustBeRunningText;
 var localized string SinglePlayerDisabledText;
-var() config string 	MenuSong;
+var() config string     MenuSong;
 
 var localized string VersionString;
 
@@ -26,39 +26,39 @@ var globalconfig bool AcceptedEULA;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-	local int xl,yl,y;
-	Super.InitComponent(MyController, MyOwner);
-	Controller.LCDCls();
-	Controller.LCDDrawTile(Controller.LCDLogo,0,0,50,43,0,0,50,43);
-	y = 0;
-	Controller.LCDStrLen("Darkest Hour",Controller.LCDMedFont,xl,yl);
-	Controller.LCDDrawText("Darkest Hour",(100-(XL/2)),y,Controller.LCDMedFont);
-	y += 14;
-	Controller.LCDStrLen("Europe",Controller.LCDSmallFont,xl,yl);
-	Controller.LCDDrawText("Europe",(100-(XL/2)),y,Controller.LCDSmallFont);
-	y += 14;
-	Controller.LCDStrLen("44-45",Controller.LCDLargeFont,xl,yl);
-	Controller.LCDDrawText("44-45",(100-(XL/2)),y,Controller.LCDLargeFont);
-	Controller.LCDRepaint();
+    local int xl,yl,y;
+    Super.InitComponent(MyController, MyOwner);
+    Controller.LCDCls();
+    Controller.LCDDrawTile(Controller.LCDLogo,0,0,50,43,0,0,50,43);
+    y = 0;
+    Controller.LCDStrLen("Darkest Hour",Controller.LCDMedFont,xl,yl);
+    Controller.LCDDrawText("Darkest Hour",(100-(XL/2)),y,Controller.LCDMedFont);
+    y += 14;
+    Controller.LCDStrLen("Europe",Controller.LCDSmallFont,xl,yl);
+    Controller.LCDDrawText("Europe",(100-(XL/2)),y,Controller.LCDSmallFont);
+    y += 14;
+    Controller.LCDStrLen("44-45",Controller.LCDLargeFont,xl,yl);
+    Controller.LCDDrawText("44-45",(100-(XL/2)),y,Controller.LCDLargeFont);
+    Controller.LCDRepaint();
 
-	sb_MainMenu.ManageComponent(b_MultiPlayer);
-	sb_MainMenu.ManageComponent(b_Practice);
-	sb_MainMenu.ManageComponent(b_Settings);
-	sb_MainMenu.ManageComponent(b_Help);
-	sb_MainMenu.ManageComponent(b_Host);
-	sb_MainMenu.ManageComponent(b_Quit);
-	sb_HelpMenu.ManageComponent(b_Credits);
-	sb_HelpMenu.ManageComponent(b_Manual);
-	sb_HelpMenu.ManageComponent(b_Demos);
-	sb_HelpMenu.ManageComponent(b_Website);
-	sb_HelpMenu.ManageComponent(b_Back);
-	sb_ShowVersion.ManageComponent(l_Version);
+    sb_MainMenu.ManageComponent(b_MultiPlayer);
+    sb_MainMenu.ManageComponent(b_Practice);
+    sb_MainMenu.ManageComponent(b_Settings);
+    sb_MainMenu.ManageComponent(b_Help);
+    sb_MainMenu.ManageComponent(b_Host);
+    sb_MainMenu.ManageComponent(b_Quit);
+    sb_HelpMenu.ManageComponent(b_Credits);
+    sb_HelpMenu.ManageComponent(b_Manual);
+    sb_HelpMenu.ManageComponent(b_Demos);
+    sb_HelpMenu.ManageComponent(b_Website);
+    sb_HelpMenu.ManageComponent(b_Back);
+    sb_ShowVersion.ManageComponent(l_Version);
 }
 
 function InternalOnOpen()
 {
-    	log("MainMenu: starting music "$MenuSong);
-    	PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
+        log("MainMenu: starting music "$MenuSong);
+        PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
 }
 
 
@@ -68,130 +68,130 @@ function OnClose(optional Bool bCanceled)
 
 function ShowSubMenu(int menu_id)
 {
-    	switch (menu_id)
-    	{
-        		case 0:
-            			sb_MainMenu.SetVisibility(true);
-            			sb_HelpMenu.SetVisibility(false);
-            			break;
+        switch (menu_id)
+        {
+                case 0:
+                        sb_MainMenu.SetVisibility(true);
+                        sb_HelpMenu.SetVisibility(false);
+                        break;
 
-        		case 1:
-            			sb_MainMenu.SetVisibility(false);
-            			sb_HelpMenu.SetVisibility(true);
-            			break;
-    	}
+                case 1:
+                        sb_MainMenu.SetVisibility(false);
+                        sb_HelpMenu.SetVisibility(true);
+                        break;
+        }
 }
 
 function bool MyKeyEvent(out byte Key,out byte State,float delta)
 {
-	if (Key == 0x1B && State == 1)
-	{
-		AllowClose = true;
-		return true;
-	}
-	else
-		return false;
+    if (Key == 0x1B && State == 1)
+    {
+        AllowClose = true;
+        return true;
+    }
+    else
+        return false;
 }
 
 function bool CanClose(optional Bool bCanceled)
 {
-	if (AllowClose)
-		Controller.OpenMenu(Controller.GetQuitPage());
+    if (AllowClose)
+        Controller.OpenMenu(Controller.GetQuitPage());
 
-	return false;
+    return false;
 }
 
 
 function bool ButtonClick(GUIComponent Sender)
 {
-    	local GUIButton selected;
-    	if (GUIButton(Sender) != none)
-	selected = GUIButton(Sender);
-	switch (sender)
-	{
-        		case b_Practice:
-       			if (class'LevelInfo'.static.IsDemoBuild())
-       			{
-	    			Controller.OpenMenu(Controller.QuestionMenuClass);
-				GUIQuestionPage(Controller.TopPage()).SetupQuestion(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
-        			}
-        			else
-        			{
-	            			Profile("InstantAction");
-	    			Controller.OpenMenu(Controller.GetInstantActionPage());
-	    			Profile("InstantAction");
-    			}
-            			break;
+        local GUIButton selected;
+        if (GUIButton(Sender) != none)
+    selected = GUIButton(Sender);
+    switch (sender)
+    {
+                case b_Practice:
+                if (class'LevelInfo'.static.IsDemoBuild())
+                {
+                    Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
+                    }
+                    else
+                    {
+                            Profile("InstantAction");
+                    Controller.OpenMenu(Controller.GetInstantActionPage());
+                    Profile("InstantAction");
+                }
+                        break;
 
-        		case b_MultiPlayer:
-        			if (!Controller.CheckSteam())
-        			{
-            				Controller.OpenMenu(Controller.QuestionMenuClass);
-		  		GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
-        			}
-        			else
-        			{
-	            			Profile("ServerBrowser");
-				Controller.OpenMenu(Controller.GetServerBrowserPage());
-				Profile("ServerBrowser");
-        				}
-				break;
+                case b_MultiPlayer:
+                    if (!Controller.CheckSteam())
+                    {
+                            Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                    }
+                    else
+                    {
+                            Profile("ServerBrowser");
+                Controller.OpenMenu(Controller.GetServerBrowserPage());
+                Profile("ServerBrowser");
+                        }
+                break;
 
-		case b_Host:
-        			if (!Controller.CheckSteam())
-        			{
-            				Controller.OpenMenu(Controller.QuestionMenuClass);
-		   		GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
-        			}
-        			else
-        			{
-		     		Profile("MPHost");
-				Controller.OpenMenu(Controller.GetMultiplayerPage());
-				Profile("MPHost");
-        			}
- 	        		break;
+        case b_Host:
+                    if (!Controller.CheckSteam())
+                    {
+                            Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                    }
+                    else
+                    {
+                    Profile("MPHost");
+                Controller.OpenMenu(Controller.GetMultiplayerPage());
+                Profile("MPHost");
+                    }
+                    break;
 
-	    	case b_Settings:
-            			Profile("Settings");
-     	    		Controller.OpenMenu(Controller.GetSettingsPage());
-    			Profile("Settings");
-    			break;
+            case b_Settings:
+                        Profile("Settings");
+                    Controller.OpenMenu(Controller.GetSettingsPage());
+                Profile("Settings");
+                break;
 
-    		case b_Credits:
-    	    		Controller.OpenMenu("DH_Interface.DHCreditsPage");
-    	    		break;
+            case b_Credits:
+                    Controller.OpenMenu("DH_Interface.DHCreditsPage");
+                    break;
 
-        		case b_Quit:
-            			Profile("Quit");
-    			Controller.OpenMenu(Controller.GetQuitPage());
-    			Profile("Quit");
-    			break;
+                case b_Quit:
+                        Profile("Quit");
+                Controller.OpenMenu(Controller.GetQuitPage());
+                Profile("Quit");
+                break;
 
-        		case b_Manual:
-            			Profile("Manual");
-            			PlayerOwner().ConsoleCommand("start "@ManualURL);
-    			Profile("Manual");
-    			break;
+                case b_Manual:
+                        Profile("Manual");
+                        PlayerOwner().ConsoleCommand("start "@ManualURL);
+                Profile("Manual");
+                break;
 
-    		case b_Website:
-    	    		Profile("Website");
-            			PlayerOwner().ConsoleCommand("start "@WebsiteURL);
-    			Profile("Website");
-    			break;
+            case b_Website:
+                    Profile("Website");
+                        PlayerOwner().ConsoleCommand("start "@WebsiteURL);
+                Profile("Website");
+                break;
 
-    		case b_Demos:
-    	    		Controller.OpenMenu("ROInterface.RODemosMenu");
-    	    		break;
+            case b_Demos:
+                    Controller.OpenMenu("ROInterface.RODemosMenu");
+                    break;
 
-    		case b_Help:
-    	    		ShowSubMenu(1);
-    	    		break;
+            case b_Help:
+                    ShowSubMenu(1);
+                    break;
 
-    		case b_Back:
-    	    		ShowSubMenu(0);
-    	    		break;
-	}
-	return true;
+            case b_Back:
+                    ShowSubMenu(0);
+                    break;
+    }
+    return true;
 }
 
 event Opened(GUIComponent Sender)
@@ -199,13 +199,13 @@ event Opened(GUIComponent Sender)
     //l_Version.Caption = VersionString;
     //sb_ShowVersion.SetVisibility(true);
 
-	if (bDebugging)
-		log(Name$".Opened()   Sender:"$Sender,'Debug');
+    if (bDebugging)
+        log(Name$".Opened()   Sender:"$Sender,'Debug');
 
-   	 if (Sender != none && PlayerOwner().Level.IsPendingConnection())
-    		PlayerOwner().ConsoleCommand("CANCEL");
-	   	 ShowSubMenu(0);
-   		 Super.Opened(Sender);
+     if (Sender != none && PlayerOwner().Level.IsPendingConnection())
+            PlayerOwner().ConsoleCommand("CANCEL");
+         ShowSubMenu(0);
+         Super.Opened(Sender);
 }
 
 function LoadMenuLevel()
@@ -214,9 +214,9 @@ function LoadMenuLevel()
 
 event bool NotifyLevelChange()
 {
-	if (bDebugging)
-		log(Name@"NotifyLevelChange  PendingConnection:"$PlayerOwner().Level.IsPendingConnection());
-		return PlayerOwner().Level.IsPendingConnection();
+    if (bDebugging)
+        log(Name@"NotifyLevelChange  PendingConnection:"$PlayerOwner().Level.IsPendingConnection());
+        return PlayerOwner().Level.IsPendingConnection();
 }
 
 defaultproperties

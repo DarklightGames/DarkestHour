@@ -25,7 +25,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_walls_int');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_body_int');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

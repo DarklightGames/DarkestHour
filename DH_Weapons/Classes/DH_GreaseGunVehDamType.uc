@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_GreaseGunVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

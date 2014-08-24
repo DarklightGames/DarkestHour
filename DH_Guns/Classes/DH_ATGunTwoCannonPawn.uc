@@ -18,17 +18,17 @@ class DH_ATGunTwoCannonPawn extends AssaultGunCannonPawn
 // Ramm also improved the original AT-Gun code by better handling the player exit for the fixed AT-Gun.
 
 // More debugging stuff
-var()	bool	bShowCenter;    // shows centering cross in tank sight for testing purposes
+var()   bool    bShowCenter;    // shows centering cross in tank sight for testing purposes
 
 // New variables used in subclasses
-var()   float	OverlayCenterScale; // scale of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-var()   float	OverlayCenterSize;
-var()   int	    OverlayCorrectionX, OverlayCorrectionY; // scope center correction in pixels, as some overlays are off-center by pixel or two
-							                           // (it's in pixels of overlay bitmap, not pixels of screen, so works for every resolution)
+var()   float   OverlayCenterScale; // scale of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float   OverlayCenterSize;
+var()   int     OverlayCorrectionX, OverlayCorrectionY; // scope center correction in pixels, as some overlays are off-center by pixel or two
+                                                       // (it's in pixels of overlay bitmap, not pixels of screen, so works for every resolution)
 
 replication
 {
-	reliable if (Role<ROLE_Authority)
+    reliable if (Role<ROLE_Authority)
         ServerToggleExtraRoundType;
 }
 
@@ -37,125 +37,125 @@ replication
 //==============================================================================
 simulated exec function SwitchFireMode()
 {
-	if (Gun != none && DH_ATGunCannon(Gun) != none && DH_ATGunCannon(Gun).bMultipleRoundTypes)
-	{
-		if (Controller != none && ROPlayer(Controller) != none)
-			ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+    if (Gun != none && DH_ATGunCannon(Gun) != none && DH_ATGunCannon(Gun).bMultipleRoundTypes)
+    {
+        if (Controller != none && ROPlayer(Controller) != none)
+            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
 
-		ServerToggleExtraRoundType();
-	}
+        ServerToggleExtraRoundType();
+    }
 }
 
 function ServerToggleExtraRoundType()
 {
-	if (Gun != none && DH_ATGunCannon(Gun) != none)
-	{
-		DH_ATGunCannon(Gun).ToggleRoundType();
-	}
+    if (Gun != none && DH_ATGunCannon(Gun) != none)
+    {
+        DH_ATGunCannon(Gun).ToggleRoundType();
+    }
 }
 
 simulated function DrawHUD(Canvas Canvas)
 {
-	local PlayerController PC;
-	local vector CameraLocation;
-	local rotator CameraRotation;
-	local Actor ViewActor;
-	local float	SavedOpacity;
-	local float	XL, YL, MapX, MapY;
-	local color SavedColor, WhiteColor;
+    local PlayerController PC;
+    local vector CameraLocation;
+    local rotator CameraRotation;
+    local Actor ViewActor;
+    local float SavedOpacity;
+    local float XL, YL, MapX, MapY;
+    local color SavedColor, WhiteColor;
 
-	local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
+    local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
-	PC = PlayerController(Controller);
-	if (PC == none)
-	{
-		Super.RenderOverlays(Canvas);
-		//log("PanzerTurret PlayerController was none, returning");
-		return;
-	}
-	else if (!PC.bBehindView)
-	{
-		// store old opacity and set to 1.0 for map overlay rendering
-		SavedOpacity = Canvas.ColorModulate.W;
-		Canvas.ColorModulate.W = 1.0;
+    PC = PlayerController(Controller);
+    if (PC == none)
+    {
+        Super.RenderOverlays(Canvas);
+        //log("PanzerTurret PlayerController was none, returning");
+        return;
+    }
+    else if (!PC.bBehindView)
+    {
+        // store old opacity and set to 1.0 for map overlay rendering
+        SavedOpacity = Canvas.ColorModulate.W;
+        Canvas.ColorModulate.W = 1.0;
 
-		Canvas.DrawColor.A = 255;
-		Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
 
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
-			if (DriverPositionIndex == 0)
-			{
+            if (DriverPositionIndex == 0)
+            {
 
             // Calculate reticle drawing position (and position to draw black bars at)
 
-			  // Draw reticle
+              // Draw reticle
               ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-			  OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-			  OverlayCenterTexStart = (1 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2;
-			  OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
+              OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
+              OverlayCenterTexStart = (1 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2;
+              OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
 
-			  Canvas.SetPos(0, 0);
-			  Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+              Canvas.SetPos(0, 0);
+              Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-				// Draw the range setting
-				if (Gun != none)
-				{
-					Canvas.Style = ERenderStyle.STY_Normal;
+                // Draw the range setting
+                if (Gun != none)
+                {
+                    Canvas.Style = ERenderStyle.STY_Normal;
 
-					SavedColor = Canvas.DrawColor;
-		    		WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255,175);
-		    		Canvas.DrawColor = WhiteColor;
+                    SavedColor = Canvas.DrawColor;
+                    WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255,175);
+                    Canvas.DrawColor = WhiteColor;
 
                     MapX = RangePositionX * Canvas.ClipX;
                     MapY = RangePositionY * Canvas.ClipY;
 
-					Canvas.SetPos(MapX,MapY);
-					Canvas.Font = class'ROHUD'.Static.GetSmallMenuFont(Canvas);
+                    Canvas.SetPos(MapX,MapY);
+                    Canvas.Font = class'ROHUD'.Static.GetSmallMenuFont(Canvas);
 
-					Canvas.StrLen(Gun.GetRange()$" "$RangeText, XL, YL);
-					Canvas.DrawTextJustified(Gun.GetRange()$" "$RangeText, 2, MapX, MapY, MapX + XL, MapY+YL);
+                    Canvas.StrLen(Gun.GetRange()$" "$RangeText, XL, YL);
+                    Canvas.DrawTextJustified(Gun.GetRange()$" "$RangeText, 2, MapX, MapY, MapX + XL, MapY+YL);
 
-					Canvas.DrawColor = SavedColor;
-				}
-			}
-			else
-			{
-               	DrawBinocsOverlay(Canvas);
-			}
-	    }
+                    Canvas.DrawColor = SavedColor;
+                }
+            }
+            else
+            {
+                DrawBinocsOverlay(Canvas);
+            }
+        }
 
-    	// reset HudOpacity to original value
-		Canvas.ColorModulate.W = SavedOpacity;
+        // reset HudOpacity to original value
+        Canvas.ColorModulate.W = SavedOpacity;
 
         // Draw tank, turret, ammo count, passenger list
-	    if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
-	}
+    }
 
      // Zap the lame crosshair - Ramm
-	if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
-	{
-		Canvas.DrawColor = CrosshairColor;
-		Canvas.DrawColor.A = 255;
-		Canvas.Style = ERenderStyle.STY_Alpha;
-		Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-		Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-	}
+    if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
+    {
+        Canvas.DrawColor = CrosshairColor;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
+        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
+    }
 
 
-	if (PC != none && !PC.bBehindView && HUDOverlay != none)
-	{
+    if (PC != none && !PC.bBehindView && HUDOverlay != none)
+    {
         if (!Level.IsSoftwareRendering())
         {
-    		CameraRotation = PC.Rotation;
-    		SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-    		HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-    		HUDOverlay.SetRotation(CameraRotation);
-    		Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
-    	}
-	}
-	else
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetRotation(CameraRotation);
+            Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
+        }
+    }
+    else
         ActivateOverlay(false);
 }
 
@@ -163,41 +163,41 @@ simulated function DrawHUD(Canvas Canvas)
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {
-	if (bForward)
-	{
-		if (DriverPositionIndex < (DriverPositions.Length - 1))
-		{
-			LastPositionIndex = DriverPositionIndex;
-			DriverPositionIndex++;
+    if (bForward)
+    {
+        if (DriverPositionIndex < (DriverPositions.Length - 1))
+        {
+            LastPositionIndex = DriverPositionIndex;
+            DriverPositionIndex++;
 
-			if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-			{
-				NextViewPoint();
-			}
+            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
 
-			if (Level.NetMode == NM_DedicatedServer)
-			{
-				AnimateTransition();
-			}
-		}
+            if (Level.NetMode == NM_DedicatedServer)
+            {
+                AnimateTransition();
+            }
+        }
      }
      else
      {
-		if (DriverPositionIndex > 0)
-		{
-			LastPositionIndex = DriverPositionIndex;
-			DriverPositionIndex--;
+        if (DriverPositionIndex > 0)
+        {
+            LastPositionIndex = DriverPositionIndex;
+            DriverPositionIndex--;
 
-			if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
-			{
-				NextViewPoint();
-			}
+            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
 
-			if (Level.NetMode == NM_DedicatedServer)
-			{
-				AnimateTransition();
-			}
-		}
+            if (Level.NetMode == NM_DedicatedServer)
+            {
+                AnimateTransition();
+            }
+        }
      }
 }
 
@@ -211,57 +211,57 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-	Super.ClientKDriverLeave(PC);
+    Super.ClientKDriverLeave(PC);
 }
 
 // Overriden to handle vehicle exiting better for fixed AT Cannons
 function bool PlaceExitingDriver()
 {
-	local int i;
-	local vector tryPlace, Extent, ZOffset;
+    local int i;
+    local vector tryPlace, Extent, ZOffset;
 
-	Extent = Driver.default.CollisionRadius * vect(1,1,0);
-	Extent.Z = Driver.default.CollisionHeight;
-	ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
+    Extent = Driver.default.CollisionRadius * vect(1,1,0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
 
-	for(i=0; i<ExitPositions.Length; i++)
-	{
-		if (bRelativeExitPos)
-		{
-		    if (VehicleBase != none)
-		    	tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-        	    else if (Gun != none)
-                	tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-	            else
-        	        tryPlace = Location + (ExitPositions[i] >> Rotation);
-	        }
-		else
-			tryPlace = ExitPositions[i];
+    for(i=0; i<ExitPositions.Length; i++)
+    {
+        if (bRelativeExitPos)
+        {
+            if (VehicleBase != none)
+                tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+                else if (Gun != none)
+                    tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
+                else
+                    tryPlace = Location + (ExitPositions[i] >> Rotation);
+            }
+        else
+            tryPlace = ExitPositions[i];
 
-		// First, do a line check (stops us passing through things on exit).
-		// Skip this line check, sometimes there are close objects that will cause this
-		// check to fail, even when the area that you are trying to place  the exiting
-		// driver is clear. - Ramm
-//		if (bRelativeExitPos)
-//		{
-//			if (VehicleBase != none)
-//			{
-//				if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
-//					continue;
-//			}
-//			else
-//				if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-//					continue;
-//		}
+        // First, do a line check (stops us passing through things on exit).
+        // Skip this line check, sometimes there are close objects that will cause this
+        // check to fail, even when the area that you are trying to place  the exiting
+        // driver is clear. - Ramm
+//      if (bRelativeExitPos)
+//      {
+//          if (VehicleBase != none)
+//          {
+//              if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
+//                  continue;
+//          }
+//          else
+//              if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
+//                  continue;
+//      }
 
-		// Then see if we can place the player there.
-		if (!Driver.SetLocation(tryPlace))
-			continue;
+        // Then see if we can place the player there.
+        if (!Driver.SetLocation(tryPlace))
+            continue;
 
-		return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 
@@ -275,24 +275,24 @@ function bool PlaceExitingDriver()
 event bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
-	local Controller C;
-	local PlayerController	PC;
+    local Controller C;
+    local PlayerController  PC;
 
     C = Controller;
 
-	if (!bForceLeave && !Level.Game.CanLeaveVehicle(self, Driver))
-		return false;
+    if (!bForceLeave && !Level.Game.CanLeaveVehicle(self, Driver))
+        return false;
 
-	if ((PlayerReplicationInfo != none) && (PlayerReplicationInfo.HasFlag != none))
-		Driver.HoldFlag(PlayerReplicationInfo.HasFlag);
+    if ((PlayerReplicationInfo != none) && (PlayerReplicationInfo.HasFlag != none))
+        Driver.HoldFlag(PlayerReplicationInfo.HasFlag);
 
-	// Do nothing if we're not being driven
-	if (Controller == none)
-		return false;
+    // Do nothing if we're not being driven
+    if (Controller == none)
+        return false;
 
     Driver.bHardAttach = false;
-	Driver.bCollideWorld = true;
-	Driver.SetCollision(true, true);
+    Driver.bCollideWorld = true;
+    Driver.SetCollision(true, true);
 
     //Let's look for an unobstructed exit point.  If we find one then we know we can dismount the gun.
     if (PlaceExitingDriver())
@@ -301,35 +301,35 @@ event bool KDriverLeave(bool bForceLeave)
 
         bDriving = false;
 
-	    // Reconnect Controller to Driver.
-	    if (C.RouteGoal == self)
-		   C.RouteGoal = none;
-	    if (C.MoveTarget == self)
-		   C.MoveTarget = none;
-	    C.bVehicleTransition = true;
-	    Controller.UnPossess();
+        // Reconnect Controller to Driver.
+        if (C.RouteGoal == self)
+           C.RouteGoal = none;
+        if (C.MoveTarget == self)
+           C.MoveTarget = none;
+        C.bVehicleTransition = true;
+        Controller.UnPossess();
 
-	    if ((Driver != none) && (Driver.Health > 0))
-	    {
-		   Driver.SetOwner(C);
-		   C.Possess(Driver);
+        if ((Driver != none) && (Driver.Health > 0))
+        {
+           Driver.SetOwner(C);
+           C.Possess(Driver);
 
-		   PC = PlayerController(C);
-		   if (PC != none)
-			  PC.ClientSetViewTarget(Driver); // Set playercontroller to view the person that got out
+           PC = PlayerController(C);
+           if (PC != none)
+              PC.ClientSetViewTarget(Driver); // Set playercontroller to view the person that got out
 
-		   Driver.StopDriving(self);
-	    }
-	    C.bVehicleTransition = false;
+           Driver.StopDriving(self);
+        }
+        C.bVehicleTransition = false;
 
-	    if (C == Controller)	// if controller didn't change, clear it...
-		   Controller = none;
+        if (C == Controller)    // if controller didn't change, clear it...
+           Controller = none;
 
-	    Level.Game.DriverLeftVehicle(self, Driver);
+        Level.Game.DriverLeftVehicle(self, Driver);
 
-	    // Car now has no driver
-	    Driver = none;
-	    DriverLeft();
+        // Car now has no driver
+        Driver = none;
+        DriverLeft();
 
         bSuperDriverLeave = true;
     }
@@ -383,17 +383,17 @@ exec function DebugExit()
     ClearStayingDebugLines();
     for(i=0; i < ExitPositions.Length; i++)
     {
-		if (bRelativeExitPos)
-		{
-		    if (VehicleBase != none)
-		    	tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-        	    else if (Gun != none)
-                	tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-	            else
-        	        tryPlace = Location + (ExitPositions[i] >> Rotation);
-	        }
-		else
-			tryPlace = ExitPositions[i];
+        if (bRelativeExitPos)
+        {
+            if (VehicleBase != none)
+                tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+                else if (Gun != none)
+                    tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
+                else
+                    tryPlace = Location + (ExitPositions[i] >> Rotation);
+            }
+        else
+            tryPlace = ExitPositions[i];
 
        DrawStayingDebugLine(VehicleBase.Location, tryPlace, 0,255,0);
 
@@ -405,25 +405,25 @@ exec function DebugExit()
 // Draws a debugging cylinder out of wireframe lines
 simulated function DrawDebugCylinder(vector Base,vector X, vector Y,vector Z, FLOAT Radius,float HalfHeight,int NumSides, byte R, byte G, byte B)
 {
-	local float AngleDelta;
-	local vector LastVertex, Vertex;
-	local int SideIndex;
+    local float AngleDelta;
+    local vector LastVertex, Vertex;
+    local int SideIndex;
 
 
 
-	AngleDelta = 2.0f * PI / NumSides;
-	LastVertex = Base + X * Radius;
+    AngleDelta = 2.0f * PI / NumSides;
+    LastVertex = Base + X * Radius;
 
-	for(SideIndex = 0;SideIndex < NumSides;SideIndex++)
-	{
-		Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1)) + Y * Sin(AngleDelta * (SideIndex + 1))) * Radius;
+    for(SideIndex = 0;SideIndex < NumSides;SideIndex++)
+    {
+        Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1)) + Y * Sin(AngleDelta * (SideIndex + 1))) * Radius;
 
         DrawStayingDebugLine(LastVertex - Z * HalfHeight,Vertex - Z * HalfHeight,R,G,B);
         DrawStayingDebugLine(LastVertex + Z * HalfHeight,Vertex + Z * HalfHeight,R,G,B);
         DrawStayingDebugLine(LastVertex - Z * HalfHeight,LastVertex + Z * HalfHeight,R,G,B);
 
-		LastVertex = Vertex;
-	}
+        LastVertex = Vertex;
+    }
 }
 
 // AB CODE
@@ -432,8 +432,8 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
     local float ScreenRatio;
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-	Canvas.SetPos(0,0);
-	Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    Canvas.SetPos(0,0);
+    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 //==============================================================================

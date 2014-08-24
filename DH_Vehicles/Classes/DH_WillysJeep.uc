@@ -20,11 +20,11 @@ class DH_WillysJeep extends DH_ROWheeledVehicle;
 var()   float                 MaxPitchSpeed;
 
 var()       sound               EngineSound;       //  Put Engine sound in right place!
-var()   	Sound               RumbleSound;       // Interior rumble sound
+var()       Sound               RumbleSound;       // Interior rumble sound
 var         ROSoundAttachment   EngineSoundAttach;
-var     	ROSoundAttachment   InteriorRumbleSoundAttach;
-var     	float               MotionSoundVolume;
-var()   	name                RumbleSoundBone;
+var         ROSoundAttachment   InteriorRumbleSoundAttach;
+var         float               MotionSoundVolume;
+var()       name                RumbleSoundBone;
 var()       name                EngineSoundBone;
 
 //==============================================================================
@@ -40,11 +40,11 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-	if (Level.NetMode != NM_DedicatedServer)
-	{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
 
-	    //add this back in if we add engine sound attachment points
-	    if (EngineSoundAttach == none)
+        //add this back in if we add engine sound attachment points
+        if (EngineSoundAttach == none)
         {
              EngineSoundAttach = Spawn(class 'ROSoundAttachment');
              EngineSoundAttach.AmbientSound = EngineSound;
@@ -59,7 +59,7 @@ simulated function PostBeginPlay()
              //InteriorRumbleSoundAttach.SoundVolume = default.SoundVolume;
              AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
         }
-	}
+    }
 }
 
 function DriverLeft()
@@ -90,37 +90,37 @@ simulated function UpdateMovementSound()
 simulated function Destroyed()
 {
 
-	if (EngineSoundAttach != none)
-	    EngineSoundAttach.Destroy();
+    if (EngineSoundAttach != none)
+        EngineSoundAttach.Destroy();
     if (InteriorRumbleSoundAttach != none)
-	    InteriorRumbleSoundAttach.Destroy();
+        InteriorRumbleSoundAttach.Destroy();
 
-	super.Destroyed();
+    super.Destroyed();
 }
 
 simulated function Tick(float DeltaTime)
 {
-	local float MotionSoundTemp;
-	local float MySpeed;
+    local float MotionSoundTemp;
+    local float MySpeed;
 
     // Only need these effects client side
     if (Level.Netmode != NM_DedicatedServer)
 
-		MySpeed = VSize(Velocity);
+        MySpeed = VSize(Velocity);
 
-		// Setup sounds that are dependent on velocity
-		MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
-		if (MySpeed > 0.1)
-		{
-		  	MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
-		}
-		else
-		{
-		  	MotionSoundVolume=0;
-		}
-		UpdateMovementSound();
+        // Setup sounds that are dependent on velocity
+        MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
+        if (MySpeed > 0.1)
+        {
+            MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
+        }
+        else
+        {
+            MotionSoundVolume=0;
+        }
+        UpdateMovementSound();
 
-	Super.Tick(DeltaTime);
+    Super.Tick(DeltaTime);
 
     if (bEngineDead || bEngineOff)
     {
@@ -132,7 +132,7 @@ simulated function Tick(float DeltaTime)
     }
 
     if (Level.NetMode != NM_DedicatedServer)
-    	CheckEmitters();
+        CheckEmitters();
 }
 
 static function StaticPrecache(LevelInfo L)
@@ -148,7 +148,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep');
     //Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB');
 
-	Super.UpdatePrecacheMaterials();
+    Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties

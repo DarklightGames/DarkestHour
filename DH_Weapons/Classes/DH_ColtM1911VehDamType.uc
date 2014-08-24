@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_ColtM1911VehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

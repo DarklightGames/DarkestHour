@@ -9,7 +9,7 @@
 //=============================================================================
 
 class DH_FastAutoWeapon extends DH_AutoWeapon
-	abstract;
+    abstract;
 
 // tells bot whether to charge or back off while using this weapon
 function float SuggestAttackStyle()
@@ -25,43 +25,43 @@ function float SuggestDefenseStyle()
 
 function float MaxRange()
 {
-	return 4500; // about 75 meters
+    return 4500; // about 75 meters
 }
 
 simulated function bool StartFire(int Mode)
 {
-	if (FireMode[Mode].bMeleeMode)
-		return super.StartFire(Mode);
+    if (FireMode[Mode].bMeleeMode)
+        return super.StartFire(Mode);
 
-	if (!super.StartFire(Mode))  // returns false when mag is empty
-	   return false;
+    if (!super.StartFire(Mode))  // returns false when mag is empty
+       return false;
 
-	if (AmmoAmount(0) <= 0)
-	{
-    	return false;
+    if (AmmoAmount(0) <= 0)
+    {
+        return false;
     }
 
-	AnimStopLooping();
+    AnimStopLooping();
 
-	if (!FireMode[Mode].IsInState('FireLoop') && (AmmoAmount(0) > 0))
-	{
-		FireMode[Mode].StartFiring();
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if (!FireMode[Mode].IsInState('FireLoop') && (AmmoAmount(0) > 0))
+    {
+        FireMode[Mode].StartFiring();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 simulated function AnimEnd(int channel)
 {
-	if (!FireMode[0].IsInState('FireLoop'))
-	{
-	  	super(DH_ProjectileWeapon).AnimEnd(channel);
-	}
+    if (!FireMode[0].IsInState('FireLoop'))
+    {
+        super(DH_ProjectileWeapon).AnimEnd(channel);
+    }
 }
 
 defaultproperties

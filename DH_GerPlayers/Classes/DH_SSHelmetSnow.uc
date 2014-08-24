@@ -1,6 +1,6 @@
 // *************************************************************************
 //
-//	***   SS Helmet with snow cover   ***
+//  ***   SS Helmet with snow cover   ***
 //
 // *************************************************************************
 
@@ -8,7 +8,7 @@ class DH_SSHelmetSnow extends DH_Headgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//	L.AddPrecacheMaterial(Material'GermanCharactersTex.WSS.WSSParkaSnow1');
+//  L.AddPrecacheMaterial(Material'GermanCharactersTex.WSS.WSSParkaSnow1');
 }
 
 defaultproperties

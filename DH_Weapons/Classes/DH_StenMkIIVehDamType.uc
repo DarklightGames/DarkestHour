@@ -3,7 +3,7 @@
 //=============================================================================
 
 class DH_StenMkIIVehDamType extends ROVehicleDamageType
-	abstract;
+    abstract;
 
 //=============================================================================
 // defaultproperties

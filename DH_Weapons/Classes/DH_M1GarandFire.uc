@@ -4,197 +4,197 @@
 
 class DH_M1GarandFire extends DH_SemiAutoFire;
 
-var() 		array<sound>	FirePingSounds; 				// An array of the last round firing sound with ping
-var(FireAnims) 	name 		FireLastAnim;				//last round animation
-var(FireAnims) 	name 		FireIronlastAnim;				//iron last round animation
+var()       array<sound>    FirePingSounds;                 // An array of the last round firing sound with ping
+var(FireAnims)  name        FireLastAnim;               //last round animation
+var(FireAnims)  name        FireIronlastAnim;               //iron last round animation
 
 var             bool        NextShotIsLast;               // Set on the second last shot to facilitate clip eject
 
 simulated function HandleRecoil()
 {
-	local rotator NewRecoilRotation;
-	local ROPlayer ROP;
-	local ROPawn ROPwn;
+    local rotator NewRecoilRotation;
+    local ROPlayer ROP;
+    local ROPawn ROPwn;
 
-		if (Instigator != none)
-		{
-		ROP = ROPlayer(Instigator.Controller);
-		ROPwn = ROPawn(Instigator);
-	}
+        if (Instigator != none)
+        {
+        ROP = ROPlayer(Instigator.Controller);
+        ROPwn = ROPawn(Instigator);
+    }
 
-		if (ROP == none || ROPwn == none)
-		return;
+        if (ROP == none || ROPwn == none)
+        return;
 
-	if (!ROP.bFreeCamera)
-	{
-	  		NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
-	 		NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
+    if (!ROP.bFreeCamera)
+    {
+            NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
+            NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
 
-	  		if (Rand(2) == 1)
-		 		NewRecoilRotation.Yaw *= -1;
+            if (Rand(2) == 1)
+                NewRecoilRotation.Yaw *= -1;
 
-				if (Instigator.Physics == PHYS_Falling)
-				{
-	  			NewRecoilRotation *= 3;
-				}
+                if (Instigator.Physics == PHYS_Falling)
+                {
+                NewRecoilRotation *= 3;
+                }
 
-		// WeaponTODO: Put bipod and resting modifiers in here
-	    	if (Instigator.bIsCrouched)
-	    	{
-	        		NewRecoilRotation *= PctCrouchRecoil;
+        // WeaponTODO: Put bipod and resting modifiers in here
+            if (Instigator.bIsCrouched)
+            {
+                    NewRecoilRotation *= PctCrouchRecoil;
 
-			// player is crouched and in iron sights
-	        		if (Weapon.bUsingSights)
-	        		{
-	            			NewRecoilRotation *= PctCrouchIronRecoil;
-	        		}
-	    	}
-	    	else if (Instigator.bIsCrawling)
-	    	{
-	        		NewRecoilRotation *= PctProneRecoil;
+            // player is crouched and in iron sights
+                    if (Weapon.bUsingSights)
+                    {
+                            NewRecoilRotation *= PctCrouchIronRecoil;
+                    }
+            }
+            else if (Instigator.bIsCrawling)
+            {
+                    NewRecoilRotation *= PctProneRecoil;
 
-	        		// player is prone and in iron sights
-	        		if (Weapon.bUsingSights)
-	        		{
-	            			NewRecoilRotation *= PctProneIronRecoil;
-	        		}
-	    	}
-	    	else if (Weapon.bUsingSights)
-	    	{
-	        		NewRecoilRotation *= PctStandIronRecoil;
-	    	}
+                    // player is prone and in iron sights
+                    if (Weapon.bUsingSights)
+                    {
+                            NewRecoilRotation *= PctProneIronRecoil;
+                    }
+            }
+            else if (Weapon.bUsingSights)
+            {
+                    NewRecoilRotation *= PctStandIronRecoil;
+            }
 
-				if (ROPwn.bRestingWeapon)
-					NewRecoilRotation *= PctRestDeployRecoil;
+                if (ROPwn.bRestingWeapon)
+                    NewRecoilRotation *= PctRestDeployRecoil;
 
-				if (Instigator.bBipodDeployed)
-		{
-			NewRecoilRotation *= PctBipodDeployRecoil;
-		}
+                if (Instigator.bBipodDeployed)
+        {
+            NewRecoilRotation *= PctBipodDeployRecoil;
+        }
 
-		if (ROPwn.LeanAmount != 0)
-		{
-			NewRecoilRotation *= PctLeanPenalty;
-		}
+        if (ROPwn.LeanAmount != 0)
+        {
+            NewRecoilRotation *= PctLeanPenalty;
+        }
 
-		// Need to set this value per weapon
- 		ROP.SetRecoil(NewRecoilRotation,RecoilRate);
- 	}
+        // Need to set this value per weapon
+        ROP.SetRecoil(NewRecoilRotation,RecoilRate);
+    }
 
-	// Add Fire Blur
-		if (Level.NetMode != NM_DedicatedServer)
-		{
-			if (Instigator != none)
- 	   	{
- 	   		if (ROPlayer(Instigator.Controller) != none)
-				{
-				if (Weapon.bUsingSights)
-				{
-				    	ROPlayer(Instigator.Controller).AddBlur(0.1, 0.1);
-				}
-			    	else
-			    	{
-			    		ROPlayer(Instigator.Controller).AddBlur(0.01, 0.1);
-			    	}
-			}
-		}
-		}
+    // Add Fire Blur
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            if (Instigator != none)
+        {
+            if (ROPlayer(Instigator.Controller) != none)
+                {
+                if (Weapon.bUsingSights)
+                {
+                        ROPlayer(Instigator.Controller).AddBlur(0.1, 0.1);
+                }
+                    else
+                    {
+                        ROPlayer(Instigator.Controller).AddBlur(0.01, 0.1);
+                    }
+            }
+        }
+        }
 }
 
 function ServerPlayFiring()
 {
-	local 	DH_M1GarandWeapon 	Gun;
+    local   DH_M1GarandWeapon   Gun;
 
-	Gun = DH_M1GarandWeapon(Weapon);
+    Gun = DH_M1GarandWeapon(Weapon);
 
-	if (Gun.WasLastRound())		// adds last round clip eject sound
-	{
-		if (FirePingSounds.Length > 0)
-		{
-		    Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
-		}
-	}
-	else
-	{
-		if (FireSounds.Length > 0)
-		{
-		    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
-		}
-	}
+    if (Gun.WasLastRound())     // adds last round clip eject sound
+    {
+        if (FirePingSounds.Length > 0)
+        {
+            Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+        }
+    }
+    else
+    {
+        if (FireSounds.Length > 0)
+        {
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+        }
+    }
 }
 
-function PlayFiring() 	// overridden to make last round eject clip & add audible ping
+function PlayFiring()   // overridden to make last round eject clip & add audible ping
 {
-	local 	DH_M1GarandWeapon 	Gun;
-	local   bool                IsLastRound;
+    local   DH_M1GarandWeapon   Gun;
+    local   bool                IsLastRound;
 
-	Gun = DH_M1GarandWeapon(Weapon);
-	IsLastRound = Gun.bIsLastRound;
+    Gun = DH_M1GarandWeapon(Weapon);
+    IsLastRound = Gun.bIsLastRound;
 
-	if (Weapon.Mesh != none)
-	{
-	 	if (IsLastRound)
-		{
-		 	if (Weapon.bUsingSights)
-			{
-			 	Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
-			}
-			else
-			{
-				Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
-			}
-		}
-		else
-		{
-		 	if (Weapon.bUsingSights)
-			{
-			 	Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
-			}
-			else
-			{
-				Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-			}
-		}
-	}
+    if (Weapon.Mesh != none)
+    {
+        if (IsLastRound)
+        {
+            if (Weapon.bUsingSights)
+            {
+                Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
+            }
+            else
+            {
+                Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
+            }
+        }
+        else
+        {
+            if (Weapon.bUsingSights)
+            {
+                Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
+            }
+            else
+            {
+                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+            }
+        }
+    }
 
-	if (Instigator.IsHumanControlled() && Instigator.IsLocallyControlled())
-	{
-		if (IsLastRound)
-		{
-			if (FirePingSounds.Length > 0)
-	        {
-		        Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
-	        }
-		}
-		else
-		{
-	        if (FireSounds.Length > 0)
-	        {
-		        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
-	        }
-		}
-	}
-	else
-	{
-		if (Gun.WasLastRound())
-		{
-			if (FirePingSounds.Length > 0)
-	        {
-		        Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
-	        }
-		}
-		else
-		{
-	        if (FireSounds.Length > 0)
-	        {
-		        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
-	        }
-		}
-	}
+    if (Instigator.IsHumanControlled() && Instigator.IsLocallyControlled())
+    {
+        if (IsLastRound)
+        {
+            if (FirePingSounds.Length > 0)
+            {
+                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+            }
+        }
+        else
+        {
+            if (FireSounds.Length > 0)
+            {
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+            }
+        }
+    }
+    else
+    {
+        if (Gun.WasLastRound())
+        {
+            if (FirePingSounds.Length > 0)
+            {
+                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+            }
+        }
+        else
+        {
+            if (FireSounds.Length > 0)
+            {
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+            }
+        }
+    }
 
-	ClientPlayForceFeedback(FireForce);  // jdf
+    ClientPlayForceFeedback(FireForce);  // jdf
 
-	FireCount++;
+    FireCount++;
 }
 
 defaultproperties

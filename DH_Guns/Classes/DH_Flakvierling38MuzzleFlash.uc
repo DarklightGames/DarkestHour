@@ -2,14 +2,14 @@ class DH_Flakvierling38MuzzleFlash extends ROMuzzleFlash3rd;
 
 simulated function Trigger(Actor Other, Pawn EventInstigator)
 {
-	Emitters[0].SpawnParticle(2);
-	Emitters[1].SpawnParticle(2);
-	Emitters[2].SpawnParticle(2);
-	Emitters[3].SpawnParticle(2);
-	Emitters[4].SpawnParticle(2);
-	Emitters[5].SpawnParticle(1);
-	Emitters[6].SpawnParticle(3);
-	Emitters[7].SpawnParticle(3);
+    Emitters[0].SpawnParticle(2);
+    Emitters[1].SpawnParticle(2);
+    Emitters[2].SpawnParticle(2);
+    Emitters[3].SpawnParticle(2);
+    Emitters[4].SpawnParticle(2);
+    Emitters[5].SpawnParticle(1);
+    Emitters[6].SpawnParticle(3);
+    Emitters[7].SpawnParticle(3);
 }
 
 defaultproperties

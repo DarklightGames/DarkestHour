@@ -1,5 +1,5 @@
 class DH_WaffenSSAutumn extends DH_Ger_WaffenSS
-	abstract;
+    abstract;
 
 defaultproperties
 {

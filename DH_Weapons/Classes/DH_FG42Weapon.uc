@@ -6,9 +6,9 @@ class DH_FG42Weapon extends DH_BipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Fallschirmgewehr42_1st.ukx
 
-var  	name  	SelectFireAnim;
-var 	name 	SelectFireIronAnim;
-var 	name 	SightUpSelectFireIronAnim;
+var     name    SelectFireAnim;
+var     name    SelectFireIronAnim;
+var     name    SightUpSelectFireIronAnim;
 
 //=============================================================================
 // replication
@@ -16,87 +16,87 @@ var 	name 	SightUpSelectFireIronAnim;
 replication
 {
     reliable if (Role<ROLE_Authority)
-    	ServerChangeFireMode;
+        ServerChangeFireMode;
 }
 
 simulated exec function SwitchFireMode()
 {
-	if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
-		return;
+    if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
+        return;
 
     GotoState('SwitchingFireMode');
 }
 
 function ServerChangeFireMode()
 {
-	FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
+    FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
 }
 
 
 simulated state SwitchingFireMode extends Busy
 {
-	simulated function bool ReadyToFire(int Mode)
-	{
-		return false;
-	}
+    simulated function bool ReadyToFire(int Mode)
+    {
+        return false;
+    }
 
-	simulated function bool ShouldUseFreeAim()
-	{
-		return false;
-	}
+    simulated function bool ShouldUseFreeAim()
+    {
+        return false;
+    }
 
-	simulated function Timer()
-	{
-		GotoState('Idle');
-	}
+    simulated function Timer()
+    {
+        GotoState('Idle');
+    }
 
-	simulated function BeginState()
-	{
-		local name Anim;
+    simulated function BeginState()
+    {
+        local name Anim;
 
-		if (bUsingSights || Instigator.bBipodDeployed)
-		{
-			if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
-			{
-				Anim = SightUpSelectFireIronAnim;
-			}
-			else
-			{
-				Anim = SelectFireIronAnim;
-			}
-		}
-		else
-		{
-			Anim = SelectFireAnim;
-		}
+        if (bUsingSights || Instigator.bBipodDeployed)
+        {
+            if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
+            {
+                Anim = SightUpSelectFireIronAnim;
+            }
+            else
+            {
+                Anim = SelectFireIronAnim;
+            }
+        }
+        else
+        {
+            Anim = SelectFireAnim;
+        }
 
-		if (Instigator.IsLocallyControlled())
-		{
-	    		PlayAnim(Anim, 1.0, FastTweenTime);
-		}
+        if (Instigator.IsLocallyControlled())
+        {
+                PlayAnim(Anim, 1.0, FastTweenTime);
+        }
 
-	    	SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
+            SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
 
-		ServerChangeFireMode();
+        ServerChangeFireMode();
 
-	    if (Role < ROLE_Authority)
-		{
-			FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
-		}
-	}
+        if (Role < ROLE_Authority)
+        {
+            FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
+        }
+    }
 }
 
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-	if (FireMode[0].bWaitForRelease)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+    if (FireMode[0].bWaitForRelease)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 defaultproperties

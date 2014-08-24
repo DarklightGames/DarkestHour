@@ -15,11 +15,11 @@ function SetBackground()
     local DH_LevelInfo levelinfo;
 
     // Find nationinfo
-   	foreach PlayerOwner().AllActors(class'DH_LevelInfo', levelinfo)
-	    break;
+    foreach PlayerOwner().AllActors(class'DH_LevelInfo', levelinfo)
+        break;
 
-	if (levelinfo != none)
-	{
+    if (levelinfo != none)
+    {
          if (levelinfo.AlliedNation == NATION_Britain)
          {
               bg_Background.SetVisibility(false);
@@ -33,14 +33,14 @@ function SetBackground()
               bg_Background3.SetVisibility(true);
          }
          else // NATION_USA
-	     {
+         {
               bg_Background.SetVisibility(true);
               bg_Background2.SetVisibility(false);
               bg_Background3.SetVisibility(false);
          }
-	}
-	else
-	{
+    }
+    else
+    {
          bg_Background.SetVisibility(true);
          bg_Background2.SetVisibility(false);
          bg_Background3.SetVisibility(false);
@@ -59,7 +59,7 @@ function SelectTeamSuccessfull()
     }
     else
 //        class'ROGUIRoleSelection'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
-	class'DHRoleSelection'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
+    class'DHRoleSelection'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
     Controller.RemoveMenu(self);
 }
 

@@ -4,7 +4,7 @@
 // Allows us to attach some cool stuff to the vehicles - camouflage, MG's, etc
 //=============================================================================
 class DH_VehicleDecoAttachment extends RODummyAttachment
-	abstract;
+    abstract;
 
 
 simulated function PostBeginPlay()

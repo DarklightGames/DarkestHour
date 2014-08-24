@@ -8,28 +8,28 @@
 
 class DH_ActorReset extends DH_LevelActors;
 
-var()	name				ActorToReset;  //Theel & Basnett
-var		actor				ActorReference;
+var()   name                ActorToReset;  //Theel & Basnett
+var     actor               ActorReference;
 
 function PostBeginPlay()
 {
-	local Actor	A;
+    local Actor A;
 
-	super.PostBeginPlay();
+    super.PostBeginPlay();
 
-	if (ActorToReset == '')
-		return; //Actor tag wasn't set no reason to continue
+    if (ActorToReset == '')
+        return; //Actor tag wasn't set no reason to continue
 
-	foreach AllActors(class'Actor', A, ActorToReset)
-	{
-		ActorReference = A;
-		break;
-	}
+    foreach AllActors(class'Actor', A, ActorToReset)
+    {
+        ActorReference = A;
+        break;
+    }
 }
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
-	ActorReference.reset();
+    ActorReference.reset();
 }
 
 defaultproperties
