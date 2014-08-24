@@ -164,6 +164,16 @@ simulated function DrawHUD(Canvas Canvas)
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
 }
 
+function Fire(optional float F)
+{
+    if(IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    super.Fire(F);
+}
+
 defaultproperties
 {
      OverlayCenterSize=1.000000

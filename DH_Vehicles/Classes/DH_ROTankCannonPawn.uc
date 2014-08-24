@@ -609,6 +609,16 @@ simulated state LeavingVehicle
     }
 }
 
+function Fire(optional float F)
+{
+    if(IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    super.Fire(F);
+}
+
 defaultproperties
 {
      bShowRangeText=true
