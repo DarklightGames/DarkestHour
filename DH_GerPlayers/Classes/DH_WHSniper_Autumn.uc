@@ -14,7 +14,7 @@ defaultproperties
      Article="a "
      PluralName="Snipers"
      InfoText="The sniper is tasked with the specialized goal of eliminating key hostile units and shaking enemy morale through careful marksmanship and fieldcraft.  Through patient observation, the sniper is also capable of providing valuable reconnaissance which can have a significant impact on the outcome of the battle."
-     menuImage=Texture'InterfaceArt_tex.SelectMenus.Scharf'
+     MenuImage=Texture'InterfaceArt_tex.SelectMenus.Scharf'
      Models(0)="WHAu_1"
      Models(1)="WHAu_2"
      Models(2)="WHAu_3"
@@ -27,5 +27,5 @@ defaultproperties
      SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
      Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetCover'
      PrimaryWeaponType=WT_Sniper
-     limit=2
+     Limit=2
 }

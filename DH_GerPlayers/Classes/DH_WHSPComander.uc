@@ -25,7 +25,7 @@ defaultproperties
      Article="a "
      PluralName="Assault Gun Commanders"
      InfoText="Stugführer||The Stugführer is the assault gun commander, either an NCO or officer. His primary task was to spot targets for the gunner, as well as to direct the rest of the crew. He might, as a platoon commander, be required to lead a complete platoon of assault guns, as well as direct his own."
-     menuImage=Texture'DHGermanCharactersTex.Icons.IconSPCom'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.IconSPCom'
      Models(0)="WHSP_1"
      Models(1)="WHSP_2"
      Models(2)="WHSP_3"
@@ -46,5 +46,5 @@ defaultproperties
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true
      bCanBeTankCommander=true
-     limit=1
+     Limit=1
 }

@@ -22,7 +22,7 @@ defaultproperties
      Article="a "
      PluralName="Squad Machine-Gunners"
      InfoText="The squad machine-gunner is tasked with the tactical employment of the light machine gun to provide direct fire support to his squad, and in many cases being its primary source of mid- and long-range firepower. Due to the light machine gun's high rate of fire, an adequate supply of ammunition is needed to maintain a constant rate of fire, provided largely by his accompanying units."
-     menuImage=Texture'DHUSCharactersTex.Icons.ABSMG'
+     MenuImage=Texture'DHUSCharactersTex.Icons.ABSMG'
      Models(0)="US_502101AB1"
      Models(1)="US_502101AB2"
      Models(2)="US_502101AB3"
@@ -34,5 +34,5 @@ defaultproperties
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet502101stEMb'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_SMG
-     limit=2
+     Limit=2
 }

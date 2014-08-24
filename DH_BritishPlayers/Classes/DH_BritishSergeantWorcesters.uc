@@ -34,5 +34,5 @@ defaultproperties
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=2
+     Limit=2
 }

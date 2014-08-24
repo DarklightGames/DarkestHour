@@ -25,7 +25,7 @@ defaultproperties
      Article="a "
      PluralName="Machine-Gunners"
      InfoText="The machine-gunner is tasked with the tactical employment of the light machine gun to provide direct fire support to his squad, and in many cases being its primary source of mid- and long-range firepower. Due to the light machine gun's high rate of fire, an adequate supply of ammunition is needed to maintain a constant rate of fire, provided largely by his accompanying units."
-     menuImage=Texture'DHBritishCharactersTex.Icons.Brit_PMG'
+     MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_PMG'
      Models(0)="Wor_1"
      Models(1)="Wor_2"
      Models(2)="Wor_3"
@@ -41,5 +41,5 @@ defaultproperties
      Headgear(2)=Class'DH_BritishPlayers.DH_BritishTommyHelmet'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
-     limit=1
+     Limit=1
 }

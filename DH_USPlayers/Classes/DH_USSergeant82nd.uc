@@ -23,7 +23,7 @@ defaultproperties
      Article="a "
      PluralName="Sergeants"
      InfoText="The sergeant is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the sergeant's presence is an excellent force multiplier to the units under his command."
-     menuImage=Texture'DHUSCharactersTex.Icons.ABSg'
+     MenuImage=Texture'DHUSCharactersTex.Icons.ABSg'
      Models(0)="US_82ABSarg1"
      Models(1)="US_82ABSarg2"
      Models(2)="US_82ABSarg3"
@@ -38,5 +38,5 @@ defaultproperties
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet82ndNCOb'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=2
+     Limit=2
 }

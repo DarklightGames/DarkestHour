@@ -161,7 +161,7 @@ defaultproperties
      WA_PreReload="idle_enfieldno4_scoped"
      WA_PostReload="idle_enfieldno4_scoped"
      WA_WorkBolt="idle_enfieldno4_scoped"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Scoped_icon'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Scoped_icon'
      MenuDescription="Scoped Enfield No.4: Bolt-action rifle with sniper scope"
      bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_Scoped_3rd'

@@ -137,7 +137,7 @@ defaultproperties
      WA_ReloadEmpty="Idle_M1Carbine"
      WA_ProneReload="Idle_M1Carbine"
      WA_ProneReloadEmpty="Idle_M1Carbine"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
      MenuDescription="Carbine M1: American semi-automatic carbine rifle firing a short .30 calibre cartridge from a detachable 15-round mag. Issued in large numbers to paratroops, tank crews, and behind the lines support personnel. Decent short range accuracy and stopping power. Maximum effective range: 300 metres."
      bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.Carbine_3rd'

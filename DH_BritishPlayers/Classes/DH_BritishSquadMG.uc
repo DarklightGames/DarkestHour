@@ -23,7 +23,7 @@ defaultproperties
      Article="a "
      PluralName="Bren Gunners"
      InfoText="The Bren gunner is tasked with the tactical employment of the light machine gun to provide direct fire support to his squad, and in many cases being its primary source of mid- and long-range firepower. Due to the light machine gun's high rate of fire, an adequate supply of ammunition is needed to maintain a constant rate of fire, provided largely by his accompanying units."
-     menuImage=Texture'DHBritishCharactersTex.Icons.Brit_SMG'
+     MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_SMG'
      Models(0)="PBI_1"
      Models(1)="PBI_2"
      Models(2)="PBI_3"
@@ -38,5 +38,5 @@ defaultproperties
      Headgear(2)=Class'DH_BritishPlayers.DH_BritishTommyHelmet'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
-     limit=3
+     Limit=3
 }

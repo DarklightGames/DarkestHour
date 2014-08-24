@@ -196,7 +196,7 @@ defaultproperties
      WA_ReloadEmpty="reload_empty_Colt"
      WA_ProneReload="prone_reload_half_Colt"
      WA_ProneReloadEmpty="prone_reload_empty_Colt"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
      MenuDescription="Colt M1911: semi-automatic pistol. Standard issue sidearm in the United States Army. Used .45 caliber rounds in a 7-round box mag, with reasonable accuracy and good stopping power. Maximum effective range: 50 metres."
      bRapidFire=false
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.Colt45_3rd'

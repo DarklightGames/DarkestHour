@@ -22,7 +22,7 @@ defaultproperties
      Article="a "
      PluralName="Snipers"
      InfoText="The sniper is tasked with the specialized goal of eliminating key hostile units and shaking enemy morale through careful marksmanship and fieldcraft.  Through patient observation, the sniper is also capable of providing valuable reconnaissance which can have a significant impact on the outcome of the battle."
-     menuImage=Texture'DHUSCharactersTex.Icons.ABSnip'
+     MenuImage=Texture'DHUSCharactersTex.Icons.ABSnip'
      Models(0)="US_82AB1"
      Models(1)="US_82AB2"
      Models(2)="US_82AB3"
@@ -32,5 +32,5 @@ defaultproperties
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet82ndEMa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet82ndEMb'
      PrimaryWeaponType=WT_Sniper
-     limit=1
+     Limit=1
 }

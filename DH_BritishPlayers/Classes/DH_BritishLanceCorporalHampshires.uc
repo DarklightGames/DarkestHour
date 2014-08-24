@@ -25,7 +25,7 @@ defaultproperties
      Article="a "
      PluralName="Lance Corporals"
      InfoText="The lance corporal is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
-     menuImage=Texture'DHBritishCharactersTex.Icons.Brit_LanceCorporal'
+     MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_LanceCorporal'
      Models(0)="Hamp_1"
      Models(1)="Hamp_2"
      Models(2)="Hamp_3"
@@ -40,5 +40,5 @@ defaultproperties
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishTurtleHelmet'
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
      Headgear(2)=Class'DH_BritishPlayers.DH_BritishTommyHelmet'
-     limit=2
+     Limit=2
 }

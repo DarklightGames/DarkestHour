@@ -21,7 +21,7 @@ defaultproperties
      Article="a "
      PluralName="Combat Engineers"
      InfoText="The combat engineer is tasked with destroying front-line enemy obstacles and fortifications.  Geared for close quarters combat, the combat engineer is generally equipped with submachine-guns and grenades.  For instances where enemy fortifications or obstacles are exposed to enemy fire, he is equipped with concealment smoke so he may get close enough to destroy the target."
-     menuImage=Texture'DHGermanCharactersTex.Icons.WSS_Eng'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.WSS_Eng'
      Models(0)="SS_1"
      Models(1)="SS_2"
      Models(2)="SS_3"
@@ -35,5 +35,5 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_SSHelmetOne'
      Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetTwo'
      PrimaryWeaponType=WT_SMG
-     limit=1
+     Limit=1
 }

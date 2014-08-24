@@ -22,7 +22,7 @@ defaultproperties
      Article="a "
      PluralName="Corporals"
      InfoText="The corporal is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
-     menuImage=Texture'DHUSCharactersTex.Icons.IconCorporal'
+     MenuImage=Texture'DHUSCharactersTex.Icons.IconCorporal'
      Models(0)="US_502101AB1"
      Models(1)="US_502101AB2"
      Models(2)="US_502101AB3"
@@ -34,5 +34,5 @@ defaultproperties
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet502101stEMa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet502101stEMb'
      PrimaryWeaponType=WT_SemiAuto
-     limit=2
+     Limit=2
 }

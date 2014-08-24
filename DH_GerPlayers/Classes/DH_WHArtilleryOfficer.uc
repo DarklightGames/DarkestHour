@@ -25,7 +25,7 @@ defaultproperties
      Article="a "
      PluralName="Artillery Officers"
      InfoText="Artillerie Offizier||The artillery officer is the artillery commander, either an NCO or officer. His primary task was to spot targets for the gunner. ||Only artillery crew can use artillery"
-     menuImage=Texture'DHGermanCharactersTex.Icons.Zugfuhrer'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.Zugfuhrer'
      Models(0)="WHA_1"
      Models(1)="WHA_2"
      Models(2)="WHA_3"
@@ -40,5 +40,5 @@ defaultproperties
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true
-     limit=1
+     Limit=1
 }

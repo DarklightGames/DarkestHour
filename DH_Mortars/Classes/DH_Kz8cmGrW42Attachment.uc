@@ -40,7 +40,7 @@ defaultproperties
      PA_IdleWeaponAnim="stand_Idle_GrW42"
      WA_Idle="idle_GrW42"
      WA_Fire="idle_GrW42"
-     menuImage=Texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42'
+     MenuImage=Texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42'
      MenuDescription="Kurz 8cm Granatwerfer 42"
      Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_chr'
 }

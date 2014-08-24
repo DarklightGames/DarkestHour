@@ -10,7 +10,7 @@ defaultproperties
      Article="a "
      PluralName="Radio Operators"
      InfoText="The radio operator carries a man-packed radio and is tasked with the role of calling in artillery strikes towards targets designated by the artillery officer. Effective communication between the radio operator and the artillery officer is critical to the success of a coordinated barrage."
-     menuImage=Texture'DHBritishCharactersTex.Icons.Para_RadOp'
+     MenuImage=Texture'DHBritishCharactersTex.Icons.Para_RadOp'
      Models(0)="paraRad1"
      Models(1)="paraRad2"
      Models(2)="paraRad3"
@@ -20,5 +20,5 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_BritishRadioItem"
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
      PrimaryWeaponType=WT_SMG
-     limit=1
+     Limit=1
 }

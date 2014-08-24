@@ -13,7 +13,7 @@ defaultproperties
      Article="a "
      PluralName="Squad Leaders"
      InfoText="Gruppenführer - Difficulty: Very Advanced||The Gruppenführer is the leader of the squad - an NCO by rank.  His job is to see to the completion of the squad's objectives by directing his men in combat and ensuring the LMG's firepower is put to good use.  Equipped for close quarters combat, the Gruppenführer is better off directing the squad's firepower at longer ranges than engaging himself.||* The Gruppenführer counts one and a half times when taking and holding objectives."
-     menuImage=Texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
+     MenuImage=Texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
      Models(0)="WK_1"
      Models(1)="WK_2"
      Models(2)="WK_3"
@@ -28,5 +28,5 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_KriegsmarineCap'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=2
+     Limit=2
 }

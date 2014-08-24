@@ -8,7 +8,7 @@ defaultproperties
      Article="a "
      PluralName="Reconnaissance Crewmen"
      InfoText="The reconnaissance crewman is tasked with either driving his reconnaissance vehicle or operating its main gun.  In order to be effective, the reconnaissance crewman must be able to forcefully scout enemy territory and accurately relay important information to all team members."
-     menuImage=Texture'DHCanadianCharactersTex.Icons.Can_ReconCrew'
+     MenuImage=Texture'DHCanadianCharactersTex.Icons.Can_ReconCrew'
      Models(0)="Can_1stH1"
      Models(1)="Can_1stH2"
      Models(2)="Can_1stH3"
@@ -18,5 +18,5 @@ defaultproperties
      Headgear(0)=Class'DH_BritishPlayers.DH_CanadianTankerBeret'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=2
+     Limit=2
 }

@@ -227,7 +227,7 @@ defaultproperties
      WA_ProneReloadEmpty="idle_Bren"
      WA_WeaponDeploy="idle_Bren_deployed"
      WA_WeaponUnDeploy="idle_Bren"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_icon'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_icon'
      MenuDescription="Bren Mk IV: The Bren is the standard squad fire support weapon used by all Commonwealth forces. The Bren fires a .303 cartridge from a 30 round detachable magazine. Equally effective in both assault and deployed formats. Accurate to 550 metres."
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bren_3rd'
 }

@@ -27,7 +27,7 @@ defaultproperties
      Article="a "
      PluralName="Tank Hunters"
      InfoText="The tank hunter is tasked with locating and destroying or disabling enemy vehicles.  Armed with close-range anti-tank weaponry, he must often get dangerously close to his target in order to assure a hit.  His weaponry can also be effective against enemy fortifications."
-     menuImage=Texture'DHBritishCharactersTex.Icons.Brit_AT'
+     MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_AT'
      Models(0)="PBI_1"
      Models(1)="PBI_2"
      Models(2)="PBI_3"
@@ -43,5 +43,5 @@ defaultproperties
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
      Headgear(2)=Class'DH_BritishPlayers.DH_BritishTommyHelmet'
      PrimaryWeaponType=WT_SMG
-     limit=1
+     Limit=1
 }

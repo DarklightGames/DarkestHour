@@ -12,7 +12,7 @@ defaultproperties
      Article="a "
      PluralName="Mortar Operators"
      InfoText="The mortar operator is tasked with providing indirect fire on distant targets using his medium mortar.  The mortar operator should work closely with a mortar observer to accurately bombard targets out of visual range.||* Targets marked by the mortar observer will appear on your situation map.|* Rounds that land near the marked target will appear on your situation map."
-     menuImage=Texture'DHBritishCharactersTex.Icons.Brit_MortarOperator'
+     MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_MortarOperator'
      Models(0)="para1"
      Models(1)="para2"
      Models(2)="para3"
@@ -27,5 +27,5 @@ defaultproperties
      Headgear(0)=Class'DH_BritishPlayers.DH_BritishParaHelmet1'
      Headgear(1)=Class'DH_BritishPlayers.DH_BritishParaHelmet2'
      Headgear(2)=Class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
-     limit=1
+     Limit=1
 }

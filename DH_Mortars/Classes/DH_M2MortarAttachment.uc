@@ -39,7 +39,7 @@ defaultproperties
      PA_IdleWeaponAnim="stand_idle_M2Mortar"
      WA_Idle="idle_M2"
      WA_Fire="idle_M2"
-     menuImage=Texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2'
+     MenuImage=Texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2'
      MenuDescription="60mm Mortar M2"
      Mesh=SkeletalMesh'DH_Mortars_3rd.M2_Mortar_chr'
 }

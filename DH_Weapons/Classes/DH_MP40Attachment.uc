@@ -190,7 +190,7 @@ defaultproperties
      WA_ReloadEmpty="reloadempty_mp40"
      WA_ProneReload="prone_reloadhalf_mp40"
      WA_ProneReloadEmpty="prone_reloadempty_mp40"
-     menuImage=Texture'InterfaceArt_tex.Menu_weapons.mp40'
+     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mp40'
      MenuDescription="Standard German sub-machine gun, firing the light 9mm Parabellum round. 32-round box mag, firing at 550rpm. Accurate out to about 200 metres."
      Mesh=SkeletalMesh'Weapons3rd_anm.mp40'
 }

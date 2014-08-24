@@ -25,7 +25,7 @@ defaultproperties
      Article="a "
      PluralName="Riflemen"
      InfoText="The rifleman is the basic soldier of the battlefield that is tasked with the important role of capturing and holding objectives, as well as the defense of key positions. Armed with the standard-issue battle rifle, the rifleman's efficiency is determined by his ability to work as a member of a larger unit."
-     menuImage=Texture'DHGermanCharactersTex.Icons.WSS_k98'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.WSS_k98'
      Models(0)="12SS_1"
      Models(1)="12SS_2"
      Models(2)="12SS_3"

@@ -248,7 +248,7 @@ defaultproperties
      PA_DodgeAnims(3)="jumpR_mid_nade"
      WA_Idle="Idle_m1"
      WA_Fire="Idle_m1"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.M1Grenades'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.M1Grenades'
      MenuDescription="The Mk. II was the standard Allied fragmentation grenade available throughout the war. Can be 'cooked'. Normally set with about a 4.5-second fuse. Effective casuality radius of 2-3 metres in the open."
      bRapidFire=false
      LightType=LT_none

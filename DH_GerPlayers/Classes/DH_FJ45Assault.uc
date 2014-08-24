@@ -31,7 +31,7 @@ defaultproperties
      Article="an "
      PluralName="Assault Troopers"
      InfoText="The assault trooper is a specialized infantry class who is tasked with closing with the enemy and eliminating him from difficult positions such as houses and fortifications.  The assault trooper is generally better armed than most infantrymen."
-     menuImage=Texture'DHGermanCharactersTex.Icons.FJ_Ass'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.FJ_Ass'
      Models(0)="FJ451"
      Models(1)="FJ452"
      Models(2)="FJ453"
@@ -47,5 +47,5 @@ defaultproperties
      Headgear(2)=Class'DH_GerPlayers.DH_FJHelmetNet2'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=4
+     Limit=4
 }

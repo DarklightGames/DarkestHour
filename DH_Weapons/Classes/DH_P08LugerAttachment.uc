@@ -198,7 +198,7 @@ defaultproperties
      WA_ReloadEmpty="reloadempty_luger"
      WA_ProneReload="prone_reloadhalf_luger"
      WA_ProneReloadEmpty="prone_reloadempty_luger"
-     menuImage=Texture'InterfaceArt_tex.Menu_weapons.luger'
+     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.luger'
      MenuDescription="Famous semi-automatic pistol, widely issued. Complex and only accurate to 50 metres at best, it used an 8-round box mag."
      bRapidFire=false
      Mesh=SkeletalMesh'Weapons3rd_anm.luger'

@@ -220,7 +220,7 @@ defaultproperties
      WA_Fire="idle_PIAT"
      WA_Reload="idle_PIAT"
      WA_ProneReload="idle_PIAT"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
      MenuDescription="P.I.A.T.: Projector, Infantry Anti-Tank. Man portable anti-tank weapon used by British and Commonwealth forces. Uses a manually set spigot system to launch a hollow charge bomb up to 350 yards, although only accurate to about 100 yards. Armor penetration: 85 to 90mm of effective armor. Sights are calibrated at 50, 80, and 110 yards."
      bHeavy=true
      bRapidFire=false

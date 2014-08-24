@@ -23,7 +23,7 @@ defaultproperties
      Article="a "
      PluralName="Radio Operators"
      InfoText="The radio operator carries a man-packed radio and is tasked with the role of calling in artillery strikes towards targets designated by the artillery officer. Effective communication between the radio operator and the artillery officer is critical to the success of a coordinated barrage."
-     menuImage=Texture'DHUSCharactersTex.Icons.IconRadOp'
+     MenuImage=Texture'DHUSCharactersTex.Icons.IconRadOp'
      Models(0)="US_1InfRad1"
      Models(1)="US_1InfRad2"
      Models(2)="US_1InfRad3"
@@ -35,5 +35,5 @@ defaultproperties
      Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet1stEMa'
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet1stEMb'
      PrimaryWeaponType=WT_SemiAuto
-     limit=1
+     Limit=1
 }

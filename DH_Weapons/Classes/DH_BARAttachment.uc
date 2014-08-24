@@ -226,7 +226,7 @@ defaultproperties
      WA_ProneReloadEmpty="reload_half_BAR"
      WA_WeaponDeploy="SightUp_iron_in_BAR"
      WA_WeaponUnDeploy="Sightup_iron_out_BAR"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_icon'
      MenuDescription="The American M1918A2 Browning Automatic Rifle firing .30 calibre rounds from a 20-round detachable box magazine. Primarily used to enhance the fire power of a standard US rifle squad. The selective fire switch allows for a reduced rate of fire. Accurate out to about 550 metres."
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.BAR_3rd'
 }

@@ -25,7 +25,7 @@ defaultproperties
      Article="a "
      PluralName="Tank Crewmen"
      InfoText="The tank crewman is a composite role tasked with a variety of operations including  gunner, hull gunner and driver. Each position has a specific view sector out of the tank and is responsible for keeping watch and reporting enemy movements in that direction, as well as performing their primary function."
-     menuImage=Texture'InterfaceArt_tex.SelectMenus.Panzerbezatsung'
+     MenuImage=Texture'InterfaceArt_tex.SelectMenus.Panzerbezatsung'
      Models(0)="WHP_1"
      Models(1)="WHP_2"
      Models(2)="WHP_3"
@@ -42,5 +42,5 @@ defaultproperties
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true
-     limit=3
+     Limit=3
 }

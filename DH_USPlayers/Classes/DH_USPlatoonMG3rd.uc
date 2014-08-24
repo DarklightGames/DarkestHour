@@ -18,7 +18,7 @@ defaultproperties
      Article="a "
      PluralName="Machine-Gunners"
      InfoText="The machine-gunner is tasked with the tactical employment of the medium machine gun to provide direct fire support to his squad, and in many cases being its primary source of mid- and long-range firepower. Due to the medium machine gun's high rate of fire, an adequate supply of ammunition is needed to maintain a constant rate of fire, provided largely by his accompanying units."
-     menuImage=Texture'DHUSCharactersTex.Icons.IconPMG'
+     MenuImage=Texture'DHUSCharactersTex.Icons.IconPMG'
      Models(0)="US_3Inf1"
      Models(1)="US_3Inf2"
      Models(2)="US_3Inf3"
@@ -32,5 +32,5 @@ defaultproperties
      Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
-     limit=1
+     Limit=1
 }

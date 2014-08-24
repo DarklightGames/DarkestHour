@@ -14,7 +14,7 @@ defaultproperties
      Article="a "
      PluralName="Squad Leaders"
      InfoText="The squad leader is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the squad leaders presence is an excellent force multiplier to the units under his command."
-     menuImage=Texture'DHGermanCharactersTex.Icons.WSS_SqL'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.WSS_SqL'
      Models(0)="12SS_1"
      Models(1)="12SS_2"
      Models(2)="12SS_3"
@@ -32,7 +32,7 @@ defaultproperties
      Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetTwo'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=1
+     Limit=1
      Limit33to44=2
      LimitOver44=2
 }

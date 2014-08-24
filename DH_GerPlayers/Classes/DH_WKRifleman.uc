@@ -13,7 +13,7 @@ defaultproperties
      Article="a "
      PluralName="Riflemen"
      InfoText="Schütze - Difficulty: Medium||The Schütze is the main-stay of the German infantry platoon.  He is tasked with the vital role of taking and holding ground.  Using his standard issue rifle, he can effectively engage the enemy at moderate to long range."
-     menuImage=Texture'InterfaceArt_tex.SelectMenus.Schutze'
+     MenuImage=Texture'InterfaceArt_tex.SelectMenus.Schutze'
      Models(0)="WK_1"
      Models(1)="WK_2"
      Models(2)="WK_3"

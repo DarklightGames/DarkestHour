@@ -14,7 +14,7 @@ defaultproperties
      Article="a "
      PluralName="Officers"
      InfoText="Zugführer - Difficulty: Very Advanced||The Zugführer is the Platoon leader. Although equipped for close quarters combat, the Zugführer is better off directing his squads to their objectives than engaging the enemy himself.||* The Zugführer counts one and a half times when taking and holding objectives."
-     menuImage=Texture'DHGermanCharactersTex.Icons.Zugfuhrer'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.Zugfuhrer'
      Models(0)="WK_1"
      Models(1)="WK_2"
      Models(2)="WK_3"
@@ -29,5 +29,5 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_KriegsmarineCap'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=1
+     Limit=1
 }

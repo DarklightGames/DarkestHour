@@ -190,7 +190,7 @@ defaultproperties
      WA_ReloadEmpty="reloadempty_mp40"
      WA_ProneReload="prone_reloadhalf_mp40"
      WA_ProneReloadEmpty="prone_reloadempty_mp40"
-     menuImage=Texture'InterfaceArt_tex.Menu_weapons.mp40'
+     MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mp40'
      MenuDescription="FlareGun: Test Weapon for setting people on fire."
      Mesh=SkeletalMesh'Weapons3rd_anm.mp40'
 }

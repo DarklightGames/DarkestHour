@@ -227,7 +227,7 @@ defaultproperties
      WA_ProneReloadEmpty="idle_FG42"
      WA_WeaponDeploy="idle_FG42_deployed"
      WA_WeaponUnDeploy="idle_FG42"
-     menuImage=Texture'DH_InterfaceArt_tex.weapon_icons.FG42_icon'
+     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.FG42_icon'
      MenuDescription="FG-42 Type I: Developed for use by German airborne troops, the Fallschirmjägergewehr 42 was designed to have the accuracy of a rifle but the fire power of a light machine-gun. The rate of fire is selective and can be switched between semi & full-auto (approx. 900 rpm). The FG42 uses a 20-round detachable box magazine and is effective to about 450 metres."
      Mesh=SkeletalMesh'DH_Weapons3rd_anm.FG42_3rd'
 }

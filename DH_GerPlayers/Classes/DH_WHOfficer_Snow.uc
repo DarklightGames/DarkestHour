@@ -22,7 +22,7 @@ defaultproperties
      Article="a "
      PluralName="Artillery Officers"
      InfoText="The artillery officer is tasked with directing artillery fire upon the battlefield through the use of long-range observation. Coordinating his efforts with a radio operator, he is able to target locations for off-grid artillery to lay down a  barrage with devastating effect."
-     menuImage=Texture'DHGermanCharactersTex.Icons.Zugfuhrer'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.Zugfuhrer'
      Models(0)="WHS_1"
      Models(1)="WHS_2"
      Models(2)="WHS_3"
@@ -38,5 +38,5 @@ defaultproperties
      Headgear(1)=Class'DH_GerPlayers.DH_HeerCrushercap'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=1
+     Limit=1
 }

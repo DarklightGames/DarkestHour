@@ -10,7 +10,7 @@ defaultproperties
      Article="a "
      PluralName="Reconnaissance Commanders"
      InfoText="The reconnaissance commander is primarily tasked with the operation of the main gun of the armored car as well as to direct the rest of the operating crew. As the commanding officer of the scouting mission, he is capable of directing his team from within his assigned vehicle as well as while dismounted."
-     menuImage=Texture'DHUSCharactersTex.Icons.US_ReconOfficer'
+     MenuImage=Texture'DHUSCharactersTex.Icons.US_ReconOfficer'
      Models(0)="US_743rdT1"
      Models(1)="US_743rdT2"
      Models(2)="US_743rdT3"
@@ -23,5 +23,5 @@ defaultproperties
      Headgear(0)=Class'DH_USPlayers.DH_USTankerHat'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
-     limit=1
+     Limit=1
 }

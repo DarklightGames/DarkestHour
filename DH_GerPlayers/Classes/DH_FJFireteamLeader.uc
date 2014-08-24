@@ -29,7 +29,7 @@ defaultproperties
      Article="a "
      PluralName="Fireteam Leaders"
      InfoText="The fireteam leader is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
-     menuImage=Texture'DHGermanCharactersTex.Icons.FJ_Ftl'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.FJ_Ftl'
      Models(0)="FJ1"
      Models(1)="FJ2"
      Models(2)="FJ3"
@@ -45,7 +45,7 @@ defaultproperties
      Headgear(0)=Class'DH_GerPlayers.DH_FJHelmet1'
      Headgear(1)=Class'DH_GerPlayers.DH_FJHelmet2'
      Headgear(2)=Class'DH_GerPlayers.DH_FJHelmetNet1'
-     limit=1
+     Limit=1
      Limit33to44=2
      LimitOver44=2
 }

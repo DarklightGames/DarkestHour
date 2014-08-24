@@ -31,7 +31,7 @@ defaultproperties
      Article="a "
      PluralName="Machine-Gunners"
      InfoText="The machine-gunner is tasked with the tactical employment of the light machine gun to provide direct fire support to his squad, and in many cases being its primary source of mid- and long-range firepower. Due to the light machine gun's high rate of fire, an adequate supply of ammunition is needed to maintain a constant rate of fire, provided largely by his accompanying units."
-     menuImage=Texture'DHGermanCharactersTex.Icons.FJ_MG'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.FJ_MG'
      Models(0)="FJ1"
      Models(1)="FJ2"
      Models(2)="FJ3"
@@ -47,5 +47,5 @@ defaultproperties
      Headgear(2)=Class'DH_GerPlayers.DH_FJHelmetNet1'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
-     limit=2
+     Limit=2
 }

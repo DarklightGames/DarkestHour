@@ -26,7 +26,7 @@ defaultproperties
      Article="a "
      PluralName="Mortar Observers"
      InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
-     menuImage=Texture'DHBritishCharactersTex.Icons.Brit_MortarObserver'
+     MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_MortarObserver'
      Models(0)="Wor_1"
      Models(1)="Wor_2"
      Models(2)="Wor_3"

@@ -26,7 +26,7 @@ defaultproperties
      Article="a "
      PluralName="Mortar Observers"
      InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
-     menuImage=Texture'DHGermanCharactersTex.Icons.WH_MortarObserver'
+     MenuImage=Texture'DHGermanCharactersTex.Icons.WH_MortarObserver'
      Models(0)="WH_1"
      Models(1)="WH_2"
      Models(2)="WH_3"
@@ -37,5 +37,5 @@ defaultproperties
      GivenItems(0)="DH_Equipment.DH_GerMortarBinocularsItem"
      Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
      Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
-     limit=1
+     Limit=1
 }
