@@ -2651,6 +2651,30 @@ simulated function DestroyEffects()
         TurretHatchFireEffect.Destroy();
 }
 
+simulated function int LimitYaw(int yaw)
+{
+    local DH_ROTankCannonPawn P;
+
+    P = DH_ROTankCannonPawn(Owner);
+
+    if(!bLimitYaw)
+    {
+        return yaw;
+    }
+
+    if(P != none)
+    {
+        if(P.DriverPositionIndex >= P.PeriscopePositionIndex)
+        {
+            return yaw;
+        }
+
+        return Clamp(yaw, P.DriverPositions[P.DriverPositionIndex].ViewNegativeYawLimit, P.DriverPositions[P.DriverPositionIndex].ViewPositiveYawLimit);
+    }
+
+    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+}
+
 defaultproperties
 {
      bUsesSecondarySpread=true
