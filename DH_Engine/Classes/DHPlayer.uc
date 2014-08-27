@@ -1609,6 +1609,7 @@ simulated function QueueHint(byte HintIndex, bool bForceNext)
         DHHintManager.QueueHint(HintIndex, bForceNext);
 }
 
+/*
 // For debug
 exec function DebugHints()
 {
@@ -1617,6 +1618,7 @@ exec function DebugHints()
     else
         log("No HintManager present in DHPlayer. Are hints enabled?");
 }
+*/
 
 function BecomeSpectator()
 {
