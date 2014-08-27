@@ -14,19 +14,24 @@ class DH_StuartTank extends DH_ROTreadCraftB;
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
         LeftTreadPanner.PanRate = 0.0;
+
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
+
     RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanDirection = rot(0, 32768, 16384);
         RightTreadPanner.PanRate = 0.0;
+
         Skins[RightTreadIndex] = RightTreadPanner;
     }
 }
