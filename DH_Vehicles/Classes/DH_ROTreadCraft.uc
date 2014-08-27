@@ -176,6 +176,9 @@ var float   WaitForCrewTime;
 
 var bool    bEmittersOn;
 
+var float   DebugTreadVelocityScale;
+var int     DebugWheelRotationScale;
+
 //=============================================================================
 // replication
 //=============================================================================
@@ -196,6 +199,9 @@ replication
 
     reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
         bEngineDead, bEngineOff;
+
+    reliable if(bNetDirty && Role == ROLE_Authority)
+        DebugTreadVelocityScale, DebugWheelRotationScale;
 }
 
 //=============================================================================
@@ -790,7 +796,25 @@ simulated function PostNetBeginPlay()
 
     if (!bEngineOff)
         bEngineOff=false;
+}
 
+simulated function PostNetReceive()
+{
+    if(TreadVelocityScale != DebugTreadVelocityScale)
+    {
+        TreadVelocityScale = DebugTreadVelocityScale;
+
+        Level.Game.Broadcast(self, "TreadVelocityScale=" $ TreadVelocityScale);
+    }
+
+    if(WheelRotationScale != DebugWheelRotationScale)
+    {
+        WheelRotationScale = DebugWheelRotationScale;
+
+        Level.Game.Broadcast(self, "WheelRotationScale=" $ WheelRotationScale);
+    }
+
+    super.PostNetReceive();
 }
 
 simulated function Tick(float DeltaTime)
@@ -3679,12 +3703,16 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    for(i=0; i<ExitPositions.Length; i++)
+    for(i = 0; i < ExitPositions.Length; i++)
     {
         if (ExitPositions[0].Z != 0)
-            ZOffset = vect(0,0,1) * ExitPositions[0].Z;
+        {
+            ZOffset = vect(0, 0, 1) * ExitPositions[0].Z;
+        }
         else
-            ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
+        {
+            ZOffset = Driver.default.CollisionHeight * vect(0, 0, 2);
+        }
 
         tryPlace = Location + ((ExitPositions[i]-ZOffset) >> Rotation) + ZOffset;
 
@@ -3698,6 +3726,7 @@ function bool PlaceExitingDriver()
 
         return true;
     }
+
     return false;
 }
 
@@ -3711,6 +3740,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
+/*
 // test0r
 function exec DamageLeftTread()
 {
@@ -3727,6 +3757,19 @@ function exec DamageRightTread()
 function exec TestEngineDamage()
 {
     EngineHealth=0;
+}
+*/
+
+simulated function exec fDebugTreadVelocityScale(float S)
+{
+    DebugTreadVelocityScale = S;
+    TreadVelocityScale = DebugTreadVelocityScale;
+}
+
+simulated function exec fDebugWheelRotationScale(int S)
+{
+    WheelRotationScale = S;
+    DebugWheelRotationScale = WheelRotationScale;
 }
 
 defaultproperties
@@ -3788,4 +3831,6 @@ defaultproperties
      IdleTimeBeforeReset=200.000000
      VehicleSpikeTime=60.000000
      EngineHealth=300
+     DebugWheelRotationScale=default.WheelRotationScale
+     DebugTreadVelocityScale=default.TreadVelocityScale
 }
