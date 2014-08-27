@@ -1630,6 +1630,64 @@ function BecomeSpectator()
     super.BecomeSpectator();
 }
 
+simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
+{
+    local ROTreadCraft V;
+
+    foreach AllActors(class'ROTreadCraft', V)
+    {
+        if(TreadVelocityScale == -1)
+        {
+            V.TreadVelocityScale = V.default.TreadVelocityScale;
+        }
+        else
+        {
+            V.TreadVelocityScale = TreadVelocityScale;
+        }
+    }
+
+    Level.Game.Broadcast(self, "DebugTreadVelocityScale=" $ TreadVelocityScale);
+}
+
+simulated exec function DebugTreadVelocityScaleIncrement()
+{
+    local ROTreadCraft V;
+
+    foreach AllActors(class'ROTreadCraft', V)
+    {
+        V.TreadVelocityScale += 1.0f;
+    }
+}
+
+simulated exec function DebugTreadVelocityScaleDecrement()
+{
+    local ROTreadCraft V;
+
+    foreach AllActors(class'ROTreadCraft', V)
+    {
+        V.TreadVelocityScale -= 1.0f;
+    }
+}
+
+simulated exec function DebugWheelRotationScale(int WheelRotationScale)
+{
+    local ROTreadCraft V;
+
+    foreach AllActors(class'ROTreadCraft', V)
+    {
+        if(WheelRotationScale == -1)
+        {
+            V.WheelRotationScale = V.default.WheelRotationScale;
+        }
+        else
+        {
+            V.WheelRotationScale = WheelRotationScale;
+        }
+    }
+
+    Level.Game.Broadcast(self, "DebugWheelRotationScale=" $ WheelRotationScale);
+}
+
 defaultproperties
 {
      FlinchRotMag=(X=100.000000,Z=100.000000)
