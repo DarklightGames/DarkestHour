@@ -14,18 +14,21 @@ class DH_CromwellTank extends DH_ROTreadCraft;
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
+        LeftTreadPanner.PanDirection = rot(0, 0, 0);
         LeftTreadPanner.PanRate = 0.0;
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
+
     RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(32768, 0, 16384);
+        RightTreadPanner.PanDirection = rot(0, 0, 0);
         RightTreadPanner.PanRate = 0.0;
         Skins[RightTreadIndex] = RightTreadPanner;
     }
@@ -91,7 +94,7 @@ defaultproperties
      RightWheelBones(4)="Wheel_R_5"
      RightWheelBones(5)="Wheel_R_6"
      RightWheelBones(6)="Wheel_R_7"
-     WheelRotationScale=2200
+     WheelRotationScale=1100
      TreadHitMinAngle=1.160000
      FrontRightAngle=27.000000
      RearRightAngle=153.000000

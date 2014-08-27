@@ -15,18 +15,21 @@ class DH_WolverineTank extends DH_ROTreadCraftB;
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
         LeftTreadPanner.PanRate = 0.0;
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
+
     RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanDirection = rot(0, 32768, 16384);
         RightTreadPanner.PanRate = 0.0;
         Skins[RightTreadIndex] = RightTreadPanner;
     }
@@ -268,7 +271,7 @@ defaultproperties
      ULeftArmorSlope=38.000000
      PointValue=3.000000
      MaxPitchSpeed=150.000000
-     TreadVelocityScale=110.000000
+     TreadVelocityScale=220.000000
      LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
      RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
      RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
