@@ -121,7 +121,7 @@ defaultproperties
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
      CrawlEndAnim="crawl_out"
-     IronSightDisplayFOV=20.000000
+     IronSightDisplayFOV=45.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      FreeAimRotationSpeed=7.500000
@@ -135,7 +135,7 @@ defaultproperties
      AIRating=0.400000
      CurrentRating=0.400000
      bSniping=true
-     DisplayFOV=70.000000
+     DisplayFOV=90.000000
      bCanRestDeploy=true
      PickupClass=Class'DH_Weapons.DH_M1GarandPickup'
      BobDamping=1.600000

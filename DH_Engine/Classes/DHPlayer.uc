@@ -1310,34 +1310,37 @@ state Mantling
 }
 
 
-// Removes the awkward "jump" out of water volumes and replaces it with a mantle capability instead
-/*state PlayerSwimming
+// Removes the awkward "jump" out of water
+// This has not been tested to much capacity
+// 8/26/2014
+state PlayerSwimming
 {
 ignores SeePlayer, HearNoise, Bump;
 
-    function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
+    function bool NotifyPhysicsVolumeChange( PhysicsVolume NewVolume )
     {
         local actor HitActor;
         local vector HitLocation, HitNormal, checkpoint;
 
-        if (!NewVolume.bWaterVolume)
+        if ( !NewVolume.bWaterVolume )
         {
             Pawn.SetPhysics(PHYS_Falling);
-            if (Pawn.Velocity.Z > 0)
-            {     */
-                /*if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) //check for waterjump
+            if ( Pawn.Velocity.Z > 0 )
+            {
+                if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) //check for waterjump
                 {
-                    Pawn.velocity.Z = FMax(Pawn.JumpZ,420) + 2 * Pawn.CollisionRadius; //set here so physics uses this for remainder of tick
+                    //Below is the only line this function changes/comments out
+                    //Pawn.velocity.Z = FMax(Pawn.JumpZ,420) + 2 * Pawn.CollisionRadius; //set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
-                else*/ /*if ((Pawn.Velocity.Z > 160) || !Pawn.TouchingWaterVolume())
+                else if ( (Pawn.Velocity.Z > 160) || !Pawn.TouchingWaterVolume() )
                     GotoState(Pawn.LandMovementState);
                 else //check if in deep water
                 {
                     checkpoint = Pawn.Location;
                     checkpoint.Z -= (Pawn.CollisionHeight + 6.0);
                     HitActor = Trace(HitLocation, HitNormal, checkpoint, Pawn.Location, false);
-                    if (HitActor != none)
+                    if (HitActor != None)
                         GotoState(Pawn.LandMovementState);
                     else
                     {
@@ -1354,63 +1357,7 @@ ignores SeePlayer, HearNoise, Bump;
         }
         return false;
     }
-
-    function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
-    {
-        local vector X,Y,Z, OldAccel;
-        local bool bUpAndOut;
-
-        if (bPressedJump)
-        {
-            if (DH_Pawn(Pawn).CanMantle(true))
-            {
-                GoToState('Mantling');
-                return;
-            }
-        }
-
-        GetAxes(Rotation,X,Y,Z);
-        OldAccel = Pawn.Acceleration;
-        if (Pawn.Acceleration != NewAccel)
-            Pawn.Acceleration = NewAccel;     */
-        /*bUpAndOut = ((X Dot Pawn.Acceleration) > 0) && ((Pawn.Acceleration.Z > 0) || (Rotation.Pitch > 2048));
-        if (Pawn.bUpAndOut != bUpAndOut)
-            Pawn.bUpAndOut = bUpAndOut;*/
-    /*    if (!Pawn.PhysicsVolume.bWaterVolume) //check for waterjump
-            NotifyPhysicsVolumeChange(Pawn.PhysicsVolume);
-    }
-
-    function PlayerMove(float DeltaTime)
-    {
-        local rotator oldRotation;
-        local vector X,Y,Z, NewAccel;
-
-        if (Level.TimeSeconds - MantleCheckTimer > 0.2)
-        {
-            DH_Pawn(Pawn).HUDCheckMantle();
-            MantleCheckTimer = Level.TimeSeconds;
-        }
-
-        GetAxes(Rotation,X,Y,Z);
-
-        NewAccel = aForward*X + aStrafe*Y + aUp*vect(0,0,1);
-        if (VSize(NewAccel) < 1.0)
-            NewAccel = vect(0,0,0);
-
-        //add bobbing when swimming
-        Pawn.CheckBob(DeltaTime, Y);
-
-        // Update rotation.
-        oldRotation = Rotation;
-        UpdateRotation(DeltaTime, 2);
-
-        if (Role < ROLE_Authority) // then save this move and replicate it
-            ReplicateMove(DeltaTime, NewAccel, DCLICK_none, OldRotation - Rotation);
-        else
-            ProcessMove(DeltaTime, NewAccel, DCLICK_none, OldRotation - Rotation);
-        bPressedJump = false;
-    }
-}  */
+}
 
 // Reset bolt rifle sway values when we bolt it, since that's technically lowering it from the eye
 simulated function ResetSwayAfterBolt()
