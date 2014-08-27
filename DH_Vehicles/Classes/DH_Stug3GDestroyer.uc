@@ -307,7 +307,7 @@ defaultproperties
      GunMantletSlope=0.000000
      PointValue=3.000000
      MaxPitchSpeed=150.000000
-     TreadVelocityScale=100.000000
+     TreadVelocityScale=146.000000
      LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L08'
      RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R08'
      RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
@@ -341,7 +341,7 @@ defaultproperties
      RightWheelBones(8)="Wheel_R_9"
      RightWheelBones(9)="Wheel_R_10"
      RightWheelBones(10)="Wheel_R_11"
-     WheelRotationScale=2000
+     WheelRotationScale=1000
      TreadHitMinAngle=1.800000
      FrontLeftAngle=330.000000
      FrontRightAngle=30.000000

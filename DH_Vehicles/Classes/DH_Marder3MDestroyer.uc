@@ -271,7 +271,7 @@ defaultproperties
      GunMantletSlope=0.000000
      PointValue=3.000000
      MaxPitchSpeed=450.000000
-     TreadVelocityScale=110.000000
+     TreadVelocityScale=300.000000
      LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
      RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
      RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
@@ -298,7 +298,7 @@ defaultproperties
      RightWheelBones(4)="Wheel_R_5"
      RightWheelBones(5)="Wheel_R_6"
      RightWheelBones(6)="Wheel_R_7"
-     WheelRotationScale=2200
+     WheelRotationScale=1700
      TreadHitMinAngle=1.800000
      FrontLeftAngle=330.000000
      FrontRightAngle=30.000000
