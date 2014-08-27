@@ -71,5 +71,5 @@ defaultproperties
      PanelClass(4)="DH_Interface.DHBrowser_ServerListPageInternet"
      PanelHint(1)="DH integrated IRC client"
      PanelHint(3)="View all DH servers currently running on your LAN"
-     PanelHint(4)="Choose from hundreds of DH servers across the world"
+     PanelHint(4)="Choose from DH servers across the world"
 }
