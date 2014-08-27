@@ -436,6 +436,16 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
     Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
+function Fire(optional float F)
+{
+    if(IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    super.Fire(F);
+}
+
 //==============================================================================
 // defaultproperties
 //==============================================================================
