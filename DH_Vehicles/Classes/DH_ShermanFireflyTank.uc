@@ -70,7 +70,7 @@ defaultproperties
      URearArmorSlope=10.000000
      PointValue=3.000000
      MaxPitchSpeed=150.000000
-     TreadVelocityScale=110.000000
+     TreadVelocityScale=250.000000
      LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
      RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
      RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
