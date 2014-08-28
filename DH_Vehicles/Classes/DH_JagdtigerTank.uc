@@ -132,9 +132,9 @@ defaultproperties
      DamagedEffectOffset=(X=-135.000000,Y=20.000000,Z=20.000000)
      SteeringScaleFactor=2.000000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=85.000000,bDrawOverlays=true)
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000,bDrawOverlays=true)
+     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.JT_body'
      VehicleHudOccupantsX(0)=0.450000
      VehicleHudOccupantsX(1)=0.540000
@@ -224,7 +224,7 @@ defaultproperties
      MaxDesireability=1.900000
      FlagBone="Mg_placement"
      FlagRotation=(Yaw=32768)
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      PitchUpLimit=5000
      PitchDownLimit=60000
      HealthMax=700.000000

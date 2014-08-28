@@ -215,7 +215,7 @@ defaultproperties
      VehicleTeam=1
      SteeringScaleFactor=4.000000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.000000)
      InitialPositionIndex=0
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
      VehicleHudOccupantsX(0)=0.440000
@@ -300,7 +300,7 @@ defaultproperties
      VehiclePositionString="in a Willys Jeep MB"
      VehicleNameString="Willys Jeep MB"
      HUDOverlayOffset=(X=2.000000)
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      GroundSpeed=325.000000
      PitchUpLimit=500
      PitchDownLimit=58000

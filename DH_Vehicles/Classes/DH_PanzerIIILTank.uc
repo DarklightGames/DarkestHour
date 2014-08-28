@@ -133,8 +133,8 @@ defaultproperties
      SteeringScaleFactor=0.750000
      BeginningIdleAnim="periscope_idle_out"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=70.000000,bDrawOverlays=true)
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",DriverTransitionAnim="VPanzer3_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=85.000000)
+     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",DriverTransitionAnim="VPanzer3_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000)
      VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panzer3_body'
      VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=85.000000,Y=-27.000000,Z=30.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=30.000000,PointHeight=32.000000,PointOffset=(X=-70.000000,Z=6.000000),DamageMultiplier=1.000000)
@@ -218,7 +218,7 @@ defaultproperties
      FlagBone="Mg_placement"
      FlagRotation=(Yaw=32768)
      HUDOverlayOffset=(X=2.000000)
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      PitchUpLimit=5000
      PitchDownLimit=60000
      HealthMax=475.000000

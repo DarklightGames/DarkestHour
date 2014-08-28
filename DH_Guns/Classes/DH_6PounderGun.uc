@@ -53,7 +53,7 @@ defaultproperties
      DriverDamageMult=1.000000
      VehiclePositionString="Using a 6 Pounder Mk.IV AT-Gun"
      VehicleNameString="6 Pounder Mk.IV AT-Gun"
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      PitchUpLimit=5000
      PitchDownLimit=60000
      HealthMax=101.000000

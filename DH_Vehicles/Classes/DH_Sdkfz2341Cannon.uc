@@ -38,7 +38,6 @@ simulated function int PrimaryAmmoCount()
 
 function HandlePrimaryCannonReload()
 {
-
     if (NumMags > 0 && CannonReloadState != CR_Empty)
     {
         ClientDoCannonReload();

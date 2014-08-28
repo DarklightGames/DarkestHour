@@ -154,7 +154,7 @@ defaultproperties
      bLimitYaw=true
      bLimitPitch=true
      HudName="Engineer"
-     DriverPositions(0)=(ViewFOV=85.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000)
+     DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000)
      DriverPositions(1)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
      bMultiPosition=true
      CameraBone="Camera_com"
@@ -164,5 +164,5 @@ defaultproperties
      ExitPositions(1)=(X=-30.000000,Y=38.000000,Z=105.000000)
      EntryRadius=350.000000
      VehicleNameString="Higgins Boat"
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
 }

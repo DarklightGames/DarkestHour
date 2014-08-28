@@ -123,9 +123,9 @@ defaultproperties
      DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
      SteeringScaleFactor=2.000000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,ViewFOV=85.000000)
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VTiger_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=85.000000)
-     DriverPositions(2)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,ViewFOV=90.000000)
+     DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VTiger_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=61923,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000)
+     DriverPositions(2)=(PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VTiger_driver_open",ViewPitchUpLimit=15000,ViewPitchDownLimit=65250,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
      VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.Tiger_body'
      VehHitpoints(0)=(PointOffset=(X=-6.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=40.000000,PointHeight=40.000000,PointOffset=(X=-100.000000,Z=10.000000),DamageMultiplier=1.000000)
@@ -211,7 +211,7 @@ defaultproperties
      FlagRotation=(Yaw=32768)
      HUDOverlayClass=Class'ROVehicles.TigerDriverOverlay'
      HUDOverlayOffset=(X=3.000000)
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      PitchUpLimit=5000
      PitchDownLimit=60000
      HealthMax=650.000000

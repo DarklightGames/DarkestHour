@@ -52,7 +52,7 @@ defaultproperties
      DriverDamageMult=1.000000
      VehiclePositionString="Using a Pak40 AT-Gun"
      VehicleNameString="Pak40 AT-Gun"
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      PitchUpLimit=5000
      PitchDownLimit=60000
      HealthMax=101.000000

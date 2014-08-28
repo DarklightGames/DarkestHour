@@ -55,7 +55,7 @@ defaultproperties
      DriverDamageMult=1.000000
      VehiclePositionString="Using a FlaK 36 Gun"
      VehicleNameString="FlaK 36 Gun"
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      PitchUpLimit=5000
      PitchDownLimit=60000
      HealthMax=100.000000

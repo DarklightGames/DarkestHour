@@ -218,7 +218,7 @@ defaultproperties
      DamagedEffectOffset=(X=-100.000000,Z=15.000000)
      SteeringScaleFactor=4.000000
      BeginningIdleAnim="driver_hatch_idle_close"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_int',ViewPitchUpLimit=8000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=85.000000)
+     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_int',ViewPitchUpLimit=8000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.000000)
      InitialPositionIndex=0
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.kubelwagen_body'
      VehicleHudOccupantsX(0)=0.460000
@@ -298,7 +298,7 @@ defaultproperties
      VehicleNameString="Volkswagen Type 82"
      MaxDesireability=1.900000
      HUDOverlayOffset=(X=2.000000)
-     HUDOverlayFOV=85.000000
+     HUDOverlayFOV=90.000000
      GroundSpeed=325.000000
      PitchUpLimit=500
      PitchDownLimit=58000

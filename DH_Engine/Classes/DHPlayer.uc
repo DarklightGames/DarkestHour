@@ -1699,8 +1699,8 @@ defaultproperties
      MortarTargetIndex=255
      ROMidGameMenuClass="DH_Interface.DHRoleSelection"
      GlobalDetailLevel=5
-     DesiredFOV=85.000000
-     DefaultFOV=85.000000
+     DesiredFOV=90.000000
+     DefaultFOV=90.000000
      PlayerReplicationInfoClass=Class'DH_Engine.DHPlayerReplicationInfo'
      PawnClass=Class'DH_Engine.DH_Pawn'
 }
