@@ -131,6 +131,14 @@ defaultproperties
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'
      VehicleHudOccupantsX(0)=0.430000
      VehicleHudOccupantsX(2)=0.560000
+     VehicleHudOccupantsX(3)=0.375
+     VehicleHudOccupantsY(3)=0.75
+     VehicleHudOccupantsX(4)=0.45
+     VehicleHudOccupantsY(4)=0.8
+     VehicleHudOccupantsX(5)=0.55
+     VehicleHudOccupantsY(5)=0.8
+     VehicleHudOccupantsX(6)=0.625
+     VehicleHudOccupantsY(6)=0.75
      VehicleHudEngineX=0.510000
      VehHitpoints(0)=(PointOffset=(X=-6.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=30.000000,PointOffset=(X=-90.000000,Z=60.000000),DamageMultiplier=1.000000)

@@ -144,6 +144,14 @@ defaultproperties
      VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
      VehicleHudOccupantsX(0)=0.430000
      VehicleHudOccupantsX(2)=0.560000
+     VehicleHudOccupantsX(3)=0.375
+     VehicleHudOccupantsY(3)=0.75
+     VehicleHudOccupantsX(4)=0.45
+     VehicleHudOccupantsY(4)=0.8
+     VehicleHudOccupantsX(5)=0.55
+     VehicleHudOccupantsY(5)=0.8
+     VehicleHudOccupantsX(6)=0.625
+     VehicleHudOccupantsY(6)=0.75
      VehicleHudEngineX=0.510000
      bVehicleHudUsesLargeTexture=true
      VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(Y=-1.000000,Z=-5.000000),bPenetrationPoint=false)
