@@ -20,18 +20,23 @@ replication
 
 simulated event Tick(float DeltaTime)
 {
-    super.Tick(DeltaTime);
-
-    UpdateSightRotation();
-}
-
-simulated function UpdateSightRotation()
-{
     local rotator SightRotation;
+    local rotator ElevationWheelRotation;
+    local rotator TraverseWheelRotation;
 
+    //sight
     SightRotation.Pitch = -CurrentAim.Pitch;
-
     SetBoneRotation(SightBone, SightRotation, 1);
+
+    //elevation wheel
+    ElevationWheelRotation.Roll = -CurrentAim.Pitch * 32;
+    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
+
+    //traverse wheel
+    TraverseWheelRotation.Pitch = CurrentAim.Yaw * 32;
+    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
+
+    super.Tick(DeltaTime);
 }
 
 state ProjectileFireMode
@@ -386,8 +391,8 @@ defaultproperties
      FireAnimations(0)="shoot_open"
      FireAnimations(1)="Shoot_open2"
      SightBone="Object002"
-     TraverseWheelBone="'"
-     ElevationWheelBone="'"
+     TraverseWheelBone="yaw_w"
+     ElevationWheelBone="pitch_w"
      NumMags=16
      NumSecMags=4
      AddedPitch=50
