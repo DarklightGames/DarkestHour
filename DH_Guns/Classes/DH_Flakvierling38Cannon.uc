@@ -27,7 +27,6 @@ simulated event Tick(float DeltaTime)
 
 simulated function UpdateSightRotation()
 {
-    local rotator BarrelRotation;
     local rotator SightRotation;
 
     SightRotation.Pitch = -CurrentAim.Pitch;
