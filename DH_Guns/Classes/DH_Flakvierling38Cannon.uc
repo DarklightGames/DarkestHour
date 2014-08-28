@@ -27,33 +27,12 @@ simulated event Tick(float DeltaTime)
 
 simulated function UpdateSightRotation()
 {
-    local rotator SightRot;
-    local rotator YawRot;
-    local rotator PitchRot;
-    //local rotator TraverseWheelRot;
-    //local rotator ElevationWheelRot;
-    local quat SightQuat;
-    local quat YawQuat;
-    local quat PitchQuat;
+    local rotator BarrelRotation;
+    local rotator SightRotation;
 
-    YawRot = GetBoneRotation(YawBone);
-    PitchRot = GetBoneRotation(PitchBone);
+    SightRotation.Pitch = -CurrentAim.Pitch;
 
-    // don't quite know why this is needed, but it is
-    YawRot.Yaw = -YawRot.Yaw;
-    PitchRot.Pitch = -PitchRot.Pitch;
-
-    //TraverseWheelRot.Yaw = YawRot.Yaw * 8;
-    //ElevationWheelRot.Yaw = PitchRot.Pitch * 8;
-
-    YawQuat = QuatFromRotator(YawRot);
-    PitchQuat = QuatFromRotator(PitchRot);
-    SightQuat = QuatProduct(PitchQuat, YawQuat);
-    SightRot = QuatToRotator(SightQuat);
-
-    SetBoneRotation(SightBone, SightRot);
-    //SetBoneRotation(ElevationWheelBone, ElevationWheelRot);
-    //SetBoneRotation(TraverseWheelBone, TraverseWheelRot);
+    SetBoneRotation(SightBone, SightRotation, 1);
 }
 
 state ProjectileFireMode
@@ -63,36 +42,45 @@ state ProjectileFireMode
         SpawnProjectile(ProjectileClass, false);
 
         // Swap animation index
-        if (FireAnimationIndex == 0)
+        if(FireAnimationIndex == 0)
+        {
             FireAnimationIndex = 1;
+        }
         else
+        {
             FireAnimationIndex = 0;
+        }
     }
 
     function AltFire(Controller C)
     {
-        return;
     }
 }
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     if (bAltFire)
+    {
         return false;
+    }
 
     if (Role != ROLE_Authority || bForceCenterAim)
+    {
         return false;
+    }
 
     if ((!bAltFire && CannonReloadState == CR_ReadyToFire && FireCountdown <= 0) || (bAltFire && FireCountdown <= 0))
     {
         CalcWeaponFire(bAltFire);
 
         if (bCorrectAim)
+        {
             WeaponFireRotation = AdjustAim(bAltFire);
+        }
 
         if (Spread > 0)
         {
-            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*Spread);
+            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
         }
 
         DualFireOffset *= -1;
@@ -106,6 +94,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 
                 HandlePrimaryCannonReload();
+
                 return false;
             }
             else
@@ -118,6 +107,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             }
 
             FireCountdown = FireInterval;
+
             Fire(C);
 
             if (MainAmmoCharge[0] < 1)
@@ -132,6 +122,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
 
                 HandleSecondaryCannonReload();
+
                 return false;
             }
             else
@@ -144,6 +135,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             }
 
             FireCountdown = FireInterval;
+
             Fire(C);
 
             if (MainAmmoCharge[1] < 1)
@@ -164,7 +156,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local int i;
     local Projectile P;
-    //local VehicleWeaponPawn WeaponPawn;
     local vector StartLocation, HitLocation, HitNormal, Extent;
     local rotator FireRot;
     local vector BarrelLocation[2];
@@ -192,16 +183,22 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
 
         if (!Owner.TraceThisActor(HitLocation, HitNormal, BarrelLocation[i], WeaponFireLocation + vector(BarrelRotation[i]) * (Owner.CollisionRadius * 1.5), Extent))
+        {
             StartLocation = HitLocation;
+        }
         else
+        {
             StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
+        }
 
         P = spawn(ProjClass, none, , StartLocation, FireRot); //self
 
         if (P != none)
         {
             if (bInheritVelocity)
+            {
                 P.Velocity = Instigator.Velocity;
+            }
 
             FlashMuzzleFlash(bAltFire);
 
@@ -216,15 +213,17 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                     AmbientSoundScaling = AltFireSoundScaling;
                 }
                 else
-                    PlayOwnedSound(AltFireSoundClass, SLOT_none, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
+                    PlayOwnedSound(AltFireSoundClass, SLOT_none, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
             }
             else
             {
                 if (bAmbientFireSound)
+                {
                     AmbientSound = FireSoundClass;
+                }
                 else
                 {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume/255.0,, FireSoundRadius,, false);
+                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume / 255.0,, FireSoundRadius,, false);
                 }
             }
         }
@@ -238,11 +237,13 @@ simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLoca
     local vector CurrentFireOffset;
 
     if (Index < 0 || Index >= ArrayCount(BarrelBones))
+    {
         return;
+    }
 
     BarrelBoneCoords = GetBoneCoords(BarrelBones[Index]);
 
-    CurrentFireOffset = (WeaponFireOffset * vect(1,0,0)) + (DualFireOffset * vect(0,1,0));
+    CurrentFireOffset = (WeaponFireOffset * vect(1, 0, 0)) + (DualFireOffset * vect(0, 1, 0));
 
     BarrelRotation = rotator(vector(CurrentAim) >> Rotation);
     BarrelLocation = BarrelBoneCoords.Origin + (CurrentFireOffset >> BarrelRotation);
@@ -256,13 +257,16 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     // Calculate fire offset in world space
     WeaponBoneCoords = GetBoneCoords(BarrelBones[BarrelBoneIndex++]);
 
-    if (BarrelBoneIndex >= 4)
-        BarrelBoneIndex = 0;
+    BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 4);
 
     if (bWasAltFire)
-        CurrentFireOffset = AltFireOffset + (WeaponFireOffset * vect(1,0,0));
+    {
+        CurrentFireOffset = AltFireOffset + (WeaponFireOffset * vect(1, 0, 0));
+    }
     else
-        CurrentFireOffset = (WeaponFireOffset * vect(1,0,0)) + (DualFireOffset * vect(0,1,0));
+    {
+        CurrentFireOffset = (WeaponFireOffset * vect(1, 0, 0)) + (DualFireOffset * vect(0, 1, 0));
+    }
 
     // Calculate rotation of the gun
     WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
@@ -272,7 +276,9 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
     // Adjust fire rotation taking dual offset into account
     if (bDualIndependantTargeting)
+    {
         WeaponFireRotation = rotator(CurrentHitLocation - WeaponFireLocation);
+    }
 }
 
 simulated event FlashMuzzleFlash(bool bWasAltFire)
@@ -282,17 +288,27 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
     if (Role == ROLE_Authority)
     {
         if (bWasAltFire)
+        {
             FiringMode = 1;
+        }
         else
+        {
             FiringMode = 0;
+        }
+
         FlashCount++;
+
         NetUpdateTime = Level.TimeSeconds - 1;
     }
     else
+    {
         CalcWeaponFire(bWasAltFire);
+    }
 
     if (HasAnim(FireAnimations[FireAnimationIndex]))
+    {
         PlayAnim(FireAnimations[FireAnimationIndex]);
+    }
 
     if (FireAnimationIndex == 0)
     {
@@ -314,15 +330,19 @@ simulated function InitEffects()
 
     // don't even spawn on server
     if (Level.NetMode == NM_DedicatedServer)
-        return;
-
-    for(i = 0 ; i < 4; i++)
     {
-        if ((FlashEmitterClass != none) && (FlashEmitters[i] == none))
+        return;
+    }
+
+    for(i = 0; i < 4; i++)
+    {
+        if (FlashEmitterClass != none && FlashEmitters[i] == none)
         {
             FlashEmitters[i] = Spawn(FlashEmitterClass);
             FlashEmitters[i].SetDrawScale(DrawScale);
+
             AttachToBone(FlashEmitters[i], BarrelBones[i]);
+
             FlashEmitters[i].SetRelativeLocation(WeaponFireOffset * vect(1,0,0));
         }
     }
@@ -331,7 +351,9 @@ simulated function InitEffects()
 function ToggleRoundType()
 {
     if (!HasMagazines(0) && !HasMagazines(1))
+    {
         return;
+    }
 
     if ((PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none) && HasMagazines(1))
     {
@@ -349,10 +371,8 @@ simulated function bool HasAmmo(int Mode)
     {
         case 0:
             return (MainAmmoCharge[0] > 0 || NumMags > 0);
-            break;
         case 1:
             return (MainAmmoCharge[1] > 0 || NumSecMags > 0);
-            break;
     }
 
     return false;
