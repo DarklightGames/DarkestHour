@@ -39,42 +39,6 @@ function bool KDriverLeave(bool bForceLeave)
     }
 }
 
-function bool TryToDrive(Pawn P)
-{
-
-    local DH_RoleInfo DHRI;
-    local DH_Pawn DHP;
-
-    DHP = DH_Pawn(P);
-    DHRI = DH_RoleInfo(DHPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo);
-
-    if (VehicleBase != none)
-    {
-        if (VehicleBase.NeedsFlip())
-        {
-            VehicleBase.Flip(vector(P.Rotation), 1);
-            return false;
-        }
-
-        if (P.GetTeamNum() != Team)
-        {
-            if (VehicleBase.Driver == none)
-                return VehicleBase.TryToDrive(P);
-
-            VehicleLocked(P);
-            return false;
-        }
-    }
-
-    if (bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
-    {
-        DenyEntry(P, 0);
-        return false;
-    }
-
-    return Super.TryToDrive(P);
-}
-
 function DriverDied()
 {
     DriverPositionIndex=InitialPositionIndex;

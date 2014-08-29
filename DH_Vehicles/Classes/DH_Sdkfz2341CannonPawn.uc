@@ -8,16 +8,6 @@
 //==============================================================================
 class DH_Sdkfz2341CannonPawn extends DH_GermanTankCannonPawn;
 
-var   bool    bMustBeReconCrew;
-
-replication
-{
-
-    // Red Orchestra replication
-    reliable if (bNetInitial && Role==ROLE_Authority)
-        bMustBeReconCrew;
-}
-
 simulated exec function SwitchFireMode()
 {
     if (Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
@@ -73,42 +63,6 @@ function bool KDriverLeave(bool bForceLeave)
     }
 }
 
-function bool TryToDrive(Pawn P)
-{
-
-    local DH_RoleInfo DHRI;
-    local DH_Pawn DHP;
-
-    DHP = DH_Pawn(P);
-    DHRI = DH_RoleInfo(DHPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo);
-
-    if (VehicleBase != none)
-    {
-        if (VehicleBase.NeedsFlip())
-        {
-            VehicleBase.Flip(vector(P.Rotation), 1);
-            return false;
-        }
-
-        if (P.GetTeamNum() != Team)
-        {
-            if (VehicleBase.Driver == none)
-                return VehicleBase.TryToDrive(P);
-
-            VehicleLocked(P);
-            return false;
-        }
-    }
-
-    if (bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
-    {
-        DenyEntry(P, 0);
-        return false;
-    }
-
-    return Super.TryToDrive(P);
-}
-
 function DriverDied()
 {
     DriverPositionIndex=InitialPositionIndex;
@@ -146,45 +100,44 @@ function float getAmmoReloadState()
 
 defaultproperties
 {
-     bMustBeReconCrew=true
-     ScopeCenterScale=0.635000
-     ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
-     CenterRotationFactor=2048
-     OverlayCenterSize=0.733330
-     UnbuttonedPositionIndex=1
-     DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
-     PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-     PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-     PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-     CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
-     ScopePositionX=0.237000
-     ScopePositionY=0.150000
-     BinocPositionIndex=2
-     WeaponFov=30.000000
-     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
-     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
-     DriverPositions(0)=(ViewLocation=(X=40.000000,Y=12.000000,Z=3.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=true)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
-     bMustBeTankCrew=false
-     FireImpulse=(X=-15000.000000)
-     GunClass=Class'DH_Vehicles.DH_Sdkfz2341Cannon'
-     bHasFireImpulse=false
-     CameraBone="Gun"
-     bPCRelativeFPRotation=true
-     bFPNoZFromCameraPitch=true
-     DrivePos=(X=4.000000,Y=-2.000000)
-     DriveAnim="VSU76_com_idle_close"
-     ExitPositions(0)=(Y=-100.000000,Z=160.000000)
-     ExitPositions(1)=(Y=100.000000,Z=160.000000)
-     EntryRadius=130.000000
-     FPCamPos=(X=50.000000,Y=-30.000000,Z=11.000000)
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="in a Sdkfz 234/1 Armored Car cannon"
-     VehicleNameString="Sdkfz 234/1 Armored Car cannon"
-     PitchUpLimit=6000
-     PitchDownLimit=64000
-     SoundVolume=130
+    ScopeCenterScale=0.635000
+    ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
+    CenterRotationFactor=2048
+    OverlayCenterSize=0.733330
+    UnbuttonedPositionIndex=1
+    DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
+    ScopePositionX=0.237000
+    ScopePositionY=0.150000
+    BinocPositionIndex=2
+    WeaponFov=30.000000
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
+    DriverPositions(0)=(ViewLocation=(X=40.000000,Y=12.000000,Z=3.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=true)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+    bMustBeTankCrew=true
+    FireImpulse=(X=-15000.000000)
+    GunClass=Class'DH_Vehicles.DH_Sdkfz2341Cannon'
+    bHasFireImpulse=false
+    CameraBone="Gun"
+    bPCRelativeFPRotation=true
+    bFPNoZFromCameraPitch=true
+    DrivePos=(X=4.000000,Y=-2.000000)
+    DriveAnim="VSU76_com_idle_close"
+    ExitPositions(0)=(Y=-100.000000,Z=160.000000)
+    ExitPositions(1)=(Y=100.000000,Z=160.000000)
+    EntryRadius=130.000000
+    FPCamPos=(X=50.000000,Y=-30.000000,Z=11.000000)
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="in a Sdkfz 234/1 Armored Car cannon"
+    VehicleNameString="Sdkfz 234/1 Armored Car cannon"
+    PitchUpLimit=6000
+    PitchDownLimit=64000
+    SoundVolume=130
 }

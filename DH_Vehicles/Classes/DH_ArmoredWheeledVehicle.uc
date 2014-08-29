@@ -35,19 +35,6 @@ struct CarHitpoint
 
 var()   array<CarHitpoint>      CarVehHitpoints;        // An array of possible small points that can be hit. Index zero is always the driver
 
-var     bool                    bMustBeReconCrew;
-
-//==============================================================================
-// Replication
-//==============================================================================
-replication
-{
-
-    // Red Orchestra replication
-    reliable if (bNetInitial && Role==ROLE_Authority)
-        bMustBeReconCrew;
-}
-
 //==============================================================================
 // Empty Functions: we don't need for Armored Cars
 //==============================================================================
@@ -255,57 +242,6 @@ function KDriverEnter(Pawn p)
             Weapons[x].NetUpdateFrequency = 20;//20
             ClientRegisterVehicleWeapon(Weapons[x], x);
         }
-    }
-}
-
-function bool TryToDrive(Pawn P)
-{
-    local int x;
-    local DH_RoleInfo DHRI;
-    local DH_Pawn DHP;
-
-    DHP = DH_Pawn(P);
-    DHRI = DH_RoleInfo(DHPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo);
-
-    if (DHP.bOnFire)
-        return false;
-
-    //don't allow vehicle to be stolen when somebody is in a turret
-    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
-    {
-        for (x = 0; x < WeaponPawns.length; x++)
-            if (WeaponPawns[x].Driver != none)
-            {
-                DenyEntry(P, 2);
-                return false;
-            }
-    }
-
-    if (P.bIsCrouched || bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
-         || P.IsA('Vehicle') || Health <= 0)
-        return false;
-
-    if (!Level.Game.CanEnterVehicle(self, P))
-        return false;
-
-    // Check vehicle Locking....
-    if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
-    {
-        DenyEntry(P, 1);
-        return false;
-    }
-    else if (bMustBeReconCrew && !DHRI.bCanBeReconCrew && P.IsHumanControlled())
-    {
-        DenyEntry(P, 0);
-        return false;
-    }
-    else
-    {
-        if (bEnterringUnlocks && bTeamLocked)
-            bTeamLocked = false;
-
-        KDriverEnter(P);
-        return true;
     }
 }
 
@@ -598,7 +534,6 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 
     super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
 
-
     //This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
     if (!bOnFire && Damage > 0 && Health > 0 && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.50) && bProjectilePenetrated)
     {
@@ -624,7 +559,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     bProjectilePenetrated = false;
     bWasTurretHit = false;
 
-    if (Health >= 0 && Health <= HealthMax/3)
+    if (Health >= 0 && Health <= HealthMax / 3)
     {
         bDisableThrottle=true;
         bEngineDead=true;
@@ -640,8 +575,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
-     bMustBeReconCrew=true
-     bAllowRiders=false
-     PointValue=2.000000
-     bSpecialTankTurning=false
+    bAllowRiders=false
+    PointValue=2.000000
+    bSpecialTankTurning=false
 }
