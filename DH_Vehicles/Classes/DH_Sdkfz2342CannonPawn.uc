@@ -8,17 +8,7 @@
 //==============================================================================
 class DH_Sdkfz2342CannonPawn extends DH_GermanTankCannonPawn;
 
-
-var   bool      bMustBeReconCrew;
 var   texture   PeriscopeOverlay;
-
-replication
-{
-
-    // Red Orchestra replication
-    reliable if (bNetInitial && Role==ROLE_Authority)
-        bMustBeReconCrew;
-}
 
 function bool KDriverLeave(bool bForceLeave)
 {
@@ -294,7 +284,6 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
 defaultproperties
 {
-     bMustBeReconCrew=true
      PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
      ScopeCenterScale=0.635000
      ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'

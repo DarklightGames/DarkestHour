@@ -9,8 +9,6 @@ class DH_RoleInfo extends RORoleInfo
 
 var     bool    bIsATGunner;            // Enable player to request AT resupply.
 var     bool    bCanUseMortars;         // Enable player to use mortars.
-var     bool    bCanBeReconCrew;        // Enable player to drive reconnaissance vehicles.
-var     bool    bCanBeReconOfficer;     // Enable player to command reconnaissance vehicles.
 var     bool    bIsSquadLeader;
 var     bool    bIsMortarObserver;
 var     bool    bIsArtilleryOfficer;

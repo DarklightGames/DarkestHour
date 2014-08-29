@@ -12,9 +12,7 @@ var     DH_LevelInfo                DHLevelInfo;                // Stores the DH
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];        // Ammo resupply area
 
 var     array<DHSpawnArea>          DHMortarSpawnAreas;
-var     array<DHSpawnArea>          DHReconSpawnAreas;
 var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
-var     DHSpawnArea                 DHCurrentReconSpawnArea[2];
 
 var     DH_RoleInfo                 DHAxisRoles[16];
 var     DH_RoleInfo                 DHAlliesRoles[16];
@@ -35,7 +33,7 @@ function PostBeginPlay()
     local ROArtilleryTrigger RAT;
     local DHAmmoResupplyVolume ARV;
     local ROMineVolume MV;
-    local int i, j, k, m, n, o, p, q;
+    local int i, j, k, m, n, o, p;
     local SpectatorCam ViewPoint;
     local float MaxPlayerRatio;
     local DHSpawnArea DHSA;
@@ -246,9 +244,6 @@ function PostBeginPlay()
         {
             if (DHSA.bMortarmanSpawnArea)
                 DHMortarSpawnAreas[p++] = DHSA;
-
-            if (DHSA.bReconnaissanceSpawnArea)
-                DHReconSpawnAreas[q++] = DHSA;
         }
 
         //Scale the Reinforcement limits based on the server's capacity
@@ -434,112 +429,6 @@ function CheckMortarmanSpawnAreas()
     DHCurrentMortarSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
 }
 
-function CheckReconnaissanceSpawnAreas()
-{
-    local int i, j, h, k;
-    local DHSpawnArea Best[2];
-    local bool bReqsMet, bSomeReqsMet;
-
-    for (i = 0; i < DHReconSpawnAreas.Length; i++)
-    {
-        if (!DHReconSpawnAreas[i].bEnabled)
-            continue;
-
-        //axis & (no best | this one has higher precedence)
-        if (DHReconSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || DHReconSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHReconSpawnAreas[i].AxisRequiredObjectives.Length; j++)
-            {
-                if (Objectives[DHReconSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            for (h = 0; h < DHReconSpawnAreas[i].AxisRequiredObjectives.Length; h++)
-            {
-                if (Objectives[DHReconSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
-                {
-                    bSomeReqsMet = true;
-                    break;
-                }
-            }
-
-            if (DHReconSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHReconSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
-                {
-                    if (Objectives[DHReconSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-                Best[AXIS_TEAM_INDEX] = DHReconSpawnAreas[i];
-            else if (bSomeReqsMet && DHReconSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
-                Best[AXIS_TEAM_INDEX] = DHReconSpawnAreas[i];
-        }
-
-        //allies & (no best | this one has higher precedence)
-        if (DHReconSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || DHReconSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHReconSpawnAreas[i].AlliesRequiredObjectives.Length; j++)
-            {
-                if (Objectives[DHReconSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns
-            // Instead of just one - Ramm
-            for (h = 0; h < DHReconSpawnAreas[i].AlliesRequiredObjectives.Length; h++)
-            {
-                if (Objectives[DHReconSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
-                {
-                    bSomeReqsMet = true;
-                    break;
-                    //log("Setting Allied  bSomeReqsMet to true");
-                }
-            }
-
-            // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
-            // allows mappers to have spawns be used when objectives are neutral, not just captured
-            if (DHReconSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHReconSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
-                {
-                    if (Objectives[DHReconSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-                Best[ALLIES_TEAM_INDEX] = DHReconSpawnAreas[i];
-            else if (bSomeReqsMet && DHReconSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
-                Best[ALLIES_TEAM_INDEX] = DHReconSpawnAreas[i];
-        }
-    }
-
-    DHCurrentReconSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
-    DHCurrentReconSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
-}
-
 function CheckTankCrewSpawnAreas()
 {
     /*
@@ -553,7 +442,6 @@ function CheckTankCrewSpawnAreas()
     super.CheckTankCrewSpawnAreas();
 
     CheckMortarmanSpawnAreas();
-    CheckReconnaissanceSpawnAreas();
 }
 
 function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
@@ -578,17 +466,11 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         }
 
         //----------------------------------------------------------------------
-        //Mortar and recon spawn addition.
+        //Mortar spawn addition.
         //Colin Basnett, 2010
         else if (DHCurrentMortarSpawnArea[Team] != none && Player != none && DHRI != none && DHRI.bCanUseMortars)
         {
             if (P.Tag != DHCurrentMortarSpawnArea[Team].Tag)
-                return -9000000;
-        }
-
-        else if (DHCurrentReconSpawnArea[Team] != none && Player != none && DHRI != none && (DHRI.bCanBeReconCrew || DHRI.bCanBeReconOfficer))
-        {
-            if (P.Tag != DHCurrentReconSpawnArea[Team].Tag)
                 return -9000000;
         }
         else

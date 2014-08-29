@@ -8,7 +8,6 @@ class DHSpawnArea extends ROSpawnArea
     placeable;
 
 var()   bool    bMortarmanSpawnArea;
-var()   bool    bReconnaissanceSpawnArea;
 
 function PostBeginPlay()
 {
@@ -18,8 +17,6 @@ function PostBeginPlay()
             DarkestHourGame(Level.Game).TankCrewSpawnAreas[DarkestHourGame(Level.Game).TankCrewSpawnAreas.Length] = self;
         else if (bMortarmanSpawnArea)
             DarkestHourGame(Level.Game).DHMortarSpawnAreas[DarkestHourGame(Level.Game).DHMortarSpawnAreas.Length] = self;
-        else if (bReconnaissanceSpawnArea)
-            DarkestHourGame(Level.Game).DHReconSpawnAreas[DarkestHourGame(Level.Game).DHReconSpawnAreas.Length] = self;
         else
             DarkestHourGame(Level.Game).SpawnAreas[DarkestHourGame(Level.Game).SpawnAreas.Length] = self;
     }
