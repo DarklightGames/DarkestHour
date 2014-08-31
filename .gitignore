@@ -54,3 +54,10 @@ XVoting/
 XWebAdmin/
 tools/make/ipch/
 *.~bak
+DH_ROVehicles/
+DH_ROWeapons/Classes/DH_PPSH41DamType.uc
+DH_ROWeapons/
+DH_ROPlayers/
+DH_ROGuns/
+DH_DarkestOrchestra/
+DH_ROEffects/
