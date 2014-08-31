@@ -569,7 +569,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // Overridden to handle world and object penetration
 simulated singular function HitWall(vector HitNormal, actor Wall)
 {
-    local float tmpWallDiff, tmpMaxWall;
+    local float tmpMaxWall;
     local vector TmpHitLocation, TmpHitNormal, X,Y,Z, LastLoc;
     local float xH; //,EnergyFactor;
     //local rotator distortion;
