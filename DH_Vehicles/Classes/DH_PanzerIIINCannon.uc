@@ -217,7 +217,7 @@ defaultproperties
      ProjPerFire=30
      bLastShot=true
      InitialTertiaryAmmo=14
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_TankCannonShellCanister'
+     TertiaryProjectileClass=Class'DH_Vehicles.DH_TankCannonShellCanisterGerman'
      SecondarySpread=0.003900
      ManualRotationsPerSecond=0.040000
      PoweredRotationsPerSecond=0.040000
