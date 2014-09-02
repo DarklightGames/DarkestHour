@@ -25,7 +25,6 @@ simulated function PlayerViewZoom(bool ZoomDirection)
 
         if (Instigator.Controller != none)
         {
-            PlayerController(Instigator.Controller).DefaultFOV = 72.0;
             PlayerController(Instigator.Controller).ResetFOV();
         }
     }
