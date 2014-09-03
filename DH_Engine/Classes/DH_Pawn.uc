@@ -582,7 +582,7 @@ simulated function ProcessHitFX()
             if (Headgear != none)
             {
                 if (DH_Headgear(HeadGear).bIsHelmet)
-                    DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
+                    DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 100.0);
                 HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
             }
         }
@@ -769,7 +769,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
         if (cumulativeDamage >=  Health)
         {
             if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
+                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
             TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
         }
     }
@@ -781,7 +781,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
             return;
 
         if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
         TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
     }
 }
@@ -2097,9 +2097,7 @@ function bool DHResupplyExplosiveWeapons(bool bHasEnemyNade, bool bHasEnemySmoke
             // DH_Equipment and DH_Weapons are dependent on DH_Engine already and to check against their classes requires making them dependencies also, which is impossible
             if ((ItemString != "DH_Equipment.DH_ParachuteItem") && (ItemString != "DH_Equipment.DH_ParachuteStaticLine")
              && (ItemString != "DH_ATWeapons.DH_BazookaWeapon") && (ItemString != "DH_ATWeapons.DH_PanzerschreckWeapon") && (ItemString != "DH_ATWeapons.DH_PIATWeapon")
-             && (ItemString != "DH_Mortars.DH_M2MortarWeapon") && (ItemString != "DH_Mortars.DH_Kz8cmGrW42Weapon")
-             && (ItemString != "DH_Equipment.DH_USRadioItem") && (ItemString != "DH_Equipment.DH_GerRadioItem")
-             && (ItemString != "DH_Equipment.DH_BritishRadioItem"))
+             && (ItemString != "DH_Mortars.DH_M2MortarWeapon") && (ItemString != "DH_Mortars.DH_Kz8cmGrW42Weapon"))
             {
                 InventoryClass = Level.Game.BaseMutator.GetInventoryClass(RI.GivenItems[i]);
             }

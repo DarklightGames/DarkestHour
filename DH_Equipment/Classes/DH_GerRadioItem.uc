@@ -7,7 +7,7 @@ class DH_GerRadioItem extends DH_RadioItem;
 
 defaultproperties
 {
-    ArtilleryTriggerClass=class'DH_Equipment.DHArtilleryTriggerUSMap'
+    ArtilleryTriggerClass=class'DH_Engine.DHArtilleryTriggerUSMap'
     AttachmentClass=Class'DH_Equipment.DH_GerRadioAttachment'
     ItemName="Torn.Fu.g"
     TeamCanUse=ALLIES_TEAM_INDEX;

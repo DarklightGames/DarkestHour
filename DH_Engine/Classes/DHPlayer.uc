@@ -1630,6 +1630,88 @@ function BecomeSpectator()
     super.BecomeSpectator();
 }
 
+function HitThis(ROArtilleryTrigger RAT)
+{
+    local DarkestHourGame DHG;
+    local ROGameReplicationInfo GRI;
+    local int TimeTilNextStrike;
+    local int PawnTeam;
+    local DHArtilleryTriggerUSMap DHAT;
+
+    if (RAT == none)
+    {
+        return;
+    }
+
+    DHG = DarkestHourGame(Level.Game);
+
+    if(DHG == none)
+    {
+        return;
+    }
+
+    GRI = ROGameReplicationInfo(GameReplicationInfo);
+    PawnTeam = Pawn.GetTeamNum();
+
+    if (GRI.bArtilleryAvailable[Pawn.GetTeamNum()] > 0)
+    {
+        ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self);
+
+        if (PawnTeam ==  0)
+        {
+            RAT.PlaySound(RAT.GermanConfirmSound, SLOT_None, 3.0, false, 100, 1.0,true);
+        }
+        else
+        {
+            RAT.PlaySound(RAT.RussianConfirmSound, SLOT_None, 3.0, false, 100, 1.0,true);
+        }
+
+        GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
+        GRI.TotalStrikes[PawnTeam]++;
+
+        DHAT = DHArtilleryTriggerUSMap(RAT);
+
+        if(DHAT != none && DHAT.Carrier != none)
+        {
+            DHG.ScoreRadioUsed(DHAT.Carrier.Controller);
+        }
+
+        ServerArtyStrike();
+
+        DHG.NotifyPlayersOfMapInfoChange(PawnTeam, self);
+    }
+    else
+    {
+        if (PawnTeam ==  0)
+        {
+            RAT.PlaySound(RAT.GermanDenySound, SLOT_None, 3.0, false, 100,1.0,true);
+        }
+        else
+        {
+            RAT.PlaySound(RAT.RussianDenySound, SLOT_None, 3.0, false, 100,1.0,true);
+        }
+
+        TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + ROTeamGame(Level.Game).LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
+
+        if (GRI.TotalStrikes[PawnTeam] >= GRI.ArtilleryStrikeLimit[PawnTeam])
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 6);
+        }
+        else if (TimeTilNextStrike >= 20)
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 7);
+        }
+        else if (TimeTilNextStrike >= 0)
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 8);
+        }
+        else
+        {
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 2);
+        }
+    }
+}
+
 simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
 {
     local ROTreadCraft V;

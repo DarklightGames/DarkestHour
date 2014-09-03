@@ -10,6 +10,22 @@ var DHArtilleryTriggerUSMap         ArtilleryTrigger;
 var int                             TeamCanUse;
 var name                            AttachBoneName;
 
+simulated function PreBeginPlay()
+{
+    local DH_Pawn DHP;
+
+    DHP = DH_Pawn(Instigator);
+
+    if (DHP == none || DHP.CarriedRadioTrigger != none)
+    {
+        Destroy();
+
+        return;
+    }
+
+    super.PreBeginPlay();
+}
+
 function PickupFunction(Pawn Other)
 {
     Super.PickupFunction(Other);
