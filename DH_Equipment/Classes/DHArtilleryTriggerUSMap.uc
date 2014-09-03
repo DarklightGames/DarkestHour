@@ -121,11 +121,6 @@ function Touch(Actor Other)
     }
 }
 
-function SetCarrier(Pawn P)
-{
-    Carrier = DH_Pawn(P);
-}
-
 defaultproperties
 {
      ReTriggerDelay=5.000000
