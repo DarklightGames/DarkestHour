@@ -20,8 +20,6 @@ var byte            DHAlliesRoleCount[16];
 var byte            DHAxisRoleBotCount[16];
 var byte            DHAxisRoleCount[16];
 
-var bool            bShowPublicVoiceIcon;
-
 struct MortarTargetInfo
 {
     var vector      Location;
@@ -39,8 +37,6 @@ var int             DHSpawnCount[2];
 
 replication
 {
-    reliable if (bNetInitial && Role == ROLE_Authority)
-        bShowPublicVoiceIcon;
     reliable if (bNetDirty && Role == ROLE_Authority)
         CarriedAlliedRadios, CarriedAxisRadios, AlliedNationID, DHAxisRoles,
         DHAlliesRoles, DHAlliesRoleBotCount, DHAlliesRoleCount,
@@ -75,5 +71,4 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 
 defaultproperties
 {
-     bShowPublicVoiceIcon=true
 }

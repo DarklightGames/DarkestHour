@@ -17,8 +17,6 @@ var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
 var     DH_RoleInfo                 DHAxisRoles[16];
 var     DH_RoleInfo                 DHAlliesRoles[16];
 
-var()   config bool                 bShowPublicVoiceIcon;
-
 //-----------------------------------------------------------------------------
 // PostBeginPlay - Find the level info and objectives
 //-----------------------------------------------------------------------------
@@ -262,9 +260,6 @@ function PostBeginPlay()
         //Make sure MaxTeamDifference is an acceptable value
         if (MaxTeamDifference < 1)
             MaxTeamDifference = 1;
-
-        //Public voice icon variable.
-        DHGRI.bShowPublicVoiceIcon = bShowPublicVoiceIcon;
     }
 }
 
@@ -1541,7 +1536,6 @@ function RestartPlayer(Controller aPlayer)
 
 defaultproperties
 {
-     bShowPublicVoiceIcon=true
      WinLimit=3
      ROHints(1)="You can 'cook' an Allied Mk II grenade by pressing the opposite fire button while holding the grenade back."
      ROHints(13)="You cannot change the 30 Cal barrel, be careful not to overheat!"
