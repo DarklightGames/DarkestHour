@@ -151,7 +151,7 @@ defaultproperties
 {
      DestroyTimer=30.000000
      SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-     ExplodeDirtEffectClass=Class'ROEffects.GrenadeSmokeEffect'
+     ExplodeDirtEffectClass=Class'DH_Equipment.DH_GrenadeSmokeEffect'
      ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
      ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
      ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'

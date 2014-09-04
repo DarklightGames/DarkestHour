@@ -162,7 +162,7 @@ defaultproperties
      bAmmoPickupIsWeapon=true
      AmmoAmount=1
      MaxDesireability=0.780000
-     InventoryType=Class'ROAmmo.SatchelCharge10lb10sAmmo'
+     InventoryType=Class'DH_Weapons.DH_SachelChargeAmmo'
      PickupMessage="You got a 10lb satchel."
      PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
      PickupForce="AssaultRiflePickup"
