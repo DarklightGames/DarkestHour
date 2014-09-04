@@ -1,0 +1,1 @@
+class DHArtilleryTriggerUSMap extends DHArtilleryTrigger;

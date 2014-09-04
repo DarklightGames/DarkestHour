@@ -113,11 +113,13 @@ function UsedBy(Pawn user)
                 case NATION_USA:
                 case NATION_Canada:
                     user.PlaySound(RussianRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
+
                     SetTimer(GetSoundDuration(RussianRequestSound), false);
 
                     break;
                 case NATION_Britain:
                     user.PlaySound(CommonwealthRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
+
                     SetTimer(GetSoundDuration(CommonwealthRequestSound), false);
 
                     break;
@@ -175,7 +177,7 @@ function Touch(Actor Other)
 
 defaultproperties
 {
-    bShouldShowOnSituationMap = true;
+    bShouldShowOnSituationMap=true
     TriggerDelay=5.000000
     Message="Request artillery support from HQ"
     RussianRequestSound=SoundGroup'DH_ArtillerySounds.requests.USrequest'
