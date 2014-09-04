@@ -5,10 +5,10 @@
 class DH_RadioItem extends DHWeapon
     abstract;
 
-var class<DHArtilleryTriggerUSMap>  ArtilleryTriggerClass;
-var DHArtilleryTriggerUSMap         ArtilleryTrigger;
-var int                             TeamCanUse;
-var name                            AttachBoneName;
+var class<DHArtilleryTrigger>   ArtilleryTriggerClass;
+var DHArtilleryTrigger          ArtilleryTrigger;
+var int                         TeamCanUse;
+var name                        AttachBoneName;
 
 simulated function PreBeginPlay()
 {
@@ -119,5 +119,6 @@ defaultproperties
     InventoryGroup=10
     TeamCanUse=NEUTRAL_TEAM_INDEX
     AttachBoneName='hip'
+    ArtilleryTriggerClass=class'DH_Engine.DHArtilleryTrigger'
 }
 

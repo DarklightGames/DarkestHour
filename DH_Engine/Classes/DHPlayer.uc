@@ -1636,7 +1636,7 @@ function HitThis(ROArtilleryTrigger RAT)
     local ROGameReplicationInfo GRI;
     local int TimeTilNextStrike;
     local int PawnTeam;
-    local DHArtilleryTriggerUSMap DHAT;
+    local DHArtilleryTrigger DHAT;
 
     if (RAT == none)
     {
@@ -1669,7 +1669,7 @@ function HitThis(ROArtilleryTrigger RAT)
         GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
         GRI.TotalStrikes[PawnTeam]++;
 
-        DHAT = DHArtilleryTriggerUSMap(RAT);
+        DHAT = DHArtilleryTrigger(RAT);
 
         if(DHAT != none && DHAT.Carrier != none)
         {

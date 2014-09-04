@@ -7,7 +7,6 @@ class DH_USRadioItem extends DH_RadioItem;
 
 defaultproperties
 {
-    ArtilleryTriggerClass=class'DH_Engine.DHArtilleryTriggerUSMap'
     AttachmentClass=class'DH_Equipment.DH_USRadioAttachment'
     ItemName="Radio"
     TeamCanUse=ALLIES_TEAM_INDEX;
