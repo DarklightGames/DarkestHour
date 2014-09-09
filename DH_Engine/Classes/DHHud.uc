@@ -2481,7 +2481,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
                 CaptureBarDefender.Tints[TeamIndex].A /= 2;
             }
 
-            s @= "(" $ P.CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
+            s @= "(" $ CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
         }
         else if (team == 1 && (GRI.Objectives[CurrentCapArea].ObjState == 2 || allies_progress != 1.0 || CurrentCapAxisCappers != 0))
         {
