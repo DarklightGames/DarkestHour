@@ -317,7 +317,7 @@ state FireLoop
 
     function ModeTick(float dt)
     {
-        Super.ModeTick(dt);
+        super(WeaponFire).ModeTick(dt);
 
         // WeaponTODO: See how to properly reimplement this
         if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat

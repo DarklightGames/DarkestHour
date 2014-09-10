@@ -10,17 +10,6 @@
 
 class DH_STG44Fire extends DH_AutomaticFire;
 
-function ModeTick(float dt)
-{
-    Super.ModeTick(dt);
-
-    // WeaponTODO: See how to properly reimplement this
-    if (bIsFiring && !AllowFire() /*|| bNowWaiting */)  // stopped firing, magazine empty or barrel overheat
-    {
-        Weapon.StopFire(ThisModeNum);
-    }
-}
-
 defaultproperties
 {
      ProjSpawnOffset=(X=25.000000)

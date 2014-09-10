@@ -9,17 +9,6 @@ var(FireAnims)  name        SightUpFireIronAnim;
 var(FireAnims)  name        SightUpFireIronLoopAnim;
 var(FireAnims)  name        SightUpFireIronEndAnim;
 
-function ModeTick(float dt)
-{
-    Super.ModeTick(dt);
-
-    // WeaponTODO: See how to properly reimplement this
-    if (bIsFiring && !AllowFire() /*|| bNowWaiting */)  // stopped firing, magazine empty or barrel overheat
-        {
-        Weapon.StopFire(ThisModeNum);
-    }
-}
-
 //**************************************************************************************************
 
 function PlayFiring()

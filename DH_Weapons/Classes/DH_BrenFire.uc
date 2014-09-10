@@ -9,17 +9,6 @@ var(FireAnims)  name        BipodDeployFireAnim;
 var(FireAnims)  name        BipodDeployFireLoopAnim;
 var(FireAnims)  name        BipodDeployFireEndAnim;
 
-function ModeTick(float dt)
-{
-    Super.ModeTick(dt);
-
-    // WeaponTODO: See how to properly reimplement this
-    if (bIsFiring && !AllowFire() /*|| bNowWaiting */)  // stopped firing, magazine empty or barrel overheat
-        {
-        Weapon.StopFire(ThisModeNum);
-    }
-}
-
 //**************************************************************************************************
 
 function PlayFiring()

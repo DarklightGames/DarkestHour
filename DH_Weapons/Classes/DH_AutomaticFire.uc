@@ -23,6 +23,16 @@ simulated function bool AllowFire()
     }
 }
 
+function ModeTick(float dt)
+{
+    Super.ModeTick(dt);
+
+    if (bIsFiring && !AllowFire())
+    {
+        Weapon.StopFire(ThisModeNum);
+    }
+}
+
 defaultproperties
 {
      PreLaunchTraceDistance=1312.000000
