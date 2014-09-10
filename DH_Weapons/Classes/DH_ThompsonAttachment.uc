@@ -1,11 +1,10 @@
 //=============================================================================
 // DH_ThompsonAttachment
 //=============================================================================
-class DH_ThompsonAttachment extends DHHighROFWeaponAttachment;
+class DH_ThompsonAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-     ClientProjectileClass=Class'DH_Weapons.DH_ThompsonBullet_C'
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdPPSH'
      MuzzleBoneName="Muzzle"
      ROShellCaseClass=Class'ROAmmo.RO3rdShellEject9x19mm'
