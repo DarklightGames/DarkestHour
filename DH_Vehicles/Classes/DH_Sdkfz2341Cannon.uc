@@ -517,7 +517,7 @@ defaultproperties
      AltFireOffset=(X=-54.000000,Y=-24.000000,Z=-3.000000)
      RotationsPerSecond=0.040000
      bAmbientAltFireSound=true
-     Spread=0.002000
+     Spread=0.003000
      AltFireSpread=0.002000
      FireInterval=0.200000
      AltFireInterval=0.050000
