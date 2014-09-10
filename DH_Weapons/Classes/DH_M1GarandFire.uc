@@ -10,97 +10,6 @@ var(FireAnims)  name        FireIronlastAnim;               //iron last round an
 
 var             bool        NextShotIsLast;               // Set on the second last shot to facilitate clip eject
 
-simulated function HandleRecoil()
-{
-    local rotator NewRecoilRotation;
-    local ROPlayer ROP;
-    local ROPawn ROPwn;
-
-        if (Instigator != none)
-        {
-        ROP = ROPlayer(Instigator.Controller);
-        ROPwn = ROPawn(Instigator);
-    }
-
-        if (ROP == none || ROPwn == none)
-        return;
-
-    if (!ROP.bFreeCamera)
-    {
-            NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
-            NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
-
-            if (Rand(2) == 1)
-                NewRecoilRotation.Yaw *= -1;
-
-                if (Instigator.Physics == PHYS_Falling)
-                {
-                NewRecoilRotation *= 3;
-                }
-
-        // WeaponTODO: Put bipod and resting modifiers in here
-            if (Instigator.bIsCrouched)
-            {
-                    NewRecoilRotation *= PctCrouchRecoil;
-
-            // player is crouched and in iron sights
-                    if (Weapon.bUsingSights)
-                    {
-                            NewRecoilRotation *= PctCrouchIronRecoil;
-                    }
-            }
-            else if (Instigator.bIsCrawling)
-            {
-                    NewRecoilRotation *= PctProneRecoil;
-
-                    // player is prone and in iron sights
-                    if (Weapon.bUsingSights)
-                    {
-                            NewRecoilRotation *= PctProneIronRecoil;
-                    }
-            }
-            else if (Weapon.bUsingSights)
-            {
-                    NewRecoilRotation *= PctStandIronRecoil;
-            }
-
-                if (ROPwn.bRestingWeapon)
-                    NewRecoilRotation *= PctRestDeployRecoil;
-
-                if (Instigator.bBipodDeployed)
-        {
-            NewRecoilRotation *= PctBipodDeployRecoil;
-        }
-
-        if (ROPwn.LeanAmount != 0)
-        {
-            NewRecoilRotation *= PctLeanPenalty;
-        }
-
-        // Need to set this value per weapon
-        ROP.SetRecoil(NewRecoilRotation,RecoilRate);
-    }
-
-    // Add Fire Blur
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            if (Instigator != none)
-        {
-            if (ROPlayer(Instigator.Controller) != none)
-                {
-                if (Weapon.bUsingSights)
-                {
-                        ROPlayer(Instigator.Controller).AddBlur(0.1, 0.1);
-                }
-                    else
-                    {
-                        ROPlayer(Instigator.Controller).AddBlur(0.01, 0.1);
-                    }
-            }
-        }
-        }
-}
-
 function ServerPlayFiring()
 {
     local   DH_M1GarandWeapon   Gun;
@@ -111,14 +20,14 @@ function ServerPlayFiring()
     {
         if (FirePingSounds.Length > 0)
         {
-            Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+            Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_None,FireVolume,,,,false);
         }
     }
     else
     {
         if (FireSounds.Length > 0)
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
         }
     }
 }
@@ -163,14 +72,14 @@ function PlayFiring()   // overridden to make last round eject clip & add audibl
         {
             if (FirePingSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
         else
         {
             if (FireSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
     }
@@ -180,14 +89,14 @@ function PlayFiring()   // overridden to make last round eject clip & add audibl
         {
             if (FirePingSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
         else
         {
             if (FireSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
     }

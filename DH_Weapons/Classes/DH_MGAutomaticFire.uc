@@ -77,24 +77,14 @@ simulated function HandleRecoil()
         if (Instigator.bIsCrouched)
         {
             NewRecoilRotation *= PctCrouchRecoil;
-
-            // player is crouched and in iron sights
-            if (Weapon.bUsingSights)
-            {
-                NewRecoilRotation *= PctHipMGPenalty;
-            }
         }
         else if (Instigator.bIsCrawling)
         {
             NewRecoilRotation *= PctProneRecoil;
-
-            // player is prone and in iron sights
-            if (Weapon.bUsingSights)
-            {
-                NewRecoilRotation *= PctHipMGPenalty;
-            }
         }
-        else if (Weapon.bUsingSights)
+
+        // player is crouched and in iron sights
+        if (Weapon.bUsingSights)
         {
             NewRecoilRotation *= PctHipMGPenalty;
         }
@@ -114,6 +104,18 @@ simulated function HandleRecoil()
 
         // Need to set this value per weapon
         ROP.SetRecoil(NewRecoilRotation,RecoilRate);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        if (Weapon.bUsingSights)
+        {
+            ROPlayer(Instigator.Controller).AddBlur(BlurTimeIronsight, BlurScaleIronsight);
+        }
+        else
+        {
+            ROPlayer(Instigator.Controller).AddBlur(BlurTime, BlurScale);
+        }
     }
 }
 
@@ -294,4 +296,6 @@ defaultproperties
      PctHipMGPenalty=2.000000
      PreLaunchTraceDistance=2624.000000
      NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+     BlurTime=0.04
+     BlurTimeIronsight=0.04
 }

@@ -45,6 +45,11 @@ var(FireAnims)  name        FireIronAnim;               // Firing animation for 
 var(FireAnims)  name        FireIronLoopAnim;           // Looping Fire animation for firing in ironsights
 var(FireAnims)  name        FireIronEndAnim;            // End anim for firing in ironsights
 
+var             float       BlurTime;
+var             float       BlurTimeIronsight;
+var             float       BlurScale;
+var             float       BlurScaleIronsight;
+
 //=============================================================================
 // functions
 //=============================================================================
@@ -423,22 +428,43 @@ function PlayFireEnd()
     }
 }
 
+simulated function HandleRecoil()
+{
+    super.HandleRecoil();
+
+    if (Level.NetMode != NM_DedicatedServer && Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        if (Weapon.bUsingSights)
+        {
+            ROPlayer(Instigator.Controller).AddBlur(BlurTimeIronsight, BlurScaleIronsight);
+        }
+        else
+        {
+            ROPlayer(Instigator.Controller).AddBlur(BlurTime, BlurScale);
+        }
+    }
+}
+
 defaultproperties
 {
-     ProjPerFire=1
-     bUsePreLaunchTrace=true
-     PreLaunchTraceDistance=2624.000000
-     SnapTraceDistance=1200.000000
-     CrouchSpreadModifier=0.850000
-     ProneSpreadModifier=0.700000
-     BipodDeployedSpreadModifier=0.500000
-     RestDeploySpreadModifier=0.750000
-     HipSpreadModifier=2.000000
-     LeanSpreadModifier=1.350000
-     PctBipodDeployRecoil=0.050000
-     bLeadTarget=true
-     bInstantHit=false
-     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
-     FireForce="AssaultRifleFire"
-     WarnTargetPct=0.500000
+    ProjPerFire=1
+    bUsePreLaunchTrace=true
+    PreLaunchTraceDistance=2624.000000
+    SnapTraceDistance=1200.000000
+    CrouchSpreadModifier=0.850000
+    ProneSpreadModifier=0.700000
+    BipodDeployedSpreadModifier=0.500000
+    RestDeploySpreadModifier=0.750000
+    HipSpreadModifier=2.000000
+    LeanSpreadModifier=1.350000
+    PctBipodDeployRecoil=0.050000
+    bLeadTarget=true
+    bInstantHit=false
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    FireForce="AssaultRifleFire"
+    WarnTargetPct=0.500000
+    BlurTime=0.1
+    BlurTimeIronsight=0.1
+    BlurScale=0.01
+    BlurScaleIronsight=0.1
 }
