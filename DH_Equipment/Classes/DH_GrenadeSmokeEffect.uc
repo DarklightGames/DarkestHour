@@ -3,14 +3,13 @@
 //-----------------------------------------------------------
 class DH_GrenadeSmokeEffect extends Emitter;
 
-// Called immediately before gameplay begins.
-//
-event PreBeginPlay()
+//Overrided to support smoke brightness override and wind direction/speed in DHLevelInfo
+simulated function PostBeginPlay()
 {
     local color NewSmokeColor;
     local byte SmokeBrightnessValue;
 
-    super.PreBeginPlay();
+    super.PostBeginPlay();
 
     //Lets change the smoke color if it's not set to default in DH_LevelInfo
     if( DarkestHourGame(Level.Game).DHLevelInfo.SmokeBrightnessOverride != 255 )
@@ -29,13 +28,13 @@ event PreBeginPlay()
         Emitters[0].ColorScale[1].Color = NewSmokeColor;
         Emitters[1].ColorScale[0].Color = NewSmokeColor;
         Emitters[1].ColorScale[1].Color = NewSmokeColor;
-        Emitters[2].ColorScale[0].Color = NewSmokeColor;
-        Emitters[2].ColorScale[1].Color = NewSmokeColor;
+        Emitters[2].ColorScale[0].color = NewSmokeColor;
+        Emitters[2].ColorScale[1].color = NewSmokeColor;
         Emitters[3].ColorScale[0].Color = NewSmokeColor;
         Emitters[3].ColorScale[1].Color = NewSmokeColor;
     }
 
-    //Now for the wind direction!
+    //Lets get the wind direction and speed and set the first sprite emitter accordingly
 }
 
 DefaultProperties
