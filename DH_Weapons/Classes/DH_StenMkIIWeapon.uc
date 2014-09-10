@@ -1,7 +1,7 @@
 //=============================================================================
 // DH_StenMkIIWeapon
 //=============================================================================
-class DH_StenMkIIWeapon extends DH_FastAutoWeapon;
+class DH_StenMkIIWeapon extends DH_AutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sten_1st.ukx
 

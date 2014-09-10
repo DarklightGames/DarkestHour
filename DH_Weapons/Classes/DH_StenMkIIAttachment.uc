@@ -1,11 +1,10 @@
 //=============================================================================
 // DH_StenMkIIAttachment
 //=============================================================================
-class DH_StenMkIIAttachment extends DHHighROFWeaponAttachment;
+class DH_StenMkIIAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-     ClientProjectileClass=Class'DH_Weapons.DH_StenMkIIBullet_C'
      mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdPPSH'
      MuzzleBoneName="Muzzle"
      ROShellCaseClass=Class'ROAmmo.RO3rdShellEject9x19mm'
