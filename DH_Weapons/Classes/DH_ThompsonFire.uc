@@ -2,164 +2,21 @@
 // ThompsonAutoFire
 //=============================================================================
 
-class DH_ThompsonFire extends DH_FastAutoFire;
+class DH_ThompsonFire extends DH_AutomaticFire;
 
-/* =================================================================================== *
-* FireLoop
-*   This state handles looping the firing animations and ambient fire sounds as well
-*   as firing rounds.
-*
-* modified by: Ramm 1/17/05
-*
-* Overridden here to allow semi auto fire sound handling for a fastauto weapon class
-* This is an extremely messy and inefficient way of doing this, however it works - Ch!cken
-* =================================================================================== */
-state FireLoop
+function ModeTick(float dt)
 {
-    function BeginState()
+    Super.ModeTick(dt);
+
+    // WeaponTODO: See how to properly reimplement this
+    if (bIsFiring && !AllowFire() /*|| bNowWaiting */)  // stopped firing, magazine empty or barrel overheat
     {
-    local DH_ProjectileWeapon RPW;
-
-    if (ROWeapon(Weapon).UsingAutoFire())
-    {
-        NextFireTime = Level.TimeSeconds - 0.1; //fire now!
-
-        RPW = DH_ProjectileWeapon(Weapon);
-
-        if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
-            weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
-        else
-            Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
-
-        PlayAmbientSound(AmbientFireSound);
-    }
-    }
-
-    function ServerPlayFiring()
-    {
-    if (!ROWeapon(Weapon).UsingAutoFire())
-    {
-//      if (FireSounds.Length > 0)
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
-    }
-    }
-
-    function PlayFiring()
-    {
-    if (!ROWeapon(Weapon).UsingAutoFire())
-    {
-    if (Weapon.Mesh != none)
-    {
-        if (FireCount > 0)
-        {
-            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
-            {
-                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-            }
-            else
-            {
-                if (Weapon.HasAnim(FireLoopAnim))
-                {
-                    Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
-                }
-                else
-                {
-                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-                }
-            }
-        }
-        else
-        {
-            if (Weapon.bUsingSights)
-            {
-                Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
-            }
-            else
-            {
-                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-            }
-        }
-
-//         if (FireSounds.Length > 0)
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
-
-         ClientPlayForceFeedback(FireForce);  // jdf
-
-         FireCount++;
-    }
-    }
-    }
-
-    function PlayFireEnd()
-    {
-    if (!ROWeapon(Weapon).UsingAutoFire())
-    {
-        if (Weapon.bUsingSights && Weapon.HasAnim(FireIronEndAnim))
-        {
-            Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
-        }
-        else if (Weapon.HasAnim(FireEndAnim))
-        {
-            Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
-        }
-    }
-    }
-
-
-    function EndState()
-    {
-    if (ROWeapon(Weapon).UsingAutoFire())
-    {
-        Weapon.AnimStopLooping();
-        PlayAmbientSound(none);
-        Weapon.PlayOwnedSound(FireEndSound,SLOT_none,FireVolume,,AmbientFireSoundRadius);
         Weapon.StopFire(ThisModeNum);
-
-        //If we are not switching weapons, go to the idle state
-        if (!Weapon.IsInState('LoweringWeapon'))
-            ROWeapon(Weapon).GotoState('Idle');
-    }
-    }
-
-    function StopFiring()
-    {
-        if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment.bUnReplicatedShot == true)
-        {
-            HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
-            if (HiROFWeaponAttachment.DualShotCount == 255)
-            {
-                HiROFWeaponAttachment.DualShotCount = 254;
-            }
-            else
-            {
-                HiROFWeaponAttachment.DualShotCount = 255;
-            }
-            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
-        }
-
-        GotoState('');
-    }
-
-    function ModeTick(float dt)
-    {
-        Super.ModeTick(dt);
-
-        // WeaponTODO: See how to properly reimplement this
-        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
-        {
-            GotoState('');
-            return;
-        }
     }
 }
 
 defaultproperties
 {
-     FireEndSound=SoundGroup'DH_WeaponSounds.Thompson.ThompsonFireEnd'
-     AmbientFireSoundRadius=750.000000
-     AmbientFireSound=SoundGroup'DH_WeaponSounds.Thompson.ThompsonFireLoop'
-     AmbientFireVolume=255
-     ServerProjectileClass=Class'DH_Weapons.DH_ThompsonBullet_S'
      ProjSpawnOffset=(X=25.000000)
      FAProjSpawnOffset=(X=-20.000000)
      FireIronAnim="Iron_Shoot_Loop"
@@ -177,7 +34,7 @@ defaultproperties
      FireLoopAnim="Shoot_Loop"
      FireEndAnim="Shoot_End"
      TweenTime=0.000000
-     FireRate=0.086000
+     FireRate=0.092307  //650rpm
      AmmoClass=Class'DH_Weapons.DH_ThompsonAmmo'
      ShakeRotMag=(X=50.000000,Y=50.000000,Z=150.000000)
      ShakeRotRate=(X=10000.000000,Y=10000.000000,Z=10000.000000)

@@ -1,7 +1,7 @@
 //=============================================================================
 // DH_ThompsonWeapon
 //=============================================================================
-class DH_ThompsonWeapon extends DH_FastAutoWeapon;
+class DH_ThompsonWeapon extends DH_AutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Thompson_1st.ukx
 
@@ -13,14 +13,16 @@ var   name      SelectFireIronAnim;
 //=============================================================================
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerChangeFireMode;
 }
 
 simulated exec function SwitchFireMode()
 {
     if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
+    {
         return;
+    }
 
     GotoState('SwitchingFireMode');
 }
@@ -79,14 +81,7 @@ simulated state SwitchingFireMode extends Busy
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-    if (FireMode[0].bWaitForRelease)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return !FireMode[0].bWaitForRelease;
 }
 
 simulated function AnimEnd(int channel)
@@ -121,19 +116,22 @@ simulated function AnimEnd(int channel)
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
-        FireMode[Mode].bInstantStop = true;
-    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-        if (!IsAnimating(0))
-        {
-            PlayIdle();
-        }
+        FireMode[Mode].bInstantStop = true;
+    }
+
+    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
+    {
+        PlayIdle();
     }
 
     FireMode[Mode].bIsFiring = false;
     FireMode[Mode].StopFiring();
+
     if (!FireMode[Mode].bFireOnRelease)
+    {
         ZeroFlashCount(Mode);
+    }
 }
 
 defaultproperties
