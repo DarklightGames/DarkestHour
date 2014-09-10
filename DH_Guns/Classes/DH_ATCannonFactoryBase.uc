@@ -14,7 +14,6 @@ class DH_ATCannonFactoryBase extends DH_VehicleFactory
 // Variables
 //==============================================================================
 var()   bool    bUseRandomizer;             // Whether or not to use the randomization system
-var()   bool    bEnableSabotageRandomizer;  // Whether or not to enable the chance of the gun being booby trapped
 var     int     GunIndex;                   // The index of this gun in the GRI ATCannon array which allows it to appear on the situation map.
 var()   string  GroupTag;                   // A tag used by the randomizer to spawn at guns by groups
 var     bool    bRandomEvaluated;           // Whether or not this AT Gun Factory has been evaluated by the randomizer yet

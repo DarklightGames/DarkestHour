@@ -13,8 +13,6 @@ class DH_ATGun extends DH_ROTreadCraft
 #exec OBJ LOAD FILE=..\textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
-var  float     SabotageProbability;
-var  bool      bHasBeenSabotaged;
 var  DH_ATCannonFactoryBase   DHParentFactory;
 var  ROVehicleFactory         ROParentFactory;
 
@@ -94,8 +92,6 @@ simulated function PostBeginPlay()
     {
         bTeamLocked=false;
     }
-
-    bHasBeenSabotaged=false;
 }
 
 // DriverLeft() called by KDriverLeave()
@@ -158,9 +154,6 @@ function bool TryToDrive(Pawn P)
          || P.IsA('Vehicle') || Health <= 0)
         return false;
 
-    if (bHasBeenSabotaged)
-        return false;
-
     if (!Level.Game.CanEnterVehicle(self, P))
         return false;
 
@@ -173,21 +166,6 @@ function bool TryToDrive(Pawn P)
     }
     else
     {
-        //Check for sabotage...
-        if (DHParentFactory != none && DHParentFactory.bEnableSabotageRandomizer && (P.GetTeamNum() != VehicleTeam))
-        {
-            if (FRand() < SabotageProbability && Health > 0 && !bHasBeenSabotaged)
-            {
-                bHasBeenSabotaged=true;
-                P.ReceiveLocalizedMessage(class'DH_VehicleMessage', 6); //Give sabotage message
-                GotoState('VehicleDestroyed');
-            }
-            else
-            {
-                bTeamLocked = false;
-            }
-        }
-
         //At this point we know the pawn is not a tanker, so let's see if they can use the gun
         if (bEnterringUnlocks && bTeamLocked)
             bTeamLocked = false;
@@ -356,7 +334,6 @@ function exec DamageTank()
 
 defaultproperties
 {
-     SabotageProbability=0.900000
      UFrontArmorFactor=0.800000
      URightArmorFactor=0.800000
      ULeftArmorFactor=0.800000
