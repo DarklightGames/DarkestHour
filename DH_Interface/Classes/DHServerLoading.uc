@@ -2,19 +2,30 @@ class DHServerLoading extends UT2K4ServerLoading;
 
 #EXEC OBJ LOAD FILE=DH_GUI_Tex.utx
 
+//Variables
+var localized string loadingMapPrefix; //"Deploying to..."
+var localized string loadingMapAuthorPrefix; //"Author:"
+var localized string vacSecuredText; //"NOTE: This server is VAC Secured. Cheating will result in a permanent ban."
+var localized string OfficialMapText; //"Official Map"
+var localized string CustomMapText; //"Community Map"
 
-var localized string        loadingMapPrefix;
+var Material vacIcon; //Server is VAC secured icon
+var Material OfficialMapIcon; //Icon for indicating the loading map is official
+var Material CustomMapIcon; //Icon for indicating the loading map is custom
 
-var localized string        vacSecuredText;
+var CacheManager.MapRecord  LoadingMapRecord; //Record for loading map (to get author, extrainfo, etc)
 
-var Material                vacIcon;
-
-
+//Functions
 
 simulated event Init()
 {
-    Super.Init();
+    //Gets the MapRecord and sets it so we can use it in other functions
+    LoadingMapRecord = class'CacheManager'.static.getMapRecord(MapName);
 
+    //Calls the base background and text functions (should be after we get the mapRecord)
+    super.Init();
+
+    //Draws VAC icon if bVACSecured
     SetVACInfo();
 }
 
@@ -23,20 +34,33 @@ simulated function SetText()
     local GUIController GC;
     local DrawOpText HintOp;
     local string Map;
+    local string AuthorFinal;
 
     Map = StripMap(MapName);
     Map = StripPrefix(Map);
     Map = AddSpaces(Map);
 
-        // Exceptions
-    if (Caps(Map) == "HEDGE HOG")
-        Map = "Hedgehog";
+    //This sets up the strings for "Author:"
+    if (LoadingMapRecord.Author == "")
+    {
+        AuthorFinal = "Unspecified";
+    }
+    else
+    {
+        AuthorFinal = LoadingMapRecord.Author;
+    }
 
+    //Sets up actual text on the screen for the author
+    DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ AuthorFinal;
+
+    //This sets up the strings "Deploying to..." MAPNAME
     DrawOpText(Operations[2]).Text = loadingMapPrefix @ Map;
     DrawOpText(Operations[1]).Text = "";
 
+    //Get GUI Controller
     GC = GUIController(Level.GetLocalPlayerController().Player.GUIController);
 
+    //This draws the loading prefix + mapname "Deploying to... LEVEL"
     if (GC!=none)
     {
         GC.LCDCls();
@@ -46,23 +70,43 @@ simulated function SetText()
         GC.LCDRePaint();
     }
 
+    //Return here if software rendering
     if (Level.IsSoftwareRendering())
         return;
 
+    //Hint stuff
     HintOp = DrawOpText(Operations[3]);
 
     if (HintOp == none)
+    {
         return;
+    }
 
     HintOp.Text = "";
 }
 
+//Show the VAC secured icon
 simulated function SetVACInfo()
 {
     if (bVACSecured)
     {
         DrawOpImage(Operations[4]).Image = vacIcon;
         DrawOpText(Operations[5]).Text = vacSecuredText;
+    }
+}
+
+//Show the Official or Custom icon and text
+simulated function SetMapConstitution(bool bOfficialMap)
+{
+    if (bOfficialMap)
+    {
+        DrawOpImage(Operations[6]).Image = OfficialMapIcon;
+        DrawOpText(Operations[7]).Text = OfficialMapText;
+    }
+    else
+    {
+        DrawOpImage(Operations[6]).Image = CustomMapIcon;
+        DrawOpText(Operations[7]).Text = CustomMapText;
     }
 }
 
@@ -133,6 +177,8 @@ simulated function SetImage()
             mat = Material'MenuBlack';
             DrawOpImage(Operations[0]).Image = mat;
 
+    //We are going to check to see if the level is officially supported
+    //If so set the proper background (loadingscreen) and call the function to add the logo indicating official map
     switch(Map)
     {
         case "bois jacques" :
@@ -221,11 +267,39 @@ simulated function SetImage()
             break;
     }
 
+    //Lets check if an official level was detected or not
     if (str == "")
-        str = Backgrounds[0];
+    {
+        //This level is custom, lets check if it has a custom loading screen set in ExtraInfo
+        if (LoadingMapRecord.ExtraInfo != "")
+        {
+            //Try to set the material up from ExtraInfo (if not entered correctly it'll fail)
+            mat = Material(DynamicLoadObject(MapName$LoadingMapRecord.ExtraInfo, class'Material'));
+        }
+        //Check to see if mat failed to set properly
+        if (mat.Validated == false)
+        {
+            //mat must have failed to create from ExtraInfo string
+            str = Backgrounds[0]; //use generic background for now
+            mat = DLOTexture(str); //set mat to use generic background
+        }
 
-    mat = DLOTexture(str);
-    DrawOpImage(Operations[0]).Image = mat;
+        //Set the custom map icon + text
+        SetMapConstitution(false);
+
+        //Draw the background loading screen
+        DrawOpImage(Operations[0]).Image = mat;
+    }
+    //Level is official
+    else
+    {
+        //Set the official map icon + text
+        SetMapConstitution(true);
+
+        //Actually set the material & draw
+        mat = DLOTexture(str);
+        DrawOpImage(Operations[0]).Image = mat;
+    }
 }
 
 static final function string Lower(coerce string Text)
@@ -243,39 +317,86 @@ static final function string Lower(coerce string Text)
 
 defaultproperties
 {
-     loadingMapPrefix="Deploying to"
-     vacSecuredText="NOTE: This server is VAC Secured. Cheating will result in a permanent ban."
-     vacIcon=Texture'InterfaceArt_tex.ServerIcons.VAC_protected'
-     Backgrounds(0)="DH_GUI_Tex.LoadingScreens.LoadingScreenDHDefault"
-     Backgrounds(1)="DH_GUI_Tex.LoadingScreens.LoadingScreenBoisJacques"
-     Backgrounds(2)="DH_GUI_Tex.LoadingScreens.LoadingScreenBrecourt"
-     Backgrounds(3)="DH_GUI_Tex.LoadingScreens.LoadingScreenCarentan"
-     Backgrounds(4)="DH_GUI_Tex.LoadingScreens.LoadingScreenDogGreen"
-     Backgrounds(5)="DH_GUI_Tex.LoadingScreens.LoadingScreenFoy"
-     Backgrounds(6)="DH_GUI_Tex.LoadingScreens.LoadingScreenFreyneux"
-     Backgrounds(7)="DH_GUI_Tex.LoadingScreens.LoadingScreenGinkelHeath"
-     Backgrounds(8)="DH_GUI_Tex.LoadingScreens.LoadingScreenHill108"
-     Backgrounds(9)="DH_GUI_Tex.LoadingScreens.LoadingScreenHurtgen"
-     Backgrounds(10)="DH_GUI_Tex.LoadingScreens.LoadingScreenJunoBeach"
-     Backgrounds(11)="DH_GUI_Tex.LoadingScreens.LoadingScreenLaChapelle"
-     Backgrounds(12)="DH_GUI_Tex.LoadingScreens.LoadingScreenLaMonderie"
-     Backgrounds(13)="DH_GUI_Tex.LoadingScreens.LoadingScreenNoville"
-     Backgrounds(14)="DH_GUI_Tex.LoadingScreens.LoadingScreenRaids"
-     Backgrounds(15)="DH_GUI_Tex.LoadingScreens.LoadingScreenStoumont"
-     Backgrounds(16)="DH_GUI_Tex.LoadingScreens.LoadingScreenVieux"
-     Backgrounds(17)="DH_GUI_Tex.LoadingScreens.LoadingScreenWachtamRhein"
-     Backgrounds(18)="DH_GUI_Tex.LoadingScreens.LoadingScreenBridgehead"
-     Backgrounds(19)="DH_GUI_Tex.LoadingScreens.LoadingScreenCaen"
-     Backgrounds(20)="DH_GUI_Tex.LoadingScreens.LoadingScreenCambesEnPlaine"
-     Backgrounds(21)="DH_GUI_Tex.LoadingScreens.LoadingScreenCarentanCauseway"
-     Backgrounds(22)="DH_GUI_Tex.LoadingScreens.LoadingScreenGran"
-     Backgrounds(23)="DH_GUI_Tex.LoadingScreens.LoadingScreenHill400"
-     Backgrounds(24)="DH_GUI_Tex.LoadingScreens.LoadingScreenKommerscheidt"
-     Backgrounds(25)="DH_GUI_Tex.LoadingScreens.LoadingScreenLutremange"
-     Backgrounds(26)="DH_GUI_Tex.LoadingScreens.LoadingScreenPoteauAmbush"
-     Backgrounds(27)="DH_GUI_Tex.LoadingScreens.LoadingScreenSimonskall"
-     Backgrounds(28)="DH_GUI_Tex.LoadingScreens.LoadingScreenVieuxRecon"
-     Operations(2)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpMapname'
-     Operations(4)=DrawOpImage'ROInterface.ROServerLoading.OpVACImg'
-     Operations(5)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpVACText'
+    loadingMapPrefix="Deploying to"
+    loadingMapAuthorPrefix="Author:"
+    //vacSecuredText="NOTE: This server is VAC Secured. Cheating will result in a permanent ban."
+    //vacIcon=texture'InterfaceArt_tex.ServerIcons.VAC_protected'
+
+    //Need to set these
+    OfficialMapIcon=texture'InterfaceArt_tex.Menu.RODisplay'
+    CustomMapIcon=texture'InterfaceArt_tex.Menu_weapons.Binocs'
+
+
+    OfficialMapText="Official Map"
+    CustomMapText="Community Map"
+
+
+    Backgrounds(0)="DH_GUI_Tex.LoadingScreens.LoadingScreenDHDefault"
+    Backgrounds(1)="DH_GUI_Tex.LoadingScreens.LoadingScreenBoisJacques"
+    Backgrounds(2)="DH_GUI_Tex.LoadingScreens.LoadingScreenBrecourt"
+    Backgrounds(3)="DH_GUI_Tex.LoadingScreens.LoadingScreenCarentan"
+    Backgrounds(4)="DH_GUI_Tex.LoadingScreens.LoadingScreenDogGreen"
+    Backgrounds(5)="DH_GUI_Tex.LoadingScreens.LoadingScreenFoy"
+    Backgrounds(6)="DH_GUI_Tex.LoadingScreens.LoadingScreenFreyneux"
+    Backgrounds(7)="DH_GUI_Tex.LoadingScreens.LoadingScreenGinkelHeath"
+    Backgrounds(8)="DH_GUI_Tex.LoadingScreens.LoadingScreenHill108"
+    Backgrounds(9)="DH_GUI_Tex.LoadingScreens.LoadingScreenHurtgen"
+    Backgrounds(10)="DH_GUI_Tex.LoadingScreens.LoadingScreenJunoBeach"
+    Backgrounds(11)="DH_GUI_Tex.LoadingScreens.LoadingScreenLaChapelle"
+    Backgrounds(12)="DH_GUI_Tex.LoadingScreens.LoadingScreenLaMonderie"
+    Backgrounds(13)="DH_GUI_Tex.LoadingScreens.LoadingScreenNoville"
+    Backgrounds(14)="DH_GUI_Tex.LoadingScreens.LoadingScreenRaids"
+    Backgrounds(15)="DH_GUI_Tex.LoadingScreens.LoadingScreenStoumont"
+    Backgrounds(16)="DH_GUI_Tex.LoadingScreens.LoadingScreenVieux"
+    Backgrounds(17)="DH_GUI_Tex.LoadingScreens.LoadingScreenWachtamRhein"
+    Backgrounds(18)="DH_GUI_Tex.LoadingScreens.LoadingScreenBridgehead"
+    Backgrounds(19)="DH_GUI_Tex.LoadingScreens.LoadingScreenCaen"
+    Backgrounds(20)="DH_GUI_Tex.LoadingScreens.LoadingScreenCambesEnPlaine"
+    Backgrounds(21)="DH_GUI_Tex.LoadingScreens.LoadingScreenCarentanCauseway"
+    Backgrounds(22)="DH_GUI_Tex.LoadingScreens.LoadingScreenGran"
+    Backgrounds(23)="DH_GUI_Tex.LoadingScreens.LoadingScreenHill400"
+    Backgrounds(24)="DH_GUI_Tex.LoadingScreens.LoadingScreenKommerscheidt"
+    Backgrounds(25)="DH_GUI_Tex.LoadingScreens.LoadingScreenLutremange"
+    Backgrounds(26)="DH_GUI_Tex.LoadingScreens.LoadingScreenPoteauAmbush"
+    Backgrounds(27)="DH_GUI_Tex.LoadingScreens.LoadingScreenSimonskall"
+    Backgrounds(28)="DH_GUI_Tex.LoadingScreens.LoadingScreenVieuxRecon"
+    Operations(2)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpMapname'
+    Operations(4)=DrawOpImage'ROInterface.ROServerLoading.OpVACImg'
+    Operations(5)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpVACText'
+
+    Begin Object class=DrawOpImage Name=OpConstitutionImg
+        Top=0.015
+        Lft=0.685
+        Width=0.045
+        Height=0.066
+        DrawColor=(R=255,B=255,G=255,A=255)
+        SubXL=128
+        SubYL=128
+    End Object
+    Operations(6)=OpConstitutionImg
+
+    Begin Object class=RODrawOpShadowedText Name=OpConstitutionText
+        Top=0.02
+        Lft=0.735
+        Height=0.05
+        Width=0.32
+        Justification=0
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+        //bWrapText=true
+    End Object
+    Operations(7)=OpConstitutionText
+
+    Begin Object class=RODrawOpShadowedText Name=OpMapAuthorText
+        Top=0.02
+        Lft=0.05
+        Height=0.05
+        Width=0.32
+        Justification=0
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+        //bWrapText=true
+    End Object
+    Operations(8)=OpMapAuthorText
+
 }
