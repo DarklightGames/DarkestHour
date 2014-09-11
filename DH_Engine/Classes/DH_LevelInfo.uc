@@ -23,6 +23,9 @@ var() EAlliedNation AlliedNation;
 var() byte SmokeBrightnessOverride; //Used to override the lighting brightness of smoke emitters
 var() rangevector WindDirectionSpeed; //Used to make smoke grenades match other emitters in the level
 
+var() Sound AlliesWinsMusic; //Optional override for Allies victory music
+var() Sound AxisWinsMusic; //Optional override for Axis victory music
+
 //=============================================================================
 // defaultproperties
 //=============================================================================
@@ -30,4 +33,6 @@ var() rangevector WindDirectionSpeed; //Used to make smoke grenades match other 
 defaultproperties
 {
     SmokeBrightnessOverride=255
+    AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
+    AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
 }
