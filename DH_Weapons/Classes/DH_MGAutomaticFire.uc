@@ -10,6 +10,24 @@ class DH_MGAutomaticFire extends DH_FastAutoFire
     abstract;
 
 var()       float           PctHipMGPenalty;    // The amount of recoil to add when the player firing an MG from the hip
+var         DH_MGbase       MGWeapon;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    MGWeapon = DH_MGbase(Weapon);
+}
+
+event ModeDoFire()
+{
+    super.ModeDoFire();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        MGWeapon.UpdateAmmoBelt();
+    }
+}
 
 // Overriden to support our hip firing mode
 state FireLoop

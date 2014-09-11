@@ -10,24 +10,6 @@
 
 class DH_MG42Fire extends DH_MGAutomaticFire;
 
-// So we don't have to cast 1200 times per minute :)
-var DH_MG42Weapon MGWeapon;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    MGWeapon = DH_MG42Weapon(Weapon);
-}
-
-event ModeDoFire()
-{
-    Super.ModeDoFire();
-
-    if (Level.NetMode != NM_DedicatedServer)
-        MGWeapon.UpdateAmmoBelt();
-}
-
 defaultproperties
 {
      FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'

@@ -12,66 +12,13 @@ class DH_MG42Weapon extends DH_MGbase;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg42_1st.ukx
 
-var     ROFPAmmoRound       MGBeltArray[10];    // An array of first person ammo rounds
-var     name                MGBeltBones[10];    // An array of bone names to attach the belt to
-var() class<ROFPAmmoRound>  BeltBulletClass;    // The class to spawn for each bullet on the ammo belt
-
-//=============================================================================
-// functions
-//=============================================================================
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Level.Netmode != NM_DedicatedServer)
-        SpawnAmmoBelt();
-}
-
-// Handles making ammo belt bullets disappear
-simulated function UpdateAmmoBelt()
-{
-    local int i;
-
-    if (AmmoAmount(0) > 9)
-    {
-        return;
-    }
-
-    for (i=AmmoAmount(0); i<10; i++)
-    {
-        MGBeltArray[i].SetDrawType(DT_none);
-    }
-}
-
-// Spawn the first person linked ammobelt
-simulated function SpawnAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < ArrayCount(MGBeltArray); i++)
-    {
-       MGBeltArray[i] = Spawn(BeltBulletClass,self);
-       AttachToBone(MGBeltArray[i], MGBeltBones[i]);
-    }
-}
-
-// Make the full ammo belt visible again. Called by anim notifies
-simulated function RenewAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < ArrayCount(MGBeltArray); i++)
-    {
-        MGBeltArray[i].SetDrawType(DT_StaticMesh);
-    }
-}
-
 // Overriden so we do faster net updated when we're down to the last few rounds
 simulated function bool ConsumeAmmo(int Mode, float load, optional bool bAmountNeededIsMax)
 {
     if (AmmoAmount(0) < 11)
+    {
         NetUpdateTime = Level.TimeSeconds - 1;
+    }
 
     return super.ConsumeAmmo(Mode, load, bAmountNeededIsMax);
 }

@@ -38,6 +38,10 @@ var     name                BarrelChangeAnim;       // anim for bipod barrel cha
 // MG Resupplying
 var     int                 NumMagsToResupply;      // Number of ammo mags to add when this weapon has been resupplied
 
+var     array<ROFPAmmoRound>    MGBeltArray;        // An array of first person ammo rounds
+var     array<name>             MGBeltBones;        // An array of bone names to attach the belt to
+var()   class<ROFPAmmoRound>    BeltBulletClass;    // The class to spawn for each bullet on the ammo belt
+
 //=============================================================================
 // Replication
 //=============================================================================
@@ -60,6 +64,57 @@ replication
 //=============================================================================
 // Functions
 //=============================================================================
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Level.Netmode != NM_DedicatedServer)
+    {
+        SpawnAmmoBelt();
+    }
+}
+
+
+// Handles making ammo belt bullets disappear
+simulated function UpdateAmmoBelt()
+{
+    local int i;
+
+    if (AmmoAmount(0) > 9)
+    {
+        return;
+    }
+
+    for (i = AmmoAmount(0); i < MGBeltArray.Length; ++i)
+    {
+        MGBeltArray[i].SetDrawType(DT_none);
+    }
+}
+
+// Spawn the first person linked ammobelt
+simulated function SpawnAmmoBelt()
+{
+    local int i;
+
+    for (i = 0; i < MGBeltBones.Length; ++i)
+    {
+        MGBeltArray[i] = Spawn(BeltBulletClass,self);
+
+        AttachToBone(MGBeltArray[i], MGBeltBones[i]);
+    }
+}
+
+// Make the full ammo belt visible again. Called by anim notifies
+simulated function RenewAmmoBelt()
+{
+    local int i;
+
+    for (i = 0; i < MGBeltArray.Length; ++i)
+    {
+        MGBeltArray[i].SetDrawType(DT_StaticMesh);
+    }
+}
 
 function bool IsMGWeapon() { return true; }
 

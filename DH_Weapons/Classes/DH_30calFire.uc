@@ -4,26 +4,6 @@
 
 class DH_30calFire extends DH_MGAutomaticFire;
 
-// So we don't have to cast 1200 times per minute :)
-var DH_30calWeapon MGWeapon;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    MGWeapon = DH_30calWeapon(Weapon);
-}
-
-event ModeDoFire()
-{
-    Super.ModeDoFire();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        MGWeapon.UpdateAmmoBelt();
-    }
-}
-
 defaultproperties
 {
      FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
