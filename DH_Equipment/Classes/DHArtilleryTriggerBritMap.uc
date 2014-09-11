@@ -1,0 +1,1 @@
+class DHArtilleryTriggerBritMap extends DHArtilleryTrigger;
