@@ -1770,6 +1770,20 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
     Level.Game.Broadcast(self, "DebugWheelRotationScale=" $ WheelRotationScale);
 }
 
+exec function LeaveBody()
+{
+    Pawn.UnPossessed();
+    Pawn.SetPhysics(PHYS_None);
+    Pawn.Velocity = vect(0, 0, 0);
+    Pawn = none;
+}
+
+exec function RoundPause()
+{
+    DarkestHourGame(Level.Game).RoundDuration = 9999999;
+    DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RoundDuration = 9999999;
+}
+
 defaultproperties
 {
      FlinchRotMag=(X=100.000000,Z=100.000000)
