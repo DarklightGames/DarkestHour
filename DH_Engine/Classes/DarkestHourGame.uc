@@ -1445,17 +1445,14 @@ state RoundInPlay
 
     function EndState()
     {
-        local Controller C;
+        local Pawn P;
 
         super.EndState();
 
-        //----------------------------------------------------------------------
-        // Fixes the unfathomably annoying bug where machine guns would drone on
-        // and on forever at the end of a round. -Colin
-        if (bGameEnded)
-            for(C = Level.ControllerList; C != none; C = C.NextController)
-                if (DHPlayer(C) != none)
-                    DHPlayer(C).ClientConsoleCommand("pausesounds", false);
+        foreach DynamicActors(class'Pawn', P)
+        {
+            P.StopWeaponFiring();
+        }
     }
 }
 
