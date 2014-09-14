@@ -34,24 +34,23 @@ simulated function SetText()
     local GUIController GC;
     local DrawOpText HintOp;
     local string Map;
-    local string AuthorFinal;
 
     Map = StripMap(MapName);
     Map = StripPrefix(Map);
     Map = AddSpaces(Map);
 
-    //This sets up the strings for "Author:"
+    //This sets up the strings for Map Author
     if (LoadingMapRecord.Author == "")
     {
-        AuthorFinal = "Unspecified";
+        DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ "Unspecified";
     }
     else
     {
-        AuthorFinal = LoadingMapRecord.Author;
+        DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ LoadingMapRecord.Author;
     }
 
     //Sets up actual text on the screen for the author
-    DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ AuthorFinal;
+    //DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ AuthorFinal;
 
     //This sets up the strings "Deploying to..." MAPNAME
     DrawOpText(Operations[2]).Text = loadingMapPrefix @ Map;
