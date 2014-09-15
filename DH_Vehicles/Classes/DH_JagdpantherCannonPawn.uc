@@ -8,19 +8,6 @@
 //==============================================================================
 class DH_JagdpantherCannonPawn extends DH_AssaultGunCannonPawn;
 
-
-// Commander cannot fire cannon when he is on the scissors scope or binocs (because he's not mounted on the damn gun!)
-function Fire(optional float F)
-{
-    if (DriverPositionIndex == PeriscopePositionIndex ||
-        DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
-    {
-        return;
-    }
-
-    super.Fire(F);
-}
-
 defaultproperties
 {
      OverlayCenterSize=0.555000

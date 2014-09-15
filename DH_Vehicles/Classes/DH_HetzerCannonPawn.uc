@@ -23,15 +23,6 @@ simulated function PostBeginPlay() // Matt: modified to lower the commander's ex
     bGunPivotDamaged=false;
 }
 
-// Commander cannot fire cannon when he is on the scissors scope or binocs // Matt: I've added this as it's used in other vehicles and is relevant
-function Fire(optional float F)
-{
-    if( (DriverPositionIndex == PeriscopePositionIndex || DriverPositionIndex == BinocPositionIndex) && ROPlayer(Controller) != none )
-        return;
-
-    Super.Fire(F);
-}
-
 // Matt: modified to prevent tank crew from switching to rider positions unless unbuttoned
 function ServerChangeDriverPosition(byte F)
 {

@@ -158,7 +158,6 @@ defaultproperties
      PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
      bShowRangeText=false
      OverlayCenterSize=1.000000
-     PeriscopePositionIndex=1
      DestroyedScopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
      ScopePositionX=0.215000
      ScopePositionY=0.500000

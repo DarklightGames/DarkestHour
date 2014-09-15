@@ -609,14 +609,31 @@ simulated state LeavingVehicle
     }
 }
 
+function bool CanFire()
+{
+    Level.Game.Broadcast(self, "" $ DriverPositionIndex @ PeriscopePositionIndex @ BinocPositionIndex);
+
+    return !IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex && ROPlayer(Controller) != none;
+}
+
 function Fire(optional float F)
 {
-    if(IsInState('ViewTransition'))
+    if (!CanFire())
     {
         return;
     }
 
     super.Fire(F);
+}
+
+function AltFire(optional float F)
+{
+    if (!CanFire())
+    {
+        return;
+    }
+
+    Super.AltFire(F);
 }
 
 defaultproperties
@@ -637,4 +654,5 @@ defaultproperties
      RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      MaxRotateThreshold=1.500000
      bDesiredBehindView=false
+     PeriscopePositionIndex=-1
 }

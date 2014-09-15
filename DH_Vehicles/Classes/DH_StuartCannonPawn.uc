@@ -40,4 +40,5 @@ defaultproperties
      PitchUpLimit=6000
      PitchDownLimit=64000
      SoundVolume=130
+     PeriscopePositionIndex=1
 }
