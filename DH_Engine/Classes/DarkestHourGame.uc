@@ -494,7 +494,6 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         Score -= 10000.0;
     else
         Score += 3000 * FRand(); //randomize
-/*
 
     for (OtherPlayer=Level.ControllerList; OtherPlayer!=none; OtherPlayer=OtherPlayer.NextController)
     {
@@ -527,7 +526,6 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
             }
         }
     }
-*/
 
     return FMax(Score, 5);
 }
