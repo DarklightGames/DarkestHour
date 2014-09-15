@@ -239,7 +239,7 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.400000
      PlayerFOVZoom=27.000000
-     XoffsetHighDetail=(X=-2.000000)
+     XoffsetHighDetail=(X=-12.000000)
      FireModeClass(0)=Class'DH_Weapons.DH_EnfieldNo4ScopedFire'
      FireModeClass(1)=Class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
      SelectAnim="Draw"
