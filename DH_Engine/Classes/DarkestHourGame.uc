@@ -444,6 +444,8 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
     local PlayerStart P;
     local DH_RoleInfo DHRI;
     local float Score;
+    local Controller OtherPlayer;
+    local float NextDist;
 
     P = PlayerStart(N);
 
@@ -495,7 +497,7 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
     else
         Score += 3000 * FRand(); //randomize
 
-    for (OtherPlayer=Level.ControllerList; OtherPlayer!=none; OtherPlayer=OtherPlayer.NextController)
+    for (OtherPlayer = Level.ControllerList; OtherPlayer != none; OtherPlayer = OtherPlayer.NextController)
     {
         if (OtherPlayer.bIsPlayer && (OtherPlayer.Pawn != none))
         {
