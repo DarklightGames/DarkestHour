@@ -2566,4 +2566,5 @@ defaultproperties
      CaptureBarTeamColors(0)=(B=30,G=43,R=213)
      CaptureBarTeamColors(1)=(B=35,G=150,R=40)
      VOICE_ICON_DIST_MAX = 2624.672119
+     TeamMessagePrefix="*TEAM* "
 }

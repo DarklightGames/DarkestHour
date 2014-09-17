@@ -120,7 +120,7 @@ defaultproperties
      USColour=(B=60,G=125,R=65,A=255)
      BritishColour=(B=140,G=105,R=50,A=255)
      CanadianColour=(B=20,G=120,R=125,A=255)
-     MessagePrefix="(DEAD) *PLATOON* "
+     MessagePrefix="(DEAD) *TEAM* "
      bComplexString=true
      bBeep=true
 }

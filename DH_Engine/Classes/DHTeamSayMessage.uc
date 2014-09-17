@@ -120,7 +120,7 @@ defaultproperties
      USColour=(B=75,G=170,R=85,A=255)
      BritishColour=(B=190,G=140,R=64,A=255)
      CanadianColour=(B=20,G=155,R=160,A=255)
-     MessagePrefix="*PLATOON* "
+     MessagePrefix="*TEAM* "
      bComplexString=true
      bBeep=true
 }
