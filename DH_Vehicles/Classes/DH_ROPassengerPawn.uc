@@ -100,6 +100,38 @@ function bool PlaceExitingDriver()
     return false;
 }
 
+function bool TryToDrive(Pawn P)
+{
+    if (VehicleBase != none)
+    {
+        if (VehicleBase.NeedsFlip())
+        {
+            VehicleBase.Flip(vector(P.Rotation), 1);
+
+            return false;
+        }
+
+        if (P.GetTeamNum() != VehicleBase.VehicleTeam)
+        {
+            if (VehicleBase.Driver == none)
+            {
+                return VehicleBase.TryToDrive(P);
+            }
+
+            DenyEntry( P, 1 );
+
+            return false;
+        }
+
+        if (VehicleBase.Driver == none && !P.IsHumanControlled())
+        {
+            return VehicleBase.TryToDrive(P);
+        }
+    }
+
+    return super(Vehicle).TryToDrive(P);
+}
+
 defaultproperties
 {
      WeaponFov=80.000000
