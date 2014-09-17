@@ -60,7 +60,7 @@ defaultproperties
      NewVehHitpoints(0)=(PointRadius=5.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=40.000000,Y=10.500000,Z=65.000000),NewHitPointType=NHP_GunOptics)
      NewVehHitpoints(1)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=100.000000,Y=10.000000,Z=35.000000),NewHitPointType=NHP_Traverse)
      NewVehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=100.000000,Y=10.000000,Z=35.000000),NewHitPointType=NHP_GunPitch)
-     bAllowRiders=false
+     bAllowRiders=true
      bIsAssaultGun=true
      UnbuttonedPositionIndex=1
      bSpecialExiting=true
@@ -133,6 +133,8 @@ defaultproperties
      ExhaustPipes(1)=(ExhaustPosition=(X=-190.000000,Y=49.000000,Z=36.000000),ExhaustRotation=(Pitch=32768))
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpanzerIVL70CannonPawn',WeaponBone="Turret_placement")
      PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpanzerIVMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpanzerIVPassengerOne',WeaponBone="body")
+     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpanzerIVPassengerTwo',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'
@@ -147,9 +149,13 @@ defaultproperties
      VehicleHudOccupantsX(0)=0.430000
      VehicleHudOccupantsX(1)=0.460000
      VehicleHudOccupantsX(2)=0.600000
+     VehicleHudOccupantsX(3)=0.500000
+     VehicleHudOccupantsX(4)=0.600000
      VehicleHudOccupantsY(0)=0.420000
      VehicleHudOccupantsY(1)=0.560000
      VehicleHudOccupantsY(2)=0.420000
+     VehicleHudOccupantsY(3)=0.700000
+     VehicleHudOccupantsY(4)=0.700000
      bVehicleHudUsesLargeTexture=true
      VehHitpoints(0)=(PointRadius=0.000000,PointOffset=(X=-15.000000,Z=-22.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=35.000000,PointOffset=(X=-100.000000,Z=10.000000),DamageMultiplier=1.000000)
