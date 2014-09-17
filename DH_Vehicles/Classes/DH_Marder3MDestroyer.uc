@@ -316,6 +316,7 @@ defaultproperties
      ExhaustPipes(0)=(ExhaustPosition=(X=-142.000000,Y=-28.000000,Z=18.000000),ExhaustRotation=(Pitch=40050))
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
      PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
+     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_Marder3MPassengerOne',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
@@ -330,9 +331,11 @@ defaultproperties
      VehicleHudOccupantsX(0)=0.550000
      VehicleHudOccupantsX(1)=0.450000
      VehicleHudOccupantsX(2)=0.550000
+     VehicleHudOccupantsX(3)=0.575000
      VehicleHudOccupantsY(0)=0.330000
      VehicleHudOccupantsY(1)=0.710000
      VehicleHudOccupantsY(2)=0.710000
+     VehicleHudOccupantsY(3)=0.500000
      VehicleHudEngineX=0.510000
      VehicleHudEngineY=0.470000
      VehHitpoints(0)=(PointRadius=8.000000,PointOffset=(X=-2.000000,Z=-14.000000),bPenetrationPoint=false)
