@@ -4128,4 +4128,5 @@ defaultproperties
      DodgeAnims(3)="jumpR_mid_nade"
      AirStillAnim="jump_mid_nade"
      TakeoffStillAnim="jump_takeoff_nade"
+     MaxFallSpeed=700.0
 }
