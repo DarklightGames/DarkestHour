@@ -234,4 +234,12 @@ defaultproperties
      HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
      bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=4
+     VehicleHudOccupantsX(3)=0.375
+     VehicleHudOccupantsY(3)=0.70
+     VehicleHudOccupantsX(4)=0.45
+     VehicleHudOccupantsY(4)=0.75
+     VehicleHudOccupantsX(5)=0.55
+     VehicleHudOccupantsY(5)=0.75
+     VehicleHudOccupantsX(6)=0.625
+     VehicleHudOccupantsY(6)=0.70
 }

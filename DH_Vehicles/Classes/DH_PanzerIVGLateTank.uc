@@ -137,6 +137,14 @@ defaultproperties
      VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2_body'
      VehicleHudOccupantsX(0)=0.430000
      VehicleHudOccupantsX(2)=0.570000
+     VehicleHudOccupantsX(3)=0.375
+     VehicleHudOccupantsY(3)=0.70
+     VehicleHudOccupantsX(4)=0.45
+     VehicleHudOccupantsY(4)=0.75
+     VehicleHudOccupantsX(5)=0.55
+     VehicleHudOccupantsY(5)=0.75
+     VehicleHudOccupantsX(6)=0.625
+     VehicleHudOccupantsY(6)=0.70
      VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=82.000000,Y=-40.000000,Z=63.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=32.000000,PointHeight=35.000000,PointOffset=(X=-100.000000,Z=6.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=10.000000,PointHeight=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=-27.000000,Z=-10.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
