@@ -27,7 +27,7 @@ replication
 {
     // client to server functions
     reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget;
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody;
 
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
@@ -1771,6 +1771,11 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
 }
 
 exec function LeaveBody()
+{
+    ServerLeaveBody();
+}
+
+function ServerLeaveBody()
 {
     Pawn.UnPossessed();
     Pawn.SetPhysics(PHYS_None);
