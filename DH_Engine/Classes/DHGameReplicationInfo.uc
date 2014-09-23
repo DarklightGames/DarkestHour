@@ -9,23 +9,6 @@ struct MortarTargetInfo
     var byte        bCancelled;
 };
 
-struct VehiclePool
-{
-    var class<Vehicle> VehicleClass;
-    var byte           bIsActive;
-    var float          NextAvailableTime;	//The next time this vehicle is able to be spawned
-    var int            ActiveCount;
-    var int            ActiveMax;
-    var int            SpawnsRemaining;
-};
-
-struct VehicleSpawnPoint
-{
-    var bool          bIsActive;
-    var byte          TeamIndex;
-    var vector        Location;
-};
-
 var ROArtilleryTrigger  CarriedAlliedRadios[10];
 var ROArtilleryTrigger  CarriedAxisRadios[10];
 
@@ -44,8 +27,27 @@ var MortarTargetInfo    GermanMortarTargets[2];
 
 var int                 DHSpawnCount[2];
 
-var VehiclePool         VehiclePools[32];
-var VehicleSpawnPoint   VehicleSpawnPoints[32];
+//Vehicle pool and spawn point info is heavily fragmented due to the arbitrary
+//variable size limit (255 bytes) that exists in UnrealScript.
+
+var class<ROVehicle>    VehiclePoolVehicleClasses[32];
+var byte                VehiclePoolIsActives[32];
+var float               VehiclePoolNextAvailableTimes[32];
+var byte                VehiclePoolActiveCounts[32];
+var byte                VehiclePoolSpawnsRemainings[32];
+
+struct Vector2
+{
+    var byte X;
+    var byte Y;
+};
+
+var const byte VehicleSpawnPointFlag_IsActive;  //0x01
+var const byte VehicleSpawnPointFlag_TeamIndex; //0x02
+
+var byte                VehicleSpawnPointFlags[32];
+var float               VehicleSpawnPointXLocations[32];
+var float               VehicleSpawnPointYLocations[32];
 
 replication
 {
@@ -53,7 +55,7 @@ replication
         CarriedAlliedRadios, CarriedAxisRadios, AlliedNationID, DHAxisRoles,
         DHAlliesRoles, DHAlliesRoleBotCount, DHAlliesRoleCount,
         DHAxisRoleBotCount, DHAxisRoleCount, AlliedMortarTargets,
-        GermanMortarTargets, DHSpawnCount, VehiclePools, VehicleSpawnPoints;
+        GermanMortarTargets, DHSpawnCount;
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
@@ -87,6 +89,18 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
    return -1;
 }
 
+simulated function bool IsVehicleSpawnPointActive(byte SpawnPointIndex)
+{
+    return (VehicleSpawnPointFlags[SpawnPointIndex] & VehicleSpawnPointFlag_IsActive) != 0;
+}
+
+simulated function byte GetVehicleSpawnPointTeamIndex(byte SpawnPointIndex)
+{
+    return (VehicleSpawnPointFlags[SpawnPointIndex] & VehicleSpawnPointFlag_TeamIndex) >> 1;
+}
+
 defaultproperties
 {
+    VehicleSpawnPointFlag_IsActive=0x01
+    VehicleSpawnPointFlag_TeamIndex=0x02
 }

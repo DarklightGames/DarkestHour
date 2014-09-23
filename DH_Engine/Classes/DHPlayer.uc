@@ -27,7 +27,7 @@ replication
 {
     // client to server functions
     reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody;
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody, ServerSpawnVehicle;
 
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
@@ -1787,6 +1787,33 @@ exec function RoundPause()
 {
     DarkestHourGame(Level.Game).RoundDuration = 9999999;
     DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RoundDuration = 9999999;
+}
+
+exec function DebugTryVehicleSpawn(byte PoolIndex, byte SpawnIndex)
+{
+    ServerSpawnVehicle(PoolIndex, SpawnIndex);
+}
+
+function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex)
+{
+    local byte SpawnError;
+    local Vehicle V;
+
+    if (Pawn == none)
+    {
+        return;
+    }
+
+    V = DarkestHourGame(Level.Game).VehicleManager.SpawnVehicle(PoolIndex, SpawnIndex, SpawnError);
+
+    if (V == none)
+    {
+        Level.Game.Broadcast(self, "ServerSpawnVehicle failed with error code" @ SpawnError);
+
+        return;
+    }
+
+    V.TryToDrive(Pawn);
 }
 
 defaultproperties

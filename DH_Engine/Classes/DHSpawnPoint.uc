@@ -44,4 +44,5 @@ function Reset()
 
 defaultproperties
 {
+    bHidden=true
 }
