@@ -742,7 +742,7 @@ function bool TryToDrive(Pawn P)
             }
         }
 
-        DenyEntry(P, 0);
+        DenyEntry(P, 8);
         return false;
     }
     else

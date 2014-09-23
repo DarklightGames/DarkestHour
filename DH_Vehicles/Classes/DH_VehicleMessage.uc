@@ -48,10 +48,11 @@ static function string GetString(
              return default.Sabotaged;
         case 7:
              return default.OverSpeed;
-        default:
+        case 8:
              return default.VehicleFull;
+        default:
+             return "";
     }
-
 }
 
 //==============================================================================
