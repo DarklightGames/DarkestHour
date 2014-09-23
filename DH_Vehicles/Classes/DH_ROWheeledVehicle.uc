@@ -40,11 +40,6 @@ var()   array<CarHitpoint>      CarVehHitpoints;        // An array of possible 
 
 var()       float               ObjectCollisionResistance;
 
-//Sabotage stuff
-var         float               SabotageProbability;
-var         bool                bVehicleSabotaged;
-var         bool                bHasBeenSabotaged;
-
 var int EngineHealthMax;
 
 // Engine stuff
@@ -79,7 +74,7 @@ replication
         ServerStartEngine;
 
     reliable if (Role == ROLE_Authority)
-        bVehicleSabotaged, bResupplyVehicle;
+        bResupplyVehicle;
 
     reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
         bEngineDead, bEngineOff;
@@ -95,7 +90,6 @@ simulated function PostBeginPlay()
     //bEngineOff=true;
     //bEngineDead=false;
     //bDisableThrottle=true;
-    //bHasBeenSabotaged=false;
 }
 
 function KDriverEnter(Pawn P)
@@ -183,15 +177,8 @@ function bool TryToDrive(Pawn P)
     // Check vehicle Locking....
     if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
     {
-        if (FRand() <= SabotageProbability)
-        {
-           bVehicleSabotaged=true;
-           bTeamLocked=false; //let 'em in, but blow up when using ignition
-        }
-        else
-        {
-           bTeamLocked=false; //vehicle is safe for enemies to use
-        }
+        DenyEntry(P, 1);
+        return false;
     }
     else if (bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
     {
@@ -426,14 +413,6 @@ function ServerStartEngine()
             {
                 if (StartUpSound != none)
                 PlaySound(StartUpSound, SLOT_none, 1.0, , 300.0);
-
-                if (bVehicleSabotaged && !bHasBeenSabotaged)
-                {
-                    bHasBeenSabotaged=true;
-                    P.ReceiveLocalizedMessage(class'DH_VehicleMessage', 6); //Give sabotage message
-                    Died(none, class'DamageType', Location);
-                    //return;
-                }
 
                 if (IdleSound != none)
                 AmbientSound = IdleSound;
@@ -841,7 +820,6 @@ simulated event DestroyAppearance()
 defaultproperties
 {
      ObjectCollisionResistance=1.000000
-     SabotageProbability=0.400000
      EngineHealthMax=30
      bEngineOff=true
      VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
