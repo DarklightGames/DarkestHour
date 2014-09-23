@@ -700,6 +700,8 @@ function bool TryToDrive(Pawn P)
     if (bOnFire || bEngineOnFire)
     {
         DenyEntry(P, 9);
+
+        return false;
     }
 
     //don't allow vehicle to be stolen when somebody is in a turret
