@@ -697,6 +697,11 @@ function bool TryToDrive(Pawn P)
     if (DH_Pawn(P).bOnFire)
         return false;
 
+    if (bOnFire || bEngineOnFire)
+    {
+        DenyEntry(P, 9);
+    }
+
     //don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
