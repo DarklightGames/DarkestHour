@@ -24,12 +24,15 @@ function PostBeginPlay()
 
     foreach AllActors(class'DHLocationHint', LH)
     {
-        P.Location = LH.Location;
-        P.Rotation = LH.Rotation;
+        if (LH.Tag == LocationHintTag)
+        {
+            P.Location = LH.Location;
+            P.Rotation = LH.Rotation;
 
-        Positions[Positions.Length] = P;
+            Positions[Positions.Length] = P;
+        }
 
-        LH.Destroy();
+        //LH.Destroy();
     }
 
     super.PostBeginPlay();
