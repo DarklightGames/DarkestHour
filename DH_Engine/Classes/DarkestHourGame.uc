@@ -17,6 +17,8 @@ var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
 var     DH_RoleInfo                 DHAxisRoles[16];
 var     DH_RoleInfo                 DHAlliesRoles[16];
 
+var     DHVehicleManager            VehicleManager;
+
 //-----------------------------------------------------------------------------
 // PostBeginPlay - Find the level info and objectives
 //-----------------------------------------------------------------------------
@@ -260,6 +262,16 @@ function PostBeginPlay()
         //Make sure MaxTeamDifference is an acceptable value
         if (MaxTeamDifference < 1)
             MaxTeamDifference = 1;
+
+        foreach AllActors(class'DHVehicleManager', VehicleManager)
+        {
+            break;
+        }
+
+        if (VehicleManager == none)
+        {
+            Warn("DHVehicleManager could not be found");
+        }
     }
 }
 
