@@ -52,7 +52,7 @@ defaultproperties
     WheelSuspensionTravel=10.000000
     WheelSuspensionMaxRenderTravel=5.000000
     ChassisTorqueScale=0.095000
-    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
+    MaxSteerAngleCurve=(Points=((OutVal=20.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
     GearRatios(3)=0.600000
     GearRatios(4)=0.750000
     ChangeUpPoint=1990.000000
