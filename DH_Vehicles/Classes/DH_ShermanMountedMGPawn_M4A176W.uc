@@ -7,7 +7,7 @@ class DH_ShermanMountedMGPawn_M4A176W extends DH_ROMountedTankMGPawn;
 defaultproperties
 {
      OverlayCenterSize=0.700000
-     MGOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
+     MGOverlay=Texture'DH_VehicleOptics_tex.Common.MG_sight'
      WeaponFov=72.000000
      GunClass=Class'DH_Vehicles.DH_ShermanMountedMG'
      bHasAltFire=false
