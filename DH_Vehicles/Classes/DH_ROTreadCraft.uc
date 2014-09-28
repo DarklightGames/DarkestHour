@@ -3736,6 +3736,16 @@ function exec TestEngineDamage()
     EngineHealth=0;
 }
 
+function ServerChangeDriverPosition(byte F)
+{
+    if (IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    super.ServerChangeDriverPosition(F);
+}
+
 defaultproperties
 {
      bAllowRiders=true

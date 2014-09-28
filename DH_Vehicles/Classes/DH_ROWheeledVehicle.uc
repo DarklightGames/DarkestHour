@@ -817,6 +817,16 @@ simulated event DestroyAppearance()
     NetPriority = 2;
 }
 
+function ServerChangeDriverPosition(byte F)
+{
+    if (IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    super.ServerChangeDriverPosition(F);
+}
+
 defaultproperties
 {
      ObjectCollisionResistance=1.000000

@@ -636,6 +636,16 @@ function AltFire(optional float F)
     Super.AltFire(F);
 }
 
+function ServerChangeDriverPosition(byte F)
+{
+    if (IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    super.ServerChangeDriverPosition(F);
+}
+
 defaultproperties
 {
      bShowRangeText=true

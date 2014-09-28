@@ -174,6 +174,16 @@ function Fire(optional float F)
     super.Fire(F);
 }
 
+function ServerChangeDriverPosition(byte F)
+{
+    if (IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    super.ServerChangeDriverPosition(F);
+}
+
 defaultproperties
 {
      OverlayCenterSize=1.000000
