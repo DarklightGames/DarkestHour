@@ -1804,7 +1804,7 @@ function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex)
         return;
     }
 
-    V = DarkestHourGame(Level.Game).VehicleManager.SpawnVehicle(PoolIndex, SpawnIndex, SpawnError);
+    V = DarkestHourGame(Level.Game).VehicleManager.SpawnVehicle(self, PoolIndex, SpawnIndex, SpawnError);
 
     if (V == none)
     {
@@ -1813,7 +1813,7 @@ function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex)
         return;
     }
 
-    V.TryToDrive(Pawn);
+    ROHud(myHUD).FadeToBlack(1.0, true);
 }
 
 defaultproperties

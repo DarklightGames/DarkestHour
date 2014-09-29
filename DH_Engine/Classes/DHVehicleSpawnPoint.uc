@@ -3,4 +3,5 @@ class DHVehicleSpawnPoint extends DHSpawnPoint
 
 defaultproperties
 {
+    Texture=Texture'DHEngine_Tex.Editor.tank'
 }

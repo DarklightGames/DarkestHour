@@ -13,6 +13,45 @@ var()   int     PlayersNeededToCapture; //TODO: This was some retardation by me,
                                         //many maps to revert, so we just convert
                                         //when we want to replicate.
 
+enum ESpawnPointOperation
+{
+    ESPO_Enable,
+    ESPO_Disable,
+    ESPO_Toggle,
+};
+
+struct SpawnPointAction
+{
+    var() name SpawnPointTag;
+    var() ESpawnPointOperation Operation;
+};
+
+var()   array<SpawnPointAction> AlliesCaptureSpawnPointActions;
+var()   array<SpawnPointAction> AxisCaptureSpawnPointActions;
+
+enum EVehiclePoolOperation
+{
+    EVPO_Enable,
+    EVPO_Disable,
+    EVPO_Toggle,
+    EVPO_MaxSpawnsAdd,
+    EVPO_MaxSpawnsSet,
+    EVPO_MaxActiveAdd,
+    EVPO_MaxActiveSet
+};
+
+struct VehiclePoolAction
+{
+    var() name VehiclePoolTag;
+    var() EVehiclePoolOperation Operation;
+    var() int Value;
+};
+
+var()   array<VehiclePoolAction> AlliesCaptureVehiclePoolActions;
+var()   array<VehiclePoolAction> AxisCaptureVehiclePoolActions;
+var()   array<name> AlliesCaptureEvents;
+var()   array<name> AxisCaptureEvents;
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -33,12 +72,74 @@ function PostBeginPlay()
 // HandleCompletion - Overridden for new functionality
 //-----------------------------------------------------------------------------
 
+function DoSpawnPointAction(SpawnPointAction SPA)
+{
+    local DHVehicleManager VM;
+
+    VM = DarkestHourGame(Level.Game).VehicleManager;
+
+    switch (SPA.Operation)
+    {
+        case ESPO_Enable:
+            VM.SetSpawnPointIsActiveByTag(SPA.SpawnPointTag, true);
+            break;
+        case ESPO_Disable:
+            VM.SetSpawnPointIsActiveByTag(SPA.SpawnPointTag, false);
+            break;
+        case ESPO_Toggle:
+            VM.ToggleSpawnPointIsActiveByTag(SPA.SpawnPointTag);
+            break;
+        default:
+            Warn("Unhandled ESpawnPointOperation");
+            break;
+    }
+}
+
+function DoVehiclePoolAction(VehiclePoolAction VPA)
+{
+    local DHVehicleManager VM;
+
+    VM = DarkestHourGame(Level.Game).VehicleManager;
+
+    switch (VPA.Operation)
+    {
+        case EVPO_Enable:
+            VM.SetPoolIsActiveByTag(VPA.VehiclePoolTag, true);
+            break;
+        case EVPO_Disable:
+            VM.SetPoolIsActiveByTag(VPA.VehiclePoolTag, false);
+            break;
+        case EVPO_Toggle:
+            VM.TogglePoolIsActiveByTag(VPA.VehiclePoolTag);
+            break;
+        case EVPO_MaxSpawnsAdd:
+            VM.AddPoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
+            break;
+        case EVPO_MaxSpawnsSet:
+            VM.SetPoolMaxSpawnsByTag(VPA.VehiclePoolTag, VPA.Value);
+            break;
+        case EVPO_MaxActiveAdd:
+            VM.AddPoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
+            break;
+        case EVPO_MaxActiveSet:
+            VM.SetPoolMaxActiveByTag(VPA.VehiclePoolTag, VPA.Value);
+            break;
+        default:
+            Warn("Unhandled EVehiclePoolOperation");
+            break;
+    }
+}
+
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
+    local int i;
     local Controller C;
     local Pawn P;
     local DHPlayerReplicationInfo PRI;
     local DH_RoleInfo RI;
+    local DHVehicleManager VM;
+
+    VM = DarkesthourGame(Level.Game).VehicleManager;
 
     CurrentCapProgress = 0.0;
 
@@ -91,6 +192,44 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).Analytics != none)
         DarkestHourGame(Level.Game).Analytics.NotifyCapture(self, Team);
     */
+
+    switch (Team)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < AxisCaptureSpawnPointActions.Length; ++i)
+            {
+                DoSpawnPointAction(AxisCaptureSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AxisCaptureVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AxisCaptureVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AxisCaptureEvents.Length; ++i)
+            {
+                TriggerEvent(AxisCaptureEvents[i], none, none);
+            }
+
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < AlliesCaptureSpawnPointActions.Length; ++i)
+            {
+                DoSpawnPointAction(AlliesCaptureSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AlliesCaptureVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AlliesCaptureVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AlliesCaptureEvents.Length; ++i)
+            {
+                TriggerEvent(AlliesCaptureEvents[i], none, none);
+            }
+
+            break;
+    }
 }
 
 function Timer()

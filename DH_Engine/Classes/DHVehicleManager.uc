@@ -6,16 +6,23 @@ class DHVehicleManager extends SVehicleFactory;
 
 struct VehiclePool
 {
-    var() class<ROVehicle> VehicleClass;
-    var() bool             bIsInitiallyActive;
-    var() float            RespawnTime;
-    var() byte             MaxSpawns; //value to determine the overall number of vehicles we can spawn
-    var() byte             MaxActive; //value to determine how many active at once
+    var() name              Tag;
+    var() class<ROVehicle>  VehicleClass;
+    var() bool              bIsInitiallyActive;
+    var() float             RespawnTime;
+    var() byte              MaxSpawns; //value to determine the overall number of vehicles we can spawn
+    var() byte              MaxActive; //value to determine how many active at once
 
-    var bool               bIsActive;
-    var float              NextAvailableTime;
-    var int                SpawnCount;
-    var int                ActiveCount;
+    var() name              OnActivatedEvent;
+    var() name              OnDeactivatedEvent;
+    var() name              OnDepletedEvent;
+    var() name              OnVehicleDestroyedEvent;
+    var() name              OnVehicleSpawnedEvent;
+
+    var bool                bIsActive;
+    var float               NextAvailableTime;
+    var byte                SpawnCount;
+    var byte                ActiveCount;
 };
 
 var const byte SpawnError_None;
@@ -28,16 +35,24 @@ var const byte SpawnError_PoolInactive;
 var const byte SpawnError_SpawnInactive;
 var const byte SpawnError_Blocked;
 var const byte SpawnError_Failed;
+var const byte SpawnError_BadTeamPool;
+var const byte SpawnError_BadTeamSpawnPoint;
+var const byte SpawnError_TryToDriveFailed;
 
 const SpawnPointsMax = 32;
 const PoolsMax = 32;
 
-var() array<VehiclePool>           Pools;
-var() byte                         MaxTeamVehicles[2];
-var() byte                         MaxDestroyedVehicles;
+var()       array<VehiclePool>  Pools;
+var()       byte                MaxTeamVehicles[2];
+var()       byte                MaxDestroyedVehicles;
 
-var   array<ROVehicle>             Vehicles;
-var   array<DHVehicleSpawnPoint>   SpawnPoints;
+var         class<LocalMessage> VehicleDestroyedMessageClass;
+
+var private byte                        TeamVehicleCounts[2];
+var private array<ROVehicle>            Vehicles;
+var private array<DHVehicleSpawnPoint>  SpawnPoints;
+var private DHGameReplicationInfo       GRI;
+var private config bool                 bDebug;
 
 //-----------------------------------------------------------
 // Functions
@@ -45,9 +60,8 @@ var   array<DHVehicleSpawnPoint>   SpawnPoints;
 
 function PostBeginPlay()
 {
-    local int i;
+    local byte i;
     local DHVehicleSpawnPoint SP;
-    local DHGameReplicationInfo GRI;
 
     super.PostBeginPlay();
 
@@ -72,41 +86,20 @@ function PostBeginPlay()
         SpawnPoints[SpawnPoints.Length] = SP;
     }
 
+    //Update GameReplicationInfo
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
-        if (SpawnPoints[i].bIsActive)
-        {
-            GRI.VehicleSpawnPointFlags[i] = GRI.VehicleSpawnPointFlags[i] | class'DHGameReplicationInfo'.default.VehicleSpawnPointFlag_IsActive;
-        }
-        else
-        {
-            GRI.VehicleSpawnPointFlags[i] = GRI.VehicleSpawnPointFlags[i] & ~class'DHGameReplicationInfo'.default.VehicleSpawnPointFlag_IsActive;
-        }
-
-        GRI.VehicleSpawnPointFlags[i] = GRI.VehicleSpawnPointFlags[i] | (SpawnPoints[i].TeamIndex << 1);
-        GRI.VehicleSpawnPointXLocations[i] = SpawnPoints[i].Location.X;
-        GRI.VehicleSpawnPointYLocations[i] = SpawnPoints[i].Location.Y;
+        UpdateSpawnPointReplicationInfo(i);
     }
 
     for (i = 0; i < Pools.Length; ++i)
     {
-        Pools[i].bIsActive = Pools[i].bIsInitiallyActive;
+        SetPoolIsActive(i, Pools[i].bIsInitiallyActive);
 
-        GRI.VehiclePoolVehicleClasses[i] = Pools[i].VehicleClass;
-
-        if (Pools[i].bIsActive)
-        {
-            GRI.VehiclePoolIsActives[i] = 1;
-        }
-        else
-        {
-            GRI.VehiclePoolIsActives[i] = 0;
-        }
-
-        GRI.VehiclePoolActiveCounts[i] = Pools[i].ActiveCount;
-        GRI.VehiclePoolNextAvailableTimes[i] = Pools[i].NextAvailableTime;
-        GRI.VehiclePoolSpawnsRemainings[i] = Pools[i].MaxSpawns - Pools[i].SpawnCount;
+        UpdatePoolReplicationInfo(i);
     }
+
+    //TODO: verify uniqueness of VehicleClass in Pools
 }
 
 function Reset()
@@ -116,65 +109,129 @@ function Reset()
     super.Reset();
 }
 
-function byte DrySpawn(byte PoolIndex, byte SpawnPointIndex, out int PositionIndex)
+function UpdateSpawnPointReplicationInfo(byte SpawnPointIndex)
+{
+    GRI.SetVehicleSpawnPointIsActive(SpawnPointIndex, SpawnPoints[SpawnPointIndex].bIsActive);
+    GRI.SetVehicleSpawnPointTeamIndex(SpawnPointIndex, SpawnPoints[SpawnPointIndex].TeamIndex);
+    GRI.SetVehicleSpawnPointLocation(SpawnPointIndex, SpawnPoints[SpawnPointIndex].Location);
+}
+
+function UpdatePoolReplicationInfo(byte PoolIndex)
+{
+    GRI.SetVehiclePoolVehicleClass(PoolIndex, Pools[PoolIndex].VehicleClass);
+    GRI.SetVehiclePoolIsActive(PoolIndex, Pools[PoolIndex].bIsActive);
+}
+
+function byte DrySpawn(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, out int LocationHintIndex)
 {
     local int i;
     local Pawn P;
     local bool bIsBlocked;
-    local int TeamVehicleCount;
 
-    if (PoolIndex < 0 || PoolIndex >= PoolsMax || Pools[PoolIndex].VehicleClass == none ||
+    if (C == none ||
+        PoolIndex < 0 || PoolIndex >= PoolsMax || Pools[PoolIndex].VehicleClass == none ||
         SpawnPointIndex < 0 || SpawnPointIndex >= SpawnPointsMax)
     {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM] Fatal error in DrySpawn (either invalid indices passed in or pool's VehicleClass is none)");
+        }
+
         return SpawnError_Fatal;
     }
 
-    //TODO: manage a team vehicle count so we don't need to iterate over this all the time
-    for (i = 0; i < Vehicles.Length; ++i)
+    if (C.GetTeamNum() != Pools[PoolIndex].VehicleClass.default.VehicleTeam)
     {
-        if (Pools[PoolIndex].VehicleClass.default.VehicleTeam == Vehicles[i].Class.default.VehicleTeam)
+        if (bDebug)
         {
-            ++TeamVehicleCount;
+            Level.Game.Broadcast(self, "[DHVM] Pool team index (" $ Pools[PoolIndex].VehicleClass.default.VehicleTeam $ ") does not match player's (" $ C.GetTeamNum() $ ")");
         }
+
+        return SpawnError_BadTeamPool;
     }
 
-    if (TeamVehicleCount >= MaxTeamVehicles[Pools[PoolIndex].VehicleClass.default.VehicleTeam])
+    if (C.GetTeamNum() != SpawnPoints[SpawnPointIndex].TeamIndex)
     {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM] Spawn point team index (" $ SpawnPoints[SpawnPointIndex].TeamIndex $ ") does not match player's (" $ C.GetTeamNum() $ ")");
+        }
+
+        return SpawnError_BadTeamSpawnPoint;
+    }
+
+    if (TeamVehicleCounts[Pools[PoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[Pools[PoolIndex].VehicleClass.default.VehicleTeam])
+    {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM] Max vehicles (" $ MaxTeamVehicles[Pools[PoolIndex].VehicleClass.default.VehicleTeam] $ ") reached for team" @ Pools[PoolIndex].VehicleClass.default.VehicleTeam);
+        }
+
         return SpawnError_MaxVehicles;
     }
 
     if (!Pools[PoolIndex].bIsActive)
     {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM]" @ Pools[PoolIndex].VehicleClass @ "pool is inactive");
+        }
+
         return SpawnError_PoolInactive;
     }
 
     if (!SpawnPoints[SpawnPointIndex].bIsActive)
     {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM] Spawn point" @ SpawnPointIndex @ "is inactive");
+        }
+
         return SpawnError_SpawnInactive;
     }
 
     if (Level.TimeSeconds < Pools[PoolIndex].NextAvailableTime)
     {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM] Cooldown on" @ Pools[PoolIndex].VehicleClass @ "pool:" @ Pools[PoolIndex].NextAvailableTime - Level.TimeSeconds);
+        }
+
         return SpawnError_Cooldown;
     }
 
     if (Pools[PoolIndex].SpawnCount >= Pools[PoolIndex].MaxSpawns)
     {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM]" @ Pools[PoolIndex].VehicleClass @ "pool is at max spawns (" $ Pools[PoolIndex].MaxSpawns $ ")");
+        }
+
         return SpawnError_SpawnLimit;
     }
 
     if (Pools[PoolIndex].ActiveCount >= Pools[PoolIndex].MaxActive)
     {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "[DHVM]" @ Pools[PoolIndex].VehicleClass @ "pool is at active limit (" $ Pools[PoolIndex].MaxSpawns $ ")");
+        }
+
         return SpawnError_ActiveLimit;
     }
 
-    PositionIndex = -1;
+    LocationHintIndex = -1;
 
-    for (i = 0; i < SpawnPoints[SpawnPointindex].Positions.Length; ++i)
+    if (bDebug)
+    {
+        Level.Game.Broadcast(self, "SpawnPoints[" $ SpawnPointIndex $ "].LocationHints.Length" @ SpawnPoints[SpawnPointindex].LocationHints.Length);
+    }
+
+    for (i = 0; i < SpawnPoints[SpawnPointindex].LocationHints.Length; ++i)
     {
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, Pools[PoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnPoints[SpawnPointIndex].Positions[i].Location)
+        foreach RadiusActors(class'Pawn', P, Pools[PoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnPoints[SpawnPointIndex].LocationHints[i].Location)
         {
             bIsBlocked = true;
 
@@ -183,11 +240,11 @@ function byte DrySpawn(byte PoolIndex, byte SpawnPointIndex, out int PositionInd
 
         if (!bIsBlocked)
         {
-            PositionIndex = i;
+            LocationHintIndex = i;
         }
     }
 
-    if (PositionIndex < 0)
+    if (LocationHintIndex < 0)
     {
         return SpawnError_Blocked;
     }
@@ -195,53 +252,57 @@ function byte DrySpawn(byte PoolIndex, byte SpawnPointIndex, out int PositionInd
     return SpawnError_None;
 }
 
-function Vehicle SpawnVehicle(byte PoolIndex, byte SpawnPointIndex, out byte SpawnError)
+function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, out byte SpawnError)
 {
-    local int PositionIndex;
+    local int LocationHintIndex;
     local ROVehicle V;
-    local DHGameReplicationInfo GRI;
 
     SpawnError = SpawnError_Fatal;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none)
-    {
-        Warn("DHGameReplicationInfo is none");
-        return none;
-    }
-
-    SpawnError = DrySpawn(PoolIndex, SpawnPointIndex, PositionIndex);
+    SpawnError = DrySpawn(C, PoolIndex, SpawnPointIndex, LocationHintIndex);
 
     if (SpawnError != SpawnError_None)
     {
         return none;
     }
 
-    V = Spawn(Pools[PoolIndex].VehicleClass,,, SpawnPoints[SpawnPointindex].Positions[PositionIndex].Location, SpawnPoints[SpawnPointindex].Positions[PositionIndex].Rotation);
-
-    if (V != none)
-    {
-        //TODO: attempt to start the engine up?
-
-        V.ParentFactory = self;
-
-        Vehicles[Vehicles.Length] = V;
-
-        //Tell the pool about the vehicle’s existence
-        Pools[PoolIndex].NextAvailableTime = Level.TimeSeconds + Pools[PoolIndex].RespawnTime;
-        Pools[PoolIndex].ActiveCount++;
-        Pools[PoolIndex].SpawnCount++;
-
-        //Update game replication info
-        GRI.VehiclePoolNextAvailableTimes[PoolIndex] = Level.TimeSeconds + Pools[PoolIndex].RespawnTime;
-        GRI.VehiclePoolActiveCounts[PoolIndex] = Pools[PoolIndex].ActiveCount;
-        GRI.VehiclePoolSpawnsRemainings[PoolIndex] = Pools[PoolIndex].MaxSpawns - Pools[PoolIndex].SpawnCount;
-    }
+    V = Spawn(Pools[PoolIndex].VehicleClass,,, SpawnPoints[SpawnPointindex].LocationHints[LocationHintIndex].Location, SpawnPoints[SpawnPointindex].LocationHints[LocationHintIndex].Rotation);
 
     if (V == none)
     {
         SpawnError = SpawnError_Failed;
+        return none;
+    }
+
+    //TODO: spawn the player somewhere way out in left field!
+    if (!V.TryToDrive(C.Pawn))
+    {
+        V.Destroy();
+
+        SpawnError = SpawnError_TryToDriveFailed;
+    }
+    else
+    {
+        //ParentFactory must be set after any calls to Destroy are made so that
+        //VehicleDestroyed is not called in the event that TryToDrive fails
+        V.ParentFactory = self;
+
+        //Add vehicle to vehicles array
+        Vehicles[Vehicles.Length] = V;
+
+        //Increment team vehicle count
+        ++TeamVehicleCounts[V.default.VehicleTeam];
+
+        //Update pool properties
+        SetPoolNextAvailableTime(PoolIndex, Level.TimeSeconds + Pools[PoolIndex].RespawnTime);
+        SetPoolActiveCount(PoolIndex, Pools[PoolIndex].ActiveCount + 1);
+        SetPoolSpawnCount(PoolIndex, Pools[PoolIndex].SpawnCount + 1);
+
+        if (Pools[PoolIndex].OnVehicleSpawnedEvent != '')
+        {
+            //Trigger OnVehicleSpawned event
+            TriggerEvent(Pools[PoolIndex].OnVehicleSpawnedEvent, none, none);
+        }
     }
 
     return V;
@@ -250,25 +311,20 @@ function Vehicle SpawnVehicle(byte PoolIndex, byte SpawnPointIndex, out byte Spa
 event VehicleDestroyed(Vehicle V)
 {
     local int i;
-    local DHGameReplicationInfo GRI;
+    local Controller C;
 
     super.VehicleDestroyed(V);
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none)
-    {
-        Warn("DHGameReplicationInfo is none");
-
-        return;
-    }
 
     //Removes the destroyed vehicle from the managed vehicles
     for (i = Vehicles.Length - 1; i >= 0; --i)
     {
         if (V == Vehicles[i])
         {
+            //Remove vehicle from vehicles array
             Vehicles.Remove(i, 1);
+
+            //Decrement team vehicle count
+            --TeamVehicleCounts[ROVehicle(V).default.VehicleTeam];
 
             break;
         }
@@ -279,17 +335,260 @@ event VehicleDestroyed(Vehicle V)
     {
         if (V.class == Pools[i].VehicleClass)
         {
-            --Pools[i].ActiveCount;
+            SetPoolActiveCount(i, Pools[i].ActiveCount - 1);
 
-            GRI.VehiclePoolActiveCounts[i] = Pools[i].ActiveCount;
+            if (!IsPoolInfinite(i))
+            {
+                for (C = Level.ControllerList; C != none; C = C.NextController)
+                {
+                    if (C.GetTeamNum() == Pools[i].VehicleClass.default.VehicleTeam)
+                    {
+                        C.BroadcastLocalizedMessage(VehicleDestroyedMessageClass,,,, V);
+                    }
+                }
+            }
+
+            if (Pools[i].OnVehicleDestroyedEvent != '')
+            {
+                TriggerEvent(Pools[i].OnVehicleDestroyedEvent, none, none);
+            }
+
+            if (Pools[i].OnDepletedEvent != '' && GetPoolSpawnsRemaining(i) == 0)
+            {
+                TriggerEvent(Pools[i].OnDepletedEvent, none, none);
+            }
 
             break;
         }
     }
 }
 
+//-----------------------------------------------------------
+// Spawn Point Functions
+//-----------------------------------------------------------
+
+private function GetSpawnPointIndicesByTag(name SpawnPointTag, out array<byte> SpawnPointIndices)
+{
+    local int i;
+
+    for (i = 0; i < SpawnPoints.Length; ++i)
+    {
+        if (SpawnPoints[i].Tag == SpawnPointTag)
+        {
+            SpawnPointIndices[SpawnPointIndices.Length] = i;
+        }
+    }
+}
+
+private function SetSpawnPointIsActive(int SpawnPointIndex, bool bIsActive)
+{
+    SpawnPoints[SpawnPointIndex].bIsActive = bIsActive;
+    GRI.SetVehicleSpawnPointIsActive(SpawnPointIndex, bIsActive);
+}
+
+function SetSpawnPointIsActiveByTag(name SpawnPointTag, bool bIsActive)
+{
+    local int i;
+    local array<byte> SpawnPointIndices;
+
+    GetSpawnPointIndicesByTag(SpawnPointTag, SpawnPointIndices);
+
+    for (i = 0; i < SpawnPointIndices.Length; ++i)
+    {
+        SetSpawnPointIsActive(SpawnPointIndices[i], bIsActive);
+    }
+}
+
+function ToggleSpawnPointIsActiveByTag(name SpawnPointTag)
+{
+    local int i;
+    local array<byte> SpawnPointIndices;
+
+    GetSpawnPointIndicesByTag(SpawnPointTag, SpawnPointIndices);
+
+    for (i = 0; i < SpawnPointIndices.Length; ++i)
+    {
+        SetSpawnPointIsActive(SpawnPointIndices[i], !SpawnPoints[SpawnPointIndices[i]].bIsActive);
+    }
+}
+
+//-----------------------------------------------------------
+// Pool Functions
+//-----------------------------------------------------------
+
+private function GetPoolIndicesByTag(name PoolTag, out array<byte> PoolIndices)
+{
+    local int i;
+
+    for (i = 0; i < Pools.Length; ++i)
+    {
+        if (Pools[i].Tag == PoolTag)
+        {
+            PoolIndices[PoolIndices.Length] = i;
+        }
+    }
+}
+
+private function SetPoolNextAvailableTime(byte PoolIndex, float NextAvailableTime)
+{
+    Pools[PoolIndex].NextAvailableTime = NextAvailableTime;
+    GRI.SetVehiclePoolNextAvailableTime(PoolIndex, NextAvailableTime);
+}
+
+private function SetPoolActiveCount(byte PoolIndex, byte ActiveCount)
+{
+    Pools[PoolIndex].ActiveCount = ActiveCount;
+    GRI.SetVehiclePoolActiveCount(PoolIndex, ActiveCount);
+}
+
+private function byte GetPoolSpawnsRemaining(byte PoolIndex)
+{
+    return Pools[PoolIndex].MaxSpawns - Pools[PoolIndex].SpawnCount;
+}
+
+private function SetPoolSpawnCount(byte PoolIndex, byte SpawnCount)
+{
+    Pools[PoolIndex].SpawnCount = SpawnCount;
+    GRI.SetVehiclePoolSpawnsRemaining(PoolIndex, GetPoolSpawnsRemaining(PoolIndex));
+}
+
+private function SetPoolMaxSpawns(byte PoolIndex, byte MaxSpawns)
+{
+    Pools[PoolIndex].MaxSpawns = MaxSpawns;
+    GRI.SetVehiclePoolSpawnsRemaining(PoolIndex, GetPoolSpawnsRemaining(PoolIndex));
+}
+
+private function SetPoolMaxActive(byte PoolIndex, byte MaxActive)
+{
+    Pools[PoolIndex].MaxActive = MaxActive;
+    GRI.SetVehiclePoolMaxActives(PoolIndex, Pools[PoolIndex].MaxActive);
+}
+
+private function AddPoolMaxActive(byte PoolIndex, int Value)
+{
+    Pools[PoolIndex].MaxActive += Value;
+    GRI.SetVehiclePoolMaxActives(PoolIndex, Pools[PoolIndex].MaxActive);
+}
+
+private function AddPoolMaxSpawns(byte PoolIndex, int Value)
+{
+    Pools[PoolIndex].MaxSpawns += Value;
+    GRI.SetVehiclePoolSpawnsRemaining(PoolIndex, GetPoolSpawnsRemaining(PoolIndex));
+}
+
+private function SetPoolIsActive(int PoolIndex, bool bIsActive)
+{
+    if (Pools[PoolIndex].bIsActive == bIsActive)
+    {
+        return;
+    }
+
+    Pools[PoolIndex].bIsActive = bIsActive;
+    GRI.SetVehiclePoolIsActive(PoolIndex, bIsActive);
+
+    if (bIsActive)
+    {
+        if (Pools[PoolIndex].OnActivatedEvent != '')
+        {
+            TriggerEvent(Pools[PoolIndex].OnActivatedEvent, none, none);
+        }
+    }
+    else
+    {
+        if (Pools[PoolIndex].OnDeactivatedEvent != '')
+        {
+            TriggerEvent(Pools[PoolIndex].OnDeactivatedEvent, none, none);
+        }
+    }
+}
+
+function AddPoolMaxSpawnsByTag(name PoolTag, int Value)
+{
+    local int i;
+    local array<byte> PoolIndices;
+
+    GetPoolIndicesByTag(PoolTag, PoolIndices);
+
+    for (i = 0; i < PoolIndices.Length; ++i)
+    {
+        AddPoolMaxSpawns(PoolIndices[i], Value);
+    }
+}
+
+function SetPoolMaxSpawnsByTag(name PoolTag, byte MaxSpawns)
+{
+    local int i;
+    local array<byte> PoolIndices;
+
+    GetPoolIndicesByTag(PoolTag, PoolIndices);
+
+    for (i = 0; i < PoolIndices.Length; ++i)
+    {
+        SetPoolMaxSpawns(PoolIndices[i], MaxSpawns);
+    }
+}
+
+function AddPoolMaxActiveByTag(name PoolTag, int Value)
+{
+    local int i;
+    local array<byte> PoolIndices;
+
+    GetPoolIndicesByTag(PoolTag, PoolIndices);
+
+    for (i = 0; i < PoolIndices.Length; ++i)
+    {
+        AddPoolMaxActive(PoolIndices[i], Value);
+    }
+}
+
+function SetPoolMaxActiveByTag(name PoolTag, byte Value)
+{
+    local int i;
+    local array<byte> PoolIndices;
+
+    GetPoolIndicesByTag(PoolTag, PoolIndices);
+
+    for (i = 0; i < PoolIndices.Length; ++i)
+    {
+        SetPoolMaxActive(PoolIndices[i], Value);
+    }
+}
+
+function SetPoolIsActiveByTag(name PoolTag, bool bIsActive)
+{
+    local int i;
+    local array<byte> PoolIndices;
+
+    GetPoolIndicesByTag(PoolTag, PoolIndices);
+
+    for (i = 0; i < PoolIndices.Length; ++i)
+    {
+        SetPoolIsActive(PoolIndices[i], bIsActive);
+    }
+}
+
+function TogglePoolIsActiveByTag(name PoolTag)
+{
+    local int i;
+    local array<byte> PoolIndices;
+
+    GetPoolIndicesByTag(PoolTag, PoolIndices);
+
+    for (i = 0; i < PoolIndices.Length; ++i)
+    {
+        SetPoolIsActive(PoolIndices[i], !Pools[PoolIndices[i]].bIsActive);
+    }
+}
+
+function bool IsPoolInfinite(byte PoolIndex)
+{
+    return Pools[PoolIndex].MaxSpawns == 255;
+}
+
 defaultproperties
 {
+    bDirectional=false
+    DrawScale=3.000000
     SpawnError_None=0
     SpawnError_Fatal=1
     SpawnError_MaxVehicles=2
@@ -299,8 +598,13 @@ defaultproperties
     SpawnError_PoolInactive=6
     SpawnError_SpawnInactive=7
     SpawnError_Blocked=8
+    SpawnError_Failed=9
+    SpawnError_BadTeamPool=10
+    SpawnError_BadTeamSpawnPoint=11
+    SpawnError_TryToDriveFailed=12
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
     MaxDestroyedVehicles=8
+    VehicleDestroyedMessageClass=class'DHVehicleDestroyedMessage'
 }
 

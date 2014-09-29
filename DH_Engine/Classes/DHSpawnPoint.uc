@@ -2,23 +2,23 @@ class DHSpawnPoint extends Actor
     hidecategories(Object,Collision,Lighting,LightColor,Karma,Force,Sound)
     placeable;
 
-struct Position
+enum ESpawnPointType
 {
-    var vector Location;
-    var rotator Rotation;
+    ESPT_Infantry,
+    ESPT_Vehicles
 };
 
+var() ESpawnPointType Type;
 var() bool bIsInitiallyActive;
 var() int TeamIndex;
 var() name LocationHintTag;
 
-var   array<Position> Positions;
+var   array<DHLocationHint> LocationHints;
 var   bool bIsActive;
 
 function PostBeginPlay()
 {
     local DHLocationHint LH;
-    local Position P;
 
     bIsActive = bIsInitiallyActive;
 
@@ -26,13 +26,8 @@ function PostBeginPlay()
     {
         if (LH.Tag == LocationHintTag)
         {
-            P.Location = LH.Location;
-            P.Rotation = LH.Rotation;
-
-            Positions[Positions.Length] = P;
+            LocationHints[LocationHints.Length] = LH;
         }
-
-        //LH.Destroy();
     }
 
     super.PostBeginPlay();
@@ -48,4 +43,7 @@ function Reset()
 defaultproperties
 {
     bHidden=true
+    bStatic=true
+    RemoteRole=ROLE_None
+    DrawScale=3.0
 }
