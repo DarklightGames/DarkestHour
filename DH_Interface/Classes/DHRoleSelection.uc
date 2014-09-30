@@ -172,27 +172,10 @@ function UpdateRoleEquipment()
             if (WeaponAttach != none)
             {
                 // Force AT weapon to go in slot #4
-                if (desiredRole.GivenItems[i] == "DH_ATWeapons.DH_PanzerFaustWeapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_PanzerFaustweapon"
-                || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_PanzerfaustWeapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_Panzerfaustweapon")
-                {
-                    temp = count;
-                    count = 3;
-                }
-                else if (desiredRole.GivenItems[i] == "DH_ATWeapons.DH_BazookaWeapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_Bazookaweapon"
-                || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_bazookaWeapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_bazookaweapon")
-                {
-                    temp = count;
-                    count = 3;
-                }
-                else if (desiredRole.GivenItems[i] == "DH_ATWeapons.DH_PanzerschreckWeapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_Panzerschreckweapon"
-                || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_panzerschreckWeapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_panzerschreckweapon")
-                {
-                    temp = count;
-                    count = 3;
-                }
-                else if (desiredRole.GivenItems[i] == "DH_ATWeapons.DH_PIATWeapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_PiatWeapon"
-                || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_Piatweapon" || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_piatweapon"
-                || desiredRole.GivenItems[i] == "DH_ATWeapons.DH_piatWeapon")
+                if (desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerFaustWeapon" ||
+                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_BazookaWeapon" ||
+                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerschreckWeapon" ||
+                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PIATWeapon")
                 {
                     temp = count;
                     count = 3;
@@ -223,7 +206,7 @@ function UpdateRoleEquipment()
             }
 
             // This check needs to be done here because DH_ParachuteItem has no attachment
-            if (desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteItem" || desiredRole.GivenItems[i] == "DH_Equipment.DH_Parachuteitem")
+            if (desiredRole.GivenItems[i] ~= "DH_Equipment.DH_ParachuteItem")
             {
                 bHideItem = true;
             }
