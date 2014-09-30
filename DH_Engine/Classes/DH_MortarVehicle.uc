@@ -114,7 +114,6 @@ defaultproperties
      MaxDesireability=0.000000
      GroundSpeed=0.000000
      bOwnerNoSee=false
-     CollisionRadius=16.000000
-     CollisionHeight=48.000000
-     bUseCylinderCollision=true
+     CollisionRadius=20.0
+     CollisionHeight=10.0
 }

@@ -220,4 +220,6 @@ defaultproperties
      PitchUpLimit=0
      PitchDownLimit=0
      bOwnerNoSee=true
+     CollisionHeight=0.0
+     CollisionRadius=0.0
 }
