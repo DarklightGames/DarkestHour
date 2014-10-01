@@ -23,6 +23,8 @@ var     vector  MortarHitLocation;
 
 var DHHintManager DHHintManager;    //We'll use our own HintManager, thanks!
 
+var bool    bHasSelectedDeployment;
+
 replication
 {
     // client to server functions
@@ -35,59 +37,9 @@ replication
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsInStateMantling, MortarTargetIndex, MortarHitLocation;
 
-    //reliable if (Role < ROLE_Authority)
-        //ServerDHDebugTeleport;
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        bHasSelectedDeployment;
 }
-
-/*
-simulated exec function DHDebugTeleport()
-{
-    ServerDHDebugTeleport();
-}
-
-//TODO: Remove for release!
-function ServerDHDebugTeleport()
-{
-    local Controller C;
-    local vector TraceStart, TraceEnd;
-    local Pawn P;
-    local float A;
-    local vector HitLocation, HitNormal;
-
-    Level.Game.Broadcast(self, "Teleporting...");
-
-    if (!PlayerReplicationInfo.bAdmin)
-        return;
-
-    for(C = Level.ControllerList; C != none; C = C.NextController)
-    {
-        P = C.Pawn;
-
-        if (DH_Pawn(P) == none)
-            continue;
-
-        if (VSize(P.Location - Pawn.Location) < 1024)   //64 feet
-            continue;
-
-        do
-        {
-            TraceStart = Pawn.Location;
-            TraceStart.X += Cos(A) * 512.0;
-            TraceStart.Y += Sin(A) * 512.0;
-            TraceStart.Z += 1024.0;
-
-            TraceEnd = TraceStart;
-            TraceEnd.Z -= 2048.0;
-
-            A += 0.0628318;
-
-            if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
-                HitLocation.Z += 32.0;
-        }
-        until(P.SetLocation(HitLocation) || A > (PI * 2))
-    }
-}
-*/
 
 //------------------------------------------------------------------------------
 //  FreeAimHandler
@@ -258,6 +210,13 @@ exec function PlayerMenu(optional int Tab)
         ClientReplaceMenu("DH_Interface.DHRoleSelection");
 }
 
+exec function DeploymentMenu(optional int Tab)
+{
+    //TODO: figure out what this does
+    //bPendingMapDisplay = false;
+
+    ClientReplaceMenu("DH_Interface.DHDeploymentMenu");
+}
 
 // Overridden to increase max name length from 20 to 32 chars
 function ChangeName(coerce string S)

@@ -30,12 +30,12 @@ var int                 DHSpawnCount[2];
 //Vehicle pool and spawn point info is heavily fragmented due to the arbitrary
 //variable size limit (255 bytes) that exists in UnrealScript.
 
-var private class<ROVehicle>    VehiclePoolVehicleClasses[32];
-var private byte                VehiclePoolIsActives[32];
-var private float               VehiclePoolNextAvailableTimes[32];
-var private byte                VehiclePoolActiveCounts[32];
-var private byte                VehiclePoolSpawnsRemainings[32];
-var private byte                VehiclePoolMaxActives[32];
+var class<ROVehicle>    VehiclePoolVehicleClasses[32];
+var byte                VehiclePoolIsActives[32];
+var float               VehiclePoolNextAvailableTimes[32];
+var private byte        VehiclePoolActiveCounts[32];
+var byte                VehiclePoolSpawnsRemainings[32];
+var private byte        VehiclePoolMaxActives[32];
 
 var private const byte  VehicleSpawnPointFlag_IsActive;  //0x01
 var private const byte  VehicleSpawnPointFlag_TeamIndex; //0x02
@@ -43,6 +43,10 @@ var private const byte  VehicleSpawnPointFlag_TeamIndex; //0x02
 var private byte        VehicleSpawnPointFlags[32];
 var private float       VehicleSpawnPointXLocations[32];
 var private float       VehicleSpawnPointYLocations[32];
+var string              VehicleSpawnPointNames[32];
+
+var float               VehiclePoolsUpdateTime;         //The last time the vehicle pools were updated in a way that requires the client to re-populate its list
+var float               VehicleSpawnPointsUpdateTime;   //The last time the vehicle spawn points were updated in a way that requires the client to repopulate the list
 
 replication
 {
@@ -54,7 +58,9 @@ replication
         VehiclePoolIsActives, VehiclePoolNextAvailableTimes,
         VehiclePoolActiveCounts, VehiclePoolSpawnsRemainings,
         VehiclePoolMaxActives, VehicleSpawnPointFlags,
-        VehicleSpawnPointXLocations, VehicleSpawnPointYLocations;
+        VehicleSpawnPointXLocations, VehicleSpawnPointYLocations,
+        VehiclePoolsUpdateTime, VehicleSpawnPointsUpdateTime,
+        VehicleSpawnPointNames;
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
@@ -94,7 +100,7 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 
 simulated function bool IsVehicleSpawnPointActive(byte VehicleSpawnPointIndex)
 {
-    return (VehicleSpawnPointFlags[VehicleSpawnPointIndex] & VehicleSpawnPointFlag_IsActive) != 0;
+    return (VehicleSpawnPointFlags[VehicleSpawnPointIndex] & VehicleSpawnPointFlag_IsActive) == VehicleSpawnPointFlag_IsActive;
 }
 
 simulated function byte GetVehicleSpawnPointTeamIndex(byte VehicleSpawnPointIndex)
@@ -112,6 +118,8 @@ function SetVehicleSpawnPointIsActive(byte VehicleSpawnPointIndex, bool bIsActiv
     {
         VehicleSpawnPointFlags[VehicleSpawnPointIndex] = VehicleSpawnPointFlags[VehicleSpawnPointIndex] & ~VehicleSpawnPointFlag_IsActive;
     }
+
+    VehicleSpawnPointsUpdateTime = Level.TimeSeconds;
 }
 
 function SetVehicleSpawnPointTeamIndex(byte VehicleSpawnPointIndex, byte TeamIndex)
@@ -128,6 +136,9 @@ function SetVehicleSpawnPointTeamIndex(byte VehicleSpawnPointIndex, byte TeamInd
             Warn("Unhandled TeamIndex");
             break;
     }
+
+    Log("VehicleSpawnPointFlags[" $ VehicleSpawnPointIndex $ "] =" @ VehicleSpawnPointFlags[VehicleSpawnPointIndex]);
+    Log("GetVehicleSpawnPointTeamIndex(" $ VehicleSpawnPointIndex $ ")=" @ GetVehicleSpawnPointTeamIndex(VehicleSpawnPointIndex));
 }
 
 function SetVehicleSpawnPointLocation(byte VehicleSpawnPointIndex, vector Location)
@@ -155,6 +166,8 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
     {
         VehiclePoolIsActives[VehiclePoolIndex] = 0;
     }
+
+    VehiclePoolsUpdateTime = Level.TimeSeconds;
 }
 
 function SetVehiclePoolSpawnsRemaining(byte PoolIndex, byte SpawnsRemaining)
@@ -178,8 +191,13 @@ function SetVehiclePoolActiveCount(byte PoolIndex, byte ActiveCount)
     VehiclePoolActiveCounts[PoolIndex] = ActiveCount;
 }
 
+function bool IsVehiclePoolInfinite(byte PoolIndex)
+{
+    return VehiclePoolMaxActives[PoolIndex] == 255;
+}
+
 defaultproperties
 {
-    VehicleSpawnPointFlag_IsActive=0x01
-    VehicleSpawnPointFlag_TeamIndex=0x02
+    VehicleSpawnPointFlag_IsActive=1
+    VehicleSpawnPointFlag_TeamIndex=2
 }

@@ -1275,6 +1275,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     Playa.SecondaryWeapon = -1;
                     Playa.GrenadeWeapon = -1;
                     Playa.bWeaponsSelected = false;
+                    Playa.bHasSelectedDeployment = false;
                     SetCharacter(aPlayer);
                 }
             }

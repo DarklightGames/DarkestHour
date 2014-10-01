@@ -12,6 +12,7 @@ var() ESpawnPointType Type;
 var() bool bIsInitiallyActive;
 var() int TeamIndex;
 var() name LocationHintTag;
+var() string SpawnPointName;
 
 var   array<DHLocationHint> LocationHints;
 var   bool bIsActive;
@@ -46,4 +47,5 @@ defaultproperties
     bStatic=true
     RemoteRole=ROLE_None
     DrawScale=3.0
+    SpawnPointName="UNNAMED SPAWN POINT!!!"
 }

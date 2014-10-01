@@ -86,6 +86,8 @@ function PostBeginPlay()
         SpawnPoints[SpawnPoints.Length] = SP;
     }
 
+    Level.Game.Broadcast(self, "Spawn points length=" @ SpawnPoints.Length);
+
     //Update GameReplicationInfo
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
@@ -114,12 +116,15 @@ function UpdateSpawnPointReplicationInfo(byte SpawnPointIndex)
     GRI.SetVehicleSpawnPointIsActive(SpawnPointIndex, SpawnPoints[SpawnPointIndex].bIsActive);
     GRI.SetVehicleSpawnPointTeamIndex(SpawnPointIndex, SpawnPoints[SpawnPointIndex].TeamIndex);
     GRI.SetVehicleSpawnPointLocation(SpawnPointIndex, SpawnPoints[SpawnPointIndex].Location);
+    GRI.VehicleSpawnPointNames[SpawnPointIndex] = SpawnPoints[SpawnPointIndex].SpawnPointName;
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)
 {
     GRI.SetVehiclePoolVehicleClass(PoolIndex, Pools[PoolIndex].VehicleClass);
     GRI.SetVehiclePoolIsActive(PoolIndex, Pools[PoolIndex].bIsActive);
+    GRI.SetVehiclePoolSpawnsRemaining(PoolIndex, GetPoolSpawnsRemaining(PoolIndex));
+    GRI.SetVehiclePoolNextAvailableTime(PoolIndex, Pools[PoolIndex].NextAvailableTime);
 }
 
 function byte DrySpawn(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, out int LocationHintIndex)
@@ -214,7 +219,7 @@ function byte DrySpawn(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, out int
     {
         if (bDebug)
         {
-            Level.Game.Broadcast(self, "[DHVM]" @ Pools[PoolIndex].VehicleClass @ "pool is at active limit (" $ Pools[PoolIndex].MaxSpawns $ ")");
+            Level.Game.Broadcast(self, "[DHVM]" @ Pools[PoolIndex].VehicleClass @ "pool is at active limit (" $ Pools[PoolIndex].MaxActive $ ")");
         }
 
         return SpawnError_ActiveLimit;
@@ -443,6 +448,8 @@ private function SetPoolActiveCount(byte PoolIndex, byte ActiveCount)
 
 private function byte GetPoolSpawnsRemaining(byte PoolIndex)
 {
+    Level.Game.Broadcast(self, Pools[PoolIndex].MaxSpawns @ Pools[PoolIndex].SpawnCount);
+
     return Pools[PoolIndex].MaxSpawns - Pools[PoolIndex].SpawnCount;
 }
 
@@ -480,6 +487,7 @@ private function SetPoolIsActive(int PoolIndex, bool bIsActive)
 {
     if (Pools[PoolIndex].bIsActive == bIsActive)
     {
+        //no change
         return;
     }
 
@@ -606,5 +614,6 @@ defaultproperties
     MaxTeamVehicles(1)=32
     MaxDestroyedVehicles=8
     VehicleDestroyedMessageClass=class'DHVehicleDestroyedMessage'
+    bDebug=true
 }
 
