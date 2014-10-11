@@ -60,7 +60,6 @@ replication
         ServerSwitchBarrels;
 }
 
-
 //=============================================================================
 // Functions
 //=============================================================================
@@ -116,7 +115,10 @@ simulated function RenewAmmoBelt()
     }
 }
 
-function bool IsMGWeapon() { return true; }
+function bool IsMGWeapon()
+{
+    return true;
+}
 
 // Implemented in various states to show whether the weapon is busy performing
 // some action that normally shouldn't be interuppted. Overriden because we
@@ -132,36 +134,48 @@ simulated exec function Deploy()
     //that would sometimes allow you deploy, then when you fired no
     //bullets would come out. -Basnett
     if (IsBusy() || Instigator.Velocity != vect(0,0,0))
+    {
         return;
+    }
 
     if (Instigator.bBipodDeployed)
     {
         BipodDeploy(false);
 
         if (Role < ROLE_Authority)
+        {
             ServerBipodDeploy(false);
+        }
     }
     else if (Instigator.bCanBipodDeploy)
     {
         BipodDeploy(true);
 
         if (Role < ROLE_Authority)
+        {
             ServerBipodDeploy(true);
+        }
     }
 }
 
 simulated function ROIronSights()
 {
     if (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy)
+    {
         Deploy();
+    }
     else if (bCanFireFromHip)
+    {
         super.ROIronSights();
+    }
 }
 
 simulated function bool StartFire(int Mode)
 {
     if (!super.StartFire(Mode))  // returns false when mag is empty
-       return false;
+    {
+        return false;
+    }
 
     if (AmmoAmount(0) <= 0 || bBarrelFailed)
     {
@@ -173,7 +187,6 @@ simulated function bool StartFire(int Mode)
     if (!FireMode[Mode].IsInState('FireLoop') && (AmmoAmount(0) > 0))
     {
         FireMode[Mode].StartFiring();
-        return true;
     }
     else
     {
@@ -198,15 +211,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
     if (Role == ROLE_Authority)
     {
         ROPawn(Instigator).bWeaponCanBeResupplied = true;
-
-        if (CurrentMagCount != (MaxNumPrimaryMags - 1))
-        {
-            ROPawn(Instigator).bWeaponNeedsResupply = true;
-        }
-        else
-        {
-            ROPawn(Instigator).bWeaponNeedsResupply = false;
-        }
+        ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount != (MaxNumPrimaryMags - 1);
     }
 
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -214,7 +219,9 @@ simulated function BringUp(optional Weapon PrevWeapon)
         SpawnBarrelSteamEmitter();
 
         if (bBarrelSteaming)
+        {
             ToggleBarrelSteam(true);
+        }
 
     }
 }
@@ -232,14 +239,13 @@ simulated function bool PutDown()
 //------------------------------------------------------------------------------
 simulated function SpawnBarrelSteamEmitter()
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitterClass != none)
     {
-        if (ROBarrelSteamEmitterClass != none)
-        {
-            ROBarrelSteamEmitter = Spawn(ROBarrelSteamEmitterClass, self);
+        ROBarrelSteamEmitter = Spawn(ROBarrelSteamEmitterClass, self);
 
-            if (ROBarrelSteamEmitter != none)
-                AttachToBone(ROBarrelSteamEmitter, BarrelSteamBone);
+        if (ROBarrelSteamEmitter != none)
+        {
+            AttachToBone(ROBarrelSteamEmitter, BarrelSteamBone);
         }
     }
 }
@@ -265,7 +271,9 @@ simulated state LoweringWeapon
 simulated exec function ROMGOperation()
 {
     if (!AllowBarrelChange())
+    {
         return;
+    }
 
     if (Level.Netmode == NM_Client)
     {
@@ -283,11 +291,15 @@ function ServerSwitchBarrels()
 simulated function bool AllowBarrelChange()
 {
     if (IsFiring() || IsBusy())
+    {
         return false;
+    }
 
     // Can't reload if we don't have a mag to put in
     if (RemainingBarrels < 2 || !bTrackBarrelHeat || IsInState('ChangingBarrels'))
+    {
         return false;
+    }
 
     return Instigator.bBipodDeployed;
 }
@@ -331,14 +343,17 @@ simulated state ChangingBarrels extends Busy
         PerformBarrelChange();
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        {
             ResetPlayerFOV();
+        }
     }
 
     simulated function EndState()
     {
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        {
             SetPlayerFOV(PlayerDeployFOV);
-
+        }
     }
 
 // Take the player out of zoom and then zoom them back in
@@ -365,9 +380,13 @@ simulated function PlayBarrelChange()
     AnimTimer = GetAnimDuration(BarrelChangeAnim, 1.0) + FastTweenTime;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+    {
+        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
+    }
     else
-        SetTimer(AnimTimer,false);
+    {
+        SetTimer(AnimTimer, false);
+    }
 
     if (Instigator.IsLocallyControlled())
     {
@@ -384,11 +403,12 @@ function PerformBarrelChange()
     }
 
     // if the barrel has failed, we're going to toss it, so remove it from the barrel array
-    if (BarrelArray[ActiveBarrel].bBarrelFailed
-        && (BarrelArray[ActiveBarrel] != none))
+    if (BarrelArray[ActiveBarrel].bBarrelFailed && BarrelArray[ActiveBarrel] != none)
     {
         BarrelArray[ActiveBarrel].Destroy();
+
         BarrelArray.Remove(ActiveBarrel,1);
+
         RemainingBarrels = byte(BarrelArray.Length);
     }
 
@@ -399,15 +419,16 @@ function PerformBarrelChange()
         {
             ActiveBarrel = 0;
         }
-
         else
         {
-            ActiveBarrel++;
+            ++ActiveBarrel;
         }
 
         // put the new barrel in the use state for heat increments and steaming
         if (BarrelArray[ActiveBarrel] != none)
+        {
             BarrelArray[ActiveBarrel].GotoState('BarrelInUse');
+        }
     }
     else
     {
@@ -422,7 +443,6 @@ function PerformBarrelChange()
         {
             ActiveBarrel = 0;
         }
-
         else
         {
             ActiveBarrel++;
@@ -430,12 +450,12 @@ function PerformBarrelChange()
 
         // put the new barrel in the use state for heat increments and steaming
         if (BarrelArray[ActiveBarrel] != none)
+        {
             BarrelArray[ActiveBarrel].GotoState('BarrelInUse');
+        }
     }
 
     ResetBarrelProperties();
-    //Level.Game.Broadcast(self, "Active barrel is now "@ActiveBarrel);
-    //Level.Game.Broadcast(self, "Active barrel temp is "@BarrelArray[ActiveBarrel].DH_MGCelsiusTemp);
 }
 
 // Overriden to set additional RO Variables when a weapon is given to the player
@@ -444,15 +464,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
     super.GiveTo(Other,Pickup);
 
     ROPawn(Instigator).bWeaponCanBeResupplied = true;
-
-    if (CurrentMagCount != (MaxNumPrimaryMags - 1))
-    {
-        ROPawn(Instigator).bWeaponNeedsResupply = true;
-    }
-    else
-    {
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-    }
+    ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount != (MaxNumPrimaryMags - 1);
 
     GiveBarrels(Pickup);
 }
@@ -460,7 +472,9 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 function DropFrom(vector StartLocation)
 {
     if (!bCanThrow)
+    {
         return;
+    }
 
     ROPawn(Instigator).bWeaponCanBeResupplied = false;
     ROPawn(Instigator).bWeaponNeedsResupply = false;
@@ -468,18 +482,16 @@ function DropFrom(vector StartLocation)
     super.DropFrom(StartLocation);
 }
 
-
 simulated function Destroyed()
 {
     local   int     i;
 
     // remove and destroy the barrels in the BarrelArray array
-    for(i = 0; i < BarrelArray.Length; i++)
+    for(i = 0; i < BarrelArray.Length; ++i)
     {
         if (BarrelArray[i] != none)
         {
             BarrelArray[i].Destroy();
-            BarrelArray[i] = none;
         }
     }
 
@@ -497,7 +509,7 @@ simulated function Destroyed()
         ROPawn(Instigator).bWeaponNeedsResupply = false;
     }
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 
@@ -512,7 +524,9 @@ function ResetBarrelProperties()
     bBarrelDamaged = BarrelArray[ActiveBarrel].bBarrelDamaged;
 
     if (DHWeaponAttachment(ThirdPersonActor) != none && DHWeaponAttachment(ThirdPersonActor).SoundPitch != 64)
-            DHWeaponAttachment(ThirdPersonActor).SoundPitch = 64;
+    {
+        DHWeaponAttachment(ThirdPersonActor).SoundPitch = 64;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -524,9 +538,11 @@ simulated function ToggleBarrelSteam(bool newState)
     bBarrelSteaming = newState;
 
     if (DHWeaponAttachment(ThirdPersonActor) != none)
+    {
         DHWeaponAttachment(ThirdPersonActor).bBarrelSteamActive = newState;
+    }
 
-    if ((Level.NetMode != NM_DedicatedServer) && (ROBarrelSteamEmitter != none))
+    if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitter != none)
     {
         ROBarrelSteamEmitter.Trigger(self, Instigator);
     }
@@ -538,7 +554,9 @@ simulated function bool ConsumeAmmo(int Mode, float load, optional bool bAmountN
     local float SoundModifier;
 
     if (Role == ROLE_Authority)
+    {
         BarrelArray[ActiveBarrel].WeaponFired();
+    }
 
     if (ROWeaponAttachment(ThirdPersonActor) != none)
     {
@@ -564,64 +582,64 @@ function GiveBarrels(optional Pickup Pickup)
     local   int         i;
     local   DH_MGBarrel tempBarrel, tempBarrel2;
 
-    if (BarrelClass != none && (Role == ROLE_Authority))
+    if (BarrelClass == none || Role != ROLE_Authority)
     {
-        if (Pickup == none)
-        {
-            // give the barrels to the players
-            for(i = 0; i < InitialBarrels; i++)
-            {
-                tempBarrel = Spawn(BarrelClass, self);
+        return;
+    }
 
-                BarrelArray[i] = tempBarrel;
-                if (i == 0)
-                {
-                    BarrelArray[i].GotoState('BarrelInUse');
-                }
-                else
-                {
-                    BarrelArray[i].GotoState('BarrelOff');
-                }
-            }
-        }
-        else if (DH_MGWeaponPickup(Pickup) != none)
+    if (Pickup == none)
+    {
+        // give the barrels to the players
+        for(i = 0; i < InitialBarrels; ++i)
         {
             tempBarrel = Spawn(BarrelClass, self);
 
-            BarrelArray[0] = tempBarrel;
-            BarrelArray[0].GotoState('BarrelInUse');
+            BarrelArray[i] = tempBarrel;
 
-            BarrelArray[0].DH_MGCelsiusTemp = DH_MGWeaponPickup(Pickup).DH_MGCelsiusTemp;
-            BarrelArray[0].bBarrelFailed = DH_MGWeaponPickup(Pickup).bBarrelFailed;
-            BarrelArray[0].UpdateBarrelStatus();        // update the barrel for the weapon we just picked up
-
-            //Level.Game.Broadcast(self, "Main temp is "@BarrelArray[0].DH_MGCelsiusTemp);
-
-            if (DH_MGWeaponPickup(Pickup).bHasSpareBarrel)
+            if (i == 0)
             {
-                 tempBarrel2 = Spawn(BarrelClass, self);
-
-                 BarrelArray[1] = tempBarrel2;
-                 BarrelArray[1].GotoState('BarrelOff');
-
-                 BarrelArray[1].DH_MGCelsiusTemp = DH_MGWeaponPickup(Pickup).DH_MGCelsiusTemp2;
-                 BarrelArray[1].UpdateSpareBarrelStatus();
-
-                 //Level.Game.Broadcast(self, "Spare temp is "@BarrelArray[1].DH_MGCelsiusTemp);
+                BarrelArray[i].GotoState('BarrelInUse');
+            }
+            else
+            {
+                BarrelArray[i].GotoState('BarrelOff');
             }
         }
-        ActiveBarrel = 0;
-        RemainingBarrels = byte(BarrelArray.Length);
     }
+    else if (DH_MGWeaponPickup(Pickup) != none)
+    {
+        tempBarrel = Spawn(BarrelClass, self);
+
+        BarrelArray[0] = tempBarrel;
+
+        BarrelArray[0].GotoState('BarrelInUse');
+        BarrelArray[0].DH_MGCelsiusTemp = DH_MGWeaponPickup(Pickup).DH_MGCelsiusTemp;
+        BarrelArray[0].bBarrelFailed = DH_MGWeaponPickup(Pickup).bBarrelFailed;
+        BarrelArray[0].UpdateBarrelStatus();        // update the barrel for the weapon we just picked up
+
+        if (DH_MGWeaponPickup(Pickup).bHasSpareBarrel)
+        {
+             tempBarrel2 = Spawn(BarrelClass, self);
+
+             BarrelArray[1] = tempBarrel2;
+             BarrelArray[1].GotoState('BarrelOff');
+
+             BarrelArray[1].DH_MGCelsiusTemp = DH_MGWeaponPickup(Pickup).DH_MGCelsiusTemp2;
+             BarrelArray[1].UpdateSpareBarrelStatus();
+        }
+    }
+
+    ActiveBarrel = 0;
+    RemainingBarrels = byte(BarrelArray.Length);
 }
 
 simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {
-    local   int     i;
+    local int i;
 
     super.DisplayDebug(Canvas, YL, YPos);
 
-    Canvas.SetDrawColor(0,255,0);
+    Canvas.SetDrawColor(0, 255, 0);
 
     // remove and destroy the barrels in the BarrelArray array
     for(i = 0; i < BarrelArray.Length; i++)
@@ -631,15 +649,14 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
             if (i == ActiveBarrel)
             {
                 Canvas.DrawText("Active Barrel Temp: "$BarrelArray[i].DH_MGCelsiusTemp$" State: "$BarrelArray[i].GetStateName());
-                YPos += YL;
-                Canvas.SetPos(4,YPos);
             }
             else
             {
                 Canvas.DrawText("Hidden Barrel Temp: "$BarrelArray[i].DH_MGCelsiusTemp$" State: "$BarrelArray[i].GetStateName());
-                YPos += YL;
-                Canvas.SetPos(4,YPos);
             }
+
+            YPos += YL;
+            Canvas.SetPos(4,YPos);
         }
     }
 }
@@ -647,10 +664,7 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 // returns true if this weapon should use free-aim in this particular state
 simulated function bool ShouldUseFreeAim()
 {
-    if (bUsesFreeAim && bUsingSights)
-        return true;
-
-    return false;
+    return bUsesFreeAim && bUsingSights;
 }
 
 // Overriden to support using ironsight mode as hipped mode for the MGs
@@ -674,9 +688,11 @@ simulated state IronSightZoomOut
     simulated function EndState()
     {
         if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+        {
             NotifyCrawlMoving();
+        }
     }
-// DO nothing
+// Do nothing
 Begin:
 }
 
@@ -687,9 +703,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
     }
 
     if (Instigator.IsLocallyControlled())
@@ -697,7 +717,7 @@ Begin:
         PlayIdle();
     }
 
-    SetTimer(FastTweenTime,false);
+    SetTimer(FastTweenTime, false);
 }
 
 //=============================================================================
@@ -715,7 +735,9 @@ simulated event RenderOverlays(Canvas Canvas)
     local int leanangle;
 
     if (Instigator == none)
+    {
         return;
+    }
 
     // Lets avoid having to do multiple casts every tick - Ramm
     Playa = ROPlayer(Instigator.Controller);
@@ -734,6 +756,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
     //Adjust weapon position for lean
     rpawn = ROPawn(Instigator);
+
     if (rpawn != none && rpawn.LeanAmount != 0)
     {
         leanangle += rpawn.LeanAmount;
@@ -757,11 +780,12 @@ simulated event RenderOverlays(Canvas Canvas)
         RollMod.Pitch = CrawlWeaponPitch;
     }
 
-
     SetRotation(RollMod);
 
     bDrawingFirstPerson = true;
+
     Canvas.DrawActor(self, false, false, DisplayFOV);
+
     bDrawingFirstPerson = false;
 }
 
@@ -775,9 +799,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
     }
     else if (DisplayFOV != default.DisplayFOV && Instigator.IsLocallyControlled())
     {
@@ -792,9 +820,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
     }
     else if (DisplayFOV != default.DisplayFOV && Instigator.IsLocallyControlled())
     {
@@ -828,10 +860,7 @@ simulated state Reloading
 
         if (Role == ROLE_Authority)
         {
-            if (CurrentMagCount != (MaxNumPrimaryMags - 1))
-                ROPawn(Instigator).bWeaponNeedsResupply = true;
-            else
-                ROPawn(Instigator).bWeaponNeedsResupply = false;
+            ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount != (MaxNumPrimaryMags - 1);
         }
     }
 }
@@ -841,19 +870,23 @@ function bool ResupplyAmmo()
 {
     local int InitialAmount, i;
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     for(i = NumMagsToResupply; i > 0; i--)
     {
         if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+        {
             PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
+        }
     }
 
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
     NetUpdateTime = Level.TimeSeconds - 1;
 
     if (CurrentMagCount == MaxNumPrimaryMags - 1)
+    {
         ROPawn(Instigator).bWeaponNeedsResupply=false;
+    }
 
     return true;
 }
@@ -871,3 +904,4 @@ defaultproperties
      ROBarrelSteamEmitterClass=Class'ROEffects.ROMGSteam'
      NumMagsToResupply=2
 }
+
