@@ -66,8 +66,7 @@ function float FtoCelsiusConversion(INT Fahrenheit)
 
     Fahrenheit -= 32;
     NewCTemp = Fahrenheit * 5.0;
-    NewCTemp = NewCTemp/9.0;
-    //log("ROMGBarrel::FtoCelsiusConversion - NewCTemp is "$NewCTemp);
+    NewCTemp = NewCTemp / 9.0;
 
     return NewCTemp;
 }
@@ -85,6 +84,7 @@ function WeaponFired()
     if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
     {
         bBarrelSteaming = true;
+
         DH_MGBase(Owner).ToggleBarrelSteam(bBarrelSteaming);
     }
 
@@ -94,30 +94,36 @@ function WeaponFired()
     }
 
     UpdateBarrelStatus();
-
-    //log("ROMGCelsiusTemp on the server is "$ROMGCelsiusTemp);
-    //log("bBarrelFailed is "$bBarrelFailed);
 }
 
 // Will update this barrel and the weapons's barrel status
 function UpdateBarrelStatus()
 {
+    local DH_MGBase MG;
+
+    MG = DH_MGBase(Owner);
+
+    if (MG == none)
+    {
+        return;
+    }
+
     if (bBarrelFailed)
     {
-        if (DH_MGbase(Owner) != none)
-            DH_MGbase(Owner).bBarrelFailed = true;
+        MG.bBarrelFailed = true;
     }
 
     if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
     {
         bBarrelSteaming = true;
-        DH_MGBase(Owner).ToggleBarrelSteam(bBarrelSteaming);
+
+        MG.ToggleBarrelSteam(bBarrelSteaming);
     }
 
     if (!bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp))
     {
         bBarrelDamaged = true;
-        DH_MGBase(Owner).bBarrelDamaged = true;
+        MG.bBarrelDamaged = true;
     }
 }
 
@@ -141,25 +147,37 @@ state BarrelInUse
     {
         // if the barrel is being put on and is steaming, turn on the steam emitter
         if (bBarrelSteaming)
+        {
             DH_MGBase(Owner).ToggleBarrelSteam(true);
+        }
 
-        // if the barrel is being put on and is damaged, set the weapon to have
-        // a damaged barrel
+        // if the barrel is being put on and is damaged, set the weapon to have a damaged barrel
         if (bBarrelDamaged)
+        {
             DH_MGBase(Owner).bBarrelDamaged = true;
+        }
 
         SetTimer(BarrelTimerRate, true);
     }
 
     //------------------------------------------------------------------------------
     // Timer - This is a server-side function that will handle barrel heat
-    //  related operations such as barrel steaming and cone fire activation calls
+    // related operations such as barrel steaming and cone fire activation calls
     //------------------------------------------------------------------------------
     function Timer()
     {
+        local DH_MGBase MG;
+
         // make sure this is done on the authority
         // if temp is at the level temp, don't bother with anything else
-        if ((Role < ROLE_Authority) || (DH_MGCelsiusTemp == LevelCTemp))
+        if (Role < ROLE_Authority || DH_MGCelsiusTemp == LevelCTemp)
+        {
+            return;
+        }
+
+        MG = DH_MGBase(Owner);
+
+        if (MG == none)
         {
             return;
         }
@@ -167,7 +185,6 @@ state BarrelInUse
         // lower the barrel temp or set to Level ambient temp if it goes below
         if (DH_MGCelsiusTemp > LevelCTemp)
         {
-            //log("In ROMGBarrel tick, time is "$level.timeseconds$" ROMGCelsiusTemp is "$ROMGCelsiusTemp);
             DH_MGCelsiusTemp -= (BarrelTimerRate * BarrelCoolingRate);
         }
         else if (DH_MGCelsiusTemp < LevelCTemp)
@@ -178,21 +195,23 @@ state BarrelInUse
         if (bBarrelSteaming && (DH_MGCelsiusTemp < DH_MGSteamTemp))
         {
             bBarrelSteaming = false;
-            DH_MGBase(Owner).ToggleBarrelSteam(bBarrelSteaming);
+
+            MG.ToggleBarrelSteam(bBarrelSteaming);
         }
 
         // Questionable, once the barrel is damaged, does it ever really get better again?
         if (bBarrelDamaged && (DH_MGCelsiusTemp < DH_MGCriticalTemp))
         {
             bBarrelDamaged = false;
-            DH_MGBase(Owner).bBarrelDamaged = false;
+
+            MG.bBarrelDamaged = false;
         }
     }
 }
 
 //------------------------------------------------------------------------------
 // Allows Barrel heat to continue to be tracked, but without the steam or cone
-//  fire toggling calls to the MG
+// fire toggling calls to the MG
 //------------------------------------------------------------------------------
 state BarrelOff
 {
@@ -211,7 +230,7 @@ state BarrelOff
     function Timer()
     {
         // make sure this is done on the authority
-        if ((Role < ROLE_Authority) || (DH_MGCelsiusTemp == LevelCTemp))
+        if (Role < ROLE_Authority || DH_MGCelsiusTemp == LevelCTemp)
         {
             return;
         }
@@ -219,7 +238,6 @@ state BarrelOff
         // lower the barrel temp or set to Level ambient temp if it goes below
         if (DH_MGCelsiusTemp > LevelCTemp)
         {
-            //log("In ROMGBarrel tick, time is "$level.timeseconds$" ROMGCelsiusTemp is "$ROMGCelsiusTemp);
             DH_MGCelsiusTemp -= (BarrelTimerRate * BarrelCoolingRate);
         }
 
