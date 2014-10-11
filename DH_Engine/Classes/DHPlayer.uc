@@ -1746,12 +1746,13 @@ exec function RoundPause()
 
 exec function DebugTryVehicleSpawn(byte PoolIndex, byte SpawnIndex)
 {
-    ServerSpawnVehicle(PoolIndex, SpawnIndex);
+    local byte SpawnError;
+
+    ServerSpawnVehicle(PoolIndex, SpawnIndex, SpawnError);
 }
 
-function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex)
+function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex, out byte SpawnError)
 {
-    local byte SpawnError;
     local Vehicle V;
 
     if (Pawn == none)

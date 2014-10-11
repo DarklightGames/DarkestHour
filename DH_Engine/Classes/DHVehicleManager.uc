@@ -282,7 +282,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex
     }
 
     //TODO: spawn the player somewhere way out in left field!
-    if (!V.TryToDrive(C.Pawn))
+    if (C.Pawn == none || !V.TryToDrive(C.Pawn))
     {
         V.Destroy();
 
