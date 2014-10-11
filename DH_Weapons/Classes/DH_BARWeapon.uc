@@ -58,24 +58,24 @@ simulated state SwitchingFireMode extends Busy
         return false;
     }
 
-        simulated function Timer()
-        {
-            GotoState('Idle');
-        }
+    simulated function Timer()
+    {
+        GotoState('Idle');
+    }
 
-        simulated function BeginState()
-        {
+    simulated function BeginState()
+    {
         local name Anim;
 
         if (bUsingSights || Instigator.bBipodDeployed)
         {
             if (Instigator.bBipodDeployed && HasAnim(SightUpSelectFireIronAnim))
             {
-            Anim = SightUpSelectFireIronAnim;
+                Anim = SightUpSelectFireIronAnim;
             }
             else
             {
-            Anim = SelectFireIronAnim;
+                Anim = SelectFireIronAnim;
             }
         }
         else
@@ -88,13 +88,14 @@ simulated state SwitchingFireMode extends Busy
                 PlayAnim(Anim, 1.0, FastTweenTime);
         }
 
-            SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
+        SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
 
         ServerChangeFireMode();
 
-            if (Role < ROLE_Authority)
+        if (Role < ROLE_Authority)
         {
             bSlowFireRate = !bSlowFireRate;
+
             if (bSlowFireRate)
             {
                 FireMode[0].FireRate = 0.2;
@@ -111,14 +112,7 @@ simulated state SwitchingFireMode extends Busy
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-    if (bSlowFireRate)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return !bSlowFireRate;
 }
 
 //================================================
@@ -170,7 +164,9 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 function DropFrom(vector StartLocation)
 {
     if (!bCanThrow)
+    {
         return;
+    }
 
     ROPawn(Instigator).bWeaponCanBeResupplied = false;
     ROPawn(Instigator).bWeaponNeedsResupply = false;
@@ -186,7 +182,7 @@ simulated function Destroyed()
         ROPawn(Instigator).bWeaponNeedsResupply = false;
     }
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 // This MG has been resupplied either by an ammo resupply area or another player
@@ -196,7 +192,7 @@ function bool ResupplyAmmo()
 
     InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
 
-    for(i=NumMagsToResupply; i>0; i--)
+    for(i = NumMagsToResupply; i > 0; --i)
     {
         if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
         {
@@ -205,6 +201,7 @@ function bool ResupplyAmmo()
     }
 
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
+
     NetUpdateTime = Level.TimeSeconds - 1;
 
     return true;
