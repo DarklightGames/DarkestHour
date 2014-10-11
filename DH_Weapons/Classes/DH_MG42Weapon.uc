@@ -38,7 +38,7 @@ defaultproperties
      BeltBulletClass=Class'ROInventory.MG42BeltRound'
      bTrackBarrelHeat=true
      bCanFireFromHip=false
-     ROBarrelClass=Class'DH_Weapons.DH_MG42Barrel'
+     BarrelClass=Class'DH_Weapons.DH_MG42Barrel'
      BarrelSteamBone="Barrel_Switch"
      BarrelChangeAnim="Bipod_Barrel_Change"
      IdleToBipodDeploy="Rest_2_Bipod"

@@ -24,7 +24,7 @@ var     byte                ActiveBarrel;           // barrel being used
 var     byte                RemainingBarrels;       // number of barrels still left, INCLUDES the active barrel
 var     byte                InitialBarrels;         // barrels initially given
 
-var     class<DH_MGBarrel>  ROBarrelClass;          // barrel type we use now
+var     class<DH_MGBarrel>  BarrelClass;          // barrel type we use now
 var     array<DH_MGBarrel>  BarrelArray;            // The array of carried MG barrels for this weapon
 
 // Barrel steam info
@@ -564,14 +564,14 @@ function GiveBarrels(optional Pickup Pickup)
     local   int         i;
     local   DH_MGBarrel tempBarrel, tempBarrel2;
 
-    if (ROBarrelClass != none && (Role == ROLE_Authority))
+    if (BarrelClass != none && (Role == ROLE_Authority))
     {
         if (Pickup == none)
         {
             // give the barrels to the players
             for(i = 0; i < InitialBarrels; i++)
             {
-                tempBarrel = Spawn(ROBarrelClass, self);
+                tempBarrel = Spawn(BarrelClass, self);
 
                 BarrelArray[i] = tempBarrel;
                 if (i == 0)
@@ -586,7 +586,7 @@ function GiveBarrels(optional Pickup Pickup)
         }
         else if (DH_MGWeaponPickup(Pickup) != none)
         {
-            tempBarrel = Spawn(ROBarrelClass, self);
+            tempBarrel = Spawn(BarrelClass, self);
 
             BarrelArray[0] = tempBarrel;
             BarrelArray[0].GotoState('BarrelInUse');
@@ -599,7 +599,7 @@ function GiveBarrels(optional Pickup Pickup)
 
             if (DH_MGWeaponPickup(Pickup).bHasSpareBarrel)
             {
-                 tempBarrel2 = Spawn(ROBarrelClass, self);
+                 tempBarrel2 = Spawn(BarrelClass, self);
 
                  BarrelArray[1] = tempBarrel2;
                  BarrelArray[1].GotoState('BarrelOff');

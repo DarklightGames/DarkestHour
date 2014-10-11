@@ -22,7 +22,7 @@ defaultproperties
      bTrackBarrelHeat=true
      bCanFireFromHip=false
      InitialBarrels=1
-     ROBarrelClass=Class'DH_Weapons.DH_30CalBarrel'
+     BarrelClass=Class'DH_Weapons.DH_30CalBarrel'
      BarrelSteamBone="bipod"
      IdleToBipodDeploy="Rest_2_Bipod"
      BipodDeployToIdle="Bipod_2_Rest"
