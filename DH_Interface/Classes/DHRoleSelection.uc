@@ -1,7 +1,5 @@
 class DHRoleSelection extends ROGUIRoleSelection;
 
-//*************************************************************************************************************************************************************
-//*************************************************************************************************************************************************************
 function bool InternalOnClick(GUIComponent Sender)
 {
     local ROPlayer player;
@@ -449,7 +447,7 @@ defaultproperties
          Caption="Role Description"
          TextAlign=TXTA_Right
          StyleName="DHLargeText"
-         WinTop=0.571666
+         WinTop=0.561666
          WinLeft=0.316250
          WinWidth=0.175000
          WinHeight=0.040000
@@ -622,7 +620,7 @@ defaultproperties
      End Object
      l_numFake=GUILabel'DH_Interface.DHRoleSelection.NumFakeLabel'
 
-     Begin Object Class=ROGUIListBoxPlus Name=Roles
+     Begin Object Class=DHGuiListBox Name=Roles
          SelectedStyleName="DHListSelectionStyle"
          OutlineStyleName="ItemOutline"
          bVisibleWhenEmpty=true
@@ -633,7 +631,7 @@ defaultproperties
          TabOrder=0
          OnChange=DHRoleSelection.InternalOnChange
      End Object
-     lb_Roles=ROGUIListBoxPlus'DH_Interface.DHRoleSelection.Roles'
+     lb_Roles=DHGuiListBox'DH_Interface.DHRoleSelection.Roles'
 
      Begin Object Class=GUIImage Name=PlayerImage
          Image=Texture'InterfaceArt_tex.Menu.empty'
@@ -695,7 +693,7 @@ defaultproperties
 
      l_WeaponDescription(1)=DHGUIScrollTextBox'DH_Interface.DHRoleSelection.WeaponDescription'
 
-     Begin Object Class=ROGUIListBoxPlus Name=WeaponListBox
+     Begin Object Class=DHGuiListBox Name=WeaponListBox
          SelectedStyleName="DHListSelectionStyle"
          OutlineStyleName="ItemOutline"
          bVisibleWhenEmpty=true
@@ -707,9 +705,9 @@ defaultproperties
          TabOrder=0
          OnChange=DHRoleSelection.InternalOnChange
      End Object
-     lb_AvailableWeapons(0)=ROGUIListBoxPlus'DH_Interface.DHRoleSelection.WeaponListBox'
+     lb_AvailableWeapons(0)=DHGuiListBox'DH_Interface.DHRoleSelection.WeaponListBox'
 
-     lb_AvailableWeapons(1)=ROGUIListBoxPlus'DH_Interface.DHRoleSelection.WeaponListBox'
+     lb_AvailableWeapons(1)=DHGuiListBox'DH_Interface.DHRoleSelection.WeaponListBox'
 
      Begin Object Class=GUIGFXButton Name=EquipButton0
          Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'

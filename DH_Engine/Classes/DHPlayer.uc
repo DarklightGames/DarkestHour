@@ -9,7 +9,6 @@ var float FlinchOffsetTime;
 
 var float   MantleCheckTimer;   // Makes sure client doesn't try to start mantling without the server
 var float   MantleFailTimer;    // Makes sure we don't get stuck floating in an object unable to end a mantle
-//var float LastMantleUpdate;   // Makes sure we haven't dropped some packets and been "server-predicted" somewhere we shouldn't be
 var bool    bDidMantle;      // Is the mantle complete?
 var bool    bIsInStateMantling; // Stop the client from exiting state until server has exited to avoid desync
 var bool    bDidCrouchCheck;
@@ -21,7 +20,7 @@ var int     MantleLoopCount;
 var     byte    MortarTargetIndex;
 var     vector  MortarHitLocation;
 
-var DHHintManager DHHintManager;    //We'll use our own HintManager, thanks!
+var DHHintManager DHHintManager;
 
 var bool    bHasSelectedDeployment;
 
@@ -233,14 +232,9 @@ simulated function PlayerWhizzed(float DistSquared)
 {
     local float Intensity;
 
-    //log("DistSquared of whiz is "$DistSquared);
+    Intensity = 1.0 - ((FMin(DistSquared, 160000)) / 160000);  // This is not the full size of the cylinder, we don't want a flinch on the more distant shots
 
-//  Intensity = 1.0 - ((FMin(DistSquared,22500))/22500);  // 22500 = (150*150) = Radius of bullet whiz cylinder squared
-    Intensity = 1.0 - ((FMin(DistSquared,160000))/160000);  // This is not the full size of the cylinder, we don't want a flinch on the more distant shots
-
-    //log("Intensity of whiz is "$Intensity);
-
-    AddBlur(0.75, Intensity); // (0.15, Intensity/2)
+    AddBlur(0.75, Intensity);
     PlayerFlinched(Intensity);
 }
 
@@ -354,7 +348,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     {
         ViewRotation = Rotation;
 
-        if (Pawn != none && Pawn.Physics != PHYS_Flying) // mmmmm
+        if (Pawn != none && Pawn.Physics != PHYS_Flying)
         {
             // Ensure we are not setting the pawn to a rotation beyond its desired
             if (    Pawn.DesiredRotation.Roll < 65535 &&
@@ -392,14 +386,16 @@ function UpdateRotation(float DeltaTime, float maxPitch)
                 ViewRotation.Pitch += 32.0 * DeltaTime * aLookUp;
             }
 
-            if ((Pawn != none) && (Pawn.Weapon != none) && (ROPwn != none))
+            if (Pawn != none && Pawn.Weapon != none && ROPwn != none)
             {
                 ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
             }
         }
 
         if (ROPwn != none)
-            ViewRotation.Pitch = ROPwn.LimitPitch(ViewRotation.Pitch,DeltaTime); //amb
+        {
+            ViewRotation.Pitch = ROPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
+        }
 
         if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bDeployingMortar))
         {
@@ -471,7 +467,7 @@ function ServerSaveArtilleryPosition()
     // If a player tries to mark artillery on a level with no arty for their team, give them a message
     if (PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
     {
-        for (i = 0; i < ArrayCount(GRI.AlliedRadios); i++)
+        for (i = 0; i < arraycount(GRI.AlliedRadios); ++i)
         {
             if (GRI.AlliedRadios[i] != none)
             {
@@ -482,7 +478,7 @@ function ServerSaveArtilleryPosition()
 
         if (!bFoundARadio)
         {
-            for (i = 0; i < ArrayCount(GRI.CarriedAlliedRadios); i++)
+            for (i = 0; i < arraycount(GRI.CarriedAlliedRadios); ++i)
             {
                 if (GRI.CarriedAlliedRadios[i] != none)
                 {
@@ -494,7 +490,7 @@ function ServerSaveArtilleryPosition()
     }
     else if (PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
     {
-        for (i = 0; i < ArrayCount(GRI.AxisRadios); i++)
+        for (i = 0; i < arraycount(GRI.AxisRadios); ++i)
         {
             if (GRI.AxisRadios[i] != none)
             {
@@ -505,7 +501,7 @@ function ServerSaveArtilleryPosition()
 
         if (!bFoundARadio)
         {
-            for (i = 0; i < ArrayCount(GRI.CarriedAxisRadios); i++)
+            for (i = 0; i < arraycount(GRI.CarriedAxisRadios); ++i)
             {
                 if (GRI.CarriedAxisRadios[i] != none)
                 {
@@ -529,12 +525,6 @@ function ServerSaveArtilleryPosition()
         StartTrace = Pawn.Location + Pawn.EyePosition();
         AimRot = Rotation;
     }
-    /*else if (Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon'))
-    {
-        TraceDist = GetMaxViewDistance();
-        StartTrace = Pawn.Location + Pawn.EyePosition();
-        AimRot = Rotation;
-    }*/
     else if (Pawn.IsA('ROVehicleWeaponPawn'))
     {
         TraceDist = GetMaxViewDistance();
@@ -613,20 +603,24 @@ function ServerCancelMortarTarget()
     if (MortarTargetIndex == 255)
     {
         ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 7);
+
         return;
     }
 
     if (GameReplicationInfo != none)
+    {
         GRI = DHGameReplicationInfo(GameReplicationInfo);
+    }
 
     if (PlayerReplicationInfo != none)
+    {
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    }
 
     if (GetTeamNum() == 0)
     {
         if (Level.TimeSeconds - GRI.GermanMortarTargets[MortarTargetIndex].Time < 15)
         {
-            //------------------------------------------------------------------
             //You cannot cancel your mortar target yet.
             ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 5);
             return;
@@ -657,12 +651,14 @@ function ServerCancelMortarTarget()
 
     if (bTargetCancelled)
     {
-        //----------------------------------------------------------------------
         //[DH]Basnett has cancelled a mortar target.
         Level.Game.BroadcastLocalizedMessage(class'DH_MortarTargetMessage', 3, PRI);
     }
     else
+    {
+        //You have no mortar target to cancel.
         ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 7);
+    }
 }
 
 function ServerSaveMortarTarget()

@@ -63,7 +63,7 @@ function PostBeginPlay()
     //a warning for the mapper.
     if (PlayersNeededToCapture > 14)
     {
-        warn(self @ " players needed to capture greater than 14, truncating.");
+        Warn(self @ " players needed to capture greater than 14, truncating.");
         PlayersNeededToCapture = 14;
     }
 }
@@ -171,7 +171,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                     continue;
             }
             else if (!bVehiclesCanCapture)
+            {
                 continue;
+            }
         }
 
         PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
@@ -187,11 +189,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     }
 
     BroadcastLocalizedMessage(class'DHObjectiveMsg', Team, none, none, self);
-    /*
-    // Notify our analytics server.
-    if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).Analytics != none)
-        DarkestHourGame(Level.Game).Analytics.NotifyCapture(self, Team);
-    */
 
     switch (Team)
     {

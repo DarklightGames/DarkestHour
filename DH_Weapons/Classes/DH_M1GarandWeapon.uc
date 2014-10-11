@@ -13,19 +13,13 @@ simulated function Fire(float F)
 {
     super.Fire(F);
 
-    if (AmmoAmount(0)==1)
-        bIsLastRound=true;
-    else
-        bIsLastRound=false;
+    bIsLastRound = AmmoAmount(0) == 1;
 }
 
 //overwritten to support garand last round clip eject for Server only
 simulated function bool WasLastRound()
 {
-    if (AmmoAmount(0)==0)
-        return true;
-
-    return false;
+    return AmmoAmount(0) == 0;
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
@@ -40,7 +34,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
 function PerformReload()
 {
     local int CurrentMagLoad;
-//  local bool bDidPlusOneReload;
 
     CurrentMagLoad = AmmoAmount(0);
 
@@ -64,7 +57,7 @@ function PerformReload()
         return;
     }
 
-    CurrentMagIndex++;
+    ++CurrentMagIndex;
 
     if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
     {
@@ -107,14 +100,17 @@ defaultproperties
      MagEmptyReloadAnim="reload_empty"
      MagPartialReloadAnim="reload_half"
      IronIdleAnim="Iron_idle"
+     IronIdleEmptyAnim="iron_idle_empty"
      IronBringUp="iron_in"
+     IronBringUpEmpty="Iron_In_empty"
      IronPutDown="iron_out"
+     IronPutDownEmpty="Iron_Out_empty"
+     SelectEmptyAnim="
      BayoAttachAnim="Bayonet_on"
      BayoDetachAnim="Bayonet_off"
      BayonetBoneName="bayonet"
      bHasBayonet=true
      IdleEmptyAnim="idle_empty"
-     IronIdleEmptyAnim="iron_idle_empty"
      MaxNumPrimaryMags=11
      InitialNumPrimaryMags=11
      CrawlForwardAnim="crawlF"

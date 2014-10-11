@@ -26,7 +26,6 @@ static function string GetString(
         default:
             return default.ResuppliedNoOperator;
     }
-
 }
 
 static function int getIconID(

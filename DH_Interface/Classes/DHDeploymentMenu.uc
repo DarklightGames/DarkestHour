@@ -1,14 +1,15 @@
 class DHDeploymentMenu extends ROGUIRoleSelection;
 
-var array<int>  VehiclePoolsSelectedIndices;
+var DHGUIList   li_VehiclePools;
+var DHGUIList   li_SpawnPoints;
+
 var float       VehiclePoolsUpdateTime;
-var float       VehicleSpawnPointsUpdateTime;
-
-var byte        VehicleSpawnPointIndex;
 var byte        VehiclePoolIndex;
+var array<int>  VehiclePoolIndices;
 
-//*************************************************************************************************************************************************************
-//*************************************************************************************************************************************************************
+var float       VehicleSpawnPointsUpdateTime;
+var byte        VehicleSpawnPointIndex;
+
 function bool InternalOnClick(GUIComponent Sender)
 {
     local ROPlayer player;
@@ -133,9 +134,8 @@ function UpdateVehiclePools()
     local int i, j;
     local string S;
     local DHPlayer C;
-    local DHGameReplicationInfo GRI;
+    local DHGameReplicationInfo DHGRI;
     local bool bIsEnabled;
-    local array<int> VehiclePoolIndices;
 
     C = DHPlayer(PlayerOwner());
 
@@ -144,29 +144,31 @@ function UpdateVehiclePools()
         return;
     }
 
-    GRI = DHGameReplicationInfo(C.GameReplicationInfo);
+    DHGRI = DHGameReplicationInfo(C.GameReplicationInfo);
 
-    if (GRI == none)
+    if (DHGRI == none)
     {
         return;
     }
 
-    if (VehiclePoolsUpdateTime < GRI.VehiclePoolsUpdateTime)
+    if (VehiclePoolsUpdateTime < DHGRI.VehiclePoolsUpdateTime)
     {
         //the vehicle pools were modified in such a way that requires
         //us to repopulate the list
         li_Roles.Clear();
 
-        for (i = 0; i < arraycount(GRI.VehiclePoolIsActives); ++i)
+        VehiclePoolIndices.Length = 0;
+
+        for (i = 0; i < arraycount(DHGRI.VehiclePoolIsActives); ++i)
         {
-            if (GRI.VehiclePoolIsActives[i] == 0 ||
-                GRI.VehiclePoolVehicleClasses[i].default.VehicleTeam != C.GetTeamNum())
+            if (DHGRI.VehiclePoolIsActives[i] == 0 ||
+                DHGRI.VehiclePoolVehicleClasses[i].default.VehicleTeam != C.GetTeamNum())
             {
                 //do not display inactive pools or those not belonging to player's team
                 continue;
             }
 
-            li_Roles.Add(GRI.VehiclePoolVehicleClasses[i].default.VehicleNameString);
+            li_Roles.Add(DHGRI.VehiclePoolVehicleClasses[i].default.VehicleNameString);
 
             Log("li_Roles.SetExtraAtIndex(" $ li_Roles.ItemCount - 1 $ ") =" @ i);
 
@@ -175,7 +177,7 @@ function UpdateVehiclePools()
             VehiclePoolIndices[VehiclePoolIndices.Length] = i;
         }
 
-        VehiclePoolsUpdateTime = GRI.VehiclePoolsUpdateTime;
+        VehiclePoolsUpdateTime = DHGRI.VehiclePoolsUpdateTime;
     }
 
     for (i = 0; i < VehiclePoolIndices.length; ++i)
@@ -183,23 +185,23 @@ function UpdateVehiclePools()
         j = VehiclePoolIndices[i];
 
         //build list entry string
-        S = GRI.VehiclePoolVehicleClasses[j].default.VehicleNameString;
+        S = DHGRI.VehiclePoolVehicleClasses[j].default.VehicleNameString;
 
-        if (!GRI.IsVehiclePoolInfinite(j))
+        if (!DHGRI.IsVehiclePoolInfinite(j))
         {
             //show vehicle spawns remaining if pool is not infinite
-            S @= "[" $ GRI.VehiclePoolSpawnsRemainings[j] $ "]";
-        }`
+            S @= "[" $ DHGRI.VehiclePoolSpawnsRemainings[j] $ "]";
+        }
 
-        if (C.Level.TimeSeconds < GRI.VehiclePoolNextAvailableTimes[j])
+        if (C.Level.TimeSeconds < DHGRI.VehiclePoolNextAvailableTimes[j])
         {
             //show countdown timer
-            S @= "(" $ class'ROHud'.static.GetTimeString(GRI.VehiclePoolNextAvailableTimes[j] - C.Level.TimeSeconds) $ ")";
+            S @= "(" $ class'ROHud'.static.GetTimeString(DHGRI.VehiclePoolNextAvailableTimes[j] - C.Level.TimeSeconds) $ ")";
 
             bIsEnabled = false;
         }
 
-        if (GRI.VehiclePoolSpawnsRemainings[j] == 0)
+        if (DHGRI.VehiclePoolSpawnsRemainings[j] == 0)
         {
             bIsEnabled = false;
         }
@@ -214,12 +216,9 @@ function UpdateVehiclePools()
 
 function UpdateVehicleSpawnPoints()
 {
-    local int i, j;
-    local string S;
+    local int i;
     local DHPlayer C;
-    local DHGameReplicationInfo GRI;
-    local bool bIsEnabled;
-    local array<int> VehicleSpawnPointIndices;
+    local DHGameReplicationInfo DHGRI;
 
     C = DHPlayer(PlayerOwner());
 
@@ -228,32 +227,31 @@ function UpdateVehicleSpawnPoints()
         return;
     }
 
-    GRI = DHGameReplicationInfo(C.GameReplicationInfo);
+    DHGRI = DHGameReplicationInfo(C.GameReplicationInfo);
 
     if (GRI == none)
     {
         return;
     }
 
-    if (VehicleSpawnPointsUpdateTime < GRI.VehicleSpawnPointsUpdateTime)
+    if (VehicleSpawnPointsUpdateTime < DHGRI.VehicleSpawnPointsUpdateTime)
     {
-        //the vehicle spawn points were modified in such a way that requires
-        //us to repopulate the list
+        //the vehicle spawn points were modified in such a way that requires us to repopulate the list
         li_AvailableWeapons[0].Clear();
 
         for (i = 0; i < 32; ++i)
         {
-            if(!GRI.IsVehicleSpawnPointActive(i) ||
-                GRI.GetVehicleSpawnPointTeamIndex(i) != C.GetTeamNum())
+            if(!DHGRI.IsVehicleSpawnPointActive(i) ||
+                DHGRI.GetVehicleSpawnPointTeamIndex(i) != C.GetTeamNum())
             {
                 continue;
             }
 
-            li_AvailableWeapons[0].Add(GRI.VehicleSpawnPointNames[i]);
+            li_AvailableWeapons[0].Add(DHGRI.VehicleSpawnPointNames[i]);
             li_AvailableWeapons[0].SetExtraAtIndex(li_AvailableWeapons[0].ItemCount - 1, "" $ i);
         }
 
-        VehicleSpawnPointsUpdateTime = GRI.VehicleSpawnPointsUpdateTime;
+        VehicleSpawnPointsUpdateTime = DHGRI.VehicleSpawnPointsUpdateTime;
     }
 
     li_AvailableWeapons[0].SortList();
@@ -261,25 +259,15 @@ function UpdateVehicleSpawnPoints()
 
 function InternalOnChange(GUIComponent Sender)
 {
-    local string s;
-
     switch (Sender)
     {
         case lb_Roles:
-            Log("li_Roles.Index =" @ li_Roles.Index);
-            Log("li_Roles.IsValid() =" @ li_Roles.IsValid());
-            Log("li_Roles.Elements[" $ li_Roles.Index $ "].ExtraStrData =" @ li_Roles.Elements[li_Roles.Index].ExtraStrData);
             VehiclePoolIndex = byte(li_Roles.GetExtra());
             break;
         case lb_AvailableWeapons[0]:
             VehicleSpawnPointIndex = byte(li_AvailableWeapons[0].GetExtra());
             break;
     }
-
-    Log("---------------------------");
-    Log("VehiclePoolIndex=" @ VehiclePoolIndex);
-    Log("VehicleSpawnPointIndex=" @ VehicleSpawnPointIndex);
-    Log("---------------------------");
 }
 
 function AttemptDeployment()
@@ -735,7 +723,7 @@ defaultproperties
 
      ConfigurationButtonText1="Options"
      ConfigurationButtonHint1="Show game and configuration options"
-     Background=Texture'DH_GUI_Tex.Menu.midgamemenu'
+     Background=none
 
      VehiclePoolsUpdateTime=-1.0
      VehicleSpawnPointsUpdateTime=-1.0
@@ -743,3 +731,4 @@ defaultproperties
      VehicleSpawnPointIndex=255
      VehiclePoolIndex=255
 }
+

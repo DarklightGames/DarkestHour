@@ -7,5 +7,4 @@ defaultproperties
          OnPreDraw=TheScrollbar.GripPreDraw
      End Object
      MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHGUIScrollTextBox.TheScrollbar'
-
 }
