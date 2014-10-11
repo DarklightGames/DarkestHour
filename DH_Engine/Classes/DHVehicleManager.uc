@@ -39,6 +39,8 @@ var const byte SpawnError_BadTeamPool;
 var const byte SpawnError_BadTeamSpawnPoint;
 var const byte SpawnError_TryToDriveFailed;
 
+var localized array<string> SpawnErrorStrings;
+
 const SpawnPointsMax = 32;
 const PoolsMax = 32;
 
@@ -591,6 +593,27 @@ function TogglePoolIsActiveByTag(name PoolTag)
 function bool IsPoolInfinite(byte PoolIndex)
 {
     return Pools[PoolIndex].MaxSpawns == 255;
+}
+
+static function string GetSpawnErrorString(int SpawnError)
+{
+    switch (SpawnError)
+    {
+        case default.SpawnError_None:
+        case default.SpawnError_Fatal:
+        case default.SpawnError_MaxVehicles:
+        case default.SpawnError_Cooldown:
+        case default.SpawnError_SpawnLimit:
+        case default.SpawnError_ActiveLimit:
+        case default.SpawnError_PoolInactive:
+        case default.SpawnError_SpawnInactive:
+        case default.SpawnError_Blocked:
+        case default.SpawnError_Failed:
+        case default.SpawnError_BadTeamPool:
+        case default.SpawnError_BadTeamSpawnPoint:
+        case default.SpawnError_TryToDriveFailed:
+            return "ERROR";
+    }
 }
 
 defaultproperties
