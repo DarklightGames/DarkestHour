@@ -65,6 +65,8 @@ var         int         CurrentMagIndex;            // The index of the magazine
 var         bool        bUsesMagazines;             // This weapon uses magazines, not single bullets, etc
 var         bool        bPlusOneLoading;            // Can have an extra round in the chamber when you reload before empty
 
+var         int         FillAmmoMagCount;
+
 //=============================================================================
 // replication
 //=============================================================================
@@ -1836,26 +1838,47 @@ function PerformReload()
 
 function bool FillAmmo()
 {
-    local int InitialAmount, i;
+    local int i;
+    local bool bDidFillAmmo;
 
-    if (PrimaryAmmoArray.Length == MaxNumPrimaryMags)
+    if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
     {
-        return false;
+        for (i = 0; i < default.FillAmmoMagCount; ++i)
+        {
+            PrimaryAmmoArray.Length = PrimaryAmmoArray.Length + 1;
+
+            Log("Added magazine (count:" @ PrimaryAmmoArray.Length $ ")");
+
+            PrimaryAmmoArray[PrimaryAmmoArray.Length - 1] = FireMode[0].AmmoClass.default.InitialAmount;
+
+            bDidFillAmmo = true;
+
+            if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
+            {
+                break;
+            }
+        }
+
+        CurrentMagCount = PrimaryAmmoArray.Length - 1;
+    }
+    else if (FillAmmoMagCount > 0)
+    {
+        for (i = 0; i < PrimaryAmmoArray.Length; ++i)
+        {
+            if (PrimaryAmmoArray[i] < FireMode[0].AmmoClass.default.InitialAmount)
+            {
+                Log("Filled magazine index" @ i @ " (previously" @ PrimaryAmmoArray[i] $ ")");
+
+                PrimaryAmmoArray[i] = FireMode[0].AmmoClass.default.InitialAmount;
+
+                bDidFillAmmo = true;
+
+                break;
+            }
+        }
     }
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
-
-    PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-    for(i=0; i<PrimaryAmmoArray.Length; i++)
-    {
-        PrimaryAmmoArray[i] = InitialAmount;
-    }
-    CurrentMagIndex=0;
-    CurrentMagCount = PrimaryAmmoArray.Length - 1;
-
-    AddAmmo(InitialAmount,0);
-
-    return true;
+    return bDidFillAmmo;
 }
 
 function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
@@ -2137,4 +2160,5 @@ defaultproperties
      LightBrightness=255.000000
      LightRadius=4.000000
      LightPeriod=3
+     FillAmmoMagCount=1
 }
