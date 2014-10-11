@@ -6,11 +6,11 @@ class DH_BARAmmoPickup extends ROMultiMagAmmoPickup;
 
 defaultproperties
 {
-     TouchMessage="Pick Up: BAR mag pouch"
+     TouchMessage="Pick Up: BAR magazine pouch"
      AmmoAmount=20
      MaxDesireability=0.300000
      InventoryType=Class'DH_Weapons.DH_BARAmmo'
-     PickupMessage="You picked up a BAR mag pouch."
+     PickupMessage="You picked up a BAR magazine pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh
      StaticMesh=StaticMesh'DH_WeaponPickups.AmmoPouches.BAR_Ammo_pickup'

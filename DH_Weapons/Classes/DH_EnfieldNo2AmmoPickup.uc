@@ -6,11 +6,11 @@ class DH_EnfieldNo2AmmoPickup extends ROMultiMagAmmoPickup;
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Enfield No2 ammo pouch"
+     TouchMessage="Pick Up: Enfield No. 2 ammunition pouch"
      AmmoAmount=7
      MaxDesireability=0.300000
      InventoryType=Class'DH_Weapons.DH_EnfieldNo2Ammo'
-     PickupMessage="You picked up an Enfield No2 ammo pouch."
+     PickupMessage="You picked up an Enfield No. 2 ammunition pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh
      StaticMesh=StaticMesh'WeaponPickupSM.pouches.tt33pouch'

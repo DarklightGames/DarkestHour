@@ -20,10 +20,10 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Enfield No2 Revolver"
+     TouchMessage="Pick Up: Enfield No. 2 Revolver"
      MaxDesireability=0.100000
      InventoryType=Class'DH_Weapons.DH_EnfieldNo2Weapon'
-     PickupMessage="You got the Enfield No2 Revolver."
+     PickupMessage="You got the Enfield No. 2 Revolver."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh
      StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.EnfieldNo2'

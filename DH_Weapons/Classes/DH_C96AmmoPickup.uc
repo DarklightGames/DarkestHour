@@ -6,11 +6,11 @@ class DH_C96AmmoPickup extends ROMultiMagAmmoPickup;
 
 defaultproperties
 {
-     TouchMessage="Pick Up: 20 round 7.63mm mag pouch"
+     TouchMessage="Pick Up: C96 magazine pouch"
      AmmoAmount=20
      MaxDesireability=0.300000
      InventoryType=Class'DH_Weapons.DH_C96Ammo'
-     PickupMessage="20 round 7.63mm mag pouch added to inventory."
+     PickupMessage="You picked up a C96 magazine pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh
      StaticMesh=StaticMesh'DH_WeaponPickups.AmmoPouches.C96_Ammo_pickup'
