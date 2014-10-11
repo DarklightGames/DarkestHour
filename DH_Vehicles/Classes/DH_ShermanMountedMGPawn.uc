@@ -13,8 +13,6 @@ defaultproperties
      CameraBone="mg_yaw"
      bDrawDriverInTP=false
      DrivePos=(Z=130.000000)
-     ExitPositions(0)=(X=98.000000,Y=100.000000,Z=156.000000)
-     ExitPositions(1)=(Y=100.000000,Z=156.000000)
      EntryRadius=130.000000
      FPCamViewOffset=(X=-2.000000,Z=5.000000)
      TPCamDistance=300.000000

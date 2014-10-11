@@ -62,6 +62,14 @@ var     bool        bDebuggingText;
 
 var     bool        bEmittersOn;
 
+struct ExitPositionPair
+{
+    var int Index;
+    var float DistanceSquared;
+};
+
+var bool bDebugExitPositions;
+
 //==============================================================================
 // Functions
 //==============================================================================
@@ -78,6 +86,37 @@ replication
 
     reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
         bEngineDead, bEngineOff;
+}
+
+static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
+{
+    return A.DistanceSquared > B.DistanceSquared;
+}
+
+//http://wiki.beyondunreal.com/Legacy:Insertion_Sort
+static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
+{
+    local int InsertIndex, RemovedIndex;
+
+    if (LowerBound < UpperBound)
+    {
+        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
+        {
+            InsertIndex = RemovedIndex;
+
+            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
+            {
+                --InsertIndex;
+            }
+
+            if ( RemovedIndex != InsertIndex )
+            {
+                MyArray.Insert(InsertIndex, 1);
+                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
+                MyArray.Remove(RemovedIndex + 1, 1);
+            }
+        }
+    }
 }
 
 simulated function PostBeginPlay()
@@ -449,119 +488,57 @@ function bool KDriverLeave(bool bForceLeave)
         Super.KDriverLeave(bForceLeave);
 }
 
-// Overridden to stop the game playing silly buggers with exit positions while moving and breaking my damage code
 function bool PlaceExitingDriver()
 {
-    local int       i, j;
-    local vector    tryPlace, Extent, HitLocation, HitNormal, ZOffset, RandomSphereLoc;
-    local float BestDir, NewDir;
+    local int i;
+    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
+    local array<ExitPositionPair> ExitPositionPairs;
 
     if (Driver == none)
+    {
         return false;
-    Extent = Driver.default.CollisionRadius * vect(1,1,0);
+    }
+
+    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
+    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
 
-    //avoid running driver over by placing in direction perpendicular to velocity
-    /*if (VSize(Velocity) > 100)
+    ExitPositionPairs.Length = ExitPositions.Length;
+
+    for (i = 0; i < ExitPositions.Length; ++i)
     {
-        tryPlace = Normal(Velocity cross vect(0,0,1)) * (CollisionRadius + Driver.default.CollisionRadius) * 1.25 ;
-        if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
+        ExitPositionPairs[i].Index = i;
+        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - ExitPositions[i]);
+    }
+
+    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
+
+    if (bDebugExitPositions)
+    {
+        for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
-            if ((tryPlace dot Controller.DirectionHint) < 0)
-                tryPlace *= -1;
+            ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+
+            Spawn(class'RODebugTracer',,, ExitPosition);
         }
-        else if (FRand() < 0.5)
-                tryPlace *= -1; //randomly prefer other side
-        if ((Trace(HitLocation, HitNormal, Location + tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location + tryPlace + ZOffset))
-             || (Trace(HitLocation, HitNormal, Location - tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location - tryPlace + ZOffset)))
+    }
+
+    for (i = 0; i < ExitPositionPairs.Length; ++i)
+    {
+        ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+
+        if (Trace(HitLocation, HitNormal, ExitPosition, Location + ZOffset, false, Extent) != none ||
+            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
+        {
+            continue;
+        }
+
+        if (Driver.SetLocation(ExitPosition))
+        {
             return true;
-    }*/
-
-    if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
-    {
-        // first try best position
-        tryPlace = Location;
-        BestDir = 0;
-        for(i=0; i<ExitPositions.Length; i++)
-        {
-            NewDir = Normal(ExitPositions[i] - Location) Dot Controller.DirectionHint;
-            if (NewDir > BestDir)
-            {
-                BestDir = NewDir;
-                tryPlace = ExitPositions[i];
-            }
-        }
-        Controller.DirectionHint = vect(0,0,0);
-        if (tryPlace != Location)
-        {
-            if (bRelativeExitPos)
-            {
-                if (ExitPositions[0].Z != 0)
-                    ZOffset = vect(0,0,1) * ExitPositions[0].Z;
-                else
-                    ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
-
-                tryPlace = Location + ((tryPlace-ZOffset) >> Rotation) + ZOffset;
-
-                // First, do a line check (stops us passing through things on exit).
-                if ((Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) == none)
-                    && Driver.SetLocation(tryPlace))
-                    return true;
-            }
-            else if (Driver.SetLocation(tryPlace))
-                return true;
         }
     }
 
-    if (!bRelativeExitPos)
-    {
-        for(i=0; i<ExitPositions.Length; i++)
-        {
-            tryPlace = ExitPositions[i];
-
-            if (Driver.SetLocation(tryPlace))
-                return true;
-            else
-            {
-                for (j=0; j<10; j++) // try random positions in a sphere...
-                {
-                    RandomSphereLoc = VRand()*200* FMax(FRand(),0.5);
-                    RandomSphereLoc.Z = Extent.Z * FRand();
-
-                    // First, do a line check (stops us passing through things on exit).
-                    if (Trace(HitLocation, HitNormal, tryPlace+RandomSphereLoc, tryPlace, false, Extent) == none)
-                    {
-                        if (Driver.SetLocation(tryPlace+RandomSphereLoc))
-                            return true;
-                    }
-                    else if (Driver.SetLocation(HitLocation))
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    for(i=0; i<ExitPositions.Length; i++)
-    {
-        if (ExitPositions[0].Z != 0)
-            ZOffset = vect(0,0,1) * ExitPositions[0].Z;
-        else
-            ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
-
-        tryPlace = Location + ((ExitPositions[i]-ZOffset) >> Rotation) + ZOffset;
-
-        // First, do a line check (stops us passing through things on exit).
-        if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-            continue;
-
-        // Then see if we can place the player there.
-        if (!Driver.SetLocation(tryPlace))
-            continue;
-
-        return true;
-    }
     return false;
 }
 

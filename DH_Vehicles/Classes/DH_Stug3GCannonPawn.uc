@@ -129,8 +129,6 @@ defaultproperties
      bFPNoZFromCameraPitch=true
      DrivePos=(Z=-6.000000)
      DriveAnim="stand_idlehip_binoc"
-     ExitPositions(0)=(Y=-150.000000,Z=150.000000)
-     ExitPositions(1)=(Y=150.000000,Z=150.000000)
      EntryRadius=130.000000
      FPCamPos=(Z=5.000000)
      TPCamDistance=300.000000

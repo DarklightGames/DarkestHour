@@ -575,7 +575,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
-    bAllowRiders=false
+    bAllowRiders=true
     PointValue=2.000000
     bSpecialTankTurning=false
 }

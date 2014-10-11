@@ -18,8 +18,6 @@ defaultproperties
      bDrawDriverInTP=false
      bDesiredBehindView=false
      DrivePos=(Z=130.000000)
-     ExitPositions(0)=(X=-45.000000,Y=20.000000,Z=150.000000)
-     ExitPositions(1)=(X=-125.000000,Y=20.000000,Z=125.000000)
      EntryRadius=130.000000
      FPCamViewOffset=(X=10.000000,Y=-5.000000,Z=1.000000)
      TPCamDistance=300.000000

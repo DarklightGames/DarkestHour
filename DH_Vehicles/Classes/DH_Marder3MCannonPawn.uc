@@ -8,7 +8,6 @@
 //==============================================================================
 class DH_Marder3MCannonPawn extends DH_AssaultGunCannonPawn;
 
-
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {
@@ -82,8 +81,6 @@ defaultproperties
      bFPNoZFromCameraPitch=true
      DrivePos=(X=-10.000000,Z=22.000000)
      DriveAnim="VSU76_com_idle_close"
-     ExitPositions(0)=(X=-50.000000,Y=-150.000000,Z=150.000000)
-     ExitPositions(1)=(X=-50.000000,Y=150.000000,Z=150.000000)
      EntryRadius=130.000000
      FPCamPos=(Z=5.000000)
      TPCamDistance=300.000000

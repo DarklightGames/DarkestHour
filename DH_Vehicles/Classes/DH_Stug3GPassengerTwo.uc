@@ -14,8 +14,6 @@ defaultproperties
      DrivePos=(X=-11.000000,Y=0.000000,Z=78.000000)
      DriveRot=(Pitch=34600)
      DriveAnim="VUC_rider1_idle"
-     ExitPositions(0)=(X=-120.000000,Y=0.000000)
-     ExitPositions(2)=(Y=-200.000000,Z=100.000000)
      EntryRadius=375.000000
      FPCamViewOffset=(X=0.000000,Z=0.000000)
      VehiclePositionString="riding a StuG III Ausf.G"

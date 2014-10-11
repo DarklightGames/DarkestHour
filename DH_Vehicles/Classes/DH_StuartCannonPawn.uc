@@ -29,8 +29,6 @@ defaultproperties
      bFPNoZFromCameraPitch=true
      DrivePos=(X=8.000000,Y=4.800000,Z=-5.750000)
      DriveAnim="VT60_com_idle_close"
-     ExitPositions(0)=(Y=-100.000000,Z=186.000000)
-     ExitPositions(1)=(Y=100.000000,Z=186.000000)
      EntryRadius=130.000000
      TPCamDistance=300.000000
      TPCamLookat=(X=-25.000000,Z=0.000000)

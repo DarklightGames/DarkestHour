@@ -79,6 +79,14 @@ defaultproperties
      VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Look'
      VehicleHudThreadsPosX(0)=0.370000
      VehicleHudThreadsPosY=0.480000
+     VehicleHudOccupantsX(3)=0.400000
+     VehicleHudOccupantsY(3)=0.670000
+     VehicleHudOccupantsX(4)=0.400000
+     VehicleHudOccupantsY(4)=0.760000
+     VehicleHudOccupantsX(5)=0.625000
+     VehicleHudOccupantsY(5)=0.760000
+     VehicleHudOccupantsX(6)=0.625000
+     VehicleHudOccupantsY(6)=0.670000
      VehicleHudThreadsScale=0.700000
      LeftWheelBones(0)="Wheel_L_1"
      LeftWheelBones(1)="Wheel_L_2"
@@ -112,6 +120,10 @@ defaultproperties
      ExhaustPipes(1)=(ExhaustPosition=(X=-175.000000,Y=-30.000000,Z=10.000000),ExhaustRotation=(Pitch=36000))
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_CromwellCannonPawn',WeaponBone="Turret_placement")
      PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_CromwellMountedMGPawn',WeaponBone="Mg_attachment")
+     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_CromwellPassengerOne',WeaponBone="body")
+     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_CromwellPassengerTwo',WeaponBone="body")
+     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_CromwellPassengerThree',WeaponBone="body")
+     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_CromwellPassengerFour',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
@@ -197,8 +209,10 @@ defaultproperties
      bFPNoZFromCameraPitch=true
      DrivePos=(X=-2.000000,Y=-5.000000,Z=2.000000)
      DriveAnim="VUC_driver_idle_close"
-     ExitPositions(0)=(X=100.000000,Y=150.000000,Z=156.000000)
-     ExitPositions(1)=(Y=150.000000,Z=156.000000)
+     ExitPositions(0)=(X=100.000000,Y=-165.000000,Z=25.000000)
+     ExitPositions(1)=(X=100.000000,Y=165.000000,Z=25.000000)
+     ExitPositions(2)=(X=-100.000000,Y=-165.000000,Z=25.000000)
+     ExitPositions(3)=(X=-100.000000,Y=165.000000,Z=-25.000000)
      EntryRadius=375.000000
      FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
      TPCamDistance=600.000000

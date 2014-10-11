@@ -160,8 +160,6 @@ defaultproperties
      CameraBone="Camera_com"
      DrivePos=(X=0.000000,Y=0.000000,Z=-15.000000)
      DriveAnim="stand_idlehip_satchel"
-     ExitPositions(0)=(X=-30.000000,Y=38.000000,Z=105.000000)
-     ExitPositions(1)=(X=-30.000000,Y=38.000000,Z=105.000000)
      EntryRadius=350.000000
      VehicleNameString="Higgins Boat"
      HUDOverlayFOV=90.000000

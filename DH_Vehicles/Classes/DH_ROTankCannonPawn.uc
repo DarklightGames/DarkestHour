@@ -9,6 +9,12 @@
 class DH_ROTankCannonPawn extends ROTankCannonPawn
         abstract;
 
+struct ExitPositionPair
+{
+    var int Index;
+    var float DistanceSquared;
+};
+
 var     bool    bShowRangeText; //turn the Range scale text on/off
 var()   bool    bShowCenter; // AB
 var()   bool    bDebugSightMover; // AB
@@ -56,6 +62,98 @@ var     bool    bDrawPenetration;
 var     bool    bDebuggingText;
 var     bool    bPenetrationText;
 var     bool    bLogPenetration;
+var     bool    bDebugExitPositions;
+
+static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
+{
+    return A.DistanceSquared > B.DistanceSquared;
+}
+
+//http://wiki.beyondunreal.com/Legacy:Insertion_Sort
+static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
+{
+    local int InsertIndex, RemovedIndex;
+
+    if (LowerBound < UpperBound)
+    {
+        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
+        {
+            InsertIndex = RemovedIndex;
+
+            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
+            {
+                --InsertIndex;
+            }
+
+            if ( RemovedIndex != InsertIndex )
+            {
+                MyArray.Insert(InsertIndex, 1);
+                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
+                MyArray.Remove(RemovedIndex + 1, 1);
+            }
+        }
+    }
+}
+
+// Overridden to stop the game playing silly buggers with exit positions while moving and breaking my damage code
+function bool PlaceExitingDriver()
+{
+    local int i;
+    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
+    local array<ExitPositionPair> ExitPositionPairs;
+
+    if (Driver == none)
+    {
+        return false;
+    }
+
+    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+
+    if (VehicleBase == none)
+    {
+        return false;
+    }
+
+    ExitPositionPairs.Length = VehicleBase.ExitPositions.Length;
+
+    for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
+    {
+        ExitPositionPairs[i].Index = i;
+        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - VehicleBase.ExitPositions[i]);
+    }
+
+    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
+
+    if (bDebugExitPositions)
+    {
+        for (i = 0; i < ExitPositionPairs.Length; ++i)
+        {
+            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
+
+            Spawn(class'RODebugTracer',,,ExitPosition);
+        }
+    }
+
+    for (i = 0; i < ExitPositionPairs.Length; ++i)
+    {
+        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
+
+        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) != none ||
+            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
+        {
+            continue;
+        }
+
+        if (Driver.SetLocation(ExitPosition))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 //=============================================================================
 // replication
@@ -369,63 +467,6 @@ simulated function ClientKDriverLeave(PlayerController PC)
     Super.ClientKDriverLeave(PC);
 }
 
-// Overridden to stop the game dumping players off the tank when they exit while moving
-function bool PlaceExitingDriver()
-{
-    local int i;
-    local vector tryPlace, Extent, HitLocation, HitNormal, ZOffset;
-
-    Extent = Driver.default.CollisionRadius * vect(1,1,0);
-    Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
-
-    //avoid running driver over by placing in direction perpendicular to velocity
-/*  if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
-    {
-        tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
-        if (FRand() < 0.5)
-            tryPlace *= -1; //randomly prefer other side
-        if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
-             || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
-            return true;
-    }*/
-
-    for(i=0; i<ExitPositions.Length; i++)
-    {
-        if (bRelativeExitPos)
-        {
-            if (VehicleBase != none)
-                tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-                else if (Gun != none)
-                    tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-                else
-                    tryPlace = Location + (ExitPositions[i] >> Rotation);
-            }
-        else
-            tryPlace = ExitPositions[i];
-
-        // First, do a line check (stops us passing through things on exit).
-        if (bRelativeExitPos)
-        {
-            if (VehicleBase != none)
-            {
-                if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
-                    continue;
-            }
-            else
-                if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-                    continue;
-        }
-
-        // Then see if we can place the player there.
-        if (!Driver.SetLocation(tryPlace))
-            continue;
-
-        return true;
-    }
-    return false;
-}
-
 function ServerChangeDriverPos()
 {
     DriverPositionIndex = InitialPositionIndex;
@@ -611,8 +652,6 @@ simulated state LeavingVehicle
 
 function bool CanFire()
 {
-    Level.Game.Broadcast(self, "" $ DriverPositionIndex @ PeriscopePositionIndex @ BinocPositionIndex);
-
     return !IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex && ROPlayer(Controller) != none;
 }
 

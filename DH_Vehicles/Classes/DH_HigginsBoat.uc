@@ -170,122 +170,6 @@ function RampDownIdle()
     DestAnimName=RampDownIdleAnim;
 }
 
-// Overridden from Vehicle.uc to prevent being spawned outside the boat while moving
-function bool PlaceExitingDriver()
-{
-    local int       i, j;
-    local vector    tryPlace, Extent, HitLocation, HitNormal, ZOffset, RandomSphereLoc;
-    local float BestDir, NewDir;
-
-    if (Driver == none)
-        return false;
-    Extent = Driver.default.CollisionRadius * vect(1,1,0);
-    Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
-
-/*  //avoid running driver over by placing in direction perpendicular to velocity
-    if (VSize(Velocity) > 100)
-    {
-        tryPlace = Normal(Velocity cross vect(0,0,1)) * (CollisionRadius + Driver.default.CollisionRadius) * 1.25 ;
-        if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
-        {
-            if ((tryPlace dot Controller.DirectionHint) < 0)
-                tryPlace *= -1;
-        }
-        else if (FRand() < 0.5)
-                tryPlace *= -1; //randomly prefer other side
-        if ((Trace(HitLocation, HitNormal, Location + tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location + tryPlace + ZOffset))
-             || (Trace(HitLocation, HitNormal, Location - tryPlace + ZOffset, Location + ZOffset, false, Extent) == none && Driver.SetLocation(Location - tryPlace + ZOffset)))
-            return true;
-    }
-*/
-    if ((Controller != none) && (Controller.DirectionHint != vect(0,0,0)))
-    {
-        // first try best position
-        tryPlace = Location;
-        BestDir = 0;
-        for(i=0; i<ExitPositions.Length; i++)
-        {
-            NewDir = Normal(ExitPositions[i] - Location) Dot Controller.DirectionHint;
-            if (NewDir > BestDir)
-            {
-                BestDir = NewDir;
-                tryPlace = ExitPositions[i];
-            }
-        }
-        Controller.DirectionHint = vect(0,0,0);
-        if (tryPlace != Location)
-        {
-            if (bRelativeExitPos)
-            {
-                if (ExitPositions[0].Z != 0)
-                    ZOffset = vect(0,0,1) * ExitPositions[0].Z;
-                else
-                    ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
-
-                tryPlace = Location + ((tryPlace-ZOffset) >> Rotation) + ZOffset;
-
-                // First, do a line check (stops us passing through things on exit).
-                if ((Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) == none)
-                    && Driver.SetLocation(tryPlace))
-                    return true;
-            }
-            else if (Driver.SetLocation(tryPlace))
-                return true;
-        }
-    }
-
-    if (!bRelativeExitPos)
-    {
-        for(i=0; i<ExitPositions.Length; i++)
-        {
-            tryPlace = ExitPositions[i];
-
-            if (Driver.SetLocation(tryPlace))
-                return true;
-            else
-            {
-                for (j=0; j<10; j++) // try random positions in a sphere...
-                {
-                    RandomSphereLoc = VRand()*200* FMax(FRand(),0.5);
-                    RandomSphereLoc.Z = Extent.Z * FRand();
-
-                    // First, do a line check (stops us passing through things on exit).
-                    if (Trace(HitLocation, HitNormal, tryPlace+RandomSphereLoc, tryPlace, false, Extent) == none)
-                    {
-                        if (Driver.SetLocation(tryPlace+RandomSphereLoc))
-                            return true;
-                    }
-                    else if (Driver.SetLocation(HitLocation))
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    for(i=0; i<ExitPositions.Length; i++)
-    {
-        if (ExitPositions[0].Z != 0)
-            ZOffset = vect(0,0,1) * ExitPositions[0].Z;
-        else
-            ZOffset = Driver.default.CollisionHeight * vect(0,0,2);
-
-        tryPlace = Location + ((ExitPositions[i]-ZOffset) >> Rotation) + ZOffset;
-
-        // First, do a line check (stops us passing through things on exit).
-        if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-            continue;
-
-        // Then see if we can place the player there.
-        if (!Driver.SetLocation(tryPlace))
-            continue;
-
-        return true;
-    }
-    return false;
-}
-
 event RanInto(Actor Other)
 {
      return;
@@ -351,12 +235,12 @@ defaultproperties
      ExhaustEffectLowClass=Class'ROEffects.ExhaustDieselEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-270.000000,Y=-30.000000,Z=23.000000),ExhaustRotation=(Pitch=31000))
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsBoatGunnerPawn',WeaponBone="mg_base")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="passenger_L1")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="passenger_L2")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerThree',WeaponBone="passenger_L3")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="passenger_R1")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="passenger_R2")
-     PassengerWeapons(6)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="passenger_R3")
+     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="Master1z00")
+     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="Master1z00")
+     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerThree',WeaponBone="Master1z00")
+     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="Master1z00")
+     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="Master1z00")
+     PassengerWeapons(6)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="Master1z00")
      IdleSound=Sound'DH_AlliedVehicleSounds.HigginsIdle01'
      StartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
      ShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'

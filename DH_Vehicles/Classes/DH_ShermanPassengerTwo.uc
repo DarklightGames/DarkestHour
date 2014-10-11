@@ -14,7 +14,6 @@ defaultproperties
      DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
      DriveRot=(Yaw=32768)
      DriveAnim="VHalftrack_Rider4_idle"
-     ExitPositions(2)=(X=-100.000000,Z=100.000000)
      EntryRadius=375.000000
      FPCamViewOffset=(X=0.000000,Z=0.000000)
      TPCamDistance=200.000000

@@ -17,7 +17,6 @@ var(Messages) localized string CannotRide;
 var(Messages) localized string VehicleFull;
 var(Messages) localized string CannotExit;
 var(Messages) localized string AssaultGunExit;
-var(Messages) localized string Sabotaged;
 var(Messages) localized string OverSpeed;
 var(Messages) localized string VehicleBurning;
 
@@ -45,8 +44,6 @@ static function string GetString(
              return default.CannotExit;
         case 5:
              return default.AssaultGunExit;
-        case 6:
-             return default.Sabotaged;
         case 7:
              return default.OverSpeed;
         case 8:
@@ -68,7 +65,6 @@ defaultproperties
      VehicleFull="All Rider Positions are Occupied"
      CannotExit="You Must Unbutton the Hatch to Exit"
      AssaultGunExit="You Must Exit Through Commander's Hatch"
-     Sabotaged="Booby Trapped!"
      OverSpeed="Slow Down!"
      Vehicleburning="Vehicle is on Fire!"
 }

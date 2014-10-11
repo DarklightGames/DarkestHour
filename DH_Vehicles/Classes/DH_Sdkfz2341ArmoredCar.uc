@@ -102,6 +102,7 @@ defaultproperties
      ExhaustPipes(0)=(ExhaustPosition=(X=-230.000000,Y=-68.000000,Z=45.000000),ExhaustRotation=(Pitch=36000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=69.000000,Z=45.000000),ExhaustRotation=(Pitch=36000))
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz2341CannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz234PassengerOne',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'

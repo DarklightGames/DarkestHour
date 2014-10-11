@@ -32,8 +32,6 @@ defaultproperties
      CameraBone="Gun"
      bPCRelativeFPRotation=true
      bFPNoZFromCameraPitch=true
-     ExitPositions(0)=(Y=-100.000000,Z=160.000000)
-     ExitPositions(1)=(Y=100.000000,Z=160.000000)
      EntryRadius=130.000000
      FPCamPos=(X=50.000000,Y=-30.000000,Z=11.000000)
      TPCamDistance=300.000000

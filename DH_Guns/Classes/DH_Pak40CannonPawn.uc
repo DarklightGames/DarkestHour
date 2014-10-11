@@ -28,22 +28,6 @@ defaultproperties
      bFPNoZFromCameraPitch=true
      DrivePos=(X=-20.000000,Z=-44.000000)
      DriveAnim="crouch_idlehold_bayo"
-     ExitPositions(0)=(X=-150.000000,Y=0.000000,Z=0.000000)
-     ExitPositions(1)=(X=-100.000000,Y=0.000000,Z=0.000000)
-     ExitPositions(2)=(X=-100.000000,Y=20.000000,Z=0.000000)
-     ExitPositions(3)=(X=-100.000000,Y=-20.000000,Z=0.000000)
-     ExitPositions(4)=(Y=50.000000,Z=0.000000)
-     ExitPositions(5)=(Y=-50.000000,Z=0.000000)
-     ExitPositions(6)=(X=-50.000000,Y=-50.000000,Z=0.000000)
-     ExitPositions(7)=(X=-50.000000,Y=50.000000,Z=0.000000)
-     ExitPositions(8)=(X=-75.000000,Y=75.000000,Z=0.000000)
-     ExitPositions(9)=(X=-75.000000,Y=-75.000000,Z=0.000000)
-     ExitPositions(10)=(X=-40.000000,Y=0.000000,Z=5.000000)
-     ExitPositions(11)=(X=-60.000000,Y=0.000000,Z=5.000000)
-     ExitPositions(12)=(X=-60.000000,Z=10.000000)
-     ExitPositions(13)=(X=-60.000000,Z=15.000000)
-     ExitPositions(14)=(X=-60.000000,Z=20.000000)
-     ExitPositions(15)=(Z=5.000000)
      EntryRadius=200.000000
      VehiclePositionString="Using a Pak40 AT-Gun"
      VehicleNameString="Pak40 AT-Gun"

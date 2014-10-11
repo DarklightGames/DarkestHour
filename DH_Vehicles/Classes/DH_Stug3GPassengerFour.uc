@@ -14,8 +14,6 @@ defaultproperties
      DrivePos=(X=0.000000,Y=0.000000,Z=57.000000)
      DriveRot=(Pitch=1800)
      DriveAnim="crouch_idle_binoc"
-     ExitPositions(0)=(X=-120.000000,Y=0.000000)
-     ExitPositions(2)=(Y=-200.000000,Z=100.000000)
      EntryRadius=375.000000
      FPCamViewOffset=(X=0.000000,Z=0.000000)
      VehiclePositionString="riding on a StuG III Ausf.G"

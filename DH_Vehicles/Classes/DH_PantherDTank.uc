@@ -115,6 +115,10 @@ defaultproperties
      ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=-20.000000,Z=65.000000),ExhaustRotation=(Pitch=22000))
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
      PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerOne',WeaponBone="body")
+     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerTwo',WeaponBone="body")
+     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerThree',WeaponBone="body")
+     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerFour',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
@@ -123,12 +127,23 @@ defaultproperties
      BeginningIdleAnim="driver_hatch_idle_close"
      DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000,bDrawOverlays=true)
      DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
+
      InitialPositionIndex=0
      VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panther_body'
+
      VehicleHudOccupantsX(0)=0.450000
-     VehicleHudOccupantsX(2)=0.550000
      VehicleHudOccupantsY(0)=0.380000
+     VehicleHudOccupantsX(2)=0.550000
      VehicleHudOccupantsY(2)=0.380000
+     VehicleHudOccupantsX(3)=0.400000
+     VehicleHudOccupantsY(3)=0.690000
+     VehicleHudOccupantsX(4)=0.400000
+     VehicleHudOccupantsY(4)=0.790000
+     VehicleHudOccupantsX(5)=0.605000
+     VehicleHudOccupantsY(5)=0.790000
+     VehicleHudOccupantsX(6)=0.605000
+     VehicleHudOccupantsY(6)=0.690000
+
      VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=100.000000,Y=-30.000000,Z=61.000000),bPenetrationPoint=false)
      VehHitpoints(1)=(PointRadius=32.000000,PointHeight=35.000000,PointOffset=(X=-90.000000,Z=6.000000),DamageMultiplier=1.000000)
      VehHitpoints(2)=(PointRadius=15.000000,PointHeight=30.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=20.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)

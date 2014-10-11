@@ -192,8 +192,6 @@ defaultproperties
      DrivePos=(X=-11.000000,Y=-4.000000,Z=31.000000)
      DriveRot=(Yaw=16384)
      DriveAnim="VUC_com_idle_close"
-     ExitPositions(0)=(X=25.000000,Y=-110.000000,Z=60.000000)
-     ExitPositions(1)=(X=25.000000,Y=110.000000,Z=60.000000)
      EntryRadius=130.000000
      FPCamPos=(X=10.000000)
      TPCamDistance=50.000000

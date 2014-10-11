@@ -14,8 +14,6 @@ defaultproperties
      CameraBone="Passenger4"
      DrivePos=(X=0.000000,Y=0.000000,Z=7.000000)
      DriveAnim="VHalftrack_Rider2_idle"
-     ExitPositions(0)=(X=-80.000000,Y=100.000000,Z=85.000000)
-     ExitPositions(1)=(X=-80.000000,Y=-100.000000,Z=85.000000)
      EntryRadius=225.000000
      FPCamViewOffset=(X=0.000000,Z=0.000000)
      TPCamLookat=(X=-27.000000)

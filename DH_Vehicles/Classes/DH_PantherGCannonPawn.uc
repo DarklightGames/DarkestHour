@@ -38,8 +38,6 @@ defaultproperties
      bPCRelativeFPRotation=true
      bFPNoZFromCameraPitch=true
      DriveAnim="VPanther_com_idle_close"
-     ExitPositions(0)=(X=-120.000000,Z=130.000000)
-     ExitPositions(1)=(Y=200.000000,Z=100.000000)
      EntryRadius=130.000000
      TPCamDistance=300.000000
      TPCamLookat=(X=-25.000000,Z=0.000000)

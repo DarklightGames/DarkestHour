@@ -51,64 +51,6 @@ simulated function ClientKDriverLeave(PlayerController PC)
     Super.ClientKDriverLeave(PC);
 }
 
-// Overridden from Vehicle.uc to prevent being spawned outside the boat while moving and
-// to allow passengers to exit with correct heights and rotations
-function bool PlaceExitingDriver()
-{
-    local int i;
-    local vector tryPlace, Extent, HitLocation, HitNormal, ZOffset;
-
-    Extent = Driver.default.CollisionRadius * vect(1,1,0);
-    Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
-
-/*  //avoid running driver over by placing in direction perpendicular to velocity
-    if (VehicleBase != none && VSize(VehicleBase.Velocity) > 100)
-    {
-        tryPlace = Normal(VehicleBase.Velocity cross vect(0,0,1)) * (VehicleBase.CollisionRadius * 1.25);
-        if (FRand() < 0.5)
-            tryPlace *= -1; //randomly prefer other side
-        if ((VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location + tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location + tryPlace + ZOffset))
-             || (VehicleBase.Trace(HitLocation, HitNormal, VehicleBase.Location - tryPlace + ZOffset, VehicleBase.Location + ZOffset, false, Extent) == none && Driver.SetLocation(VehicleBase.Location - tryPlace + ZOffset)))
-            return true;
-    }*/
-
-    for(i=0; i<ExitPositions.Length; i++)
-    {
-        if (bRelativeExitPos)
-        {
-            if (VehicleBase != none)
-                tryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-            else if (Gun != none)
-                tryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-            else
-                tryPlace = Location + (ExitPositions[i] >> Rotation);
-        }
-        else
-            tryPlace = ExitPositions[i];
-
-        // First, do a line check (stops us passing through things on exit).
-        if (bRelativeExitPos)
-        {
-            if (VehicleBase != none)
-            {
-                if (VehicleBase.Trace(HitLocation, HitNormal, tryPlace, VehicleBase.Location + ZOffset, false, Extent) != none)
-                    continue;
-            }
-            else
-                if (Trace(HitLocation, HitNormal, tryPlace, Location + ZOffset, false, Extent) != none)
-                    continue;
-        }
-
-        // Then see if we can place the player there.
-        if (!Driver.SetLocation(tryPlace))
-            continue;
-
-        return true;
-    }
-    return false;
-}
-
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
@@ -370,8 +312,6 @@ defaultproperties
      DrivePos=(Y=-5.000000,Z=14.000000)
      DriveRot=(Yaw=16384)
      DriveAnim="VHalftrack_com_idle"
-     ExitPositions(0)=(X=-30.000000,Y=38.000000,Z=105.000000)
-     ExitPositions(1)=(X=-30.000000,Y=38.000000,Z=105.000000)
      EntryRadius=350.000000
      TPCamDistance=300.000000
      TPCamLookat=(X=-25.000000,Z=0.000000)

@@ -32,6 +32,98 @@ var     float DestAnimRate;
 
 var     float       PointValue;
 
+struct ExitPositionPair
+{
+    var int Index;
+    var float DistanceSquared;
+};
+
+var bool bDebugExitPositions;
+
+static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
+{
+    return A.DistanceSquared > B.DistanceSquared;
+}
+
+static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
+{
+    local int InsertIndex, RemovedIndex;
+
+    if (LowerBound < UpperBound)
+    {
+        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
+        {
+            InsertIndex = RemovedIndex;
+
+            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
+            {
+                --InsertIndex;
+            }
+
+            if ( RemovedIndex != InsertIndex )
+            {
+                MyArray.Insert(InsertIndex, 1);
+                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
+                MyArray.Remove(RemovedIndex + 1, 1);
+            }
+        }
+    }
+}
+
+function bool PlaceExitingDriver()
+{
+    local int i;
+    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
+    local array<ExitPositionPair> ExitPositionPairs;
+
+    if (Driver == none)
+    {
+        return false;
+    }
+
+    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent.Z = Driver.default.CollisionHeight;
+    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+
+    ExitPositionPairs.Length = ExitPositions.Length;
+
+    for (i = 0; i < ExitPositions.Length; ++i)
+    {
+        ExitPositionPairs[i].Index = i;
+        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - ExitPositions[i]);
+    }
+
+    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
+
+    if (bDebugExitPositions)
+    {
+        for (i = 0; i < ExitPositionPairs.Length; ++i)
+        {
+            ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+
+            Spawn(class'RODebugTracer',,, ExitPosition);
+        }
+    }
+
+    for (i = 0; i < ExitPositionPairs.Length; ++i)
+    {
+        ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+
+        if (Trace(HitLocation, HitNormal, ExitPosition, Location + ZOffset, false, Extent) != none ||
+            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
+        {
+            continue;
+        }
+
+        if (Driver.SetLocation(ExitPosition))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 //=============================================================================
 // Functions
 //=============================================================================
@@ -401,4 +493,5 @@ defaultproperties
      PitchDownLimit=58000
      CollisionRadius=300.000000
      CollisionHeight=45.000000
+     bDebugExitPositions=true
 }

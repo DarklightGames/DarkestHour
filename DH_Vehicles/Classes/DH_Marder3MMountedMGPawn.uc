@@ -165,8 +165,6 @@ defaultproperties
      DrivePos=(X=7.000000,Z=-22.000000)
      DriveRot=(Yaw=16384)
      DriveAnim="VHalftrack_com_idle"
-     ExitPositions(0)=(X=-60.000000,Y=100.000000,Z=100.000000)
-     ExitPositions(1)=(X=-150.000000,Y=100.000000,Z=100.000000)
      EntryRadius=130.000000
      TPCamDistance=300.000000
      TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)

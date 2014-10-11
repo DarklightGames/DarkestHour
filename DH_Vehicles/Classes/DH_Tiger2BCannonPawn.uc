@@ -39,10 +39,6 @@ defaultproperties
      bFPNoZFromCameraPitch=true
      DrivePos=(Z=5.000000)
      DriveAnim="VPanther_com_idle_close"
-     ExitPositions(0)=(X=-150.000000,Z=125.000000)
-     ExitPositions(1)=(X=-150.000000,Z=125.000000)
-     ExitPositions(2)=(Y=150.000000,Z=125.000000)
-     ExitPositions(3)=(Y=-150.000000,Z=125.000000)
      EntryRadius=130.000000
      FPCamPos=(Y=-27.000000)
      TPCamDistance=300.000000

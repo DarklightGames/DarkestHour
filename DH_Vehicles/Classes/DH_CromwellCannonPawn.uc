@@ -32,8 +32,6 @@ defaultproperties
      bFPNoZFromCameraPitch=true
      DrivePos=(Z=-3.000000)
      DriveAnim="VT3485_com_idle_close"
-     ExitPositions(0)=(Y=-120.000000,Z=150.000000)
-     ExitPositions(1)=(Y=120.000000,Z=150.000000)
      EntryRadius=130.000000
      TPCamDistance=300.000000
      TPCamLookat=(X=-25.000000,Z=0.000000)
