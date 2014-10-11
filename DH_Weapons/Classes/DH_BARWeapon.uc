@@ -125,24 +125,16 @@ simulated function BringUp(optional Weapon PrevWeapon)
     if (Role == ROLE_Authority)
     {
         ROPawn(Instigator).bWeaponCanBeResupplied = true;
-
-        if (CurrentMagCount != (MaxNumPrimaryMags - 1))
-        {
-            ROPawn(Instigator).bWeaponNeedsResupply = true;
-        }
-        else
-        {
-            ROPawn(Instigator).bWeaponNeedsResupply = false;
-        }
+        ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount != (MaxNumPrimaryMags - 1);
     }
 }
 
 simulated function bool PutDown()
 {
+    return super.PutDown();
+
     ROPawn(Instigator).bWeaponCanBeResupplied = false;
     ROPawn(Instigator).bWeaponNeedsResupply = false;
-
-    return super.PutDown();
 }
 
 function GiveTo(Pawn Other, optional Pickup Pickup)
@@ -150,15 +142,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
     super.GiveTo(Other,Pickup);
 
     ROPawn(Instigator).bWeaponCanBeResupplied = true;
-
-    if (CurrentMagCount <= (MaxNumPrimaryMags - 1))
-    {
-        ROPawn(Instigator).bWeaponNeedsResupply = true;
-    }
-    else
-    {
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-    }
+    ROPawn(Instigator).bWeaponNeedsResupply = CurrentMagCount <= (MaxNumPrimaryMags - 1);
 }
 
 function DropFrom(vector StartLocation)
