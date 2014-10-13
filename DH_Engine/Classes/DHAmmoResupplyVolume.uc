@@ -50,13 +50,15 @@ function Timer()
     local DH_RoleInfo DHRI;
 
     if (Role < ROLE_Authority || !bActive)
+    {
         return;
+    }
 
     foreach TouchingActors(class'Pawn', recvr)
     {
-        if (Team==OWNER_Neutral || recvr.GetTeamNum()==Team)
+        if (Team == OWNER_Neutral || recvr.GetTeamNum() == Team)
         {
-            bResupplied=false;
+            bResupplied = false;
 
             if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
             {
@@ -64,7 +66,9 @@ function Timer()
                 V = Vehicle(recvr);
 
                 if (P != none)
+                {
                     DHRI = P.GetRoleInfo();
+                }
 
                 if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
                 {
@@ -74,37 +78,48 @@ function Timer()
                         recvr_weapon = ROWeapon(recvr_inv);
 
                         //Don't allow resupplying of enemy weapons
-                        if (recvr_weapon.IsGrenade() == true && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetGrenadeWeapon())
-                           && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetSecGrenadeWeapon()))
+                        if (recvr_weapon.IsGrenade() &&
+                            recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetGrenadeWeapon()) &&
+                            recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetSecGrenadeWeapon()))
                         {
-                           if (recvr_weapon.Name == 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name == 'DH_OrangeSmokeGrenadeWeapon')
-                               bEnemySmokeFound = true;
-                           else
-                               bEnemyGrenadeFound = true;
+                            if (recvr_weapon.Name ~= 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name ~= 'DH_OrangeSmokeGrenadeWeapon')
+                            {
+                                bEnemySmokeFound = true;
+                            }
+                            else
+                            {
+                                bEnemyGrenadeFound = true;
+                            }
                         }
                         else if (recvr_weapon != none && recvr_weapon.FillAmmo())
-                                bResupplied=true;
+                        {
+                            bResupplied = true;
+                        }
                     }
 
                     if (DHRI != none)
                     {
                         if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
                         {
-                            P.bHasMGAmmo =true;
-                            bResupplied=true;
+                            P.bHasMGAmmo = true;
+                            bResupplied = true;
                         }
                     }
 
                     // Resupply explosive weapons
-                    if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound,bEnemySmokeFound))
-                        bResupplied=true;
+                    if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound, bEnemySmokeFound))
+                    {
+                        bResupplied = true;
+                    }
                 }
 
                 if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
                 {
                     // Resupply vehicles
                     if (V.ResupplyAmmo())
-                        bResupplied=true;
+                    {
+                        bResupplied = true;
+                    }
                 }
 
                 //Mortar specific resupplying.
@@ -113,12 +128,14 @@ function Timer()
                     if (DHRI.bCanUseMortars)
                     {
                         P.FillMortarAmmunition();
+
                         bResupplied = true;
                     }
 
                     if (!P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo)
                     {
                         P.bHasMortarAmmo = true;
+
                         bResupplied = true;
                     }
                 }
