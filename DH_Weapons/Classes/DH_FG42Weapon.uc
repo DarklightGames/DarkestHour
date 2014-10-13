@@ -75,7 +75,7 @@ simulated state SwitchingFireMode extends Busy
                 PlayAnim(Anim, 1.0, FastTweenTime);
         }
 
-            SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
+        SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
 
         ServerChangeFireMode();
 
@@ -89,14 +89,7 @@ simulated state SwitchingFireMode extends Busy
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-    if (FireMode[0].bWaitForRelease)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return !FireMode[0].bWaitForRelease;
 }
 
 defaultproperties
