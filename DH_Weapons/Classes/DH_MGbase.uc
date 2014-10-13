@@ -489,7 +489,6 @@ defaultproperties
 {
      bCanFireFromHip=true
      InitialBarrels=2
-     ROBarrelSteamEmitterClass=Class'ROEffects.ROMGSteam'
      NumMagsToResupply=2
 }
 

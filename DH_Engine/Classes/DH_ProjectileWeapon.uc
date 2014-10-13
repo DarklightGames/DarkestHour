@@ -2586,4 +2586,5 @@ defaultproperties
      LightRadius=4.000000
      LightPeriod=3
      FillAmmoMagCount=1
+     ROBarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
 }
