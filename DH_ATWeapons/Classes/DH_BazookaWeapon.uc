@@ -758,34 +758,6 @@ function bool ResupplyAmmo()
         return false;
 }
 
-// Special ammo handling for Bazooka to allow a single rocket to be added to the inventory only
-function bool FillAmmo()
-{
-    // ResupplyAmmo();
-    local int InitialAmount, i;
-
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
-
-    if ((CurrentMagCount == 0) && AmmoAmount(0) == 0)
-    {
-        for(i=NumMagsToResupply; i>0; i--)
-        {
-            if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-            {
-                PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
-            }
-        }
-
-        CurrentMagCount = PrimaryAmmoArray.Length - 1;
-        NetUpdateTime = Level.TimeSeconds - 1;
-
-        DH_Pawn(Instigator).bWeaponNeedsResupply = false;   // Use this if ammo dump doesn't remove reload message
-        DH_Pawn(Instigator).bWeaponNeedsReload = true;
-
-        return true;
-    }
-}
-
 function bool IsATWeapon()
 {
     return true;
@@ -837,4 +809,5 @@ defaultproperties
      AttachmentClass=Class'DH_ATWeapons.DH_BazookaAttachment'
      ItemName="M1A1 Bazooka"
      Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka'
+     FillAmmoMagCount=0
 }

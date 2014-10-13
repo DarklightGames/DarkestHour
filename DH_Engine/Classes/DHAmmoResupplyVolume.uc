@@ -44,7 +44,7 @@ function Timer()
     local Pawn recvr;
     local inventory recvr_inv;
     local ROWeapon recvr_weapon;
-    local bool bEnemyGrenadeFound, bEnemySmokeFound, bResupplied;
+    local bool bResupplied;
     local DH_Pawn P;
     local Vehicle V;
     local DH_RoleInfo DHRI;
@@ -56,97 +56,89 @@ function Timer()
 
     foreach TouchingActors(class'Pawn', recvr)
     {
-        if (Team == OWNER_Neutral || recvr.GetTeamNum() == Team)
+        bResupplied = false;
+
+        if ((Team != OWNER_Neutral && recvr.GetTeamNum() != Team) || Level.TimeSeconds - recvr.LastResupplyTime < UpdateTime)
         {
-            bResupplied = false;
+            continue;
+        }
 
-            if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
+        P = DH_Pawn(recvr);
+        V = Vehicle(recvr);
+
+        if (P != none)
+        {
+            DHRI = P.GetRoleInfo();
+        }
+
+        if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
+        {
+            //Resupply weapons
+            for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
             {
-                P = DH_Pawn(recvr);
-                V = Vehicle(recvr);
+                recvr_weapon = ROWeapon(recvr_inv);
 
-                if (P != none)
+                //Don't allow resupplying of enemy weapons
+                if (recvr_weapon.IsGrenade())
                 {
-                    DHRI = P.GetRoleInfo();
+                    continue;
                 }
 
-                if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
+                if (recvr_weapon != none && recvr_weapon.FillAmmo())
                 {
-                    //Resupply weapons
-                    for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
-                    {
-                        recvr_weapon = ROWeapon(recvr_inv);
-
-                        //Don't allow resupplying of enemy weapons
-                        if (recvr_weapon.IsGrenade() &&
-                            recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetGrenadeWeapon()) &&
-                            recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetSecGrenadeWeapon()))
-                        {
-                            if (recvr_weapon.Name ~= 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name ~= 'DH_OrangeSmokeGrenadeWeapon')
-                            {
-                                bEnemySmokeFound = true;
-                            }
-                            else
-                            {
-                                bEnemyGrenadeFound = true;
-                            }
-                        }
-                        else if (recvr_weapon != none && recvr_weapon.FillAmmo())
-                        {
-                            bResupplied = true;
-                        }
-                    }
-
-                    if (DHRI != none)
-                    {
-                        if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
-                        {
-                            P.bHasMGAmmo = true;
-                            bResupplied = true;
-                        }
-                    }
-
-                    // Resupply explosive weapons
-                    if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound, bEnemySmokeFound))
-                    {
-                        bResupplied = true;
-                    }
-                }
-
-                if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
-                {
-                    // Resupply vehicles
-                    if (V.ResupplyAmmo())
-                    {
-                        bResupplied = true;
-                    }
-                }
-
-                //Mortar specific resupplying.
-                if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none)
-                {
-                    if (DHRI.bCanUseMortars)
-                    {
-                        P.FillMortarAmmunition();
-
-                        bResupplied = true;
-                    }
-
-                    if (!P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo)
-                    {
-                        P.bHasMortarAmmo = true;
-
-                        bResupplied = true;
-                    }
-                }
-
-                //Play sound if applicable
-                if (bResupplied)
-                {
-                    recvr.LastResupplyTime = Level.TimeSeconds;
-                    recvr.ClientResupplied();
+                    bResupplied = true;
                 }
             }
+
+            if (DHRI != none)
+            {
+                if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
+                {
+                    P.bHasMGAmmo = true;
+
+                    bResupplied = true;
+                }
+            }
+
+            // Resupply explosive weapons
+//            if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound, bEnemySmokeFound))
+//            {
+//                bResupplied = true;
+//            }
+        }
+
+        if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
+        {
+            // Resupply vehicles
+            if (V.ResupplyAmmo())
+            {
+                bResupplied = true;
+            }
+        }
+
+        //Mortar specific resupplying.
+        if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none)
+        {
+            if (DHRI.bCanUseMortars)
+            {
+                P.FillMortarAmmunition();
+
+                bResupplied = true;
+            }
+
+            if (!P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo)
+            {
+                P.bHasMortarAmmo = true;
+
+                bResupplied = true;
+            }
+        }
+
+        //Play sound if applicable
+        if (bResupplied)
+        {
+            recvr.LastResupplyTime = Level.TimeSeconds;
+            recvr.ClientResupplied();
         }
     }
 }

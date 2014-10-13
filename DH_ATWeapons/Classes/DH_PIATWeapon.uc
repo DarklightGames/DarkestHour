@@ -565,52 +565,6 @@ function bool ResupplyAmmo()
     return true;
 }
 
-// Overridden to stop resupply zones adding a fresh bomb to an empty PIAT. Extra bomb goes into inventory instead
-function bool FillAmmo()
-{
-         //ResupplyAmmo();     // For testing resupply code
-    local int InitialAmount, i;
-    local bool bIsLoaded;
-
-    if (AmmoAmount(0) > 0)
-        bIsLoaded = true;
-
-    if (PrimaryAmmoArray.Length == MaxNumPrimaryMags)
-    {
-        return false;
-    }
-
-    if (!bIsLoaded || (CurrentMagCount < MaxNumPrimaryMags - 2))
-    {
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
-
-    if (!bIsLoaded)
-        PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-    else
-        PrimaryAmmoArray.Length = MaxNumPrimaryMags - 1;
-
-    for(i=0; i<PrimaryAmmoArray.Length; i++)
-    {
-        PrimaryAmmoArray[i] = InitialAmount;
-    }
-
-    CurrentMagIndex=0;
-    CurrentMagCount = PrimaryAmmoArray.Length - 1;
-
-    DH_Pawn(Instigator).bWeaponNeedsResupply = false;   // Use this if ammo dump doesn't remove reload message
-
-    if (!bIsLoaded)
-        DH_Pawn(Instigator).bWeaponNeedsReload = true;
-
-/*  if (!bIsLoaded)
-        CurrentMagCount = PrimaryAmmoArray.Length - 1;
-    else
-        CurrentMagCount = PrimaryAmmoArray.Length - 2;
-*/
-    return true;
-    }
-}
-
 function bool bIsATWeapon()
 {
     return true;
@@ -656,4 +610,5 @@ defaultproperties
      AttachmentClass=Class'DH_ATWeapons.DH_PIATAttachment'
      ItemName="PIAT"
      Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
+     FillAmmoMagCount=0
 }
