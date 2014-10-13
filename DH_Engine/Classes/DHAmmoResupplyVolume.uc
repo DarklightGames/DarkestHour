@@ -99,12 +99,6 @@ function Timer()
                     bResupplied = true;
                 }
             }
-
-            // Resupply explosive weapons
-//            if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound, bEnemySmokeFound))
-//            {
-//                bResupplied = true;
-//            }
         }
 
         if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))

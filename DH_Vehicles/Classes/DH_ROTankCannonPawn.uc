@@ -685,6 +685,20 @@ function ServerChangeDriverPosition(byte F)
     super.ServerChangeDriverPosition(F);
 }
 
+function bool ResupplyAmmo()
+{
+    local DH_ROTankCannon P;
+
+    P = DH_ROTankCannon(Gun);
+
+    if (P != none && P.ResupplyAmmo())
+    {
+        return true;
+    }
+
+    return false;
+}
+
 defaultproperties
 {
      bShowRangeText=true

@@ -225,6 +225,20 @@ function ServerChangeDriverPosition(byte F)
     super.ServerChangeDriverPosition(F);
 }
 
+function bool ResupplyAmmo()
+{
+    local DH_HiddenTankHullMG P;
+
+    P = DH_HiddenTankHullMG(Gun);
+
+    if (P != none && P.ResupplyAmmo())
+    {
+        return true;
+    }
+
+    return false;
+}
+
 defaultproperties
 {
      OverlayCenterSize=1.000000

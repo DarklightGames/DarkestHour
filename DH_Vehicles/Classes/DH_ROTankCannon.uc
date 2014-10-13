@@ -2675,6 +2675,41 @@ simulated function int LimitYaw(int yaw)
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
+function bool ResupplyAmmo()
+{
+    local bool bDidResupply;
+
+    if (MainAmmoChargeExtra[0] < InitialPrimaryAmmo)
+    {
+        ++MainAmmoChargeExtra[0];
+
+        bDidResupply = true;
+    }
+
+    if (MainAmmoChargeExtra[1] < InitialSecondaryAmmo)
+    {
+        ++MainAmmoChargeExtra[1];
+
+        bDidResupply = true;
+    }
+
+    if (MainAmmoChargeExtra[2] < InitialTertiaryAmmo)
+    {
+        ++MainAmmoChargeExtra[2];
+
+        bDidResupply = true;
+    }
+
+    if (NumAltMags < default.NumAltMags)
+    {
+        ++NumAltMags;
+
+        bDidResupply = true;
+    }
+
+    return bDidResupply;
+}
+
 defaultproperties
 {
      bUsesSecondarySpread=true

@@ -151,6 +151,20 @@ simulated function int getNumMags()
     return NumMags;
 }
 
+function bool ResupplyAmmo()
+{
+    local bool bDidResupply;
+
+    if (NumMags < default.NumMags)
+    {
+        ++NumMags;
+
+        bDidResupply = true;
+    }
+
+    return bDidResupply;
+}
+
 defaultproperties
 {
 }
