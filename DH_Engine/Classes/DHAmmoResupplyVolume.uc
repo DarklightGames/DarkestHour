@@ -215,7 +215,7 @@ function Reset()
 defaultproperties
 {
      Team=OWNER_Neutral
-     UpdateTime=30.000000
+     UpdateTime=5.000000
      ResupplyType=RT_All
      bStatic=false
 }
