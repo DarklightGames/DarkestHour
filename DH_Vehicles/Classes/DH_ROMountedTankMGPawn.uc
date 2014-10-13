@@ -227,9 +227,9 @@ function ServerChangeDriverPosition(byte F)
 
 function bool ResupplyAmmo()
 {
-    local DH_HiddenTankHullMG P;
+    local DH_ROMountedTankMG P;
 
-    P = DH_HiddenTankHullMG(Gun);
+    P = DH_ROMountedTankMG(Gun);
 
     if (P != none && P.ResupplyAmmo())
     {
