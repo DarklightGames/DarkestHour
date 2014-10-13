@@ -136,36 +136,25 @@ function Timer()
                         recvr_weapon = ROWeapon(recvr_inv);
 
                         //Don't allow resupplying of enemy weapons
-                        if (recvr_weapon.IsGrenade() == true && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetGrenadeWeapon())
-                           && recvr_weapon.Class != Level.Game.BaseMutator.GetInventoryClass(DHPlayer(P.Controller).GetSecGrenadeWeapon()))
+                        if (recvr_weapon.IsGrenade())
                         {
-                           if (recvr_weapon.Name == 'DH_RedSmokeGrenadeWeapon' || recvr_weapon.Name == 'DH_OrangeSmokeGrenadeWeapon')
-                               bEnemySmokeFound = true;
-                           else
-                               bEnemyGrenadeFound = true;
+                            continue;
                         }
-                        else if (recvr_weapon != none && recvr_weapon.FillAmmo())
-                                bResupplied=true;
+
+                        if (recvr_weapon != none && recvr_weapon.FillAmmo())
+                        {
+                            bResupplied=true;
+                        }
                     }
 
                     if (DHRI != none)
                     {
-                        if (!P.bHasATAmmo /*&& DHRI.bCarriesATAmmo*/)
-                        {
-                            P.bHasATAmmo = true;
-                            bResupplied = true;
-                        }
-
                         if (!P.bHasMGAmmo /*&& DHRI.bCarriesMGAmmo*/)
                         {
                             P.bHasMGAmmo =true;
                             bResupplied=true;
                         }
                     }
-
-                    // Resupply explosive weapons
-                    if (P.DHResupplyExplosiveWeapons(bEnemyGrenadeFound,bEnemySmokeFound))
-                        bResupplied=true;
                 }
 
                 if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
