@@ -2,7 +2,7 @@
 // DH_BARPickup
 //=============================================================================
 
-class DH_BARPickup extends ROWeaponPickup
+class DH_BARPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

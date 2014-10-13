@@ -2,7 +2,7 @@
 // DH_FG42Pickup
 //=============================================================================
 
-class DH_FG42Pickup extends ROWeaponPickup
+class DH_FG42Pickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

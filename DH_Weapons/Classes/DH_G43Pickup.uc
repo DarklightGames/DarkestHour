@@ -8,7 +8,7 @@
 // - John "Ramm-Jaeger" Gibson
 //=============================================================================
 
-class DH_G43Pickup extends ROWeaponPickup
+class DH_G43Pickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

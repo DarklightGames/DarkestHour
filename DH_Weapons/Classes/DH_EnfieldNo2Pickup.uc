@@ -2,7 +2,7 @@
 // DH_EnfieldNo2Pickup
 //=============================================================================
 
-class DH_EnfieldNo2Pickup extends ROWeaponPickup
+class DH_EnfieldNo2Pickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

@@ -1,4 +1,4 @@
-class DH_EnfieldNo4Pickup extends ROWeaponPickup
+class DH_EnfieldNo4Pickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

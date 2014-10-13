@@ -2,7 +2,7 @@
 // DH_ColtM1911Pickup
 //=============================================================================
 
-class DH_ColtM1911Pickup extends ROWeaponPickup
+class DH_ColtM1911Pickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

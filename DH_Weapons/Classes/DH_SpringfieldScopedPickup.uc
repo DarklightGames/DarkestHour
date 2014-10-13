@@ -2,7 +2,7 @@
 // DH_SpringfieldScopedPickup
 //=============================================================================
 
-class DH_SpringfieldScopedPickup extends ROWeaponPickup
+class DH_SpringfieldScopedPickup extends DHWeaponPickup
    notplaceable;
 
 defaultproperties

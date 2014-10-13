@@ -27,8 +27,6 @@ var     name            BipodDeployToHip;           // anim for bipod deployed s
 var     name            IdleToBipodDeployEmpty;     // anim for bipod rest state to deployed empty state
 var     name            BipodDeployToIdleEmpty;     // anim for bipod deployed state to rest empty state
 
-var     float           PlayerDeployFOV;
-
 //=============================================================================
 // replication
 //=============================================================================

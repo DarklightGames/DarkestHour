@@ -2,7 +2,7 @@
 // GreaseGunPickup
 //=============================================================================
 
-class DH_GreaseGunPickup extends ROWeaponPickup
+class DH_GreaseGunPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

@@ -2,7 +2,7 @@
 // DH_BrenPickup
 //=============================================================================
 
-class DH_BrenPickup extends ROWeaponPickup
+class DH_BrenPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

@@ -2,7 +2,7 @@
 // DH_EnfieldNo4ScopedPickup
 //=============================================================================
 
-class DH_EnfieldNo4ScopedPickup extends ROWeaponPickup
+class DH_EnfieldNo4ScopedPickup extends DHWeaponPickup
    notplaceable;
 
 defaultproperties

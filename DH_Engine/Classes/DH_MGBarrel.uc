@@ -36,11 +36,11 @@ simulated function PostBeginPlay()
 {
     Super.PostBeginPlay();
 
-    if ((Role == ROLE_Authority) && (DarkestHourGame(Level.Game).LevelInfo != none))
+    if (Role == ROLE_Authority && DarkestHourGame(Level.Game).LevelInfo != none)
     {
         LevelCTemp = FtoCelsiusConversion(DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit);
+
         DH_MGCelsiusTemp = LevelCTemp;
-        //log("ROMGBarrel::PostBeginPlay - ROMGCelsiusTemp is "$ROMGCelsiusTemp);
     }
 }
 
@@ -48,10 +48,14 @@ simulated function Destroyed()
 {
     // if the barrel is destroyed and is steaming, de-activate the steam effect
     if (bBarrelSteaming)
-        DH_MGBase(Owner).ToggleBarrelSteam(false);
+    {
+        DH_ProjectileWeapon(Owner).ToggleBarrelSteam(false);
+    }
 
     if (bBarrelDamaged)
-        DH_MGBase(Owner).bBarrelDamaged = false;
+    {
+        DH_ProjectileWeapon(Owner).bBarrelDamaged = false;
+    }
 
     super.Destroyed();
 }
@@ -85,7 +89,7 @@ function WeaponFired()
     {
         bBarrelSteaming = true;
 
-        DH_MGBase(Owner).ToggleBarrelSteam(bBarrelSteaming);
+        DH_ProjectileWeapon(Owner).ToggleBarrelSteam(bBarrelSteaming);
     }
 
     if (DH_MGCelsiusTemp > DH_MGFailTemp)
@@ -99,31 +103,31 @@ function WeaponFired()
 // Will update this barrel and the weapons's barrel status
 function UpdateBarrelStatus()
 {
-    local DH_MGBase MG;
+    local DH_ProjectileWeapon W;
 
-    MG = DH_MGBase(Owner);
+    W = DH_ProjectileWeapon(Owner);
 
-    if (MG == none)
+    if (W == none)
     {
         return;
     }
 
     if (bBarrelFailed)
     {
-        MG.bBarrelFailed = true;
+        W.bBarrelFailed = true;
     }
 
     if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
     {
         bBarrelSteaming = true;
 
-        MG.ToggleBarrelSteam(bBarrelSteaming);
+        W.ToggleBarrelSteam(bBarrelSteaming);
     }
 
     if (!bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp))
     {
         bBarrelDamaged = true;
-        MG.bBarrelDamaged = true;
+        W.bBarrelDamaged = true;
     }
 }
 
@@ -148,13 +152,13 @@ state BarrelInUse
         // if the barrel is being put on and is steaming, turn on the steam emitter
         if (bBarrelSteaming)
         {
-            DH_MGBase(Owner).ToggleBarrelSteam(true);
+            DH_ProjectileWeapon(Owner).ToggleBarrelSteam(true);
         }
 
         // if the barrel is being put on and is damaged, set the weapon to have a damaged barrel
         if (bBarrelDamaged)
         {
-            DH_MGBase(Owner).bBarrelDamaged = true;
+            DH_ProjectileWeapon(Owner).bBarrelDamaged = true;
         }
 
         SetTimer(BarrelTimerRate, true);
@@ -166,7 +170,7 @@ state BarrelInUse
     //------------------------------------------------------------------------------
     function Timer()
     {
-        local DH_MGBase MG;
+        local DH_ProjectileWeapon W;
 
         // make sure this is done on the authority
         // if temp is at the level temp, don't bother with anything else
@@ -175,9 +179,9 @@ state BarrelInUse
             return;
         }
 
-        MG = DH_MGBase(Owner);
+        W = DH_ProjectileWeapon(Owner);
 
-        if (MG == none)
+        if (W == none)
         {
             return;
         }
@@ -196,7 +200,7 @@ state BarrelInUse
         {
             bBarrelSteaming = false;
 
-            MG.ToggleBarrelSteam(bBarrelSteaming);
+            W.ToggleBarrelSteam(bBarrelSteaming);
         }
 
         // Questionable, once the barrel is damaged, does it ever really get better again?
@@ -204,7 +208,7 @@ state BarrelInUse
         {
             bBarrelDamaged = false;
 
-            MG.bBarrelDamaged = false;
+            W.bBarrelDamaged = false;
         }
     }
 }
@@ -221,7 +225,7 @@ state BarrelOff
         // emitter
         if (bBarrelSteaming)
         {
-            DH_MGBase(Owner).ToggleBarrelSteam(false);
+            DH_ProjectileWeapon(Owner).ToggleBarrelSteam(false);
         }
 
         SetTimer(BarrelTimerRate, true);

@@ -2,7 +2,7 @@
 // C96Pickup
 //=============================================================================
 
-class DH_C96Pickup extends ROWeaponPickup
+class DH_C96Pickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

@@ -2,7 +2,7 @@
 // DH_PanzerschreckPickup
 //=============================================================================
 
-class DH_PanzerschreckPickup extends ROWeaponPickup
+class DH_PanzerschreckPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

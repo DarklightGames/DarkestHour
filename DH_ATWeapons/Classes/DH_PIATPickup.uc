@@ -2,7 +2,7 @@
 // DH_PIATPickup
 //=============================================================================
 
-class DH_PIATPickup extends ROWeaponPickup
+class DH_PIATPickup extends DHWeaponPickup
    notplaceable;
 
 defaultproperties

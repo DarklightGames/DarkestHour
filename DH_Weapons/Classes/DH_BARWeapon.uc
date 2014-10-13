@@ -203,8 +203,8 @@ defaultproperties
      SightUpSelectFireIronAnim="SightUp_iron_switch_fire"
      bSlowFireRate=true
      NumMagsToResupply=2
-     MaxNumPrimaryMags=12
-     InitialNumPrimaryMags=12
+     MaxNumPrimaryMags=6
+     InitialNumPrimaryMags=6
      IronSightDisplayFOV=25.000000
      FreeAimRotationSpeed=2.000000
      bHasSelectFire=true

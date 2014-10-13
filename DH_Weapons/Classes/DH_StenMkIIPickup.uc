@@ -2,7 +2,7 @@
 // StenMkIIPickup
 //=============================================================================
 
-class DH_StenMkIIPickup extends ROWeaponPickup
+class DH_StenMkIIPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

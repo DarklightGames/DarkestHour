@@ -2,7 +2,7 @@
 // ThompsonPickup
 //=============================================================================
 
-class DH_ThompsonPickup extends ROWeaponPickup
+class DH_ThompsonPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

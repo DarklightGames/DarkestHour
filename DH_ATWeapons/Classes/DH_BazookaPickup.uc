@@ -2,7 +2,7 @@
 // DH_BazookaPickup
 //=============================================================================
 
-class DH_BazookaPickup extends ROWeaponPickup
+class DH_BazookaPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================

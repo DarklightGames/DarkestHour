@@ -1,4 +1,4 @@
-class DH_M1GarandPickup extends ROWeaponPickup
+class DH_M1GarandPickup extends DHWeaponPickup
    notplaceable;
 
 //=============================================================================
