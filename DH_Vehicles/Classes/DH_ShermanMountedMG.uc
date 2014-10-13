@@ -6,7 +6,7 @@
 //
 // American M4A1 'Sherman' tank bow machinegun
 //==============================================================================
-class DH_ShermanMountedMG extends DH_HiddenTankHullMG;
+class DH_ShermanMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

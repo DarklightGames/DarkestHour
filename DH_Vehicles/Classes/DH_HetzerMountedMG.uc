@@ -3,82 +3,82 @@
 //
 // Hetzer remote controlled mounted machine gun
 //===================================================================
-class DH_HetzerMountedMG extends DH_HiddenTankHullMG;
+class DH_HetzerMountedMG extends DH_ROMountedTankMG;
 
 #exec OBJ LOAD FILE=..\Sounds\inf_weapons_foley.uax
 
-var()	sound	NoAmmoSound; // Matt: 'dry fire' sound when trying to fire MG empty
+var()   sound   NoAmmoSound; // Matt: 'dry fire' sound when trying to fire MG empty
 
-var()	sound	MGReloadSoundOne; // Matt: 4 part reload functionality based on a tank cannon (and all new variables below)
-var()	sound	MGReloadSoundTwo;
-var()	sound	MGReloadSoundThree;
-var()	sound	MGReloadSoundFour;
+var()   sound   MGReloadSoundOne; // Matt: 4 part reload functionality based on a tank cannon (and all new variables below)
+var()   sound   MGReloadSoundTwo;
+var()   sound   MGReloadSoundThree;
+var()   sound   MGReloadSoundFour;
 
-var		bool	bClientCanFireMG; // Matt: flag that is set on the server and replicated to the client that determines if the MG can fire
+var     bool    bClientCanFireMG; // Matt: flag that is set on the server and replicated to the client that determines if the MG can fire
 
-var		enum	EMGReloadState
+var     enum    EMGReloadState
 {
     MG_Waiting,
-	MG_Empty,
-	MG_ReloadedPart1,
-	MG_ReloadedPart2,
-	MG_ReloadedPart3,
-	MG_ReloadedPart4,
-	MG_ReadyToFire,
+    MG_Empty,
+    MG_ReloadedPart1,
+    MG_ReloadedPart2,
+    MG_ReloadedPart3,
+    MG_ReloadedPart4,
+    MG_ReadyToFire,
 }   MGReloadState;
 
 replication
 {
-	// Variables the server should send to the client
+    // Variables the server should send to the client
     reliable if( bNetDirty && Role==ROLE_Authority )
-		bClientCanFireMG;
+        bClientCanFireMG;
 
-	// Functions the server calls on the client side.
-	reliable if( Role == ROLE_Authority )
-		ClientSetReloadState;
-		
-	// Functions the client calls on the server side:
-	reliable if ( Role < ROLE_Authority )
-		ServerManualReload;
-}		
+    // Functions the server calls on the client side.
+    reliable if( Role == ROLE_Authority )
+        ClientSetReloadState;
+
+    // Functions the client calls on the server side:
+    reliable if ( Role < ROLE_Authority )
+        ServerManualReload;
+}
 
 // Matt: modified to add 'dry fire' effects if MG isn't loaded
 simulated function bool ReadyToFire(bool bAltFire)
 {
-	if( (MGReloadState != MG_ReadyToFire || !bClientCanFireMG) && !bAltFire )
-	{
-		ShakeView(false); // Matt: added to jolt when trying to fire empty
-		PlaySound(NoAmmoSound, SLOT_None,1.5,, 25, ,true); // Matt: added to play click sound when trying to fire empty
-		return false;
-	}
+    if( (MGReloadState != MG_ReadyToFire || !bClientCanFireMG) && !bAltFire )
+    {
+        ShakeView(false); // Matt: added to jolt when trying to fire empty
+        PlaySound(NoAmmoSound, SLOT_None,1.5,, 25, ,true); // Matt: added to play click sound when trying to fire empty
+        return false;
+    }
 
-	return Super(VehicleWeapon).ReadyToFire(bAltFire);
+    return Super(VehicleWeapon).ReadyToFire(bAltFire);
 }
 
 // Matt: reverted back to CeaseFire from VehicleWeapon as parent DH_HiddenTankHullMG introduces auto-reload of MG when runs out of ammo
 function CeaseFire(Controller C, bool bWasAltFire)
 {
-	Super(VehicleWeapon).CeaseFire(C, bWasAltFire);
+    Super(VehicleWeapon).CeaseFire(C, bWasAltFire);
 }
 
 // Matt: doesn't actually handle MG reload, it just sets the MG to empty and waiting for reload - but redefining this avoids need to redefine the lengthy AttemptFire
 function HandleReload()
 {
-	bClientCanFireMG = false;
-	MGReloadState = MG_Empty;
-	SetTimer(0.01, false);
+    bClientCanFireMG = false;
+    MGReloadState = MG_Empty;
+    SetTimer(0.01, false);
 }
 
 // Matt: called by ROManualReload from the MG Pawn - sets MGReloadState to MG_Empty, which starts a 4 part reload (tank cannon functionality)
 function ServerManualReload()
 {
-	if( NumMags > 0 && ( MGReloadState == MG_Waiting || MGReloadState == MG_ReadyToFire ) )
-	{
-		ClientSetReloadState(MG_Empty);
-		NetUpdateTime = Level.TimeSeconds - 1;
-		MGReloadState = MG_Empty;
-	    SetTimer(0.01, false);
-	}
+    if( NumMags > 0 && ( MGReloadState == MG_Waiting || MGReloadState == MG_ReadyToFire ) )
+    {
+        ClientSetReloadState(MG_Empty);
+        NetUpdateTime = Level.TimeSeconds - 1;
+        MGReloadState = MG_Empty;
+        SetTimer(0.01, false);
+    }
 }
 
 // Matt: part of 4 part reload functionality, based on tank cannon
@@ -91,70 +91,70 @@ simulated function ClientSetReloadState( EMGReloadState NewState )
 // Matt: added 4 part reload similar to a tank cannon
 simulated function Timer()
 {
-	local DH_HetzerMountedMGPawn MGP;
-	
-	MGP = DH_HetzerMountedMGPawn(Owner);
+    local DH_HetzerMountedMGPawn MGP;
 
-	// Matt: pause reload if there is the MG has no Controller or if buttoned up or in the process of buttoning or unbuttoning
-	if ( MGP == none || MGP.Controller == none || MGP.DriverPositionIndex < MGP.UnbuttonedPositionIndex || MGP.IsInState('ViewTransition') )
-		SetTimer(0.05,true);
+    MGP = DH_HetzerMountedMGPawn(Owner);
 
-	else if ( MGReloadState == MG_Empty )
-	{
-		if (Role == ROLE_Authority)
-			PlayOwnedSound(MGReloadSoundOne, SLOT_Misc, 2,, 150,, false); // Matt: doubled the default volume
-		else
-			PlaySound(MGReloadSoundOne, SLOT_Misc, 2,, 150,, false); // Matt: doubled the default volume
+    // Matt: pause reload if there is the MG has no Controller or if buttoned up or in the process of buttoning or unbuttoning
+    if ( MGP == none || MGP.Controller == none || MGP.DriverPositionIndex < MGP.UnbuttonedPositionIndex || MGP.IsInState('ViewTransition') )
+        SetTimer(0.05,true);
 
-		MGReloadState = MG_ReloadedPart1;
-		SetTimer(GetSoundDuration(MGReloadSoundOne),false);
-	}
+    else if ( MGReloadState == MG_Empty )
+    {
+        if (Role == ROLE_Authority)
+            PlayOwnedSound(MGReloadSoundOne, SLOT_Misc, 2,, 150,, false); // Matt: doubled the default volume
+        else
+            PlaySound(MGReloadSoundOne, SLOT_Misc, 2,, 150,, false); // Matt: doubled the default volume
 
-	else if ( MGReloadState == MG_ReloadedPart1 )
-	{
-		if (Role == ROLE_Authority)
-			PlayOwnedSound(MGReloadSoundTwo, SLOT_Misc, 2,, 150,, false);
-		else
-			PlaySound(MGReloadSoundTwo, SLOT_Misc, 2,, 150,, false);
+        MGReloadState = MG_ReloadedPart1;
+        SetTimer(GetSoundDuration(MGReloadSoundOne),false);
+    }
 
-		MGReloadState = MG_ReloadedPart2;
-		SetTimer(GetSoundDuration(MGReloadSoundTwo),false);
-	}
+    else if ( MGReloadState == MG_ReloadedPart1 )
+    {
+        if (Role == ROLE_Authority)
+            PlayOwnedSound(MGReloadSoundTwo, SLOT_Misc, 2,, 150,, false);
+        else
+            PlaySound(MGReloadSoundTwo, SLOT_Misc, 2,, 150,, false);
 
-	else if ( MGReloadState == MG_ReloadedPart2 )
-	{
-		if (Role == ROLE_Authority)
-			PlayOwnedSound(MGReloadSoundThree, SLOT_Misc, 2,, 150,, false);
-		else
-			PlaySound(MGReloadSoundThree, SLOT_Misc, 2,, 150,, false);
+        MGReloadState = MG_ReloadedPart2;
+        SetTimer(GetSoundDuration(MGReloadSoundTwo),false);
+    }
 
-		MGReloadState = MG_ReloadedPart3;
-		SetTimer(GetSoundDuration(MGReloadSoundThree),false);
+    else if ( MGReloadState == MG_ReloadedPart2 )
+    {
+        if (Role == ROLE_Authority)
+            PlayOwnedSound(MGReloadSoundThree, SLOT_Misc, 2,, 150,, false);
+        else
+            PlaySound(MGReloadSoundThree, SLOT_Misc, 2,, 150,, false);
+
+        MGReloadState = MG_ReloadedPart3;
+        SetTimer(GetSoundDuration(MGReloadSoundThree),false);
    }
 
    else if ( MGReloadState == MG_ReloadedPart3 )
    {
-		if (Role == ROLE_Authority)
-			PlayOwnedSound(MGReloadSoundFour, SLOT_Misc, 2,, 150,, false);
-		else
-			PlaySound(MGReloadSoundFour, SLOT_Misc, 2,, 150,, false);
+        if (Role == ROLE_Authority)
+            PlayOwnedSound(MGReloadSoundFour, SLOT_Misc, 2,, 150,, false);
+        else
+            PlaySound(MGReloadSoundFour, SLOT_Misc, 2,, 150,, false);
 
-		MGReloadState = MG_ReloadedPart4;
-		SetTimer(GetSoundDuration(MGReloadSoundFour),false);
-	}
+        MGReloadState = MG_ReloadedPart4;
+        SetTimer(GetSoundDuration(MGReloadSoundFour),false);
+    }
 
-	else if ( MGReloadState == MG_ReloadedPart4 )
-	{
-		if(Role == ROLE_Authority)
-		{
-			bClientCanFireMG = true;
-			NumMags--;
-			MainAmmoCharge[0] = InitialPrimaryAmmo;
-		}
+    else if ( MGReloadState == MG_ReloadedPart4 )
+    {
+        if(Role == ROLE_Authority)
+        {
+            bClientCanFireMG = true;
+            NumMags--;
+            MainAmmoCharge[0] = InitialPrimaryAmmo;
+        }
 
-		MGReloadState = MG_ReadyToFire;
-		SetTimer(0.0,false);
-	}
+        MGReloadState = MG_ReadyToFire;
+        SetTimer(0.0,false);
+    }
 }
 
 defaultproperties

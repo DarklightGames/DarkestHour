@@ -6,7 +6,7 @@
 //
 // German Panzer VI Ausf. E "Tiger" mounted MG34
 //==============================================================================
-class DH_TigerMountedMG extends DH_HiddenTankHullMG;
+class DH_TigerMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

@@ -5,7 +5,7 @@
 //
 // PanzerIII tank mounted machine gun
 //===================================================================
-class DH_PanzerIIIMountedMG extends DH_HiddenTankHullMG;
+class DH_PanzerIIIMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

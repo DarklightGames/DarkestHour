@@ -6,7 +6,7 @@
 //
 // British Cruiser Tank Mk.VIII Cromwell Mk.IV - Besa Hull MG
 //==============================================================================
-class DH_CromwellMountedMG extends DH_HiddenTankHullMG;
+class DH_CromwellMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

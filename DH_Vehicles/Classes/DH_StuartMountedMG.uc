@@ -6,7 +6,7 @@
 //
 // American M5A1 'Stuart' tank bow machinegun
 //==============================================================================
-class DH_StuartMountedMG extends DH_HiddenTankHullMG;
+class DH_StuartMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

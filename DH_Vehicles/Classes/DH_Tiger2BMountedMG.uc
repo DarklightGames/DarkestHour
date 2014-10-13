@@ -7,7 +7,7 @@
 //
 // King Tiger Hull Mounted MG34
 //===================================================================
-class DH_Tiger2BMountedMG extends DH_HiddenTankHullMG;
+class DH_Tiger2BMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

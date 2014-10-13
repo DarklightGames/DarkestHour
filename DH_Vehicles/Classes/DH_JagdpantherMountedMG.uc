@@ -5,7 +5,7 @@
 //
 // Jagdpanther bow mounted machine gun
 //===================================================================
- class DH_JagdpantherMountedMG extends DH_HiddenTankHullMG;
+ class DH_JagdpantherMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

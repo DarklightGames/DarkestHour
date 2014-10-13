@@ -6,7 +6,7 @@
 //
 // Jagdpanzer IV tank destroyer bow MG
 //==============================================================================
- class DH_JagdpanzerIVMountedMG extends DH_HiddenTankHullMG;
+ class DH_JagdpanzerIVMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

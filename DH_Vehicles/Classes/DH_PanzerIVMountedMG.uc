@@ -5,7 +5,7 @@
 //
 // Panzer IV bow mounted machine gun
 //===================================================================
-class DH_PanzerIVMountedMG extends DH_HiddenTankHullMG;
+class DH_PanzerIVMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

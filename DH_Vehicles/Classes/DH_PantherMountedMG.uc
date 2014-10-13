@@ -6,7 +6,7 @@
 //
 // German Panzer V (Panther) hull MG
 //==============================================================================
-class DH_PantherMountedMG extends DH_HiddenTankHullMG;
+class DH_PantherMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {
