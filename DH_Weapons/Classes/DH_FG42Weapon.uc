@@ -102,8 +102,8 @@ defaultproperties
      SightUpIronIdleAnim="deploy_idle"
      SightUpMagEmptyReloadAnim="deploy_reload_empty"
      SightUpMagPartialReloadAnim="deploy_reload_half"
-     MaxNumPrimaryMags=11
-     InitialNumPrimaryMags=11
+     MaxNumPrimaryMags=6
+     InitialNumPrimaryMags=6
      bHasSelectFire=true
      FireModeClass(0)=Class'DH_Weapons.DH_FG42Fire'
      FireModeClass(1)=Class'DH_Weapons.DH_FG42MeleeFire'
