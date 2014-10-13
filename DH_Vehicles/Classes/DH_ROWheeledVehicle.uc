@@ -184,52 +184,78 @@ function DriverLeft()
     super(Vehicle).DriverLeft();
 }
 
-// Overridden due to the Onslaught team lock not working in RO
 function bool TryToDrive(Pawn P)
 {
-    local int x;
+    local int i;
+    local DH_Pawn DHP;
 
-    if (DH_Pawn(P).bOnFire)
+    DHP = DH_Pawn(P);
+
+    if (DHP == none || DH_Pawn(P).bOnFire)
+    {
         return false;
+    }
 
     if (bDebuggingText)
-    P.ClientMessage("Vehicle Health: "$Health$", EngineHealth: "$EngineHealth);
+    {
+        P.ClientMessage("Vehicle Health: " $ Health $ ", EngineHealth: " $ EngineHealth);
+    }
 
     //don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
-        for (x = 0; x < WeaponPawns.length; x++)
-            if (WeaponPawns[x].Driver != none)
+        for (i = 0; i < WeaponPawns.length; i++)
+        {
+            if (WeaponPawns[i].Driver != none)
             {
                 DenyEntry(P, 2);
+
                 return false;
             }
+        }
     }
+
     //took out the crouch requirement to enter
-    if (bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
-         || P.IsA('Vehicle') || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')))
+    if (bNonHumanControl ||
+        P.Controller == none ||
+        Driver != none ||
+        P.DrivenVehicle != none ||
+        !P.Controller.bIsPlayer ||
+        Health <= 0 ||
+        (P.Weapon != none && P.Weapon.IsInState('Reloading')))
+    {
         return false;
+    }
 
     if (!Level.Game.CanEnterVehicle(self, P))
+    {
         return false;
+    }
 
     // Check vehicle Locking....
     if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
     {
         DenyEntry(P, 1);
+
         return false;
     }
-    else if (bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
+    else if (bMustBeTankCommander &&
+             P.IsHumanControlled() &&
+             !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)
     {
        DenyEntry(P, 0);
+
        return false;
     }
     else
     {
         if (bEnterringUnlocks && bTeamLocked)
+        {
             bTeamLocked = false;
+        }
 
         KDriverEnter(P);
+
         return true;
     }
 }
