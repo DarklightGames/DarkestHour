@@ -473,7 +473,16 @@ function bool ResupplyAmmo()
 // Special ammo handling for MGs
 function bool FillAmmo()
 {
-    return ResupplyAmmo();
+    local bool bDidFillAmmo;
+
+    bDidFillAmmo = super.FillAmmo();
+
+    if (CurrentMagCount == MaxNumPrimaryMags - 1)
+    {
+        ROPawn(Instigator).bWeaponNeedsResupply = false;
+    }
+
+    return bDidFillammo;
 }
 
 defaultproperties
