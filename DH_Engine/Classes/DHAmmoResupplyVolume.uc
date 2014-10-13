@@ -88,12 +88,6 @@ function Timer()
 
                     if (DHRI != none)
                     {
-                        if (!P.bHasATAmmo && DHRI.bCarriesATAmmo)
-                        {
-                            P.bHasATAmmo = true;
-                            bResupplied = true;
-                        }
-
                         if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
                         {
                             P.bHasMGAmmo =true;
