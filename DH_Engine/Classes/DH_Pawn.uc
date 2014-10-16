@@ -1396,6 +1396,14 @@ state Dying
 
         super.Timer();
     }
+
+Begin:
+	Sleep(0.2);
+	bInvulnerableBody = false;
+	if (!Level.Game.bGameEnded)
+	{
+	   PlayDyingSound();
+	}
 }
 
 // Prevented damage overlay from overriding burning overlay

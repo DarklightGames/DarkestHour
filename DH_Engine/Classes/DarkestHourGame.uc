@@ -1543,6 +1543,12 @@ function RestartPlayer(Controller aPlayer)
     }
 }
 
+//Debug function for winning around (needs admin or local)
+exec function WinGame(optional int TeamToWin)
+{
+    EndRound(TeamToWin);
+}
+
 defaultproperties
 {
      WinLimit=3
