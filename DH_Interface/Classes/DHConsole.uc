@@ -121,8 +121,8 @@ event ConnectFailure(string FailCode,string URL)
         else
         {
             ViewportOwner.Actor.ClearProgressMessages();
-            ViewportOwner.Actor.ClientNetworkMessage("This stalled, Theel","");
-            //ViewportOwner.Actor.ClientNetworkMessage("ST_Unknown","");
+            ViewportOwner.Actor.ClientNetworkMessage("ST_Unknown","");
+            //ViewportOwner.Actor.ClientNetworkMessage("This stalled, Theel","");
             return;
         }
     }
@@ -139,8 +139,8 @@ event ConnectFailure(string FailCode,string URL)
         else
         {
             ViewportOwner.Actor.ClearProgressMessages();
-            ViewportOwner.Actor.ClientNetworkMessage("This steam auth, Theel","");
-            //ViewportOwner.Actor.ClientNetworkMessage("ST_Unknown","");
+            ViewportOwner.Actor.ClientNetworkMessage("ST_Unknown","");
+            //ViewportOwner.Actor.ClientNetworkMessage("This steam auth, Theel","");
             return;
         }
     }
