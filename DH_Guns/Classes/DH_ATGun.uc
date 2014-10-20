@@ -82,18 +82,6 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     return true;
 }
 
-simulated function PostBeginPlay()
-{
-    //do not need to setup treads and sounds.
-    super(ROWheeledVehicle).PostBeginPlay();
-
-    //Allow level designers to designate AT Guns as captureable or non-captureable
-    if (ROParentFactory != none && ROParentFactory.bAllowOpposingForceCapture)
-    {
-        bTeamLocked=false;
-    }
-}
-
 // DriverLeft() called by KDriverLeave()
 function DriverLeft()
 {
