@@ -11,12 +11,19 @@ function SpawnVehicle()
     super.SpawnVehicle();
 
     //Because RequiresLeader is defaulted to true, lets only change it to false if needed
-    if (!bRequiresSLToDrive)
+    if (!bRequiresSLToDrive && LastSpawnedVehicle != none)
     {
-        if (LastSpawnedVehicle != none)
+        //TODO:
+        if (LastSpawnedVehicle.IsA('DH_MobileDeployVehicle_Allies'))
         {
             DH_MobileDeployVehicle_Allies(LastSpawnedVehicle).bMustBeSL = bRequiresSLToDrive;
+        }
+        else if (LastSpawnedVehicle.IsA('DH_MobileDeployVehicle_UK'))
+        {
             DH_MobileDeployVehicle_UK(LastSpawnedVehicle).bMustBeSL = bRequiresSLToDrive;
+        }
+        else if (LastSpawnedVehicle.IsA('DH_MobileDeployVehicle_Axis'))
+        {
             DH_MobileDeployVehicle_Axis(LastSpawnedVehicle).bMustBeSL = bRequiresSLToDrive;
         }
     }
