@@ -586,19 +586,27 @@ event TakeImpactDamage(float AccelMag)
 {
     local int Damage;
 
-    Damage = int(VSize(ImpactInfo.Other.Velocity) * 20 * ImpactDamageModifier());
-
     if (Vehicle(ImpactInfo.Other) != none)
-        TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0,0,0), class'DH_VehicleCollisionDamType');
-    else
-        TakeDamage(int(AccelMag * ImpactDamageModifier())/ ObjectCollisionResistance , Self, ImpactInfo.Pos, vect(0,0,0), class'DH_VehicleCollisionDamType');
+    {
+        Damage = int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier()); // Matt: moved under this 'if' to avoid "accessed none" errors
 
-    //FIXME - scale sound volume to damage amount
-    if (ImpactDamageSounds.Length > 0)        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length-1)],,TransientSoundVolume*2.5);
+        TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0, 0, 0), class'DH_VehicleCollisionDamType');
+    }
+    else
+    {
+        TakeDamage(int(AccelMag * ImpactDamageModifier()) / ObjectCollisionResistance, self, ImpactInfo.Pos, vect(0.0,0.0,0.0), class'DH_VehicleCollisionDamType');
+    }
+
+    // FIXME - scale sound volume to damage amount
+    if (ImpactDamageSounds.Length > 0)
+    {
+        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], , TransientSoundVolume * 2.5);
+    }
 
     if (Health < 0 && (Level.TimeSeconds - LastImpactExplosionTime) > TimeBetweenImpactExplosions)
     {
         VehicleExplosion(Normal(ImpactInfo.ImpactNorm), 0.5);
+
         LastImpactExplosionTime = Level.TimeSeconds;
     }
 }
