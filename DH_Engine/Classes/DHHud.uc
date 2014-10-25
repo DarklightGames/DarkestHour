@@ -2505,6 +2505,62 @@ simulated function DrawCaptureBar(Canvas Canvas)
     bDrawingCaptureBar = true;
 }
 
+// Matt: modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
+simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplicationInfo GRI, int current_obj)
+{
+    local  int    i, count;
+    local  float  new_y;
+
+    // Do not update label coords if it's disabled in the objective
+    if (GRI.Objectives[current_obj].bDoNotUseLabelShiftingOnSituationMap)
+    {
+        GRI.Objectives[current_obj].LabelCoords = label_coords;
+        return;
+    }
+
+    if (current_obj == 0)
+    {
+        // Set label position to be same as tested position
+        GRI.Objectives[0].LabelCoords = label_coords;
+        return;
+    }
+
+    for (i = 0; i < current_obj; i++)
+    {
+        if (GRI.Objectives[i] == none) // Matt: added to avoid spamming "accessed none" errors
+        {
+            continue;
+        }
+
+        // Check if there's overlap in the X axis
+        if (!(label_coords.X2 <= GRI.Objectives[i].LabelCoords.X1 || label_coords.X1 >= GRI.Objectives[i].LabelCoords.X2))
+        {
+            // There's overlap! Check if there's overlap in the Y axis.
+            if (!(label_coords.Y2 <= GRI.Objectives[i].LabelCoords.Y1 || label_coords.Y1 >= GRI.Objectives[i].LabelCoords.Y2))
+            {
+                // There's overlap on both axis: the label overlaps. Update the position of the label.
+                new_y = GRI.Objectives[i].LabelCoords.Y2 - (label_coords.Y2 - label_coords.Y1) * 0.00;
+                label_coords.Y2 = new_y + label_coords.Y2 - label_coords.Y1;
+                label_coords.Y1 = new_y;
+
+                i = -1; // this is to force rechecking of all possible overlaps to ensure that no other label overlaps with this
+
+                // Safety
+                count++;
+
+                if (count > current_obj * 5)
+                {
+                    break;
+                }
+            }
+        }
+
+    }
+
+    // Set new label position
+    GRI.Objectives[current_obj].LabelCoords = label_coords;
+}
+
 defaultproperties
 {
      MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
