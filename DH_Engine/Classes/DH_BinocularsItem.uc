@@ -80,6 +80,42 @@ simulated state StartMantle extends Busy
     }
 }
 
+simulated state LoweringWeapon
+{
+    // Matt: modified to fix problem that writes many 'accessed none' errors to the log
+    // Need to avoid Super from ROWeapon, which only duplicates Super from BinocularsItem but adds unwanted calls on FireMode classes that binoculars don't have
+    simulated function EndState()
+    {
+        if (bUsingSights && Role == ROLE_Authority)
+        {
+            ServerZoomOut(false);
+        }
+
+        if (ClientState == WS_PutDown)
+        {
+            if (Instigator.PendingWeapon == none)
+            {
+                PlayIdle();
+
+                ClientState = WS_ReadyToFire;
+            }
+            else
+            {
+                ClientState = WS_Hidden;
+
+                Instigator.ChangedWeapon();
+
+                if (Instigator.Weapon == self)
+                {
+                    PlayIdle();
+
+                    ClientState = WS_ReadyToFire;
+                }
+            }
+        }
+    }
+}
+
 defaultproperties
 {
 }
