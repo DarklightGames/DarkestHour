@@ -7,6 +7,7 @@
 class DarkestHourGame extends ROTeamGame;
 
 var     DH_LevelInfo                DHLevelInfo;                // Stores the DH_LevelInfo so we can access its properties
+var     DHLevelSharedInfo           DHSharedInfo;               // Stores the DHLevelSharedInfo so we can access its properties
 
 // Ammo resupply
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];        // Ammo resupply area
@@ -27,6 +28,7 @@ function PostBeginPlay()
 {
     local ROLevelInfo LI;
     local DH_LevelInfo DLI;
+    local DHLevelSharedInfo DLSI;
     local DHGameReplicationInfo DHGRI;
     local ROMapBoundsNE NE;
     local ROMapBoundsSW SW;
@@ -69,6 +71,20 @@ function PostBeginPlay()
         else
         {
             log("DarkestHourGame: More than one DH_LevelInfo detected!");
+            break;
+        }
+    }
+
+    // Find and set the DHLevelSharedInfo
+    foreach AllActors(class'DHLevelSharedInfo', DLSI)
+    {
+        if (DHSharedInfo == none)
+        {
+            DHSharedInfo = DLSI;
+        }
+        else
+        {
+            log("DarkestHourGame: More than one DHLevelSharedInfo detected!");
             break;
         }
     }
@@ -271,6 +287,16 @@ function PostBeginPlay()
         if (VehicleManager == none)
         {
             Warn("DHVehicleManager could not be found");
+        }
+
+        //Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
+        if (DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
+        {
+            DHGRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length);
+        }
+        if (DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
+        {
+            DHGRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length);
         }
     }
 }

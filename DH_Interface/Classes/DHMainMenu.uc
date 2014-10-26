@@ -8,7 +8,7 @@ class DHMainMenu extends UT2K4GUIPage;
 
 var automated       FloatingImage       i_background;
 var automated       GUISectionBackground    sb_MainMenu;
-var automated       GUIButton       b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
+var automated       GUIButton       b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
 var automated       GUISectionBackground    sb_HelpMenu;
 var automated       GUIButton           b_Credits, b_Manual, b_Demos, b_Website, b_Back;
 var automated       GUISectionBackground           sb_ShowVersion;
@@ -41,6 +41,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Controller.LCDDrawText("44-45",(100-(XL/2)),y,Controller.LCDLargeFont);
     Controller.LCDRepaint();
 
+    sb_MainMenu.ManageComponent(b_QuickPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
     sb_MainMenu.ManageComponent(b_Settings);
@@ -104,92 +105,104 @@ function bool CanClose(optional Bool bCanceled)
 
 function bool ButtonClick(GUIComponent Sender)
 {
-        local GUIButton selected;
-        if (GUIButton(Sender) != none)
-    selected = GUIButton(Sender);
+    local GUIButton selected;
+
+    if (GUIButton(Sender) != none)
+    {
+        selected = GUIButton(Sender);
+    }
+
     switch (sender)
     {
-                case b_Practice:
-                if (class'LevelInfo'.static.IsDemoBuild())
-                {
-                    Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
-                    }
-                    else
-                    {
-                            Profile("InstantAction");
-                    Controller.OpenMenu(Controller.GetInstantActionPage());
-                    Profile("InstantAction");
-                }
-                        break;
+        case b_QuickPlay:
+            PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
+            Controller.CloseAll(false,true);
 
-                case b_MultiPlayer:
-                    if (!Controller.CheckSteam())
-                    {
-                            Controller.OpenMenu(Controller.QuestionMenuClass);
+            //Just need to make the IP gathered from HTTP request like the news, I know how to do this!
+
+            break;
+
+        case b_Practice:
+            if (class'LevelInfo'.static.IsDemoBuild())
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
+            }
+            else
+            {
+                Profile("InstantAction");
+                Controller.OpenMenu(Controller.GetInstantActionPage());
+                Profile("InstantAction");
+            }
+            break;
+
+        case b_MultiPlayer:
+            if (!Controller.CheckSteam())
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
                 GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
-                    }
-                    else
-                    {
-                            Profile("ServerBrowser");
+            }
+            else
+            {
+                Profile("ServerBrowser");
                 Controller.OpenMenu(Controller.GetServerBrowserPage());
                 Profile("ServerBrowser");
-                        }
-                break;
+            }
+            break;
 
         case b_Host:
-                    if (!Controller.CheckSteam())
-                    {
-                            Controller.OpenMenu(Controller.QuestionMenuClass);
+            if (!Controller.CheckSteam())
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
                 GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
-                    }
-                    else
-                    {
-                    Profile("MPHost");
+            }
+            else
+            {
+                Profile("MPHost");
                 Controller.OpenMenu(Controller.GetMultiplayerPage());
                 Profile("MPHost");
-                    }
-                    break;
+            }
+            break;
 
-            case b_Settings:
-                        Profile("Settings");
-                    Controller.OpenMenu(Controller.GetSettingsPage());
-                Profile("Settings");
-                break;
+        case b_Settings:
+            Profile("Settings");
+            Controller.OpenMenu(Controller.GetSettingsPage());
+            Profile("Settings");
+            break;
 
-            case b_Credits:
-                    Controller.OpenMenu("DH_Interface.DHCreditsPage");
-                    break;
+        case b_Credits:
+            Controller.OpenMenu("DH_Interface.DHCreditsPage");
+            break;
 
-                case b_Quit:
-                        Profile("Quit");
-                Controller.OpenMenu(Controller.GetQuitPage());
-                Profile("Quit");
-                break;
+        case b_Quit:
+            Profile("Quit");
+            Controller.OpenMenu(Controller.GetQuitPage());
+            Profile("Quit");
+            break;
 
-                case b_Manual:
-                        Profile("Manual");
-                        PlayerOwner().ConsoleCommand("start "@ManualURL);
-                Profile("Manual");
-                break;
+        case b_Manual:
+            Profile("Manual");
+            PlayerOwner().ConsoleCommand("start "@ManualURL);
+            Profile("Manual");
+            break;
 
-            case b_Website:
-                    Profile("Website");
-                        PlayerOwner().ConsoleCommand("start "@WebsiteURL);
-                Profile("Website");
-                break;
+        case b_Website:
+            Profile("Website");
+            PlayerOwner().ConsoleCommand("start "@WebsiteURL);
+            Profile("Website");
+            break;
 
-            case b_Demos:
-                    Controller.OpenMenu("ROInterface.RODemosMenu");
-                    break;
+        case b_Demos:
+            Controller.OpenMenu("ROInterface.RODemosMenu");
+            break;
 
-            case b_Help:
-                    ShowSubMenu(1);
-                    break;
+        case b_Help:
+            ShowSubMenu(1);
+            break;
 
-            case b_Back:
-                    ShowSubMenu(0);
-                    break;
+        case b_Back:
+            ShowSubMenu(0);
+            break;
     }
     return true;
 }
@@ -242,6 +255,20 @@ defaultproperties
      End Object
      sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
 
+     Begin Object Class=GUIButton Name=QuickPlayButton
+         CaptionAlign=TXTA_Left
+         Caption="Join Test Server"
+         bAutoShrink=false
+         bUseCaptionHeight=true
+         FontScale=FNS_Large
+         StyleName="DHMenuTextButtonStyle"
+         TabOrder=1
+         bFocusOnWatch=true
+         OnClick=DHMainMenu.ButtonClick
+         OnKeyEvent=QuickPlayButton.InternalOnKeyEvent
+     End Object
+     b_QuickPlay=GUIButton'DH_Interface.DHMainMenu.QuickPlayButton'
+
      Begin Object Class=GUIButton Name=ServerButton
          CaptionAlign=TXTA_Left
          Caption="Multiplayer"
@@ -249,7 +276,7 @@ defaultproperties
          bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
-         TabOrder=1
+         TabOrder=2
          bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=ServerButton.InternalOnKeyEvent
@@ -263,7 +290,7 @@ defaultproperties
          bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
-         TabOrder=2
+         TabOrder=3
          bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=InstantActionButton.InternalOnKeyEvent
@@ -277,7 +304,7 @@ defaultproperties
          bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
-         TabOrder=3
+         TabOrder=4
          bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=SettingsButton.InternalOnKeyEvent
@@ -291,7 +318,7 @@ defaultproperties
          bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
-         TabOrder=4
+         TabOrder=5
          bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=HelpButton.InternalOnKeyEvent
@@ -305,7 +332,7 @@ defaultproperties
          bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
-         TabOrder=5
+         TabOrder=6
          bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=HostButton.InternalOnKeyEvent
@@ -319,7 +346,7 @@ defaultproperties
          bUseCaptionHeight=true
          FontScale=FNS_Large
          StyleName="DHMenuTextButtonStyle"
-         TabOrder=6
+         TabOrder=7
          bFocusOnWatch=true
          OnClick=DHMainMenu.ButtonClick
          OnKeyEvent=QuitButton.InternalOnKeyEvent

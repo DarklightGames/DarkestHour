@@ -3,6 +3,21 @@
 //-----------------------------------------------------------
 class DHBrowser_Footer extends UT2k4Browser_Footer;
 
+var automated GUIButton b_Main;
+
+function bool InternalOnClick(GUIComponent Sender)
+{
+    if (Sender == b_Main)
+    {
+        //Open main menu
+        Controller.CloseAll(false,true);
+        Controller.OpenMenu("DH_Interface.DHMainMenu");
+        return true;
+    }
+
+    super.InternalOnClick(Sender);
+}
+
 defaultproperties
 {
      Begin Object Class=DHmoCheckBox Name=OnlyStandardCheckBox
@@ -76,6 +91,19 @@ defaultproperties
          OnKeyEvent=BrowserBack.InternalOnKeyEvent
      End Object
      b_Back=GUIButton'DH_Interface.DHBrowser_Footer.BrowserBack'
+
+     Begin Object class=GUIButton Name=BrowserMain
+         Caption="MAIN"
+         StyleName="DHSmallTextButtonStyle"
+         WinTop=0.500000
+         WinHeight=0.036482
+         RenderWeight=2.000000
+         TabOrder=5
+         bBoundToParent=true
+         OnClick=DHBrowser_Footer.InternalOnClick
+         OnKeyEvent=BrowserMain.InternalOnKeyEvent
+     End Object
+     b_Main=GUIButton'DH_Interface.DHBrowser_Footer.BrowserMain'
 
      Begin Object Class=GUIButton Name=BrowserRefresh
          Caption="REFRESH"

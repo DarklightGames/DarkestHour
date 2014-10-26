@@ -20,6 +20,7 @@ enum EAlliedNation
 var() EAxisNation AxisNation;
 var() EAlliedNation AlliedNation;
 
+//These variables need removed
 var() byte SmokeBrightnessOverride; //Used to override the lighting brightness of smoke emitters
 var() rangevector WindDirectionSpeed; //Used to make smoke grenades match other emitters in the level
 

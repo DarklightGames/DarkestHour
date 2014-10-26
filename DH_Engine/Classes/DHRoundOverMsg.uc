@@ -37,18 +37,32 @@ static simulated function ClientReceive(
     }
     //End super code
 
-    //Modified function code from RO super
+    //Modified function code from RO super - This is pretty nasty, lots of casting
     if (P.PlayerReplicationInfo.Team != none && OptionalObject != none)
     {
         //Allies Win
         if (Switch == 1)
         {
-            P.PlayAnnouncement(DH_LevelInfo(OptionalObject).AlliesWinsMusic, 1, true);
+            if(DHGameReplicationInfo(P.GameReplicationInfo).AlliesVictoryMusicIndex != -1)
+            {
+                P.PlayAnnouncement(SoundGroup(DH_LevelInfo(OptionalObject).AlliesWinsMusic).Sounds[DHGameReplicationInfo(P.GameReplicationInfo).AlliesVictoryMusicIndex], 1, true);
+            }
+            else
+            {
+                P.PlayAnnouncement(DH_LevelInfo(OptionalObject).AlliesWinsMusic, 1, true);
+            }
         }
         //Axis Win
         else if (Switch == 0)
         {
-            P.PlayAnnouncement(DH_LevelInfo(OptionalObject).AxisWinsMusic, 1, true);
+            if(DHGameReplicationInfo(P.GameReplicationInfo).AxisVictoryMusicIndex != -1)
+            {
+                P.PlayAnnouncement(SoundGroup(DH_LevelInfo(OptionalObject).AxisWinsMusic).Sounds[DHGameReplicationInfo(P.GameReplicationInfo).AxisVictoryMusicIndex], 1, true);
+            }
+            else
+            {
+                P.PlayAnnouncement(DH_LevelInfo(OptionalObject).AxisWinsMusic, 1, true);
+            }
         }
         //Neutral Outcome
         else

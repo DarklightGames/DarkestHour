@@ -318,18 +318,13 @@ defaultproperties
 {
     loadingMapPrefix="Deploying to"
     loadingMapAuthorPrefix="Author:"
-    //vacSecuredText="NOTE: This server is VAC Secured. Cheating will result in a permanent ban."
-    //vacIcon=texture'InterfaceArt_tex.ServerIcons.VAC_protected'
-
-    //Need to set these
-    OfficialMapIcon=texture'InterfaceArt_tex.Menu.RODisplay'
-    CustomMapIcon=texture'InterfaceArt_tex.Menu_weapons.Binocs'
-
 
     OfficialMapText="Official Map"
+    OfficialMapIcon=texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CustomMapText="Community Map"
+    CustomMapIcon=texture'DH_GUI_Tex.Menu.CommunityMapLogo'
 
-
+    //The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreens.LoadingScreenDHDefault"
     Backgrounds(1)="DH_GUI_Tex.LoadingScreens.LoadingScreenBoisJacques"
     Backgrounds(2)="DH_GUI_Tex.LoadingScreens.LoadingScreenBrecourt"
@@ -381,7 +376,7 @@ defaultproperties
         Width=0.32
         Justification=0
         VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
+        FontName="ROInterface.ROHeaderFont"
         //bWrapText=true
     End Object
     Operations(7)=OpConstitutionText
@@ -393,7 +388,7 @@ defaultproperties
         Width=0.32
         Justification=0
         VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
+        FontName="ROInterface.ROHeaderFont"
         //bWrapText=true
     End Object
     Operations(8)=OpMapAuthorText

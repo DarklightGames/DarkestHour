@@ -13,6 +13,8 @@ var ROArtilleryTrigger  CarriedAlliedRadios[10];
 var ROArtilleryTrigger  CarriedAxisRadios[10];
 
 var int                 AlliedNationID;
+var int                 AlliesVictoryMusicIndex;
+var int                 AxisVictoryMusicIndex;
 
 var DH_RoleInfo         DHAxisRoles[16];
 var DH_RoleInfo         DHAlliesRoles[16];
@@ -60,7 +62,7 @@ replication
         VehiclePoolMaxActives, VehicleSpawnPointFlags,
         VehicleSpawnPointXLocations, VehicleSpawnPointYLocations,
         VehiclePoolsUpdateTime, VehicleSpawnPointsUpdateTime,
-        VehicleSpawnPointNames;
+        VehicleSpawnPointNames, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
@@ -200,4 +202,6 @@ defaultproperties
 {
     VehicleSpawnPointFlag_IsActive=1
     VehicleSpawnPointFlag_TeamIndex=2
+    AlliesVictoryMusicIndex=-1
+    AxisVictoryMusicIndex=-1
 }
