@@ -290,13 +290,13 @@ function PostBeginPlay()
         }
 
         //Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
-        if (DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
+        if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
         {
-            DHGRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length);
+            DHGRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length - 1);
         }
-        if (DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
+        if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
         {
-            DHGRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length);
+            DHGRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
         }
     }
 }

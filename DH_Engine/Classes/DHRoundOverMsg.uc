@@ -18,12 +18,16 @@ static simulated function ClientReceive(
     optional Object OptionalObject
     )
 {
+    local DH_LevelInfo DHLI;
+    local DHGameReplicationInfo DHGRI;
+    local SoundGroup SoundG;
+
     //Do not call the super because the RO code is bad and calls the default values of sound and we don't want that
 
     //This code is taken from LocalMessage as the RO code calls the super and we don't want to break anything
     if (P.myHud != none)
     {
-        P.myHUD.LocalizedMessage(default.Class, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+        P.myHUD.LocalizedMessage(default.class, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
     }
 
     if (P.DemoViewer != none)
@@ -37,31 +41,50 @@ static simulated function ClientReceive(
     }
     //End super code
 
-    //Modified function code from RO super - This is pretty nasty, lots of casting
+    //Modified function code from RO super, check to make sure we were passed the DH_LevelInfo as OptionalObject
     if (P.PlayerReplicationInfo.Team != none && OptionalObject != none)
     {
+        DHLI = DH_LevelInfo(OptionalObject);
+        DHGRI = DHGameReplicationInfo(P.GameReplicationInfo);
+
+        //Make sure the levelinfo and GRI exist
+        if (DHLI == none || DHGRI == none)
+        {
+            return;
+        }
+
         //Allies Win
         if (Switch == 1)
         {
-            if(DHGameReplicationInfo(P.GameReplicationInfo).AlliesVictoryMusicIndex != -1)
+            //Lets find out if we are dealing with a sound group
+            SoundG = SoundGroup(DH_LevelInfo(OptionalObject).AlliesWinsMusic);
+            //Check to make sure the sound exists and the index is valid
+            if (SoundG != none && DHGRI.AlliesVictoryMusicIndex >= 0 && DHGRI.AlliesVictoryMusicIndex < SoundG.Sounds.Length)
             {
-                P.PlayAnnouncement(SoundGroup(DH_LevelInfo(OptionalObject).AlliesWinsMusic).Sounds[DHGameReplicationInfo(P.GameReplicationInfo).AlliesVictoryMusicIndex], 1, true);
+                //A sound group
+                P.PlayAnnouncement(SoundG.Sounds[DHGRI.AlliesVictoryMusicIndex], 1, true);
             }
             else
             {
-                P.PlayAnnouncement(DH_LevelInfo(OptionalObject).AlliesWinsMusic, 1, true);
+                //A single sound
+                P.PlayAnnouncement(DHLI.AlliesWinsMusic, 1, true);
             }
         }
         //Axis Win
         else if (Switch == 0)
         {
-            if(DHGameReplicationInfo(P.GameReplicationInfo).AxisVictoryMusicIndex != -1)
+            //Lets find out if we are dealing with a sound group
+            SoundG = SoundGroup(DH_LevelInfo(OptionalObject).AxisWinsMusic);
+            //Check to make sure the sound exists and the index is valid
+            if (SoundG != none && DHGRI.AxisVictoryMusicIndex >= 0 && DHGRI.AxisVictoryMusicIndex < SoundG.Sounds.Length)
             {
-                P.PlayAnnouncement(SoundGroup(DH_LevelInfo(OptionalObject).AxisWinsMusic).Sounds[DHGameReplicationInfo(P.GameReplicationInfo).AxisVictoryMusicIndex], 1, true);
+                //A sound group
+                P.PlayAnnouncement(SoundG.Sounds[DHGRI.AxisVictoryMusicIndex], 1, true);
             }
             else
             {
-                P.PlayAnnouncement(DH_LevelInfo(OptionalObject).AxisWinsMusic, 1, true);
+                //A single sound
+                P.PlayAnnouncement(DHLI.AxisWinsMusic, 1, true);
             }
         }
         //Neutral Outcome
