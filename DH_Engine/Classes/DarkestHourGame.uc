@@ -1575,7 +1575,47 @@ function RestartPlayer(Controller C)
     }
 }
 
-//Debug function for winning around (needs admin or local)
+//This function add functionality so when you type "%r" in teamsay it'll output helpful debug info
+//for reporting bugs in MP (returns mapname & coordinates)
+static function string ParseChatPercVar(Mutator BaseMutator, controller Who, string Cmd)
+{
+    local string Str;
+    local string MapName;
+    local int i, j;
+
+    if (Who.Pawn==None)
+        return Cmd;
+
+    //Coordinates
+    if (cmd~="%R")
+    {
+        // Get the MapName out of the URL
+        MapName = Who.Level.GetLocalURL();
+        i = InStr(MapName, "/");
+        if (i < 0)
+        {
+            i = 0;
+        }
+        j = InStr(MapName, "?");
+        if (j < 0)
+        {
+            j = Len(MapName);
+        }
+        if (Mid(MapName, j - 3, 3) ~= "rom")
+        {
+            j -= 5;
+        }
+        MapName = Mid(MapName, i + 1, j - i);
+
+        //Finish parsing the string
+        Str = "Map:" @ MapName @ "Coord:" @ string(Who.Pawn.Location) @ "Report: ";
+        return Str;
+    }
+
+    super.ParseChatPercVar(BaseMutator,Who,Cmd);
+}
+
+//Debug function for winning a round (needs admin or local)
 exec function DebugWinGame(optional int TeamToWin)
 {
     EndRound(TeamToWin);
