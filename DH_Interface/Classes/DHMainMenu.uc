@@ -20,8 +20,24 @@ var localized string SteamMustBeRunningText;
 var localized string SinglePlayerDisabledText;
 var() config string     MenuSong;
 
-var localized string VersionString;
+//Quick Play Variables
+var string waitString;
+var string quickplayip;
+var ROBufferedTCPLink myLink;
+var string LinkClassName;
 
+var string getRequest;
+var String getResponse;
+var string newsIPAddr;
+var int     myRetryCount;
+var int     myRetryMax;
+
+var float   ReReadyPause;
+var bool sendGet;
+var bool pageWait;
+
+//Other
+var localized string VersionString;
 var globalconfig bool AcceptedEULA;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -54,6 +70,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_HelpMenu.ManageComponent(b_Website);
     sb_HelpMenu.ManageComponent(b_Back);
     sb_ShowVersion.ManageComponent(l_Version);
+
+    //Quick Play Init
+    GetQuickPlayIP();
 }
 
 function InternalOnOpen()
@@ -115,8 +134,16 @@ function bool ButtonClick(GUIComponent Sender)
     switch (sender)
     {
         case b_QuickPlay:
-            PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
-            Controller.CloseAll(false,true);
+            if (quickplayip == "")
+            {
+
+
+            }
+            else
+            {
+                PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
+                Controller.CloseAll(false,true);
+            }
 
             //Just need to make the IP gathered from HTTP request like the news, I know how to do this!
 
@@ -232,8 +259,161 @@ event bool NotifyLevelChange()
         return PlayerOwner().Level.IsPendingConnection();
 }
 
+//Quick Play Button Functions
+event Timer()
+{
+    local string text;
+    local string page;
+    local string command;
+
+    if(myLink != None)
+    {
+        if ( myLink.ServerIpAddr.Port != 0)
+        {
+            if(myLink.IsConnected())
+            {
+                if(sendGet)
+                {
+                     command = getRequest$myLink.CRLF$"Host: "$newsIPAddr$myLink.CRLF$myLink.CRLF;
+                     myLink.SendCommand(command);
+                     pageWait = true;
+                     myLink.WaitForCount(1,20,1); // 20 sec timeout
+                     sendGet = false;
+                }
+                else
+                {
+                    if(pageWait)
+                    {
+                        waitString = waitString$".";
+                        b_QuickPlay.Caption = waitString;
+                    }
+                }
+            }
+            else
+            {
+                if(sendGet)
+                {
+                    waitString = waitString @ "Could not find test server info";
+                    b_QuickPlay.Caption = waitString;
+                }
+            }
+        }
+        else
+        {
+            if (myRetryCount++ > myRetryMax)
+            {
+                waitString = waitString @ "No More Retries";
+                KillTimer();
+                b_QuickPlay.Caption = waitString;
+            }
+        }
+        if(myLink.PeekChar() != 0)
+        {
+            pageWait = false;
+            // data waiting
+            page = "";
+            while(myLink.ReadBufferedLine(text))
+            {
+                page = page$text;
+            }
+            HTTPParse(page);
+            waitString = page; //This is sorta pointless, but left it as it doesn't hurt anything
+            quickplayip = waitString; //Sets the quickplay ip for the quick play button
+            b_QuickPlay.Caption = "Join Test Server";
+            myLink.DestroyLink();
+            myLink = none;
+            KillTimer();
+        }
+    }
+    SetTimer(ReReadyPause, true);
+}
+
+protected function ROBufferedTCPLink CreateNewLink()
+{
+    local class<ROBufferedTCPLink> NewLinkClass;
+    local ROBufferedTCPLink NewLink;
+
+    if ( PlayerOwner() == None )
+        return None;
+
+    if ( LinkClassName != "" )
+    {
+        NewLinkClass = class<ROBufferedTCPLink>(DynamicLoadObject( LinkClassName, class'Class'));
+    }
+    if ( NewLinkClass != None )
+    {
+        NewLink = PlayerOwner().Spawn( NewLinkClass );
+    }
+
+    NewLink.ResetBuffer();
+
+    return NewLink;
+}
+
+function GetQuickPlayIP()
+{
+    if(myLink == None)
+    {
+        myLink = CreateNewLink();
+    }
+    if(myLink != None)
+    {
+        myLink.ServerIpAddr.Port = 0;
+
+        sendGet = true;
+        myLink.Resolve(newsIPAddr);  // NOTE: This is a non-blocking operation
+
+        SetTimer(ReReadyPause, true);
+    }
+    else
+    {
+        waitString = waitString$"|| myLink is none";
+    }
+}
+
+function HTTPParse(out string page)
+{
+    local string junk;
+    local int i;
+
+    junk = page;
+    Caps(junk);
+    i = InStr(junk, "<BODY>");
+
+    if (i > -1)
+    {
+         // remove all header from string
+         page = Right(page, len(page) - i - 6);
+    }
+
+    junk = page;
+    Caps(junk);
+    i = InStr(junk, "</BODY>");
+
+    if (i > -1)
+    {
+         // remove all footers from string
+         page = Left(page,i);
+    }
+
+    page = Repl(page, "<br>", "|", false);
+}
+
 defaultproperties
 {
+    //IP variables
+    waitString = "Getting Server Info"
+    newsIPAddr = "darkesthourgame.com"
+    getRequest = "GET /quickplayip.php HTTP/1.1"
+
+    ReReadyPause=0.250000
+    myRetryCount=0
+    myRetryMax=40
+
+    LinkClassName="ROInterface.ROBufferedTCPLink"
+    sendGet = true;
+
+
      Begin Object Class=FloatingImage Name=FloatingBackground
          Image=Texture'DH_GUI_Tex.Menu.MainBackGround'
          DropShadow=none
@@ -255,9 +435,9 @@ defaultproperties
      End Object
      sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
 
-     Begin Object Class=GUIButton Name=QuickPlayButton
+     Begin Object class=GUIButton Name=QuickPlayButton
          CaptionAlign=TXTA_Left
-         Caption="Join Test Server"
+         Caption="Getting Server Info"
          bAutoShrink=false
          bUseCaptionHeight=true
          FontScale=FNS_Large
