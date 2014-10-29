@@ -18,7 +18,7 @@ var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
 var     DH_RoleInfo                 DHAxisRoles[16];
 var     DH_RoleInfo                 DHAlliesRoles[16];
 
-var     DHVehicleManager            VehicleManager;
+var     DHSpawnManager              SpawnManager;
 
 //-----------------------------------------------------------------------------
 // PostBeginPlay - Find the level info and objectives
@@ -279,14 +279,14 @@ function PostBeginPlay()
         if (MaxTeamDifference < 1)
             MaxTeamDifference = 1;
 
-        foreach AllActors(class'DHVehicleManager', VehicleManager)
+        foreach AllActors(class'DHSpawnManager', SpawnManager)
         {
             break;
         }
 
-        if (VehicleManager == none)
+        if (SpawnManager == none)
         {
-            Warn("DHVehicleManager could not be found");
+            Warn("DHSpawnManager could not be found");
         }
 
         //Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
@@ -1529,50 +1529,171 @@ function ResetMortarTargets()
 //------------------------------------------------------------------------------
 // Overridden so we show how many actual individual reinforcements we have.
 // Basnett - January 19th, 2010
-function RestartPlayer(Controller aPlayer)
+function RestartPlayer(Controller C)
 {
-    local ROPlayer playa;
+    local DHPlayer DHC;
 
-    if (aPlayer == none)
-        return;
+    if (DHLevelInfo == none || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
+    {
+        SetCharacter(C);
 
-    SetCharacter(aPlayer);
+        super(TeamGame).RestartPlayer(C);
+    }
+    else
+    {
+        DHRestartPlayer(C);
+    }
 
-    Super(TeamGame).RestartPlayer(aPlayer);
-
-    if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
+    //TODO: look into improving or rewriting this, as this is garbage looking
+    if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
 
         //If the Allies have used up 85% of their reinforcements, send them a reinforcements low message
         if (SpawnCount[ALLIES_TEAM_INDEX] == int(LevelInfo.Allies.SpawnLimit * 0.85))
+        {
             SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
+        }
     }
-    else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
+    else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
 
         //If Axis has used up 85% of their reinforcements, send them a reinforcements low message
         if (SpawnCount[AXIS_TEAM_INDEX] == int(LevelInfo.Axis.SpawnLimit * 0.85))
+        {
             SendReinforcementMessage(AXIS_TEAM_INDEX, 0);
+        }
     }
 
-    // hax?
-    playa = ROPlayer(aPlayer);
-    if (playa != none)
+    DHC = DHPlayer(C);
+
+    if (DHC != none && DHC.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
     {
-        if (playa.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
-        {
-            playa.NotifyOfMapInfoChange();
-            playa.bFirstRoleAndTeamChange = true;
-        }
+        DHC.NotifyOfMapInfoChange();
+        DHC.bFirstRoleAndTeamChange = true;
     }
 }
 
 //Debug function for winning around (needs admin or local)
-exec function WinGame(optional int TeamToWin)
+exec function DebugWinGame(optional int TeamToWin)
 {
     EndRound(TeamToWin);
+}
+
+function DHRestartPlayer(Controller C)
+{
+    local TeamInfo BotTeam, OtherTeam;
+    local DHPlayer DHC;
+    local DHLocationHint LH;
+    local NavigationPoint startSpot;
+    local int TeamNum;
+    local class<Pawn> DefaultPlayerClass;
+    local Vehicle V, Best;
+    local vector ViewDir;
+    local float BestDist, Dist;
+
+    if (C == none)
+    {
+        return;
+    }
+
+    DHC = DHPlayer(C);
+
+    if ((!bPlayersVsBots || (Level.NetMode == NM_Standalone)) && bBalanceTeams && (Bot(C) != none) && (!bCustomBots || (Level.NetMode != NM_Standalone)))
+    {
+        BotTeam = C.PlayerReplicationInfo.Team;
+
+        if (BotTeam == Teams[0])
+        {
+            OtherTeam = Teams[1];
+        }
+        else
+        {
+            OtherTeam = Teams[0];
+        }
+
+        if (OtherTeam.Size < BotTeam.Size - 1)
+        {
+            C.Destroy();
+
+            return;
+        }
+    }
+
+    if (bMustJoinBeforeStart && (UnrealPlayer(C) != none) && UnrealPlayer(C).bLatecomer)
+    {
+        return;
+    }
+
+    if (C.PlayerReplicationInfo.bOutOfLives)
+    {
+        return;
+    }
+
+    if (C.IsA('Bot') && TooManyBots(C))
+    {
+        C.Destroy();
+
+        return;
+    }
+
+    if (bRestartLevel && Level.NetMode != NM_DedicatedServer && Level.NetMode != NM_ListenServer)
+    {
+        return;
+    }
+
+    if (!DHC.bReadyToSpawn)
+    {
+        return;
+    }
+
+    if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
+    {
+        BaseMutator.PlayerChangedClass(C);
+    }
+
+    if (C.PawnClass != none)
+    {
+        C.Pawn = Spawn(C.PawnClass,,, LH.Location, LH.Rotation);
+    }
+
+    if (C.Pawn == none)
+    {
+        DefaultPlayerClass = GetDefaultPlayerClass(C);
+
+        C.Pawn = Spawn(DefaultPlayerClass,,,LH.Location, LH.Rotation);
+    }
+
+    if (C.Pawn == none)
+    {
+        log("Couldn't spawn player of type " $ C.PawnClass $ " at " $ StartSpot);
+
+        C.GotoState('Dead');
+
+        if (PlayerController(C) != none)
+        {
+            PlayerController(C).ClientGotoState('Dead','Begin');
+        }
+
+        return;
+    }
+
+    if (PlayerController(C) != none)
+    {
+        PlayerController(C).TimeMargin = -0.1;
+    }
+
+    C.Pawn.Anchor = startSpot;
+    C.Pawn.LastStartSpot = PlayerStart(startSpot);
+    C.Pawn.LastStartTime = Level.TimeSeconds;
+    C.PreviousPawnClass = C.Pawn.Class;
+    C.Possess(C.Pawn);
+    C.PawnClass = C.Pawn.Class;
+    C.Pawn.PlayTeleportEffect(true, true);
+    C.ClientSetRotation(C.Pawn.Rotation);
+
+    AddDefaultInventory(C.Pawn);
 }
 
 defaultproperties

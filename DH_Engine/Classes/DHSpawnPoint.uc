@@ -13,6 +13,7 @@ var() bool bIsInitiallyActive;
 var() int TeamIndex;
 var() name LocationHintTag;
 var() string SpawnPointName;
+var() float SpawnProtectionTime;
 
 var   array<DHLocationHint> LocationHints;
 var   bool bIsActive;
@@ -48,4 +49,5 @@ defaultproperties
     RemoteRole=ROLE_None
     DrawScale=3.0
     SpawnPointName="UNNAMED SPAWN POINT!!!"
+    SpawnProtectionTime=5.0
 }

@@ -17,18 +17,22 @@ var bool    bLockJump;
 var bool    bMantleDebug;
 var int     MantleLoopCount;
 
-var     byte    MortarTargetIndex;
-var     vector  MortarHitLocation;
+var byte    MortarTargetIndex;
+var vector  MortarHitLocation;
 
 var DHHintManager DHHintManager;
 
-var bool    bHasSelectedDeployment;
+var bool    bReadyToSpawn;
+var int     SpawnPointIndex;
+var int     VehiclePoolIndex;
 
 replication
 {
     // client to server functions
     reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody, ServerSpawnVehicle;
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
+        ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
+        ServerSpawnVehicle, ServerChangeSpawn;
 
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
@@ -37,7 +41,7 @@ replication
         bIsInStateMantling, MortarTargetIndex, MortarHitLocation;
 
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bHasSelectedDeployment;
+        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
 }
 
 //------------------------------------------------------------------------------
@@ -1751,6 +1755,7 @@ exec function DebugTryVehicleSpawn(byte PoolIndex, byte SpawnIndex)
     ServerSpawnVehicle(PoolIndex, SpawnIndex, SpawnError);
 }
 
+//TODO: have the server call something like this when it tries to spawn a dude
 function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex, out byte SpawnError)
 {
     local Vehicle V;
@@ -1760,7 +1765,7 @@ function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex, out byte SpawnError
         return;
     }
 
-    V = DarkestHourGame(Level.Game).VehicleManager.SpawnVehicle(self, PoolIndex, SpawnIndex, SpawnError);
+    V = DarkestHourGame(Level.Game).SpawnManager.SpawnVehicle(self, PoolIndex, SpawnIndex, SpawnError);
 
     if (V == none)
     {
@@ -1770,6 +1775,39 @@ function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex, out byte SpawnError
     }
 
     ROHud(myHUD).FadeToBlack(1.0, true);
+}
+
+function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none || G.SpawnManager == none)
+    {
+        return;
+    }
+
+    if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= G.SpawnManager.GetSpawnPointCount()))
+    {
+        Error("Invalid spawn point index");
+
+        //Reset spawn point index to null
+        self.SpawnPointIndex = -1;
+    }
+
+    if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= G.SpawnManager.GetVehiclePoolCount()))
+    {
+        Error("Invalid vehicle pool index");
+
+        //Reset vehicle pool index to null
+        self.VehiclePoolIndex = -1;
+    }
+
+    self.SpawnPointIndex = SpawnPointIndex;
+    self.VehiclePoolIndex = VehiclePoolIndex;
+
+    bReadyToSpawn = true;   //TODO: do a more thorough check here
 }
 
 defaultproperties
@@ -1787,4 +1825,6 @@ defaultproperties
      DefaultFOV=90.000000
      PlayerReplicationInfoClass=Class'DH_Engine.DHPlayerReplicationInfo'
      PawnClass=Class'DH_Engine.DH_Pawn'
+     SpawnPointIndex=-1
+     VehiclePoolIndex=-1
 }

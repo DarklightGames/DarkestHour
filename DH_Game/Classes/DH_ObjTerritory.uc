@@ -7,11 +7,7 @@ class DH_ObjTerritory extends ROObjTerritory
 
 var()   bool    bVehiclesCanCapture;
 var()   bool    bTankersCanCapture;
-var()   int     PlayersNeededToCapture; //TODO: This was some retardation by me,
-                                        //should have been a byte from the
-                                        //start, but it was implemented on too
-                                        //many maps to revert, so we just convert
-                                        //when we want to replicate.
+var()   int     PlayersNeededToCapture;
 
 enum ESpawnPointOperation
 {
@@ -25,9 +21,6 @@ struct SpawnPointAction
     var() name SpawnPointTag;
     var() ESpawnPointOperation Operation;
 };
-
-var()   array<SpawnPointAction> AlliesCaptureSpawnPointActions;
-var()   array<SpawnPointAction> AxisCaptureSpawnPointActions;
 
 enum EVehiclePoolOperation
 {
@@ -47,6 +40,8 @@ struct VehiclePoolAction
     var() int Value;
 };
 
+var()   array<SpawnPointAction> AlliesCaptureSpawnPointActions;
+var()   array<SpawnPointAction> AxisCaptureSpawnPointActions;
 var()   array<VehiclePoolAction> AlliesCaptureVehiclePoolActions;
 var()   array<VehiclePoolAction> AxisCaptureVehiclePoolActions;
 var()   array<name> AlliesCaptureEvents;
@@ -74,9 +69,9 @@ function PostBeginPlay()
 
 function DoSpawnPointAction(SpawnPointAction SPA)
 {
-    local DHVehicleManager VM;
+    local DHSpawnManager VM;
 
-    VM = DarkestHourGame(Level.Game).VehicleManager;
+    VM = DarkestHourGame(Level.Game).SpawnManager;
 
     switch (SPA.Operation)
     {
@@ -97,9 +92,9 @@ function DoSpawnPointAction(SpawnPointAction SPA)
 
 function DoVehiclePoolAction(VehiclePoolAction VPA)
 {
-    local DHVehicleManager VM;
+    local DHSpawnManager VM;
 
-    VM = DarkestHourGame(Level.Game).VehicleManager;
+    VM = DarkestHourGame(Level.Game).SpawnManager;
 
     switch (VPA.Operation)
     {
@@ -137,9 +132,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     local Pawn P;
     local DHPlayerReplicationInfo PRI;
     local DH_RoleInfo RI;
-    local DHVehicleManager VM;
+    local DHSpawnManager VM;
 
-    VM = DarkesthourGame(Level.Game).VehicleManager;
+    VM = DarkesthourGame(Level.Game).SpawnManager;
 
     CurrentCapProgress = 0.0;
 

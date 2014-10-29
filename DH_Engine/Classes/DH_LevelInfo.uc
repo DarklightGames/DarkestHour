@@ -17,6 +17,12 @@ enum EAlliedNation
     NATION_Canada,
 };
 
+enum ESpawnMode
+{
+    ESM_RedOrchestra,
+    ESM_DarkestHour
+};
+
 var() EAxisNation AxisNation;
 var() EAlliedNation AlliedNation;
 
@@ -27,6 +33,8 @@ var() rangevector WindDirectionSpeed; //Used to make smoke grenades match other 
 var() sound AlliesWinsMusic; //Optional override for Allies victory music
 var() sound AxisWinsMusic; //Optional override for Axis victory music
 
+var() ESpawnMode SpawnMode;
+
 //=============================================================================
 // defaultproperties
 //=============================================================================
@@ -36,6 +44,6 @@ defaultproperties
     SmokeBrightnessOverride=255
     AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
+    SpawnMode=ESM_RedOrchestra
 }
-
 

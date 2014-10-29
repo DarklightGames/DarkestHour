@@ -3,12 +3,32 @@ class DHDeploymentMenu extends ROGUIRoleSelection;
 var DHGUIList   li_VehiclePools;
 var DHGUIList   li_SpawnPoints;
 
+var automated GUIImage  i_MapImage;
+
 var float       VehiclePoolsUpdateTime;
-var byte        VehiclePoolIndex;
+var int         VehiclePoolIndex;
 var array<int>  VehiclePoolIndices;
 
-var float       VehicleSpawnPointsUpdateTime;
-var byte        VehicleSpawnPointIndex;
+var float       SpawnPointsUpdateTime;
+var int         SpawnPointIndex;
+
+/*
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    i_MapImage.Image = GRI.MapImage;
+
+    super.InitComponent(MyController, MyOwner);
+}
+*/
 
 function bool InternalOnClick(GUIComponent Sender)
 {
@@ -31,16 +51,11 @@ function bool InternalOnClick(GUIComponent Sender)
             break;
 
         case b_Continue:
-            AttemptDeployment();
-            break;
-
-        case b_Config:
-            bShowingConfigButtons = !bShowingConfigButtons;
-            UpdateConfigButtonsVisibility();
+            ChangeSpawn();
             break;
 
         case b_Disconnect:
-            PlayerOwner().ConsoleCommand("DISCONNECT");
+            PlayerOwner().ConsoleCommand("disconnect");
             CloseMenu();
             break;
 
@@ -126,7 +141,7 @@ function bool InternalOnClick(GUIComponent Sender)
 event Timer()
 {
     UpdateVehiclePools();
-    UpdateVehicleSpawnPoints();
+    UpdateSpawnPoints();
 }
 
 function UpdateVehiclePools()
@@ -214,7 +229,7 @@ function UpdateVehiclePools()
     }
 }
 
-function UpdateVehicleSpawnPoints()
+function UpdateSpawnPoints()
 {
     local int i;
     local DHPlayer C;
@@ -229,29 +244,28 @@ function UpdateVehicleSpawnPoints()
 
     DHGRI = DHGameReplicationInfo(C.GameReplicationInfo);
 
-    if (GRI == none)
+    if (DHGRI == none)
     {
         return;
     }
 
-    if (VehicleSpawnPointsUpdateTime < DHGRI.VehicleSpawnPointsUpdateTime)
+    if (SpawnPointsUpdateTime < DHGRI.SpawnPointsUpdateTime)
     {
         //the vehicle spawn points were modified in such a way that requires us to repopulate the list
         li_AvailableWeapons[0].Clear();
 
         for (i = 0; i < 32; ++i)
         {
-            if(!DHGRI.IsVehicleSpawnPointActive(i) ||
-                DHGRI.GetVehicleSpawnPointTeamIndex(i) != C.GetTeamNum())
+            if(!DHGRI.IsSpawnPointActive(i) || DHGRI.GetSpawnPointTeamIndex(i) != C.GetTeamNum())
             {
                 continue;
             }
 
-            li_AvailableWeapons[0].Add(DHGRI.VehicleSpawnPointNames[i]);
+            li_AvailableWeapons[0].Add(DHGRI.SpawnPointNames[i]);
             li_AvailableWeapons[0].SetExtraAtIndex(li_AvailableWeapons[0].ItemCount - 1, "" $ i);
         }
 
-        VehicleSpawnPointsUpdateTime = DHGRI.VehicleSpawnPointsUpdateTime;
+        SpawnPointsUpdateTime = DHGRI.SpawnPointsUpdateTime;
     }
 
     li_AvailableWeapons[0].SortList();
@@ -262,19 +276,17 @@ function InternalOnChange(GUIComponent Sender)
     switch (Sender)
     {
         case lb_Roles:
-            VehiclePoolIndex = byte(li_Roles.GetExtra());
+            VehiclePoolIndex = int(li_Roles.GetExtra());
             break;
         case lb_AvailableWeapons[0]:
-            VehicleSpawnPointIndex = byte(li_AvailableWeapons[0].GetExtra());
+            SpawnPointIndex = int(li_AvailableWeapons[0].GetExtra());
             break;
     }
 }
 
-function AttemptDeployment()
+function ChangeSpawn()
 {
     local DHPlayer C;
-    local Vehicle V;
-    local byte SpawnError;
 
     C = DHPlayer(PlayerOwner());
 
@@ -283,13 +295,9 @@ function AttemptDeployment()
         return;
     }
 
-    C.ServerSpawnVehicle(VehiclePoolIndex, VehicleSpawnPointIndex, SpawnError);
+    C.ServerChangeSpawn(SpawnPointIndex, VehiclePoolIndex);
 
-    if (SpawnError != class'DHVehicleManager'.default.SpawnError_None)
-    {
-        //TODO: display correct message here or something i dunno
-        CloseMenu();
-    }
+    CloseMenu();
 }
 
 defaultproperties
@@ -726,9 +734,9 @@ defaultproperties
      Background=none
 
      VehiclePoolsUpdateTime=-1.0
-     VehicleSpawnPointsUpdateTime=-1.0
+     SpawnPointsUpdateTime=-1.0
 
-     VehicleSpawnPointIndex=255
-     VehiclePoolIndex=255
+     SpawnPointIndex=-1
+     VehiclePoolIndex=-1
 }
 

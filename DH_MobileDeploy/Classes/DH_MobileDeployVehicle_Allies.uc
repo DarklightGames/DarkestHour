@@ -15,8 +15,6 @@ class DH_MobileDeployVehicle_Allies extends DH_M3A1HalftrackTransport;
 
 var     bool        bMustBeSL;
 
-simulated
-
 //function TryToDrive overridden from DH_ROTransportCraft
 //Overridden to allow leader only as driver
 function bool TryToDrive(Pawn P)

@@ -1,9 +1,3 @@
-/*
-Primary function of this was just to act as our mortar spawn.  For
-posterity, I'll just call it the DH spawn area so anyone extending it doesn't
-have to have to feel weird about extending it.
--Colin Basnett, 2010
-*/
 class DHSpawnArea extends ROSpawnArea
     placeable;
 
@@ -11,14 +5,24 @@ var()   bool    bMortarmanSpawnArea;
 
 function PostBeginPlay()
 {
-    if (DarkestHourGame(Level.Game) != none)
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
     {
         if (bTankCrewSpawnArea)
-            DarkestHourGame(Level.Game).TankCrewSpawnAreas[DarkestHourGame(Level.Game).TankCrewSpawnAreas.Length] = self;
+        {
+            G.TankCrewSpawnAreas[G.TankCrewSpawnAreas.Length] = self;
+        }
         else if (bMortarmanSpawnArea)
-            DarkestHourGame(Level.Game).DHMortarSpawnAreas[DarkestHourGame(Level.Game).DHMortarSpawnAreas.Length] = self;
+        {
+            G.DHMortarSpawnAreas[G.DHMortarSpawnAreas.Length] = self;
+        }
         else
-            DarkestHourGame(Level.Game).SpawnAreas[DarkestHourGame(Level.Game).SpawnAreas.Length] = self;
+        {
+            G.SpawnAreas[G.SpawnAreas.Length] = self;
+        }
     }
 
     if (VolumeTag != '')
@@ -26,6 +30,7 @@ function PostBeginPlay()
         foreach AllActors(class'Volume', AttachedVolume, VolumeTag)
         {
             AttachedVolume.AssociatedActor = self;
+
             break;
         }
     }
@@ -36,3 +41,4 @@ function PostBeginPlay()
 defaultproperties
 {
 }
+
