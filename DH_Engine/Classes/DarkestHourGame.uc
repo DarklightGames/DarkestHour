@@ -1589,23 +1589,13 @@ static function string ParseChatPercVar(Mutator BaseMutator, controller Who, str
     //Coordinates
     if (cmd~="%R")
     {
-        // Get the MapName out of the URL
-        MapName = Who.Level.GetLocalURL();
-        i = InStr(MapName, "/");
-        if (i < 0)
+        //Get the level name string
+        MapName = string(Who.outer);
+
+        if (MapName == "")
         {
-            i = 0;
+            MapName = "Error No MapName";
         }
-        j = InStr(MapName, "?");
-        if (j < 0)
-        {
-            j = Len(MapName);
-        }
-        if (Mid(MapName, j - 3, 3) ~= "rom")
-        {
-            j -= 5;
-        }
-        MapName = Mid(MapName, i + 1, j - i);
 
         //Finish parsing the string
         Str = "Map:" @ MapName @ "Coord:" @ string(Who.Pawn.Location) @ "Report: ";
