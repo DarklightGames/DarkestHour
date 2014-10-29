@@ -21,18 +21,21 @@ var localized string SinglePlayerDisabledText;
 var() config string     MenuSong;
 
 //Quick Play Variables
+var ROBufferedTCPLink myLink;
+
 var string waitString;
 var string quickplayip;
-var ROBufferedTCPLink myLink;
 var string LinkClassName;
-
 var string getRequest;
 var String getResponse;
 var string newsIPAddr;
+
 var int     myRetryCount;
 var int     myRetryMax;
 
 var float   ReReadyPause;
+
+var bool bAttemptQuickPlay;
 var bool sendGet;
 var bool pageWait;
 
@@ -134,19 +137,12 @@ function bool ButtonClick(GUIComponent Sender)
     switch (sender)
     {
         case b_QuickPlay:
-            if (quickplayip == "")
-            {
-
-
-            }
-            else
+            bAttemptQuickPlay = true;
+            if (quickplayip != "")
             {
                 PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
                 Controller.CloseAll(false,true);
             }
-
-            //Just need to make the IP gathered from HTTP request like the news, I know how to do this!
-
             break;
 
         case b_Practice:
@@ -280,13 +276,10 @@ event Timer()
                      myLink.WaitForCount(1,20,1); // 20 sec timeout
                      sendGet = false;
                 }
-                else
+                else if (bAttemptQuickPlay)
                 {
-                    if(pageWait)
-                    {
-                        waitString = waitString$".";
-                        b_QuickPlay.Caption = waitString;
-                    }
+                     waitString = waitString$".";
+                     b_QuickPlay.Caption = waitString;
                 }
             }
             else
@@ -323,6 +316,12 @@ event Timer()
             myLink.DestroyLink();
             myLink = none;
             KillTimer();
+
+            if (bAttemptQuickPlay)
+            {
+                PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
+                Controller.CloseAll(false,true);
+            }
         }
     }
     SetTimer(ReReadyPause, true);
@@ -402,7 +401,7 @@ function HTTPParse(out string page)
 defaultproperties
 {
     //IP variables
-    waitString = "Getting Server Info"
+    waitString = "Join Test Server"
     newsIPAddr = "darkesthourgame.com"
     getRequest = "GET /quickplayip.php HTTP/1.1"
 
@@ -437,7 +436,7 @@ defaultproperties
 
      Begin Object class=GUIButton Name=QuickPlayButton
          CaptionAlign=TXTA_Left
-         Caption="Getting Server Info"
+         Caption="Join Test Server"
          bAutoShrink=false
          bUseCaptionHeight=true
          FontScale=FNS_Large
