@@ -1,8 +1,16 @@
 class DHSpawnManager extends SVehicleFactory;
 
-//-----------------------------------------------------------
-// Variables
-//-----------------------------------------------------------
+enum ESpawnPointType
+{
+    ESPT_Infantry,
+    ESPT_Vehicles
+};
+
+enum ESpawnPointMethod
+{
+    ESPM_Hints,
+    ESPM_Radius
+};
 
 struct VehiclePool
 {
@@ -38,6 +46,7 @@ var const byte SpawnError_Failed;
 var const byte SpawnError_BadTeamPool;
 var const byte SpawnError_BadTeamSpawnPoint;
 var const byte SpawnError_TryToDriveFailed;
+var const byte SpawnError_BadSpawnType;
 
 var const byte SpawnPointType_Infantry;
 var const byte SpawnPointType_Vehicles;
@@ -47,11 +56,11 @@ var localized array<string> SpawnErrorStrings;
 const SpawnPointsMax = 32;
 const PoolsMax = 32;
 
-var()       array<VehiclePool>  VehiclePools;
-var()       byte                MaxTeamVehicles[2];
-var()       byte                MaxDestroyedVehicles;
+var(Vehicles) array<VehiclePool>        VehiclePools;
+var(Vehicles) byte                      MaxTeamVehicles[2];
+var(Vehicles) byte                      MaxDestroyedVehicles;
 
-var         class<LocalMessage> VehicleDestroyedMessageClass;
+var class<LocalMessage>                 VehicleDestroyedMessageClass;
 
 var private byte                        TeamVehicleCounts[2];
 var private array<ROVehicle>            Vehicles;
@@ -87,9 +96,11 @@ function PostBeginPlay()
 
             break;
         }
+
+        SpawnPoints[SpawnPoints.Length] = SP;
     }
 
-    Level.Game.Broadcast(self, "Spawn points length=" @ SpawnPoints.Length);
+    Log("Spawn points length = " @ SpawnPoints.Length);
 
     //Update GameReplicationInfo
     for (i = 0; i < SpawnPoints.Length; ++i)
@@ -130,138 +141,74 @@ function UpdatePoolReplicationInfo(byte PoolIndex)
     GRI.SetVehiclePoolNextAvailableTime(PoolIndex, VehiclePools[PoolIndex].NextAvailableTime);
 }
 
-function byte DrySpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, out int LocationHintIndex)
+function byte DrySpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, out vector SpawnLocation, out rotator SpawnRotation)
 {
-    local int i, j;
-    local Pawn P;
-    local bool bIsBlocked;
-    local array<int> LocationHintIndices;
     local DHSpawnPoint SP;
+    local byte SpawnError;
 
-    if (C == none ||
-        PoolIndex < 0 || PoolIndex >= PoolsMax || VehiclePools[PoolIndex].VehicleClass == none ||
-        SpawnPointIndex < 0 || SpawnPointIndex >= SpawnPointsMax)
+    if (C == none)
     {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM] Fatal error in DrySpawn (either invalid indices passed in or pool's VehicleClass is none)");
-        }
-
         return SpawnError_Fatal;
+    }
+
+    //Check spawn point
+    SpawnError = GetSpawnPointError(C, SpawnPointIndex, ESPT_Vehicles);
+
+    if (SpawnError != SpawnError_None)
+    {
+        return SpawnError;
     }
 
     SP = SpawnPoints[SpawnPointIndex];
 
-    if (SP == none || SP.Type == ESPT_Vehicles)
+    if (SP == none)
     {
-        Error("[DHSM] Fatal error, requested spawn point is null or incorrect type");
-
         return SpawnError_Fatal;
     }
 
-    if (C.GetTeamNum() != VehiclePools[PoolIndex].VehicleClass.default.VehicleTeam)
-    {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM] Pool team index (" $ VehiclePools[PoolIndex].VehicleClass.default.VehicleTeam $ ") does not match player's (" $ C.GetTeamNum() $ ")");
-        }
+    //Check vehicle pool
+    SpawnError = GetVehiclePoolError(C, PoolIndex, SP);
 
-        return SpawnError_BadTeamPool;
+    if (SpawnError != SpawnError_None)
+    {
+        return SpawnError;
     }
 
-    if (C.GetTeamNum() != SP.TeamIndex)
+    switch (SP.Method)
     {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM] Spawn point team index (" $ SP.TeamIndex $ ") does not match player's (" $ C.GetTeamNum() $ ")");
-        }
-
-        return SpawnError_BadTeamSpawnPoint;
+        case ESPM_Hints:
+            if (GetSpawnLocation(SP, VehiclePools[PoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnLocation, SpawnRotation))
+            {
+                return SpawnError_Blocked;
+            }
+        case ESPM_Radius:
+            //TODO: do a proper radius check
+            SpawnLocation = SP.Location;
+            SpawnRotation = SP.Rotation;
     }
 
-    if (TeamVehicleCounts[VehiclePools[PoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[VehiclePools[PoolIndex].VehicleClass.default.VehicleTeam])
-    {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM] Max vehicles (" $ MaxTeamVehicles[VehiclePools[PoolIndex].VehicleClass.default.VehicleTeam] $ ") reached for team" @ VehiclePools[PoolIndex].VehicleClass.default.VehicleTeam);
-        }
+    return SpawnError_None;
+}
 
-        return SpawnError_MaxVehicles;
-    }
+function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
+{
+    local Pawn P;
+    local array<int> LocationHintIndices;
+    local int LocationHintIndex;
+    local int i;
+    local bool bIsBlocked;
 
-    if (!VehiclePools[PoolIndex].bIsActive)
-    {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM]" @ VehiclePools[PoolIndex].VehicleClass @ "pool is inactive");
-        }
-
-        return SpawnError_PoolInactive;
-    }
-
-    if (!SP.bIsActive)
-    {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM] Spawn point" @ SpawnPointIndex @ "is inactive");
-        }
-
-        return SpawnError_SpawnInactive;
-    }
-
-    if (Level.TimeSeconds < VehiclePools[PoolIndex].NextAvailableTime)
-    {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM] Cooldown on" @ VehiclePools[PoolIndex].VehicleClass @ "pool:" @ VehiclePools[PoolIndex].NextAvailableTime - Level.TimeSeconds);
-        }
-
-        return SpawnError_Cooldown;
-    }
-
-    if (VehiclePools[PoolIndex].SpawnCount >= VehiclePools[PoolIndex].MaxSpawns)
-    {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM]" @ VehiclePools[PoolIndex].VehicleClass @ "pool is at max spawns (" $ VehiclePools[PoolIndex].MaxSpawns $ ")");
-        }
-
-        return SpawnError_SpawnLimit;
-    }
-
-    if (VehiclePools[PoolIndex].ActiveCount >= VehiclePools[PoolIndex].MaxActive)
-    {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "[DHSM]" @ VehiclePools[PoolIndex].VehicleClass @ "pool is at active limit (" $ VehiclePools[PoolIndex].MaxActive $ ")");
-        }
-
-        return SpawnError_ActiveLimit;
-    }
+    //Scramble location hint indices so we don't use the same ones repeatedly
+    LocationHintIndices = CreateScrambledArrayIndices(SP.LocationHints.Length);
 
     //Initialize with invalid index
     LocationHintIndex = -1;
-
-    if (bDebug)
-    {
-        Level.Game.Broadcast(self, "SpawnPoints[" $ SpawnPointIndex $ "].LocationHints.Length" @ SpawnPoints[SpawnPointindex].LocationHints.Length);
-    }
-
-    //Scramble location hint indices so we don't use the same ones repeatedly
-    for (i = 0; i < SP.LocationHints.Length; ++i)
-    {
-        j = Rand(LocationHintIndices.Length);
-
-        LocationHintIndices.Insert(j, 1);
-
-        LocationHintIndices[j] = i;
-    }
 
     for (i = 0; i < LocationHintIndices.Length; ++i)
     {
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, VehiclePools[PoolIndex].VehicleClass.default.CollisionRadius * 1.25, SP.LocationHints[LocationHintIndices[i]].Location)
+        foreach RadiusActors(class'Pawn', P, CollisionRadius , SP.LocationHints[LocationHintIndices[i]].Location)
         {
             bIsBlocked = true;
 
@@ -274,47 +221,44 @@ function byte DrySpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, 
         }
     }
 
-    if (LocationHintIndex < 0)
+    if (LocationHintIndex == -1)
     {
-        return SpawnError_Blocked;
+        //No proper location hint found, return false
+        return false;
     }
 
-    return SpawnError_None;
+    SpawnLocation = SP.LocationHints[LocationHintIndex].Location;
+    SpawnRotation = SP.LocationHints[LocationHintIndex].Rotation;
+
+    return true;
 }
 
 function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, out byte SpawnError)
 {
-    local int LocationHintIndex;
     local ROVehicle V;
-    local DHSpawnPoint SP;
-    local DHLocationHint LH;
+    local vector SpawnLocation;
+    local rotator SpawnRotation;
 
     SpawnError = SpawnError_Fatal;
 
-    SpawnError = DrySpawnVehicle(C, PoolIndex, SpawnPointIndex, LocationHintIndex);
+    if (C.Pawn != none)
+    {
+        return none;
+    }
 
-    SP = SpawnPoints[SpawnPointIndex];
+    SpawnError = DrySpawnVehicle(C, PoolIndex, SpawnPointIndex, SpawnLocation, SpawnRotation);
 
     if (SpawnError != SpawnError_None)
     {
         return none;
     }
 
-    if (LocationHintIndex < 0 || LocationHintIndex >= SP.LocationHints.Length || SP.LocationHints[LocationHintIndex] == none)
-    {
-        Error("[DHSM] Invalid location hint (either null or index is out of range)");
-
-        SpawnError = SpawnError_Fatal;
-        return none;
-    }
-
-    LH = SP.LocationHints[LocationHintIndex];
-
-    V = Spawn(VehiclePools[PoolIndex].VehicleClass,,, LH.Location, LH.Rotation);
+    V = Spawn(VehiclePools[PoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
 
     if (V == none)
     {
         SpawnError = SpawnError_Failed;
+
         return none;
     }
 
@@ -350,6 +294,165 @@ function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex
     }
 
     return V;
+}
+
+function byte GetSpawnPointError(DHPlayer C, byte SpawnPointIndex, ESpawnPointType SpawnPointType)
+{
+    local DHSpawnPoint SP;
+
+    if (SpawnPointIndex < 0 || SpawnPointIndex >= SpawnPoints.Length)
+    {
+        Error("[DHSM] Fatal error in DrySpawnInfantry (either invalid indices passed in or pool's VehicleClass is none)");
+
+        return SpawnError_Fatal;
+    }
+
+    SP = SpawnPoints[SpawnPointIndex];
+
+    if (SP == none || SP.Type != ESPT_Infantry)
+    {
+        Error("[DHSM] Fatal error, requested spawn point is null or incorrect type");
+
+        return SpawnError_Fatal;
+    }
+
+    if (C.GetTeamNum() != SP.TeamIndex)
+    {
+        Error("[DHSM] Spawn point team index (" $ SP.TeamIndex $ ") does not match player's (" $ C.GetTeamNum() $ ")");
+
+        return SpawnError_BadTeamSpawnPoint;
+    }
+
+    if (!SP.bIsActive)
+    {
+        Error("[DHSM] Spawn point" @ SpawnPointIndex @ "is inactive");
+
+        return SpawnError_SpawnInactive;
+    }
+
+    if (SP.Type != SpawnPointType)
+    {
+        return SpawnError_SpawnInactive;
+    }
+
+    return SpawnError_None;
+}
+
+function byte GetVehiclePoolError(DHPlayer C, byte VehiclePoolIndex, DHSpawnPoint SP)
+{
+    if (C == none)
+    {
+        return SpawnError_Fatal;
+    }
+
+    if (VehiclePoolIndex < 0 || VehiclePoolIndex >= PoolsMax || VehiclePools[VehiclePoolIndex].VehicleClass == none)
+    {
+        Error("[DHSM] Fatal error in DrySpawn (either invalid indices passed in or pool's VehicleClass is none)");
+
+        return SpawnError_Fatal;
+    }
+
+    if (SP == none || SP.Type != ESPT_Vehicles)
+    {
+        Error("[DHSM] Fatal error, requested spawn point is null or incorrect type");
+
+        return SpawnError_Fatal;
+    }
+
+    if (TeamVehicleCounts[VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam] >= MaxTeamVehicles[VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam])
+    {
+        Error("[DHSM] Max vehicles (" $ MaxTeamVehicles[VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam] $ ") reached for team" @ VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam);
+
+        return SpawnError_MaxVehicles;
+    }
+
+    if (!VehiclePools[VehiclePoolIndex].bIsActive)
+    {
+        Error("[DHSM]" @ VehiclePools[VehiclePoolIndex].VehicleClass @ "pool is inactive");
+
+        return SpawnError_PoolInactive;
+    }
+
+    if (Level.TimeSeconds < VehiclePools[VehiclePoolIndex].NextAvailableTime)
+    {
+        Error("[DHSM] Cooldown on" @ VehiclePools[VehiclePoolIndex].VehicleClass @ "pool:" @ VehiclePools[VehiclePoolIndex].NextAvailableTime - Level.TimeSeconds);
+
+        return SpawnError_Cooldown;
+    }
+
+    if (VehiclePools[VehiclePoolIndex].SpawnCount >= VehiclePools[VehiclePoolIndex].MaxSpawns)
+    {
+        Error("[DHSM]" @ VehiclePools[VehiclePoolIndex].VehicleClass @ "pool is at max spawns (" $ VehiclePools[VehiclePoolIndex].MaxSpawns $ ")");
+
+        return SpawnError_SpawnLimit;
+    }
+
+    if (VehiclePools[VehiclePoolIndex].ActiveCount >= VehiclePools[VehiclePoolIndex].MaxActive)
+    {
+        Error("[DHSM]" @ VehiclePools[VehiclePoolIndex].VehicleClass @ "pool is at active limit (" $ VehiclePools[VehiclePoolIndex].MaxActive $ ")");
+
+        return SpawnError_ActiveLimit;
+    }
+
+    return SpawnError_None;
+}
+
+function byte DrySpawnInfantry(DHPlayer C, byte SpawnPointIndex, out vector SpawnLocation, out rotator SpawnRotation)
+{
+    local byte SpawnError;
+    local DHSpawnPoint SP;
+
+    if (C == none)
+    {
+        return SpawnError_Fatal;
+    }
+
+    //Spawn point sanity check
+    SpawnError = GetSpawnPointError(C, SpawnPointIndex, ESPT_Infantry);
+
+    if (SpawnError != SpawnError_None)
+    {
+        return SpawnError;
+    }
+
+    SP = SpawnPoints[SpawnPointIndex];
+
+    if (SP == none)
+    {
+        return SpawnError_Fatal;
+    }
+
+    switch (SP.Method)
+    {
+        case ESPM_Hints:
+            if (!GetSpawnLocation(SP, 128.0, SpawnLocation, SpawnRotation))
+            {
+                return SpawnError_Blocked;
+            }
+            break;
+        case ESPM_Radius:
+            SpawnLocation = SP.Location;
+            SpawnRotation = SP.Rotation;
+            break;
+    }
+
+    return SpawnError_None;
+}
+
+function byte SpawnInfantry(DHPlayer C, byte SpawnPointIndex, out vector SpawnLocation, out rotator SpawnRotation)
+{
+    local byte SpawnError;
+
+    SpawnError = SpawnError_Fatal;
+
+    if (C.Pawn != none)
+    {
+        return SpawnError;
+    }
+
+    SpawnError = DrySpawnInfantry(C, SpawnPointIndex, SpawnLocation, SpawnRotation);
+
+    return SpawnError;
 }
 
 event VehicleDestroyed(Vehicle V)
@@ -662,6 +765,23 @@ static function string GetSpawnErrorString(int SpawnError)
     }
 }
 
+static function array<int> CreateScrambledArrayIndices(int Length)
+{
+    local array<int> Indices;
+    local int i, j;
+
+    for (i = 0; i < Length; ++i)
+    {
+        j = Rand(Length);
+
+        Indices.Insert(j, 1);
+
+        Indices[j] = i;
+    }
+
+    return Indices;
+}
+
 defaultproperties
 {
     bDirectional=false
@@ -679,6 +799,7 @@ defaultproperties
     SpawnError_BadTeamPool=10
     SpawnError_BadTeamSpawnPoint=11
     SpawnError_TryToDriveFailed=12
+    SpawnError_BadSpawnType=13
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
     MaxDestroyedVehicles=8

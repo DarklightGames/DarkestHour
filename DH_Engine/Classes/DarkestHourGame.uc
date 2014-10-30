@@ -1585,20 +1585,22 @@ function DHRestartPlayer(Controller C)
 {
     local TeamInfo BotTeam, OtherTeam;
     local DHPlayer DHC;
-    local DHLocationHint LH;
     local NavigationPoint startSpot;
     local int TeamNum;
     local class<Pawn> DefaultPlayerClass;
     local Vehicle V, Best;
     local vector ViewDir;
     local float BestDist, Dist;
+    local byte SpawnError;
+    local vector SpawnLocation;
+    local rotator SpawnRotation;
 
-    if (C == none)
+    DHC = DHPlayer(C);
+
+    if (DHC == none)
     {
         return;
     }
-
-    DHC = DHPlayer(C);
 
     if ((!bPlayersVsBots || (Level.NetMode == NM_Standalone)) && bBalanceTeams && (Bot(C) != none) && (!bCustomBots || (Level.NetMode != NM_Standalone)))
     {
@@ -1648,6 +1650,15 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
+    SpawnError = SpawnManager.SpawnInfantry(DHC, DHC.SpawnPointIndex, SpawnLocation, SpawnRotation);   //TODO: remove need for passing in selection, SPI exists in DHC
+
+    if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+    {
+        Error("Spawn Error =" @ SpawnError);
+
+        return;
+    }
+
     if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
     {
         BaseMutator.PlayerChangedClass(C);
@@ -1655,14 +1666,14 @@ function DHRestartPlayer(Controller C)
 
     if (C.PawnClass != none)
     {
-        C.Pawn = Spawn(C.PawnClass,,, LH.Location, LH.Rotation);
+        C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
     }
 
     if (C.Pawn == none)
     {
         DefaultPlayerClass = GetDefaultPlayerClass(C);
 
-        C.Pawn = Spawn(DefaultPlayerClass,,,LH.Location, LH.Rotation);
+        C.Pawn = Spawn(DefaultPlayerClass,,, SpawnLocation, SpawnRotation);
     }
 
     if (C.Pawn == none)
@@ -1694,6 +1705,85 @@ function DHRestartPlayer(Controller C)
     C.ClientSetRotation(C.Pawn.Rotation);
 
     AddDefaultInventory(C.Pawn);
+}
+
+//Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer
+function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
+{
+    local UnrealTeamInfo NewTeam;
+    local DHPlayer P;
+
+    if (bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun)
+    {
+        return false;   // only allow team changes before match starts
+    }
+
+    if (CurrentGameProfile != none && !CurrentGameProfile.CanChangeTeam(Other, num))
+    {
+        return false;
+    }
+
+    if (Other.IsA('PlayerController') && Other.PlayerReplicationInfo.bOnlySpectator)
+    {
+        Other.PlayerReplicationInfo.Team = none;
+
+        return true;
+    }
+
+    NewTeam = Teams[PickTeam(num,Other)];
+
+    // check if already on this team
+    if (Other.PlayerReplicationInfo.Team == NewTeam)
+    {
+        return false;
+    }
+
+    Other.StartSpot = none;
+
+    if (Other.PlayerReplicationInfo.Team != none)
+    {
+        Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
+
+        P = DHPlayer(Other);
+
+        if (P != none)
+        {
+            P.DesiredRole = -1;
+            P.CurrentRole = -1;
+            ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo = none;
+            P.PrimaryWeapon = -1;
+            P.SecondaryWeapon = -1;
+            P.GrenadeWeapon = -1;
+            P.bWeaponsSelected = false;
+
+            //DARKEST HOUR
+            P.bReadyToSpawn = false;
+            P.SpawnPointIndex = -1;
+            P.VehiclePoolIndex = -1;
+        }
+    }
+
+    if (NewTeam.AddToTeam(Other))
+    {
+        if (NewTeam == Teams[ALLIES_TEAM_INDEX])
+        {
+            BroadcastLocalizedMessage(GameMessageClass, 3, Other.PlayerReplicationInfo, none, NewTeam);
+        }
+        else
+        {
+            BroadcastLocalizedMessage(GameMessageClass, 12, Other.PlayerReplicationInfo, none, NewTeam);
+        }
+
+        if (bNewTeam && PlayerController(Other) != none)
+        {
+            GameEvent("TeamChange", "" $ num, Other.PlayerReplicationInfo);
+        }
+    }
+
+    // Since we're changing teams, remove all rally points/help requests/etc
+    ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
+
+    return true;
 }
 
 defaultproperties

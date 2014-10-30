@@ -8,7 +8,14 @@ enum ESpawnPointType
     ESPT_Vehicles
 };
 
+enum ESpawnPointMethod
+{
+    ESPM_Hints,
+    ESPM_Radius
+};
+
 var() ESpawnPointType Type;
+var() ESpawnPointMethod Method;
 var() bool bIsInitiallyActive;
 var() int TeamIndex;
 var() name LocationHintTag;
@@ -18,11 +25,16 @@ var() float SpawnProtectionTime;
 var   array<DHLocationHint> LocationHints;
 var   bool bIsActive;
 
+function PreBeginPlay()
+{
+    bIsActive = bIsInitiallyActive;
+
+    super.PreBeginPlay();
+}
+
 function PostBeginPlay()
 {
     local DHLocationHint LH;
-
-    bIsActive = bIsInitiallyActive;
 
     foreach AllActors(class'DHLocationHint', LH)
     {
@@ -50,4 +62,5 @@ defaultproperties
     DrawScale=3.0
     SpawnPointName="UNNAMED SPAWN POINT!!!"
     SpawnProtectionTime=5.0
+    Method=ESPM_LocationHint
 }
