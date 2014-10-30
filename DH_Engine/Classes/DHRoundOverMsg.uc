@@ -57,7 +57,7 @@ static simulated function ClientReceive(
         if (Switch == 1)
         {
             //Lets find out if we are dealing with a sound group
-            SoundG = SoundGroup(DH_LevelInfo(OptionalObject).AlliesWinsMusic);
+            SoundG = SoundGroup(DHLI.AlliesWinsMusic);
             //Check to make sure the sound exists and the index is valid
             if (SoundG != none && DHGRI.AlliesVictoryMusicIndex >= 0 && DHGRI.AlliesVictoryMusicIndex < SoundG.Sounds.Length)
             {
@@ -74,7 +74,7 @@ static simulated function ClientReceive(
         else if (Switch == 0)
         {
             //Lets find out if we are dealing with a sound group
-            SoundG = SoundGroup(DH_LevelInfo(OptionalObject).AxisWinsMusic);
+            SoundG = SoundGroup(DHLI.AxisWinsMusic);
             //Check to make sure the sound exists and the index is valid
             if (SoundG != none && DHGRI.AxisVictoryMusicIndex >= 0 && DHGRI.AxisVictoryMusicIndex < SoundG.Sounds.Length)
             {
