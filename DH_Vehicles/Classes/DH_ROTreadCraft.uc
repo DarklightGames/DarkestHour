@@ -334,6 +334,155 @@ simulated function SetupTreads()
     }
 }
 
+// Matt: modified to fix RO bug where players can't get into a rider position on a driven tank if 1st rider position is already occupied
+// Original often returned MG as ClosestWeaponPawn, which infantry cannot use, so we now check player can use weapon pawn & it's available)
+function Vehicle FindEntryVehicle(Pawn P)
+{
+    local  float              DistSquared, ClosestDistSquared, BackupDistSquared; // use distance squared to compare to VSizeSquared (faster than VSize)
+    local  int                x;
+    local  VehicleWeaponPawn  ClosestWeaponPawn, BackupWeaponPawn;
+    local  Bot                B;
+    local  Vehicle            VehicleGoal;
+    local  bool               bPlayerIsTankCrew;
+
+    B = Bot(P.Controller);
+
+    // Bots know what they want
+    if (B != none)
+    {
+        // This is what's added in ROTreadCraft, worked into main function from ROVehicle ("code to get the bots using tanks better")
+        if (WeaponPawns.length != 0 && IsVehicleEmpty())
+        {
+            for (x = WeaponPawns.length -1; x >= 0; x--)
+            {
+                if (WeaponPawns[x].Driver == none)
+                {
+                    return WeaponPawns[x];
+                }
+            }
+        }
+
+        VehicleGoal = Vehicle(B.RouteGoal);
+
+        if (VehicleGoal == none)
+        {
+            return none;
+        }
+
+        if (VehicleGoal == self)
+        {
+            if (Driver == none)
+            {
+                return self;
+            }
+
+            return none;
+        }
+
+        for (x = 0; x < WeaponPawns.length; x++)
+        {
+            if (VehicleGoal == WeaponPawns[x])
+            {
+                if (WeaponPawns[x].Driver == none)
+                {
+                    return WeaponPawns[x];
+                }
+
+                if (Driver == none)
+                {
+                    return self;
+                }
+
+                return none;
+            }
+        }
+
+        return none;
+    }
+
+    // Always go with driver's seat if no driver (even if player isn't tank crew, TryToDrive puts them in any available rider slot)
+    if (Driver == none)
+    {
+        DistSquared = VSizeSquared(P.Location - (Location + (EntryPosition >> Rotation)));
+
+        if (DistSquared < Square(EntryRadius))
+        {
+            return self;
+        }
+
+        for (x = 0; x < WeaponPawns.length; x++)
+        {
+            DistSquared = VSizeSquared(P.Location - (WeaponPawns[x].Location + (WeaponPawns[x].EntryPosition >> Rotation)));
+
+            if (DistSquared < Square(WeaponPawns[x].EntryRadius))
+            {
+                return self;
+            }
+        }
+
+        return none;
+    }
+
+    // Record if player is allowed to use tanks
+    if (P.IsHumanControlled() && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none && 
+        ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)
+    {
+        bPlayerIsTankCrew = true;
+    }
+
+    // Set some high starting values so we can record when we find a closer weapon pawn (squared distances are equivalent to 1,000 units or 16.5m)
+    ClosestDistSquared = 1000000.0;
+    BackupDistSquared = 1000000.0; // added so we can check the closest weapon pawn player could occupy, even though it may be out of range (vehicle itself may be in range)
+
+    // Loop through weapon pawns to check if we are in entry range
+    for (x = 0; x < WeaponPawns.length; x++)
+    {
+        // Ignore this weapon pawn if it's already occupied by another player
+        if (WeaponPawns[x] == none || (WeaponPawns[x].Driver != none && WeaponPawns[x].Driver.IsHumanControlled()))
+        {
+            continue;
+        }
+
+        // Stop non-tanker from trying to enter a tank crew position (cannon or MG), which would be unsuccessful & stop them reaching a valid rider slot
+        if (!bPlayerIsTankCrew && WeaponPawns[x].IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(WeaponPawns[x]).bMustBeTankCrew)
+        {
+            continue;
+        }
+
+        // Calculate player's distance from this weapon pawn
+        DistSquared = VSizeSquared(P.Location - (WeaponPawns[x].Location + (WeaponPawns[x].EntryPosition >> Rotation)));
+
+        // Check if this weapon pawn is currently the closest one within range that the player can use
+        if (DistSquared < ClosestDistSquared && DistSquared < Square(WeaponPawns[x].EntryRadius))
+        {
+            ClosestDistSquared = DistSquared;
+            ClosestWeaponPawn = WeaponPawns[x];
+        }    
+        // If not, check if this is closest 'backup' weapon pawn player could occupy (used below if vehicle itself in range but no weapon pawn in range)
+        else if (ClosestWeaponPawn == none && DistSquared < BackupDistSquared)
+        {
+            BackupDistSquared = DistSquared;
+            BackupWeaponPawn = WeaponPawns[x];            
+        }
+    }
+
+    // If we have a weapon pawn in range, return the closest recorded
+    if (ClosestWeaponPawn != none)
+    {
+        return ClosestWeaponPawn;
+    }
+    // Or if we have a backup weapon pawn & the vehicle itself is in range, return the backup weapon pawn
+    else if (BackupWeaponPawn != none && VSizeSquared(P.Location - (Location + (EntryPosition >> Rotation))) < Square(EntryRadius))
+    {
+        return BackupWeaponPawn;
+    }
+    // No valid slots in range
+    else
+    {
+        return none;
+    }
+}
+
 function KDriverEnter(Pawn p)
 {
     local int x;
