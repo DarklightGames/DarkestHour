@@ -376,6 +376,74 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     ObituaryCount++;
 }
 
+// Matt: modified to correct bug that sometimes screwed up layout of critical message, resulting in very long text lines going outside of message background & sometimes off screen
+simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMessageExtra MessageExtra, Canvas C)
+{
+    local  array<string>  Lines;
+    local  float          TempXL, TempYL, InitialXL, XL, YL;
+    local  int            InitialNumLines, i, j;
+
+    // Hackish for ROCriticalMessages
+    if (class'Object'.static.ClassIsChildOf(Message.Message, class'ROCriticalMessage'))
+    {
+        // Set a random background type
+        MessageExtra.background_type = Rand(4);
+
+        // Figure what width to use to break the string at
+        InitialXL = Message.DX;
+//      TempXL = Min(InitialXL, C.SizeX * class'ROCriticalMessage'.default.maxMessageWidth); // Matt: replaced by line below to use max width specified in ROCriticalMessage subclass
+        TempXL = Min(InitialXL, C.SizeX * class<ROCriticalMessage>(Message.Message).default.maxMessageWidth);
+
+        if (TempXL < Message.DY * 8.0) // only wrap if we have enough text
+        {
+            MessageExtra.Lines.Length = 1;
+            MessageExtra.Lines[0] = Message.StringMessage;
+        }
+        else
+        {
+            Lines.Length = 0;
+            C.WrapStringToArray(Message.StringMessage, Lines, TempXL);
+            InitialNumLines = Lines.length;
+            Message.DX = TempXL; // Matt: added to fix problem, so Message.DX is always set, even for the 1st pass
+
+            for (i = 0; i < 20; i++)
+            {
+                TempXL *= 0.8;
+                Lines.Length = 0;
+                C.WrapStringToArray(Message.StringMessage, Lines, TempXL);
+
+                if (Lines.Length > InitialNumLines)
+                {
+                    // If we're getting more than InitialNumLines Lines, it means we should use the previously calculated width
+                    Lines.Length = 0;
+                    C.WrapStringToArray(Message.StringMessage, Lines, Message.DX); // Matt: was sometimes going wrong here, as Message.DX hadn't been set before the 1st pass
+
+                    // Save strings to message array + calculate resulting XL/YL
+                    MessageExtra.Lines.Length = Lines.Length;
+                    C.Font = Message.StringFont;
+                    XL = 0;
+                    YL = 0;
+
+                    for (j = 0; j < Lines.Length; j++)
+                    {
+                        MessageExtra.Lines[j] = Lines[j];
+                        C.TextSize(Lines[j], TempXL, TempYL);
+                        XL = Max(TempXL, XL);
+                        YL += TempYL;
+                    }
+
+                    Message.DX = XL;
+                    Message.DY = YL;
+
+                    break;
+                }
+
+                Message.DX = TempXL; // store temporarily
+            }
+        }
+    }
+}
+
 //-----------------------------------------------------------------------------
 // GetTeamColour - Returns the appropriate team color
 //-----------------------------------------------------------------------------
