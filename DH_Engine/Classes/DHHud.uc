@@ -2629,6 +2629,62 @@ simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplica
     GRI.Objectives[current_obj].LabelCoords = label_coords;
 }
 
+// Matt: modified so if player is in a vehicle, the keybinds to GrowHUD & ShrinkHUD will call same named functions in the vehicle classes
+// When player is in a vehicle these functions do nothing to the HUD, but they can be used to add useful custom functionality to vehicles, especially as keys are -/+ by default
+exec function GrowHUD()
+{
+    if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
+    {
+        if (PawnOwner.IsA('DH_ROTreadCraft'))
+        {
+            DH_ROTreadCraft(PawnOwner).GrowHUD();
+        }
+        else if (PawnOwner.IsA('DH_ROWheeledVehicle'))
+        {
+            DH_ROWheeledVehicle(PawnOwner).GrowHUD();
+        }
+        else if (PawnOwner.IsA('DH_ROTankCannonPawn'))
+        {
+            DH_ROTankCannonPawn(PawnOwner).GrowHUD();
+        }
+        else if (PawnOwner.IsA('DH_ROMountedTankMGPawn'))
+        {
+            DH_ROMountedTankMGPawn(PawnOwner).GrowHUD();
+        }
+    }
+    else
+    {
+        super.GrowHUD();
+    }
+}
+
+exec function ShrinkHUD()
+{
+    if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
+    {
+        if (PawnOwner.IsA('DH_ROTreadCraft'))
+        {
+            DH_ROTreadCraft(PawnOwner).ShrinkHUD();
+        }
+        else if (PawnOwner.IsA('DH_ROWheeledVehicle'))
+        {
+            DH_ROWheeledVehicle(PawnOwner).ShrinkHUD();
+        }
+        else if (PawnOwner.IsA('DH_ROTankCannonPawn'))
+        {
+            DH_ROTankCannonPawn(PawnOwner).ShrinkHUD();
+        }
+        else if (PawnOwner.IsA('DH_ROMountedTankMGPawn'))
+        {
+            DH_ROMountedTankMGPawn(PawnOwner).ShrinkHUD();
+        }
+    }
+    else
+    {
+        super.ShrinkHUD();
+    }
+}
+
 defaultproperties
 {
      MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))

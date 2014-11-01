@@ -699,6 +699,11 @@ function bool ResupplyAmmo()
     return false;
 }
 
+// Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
+// When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
+simulated function GrowHUD();
+simulated function ShrinkHUD();
+
 defaultproperties
 {
      bShowRangeText=true
