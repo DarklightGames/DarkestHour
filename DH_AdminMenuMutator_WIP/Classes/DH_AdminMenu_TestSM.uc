@@ -7,18 +7,19 @@
 //===============================================================================================================
 class DH_AdminMenu_TestSM extends StaticMeshActor;
 
+
 defaultproperties
 {
-     bExactProjectileCollision=False
-     StaticMesh=StaticMesh'MilitarySM.sandbag.sandbag02'
-     bUseDynamicLights=False
-     bStatic=False
-     bWorldGeometry=False
-     bAcceptsProjectors=False
-     bShadowCast=False
-     bStaticLighting=False
-     bCollideActors=False
-     bCollideWorld=True
-     bBlockActors=False
-     bBlockKarma=False
+    bExactProjectileCollision=false
+    StaticMesh=StaticMesh'MilitarySM.sandbag.sandbag02'
+    bUseDynamicLights=false
+    bStatic=false
+    bWorldGeometry=false
+    bAcceptsProjectors=false
+    bShadowCast=false
+    bStaticLighting=false
+    bCollideActors=false
+    bCollideWorld=true
+    bBlockActors=false
+    bBlockKarma=false
 }

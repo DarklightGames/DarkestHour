@@ -11,125 +11,124 @@
 //=================================================================================================================================
 class DH_AdminMenuMutator extends Mutator;
 
-// this compiles the klaxon warning message sound as part of this the code package
-//#exec AUDIO IMPORT FILE="..\DarkestHour\DH_AdminMenuMutator_WIP\Sounds\Submarine-Klaxon.wav" NAME="Klaxon" // TEMP replaced by below
+
 #exec OBJ LOAD FILE=..\Sounds\DH_KlaxonSound.uax
+//#exec AUDIO IMPORT FILE="..\DarkestHour\DH_AdminMenuMutator_WIP\Sounds\Submarine-Klaxon.wav" NAME="Klaxon" // TEMP, would compile klaxon warning sound as part of this code package
 
 
-const  BOTH_TEAMS_INDEX = 99;			// an index no. representing that an action is to be performed on both teams (adding to RO's ALLIES_TEAM_INDEX & AXIS_TEAM_INDEX)
-const  ERROR_INDEX = -1;				// an index number representing an error return, e.g. could not find a match
-const  NULL_VECTOR = vect(0.0,0.0,0.0);	// just saves having lots of NullVector local variables
+const  BOTH_TEAMS_INDEX = 99;           // an index no. representing that an action is to be performed on both teams (adding to RO's ALLIES_TEAM_INDEX & AXIS_TEAM_INDEX)
+const  ERROR_INDEX = -1;                // an index number representing an error return, e.g. could not find a match
+const  NULL_VECTOR = vect(0.0,0.0,0.0); // just saves having lots of NullVector local variables
 
 struct  Minefield
 {
 var  float  MVKillTime;
 var  float  MVWarnInterval; 
 };
-var  array<Minefield>	SavedMinefields;	// an array of minefields that records their original properties, so they can be re-enabled later
+var  array<Minefield>    SavedMinefields;  // an array of minefields that records their original properties, so they can be re-enabled later
 
-var  DH_AdminMenu_Replicator  Replicator;	// a 'helper' actor that gets replicated to all clients to add menu interactions & replicate variables for client use
-var  ROTeamGame			ROTG;				// reference to the ROTeamGame actor (which is RO's GameInfo class) - used by several functions
-var  AccessControl		AccessControl;		// reference to the AccessControl class actor, which handles kicks & bans - used by the kick with warning function
-var  PlayerController	Admin;				// temporarily saves the admin performing the current action, which avoids passing it through lots & lots of functions
-var  int				ParaDropHeight;		// the Z co-ordinate used for the starting height in all paradrop options
-var  float				MapScale;			// size/scale of current map, used to calculate grid locations for paradrops
-var  vector				MapCenter;			// centre location of map, also used to calculate grid locations for paradrops
-var  bool  				bRealismMutPresent;	// flags whether the realism match mutator is present on the server (replicated to clients via the Replicator)
-var  bool				bMinesDisabled;		// a flag that all minefields have been disabled (replicated to clients via the Replicator)
-var  bool				bHideCapProgress;	// a flag that capture progress bars have been disabled (replicated to clients via the Replicator)
-var  bool				bHidePlayerIcon;	// a flag that the player icon on the map has been disabled (replicated to clients via the Replicator)
+var  DH_AdminMenu_Replicator  Replicator;  // a 'helper' actor that gets replicated to all clients to add menu interactions & replicate variables for client use
+var  ROTeamGame        ROTG;               // reference to the ROTeamGame actor (which is RO's GameInfo class) - used by several functions
+var  AccessControl     AccessControl;      // reference to the AccessControl class actor, which handles kicks & bans - used by the kick with warning function
+var  PlayerController  Admin;              // temporarily saves the admin performing the current action, which avoids passing it through lots & lots of functions
+var  int               ParaDropHeight;     // the Z co-ordinate used for the starting height in all paradrop options
+var  float             MapScale;           // size/scale of current map, used to calculate grid locations for paradrops
+var  vector            MapCenter;          // centre location of map, also used to calculate grid locations for paradrops
+var  bool              bRealismMutPresent; // flags whether the realism match mutator is present on the server (replicated to clients via the Replicator)
+var  bool              bMinesDisabled;     // a flag that all minefields have been disabled (replicated to clients via the Replicator)
+var  bool              bHideCapProgress;   // a flag that capture progress bars have been disabled (replicated to clients via the Replicator)
+var  bool              bHidePlayerIcon;    // a flag that the player icon on the map has been disabled (replicated to clients via the Replicator)
 
 // Config variables that can be set in the server's DarkestHour.ini file (some default values are set here but can be overridden in the config file):
-var  config  bool	bParaDropPlayerAllowed;	// unless set to true, paradropping a single player will be disabled (replicated to clients via the Replicator)
-var  config  bool	bShowRealismMenu;		// unless set to true, the realism menu & its various options will be disabled (replicated to clients via the Replicator)
-var  config  bool	bBypassAdminLogin;		// allows the option of disabling admin checks, e.g. if used on a test server
-var  config  bool	bDebug;					// if true, various events will be logged
-var  config  int	MaxCharactersInMessage;	// maximum characters in private message before it gets split into 2 message windows (a default value is set)
-var  config  sound	WarningSound;			// the sound to play when sending an admin warning message to a player (default is a klaxon)
+var  config  bool      bParaDropPlayerAllowed; // unless set to true, paradropping a single player will be disabled (replicated to clients via the Replicator)
+var  config  bool      bShowRealismMenu;       // unless set to true, the realism menu & its various options will be disabled (replicated to clients via the Replicator)
+var  config  bool      bBypassAdminLogin;      // allows the option of disabling admin checks, e.g. if used on a test server
+var  config  bool      bDebug;                 // if true, various events will be logged
+var  config  sound     WarningSound;           // the sound to play when sending an admin warning message to a player (default is a klaxon)
 
 
 ////////////////////////////  INITIALISATION FUNCTIONS  ////////////////////////////////////////////////////////////////////////////////
-
-function PostBeginPlay() // TEST to replace HUD with fixed version
-{
-	super.PostBeginPlay();
-
-//	Level.Game.HUDType = "DH_AdminMenuMutator_WIP.DH_AdminMenu_HUDfix";
-}
 
 // Waits until the GameInfo has completed its BeginPlay events & then sets the initial variables we need here
 // Note that we use this instead of a BeginPlay event as it allows time to make sure other mutators have been spawned & for the ROTG.MineVolumes array to be populated
 function Tick(float DeltaTime)
 {
-	super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
-//	log("AM mutator: Tick called"); // TEMP
-	if (Level.Game.bScriptInitialized) // this means that the GameInfo actor has completed its BeginPlay events
-	{
-		SetInitialVariables();
-		Disable('Tick');
-	}
+    if (Level.Game.bScriptInitialized) // this means that the GameInfo actor has completed its BeginPlay events
+    {
+        SetInitialVariables();
+        Disable('Tick');
+    }
 }
 
 // Sets some key variables that are used by various functions & also by the Replicator (which is spawned here)
 function SetInitialVariables()
 {
-	local  Mutator  Mut;
+    local  Mutator  Mut;
 
-	// Get a reference to the ROTeamGame actor, which is used by many functions
-	ROTG = ROTeamGame(Level.Game);
+    // Get a reference to the ROTeamGame actor, which is used by many functions
+    ROTG = ROTeamGame(Level.Game);
 
-	if (ROTG == none)
-		Log("DH_AdminMenu ERROR: an ROTeamGame actor wasn't found on the server - this is a serious problem & many functions will not work");
+    if (ROTG == none)
+    {
+        Log("DH_AdminMenu ERROR: an ROTeamGame actor wasn't found on the server - this is a serious problem & many functions will not work");
+    }
 
-	// Get a reference to the ROTeamGame actor, which is used by the 'kick player with reason' option
-	AccessControl = Level.Game.AccessControl;
+    // Get a reference to the ROTeamGame actor, which is used by the 'kick player with reason' option
+    AccessControl = Level.Game.AccessControl;
 
-	if (AccessControl == none && Level.NetMode != NM_Standalone)
-		Log("DH_AdminMenu ERROR: an AccessControl actor wasn't found on the server - it won't be possible to kick a player with a message");
+    if (AccessControl == none && Level.NetMode != NM_Standalone)
+    {
+        Log("DH_AdminMenu ERROR: an AccessControl actor wasn't found on the server - it won't be possible to kick a player with a message");
+    }
 
-	// If the paradrop or realism menu options are enabled, we set the necessary paradrop variables for this map
-	if (bParaDropPlayerAllowed || bShowRealismMenu)
-		SetParaDropVariables();
+    // If the paradrop or realism menu options are enabled, we set the necessary paradrop variables for this map
+    if (bParaDropPlayerAllowed || bShowRealismMenu)
+    {
+        SetParaDropVariables();
+    }
 
-	if (bShowRealismMenu)
-	{
-		// Create an array saving the starting properties of all minefield, so if they are disabled & re-enabled we can re-set them
-		SaveMinefields();
+    if (bShowRealismMenu)
+    {
+        // Create an array saving the starting properties of all minefield, so if they are disabled & re-enabled we can re-set them
+        SaveMinefields();
 
-		// Look for the realism match mutator - if it's there we just set a flag
-		for (Mut = Level.Game.BaseMutator; Mut != None; Mut = Mut.NextMutator)
-		{
-			if (Mut.IsA('MutRealismMatch'))
-			{
-				bRealismMutPresent = true;
-				break;
-			}	
-		}
-	}
+        // Look for the realism match mutator - if it's there we just set a flag
+        for (Mut = Level.Game.BaseMutator; Mut != None; Mut = Mut.NextMutator)
+        {
+            if (Mut.IsA('MutRealismMatch'))
+            {
+                bRealismMutPresent = true;
+                break;
+            }    
+        }
+    }
 
-	// Spawns the 'helper' actor (Replicator) that will get replicated to all clients
-	Replicator = Spawn(class'DH_AdminMenu_Replicator', self);
+    // Spawns the 'helper' actor (Replicator) that will get replicated to all clients
+    Replicator = Spawn(class'DH_AdminMenu_Replicator', self);
 }
 
 // Builds a SavedMinefields array so we can restore minefield properties if they are disabled then re-enabled
 function SaveMinefields()
 {
-	local  int  i;
+    local  int  i;
 
-	if (ROTG != none && ROTG.MineVolumes.Length > 0)
-	{
-		SavedMinefields.Length = ROTG.MineVolumes.Length;
+    if (ROTG != none && ROTG.MineVolumes.Length > 0)
+    {
+        SavedMinefields.Length = ROTG.MineVolumes.Length;
 
-		for (i = 0; i < ROTG.MineVolumes.Length; i++)
-		{
-			SavedMinefields[i].MVKillTime = ROTG.MineVolumes[i].KillTime;
-			SavedMinefields[i].MVWarnInterval = ROTG.MineVolumes[i].WarnInterval;
+        for (i = 0; i < ROTG.MineVolumes.Length; i++)
+        {
+            SavedMinefields[i].MVKillTime = ROTG.MineVolumes[i].KillTime;
+            SavedMinefields[i].MVWarnInterval = ROTG.MineVolumes[i].WarnInterval;
 
-			if (bDebug)
-				Log("DH_AdminMenu: building array SavedMinefields["$i$"]: kill time =" @ SavedMinefields[i].MVKillTime $ ", warning interval =" @ SavedMinefields[i].MVWarnInterval);
-		}
-	}
+            if (bDebug)
+            {
+                Log("DH_AdminMenu: building array SavedMinefields["$i$"]: kill time =" @ SavedMinefields[i].MVKillTime $ ", warning interval =" @ SavedMinefields[i].MVWarnInterval);
+            }
+        }
+    }
 }
 
 ////////////////////////////  THE MIGHTY MUTATE FUNCTION !  ///////////////////////////////////////////////////////////
@@ -137,785 +136,875 @@ function SaveMinefields()
 // This processes a mutate string passed as a console command from the local menus - it is where everything in the mutator is initiated
 function Mutate(string MutateString, PlayerController Sender)
 {
-	local  array<string>	Words;
-	local  string			MutateOption;
+    local  array<string>  Words;
+    local  string         MutateOption;
 
-	// splits the mutate arguments into an array of separate words (note the menus will have replaced spaces in names with non-breaking spaces, which stops those names being split up)
-	Split(MutateString, " ", Words);
+    // Splits the mutate arguments into an array of separate words (note the menus will have replaced spaces in names with non-breaking spaces, which stops those names being split up)
+    Split(MutateString, " ", Words);
 
-	if (Words.Length > 1) // mutators are chained & if a mutate call is made from another mutator it will probably only have 1 passsed argument & so will skip everything here	
-	{
-		Admin = Sender; // saves the sending player's PlayerController as class variable 'Admin', which avoids having to pass it through lots & lots of functions
-		MutateOption = Words[1];
+    if (Words.Length > 1) // mutators are chained & if a mutate call is made from another mutator it will probably only have 1 passsed argument & so will skip everything here    
+    {
+        Admin = Sender; // saves the sending player's PlayerController as class variable 'Admin', which avoids having to pass it through lots & lots of functions
+        MutateOption = Words[1];
 
-		if (Words.Length < 6) // makes sure Words array has at least 6 members, just to avoid errors in paradrop options trying to pass Words[4] & Words[5] that may not exist
-			Words.Length = 6;
+        if (Words.Length < 6) // makes sure Words array has at least 6 members, just to avoid errors in paradrop options trying to pass Words[4] & Words[5] that may not exist
+        {
+            Words.Length = 6;
+        }
 
-		log("AM.Mutate function: Words[1] =" @ Words[1] @ " Words[2] =" @ Words[2] @ " Words[3] =" @ Words[3] @ " Words[4] =" @ Words[4] @ " Words[5] =" @ Words[5]); // TEMP
+        // Private message to one player
+        if (MutateOption ~= "PrivateMessageToPlayer")
+        {
+            PrivateMessageToPlayer(Words[2], PutMessageTogether(Words, 3), false); // Words[2] is PlayerName, Words[3+] is admin's message, false flags it's not an admin warning
+        }
+        // Admin warning message to one player
+        else if (MutateOption ~= "WarningMessageToPlayer")
+        {
+            PrivateMessageToPlayer(Words[2], PutMessageTogether(Words, 3), true); // Words[2] is PlayerName, Words[3+] is admin's warning, true flags it is an admin warning
+        }
+        // Kick with message giving reason
+        else if (MutateOption ~= "KickPlayerWithReason")
+        {
+            KickPlayerWithReason(Words[2], PutMessageTogether(Words, 3)); // Words[2] is PlayerName, Words[3+] may be admin's message
+        }
+        // Kill a player
+        else if (MutateOption ~= "KillPlayer")
+        {
+            KillPlayer(Words[2]); // Words[2] is PlayerName
+        }
+        // Switch a player (including a spectator) to a different role or team
+        else if (MutateOption ~= "SwitchPlayer")
+        {
+            SwitchPlayer(Words[2], Words[3], Words[4], Words[5]); // Words[2] is PlayerName, Words[3] is TeamName, Words[4] is RoleName, Words[5] is RoleIndex
+        }
+        // Drop single player at an objective or at a grid location or at their current location
+        else if (MutateOption ~= "ParaDropPlayer")
+        {
+            if (Words[3] ~= "AtGridRef")
+            {
+                Words[4] = ConcatenateGridRef(Words, 4);
+            }
 
-		// Private message to one player
-		if (MutateOption ~= "PrivateMessageToPlayer")
-		{
-			PrivateMessageToPlayer(Words[2], PutMessageTogether(Words, 3), false); // Words[2] is PlayerName, Words[3+] is admin's message, false flags it's not an admin warning
-		}
-		// Admin warning message to one player
-		else if (MutateOption ~= "WarningMessageToPlayer")
-		{
-			PrivateMessageToPlayer(Words[2], PutMessageTogether(Words, 3), true); // Words[2] is PlayerName, Words[3+] is admin's warning, true flags it is an admin warning
-		}
-		// Kick with message giving reason
-		else if (MutateOption ~= "KickPlayerWithReason")
-		{
-			KickPlayerWithReason(Words[2], PutMessageTogether(Words, 3)); // Words[2] is PlayerName, Words[3+] may be admin's message
-		}
-		// Kill a player
-		else if (MutateOption ~= "KillPlayer")
-		{
-			KillPlayer(Words[2]); // Words[2] is PlayerName
-		}
-		// Switch a player (including a spectator) to a different role or team
-		else if (MutateOption ~= "SwitchPlayer")
-		{
-			SwitchPlayer(Words[2], Words[3], Words[4], Words[5]); // Words[2] is PlayerName, Words[3] is TeamName, Words[4] is RoleName, Words[5] is RoleIndex
-		}
-		// Drop single player at an objective or at a grid location or at their current location
-		else if (MutateOption ~= "ParaDropPlayer")
-		{
-			if (Words[3] ~= "AtGridRef")
-				Words[4] = ConcatenateGridRef(Words, 4);
-																
-			ParaDropPlayer(Words[2], Words[3], Words[4], Words[5]); // Words[2] is PlayerName, Words[3] is TypeOfDropTarget, Words[4+] may be GridRef, Words[4] may be ObjName, Words[5] may be ObjNum
-		}
+            ParaDropPlayer(Words[2], Words[3], Words[4], Words[5]); // Words[2] is PlayerName, Words[3] is TypeOfDropTarget, Words[4+] may be GridRef, Words[4] may be ObjName, Words[5] may be ObjNum
+        }
 
-		// REALISM MATCH MENU ONLY:
-		else if (bShowRealismMenu)
-		{
-			// Enable realism match (RM only)
-			if (MutateOption ~= "EnableRealismMatch")
-			{
-				EnableRealismMatch(); // calls real enable match functionality from realism mutator, but adds auto admin login/out, plus 'must be admin' message if not logged in
-			}
-			// Disable realism match (RM only)
-			else if (MutateOption ~= "DisableRealismMatch")
-			{
-				DisableRealismMatch(); // calls real disable match functionality from realism mutator, but adds auto admin login/out, plus 'must be admin' message if not logged in
-			}
-			// Force realism match live (RM only)
-			else if (MutateOption ~= "ForceRealismMatchLive")
-			{
-				ForceRealismMatchLive(); // calls real match live functionality from realism mutator, but adds auto admin login/out, plus 'must be admin' message if not logged in
-			}
+        // REALISM MATCH MENU ONLY:
+        else if (bShowRealismMenu)
+        {
+            // Enable realism match (RM only)
+            if (MutateOption ~= "EnableRealismMatch")
+            {
+                EnableRealismMatch(); // calls real enable match functionality from realism mutator, but adds auto admin login/out, plus 'must be admin' message if not logged in
+            }
+            // Disable realism match (RM only)
+            else if (MutateOption ~= "DisableRealismMatch")
+            {
+                DisableRealismMatch(); // calls real disable match functionality from realism mutator, but adds auto admin login/out, plus 'must be admin' message if not logged in
+            }
+            // Force realism match live (RM only)
+            else if (MutateOption ~= "ForceRealismMatchLive")
+            {
+                ForceRealismMatchLive(); // calls real match live functionality from realism mutator, but adds auto admin login/out, plus 'must be admin' message if not logged in
+            }
 
-			// Drop either all players or all of one team, either at an objective or at a grid location (RM only)
-			else if (MutateOption ~= "ParaDropAll")
-			{
-				if (Words[3] ~= "AtGridRef")
-					Words[4] = ConcatenateGridRef(Words, 4);
+            // Drop either all players or all of one team, either at an objective or at a grid location (RM only)
+            else if (MutateOption ~= "ParaDropAll")
+            {
+                if (Words[3] ~= "AtGridRef")
+                {
+                    Words[4] = ConcatenateGridRef(Words, 4);
+                }
 
-				ParaDropAll(Words[2], Words[3], Words[4], Words[5]); // Words[2] is TeamName, Words[3] is TypeOfDropTarget, Words[4+] may be GridRef, Words[4] may be ObjName, Words[5] may be ObjNum
-			}
-			// Disable minefields (RM only)
-			else if (MutateOption ~= "DisableMinefields")
-			{
-				DisableMinefields();
-			}
-			// Enable minefields (RM only)
-			else if (MutateOption ~= "EnableMinefields")
-			{
-				EnableMinefields();
-			}
-			// Toggle cap progress bars (RM only)
-			else if (MutateOption ~= "ToggleCapProgress")
-			{
-				ToggleCapProgress();
-			}
-			// Toggle player icon on map (RM only)
-			else if (MutateOption ~= "TogglePlayerIcon")
-			{
-				TogglePlayerIcon();
-			}
-			// Kill all players (RM only)
-			else if (MutateOption ~= "KillAllPlayers")
-			{
-				KillAllPlayers();
-			}
-			// Set new game speed (RM only)
-			else if (MutateOption ~= "SetGameSpeed")
-			{
-				SetGameSpeed(Float(Words[2]));
-			}
-			// Destroy actor that is currently in player's sights (e.g. destroy immobile tank blocking spawn exit)
-			else if (MutateOption ~= "DestroyActorInSights")
-			{
-				DestroyActorInSights();
-			}
-		}
+                ParaDropAll(Words[2], Words[3], Words[4], Words[5]); // Words[2] is TeamName, Words[3] is TypeOfDropTarget, Words[4+] may be GridRef, Words[4] may be ObjName, Words[5] may be ObjNum
+            }
+            // Disable minefields (RM only)
+            else if (MutateOption ~= "DisableMinefields")
+            {
+                DisableMinefields();
+            }
+            // Enable minefields (RM only)
+            else if (MutateOption ~= "EnableMinefields")
+            {
+                EnableMinefields();
+            }
+            // Toggle cap progress bars (RM only)
+            else if (MutateOption ~= "ToggleCapProgress")
+            {
+                ToggleCapProgress();
+            }
+            // Toggle player icon on map (RM only)
+            else if (MutateOption ~= "TogglePlayerIcon")
+            {
+                TogglePlayerIcon();
+            }
+            // Kill all players (RM only)
+            else if (MutateOption ~= "KillAllPlayers")
+            {
+                KillAllPlayers();
+            }
+            // Set new game speed (RM only)
+            else if (MutateOption ~= "SetGameSpeed")
+            {
+                SetGameSpeed(Float(Words[2]));
+            }
+            // Destroy actor that is currently in player's sights (e.g. destroy immobile tank blocking spawn exit)
+            else if (MutateOption ~= "DestroyActorInSights")
+            {
+                DestroyActorInSights();
+            }
+        }
 
-		// if a menu passed "logout" as the 1st Mutate string word it means the menu logged us in as an admin, so we now log out after the selected task is completed
-		if (Words[0] ~= "logout")
-			Sender.AdminLogout();
+        // If a menu passed "logout" as the 1st Mutate string word it means the menu logged us in as an admin, so we now log out after the selected task is completed
+        if (Words[0] ~= "logout")
+        {
+            Sender.AdminLogout();
+        }
 
-		Admin = none; // re-set for next time
-	}
+        Admin = none; // re-set for next time
+    }
 
-	super.Mutate(MutateString, Sender);
-}	
+    super.Mutate(MutateString, Sender);
+}    
 
 ////////////////////////////  PLAYER MENU OPTIONS CALLED BY MUTATE FUNCTION  ///////////////////////////////////////////////////////////
 
 function PrivateMessageToPlayer(string PlayerName, string Message, optional bool bIsAdminWarning)
 {
-	local  PlayerController  Receiver;
+    local  PlayerController  Receiver;
 
-	if (!IsLoggedInAsAdmin())
-		return;
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	if (Message == "")
-	{
-		ErrorMessageToSelf(12); // no message specified
-		return;
-	}
+    if (Message == "")
+    {
+        ErrorMessageToSelf(12); // no message specified
+        return;
+    }
 
-	Receiver = PlayerController(FindControllerFromName(PlayerName));
+    Receiver = PlayerController(FindControllerFromName(PlayerName));
 
-	if (Receiver != none && Replicator != none)
-	{
-		if (bIsAdminWarning) log("Mutator PrivateMessageToPlayer function calling Replicator.ServerPrivateMessage"); // TEMP
-		else log("Mutator PrivateMessageToPlayer function calling Replicator.ServerPrivateMessage");
+    if (Receiver != none && Replicator != none)
+    {
+        // Crop a very long message to avoid trying to send huge strings that take up bandwidth & may not work if too long
+        Message = Left(Message, 350);
+    
+        // Use the Replicator to display the message to the target player
+        Replicator.ServerPrivateMessage(Receiver, Admin, Message, bIsAdminWarning);
 
-		// use the Replicator to display the private message on an ROCriticalMessage background in the middle of the player's screen
-		Replicator.ServerPrivateMessage(Receiver, Admin, Message, bIsAdminWarning);
-
-		if (bIsAdminWarning)
-		{
-			Log("DH_AdminMenu: admin warning from" @ GetAdminName() @ "to '" $ PlayerName $ "':" @ Message);
-		}
-		else
-		{
-			Log("DH_AdminMenu: private message from" @ GetAdminName() @ "to '" $ PlayerName $ "':" @ Message);
-		}
-	}
+        if (bIsAdminWarning)
+        {
+            Log("DH_AdminMenu: admin warning from" @ GetAdminName() @ "to '" $ PlayerName $ "':" @ Message);
+        }
+        else
+        {
+            Log("DH_AdminMenu: private message from" @ GetAdminName() @ "to '" $ PlayerName $ "':" @ Message);
+        }
+    }
 }
 
 function KickPlayerWithReason(string PlayerName, optional string KickMessage)
 {
-	local  PlayerController	PlayerToKick;
-	local  string  			OriginalDefaultKickReason;
+    local  PlayerController  PlayerToKick;
+    local  string            OriginalDefaultKickReason;
 
-	if (!IsLoggedInAsAdmin())
-		return;
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	if (AccessControl != none)
-	{
-		PlayerToKick = PlayerController(FindControllerFromName(PlayerName));
+    if (AccessControl != none)
+    {
+        PlayerToKick = PlayerController(FindControllerFromName(PlayerName));
 
-		if (PlayerToKick != none)
-		{
-			// If no message specified we will use the default "none specified" message
-			if (KickMessage == "")
-				KickMessage = AccessControl.DefaultKickReason;
+        if (PlayerToKick != none)
+        {
+            // If no message specified we will use the default "none specified" message
+            if (KickMessage == "")
+            {
+                KickMessage = AccessControl.DefaultKickReason;
+            }
 
-			// Set the custom message
-			OriginalDefaultKickReason = AccessControl.DefaultKickReason; // moved this here from PostBeginPlay just in case another mutator changes AC.DefaultKickReason during play
-			AccessControl.DefaultKickReason = KickMessage;
+            // Set the custom message
+            OriginalDefaultKickReason = AccessControl.DefaultKickReason; // moved this here from PostBeginPlay just in case another mutator changes AC.DefaultKickReason during play
+            AccessControl.DefaultKickReason = KickMessage;
 
-			// Kick the player
-			if (AccessControl.KickPlayer(PlayerToKick)) // KickPlayer returns true if kick was successful so we use that to message & log accordingly
-			{
-				Log("DH_AdminMenu: admin" @ GetAdminName() @ "kicked" @ PlayerName @ "with message:" @ KickMessage);
-			}
-			else
-			{
-				ErrorMessageToSelf(13, PlayerName); // kick failed (may be because target is a logged in admin)
-				Log("DH_AdminMenu: admin" @ GetAdminName() @ "tried to kick" @ PlayerName @ "but kick failed (message:" @ KickMessage $ ")");
-			}
+            // Kick the player
+            if (AccessControl.KickPlayer(PlayerToKick)) // KickPlayer returns true if kick was successful so we use that to message & log accordingly
+            {
+                Log("DH_AdminMenu: admin" @ GetAdminName() @ "kicked" @ PlayerName @ "with message:" @ KickMessage);
+            }
+            else
+            {
+                ErrorMessageToSelf(13, PlayerName); // kick failed (may be because target is a logged in admin)
+                Log("DH_AdminMenu: admin" @ GetAdminName() @ "tried to kick" @ PlayerName @ "but kick failed (message:" @ KickMessage $ ")");
+            }
 
-			// Restore original DefaultKickReason for next person who gets kicked (who may not have a message specified)
-			AccessControl.DefaultKickReason = OriginalDefaultKickReason;
-		}
-	}
-	else
-	{
-		ErrorMessageToSelf(14); // cannot kick, no AccessControl actor on server
-		Log("DH_AdminMenu ERROR: AccessControl actor not found when admin" @ GetAdminName() @ "tried to kick" @ PlayerName @ "(message:" @ KickMessage $ ")");
-	}
+            // Restore original DefaultKickReason for next person who gets kicked (who may not have a message specified)
+            AccessControl.DefaultKickReason = OriginalDefaultKickReason;
+        }
+    }
+    else
+    {
+        ErrorMessageToSelf(14); // cannot kick, no AccessControl actor on server
+        Log("DH_AdminMenu ERROR: AccessControl actor not found when admin" @ GetAdminName() @ "tried to kick" @ PlayerName @ "(message:" @ KickMessage $ ")");
+    }
 }
 
 function KillPlayer(string PlayerName)
 {
-	local  Controller  PlayerToKill;
+    local  Controller  PlayerToKill;
 
-	if (!IsLoggedInAsAdmin())
-		return;
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	PlayerToKill = FindControllerFromName(PlayerName, true);
+    PlayerToKill = FindControllerFromName(PlayerName, true);
 
-	if (PlayerToKill != none)
-		KillThisPlayer(PlayerToKill, PlayerName);
+    if (PlayerToKill != none)
+    {
+        KillThisPlayer(PlayerToKill, PlayerName);
+    }
 }
 
 function SwitchPlayer(string PlayerName, string TeamName, string RoleName, string RoleIndexString)
 {
-	local DarkestHourGame	DHG;
-	local  int				TeamIndex, RoleIndex;
-	local  ROPlayer			PlayerToSwitch;
-	local  bool				bFoundRole, bOriginalPlayersBalanceTeams;
+    local DarkestHourGame  DHG;
+    local  int             TeamIndex, RoleIndex;
+    local  ROPlayer        PlayerToSwitch;
+    local  bool            bFoundRole, bOriginalPlayersBalanceTeams;
 
-	if (!IsLoggedInAsAdmin())
-		return;
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	TeamIndex = GetTeamIndexFromName(TeamName);
+    TeamIndex = GetTeamIndexFromName(TeamName);
 
-	if (TeamIndex == ALLIES_TEAM_INDEX || TeamIndex == AXIS_TEAM_INDEX)
-	{
-		RoleIndex = RemoveBracketsFromIndex(RoleIndexString);
+    if (TeamIndex == ALLIES_TEAM_INDEX || TeamIndex == AXIS_TEAM_INDEX)
+    {
+        RoleIndex = RemoveBracketsFromIndex(RoleIndexString);
 
-		// Check that role index finds a valid RoleInfo
-		DHG = DarkestHourGame(ROTG);
+        if (RoleIndex >= 0)
+        {
+            // Check that role index finds a valid RoleInfo
+            DHG = DarkestHourGame(ROTG);
 
-		if (DHG != none) // means we're playing Darkest Hour & need to use a DH roles array
-		{
-			if (TeamIndex == ALLIES_TEAM_INDEX)
-			{
-				if (RoleIndex >= 0 && RoleIndex < ArrayCount(DHG.DHAlliesRoles) && DHG.DHAlliesRoles[RoleIndex] != none)
-					bFoundRole = true;
-			}
-			else
-			{
-				if (RoleIndex >= 0 && RoleIndex < ArrayCount(DHG.DHAxisRoles) && DHG.DHAxisRoles[RoleIndex] != none)
-					bFoundRole = true;
-			}
-		}
-		else // this makes it work with Red Orchestra or any game class/mod that uses RO's AlliesRoles/AxisRoles
-		{
-			if (TeamIndex == ALLIES_TEAM_INDEX)
-			{
-				if (RoleIndex >= 0 && RoleIndex < ArrayCount(ROTG.AlliesRoles) && ROTG.AlliesRoles[RoleIndex] != none)
-					bFoundRole = true;
-			}
-			else
-			{
-				if (RoleIndex >= 0 && RoleIndex < ArrayCount(ROTG.AxisRoles) && ROTG.AxisRoles[RoleIndex] != none)
-					bFoundRole = true;
-			}
-		}
+            if (DHG != none) // means we're playing Darkest Hour & need to use a DH roles array
+            {
+                if (TeamIndex == ALLIES_TEAM_INDEX)
+                {
+                    bFoundRole = RoleIndex < ArrayCount(DHG.DHAlliesRoles) && DHG.DHAlliesRoles[RoleIndex] != none;
+                }
+                else
+                {
+                    bFoundRole = RoleIndex < ArrayCount(DHG.DHAxisRoles) && DHG.DHAxisRoles[RoleIndex] != none;
+                }
+            }
+            else // this makes it work with Red Orchestra or any game class/mod that uses RO's AlliesRoles/AxisRoles
+            {
+                if (TeamIndex == ALLIES_TEAM_INDEX)
+                {
+                    bFoundRole = RoleIndex < ArrayCount(ROTG.AlliesRoles) && ROTG.AlliesRoles[RoleIndex] != none;
+                }
+                else
+                {
+                    bFoundRole = RoleIndex < ArrayCount(ROTG.AxisRoles) && ROTG.AxisRoles[RoleIndex] != none;
+                }
+            }
+        }
 
-		// If we have a valid role then attempt to switch the player
-		if (bFoundRole)
-		{
-			PlayerToSwitch = ROPlayer(FindControllerFromName(PlayerName));
+        // If we have a valid role then attempt to switch the player
+        if (bFoundRole)
+        {
+            PlayerToSwitch = ROPlayer(FindControllerFromName(PlayerName));
 
-			if (PlayerToSwitch != none)
-			{
-				if (PlayerToSwitch.CurrentRole != RoleIndex || PlayerToSwitch.GetTeamNum() != TeamIndex) // only switch role if chosen role and/or team are different
-				{
-					KillThisPlayer(PlayerToSwitch);
-					bOriginalPlayersBalanceTeams = ROTG.bPlayersBalanceTeams; // save the current team balance setting
-					ROTG.bPlayersBalanceTeams = false; // turn off team balance
-					PlayerToSwitch.ServerChangePlayerInfo(TeamIndex, RoleIndex, 0, 0); // for humans this works on its own but bots cause all kinds of problems - so we avoid switching bots
-					ROTG.bPlayersBalanceTeams = bOriginalPlayersBalanceTeams; // now restore original team balance setting
+            if (PlayerToSwitch != none)
+            {
+                if (PlayerToSwitch.CurrentRole != RoleIndex || PlayerToSwitch.GetTeamNum() != TeamIndex) // only switch role if chosen role and/or team are different
+                {
+                    KillThisPlayer(PlayerToSwitch);
+                    bOriginalPlayersBalanceTeams = ROTG.bPlayersBalanceTeams; // save the current team balance setting
+                    ROTG.bPlayersBalanceTeams = false; // turn off team balance
+                    PlayerToSwitch.ServerChangePlayerInfo(TeamIndex, RoleIndex, 0, 0); // for humans this works on its own but bots cause all kinds of problems - so we avoid switching bots
+                    ROTG.bPlayersBalanceTeams = bOriginalPlayersBalanceTeams; // now restore original team balance setting
 
-					if (Admin != none)
-					{
-						NotifyPlayer(2, PlayerToSwitch); // admin switched your role/team
-						Log("DH_AdminMenu: admin" @ GetAdminName() @ "switched player '" $ PlayerName $ "' to" @ Locs(TeamName) @ Locs(RoleName));
-					}
-				}
-				else
-				{
-					ErrorMessageToSelf(10, PlayerName); // player is already in that role
-				}
-			}
-		}
-		else
-		{
-			ErrorMessageToSelf(19, RoleName); // can't find that role
-		}
-	}
+                    if (Admin != none)
+                    {
+                        NotifyPlayer(2, PlayerToSwitch); // admin switched your role/team
+                        Log("DH_AdminMenu: admin" @ GetAdminName() @ "switched player '" $ PlayerName $ "' to" @ Locs(TeamName) @ Locs(RoleName));
+                    }
+                }
+                else
+                {
+                    ErrorMessageToSelf(10, PlayerName); // player is already in that role
+                }
+            }
+        }
+        else
+        {
+            ErrorMessageToSelf(19, RoleName); // can't find that role
+        }
+    }
 }
 
 function ParaDropPlayer(string PlayerName, string TypeOfDropTarget, optional string DropTarget, optional string ObjectiveIndex)
 {
-	local  Controller	PlayerToDrop;
-	local  vector		ParaDropVector;
+    local  Controller  PlayerToDrop;
+    local  vector      ParaDropVector;
 
-	if (!IsLoggedInAsAdmin())
-		return;
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	if (!bParaDropPlayerAllowed)
-	{
-		ErrorMessageToSelf(2); // paradropping a player not allowed on server
-		return;
-	}
+    if (!bParaDropPlayerAllowed)
+    {
+        ErrorMessageToSelf(2); // paradropping a player not allowed on server
+        return;
+    }
 
-	PlayerToDrop = FindControllerFromName(PlayerName, true);
+    PlayerToDrop = FindControllerFromName(PlayerName, true);
 
-	if (PlayerToDrop != none)
-	{
-		if (TypeOfDropTarget ~= "AtObjective")
-		{
-			ParaDropVector = GetObjectiveDropLocation(DropTarget, ObjectiveIndex);
-		}
-		else if (TypeOfDropTarget ~= "AtGridRef")
-		{
-			ParaDropVector = GetGridDropLocation(DropTarget);
-		}
-		else if (TypeOfDropTarget ~= "AtCurrentLocation")
-		{
-			ParaDropVector = GetCurrentDropLocation(PlayerToDrop);
-		}
-		else
-		{
-			ErrorMessageToSelf(21); // no valid type of drop target specified
-			return;
-		}
+    if (PlayerToDrop != none)
+    {
+        if (TypeOfDropTarget ~= "AtObjective")
+        {
+            ParaDropVector = GetObjectiveDropLocation(DropTarget, ObjectiveIndex);
+        }
+        else if (TypeOfDropTarget ~= "AtGridRef")
+        {
+            ParaDropVector = GetGridDropLocation(DropTarget);
+        }
+        else if (TypeOfDropTarget ~= "AtCurrentLocation")
+        {
+            ParaDropVector = GetCurrentDropLocation(PlayerToDrop);
+        }
+        else
+        {
+            ErrorMessageToSelf(21); // no valid type of drop target specified
+            return;
+        }
 
-		if (ParaDropVector != NULL_VECTOR)
-			ParaDropThisPlayer(PlayerToDrop, ParaDropVector, PlayerName);
-	}
+        if (ParaDropVector != NULL_VECTOR)
+        {
+            ParaDropThisPlayer(PlayerToDrop, ParaDropVector, PlayerName);
+        }
+    }
 }
 
 // Generic function that performs a player kill - called as required from other functions that are called directly from Mutate (e.g. KillPlayer, SwitchPlayer & KillAllPLayers)
 function KillThisPlayer(Controller PlayerToKill, optional string PlayerName)
 {
-	local  Pawn		PlayerPawn;
-	local  float	OriginalFriendlyFireScale;
+    local  Pawn   PlayerPawn;
+    local  float  OriginalFriendlyFireScale;
 
-	if (PlayerToKill == none)
-		return;
+    if (PlayerToKill == none)
+    {
+        return;
+    }
 
-	PlayerPawn = PlayerToKill.Pawn;
+    PlayerPawn = PlayerToKill.Pawn;
 
-	if (PlayerPawn != none && (PlayerPawn.IsA('ROPawn') || PlayerPawn.IsA('Vehicle')))
-	{
-		OriginalFriendlyFireScale = ROTG.FriendlyFireScale; // save the current friendly fire setting
-		ROTG.FriendlyFireScale = 1; // turn on friendly fire
+    if (PlayerPawn != none && (PlayerPawn.IsA('ROPawn') || PlayerPawn.IsA('Vehicle')))
+    {
+        OriginalFriendlyFireScale = ROTG.FriendlyFireScale; // save the current friendly fire setting
+        ROTG.FriendlyFireScale = 1.0; // turn on friendly fire
 
-		// kill the player (includes custom damage type that shows "was re-spawned by admin" message in the console)
-		if (PlayerPawn.IsA('ROPawn'))
-		{
-			PlayerPawn.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator_WIP.DH_AdminMenu_DamageType');
-		}
-		else
-		{
-			Vehicle(PlayerPawn).Driver.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator_WIP.DH_AdminMenu_DamageType');
-		}
+        // Kill the player (includes custom damage type that shows "was re-spawned by admin" message in the console)
+        if (PlayerPawn.IsA('ROPawn'))
+        {
+            PlayerPawn.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator_WIP.DH_AdminMenu_DamageType');
+        }
+        else
+        {
+            Vehicle(PlayerPawn).Driver.TakeDamage(9999, none, NULL_VECTOR, NULL_VECTOR, class'DH_AdminMenuMutator_WIP.DH_AdminMenu_DamageType');
+        }
 
-		ROTG.FriendlyFireScale = OriginalFriendlyFireScale; // now restore the original friendly fire setting
-		PlayerToKill.PlayerReplicationInfo.Score += 1; // compensate for the -1 score reduction they will get for having 'suicided', so their score remains the same
+        ROTG.FriendlyFireScale = OriginalFriendlyFireScale; // now restore the original friendly fire setting
+        PlayerToKill.PlayerReplicationInfo.Score += 1; // compensate for the -1 score reduction they will get for having 'suicided', so their score remains the same
 
-		// if a specific player name was passed (only used in KillPlayer) then give notification message to killed player & log the event
-		if (PlayerName != "" && Admin != none)
-		{
-			NotifyPlayer(1, PlayerToKill); // admin killed you
-			Log("DH_AdminMenu: admin" @ GetAdminName() @ "killed player '" $ PlayerName $ "'");
-		}
-	}
-	else if (PlayerName != "")
-	{
-		ErrorMessageToSelf(9, PlayerName); // player is not active
-	}	
+        // If a specific player name was passed (only used in KillPlayer) then give notification message to killed player & log the event
+        if (PlayerName != "" && Admin != none)
+        {
+            NotifyPlayer(1, PlayerToKill); // admin killed you
+            Log("DH_AdminMenu: admin" @ GetAdminName() @ "killed player '" $ PlayerName $ "'");
+        }
+    }
+    else if (PlayerName != "")
+    {
+        ErrorMessageToSelf(9, PlayerName); // player is not active
+    }    
 }
 
 ////////////////////////////  REALISM MENU OPTIONS CALLED BY MUTATE FUNCTION  ///////////////////////////////////////////////////////////
 
 function EnableRealismMatch()
 {
-	if (!bRealismMutPresent || !IsLoggedInAsAdmin(true)) // the 'true' is bEnforceAdminLogin, so does not allow bBypassAdminLogin (won't work on realism mutator)
-		return;
+    if (!bRealismMutPresent || !IsLoggedInAsAdmin(true)) // the 'true' is bEnforceAdminLogin, so does not allow bBypassAdminLogin (won't work on realism mutator)
+    {
+        return;
+    }
 
-	Log("DH_AdminMenu: admin" @ GetAdminName() @ "enabled a realism match");
-	Level.Game.BaseMutator.Mutate("EnableMatch", Admin); // calls the real enable match functionality from the realism match mutator
+    Log("DH_AdminMenu: admin" @ GetAdminName() @ "enabled a realism match");
+    Level.Game.BaseMutator.Mutate("EnableMatch", Admin); // calls the real enable match functionality from the realism match mutator
 }
 
 function DisableRealismMatch()
 {
-	if (!bRealismMutPresent || !IsLoggedInAsAdmin(true)) // the 'true' is bEnforceAdminLogin
-		return;
+    if (!bRealismMutPresent || !IsLoggedInAsAdmin(true)) // the 'true' is bEnforceAdminLogin
+    {
+        return;
+    }
 
-	Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled a realism match");
-	Level.Game.BaseMutator.Mutate("DisableMatch", Admin); // calls the real disable match functionality from the realism match mutator
+    Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled a realism match");
+    Level.Game.BaseMutator.Mutate("DisableMatch", Admin); // calls the real disable match functionality from the realism match mutator
 }
 
 function ForceRealismMatchLive()
 {
-	if (!bRealismMutPresent || !IsLoggedInAsAdmin(true)) // the 'true' is bEnforceAdminLogin
-		return;
+    if (!bRealismMutPresent || !IsLoggedInAsAdmin(true)) // the 'true' is bEnforceAdminLogin
+    {
+        return;
+    }
 
-	Log("DH_AdminMenu: admin" @ GetAdminName() @ "forced realism match live");
-	Level.Game.BaseMutator.Mutate("MatchLive", Admin); // calls the real match live functionality from the realism match mutator
+    Log("DH_AdminMenu: admin" @ GetAdminName() @ "forced realism match live");
+    Level.Game.BaseMutator.Mutate("MatchLive", Admin); // calls the real match live functionality from the realism match mutator
 }
 
 function ParaDropAll(string TeamName, string TypeOfDropTarget, string DropTarget, optional string ObjectiveIndex)
 {
-	local  int			SelectedTeamIndex;
-	local  vector		ParaDropVector;
-	local  Controller	C;
+    local  int         SelectedTeamIndex;
+    local  vector      ParaDropVector;
+    local  Controller  C;
 
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin())
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	SelectedTeamIndex = GetTeamIndexFromName(TeamName);
+    SelectedTeamIndex = GetTeamIndexFromName(TeamName);
 
-	if (SelectedTeamIndex != ERROR_INDEX)
-	{
-		if (TypeOfDropTarget ~= "AtObjective")
-		{
-			ParaDropVector = GetObjectiveDropLocation(DropTarget, ObjectiveIndex);
-		}
-		else if (TypeOfDropTarget ~= "AtGridRef")
-		{
-			ParaDropVector = GetGridDropLocation(DropTarget);
-		}
-		else
-		{
-			ErrorMessageToSelf(21); // no valid type of drop target specified
-			return;
-		}
+    if (SelectedTeamIndex != ERROR_INDEX)
+    {
+        if (TypeOfDropTarget ~= "AtObjective")
+        {
+            ParaDropVector = GetObjectiveDropLocation(DropTarget, ObjectiveIndex);
+        }
+        else if (TypeOfDropTarget ~= "AtGridRef")
+        {
+            ParaDropVector = GetGridDropLocation(DropTarget);
+        }
+        else
+        {
+            ErrorMessageToSelf(21); // no valid type of drop target specified
+            return;
+        }
 
-		if (ParaDropVector != NULL_VECTOR)
-		{
-			for (C = Level.ControllerList; C != none; C = C.NextController)
-			{
-				if (C.GetTeamNum() == SelectedTeamIndex || SelectedTeamIndex == BOTH_TEAMS_INDEX)
-					ParaDropThisPlayer(C, ParaDropVector);
-			}
-			Log("DH_AdminMenu: admin" @ GetAdminName() @ "paradropped all" @ TeamName);
-		}
-	}
+        if (ParaDropVector != NULL_VECTOR)
+        {
+            for (C = Level.ControllerList; C != none; C = C.NextController)
+            {
+                if (C.GetTeamNum() == SelectedTeamIndex || SelectedTeamIndex == BOTH_TEAMS_INDEX)
+                {
+                    ParaDropThisPlayer(C, ParaDropVector);
+                }
+            }
+
+            Log("DH_AdminMenu: admin" @ GetAdminName() @ "paradropped all" @ TeamName);
+        }
+    }
 }
 
 function DisableMinefields() // doesn't actually disable them, but it makes their warn & kill times so long that they appear disabled
 {
-	local  int  i;
+    local  int  i;
 
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin())
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	if (ROTG.MineVolumes.Length == 0)
-	{
-		ErrorMessageToSelf(15); // no minefields
-	}
-	else if (!bMinesDisabled)
-	{
-		bMinesDisabled = true;
+    if (ROTG.MineVolumes.Length == 0)
+    {
+        ErrorMessageToSelf(15); // no minefields
+    }
+    else if (!bMinesDisabled)
+    {
+        bMinesDisabled = true;
 
-		if (Replicator != none)
-			Replicator.bMinesDisabled = true; // also update the Replicator, which then replicates this to clients for use by the menu interactions
+        if (Replicator != none)
+        {
+            Replicator.bMinesDisabled = true; // also update the Replicator, which then replicates this to clients for use by the menu interactions
+        }
 
-		for (i = 0; i < ROTG.MineVolumes.Length; i++)
-		{
-			ROTG.MineVolumes[i].KillTime = 9999;
-			ROTG.MineVolumes[i].WarnInterval = 9999;
-			if (bDebug)
-				Log("DH_AdminMenu: MINES OFF: MineVolumes["$i$"] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
-		}
-		BroadcastMessageToAll(4);
-		Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled all minefields");
-	}
-	else
-	{
-		ErrorMessageToSelf(16); // already disabled
-	}
+        for (i = 0; i < ROTG.MineVolumes.Length; i++)
+        {
+            ROTG.MineVolumes[i].KillTime = 9999.0;
+            ROTG.MineVolumes[i].WarnInterval = 9999.0;
+
+            if (bDebug)
+            {
+                Log("DH_AdminMenu: MINES OFF: MineVolumes["$i$"] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
+            }
+        }
+
+        BroadcastMessageToAll(4);
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled all minefields");
+    }
+    else
+    {
+        ErrorMessageToSelf(16); // already disabled
+    }
 }
 
 function EnableMinefields()
 {
-	local  int  i;
+    local  int  i;
 
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin())
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	if (ROTG.MineVolumes.Length == 0)
-	{
-		ErrorMessageToSelf(15); // no minefields
-	}
-	else if (bMinesDisabled)
-	{
-		bMinesDisabled = false;
+    if (ROTG.MineVolumes.Length == 0)
+    {
+        ErrorMessageToSelf(15); // no minefields
+    }
+    else if (bMinesDisabled)
+    {
+        bMinesDisabled = false;
 
-		if (Replicator != none)
-			Replicator.bMinesDisabled = false; // also update the Replicator, which then replicates this to clients for use by the menu interactions
+        if (Replicator != none)
+        {
+            Replicator.bMinesDisabled = false; // also update the Replicator, which then replicates this to clients for use by the menu interactions
+        }
 
-		for (i = 0; i < ROTG.MineVolumes.Length; i++)
-		{
-			ROTG.MineVolumes[i].KillTime = SavedMinefields[i].MVKillTime;
-			ROTG.MineVolumes[i].WarnInterval = SavedMinefields[i].MVWarnInterval;
-			if (bDebug)
-				Log("DH_AdminMenu: MINES ON: MineVolumes["$i$"] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
-		}
-		BroadcastMessageToAll(5);
-		Log("DH_AdminMenu: admin" @ GetAdminName() @ "re-enabled all minefields");
-	}
-	else
-	{
-		ErrorMessageToSelf(17); // already enabled
-	}
+        for (i = 0; i < ROTG.MineVolumes.Length; i++)
+        {
+            ROTG.MineVolumes[i].KillTime = SavedMinefields[i].MVKillTime;
+            ROTG.MineVolumes[i].WarnInterval = SavedMinefields[i].MVWarnInterval;
+
+            if (bDebug)
+            {
+                Log("DH_AdminMenu: MINES ON: MineVolumes["$i$"] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
+            }
+        }
+
+        BroadcastMessageToAll(5);
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "re-enabled all minefields");
+    }
+    else
+    {
+        ErrorMessageToSelf(17); // already enabled
+    }
 }
-		
+        
 function ToggleCapProgress()
 {
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin() || Replicator == none)
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin() || Replicator == none)
+    {
+        return;
+    }
 
-	bHideCapProgress = !bHideCapProgress;
+    bHideCapProgress = !bHideCapProgress;
 
-	if (bHideCapProgress)
-	{
-		BroadcastMessageToAll(9);
-		Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled capture progress indicators");
-	}
-	else
-	{
-		BroadcastMessageToAll(10);
-		Log("DH_AdminMenu: admin" @ GetAdminName() @ "re-enabled capture progress indicators");
-	}
+    if (bHideCapProgress)
+    {
+        BroadcastMessageToAll(6);
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled capture progress indicators");
+    }
+    else
+    {
+        BroadcastMessageToAll(7);
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "re-enabled capture progress indicators");
+    }
 
-	Replicator.ServerToggleCapProgress(bHideCapProgress); // use the Replicator to toggle this for each player
+    Replicator.ServerToggleCapProgress(bHideCapProgress); // use the Replicator to toggle this for each player
 }
-		
+        
 function TogglePlayerIcon()
 {
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin() || Replicator == none)
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin() || Replicator == none)
+    {
+        return;
+    }
 
-	bHidePlayerIcon = !bHidePlayerIcon;
+    bHidePlayerIcon = !bHidePlayerIcon;
 
-	if (bHidePlayerIcon)
-	{
-		BroadcastMessageToAll(11);
-		Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled the player icon on the map");
-	}
-	else
-	{
-		BroadcastMessageToAll(12);
-		Log("DH_AdminMenu: admin" @ GetAdminName() @ "re-enabled the player icon on the map");
-	}
+    if (bHidePlayerIcon)
+    {
+        BroadcastMessageToAll(8);
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "disabled the player icon on the map");
+    }
+    else
+    {
+        BroadcastMessageToAll(9);
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "re-enabled the player icon on the map");
+    }
 
-	Replicator.ServerTogglePlayerIcon(bHidePlayerIcon); // use the Replicator to toggle this for each player
+    Replicator.ServerTogglePlayerIcon(bHidePlayerIcon); // use the Replicator to toggle this for each player
 }
 
 function KillAllPlayers()
 {
-	local  Controller  C;
+    local  Controller  C;
 
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin())
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	for (C = Level.ControllerList; C != none; C = C.NextController)
-		KillThisPlayer(C);
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        KillThisPlayer(C);
+    }
 
-	BroadcastMessageToAll(8);
-	Log("DH_AdminMenu: admin" @ GetAdminName() @ "killed all players");
+    BroadcastMessageToAll(10);
+    Log("DH_AdminMenu: admin" @ GetAdminName() @ "killed all players");
 }
 
 function SetGameSpeed(float NewSpeed)
 {
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin())
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
+    if (NewSpeed >= 0.0)
+    {
+        NewSpeed = FClamp(NewSpeed, 0.1, 15.0);
+        Level.Game.bAllowMPGameSpeed = true;
+        Level.Game.SetGameSpeed(NewSpeed);
+        Level.Game.bAllowMPGameSpeed = false;
 
-	if (NewSpeed >= 0.0)
-	{
-		Level.Game.bAllowMPGameSpeed = true;
-		Level.Game.SetGameSpeed(NewSpeed);
-		Level.Game.bAllowMPGameSpeed = false;
-	}
+        BroadcastMessageToAll(100 + (Level.Game.GameSpeed * 100)); // a trick of passing new game speed, as a % with 100 added so we know it isn't one of the normal numbered messages
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "changed game speed to" @ Level.Game.GameSpeed);
+    }
 }
 
 function DestroyActorInSights()
 {
-	local  int		TraceDistance; 
-	local  vector	AimDirection, StartTrace, EndTrace, HitLocation, HitNormal;
-	local  Actor	HitActor;
+    local  int        TraceDistance; 
+    local  vector    AimDirection, StartTrace, EndTrace, HitLocation, HitNormal;
+    local  Actor    HitActor;
 
-	if (!bShowRealismMenu || !IsLoggedInAsAdmin())
-		return;
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
 
-	if (Admin.IsA('ROPlayer') && Admin.Pawn != none)
-	{
-		TraceDistance = ROPlayer(Admin).GetMaxViewDistance();
-		AimDirection = vector(Admin.Pawn.GetViewRotation());
-		StartTrace = Admin.Pawn.Location + Admin.Pawn.EyePosition();
-		EndTrace = StartTrace + (AimDirection * TraceDistance);
+    if (Admin.IsA('ROPlayer') && Admin.Pawn != none)
+    {
+        TraceDistance = ROPlayer(Admin).GetMaxViewDistance();
+        AimDirection = vector(Admin.Pawn.GetViewRotation());
+        StartTrace = Admin.Pawn.Location + Admin.Pawn.EyePosition();
+        EndTrace = StartTrace + (AimDirection * TraceDistance);
 
-		HitActor = Trace(HitLocation, HitNormal, EndTrace, StartTrace, true);
+        HitActor = Trace(HitLocation, HitNormal, EndTrace, StartTrace, true);
 
-		if (!HitActor.IsA('ROPawn') && !HitActor.IsA('ROBulletWhipAttachment'))
-		{
-			if (HitActor.Destroy());
-				Log("DH_AdminMenu: admin" @ GetAdminName() @ "used DestroyActorInSights to remove actor" @ HitActor);
-		}
-	}
+        if (!HitActor.IsA('ROPawn') && !HitActor.IsA('ROBulletWhipAttachment'))
+        {
+            if (HitActor.Destroy())
+            {
+                Log("DH_AdminMenu: admin" @ GetAdminName() @ "used DestroyActorInSights to remove actor" @ HitActor);
+            }
+        }
+    }
 }
 
 ////////////////////////////  GENERAL HELPER FUNCTIONS (messaging, true/false checks, find things, etc)  //////////////////////////////////////
 
-function BroadcastMessageToAll(byte MessageNumber)
+function BroadcastMessageToAll(int MessageNumber)
 {
-	if (MessageNumber > 0 && Admin != none)
-		BroadcastLocalizedMessage(class'DH_AdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+    if (MessageNumber > 0 && Admin != none)
+    {
+        BroadcastLocalizedMessage(class'DH_AdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+    }
 }
 
 function NotifyPlayer(byte MessageNumber, Controller Receiver)
 {
-	if (MessageNumber > 0 && Admin != none && Receiver.IsA('PlayerController'))
-		PlayerController(Receiver).ReceiveLocalizedMessage(class'DH_AdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+    if (MessageNumber > 0 && Admin != none && Receiver.IsA('PlayerController'))
+    {
+        PlayerController(Receiver).ReceiveLocalizedMessage(class'DH_AdminMenu_NotifyMessages', MessageNumber, Admin.PlayerReplicationInfo);
+    }
 }
 
 function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 {
-	if (MessageNumber > 0 && Admin != none)
-		Admin.ClientMessage(class'DH_AdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
+    if (MessageNumber > 0 && Admin != none)
+    {
+        Admin.ClientMessage(class'DH_AdminMenu_ErrorMessages'.static.AssembleMessage(MessageNumber, InsertedName));
+    }
 }
 
 // A check if the sending player is an admin - if not displays a message to say "you must be logged in as an admin ..."
-function bool IsLoggedInAsAdmin(optional bool bEnforceAdminLogin) // TEST - TODO: replace this with list of admin ROIDs read from server config file
+function bool IsLoggedInAsAdmin(optional bool bEnforceAdminLogin)
 {
-	// Do a normal admin login check
-	if (Admin != none && Admin.PlayerReplicationInfo != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin))
-		return true;
+    // Do a normal admin login check
+    if (Admin != none && Admin.PlayerReplicationInfo != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin))
+    {
+        return true;
+    }
 
-	// Otherwise, if bBypassAdminLogin has been set to true in the config file, we effectively bypass the usual admin check (e.g. for use on a test server)
-	// (but this bypass will be overridden if this function call included the optional bEnforceAdminLogin = true)
-	if (bBypassAdminLogin && !bEnforceAdminLogin)
-		return true;
+    // Otherwise, if bBypassAdminLogin has been set to true in the config file, we effectively bypass the usual admin check (e.g. for use on a test server)
+    // (but this bypass will be overridden if this function call included the optional bEnforceAdminLogin = true)
+    if (bBypassAdminLogin && !bEnforceAdminLogin)
+    {
+        return true;
+    }
 
-	// In single player an admin login is irrelevant, so just return true
-	if (Level.NetMode == NM_Standalone)
-		return true;
+    // In single player an admin login is irrelevant, so just return true
+    if (Level.NetMode == NM_Standalone)
+    {
+        return true;
+    }
 
-	ErrorMessageToSelf(1); // must be an admin
-	return false;
+    ErrorMessageToSelf(1); // must be an admin
+    return false;
 }
 
 // Returns admin's player name for use in logging
 function string GetAdminName()
 {
-	if (Admin != none && Admin.PlayerReplicationInfo != none && Admin.PlayerReplicationInfo.PlayerName != "")
-		return "'" $ Admin.PlayerReplicationInfo.PlayerName $ "'";
+    if (Admin != none && Admin.PlayerReplicationInfo != none && Admin.PlayerReplicationInfo.PlayerName != "")
+    {
+        return "'" $ Admin.PlayerReplicationInfo.PlayerName $ "'";
+    }
 
-	return class'DH_AdminMenu_ErrorMessages'.static.AssembleMessage(10); // can't find admin's name (should never happen)
+    return class'DH_AdminMenu_ErrorMessages'.static.AssembleMessage(10); // can't find admin's name (should never happen)
 }
 
 // Returns player's name (from their Controller) for use in messages & logging
 function string GetPlayerName(Controller Player)
 {
-	if (Player != none && Player.PlayerReplicationInfo != none && Player.PlayerReplicationInfo.PlayerName != "")
-		return Player.PlayerReplicationInfo.PlayerName;
+    if (Player != none && Player.PlayerReplicationInfo != none && Player.PlayerReplicationInfo.PlayerName != "")
+    {
+        return Player.PlayerReplicationInfo.PlayerName;
+    }
 
-	return class'DH_AdminMenu_ErrorMessages'.static.AssembleMessage(9); // can't find player's name (should never happen, but just in case)
+    return class'DH_AdminMenu_ErrorMessages'.static.AssembleMessage(9); // can't find player's name (should never happen, but just in case)
 }
 
 // Takes an index number passed by a local menu as a string in brackets (just to add readability to an on-screen command), strips the brackets & converts to a integer
 function int RemoveBracketsFromIndex(string IndexString)
 {
-	local  int  Index;
+    local  int  Index;
 
-	// special handling of a zero index because if invalid string is passed, cast to int will fail & return a misleading 0 - so menus pass a [0] index as [zero] to avoid this
-	if (IndexString == "[zero]")
-		return 0;
+    // Special handling of a zero index because if invalid string is passed, cast to int will fail & return a misleading 0 - so menus pass a [0] index as [zero] to avoid this
+    if (IndexString == "[zero]")
+    {
+        return 0;
+    }
 
-	IndexString = Repl(IndexString, "[", "");
-	IndexString = Repl(IndexString, "]", "");
+    IndexString = Repl(IndexString, "[", "");
+    IndexString = Repl(IndexString, "]", "");
 
-	Index = Int(IndexString);
+    Index = Int(IndexString);
 
-	if (Index == 0) // if Index is 0 it means the cast to int failed, so an invalid string must have been passed, i.e. string did not represent a number
-		return ERROR_INDEX;
+    if (Index == 0) // if Index is 0 it means the cast to int failed, so an invalid string must have been passed, i.e. string did not represent a number
+    {
+        return ERROR_INDEX;
+    }
 
-	return Index;
+    return Index;
 }
 
 // Puts a message together from a passed array of words, starting from a specified point
 function string PutMessageTogether(array<string> Words, byte StartIndex)
 {
-	local  string	Message;
-	local  int		i;
+    local  string  Message;
+    local  int     i;
 
-	if (Words.Length > StartIndex)
-	{
-		Message $= Words[StartIndex];
+    if (Words.Length > StartIndex)
+    {
+        Message $= Words[StartIndex];
 
-		if (Words.Length > (StartIndex +1))
-		{
-			for (i = StartIndex +1; i < Words.Length; i++)
-				Message @= Words[i];
-		}
-	}
+        if (Words.Length > (StartIndex +1))
+        {
+            for (i = StartIndex +1; i < Words.Length; i++)
+            {
+                Message @= Words[i];
+            }
+        }
+    }
 
-	return Message;
+    return Message;
 }
 
 // Finds the Controller for a given player name - includes a check for more than one player with the specified name & also an optional check for bots
 function Controller FindControllerFromName(string PlayerName, optional bool bAllowActionOnBot)
 {
-	local  Controller	C, FoundPlayer;
-	local  string		CheckedPlayerName;
+    local  Controller  C, FoundPlayer;
+    local  string      CheckedPlayerName;
 
-	if (PlayerName == "")
-	{
-		ErrorMessageToSelf(4); // no player name specified
-		return none;
-	}
+    if (PlayerName == "")
+    {
+        ErrorMessageToSelf(4); // no player name specified
+        return none;
+    }
 
-	for (C = Level.ControllerList; C != none; C = C.NextController)
-	{
-		if (C.PlayerReplicationInfo != none)
-		{
-			// Replace any spaces in name with non-breaking spaces - needed to match against names passed from menu choices because those will have had the same treatment
-			CheckedPlayerName = Repl(GetPlayerName(C)," "," ");
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C.PlayerReplicationInfo != none)
+        {
+            // Replace any spaces in name with non-breaking spaces - needed to match against names passed from menu choices because those will have had the same treatment
+            CheckedPlayerName = Repl(GetPlayerName(C)," "," ");
 
-			if (CheckedPlayerName == PlayerName)
-			{
-				if (FoundPlayer != none) // if we have already saved a FoundPlayer we must have more than 1 player with that name, so we can't proceed
-				{
-					ErrorMessageToSelf(6, PlayerName); // more than 1 player with that name, too risky to proceed
-					return none;
-				}
+            if (CheckedPlayerName == PlayerName)
+            {
+                if (FoundPlayer != none) // if we have already saved a FoundPlayer we must have more than 1 player with that name, so we can't proceed
+                {
+                    ErrorMessageToSelf(6, PlayerName); // more than 1 player with that name, too risky to proceed
+                    return none;
+                }
 
-				FoundPlayer = C;
-				// we would typically break at this point as we've found our player, but here we will continue to search through all players in case we have more than one with this name
-			}
-		}
-	}
+                FoundPlayer = C;
+                // we would typically break here as we've found our player, but we continue to search through all players in case we have more than one with this name
+            }
+        }
+    }
 
-	if (FoundPlayer == none)
-	{
-		ErrorMessageToSelf(5, PlayerName); // can't find player
-		return none;
-	}
-	// if a bot has been selected & the function call hasn't allowed bots, we give an error message & return a blank
-	if (FoundPlayer.IsA('ROBot') && !bAllowActionOnBot)
-	{
-		ErrorMessageToSelf(11); // can't do that to a bot
-		return none;
-	}
+    if (FoundPlayer == none)
+    {
+        ErrorMessageToSelf(5, PlayerName); // can't find player
+        return none;
+    }
 
-	return FoundPlayer;
+    // if a bot has been selected & the function call hasn't allowed bots, we give an error message & return a blank
+    if (FoundPlayer.IsA('ROBot') && !bAllowActionOnBot)
+    {
+        ErrorMessageToSelf(11); // can't do that to a bot
+        return none;
+    }
+
+    return FoundPlayer;
 }
 
 // Convert a text team name to the relevant team index number
 function int GetTeamIndexFromName(out string TeamName)
 {
-	switch (TeamName)
-	{
-		case "ToAllies":
-			TeamName = "Allies"; // removes the "To" from TeamName & then 'falls through' to return same value as case "Allies"
-		case "Allies":
-			return ALLIES_TEAM_INDEX;
+    switch (TeamName)
+    {
+        case "ToAllies":
+            TeamName = "Allies"; // removes the "To" from TeamName & then 'falls through' to return same value as case "Allies"
+        case "Allies":
+            return ALLIES_TEAM_INDEX;
 
-		case "ToAxis": // removes the "To" from TeamName & then 'falls through' to return same value as case "Axis"
-			TeamName = "Axis";
-		case "Axis":
-			return AXIS_TEAM_INDEX;
+        case "ToAxis": // removes the "To" from TeamName & then 'falls through' to return same value as case "Axis"
+            TeamName = "Axis";
+        case "Axis":
+            return AXIS_TEAM_INDEX;
 
-		case "Players":
-			return BOTH_TEAMS_INDEX;
+        case "Players":
+            return BOTH_TEAMS_INDEX;
 
-		default:
-			ErrorMessageToSelf(18); // no valid team specified
-			return ERROR_INDEX;
-	}
+        default:
+            ErrorMessageToSelf(18); // no valid team specified
+            return ERROR_INDEX;
+    }
 }
 
 /////////////////////////////////////  PARADROP FUNCTIONS  /////////////////////////////////////////////////////////////////////////////////////////////
@@ -924,93 +1013,108 @@ function int GetTeamIndexFromName(out string TeamName)
 // Calls modified GiveChute function from this mutator that works for bots & fixes most "accessed none" log errors from the original function when any player lands
 function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, optional string PlayerName)
 {
-	local  Pawn  PlayerPawn;
+    local  Pawn  PlayerPawn;
 
-	if (PlayerToDrop == none || ParaDropVector == NULL_VECTOR)
-		return;
+    if (PlayerToDrop == none || ParaDropVector == NULL_VECTOR)
+    {
+        return;
+    }
 
-	PlayerPawn = PlayerToDrop.Pawn;
+    PlayerPawn = PlayerToDrop.Pawn;
 
-	if (PlayerPawn != none && (PlayerPawn.IsA('ROPawn') || PlayerPawn.IsA('Vehicle')))
-	{
-		if (PlayerPawn.IsA('Vehicle'))
-		{
-			if (PlayerPawn.IsA('VehicleWeaponPawn'))
-				PlayerPawn = PlayerPawn.GetVehicleBase(); // Matt: switch PlayerPawn to the actual vehicle so we drop that
+    if (PlayerPawn != none && (PlayerPawn.IsA('ROPawn') || PlayerPawn.IsA('Vehicle')))
+    {
+        // If player is in a vehicle we switch PlayerPawn to the actual vehicle so we drop that
+        if (PlayerPawn.IsA('Vehicle'))
+        {
+            if (PlayerPawn.IsA('VehicleWeaponPawn'))
+            {
+                PlayerPawn = PlayerPawn.GetVehicleBase();
+            }
 
-			PlayerPawn.SetPhysics(PHYS_None); // Matt: have to do this otherwise the vehicle doesn't move to the new location
-		}
-		else
-		{
-			GiveChute(PlayerToDrop);
-		}
+            PlayerPawn.SetPhysics(PHYS_None); // have to do this otherwise the vehicle doesn't move to the new location
+        }
+        else
+        {
+            GiveChute(PlayerToDrop);
+        }
 
-		PlayerPawn.SetLocation(ParaDropVector + RandRange(10,20) * 60 * vector(RotRand()));
+        PlayerPawn.SetLocation(ParaDropVector + RandRange(10,20) * 60 * vector(RotRand()));
 
-		if (PlayerPawn.IsA('Vehicle')) // Matt: if we dropped a vehicle, we must now reset it's normal physics, otherwise it just hangs in the sky !
-			PlayerPawn.SetPhysics(PHYS_Karma);
+        if (PlayerPawn.IsA('Vehicle')) // if we dropped a vehicle, we must now reset it's normal physics, otherwise it just hangs in the sky !
+        {
+            PlayerPawn.SetPhysics(PHYS_Karma);
+        }
 
-		// if a specific player name was passed (only used in ParaDropPlayer) then give notification message to dropped player & log the event
-		if (PlayerName != "" && Admin != none)
-		{
-			NotifyPlayer(3, PlayerToDrop); // admin paradropped you
-			Log("DH_AdminMenu: admin" @ GetAdminName() @ "paradropped player '" $ PlayerName $ "'");
-		}
-	}
-	else if (PlayerName != "")
-	{
-		ErrorMessageToSelf(9, PlayerName); // player is not active
-	}	
+        // If a specific player name was passed (only used in ParaDropPlayer) then give notification message to dropped player & log the event
+        if (PlayerName != "" && Admin != none)
+        {
+            NotifyPlayer(3, PlayerToDrop); // admin paradropped you
+            Log("DH_AdminMenu: admin" @ GetAdminName() @ "paradropped player '" $ PlayerName $ "'");
+        }
+    }
+    else if (PlayerName != "")
+    {
+        ErrorMessageToSelf(9, PlayerName); // player is not active
+    }    
 }
 
-// Modified version of function from DHPawn to properly handle giving parachutes to bots without errors
+// Modified version of function from DH_Pawn to properly handle giving parachutes to bots without errors
 // The modified ParachuteStaticLine class also fixes several errors that logged "accessed none" whenever a player lands
 singular function GiveChute(Controller PlayerToDrop)
 {
-	local  RORoleInfo	RI;
-	local  string		ItemString;
-	local  bool			bHasPSL, bHasPI;
-	local  int			i;
+    local  RORoleInfo  RI;
+    local  string      ItemString;
+    local  bool        bHasPSL, bHasPI;
+    local  int         i;
 
-	if (PlayerToDrop == none || PlayerToDrop.Pawn == none || PlayerToDrop.PlayerReplicationInfo == none)
-		return;
+    if (PlayerToDrop == none || PlayerToDrop.Pawn == none || PlayerToDrop.PlayerReplicationInfo == none)
+    {
+        return;
+    }
 
-	RI = ROPlayerReplicationInfo(PlayerToDrop.PlayerReplicationInfo).RoleInfo;
-	
-	if (RI != None)
-	{
-		for (i = RI.GivenItems.Length -1; i >= 0; i--)
-		{
-			ItemString = RI.GivenItems[i];
+    RI = ROPlayerReplicationInfo(PlayerToDrop.PlayerReplicationInfo).RoleInfo;
+    
+    if (RI != None)
+    {
+        for (i = RI.GivenItems.Length -1; i >= 0; i--)
+        {
+            ItemString = RI.GivenItems[i];
 
-			if (ItemString == "DH_AdminMenuMutator_WIP.DH_AdminMenu_ParachuteStaticLine" || ItemString == "DH_Equipment.DH_ParachuteStaticLine")
-			{
-				bHasPSL = true;
-			}
-			else if (ItemString == "DH_Equipment.DH_ParachuteItem")
-			{
-				bHasPI = true;
-			}
-		}
-	}
+            if (ItemString == "DH_AdminMenuMutator_WIP.DH_AdminMenu_ParachuteStaticLine" || ItemString == "DH_Equipment.DH_ParachuteStaticLine")
+            {
+                bHasPSL = true;
+            }
+            else if (ItemString == "DH_Equipment.DH_ParachuteItem")
+            {
+                bHasPI = true;
+            }
+        }
+    }
 
-	if (!bHasPSL)
-		PlayerToDrop.Pawn.GiveWeapon("DH_AdminMenuMutator_WIP.DH_AdminMenu_ParachuteStaticLine"); // gives modified parachute static line to fix errors
+    if (!bHasPSL)
+    {
+        PlayerToDrop.Pawn.GiveWeapon("DH_AdminMenuMutator_WIP.DH_AdminMenu_ParachuteStaticLine"); // gives modified parachute static line to fix errors
+    }
 
-	if (!bHasPI)
-		PlayerToDrop.Pawn.GiveWeapon("DH_Equipment.DH_ParachuteItem");
+    if (!bHasPI)
+    {
+        PlayerToDrop.Pawn.GiveWeapon("DH_Equipment.DH_ParachuteItem");
+    }
 }
 
 // Checks for a grid reference that may have been included from a certain point
 function string ConcatenateGridRef(array<string> Characters, byte StartIndex)
 {
-	local  string	GridRef;
-	local  int		i;
+    local  string  GridRef;
+    local  int     i;
 
-	for (i = StartIndex; i < Characters.Length; i++)
-		GridRef $= Characters[i];
+    for (i = StartIndex; i < Characters.Length; i++)
+    {
+        GridRef $= Characters[i];
+    }
 
-	return GridRef;
+    return GridRef;
 }
 
 // Coverts a grid reference into paradrop location coordinates
@@ -1018,262 +1122,258 @@ function string ConcatenateGridRef(array<string> Characters, byte StartIndex)
 // Also accepts "e2" format & assumes a central keypad 5 sub-grid position if a keypad number is not specified
 function vector GetGridDropLocation(string GridRef)
 {
-	local  string	GridLetter;
-	local  byte		GridNumber, KeypadNumber;
-	local  float	GridX, GridY, KeypadX, KeypadY;
-	local  vector	DropLocation;
+    local  string  GridLetter;
+    local  byte    GridNumber, KeypadNumber;
+    local  float   GridX, GridY;
+    local  vector  DropLocation;
 
-	GridRef = Repl(GridRef, " ", "");	// remove any unwanted spaces
-	GridRef = Repl(GridRef, "kp", "");	// remove "kp" if the admin has entered a grid ref in format of "E 4 kp 3" (the original Builder mutator format)
+    GridRef = Repl(GridRef, " ", "");  // remove any unwanted spaces
+    GridRef = Repl(GridRef, "kp", ""); // remove "kp" if the admin has entered a grid ref in format of "E 4 kp 3" (the original Builder mutator format)
 
-	GridLetter = Left(GridRef, 1);
-	GridNumber = Byte(Mid(GridRef, 1, 1));
-	KeypadNumber = Byte(Mid(GridRef, 2, 1));
+    GridLetter = Left(GridRef, 1);
+    GridNumber = Byte(Mid(GridRef, 1, 1));
+    KeypadNumber = Byte(Mid(GridRef, 2, 1));
 
-	if (GridNumber < 1 || GridNumber > 9)
-	{
-		ErrorMessageToSelf(22); // invalid grid ref
-		return NULL_VECTOR;
-	}
+    if (GridNumber < 1 || GridNumber > 9)
+    {
+        ErrorMessageToSelf(22); // invalid grid ref
+        return NULL_VECTOR;
+    }
 
-	// grid numbers range from 1 to 9, with 5 being central, so we deduct 5 to give an offset from the centre of between -4 and +4 for calculating the drop position
-	GridX = GridNumber -5;
+    // Set GridX & GridY as relative offsets (in grid squares at this stage) from MapCentre, so we have values between -4 and +4 for calculating the drop position
+    GridX = Float(GridNumber - 5);
 
-	switch (GridLetter)
-	{
-		case "A":
-				GridY = -4;
-				break;
-		case "B":
-				GridY = -3;
-				break;
-		case "C":
-				GridY = -2;
-				break;
-		case "D":
-				GridY = -1;
-				break;
-		case "E":
-				GridY =  0;
-				break;
-		case "F":
-				GridY = +1;
-				break;
-		case "G":
-				GridY = +2;
-				break;
-		case "H":
-				GridY = +3;
-				break;
-		case "I":
-				GridY = +4;
-				break;
+    switch (GridLetter)
+    {
+        case "A":
+                GridY = -4.0;
+                break;
+        case "B":
+                GridY = -3.0;
+                break;
+        case "C":
+                GridY = -2.0;
+                break;
+        case "D":
+                GridY = -1.0;
+                break;
+        case "E":
+                GridY =  0.0;
+                break;
+        case "F":
+                GridY = 1.0;
+                break;
+        case "G":
+                GridY = 2.0;
+                break;
+        case "H":
+                GridY = 3.0;
+                break;
+        case "I":
+                GridY = 4.0;
+                break;
 
-		default:
-				ErrorMessageToSelf(22); // invalid grid ref
-				return NULL_VECTOR;
-	}
+        default:
+                ErrorMessageToSelf(22); // invalid grid ref
+                return NULL_VECTOR;
+    }
 
-	switch (KeypadNumber)
-	{
-		case 1:
-				KeypadX = -1;
-				KeypadY = +1;
-				break;
-		case 2:
-				KeypadX =  0;
-				KeypadY = +1;
-				break;
-		case 3:
-				KeypadX = +1;
-				KeypadY = +1;
-				break;
-		case 4:
-				KeypadX = -1;
-				KeypadY =  0;
-				break;
-		case 5:
-		case 0: // if no keypad sub-grid is entered it assumes a central keypad 5 position
-				KeypadX =  0;
-				KeypadY =  0;
-				break;
-		case 6:
-				KeypadX = +1;
-				KeypadY =  0;
-				break;
-		case 7:
-				KeypadX = -1;
-				KeypadY = -1;
-				break;
-		case 8:
-				KeypadX = -0;
-				KeypadY = -1;
-				break;
-		case 9:
-				KeypadX = +1;
-				KeypadY = -1;
-				break;
+    // Adjust GridX & GridY for keypad sub-grid position
+    switch (KeypadNumber)
+    {
+        case 0: // if no keypad sub-grid is entered we assume a central keypad 5 position (no adjustment)
+                break;
+        case 1:
+                GridX -= 0.333333;
+                GridY += 0.333333;
+                break;
+        case 2:
+                GridY += 0.333333;
+                break;
+        case 3:
+                GridX += 0.333333;
+                GridY += 0.333333;
+                break;
+        case 4:
+                GridX -= 0.333333;
+                break;
+        case 5:
+                break;
+        case 6:
+                GridX += 0.333333;
+                break;
+        case 7:
+                GridX -= 0.333333;
+                GridY -= 0.333333;
+                break;
+        case 8:
+                GridY -= 0.333333;
+                break;
+        case 9:
+                GridX += 0.333333;
+                GridY -= 0.333333;
+                break;
 
-		default:
-				ErrorMessageToSelf(22); // invalid grid ref
-				return NULL_VECTOR;
-	}
+        default:
+                ErrorMessageToSelf(22); // invalid grid ref
+                return NULL_VECTOR;
+    }
 
-	// at this stage DropLocation X/Y is an offset relative to the map centre
-	// we add one ninth of GridX/Y (as map is divided into 9 grid squares) & one twenty-seventh of KeypadX/Y (as each keypad square is one third the size of of a grid square)
-	// then we multiply by the map scale
-	DropLocation.X = (GridX/9 + KeypadX/27) * MapScale;
-	DropLocation.Y = (GridY/9 + KeypadY/27) * MapScale;
-	DropLocation.Z = ParaDropHeight;
+    // Convert DropLocation (currently just grid square offsets) to Unreal unit offsets from map centre, with Z as the established ParaDropHeight
+    DropLocation.X = (GridX / 9.0) * MapScale;
+    DropLocation.Y = (GridY / 9.0) * MapScale;
+    DropLocation.Z = ParaDropHeight;
 
-	// now we correct for any rotational offset in the map
-	DropLocation = GetAdjustedHudLocation(DropLocation, true);
+    // Now correct our offset for any rotational offset in the map
+    DropLocation = GetAdjustedHudLocation(DropLocation, true);
 
-	// finally we add to the map centre co-ords to give us real world co-ords for the paradrop
-	DropLocation.X += MapCenter.X;
-	DropLocation.Y += MapCenter.Y;
+    // Finally add to the map centre co-ords to give us real world co-ords for the paradrop
+    DropLocation.X += MapCenter.X;
+    DropLocation.Y += MapCenter.Y;
 
-	return DropLocation;
+    return DropLocation;
 }
 
 // Finds a map objective & returns its location for paradrop coordinates
 function vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveIndexString)
 {
-	local  vector		DropLocation;
-	local  int			ObjectiveIndex;
-	local  ROObjective	Objective;
+    local  vector       DropLocation;
+    local  int          ObjectiveIndex;
+    local  ROObjective  Objective;
 
-	ObjectiveIndex = RemoveBracketsFromIndex(ObjectiveIndexString);
+    ObjectiveIndex = RemoveBracketsFromIndex(ObjectiveIndexString);
 
-	if (ObjectiveIndex >= 0 && ObjectiveIndex < ArrayCount(ROTG.Objectives))
-	{
-		Objective = ROTG.Objectives[ObjectiveIndex];
+    if (ObjectiveIndex >= 0 && ObjectiveIndex < ArrayCount(ROTG.Objectives))
+    {
+        Objective = ROTG.Objectives[ObjectiveIndex];
 
-		if (Objective != none && Objective.ObjNum == ObjectiveIndex)
-		{
-			DropLocation = Objective.Location;
-			DropLocation.Z = ParaDropHeight;
-		}
-	}
+        if (Objective != none && Objective.ObjNum == ObjectiveIndex)
+        {
+            DropLocation = Objective.Location;
+            DropLocation.Z = ParaDropHeight;
+        }
+    }
 
-	if (DropLocation == NULL_VECTOR)
-		ErrorMessageToSelf(20, ObjectiveName); // can't find objective
+    if (DropLocation == NULL_VECTOR)
+    {
+        ErrorMessageToSelf(20, ObjectiveName); // can't find objective
+    }
 
-	return DropLocation;
+    return DropLocation;
 }
 
 // Returns player's current location for paradrop coordinates
 function vector GetCurrentDropLocation(Controller PlayerToDrop)
 {
-	local  vector  DropLocation;
+    local  vector  DropLocation;
 
-	if (PlayerToDrop == none || PlayerToDrop.Pawn == none)
-	{
-		ErrorMessageToSelf(9, GetPlayerName(PlayerToDrop)); // player is not active
-		return NULL_VECTOR;
-	}
+    if (PlayerToDrop == none || PlayerToDrop.Pawn == none)
+    {
+        ErrorMessageToSelf(9, GetPlayerName(PlayerToDrop)); // player is not active
+        return NULL_VECTOR;
+    }
 
-	DropLocation = PlayerToDrop.Pawn.Location;
-	DropLocation.Z = ParaDropHeight;
+    DropLocation = PlayerToDrop.Pawn.Location;
+    DropLocation.Z = ParaDropHeight;
 
-	return DropLocation;
+    return DropLocation;
 }
 
 // This function will adjust a hud map location based on the rotation offset of the overhead map (used by GetGridDropLocation function)
 // Note this is from ROHud but that is not accessible serverside, so we need the same function here
 function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
 {
-	local float SwapX, SwapY;
-	local ROGameReplicationInfo GRI;
-	local int OverheadOffset;
+    local ROGameReplicationInfo  GRI;
+    local float                  SwapX, SwapY;
+    local int                    OverheadOffset;
 
-	GRI = ROGameReplicationInfo(Level.Game.GameReplicationInfo);
-	OverheadOffset = GRI.OverheadOffset;
+    GRI = ROGameReplicationInfo(Level.Game.GameReplicationInfo);
+    OverheadOffset = GRI.OverheadOffset;
 
-	if (bInvert)
-	{
-		if (OverheadOffset == 90)
-		{
-			OverheadOffset = 270;
-		}
-		else if (OverheadOffset == 270)
-		{
-			OverheadOffset = 90;
-		}
-	}
+    if (bInvert)
+    {
+        if (OverheadOffset == 90)
+        {
+            OverheadOffset = 270;
+        }
+        else if (OverheadOffset == 270)
+        {
+            OverheadOffset = 90;
+        }
+    }
 
-	//modding
-	if (OverheadOffset  == 90)
-	{
-		SwapX = HudLoc.Y * -1;
-		SwapY = HudLoc.X ;
-		HudLoc.X = SwapX;
-		HudLoc.Y = SwapY;
-	}
-	else if (OverheadOffset == 180)
-	{
-		SwapX = HudLoc.X * -1;
-		SwapY = HudLoc.Y * -1;
-		HudLoc.X = SwapX;
-		HudLoc.Y = SwapY;
-	}
-	else if (OverheadOffset == 270)
-	{
-		SwapX = HudLoc.Y;
-		SwapY = HudLoc.X * -1;
-		HudLoc.X = SwapX;
-		HudLoc.Y = SwapY;
-	}
+    if (OverheadOffset  == 90)
+    {
+        SwapX = HudLoc.Y * -1.0;
+        SwapY = HudLoc.X ;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+    else if (OverheadOffset == 180)
+    {
+        SwapX = HudLoc.X * -1.0;
+        SwapY = HudLoc.Y * -1.0;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+    else if (OverheadOffset == 270)
+    {
+        SwapX = HudLoc.Y;
+        SwapY = HudLoc.X * -1.0;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
 
-	return HudLoc;
+    return HudLoc;
 }
-
 
 function SetParaDropVariables()
 {
-	local  ROGameReplicationInfo  GRI;
-	local  TerrainInfo	TInfo;
-	local  vector		TILocation, MapDiagonal;
-	local  actor		TestActor;
-	local  int			i;
+    local  ROGameReplicationInfo  GRI;
+    local  TerrainInfo            TInfo;
+    local  vector                 TILocation, MapDiagonal;
+    local  Actor                  TestActor;
+    local  int                    i;
 
-	foreach AllActors(class'TerrainInfo', TInfo)
-	{
-		TILocation.Z = TInfo.Location.Z;
-		break;
-	}
+    foreach AllActors(class'TerrainInfo', TInfo)
+    {
+        TILocation.Z = TInfo.Location.Z;
+        break;
+    }
 
-	for (i = 1; i < 6; i++)
-	{
-		TILocation.Z += 1920;
-		TestActor = Spawn(class'DH_AdminMenuMutator_WIP.DH_AdminMenu_TestSM', , , TILocation);
+    for (i = 1; i < 6; i++)
+    {
+        TILocation.Z += 1920.0;
+        TestActor = Spawn(class'DH_AdminMenuMutator_WIP.DH_AdminMenu_TestSM', , , TILocation);
 
-		if (TestActor != none)
-			TestActor.SetStaticMesh(none);
+        if (TestActor != none)
+        {
+            TestActor.SetStaticMesh(none);
+        }
 
-		if ((i == 5 && TestActor != none) || TestActor == none)
-		{
-			if (TestActor != none)
-				TestActor.Destroy();
-			TILocation.Z -= 1920;
-			ParaDropHeight = TILocation.Z;
-		}
-	}
+        if ((i == 5 && TestActor != none) || TestActor == none)
+        {
+            if (TestActor != none)
+            {
+                TestActor.Destroy();
+            }
 
-	GRI = ROGameReplicationInfo(Level.Game.GameReplicationInfo);
-	MapDiagonal = GRI.SouthWestBounds - GRI.NorthEastBounds;
-	MapCenter =  MapDiagonal/2 + GRI.NorthEastBounds;
-	MapScale = Abs(MapDiagonal.X);
+            TILocation.Z -= 1920.0;
+            ParaDropHeight = TILocation.Z;
+        }
+    }
 
-//	log("AMMut.SetParaDropVariables: GRI =" @ GRI @ " MapCenter =" @ MapCenter @ " MapScale =" @ MapScale); // TEMP
+    GRI = ROGameReplicationInfo(Level.Game.GameReplicationInfo);
+    MapDiagonal = GRI.SouthWestBounds - GRI.NorthEastBounds;
+    MapCenter =  (MapDiagonal / 2.0) + GRI.NorthEastBounds;
+    MapScale = Abs(MapDiagonal.X);
 }
 
 defaultproperties
 {
-     MaxCharactersInMessage=128
-     WarningSound=Sound'DH_KlaxonSound.Klaxon'
-     bAddToServerPackages=True
-     GroupName="AdminMenu"
-     FriendlyName="Admin menu"
-     Description="Screen menu options allowing an admin greater control over players or a realism match (WIP version)"
+    GroupName="AdminMenu"
+    FriendlyName="Admin menu"
+    Description="Screen menu options allowing an admin greater control over players or a realism match (WIP version)"
+    bAddToServerPackages=true // this is necessary for the Replicator to be spawned on a client
+    WarningSound=sound'DH_KlaxonSound.Klaxon' // can be overridden in server DarkestHour.ini file // TEMP, would be 'DH_AdminMenuMutator_WIP.Klaxon' to use the sound compiled in this code package
 }

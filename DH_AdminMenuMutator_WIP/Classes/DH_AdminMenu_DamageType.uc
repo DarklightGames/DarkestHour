@@ -7,13 +7,14 @@
 //
 //===============================================================================================================================
 class DH_AdminMenu_DamageType extends DamageType
-	abstract;
+    abstract;
+
 
 defaultproperties
 {
-     DeathString="%o was re-spawned by an admin"
-     bArmorStops=False
-     bLocationalHit=False
-     bCausesBlood=False
-     GibModifier=0.000000
+    DeathString="%o was re-spawned by an admin"
+    bLocationalHit=false
+    bArmorStops=false
+    bCausesBlood=false
+    GibModifier=0.0
 }
