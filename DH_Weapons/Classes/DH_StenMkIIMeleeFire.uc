@@ -2,7 +2,7 @@
 // StenMkIIMeleeFire
 //=============================================================================
 
-class DH_StenMkIIMeleeFire extends ROMeleeFire;
+class DH_StenMkIIMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

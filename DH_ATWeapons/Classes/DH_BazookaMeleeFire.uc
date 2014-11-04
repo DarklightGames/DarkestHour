@@ -2,7 +2,7 @@
 // DH_BazookaMeleeFire
 //=============================================================================
 
-class DH_BazookaMeleeFire extends ROMeleeFire;
+class DH_BazookaMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

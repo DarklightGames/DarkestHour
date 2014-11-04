@@ -2,7 +2,7 @@
 // DH_ColtM1911MeleeFire
 //=============================================================================
 
-class DH_ColtM1911MeleeFire extends ROMeleeFire;
+class DH_ColtM1911MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

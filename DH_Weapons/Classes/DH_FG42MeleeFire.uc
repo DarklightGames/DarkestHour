@@ -2,7 +2,7 @@
 // DH_FG42MeleeFire
 //=============================================================================
 
-class DH_FG42MeleeFire extends ROMeleeFire;
+class DH_FG42MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

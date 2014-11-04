@@ -2,7 +2,7 @@
 // DH_PIATMeleeFire
 //=============================================================================
 
-class DH_PIATMeleeFire extends ROMeleeFire;
+class DH_PIATMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

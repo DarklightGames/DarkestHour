@@ -2,7 +2,7 @@
 // GreaseGunMeleeFire
 //=============================================================================
 
-class DH_GreaseGunMeleeFire extends ROMeleeFire;
+class DH_GreaseGunMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

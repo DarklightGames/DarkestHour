@@ -2,7 +2,7 @@
 // DH_PanzerschreckMeleeFire
 //=============================================================================
 
-class DH_PanzerschreckMeleeFire extends ROMeleeFire;
+class DH_PanzerschreckMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

@@ -2,7 +2,7 @@
 // ThompsonMeleeFire
 //=============================================================================
 
-class DH_ThompsonMeleeFire extends ROMeleeFire;
+class DH_ThompsonMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

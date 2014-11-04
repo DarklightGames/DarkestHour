@@ -2,7 +2,7 @@
 // DH_BrenMeleeFire
 //=============================================================================
 
-class DH_BrenMeleeFire extends ROMeleeFire;
+class DH_BrenMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

@@ -2,7 +2,7 @@
 // DH_SpringfieldScopedMeleeFire
 //=============================================================================
 
-class DH_SpringfieldScopedMeleeFire extends ROMeleeFire;
+class DH_SpringfieldScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

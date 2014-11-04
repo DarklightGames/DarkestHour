@@ -2,7 +2,7 @@
 // C96MeleeFire
 //=============================================================================
 
-class DH_C96MeleeFire extends ROMeleeFire;
+class DH_C96MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

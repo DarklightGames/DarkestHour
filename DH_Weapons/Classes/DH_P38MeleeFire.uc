@@ -8,7 +8,7 @@
 // - John "Ramm-Jaeger" Gibson
 //=============================================================================
 
-class DH_P38MeleeFire extends ROMeleeFire;
+class DH_P38MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

@@ -2,7 +2,7 @@
 // DH_M1GarandMeleeFire
 //=============================================================================
 
-class DH_M1GarandMeleeFire extends ROMeleeFire;
+class DH_M1GarandMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {

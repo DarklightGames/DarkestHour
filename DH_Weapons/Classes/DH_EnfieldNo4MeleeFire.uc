@@ -2,7 +2,7 @@
 // DH_EnfieldNo4MeleeFire
 //=============================================================================
 
-class DH_EnfieldNo4MeleeFire extends ROMeleeFire;
+class DH_EnfieldNo4MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
