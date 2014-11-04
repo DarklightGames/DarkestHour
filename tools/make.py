@@ -19,8 +19,6 @@ def print_usage():
 	print "usage: make.py --mod=<ModName>"
 
 def main(argv):
-	argv = ["--mod=DarkestHourDev"]
-
 	#red orchestra directory
 	ro_dir = os.environ.get('RODIR')
 
