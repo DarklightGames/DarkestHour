@@ -139,8 +139,8 @@ defaultproperties
      SightUpIronIdleAnim="deploy_idle"
      SightUpMagEmptyReloadAnim="deploy_reload_empty"
      SightUpMagPartialReloadAnim="deploy_reload_half"
-     MaxNumPrimaryMags=7
-     InitialNumPrimaryMags=7
+     MaxNumPrimaryMags=6
+     InitialNumPrimaryMags=6
      FireModeClass(0)=Class'DH_Weapons.DH_BrenFire'
      FireModeClass(1)=Class'DH_Weapons.DH_BrenMeleeFire'
      PickupClass=Class'DH_Weapons.DH_BrenPickup'
