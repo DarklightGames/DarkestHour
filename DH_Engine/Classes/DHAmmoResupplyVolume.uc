@@ -98,7 +98,15 @@ function Timer()
 
                     bResupplied = true;
                 }
+
+                if (!P.bHasATAmmo && DHRI.bCarriesATAmmo)
+                {
+                    P.bHasATAmmo = true;
+
+                    bResupplied = true;
+                }
             }
+
         }
 
         if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))

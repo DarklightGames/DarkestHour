@@ -135,7 +135,6 @@ function Timer()
                     {
                         recvr_weapon = ROWeapon(recvr_inv);
 
-                        //Don't allow resupplying of enemy weapons
                         if (recvr_weapon.IsGrenade())
                         {
                             continue;
@@ -149,10 +148,17 @@ function Timer()
 
                     if (DHRI != none)
                     {
-                        if (!P.bHasMGAmmo /*&& DHRI.bCarriesMGAmmo*/)
+                        if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
                         {
-                            P.bHasMGAmmo =true;
-                            bResupplied=true;
+                            P.bHasMGAmmo = true;
+                            bResupplied = true;
+                        }
+
+                        if (!P.bHasATAmmo && DHRI.bCarriesATAmmo)
+                        {
+                            P.bHasATAmmo = true;
+
+                            bResupplied = true;
                         }
                     }
                 }
