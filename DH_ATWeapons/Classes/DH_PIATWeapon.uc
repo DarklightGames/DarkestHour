@@ -1,7 +1,7 @@
 //===================================================================
 // DH_PIATWeapon
 //===================================================================
-class DH_PIATWeapon extends DH_RocketWeapon;
+class DH_PIATWeapon extends DH_ProjectileWeapon;
 
 #exec OBJ LOAD FILE=..\DarkestHour\Animations\DH_PIAT_1st.ukx
 
@@ -10,6 +10,8 @@ var     int         RangeIndex;             // Current range setting
 var     name        IronIdleAnimOne;        // Iron idle animation for range setting one
 var     name        IronIdleAnimTwo;        // Iron idle animation for range setting two
 var     name        IronIdleAnimThree;      // Iron idle animation for range setting three
+
+var     ROFPAmmoRound            RocketAttachment;     // The first person ammo round attached to the rocket
 
 var int     NumMagsToResupply;          // Number of ammo mags to add when this weapon has been resupplied
 
@@ -197,6 +199,9 @@ simulated function Destroyed()
         ROPawn(Instigator).bWeaponCanBeResupplied = false;
         ROPawn(Instigator).bWeaponNeedsResupply = false;
     }
+
+    if (RocketAttachment != none)
+        RocketAttachment.Destroy();
 
     Super.Destroyed();
 }
@@ -610,5 +615,7 @@ defaultproperties
      AttachmentClass=Class'DH_ATWeapons.DH_PIATAttachment'
      ItemName="PIAT"
      Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
-     FillAmmoMagCount=0
+     FillAmmoMagCount=1
+     Priority=8
+     InventoryGroup=5
 }

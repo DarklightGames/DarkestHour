@@ -19,8 +19,10 @@ event ModeDoFire()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (DH_RocketWeapon(Owner).RocketAttachment  != none)
-           DH_RocketWeapon(Owner).RocketAttachment.Destroy();
+        if (DH_PIATWeapon(Owner).RocketAttachment  != none)
+        {
+            DH_PIATWeapon(Owner).RocketAttachment.Destroy();
+        }
     }
 
     Super.ModeDoFire();
