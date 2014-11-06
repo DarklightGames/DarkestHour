@@ -69,14 +69,14 @@ def main(argv):
 		sys.exit(1)
 
 	#mod system directory
-	mod_sys_dir = mod_dir + "\\System"
+	mod_sys_dir = os.path.join(mod_dir, "System")
 
 	if not os.path.isdir(mod_sys_dir):
 		print "error could not resolve mod system directory"
 		sys.exit(1)
 
 	#mod config path
-	config_path = mod_sys_dir + "\\" + mod + ".ini"
+	config_path = os.path.join(mod_sys_dir, mod + ".ini")
 	
 	if not os.path.isfile(config_path):
 		print "error: could not resove mod config file"
