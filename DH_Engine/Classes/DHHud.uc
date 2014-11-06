@@ -2633,6 +2633,7 @@ simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplica
 // When player is in a vehicle these functions do nothing to the HUD, but they can be used to add useful custom functionality to vehicles, especially as keys are -/+ by default
 exec function GrowHUD()
 {
+/*
     if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
     {
         if (PawnOwner.IsA('DH_ROTreadCraft'))
@@ -2656,10 +2657,12 @@ exec function GrowHUD()
     {
         super.GrowHUD();
     }
+    */
 }
 
 exec function ShrinkHUD()
 {
+/*
     if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
     {
         if (PawnOwner.IsA('DH_ROTreadCraft'))
@@ -2683,6 +2686,7 @@ exec function ShrinkHUD()
     {
         super.ShrinkHUD();
     }
+    */
 }
 
 defaultproperties
