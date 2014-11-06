@@ -2,7 +2,7 @@
 // DH_30calPickup
 //=============================================================================
 
-class DH_30calPickup extends DH_MGWeaponPickup
+class DH_30calPickup extends DHWeaponPickup
    notplaceable;
 
 defaultproperties

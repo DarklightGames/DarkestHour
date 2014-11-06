@@ -7,7 +7,7 @@
 // Copyright (C) 2005 Tripwire Interactive LLC
 // - John "Ramm-Jaeger" Gibson
 //=============================================================================
-class DH_MG34Pickup extends DH_MGWeaponPickup
+class DH_MG34Pickup extends DHWeaponPickup
    notplaceable;
 
 //-----------------------------------------------------------------------------
