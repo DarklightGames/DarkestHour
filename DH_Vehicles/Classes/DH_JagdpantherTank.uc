@@ -12,9 +12,93 @@ class DH_JagdpantherTank extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 
+struct SchurzenType
+{
+var  class<DH_VehicleDecoAttachment>  SchurzenClass; // a possible schurzen decorative attachment class, with different degrees of damage
+var  byte                             PercentChance; // the % chance of this deco attachment being the one spawned
+};
+
+var  SchurzenType              SchurzenTypes[4]; // an array of possible schurzen attachments
+var  byte                      SchurzenIndex;    // the schurzen index number selected randomly to be spawned for this vehicle
+var  DH_VehicleDecoAttachment  Schurzen;         // actor reference to the schurzen deco attachment, so it can be destroyed when the vehicle gets destroyed
+var  vector                    SchurzenOffset;   // the positional offset from the attachment bone
+var  Material                  SchurzenTexture;  // the camo skin for the schurzen attachment
+
+replication
+{
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
+        SchurzenIndex;
+}
+
+// Modified to assign the schuzen deco attachment class as a random selection for each vehicle spawned
+simulated function PostBeginPlay()
+{
+    local  byte  RandomNumber, CumulativeChance, i;
+
+    super.PostBeginPlay();
+
+    if (Role == ROLE_Authority && SchurzenTexture != none)
+    {
+        RandomNumber = RAND(100);
+        
+        for (i = 0; i < ArrayCount(SchurzenTypes); i++)
+        {
+            CumulativeChance += SchurzenTypes[i].PercentChance;
+
+            if (RandomNumber < CumulativeChance)
+            {
+                SchurzenIndex = i;
+                break;
+            }
+        }
+    }
+}
+
+// Modified to attach schurzen to vehicle (in multi-player this only happens clientside & only after the chosen SchurzenIndex has been replicated)
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    // Only spawn schurzen if a valid attachment class has been selected
+    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < ArrayCount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
+    {
+        Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
+
+        if (Schurzen != none)
+        {
+            Schurzen.Skins[0] = SchurzenTexture; // set the deco attachment's camo skin
+            AttachToBone(Schurzen,'body');
+            Schurzen.SetRelativeLocation(SchurzenOffset);
+        }
+    }
+}
+
+// Modified to destroy schurzen when the vehicle gets destroyed
+simulated event DestroyAppearance()
+{
+    super.DestroyAppearance();
+
+    if (Schurzen != none)
+    {
+        Schurzen.Destroy();
+    }
+}
+
+// Modified to destroy schurzen when the vehicle gets destroyed
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Schurzen != none)
+    {
+        Schurzen.Destroy();
+    }
+}
+
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
@@ -22,7 +106,9 @@ simulated function SetupTreads()
         LeftTreadPanner.PanRate = 0.0;
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
+
     RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
@@ -40,6 +126,7 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.jagdpanther_treads');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_walls_int');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_body_int');
+    L.AddPrecacheMaterial(default.SchurzenTexture);
 }
 
 simulated function UpdatePrecacheMaterials()
@@ -48,12 +135,21 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.jagdpanther_treads');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_walls_int');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_body_int');
+    Level.AddPrecacheMaterial(SchurzenTexture); 
 
     Super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
 {
+	SchurzenTexture=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2' // ideally get better matching texture made, but for now this is passable match
+	SchurzenTypes(0)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenOne',PercentChance=30)   // undamaged schurzen
+	SchurzenTypes(1)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenTwo',PercentChance=15)   // missing front panel on right & middle panel on left
+	SchurzenTypes(2)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenThree',PercentChance=10) // with front panels missing on both sides
+	SchurzenTypes(3)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenFour',PercentChance=15)  // most badly damaged, with 3 panels missing
+	SchurzenOffset=(X=28.4,Y=5.8,Z=-14.2)
+	SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
+
      NewVehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=55.000000,Y=-40.000000,Z=77.000000),NewHitPointType=NHP_GunOptics)
      NewVehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="Turret_placement",PointOffset=(X=72.000000,Z=45.000000),NewHitPointType=NHP_Traverse)
      NewVehHitpoints(2)=(PointRadius=15.000000,PointScale=1.000000,PointBone="Turret_placement",PointOffset=(X=72.000000,Z=45.000000),NewHitPointType=NHP_GunPitch)

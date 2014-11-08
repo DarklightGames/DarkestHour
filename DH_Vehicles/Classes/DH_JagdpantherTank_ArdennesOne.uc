@@ -32,4 +32,5 @@ defaultproperties
 {
      PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpantherCannonPawn_ArdennesOne')
      Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.jagdpanther_body_ardennes'
+     SchurzenTexture=Texture'DH_VehiclesGE_tex3.ext_vehicles.Jagdpanther_armor_ardennes'
 }
