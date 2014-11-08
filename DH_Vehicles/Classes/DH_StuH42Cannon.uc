@@ -11,7 +11,7 @@ class DH_StuH42Cannon extends DH_ROTankCannon;
 defaultproperties
 {
      InitialTertiaryAmmo=6
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_Stug3GCannonShellSmoke'
+     TertiaryProjectileClass=Class'DH_Vehicles.DH_StuH42CannonShellSmoke'
      SecondarySpread=0.001500
      TertiarySpread=0.003570
      ManualRotationsPerSecond=0.025000

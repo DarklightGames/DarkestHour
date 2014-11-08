@@ -73,7 +73,7 @@ function DecrementRange()
 defaultproperties
 {
      InitialTertiaryAmmo=6
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_ShermanCannonShellSmoke'
+     TertiaryProjectileClass=Class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
      SecondarySpread=0.003000
      TertiarySpread=0.003600
      ManualRotationsPerSecond=0.012500
