@@ -19,64 +19,66 @@ def print_usage():
 	print "usage: make.py --mod=<ModName>"
 
 def main(argv):
-	argv = ["--mod=DarkestHourDev"]
-
 	#red orchestra directory
 	ro_dir = os.environ.get('RODIR')
 
-	if ro_dir is None:
+	if ro_dir == None:
 		print "error: environment variable RODIR is not defined"
-		return
+		sys.exit(1)
 
 	if not os.path.isdir(ro_dir):
 		print "error: environment variable RODIR is not a valid directory"
-		return
+		sys.exit(1)
 
 	#red orchestra system directory
-	ro_sys_dir = ro_dir + '\\System'
+	ro_sys_dir = os.path.join(ro_dir, 'System')
 
 	if not os.path.isdir(ro_sys_dir):
 		print "error: could not resolve red orchestra system directory"
-		return
+		sys.exit(1)
 
 	#parse options
 	try:
-		opts, args = getopt.getopt(argv, "", ["mod=", "clean"])
+		opts, args = getopt.getopt(argv, "c", ["mod="])
 	except:
+		print "error: invalid arguments"
 		print_usage()
-		system.exit(1)
+		sys.exit(1)
 
 	mod = None
+	should_clean = False
 
 	for opt, arg in opts:
 		if opt == "--mod":
 			mod = arg
+		elif opt == "--clean":
+			should_clean = True
 
-	if mod is None:
+	if mod == None:
 		print "error: could not resolve mod"
 		print_usage()
-		return
+		sys.exit(1)
 
 	#mod directory
-	mod_dir = ro_dir + "\\" + mod
+	mod_dir = os.path.join(ro_dir, mod)
 
 	if not os.path.isdir(mod_dir):
 		print "error: could not resolve mod directory"
-		return
+		sys.exit(1)
 
 	#mod system directory
-	mod_sys_dir = mod_dir + "\\System"
+	mod_sys_dir = os.path.join(mod_dir, "System")
 
 	if not os.path.isdir(mod_sys_dir):
 		print "error could not resolve mod system directory"
-		return
+		sys.exit(1)
 
 	#mod config path
-	config_path = mod_sys_dir + "\\" + mod + ".ini"
+	config_path = os.path.join(mod_sys_dir, mod + ".ini")
 	
 	if not os.path.isfile(config_path):
 		print "error: could not resove mod config file"
-		return
+		sys.exit(1)
 
 	#parse config
 	config = ConfigParser.RawConfigParser(dict_type=MultiOrderedDict)
@@ -127,14 +129,14 @@ def main(argv):
 	for package in packages_to_compile:
 		package_path = os.path.join(mod_sys_dir, package)
 
-		if os.path.exists(package_path):
+		if os.path.isfile(package_path):
 			try:
 				os.remove(package_path)
 			except:
-				print "error: failed to delete file " + package_filename + " (do you have the game or editor running?)"
-				return
+				print "error: failed to delete file " + package + " (do you have the game or editor running?)"
+				sys.exit(1)
 
-	proc = subprocess.Popen(['ucc', 'make', '-mod=' + mod])
+	proc = subprocess.Popen([os.path.join(ro_sys_dir, "ucc"), "make", "-mod=" + mod])
 	proc.communicate()
 
 	for root, dirs, files in os.walk(ro_sys_dir):
