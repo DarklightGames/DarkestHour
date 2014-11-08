@@ -13,6 +13,7 @@ defaultproperties
      InitialTertiaryAmmo=5
      TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
      SecondarySpread=0.001270
+     TertiarySpread=0.003570
      ManualRotationsPerSecond=0.033000
      PoweredRotationsPerSecond=0.033000
      bIsAssaultGun=true
