@@ -86,7 +86,8 @@ function Timer()
     local Pawn recvr;
     local inventory recvr_inv;
     local ROWeapon recvr_weapon;
-    local bool bEnemyGrenadeFound, bEnemySmokeFound, bResupplied;
+    local bool bResupplied;
+//  local bool bEnemyGrenadeFound, bEnemySmokeFound; // not used
     local DH_Pawn P;
     local Vehicle V;
     local DH_RoleInfo DHRI;

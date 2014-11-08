@@ -17,14 +17,15 @@ var         ROSoundAttachment           EngineSoundAttach;
 var         float                       MotionSoundVolume;
 
 var         sound                       DestroyedBurningSound;
-
+/*
+// Matt: none of these are used and some conflict with local variables or function parameters
 var()   float           MaxPitchSpeed;
 var()   float           BoatFloatTraceDistance;
 var     float           HitDist, HoverAdd;
 var     vector          TraceStart, TraceEnd, HitLocation, HitNormal;
 var     actor           HitActor;
 var     bool            bBoatFloat;
-
+*/
 //var     array<BoatSprayEffect> BoatSpray; // FL, FR, RL, RR
 
 var     name DestAnimName;
@@ -453,8 +454,8 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 defaultproperties
 {
      DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-     MaxPitchSpeed=600.000000
-     BoatFloatTraceDistance=10000.000000
+//   MaxPitchSpeed=600.000000
+//   BoatFloatTraceDistance=10000.000000
      PointValue=1.000000
      ChangeUpPoint=1990.000000
      ChangeDownPoint=1000.000000

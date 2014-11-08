@@ -192,7 +192,7 @@ defaultproperties
      WashSoundBoneR="Wash_R"
      EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
      EngineSoundBone="Engine"
-     MaxPitchSpeed=150.000000
+//   MaxPitchSpeed=150.000000 // deprecated
      DestAnimName="Higgins-Idle"
      DestAnimRate=1.000000
      WheelSoftness=0.025000

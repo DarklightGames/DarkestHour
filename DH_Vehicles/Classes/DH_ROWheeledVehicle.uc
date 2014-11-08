@@ -444,7 +444,7 @@ simulated function StartEmitters()
 
 function ServerStartEngine()
 {
-    local Pawn P;
+//  local Pawn P; // not used
 
     if (!bEngineDead) //can't turn Engine on or off if its Dead
     {
