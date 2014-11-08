@@ -195,7 +195,8 @@ simulated function Tick(float DeltaTime)
         CheckEmitters();
 }
 
-function KDriverEnter(Pawn p)
+/*
+function KDriverEnter(Pawn p) // Matt: removed as this override only removes "if(!p.IsHumanControlled()) bEngineOff=false;", which just lets bots start vehicle engine & seems perfectly valid
 {
     local int x;
 
@@ -246,7 +247,7 @@ function KDriverEnter(Pawn p)
 }
 
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
-function ServerChangeViewPoint(bool bForward)
+function ServerChangeViewPoint(bool bForward) // Matt: removed as this override does nothing & only restates the super inherited from DH_ROTreadCraft
 {
     if (bForward)
     {
@@ -282,7 +283,7 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-simulated state ViewTransition
+simulated state ViewTransition // Matt: removed as this override does nothing & only restates the super inherited from DH_ROTreadCraft
 {
     simulated function HandleTransition()
     {
@@ -340,10 +341,10 @@ Begin:
     Sleep(0.2);
 }
 
+// Matt: removed as this override actually removes correct handling if vehicle uses bSpecialExiting, giving incorrect "you must open hatch" message when there is no driver's hatch
 // Overridden to prevent players exiting unless unbuttoned first
 function bool KDriverLeave(bool bForceLeave)
 {
-
     // if player is not unbuttoned and is trying to exit rather than switch positions, don't let them out
     // bForceLeave is always true for position switch, so checking against false means no risk of locking someone in one slot
     if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
@@ -357,10 +358,11 @@ function bool KDriverLeave(bool bForceLeave)
 }
 
 // Send a message on why they can't get in the vehicle
-function DenyEntry(Pawn P, int MessageNum)
+function DenyEntry(Pawn P, int MessageNum) // Matt: removed as this override does nothing & only restates the super inherited from DH_ROTreadCraft
 {
     P.ReceiveLocalizedMessage(class'DH_VehicleMessage', MessageNum);
 }
+*/
 
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
 //              for Tanks, we'll probably want to prevent bullets from doing damage too
