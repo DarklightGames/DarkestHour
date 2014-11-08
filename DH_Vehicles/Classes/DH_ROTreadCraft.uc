@@ -3914,6 +3914,27 @@ simulated function UpdateTurretReferences()
     }
 }
 
+// Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
+simulated function int NumPassengers()
+{
+    local  int  i, num;
+
+    if (Driver != none)
+    {
+        num = 1;
+    }
+
+    for (i = 0; i < WeaponPawns.length; i++)
+    {
+        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
+        {
+            num++;
+        }
+    }
+
+    return num;
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
