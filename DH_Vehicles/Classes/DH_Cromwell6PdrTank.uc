@@ -6,7 +6,7 @@
 //
 // British Cruiser Tank Mk.VIII Cromwell Mk.I
 //==============================================================================
-class DH_Cromwell6PdrTank extends DH_ROTreadCraft;
+class DH_Cromwell6PdrTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Cromwell_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
@@ -54,6 +54,17 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int');
 
     Super.UpdatePrecacheMaterials();
+}
+
+// Modified to adjust size/proportions of texture overlay to match driver's glass vision block
+simulated function DrawPeriscopeOverlay(Canvas Canvas)
+{
+    local float ScreenRatio;
+
+    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
+    Canvas.SetPos(0.0,0.0);
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) * 0.6, 
+        PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio * 0.85);
 }
 
 defaultproperties
@@ -210,9 +221,9 @@ defaultproperties
      MaxDesireability=1.900000
      FlagBone="Mg_placement"
      FlagRotation=(Yaw=32768)
-     HUDOverlayClass=Class'ROVehicles.KV1DriverOverlay'
-     HUDOverlayOffset=(X=-1.000000)
-     HUDOverlayFOV=90.000000
+     HUDOverlayClass=none // Matt: was class'ROVehicles.KV1DriverOverlay' but now uses texture overlay for glass vision block (note class now extends DH_ROTreadCraftB)
+//   HUDOverlayOffset=(X=-1.000000)
+//   HUDOverlayFOV=90.000000
      PitchUpLimit=5000
      PitchDownLimit=60000
      HealthMax=525.000000
