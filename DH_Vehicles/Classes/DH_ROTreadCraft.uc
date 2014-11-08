@@ -3888,6 +3888,32 @@ function ServerChangeDriverPosition(byte F)
     super.ServerChangeDriverPosition(F);
 }
 
+// Modified to optimise & to avoid accessed none errors
+simulated function UpdateTurretReferences()
+{
+    local int i;
+
+    for (i = 0; i < WeaponPawns.Length; i++)
+    {
+        if (WeaponPawns[i] != none && WeaponPawns[i].Gun != none)
+        {
+            if (CannonTurret == none && WeaponPawns[i].Gun.IsA('ROTankCannon'))
+            {
+                CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
+            }
+            else if (HullMG == none && WeaponPawns[i].Gun.IsA('ROMountedTankMG'))
+            {
+                HullMG = WeaponPawns[i].Gun;
+            }
+
+            if (CannonTurret != none && HullMG != none)
+            {
+                break;
+            }
+        }
+    }
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
