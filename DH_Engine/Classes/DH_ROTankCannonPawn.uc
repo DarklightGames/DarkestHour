@@ -31,6 +31,8 @@ var     name    GunsightOpticsName;
 var     int     InitialPositionIndex; // Initial Gunner Position
 var     int     UnbuttonedPositionIndex; // Lowest pos number where player is unbuttoned
 
+var  texture     AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
+
 // NEW DH CODE: Damage modelling stuff
 var     texture DestroyedScopeOverlay;
 var     bool    bTurretRingDamaged;
@@ -699,6 +701,23 @@ function bool ResupplyAmmo()
     return false;
 }
 
+// Matt: used by HUD to show coaxial MG reload progress, like the cannon reload
+function float GetAltAmmoReloadState()
+{
+    local float ProportionOfReloadRemaining;
+
+    if (Gun.FireCountdown <= Gun.AltFireInterval)
+    {
+        return 0.0;
+    }
+    else
+    {
+        ProportionOfReloadRemaining = Gun.FireCountdown / GetSoundDuration(ROTankCannon(Gun).ReloadSound);
+
+        return Ceil(4.0 * ProportionOfReloadRemaining) / 4.0; // round to increments of 0.25
+    }
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
@@ -723,4 +742,5 @@ defaultproperties
     MaxRotateThreshold=1.500000
     bDesiredBehindView=false
     PeriscopePositionIndex=-1
+    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }

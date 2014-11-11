@@ -1,5 +1,7 @@
 class DHHud extends ROHud;
 
+var(ROHud)  SpriteWidget    VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
+var(ROHud)  SpriteWidget    VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
 var(DHHud)  SpriteWidget    MapIconCarriedRadio;
 var(DHHud)  SpriteWidget    CanMantleIcon;
 var(DHHud)  SpriteWidget    VoiceIcon;
@@ -376,7 +378,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     ObituaryCount++;
 }
 
-// Matt: modified to correct bug that sometimes screwed up layout of critical message, resulting in very long text lines going outside of message background & sometimes off screen
+// Modified to correct bug that sometimes screwed up layout of critical message, resulting in very long text lines going outside of message background & sometimes off screen
 simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMessageExtra MessageExtra, Canvas C)
 {
     local  array<string>  Lines;
@@ -882,7 +884,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
     local  color                  vehicleColor;
     local  rotator                myRot;
     local  int                    i, current, pending;
-    local  float                  f, XL, YL, Y_one, myScale;
+    local  float                  f, XL, YL, Y_one, myScale, ProportionOfReloadRemaining;
     local  float                  modifiedVehicleOccupantsTextYOffset; // used to offset text vertically when drawing coaxial ammo info
     local  array<string>          lines;
 
@@ -1090,6 +1092,19 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
                         VehicleAltAmmoIcon.WidgetTexture = cannon.hudAltAmmoIcon;
                         DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
+                        // Draw coaxial gun reload state icon (if needed) // Matt: to show reload progress in red, like a tank cannon reload
+                        if (DH_ROTankCannonPawn(passenger) != none)
+                        {
+                            ProportionOfReloadRemaining = DH_ROTankCannonPawn(passenger).GetAltAmmoReloadState();
+
+                            if (ProportionOfReloadRemaining > 0.0)
+                            {
+                                VehicleAltAmmoReloadIcon.WidgetTexture = DH_ROTankCannonPawn(passenger).AltAmmoReloadTexture;
+                                VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
+                                DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
+                            }
+                        }
+
                         // Draw coaxial gun ammo ammount
                         VehicleAltAmmoAmount.Value = cannon.getNumMags();
                         DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
@@ -1124,6 +1139,19 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
             // Draw ammo icon
             VehicleMGAmmoIcon.WidgetTexture = weapon.hudAltAmmoIcon;
             DrawSpriteWidget(Canvas, VehicleMGAmmoIcon);
+
+            // Draw reload state icon (if needed) // Matt: to show reload progress in red, like a tank cannon reload
+            if (DH_ROMountedTankMGPawn(passenger) != none)
+            {
+                ProportionOfReloadRemaining = passenger.GetAmmoReloadState();
+
+                if (ProportionOfReloadRemaining > 0.0)
+                {
+                    VehicleMGAmmoReloadIcon.WidgetTexture = DH_ROMountedTankMGPawn(passenger).VehicleMGReloadTexture;
+                    VehicleMGAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
+                    DrawSpriteWidget(Canvas, VehicleMGAmmoReloadIcon);
+                }
+            }
 
             // Draw ammo count
             VehicleMGAmmoAmount.Value = weapon.getNumMags();
@@ -3145,7 +3173,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     bDrawingCaptureBar = true;
 }
 
-// Matt: modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
+// Modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
 simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplicationInfo GRI, int current_obj)
 {
     local  int    i, count;
@@ -3259,6 +3287,8 @@ exec function ShrinkHUD()
 
 defaultproperties
 {
+     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.20,DrawPivot=DP_LowerLeft,PosX=0.25,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
+     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
      MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
      CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.800000,DrawPivot=DP_LowerMiddle,PosX=0.550000,PosY=0.980000,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
      VoiceIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Communication.Voice',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=63),TextureScale=0.500000,DrawPivot=DP_MiddleMiddle,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))

@@ -17,6 +17,8 @@ var()   float   OverlayCenterSize;    // size of the gunsight overlay, 1.0 means
 var()   float   OverlayCorrectionX;
 var()   float   OverlayCorrectionY;
 
+var     texture VehicleMGReloadTexture; // used to show reload progress on the HUD, like a tank cannon reload
+
 struct ExitPositionPair
 {
     var int Index;
@@ -239,6 +241,33 @@ function bool ResupplyAmmo()
     return false;
 }
 
+// Matt: used by HUD to show coaxial MG reload progress, like the cannon reload
+function float GetAmmoReloadState() // TEMP partial demo, pending consolidation & rework of all MG classes - this only works in single player as variables aren't replicated to client
+{
+    local DH_ROMountedTankMG MG;
+    local float ProportionOfReloadRemaining;
+
+    MG = DH_ROMountedTankMG(Gun);
+
+    if (MG != none)
+    {
+        if (MG.ReadyToFire(false))
+        {
+            return 0.0;
+        }
+        else if (Role == ROLE_Authority && MG.bReloading && MG.TimerRate > 0.0)
+        {            
+            ProportionOfReloadRemaining = 1.0 - (MG.TimerCounter / MG.TimerRate);
+
+            return Ceil(4.0 * ProportionOfReloadRemaining) / 4.0; // round to increments of 0.25
+        }
+        else
+        {
+            return 1.0; // HUD will draw ammo icon all in red to show can't fire MG - either totally out of ammo or a net client that doesn't have the variables to calculate progress
+        }
+    }
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
@@ -247,4 +276,5 @@ simulated function ShrinkHUD();
 defaultproperties
 {
     OverlayCenterSize=1.000000
+    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }
