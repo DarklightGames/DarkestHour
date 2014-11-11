@@ -6,7 +6,7 @@
 //
 // German SturmHaubitze 42 - Gr.38 Hl/C HEAT - DamageType
 //==============================================================================
-class DH_StuH42CannonShellDamageHEAT extends DH_HEATCannonShellDamage // Matt: changed class extended
+class DH_StuH42CannonShellDamageHEAT extends DH_HEATCannonShellDamage
       abstract;
 
 defaultproperties

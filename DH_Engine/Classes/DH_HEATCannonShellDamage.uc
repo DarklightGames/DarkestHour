@@ -1,4 +1,4 @@
-class DH_HEATCannonShellDamage extends ROTankShellExplosionDamage // Matt: new class
+class DH_HEATCannonShellDamage extends ROTankShellExplosionDamage
       abstract;
 
 defaultproperties

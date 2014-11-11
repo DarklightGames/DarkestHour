@@ -311,7 +311,7 @@ defaultproperties
 {
      bHasTracer=true
      TracerEffect=Class'DH_Effects.DH_RedTankShellTracerBig'
-     ShellImpactDamage=Class/*DH_Vehicles.*/'DH_TankShellImpactDamage' // Matt: removed
+     ShellImpactDamage=Class'DH_TankShellImpactDamage'
      ImpactDamage=400
      VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
      DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
@@ -333,7 +333,7 @@ defaultproperties
      Damage=100.000000
      DamageRadius=5.000000
      MomentumTransfer=10000.000000
-     MyDamageType=Class/*DH_Vehicles.*/'DH_TankShellAPExplosionDamage' // Matt: removed
+     MyDamageType=Class'DH_TankShellAPExplosionDamage'
      ExplosionDecal=Class'ROEffects.TankAPMarkDirt'
      ExplosionDecalSnow=Class'ROEffects.TankAPMarkSnow'
      DrawType=DT_StaticMesh

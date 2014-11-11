@@ -6,11 +6,11 @@
 //
 // Panzer III Ausf. N - Gr.38 Hl/C HEAT - DamageType
 //==============================================================================
-class DH_PanzerIIINCannonShellDamageHEAT extends DH_HEATCannonShellDamage // Matt: changed class extended
+class DH_PanzerIIINCannonShellDamageHEAT extends DH_HEATCannonShellDamage
       abstract;
 
 defaultproperties
 {
-    APCDamageModifier=0.650000 // Matt: P4 & Stuh have 0.4, why different (but same as S105)?
+    APCDamageModifier=0.650000
     DeathString="%o was burnt up by %k's Panzer III HEAT shell."
 }

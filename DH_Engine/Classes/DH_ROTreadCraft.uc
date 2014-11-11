@@ -13,7 +13,7 @@ class DH_ROTreadCraft extends ROTreadCraft
 #exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
 #exec OBJ LOAD FILE=..\sounds\DH_AlliedVehicleSounds2.uax
 #exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx // Matt: added
+#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx
 
 struct ExitPositionPair
 {
@@ -3964,7 +3964,7 @@ defaultproperties
      EngineFireHEATChance=0.850000
      HullFireChance=0.250000
      HullFireHEATChance=0.500000
-     VehicleBurningDamType=Class/*DH_Vehicles.*/'DH_VehicleBurningDamType' // Matt: removed
+     VehicleBurningDamType=Class'DH_VehicleBurningDamType'
      PlayerFireDamagePerSec=15.000000
      bFirstHit=true
      FireDetonationChance=0.070000

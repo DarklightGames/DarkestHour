@@ -332,7 +332,7 @@ defaultproperties
      Health=800
      Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
      Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
-     DestroyedVehicleTexture=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest' // Matt: added
+     DestroyedVehicleTexture=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
      CollisionRadius=100.000000
      CollisionHeight=60.000000
      Begin Object Class=KarmaParamsRBFull Name=KParams0

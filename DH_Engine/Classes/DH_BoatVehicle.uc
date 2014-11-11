@@ -28,7 +28,7 @@ var     bool            bBoatFloat;
 */
 //var     array<BoatSprayEffect> BoatSpray; // FL, FR, RL, RR
 
-var     Material  DestroyedVehicleTexture; // Matt: added
+var     Material  DestroyedVehicleTexture; // Matt: added to remove literal reference to Higgins boat
 var     name      DestAnimName;
 var     float     DestAnimRate;
 
@@ -409,7 +409,7 @@ simulated event DestroyAppearance()
         DamagedEffect.Kill();
     }
 
-    //Become the dead vehicle mesh // Matt: removed as in this case the animation mesh is remaining
+    //Become the dead vehicle mesh // Matt: removed as in this case we aren't switching to a destroyed static mesh
 //  SetPhysics(PHYS_none);
 //  KSetBlockKarma(false);
 //  SetDrawType(DT_Mesh);
@@ -418,7 +418,7 @@ simulated event DestroyAppearance()
 //  Skins.length = 1;
     NetPriority = 2;
 
-    Skins[0] = DestroyedVehicleTexture; // Matt: made generic, was Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest';
+    Skins[0] = DestroyedVehicleTexture;
     LoopAnim(DestAnimName, DestAnimRate);
 }
 
@@ -456,8 +456,8 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 defaultproperties
 {
      DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-//   MaxPitchSpeed=600.000000
-//   BoatFloatTraceDistance=10000.000000
+//   MaxPitchSpeed=600.000000 // deprecated
+//   BoatFloatTraceDistance=10000.000000 // deprecated
      PointValue=1.000000
      ChangeUpPoint=1990.000000
      ChangeDownPoint=1000.000000

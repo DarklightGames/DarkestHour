@@ -532,7 +532,7 @@ defaultproperties
      ShellHitRockEffectClass=Class'DH_Effects.DH_TankMediumHEHitEffect'
      ShellHitWaterEffectClass=Class'DH_Effects.DH_TankMediumHEHitEffect'
      DamageRadius=300.000000
-     MyDamageType=Class/*'DH_Vehicles.*/'DH_HECannonShellDamage' // Matt: removed
+     MyDamageType=Class'DH_HECannonShellDamage'
      ExplosionDecal=Class'ROEffects.ArtilleryMarkDirt'
      ExplosionDecalSnow=Class'ROEffects.ArtilleryMarkSnow'
      LifeSpan=10.000000

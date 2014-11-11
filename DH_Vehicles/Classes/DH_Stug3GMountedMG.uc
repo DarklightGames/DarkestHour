@@ -263,7 +263,7 @@ defaultproperties
      FireAttachBone="gunner_int"
      FireEffectOffset=(Z=5.000000)
      FireEffectClass=Class'ROEngine.VehicleDamagedEffect'
-     VehicleBurningDamType=Class/*DH_Vehicles.*/'DH_VehicleBurningDamType' // Matt: removed
+     VehicleBurningDamType=Class'DH_VehicleBurningDamType'
      DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
      bUsesTracers=true

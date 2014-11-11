@@ -6,11 +6,11 @@
 //
 // American M4A3(105) 105mm tank - M67 HEAT - DamageType
 //==============================================================================
-class DH_Sherman105CannonShellDamageHEAT extends DH_HEATCannonShellDamage // Matt: changed class extended
+class DH_Sherman105CannonShellDamageHEAT extends DH_HEATCannonShellDamage
       abstract;
 
 defaultproperties
 {
-    APCDamageModifier=0.650000 // Matt: P4 & Stuh have 0.4, why different to Stuh (but same as P3)?
+    APCDamageModifier=0.650000
     DeathString="%o was burnt up by %k's Sherman(105) HEAT shell."
 }
