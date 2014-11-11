@@ -1986,33 +1986,6 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     }
 }
 
-function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
-{
-
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
-    {
-        DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-    }
-
-    if (HitDriver(Hitlocation, Momentum))
-    {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-    }
-
-    //reset everything
-    bWasHEATRound = false;
-    bProjectilePenetrated = false;
-    bWasShatterProne = false;
-    bRoundShattered=false;
-
-}
-
 // Returns the name of the various round types as well as a 0-based int
 // specifying which type is the active one
 simulated function int GetRoundsDescription(out array<string> descriptions)

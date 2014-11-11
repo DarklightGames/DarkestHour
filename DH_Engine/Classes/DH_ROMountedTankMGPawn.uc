@@ -246,5 +246,5 @@ simulated function ShrinkHUD();
 
 defaultproperties
 {
-     OverlayCenterSize=1.000000
+    OverlayCenterSize=1.000000
 }

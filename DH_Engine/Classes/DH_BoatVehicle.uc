@@ -28,10 +28,11 @@ var     bool            bBoatFloat;
 */
 //var     array<BoatSprayEffect> BoatSpray; // FL, FR, RL, RR
 
-var     name DestAnimName;
-var     float DestAnimRate;
+var     Material  DestroyedVehicleTexture; // Matt: added
+var     name      DestAnimName;
+var     float     DestAnimRate;
 
-var     float       PointValue;
+var     float     PointValue;
 
 struct ExitPositionPair
 {
@@ -40,6 +41,7 @@ struct ExitPositionPair
 };
 
 var bool bDebugExitPositions;
+
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
@@ -407,16 +409,16 @@ simulated event DestroyAppearance()
         DamagedEffect.Kill();
     }
 
-    //Become the dead vehicle mesh
-    SetPhysics(PHYS_none);
-    KSetBlockKarma(false);
-    SetDrawType(DT_Mesh);
-    KSetBlockKarma(true);
-    SetPhysics(PHYS_Karma);
-//    Skins.length = 1;
+    //Become the dead vehicle mesh // Matt: removed as in this case the animation mesh is remaining
+//  SetPhysics(PHYS_none);
+//  KSetBlockKarma(false);
+//  SetDrawType(DT_Mesh);
+//  KSetBlockKarma(true);
+//  SetPhysics(PHYS_Karma);
+//  Skins.length = 1;
     NetPriority = 2;
 
-    Skins[0]=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest';
+    Skins[0] = DestroyedVehicleTexture; // Matt: made generic, was Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest';
     LoopAnim(DestAnimName, DestAnimRate);
 }
 

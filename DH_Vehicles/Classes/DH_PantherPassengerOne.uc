@@ -1,5 +1,5 @@
 //============================================================
-// DH_PantherPassenger - added by Matt UK
+// DH_PantherPassenger
 //
 // Panzer V (Panther) tank passenger that rides on the back
 //============================================================

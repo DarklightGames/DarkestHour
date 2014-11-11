@@ -1,5 +1,5 @@
 //=======================================================================
-// DH_CromwellPassenger - added by Matt UK
+// DH_CromwellPassenger
 //
 // British Cruiser Tank Mk.VIII Cromwell passenger that rides on the back
 //=======================================================================

@@ -6,18 +6,12 @@
 //
 // Panzer IV - Gr.38 Hl/C HEAT - DamageType
 //==============================================================================
-class DH_PanzerIVCannonShellDamageHEAT extends ROTankShellExplosionDamage
+class DH_PanzerIVCannonShellDamageHEAT extends DH_HEATCannonShellDamage // Matt: changed class extended
       abstract;
 
 defaultproperties
 {
-     TankDamageModifier=0.020000
-     APCDamageModifier=0.400000
-     VehicleDamageModifier=0.850000
-     TreadDamageModifier=0.150000
-     DeathString="%o was burnt up by %k's Panzer IV HEAT shell."
-     bArmorStops=true
-     bExtraMomentumZ=false
-     KDeathVel=150.000000
-     HumanObliterationThreshhold=325
+    TreadDamageModifier=0.150000 // Matt: all other HEAT damage classes have 0.2, why different?
+    DeathString="%o was burnt up by %k's Panzer IV HEAT shell."
+    HumanObliterationThreshhold=325 // Matt: all other HEAT damage classes have 400, why different?
 }

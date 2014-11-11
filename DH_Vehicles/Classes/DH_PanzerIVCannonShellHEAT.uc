@@ -82,5 +82,6 @@ defaultproperties
      MaxSpeed=33073.000000
      Damage=450.000000
      DamageRadius=200.000000
+     MyDamageType=Class'DH_Vehicles.DH_PanzerIVCannonShellDamageHEAT' // Matt: added
      Tag="Gr.38 Hl/C"
 }

@@ -29,6 +29,6 @@ defaultproperties
      BallisticCoefficient=1.190000
      Speed=37357.000000
      MaxSpeed=37357.000000
-     MyDamageType=Class'DH_Vehicles.DH_HECannonShellDamageSmoke'
+     MyDamageType=Class/*'DH_Vehicles.*/'DH_HECannonShellDamageSmoke' // Matt: removed
      Tag="M89 WP"
 }

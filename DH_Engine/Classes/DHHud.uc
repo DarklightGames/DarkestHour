@@ -3201,7 +3201,6 @@ simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplica
     GRI.Objectives[current_obj].LabelCoords = label_coords;
 }
 
-/*
 // Matt: modified so if player is in a vehicle, the keybinds to GrowHUD & ShrinkHUD will call same named functions in the vehicle classes
 // When player is in a vehicle these functions do nothing to the HUD, but they can be used to add useful custom functionality to vehicles, especially as keys are -/+ by default
 exec function GrowHUD()
@@ -3257,7 +3256,6 @@ exec function ShrinkHUD()
         super.ShrinkHUD();
     }
 }
-*/
 
 defaultproperties
 {

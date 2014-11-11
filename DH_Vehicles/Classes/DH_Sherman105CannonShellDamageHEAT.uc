@@ -6,18 +6,11 @@
 //
 // American M4A3(105) 105mm tank - M67 HEAT - DamageType
 //==============================================================================
-class DH_Sherman105CannonShellDamageHEAT extends ROTankShellExplosionDamage
+class DH_Sherman105CannonShellDamageHEAT extends DH_HEATCannonShellDamage // Matt: changed class extended
       abstract;
 
 defaultproperties
 {
-     TankDamageModifier=0.020000
-     APCDamageModifier=0.650000
-     VehicleDamageModifier=0.850000
-     TreadDamageModifier=0.200000
-     DeathString="%o was burnt up by %k's Sherman(105) HEAT shell."
-     bArmorStops=true
-     bExtraMomentumZ=false
-     KDeathVel=150.000000
-     HumanObliterationThreshhold=400
+    APCDamageModifier=0.650000 // Matt: P4 & Stuh have 0.4, why different to Stuh (but same as P3)?
+    DeathString="%o was burnt up by %k's Sherman(105) HEAT shell."
 }

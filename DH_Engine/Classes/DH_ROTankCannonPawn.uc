@@ -706,21 +706,21 @@ simulated function ShrinkHUD();
 
 defaultproperties
 {
-     bShowRangeText=true
-     GunsightPositions=1
-     GunsightOpticsName="ScopeNameHere"
-     UnbuttonedPositionIndex=2
-     ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-     ManualPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-     ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-     ManualMinRotateThreshold=0.250000
-     ManualMaxRotateThreshold=2.500000
-     PoweredMinRotateThreshold=0.150000
-     PoweredMaxRotateThreshold=1.750000
-     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-     PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-     RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-     MaxRotateThreshold=1.500000
-     bDesiredBehindView=false
-     PeriscopePositionIndex=-1
+    bShowRangeText=true
+    GunsightPositions=1
+    GunsightOpticsName="ScopeNameHere"
+    UnbuttonedPositionIndex=2
+    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    ManualPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    ManualMinRotateThreshold=0.250000
+    ManualMaxRotateThreshold=2.500000
+    PoweredMinRotateThreshold=0.150000
+    PoweredMaxRotateThreshold=1.750000
+    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    MaxRotateThreshold=1.500000
+    bDesiredBehindView=false
+    PeriscopePositionIndex=-1
 }

@@ -13,6 +13,7 @@ class DH_ROTreadCraft extends ROTreadCraft
 #exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
 #exec OBJ LOAD FILE=..\sounds\DH_AlliedVehicleSounds2.uax
 #exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
+#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx // Matt: added
 
 struct ExitPositionPair
 {
@@ -334,7 +335,7 @@ simulated function SetupTreads()
     }
 }
 
-// Matt: modified to fix RO bug where players can't get into a rider position on a driven tank if 1st rider position is already occupied
+// Modified to fix RO bug where players can't get into a rider position on a driven tank if 1st rider position is already occupied
 // Original often returned MG as ClosestWeaponPawn, which infantry cannot use, so we now check player can use weapon pawn & it's available)
 function Vehicle FindEntryVehicle(Pawn P)
 {
@@ -3963,7 +3964,7 @@ defaultproperties
      EngineFireHEATChance=0.850000
      HullFireChance=0.250000
      HullFireHEATChance=0.500000
-     VehicleBurningDamType=Class'DH_Vehicles.DH_VehicleBurningDamType'
+     VehicleBurningDamType=Class/*DH_Vehicles.*/'DH_VehicleBurningDamType' // Matt: removed
      PlayerFireDamagePerSec=15.000000
      bFirstHit=true
      FireDetonationChance=0.070000
