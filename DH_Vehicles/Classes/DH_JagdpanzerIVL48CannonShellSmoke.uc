@@ -40,5 +40,6 @@ defaultproperties
      BallisticCoefficient=2.100000
      Speed=33073.000000
      MaxSpeed=33073.000000
+     MyDamageType=Class'DH_Engine.DH_HECannonShellDamageSmoke' // Matt: added instead of inheriting AP shell's default DH_TankShellAPExplosionDamage
      Tag="Nbgr.Kw.K"
 }

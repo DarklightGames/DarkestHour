@@ -201,6 +201,7 @@ defaultproperties
      Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Right_Drive_Wheel'
 
      VehicleMass=11.500000
+     bDrawDriverInTP=false // Matt: added as driver cannot be seen (matches ausf.N)
      bFPNoZFromCameraPitch=true
      DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
      DriveAnim="VPanzer3_driver_idle_close"

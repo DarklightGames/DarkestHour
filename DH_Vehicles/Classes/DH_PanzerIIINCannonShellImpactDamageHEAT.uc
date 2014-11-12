@@ -13,4 +13,5 @@ defaultproperties
 {
      APCDamageModifier=0.750000
      DeathString="%o was killed by %k's Panzer III Ausf.N HEAT shell."
+     bArmorStops=true // Matt: added so side skirts stop HEAT round
 }

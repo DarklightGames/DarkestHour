@@ -19,5 +19,5 @@ defaultproperties
      KDeathVel=300.000000
      KDeathUpKick=60.000000
      VehicleMomentumScaling=1.600000
-     HumanObliterationThreshhold=425
+     HumanObliterationThreshhold=450 // Matt: increased from 425 to match jagdpanther, which has same gun & round
 }
