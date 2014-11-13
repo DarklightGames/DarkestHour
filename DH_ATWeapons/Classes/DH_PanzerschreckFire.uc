@@ -85,7 +85,7 @@ function PlayFiring()
 {
     local name Anim;
 
-    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
 
     if (Weapon.Mesh != none)
     {
@@ -132,7 +132,7 @@ function PlayFiring()
         }
     }
 
-//  Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+//  Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
 
     ClientPlayForceFeedback(FireForce);  // jdf
 

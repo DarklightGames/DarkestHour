@@ -107,7 +107,7 @@ function UsedBy(Pawn user)
 
         if (user.GetTeamNum() == AXIS_TEAM_INDEX)
         {
-            user.PlaySound(GermanRequestSound, SLOT_none, 3.0, false, 100, 1.0,true);
+            user.PlaySound(GermanRequestSound, SLOT_None, 3.0, false, 100, 1.0,true);
 
             SetTimer(GetSoundDuration(GermanRequestSound), false);
         }
@@ -117,13 +117,13 @@ function UsedBy(Pawn user)
             {
                 case NATION_USA:
                 case NATION_Canada:
-                    user.PlaySound(RussianRequestSound, SLOT_none, 3.0, false, 100, 1.0, true);
+                    user.PlaySound(RussianRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
 
                     SetTimer(GetSoundDuration(RussianRequestSound), false);
 
                     break;
                 case NATION_Britain:
-                    user.PlaySound(CommonwealthRequestSound, SLOT_none, 3.0, false, 100, 1.0, true);
+                    user.PlaySound(CommonwealthRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
 
                     SetTimer(GetSoundDuration(CommonwealthRequestSound), false);
 

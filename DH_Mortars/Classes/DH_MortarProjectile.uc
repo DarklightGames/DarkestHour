@@ -120,7 +120,7 @@ simulated function Tick(float DeltaTime)
     if (Level.NetMode != NM_DedicatedServer && Velocity.Z < 0 && ShouldPlayDescendingSound(HitLocation))
     {
         GetDescendingSoundPitch(Pitch, HitLocation);
-        PlaySound(DescendingSound, SLOT_none, 8.0, false, 512, Pitch, true);
+        PlaySound(DescendingSound, SLOT_None, 8.0, false, 512, Pitch, true);
         Disable('Tick');
     }
 
@@ -286,7 +286,7 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
     GetHitSound(HitSound, HitSurfaceType);
 
     Spawn(HitEmitterClass, , , HitLocation, rotator(HitNormal));
-    PlaySound(HitSound, SLOT_none, 4.0 * TransientSoundVolume);
+    PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
 }
 
 simulated function GetHitEmitterClass(out class<Emitter> HitEmitterClass, ESurfaceTypes SurfaceType)

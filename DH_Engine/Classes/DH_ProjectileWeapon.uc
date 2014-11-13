@@ -2182,7 +2182,7 @@ simulated function Fire(float F)
     player = DHPlayer(Instigator.Controller);
 
     if (AmmoAmount(0) < 1 && !IsBusy())
-        PlayOwnedSound(FireMode[0].NoAmmoSound,SLOT_none,1.0,,,,false);
+        PlayOwnedSound(FireMode[0].NoAmmoSound,SLOT_None,1.0,,,,false);
 }
 
 //------------------------------------------------------------------------------

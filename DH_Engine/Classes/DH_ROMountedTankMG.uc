@@ -94,7 +94,7 @@ function HandleReload()
         NumMags--;
         NetUpdateTime = Level.TimeSeconds - 1;
         SetTimer(GetSoundDuration(ReloadSound), false);
-        PlaySound(ReloadSound, SLOT_none,1.5,, 25, ,true);
+        PlaySound(ReloadSound, SLOT_None,1.5,, 25, ,true);
     }
 }
 

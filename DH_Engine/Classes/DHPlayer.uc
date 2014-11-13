@@ -1623,11 +1623,11 @@ function HitThis(ROArtilleryTrigger RAT)
 
         if (PawnTeam ==  0)
         {
-            RAT.PlaySound(RAT.GermanConfirmSound, SLOT_none, 3.0, false, 100, 1.0,true);
+            RAT.PlaySound(RAT.GermanConfirmSound, SLOT_None, 3.0, false, 100, 1.0,true);
         }
         else
         {
-            RAT.PlaySound(RAT.RussianConfirmSound, SLOT_none, 3.0, false, 100, 1.0,true);
+            RAT.PlaySound(RAT.RussianConfirmSound, SLOT_None, 3.0, false, 100, 1.0,true);
         }
 
         GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
@@ -1648,11 +1648,11 @@ function HitThis(ROArtilleryTrigger RAT)
     {
         if (PawnTeam ==  0)
         {
-            RAT.PlaySound(RAT.GermanDenySound, SLOT_none, 3.0, false, 100,1.0,true);
+            RAT.PlaySound(RAT.GermanDenySound, SLOT_None, 3.0, false, 100,1.0,true);
         }
         else
         {
-            RAT.PlaySound(RAT.RussianDenySound, SLOT_none, 3.0, false, 100,1.0,true);
+            RAT.PlaySound(RAT.RussianDenySound, SLOT_None, 3.0, false, 100,1.0,true);
         }
 
         TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + ROTeamGame(Level.Game).LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;

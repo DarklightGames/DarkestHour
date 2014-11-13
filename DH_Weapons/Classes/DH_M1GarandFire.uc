@@ -21,14 +21,14 @@ function ServerPlayFiring()
     {
         if (FirePingSounds.Length > 0)
         {
-            Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+            Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_None,FireVolume,,,,false);
         }
     }
     else
     {
         if (FireSounds.Length > 0)
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
         }
     }
 }
@@ -73,14 +73,14 @@ function PlayFiring()   // overridden to make last round eject clip & add audibl
         {
             if (FirePingSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
         else
         {
             if (FireSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
     }
@@ -90,14 +90,14 @@ function PlayFiring()   // overridden to make last round eject clip & add audibl
         {
             if (FirePingSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FirePingSounds[Rand(FirePingSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
         else
         {
             if (FireSounds.Length > 0)
             {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
             }
         }
     }

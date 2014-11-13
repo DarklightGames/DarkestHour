@@ -458,7 +458,7 @@ function ServerStartEngine()
                 AmbientSound = none;
 
                 if (ShutDownSound != none)
-                PlaySound(ShutDownSound, SLOT_none, 1.0, , 300.0);
+                PlaySound(ShutDownSound, SLOT_None, 1.0, , 300.0);
 
                 Throttle=0;
                 ThrottleAmount=0;
@@ -474,7 +474,7 @@ function ServerStartEngine()
             if (Level.TimeSeconds - IgnitionSwitchTime > 4.0)
             {
                 if (StartUpSound != none)
-                PlaySound(StartUpSound, SLOT_none, 1.0, , 300.0);
+                PlaySound(StartUpSound, SLOT_None, 1.0, , 300.0);
 
                 if (IdleSound != none)
                 AmbientSound = IdleSound;

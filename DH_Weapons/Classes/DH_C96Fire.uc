@@ -40,7 +40,7 @@ state FireLoop
     {
         if (!ROWeapon(Weapon).UsingAutoFire())
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
         }
     }
 
@@ -80,7 +80,7 @@ state FireLoop
                     }
                 }
 
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
 
                 ClientPlayForceFeedback(FireForce);  // jdf
 
@@ -110,7 +110,7 @@ state FireLoop
         {
             Weapon.AnimStopLooping();
             PlayAmbientSound(none);
-            Weapon.PlayOwnedSound(FireEndSound,SLOT_none,FireVolume,,AmbientFireSoundRadius);
+            Weapon.PlayOwnedSound(FireEndSound,SLOT_None,FireVolume,,AmbientFireSoundRadius);
             Weapon.StopFire(ThisModeNum);
 
             //If we are not switching weapons, go to the idle state

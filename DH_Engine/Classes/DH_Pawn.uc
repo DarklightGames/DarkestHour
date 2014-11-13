@@ -579,7 +579,7 @@ simulated function ProcessHitFX()
             if (Headgear != none)
             {
                 if (DH_Headgear(HeadGear).bIsHelmet)
-                    DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
+                    DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 100.0);
                 HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
             }
         }
@@ -766,7 +766,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
         if (cumulativeDamage >=  Health)
         {
             if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
+                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
             TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
         }
     }
@@ -778,7 +778,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
             return;
 
         if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
         TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
     }
 }

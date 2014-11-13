@@ -37,7 +37,7 @@ simulated function PostNetBeginPlay()
         Spawn(HitEffects[ST].HitDecal, self,, Location, Rotation);
 
     if (HitEffects[ST].HitSound != none)
-        PlaySound(HitEffects[ST].HitSound, SLOT_none, 30.0, false, 100.0);
+        PlaySound(HitEffects[ST].HitSound, SLOT_None, 30.0, false, 100.0);
 
     if (HitEffects[ST].HitEffect != none)
         Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));

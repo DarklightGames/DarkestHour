@@ -72,7 +72,7 @@ function PlayFiring()
 
     if (FireSounds.Length > 0)
     {
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
     }
 
     ClientPlayForceFeedback(FireForce);

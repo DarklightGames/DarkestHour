@@ -156,7 +156,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                     AmbientSoundScaling = AltFireSoundScaling;
                 }
                 else
-                    PlayOwnedSound(AltFireSoundClass, SLOT_none, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
+                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
             }
             else
             {
@@ -164,7 +164,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                     AmbientSound = FireSoundClass;
                 else
                 {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_none, FireSoundVolume/255.0,, FireSoundRadius,, false);
+                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);
                 }
             }
         }
