@@ -1,10 +1,7 @@
-// class: DHMinefield_ATMine
-// Auther: Theel
-// Date: 2-06-10
-// Purpose:
-// A new mine that only explodes on vehicles and can damage them (large tanks often detracts)
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHMinefield_ATMine extends ROMine;
 

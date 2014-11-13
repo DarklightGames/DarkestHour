@@ -1,7 +1,7 @@
-//-----------------------------------------------------------
-//DHBrowser_ServerListPageInternet
-//-----------------------------------------------------------
-//class DHBrowser_ServerListPageInternet extends UT2k4Browser_ServerListPageInternet;
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHBrowser_ServerListPageInternet extends ROUT2k4Browser_ServerListPageInternet;
 

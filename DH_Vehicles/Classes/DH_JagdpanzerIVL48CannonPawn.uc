@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_JagdpanzerIVL48CannonPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Jagdpanzer IV L/48 tank cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_JagdpanzerIVL48CannonPawn extends DH_JagdpanzerIVCannonPawn;
 
 defaultproperties

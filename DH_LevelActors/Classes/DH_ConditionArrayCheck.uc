@@ -1,10 +1,7 @@
-// class: DH_ConditionArrayCheck
-// Auther: Theel
-// Date: 10-06-10
-// Purpose:
-// Ability to check a sequence of conditiion triggers, triggering an event if true/false
-// Problems/Limitations:
-// Because this might be called quite often it's better to get references of Conditions than to loop them each trigger
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ConditionArrayCheck extends DH_LevelActors;
 

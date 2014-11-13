@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz251Gun
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Sdkfz 251 Halftack mounted MG34
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz251Gun extends Sdkfz251Gun;
 
 defaultproperties

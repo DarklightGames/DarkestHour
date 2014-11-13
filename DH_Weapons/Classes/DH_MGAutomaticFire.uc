@@ -1,10 +1,7 @@
-//===================================================================
-// ROMGAutomaticFire
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Automatic fire class with MG specific functionality
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MGAutomaticFire extends DH_FastAutoFire
     abstract;

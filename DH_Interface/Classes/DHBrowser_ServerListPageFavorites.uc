@@ -1,6 +1,8 @@
-//-----------------------------------------------------------
-//
-//-----------------------------------------------------------
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHBrowser_ServerListPageFavorites extends UT2k4Browser_ServerListPageFavorites;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)

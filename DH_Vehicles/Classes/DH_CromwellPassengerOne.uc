@@ -1,8 +1,8 @@
-//=======================================================================
-// DH_CromwellPassenger
-//
-// British Cruiser Tank Mk.VIII Cromwell passenger that rides on the back
-//=======================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_CromwellPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties

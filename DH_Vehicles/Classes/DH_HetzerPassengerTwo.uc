@@ -1,8 +1,8 @@
-//===================================================================
-// DH_HetzerPassenger
-//
-// Hetzer passenger that rides on engine deck
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_HetzerPassengerTwo extends DH_HetzerPassengerOne;
 
 defaultproperties

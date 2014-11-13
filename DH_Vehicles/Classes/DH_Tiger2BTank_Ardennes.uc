@@ -1,12 +1,8 @@
-//===================================================================
-// Tiger2BTank_Ardennes (Tiger II #322 at Ardennes Offensive - Dec. 1944)
-//
-// Original Content - Tripwire Interactive Copyright (C) 2004-2008
-// Models,Animations,Statics, and Textures: Paul Pepera (c) 2007-2008 (Capt.Obvious)
-// Coding and Sound Editing: Eric Parris (c) 2008 (Shurek)
-//
-// Konigstiger,King Tiger,Tiger II - Pzkpfw VI Ausf B (SdKfz 182)
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Tiger2BTank_Ardennes extends DH_Tiger2BTank;
 
 

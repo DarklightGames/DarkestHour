@@ -1,8 +1,8 @@
-//============================================================
-// DH_PantherPassenger
-//
-// Panzer V (Panther) tank passenger that rides on the back
-//============================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PantherPassengerFour extends DH_PantherPassenger;
 
 defaultproperties

@@ -1,10 +1,7 @@
-// class: DH_TriggerArrayActor
-// Auther: Theel
-// Date: 12-19-10
-// Purpose:
-// Adds the ability to easily trigger multiple events from one event (dont' do too many!)
-// Problems/Limitations:
-// Not optimized because lots of events, has no random abilities,
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_TriggerArrayActor extends DH_LevelActors;
 

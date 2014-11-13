@@ -1,8 +1,9 @@
-//===================================================================
-// DH_PantherGCannonPawn - Snow variant 2
-//==================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
-class  DH_PantherGCannonPawn_SnowTwo extends DH_PantherGCannonPawn;
+class DH_PantherGCannonPawn_SnowTwo extends DH_PantherGCannonPawn;
 
 defaultproperties
 {

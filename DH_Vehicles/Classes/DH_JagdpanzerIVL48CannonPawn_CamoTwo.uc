@@ -1,11 +1,9 @@
-//===================================================================
-// JagdpanzerIVL48CannonPawn
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Stug III tank destroyer cannon pawn
-//==================================================================
- class  DH_JagdpanzerIVL48CannonPawn_CamoTwo extends DH_JagdpanzerIVL48CannonPawn;
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
+class DH_JagdpanzerIVL48CannonPawn_CamoTwo extends DH_JagdpanzerIVL48CannonPawn;
 
 defaultproperties
 {

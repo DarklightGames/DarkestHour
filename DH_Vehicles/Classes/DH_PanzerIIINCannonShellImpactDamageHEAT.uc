@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIIINCannonShellImpactDamageHEAT
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Panzer III Ausf. N - Gr.38 Hl/C HEAT - ImpactDamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIIINCannonShellImpactDamageHEAT extends ROTankShellImpactDamage
       abstract;
 

@@ -1,9 +1,8 @@
-//================================================== ===========================
-// VariableTimedMover
-// Allows custom MoveTimes per key (modified from a version by Fataloverdose)
-// by SuperApe -- Sept 2005
-// Modified again by PsYcH0_Ch!cKeN -- July 2008
-//================================================== ===========================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHVariableTimedMover extends Mover;
 
 var() bool bActAsClientMover;

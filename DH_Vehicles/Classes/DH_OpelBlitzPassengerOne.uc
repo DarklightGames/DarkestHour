@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_OpelBlitzPassengerOne
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Opel Blitz cargo truck - passenger
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_OpelBlitzPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties

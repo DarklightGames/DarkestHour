@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanTankA_M4A176W_Early
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A1(76)W (Sherman) tank - without HVAP
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanTankA_M4A176W_Early extends DH_ShermanTankA_M4A176W;
 
 defaultproperties

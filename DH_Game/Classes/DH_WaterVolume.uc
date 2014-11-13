@@ -1,20 +1,7 @@
-//=============================================================================
-// DH_ShallowWaterVol
-//=============================================================================
-// Author   | Andrew Theel
-//-----------------------------------------------------------------------------
-// Date     | Augest 20th, 2014
-//-----------------------------------------------------------------------------
-// Purpose  | Water volume to stop many bugs and annoyances with normal vol
-//          | Uses new emitters for projectile effects
-//-----------------------------------------------------------------------------
-// Limits   | Not setup for deep areas as all water "physics" are disabled.
-//-----------------------------------------------------------------------------
-// To Do    | Remake with DH_Pawn to have proper effects/swimming
-//=============================================================================
-
-//Remove Embedded Actors references
-//Clean up code
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_WaterVolume extends PhysicsVolume;
 

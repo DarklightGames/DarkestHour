@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_CromwellCannonShellSmoke
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M4 American Sherman tank - 75mm M89 Smoke
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_CromwellCannonShellSmoke extends DH_ROTankCannonShellSmoke;
 
 defaultproperties

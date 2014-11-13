@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_M2MortarWeapon extends DH_MortarWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Mortars_1st.ukx

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanTank_DDay
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A1 (Sherman) 75mm tank - "swimming" version
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanTank_DDay extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sherman_anm.ukx

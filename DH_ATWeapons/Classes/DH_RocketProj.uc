@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_RocketProj
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for all Darkest Hour Anti-Vehicle Rockets
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_RocketProj extends DH_ROAntiVehicleProjectile
       config(DH_Penetration);
 

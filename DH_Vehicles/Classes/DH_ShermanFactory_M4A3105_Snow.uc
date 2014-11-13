@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanFactory_M4A3105
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3(105) 105mm tank - Factory class
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanFactory_M4A3105_Snow extends DH_ShermanFactory_M4A3105;
 
 defaultproperties

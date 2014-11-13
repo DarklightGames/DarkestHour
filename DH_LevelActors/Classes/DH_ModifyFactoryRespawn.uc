@@ -1,10 +1,7 @@
-// class: DH_ModifyFactoryRespawn
-// Auther: Theel
-// Date: 08-05-11
-// Purpose:
-// Ability to modify factorys respawnlimit (reinforcements)
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyFactoryRespawn extends DH_ModifyActors;
 

@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Flakvierling38Gun extends DH_ATGun;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Flakvierling38_stc.usx

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz2341CannonShell
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 20mm Pz.Gr.AP
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz2341CannonShell extends DH_GermanTankCannonShell;
 
 defaultproperties

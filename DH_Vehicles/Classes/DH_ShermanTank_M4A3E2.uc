@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanTank_M4A3E2
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3E2(75)W (Sherman 'Jumbo') 75mm assault tank
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanTank_M4A3E2 extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A3E2_anm.ukx

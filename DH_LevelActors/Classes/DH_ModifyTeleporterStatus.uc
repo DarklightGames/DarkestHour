@@ -1,10 +1,7 @@
-// class: DH_ModifyTeleporterStatus
-// Auther: Theel
-// Date: 10-03-10
-// Purpose:
-// Ability to activate, deactivate, and change destination of a teleporter based on event.
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyTeleporterStatus extends DH_ModifyActors;
 

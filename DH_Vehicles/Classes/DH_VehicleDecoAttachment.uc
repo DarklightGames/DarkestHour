@@ -1,8 +1,8 @@
-//=============================================================================
-// DH_VehicleDecorationAttachment
-//
-// Allows us to attach some cool stuff to the vehicles - camouflage, MG's, etc
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_VehicleDecoAttachment extends RODummyAttachment
     abstract;
 

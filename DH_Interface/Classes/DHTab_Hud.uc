@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHTab_Hud extends ROTab_Hud;
 
 var automated moCheckBox    ch_SimpleColours;

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanTank_M4A310_Snow
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3(105) - 105mm Howitzer
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanTank_M4A3105_Snow extends DH_ShermanTank_M4A3105;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex2.utx

@@ -1,10 +1,7 @@
-// class: DH_TeamWinRound
-// Auther: Theel
-// Date: 9-28-10
-// Purpose:
-// Adds the ability to win a round from event
-// Problems/Limitations:
-// Will cause roundover loop if not properly used by leveler
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_TeamWinRound extends DH_LevelActors;
 

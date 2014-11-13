@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_WolverineTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M10 American tank destroyer "Wolverine"
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_WolverineTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Wolverine_anm.ukx

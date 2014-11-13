@@ -1,8 +1,8 @@
 //==============================================================================
-// DH_HetzerVehicleMessage
-//
-// Custom messages concerning the remote MG or the driver exiting
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_HetzerVehicleMessage extends ROVehicleMessage;
 
 var(Messages) localized string CannotExit;

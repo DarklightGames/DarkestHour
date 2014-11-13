@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Marder3MPassengerOne extends DH_Marder3MPassenger;
 
 defaultproperties

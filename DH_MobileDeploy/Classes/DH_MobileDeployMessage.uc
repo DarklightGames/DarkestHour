@@ -1,4 +1,7 @@
-//MDV messages used by teleporter and vehicle (deny entry)
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MobileDeployMessage extends LocalMessage;
 

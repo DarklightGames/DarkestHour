@@ -1,10 +1,7 @@
-// class: DHMinefield
-// Auther: Theel
-// Date: 2-06-10
-// Purpose:
-// Placeholder for any possible future for the class
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHMinefield extends ROMinefield;
 

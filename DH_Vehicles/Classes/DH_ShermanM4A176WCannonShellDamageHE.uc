@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanM4A176WCannonShellDamageHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M4 American Sherman Tank - 76mm M42A1 HE
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanM4A176WCannonShellDamageHE extends ROTankShellExplosionDamage;
 
 defaultproperties

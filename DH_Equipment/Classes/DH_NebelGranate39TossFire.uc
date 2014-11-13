@@ -1,12 +1,7 @@
-//=============================================================================
-// NebelGranate39TossFire
-//=============================================================================
-// grenade toss firing class for the German NebelHandGranate 39 smoke grenade
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2006 Tripwire Interactive LLC
-// - John "Ramm-Jaeger" Gibson
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_NebelGranate39TossFire extends DH_StielGranateTossFire;
 

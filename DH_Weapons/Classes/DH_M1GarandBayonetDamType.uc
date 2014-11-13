@@ -1,11 +1,7 @@
-//=====================================================
-// Kar98BayonetDamType
-// started by Antarian 9/17/03
-//
-// Copyright (C) 2003 Jeffrey Nakai
-//
-// class that handles the Kar98 bayonet damage type
-//=====================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_M1GarandBayonetDamType extends ROWeaponBayonetDamageType
     abstract;

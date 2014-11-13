@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_AchillesCannonShell
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M10 British tank destroyer "Achilles IC" - APDS Mk.I Discarding Sabot Shot
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_AchillesCannonShellAPDS extends DH_ROTankCannonShellAPDS;
 
 defaultproperties

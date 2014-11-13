@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_M3A1HalftrackTransport_Snow
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Allied M3A1 Halftrack troop/supply transport - winter version
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_M3A1HalftrackTransport_Snow extends DH_M3A1HalftrackTransport;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx

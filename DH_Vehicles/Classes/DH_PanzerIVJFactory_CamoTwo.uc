@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIVJFactory_CamoTwo
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzer IV Ausf. J tank factory - camo two (ambush) variant
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIVJFactory_CamoTwo extends DH_PanzerIVJFactory;
 
 defaultproperties

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ROTankCannonShellHVAP90
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for APCR/HVAP projectiles - 90mm
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ROTankCannonShellHVAP90 extends DH_ROTankCannonShell;
 
 simulated function ProcessTouch(Actor Other, vector HitLocation)

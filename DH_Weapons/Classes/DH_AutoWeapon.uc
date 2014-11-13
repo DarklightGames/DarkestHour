@@ -1,11 +1,7 @@
-//=====================================================
-// ROAutoWeapon
-// Created by Antarian on 8/4/03
-//
-// Copyright (C) 2003 Jeffrey Nakai
-//
-// Base class for the Red Orchestra Auto Weapons
-//=====================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_AutoWeapon extends DH_ProjectileWeapon
     abstract;

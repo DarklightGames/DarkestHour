@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerschreckRocket
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzerschreck 54 RPzB.Gr.4992 rocket
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerschreckRocket extends DH_RocketProj; //PanzerFaustRocket;
 
 defaultproperties

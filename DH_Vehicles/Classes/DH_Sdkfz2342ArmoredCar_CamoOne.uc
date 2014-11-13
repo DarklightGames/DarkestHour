@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz2342ArmoredCar_CamoOne
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Sdkfz 234/2 German Armored Reconnaisance Car
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz2342ArmoredCar_CamoOne extends DH_Sdkfz2342ArmoredCar;
 
 

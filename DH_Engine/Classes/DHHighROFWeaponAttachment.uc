@@ -1,12 +1,7 @@
-//=============================================================================
-// DHHighROFWeaponAttachment
-//=============================================================================
-// Modified ROHighROFWeaponAttachment class that more accurately
-// represents tracer and client bullet trajectory across the network.
-//=============================================================================
-// Darkest Hour Source
-// Copyright (C) 2011 Colin "Dark Nation" Basnett
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHHighROFWeaponAttachment extends ROWeaponAttachment
     abstract;

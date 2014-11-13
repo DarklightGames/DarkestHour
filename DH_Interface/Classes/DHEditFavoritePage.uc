@@ -1,6 +1,8 @@
 //==============================================================================
-//  DHEditFavoritePage
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DHEditFavoritePage extends DHBrowser_OpenIP;
 
 var automated GUILabel l_name;

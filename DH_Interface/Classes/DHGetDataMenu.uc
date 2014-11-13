@@ -1,6 +1,8 @@
 //==============================================================================
-//  DHGetDataMenu
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DHGetDataMenu extends UT2K4GetDataMenu;
 
 defaultproperties

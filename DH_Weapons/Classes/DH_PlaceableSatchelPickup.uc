@@ -1,11 +1,8 @@
-//===================================================================
-// AB2 version of worluk's ROSatchelPickup
-//
-// Copyright (C) 2006 Tobias "worluk"  Engel
-// based on the ROPanzerFaustPickup class of TWI
-//
-// A placeable Satchel pickup for mappers to put in thier map
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PlaceableSatchelPickup extends ROPlaceableAmmoPickup;
 
 var() class<Inventory> WeaponType;

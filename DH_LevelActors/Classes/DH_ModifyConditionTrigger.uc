@@ -1,10 +1,7 @@
-// class: DH_ModifyConditionTrigger
-// Auther: Theel
-// Date: 10-04-10
-// Purpose:
-// Ability to easily change to condition triggers and works will with ConditionArrayCheck
-// Problems/Limitations:
-// Doesn't support array of names
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyConditionTrigger extends DH_ModifyActors;
 

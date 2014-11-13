@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ROTreadCraft
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for all DH Tanks and Armored Fighting Vehicles
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ROTreadCraft extends ROTreadCraft
         abstract;
 

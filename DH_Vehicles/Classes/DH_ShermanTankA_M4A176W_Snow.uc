@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanTankA_M4A176W_Snow
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A1(76)W (Sherman) tank - winter version
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanTankA_M4A176W_Snow extends DH_ShermanTankA_M4A176W;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex2.utx

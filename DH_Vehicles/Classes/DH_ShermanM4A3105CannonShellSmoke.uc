@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanM4A3105CannonShellSmoke
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American 105mm howitzer M60 WP smoke shell
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanM4A3105CannonShellSmoke extends DH_ShermanCannonShellSmoke;
 
 

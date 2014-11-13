@@ -1,10 +1,8 @@
-//===================================================================
-// DH_Stug3GPassenger
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// StuG passenger that rides on engine deck
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Stug3GPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties

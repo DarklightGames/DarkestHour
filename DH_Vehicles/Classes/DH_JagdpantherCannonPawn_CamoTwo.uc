@@ -1,12 +1,9 @@
-//===================================================================
-// DH_JagdpantherCannonPawn
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Jagpanther tank destroyer cannon pawn
-//==================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
-class  DH_JagdpantherCannonPawn_CamoTwo extends DH_JagdpantherCannonPawn;
+class DH_JagdpantherCannonPawn_CamoTwo extends DH_JagdpantherCannonPawn;
 
 defaultproperties
 {

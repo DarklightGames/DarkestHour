@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanFactory_M4A376W
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3(75)W 76mm tank - Factory class
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanFactory_M4A376W extends DH_ShermanFactory;
 
 defaultproperties

@@ -1,8 +1,9 @@
-//===================================================================
-// DHTigerTankCannonPawn
-//==================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
-class  DH_TigerCannonPawn_CamoOne extends DH_TigerCannonPawn_Late;
+class DH_TigerCannonPawn_CamoOne extends DH_TigerCannonPawn_Late;
 
 defaultproperties
 {

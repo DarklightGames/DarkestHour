@@ -1,10 +1,7 @@
-// class: DH_LevelActors
-// Auther: Theel
-// Date: 11-07-10
-// Purpose:
-// Serves as the base class for modify actors
-// Problems/Limitations:
-//
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyActors extends DH_LevelActors;
 

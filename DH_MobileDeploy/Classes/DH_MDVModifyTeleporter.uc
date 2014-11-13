@@ -1,10 +1,7 @@
-// class: DH_MDVModifyTeleporter
-// Auther: Theel
-// Date: 2-02-11
-// Purpose:
-// Ability to work with the MDV teleporter telling it to increment, decrement, or change priority
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MDVModifyTeleporter extends Actor
     hidecategories(Object,Movement,Lighting,LightColor,Karma,Force,Display,Advanced,Sound)

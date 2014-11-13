@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sherman105CannonShellDamageHEAT
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3(105) 105mm tank - M67 HEAT - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sherman105CannonShellDamageHEAT extends DH_HEATCannonShellDamage
       abstract;
 

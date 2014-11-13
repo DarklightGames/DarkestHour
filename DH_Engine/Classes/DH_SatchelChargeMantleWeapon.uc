@@ -1,12 +1,7 @@
-//============================================================================
-// ROGrenadeWeapon
-// Created by Antarian on 1/11/04 as ROGrenadeWeapon
-// Renamed ROExplosiveWeapon by Antarian 1/11/04
-//
-// Copyright (C) 2003, 2004 Jeffrey Nakai
-//
-// Has the base weapon info for the red orchestra grenades
-//============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_SatchelChargeMantleWeapon extends SatchelCharge10lb10sWeapon
     abstract;

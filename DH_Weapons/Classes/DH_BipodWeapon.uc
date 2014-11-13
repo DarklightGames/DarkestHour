@@ -1,12 +1,7 @@
-//=============================================================================
-// ROBipodWeapon
-//=============================================================================
-// Base Class for weapons that use bipods. Still contains a lot of Ant's
-// legacy MG bipod code. Clear that up as you have time.
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2005 John "Ramm-Jaeger" Gibson
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_BipodWeapon extends DH_ProjectileWeapon
     abstract;

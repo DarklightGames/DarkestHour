@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanTankA_M4A176W
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A1(76)W (Sherman) tank
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanTankA_M4A176W extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A176W_anm.ukx

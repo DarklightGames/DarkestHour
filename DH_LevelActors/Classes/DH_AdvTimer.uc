@@ -1,10 +1,7 @@
-// class: DH_AdvTimer
-// Auther: Theel
-// Date: 10-04-10
-// Purpose:
-// Can use to call an event after a given time, can autostart or be called by a event
-// Limitations:
-// none! does what it's supposed to do
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_AdvTimer extends DH_LevelActors;
 

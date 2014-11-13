@@ -1,11 +1,8 @@
-//===================================================================
-// DH_ROTreadCraftB
-//
-// Code by Eric "Shurek" Parris
-// Source by Tripwire Interactive (c) 2004-2009
-//
-// Extended tank class to allow for textured pericope overlays(vs. mesh overlays)
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_ROTreadCraftB extends DH_ROTreadCraft;
 
 

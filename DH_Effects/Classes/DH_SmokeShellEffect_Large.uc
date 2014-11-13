@@ -1,12 +1,8 @@
-//======================================================================================================
-// DH_SmokeShellEffect_Large
-// 
-// Effect class for large smoke shells, such as the 105mm howitzers of the Sherman M4A3(105) & StuH
-// Based on DH_SmokeShellEffect, which was originally AHZ's TankSmokeEffect
-//
-// Original content Copyright © 2005 - 2008 Tripwire Interactive, LLC
-// All other content Copyright © 2006 - 2008 William "Teufelhund" Miller
-//======================================================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_SmokeShellEffect_Large extends Emitter;
 
 

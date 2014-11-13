@@ -1,10 +1,7 @@
-// class: DHATMineDamage
-// Auther: Theel
-// Date: 2-06-10
-// Purpose:
-// A damagetype that easily detracks armor and has mine info
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHATMineDamage extends ROTankShellExplosionDamage
       abstract;

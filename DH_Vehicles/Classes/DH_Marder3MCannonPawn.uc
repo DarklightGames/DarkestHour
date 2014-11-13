@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Marder3MCannonPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Jadgpanzer III - Ausf. M (Marder) tank cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Marder3MCannonPawn extends DH_AssaultGunCannonPawn;
 
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection

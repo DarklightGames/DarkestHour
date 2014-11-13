@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_TigerTank_Ardennes
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzer VI Ausf. E "Tiger" tank
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_TigerTank_Ardennes extends DH_TigerTank_Late;
 
 static function StaticPrecache(LevelInfo L)

@@ -1,10 +1,7 @@
-// class: DH_ModifyObjectiveStatus
-// Auther: Theel
-// Date: 10-06-10
-// Purpose:
-// Gives the ability to randomly activate or deactivate a list of objectives
-// Problems/Limitations:
-// Needs testing
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyObjectiveStatus extends DH_ModifyActors;
 

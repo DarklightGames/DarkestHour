@@ -1,11 +1,9 @@
-//===================================================================
-// DH_Marder3MCannonPawn
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Marder III Ausf. M tank destroyer cannon pawn
-//==================================================================
- class DH_Marder3MCannonPawn_CamoOne extends DH_Marder3MCannonPawn;
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
+class DH_Marder3MCannonPawn_CamoOne extends DH_Marder3MCannonPawn;
 
 defaultproperties
 {

@@ -1,12 +1,8 @@
 //==============================================================================
-// DH_AT57CannonShell
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-// AHZ AT Gun Source -(c) William "Teufelhund" Miller
-//
-// American 57mm APC shell M86
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_AT57CannonShell extends DH_ROTankCannonShell;
 
 defaultproperties

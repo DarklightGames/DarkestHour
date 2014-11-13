@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIVJTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzer IV Ausf. J tank
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIVJTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_PanzerIV_anm.ukx

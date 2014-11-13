@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Tiger2BCannon
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzer VI Ausf. B "King Tiger" tank cannon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Tiger2BCannon extends DH_ROTankCannon;
 
 // Special tracer handling for this type of cannon

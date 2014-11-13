@@ -1,10 +1,7 @@
-//=============================================================================
-// DH_ParachuteStaticLine
-//=============================================================================
-// This handles the floating down & spawning 3rd person chute
-// 1st person chute is dealt with in DH_ParachuteItem
-// The two are split to allow correct 3rd person mesh attachment
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ParachuteStaticLine extends Weapon;
 

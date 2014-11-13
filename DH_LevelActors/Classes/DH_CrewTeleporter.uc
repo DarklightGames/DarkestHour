@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_CrewTeleporter extends DH_Teleporter;
 
 var() int CrewTeam; //0 for Axis 1 for Allies

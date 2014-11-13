@@ -1,10 +1,8 @@
-//===================================================================
-// DH_PanzerIIINCannon
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Panzer III Ausf.N cannon
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PanzerIIINCannon_CamoOne extends DH_PanzerIIINCannon;
 
 defaultproperties

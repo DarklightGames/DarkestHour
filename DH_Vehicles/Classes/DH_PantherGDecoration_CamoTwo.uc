@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PantherGDecoration_CamoTwo extends DH_VehicleDecoAttachment;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_VehicleDecoGE_stc.usx

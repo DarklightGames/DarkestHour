@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHGUIList extends ROGuiListPlus;
 
 //NOTE: Overriden to eliminate the need for selected items to only be highlighted if the list is in focus

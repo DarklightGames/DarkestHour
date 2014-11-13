@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_AchillesTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M10 British tank destroyer "Achilles IC"
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_AchillesTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUK_tex.utx

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_HigginsPassengerTwo
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Allied landing craft passenger
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_HigginsPassengerTwo extends DH_HigginsPassengerPawn;
 
 defaultproperties

@@ -1,12 +1,7 @@
-// class: DH_ModifyDSMStatus
-// Auther: Theel
-// Date: 9-28-10
-// Purpose:
-// Adds the ability to modify DestroyableStaticMeshes with events
-// Problems/Limitations:
-// Only supports one DSM to modify only supports DH_DestroyableSM
-
-//Need to add multiple DSMs
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyDSMStatus extends DH_ModifyActors;
 

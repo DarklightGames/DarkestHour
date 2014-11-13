@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_WillysJeepPassengerOne
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American Willys Jeep 4x4 passenger
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_WillysJeepPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties

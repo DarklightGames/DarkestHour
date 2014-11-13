@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_WolverineCannonPawn_Early
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M10 "Wolverine" tank destroyer cannon pawn - no HVAP
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_WolverineCannonPawn_Early extends DH_WolverineCannonPawn;
 
 defaultproperties

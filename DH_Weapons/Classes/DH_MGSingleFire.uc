@@ -1,10 +1,7 @@
-//===================================================================
-// ROMGSingleFire
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Single fire class with MG specific functionality
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MGSingleFire extends DH_ProjectileFire
     abstract;

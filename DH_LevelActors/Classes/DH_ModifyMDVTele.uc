@@ -1,10 +1,7 @@
-// class: DH_ModifyMDVTele
-// Auther: Theel
-// Date: 1-06-11
-// Purpose:
-// Ability to change the mobile teleporter's active MDV.  It can also disable and enable the proper factories.
-// Problems/Limitations:
-// Requires DH_MobileTeleporter (aka dependent on the MDV package)
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyMDVTele extends Note
     placeable;

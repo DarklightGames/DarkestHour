@@ -1,15 +1,7 @@
-//=============================================================================
-// DH_ModifyRoundTime
-//=============================================================================
-// Author   | Colin Basnett
-//-----------------------------------------------------------------------------
-// Date     | July 21st, 2010
-//-----------------------------------------------------------------------------
-// Purpose  | This actor can be triggered to add or subtract time from the
-//          | round timer or set the timer to a specific value. It also has to
-//          | option to broadcast a message to all players that the round time
-//          | has been altered.
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyRoundTime extends DH_ModifyActors;
 

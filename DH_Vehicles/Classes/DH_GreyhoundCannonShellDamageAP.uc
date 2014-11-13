@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_GreyhoundCannonShellDamageAP
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American tank shell - 37mm APC M51B1 - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_GreyhoundCannonShellDamageAP extends ROTankShellImpactDamage //ROWeaponDamageType
       abstract;
 

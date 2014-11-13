@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHGUIVertScrollButton extends GUIScrollButtonBase;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)

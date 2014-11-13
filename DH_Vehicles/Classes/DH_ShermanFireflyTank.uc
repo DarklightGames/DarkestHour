@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanFireflyTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British 'Sherman Firefly' Mark VC tank
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanFireflyTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanFirefly_anm.ukx

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_CromwellCannonShellDamageAP
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British Cromwell Mk.IV tank - 75mm APC M61 - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_CromwellCannonShellDamageAP extends ROTankShellImpactDamage
       abstract;
 

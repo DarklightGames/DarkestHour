@@ -1,9 +1,9 @@
 //==============================================================================
-// DH_HetzerCannon
-//
-// German Hetzer tank destroyer cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
-class  DH_HetzerCannonPawn extends DH_AssaultGunCannonPawn;
+
+class DH_HetzerCannonPawn extends DH_AssaultGunCannonPawn;
 
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay() // Matt: modified to lower the commander's exit position above the roof

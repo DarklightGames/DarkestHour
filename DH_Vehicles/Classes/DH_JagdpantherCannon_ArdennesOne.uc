@@ -1,10 +1,8 @@
-//===================================================================
-// DH_JagdpantherCannon_ArdennesOne
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Jagdpanther tank destroyer cannon class
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JagdpantherCannon_ArdennesOne extends DH_JagdpantherCannon;
 
 defaultproperties

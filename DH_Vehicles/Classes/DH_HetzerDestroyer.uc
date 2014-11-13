@@ -1,8 +1,8 @@
 //==============================================================================
-// DH_HetzerDestroyer
-//
-// German Hetzer tank destroyer
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_HetzerDestroyer extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Hetzer_anm_V1.ukx

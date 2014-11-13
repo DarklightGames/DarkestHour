@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_HellcatCannonShellDamageAP
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M18 American tank destroyer "Hellcat" - 76mm APC M62 - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_HellcatCannonShellDamageAP extends ROTankShellImpactDamage
       abstract;
 

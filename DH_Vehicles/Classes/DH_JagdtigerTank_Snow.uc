@@ -1,13 +1,8 @@
-//===================================================================
-// JagdtigerTank
-//
-// Original Content - Tripwire Interactive Copyright (C) 2004-2008
-// Models, Statics, and Textures: Paul Pepera (c) 2007-2008 (Capt. Obvious)
-// Animation and rigging: TT33 (2010)
-// Coding and Sound Editing: Eric Parris (c) 2010 (Shurek)
-//
-// Jagdtiger - Panzerjäger VI Ausf.B (SdKfz 186)
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JagdtigerTank_Snow extends DH_JagdtigerTank;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex3.utx

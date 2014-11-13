@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Stug3GDestroyer_Snow
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Sturmgeschutze III Ausf.G tank destroyer - winter version
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Stug3GDestroyer_Snow extends DH_Stug3GDestroyer;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx

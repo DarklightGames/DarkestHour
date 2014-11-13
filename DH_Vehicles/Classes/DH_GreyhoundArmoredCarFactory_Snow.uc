@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_GreyhoundArmoredCarFactory_Snow
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M8 'Greyhound' Armored Car - winter variant factory
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_GreyhoundArmoredCarFactory_Snow extends DH_GreyhoundArmoredCarFactory;
 
 defaultproperties

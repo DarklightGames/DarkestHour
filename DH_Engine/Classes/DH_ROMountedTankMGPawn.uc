@@ -1,11 +1,8 @@
-//===================================================================
-// ROMountedTankMGPawn
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Base class for mounted tank machine guns pawns. Overrides
-// onslaught functionality that we don't want/need
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
       abstract;
 

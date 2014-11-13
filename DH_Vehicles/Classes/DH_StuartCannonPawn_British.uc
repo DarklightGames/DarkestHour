@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_StuartCannonPawn_British
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British M5A1 (Stuart) light tank cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_StuartCannonPawn_British extends DH_StuartCannonPawn;
 
 defaultproperties

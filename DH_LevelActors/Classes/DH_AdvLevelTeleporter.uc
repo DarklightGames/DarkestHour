@@ -1,17 +1,7 @@
-// class: DH_AdvLevelTeleporter
-// Auther: Theel
-// Date: 11-03-10
-// Purpose:
-// Optimizes the teleporter and also adds new features including pawn capturing and alt URLs
-// Problems/Limitations:
-// Needs testing (lacks ability to change URL)
-//
-
-//***************
-// Delete as this class really isn't needed
-// though I feel it is much more optimized, it's use would be too rare to justify it's inclusion in the next update
-//***************
-
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_AdvLevelTeleporter extends DH_Teleporter;
 

@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHCanadianVoice extends ROVoicePack;
 
 #exec OBJ LOAD FILE=..\Sounds\DH_US_Voice_Infantry.uax

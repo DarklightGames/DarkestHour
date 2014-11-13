@@ -1,10 +1,8 @@
-//===================================================================
-// PanzerIVGCannon
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Panzer 4 tank cannon class
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PanzerIVGLateCannon_CamoOne extends DH_PanzerIVGLateCannon;
 
 defaultproperties

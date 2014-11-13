@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_AchillesCannonShellDamageAP
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M10 British tank destroyer "Achilles IC" - 76.2mm APC Shot - Damage Type
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_AchillesCannonShellDamageAP extends ROTankShellImpactDamage //ROWeaponDamageType
       abstract;
 

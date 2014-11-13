@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_StuH42CannonPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German SturmHaubitze 42 Ausf.G assault gun cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_StuH42CannonPawn_Snow extends DH_StuH42CannonPawn;
 
 defaultproperties

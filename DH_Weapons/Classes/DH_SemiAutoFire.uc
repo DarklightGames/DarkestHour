@@ -1,12 +1,7 @@
-//=====================================================
-// DH_SemiAutoFire
-// started by Antarian 11/20/03
-//
-// Copyright (C) 2003 Jeffrey Nakai
-//
-// class that holds Semi-Auto Firing properties
-//  subclasses just contain default props
-//=====================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_SemiAutoFire extends DH_ProjectileFire;
 

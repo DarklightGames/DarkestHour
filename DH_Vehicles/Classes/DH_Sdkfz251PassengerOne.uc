@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz251PassengerOne
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Sdkfz 251 German Halftrack passenger
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz251PassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties

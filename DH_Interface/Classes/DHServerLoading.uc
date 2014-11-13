@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHServerLoading extends UT2K4ServerLoading;
 
 #EXEC OBJ LOAD FILE=DH_GUI_Tex.utx

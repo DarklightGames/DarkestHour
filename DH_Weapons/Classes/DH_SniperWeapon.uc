@@ -1,11 +1,7 @@
-//===================================================================
-// DH_SniperWeapon
-// started by Antarian 8/5/03
-//
-// Copyright (C) 2003 John Gibson and Jeffrey Nakai
-//
-// Base class for the Red Orchestra Sniper Weapons
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_SniperWeapon extends DH_ProjectileWeapon
     abstract;

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanCannon_DDay
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A1 (Sherman) 75mm tank cannon - "swimming" version
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanCannon_DDay extends DH_ShermanCannon;
 
 // Limit the left and right movement of the driver

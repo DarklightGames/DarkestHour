@@ -1,11 +1,8 @@
-//===================================================================
-// DH_WillysJeep
-//
-//  Models and textures by Peter "Foo'Bar" Schaller - 2007/2008
-//  Coding and sounds by Eric "Shurek" Parris - 2008
-//
-// Willys Jeep MB military scout vehicle for the US Army
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_WillysJeep_Snow extends DH_WillysJeep;
 
 

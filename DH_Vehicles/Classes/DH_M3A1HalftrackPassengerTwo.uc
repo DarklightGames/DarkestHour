@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_M3A1HalftrackPassengerTwo
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2005
-//
-// M3A1 Allied Halftrack passenger
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_M3A1HalftrackPassengerTwo extends DH_ROPassengerPawn;
 
 defaultproperties

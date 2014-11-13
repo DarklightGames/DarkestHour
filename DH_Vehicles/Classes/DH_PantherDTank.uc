@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PantherDTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzer V Ausf. D (Panther) tank
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PantherDTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\axis_pantherg_anm.ukx

@@ -1,10 +1,8 @@
-//===================================================================
-// DH_StuartPassenger
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// M5 Stuart passenger that rides in back
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_StuartPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties

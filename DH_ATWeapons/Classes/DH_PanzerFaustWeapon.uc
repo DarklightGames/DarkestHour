@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerFaustWeapon
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzerfaust "60" - WeaponClass
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerFaustWeapon extends RORocketWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Panzerfaust_1st.ukx

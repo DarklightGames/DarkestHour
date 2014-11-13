@@ -1,7 +1,7 @@
 //==============================================================================
-//  DHBrowser_OpenIP
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
-//class DHBrowser_OpenIP extends UT2K4Browser_OpenIP;
 
 class DHBrowser_OpenIP extends UT2K4GetDataMenu;
 

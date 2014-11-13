@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIIINCannonShellHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Panzer III Ausf. N - Sprgr.Kw.K.(34)HE
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIIINCannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties

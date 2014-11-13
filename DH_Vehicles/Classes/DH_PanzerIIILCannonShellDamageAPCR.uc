@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIIILCannonShellDamageAPCR
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Panzer III Ausf. L - 50mm Pzgr.40 APCR - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIIILCannonShellDamageAPCR extends ROTankShellImpactDamage
       abstract;
 

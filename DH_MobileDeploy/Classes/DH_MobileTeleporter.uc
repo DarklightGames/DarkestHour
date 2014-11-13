@@ -1,10 +1,7 @@
-// class: DH_MobileTeleporter
-// Auther: Theel
-// Date: 12-09-10
-// Purpose:
-// Allows teleportation to vehicles spawned by a factory, and is supposed to be use for MDVs (Mobile Deploy Vehicles)
-// Problems/Limitations:
-//
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MobileTeleporter extends Teleporter;
 

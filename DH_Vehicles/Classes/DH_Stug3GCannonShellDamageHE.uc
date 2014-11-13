@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Stug3GCannonShellDamageHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 75mm Sprgr.Patr.34 - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Stug3GCannonShellDamageHE extends ROTankShellExplosionDamage;
 
 defaultproperties

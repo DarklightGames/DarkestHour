@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ROPassengerPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for Darkest Hour Passenger Pawns - sets rotation, bailing dmg, etc
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ROPassengerPawn extends ROPassengerPawn;
 
 /*

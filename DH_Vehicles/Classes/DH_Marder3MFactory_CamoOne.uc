@@ -1,9 +1,9 @@
-// =========================================================================
-//
-//  ***   DH_Marder3MFactory   ***
-//
-// =========================================================================
- class DH_Marder3MFactory_CamoOne extends DH_Marder3MFactory;
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
+class DH_Marder3MFactory_CamoOne extends DH_Marder3MFactory;
 
 defaultproperties
 {

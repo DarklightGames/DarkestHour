@@ -1,12 +1,7 @@
-// class: DH_MobileDeployVehicle_Axis
-// Auther: Theel
-// Date: 12-09-10
-// Purpose:
-// Is the MDV vehicle class for the MDV factories.
-// The only difference from a US M3HT is some visual difference and the overridden TryToDrive Function
-// which makes it so you can only allow a Leader to drive.  Also it is told to never reset.
-// Problems/Limitations:
-// none at this time
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MobileDeployVehicle_Axis extends DH_Sdkfz251Transport;
 

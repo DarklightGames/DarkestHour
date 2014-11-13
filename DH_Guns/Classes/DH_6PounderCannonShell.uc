@@ -1,12 +1,8 @@
 //==============================================================================
-// DH_6PounderCannonShell
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-// AHZ AT Gun Source -(c) William "Teufelhund" Miller
-//
-// 6 Pounder Mk. IV AT Gun - Mk.IX APCBC Shot
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_6PounderCannonShell extends DH_ROTankCannonShell;
 
 defaultproperties

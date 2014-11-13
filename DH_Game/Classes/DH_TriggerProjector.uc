@@ -1,8 +1,7 @@
-//=============================================================================
-// class TriggerProjector
-// A projector that can be triggered to fade on and off.
-// Has two colours that it fades from, and overlays the given image over them.
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_TriggerProjector extends Projector;
 

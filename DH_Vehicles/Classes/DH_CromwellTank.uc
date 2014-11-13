@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_CromwellTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British Cruiser Tank Mk.VIII Cromwell Mk.IV
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_CromwellTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Cromwell_anm.ukx

@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JacksonTank_Snow extends DH_JacksonTank;
 
 static function StaticPrecache(LevelInfo L)

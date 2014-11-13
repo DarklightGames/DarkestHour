@@ -1,7 +1,8 @@
-//-----------------------------------------------------------
-//   First Person StuG III MG34 Overlay
-//   Skin and coding by Eric "Shurek" Parris (c) 2008
-//-----------------------------------------------------------
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Stug3GOverlayMG extends VehicleHUDOverlay;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx

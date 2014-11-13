@@ -1,10 +1,8 @@
-//===================================================================
-// DH_JagdpantherTank_ArdennesOne
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Mighty JagdPanther tank destroyer (E) - Ardennes Offensive Camo
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JagdpantherTank_ArdennesOne extends DH_JagdpantherTank;
 
 

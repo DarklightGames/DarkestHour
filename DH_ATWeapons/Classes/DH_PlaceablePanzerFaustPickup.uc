@@ -1,10 +1,8 @@
-//===================================================================
-// ROPanzerFaustPickup
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// A placeable Panzerfaust pickup for mappers to put in thier map
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PlaceablePanzerFaustPickup extends ROPlaceableAmmoPickup;
 
 var() class<Inventory> WeaponType;

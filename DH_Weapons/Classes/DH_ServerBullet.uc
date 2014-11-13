@@ -1,12 +1,8 @@
-//=============================================================================
-// DH_ServerBullet
-//=============================================================================
-// bullets that do penetrate walls
-//=============================================================================
-// Infiltration community addition
-// Copyright (C) 1999-2006 geogob and Sentry Studios (mainly Beppo)
-// Added to DarkestHour with permission, by PsYcH0_Ch!cKeN
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_ServerBullet extends ROServerBullet
     config(DH_Penetration)
     abstract;

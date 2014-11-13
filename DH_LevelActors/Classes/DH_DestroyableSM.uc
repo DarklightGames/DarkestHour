@@ -1,10 +1,7 @@
-// class: DH_DestroyableSM
-// Auther: Theel
-// Date: 10-04-10
-// Purpose:
-// Adds the ability to toggle status of the DSM and adds other functionality
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_DestroyableSM extends RODestroyableStaticMeshBase;
 

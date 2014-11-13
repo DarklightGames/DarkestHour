@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_GMCTruckTransport
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Allied GMC CCKW 2.5-ton 6X6 Cargo Truck
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_GMCTruckTransport extends DH_ROWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_GMCTruck_anm.ukx

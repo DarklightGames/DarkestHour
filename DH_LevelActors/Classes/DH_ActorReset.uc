@@ -1,10 +1,7 @@
-// class: DH_ActorReset
-// Auther: Theel
-// Date: 9-28-10
-// Purpose:
-// Adds the ability to reset an actor by an event
-// Problems/Limitations:
-// Removed random ability
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ActorReset extends DH_LevelActors;
 

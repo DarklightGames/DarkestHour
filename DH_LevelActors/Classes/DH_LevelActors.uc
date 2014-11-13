@@ -1,10 +1,7 @@
-// class: DH_LevelActors
-// Auther: Theel
-// Date: 11-07-10
-// Purpose:
-// Serves as the base class for most Actors within the package
-// Problems/Limitations:
-// Hides some catorgories, if they are needed the child actor needs to show the category itself
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_LevelActors extends Actor
     hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Display,Advanced,Sound)

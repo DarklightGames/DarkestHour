@@ -1,10 +1,8 @@
-//===================================================================
-// DH_ShermanPassenger
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// M4 Sherman passenger that rides in back
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PanzerIVPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties

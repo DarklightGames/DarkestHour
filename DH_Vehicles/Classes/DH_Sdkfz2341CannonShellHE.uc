@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz2341CannonShellHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 20mm 2cm Br Sprgr. Patr. Vk L'spur (High Explosive Incendiary Tracer)
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz2341CannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties

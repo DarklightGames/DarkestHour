@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Stug3GCannon
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Sturmgeschutze III Ausf.G tank destroyer cannon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Stug3GCannon extends DH_ROTankCannon;
 
 defaultproperties

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ROTankCannonShellHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for all Darkest Hour High Explosive tank projectiles
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ROTankCannonShellHE extends DH_ROTankCannonShell;
 
 var     sound       ExplosionSound[4];          // sound of the round exploding

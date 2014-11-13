@@ -1,11 +1,7 @@
-//===================================================================
-// DH_PistolWeapon
-// started by Antarian 8/5/03
-//
-// Copyright (C) 2003 Jeffrey Nakai
-//
-// Base class for the Red Orchestra Pistol Weapons
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_PistolWeapon extends DH_ProjectileWeapon
     abstract;

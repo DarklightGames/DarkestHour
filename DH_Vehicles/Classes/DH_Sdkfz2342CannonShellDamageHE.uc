@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz2342CannonShellDamageHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Sdkfz 234/2 - 50mm Sprgr.Patr.38 HE - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz2342CannonShellDamageHE extends ROTankShellExplosionDamage;
 
 defaultproperties

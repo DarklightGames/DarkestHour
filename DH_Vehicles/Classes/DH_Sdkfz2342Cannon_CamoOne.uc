@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz2342Cannon
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Sdkfz 234/2 "Puma" Armored Car cannon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz2342Cannon_CamoOne extends DH_Sdkfz2342Cannon;
 
 defaultproperties

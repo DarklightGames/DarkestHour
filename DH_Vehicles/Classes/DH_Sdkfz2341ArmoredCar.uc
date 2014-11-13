@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz2341ArmoredCar
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Sdkfz 234/1 German Armored Reconnaisance Car
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz2341ArmoredCar extends DH_ArmoredWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz234ArmoredCar_anm.ukx

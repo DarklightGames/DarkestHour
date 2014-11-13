@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_UniCarrierMGOverlay
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British Mk.I Bren Carrier - first person mesh
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_UniCarrierMGOverlay extends VehicleHUDOverlay;
 
 

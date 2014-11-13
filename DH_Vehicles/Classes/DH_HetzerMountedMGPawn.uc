@@ -1,8 +1,8 @@
-//===================================================================
-// DH_HetzerMountedMGPawn
-//
-// Hetzer tank mounted machine gun pawn
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_HetzerMountedMGPawn extends DH_ROMountedTankMGPawn;
 
 var	int	UnbuttonedPositionIndex; // Matt: lowest position number where player is unbuttoned

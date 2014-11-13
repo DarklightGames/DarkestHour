@@ -1,7 +1,8 @@
-///=============================================================================
-// Teleports actors either between different teleporters within a level
-// or to matching teleporters on other levels, or to general Internet URLs.
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Teleporter extends Teleporter
     placeable;
 

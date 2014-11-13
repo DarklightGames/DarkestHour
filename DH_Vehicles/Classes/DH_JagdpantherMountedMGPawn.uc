@@ -1,10 +1,8 @@
-//===================================================================
-// DH_JagdpantherMountedMGPawn
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Jagdpanther tank mounted machine gun pawn
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JagdpantherMountedMGPawn extends DH_ROMountedTankMGPawn;
 
 defaultproperties

@@ -1,10 +1,7 @@
-// class: DH_CatchAndWatchPawn
-// Auther: Theel
-// Date: 11-07-10
-// Purpose:
-// Waits for a pawn reference and then watches it's health.  Calls event if it's dead, doesn't call if round not in play
-// Problems/Limitations:
-// none so far
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_CatchAndWatchPawn extends DH_LevelActors;
 

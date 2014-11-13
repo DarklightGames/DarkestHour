@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanM4A176WCannonShellSmoke
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M10 American 'Wolverine' tank destroyer - 3" M89 Smoke
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanM4A176WCannonShellSmoke extends DH_ROTankCannonShellSmoke;
 
 defaultproperties

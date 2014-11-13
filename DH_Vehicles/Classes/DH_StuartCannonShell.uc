@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_StuartCannonShell
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M5 Stuart tank - 37mm APC M51
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_StuartCannonShell extends DH_ROTankCannonShell;
 
 defaultproperties

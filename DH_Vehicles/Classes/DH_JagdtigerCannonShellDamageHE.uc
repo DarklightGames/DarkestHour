@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_JagdtigerCannonShellDamageHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 128mm Spgr.Patr.l/4.5 HE
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_JagdtigerCannonShellDamageHE extends ROTankShellExplosionDamage;
 
 defaultproperties

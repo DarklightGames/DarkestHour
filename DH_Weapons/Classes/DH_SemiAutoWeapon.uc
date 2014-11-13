@@ -1,12 +1,7 @@
-//===================================================================
-// DH_SemiAutoWeapon
-// started by Antarian 8/4/03
-//
-// Copyright (C) 2003 Jeffrey Nakai
-//
-// Base class for the Red Orchestra Semi-Auto Weapons
-// NO FUNCTIONS IN CHILD CLASSES
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_SemiAutoWeapon extends DH_ProjectileWeapon
     abstract;

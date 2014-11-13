@@ -1,10 +1,7 @@
-//=====================================================
-// ROCreditsPage
-// Last change: 05.19.2004 by Puma
-//
-// Used for displaying the ROCredits
-// Copyright 2003 by Red Orchestra
-//=====================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHCreditsPage extends LargeWindow;
 

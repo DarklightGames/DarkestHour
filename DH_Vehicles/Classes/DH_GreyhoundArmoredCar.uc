@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_GreyhoundArmoredCar
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M8 'Greyhound' Armored Car
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_GreyhoundArmoredCar extends DH_ArmoredWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Greyhound_anm.ukx

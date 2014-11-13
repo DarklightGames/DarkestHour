@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIIINTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzer III Ausf. N tank
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIIINTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Panzer3_anm.ukx

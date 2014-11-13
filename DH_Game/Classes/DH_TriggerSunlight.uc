@@ -1,7 +1,7 @@
-//=============================================================================
-// class TriggerSunlight
-// A dynamic Sunlight that can be triggered to fade between two levels.
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_TriggerSunlight extends Sunlight
     hidecategories(Emitter,Force,Karma,Corona);

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanFireFlyCannonPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British 'Sherman' VC tank cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanFireFlyCannonPawn extends DH_BritishTankCannonPawn;
 
 

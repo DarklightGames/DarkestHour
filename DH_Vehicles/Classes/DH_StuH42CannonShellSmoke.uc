@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_StuH42CannonShellSmoke
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 105mm howitzer smoke shell (10-cm F.H.Gr.Nb.)
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_StuH42CannonShellSmoke extends DH_Stug3GCannonShellSmoke;
 
 

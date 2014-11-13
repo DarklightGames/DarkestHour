@@ -1,8 +1,8 @@
 //==============================================================================
-// DH_HetzerCannon
-//
-// German Hetzer tank destroyer cannon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_HetzerCannon extends DH_ROTankCannon;
 
 // Limit the left and right movement of the driver (Matt: this is in all DH assault gun type vehicles)

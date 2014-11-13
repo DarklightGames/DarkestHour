@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_JacksonCannonShellDamageAP
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M36 American tank destroyer - 90mm APC M82 - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_JacksonCannonShellDamageAP extends ROTankShellImpactDamage
       abstract;
 

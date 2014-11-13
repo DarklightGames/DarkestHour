@@ -1,7 +1,9 @@
-//=============================================================================
-// DH_MG42VehicleClientTracer
-//=============================================================================
- class DH_MG42VehicleClientTracer extends ROClientTracer;
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
+class DH_MG42VehicleClientTracer extends ROClientTracer;
 
 defaultproperties
 {

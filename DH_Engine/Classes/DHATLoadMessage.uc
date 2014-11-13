@@ -1,12 +1,7 @@
-//=============================================================================
-// DHATLoadMessage
-//=============================================================================
-// Message send to player when reloading an AT soldier. This msg class
-// is also sent to the gunner to inform them that they were reloaded.
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2005 Mathieu Mallet
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHATLoadMessage extends ROCriticalMessage;
 

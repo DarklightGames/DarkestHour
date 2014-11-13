@@ -1,12 +1,8 @@
 //==============================================================================
-// DH_ATGun
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-// AHZ AT Gun Source -(c) William "Teufelhund" Miller
-//
-// Base class for all Darkest Hour AT-Guns
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ATGun extends DH_ROTreadCraft
     abstract;
 

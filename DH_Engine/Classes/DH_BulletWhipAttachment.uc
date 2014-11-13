@@ -1,13 +1,7 @@
-//=============================================================================
-// ROBulletWhipAttachment
-//=============================================================================
-// An additional collision cylinder for detecting precision hit traces or
-// projectiles as well as detecting bullets passing by which allows for the
-// creation of bullet whip sound effects.
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2003-2004 John Gibson
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_BulletWhipAttachment extends ROBulletWhipAttachment;
 

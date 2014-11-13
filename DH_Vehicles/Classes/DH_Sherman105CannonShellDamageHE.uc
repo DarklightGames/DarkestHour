@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sherman105CannonShellDamageHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3(105) 105mm tank - M1 HE - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sherman105CannonShellDamageHE extends ROTankShellExplosionDamage
       abstract;
 

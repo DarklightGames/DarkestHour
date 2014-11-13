@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Flakvierling38CannonShellDamageHE extends DH_Sdkfz2341CannonShellDamageHE;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Flakvierling38_tex.utx

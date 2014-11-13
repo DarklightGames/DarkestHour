@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Tiger2BCannonShellHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 88mm Schw.Sprgr.Patr.L/4.5 HE
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Tiger2BCannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties

@@ -1,12 +1,8 @@
-//------------------------------------------------------------------------------
-// DH_TankMediumHEHitEffect
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
-// @description: Medium sized HE shell hit emitter. Produces smoke dirt and
-// flying smoldering debris.
-// Copyright (C) 2005 Tripwire Interactive LLC
-// - David Hensley & John "Ramm-Jaeger" Gibson
-// Enhanced for Darkest Hour by Eric "Shurek" Parris
-//------------------------------------------------------------------------------
 class DH_TankMediumHEHitEffect extends Emitter;
 
 //------------------------------------------------------------------------------

@@ -1,10 +1,8 @@
-//===================================================================
-// PanzerIIIMountedMGPawn
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// PanzerIII tank mounted machine gun pawn
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PanzerIIIMountedMGPawn extends DH_JagdpantherMountedMGPawn;
 
 defaultproperties

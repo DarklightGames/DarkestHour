@@ -1,12 +1,8 @@
 //==============================================================================
-// DH_6PounderGunCannon
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-// AHZ AT Gun Source -(c) William "Teufelhund" Miller
-//
-// British 6 Pounder Mk. IV AT-Gun cannon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_6PounderGunCannon extends DH_ATGunCannon;
 
 #exec OBJ LOAD FILE=..\Sounds\DH_ArtillerySounds.uax

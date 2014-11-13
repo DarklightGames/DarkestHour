@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Tiger2BCannonShellAPCR
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// DH_Tiger2BCannonShellDamageAPCR
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Tiger2BCannonShellDamageAPCR extends ROTankShellImpactDamage; //ROWeaponDamageType
 
 defaultproperties

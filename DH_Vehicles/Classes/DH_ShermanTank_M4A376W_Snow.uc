@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanTank_M4A376W_Snow
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3(76)W 76mm tank - Winter variant
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanTank_M4A376W_Snow extends DH_ShermanTank_M4A376W;
 
 

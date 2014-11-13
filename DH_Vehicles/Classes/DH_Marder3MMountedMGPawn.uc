@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Marder3MMountedMGPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Marder III Ausf.M German tank hunter - top mounted MG34
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Marder3MMountedMGPawn extends DH_ROMountedTankMGPawn;
 
 

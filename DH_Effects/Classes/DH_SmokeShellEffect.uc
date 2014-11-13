@@ -1,12 +1,8 @@
 //==============================================================================
-// TankSmokeEffect
-//
-// Original content Copyright © 2005 - 2008 Tripwire Interactive, LLC
-// All other content Copyright © 2006 - 2008 William "Teufelhund" Miller
-//
-// Base effect class for RO tank cannon smoke shells.
-//    Taken from GrenadeSmokeEffect, with size of effect increased
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_SmokeShellEffect extends Emitter;
 
 //==============================================================================

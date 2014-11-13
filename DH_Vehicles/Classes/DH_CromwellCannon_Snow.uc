@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_CromwellTank_Snow
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British Cruiser Tank Mk.VIII Cromwell Mk.IV cannon - winter variant
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_CromwellCannon_Snow extends DH_CromwellCannon;
 
 defaultproperties

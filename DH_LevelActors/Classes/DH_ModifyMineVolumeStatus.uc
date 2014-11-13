@@ -1,12 +1,7 @@
-// class: DH_ModifyMineVolumeStatus
-// Auther: Theel
-// Date: 11-01-10
-// Purpose:
-// Allows leveler to disable, enable, toggle DH_MineVolume without needs of spawn areas
-// Problems/Limitations:
-// Does what it needs to
-// Comments: Because ROTeamGame enables all minefields if they don't have spawnarea set to false I'm forced to
-// have a seperate minefieldvolume
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyMineVolumeStatus extends DH_ModifyActors;
 

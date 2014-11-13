@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ROWheeledVehicle
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for all DH wheeled transports
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ROWheeledVehicle extends ROWheeledVehicle
       abstract;
 

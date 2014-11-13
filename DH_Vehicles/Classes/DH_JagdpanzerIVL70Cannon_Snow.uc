@@ -1,10 +1,8 @@
-//===================================================================
-// JagdpanzerIVL48Cannon
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Jagdpanzer IV L48 tank destroyer cannon class
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JagdpanzerIVL70Cannon_Snow extends DH_JagdpanzerIVL70Cannon;
 
 defaultproperties

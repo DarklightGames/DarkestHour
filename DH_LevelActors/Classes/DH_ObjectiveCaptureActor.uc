@@ -1,10 +1,7 @@
-// class: DH_ObjectiveCaptureActor
-// Auther: Theel
-// Date: 9-28-10
-// Purpose:
-// Adds the ability to capture an objective from event
-// Problems/Limitations:
-// Can cause roundover loop if not properly used by leveler (careful)
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ObjectiveCaptureActor extends DH_LevelActors;
 

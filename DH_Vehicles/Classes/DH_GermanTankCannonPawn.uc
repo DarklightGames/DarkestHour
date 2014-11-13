@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_GermanTankCannonPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for German main gun cannon pawns (range with moving graticules)
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_GermanTankCannonPawn extends DH_ROTankCannonPawn
        abstract;
 

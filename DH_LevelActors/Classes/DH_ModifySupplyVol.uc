@@ -1,10 +1,7 @@
-// class: DH_ModifySupplyVol
-// Auther: Theel
-// Date: 10-05-10
-// Purpose:
-// Allows activating and deactivating supply caches so they don't have to be spawn based
-// Problems/Limitations:
-// Can only modify 1 volume
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifySupplyVol extends DH_ModifyActors;
 

@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Flakvierling38CannonShellHE extends DH_Sdkfz2341CannonShellHE;
 
 defaultproperties

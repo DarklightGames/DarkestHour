@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanCannonPawn_Camo
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A1 (Sherman) 75mm tank cannon pawn - camo version
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanCannonPawn_Camo extends DH_ShermanCannonPawn;
 
 defaultproperties

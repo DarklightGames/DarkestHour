@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanFireFlyCannon
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British 'Sherman' VC tank cannon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanFireFlyCannon extends DH_ROTankCannon;
 
 // Special tracer handling for this type of cannon

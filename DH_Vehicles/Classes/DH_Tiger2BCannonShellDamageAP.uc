@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Tiger2BCannonShellDamageAP
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 88mm Pzgr.39/43 APCBC - DamageType
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Tiger2BCannonShellDamageAP extends ROTankShellImpactDamage; //ROWeaponDamageType
 
 defaultproperties

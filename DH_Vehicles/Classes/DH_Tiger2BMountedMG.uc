@@ -1,12 +1,8 @@
-//===================================================================
-// DH_Tiger2BMountedMG
-//
-// All original content - Copyright (C) 2005 Tripwire Interactive LLC
-// Coding and Sound Effects - (c) 2007-2008 Eric Parris (Shurek)
-// Animations,Models, and Textures - (c) 2007-2008 Paul Pepera (Capt.Obvious)
-//
-// King Tiger Hull Mounted MG34
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Tiger2BMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties

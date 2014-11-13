@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerFaustRocket
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Panzerfaust 60 anti-tank weapon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerFaustRocket extends DH_RocketProj; //PanzerFaustRocket;
 
 #exec OBJ LOAD FILE=..\Staticmeshes\DH_Military_Axis.usx

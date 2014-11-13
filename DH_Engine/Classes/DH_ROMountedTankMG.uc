@@ -1,10 +1,8 @@
-//===================================================================
-// DH_ROMountedTankMG
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Base class for Darkest Hour mounted tank machine guns
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_ROMountedTankMG extends ROMountedTankMG
       abstract;
 

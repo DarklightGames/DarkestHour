@@ -1,10 +1,8 @@
-//===================================================================
-// KubelwagenPassengerThree
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Kubel passenger that rides in back
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_KubelwagenPassengerThree extends DH_ROPassengerPawn;
 
 defaultproperties

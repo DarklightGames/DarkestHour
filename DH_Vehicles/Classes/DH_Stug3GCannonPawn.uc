@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Stug3GCannonPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Sturmgeschutze III Ausf.G tank destroyer cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Stug3GCannonPawn extends DH_AssaultGunCannonPawn;
 
 // modification allowing dual-magnification optics is here (look for "GunsightPositions")

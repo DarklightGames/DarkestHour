@@ -1,13 +1,7 @@
-//=============================================================================
-// DHHintManager
-//=============================================================================
-// This class manages (most) of the hinting system stuff. It is spawned and
-// referenced in ROPlayer. It also interfaces with ROHud to display the hints
-// on screen. Finally, config variables are used to
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2005 Mathieu Mallet
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHHintManager extends Info
     config(User);

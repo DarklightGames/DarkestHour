@@ -1,10 +1,7 @@
-// class: DH_MineVolume
-// Auther: Theel
-// Date: 10-05-10
-// Purpose:
-// A new mine field volume that replicates correctly and works with modify actors
-// Problems/Limitations:
-// Can only modify 1 volume
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MineVolume extends ROMineVolume;
 

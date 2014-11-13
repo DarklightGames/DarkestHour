@@ -1,11 +1,7 @@
-// class: DH_ArtilleryActor
-// Auther: Theel
-// Date: 9-25-10
-// Purpose:
-// Allows easier random artillery and not have to deal with scripted trigger BS (not event based!)
-// Limitations:
-// Quite featured
-// Radius is square based not vector (I like so you can have rectangles)
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ArtilleryActor extends DH_LevelActors;
 

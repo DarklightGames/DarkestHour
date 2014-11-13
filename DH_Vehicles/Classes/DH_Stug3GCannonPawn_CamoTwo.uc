@@ -1,12 +1,9 @@
-//===================================================================
-// Stug3GCannonPawn
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Stug III tank destroyer cannon pawn
-//==================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
-class  DH_Stug3GCannonPawn_CamoTwo extends DH_Stug3GCannonPawn;
+class DH_Stug3GCannonPawn_CamoTwo extends DH_Stug3GCannonPawn;
 
 defaultproperties
 {

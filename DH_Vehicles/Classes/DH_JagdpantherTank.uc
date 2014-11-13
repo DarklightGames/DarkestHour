@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_JagdpantherTank
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Jadgpanzer V 'Jagdpanther' tank destroyer
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_JagdpantherTank extends DH_ROTreadCraftB;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Jagdpanther_anm.ukx

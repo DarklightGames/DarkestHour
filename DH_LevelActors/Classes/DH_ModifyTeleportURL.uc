@@ -1,12 +1,7 @@
-// class: DH_ModifyTeleportURL
-// Auther: Theel
-// Date: 10-06-10
-// Purpose:
-// Ability to randomly modify a teleport's URL (destination)
-// Problems/Limitations:
-// none known
-
-//this neeeds reviewed as it looks buggy
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyTeleportURL extends DH_ModifyActors;
 

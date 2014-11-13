@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_USTanker743rd extends DH_US_743rd_TankBattalion;
 
 function class<ROHeadgear> GetHeadgear()

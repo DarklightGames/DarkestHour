@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JagdpanzerIVL48Destroyer_Snow extends DH_JagdpanzerIVL48Destroyer;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex5.utx

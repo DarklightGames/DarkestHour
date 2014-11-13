@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_AmericanTankCannonPawn
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Base class for American main gun cannon pawns (no moving graticules)
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_AmericanTankCannonPawn extends DH_ROTankCannonPawn
        abstract;
 

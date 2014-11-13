@@ -1,11 +1,8 @@
 //==============================================================================
-// ROTankSmokeShell
-//
-// Original content Copyright © 2005 - 2008 Tripwire Interactive, LLC
-// All other content Copyright © 2006 - 2008 William "Teufelhund" Miller
-//
-// Base class for RO tank cannon smoke shells.
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ROTankCannonShellSmoke extends DH_ROTankCannonShellHE;
 
 

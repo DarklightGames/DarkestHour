@@ -1,3 +1,8 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Flakvierling38CannonPawn extends DH_ATGunTwoCannonPawn;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Flakvierling38_anm.ukx

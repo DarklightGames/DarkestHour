@@ -1,13 +1,7 @@
-//=============================================================================
-// DH_FastAutoFire
-//=============================================================================
-// An automatic fire class for weapons with very high (> 500 rpm)
-// cyclic rates. This class and the ROHighROFWeaponAttachment class
-// will reduce net bandwidth and CPU overhead
-//=============================================================================
-// Red Orchestra Source
-// Copyright (C) 2005 John "Ramm-Jaeger" Gibson
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_FastAutoFire extends DH_AutomaticFire;
 

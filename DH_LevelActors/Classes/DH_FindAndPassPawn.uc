@@ -1,10 +1,7 @@
-// class: DH_FindAndPassPawn
-// Auther: Theel
-// Date: 9-28-10
-// Purpose:
-// Can be used to capture a pawn's reference and pass it to a watch actor
-// Problems/Limitations:
-// Only supports proximity and factory tag.  Also it is forced to use a delay (5 seconds) before finding the pawn
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_FindAndPassPawn extends DH_LevelActors
     showcategories(Collision,Advanced);

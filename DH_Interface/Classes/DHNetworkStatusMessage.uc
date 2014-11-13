@@ -1,9 +1,7 @@
-//====================================================================
-// DHNetworkStatusMessage
-//
-// Used for when a player is disconnected to a game, will take them back
-//  to the DH server menu, not the RO server browser
-//====================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DHNetworkStatusMessage extends GUIPage;
 

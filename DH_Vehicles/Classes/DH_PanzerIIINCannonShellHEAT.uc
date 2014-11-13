@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIIINCannonShellHEAT
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Panzer III Ausf. N - Gr.38 Hl/C HEAT
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIIINCannonShellHEAT extends DH_ROTankCannonShellHEAT;
 
 defaultproperties

@@ -1,10 +1,7 @@
-// class: DH_ModifyFactoryStatus
-// Auther: Theel
-// Date: 11-06-10
-// Purpose:
-// Ability to activate, deactivate, and toggle status of a vehicle factory based on event.  Now supports multiple factories
-// Problems/Limitations:
-// none known
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyFactoryStatus extends DH_ModifyActors;
 

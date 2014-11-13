@@ -1,11 +1,9 @@
-//===================================================================
-// KubelwagenPassengerOne
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Type 82 passenger that rides in back
-//===================================================================
- class DH_KubelwagenPassengerOne extends DH_ROPassengerPawn;
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
+class DH_KubelwagenPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties
 {

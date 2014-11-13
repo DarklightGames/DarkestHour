@@ -1,9 +1,6 @@
 //==============================================================================
-//  Created on: 11/15/2003
-//  Specialized array property page for dynamic arrays
-//
-//  Written by Ron Prestenback
-//  © 2003, Epic Games, Inc. All Rights Reserved
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
 
 class DHGUIDynArrayPage extends GUIDynArrayPage;

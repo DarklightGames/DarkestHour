@@ -1,10 +1,8 @@
-//===================================================================
-// Sdkfz251PassengerThree
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// HT passenger that rides in back
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_Sdkfz251PassengerThree extends DH_ROPassengerPawn;
 
 defaultproperties

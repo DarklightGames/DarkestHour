@@ -1,18 +1,7 @@
-//=============================================================================
-// DH_ModifyRoundTimeMessage
-//=============================================================================
-// Author   | Colin Basnett
-//-----------------------------------------------------------------------------
-// Date     | July 21st, 2010
-//-----------------------------------------------------------------------------
-// Purpose  | This message outputs the following strings based on switch and
-//          | the calling DH_RoundTimeModifier's values:
-//          |
-//          | Round time has been increased by [X hour(s)] [Y minute(s)] [Z second(s)].
-//          | Round time has been decreased by [X hour(s)] [Y minute(s)] [Z second(s)].
-//          | Round time has been set to [X hour(s)] [Y minute(s)] [Z second(s)].
-//          | Round time has been modified.
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyRoundTimeMessage extends ROCriticalMessage
     notplaceable;

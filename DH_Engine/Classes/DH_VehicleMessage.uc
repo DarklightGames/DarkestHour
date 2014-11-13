@@ -1,11 +1,6 @@
 //==============================================================================
-// DH_VehicleMessage
-//
-// Red Orchestra Source - William Miller
-// Copyright (C) 2007 Tripwire Interactive, LLC
-// Modified 2008 - Eric Parris
-//
-// Message class for tanks with passengers.
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
 
 class DH_VehicleMessage extends ROVehicleMessage;

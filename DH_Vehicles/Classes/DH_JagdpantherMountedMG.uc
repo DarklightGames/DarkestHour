@@ -1,11 +1,9 @@
-//===================================================================
-// DH_JagdpantherMountedMG
-//
-// Copyright (C) 2004 John "Ramm-Jaeger"  Gibson
-//
-// Jagdpanther bow mounted machine gun
-//===================================================================
- class DH_JagdpantherMountedMG extends DH_ROMountedTankMG;
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
+class DH_JagdpantherMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {

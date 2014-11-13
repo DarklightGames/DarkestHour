@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_GreyhoundCannonShell
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American tank shell - 37mm APC M51B1
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_GreyhoundCannonShell extends DH_ROTankCannonShell;
 
 defaultproperties

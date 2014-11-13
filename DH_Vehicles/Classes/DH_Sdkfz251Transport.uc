@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Sdkfz251Transport
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// Sdkfz 251 German Halftrack troop transport
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Sdkfz251Transport extends DH_ROTransportCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx

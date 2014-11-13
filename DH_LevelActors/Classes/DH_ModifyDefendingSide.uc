@@ -1,10 +1,7 @@
-// class: DH_ModifyDefendingSide
-// Auther: Theel
-// Date: 10-04-10
-// Purpose:
-// Ability to change the defending team from event.  Helps with getting counter attack setups
-// Problems/Limitations:
-// none
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyDefendingSide extends DH_ModifyActors;
 

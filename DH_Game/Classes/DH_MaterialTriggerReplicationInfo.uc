@@ -1,11 +1,7 @@
-//=============================================================================
-// MaterialTriggerReplicationInfo
-// Copyright 2003 by Wormbo
-//
-// Used by ClientMaterialTrigger to replicate material trigger events to
-// network clients.
-//=============================================================================
-
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_MaterialTriggerReplicationInfo extends ReplicationInfo;
 

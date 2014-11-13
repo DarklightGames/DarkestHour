@@ -1,10 +1,8 @@
-//===================================================================
-// PanzerIIITank
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Panzer 3 light tank class
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PanzerIIILTank_Camo extends DH_PanzerIIILTank;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx

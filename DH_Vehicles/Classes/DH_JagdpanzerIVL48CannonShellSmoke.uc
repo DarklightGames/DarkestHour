@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_JagdpanzerIVL48CannonShellSmoke
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 75mm Nebel shell
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_JagdpanzerIVL48CannonShellSmoke extends DH_ROTankCannonShellSmoke;
 
 defaultproperties

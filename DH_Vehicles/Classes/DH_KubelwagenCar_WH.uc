@@ -1,11 +1,8 @@
-//===================================================================
-// VWType82_WH (Early War - Panzer Grau scheme for Wehrmacht Heer)
-//
-//  Models and textures by Peter "Foo'Bar" Schaller - 2007/2008
-//  Coding and sounds by Eric "Shurek" Parris - 2008
-//
-// Volkswagen Type 82 military scout car
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_KubelwagenCar_WH extends DH_ROWheeledVehicle;
 
 

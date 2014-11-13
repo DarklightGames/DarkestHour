@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_UniCarrierTransport
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British Mk.I Bren Carrier (w/resupply)
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_UniCarrierTransport extends DH_ROTransportCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_allies_carrier_anm.ukx

@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanCannonPawn_M4A3105
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A3 (105) 105mm tank howtizer cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanCannonPawn_M4A3105 extends DH_AmericanTankCannonPawn;
 
 defaultproperties

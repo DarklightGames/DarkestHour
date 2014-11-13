@@ -1,10 +1,8 @@
-//===================================================================
-// TigerMountedMGPawn
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Tiger I Ausf. E bow mounted machine gun pawn
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_TigerMountedMGPawn extends DH_ROMountedTankMGPawn;
 
 defaultproperties

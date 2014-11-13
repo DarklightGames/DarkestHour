@@ -1,11 +1,7 @@
-// class: DH_GameWinner
-// Auther: Theel
-// Date: 10-25-10
-// Purpose:
-// Allows leveler to call a "final" event based on who won the most rounds (for series maps)
-// Problems/Limitations:
-// Can cause roundover loop if not properly used by leveler
-// Use the tag EndGame to capture the EndGame event
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_GameWinner extends DH_LevelActors;
 

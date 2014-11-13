@@ -1,8 +1,8 @@
-//===================================================================
-// DH_HetzerMountedMG
-//
-// Hetzer remote controlled mounted machine gun
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_HetzerMountedMG extends DH_ROMountedTankMG;
 
 #exec OBJ LOAD FILE=..\Sounds\inf_weapons_foley.uax

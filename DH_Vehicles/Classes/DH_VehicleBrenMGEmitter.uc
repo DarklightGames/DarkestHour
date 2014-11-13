@@ -1,7 +1,8 @@
-//-----------------------------------------------------------
-//   VehicleMGEmitter - Ambient Emitter class for RO vehicle MGs
-//  Muzzle flash and shell ejection
-//-----------------------------------------------------------
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_VehicleBrenMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)

@@ -1,11 +1,8 @@
 //==============================================================================
-// DDH_ShermanM4A176WCannonShellDamageAP
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// M4 American Sherman Tank - 76mm APC M62
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanM4A176WCannonShellDamageAP extends ROTankShellImpactDamage;
 
 defaultproperties

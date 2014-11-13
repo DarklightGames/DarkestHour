@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_ShermanMountedMG_M4A176W
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// American M4A1 'Sherman' tank bow machinegun
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_ShermanMountedMG_M4A176W extends DH_ROMountedTankMG;
 
 defaultproperties

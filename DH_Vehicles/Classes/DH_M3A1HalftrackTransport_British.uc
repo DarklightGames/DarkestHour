@@ -1,11 +1,8 @@
-//===================================================================
-// DH_M3A1HalftrackTransport_British
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British M3A1 Halftrack troop transport
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_M3A1HalftrackTransport_British extends DH_M3A1HalftrackTransport;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx

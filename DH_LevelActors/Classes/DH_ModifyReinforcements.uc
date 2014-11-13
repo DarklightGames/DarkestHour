@@ -1,10 +1,7 @@
-// class: DH_ModifyReinforcements
-// Auther: Theel & Basnett
-// Date: 9-28-10
-// Purpose:
-// Ability to adjust a team or both team's reinforcements with an event
-// Problems/Limitations:
-// Sadly the reinforcement % shown in HUD doesn't get updated until it tries to respawn someone or something?
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_ModifyReinforcements extends DH_ModifyActors;
 

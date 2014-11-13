@@ -1,10 +1,8 @@
-//===================================================================
-// DH_JagdpantherFactory
-//
-// Copyright (C) 2005 John "Ramm-Jaeger"  Gibson
-//
-// Jagdpanther factory class-Panzerlied
-//===================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_JagdPantherFactory extends DH_GermanVehicles;
 
 defaultproperties

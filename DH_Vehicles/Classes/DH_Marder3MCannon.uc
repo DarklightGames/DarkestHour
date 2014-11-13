@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Marder3MCannon
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Jadgpanzer III - Ausf. M (Marder) tank cannon
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Marder3MCannon extends DH_ROTankCannon;
 
 defaultproperties

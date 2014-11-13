@@ -1,10 +1,8 @@
-//=============================================================================
-// The moving brush class.
-// This is a built-in Unreal class and it shouldn't be modified.
-// Note that movers by default have bNoDelete==true.  This makes movers and their default properties
-// remain on the client side.  If a mover subclass has bNoDelete=false, then its default properties must
-// be replicated
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DHC47Mover extends DHVariableTimedMover;
 
 

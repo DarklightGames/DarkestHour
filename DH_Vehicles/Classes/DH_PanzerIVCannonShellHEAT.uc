@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIVCannonShellHEAT
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German 75mm Gr.38 Hl/C
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIVCannonShellHEAT extends DH_ROTankCannonShellHEAT;
 
 defaultproperties

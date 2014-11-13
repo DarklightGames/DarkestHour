@@ -1,12 +1,7 @@
-//=====================================================
-// DH_PistolFire
-// started by Antarian 8/28/03
-//
-// Copyright (C) 2003 Jeffrey Nakai
-//
-// class that holds Pistol Firing properties
-//  subclasses just contain default props
-//=====================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DH_PistolFire extends DH_ProjectileFire;
 

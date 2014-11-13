@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_Cromwell6PdrCannonShellHE
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// British Cromwell Mk.I tank - Mk.X-T HE
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_Cromwell6PdrCannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties

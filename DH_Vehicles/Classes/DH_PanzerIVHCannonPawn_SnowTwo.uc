@@ -1,11 +1,8 @@
 //==============================================================================
-// DH_PanzerIVHCannonPawn_SnowTwo
-//
-// Darkest Hour Source - (c) Darkest Hour Team 2010
-// Red Orchestra Source - (c) Tripwire Interactive 2006
-//
-// German Panzer IV Ausf. H tank cannon pawn
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
 //==============================================================================
+
 class DH_PanzerIVHCannonPawn_SnowTwo extends DH_PanzerIVHCannonPawn;
 
 defaultproperties

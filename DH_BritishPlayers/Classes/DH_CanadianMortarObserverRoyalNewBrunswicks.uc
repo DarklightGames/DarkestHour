@@ -1,6 +1,8 @@
-//=============================================================================
-// DH_CanadianMortarObserverRoyalNewBrunswicks
-//=============================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_CanadianMortarObserverRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
 
 function class<ROHeadgear> GetHeadgear()

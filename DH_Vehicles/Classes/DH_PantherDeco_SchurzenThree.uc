@@ -1,8 +1,8 @@
-//=================================================================================
-// DH_PantherDeco_SchurzenThree - with front panels missing on both sides
-//
-// A Schurzen decorative attachment for panthers or jagdpanthers
-//=================================================================================
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
+
 class DH_PantherDeco_SchurzenThree extends DH_PantherDeco_SchurzenOne;
 
 defaultproperties
