@@ -104,11 +104,11 @@ function DoTrace(vector Start, Rotator Dir)
             {
                 if (Weapon.bBayonetMounted)
                 {
-                    Weapon.PlaySound(GroundStabSound,SLOT_none,FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundStabSound,SLOT_None,FireVolume,, SoundRadius,, true);
                 }
                 else
                 {
-                    Weapon.PlaySound(GroundBashSound,SLOT_none,FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundBashSound,SLOT_None,FireVolume,, SoundRadius,, true);
                 }
             }
 
@@ -157,11 +157,11 @@ function DoTrace(vector Start, Rotator Dir)
                     HitPawn.ProcessLocationalDamage(Damage, Instigator, HitLocation, MomentumTransfer*X,ThisDamageType,DamageHitPoint);
                     if (Weapon.bBayonetMounted)
                     {
-                        Weapon.PlaySound(PlayerStabSound,SLOT_none,FireVolume,, SoundRadius,, true);
+                        Weapon.PlaySound(PlayerStabSound,SLOT_None,FireVolume,, SoundRadius,, true);
                     }
                     else
                     {
-                        Weapon.PlaySound(PlayerBashSound,SLOT_none,1.0,, SoundRadius,, true);
+                        Weapon.PlaySound(PlayerBashSound,SLOT_None,1.0,, SoundRadius,, true);
                     }
                  }
                  // Hit detection debugging
@@ -172,11 +172,11 @@ function DoTrace(vector Start, Rotator Dir)
             {
                 if (Weapon.bBayonetMounted)
                 {
-                    Weapon.PlaySound(GroundStabSound,SLOT_none, FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundStabSound,SLOT_None, FireVolume,, SoundRadius,, true);
                 }
                 else
                 {
-                    Weapon.PlaySound(GroundBashSound,SLOT_none, FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundBashSound,SLOT_None, FireVolume,, SoundRadius,, true);
                 }
 
                 Other.TakeDamage(Damage, Instigator, HitLocation, MomentumTransfer * X, ThisDamageType);
@@ -198,11 +198,11 @@ function DoTrace(vector Start, Rotator Dir)
 
             if (Weapon.bBayonetMounted)
             {
-                Weapon.PlaySound(GroundStabSound,SLOT_none,FireVolume,, SoundRadius,, true);
+                Weapon.PlaySound(GroundStabSound,SLOT_None,FireVolume,, SoundRadius,, true);
             }
             else
             {
-                Weapon.PlaySound(GroundBashSound,SLOT_none,FireVolume,, SoundRadius,, true);
+                Weapon.PlaySound(GroundBashSound,SLOT_None,FireVolume,, SoundRadius,, true);
             }
         }
     } // end of if (Other != none && (Other != Instigator || ReflectNum > 0))
