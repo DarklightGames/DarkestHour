@@ -1680,7 +1680,18 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
-    SpawnError = SpawnManager.SpawnInfantry(DHC, DHC.SpawnPointIndex, SpawnLocation, SpawnRotation);   //TODO: remove need for passing in selection, SPI exists in DHC
+    if (DHC.VehiclePoolIndex != -1)
+    {
+        Log("attempting to spawn vehicle at VP" @ DHC.VehiclePoolIndex @ "SP" @ DHC.SpawnPointIndex);
+
+        SpawnManager.SpawnVehicle(DHC, DHC.VehiclePoolIndex, DHC.SpawnPointIndex, SpawnError);   //TODO: remove need for passing in selection, indices exists in DHC
+    }
+    else
+    {
+        Log("attempting to spawn infantry at SP" @ DHC.SpawnPointIndex);
+
+        SpawnError = SpawnManager.SpawnInfantry(DHC, DHC.SpawnPointIndex, SpawnLocation, SpawnRotation);   //TODO: remove need for passing in selection, SPI exists in DHC
+    }
 
     if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
     {
@@ -1689,10 +1700,10 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
-    if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
-    {
-        BaseMutator.PlayerChangedClass(C);
-    }
+    //if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
+    //{
+         //BaseMutator.PlayerChangedClass(C);
+    //}
 
     if (C.PawnClass != none)
     {

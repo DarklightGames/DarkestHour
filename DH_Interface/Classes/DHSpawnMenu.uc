@@ -1,0 +1,1 @@
+class DHSpawnMenu extends LargeWindow;

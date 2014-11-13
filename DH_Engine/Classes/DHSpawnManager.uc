@@ -177,7 +177,7 @@ function byte DrySpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, 
     switch (SP.Method)
     {
         case ESPM_Hints:
-            if (GetSpawnLocation(SP, VehiclePools[PoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnLocation, SpawnRotation))
+            if (!GetSpawnLocation(SP, VehiclePools[PoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnLocation, SpawnRotation))
             {
                 return SpawnError_Blocked;
             }
@@ -239,6 +239,8 @@ function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex
     local vector SpawnLocation;
     local rotator SpawnRotation;
 
+    //TODO: need to check intended role etc.
+
     SpawnError = SpawnError_Fatal;
 
     if (C.Pawn != none)
@@ -261,6 +263,9 @@ function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex
 
         return none;
     }
+
+    //spawn a player
+    SpawnPawn(C, SpawnLocation, SpawnRotation);
 
     //TODO: spawn the player somewhere way out in left field!
     if (C.Pawn == none || !V.TryToDrive(C.Pawn))
@@ -296,6 +301,58 @@ function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex
     return V;
 }
 
+function SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotation)
+{
+    local class<Pawn> DefaultPlayerClass;
+
+    //if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
+    //{
+        //BaseMutator.PlayerChangedClass(C);
+    //}
+
+    if (C.PawnClass != none)
+    {
+        C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
+    }
+
+    if (C.Pawn == none)
+    {
+        DefaultPlayerClass = DarkestHourGame(Level.Game).GetDefaultPlayerClass(C);
+
+        C.Pawn = Spawn(DefaultPlayerClass,,, SpawnLocation, SpawnRotation);
+    }
+
+    if (C.Pawn == none)
+    {
+        log("Couldn't spawn player of type " $ C.PawnClass $ " at " $ SpawnLocation);
+
+        C.GotoState('Dead');
+
+        if (PlayerController(C) != none)
+        {
+            PlayerController(C).ClientGotoState('Dead','Begin');
+        }
+
+        return;
+    }
+
+    if (PlayerController(C) != none)
+    {
+        PlayerController(C).TimeMargin = -0.1;
+    }
+
+    //C.Pawn.Anchor = startSpot;
+    //C.Pawn.LastStartSpot = PlayerStart(startSpot);
+    C.Pawn.LastStartTime = Level.TimeSeconds;
+    C.PreviousPawnClass = C.Pawn.Class;
+    C.Possess(C.Pawn);
+    C.PawnClass = C.Pawn.Class;
+    C.Pawn.PlayTeleportEffect(true, true);
+    C.ClientSetRotation(C.Pawn.Rotation);
+
+    DarkestHourGame(Level.Game).AddDefaultInventory(C.Pawn);
+}
+
 function byte GetSpawnPointError(DHPlayer C, byte SpawnPointIndex, ESpawnPointType SpawnPointType)
 {
     local DHSpawnPoint SP;
@@ -309,7 +366,7 @@ function byte GetSpawnPointError(DHPlayer C, byte SpawnPointIndex, ESpawnPointTy
 
     SP = SpawnPoints[SpawnPointIndex];
 
-    if (SP == none || SP.Type != ESPT_Infantry)
+    if (SP == none || SP.Type != SpawnPointType)
     {
         Error("[DHSM] Fatal error, requested spawn point is null or incorrect type");
 
@@ -425,14 +482,16 @@ function byte DrySpawnInfantry(DHPlayer C, byte SpawnPointIndex, out vector Spaw
     switch (SP.Method)
     {
         case ESPM_Hints:
-            if (!GetSpawnLocation(SP, 128.0, SpawnLocation, SpawnRotation))
+            if (!GetSpawnLocation(SP, class'DH_Pawn'.default.CollisionRadius, SpawnLocation, SpawnRotation))
             {
                 return SpawnError_Blocked;
             }
+
             break;
         case ESPM_Radius:
             SpawnLocation = SP.Location;
             SpawnRotation = SP.Rotation;
+
             break;
     }
 
@@ -767,19 +826,40 @@ static function string GetSpawnErrorString(int SpawnError)
 
 static function array<int> CreateScrambledArrayIndices(int Length)
 {
+    local int i;
     local array<int> Indices;
-    local int i, j;
+
+    Indices.Length = Length;
 
     for (i = 0; i < Length; ++i)
     {
-        j = Rand(Length);
-
-        Indices.Insert(j, 1);
-
-        Indices[j] = i;
+        Indices[i] = i;
     }
 
+    FisherYatesShuffle(Indices);
+
     return Indices;
+}
+
+static function FisherYatesShuffle(out array<int> _Array)
+{
+    local int i, j;
+
+    for (i = _Array.Length - 1; i >= 0; --i)
+    {
+        j = Rand(i);
+
+        Swap(_Array[i], _Array[j]);
+    }
+}
+
+static function Swap(out int A, out int B)
+{
+    local int temp;
+
+    temp = A;
+    A = B;
+    B = temp;
 }
 
 defaultproperties

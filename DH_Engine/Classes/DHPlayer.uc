@@ -218,7 +218,7 @@ exec function DeploymentMenu(optional int Tab)
     //TODO: figure out what this does
     //bPendingMapDisplay = false;
 
-    ClientReplaceMenu("DH_Interface.DHDeploymentMenu");
+    ClientReplaceMenu("DH_Interface.DHSpawnMenu");
 }
 
 // Overridden to increase max name length from 20 to 32 chars
