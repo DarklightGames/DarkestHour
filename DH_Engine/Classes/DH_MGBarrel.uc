@@ -29,7 +29,7 @@ var     float       BarrelTimerRate;            // How fast to call the timer fo
 //=============================================================================
 simulated function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (Role == ROLE_Authority && DarkestHourGame(Level.Game).LevelInfo != none)
     {

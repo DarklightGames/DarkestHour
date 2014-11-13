@@ -12,7 +12,7 @@ class DH_PanzerschreckBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_ATWeapons.DH_PanzerschreckWeapon'
+     WeaponClass=class'DH_ATWeapons.DH_PanzerschreckWeapon'
      DeathString="%o was smacked with %k's Panzerschreck."
      FemaleSuicide="%o turned the rocket on herself."
      MaleSuicide="%o turned the rocket on himself."

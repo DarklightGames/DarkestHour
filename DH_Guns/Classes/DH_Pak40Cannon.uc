@@ -46,11 +46,11 @@ defaultproperties
      WeaponFireOffset=200.000000
      RotationsPerSecond=0.025000
      FireInterval=3.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Guns.DH_Pak40CannonShell'
+     ProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
      ShakeRotMag=(Z=110.000000)
      ShakeRotRate=(Z=1100.000000)
      ShakeRotTime=2.000000
@@ -67,8 +67,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=50
      InitialSecondaryAmmo=42
-     PrimaryProjectileClass=Class'DH_Guns.DH_Pak40CannonShell'
-     SecondaryProjectileClass=Class'DH_Guns.DH_Pak40CannonShellHE'
+     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
+     SecondaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHE'
      Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_turret'
      Skins(0)=Texture'MilitaryAxisSMT.Artillery.RO_BC_pak40'
      Skins(1)=Texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'

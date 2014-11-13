@@ -7,5 +7,5 @@ class DH_WolverineCannonPawn_Early extends DH_WolverineCannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_WolverineCannon_Early'
+     GunClass=class'DH_Vehicles.DH_WolverineCannon_Early'
 }

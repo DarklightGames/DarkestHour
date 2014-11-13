@@ -8,7 +8,7 @@ class DH_PIATBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_ATWeapons.DH_PIATWeapon'
+     WeaponClass=class'DH_ATWeapons.DH_PIATWeapon'
      DeathString="%o was smacked with %k's PIAT."
      FemaleSuicide="%o turned the PIAT on herself."
      MaleSuicide="%o turned the PIAT on himself."

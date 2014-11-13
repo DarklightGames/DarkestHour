@@ -40,7 +40,7 @@ defaultproperties
      DHPenetrationTable(9)=7.600000
      DHPenetrationTable(10)=6.800000
      ShellDiameter=7.500000
-     ShellImpactDamage=Class'DH_Guns.DH_Pak40CannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_Pak40CannonShellDamageAP'
      ImpactDamage=650
      BallisticCoefficient=2.520000
      Speed=45270.000000

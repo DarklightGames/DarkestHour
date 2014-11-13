@@ -24,7 +24,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: M1 Garand"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_M1GarandWeapon'
+     InventoryType=class'DH_Weapons.DH_M1GarandWeapon'
      PickupMessage="You got the M1 Garand."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

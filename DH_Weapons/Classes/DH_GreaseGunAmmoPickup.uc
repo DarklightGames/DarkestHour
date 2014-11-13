@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: 30 round .45in mag pouch"
      AmmoAmount=30
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_GreaseGunAmmo'
+     InventoryType=class'DH_Weapons.DH_GreaseGunAmmo'
      PickupMessage="30 round .45in mag pouch added to inventory."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

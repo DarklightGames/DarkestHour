@@ -47,13 +47,13 @@ defaultproperties
      ShellDiameter=7.500000
      bIsAlliedShell=false
      PenetrationMag=920.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellDamageAP'
      ImpactDamage=455
      BallisticCoefficient=2.000000
      Speed=42245.000000
      MaxSpeed=42245.000000
      Damage=415.000000
      DamageRadius=1350.000000
-     MyDamageType=Class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellDamageHE'
      Tag="Sprgr.Patr.42"
 }

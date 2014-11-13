@@ -18,10 +18,10 @@ defaultproperties
      Models(1)="RNB_Of2"
      Models(2)="RNB_Of3"
      SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
      GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
-     Headgear(0)=Class'DH_BritishPlayers.DH_BritishTommyHelmet'
+     Headgear(0)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      Limit=1

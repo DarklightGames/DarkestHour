@@ -7,7 +7,7 @@ class DH_MG34VehicleClientTracer extends ROClientTracer;
 
 defaultproperties
 {
-     mTracerClass=Class'DH_Vehicles.DH_GermanVehicleMGTracer'
+     mTracerClass=class'DH_Vehicles.DH_GermanVehicleMGTracer'
      DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
      BallisticCoefficient=0.515000
      SpeedFudgeScale=0.750000

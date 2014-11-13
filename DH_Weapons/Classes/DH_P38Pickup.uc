@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Walther P38"
      MaxDesireability=0.100000
-     InventoryType=Class'DH_Weapons.DH_P38Weapon'
+     InventoryType=class'DH_Weapons.DH_P38Weapon'
      PickupMessage="You got the Walther P38."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

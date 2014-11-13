@@ -7,13 +7,13 @@ class DH_30calAttachment extends DHMGWeaponAttachment;
 
 defaultproperties
 {
-     ClientProjectileClass=Class'DH_Weapons.DH_30calBullet_C'
-     ClientTracerClass=Class'DH_Weapons.DH_30CalClientTracer'
+     ClientProjectileClass=class'DH_Weapons.DH_30calBullet_C'
+     ClientTracerClass=class'DH_Weapons.DH_30CalClientTracer'
      bUsesTracers=true
      TracerFrequency=5
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdMG'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
      MuzzleBoneName="Muzzle"
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
      PA_MovementAnims(0)="stand_jogF_dp27"
      PA_MovementAnims(1)="stand_jogB_dp27"
      PA_MovementAnims(2)="stand_jogL_dp27"

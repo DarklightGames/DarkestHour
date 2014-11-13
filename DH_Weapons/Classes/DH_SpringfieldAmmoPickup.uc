@@ -11,7 +11,7 @@ defaultproperties
      DropLifeTime=10.000000
      AmmoAmount=5
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_SpringfieldAmmo'
+     InventoryType=class'DH_Weapons.DH_SpringfieldAmmo'
      PickupMessage="You picked up a .30-06 ammo pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

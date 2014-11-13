@@ -7,7 +7,7 @@ class DH_M1CarbineMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_M1CarbineBashDamType'
+     DamageType=class'DH_Weapons.DH_M1CarbineBashDamType'
      TraceRange=75.000000
      BashBackAnim="bash_pullback"
      BashHoldAnim="bash_hold"

@@ -19,8 +19,8 @@ defaultproperties
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
      CrawlEndAnim="crawl_out"
-     FireModeClass(0)=Class'DH_Weapons.DH_M1GrenadeFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_M1GrenadeTossFire'
+     FireModeClass(0)=class'DH_Weapons.DH_M1GrenadeFire'
+     FireModeClass(1)=class'DH_Weapons.DH_M1GrenadeTossFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -29,10 +29,10 @@ defaultproperties
      AIRating=0.400000
      CurrentRating=0.400000
      DisplayFOV=70.000000
-     PickupClass=Class'DH_Weapons.DH_M1GrenadePickup'
+     PickupClass=class'DH_Weapons.DH_M1GrenadePickup'
      PlayerViewOffset=(X=15.000000,Y=15.000000)
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_M1GrenadeAttachment'
+     AttachmentClass=class'DH_Weapons.DH_M1GrenadeAttachment'
      ItemName="Mk II Grenade"
      Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
 }

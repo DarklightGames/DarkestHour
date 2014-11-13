@@ -7,7 +7,7 @@ class DH_GreaseGunMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_GreaseGunBashDamType'
+     DamageType=class'DH_Weapons.DH_GreaseGunBashDamType'
      TraceRange=75.000000
      GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
      BashBackAnim="bash_pullback"

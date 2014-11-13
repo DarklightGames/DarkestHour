@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Luger P08"
      MaxDesireability=0.100000
-     InventoryType=Class'DH_Weapons.DH_P08LugerWeapon'
+     InventoryType=class'DH_Weapons.DH_P08LugerWeapon'
      PickupMessage="You got the Luger P08."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

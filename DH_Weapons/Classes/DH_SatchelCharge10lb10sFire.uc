@@ -10,5 +10,5 @@ defaultproperties
     //** Ammo properties **//
     AmmoClass=class'DH_Weapons.DH_SachelChargeAmmo'
 
-    ProjectileClass=Class'DH_Weapons.DH_SatchelCharge10lb10sProjectile'
+    ProjectileClass=class'DH_Weapons.DH_SatchelCharge10lb10sProjectile'
 }

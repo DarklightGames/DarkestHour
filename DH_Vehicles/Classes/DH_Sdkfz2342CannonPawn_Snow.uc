@@ -7,5 +7,5 @@ class DH_Sdkfz2342CannonPawn_Snow extends DH_Sdkfz2342CannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_Sdkfz2342Cannon_Snow'
+     GunClass=class'DH_Vehicles.DH_Sdkfz2342Cannon_Snow'
 }

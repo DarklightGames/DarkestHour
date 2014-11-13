@@ -32,7 +32,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     Gotostate('EnteringVehicle');
 
-    Super.ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
@@ -45,7 +45,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-    Super.ClientKDriverLeave(PC);
+    super.ClientKDriverLeave(PC);
 }
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
@@ -218,7 +218,7 @@ simulated function DrawHUD(Canvas Canvas)
 
         if (PC == none)
         {
-            Super.RenderOverlays(Canvas);
+            super.RenderOverlays(Canvas);
             //log("PanzerTurret PlayerController was none, returning");
             return;
         }
@@ -300,7 +300,7 @@ defaultproperties
      DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
      bMultiPosition=true
      bMustBeTankCrew=false
-     GunClass=Class'DH_Vehicles.DH_HigginsBoatGun'
+     GunClass=class'DH_Vehicles.DH_HigginsBoatGun'
      bCustomAiming=true
      PositionInArray=0
      bHasAltFire=false
@@ -315,7 +315,7 @@ defaultproperties
      TPCamWorldOffset=(Z=120.000000)
      VehiclePositionString="in a Higgins Boat"
      VehicleNameString="Higgins Boat"
-     HUDOverlayClass=Class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
+     HUDOverlayClass=class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
      HUDOverlayOffset=(X=-2.000000)
      HUDOverlayFOV=35.000000
      PitchUpLimit=8000

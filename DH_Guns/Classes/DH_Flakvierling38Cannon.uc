@@ -404,15 +404,15 @@ defaultproperties
      WeaponFireOffset=64.000000
      RotationsPerSecond=0.050000
      FireInterval=0.150000
-     FlashEmitterClass=Class'DH_Guns.DH_Flakvierling38MuzzleFlash'
-     ProjectileClass=Class'DH_Guns.DH_Flakvierling38CannonShellAP'
+     FlashEmitterClass=class'DH_Guns.DH_Flakvierling38MuzzleFlash'
+     ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
      AltFireProjectileClass=none
      CustomPitchUpLimit=15474
      CustomPitchDownLimit=64990
      InitialPrimaryAmmo=40
      InitialSecondaryAmmo=40
-     PrimaryProjectileClass=Class'DH_Guns.DH_Flakvierling38CannonShellAP'
-     SecondaryProjectileClass=Class'DH_Guns.DH_Flakvierling38CannonShellHE'
+     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
+     SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'
      Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
      Skins(0)=Texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }

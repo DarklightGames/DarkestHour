@@ -7,7 +7,7 @@ class DH_C96MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_C96BashDamType'
+     DamageType=class'DH_Weapons.DH_C96BashDamType'
      TraceRange=75.000000
      GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
      BashBackAnim="bash_pullback"

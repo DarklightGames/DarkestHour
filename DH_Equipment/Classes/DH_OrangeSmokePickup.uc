@@ -14,7 +14,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: RauchSichtzeichen Orange 160"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Equipment.DH_OrangeSmokeWeapon'
+     InventoryType=class'DH_Equipment.DH_OrangeSmokeWeapon'
      PickupMessage="You got the RauchSichtzeichen Orange 160."
      PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
      PickupForce="AssaultRiflePickup"

@@ -28,9 +28,9 @@ defaultproperties
      Models(3)="US_WinterInf4"
      Models(4)="US_WinterInf5"
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_M1GarandWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1GarandAmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet1stEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmetWinter'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
      PrimaryWeaponType=WT_SemiAuto
 }

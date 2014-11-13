@@ -7,6 +7,6 @@ class DHVoiceReplicationInfo extends TeamVoiceReplicationInfo;
 
 defaultproperties
 {
-    ChatRoomClass=Class'DH_Engine.DHVoiceChatRoom'
+    ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
 }
 

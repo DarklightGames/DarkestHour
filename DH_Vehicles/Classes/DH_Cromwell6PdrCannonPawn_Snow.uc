@@ -7,5 +7,5 @@ class DH_Cromwell6PdrCannonPawn_Snow extends DH_CromwellCannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_Cromwell6PdrCannon_Snow'
+     GunClass=class'DH_Vehicles.DH_Cromwell6PdrCannon_Snow'
 }

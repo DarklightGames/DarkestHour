@@ -41,7 +41,7 @@ simulated function UpdateTracer()
 defaultproperties
 {
      InitialTertiaryAmmo=35
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_PantherCannonShellHE'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
      SecondarySpread=0.001650
      TertiarySpread=0.001200
      ManualRotationsPerSecond=0.011000
@@ -95,7 +95,7 @@ defaultproperties
      RangeSettings(25)=3000
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=9
-     DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -114,8 +114,8 @@ defaultproperties
      bAmbientAltFireSound=true
      FireInterval=7.000000
      AltFireInterval=0.070580
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
@@ -123,8 +123,8 @@ defaultproperties
      RotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
      AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_PantherCannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_MG34VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -145,8 +145,8 @@ defaultproperties
      InitialPrimaryAmmo=44
      InitialSecondaryAmmo=5
      InitialAltAmmo=150
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_PantherCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_PantherCannonShellAPCR'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellAPCR'
      Mesh=SkeletalMesh'axis_pantherg_anm.PantherG_turret_ext'
      Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
      Skins(1)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'

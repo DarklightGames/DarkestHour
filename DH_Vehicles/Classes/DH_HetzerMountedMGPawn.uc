@@ -13,7 +13,7 @@ simulated function PostBeginPlay() // Matt: modified to lower the loader's exit 
 	local vector Offset;
 	local vector Loc;
 
-	Super.PostBeginPlay();
+	super.PostBeginPlay();
 	
 	Offset.Z += 150; // Matt: this was 220 but the exit was a long way above the roof
 	Loc = GetBoneCoords('loader_player').ZAxis;
@@ -31,7 +31,7 @@ function Fire(optional float F)
 		return;
 	}
 
-	Super.Fire(F);
+	super.Fire(F);
 }
 
 // Matt: added so that MG reloads on pressing 'reload' key (which calls this function)
@@ -86,7 +86,7 @@ function ServerChangeDriverPosition(byte F)
 		return;
 	}
 
-	Super.ServerChangeDriverPosition(F);
+	super.ServerChangeDriverPosition(F);
 }
 
 // Matt: was in StuH (taken from DH_ROTankCannonPawn) - I've modified to play idle animation on the server as a workaround to stop the collision box glitch on the roof
@@ -120,7 +120,7 @@ simulated function NextWeapon()
 		return;
 	}
 
-	Super.NextWeapon();
+	super.NextWeapon();
 }
 
 // Matt: modified to run the state 'ViewTransition' on the server when buttoning up, so the transition down anim plays on the server & puts the loader's collision box in correct position
@@ -236,7 +236,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-    if(CameraBone != '' && Gun != None)
+    if(CameraBone != '' && Gun != none)
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
@@ -285,7 +285,7 @@ simulated function DrawHUD(Canvas Canvas)
 	PC = PlayerController(Controller);
 	if( PC == none )
 	{
-		Super.RenderOverlays(Canvas);
+		super.RenderOverlays(Canvas);
 		//log("PanzerTurret PlayerController was none, returning");
 		return;
 	}
@@ -329,7 +329,7 @@ simulated function DrawHUD(Canvas Canvas)
 // Matt: modified so that the new functionality (from StuH) that moves the MG, only happens if the player is buttoned up
 function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
 {
-	Super.UpdateRocketAcceleration(deltaTime, YawChange, PitchChange); // Matt: call the Super to replace unnecessary several lines in original function
+	super.UpdateRocketAcceleration(deltaTime, YawChange, PitchChange); // Matt: call the Super to replace unnecessary several lines in original function
 
 	// Matt: this 'if' prevents the MG from moving if the player is unbuttoned or in the process of buttoning or unbuttoning
 	if( DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition'))
@@ -351,16 +351,16 @@ defaultproperties
      MGOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
      FirstPersonGunShakeScale=0.850000
      WeaponFov=41.000000
-     DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionUpAnim="loader_open",DriverTransitionAnim="VT60_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=True)
-     DriverPositions(1)=(ViewLocation=(X=5.000000,Z=8.000000),ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionDownAnim="loader_close",DriverTransitionAnim="VT60_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=True)
-     bMultiPosition=True
-     GunClass=Class'DH_Vehicles.DH_HetzerMountedMG'
-     bCustomAiming=True
-     bHasAltFire=False
+     DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionUpAnim="loader_open",DriverTransitionAnim="VT60_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true)
+     DriverPositions(1)=(ViewLocation=(X=5.000000,Z=8.000000),ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionDownAnim="loader_close",DriverTransitionAnim="VT60_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
+     bMultiPosition=true
+     GunClass=class'DH_Vehicles.DH_HetzerMountedMG'
+     bCustomAiming=true
+     bHasAltFire=false
      CameraBone="Gun"
-     bPCRelativeFPRotation=True
-     bDesiredBehindView=False
-     bFPNoZFromCameraPitch=True
+     bPCRelativeFPRotation=true
+     bDesiredBehindView=false
+     bFPNoZFromCameraPitch=true
      DrivePos=(X=17.000000,Y=6.000000,Z=-1.500000)
      DriveAnim="VT60_com_idle_close"
      EntryRadius=130.000000

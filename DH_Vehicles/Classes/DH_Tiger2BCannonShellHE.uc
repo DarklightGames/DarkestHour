@@ -84,13 +84,13 @@ defaultproperties
      ShellDiameter=8.800000
      bIsAlliedShell=false
      PenetrationMag=1020.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_Tiger2BCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_Tiger2BCannonShellDamageAP'
      ImpactDamage=550
      BallisticCoefficient=3.250000
      Speed=45264.000000
      MaxSpeed=45264.000000
      Damage=475.000000
      DamageRadius=1550.000000
-     MyDamageType=Class'DH_Vehicles.DH_Tiger2BCannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_Tiger2BCannonShellDamageHE'
      Tag="Sprgr.Patr."
 }

@@ -379,8 +379,8 @@ simulated function Destroyed()
 
 defaultproperties
 {
-     AirExplosionEmitterClass=Class'DH_Effects.DH_MortarImpact60mm'
-     GroundExplosionEmitterClass=Class'DH_Effects.DH_MortarImpact60mm'
-     SnowExplosionEmitterClass=Class'DH_Effects.DH_MortarImpact60mm'
-     WaterExplosionEmitterClass=Class'ROEffects.ROArtilleryWaterEmitter'
+     AirExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
+     GroundExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
+     SnowExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
+     WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
 }

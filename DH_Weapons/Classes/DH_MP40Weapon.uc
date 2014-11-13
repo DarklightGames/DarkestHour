@@ -25,8 +25,8 @@ defaultproperties
      IronSightDisplayFOV=35.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.150000
-     FireModeClass(0)=Class'DH_Weapons.DH_MP40Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_MP40MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_MP40Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_MP40MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -36,9 +36,9 @@ defaultproperties
      CurrentRating=0.700000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_MP40Pickup'
+     PickupClass=class'DH_Weapons.DH_MP40Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_MP40Attachment'
+     AttachmentClass=class'DH_Weapons.DH_MP40Attachment'
      ItemName="Maschinenpistole 40"
      Mesh=SkeletalMesh'Axis_Mp40_1st.mp40-mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.SMG.MP40_s'

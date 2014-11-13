@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: BAR magazine pouch"
      AmmoAmount=20
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_BARAmmo'
+     InventoryType=class'DH_Weapons.DH_BARAmmo'
      PickupMessage="You picked up a BAR magazine pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

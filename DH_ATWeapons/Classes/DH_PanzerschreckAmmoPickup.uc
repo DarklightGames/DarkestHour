@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: Panzerschreck rocket"
      AmmoAmount=1
      MaxDesireability=0.300000
-     InventoryType=Class'DH_ATWeapons.DH_PanzerschreckAmmo'
+     InventoryType=class'DH_ATWeapons.DH_PanzerschreckAmmo'
      PickupMessage="You picked up a Panzerschreck rocket."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

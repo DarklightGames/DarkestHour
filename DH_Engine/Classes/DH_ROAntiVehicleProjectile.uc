@@ -464,7 +464,7 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
 defaultproperties
 {
      bIsAlliedShell=true
-     ShellShatterEffectClass=Class'DH_Effects.DH_TankAPShellShatter'
+     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatter'
      ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
      ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
      ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'

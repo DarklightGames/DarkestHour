@@ -263,7 +263,7 @@ simulated function UpdateTurretReferences()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.stug3G_body_camo2');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.stug3g_treads');
@@ -276,7 +276,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.stug3g_treads');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.stug3G_armor_camo2');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -284,8 +284,8 @@ defaultproperties
      GunMantletArmorFactor=8.000000
      GunMantletSlope=45.000000
      bHasAddedSideArmor=true
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GCannonPawn_CamoTwo')
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuH42MountedMGPawn')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn_CamoTwo')
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn')
      DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destlate'
      Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_camo2'

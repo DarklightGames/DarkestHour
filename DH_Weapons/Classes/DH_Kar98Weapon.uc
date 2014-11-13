@@ -31,8 +31,8 @@ defaultproperties
      IronSightDisplayFOV=25.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.400000
-     FireModeClass(0)=Class'DH_Weapons.DH_Kar98Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_Kar98MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_Kar98Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_Kar98MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -43,9 +43,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_Kar98Pickup'
+     PickupClass=class'DH_Weapons.DH_Kar98Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_Kar98Attachment'
+     AttachmentClass=class'DH_Weapons.DH_Kar98Attachment'
      ItemName="Karabiner 98k"
      Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k_mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_s'

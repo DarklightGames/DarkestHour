@@ -220,6 +220,6 @@ defaultproperties
 {
      FireAttachBone="mg_pitch"
      FireEffectOffset=(X=10.000000,Z=5.000000)
-     FireEffectClass=Class'ROEngine.VehicleDamagedEffect'
-     VehicleBurningDamType=Class'DH_VehicleBurningDamType'
+     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+     VehicleBurningDamType=class'DH_VehicleBurningDamType'
 }

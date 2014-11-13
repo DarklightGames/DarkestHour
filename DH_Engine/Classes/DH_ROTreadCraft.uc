@@ -297,7 +297,7 @@ function bool PlaceExitingDriver()
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
         L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 }
@@ -306,7 +306,7 @@ simulated function UpdatePrecacheMaterials()
 {
         Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 //Don't need this in DH
@@ -764,7 +764,7 @@ function bool KDriverLeave(bool bForceLeave)
         return false;
     }
     else
-        Super.KDriverLeave(bForceLeave);
+        super.KDriverLeave(bForceLeave);
 
 }
 
@@ -1035,7 +1035,7 @@ simulated function PostBeginPlay()
 
 simulated function PostNetBeginPlay()
 {
-    Super.PostNetBeginPlay();
+    super.PostNetBeginPlay();
 
     if (!bEngineOff)
         bEngineOff=false;
@@ -3310,7 +3310,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
-        DamageType = Class'ROSuicided';
+        DamageType = class'ROSuicided';
         Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
@@ -3718,7 +3718,7 @@ simulated function Destroyed()
         }
     }
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 simulated event DestroyAppearance()
@@ -3961,7 +3961,7 @@ defaultproperties
      EngineFireHEATChance=0.850000
      HullFireChance=0.250000
      HullFireHEATChance=0.500000
-     VehicleBurningDamType=Class'DH_VehicleBurningDamType'
+     VehicleBurningDamType=class'DH_VehicleBurningDamType'
      PlayerFireDamagePerSec=15.000000
      bFirstHit=true
      FireDetonationChance=0.070000
@@ -3973,7 +3973,7 @@ defaultproperties
      DamagedStartUpSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
      DamagedShutDownSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_stop_damaged'
      SmokingEngineSound=Sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
-     FireEffectClass=Class'ROEngine.VehicleDamagedEffect'
+     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
      EngineHealthMax=300
      bEngineOff=true
      DriverTraceDist=4500.000000

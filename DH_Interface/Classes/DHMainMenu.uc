@@ -26,7 +26,7 @@ var string waitString;
 var string quickplayip;
 var string LinkClassName;
 var string getRequest;
-var String getResponse;
+var string getResponse;
 var string newsIPAddr;
 
 var int     myRetryCount;
@@ -45,7 +45,7 @@ var globalconfig bool AcceptedEULA;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int xl,yl,y;
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
     Controller.LCDCls();
     Controller.LCDDrawTile(Controller.LCDLogo,0,0,50,43,0,0,50,43);
     y = 0;
@@ -240,7 +240,7 @@ event Opened(GUIComponent Sender)
      if (Sender != none && PlayerOwner().Level.IsPendingConnection())
             PlayerOwner().ConsoleCommand("CANCEL");
          ShowSubMenu(0);
-         Super.Opened(Sender);
+         super.Opened(Sender);
 }
 
 function LoadMenuLevel()
@@ -261,7 +261,7 @@ event Timer()
     local string page;
     local string command;
 
-    if (myLink != None)
+    if (myLink != none)
     {
         if (myLink.ServerIpAddr.Port != 0 && myLink.IsConnected())
         {
@@ -310,14 +310,14 @@ protected function ROBufferedTCPLink CreateNewLink()
     local class<ROBufferedTCPLink> NewLinkClass;
     local ROBufferedTCPLink NewLink;
 
-    if (PlayerOwner() == None)
-        return None;
+    if (PlayerOwner() == none)
+        return none;
 
     if (LinkClassName != "")
     {
-        NewLinkClass = class<ROBufferedTCPLink>(DynamicLoadObject( LinkClassName, class'Class'));
+        NewLinkClass = class<ROBufferedTCPLink>(DynamicLoadObject( LinkClassName, class'class'));
     }
-    if (NewLinkClass != None)
+    if (NewLinkClass != none)
     {
         NewLink = PlayerOwner().Spawn( NewLinkClass );
     }
@@ -329,11 +329,11 @@ protected function ROBufferedTCPLink CreateNewLink()
 
 function GetQuickPlayIP()
 {
-    if (myLink == None)
+    if (myLink == none)
     {
         myLink = CreateNewLink();
     }
-    if (myLink != None)
+    if (myLink != none)
     {
         myLink.ServerIpAddr.Port = 0;
 

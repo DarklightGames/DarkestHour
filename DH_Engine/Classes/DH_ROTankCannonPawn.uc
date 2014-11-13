@@ -178,7 +178,7 @@ simulated function PostBeginPlay()
     local vector Offset;
     local vector Loc;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     Offset.Z += 250; //220
     Loc = GetBoneCoords('com_player').ZAxis;
@@ -463,7 +463,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-    Super.ClientKDriverLeave(PC);
+    super.ClientKDriverLeave(PC);
 }
 
 function ServerChangeDriverPos()
@@ -671,7 +671,7 @@ function AltFire(optional float F)
         return;
     }
 
-    Super.AltFire(F);
+    super.AltFire(F);
 }
 
 function ServerChangeDriverPosition(byte F)

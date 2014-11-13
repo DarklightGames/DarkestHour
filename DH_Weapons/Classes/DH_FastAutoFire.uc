@@ -241,7 +241,7 @@ event ModeDoFire()
 {
     if (!ROWeapon(Owner).IsBusy() && AllowFire() && IsInState('FireLoop'))
     {
-        Super.ModeDoFire();
+        super.ModeDoFire();
     }
 //    else if (abs(ROWeaponPtr.mouseClickTime - Level.TimeSeconds) < 0.02)
 //    {

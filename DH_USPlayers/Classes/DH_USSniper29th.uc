@@ -28,10 +28,10 @@ defaultproperties
      Models(3)="US_29Inf4"
      Models(4)="US_29Inf5"
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_SpringfieldScopedWeapon',Amount=18,AssociatedAttachment=Class'DH_Weapons.DH_M1GarandAmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet29thEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet29thEMb'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',Amount=18,AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet29thEMb'
      PrimaryWeaponType=WT_Sniper
      Limit=1
 }

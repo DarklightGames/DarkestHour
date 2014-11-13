@@ -26,11 +26,11 @@ defaultproperties
      Models(1)="US_502101ABOf2"
      Models(2)="US_502101ABOf3"
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
      GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet502101stOfficera'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet502101stOfficerb'
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stOfficera'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stOfficerb'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      Limit=1

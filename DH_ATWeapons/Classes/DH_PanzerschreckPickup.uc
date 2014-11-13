@@ -24,7 +24,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Panzerschreck"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_ATWeapons.DH_PanzerschreckWeapon'
+     InventoryType=class'DH_ATWeapons.DH_PanzerschreckWeapon'
      PickupMessage="You got the Panzerschreck."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

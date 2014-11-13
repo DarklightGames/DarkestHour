@@ -48,7 +48,7 @@ simulated function bool ReadyToFire(bool bAltFire)
     if( (MGReloadState != MG_ReadyToFire || !bClientCanFireMG) && !bAltFire )
     {
         ShakeView(false); // Matt: added to jolt when trying to fire empty
-        PlaySound(NoAmmoSound, SLOT_None,1.5,, 25, ,true); // Matt: added to play click sound when trying to fire empty
+        PlaySound(NoAmmoSound, SLOT_none,1.5,, 25, ,true); // Matt: added to play click sound when trying to fire empty
         return false;
     }
 
@@ -164,12 +164,12 @@ defaultproperties
      MGReloadSoundTwo=Sound'Inf_Weapons_Foley.mg34.mg34_reload02_039'
      MGReloadSoundThree=Sound'Inf_Weapons_Foley.mg34.mg34_reload03_104'
      MGReloadSoundFour=Sound'Inf_Weapons_Foley.mg34.mg34_reload04_170'
-     bClientCanFireMG=True
+     bClientCanFireMG=true
      MGReloadState=MG_ReadyToFire
      NumMags=12
      FireAttachBone="gunner_int"
      FireEffectOffset=(Y=6.000000)
-     DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
      VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=12.500000,Y=6.000000,Z=43.000000))
      VehHitpoints(1)=(PointRadius=17.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=5.000000,Y=6.000000,Z=18.500000))
@@ -182,19 +182,19 @@ defaultproperties
      GunnerAttachmentBone="loader_attachment"
      WeaponFireOffset=3.000000
      RotationsPerSecond=0.500000
-     bInstantFire=False
+     bInstantFire=false
      Spread=0.002000
      FireInterval=0.070580
-     AmbientEffectEmitterClass=Class'ROVehicles.VehicleMGEmitter'
+     AmbientEffectEmitterClass=class'ROVehicles.VehicleMGEmitter'
      FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
      AmbientSoundScaling=5.000000
      FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-     ProjectileClass=Class'DH_Vehicles.DH_MG34VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
      ShakeRotMag=(X=25.000000,Y=0.000000,Z=10.000000)
      ShakeRotRate=(X=5000.000000,Y=5000.000000,Z=5000.000000)
      ShakeOffsetMag=(X=0.500000,Y=0.000000,Z=0.200000)
      ShakeOffsetRate=(X=500.000000,Y=500.000000,Z=500.000000)
-     AIInfo(0)=(bLeadTarget=True,bFireOnRelease=True,aimerror=800.000000,RefireRate=0.070580)
+     AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.000000,RefireRate=0.070580)
      CustomPitchUpLimit=2100
      CustomPitchDownLimit=63100
      BeginningIdleAnim="loader_idle_close"
@@ -203,9 +203,9 @@ defaultproperties
      Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body'
      Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
      Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
-     bCollideActors=True
-     bBlockActors=True
-     bProjTarget=True
-     bBlockZeroExtentTraces=True
-     bBlockNonZeroExtentTraces=True
+     bCollideActors=true
+     bBlockActors=true
+     bProjTarget=true
+     bBlockZeroExtentTraces=true
+     bBlockNonZeroExtentTraces=true
 }

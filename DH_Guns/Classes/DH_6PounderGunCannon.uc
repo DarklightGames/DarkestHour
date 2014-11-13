@@ -10,7 +10,7 @@ class DH_6PounderGunCannon extends DH_ATGunCannon;
 defaultproperties
 {
      InitialTertiaryAmmo=20
-     TertiaryProjectileClass=Class'DH_Guns.DH_6PounderCannonShellHE'
+     TertiaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellHE'
      SecondarySpread=0.004800
      TertiarySpread=0.001250
      ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
@@ -54,11 +54,11 @@ defaultproperties
      WeaponFireOffset=20.000000
      RotationsPerSecond=0.025000
      FireInterval=3.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Guns.DH_6PounderCannonShell'
+     ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
      ShakeRotMag=(Z=110.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=2.000000
@@ -75,8 +75,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=66
      InitialSecondaryAmmo=10
-     PrimaryProjectileClass=Class'DH_Guns.DH_6PounderCannonShell'
-     SecondaryProjectileClass=Class'DH_Guns.DH_6PounderCannonShellAPDS'
+     PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
+     SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
      Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_turret'
      Skins(0)=Texture'DH_Artillery_Tex.57mmGun.57mmGun'
      Skins(1)=Texture'DH_Artillery_Tex.17pounder.17Pounder_ext'

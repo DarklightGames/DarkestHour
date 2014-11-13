@@ -29,7 +29,7 @@ simulated function PreBeginPlay()
 
 function PickupFunction(Pawn Other)
 {
-    Super.PickupFunction(Other);
+    super.PickupFunction(Other);
 
     AttachToPawn(Instigator);
 
@@ -115,8 +115,8 @@ function AttachToPawn(Pawn P)
 
 defaultproperties
 {
-    FireModeClass(0)=Class'ROInventory.ROEmptyFireClass'
-    FireModeClass(1)=Class'ROInventory.ROEmptyFireClass'
+    FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
+    FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
     InventoryGroup=10
     TeamCanUse=NEUTRAL_TEAM_INDEX
     AttachBoneName='hip'

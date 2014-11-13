@@ -29,7 +29,7 @@ simulated function PostBeginPlay()
     if (bDebugROBallistics)
         bDebugBallistics = true;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 /*simulated function HitWall(vector HitNormal, actor Wall)
@@ -344,7 +344,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     if (bDebugMode) log(">>>"@Other@"=="@Instigator@"||"@Other.Base@"=="@Instigator@"||"@!Other.bBlockHitPointTraces);
 
-//  Super.ProcessTouch(Other, HitLocation);
+//  super.ProcessTouch(Other, HitLocation);
     //>>>>
     if (Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
         return;

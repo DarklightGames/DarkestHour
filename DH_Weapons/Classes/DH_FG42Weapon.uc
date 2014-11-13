@@ -106,10 +106,10 @@ defaultproperties
      MaxNumPrimaryMags=6
      InitialNumPrimaryMags=6
      bHasSelectFire=true
-     FireModeClass(0)=Class'DH_Weapons.DH_FG42Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_FG42MeleeFire'
-     PickupClass=Class'DH_Weapons.DH_FG42Pickup'
-     AttachmentClass=Class'DH_Weapons.DH_FG42Attachment'
+     FireModeClass(0)=class'DH_Weapons.DH_FG42Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
+     PickupClass=class'DH_Weapons.DH_FG42Pickup'
+     AttachmentClass=class'DH_Weapons.DH_FG42Attachment'
      ItemName="Fallschirmjägergewehr 42"
      Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42'
 }

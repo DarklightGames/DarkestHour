@@ -32,11 +32,11 @@ defaultproperties
      Models(3)="US_29Inf4B"
      Models(4)="US_29Inf5B"
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_M1GarandWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1GarandAmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
-     Grenades(1)=(Item=Class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet29thEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet29thEMb'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet29thEMb'
      PrimaryWeaponType=WT_SemiAuto
      Limit=2
 }

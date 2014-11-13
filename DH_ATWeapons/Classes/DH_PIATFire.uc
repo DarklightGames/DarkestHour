@@ -26,7 +26,7 @@ event ModeDoFire()
         }
     }
 
-    Super.ModeDoFire();
+    super.ModeDoFire();
 
 //  DH_PIATWeapon(Weapon).PostFire();
 }
@@ -109,14 +109,14 @@ defaultproperties
      TweenTime=0.000000
      FireForce="RocketLauncherFire"
      FireRate=2.600000
-     AmmoClass=Class'DH_ATWeapons.DH_PIATAmmo'
+     AmmoClass=class'DH_ATWeapons.DH_PIATAmmo'
      ShakeRotMag=(X=100.000000,Y=100.000000,Z=800.000000)
      ShakeRotRate=(X=12500.000000,Y=12500.000000,Z=12500.000000)
      ShakeRotTime=7.000000
      ShakeOffsetMag=(X=6.000000,Y=2.000000,Z=10.000000)
      ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      ShakeOffsetTime=4.000000
-     ProjectileClass=Class'DH_ATWeapons.DH_PIATRocket'
+     ProjectileClass=class'DH_ATWeapons.DH_PIATRocket'
      BotRefireRate=0.500000
      WarnTargetPct=0.900000
      aimerror=1200.000000

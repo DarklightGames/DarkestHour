@@ -26,7 +26,7 @@ defaultproperties
      DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VTiger_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
      DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-110000.000000)
-     GunClass=Class'DH_Vehicles.DH_TigerCannon'
+     GunClass=class'DH_Vehicles.DH_TigerCannon'
      CameraBone="Gun"
      bPCRelativeFPRotation=true
      DriveAnim="VTiger_com_idle_close"

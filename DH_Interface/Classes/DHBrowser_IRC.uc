@@ -9,7 +9,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int              i;
 
-    Super.Initcomponent(MyController, MyOwner);
+    super.Initcomponent(MyController, MyOwner);
 
     class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 

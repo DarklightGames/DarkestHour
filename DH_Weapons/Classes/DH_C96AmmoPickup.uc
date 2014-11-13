@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: C96 magazine pouch"
      AmmoAmount=20
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_C96Ammo'
+     InventoryType=class'DH_Weapons.DH_C96Ammo'
      PickupMessage="You picked up a C96 magazine pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

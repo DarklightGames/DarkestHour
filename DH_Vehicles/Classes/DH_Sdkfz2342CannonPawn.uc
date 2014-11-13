@@ -147,7 +147,7 @@ simulated function DrawHUD(Canvas Canvas)
     PC = PlayerController(Controller);
     if (PC == none)
     {
-        Super.RenderOverlays(Canvas);
+        super.RenderOverlays(Canvas);
         //log("PanzerTurret PlayerController was none, returning");
         return;
     }
@@ -305,7 +305,7 @@ defaultproperties
      DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      bMustBeTankCrew=false
      FireImpulse=(X=-15000.000000)
-     GunClass=Class'DH_Vehicles.DH_Sdkfz2342Cannon'
+     GunClass=class'DH_Vehicles.DH_Sdkfz2342Cannon'
      CameraBone="Gun"
      MinRotateThreshold=0.500000
      MaxRotateThreshold=2.300000

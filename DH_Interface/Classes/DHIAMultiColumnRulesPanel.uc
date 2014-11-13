@@ -131,7 +131,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
         localController = MyController;
-        Super.InitComponent(MyController, MyOwner);
+        super.InitComponent(MyController, MyOwner);
         RemoveComponent(b_Symbols);
         sb_background.ManageComponent(ch_Advanced);
         sb_background.ManageComponent(lb_Rules);
@@ -155,7 +155,7 @@ function InternalOnChange(GUIComponent Sender)
                 OnDifficultyChanged(combo.getIndex(), combo.tag);
         }
         }
-        Super.InternalOnChange(Sender);
+        super.InternalOnChange(Sender);
 }
 
 defaultproperties

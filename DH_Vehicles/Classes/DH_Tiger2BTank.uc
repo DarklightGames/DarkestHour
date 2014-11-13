@@ -32,7 +32,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Tiger2B_body_normandy');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.Tiger2B_treads');
@@ -48,7 +48,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.Tiger2B_body_int');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -109,12 +109,12 @@ defaultproperties
      TransRatio=0.070000
      SteerSpeed=50.000000
      SteerBoneName="Steering"
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-232.000000,Y=23.000000,Z=27.000000),ExhaustRotation=(Pitch=22000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-232.000000,Y=-27.000000,Z=27.000000),ExhaustRotation=(Pitch=22000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Tiger2BCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_Tiger2BMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BMountedMGPawn',WeaponBone="Mg_placement")
      IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'

@@ -17,7 +17,7 @@ defaultproperties
 {
      NumMags=20
      ReloadLength=7.000000
-     DummyTracerClass=Class'DH_Vehicles.DH_BrenVehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_BrenVehicleClientTracer'
      mTracerInterval=0.600000
      hudAltAmmoIcon=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
      YawBone="Gun_protection"
@@ -26,11 +26,11 @@ defaultproperties
      Spread=0.002000
      FireInterval=0.125000
      AltFireInterval=0.125000
-     AmbientEffectEmitterClass=Class'DH_Vehicles.DH_VehicleBrenMGEmitter'
+     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
      FireSoundClass=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_loop'
      AmbientSoundScaling=5.000000
      FireEndSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_end'
-     ProjectileClass=Class'DH_Vehicles.DH_BrenVehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_BrenVehicleBullet'
      ShakeRotRate=(X=50.000000,Y=50.000000,Z=50.000000)
      ShakeOffsetRate=(X=5.000000,Y=5.000000,Z=5.000000)
      CustomPitchUpLimit=3500

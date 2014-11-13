@@ -154,12 +154,12 @@ function inventory SpawnWeaponCopy(pawn Other)
 
 defaultproperties
 {
-     WeaponType=Class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
+     WeaponType=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
      TouchMessage="Pick Up: Satchel charge 10lb"
      bAmmoPickupIsWeapon=true
      AmmoAmount=1
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_SachelChargeAmmo'
+     InventoryType=class'DH_Weapons.DH_SachelChargeAmmo'
      PickupMessage="You got a 10lb satchel."
      PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
      PickupForce="AssaultRiflePickup"

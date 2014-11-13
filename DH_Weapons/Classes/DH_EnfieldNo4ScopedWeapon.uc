@@ -31,7 +31,7 @@ simulated function UpdateScopeMode()
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
             ScopeScriptedTexture.SetSize(512,512);
-            ScopeScriptedTexture.Client = Self;
+            ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
             {
@@ -71,7 +71,7 @@ simulated function UpdateScopeMode()
             }
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
             ScopeScriptedTexture.SetSize(1024,1024);
-            ScopeScriptedTexture.Client = Self;
+            ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
             {
@@ -241,8 +241,8 @@ defaultproperties
      ZoomOutTime=0.400000
      PlayerFOVZoom=27.000000
      XoffsetHighDetail=(X=-12.000000)
-     FireModeClass(0)=Class'DH_Weapons.DH_EnfieldNo4ScopedFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
+     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -253,9 +253,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
+     PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
+     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
      ItemName="Scoped Enfield No.4"
      Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'
 }

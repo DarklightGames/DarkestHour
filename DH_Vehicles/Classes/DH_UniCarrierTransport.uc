@@ -33,7 +33,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     //L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext');
     L.AddPrecacheMaterial(Material'allies_vehicles_tex.Treads.T60_treads');
@@ -48,7 +48,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int');
     Level.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 // Overriden to handle the special driver animations for this vehicle
@@ -146,15 +146,15 @@ defaultproperties
      EngineRPMSoundRange=5000.000000
      SteerBoneName="Steering"
      RevMeterScale=4000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-105.000000,Y=33.000000,Z=13.000000),ExhaustRotation=(Pitch=36000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-105.000000,Y=-33.000000,Z=13.000000),ExhaustRotation=(Pitch=36000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_UniCarrierGunPawn',WeaponBone="mg_base")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_UniCarrierPassengerOne',WeaponBone="passenger_l_1")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_UniCarrierPassengerTwo',WeaponBone="passenger_l_2")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_UniCarrierPassengerThree',WeaponBone="passenger_r_1")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_UniCarrierPassengerFour',WeaponBone="passenger_r_2")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierGunPawn',WeaponBone="mg_base")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerOne',WeaponBone="passenger_l_1")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerTwo',WeaponBone="passenger_l_2")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerThree',WeaponBone="passenger_r_1")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerFour',WeaponBone="passenger_r_2")
      IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
      StartUpSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_start'
      ShutDownSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
@@ -265,7 +265,7 @@ defaultproperties
      VehiclePositionString="in a Mk.I Bren Carrier"
      VehicleNameString="Mk.I Bren Carrier"
      MaxDesireability=0.100000
-     HUDOverlayClass=Class'ROVehicles.UniCarrierDriverOverlay'
+     HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'
      HUDOverlayOffset=(Y=-0.800000,Z=1.990000)
      HUDOverlayFOV=81.000000
      PitchUpLimit=500

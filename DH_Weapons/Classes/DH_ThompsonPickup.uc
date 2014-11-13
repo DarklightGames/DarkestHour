@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: M1A1 Thompson"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_ThompsonWeapon'
+     InventoryType=class'DH_Weapons.DH_ThompsonWeapon'
      PickupMessage="You got the M1A1 Thompson."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

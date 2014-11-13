@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: M1 Carbine mag pouch"
      AmmoAmount=15
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_M1CarbineAmmo'
+     InventoryType=class'DH_Weapons.DH_M1CarbineAmmo'
      PickupMessage="You picked up a M1 Carbine mag pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

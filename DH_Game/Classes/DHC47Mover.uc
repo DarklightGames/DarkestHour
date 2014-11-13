@@ -39,7 +39,7 @@ LoopAnim(AnimName, AnimRate);               //DH - loop the anim
     RealRotation = Rotation;
 
     // Init key info.
-    Super.BeginPlay();
+    super.BeginPlay();
     KeyNum         = Clamp(KeyNum, 0, ArrayCount(KeyPos)-1);
     PhysAlpha      = 0.0;
     StartKeyNum = KeyNum;
@@ -68,7 +68,7 @@ function PostBeginPlay()
     for (n = 0; n < KeyMoveTime.length; n++)
         KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     MoveTime = KeyMoveSpeed[ KeyNum ];
 

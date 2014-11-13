@@ -29,6 +29,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanCannonPawn_Snow')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_Snow')
      Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
 }

@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: 32 round 9mm mag pouch"
      AmmoAmount=32
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_StenMkIIAmmo'
+     InventoryType=class'DH_Weapons.DH_StenMkIIAmmo'
      PickupMessage="32 round 9mm mag pouch added to inventory."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

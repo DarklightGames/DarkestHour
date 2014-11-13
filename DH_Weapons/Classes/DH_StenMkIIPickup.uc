@@ -20,7 +20,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Sten MkII"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_StenMkIIWeapon'
+     InventoryType=class'DH_Weapons.DH_StenMkIIWeapon'
      PickupMessage="You got the Sten MkII."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

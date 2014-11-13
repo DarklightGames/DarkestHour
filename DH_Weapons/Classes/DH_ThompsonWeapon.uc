@@ -157,8 +157,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      bHasSelectFire=true
-     FireModeClass(0)=Class'DH_Weapons.DH_ThompsonFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_ThompsonMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_ThompsonFire'
+     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -168,9 +168,9 @@ defaultproperties
      CurrentRating=0.700000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_ThompsonPickup'
+     PickupClass=class'DH_Weapons.DH_ThompsonPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_ThompsonAttachment'
+     AttachmentClass=class'DH_Weapons.DH_ThompsonAttachment'
      ItemName="M1A1 Thompson"
      Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson'
      bUseHighDetailOverlayIndex=true

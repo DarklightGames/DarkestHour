@@ -17,14 +17,14 @@ defaultproperties
      YawBone="Vehicle_attachment01"
      GunnerAttachmentBone="com_player"
      RotationsPerSecond=0.007813
-     ProjectileClass=Class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
+     ProjectileClass=class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
      MaxPositiveYaw=1820
      MaxNegativeYaw=-1820
      bLimitYaw=true
      InitialPrimaryAmmo=16
      InitialSecondaryAmmo=4
-     PrimaryProjectileClass=Class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
-     SecondaryProjectileClass=Class'DH_Mortars.DH_Kz8cmGrW42ProjectileSmoke'
+     PrimaryProjectileClass=class'DH_Mortars.DH_Kz8cmGrW42ProjectileHE'
+     SecondaryProjectileClass=class'DH_Mortars.DH_Kz8cmGrW42ProjectileSmoke'
      Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_turret'
 }
 

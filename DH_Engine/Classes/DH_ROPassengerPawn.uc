@@ -143,7 +143,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-    Super.ClientKDriverLeave(PC);
+    super.ClientKDriverLeave(PC);
 }
 
 // Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position

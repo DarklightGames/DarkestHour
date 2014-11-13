@@ -31,8 +31,8 @@ defaultproperties
      Models(3)="OT_4"
      Models(4)="OT_5"
      Models(5)="OT_6"
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=1)
-     Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
-     Headgear(1)=Class'ROInventory.ROGermanHat'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=1)
+     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
+     Headgear(1)=class'ROInventory.ROGermanHat'
 }

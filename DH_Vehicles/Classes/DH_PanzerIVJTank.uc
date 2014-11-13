@@ -34,7 +34,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_ext');
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.Panzer4F2_int');
@@ -58,7 +58,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo2');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo2');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -121,16 +121,16 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-176.000000,Y=-10.000000,Z=42.000000),ExhaustRotation=(Pitch=22000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-176.000000,Y=46.000000,Z=42.000000),ExhaustRotation=(Pitch=22000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIVJCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIVMountedMGPawn',WeaponBone="Mg_placement")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIVPassengerOne',WeaponBone="body")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIVPassengerTwo',WeaponBone="body")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIVPassengerThree',WeaponBone="body")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIVPassengerFour',WeaponBone="body")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVJCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerOne',WeaponBone="body")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerTwo',WeaponBone="body")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerThree',WeaponBone="body")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVPassengerFour',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'

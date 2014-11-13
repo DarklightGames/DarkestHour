@@ -210,10 +210,10 @@ defaultproperties
      IronSightDisplayFOV=25.000000
      FreeAimRotationSpeed=2.000000
      bHasSelectFire=true
-     FireModeClass(0)=Class'DH_Weapons.DH_BARFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_BARMeleeFire'
-     PickupClass=Class'DH_Weapons.DH_BARPickup'
-     AttachmentClass=Class'DH_Weapons.DH_BARAttachment'
+     FireModeClass(0)=class'DH_Weapons.DH_BARFire'
+     FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
+     PickupClass=class'DH_Weapons.DH_BARPickup'
+     AttachmentClass=class'DH_Weapons.DH_BARAttachment'
      ItemName="Browning Automatic Rifle"
      Mesh=SkeletalMesh'DH_BAR_1st.BAR'
 }

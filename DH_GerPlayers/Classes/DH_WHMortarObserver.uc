@@ -31,10 +31,10 @@ defaultproperties
      Models(2)="WH_3"
      Models(3)="WH_4"
      SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
      GivenItems(0)="DH_Equipment.DH_GerMortarBinocularsItem"
-     Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
-     Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
+     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
+     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
      Limit=1
 }

@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: 250 round 7.92x57mm belt"
      AmmoAmount=250
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DHMG250Rd792x57Ammo'
+     InventoryType=class'DH_Weapons.DHMG250Rd792x57Ammo'
      PickupMessage="250 round 7.92x57mm belt added to inventory."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

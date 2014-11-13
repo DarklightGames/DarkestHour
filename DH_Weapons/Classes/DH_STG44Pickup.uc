@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: STG44"
      MaxDesireability=0.900000
-     InventoryType=Class'DH_Weapons.DH_STG44Weapon'
+     InventoryType=class'DH_Weapons.DH_STG44Weapon'
      PickupMessage="You got the STG44."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

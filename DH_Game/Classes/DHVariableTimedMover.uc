@@ -20,7 +20,7 @@ function PostBeginPlay()
 
     KeyMoveSpeed[KeyMoveTime.length] = 0; // This is to prevent OutofBounds errors on the array
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     MoveTime = KeyMoveSpeed[ KeyNum ];
 
@@ -35,19 +35,19 @@ function PostBeginPlay()
 simulated event KeyFrameReached()
 {
 MoveTime = KeyMoveSpeed[ KeyNum ];
-Super.KeyFrameReached();
+super.KeyFrameReached();
 }
 
 function DoOpen()
 {
 MoveTime = KeyMoveSpeed[ KeyNum ];
-Super.DoOpen();
+super.DoOpen();
 }
 
 function DoClose()
 {
 MoveTime = KeyMoveSpeed[ KeyNum ];
-Super.DoClose();
+super.DoClose();
 }
 
 state ServerIdle
@@ -60,7 +60,7 @@ state() LoopMove
 event KeyFrameReached()
 {
 MoveTime = KeyMoveSpeed[ KeyNum ];
-Super.KeyFrameReached();
+super.KeyFrameReached();
 }
 }
 
@@ -69,7 +69,7 @@ state() ConstantLoop
 event KeyFrameReached()
 {
 MoveTime = KeyMoveSpeed[ KeyNum ];
-Super.KeyFrameReached();
+super.KeyFrameReached();
 }
 }
 
@@ -78,7 +78,7 @@ state() LeadInOutLooper
 event KeyFrameReached()
 {
 MoveTime = KeyMoveSpeed[ KeyNum ];
-Super.KeyFrameReached();
+super.KeyFrameReached();
 }
 }
 
@@ -87,7 +87,7 @@ state LeadInOutLooping
 event KeyFrameReached()
 {
 MoveTime = KeyMoveSpeed[ KeyNum ];
-Super.KeyFrameReached();
+super.KeyFrameReached();
 }
 }
 

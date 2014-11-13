@@ -161,8 +161,8 @@ defaultproperties
      ZoomOutTime=0.100000
      FreeAimRotationSpeed=7.000000
      bHasSelectFire=true
-     FireModeClass(0)=Class'DH_Weapons.DH_STG44Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_STG44MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_STG44Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_STG44MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -173,9 +173,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_STG44Pickup'
+     PickupClass=class'DH_Weapons.DH_STG44Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_STG44Attachment'
+     AttachmentClass=class'DH_Weapons.DH_STG44Attachment'
      ItemName="Sturmgewehr 44"
      Mesh=SkeletalMesh'Axis_Stg44_1st.STG44-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.SMG.STG44_S'

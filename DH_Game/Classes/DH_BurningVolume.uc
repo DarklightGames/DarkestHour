@@ -22,17 +22,17 @@ function CausePainTo(Actor Other)
 	{
 		if ( Region.Zone.bSoftKillZ && (Other.Physics != PHYS_Walking) )
 			return;
-		Other.TakeDamage(int(DamagePerSec * depth), None, Location, vect(0,0,0), DamageType);
+		Other.TakeDamage(int(DamagePerSec * depth), none, Location, vect(0,0,0), DamageType);
 		if ( P.Health <= 20 )
-			Other.TakeDamage(int(FireDamageAmount * depth), None, Location, vect(0,0,0), FireDamageType);
+			Other.TakeDamage(int(FireDamageAmount * depth), none, Location, vect(0,0,0), FireDamageType);
 
-		if ( (P != None) && (P.Controller != None) )
+		if ( (P != none) && (P.Controller != none) )
 			P.Controller.PawnIsInPain(self);
 
 	}
 	else
 	{
-		if ( (P != None) && (P.Health < P.HealthMax) )
+		if ( (P != none) && (P.Health < P.HealthMax) )
 			P.Health = Min(P.HealthMax, P.Health - depth * DamagePerSec);
 	}
 }
@@ -43,15 +43,15 @@ defaultproperties
 	DamagePerSec=45
 	FireDamageType=class'DH_Engine.DH_BurningDamType'
 	DamageType=class'FellLava'
-	bPainCausing=True
+	bPainCausing=true
 	bWaterVolume=false
-	bDestructive=True
+	bDestructive=true
 	bNoInventory=true
 	ViewFog=(X=0.5859375,Y=0.1953125,Z=0.078125)
 	FluidFriction=+00004.000000
 	LocationName="in fire"
 	KExtraLinearDamping=0.8
 	KExtraAngularDamping=0.1
-	RemoteRole=ROLE_None
+	RemoteRole=ROLE_none
 	bNoDelete=true
 }

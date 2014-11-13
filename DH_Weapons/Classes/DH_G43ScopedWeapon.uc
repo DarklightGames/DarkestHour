@@ -81,8 +81,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      PlayerFOVZoom=20.000000
-     FireModeClass(0)=Class'DH_Weapons.DH_G43ScopedFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_G43MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_G43ScopedFire'
+     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -93,9 +93,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_G43ScopedPickup'
+     PickupClass=class'DH_Weapons.DH_G43ScopedPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_G43ScopedAttachment'
+     AttachmentClass=class'DH_Weapons.DH_G43ScopedAttachment'
      ItemName="Gewehr 43"
      Mesh=SkeletalMesh'Axis_G43_1st.g43_scoped_mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Rifles.g43_sniper_s'

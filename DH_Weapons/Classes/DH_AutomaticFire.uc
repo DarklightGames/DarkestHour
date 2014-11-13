@@ -21,7 +21,7 @@ simulated function bool AllowFire()
 
 function ModeTick(float dt)
 {
-    Super.ModeTick(dt);
+    super.ModeTick(dt);
 
     if (bIsFiring && !AllowFire())
     {

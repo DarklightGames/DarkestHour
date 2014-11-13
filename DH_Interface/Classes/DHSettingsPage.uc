@@ -22,7 +22,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         local rotator PlayerRot;
         local int i;
 
-        Super.InitComponent(MyController, MyOwner);
+        super.InitComponent(MyController, MyOwner);
         PageCaption = t_Header.Caption;
 
         GetSizingButton();
@@ -90,12 +90,12 @@ function InternalOnClose(optional Bool bCanceled)
         NewRot = PlayerOwner().Rotation;
         NewRot.Pitch = SavedPitch;
         PlayerOwner().SetRotation(NewRot);
-        Super.OnClose(bCanceled);
+        super.OnClose(bCanceled);
 }
 
 function InternalOnChange(GUIComponent Sender)
 {
-    Super.InternalOnChange(Sender);
+    super.InternalOnChange(Sender);
 
     if (c_Tabs.ActiveTab == none)
         ActivePanel = none;

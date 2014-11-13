@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: Bazooka rocket"
      AmmoAmount=1
      MaxDesireability=0.300000
-     InventoryType=Class'DH_ATWeapons.DH_BazookaAmmo'
+     InventoryType=class'DH_ATWeapons.DH_BazookaAmmo'
      PickupMessage="You picked up a Bazooka rocket."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

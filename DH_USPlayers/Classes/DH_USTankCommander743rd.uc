@@ -17,11 +17,11 @@ defaultproperties
      Models(1)="US_743rdT2"
      Models(2)="US_743rdT3"
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_ThompsonWeapon',Amount=3)
-     PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_GreaseGunWeapon',Amount=3)
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',Amount=3)
+     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',Amount=3)
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
      GivenItems(0)="DH_Equipment.DH_USBinocularsItem"
-     Headgear(0)=Class'DH_USPlayers.DH_USTankerHat'
+     Headgear(0)=class'DH_USPlayers.DH_USTankerHat'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true

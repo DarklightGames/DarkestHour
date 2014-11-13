@@ -73,7 +73,7 @@ defaultproperties
 {
      Damage=600.000000
      DamageRadius=725.000000
-     MyDamageType=Class'DH_Weapons.DH_SatchelDamType'
+     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
      CollisionRadius=4.000000
      CollisionHeight=4.000000
 }

@@ -32,7 +32,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3_body_ext');
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_wheels');
@@ -49,7 +49,7 @@ simulated function UpdatePrecacheMaterials()
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int');
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.Treads.Sherman_treads');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -115,15 +115,15 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-116.000000,Z=35.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanCannonPawn_M4A375W',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanMountedMGPawn_M4A176W',WeaponBone="Mg_placement")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanJumboPassengerOne',WeaponBone="Passenger_1")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanJumboPassengerTwo',WeaponBone="passenger_2")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanJumboPassengerThree',WeaponBone="passenger_3")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanJumboPassengerFour',WeaponBone="passenger_4")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A375W',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn_M4A176W',WeaponBone="Mg_placement")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanJumboPassengerOne',WeaponBone="Passenger_1")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanJumboPassengerTwo',WeaponBone="passenger_2")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanJumboPassengerThree',WeaponBone="passenger_3")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanJumboPassengerFour',WeaponBone="passenger_4")
      IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
      StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
      ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'

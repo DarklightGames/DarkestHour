@@ -17,7 +17,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     Gotostate('EnteringVehicle');
 
-    Super.ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
@@ -184,7 +184,7 @@ function bool KDriverLeave(bool bForceLeave)
 
     OldVel = Velocity;
 
-    bSuperDriverLeave = Super.KDriverLeave(bForceLeave);
+    bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
     OldVel.Z += 50;
     Instigator.Velocity = OldVel;
@@ -200,7 +200,7 @@ defaultproperties
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
      bMultiPosition=true
      bMustBeTankCrew=false
-     GunClass=Class'DH_Vehicles.DH_M3A1HalftrackGun'
+     GunClass=class'DH_Vehicles.DH_M3A1HalftrackGun'
      bCustomAiming=true
      PositionInArray=0
      bHasAltFire=false
@@ -215,7 +215,7 @@ defaultproperties
      TPCamWorldOffset=(Z=120.000000)
      VehiclePositionString="on a M3A1 Halftrack .30 Cal"
      VehicleNameString="M3A1 Halftrack .30 Cal"
-     HUDOverlayClass=Class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
+     HUDOverlayClass=class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
      HUDOverlayOffset=(X=-2.000000)
      HUDOverlayFOV=35.000000
      bKeepDriverAuxCollision=true

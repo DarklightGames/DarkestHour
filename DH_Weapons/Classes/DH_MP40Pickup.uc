@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Maschinenpistole 40"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_MP40Weapon'
+     InventoryType=class'DH_Weapons.DH_MP40Weapon'
      PickupMessage="You got the Maschinenpistole 40."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

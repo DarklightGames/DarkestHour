@@ -35,7 +35,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.M5_body_ext');
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
@@ -48,7 +48,7 @@ simulated function UpdatePrecacheMaterials()
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -108,14 +108,14 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-100.000000,Z=45.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuartPassengerOne',WeaponBone="body")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuartPassengerTwo',WeaponBone="body")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuartPassengerThree',WeaponBone="body")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartPassengerOne',WeaponBone="body")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartPassengerTwo',WeaponBone="body")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartPassengerThree',WeaponBone="body")
      IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'

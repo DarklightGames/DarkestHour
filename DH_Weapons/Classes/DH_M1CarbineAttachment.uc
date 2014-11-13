@@ -9,9 +9,9 @@ class DH_M1CarbineAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdSVT'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
      MuzzleBoneName="Muzzle"
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x25mm'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"
      PA_MovementAnims(2)="stand_jogL_kar"

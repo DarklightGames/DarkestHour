@@ -10,16 +10,16 @@ defaultproperties
 	Begin Object Class=SpriteEmitter Name=SpriteEmitter0
 		UseDirectionAs=PTDU_Normal
 		ProjectionNormal=(X=1.000000,Z=0.000000)
-		FadeOut=True
-		FadeIn=True
-		RespawnDeadParticles=False
-		SpinParticles=True
-		DampRotation=True
-		UseSizeScale=True
-		UseRegularSizeScale=False
-		AutomaticInitialSpawning=False
-		BlendBetweenSubdivisions=True
-		UseSubdivisionScale=True
+		FadeOut=true
+		FadeIn=true
+		RespawnDeadParticles=false
+		SpinParticles=true
+		DampRotation=true
+		UseSizeScale=true
+		UseRegularSizeScale=false
+		AutomaticInitialSpawning=false
+		BlendBetweenSubdivisions=true
+		UseSubdivisionScale=true
 		ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
 		ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
 		MaxParticles=1
@@ -43,17 +43,17 @@ defaultproperties
 	Emitters(0)=SpriteEmitter'SpriteEmitter0'
 
 	Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-		FadeOut=True
-		FadeIn=True
-		RespawnDeadParticles=False
-		SpinParticles=True
-		UseSizeScale=True
-		UseRegularSizeScale=False
-		UniformSize=True
-		AutomaticInitialSpawning=False
-		BlendBetweenSubdivisions=True
-		UseRandomSubdivision=True
-		UseVelocityScale=True
+		FadeOut=true
+		FadeIn=true
+		RespawnDeadParticles=false
+		SpinParticles=true
+		UseSizeScale=true
+		UseRegularSizeScale=false
+		UniformSize=true
+		AutomaticInitialSpawning=false
+		BlendBetweenSubdivisions=true
+		UseRandomSubdivision=true
+		UseVelocityScale=true
 		Acceleration=(Z=-600.000000)
 		ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
 		ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -80,12 +80,12 @@ defaultproperties
 	Emitters(1)=SpriteEmitter'SpriteEmitter1'
 
 	Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-		FadeOut=True
-		FadeIn=True
-		RespawnDeadParticles=False
-		UniformSize=True
-		AutomaticInitialSpawning=False
-		UseRandomSubdivision=True
+		FadeOut=true
+		FadeIn=true
+		RespawnDeadParticles=false
+		UniformSize=true
+		AutomaticInitialSpawning=false
+		UseRandomSubdivision=true
 		Acceleration=(Z=-500.000000)
 		ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
 		ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -106,15 +106,15 @@ defaultproperties
 	Emitters(2)=SpriteEmitter'SpriteEmitter2'
 
 	Begin Object Class=SpriteEmitter Name=SpriteEmitter3
-		FadeOut=True
-		FadeIn=True
-		RespawnDeadParticles=False
-		UseSizeScale=True
-		UseRegularSizeScale=False
-		UniformSize=True
-		AutomaticInitialSpawning=False
-		BlendBetweenSubdivisions=True
-		UseRandomSubdivision=True
+		FadeOut=true
+		FadeIn=true
+		RespawnDeadParticles=false
+		UseSizeScale=true
+		UseRegularSizeScale=false
+		UniformSize=true
+		AutomaticInitialSpawning=false
+		BlendBetweenSubdivisions=true
+		UseRandomSubdivision=true
 		ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
 		ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
 		MaxParticles=1
@@ -132,17 +132,17 @@ defaultproperties
 	Emitters(3)=SpriteEmitter'SpriteEmitter3'
 
 	Begin Object Class=SpriteEmitter Name=SpriteEmitter4
-		FadeOut=True
-		FadeIn=True
-		RespawnDeadParticles=False
-		SpinParticles=True
-		UseSizeScale=True
-		UseRegularSizeScale=False
-		UniformSize=True
-		AutomaticInitialSpawning=False
-		BlendBetweenSubdivisions=True
-		UseRandomSubdivision=True
-		UseVelocityScale=True
+		FadeOut=true
+		FadeIn=true
+		RespawnDeadParticles=false
+		SpinParticles=true
+		UseSizeScale=true
+		UseRegularSizeScale=false
+		UniformSize=true
+		AutomaticInitialSpawning=false
+		BlendBetweenSubdivisions=true
+		UseRandomSubdivision=true
+		UseVelocityScale=true
 		Acceleration=(Z=-700.000000)
 		ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
 		ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
@@ -167,17 +167,17 @@ defaultproperties
 	Emitters(4)=SpriteEmitter'SpriteEmitter4'
 
 	Begin Object Class=SpriteEmitter Name=SpriteEmitter5
-		FadeOut=True
-		FadeIn=True
-		RespawnDeadParticles=False
-		SpinParticles=True
-		UseSizeScale=True
-		UseRegularSizeScale=False
-		UniformSize=True
-		AutomaticInitialSpawning=False
-		BlendBetweenSubdivisions=True
-		UseRandomSubdivision=True
-		UseVelocityScale=True
+		FadeOut=true
+		FadeIn=true
+		RespawnDeadParticles=false
+		SpinParticles=true
+		UseSizeScale=true
+		UseRegularSizeScale=false
+		UniformSize=true
+		AutomaticInitialSpawning=false
+		BlendBetweenSubdivisions=true
+		UseRandomSubdivision=true
+		UseVelocityScale=true
 		ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
 		ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
 		MaxParticles=3
@@ -201,17 +201,17 @@ defaultproperties
 	Emitters(5)=SpriteEmitter'SpriteEmitter5'
 
 	Begin Object Class=SpriteEmitter Name=SpriteEmitter6
-		FadeOut=True
-		FadeIn=True
-		RespawnDeadParticles=False
-		SpinParticles=True
-		UseSizeScale=True
-		UseRegularSizeScale=False
-		UniformSize=True
-		AutomaticInitialSpawning=False
-		BlendBetweenSubdivisions=True
-		UseRandomSubdivision=True
-		UseVelocityScale=True
+		FadeOut=true
+		FadeIn=true
+		RespawnDeadParticles=false
+		SpinParticles=true
+		UseSizeScale=true
+		UseRegularSizeScale=false
+		UniformSize=true
+		AutomaticInitialSpawning=false
+		BlendBetweenSubdivisions=true
+		UseRandomSubdivision=true
+		UseVelocityScale=true
 		ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
 		ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
 		MaxParticles=3

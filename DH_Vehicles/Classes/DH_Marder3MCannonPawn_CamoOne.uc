@@ -7,5 +7,5 @@ class DH_Marder3MCannonPawn_CamoOne extends DH_Marder3MCannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_Marder3MCannon_CamoOne'
+     GunClass=class'DH_Vehicles.DH_Marder3MCannon_CamoOne'
 }

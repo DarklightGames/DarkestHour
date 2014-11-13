@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: .30 caliber ammunition box"
      AmmoAmount=250
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_30CalAmmo'
+     InventoryType=class'DH_Weapons.DH_30CalAmmo'
      PickupMessage="You picked up a .30 caliber ammunition box."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

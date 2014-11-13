@@ -46,13 +46,13 @@ defaultproperties
      DHPenetrationTable(10)=1.500000
      ShellDiameter=8.800000
      PenetrationMag=1020.000000
-     ShellImpactDamage=Class'DH_Guns.DH_Pak43CannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_Pak43CannonShellDamageAP'
      ImpactDamage=550
      BallisticCoefficient=3.250000
      Speed=45264.000000
      MaxSpeed=45264.000000
      Damage=475.000000
      DamageRadius=1550.000000
-     MyDamageType=Class'DH_Guns.DH_Pak43CannonShellDamageHE'
+     MyDamageType=class'DH_Guns.DH_Pak43CannonShellDamageHE'
      Tag="Sprgr.Patr."
 }

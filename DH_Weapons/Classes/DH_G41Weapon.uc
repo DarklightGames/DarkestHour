@@ -235,8 +235,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      FreeAimRotationSpeed=7.500000
-     FireModeClass(0)=Class'DH_Weapons.DH_G41Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_G41MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_G41Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_G41MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -247,9 +247,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_G41Pickup'
+     PickupClass=class'DH_Weapons.DH_G41Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_G41Attachment'
+     AttachmentClass=class'DH_Weapons.DH_G41Attachment'
      ItemName="Gewehr 41(W)"
      Mesh=SkeletalMesh'Axis_G41_1st.G41_mesh'
      HighDetailOverlay=Shader'Weapons1st_tex2.Rifles.G41_S'

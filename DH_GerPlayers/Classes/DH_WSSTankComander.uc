@@ -31,15 +31,15 @@ defaultproperties
      Models(3)="SSP_4"
      Models(4)="SSP_5"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-     DetachedArmClass=Class'ROEffects.SeveredArmGerTanker'
-     DetachedLegClass=Class'ROEffects.SeveredLegGerTanker'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-     PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_C96Weapon',Amount=2,AssociatedAttachment=Class'DH_Weapons.DH_C96AmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
+     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_C96Weapon',Amount=2,AssociatedAttachment=class'DH_Weapons.DH_C96AmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
      GivenItems(0)="DH_Equipment.DH_GerBinocularsItem"
-     Headgear(0)=Class'DH_GerPlayers.DH_WSSTankerCrushercap'
-     Headgear(1)=Class'DH_GerPlayers.DH_SSCap'
+     Headgear(0)=class'DH_GerPlayers.DH_WSSTankerCrushercap'
+     Headgear(1)=class'DH_GerPlayers.DH_SSCap'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true

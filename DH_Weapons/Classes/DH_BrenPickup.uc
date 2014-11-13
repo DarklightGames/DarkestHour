@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Bren"
      MaxDesireability=0.900000
-     InventoryType=Class'DH_Weapons.DH_BrenWeapon'
+     InventoryType=class'DH_Weapons.DH_BrenWeapon'
      PickupMessage="You got the Bren."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

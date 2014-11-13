@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: Lee Enfield No. 4 ammunition pouch"
      AmmoAmount=5
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_EnfieldNo4Ammo'
+     InventoryType=class'DH_Weapons.DH_EnfieldNo4Ammo'
      PickupMessage="You picked up a Lee Enfield No. 4 ammunition pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

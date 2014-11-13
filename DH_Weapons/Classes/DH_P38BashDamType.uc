@@ -12,7 +12,7 @@ class DH_P38BashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_P38Weapon'
+     WeaponClass=class'DH_Weapons.DH_P38Weapon'
      DeathString="%o was smacked by %k's Walther P38."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

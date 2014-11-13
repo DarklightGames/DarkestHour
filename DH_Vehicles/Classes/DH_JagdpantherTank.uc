@@ -117,7 +117,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdpanther_body_goodwood');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.jagdpanther_treads');
@@ -134,7 +134,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_body_int');
     Level.AddPrecacheMaterial(SchurzenTexture); 
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -211,12 +211,12 @@ defaultproperties
      TransRatio=0.100000
      ChangeUpPoint=1990.000000
      ChangeDownPoint=1000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-230.000000,Y=20.000000,Z=109.592003),ExhaustRotation=(Pitch=22000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=-20.000000,Z=109.592003),ExhaustRotation=(Pitch=22000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpantherCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpantherMountedMGPawn',WeaponBone="Mg_attachment")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherMountedMGPawn',WeaponBone="Mg_attachment")
      IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'

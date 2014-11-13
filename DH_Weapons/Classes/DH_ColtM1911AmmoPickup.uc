@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: Colt M1911 magazine pouch"
      AmmoAmount=7
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_ColtM1911Ammo'
+     InventoryType=class'DH_Weapons.DH_ColtM1911Ammo'
      PickupMessage="You picked up a Colt M1911 magazine pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

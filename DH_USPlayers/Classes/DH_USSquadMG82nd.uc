@@ -30,10 +30,10 @@ defaultproperties
      Models(2)="US_82AB3"
      bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_BARWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet82ndEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet82ndEMb'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet82ndEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet82ndEMb'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_SMG
      Limit=2

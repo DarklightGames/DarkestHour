@@ -24,7 +24,7 @@ defaultproperties
      DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)
      DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_int',ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-110000.000000)
-     GunClass=Class'DH_Vehicles.DH_JagdpantherCannon'
+     GunClass=class'DH_Vehicles.DH_JagdpantherCannon'
      bHasAltFire=false
      CameraBone="Turret_placement1"
      MaxRotateThreshold=3.000000

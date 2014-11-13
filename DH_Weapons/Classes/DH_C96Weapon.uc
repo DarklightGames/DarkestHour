@@ -172,8 +172,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      bHasSelectFire=true
-     FireModeClass(0)=Class'DH_Weapons.DH_C96Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_C96MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_C96Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_C96MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -183,9 +183,9 @@ defaultproperties
      CurrentRating=0.400000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_C96Pickup'
+     PickupClass=class'DH_Weapons.DH_C96Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_C96Attachment'
+     AttachmentClass=class'DH_Weapons.DH_C96Attachment'
      ItemName="Mauser C96"
      Mesh=SkeletalMesh'DH_C96_1st.c96'
 }

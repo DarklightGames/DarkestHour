@@ -12,7 +12,7 @@ class DH_P08LugerBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_P08LugerWeapon'
+     WeaponClass=class'DH_Weapons.DH_P08LugerWeapon'
      DeathString="%o was smacked by %k's Luger P08."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

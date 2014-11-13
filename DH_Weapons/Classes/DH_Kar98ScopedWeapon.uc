@@ -39,8 +39,8 @@ defaultproperties
      ZoomOutTime=0.400000
      PlayerFOVZoom=15.000000
      XoffsetHighDetail=(X=-5.000000)
-     FireModeClass(0)=Class'DH_Weapons.DH_Kar98ScopedFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_Kar98ScopedMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_Kar98ScopedFire'
+     FireModeClass(1)=class'DH_Weapons.DH_Kar98ScopedMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -51,9 +51,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_Kar98ScopedPickup'
+     PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_Kar98ScopedAttachment'
+     AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
      ItemName="Karabiner 98k"
      Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k-scoped-mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Rifles.k98_sniper_s'

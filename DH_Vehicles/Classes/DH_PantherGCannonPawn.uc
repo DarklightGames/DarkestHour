@@ -30,7 +30,7 @@ defaultproperties
      DriverPositions(3)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VPanther_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
      DriverPositions(4)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-100000.000000)
-     GunClass=Class'DH_Vehicles.DH_PantherGCannon'
+     GunClass=class'DH_Vehicles.DH_PantherGCannon'
      CameraBone="Gun"
      bPCRelativeFPRotation=true
      bFPNoZFromCameraPitch=true

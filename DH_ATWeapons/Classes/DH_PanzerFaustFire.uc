@@ -29,7 +29,7 @@ event ModeDoFire()
            RORocketWeapon(Owner).RocketAttachment.Destroy();
     }
 
-    Super.ModeDoFire();
+    super.ModeDoFire();
 
     WeapLoc=Weapon.ThirdPersonActor.Location; // Get the location of the panzerfaust
     WeapRot=Weapon.ThirdPersonActor.Rotation; // Get the rotation of the panzerfaust
@@ -132,7 +132,7 @@ defaultproperties
      ExhaustDamage=200.000000
      ExhaustDamageRadius=50.000000
      ExhaustMomentumTransfer=100.000000
-     ExhaustDamageType=Class'DH_ATWeapons.DH_PanzerfaustExhaustDamType'
+     ExhaustDamageType=class'DH_ATWeapons.DH_PanzerfaustExhaustDamType'
      FireIronAnimOne="shoot30"
      FireIronAnimTwo="shoot"
      FireIronAnimThree="shoot90"
@@ -151,17 +151,17 @@ defaultproperties
      TweenTime=0.000000
      FireForce="RocketLauncherFire"
      FireRate=2.600000
-     AmmoClass=Class'DH_ATWeapons.DH_PanzerFaustAmmo'
+     AmmoClass=class'DH_ATWeapons.DH_PanzerFaustAmmo'
      ShakeRotMag=(X=50.000000,Y=50.000000,Z=500.000000)
      ShakeRotRate=(X=12500.000000,Y=12500.000000,Z=7500.000000)
      ShakeRotTime=6.000000
      ShakeOffsetMag=(X=3.000000,Y=1.000000,Z=5.000000)
      ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      ShakeOffsetTime=1.000000
-     ProjectileClass=Class'DH_ATWeapons.DH_PanzerFaustRocket'
+     ProjectileClass=class'DH_ATWeapons.DH_PanzerFaustRocket'
      BotRefireRate=0.500000
      WarnTargetPct=0.900000
-     SmokeEmitterClass=Class'ROEffects.ROMuzzleSmoke'
+     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
      aimerror=1200.000000
      Spread=550.000000
      SpreadStyle=SS_Random

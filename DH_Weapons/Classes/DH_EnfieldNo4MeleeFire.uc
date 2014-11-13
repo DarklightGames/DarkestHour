@@ -7,8 +7,8 @@ class DH_EnfieldNo4MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_EnfieldNo4BashDamType'
-     BayonetDamageType=Class'DH_Weapons.DH_EnfieldNo4BayonetDamType'
+     DamageType=class'DH_Weapons.DH_EnfieldNo4BashDamType'
+     BayonetDamageType=class'DH_Weapons.DH_EnfieldNo4BayonetDamType'
      TraceRange=75.000000
      BayonetTraceRange=125.000000
      BashBackAnim="bash_pullback"

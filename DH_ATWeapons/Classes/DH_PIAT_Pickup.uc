@@ -151,12 +151,12 @@ function inventory SpawnWeaponCopy(pawn Other)
 
 defaultproperties
 {
-     WeaponType=Class'DH_ATWeapons.DH_PIATWeapon'
+     WeaponType=class'DH_ATWeapons.DH_PIATWeapon'
      TouchMessage="Pick Up: PIAT"
      bAmmoPickupIsWeapon=true
      AmmoAmount=1
      MaxDesireability=0.780000
-     InventoryType=Class'DH_ATWeapons.DH_PIATAmmo'
+     InventoryType=class'DH_ATWeapons.DH_PIATAmmo'
      PickupMessage="You got the PIAT."
      PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
      PickupForce="AssaultRiflePickup"

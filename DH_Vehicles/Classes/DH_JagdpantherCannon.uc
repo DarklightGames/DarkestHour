@@ -74,11 +74,11 @@ defaultproperties
      WeaponFireOffset=30.000000
      RotationsPerSecond=0.020000
      FireInterval=8.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_JagdpantherCannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -95,8 +95,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=42
      InitialSecondaryAmmo=15
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpantherCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpantherCannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
      Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
      Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'

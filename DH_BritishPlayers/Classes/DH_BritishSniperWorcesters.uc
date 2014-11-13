@@ -35,13 +35,13 @@ defaultproperties
      Models(4)="Wor_5"
      Models(5)="Wor_6"
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo4ScopedWeapon',Amount=18)
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
-     Grenades(0)=(Item=Class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon',Amount=18)
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
+     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
      GivenItems(0)="DH_Equipment.DH_USBinocularsItem"
-     Headgear(0)=Class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-     Headgear(1)=Class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-     Headgear(2)=Class'DH_BritishPlayers.DH_BritishTommyHelmet'
+     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
+     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
+     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
      PrimaryWeaponType=WT_Sniper
      Limit=2
 }

@@ -24,7 +24,7 @@ defaultproperties
      DriverPositions(3)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A3E2_anm.ShermanM4A3E2_turret_int',TransitionDownAnim="com_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
      DriverPositions(4)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A3E2_anm.ShermanM4A3E2_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-95000.000000)
-     GunClass=Class'DH_Vehicles.DH_ShermanCannon_M4A3E2'
+     GunClass=class'DH_Vehicles.DH_ShermanCannon_M4A3E2'
      CameraBone="Gun"
      bPCRelativeFPRotation=true
      bFPNoZFromCameraPitch=true

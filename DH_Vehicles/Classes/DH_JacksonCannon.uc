@@ -36,7 +36,7 @@ function DecrementRange()
 defaultproperties
 {
      InitialTertiaryAmmo=10
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_JacksonCannonShellHE'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHE'
      SecondarySpread=0.001100
      TertiarySpread=0.001250
      ManualRotationsPerSecond=0.010000
@@ -82,11 +82,11 @@ defaultproperties
      WeaponFireOffset=240.000000
      RotationsPerSecond=0.062500
      FireInterval=6.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_JacksonCannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -100,8 +100,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=32
      InitialSecondaryAmmo=6
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_JacksonCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_JacksonCannonShellHVAP'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHVAP'
      Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext'
      Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
      Skins(1)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'

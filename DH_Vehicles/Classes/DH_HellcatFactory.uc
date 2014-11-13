@@ -9,6 +9,6 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Vehicles.DH_HellcatTank'
+     VehicleClass=class'DH_Vehicles.DH_HellcatTank'
      Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
 }

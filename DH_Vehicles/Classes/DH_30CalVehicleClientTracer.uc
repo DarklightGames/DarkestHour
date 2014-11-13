@@ -7,7 +7,7 @@ class DH_30CalVehicleClientTracer extends ROClientTracer;
 
 defaultproperties
 {
-     mTracerClass=Class'DH_Vehicles.DH_30CalVehicleRedTracer'
+     mTracerClass=class'DH_Vehicles.DH_30CalVehicleRedTracer'
      DeflectedMesh=StaticMesh'DH_Tracers.US_TracerVehicle_Ball'
      BallisticCoefficient=0.410000
      SpeedFudgeScale=0.750000

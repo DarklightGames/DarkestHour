@@ -113,7 +113,7 @@ simulated function UpdateMovementSound()
 
 simulated event DrivingStatusChanged()
 {
-    Super.DrivingStatusChanged();
+    super.DrivingStatusChanged();
 
     if (!bDriving)
     {
@@ -150,7 +150,7 @@ function DriverLeft()
     MotionSoundVolume=0.0;
     UpdateMovementSound();
 
-    Super.DriverLeft();
+    super.DriverLeft();
 }
 
 simulated function DestroyTreads()
@@ -175,7 +175,7 @@ simulated function Tick(float DeltaTime)
     local float MySpeed;
     local int i;
 
-    Super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
     // Only need these effects client side
     if (Level.Netmode != NM_DedicatedServer)
@@ -256,7 +256,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
-        DamageType = Class'ROSuicided';
+        DamageType = class'ROSuicided';
         Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
@@ -391,7 +391,7 @@ defaultproperties
      MaxCriticalSpeed=800.000000
      WheelRotationScale=500
      PointValue=2.000000
-     DestructionEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
+     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
      VehicleSpikeTime=60.000000
      bIsApc=true
      bKeepDriverAuxCollision=false

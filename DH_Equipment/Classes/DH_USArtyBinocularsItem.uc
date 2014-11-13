@@ -22,5 +22,5 @@ simulated function Fire(float F)
 
 defaultproperties
 {
-     AttachmentClass=Class'DH_Equipment.DH_USArtyBinocularsAttachment'
+     AttachmentClass=class'DH_Equipment.DH_USArtyBinocularsAttachment'
 }

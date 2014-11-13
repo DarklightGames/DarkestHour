@@ -59,7 +59,7 @@ function Trigger(Actor Other, Pawn EventInstigator)
   local int i;
 
   if (Other == none)
-    Other = Self;
+    Other = self;
 
   if (TriggerAction == TriggerTriggers) {
     for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
@@ -85,7 +85,7 @@ function Untrigger(Actor Other, Pawn EventInstigator)
   local int i;
 
   if (Other == none)
-    Other = Self;
+    Other = self;
 
   if (UntriggerAction == UntriggerTriggers) {
     for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)

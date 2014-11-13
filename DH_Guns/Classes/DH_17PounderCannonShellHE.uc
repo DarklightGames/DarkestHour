@@ -63,13 +63,13 @@ defaultproperties
      ShellDiameter=7.620000
      bHasTracer=true
      PenetrationMag=880.000000
-     ShellImpactDamage=Class'DH_Guns.DH_17PounderCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_17PounderCannonShellDamageAP'
      ImpactDamage=450
      BallisticCoefficient=2.450000
      Speed=53351.000000
      MaxSpeed=53351.000000
      Damage=400.000000
      DamageRadius=1140.000000
-     MyDamageType=Class'DH_Guns.DH_17PounderCannonShellDamageHE'
+     MyDamageType=class'DH_Guns.DH_17PounderCannonShellDamageHE'
      Tag="Mk.I HE-T"
 }

@@ -51,19 +51,19 @@ defaultproperties
      ShellDiameter=12.800000
      bIsAlliedShell=false
      PenetrationMag=1500.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_JagdtigerCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_JagdtigerCannonShellDamageAP'
      ImpactDamage=900
-     ShellDeflectEffectClass=Class'ROEffects.ROArtilleryDirtEmitter'
-     ShellHitDirtEffectClass=Class'ROEffects.ROArtilleryDirtEmitter'
-     ShellHitSnowEffectClass=Class'ROEffects.ROArtillerySnowEmitter'
-     ShellHitWoodEffectClass=Class'ROEffects.ROArtilleryDirtEmitter'
-     ShellHitRockEffectClass=Class'ROEffects.ROArtilleryDirtEmitter'
-     ShellHitWaterEffectClass=Class'ROEffects.ROArtilleryWaterEmitter'
+     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+     ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
+     ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+     ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
      BallisticCoefficient=3.900000
      Speed=53110.000000
      MaxSpeed=53110.000000
      Damage=700.000000
      DamageRadius=2715.000000
-     MyDamageType=Class'DH_Vehicles.DH_JagdtigerCannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_JagdtigerCannonShellDamageHE'
      Tag="Schw.Spgr.Patr"
 }

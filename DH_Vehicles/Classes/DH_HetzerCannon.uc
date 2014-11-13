@@ -49,11 +49,11 @@ simulated function int LimitYaw(int yaw)
 defaultproperties
 {
      InitialTertiaryAmmo=5
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
      SecondarySpread=0.001270
      ManualRotationsPerSecond=0.025000
      PoweredRotationsPerSecond=0.025000
-     bIsAssaultGun=True
+     bIsAssaultGun=true
      FrontArmorFactor=6.000000
      RightArmorFactor=2.000000
      LeftArmorFactor=2.000000
@@ -111,29 +111,29 @@ defaultproperties
      GunnerAttachmentBone="com_attachment"
      WeaponFireOffset=160.000000
      RotationsPerSecond=0.025000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
      ShakeOffsetMag=(Z=1.000000)
      ShakeOffsetRate=(Z=100.000000)
      ShakeOffsetTime=10.000000
-     AIInfo(0)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=True,WarnTargetPct=0.750000,RefireRate=0.015000)
+     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
      CustomPitchUpLimit=1820
      CustomPitchDownLimit=64444
      MaxPositiveYaw=2000
      MaxNegativeYaw=-910
-     bLimitYaw=True
+     bLimitYaw=true
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=30
      InitialSecondaryAmmo=10
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
      Mesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_turret'
      Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body'
      SoundVolume=130

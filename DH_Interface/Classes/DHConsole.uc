@@ -117,7 +117,7 @@ event ConnectFailure(string FailCode,string URL)
             SteamLoginRetryCount++;
 
             ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute,false);
-            ViewportOwner.GUIController.CloseAll(false,True);
+            ViewportOwner.GUIController.CloseAll(false, true);
             return;
         }
         else
@@ -135,7 +135,7 @@ event ConnectFailure(string FailCode,string URL)
             SteamLoginRetryCount++;
 
             ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute,false);
-            ViewportOwner.GUIController.CloseAll(false,True);
+            ViewportOwner.GUIController.CloseAll(false, true);
             return;
         }
         else

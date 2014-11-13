@@ -54,7 +54,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     bMustBeTankCrew=true
     FireImpulse=(X=-30000.000000)
-    GunClass=Class'DH_Vehicles.DH_GreyhoundCannon'
+    GunClass=class'DH_Vehicles.DH_GreyhoundCannon'
     CameraBone="Gun"
     bPCRelativeFPRotation=true
     bFPNoZFromCameraPitch=true

@@ -28,7 +28,7 @@ defaultproperties
      TouchMessage="Pick Up: Karabiner 98k"
      DropLifeTime=10.000000
      MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_Kar98ScopedWeapon'
+     InventoryType=class'DH_Weapons.DH_Kar98ScopedWeapon'
      PickupMessage="You got the Karabiner 98k."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

@@ -29,11 +29,11 @@ defaultproperties
      Models(3)="US_3Inf4"
      Models(4)="US_3Inf5"
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
      GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"
      GivenItems(1)="DH_Equipment.DH_USBinocularsItem"
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
      PrimaryWeaponType=WT_SemiAuto
      Limit=1
 }

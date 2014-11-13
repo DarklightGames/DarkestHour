@@ -212,7 +212,7 @@ defaultproperties
 {
      NumMags=8
      ReloadLength=6.590000
-     DummyTracerClass=Class'DH_Vehicles.DH_30CalVehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
      mTracerInterval=0.600000
      bUsesTracers=true
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=8.000000))
@@ -233,16 +233,16 @@ defaultproperties
      Spread=0.002000
      FireInterval=0.120000
      AltFireInterval=0.150000
-     AmbientEffectEmitterClass=Class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
+     AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
      FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
      AmbientSoundScaling=5.000000
      FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
      FireForce="minifireb"
-     DamageType=Class'ROGame.ROVehMountedMGDamType'
+     DamageType=class'ROGame.ROVehMountedMGDamType'
      DamageMin=100
      DamageMax=100
      TraceRange=15000.000000
-     ProjectileClass=Class'DH_Vehicles.DH_30CalVehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
      ShakeRotMag=(X=25.000000,Z=10.000000)
      ShakeRotRate=(X=5000.000000,Y=5000.000000,Z=5000.000000)
      ShakeRotTime=2.000000

@@ -10,7 +10,7 @@ var automated BackgroundImage               bg_Background2,
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
     SetBackground();
 }

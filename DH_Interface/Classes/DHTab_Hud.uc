@@ -15,7 +15,7 @@ var bool bShowVoiceIcon;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG1.ManageComponent(ch_ShowDeathMessages);

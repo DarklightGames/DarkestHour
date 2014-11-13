@@ -62,18 +62,18 @@ defaultproperties
      ShellDiameter=5.700000
      bHasTracer=true
      PenetrationMag=630.000000
-     ShellImpactDamage=Class'DH_Guns.DH_6PounderCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_6PounderCannonShellDamageAP'
      ImpactDamage=295
-     ShellHitDirtEffectClass=Class'ROEffects.TankHEHitDirtEffect'
-     ShellHitSnowEffectClass=Class'ROEffects.TankHEHitSnowEffect'
-     ShellHitWoodEffectClass=Class'ROEffects.TankHEHitWoodEffect'
-     ShellHitRockEffectClass=Class'ROEffects.TankHEHitRockEffect'
-     ShellHitWaterEffectClass=Class'ROEffects.TankHEHitWaterEffect'
+     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
+     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
+     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
+     ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
+     ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
      BallisticCoefficient=1.190000
      Speed=50152.000000
      MaxSpeed=50152.000000
      Damage=250.000000
      DamageRadius=600.000000
-     MyDamageType=Class'DH_Guns.DH_6PounderCannonShellDamageHE'
+     MyDamageType=class'DH_Guns.DH_6PounderCannonShellDamageHE'
      Tag="Mk.X HE-T"
 }

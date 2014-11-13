@@ -7,7 +7,7 @@ class DHIRC_Panel extends UT2k4IRC_Panel;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.Initcomponent(MyController, MyOwner);
+    super.Initcomponent(MyController, MyOwner);
 
     class'ROInterfaceUtil'.static.SetROStyle(MyController, Controls);
 }

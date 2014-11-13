@@ -9,7 +9,7 @@ defaultproperties
 {
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumMags=6
-     DummyTracerClass=Class'DH_Vehicles.DH_BesaVehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_BesaVehicleClientTracer'
      mTracerInterval=0.460000
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
      YawBone="mg_yaw"
@@ -25,7 +25,7 @@ defaultproperties
      FireInterval=0.092000
      FireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
      FireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
-     ProjectileClass=Class'DH_Vehicles.DH_BesaVehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
      ShakeRotMag=(X=10.000000,Y=10.000000,Z=10.000000)
      ShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
      MaxPositiveYaw=7000

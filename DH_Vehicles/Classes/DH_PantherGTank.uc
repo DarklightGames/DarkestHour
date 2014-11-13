@@ -7,7 +7,7 @@ class DH_PantherGTank extends DH_PantherDTank;
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.pantherg_ext');
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.PantherG_treads');
@@ -22,7 +22,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int_s');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -32,7 +32,7 @@ defaultproperties
      ULeftArmorFactor=5.000000
      URightArmorSlope=30.000000
      ULeftArmorSlope=30.000000
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherGCannonPawn')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherGCannonPawn')
      VehiclePositionString="in a Panzer V Ausf.G"
      VehicleNameString="Panzer V Ausf.G"
 }

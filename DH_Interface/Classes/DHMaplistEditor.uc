@@ -28,7 +28,7 @@ function AddSystemMenu()
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-        Super.InitComponent(MyController, MyOwner);
+        super.InitComponent(MyController, MyOwner);
 
         sb_MapList.ManageComponent(co_Maplist);
         sb_MapList.ManageComponent(sb_container);

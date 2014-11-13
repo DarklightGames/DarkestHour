@@ -31,12 +31,12 @@ defaultproperties
      Models(2)="WL_3"
      Models(3)="WL_4"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
      GivenItems(0)="DH_Equipment.DH_GerArtyBinocularsItem"
-     Headgear(0)=Class'DH_GerPlayers.DH_LWHelmet'
-     Headgear(1)=Class'DH_GerPlayers.DH_LWHelmetTwo'
+     Headgear(0)=class'DH_GerPlayers.DH_LWHelmet'
+     Headgear(1)=class'DH_GerPlayers.DH_LWHelmetTwo'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      Limit=1

@@ -13,6 +13,6 @@ defaultproperties
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."
      GibModifier=0.000000
-     PawnDamageEmitter=Class'ROEffects.ROBloodPuff'
+     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
      KDamageImpulse=2250.000000
 }

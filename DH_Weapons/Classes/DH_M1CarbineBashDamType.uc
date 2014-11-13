@@ -12,7 +12,7 @@ class DH_M1CarbineBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_M1CarbineWeapon'
+     WeaponClass=class'DH_Weapons.DH_M1CarbineWeapon'
      DeathString="%o was smacked with %k's M1 Carbine."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

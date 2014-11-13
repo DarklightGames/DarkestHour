@@ -91,7 +91,7 @@ function bool TryToDrive(Pawn P)
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_PegasusGunPawn')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_PegasusGunPawn')
      HealthMax=101.000000
      Health=101
      Begin Object Class=KarmaParamsRBFull Name=KParams0

@@ -12,7 +12,7 @@ class DH_EnfieldNo4ScopedBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
+     WeaponClass=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
      DeathString="%o was smacked with %k's scoped Enfield No.4."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

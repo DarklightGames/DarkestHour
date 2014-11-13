@@ -8,7 +8,7 @@ class DH_AchillesCannon extends DH_ROTankCannon;
 defaultproperties
 {
      InitialTertiaryAmmo=15
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_AchillesCannonShellHE'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
      SecondarySpread=0.006000
      TertiarySpread=0.001560
      PoweredRotationsPerSecond=0.011111
@@ -63,11 +63,11 @@ defaultproperties
      WeaponFireOffset=15.000000
      RotationsPerSecond=0.011111
      FireInterval=6.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_AchillesCannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -81,8 +81,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=32
      InitialSecondaryAmmo=4
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_AchillesCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_AchillesCannonShellAPDS'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellAPDS'
      Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext'
      SoundVolume=130
      SoundRadius=300.000000

@@ -27,7 +27,7 @@ defaultproperties
      DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3L_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
      DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3L_turret_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-80000.000000)
-     GunClass=Class'DH_Vehicles.DH_PanzerIIILCannon'
+     GunClass=class'DH_Vehicles.DH_PanzerIIILCannon'
      CameraBone="Gun"
      bPCRelativeFPRotation=true
      bFPNoZFromCameraPitch=true

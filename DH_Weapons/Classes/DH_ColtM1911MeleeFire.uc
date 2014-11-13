@@ -7,7 +7,7 @@ class DH_ColtM1911MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_ColtM1911BashDamType'
+     DamageType=class'DH_Weapons.DH_ColtM1911BashDamType'
      TraceRange=75.000000
      GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
      PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit'

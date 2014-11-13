@@ -267,7 +267,7 @@ simulated function UpdateTurretReferences()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.stug3G_body_ext');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.stug3g_treads');
@@ -280,7 +280,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.stug3g_treads');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.stug3G_armor_camo1');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -348,16 +348,16 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-175.000000,Y=40.000000,Z=-25.000000),ExhaustRotation=(Pitch=34000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-175.000000,Y=-40.000000,Z=-25.000000),ExhaustRotation=(Pitch=34000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuH42CannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_StuH42MountedMGPawn',WeaponBone="mg_base")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GPassengerOne',WeaponBone="passenger_01")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GPassengerTwo',WeaponBone="passenger_02")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GPassengerThree',WeaponBone="passenger_03")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_Stug3GPassengerFour',WeaponBone="passenger_04x")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42CannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn',WeaponBone="mg_base")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerOne',WeaponBone="passenger_01")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerTwo',WeaponBone="passenger_02")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerThree',WeaponBone="passenger_03")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerFour',WeaponBone="passenger_04x")
      IdleSound=SoundGroup'Vehicle_Engines.STUGiii.stugiii_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'

@@ -31,7 +31,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.Tiger1_ext');
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int');
@@ -46,7 +46,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Tiger1_treads');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int_s');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 
@@ -107,12 +107,12 @@ defaultproperties
      TransRatio=0.090000
      SteerSpeed=50.000000
      SteerBoneName="Steering"
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-190.000000,Y=25.000000,Z=65.000000),ExhaustRotation=(Pitch=18000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-190.000000,Y=-25.000000,Z=65.000000),ExhaustRotation=(Pitch=18000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_TigerCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_TigerMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerMountedMGPawn',WeaponBone="Mg_placement")
      IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
@@ -206,7 +206,7 @@ defaultproperties
      MaxDesireability=1.900000
      FlagBone="Mg_placement"
      FlagRotation=(Yaw=32768)
-     HUDOverlayClass=Class'ROVehicles.TigerDriverOverlay'
+     HUDOverlayClass=class'ROVehicles.TigerDriverOverlay'
      HUDOverlayOffset=(X=3.000000)
      HUDOverlayFOV=90.000000
      PitchUpLimit=5000

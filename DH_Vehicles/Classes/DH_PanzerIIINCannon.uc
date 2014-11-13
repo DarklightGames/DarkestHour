@@ -214,7 +214,7 @@ defaultproperties
      ProjPerFire=30
      bLastShot=true
      InitialTertiaryAmmo=14
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_TankCannonShellCanisterGerman'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterGerman'
      SecondarySpread=0.003900
      ManualRotationsPerSecond=0.040000
      PoweredRotationsPerSecond=0.040000
@@ -268,7 +268,7 @@ defaultproperties
      RangeSettings(25)=3000
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=5
-     DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -288,16 +288,16 @@ defaultproperties
      Spread=0.001350
      FireInterval=4.000000
      AltFireInterval=0.070580
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
      AltFireSoundScaling=3.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-     ProjectileClass=Class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_MG34VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
+     AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -318,8 +318,8 @@ defaultproperties
      InitialPrimaryAmmo=40
      InitialSecondaryAmmo=10
      InitialAltAmmo=150
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
      Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_turret_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
      Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'

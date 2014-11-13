@@ -10,7 +10,7 @@ var automated DHGUIPlainBackground  sb_ButtonBackground;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
         class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 }
 

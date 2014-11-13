@@ -10,7 +10,7 @@ var DHSettingsPage SettingsPage;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController,MyOwner);
+    super.InitComponent(MyController,MyOwner);
         SettingsPage = DHSettingsPage(MyOwner);
 }
 

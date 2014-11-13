@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Mauser C96 pistol"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_C96Weapon'
+     InventoryType=class'DH_Weapons.DH_C96Weapon'
      PickupMessage="You got the Mauser C96 pistol."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

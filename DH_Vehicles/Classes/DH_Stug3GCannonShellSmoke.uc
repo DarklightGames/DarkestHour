@@ -34,10 +34,10 @@ defaultproperties
      MechanicalRanges(25)=(Range=3000,RangeValue=768.000000)
      ShellDiameter=7.500000
      bIsAlliedShell=false
-//   ShellImpactDamage=Class'DH_Vehicles.DH_Stug3GCannonShellDamageAP' // Matt: removed as inconsistent with other smoke shells, which inherit generic DH_TankShellImpactDamage
+//   ShellImpactDamage=class'DH_Vehicles.DH_Stug3GCannonShellDamageAP' // Matt: removed as inconsistent with other smoke shells, which inherit generic DH_TankShellImpactDamage
      BallisticCoefficient=2.100000
      Speed=33073.000000
      MaxSpeed=33073.000000
-     MyDamageType=Class'DH_Engine.DH_HECannonShellDamageSmoke' // Matt: added instead of inheriting AP shell's default DH_TankShellAPExplosionDamage
+     MyDamageType=class'DH_Engine.DH_HECannonShellDamageSmoke' // Matt: added instead of inheriting AP shell's default DH_TankShellAPExplosionDamage
      Tag="Nbgr.Kw.K"
 }

@@ -7,8 +7,8 @@ class DH_P08LugerAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdPistol'
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject9x19mm'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
      PA_MovementAnims(0)="stand_jogF_pistol"
      PA_MovementAnims(1)="stand_jogB_pistol"
      PA_MovementAnims(2)="stand_jogL_pistol"

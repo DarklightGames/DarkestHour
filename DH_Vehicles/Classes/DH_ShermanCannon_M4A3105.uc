@@ -70,7 +70,7 @@ function DecrementRange()
 defaultproperties
 {
      InitialTertiaryAmmo=6
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
      SecondarySpread=0.003000
      TertiarySpread=0.003600
      ManualRotationsPerSecond=0.012500
@@ -106,7 +106,7 @@ defaultproperties
      AddedPitch=340
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=5
-     DummyTracerClass=Class'DH_Vehicles.DH_30CalVehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
      mTracerInterval=0.600000
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -126,8 +126,8 @@ defaultproperties
      Spread=0.002250
      FireInterval=10.000000
      AltFireInterval=0.120000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
@@ -135,8 +135,8 @@ defaultproperties
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_30CalVehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+     AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -157,8 +157,8 @@ defaultproperties
      InitialPrimaryAmmo=15
      InitialSecondaryAmmo=45
      InitialAltAmmo=200
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
      Mesh=SkeletalMesh'DH_ShermanM4A3E2_anm.ShermanM4A3105_turret_ext'
      Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.Sherman_105_ext'
      SoundVolume=200

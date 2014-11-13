@@ -19,8 +19,8 @@ defaultproperties
      TweenTime=0.010000
      FireForce="RocketLauncherFire"
      FireRate=50.000000
-     AmmoClass=Class'ROAmmo.StielGranateAmmo'
-     ProjectileClass=Class'DH_Weapons.DH_StielGranateProjectile'
+     AmmoClass=class'ROAmmo.StielGranateAmmo'
+     ProjectileClass=class'DH_Weapons.DH_StielGranateProjectile'
      BotRefireRate=0.500000
      WarnTargetPct=0.900000
      aimerror=200.000000

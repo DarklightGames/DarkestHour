@@ -37,12 +37,12 @@ defaultproperties
      Models(3)="FJ4"
      Models(4)="FJ5"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-     Headgear(0)=Class'DH_GerPlayers.DH_FJHelmetCamo1'
-     Headgear(1)=Class'DH_GerPlayers.DH_FJHelmetCamo2'
-     Headgear(2)=Class'DH_GerPlayers.DH_FJHelmetNet1'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+     Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamo1'
+     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamo2'
+     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      Limit=4

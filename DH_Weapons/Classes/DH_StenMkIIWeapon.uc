@@ -159,8 +159,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      bHasSelectFire=true
-     FireModeClass(0)=Class'DH_Weapons.DH_StenMkIIFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_StenMkIIMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_StenMkIIFire'
+     FireModeClass(1)=class'DH_Weapons.DH_StenMkIIMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -170,9 +170,9 @@ defaultproperties
      CurrentRating=0.700000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_StenMkIIPickup'
+     PickupClass=class'DH_Weapons.DH_StenMkIIPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_StenMkIIAttachment'
+     AttachmentClass=class'DH_Weapons.DH_StenMkIIAttachment'
      ItemName="Sten MkII"
      Mesh=SkeletalMesh'DH_Sten_1st.StenMkII'
      bUseHighDetailOverlayIndex=true

@@ -134,7 +134,7 @@ defaultproperties
      DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionDownAnim="lookover_down",DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
      DriverPositions(3)=(ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
      bMustBeTankCrew=true
-     GunClass=Class'DH_Guns.DH_Flakvierling38Cannon'
+     GunClass=class'DH_Guns.DH_Flakvierling38Cannon'
      CameraBone="Camera_com"
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'

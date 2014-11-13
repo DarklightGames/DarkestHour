@@ -33,7 +33,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Cromwell_body_ext');
     L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Cromwell_armor_ext');
@@ -50,7 +50,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int2');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 // Modified to adjust size/proportions of texture overlay to match driver's glass vision block
@@ -114,12 +114,12 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-175.000000,Y=30.000000,Z=10.000000),ExhaustRotation=(Pitch=36000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-175.000000,Y=-30.000000,Z=10.000000),ExhaustRotation=(Pitch=36000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Cromwell6PdrCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_CromwellMountedMGPawn',WeaponBone="Mg_attachment")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Cromwell6PdrCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellMountedMGPawn',WeaponBone="Mg_attachment")
      IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'

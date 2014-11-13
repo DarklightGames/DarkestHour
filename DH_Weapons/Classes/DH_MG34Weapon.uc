@@ -29,7 +29,7 @@ simulated event StopFire(int Mode)
 defaultproperties
 {
      bTrackBarrelHeat=true
-     BarrelClass=Class'DH_Weapons.DH_MG34Barrel'
+     BarrelClass=class'DH_Weapons.DH_MG34Barrel'
      BarrelSteamBone="Barrel"
      BarrelChangeAnim="Bipod_Barrel_Change"
      IdleToBipodDeploy="Rest_2_Bipod"
@@ -56,8 +56,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      Handtex=Texture'Weapons1st_tex.Arms.hands_gergloves'
-     FireModeClass(0)=Class'DH_Weapons.DH_MG34AutoFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_MG34SemiAutoFire'
+     FireModeClass(0)=class'DH_Weapons.DH_MG34AutoFire'
+     FireModeClass(1)=class'DH_Weapons.DH_MG34SemiAutoFire'
      IdleAnim="Rest_Idle"
      SelectAnim="Draw"
      PutDownAnim="Put_away"
@@ -68,9 +68,9 @@ defaultproperties
      CurrentRating=0.400000
      bSniping=true
      DisplayFOV=70.000000
-     PickupClass=Class'DH_Weapons.DH_MG34Pickup'
+     PickupClass=class'DH_Weapons.DH_MG34Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_MG34Attachment'
+     AttachmentClass=class'DH_Weapons.DH_MG34Attachment'
      ItemName="Maschinengewehr 34"
      Mesh=SkeletalMesh'Axis_Mg34_1st.MG_34_Mesh'
 }

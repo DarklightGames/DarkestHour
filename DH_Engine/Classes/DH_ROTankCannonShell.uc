@@ -191,7 +191,7 @@ simulated function Destroyed()
     if (Corona != none)
         Corona.Destroy();
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 
@@ -307,21 +307,21 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 defaultproperties
 {
      bHasTracer=true
-     TracerEffect=Class'DH_Effects.DH_RedTankShellTracerBig'
-     ShellImpactDamage=Class'DH_TankShellImpactDamage'
+     TracerEffect=class'DH_Effects.DH_RedTankShellTracerBig'
+     ShellImpactDamage=class'DH_TankShellImpactDamage'
      ImpactDamage=400
      VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
      DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
      RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
      WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
      WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-     ShellHitVehicleEffectClass=Class'ROEffects.TankAPHitPenetrate'
-     ShellDeflectEffectClass=Class'ROEffects.TankAPHitDeflect'
-     ShellHitDirtEffectClass=Class'ROEffects.TankAPHitDirtEffect'
-     ShellHitSnowEffectClass=Class'ROEffects.TankAPHitSnowEffect'
-     ShellHitWoodEffectClass=Class'ROEffects.TankAPHitWoodEffect'
-     ShellHitRockEffectClass=Class'ROEffects.TankAPHitRockEffect'
-     ShellHitWaterEffectClass=Class'ROEffects.TankAPHitWaterEffect'
+     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrate'
+     ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
+     ShellHitDirtEffectClass=class'ROEffects.TankAPHitDirtEffect'
+     ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
+     ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
+     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
+     ShellHitWaterEffectClass=class'ROEffects.TankAPHitWaterEffect'
      AmbientVolumeScale=5.000000
      SpeedFudgeScale=0.500000
      InitialAccelerationTime=0.200000
@@ -330,9 +330,9 @@ defaultproperties
      Damage=100.000000
      DamageRadius=5.000000
      MomentumTransfer=10000.000000
-     MyDamageType=Class'DH_TankShellAPExplosionDamage'
-     ExplosionDecal=Class'ROEffects.TankAPMarkDirt'
-     ExplosionDecalSnow=Class'ROEffects.TankAPMarkSnow'
+     MyDamageType=class'DH_TankShellAPExplosionDamage'
+     ExplosionDecal=class'ROEffects.TankAPMarkDirt'
+     ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
      DrawType=DT_StaticMesh
      StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
      bNetTemporary=false

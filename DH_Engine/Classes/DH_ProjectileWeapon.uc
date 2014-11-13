@@ -115,7 +115,7 @@ function ServerWorkBolt(){}
 // in the right position for free-aim calculations (not the ref pose)
 simulated function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (Role == ROLE_Authority && !Instigator.IsLocallyControlled())
     {

@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: M1A1 Bazooka"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_ATWeapons.DH_BazookaWeapon'
+     InventoryType=class'DH_ATWeapons.DH_BazookaWeapon'
      PickupMessage="You got the M1A1 Bazooka."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

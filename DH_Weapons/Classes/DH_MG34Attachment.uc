@@ -7,13 +7,13 @@ class DH_MG34Attachment extends DHMGWeaponAttachment;
 
 defaultproperties
 {
-     ClientProjectileClass=Class'DH_Weapons.DH_MG34Bullet_C'
-     ClientTracerClass=Class'DH_Weapons.DH_MG34ClientTracer'
+     ClientProjectileClass=class'DH_Weapons.DH_MG34Bullet_C'
+     ClientTracerClass=class'DH_Weapons.DH_MG34ClientTracer'
      bUsesTracers=true
      TracerFrequency=7
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdMG'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
      bAltFireFlash=true
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
      PA_MovementAnims(0)="stand_jogF_mg34"
      PA_MovementAnims(1)="stand_jogB_mg34"
      PA_MovementAnims(2)="stand_jogL_mg34"

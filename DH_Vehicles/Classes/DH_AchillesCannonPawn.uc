@@ -74,7 +74,7 @@ defaultproperties
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
      DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
      FireImpulse=(X=-100000.000000)
-     GunClass=Class'DH_Vehicles.DH_AchillesCannon'
+     GunClass=class'DH_Vehicles.DH_AchillesCannon'
      CameraBone="Gun"
      bPCRelativeFPRotation=true
      bFPNoZFromCameraPitch=true

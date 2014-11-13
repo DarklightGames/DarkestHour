@@ -12,7 +12,7 @@ class DH_BrenBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_BrenWeapon'
+     WeaponClass=class'DH_Weapons.DH_BrenWeapon'
      DeathString="%o was smacked by %k's Bren."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

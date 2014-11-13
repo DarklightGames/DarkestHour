@@ -203,7 +203,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
-        DamageType = Class'ROSuicided';
+        DamageType = class'ROSuicided';
         Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
@@ -333,12 +333,12 @@ defaultproperties
      bSpecialTankTurning=false
      ViewShakeRadius=100.000000
      ViewShakeOffsetFreq=1.000000
-     DisintegrationEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
-     DisintegrationEffectLowClass=Class'ROEffects.ROVehicleDestroyedEmitter_simple'
+     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
      DisintegrationHealth=-1000000000.000000
      DestructionLinearMomentum=(Min=0.000000,Max=0.000000)
      DestructionAngularMomentum=(Min=0.000000,Max=0.000000)
-     DamagedEffectClass=Class'AHZ_ROVehicles.ATCannonDamagedEffect'
+     DamagedEffectClass=class'AHZ_ROVehicles.ATCannonDamagedEffect'
      bMustBeTankCommander=false
      VehicleHudEngineX=0.000000
      VehicleHudEngineY=0.000000

@@ -18,7 +18,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: M1918A2 Browning Automatic Rifle"
      MaxDesireability=0.900000
-     InventoryType=Class'DH_Weapons.DH_BARWeapon'
+     InventoryType=class'DH_Weapons.DH_BARWeapon'
      PickupMessage="You got the M1918A2 Browning Automatic Rifle."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

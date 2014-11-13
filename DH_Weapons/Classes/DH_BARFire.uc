@@ -11,7 +11,7 @@ var(FireAnims)  name        SightUpFireIronEndAnim;
 
 function ModeTick(float dt)
 {
-    Super.ModeTick(dt);
+    super.ModeTick(dt);
 
     if (bIsFiring && !AllowFire())
     {
@@ -108,7 +108,7 @@ defaultproperties
      FAProjSpawnOffset=(X=-28.000000)
      PreLaunchTraceDistance=2624.000000
      TracerFrequency=5
-     DummyTracerClass=Class'DH_Weapons.DH_BARClientTracer'
+     DummyTracerClass=class'DH_Weapons.DH_BARClientTracer'
      FireIronAnim="Iron_Shoot_Loop"
      FireIronLoopAnim="Iron_Shoot_Loop"
      FireIronEndAnim="Iron_Shoot_End"
@@ -124,7 +124,7 @@ defaultproperties
      PctBipodDeployRecoil=0.010000
      PctRestDeployRecoil=0.050000
      RecoilRate=0.075000
-     ShellEjectClass=Class'ROAmmo.ShellEject1st762x54mm'
+     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
      ShellIronSightOffset=(X=20.000000,Z=-2.000000)
      ShellRotOffsetIron=(Pitch=500)
      ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
@@ -135,18 +135,18 @@ defaultproperties
      FireEndAnim="Shoot_End"
      TweenTime=0.000000
      FireRate=0.200000
-     AmmoClass=Class'DH_Weapons.DH_BARAmmo'
+     AmmoClass=class'DH_Weapons.DH_BARAmmo'
      ShakeRotMag=(X=50.000000,Y=50.000000,Z=150.000000)
      ShakeRotRate=(X=10000.000000,Y=10000.000000,Z=10000.000000)
      ShakeRotTime=0.750000
      ShakeOffsetMag=(X=3.000000,Y=1.000000,Z=3.000000)
      ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      ShakeOffsetTime=1.000000
-     ProjectileClass=Class'DH_Weapons.DH_BARBullet'
+     ProjectileClass=class'DH_Weapons.DH_BARBullet'
      BotRefireRate=0.990000
      WarnTargetPct=0.900000
-     FlashEmitterClass=Class'ROEffects.MuzzleFlash1stSTG'
-     SmokeEmitterClass=Class'ROEffects.ROMuzzleSmoke'
+     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
+     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
      aimerror=1200.000000
      Spread=150.000000
      SpreadStyle=SS_Random

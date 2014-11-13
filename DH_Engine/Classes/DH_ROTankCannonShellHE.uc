@@ -521,17 +521,17 @@ defaultproperties
      BlurEffectScalar=2.200000
      PenetrationMag=300.000000
      VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-     ShellHitVehicleEffectClass=Class'ROEffects.TankHEHitPenetrate'
-     ShellDeflectEffectClass=Class'ROEffects.TankHEHitDeflect'
-     ShellHitDirtEffectClass=Class'DH_Effects.DH_TankMediumHEHitEffect'
-     ShellHitSnowEffectClass=Class'DH_Effects.DH_TankMediumHEHitEffect'
-     ShellHitWoodEffectClass=Class'DH_Effects.DH_TankMediumHEHitEffect'
-     ShellHitRockEffectClass=Class'DH_Effects.DH_TankMediumHEHitEffect'
-     ShellHitWaterEffectClass=Class'DH_Effects.DH_TankMediumHEHitEffect'
+     ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
+     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
+     ShellHitDirtEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
+     ShellHitSnowEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
+     ShellHitWoodEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
+     ShellHitRockEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
+     ShellHitWaterEffectClass=class'DH_Effects.DH_TankMediumHEHitEffect'
      DamageRadius=300.000000
-     MyDamageType=Class'DH_HECannonShellDamage'
-     ExplosionDecal=Class'ROEffects.ArtilleryMarkDirt'
-     ExplosionDecalSnow=Class'ROEffects.ArtilleryMarkSnow'
+     MyDamageType=class'DH_HECannonShellDamage'
+     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
+     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
      LifeSpan=10.000000
      SoundRadius=1000.000000
 }

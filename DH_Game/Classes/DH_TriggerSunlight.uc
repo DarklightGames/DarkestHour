@@ -27,7 +27,7 @@ var float SwapTime;
 
 event PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     // Work out the starting light color:
     bIsOn = bInitiallyOn;

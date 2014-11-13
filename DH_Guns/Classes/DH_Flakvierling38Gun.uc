@@ -26,10 +26,10 @@ defaultproperties
 {
      VehicleHudTurret=TexRotator'DH_Flakvierling38_tex.flak.flakv38_turret_rot'
      VehicleHudTurretLook=TexRotator'DH_Flakvierling38_tex.flak.flakv38_turret_look'
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Flakvierling38CannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flakvierling38CannonPawn',WeaponBone="Turret_placement")
      DestroyedVehicleMesh=StaticMesh'DH_Flakvierling38_stc.flakv38.flakv38_destroyed'
-     DestructionEffectClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-     DisintegrationEffectClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
      DamagedEffectClass=none
      DamagedEffectHealthSmokeFactor=0.000000
      DamagedEffectHealthMediumSmokeFactor=0.000000

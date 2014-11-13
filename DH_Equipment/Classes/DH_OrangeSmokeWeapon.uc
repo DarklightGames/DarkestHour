@@ -30,8 +30,8 @@ defaultproperties
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
      CrawlEndAnim="crawl_out"
-     FireModeClass(0)=Class'DH_Equipment.DH_OrangeSmokeFire'
-     FireModeClass(1)=Class'DH_Equipment.DH_OrangeSmokeTossFire'
+     FireModeClass(0)=class'DH_Equipment.DH_OrangeSmokeFire'
+     FireModeClass(1)=class'DH_Equipment.DH_OrangeSmokeTossFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -42,10 +42,10 @@ defaultproperties
      bCanThrow=false
      DisplayFOV=70.000000
      InventoryGroup=8
-     PickupClass=Class'DH_Equipment.DH_OrangeSmokePickup'
+     PickupClass=class'DH_Equipment.DH_OrangeSmokePickup'
      PlayerViewOffset=(X=5.000000,Y=5.000000)
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Equipment.DH_OrangeSmokeAttachment'
+     AttachmentClass=class'DH_Equipment.DH_OrangeSmokeAttachment'
      ItemName="RauchSichtzeichen Orange 160"
      Mesh=SkeletalMesh'DH_GermanSmokeGrenade_1st.OrangeSmokeGrenade'
 }

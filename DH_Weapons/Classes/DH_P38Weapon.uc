@@ -41,8 +41,8 @@ defaultproperties
      IronSightDisplayFOV=35.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.400000
-     FireModeClass(0)=Class'DH_Weapons.DH_P38Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_P38MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_P38Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_P38MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -52,9 +52,9 @@ defaultproperties
      CurrentRating=0.350000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_P38Pickup'
+     PickupClass=class'DH_Weapons.DH_P38Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_P38Attachment'
+     AttachmentClass=class'DH_Weapons.DH_P38Attachment'
      ItemName="Walther P38"
      Mesh=SkeletalMesh'Axis_P38_1st.P-38-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Pistols.p38_S'

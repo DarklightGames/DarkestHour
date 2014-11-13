@@ -53,13 +53,13 @@ defaultproperties
      ShellDiameter=7.620000
      bHasTracer=true
      PenetrationMag=880.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAP'
      ImpactDamage=450
      BallisticCoefficient=2.450000
      Speed=53351.000000
      MaxSpeed=53351.000000
      Damage=400.000000
      DamageRadius=1140.000000
-     MyDamageType=Class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageHE'
      Tag="Mk.I HE-T"
 }

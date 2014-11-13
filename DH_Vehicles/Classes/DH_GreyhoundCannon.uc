@@ -208,7 +208,7 @@ defaultproperties
      ProjPerFire=20
      bLastShot=true
      InitialTertiaryAmmo=8
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_TankCannonShellCanisterAmerican'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterAmerican'
      SecondarySpread=0.001450
      ManualRotationsPerSecond=0.040000
      PoweredRotationsPerSecond=0.040000
@@ -236,7 +236,7 @@ defaultproperties
      AddedPitch=26
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=6
-     DummyTracerClass=Class'DH_Vehicles.DH_30CalVehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
      mTracerInterval=0.600000
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -255,8 +255,8 @@ defaultproperties
      bAmbientAltFireSound=true
      FireInterval=3.000000
      AltFireInterval=0.120000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
@@ -264,8 +264,8 @@ defaultproperties
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
      AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_GreyhoundCannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_30CalVehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=600.000000)
      ShakeRotTime=4.000000
@@ -286,8 +286,8 @@ defaultproperties
      InitialPrimaryAmmo=24
      InitialSecondaryAmmo=48
      InitialAltAmmo=250
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_GreyhoundCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_GreyhoundCannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
      Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
      Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
      Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'

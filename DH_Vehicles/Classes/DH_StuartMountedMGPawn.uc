@@ -10,7 +10,7 @@ defaultproperties
      OverlayCenterSize=0.700000
      MGOverlay=Texture'DH_VehicleOptics_tex.Common.MG_sight'
      WeaponFov=72.000000
-     GunClass=Class'DH_Vehicles.DH_StuartMountedMG'
+     GunClass=class'DH_Vehicles.DH_StuartMountedMG'
      bHasAltFire=false
      CameraBone="mg_yaw"
      bDrawDriverInTP=false

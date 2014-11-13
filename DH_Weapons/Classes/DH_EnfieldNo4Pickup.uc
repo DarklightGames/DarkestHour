@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Lee Enfield No. 4"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_EnfieldNo4Weapon'
+     InventoryType=class'DH_Weapons.DH_EnfieldNo4Weapon'
      PickupMessage="You got the Lee Enfield No. 4."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

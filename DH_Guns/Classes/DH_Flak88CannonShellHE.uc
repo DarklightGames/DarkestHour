@@ -46,13 +46,13 @@ defaultproperties
      DHPenetrationTable(10)=1.500000
      ShellDiameter=8.800000
      PenetrationMag=1020.000000
-     ShellImpactDamage=Class'DH_Guns.DH_Flak88CannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_Flak88CannonShellDamageAP'
      ImpactDamage=550
      BallisticCoefficient=2.400000
      Speed=49489.000000
      MaxSpeed=49489.000000
      Damage=475.000000
      DamageRadius=1550.000000
-     MyDamageType=Class'DH_Guns.DH_Flak88CannonShellDamageHE'
+     MyDamageType=class'DH_Guns.DH_Flak88CannonShellDamageHE'
      Tag="Schw.Sprgr.Patr."
 }

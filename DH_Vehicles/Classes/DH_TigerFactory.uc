@@ -9,5 +9,5 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Vehicles.DH_TigerTank'
+     VehicleClass=class'DH_Vehicles.DH_TigerTank'
 }

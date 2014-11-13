@@ -40,7 +40,7 @@ state FireLoop
     {
         if (!ROWeapon(Weapon).UsingAutoFire())
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
         }
     }
 
@@ -80,7 +80,7 @@ state FireLoop
                     }
                 }
 
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_none,FireVolume,,,,false);
 
                 ClientPlayForceFeedback(FireForce);  // jdf
 
@@ -110,7 +110,7 @@ state FireLoop
         {
             Weapon.AnimStopLooping();
             PlayAmbientSound(none);
-            Weapon.PlayOwnedSound(FireEndSound,SLOT_None,FireVolume,,AmbientFireSoundRadius);
+            Weapon.PlayOwnedSound(FireEndSound,SLOT_none,FireVolume,,AmbientFireSoundRadius);
             Weapon.StopFire(ThisModeNum);
 
             //If we are not switching weapons, go to the idle state
@@ -142,7 +142,7 @@ state FireLoop
 
     function ModeTick(float dt)
     {
-        Super.ModeTick(dt);
+        super.ModeTick(dt);
 
         // WeaponTODO: See how to properly reimplement this
         if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
@@ -160,7 +160,7 @@ defaultproperties
      AmbientFireSoundRadius=750.000000
      AmbientFireSound=SoundGroup'DH_WeaponSounds.c96.C96_FireLoop01'
      AmbientFireVolume=255
-     ServerProjectileClass=Class'DH_Weapons.DH_C96Bullet_S'
+     ServerProjectileClass=class'DH_Weapons.DH_C96Bullet_S'
      ProjSpawnOffset=(X=25.000000)
      FAProjSpawnOffset=(X=-20.000000)
      FireIronAnim="Iron_Shoot_Loop"
@@ -171,7 +171,7 @@ defaultproperties
      maxVerticalRecoilAngle=600
      maxHorizontalRecoilAngle=75
      RecoilRate=0.050000
-     ShellEjectClass=Class'ROAmmo.ShellEject1st9x19mm'
+     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
      ShellRotOffsetIron=(Pitch=5000)
      PreFireAnim="Shoot1_start"
      FireAnim="Shoot_Loop"
@@ -179,18 +179,18 @@ defaultproperties
      FireEndAnim="Shoot_End"
      TweenTime=0.000000
      FireRate=0.066666
-     AmmoClass=Class'DH_Weapons.DH_C96Ammo'
+     AmmoClass=class'DH_Weapons.DH_C96Ammo'
      ShakeRotMag=(X=50.000000,Y=50.000000,Z=150.000000)
      ShakeRotRate=(X=10000.000000,Y=10000.000000,Z=10000.000000)
      ShakeRotTime=0.500000
      ShakeOffsetMag=(X=3.000000,Y=1.000000,Z=3.000000)
      ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
      ShakeOffsetTime=1.000000
-     ProjectileClass=Class'DH_Weapons.DH_C96Bullet'
+     ProjectileClass=class'DH_Weapons.DH_C96Bullet'
      BotRefireRate=0.990000
      WarnTargetPct=0.900000
-     FlashEmitterClass=Class'ROEffects.MuzzleFlash1stPistol'
-     SmokeEmitterClass=Class'ROEffects.ROMuzzleSmoke'
+     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
+     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
      aimerror=1200.000000
      Spread=400.000000
      SpreadStyle=SS_Random

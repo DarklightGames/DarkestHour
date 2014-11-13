@@ -18,9 +18,9 @@ defaultproperties
      SnowExplosionSounds(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
      SnowExplosionSounds(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
      SnowExplosionSounds(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
-     GroundExplosionEmitterClass=Class'DH_Effects.DH_M2MortarHEExplosion'
-     SnowExplosionEmitterClass=Class'DH_Effects.DH_M2MortarHEExplosion'
-     WaterExplosionEmitterClass=Class'DH_Effects.DH_M2MortarHEExplosion'
+     GroundExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
+     SnowExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
+     WaterExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
      ShakeRotMag=(Z=100.000000)
      ShakeRotRate=(Z=2500.000000)
      ShakeRotTime=3.000000
@@ -34,8 +34,8 @@ defaultproperties
      Damage=233.332993
      DamageRadius=640.000000
      MomentumTransfer=75000.000000
-     MyDamageType=Class'DH_Mortars.DH_M2MortarDamageType'
-     ExplosionDecal=Class'ROEffects.ArtilleryMarkDirt'
-     ExplosionDecalSnow=Class'ROEffects.ArtilleryMarkSnow'
+     MyDamageType=class'DH_Mortars.DH_M2MortarDamageType'
+     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
+     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
      Tag="M49A2 HE"
 }

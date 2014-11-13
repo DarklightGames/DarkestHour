@@ -27,8 +27,8 @@ defaultproperties
      IronSightDisplayFOV=20.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_Weapons.DH_G43Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_G43MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_G43Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -39,9 +39,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_G43Pickup'
+     PickupClass=class'DH_Weapons.DH_G43Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_G43Attachment'
+     AttachmentClass=class'DH_Weapons.DH_G43Attachment'
      ItemName="Gewehr 43"
      Mesh=SkeletalMesh'Axis_G43_1st.G-43-Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Rifles.G43_S'

@@ -17,7 +17,7 @@ defaultproperties
      APCDamageModifier=0.250000
      VehicleDamageModifier=0.800000
      TreadDamageModifier=0.250000
-     WeaponClass=Class'DH_ATWeapons.DH_BazookaWeapon'
+     WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
      DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
      DeathOverlayTime=999.000000
      KDeathVel=150.000000

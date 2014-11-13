@@ -32,12 +32,12 @@ defaultproperties
      Models(4)="WHSP_5"
      Models(5)="WHSP_6"
      SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
-     DetachedArmClass=Class'ROEffects.SeveredArmGerTanker'
-     DetachedLegClass=Class'ROEffects.SeveredLegGerTanker'
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-     Headgear(0)=Class'ROInventory.ROGermanHat'
-     Headgear(1)=Class'DH_GerPlayers.DH_HeerCamoCap'
+     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
+     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+     Headgear(0)=class'ROInventory.ROGermanHat'
+     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
      RolePawnClass="DH_GerPlayers.DH_WH_TankerPawn"
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true

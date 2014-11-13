@@ -7,5 +7,5 @@ class DH_ShermanCannonPawnB_M4A176W_Snow extends DH_ShermanCannonPawnB_M4A176W;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_ShermanCannonB_M4A176W_Snow'
+     GunClass=class'DH_Vehicles.DH_ShermanCannonB_M4A176W_Snow'
 }

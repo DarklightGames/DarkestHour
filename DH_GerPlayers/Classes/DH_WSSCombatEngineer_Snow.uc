@@ -28,11 +28,11 @@ defaultproperties
      Models(4)="SSS_5"
      Models(5)="SSS_6"
      SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-     Grenades(1)=(Item=Class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
-     Headgear(0)=Class'DH_GerPlayers.DH_SSHelmetCover'
-     Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetSnow'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
+     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
+     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
      PrimaryWeaponType=WT_SMG
      Limit=1
 }

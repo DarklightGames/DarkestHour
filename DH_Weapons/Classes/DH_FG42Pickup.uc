@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Fallschirmjägergewehr 42"
      MaxDesireability=0.900000
-     InventoryType=Class'DH_Weapons.DH_FG42Weapon'
+     InventoryType=class'DH_Weapons.DH_FG42Weapon'
      PickupMessage="You got the Fallschirmjägergewehr 42."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

@@ -80,7 +80,7 @@ defaultproperties
      DHPenetrationTable(9)=10.600000
      DHPenetrationTable(10)=9.700000
      ShellDiameter=8.800000
-     ShellImpactDamage=Class'DH_Vehicles.DH_TigerCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_TigerCannonShellDamageAP'
      ImpactDamage=775
      BallisticCoefficient=3.300000
      Speed=48281.000000

@@ -27,7 +27,7 @@ replication
 // Overridden to counteract mappers giving out more ammo than the weapon code can handle
 simulated function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (PrimaryAmmoArray.Length > MaxNumPrimaryMags)
         PrimaryAmmoArray.Remove(MaxNumPrimaryMags, (PrimaryAmmoArray.Length - MaxNumPrimaryMags));
@@ -593,7 +593,7 @@ simulated function Destroyed()
         DH_Pawn(Instigator).bWeaponNeedsReload = false;
     }
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 // Overridden to prevent picking up more than the intended max ammo count

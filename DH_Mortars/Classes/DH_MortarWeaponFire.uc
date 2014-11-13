@@ -15,6 +15,6 @@ function ServerPlayFiring() { return; }
 
 defaultproperties
 {
-     AmmoClass=Class'ROEngine.Ammo_Dummy'
+     AmmoClass=class'ROEngine.Ammo_Dummy'
      AmmoPerFire=0
 }

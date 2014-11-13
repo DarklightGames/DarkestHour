@@ -30,13 +30,13 @@ defaultproperties
      DHPenetrationTable(10)=1.500000
      ShellDiameter=9.000000
      PenetrationMag=1020.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_JacksonCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_JacksonCannonShellDamageAP'
      ImpactDamage=510
      BallisticCoefficient=1.790000
      Speed=49609.000000
      MaxSpeed=49609.000000
      Damage=450.000000
      DamageRadius=1570.000000
-     MyDamageType=Class'DH_Vehicles.DH_JacksonCannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_JacksonCannonShellDamageHE'
      Tag="M71 HE"
 }

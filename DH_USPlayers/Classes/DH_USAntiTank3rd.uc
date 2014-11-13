@@ -35,12 +35,12 @@ defaultproperties
      Models(4)="US_3Inf5"
      bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
-     PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_GreaseGunWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_ThompsonAmmoPouch')
-     Grenades(0)=(Item=Class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
+     Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
      GivenItems(0)="DH_ATWeapons.DH_BazookaWeapon"
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
      PrimaryWeaponType=WT_SMG
      Limit=1
 }

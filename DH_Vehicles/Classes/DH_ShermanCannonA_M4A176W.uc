@@ -69,7 +69,7 @@ function DecrementRange()
 defaultproperties
 {
      InitialTertiaryAmmo=26
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
      SecondarySpread=0.001000
      TertiarySpread=0.001350
      ManualRotationsPerSecond=0.020000
@@ -108,7 +108,7 @@ defaultproperties
      AddedPitch=52
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=6
-     DummyTracerClass=Class'DH_Vehicles.DH_30CalVehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
      mTracerInterval=0.600000
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -126,8 +126,8 @@ defaultproperties
      bAmbientAltFireSound=true
      FireInterval=5.000000
      AltFireInterval=0.120000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
@@ -135,8 +135,8 @@ defaultproperties
      RotateSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
      AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_30CalVehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -157,8 +157,8 @@ defaultproperties
      InitialPrimaryAmmo=43
      InitialSecondaryAmmo=2
      InitialAltAmmo=200
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
      Mesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA'
      Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
      Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'

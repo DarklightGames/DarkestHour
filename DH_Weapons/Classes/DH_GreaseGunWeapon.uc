@@ -25,8 +25,8 @@ defaultproperties
      IronSightDisplayFOV=30.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_Weapons.DH_GreaseGunFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_GreaseGunMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_GreaseGunFire'
+     FireModeClass(1)=class'DH_Weapons.DH_GreaseGunMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -36,9 +36,9 @@ defaultproperties
      CurrentRating=0.700000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_GreaseGunPickup'
+     PickupClass=class'DH_Weapons.DH_GreaseGunPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_GreaseGunAttachment'
+     AttachmentClass=class'DH_Weapons.DH_GreaseGunAttachment'
      ItemName="M3 Grease Gun"
      Mesh=SkeletalMesh'DH_M3GreaseGun_1st.M3GreaseGun'
      HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.M3GeaseGun_s'

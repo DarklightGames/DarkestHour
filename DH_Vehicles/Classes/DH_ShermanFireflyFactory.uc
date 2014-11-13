@@ -9,6 +9,6 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Vehicles.DH_ShermanFireflyTank'
+     VehicleClass=class'DH_Vehicles.DH_ShermanFireflyTank'
      Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'
 }

@@ -7,5 +7,5 @@ class DH_Flak88CannonPawn_Green extends DH_Flak88CannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Guns.DH_Flak88Cannon_Green'
+     GunClass=class'DH_Guns.DH_Flak88Cannon_Green'
 }

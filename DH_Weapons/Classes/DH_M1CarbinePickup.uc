@@ -24,7 +24,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: M1 Carbine"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_M1CarbineWeapon'
+     InventoryType=class'DH_Weapons.DH_M1CarbineWeapon'
      PickupMessage="You got the M1 Carbine."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

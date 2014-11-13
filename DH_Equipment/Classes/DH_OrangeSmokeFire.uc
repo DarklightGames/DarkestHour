@@ -100,6 +100,6 @@ defaultproperties
      bSplashDamage=false
      bRecommendSplashDamage=false
      MaxHoldTime=4.950000
-     AmmoClass=Class'DH_Equipment.DH_OrangeSmokeAmmo'
-     ProjectileClass=Class'DH_Equipment.DH_OrangeSmokeProjectile'
+     AmmoClass=class'DH_Equipment.DH_OrangeSmokeAmmo'
+     ProjectileClass=class'DH_Equipment.DH_OrangeSmokeProjectile'
 }

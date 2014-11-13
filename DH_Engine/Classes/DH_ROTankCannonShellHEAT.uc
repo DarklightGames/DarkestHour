@@ -915,7 +915,7 @@ simulated function Destroyed()
     if (Corona != none)
         Corona.Destroy();
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 
@@ -948,12 +948,12 @@ defaultproperties
      BlurTime=6.000000
      BlurEffectScalar=2.100000
      VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-     ShellHitVehicleEffectClass=Class'ROEffects.TankHEHitPenetrate'
-     ShellDeflectEffectClass=Class'ROEffects.TankHEHitDeflect'
+     ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
+     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
      DamageRadius=300.000000
-     MyDamageType=Class'DH_HEATCannonShellDamage'
-     ExplosionDecal=Class'ROEffects.ArtilleryMarkDirt'
-     ExplosionDecalSnow=Class'ROEffects.ArtilleryMarkSnow'
+     MyDamageType=class'DH_HEATCannonShellDamage'
+     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
+     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
      LifeSpan=10.000000
      SoundRadius=1000.000000
 }

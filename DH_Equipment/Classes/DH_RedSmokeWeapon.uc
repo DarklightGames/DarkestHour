@@ -30,8 +30,8 @@ defaultproperties
      CrawlBackwardAnim="crawlB"
      CrawlStartAnim="crawl_in"
      CrawlEndAnim="crawl_out"
-     FireModeClass(0)=Class'DH_Equipment.DH_RedSmokeFire'
-     FireModeClass(1)=Class'DH_Equipment.DH_RedSmokeTossFire'
+     FireModeClass(0)=class'DH_Equipment.DH_RedSmokeFire'
+     FireModeClass(1)=class'DH_Equipment.DH_RedSmokeTossFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -42,10 +42,10 @@ defaultproperties
      bCanThrow=false
      DisplayFOV=70.000000
      InventoryGroup=8
-     PickupClass=Class'DH_Equipment.DH_RedSmokePickup'
+     PickupClass=class'DH_Equipment.DH_RedSmokePickup'
      PlayerViewOffset=(X=5.000000,Y=5.000000)
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Equipment.DH_RedSmokeAttachment'
+     AttachmentClass=class'DH_Equipment.DH_RedSmokeAttachment'
      ItemName="M16 Red Smoke Grenade"
      Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.RedSmokeGrenade'
 }

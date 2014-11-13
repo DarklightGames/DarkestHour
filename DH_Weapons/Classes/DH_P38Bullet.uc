@@ -12,9 +12,9 @@ class DH_P38Bullet extends DH_Bullet;
 defaultproperties
 {
      WhizType=2
-     MyVehicleDamage=Class'DH_Weapons.DH_P38VehDamType'
+     MyVehicleDamage=class'DH_Weapons.DH_P38VehDamType'
      BallisticCoefficient=0.150000
      Speed=22029.000000
      Damage=50.000000
-     MyDamageType=Class'DH_Weapons.DH_P38DamType'
+     MyDamageType=class'DH_Weapons.DH_P38DamType'
 }

@@ -7,7 +7,7 @@ class DH_BazookaMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_ATWeapons.DH_BazookaBashDamType'
+     DamageType=class'DH_ATWeapons.DH_BazookaBashDamType'
      TraceRange=75.000000
      BashBackAnim="bash_pullback"
      BashHoldAnim="bash_hold"

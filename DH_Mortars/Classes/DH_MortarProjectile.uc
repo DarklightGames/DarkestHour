@@ -337,11 +337,11 @@ defaultproperties
 {
      DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
      DudChance=0.010000
-     HitDirtEmitterClass=Class'ROEffects.TankAPHitDirtEffect'
-     HitSnowEmitterClass=Class'ROEffects.TankAPHitSnowEffect'
-     HitWoodEmitterClass=Class'ROEffects.TankAPHitWoodEffect'
-     HitRockEmitterClass=Class'ROEffects.TankAPHitRockEffect'
-     HitWaterEmitterClass=Class'ROEffects.TankAPHitWaterEffect'
+     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
+     HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
+     HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
+     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
+     HitWaterEmitterClass=class'ROEffects.TankAPHitWaterEffect'
      HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
      HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
      HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'

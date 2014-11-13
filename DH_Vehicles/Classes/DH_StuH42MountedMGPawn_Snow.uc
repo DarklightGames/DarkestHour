@@ -7,5 +7,5 @@ class DH_StuH42MountedMGPawn_Snow extends DH_StuH42MountedMGPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_StuH42MountedMG_Snow'
+     GunClass=class'DH_Vehicles.DH_StuH42MountedMG_Snow'
 }

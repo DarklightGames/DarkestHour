@@ -32,11 +32,11 @@ defaultproperties
      Models(4)="WHP_5"
      Models(5)="WHP_6"
      SleeveTexture=Texture'Weapons1st_tex.Arms.GermanTankerSleeves'
-     DetachedArmClass=Class'ROEffects.SeveredArmGerTanker'
-     DetachedLegClass=Class'ROEffects.SeveredLegGerTanker'
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     Headgear(0)=Class'DH_GerPlayers.DH_HeerTankerCap'
-     Headgear(1)=Class'DH_GerPlayers.DH_HeerCamoCap'
+     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
+     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     Headgear(0)=class'DH_GerPlayers.DH_HeerTankerCap'
+     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
      RolePawnClass="DH_GerPlayers.DH_WH_TankerPawn"
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true

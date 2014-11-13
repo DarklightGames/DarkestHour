@@ -12,7 +12,7 @@ class DH_MP40BashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_MP40Weapon'
+     WeaponClass=class'DH_Weapons.DH_MP40Weapon'
      DeathString="%o was smacked with %k's Maschinenpistole 40."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

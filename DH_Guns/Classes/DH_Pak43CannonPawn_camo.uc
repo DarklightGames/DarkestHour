@@ -7,5 +7,5 @@ class DH_Pak43CannonPawn_Camo extends DH_Pak43CannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Guns.DH_Pak43Cannon_camo'
+     GunClass=class'DH_Guns.DH_Pak43Cannon_camo'
 }

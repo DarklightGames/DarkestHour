@@ -38,8 +38,8 @@ defaultproperties
      IronSightDisplayFOV=40.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_Weapons.DH_ColtM1911Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_ColtM1911MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_ColtM1911Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_ColtM1911MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -49,9 +49,9 @@ defaultproperties
      CurrentRating=0.350000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_ColtM1911Pickup'
+     PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_ColtM1911Attachment'
+     AttachmentClass=class'DH_Weapons.DH_ColtM1911Attachment'
      ItemName="Colt M1911 Pistol"
      Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
 }

@@ -50,7 +50,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
 {
     local int i;
     local moComboBox CB;
-    Super.InitComponent(MyC, MyO);
+    super.InitComponent(MyC, MyO);
 
     FLP = DHFilterListPage(ParentPage);
 

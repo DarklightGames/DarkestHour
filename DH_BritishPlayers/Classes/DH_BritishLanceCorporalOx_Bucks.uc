@@ -35,13 +35,13 @@ defaultproperties
      Models(4)="para5"
      Models(5)="para6"
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
-     PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_ThompsonWeapon',Amount=6)
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
-     Grenades(0)=(Item=Class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
-     Grenades(1)=(Item=Class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
-     Headgear(0)=Class'DH_BritishPlayers.DH_BritishParaHelmet1'
-     Headgear(1)=Class'DH_BritishPlayers.DH_BritishParaHelmet2'
-     Headgear(2)=Class'DH_BritishPlayers.DH_BritishParaHelmet1'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
+     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_ThompsonWeapon',Amount=6)
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
+     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
+     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
+     Headgear(1)=class'DH_BritishPlayers.DH_BritishParaHelmet2'
+     Headgear(2)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
      Limit=2
 }

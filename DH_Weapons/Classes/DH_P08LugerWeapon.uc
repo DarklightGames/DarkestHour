@@ -41,8 +41,8 @@ defaultproperties
      IronSightDisplayFOV=55.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.300000
-     FireModeClass(0)=Class'DH_Weapons.DH_P08LugerFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_P08LugerMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_P08LugerFire'
+     FireModeClass(1)=class'DH_Weapons.DH_P08LugerMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="Put_away"
      SelectAnimRate=1.000000
@@ -52,9 +52,9 @@ defaultproperties
      CurrentRating=0.350000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_P08LugerPickup'
+     PickupClass=class'DH_Weapons.DH_P08LugerPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_P08LugerAttachment'
+     AttachmentClass=class'DH_Weapons.DH_P08LugerAttachment'
      ItemName="Luger P08"
      Mesh=SkeletalMesh'Axis_Luger_1st.P08Luger'
      HighDetailOverlay=Shader'Weapons1st_tex.Pistols.luger_s'

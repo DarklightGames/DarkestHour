@@ -16,10 +16,10 @@ defaultproperties
      DHPenetrationTable(5)=9.800000
      DHPenetrationTable(6)=9.800000
      bIsHEATRound=true
-     ShellImpactDamage=Class'DH_ATWeapons.DH_BazookaImpactDamType'
+     ShellImpactDamage=class'DH_ATWeapons.DH_BazookaImpactDamType'
      ImpactDamage=575
      Speed=6337.000000
      MaxSpeed=6337.000000
-     MyDamageType=Class'DH_ATWeapons.DH_BazookaDamType'
+     MyDamageType=class'DH_ATWeapons.DH_BazookaDamType'
      StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell'
 }

@@ -228,7 +228,7 @@ function ServerRequestReload()
         }
         else
         {
-            Super.ServerRequestReload();
+            super.ServerRequestReload();
         }
     }
     else
@@ -246,7 +246,7 @@ simulated function ClientDoReload(optional int NumRounds)
     }
     else
     {
-        Super.ClientDoReload();
+        super.ClientDoReload();
     }
 }
 

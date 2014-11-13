@@ -46,7 +46,7 @@ defaultproperties
      SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
      SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
      SmokeSoundDuration=30.000000
-     SmokeEmitterClass=Class'ROEffects.GrenadeSmokeEffect'
+     SmokeEmitterClass=class'ROEffects.GrenadeSmokeEffect'
      SoundVolume=255
      SoundRadius=200.000000
 }

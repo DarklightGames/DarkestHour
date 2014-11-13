@@ -38,7 +38,7 @@ struct VehiclePool
     var byte                ActiveCount;                //count of active vehicles spawn from this pool
 };
 
-var const byte SpawnError_None;
+var const byte SpawnError_none;
 var const byte SpawnError_Fatal;
 var const byte SpawnError_MaxVehicles;
 var const byte SpawnError_Cooldown;
@@ -159,7 +159,7 @@ function byte DrySpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, 
     //Check spawn point
     SpawnError = GetSpawnPointError(C, SpawnPointIndex, ESPT_Vehicles);
 
-    if (SpawnError != SpawnError_None)
+    if (SpawnError != SpawnError_none)
     {
         return SpawnError;
     }
@@ -174,7 +174,7 @@ function byte DrySpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, 
     //Check vehicle pool
     SpawnError = GetVehiclePoolError(C, PoolIndex, SP);
 
-    if (SpawnError != SpawnError_None)
+    if (SpawnError != SpawnError_none)
     {
         return SpawnError;
     }
@@ -192,7 +192,7 @@ function byte DrySpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex, 
             SpawnRotation = SP.Rotation;
     }
 
-    return SpawnError_None;
+    return SpawnError_none;
 }
 
 function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
@@ -255,7 +255,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, byte PoolIndex, byte SpawnPointIndex
 
     SpawnError = DrySpawnVehicle(C, PoolIndex, SpawnPointIndex, SpawnLocation, SpawnRotation);
 
-    if (SpawnError != SpawnError_None)
+    if (SpawnError != SpawnError_none)
     {
         return none;
     }
@@ -397,7 +397,7 @@ function byte GetSpawnPointError(DHPlayer C, byte SpawnPointIndex, ESpawnPointTy
         return SpawnError_SpawnInactive;
     }
 
-    return SpawnError_None;
+    return SpawnError_none;
 }
 
 function byte GetVehiclePoolError(DHPlayer C, byte VehiclePoolIndex, DHSpawnPoint SP)
@@ -456,7 +456,7 @@ function byte GetVehiclePoolError(DHPlayer C, byte VehiclePoolIndex, DHSpawnPoin
         return SpawnError_ActiveLimit;
     }
 
-    return SpawnError_None;
+    return SpawnError_none;
 }
 
 function byte DrySpawnInfantry(DHPlayer C, byte SpawnPointIndex, out vector SpawnLocation, out rotator SpawnRotation)
@@ -472,7 +472,7 @@ function byte DrySpawnInfantry(DHPlayer C, byte SpawnPointIndex, out vector Spaw
     //Spawn point sanity check
     SpawnError = GetSpawnPointError(C, SpawnPointIndex, ESPT_Infantry);
 
-    if (SpawnError != SpawnError_None)
+    if (SpawnError != SpawnError_none)
     {
         return SpawnError;
     }
@@ -500,7 +500,7 @@ function byte DrySpawnInfantry(DHPlayer C, byte SpawnPointIndex, out vector Spaw
             break;
     }
 
-    return SpawnError_None;
+    return SpawnError_none;
 }
 
 function byte SpawnInfantry(DHPlayer C, byte SpawnPointIndex, out vector SpawnLocation, out rotator SpawnRotation)
@@ -812,7 +812,7 @@ static function string GetSpawnErrorString(int SpawnError)
     //TODO: return correct spawn error strings
     switch (SpawnError)
     {
-        case default.SpawnError_None:
+        case default.SpawnError_none:
         case default.SpawnError_Fatal:
         case default.SpawnError_MaxVehicles:
         case default.SpawnError_Cooldown:
@@ -871,7 +871,7 @@ defaultproperties
 {
     bDirectional=false
     DrawScale=3.000000
-    SpawnError_None=0
+    SpawnError_none=0
     SpawnError_Fatal=1
     SpawnError_MaxVehicles=2
     SpawnError_Cooldown=3

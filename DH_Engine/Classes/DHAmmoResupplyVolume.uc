@@ -30,7 +30,7 @@ var()   EResupplyType       ResupplyType; //Who this volume will resupply
 
 function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (!bUsesSpawnAreas)
         Activate();

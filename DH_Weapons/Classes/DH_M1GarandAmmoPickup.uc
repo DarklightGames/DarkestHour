@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: M1 Garand ammo pouch"
      AmmoAmount=8
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_M1GarandAmmo'
+     InventoryType=class'DH_Weapons.DH_M1GarandAmmo'
      PickupMessage="You picked up a M1 Garand ammo pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

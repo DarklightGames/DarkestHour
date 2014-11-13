@@ -118,7 +118,7 @@ defaultproperties
      DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536)
      DriverPositions(3)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
      DriverPositions(4)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
-     GunClass=Class'DH_Vehicles.DH_StuH42Cannon'
+     GunClass=class'DH_Vehicles.DH_StuH42Cannon'
      CameraBone="Turret"
      MinRotateThreshold=0.500000
      MaxRotateThreshold=2.500000

@@ -68,11 +68,11 @@ defaultproperties
      WeaponFireOffset=20.000000
      RotationsPerSecond=0.033000
      FireInterval=4.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_Marder3MCannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -89,8 +89,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=20
      InitialSecondaryAmmo=7
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_Marder3MCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_Marder3MCannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_Marder3MCannonShellHE'
      Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
      SoundVolume=130

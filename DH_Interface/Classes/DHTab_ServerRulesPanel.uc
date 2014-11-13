@@ -140,7 +140,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function Refresh()
 {
-        Super.Refresh();
+        super.Refresh();
 
         sb_background.ManageComponent(lb_Rules);
 }

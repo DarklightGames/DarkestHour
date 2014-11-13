@@ -30,10 +30,10 @@ defaultproperties
      MGBeltBones(7)="Case02"
      MGBeltBones(8)="Case01"
      MGBeltBones(9)="Case"
-     BeltBulletClass=Class'ROInventory.MG42BeltRound'
+     BeltBulletClass=class'ROInventory.MG42BeltRound'
      bTrackBarrelHeat=true
      bCanFireFromHip=false
-     BarrelClass=Class'DH_Weapons.DH_MG42Barrel'
+     BarrelClass=class'DH_Weapons.DH_MG42Barrel'
      BarrelSteamBone="Barrel_Switch"
      BarrelChangeAnim="Bipod_Barrel_Change"
      IdleToBipodDeploy="Rest_2_Bipod"
@@ -57,8 +57,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      Handtex=Texture'Weapons1st_tex.Arms.hands_gergloves'
-     FireModeClass(0)=Class'DH_Weapons.DH_MG42Fire'
-     FireModeClass(1)=Class'ROInventory.ROEmptyFireClass'
+     FireModeClass(0)=class'DH_Weapons.DH_MG42Fire'
+     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
      IdleAnim="Rest_Idle"
      SelectAnim="Draw"
      PutDownAnim="putaway"
@@ -69,9 +69,9 @@ defaultproperties
      CurrentRating=0.400000
      bSniping=true
      DisplayFOV=70.000000
-     PickupClass=Class'DH_Weapons.DH_MG42Pickup'
+     PickupClass=class'DH_Weapons.DH_MG42Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_MG42Attachment'
+     AttachmentClass=class'DH_Weapons.DH_MG42Attachment'
      ItemName="Maschinengewehr 42"
      Mesh=SkeletalMesh'Axis_Mg42_1st.MG42_Mesh'
 }

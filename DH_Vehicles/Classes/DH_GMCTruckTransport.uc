@@ -18,7 +18,7 @@ var()   name                              DecorationAttachBone;
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_Allied_MilitarySM.American.GMC');
 
@@ -27,7 +27,7 @@ static function StaticPrecache(LevelInfo L)
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_Allied_MilitarySM.American.GMC');
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 simulated function PostBeginPlay()
@@ -68,7 +68,7 @@ simulated event DestroyAppearance()
         ResupplyAttach.Destroy();
     }
 
-    Super.DestroyAppearance();
+    super.DestroyAppearance();
 }
 
 // Overridden due to the Onslaught team lock not working in RO
@@ -161,19 +161,19 @@ defaultproperties
      EngineRPMSoundRange=5000.000000
      SteerBoneName="WheelDrive"
      RevMeterScale=4000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-150.000000,Y=-35.000000,Z=-12.000000),ExhaustRotation=(Pitch=36000,Yaw=5000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-150.000000,Y=35.000000,Z=-12.000000),ExhaustRotation=(Pitch=36000,Yaw=5000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_GMCTruckPassengerOne',WeaponBone="passenger1")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_GMCTruckPassengerFour',WeaponBone="passenger_l_5")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_GMCTruckPassengerSeven',WeaponBone="passenger_r_5")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerOne',WeaponBone="passenger1")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerFour',WeaponBone="passenger_l_5")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerSeven',WeaponBone="passenger_r_5")
      IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
      DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
-     DisintegrationEffectClass=Class'ROEffects.ROVehicleObliteratedEmitter'
-     DisintegrationEffectLowClass=Class'ROEffects.ROVehicleObliteratedEmitter_simple'
+     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
+     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
      DisintegrationHealth=-10000.000000
      DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
      DestructionAngularMomentum=(Max=150.000000)

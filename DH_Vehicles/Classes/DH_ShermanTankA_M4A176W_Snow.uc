@@ -9,7 +9,7 @@ class DH_ShermanTankA_M4A176W_Snow extends DH_ShermanTankA_M4A176W;
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow');
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.Treads.M10_treads');
@@ -26,12 +26,12 @@ simulated function UpdatePrecacheMaterials()
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int');
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanCannonPawnA_M4A176W_Snow')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawnA_M4A176W_Snow')
      Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
      Skins(1)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
 }

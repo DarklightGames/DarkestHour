@@ -115,7 +115,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.pantherg_ext');
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.PantherG_treads');
@@ -132,7 +132,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int_s');
     Level.AddPrecacheMaterial(SchurzenTexture); 
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -202,16 +202,16 @@ defaultproperties
      TransRatio=0.110000
      ChangeUpPoint=1990.000000
      ChangeDownPoint=1000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-230.000000,Y=20.000000,Z=65.000000),ExhaustRotation=(Pitch=22000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=-20.000000,Z=65.000000),ExhaustRotation=(Pitch=22000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerOne',WeaponBone="body")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerTwo',WeaponBone="body")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerThree',WeaponBone="body")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_PantherPassengerFour',WeaponBone="body")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerOne',WeaponBone="body")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerTwo',WeaponBone="body")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerThree',WeaponBone="body")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerFour',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'

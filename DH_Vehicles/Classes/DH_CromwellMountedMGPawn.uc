@@ -9,7 +9,7 @@ defaultproperties
 {
      MGOverlay=Texture'DH_VehicleOptics_tex.Allied.BesaMG_sight'
      WeaponFov=38.000000
-     GunClass=Class'DH_Vehicles.DH_CromwellMountedMG'
+     GunClass=class'DH_Vehicles.DH_CromwellMountedMG'
      bHasAltFire=false
      CameraBone="mg_yaw"
      bDrawDriverInTP=false

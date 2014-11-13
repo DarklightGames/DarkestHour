@@ -103,7 +103,7 @@ ignores HearNoise, Bump;
 
 function Possess(Pawn aPawn)
 {
-    Super.Possess(aPawn);
+    super.Possess(aPawn);
     if (DH_Pawn(aPawn) != none)
         DH_Pawn(aPawn).Setup(PawnSetupRecord);
 }
@@ -113,7 +113,7 @@ function SetPawnClass(string inClass, string inCharacter)
 {
     local class<DH_Pawn> pClass;
 
-    pClass = class<DH_Pawn>(DynamicLoadObject(inClass, class'Class'));
+    pClass = class<DH_Pawn>(DynamicLoadObject(inClass, class'class'));
     if (pClass != none)
         PawnClass = pClass;
 
@@ -123,6 +123,6 @@ function SetPawnClass(string inClass, string inCharacter)
 
 defaultproperties
 {
-     PlayerReplicationInfoClass=Class'DH_Engine.DHPlayerReplicationInfo'
-     PawnClass=Class'DH_Engine.DH_Pawn'
+     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
+     PawnClass=class'DH_Engine.DH_Pawn'
 }

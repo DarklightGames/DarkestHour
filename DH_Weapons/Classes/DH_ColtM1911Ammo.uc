@@ -9,7 +9,7 @@ defaultproperties
 {
      MaxAmmo=8
      InitialAmount=7
-     PickupClass=Class'DH_Weapons.DH_ColtM1911AmmoPickup'
+     PickupClass=class'DH_Weapons.DH_ColtM1911AmmoPickup'
      IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_ammo'
      IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
      ItemName="Colt M1911 Magazine"

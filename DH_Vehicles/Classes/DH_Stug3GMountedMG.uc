@@ -37,7 +37,7 @@ replication
 simulated function Tick(float DeltaTime)
 {
 
-    Super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
     if (bOnFire && HullMGFireEffect == none)
     {
@@ -259,9 +259,9 @@ defaultproperties
      ReloadLength=6.590000
      FireAttachBone="gunner_int"
      FireEffectOffset=(Z=5.000000)
-     FireEffectClass=Class'ROEngine.VehicleDamagedEffect'
-     VehicleBurningDamType=Class'DH_VehicleBurningDamType'
-     DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
+     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+     VehicleBurningDamType=class'DH_VehicleBurningDamType'
+     DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
      bUsesTracers=true
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=10.000000,Y=-5.000000,Z=23.000000))
@@ -282,16 +282,16 @@ defaultproperties
      Spread=0.002000
      FireInterval=0.070580
      AltFireInterval=0.070580
-     AmbientEffectEmitterClass=Class'ROVehicles.VehicleMGEmitter'
+     AmbientEffectEmitterClass=class'ROVehicles.VehicleMGEmitter'
      FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
      AmbientSoundScaling=5.000000
      FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
      FireForce="minifireb"
-     DamageType=Class'ROGame.ROVehMountedMGDamType'
+     DamageType=class'ROGame.ROVehMountedMGDamType'
      DamageMin=25
      DamageMax=25
      TraceRange=15000.000000
-     ProjectileClass=Class'DH_Vehicles.DH_MG34VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
      ShakeRotMag=(X=25.000000,Z=10.000000)
      ShakeRotRate=(X=5000.000000,Y=5000.000000,Z=5000.000000)
      ShakeRotTime=2.000000

@@ -7,7 +7,7 @@ class DH_P38MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_P38BashDamType'
+     DamageType=class'DH_Weapons.DH_P38BashDamType'
      TraceRange=75.000000
      GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
      PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit'

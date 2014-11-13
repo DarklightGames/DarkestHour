@@ -141,7 +141,7 @@ simulated function UpdateScopeMode()
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
             ScopeScriptedTexture.SetSize(512,512);
-            ScopeScriptedTexture.Client = Self;
+            ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
             {
@@ -181,7 +181,7 @@ simulated function UpdateScopeMode()
             }
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
             ScopeScriptedTexture.SetSize(1024,1024);
-            ScopeScriptedTexture.Client = Self;
+            ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
             {
@@ -306,7 +306,7 @@ simulated event RenderOverlays(Canvas Canvas)
             if (ScopeScriptedTexture != none)
             {
                 Skins[LenseMaterialID] = ScopeScriptedShader;
-                ScopeScriptedTexture.Client = Self;   // Need this because this can get corrupted - Ramm
+                ScopeScriptedTexture.Client = self;   // Need this because this can get corrupted - Ramm
                 ScopeScriptedTexture.Revision = (ScopeScriptedTexture.Revision +1);
             }
         }
@@ -444,7 +444,7 @@ simulated event Destroyed()
         ScopeScriptedShader = none;
     }
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 simulated function PreTravelCleanUp()

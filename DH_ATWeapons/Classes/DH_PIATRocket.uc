@@ -9,7 +9,7 @@ class DH_PIATRocket extends DH_RocketProj;
 
 simulated function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (SmokeTrail != none)
     {
@@ -34,10 +34,10 @@ defaultproperties
      DHPenetrationTable(6)=9.100000
      bIsHEATRound=true
      bHasTracer=false
-     ShellImpactDamage=Class'DH_ATWeapons.DH_PIATImpactDamType'
+     ShellImpactDamage=class'DH_ATWeapons.DH_PIATImpactDamType'
      ImpactDamage=650
      Speed=4526.000000
      MaxSpeed=4526.000000
-     MyDamageType=Class'DH_ATWeapons.DH_PIATDamType'
+     MyDamageType=class'DH_ATWeapons.DH_PIATDamType'
      StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.PIATBomb_1st'
 }

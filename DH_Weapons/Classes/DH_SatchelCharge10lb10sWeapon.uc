@@ -9,9 +9,9 @@ class DH_SatchelCharge10lb10sWeapon extends DH_SatchelChargeMantleWeapon;
 
 defaultproperties
 {
-     FireModeClass(0)=Class'DH_Weapons.DH_SatchelCharge10lb10sFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_SatchelCharge10lb10sFire'
-     PickupClass=Class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
-     AttachmentClass=Class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
+     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
+     FireModeClass(1)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
+     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
+     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
      ItemName="10lb Satchel Charge"
 }

@@ -22,21 +22,21 @@ defaultproperties
      OverlayKnobTurnRightAnim="traverse_right"
      GunIdleAnim="deploy_idle_GrW42"
      GunFiringAnim="deploy_fire_GrW42"
-     WeaponClass=Class'DH_Mortars.DH_Kz8cmGrW42Weapon'
+     WeaponClass=class'DH_Mortars.DH_Kz8cmGrW42Weapon'
      HUDMortarTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42Side'
      HUDHighExplosiveTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
      HUDSmokeTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'
      HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcG'
      DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_turret',bDrawOverlays=true,bExposed=true)
      bMustBeTankCrew=false
-     GunClass=Class'DH_Mortars.DH_Kz8cmGrW42VehicleWeapon'
+     GunClass=class'DH_Mortars.DH_Kz8cmGrW42VehicleWeapon'
      CameraBone="Camera"
      DrivePos=(X=28.000000,Z=34.000000)
      DriveAnim="deploy_idle_GrW42"
      TPCamDistance=128.000000
      TPCamLookat=(Z=16.000000)
      TPCamDistRange=(Min=128.000000,Max=128.000000)
-     HUDOverlayClass=Class'DH_Mortars.DH_Kz8cmGrW42Overlay'
+     HUDOverlayClass=class'DH_Mortars.DH_Kz8cmGrW42Overlay'
      HUDOverlayFOV=90.000000
      HitPoints(0)=(PointBone="Baseplate",DamageMultiplier=1.000000)
 }

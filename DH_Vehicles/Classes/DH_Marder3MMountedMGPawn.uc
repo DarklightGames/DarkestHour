@@ -18,7 +18,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     Gotostate('EnteringVehicle');
 
-    Super.ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
@@ -153,7 +153,7 @@ defaultproperties
      DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
      DriverPositions(1)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
      bMultiPosition=true
-     GunClass=Class'DH_Vehicles.DH_Marder3MMountedMG'
+     GunClass=class'DH_Vehicles.DH_Marder3MMountedMG'
      bCustomAiming=true
      bHasAltFire=false
      CameraBone="loader_cam"
@@ -168,7 +168,7 @@ defaultproperties
      TPCamWorldOffset=(Z=120.000000)
      VehiclePositionString="manning a Marder III Ausf.M MG34"
      VehicleNameString="Marder III Ausf.M MG34"
-     HUDOverlayClass=Class'DH_Vehicles.DH_Stug3GOverlayMG'
+     HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
      HUDOverlayFOV=45.000000
      PitchUpLimit=6000
      PitchDownLimit=63500

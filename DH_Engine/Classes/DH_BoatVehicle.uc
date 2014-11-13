@@ -149,7 +149,7 @@ simulated function PostBeginPlay()
     SetTimer(1.0, false);
     // End RO functionality
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -186,7 +186,7 @@ function DriverLeft()
     // Not moving, so no motion sound
     MotionSoundVolume=0.0;
     UpdateMovementSound();
-    Super.DriverLeft();
+    super.DriverLeft();
 }
 
 
@@ -269,7 +269,7 @@ simulated function Destroyed()
     if (WashSoundAttachR != none)
         WashSoundAttachR.Destroy();
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
@@ -295,7 +295,7 @@ simulated event DrivingStatusChanged()
     local int i;
     local Coords WheelCoords;
 
-    Super.DrivingStatusChanged();
+    super.DrivingStatusChanged();
 
     if (bDriving && Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {

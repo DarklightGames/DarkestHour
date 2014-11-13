@@ -58,7 +58,7 @@ static function string AssembleString(
     HUD myHUD,
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,
-    optional String MessageString
+    optional string MessageString
     )
 {
     if (RelatedPRI_1 == none)

@@ -17,7 +17,7 @@ var name            RampDownIdleAnim;
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat');
 
@@ -27,7 +27,7 @@ simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
@@ -228,16 +228,16 @@ defaultproperties
      EngineInertia=0.100000
      SteerBoneName="Master3z00"
      RevMeterScale=4000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustDieselEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustDieselEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-270.000000,Y=-30.000000,Z=23.000000),ExhaustRotation=(Pitch=31000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsBoatGunnerPawn',WeaponBone="mg_base")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="Master1z00")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="Master1z00")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerThree',WeaponBone="Master1z00")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="Master1z00")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="Master1z00")
-     PassengerWeapons(6)=(WeaponPawnClass=Class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="Master1z00")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatGunnerPawn',WeaponBone="mg_base")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="Master1z00")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="Master1z00")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerThree',WeaponBone="Master1z00")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="Master1z00")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="Master1z00")
+     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="Master1z00")
      IdleSound=Sound'DH_AlliedVehicleSounds.HigginsIdle01'
      StartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
      ShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'

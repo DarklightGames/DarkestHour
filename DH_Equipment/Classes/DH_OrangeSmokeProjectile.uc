@@ -158,13 +158,13 @@ defaultproperties
 {
      DestroyTimer=50.000000
      SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-     ExplodeDirtEffectClass=Class'DH_Effects.DH_OrangeSmokeEffect'
+     ExplodeDirtEffectClass=class'DH_Effects.DH_OrangeSmokeEffect'
      ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
      ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
      ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
      Damage=0.000000
      DamageRadius=0.000000
-     MyDamageType=Class'DH_Equipment.DH_OrangeSmokeDamType'
+     MyDamageType=class'DH_Equipment.DH_OrangeSmokeDamType'
      StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Ger_OrangeSmokeGrenade_throw'
      bAlwaysRelevant=true
      LifeSpan=50.000000

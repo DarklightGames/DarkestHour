@@ -7,7 +7,7 @@ class DH_EnfieldNo2Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdPistol'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
      MuzzleBoneName="Muzzle"
      PA_MovementAnims(0)="stand_jogF_pistol"
      PA_MovementAnims(1)="stand_jogB_pistol"

@@ -40,7 +40,7 @@ function PostBeginPlay()
     local float MaxPlayerRatio;
     local DHSpawnArea DHSA;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (MaxIdleTime > 0)
         Level.bKickLiveIdlers = true;
@@ -870,7 +870,7 @@ function int ReduceDamage(int Damage, pawn injured, pawn instigatedBy, vector Hi
         return 0;
     }
     else
-        Return Super.ReduceDamage(Damage, injured, instigatedBy, HitLocation, Momentum, DamageType);
+        Return super.ReduceDamage(Damage, injured, instigatedBy, HitLocation, Momentum, DamageType);
 }
 
 // Stop the game from automatically trimming longer names
@@ -885,7 +885,7 @@ event PlayerController Login
     local PlayerController NewPlayer;
 
     InName = Left(ParseOption (Options, "Name"), 32);
-    NewPlayer = Super.Login(Portal, Options, Error);
+    NewPlayer = super.Login(Portal, Options, Error);
     ChangeName(NewPlayer, InName, false);
 
     return NewPlayer;
@@ -1583,7 +1583,7 @@ static function string ParseChatPercVar(Mutator BaseMutator, controller Who, str
     local string MapName;
     local int i, j;
 
-    if (Who.Pawn==None)
+    if (Who.Pawn==none)
         return Cmd;
 
     //Coordinates
@@ -1693,7 +1693,7 @@ function DHRestartPlayer(Controller C)
         SpawnError = SpawnManager.SpawnInfantry(DHC, DHC.SpawnPointIndex, SpawnLocation, SpawnRotation);   //TODO: remove need for passing in selection, SPI exists in DHC
     }
 
-    if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+    if (SpawnError != class'DHSpawnManager'.default.SpawnError_none)
     {
         Error("Spawn Error =" @ SpawnError);
 
@@ -1877,10 +1877,10 @@ defaultproperties
      BeaconName="DH"
      BroadcastHandlerClass="DH_Engine.DHBroadcastHandler"
      PlayerControllerClassName="DH_Engine.DHPlayer"
-     GameReplicationInfoClass=Class'DH_Engine.DHGameReplicationInfo'
+     GameReplicationInfoClass=class'DH_Engine.DHGameReplicationInfo'
      GameName="DarkestHourGame"
      DecoTextName="DH_Engine.DarkestHourGame"
      Acronym="DH"
-     VoiceReplicationInfoClass=Class'DH_Engine.DHVoiceReplicationInfo'
+     VoiceReplicationInfoClass=class'DH_Engine.DHVoiceReplicationInfo'
      VotingHandlerType="DH_Engine.DHVotingHandler"
 }

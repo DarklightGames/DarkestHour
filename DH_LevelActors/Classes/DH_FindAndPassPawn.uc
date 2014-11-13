@@ -48,7 +48,7 @@ auto state DelayBeforeFind
         switch(HowToFind)
         {
             case FT_ClassProximity:
-                GoToState('FindClass');
+                GoToState('Findclass');
             break;
             case FT_TagProximity:
                 GoToState('FindTag');

@@ -14,7 +14,7 @@ simulated function PostBeginPlay()
     // Set up the timer, then tell our parent:
     SetTimer(DelayTime, false);
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 // The timer will go off every 'DelayTime' seconds:
@@ -32,7 +32,7 @@ simulated function Timer()
 // Reset actor to initial state - used when restarting level without reloading.
 function Reset()
 {
-    Super.Reset();
+    super.Reset();
 
     // collision, bInitiallyactive
     bInitiallyActive = bSavedInitialActive;

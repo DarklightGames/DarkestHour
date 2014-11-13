@@ -33,10 +33,10 @@ defaultproperties
      Models(4)="WHS_5"
      Models(5)="WHS_6"
      SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
      GivenItems(0)="DH_Equipment.DH_GerMortarBinocularsItem"
-     Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetCover'
-     Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetSnow'
+     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
+     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnow'
      Limit=1
 }

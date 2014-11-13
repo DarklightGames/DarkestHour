@@ -51,11 +51,11 @@ defaultproperties
      WeaponFireOffset=20.000000
      RotationsPerSecond=0.025000
      FireInterval=4.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Guns.DH_Flak88CannonShell'
+     ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
      ShakeRotMag=(Z=110.000000)
      ShakeRotRate=(Z=1100.000000)
      ShakeRotTime=2.000000
@@ -69,8 +69,8 @@ defaultproperties
      BeginningIdleAnim="Vt3485_driver_idle_close"
      InitialPrimaryAmmo=50
      InitialSecondaryAmmo=42
-     PrimaryProjectileClass=Class'DH_Guns.DH_Flak88CannonShell'
-     SecondaryProjectileClass=Class'DH_Guns.DH_Flak88CannonShellHE'
+     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
+     SecondaryProjectileClass=class'DH_Guns.DH_Flak88CannonShellHE'
      Mesh=SkeletalMesh'DH_Flak88_anm.flak88_turret'
      Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
      Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'

@@ -12,7 +12,7 @@ var string PawnEntryActorName;
 
 function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (EntrySound == none && EntrySoundName != "")
     {
@@ -26,12 +26,12 @@ function PostBeginPlay()
 
     if (EntryActor == none && EntryActorName != "")
     {
-        EntryActor = class<Actor>(DynamicLoadObject(EntryActorName, class'Class'));
+        EntryActor = class<Actor>(DynamicLoadObject(EntryActorName, class'class'));
     }
 
     if (PawnEntryActor == none && PawnEntryActorName != "")
     {
-        PawnEntryActor = class<Actor>(DynamicLoadObject(PawnEntryActorName, class'Class'));
+        PawnEntryActor = class<Actor>(DynamicLoadObject(PawnEntryActorName, class'class'));
     }
 }
 
@@ -41,7 +41,7 @@ simulated event Touch(Actor Other)
     local int i;
     local DH_Pawn P;
 
-    Super.Touch(Other);
+    super.Touch(Other);
 
     P = DH_Pawn(Other);
 

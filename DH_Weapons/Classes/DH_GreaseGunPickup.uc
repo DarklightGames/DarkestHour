@@ -20,7 +20,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Grease Gun"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_GreaseGunWeapon'
+     InventoryType=class'DH_Weapons.DH_GreaseGunWeapon'
      PickupMessage="You got the Grease Gun."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

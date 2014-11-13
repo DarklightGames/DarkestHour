@@ -25,7 +25,7 @@ defaultproperties
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'axis_panzer4H_anm.Panzer4H_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer4_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
      DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'axis_panzer4H_anm.Panzer4H_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer4_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
      DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'axis_panzer4H_anm.Panzer4H_turret_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
-     GunClass=Class'DH_Vehicles.DH_PanzerIVGLateCannon'
+     GunClass=class'DH_Vehicles.DH_PanzerIVGLateCannon'
      CameraBone="Gun"
      bPCRelativeFPRotation=true
      bFPNoZFromCameraPitch=true

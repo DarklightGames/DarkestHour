@@ -118,7 +118,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     bMustBeTankCrew=true
     FireImpulse=(X=-15000.000000)
-    GunClass=Class'DH_Vehicles.DH_Sdkfz2341Cannon'
+    GunClass=class'DH_Vehicles.DH_Sdkfz2341Cannon'
     bHasFireImpulse=false
     CameraBone="Gun"
     bPCRelativeFPRotation=true

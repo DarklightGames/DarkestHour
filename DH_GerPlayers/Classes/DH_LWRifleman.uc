@@ -30,7 +30,7 @@ defaultproperties
      Models(2)="WL_3"
      Models(3)="WL_4"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-     Headgear(0)=Class'DH_GerPlayers.DH_LWHelmet'
-     Headgear(1)=Class'DH_GerPlayers.DH_LWHelmetTwo'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+     Headgear(0)=class'DH_GerPlayers.DH_LWHelmet'
+     Headgear(1)=class'DH_GerPlayers.DH_LWHelmetTwo'
 }

@@ -7,7 +7,7 @@ class DH_Kar98ScopedMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_Kar98ScopedBashDamType'
+     DamageType=class'DH_Weapons.DH_Kar98ScopedBashDamType'
      TraceRange=75.000000
      BashBackAnim="bash_pullback"
      BashHoldAnim="bash_hold"

@@ -43,13 +43,13 @@ simulated event PostBeginPlay()
     local Color startTint;
     local Texture theProjTexture;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     // Allocate a new scripted texture from the pool
     // and have it call us for updates.
     ScriptTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
     ScriptTexture.SetSize(ProjTexture.MaterialUSize(), ProjTexture.MaterialVSize());
-    ScriptTexture.Client = Self;
+    ScriptTexture.Client = self;
 
     // Set the scripted texture properties to
     // match those of the ProjTexture:
@@ -117,7 +117,7 @@ simulated event Destroyed()
     Level.ObjectPool.FreeObject(ScriptTexture);
     ScriptTexture = none;
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 simulated function SetColors(Color NewColor, Color NewTint)

@@ -112,7 +112,7 @@ defaultproperties
      DriverPositions(0)=(ViewLocation=(X=70.000000,Y=20.000000,Z=5.000000),ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=15474,ViewPitchDownLimit=64990,ViewPositiveYawLimit=3000,ViewNegativeYawLimit=-3000,bDrawOverlays=true,bExposed=true)
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
      DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=true,bExposed=true)
-     GunClass=Class'DH_Guns.DH_Flak88Cannon'
+     GunClass=class'DH_Guns.DH_Flak88Cannon'
      CameraBone="Gun"
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'

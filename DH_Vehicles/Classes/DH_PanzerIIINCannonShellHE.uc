@@ -73,7 +73,7 @@ defaultproperties
      ShellDiameter=7.500000
      bIsAlliedShell=false
      PenetrationMag=900.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_PanzerIIINCannonShellImpactDamageHEAT'
+     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIINCannonShellImpactDamageHEAT'
      ImpactDamage=455
      BallisticCoefficient=2.000000
      SpeedFudgeScale=0.700000
@@ -81,6 +81,6 @@ defaultproperties
      MaxSpeed=25348.000000
      Damage=415.000000
      DamageRadius=1350.000000
-     MyDamageType=Class'DH_Vehicles.DH_PanzerIIINCannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_PanzerIIINCannonShellDamageHE'
      Tag="Sprgr.Kw.K."
 }

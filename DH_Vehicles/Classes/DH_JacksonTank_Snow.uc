@@ -7,7 +7,7 @@ class DH_JacksonTank_Snow extends DH_JacksonTank;
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.M36_Bodysnow_ext');
     //L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M10_treads');
@@ -24,7 +24,7 @@ simulated function UpdatePrecacheMaterials()
     //Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int2');
     //Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 DefaultProperties

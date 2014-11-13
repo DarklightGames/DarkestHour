@@ -16,7 +16,7 @@ simulated function bool PointOfView()
 
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    Super.ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
@@ -30,7 +30,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-    Super.ClientKDriverLeave(PC);
+    super.ClientKDriverLeave(PC);
 }
 
 // Overridden to give players the same momentum as their vehicle had when exiting
@@ -42,7 +42,7 @@ function bool KDriverLeave(bool bForceLeave)
 
     OldVel = Velocity;
 
-    bSuperDriverLeave = Super.KDriverLeave(bForceLeave);
+    bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
     OldVel.Z += 50;
     Instigator.Velocity = OldVel;
@@ -180,7 +180,7 @@ defaultproperties
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
      bMultiPosition=true
      bMustBeTankCrew=false
-     GunClass=Class'DH_Vehicles.DH_UniCarrierGun'
+     GunClass=class'DH_Vehicles.DH_UniCarrierGun'
      bCustomAiming=true
      PositionInArray=0
      bHasAltFire=false
@@ -196,7 +196,7 @@ defaultproperties
      TPCamWorldOffset=(Z=120.000000)
      VehiclePositionString="in a Mk.I Bren Carrier Gun Position"
      VehicleNameString="Mk.I Bren Carrier Gun"
-     HUDOverlayClass=Class'DH_Vehicles.DH_UniCarrierMGOverlay'
+     HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
      HUDOverlayOffset=(X=-6.000000)
      HUDOverlayFOV=35.000000
      bKeepDriverAuxCollision=true

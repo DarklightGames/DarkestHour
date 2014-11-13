@@ -29,7 +29,7 @@ defaultproperties
      DHPenetrationTable(9)=13.100000
      DHPenetrationTable(10)=11.800000
      ShellDiameter=9.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_JacksonCannonShellDamageHVAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_JacksonCannonShellDamageHVAP'
      ImpactDamage=525
      BallisticCoefficient=1.564000
      SpeedFudgeScale=0.400000

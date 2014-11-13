@@ -32,14 +32,14 @@ defaultproperties
      Models(4)="WHP_5"
      Models(5)="WHP_6"
      SleeveTexture=Texture'Weapons1st_tex.Arms.GermanTankerSleeves'
-     DetachedArmClass=Class'ROEffects.SeveredArmGerTanker'
-     DetachedLegClass=Class'ROEffects.SeveredLegGerTanker'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
+     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
      GivenItems(0)="DH_Equipment.DH_GerBinocularsItem"
-     Headgear(0)=Class'DH_GerPlayers.DH_HeerTankerCrushercap'
-     Headgear(1)=Class'DH_GerPlayers.DH_HeerTankerCap'
+     Headgear(0)=class'DH_GerPlayers.DH_HeerTankerCrushercap'
+     Headgear(1)=class'DH_GerPlayers.DH_HeerTankerCap'
      RolePawnClass="DH_GerPlayers.DH_WH_TankerPawn"
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true

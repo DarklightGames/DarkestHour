@@ -20,7 +20,7 @@ var     float BarVPos;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(Mycontroller, MyOwner);
+    super.InitComponent(Mycontroller, MyOwner);
     PlayerOwner().ClearProgressMessages();
 }
 

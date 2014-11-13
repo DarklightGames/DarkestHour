@@ -10,7 +10,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: M1919A4 Browning Machine Gun"
      MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_30calWeapon'
+     InventoryType=class'DH_Weapons.DH_30calWeapon'
      PickupMessage="You got the M1919A4 Browning Machine Gun."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

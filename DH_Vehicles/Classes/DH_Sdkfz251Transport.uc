@@ -29,7 +29,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.halftrack_ext');
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Halftrack_treads');
@@ -44,7 +44,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int_s');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -116,16 +116,16 @@ defaultproperties
      EngineRPMSoundRange=5000.000000
      SteerBoneName="Steering"
      RevMeterScale=4000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=105.000000,Y=-70.000000,Z=-15.000000),ExhaustRotation=(Pitch=36000,Yaw=5000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz251GunPawn',WeaponBone="mg_base")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz251PassengerOne',WeaponBone="passenger_l_1")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz251PassengerTwo',WeaponBone="passenger_l_2")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz251PassengerThree',WeaponBone="passenger_l_3")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz251PassengerFour',WeaponBone="passenger_r_1")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz251PassengerFive',WeaponBone="passenger_r_2")
-     PassengerWeapons(6)=(WeaponPawnClass=Class'DH_Vehicles.DH_Sdkfz251PassengerSix',WeaponBone="passenger_r_3")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251GunPawn',WeaponBone="mg_base")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerOne',WeaponBone="passenger_l_1")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerTwo',WeaponBone="passenger_l_2")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerThree',WeaponBone="passenger_l_3")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerFour',WeaponBone="passenger_r_1")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerFive',WeaponBone="passenger_r_2")
+     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerSix',WeaponBone="passenger_r_3")
      IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
@@ -230,7 +230,7 @@ defaultproperties
      VehiclePositionString="in a SdKfz-251"
      VehicleNameString="SdKfz-251 Halftrack"
      MaxDesireability=1.200000
-     HUDOverlayClass=Class'ROVehicles.Sdkfz251DriverOverlay'
+     HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'
      HUDOverlayOffset=(Z=0.800000)
      HUDOverlayFOV=100.000000
      GroundSpeed=325.000000

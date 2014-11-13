@@ -31,7 +31,7 @@ simulated function UpdateScopeMode()
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
             ScopeScriptedTexture.SetSize(512,512);
-            ScopeScriptedTexture.Client = Self;
+            ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
             {
@@ -71,7 +71,7 @@ simulated function UpdateScopeMode()
             }
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
             ScopeScriptedTexture.SetSize(1024,1024);
-            ScopeScriptedTexture.Client = Self;
+            ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
             {
@@ -138,8 +138,8 @@ defaultproperties
      ZoomOutTime=0.400000
      PlayerFOVZoom=32.000000
      XoffsetHighDetail=(X=-2.000000)
-     FireModeClass(0)=Class'DH_Weapons.DH_SpringfieldScopedFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_SpringfieldScopedMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_SpringfieldScopedFire'
+     FireModeClass(1)=class'DH_Weapons.DH_SpringfieldScopedMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -150,9 +150,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_SpringfieldScopedPickup'
+     PickupClass=class'DH_Weapons.DH_SpringfieldScopedPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_SpringfieldScopedAttachment'
+     AttachmentClass=class'DH_Weapons.DH_SpringfieldScopedAttachment'
      ItemName="M1903 Springfield Scoped"
      Mesh=SkeletalMesh'DH_Springfield_1st.Springfield_Scoped'
 }

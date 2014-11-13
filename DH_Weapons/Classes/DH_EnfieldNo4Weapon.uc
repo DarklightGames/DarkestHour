@@ -255,8 +255,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      FreeAimRotationSpeed=7.500000
-     FireModeClass(0)=Class'DH_Weapons.DH_EnfieldNo4Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_EnfieldNo4MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -267,9 +267,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_EnfieldNo4Pickup'
+     PickupClass=class'DH_Weapons.DH_EnfieldNo4Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_EnfieldNo4Attachment'
+     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4Attachment'
      ItemName="Lee Enfield No.4 Rifle"
      Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4'
 }

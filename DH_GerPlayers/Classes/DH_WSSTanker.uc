@@ -31,11 +31,11 @@ defaultproperties
      Models(3)="SSP_4"
      Models(4)="SSP_5"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-     DetachedArmClass=Class'ROEffects.SeveredArmGerTanker'
-     DetachedLegClass=Class'ROEffects.SeveredLegGerTanker'
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     Headgear(0)=Class'DH_GerPlayers.DH_WSSHatPanzerA'
-     Headgear(1)=Class'DH_GerPlayers.DH_WSSHatPanzerB'
+     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
+     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     Headgear(0)=class'DH_GerPlayers.DH_WSSHatPanzerA'
+     Headgear(1)=class'DH_GerPlayers.DH_WSSHatPanzerB'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true

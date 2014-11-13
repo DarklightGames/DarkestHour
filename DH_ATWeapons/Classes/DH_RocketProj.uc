@@ -69,14 +69,14 @@ simulated function PostBeginPlay()
         Velocity=0.6*Velocity;
     }
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 }
 
 simulated function PostNetBeginPlay()
 {
     local PlayerController PC;
 
-    Super.PostNetBeginPlay();
+    super.PostNetBeginPlay();
 
     if (Level.NetMode == NM_DedicatedServer)
         return;
@@ -986,7 +986,7 @@ simulated function Destroyed()
     if (Corona != none)
     Corona.Destroy();
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 defaultproperties
@@ -1003,25 +1003,25 @@ defaultproperties
      PenetrationScale=0.080000
      DistortionScale=0.400000
      bHasTracer=true
-     TracerEffect=Class'DH_Effects.DH_OrangeTankShellTracer'
+     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
      BlurTime=6.000000
      PenetrationMag=250.000000
-     ShellImpactDamage=Class'ROGame.RORocketImpactDamage'
+     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
      ImpactDamage=675
      VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
      WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-     ShellHitVehicleEffectClass=Class'ROEffects.PanzerfaustHitTank'
-     ShellHitDirtEffectClass=Class'ROEffects.PanzerfaustHitDirt'
-     ShellHitSnowEffectClass=Class'ROEffects.PanzerfaustHitSnow'
-     ShellHitWoodEffectClass=Class'ROEffects.PanzerfaustHitWood'
-     ShellHitRockEffectClass=Class'ROEffects.PanzerfaustHitConcrete'
-     ShellHitWaterEffectClass=Class'ROEffects.PanzerfaustHitWater'
+     ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
+     ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
+     ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
+     ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
+     ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
+     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
      BallisticCoefficient=0.050000
      Damage=300.000000
      DamageRadius=250.000000
      MomentumTransfer=10000.000000
-     ExplosionDecal=Class'ROEffects.RocketMarkDirt'
-     ExplosionDecalSnow=Class'ROEffects.RocketMarkSnow'
+     ExplosionDecal=class'ROEffects.RocketMarkDirt'
+     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
      LightType=LT_Steady
      LightEffect=LE_QuadraticNonIncidence
      LightHue=28

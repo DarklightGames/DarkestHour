@@ -25,9 +25,9 @@ defaultproperties
      Models(1)="US_743rdT2"
      Models(2)="US_743rdT3"
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet'
-     Headgear(1)=Class'DH_USPlayers.DH_USTankerHat'
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
+     Headgear(1)=class'DH_USPlayers.DH_USTankerHat'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true

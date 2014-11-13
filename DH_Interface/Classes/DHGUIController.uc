@@ -9,7 +9,7 @@ var Array<string>       RODefaultStyleNames;      // Holds the name of all style
 
 event InitializeController()
 {
-        Super.InitializeController();
+        super.InitializeController();
 
         RegisterStyle(class'ROInterface.ROSTY2_ImageButton');
         RegisterStyle(class'ROInterface.ROSTY2SelectButton');

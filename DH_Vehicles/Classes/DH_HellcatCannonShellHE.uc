@@ -30,13 +30,13 @@ defaultproperties
      DHPenetrationTable(10)=0.800000
      ShellDiameter=7.620000
      PenetrationMag=780.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_HellcatCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_HellcatCannonShellDamageAP'
      ImpactDamage=450
      BallisticCoefficient=1.368000
      Speed=47799.000000
      MaxSpeed=47799.000000
      Damage=400.000000
      DamageRadius=1140.000000
-     MyDamageType=Class'DH_Vehicles.DH_HellcatCannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_HellcatCannonShellDamageHE'
      Tag="M42A1 HE"
 }

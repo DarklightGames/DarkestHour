@@ -103,7 +103,7 @@ simulated function Destroyed()
         ROPawn(Instigator).bWeaponNeedsResupply = false;
     }
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 // This MG has been resupplied either by an ammo resupply area or another player
@@ -142,10 +142,10 @@ defaultproperties
      SightUpMagPartialReloadAnim="deploy_reload_half"
      MaxNumPrimaryMags=6
      InitialNumPrimaryMags=6
-     FireModeClass(0)=Class'DH_Weapons.DH_BrenFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_BrenMeleeFire'
-     PickupClass=Class'DH_Weapons.DH_BrenPickup'
-     AttachmentClass=Class'DH_Weapons.DH_BrenAttachment'
+     FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
+     FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'
+     PickupClass=class'DH_Weapons.DH_BrenPickup'
+     AttachmentClass=class'DH_Weapons.DH_BrenAttachment'
      ItemName="Bren Mk.IV"
      Mesh=SkeletalMesh'DH_Bren_1st.Bren'
 }

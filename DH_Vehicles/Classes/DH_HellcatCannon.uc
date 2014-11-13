@@ -36,7 +36,7 @@ function DecrementRange()
 defaultproperties
 {
      InitialTertiaryAmmo=10
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_HellcatCannonShellHE'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHE'
      SecondarySpread=0.001000
      TertiarySpread=0.001350
      ManualRotationsPerSecond=0.033000
@@ -82,11 +82,11 @@ defaultproperties
      WeaponFireOffset=10.000000
      RotationsPerSecond=0.067000
      FireInterval=5.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_HellcatCannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -100,8 +100,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=30
      InitialSecondaryAmmo=5
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_HellcatCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_HellcatCannonShellHVAP'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
      Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
      Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
      Skins(1)=Texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'

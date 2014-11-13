@@ -18,10 +18,10 @@ defaultproperties
      VehicleHudThreadsScale=0.600000
      TreadHitMinAngle=1.900000
      TransRatio=0.000000
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Guns.DH_Flak88CannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak88CannonPawn',WeaponBone="Turret_placement")
      DestroyedVehicleMesh=StaticMesh'MilitaryAxisSM.Artillery.Flak88_destroyed'
-     DestructionEffectClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-     DisintegrationEffectClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
      DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
      DestructionAngularMomentum=(Min=50.000000,Max=150.000000)
      DamagedEffectClass=none

@@ -91,7 +91,7 @@ replication
 
 simulated function Tick(float DeltaTime)
 {
-    Super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
     if (bOnFire && TurretHatchFireEffect == none)
     {
@@ -2552,7 +2552,7 @@ simulated function UpdatePrecacheStaticMeshes()
 {
     if (TertiaryProjectileClass != none)
         Level.AddPrecacheStaticMesh(TertiaryProjectileClass.default.StaticMesh);
-    Super.UpdatePrecacheStaticMeshes();
+    super.UpdatePrecacheStaticMeshes();
 }
 
 // ARMORED BEASTS CODE: Functions extended for easy tuning of gunsights in PRACTICE mode
@@ -2567,7 +2567,7 @@ function IncrementRange()
     }
     else
     {
-        Super.IncrementRange();
+        super.IncrementRange();
     }
 }
 
@@ -2580,7 +2580,7 @@ function DecrementRange()
     }
     else
     {
-        Super.DecrementRange();
+        super.DecrementRange();
     }
 }
 
@@ -2688,7 +2688,7 @@ defaultproperties
      PoweredRotationsPerSecond=0.050000
      FireAttachBone="com_player"
      FireEffectOffset=(Z=-20.000000)
-     FireEffectClass=Class'ROEngine.VehicleDamagedEffect'
+     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
      bManualTurret=true
      CannonReloadState=CR_Waiting
      AltFireSpread=0.002000

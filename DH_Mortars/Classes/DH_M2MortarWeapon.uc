@@ -10,7 +10,7 @@ class DH_M2MortarWeapon extends DH_MortarWeapon;
 defaultproperties
 {
      DeployAnimation="Deploy"
-     VehicleClass=Class'DH_Mortars.DH_M2MortarVehicle'
+     VehicleClass=class'DH_Mortars.DH_M2MortarVehicle'
      HighExplosiveMaximum=20
      HighExplosiveResupplyCount=5
      SmokeMaximum=4
@@ -18,7 +18,7 @@ defaultproperties
      SelectAnim="Draw"
      PutDownAnim="putaway"
      PlayerViewOffset=(Z=-2.000000)
-     AttachmentClass=Class'DH_Mortars.DH_M2MortarAttachment'
+     AttachmentClass=class'DH_Mortars.DH_M2MortarAttachment'
      ItemName="60mm Mortar M2"
      Mesh=SkeletalMesh'DH_Mortars_1st.M2_Mortar1st'
 }

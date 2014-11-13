@@ -31,6 +31,6 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
      bHasAddedSideArmor=true
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIIINCannonPawn_CamoOne')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIINCannonPawn_CamoOne')
      Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
 }

@@ -12,7 +12,7 @@ class DH_ColtM1911BashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_ColtM1911Weapon'
+     WeaponClass=class'DH_Weapons.DH_ColtM1911Weapon'
      DeathString="%o was smacked by %k's Colt M1911."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

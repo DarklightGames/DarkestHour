@@ -22,7 +22,7 @@ var     array<int> ActivatedIndexes;
 //==============================================================================
 simulated event PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     // Add this AT Gun to the GRI
     if (Role == ROLE_Authority)
@@ -296,7 +296,7 @@ event VehicleDestroyed(Vehicle V)
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,false);
     }
 
-    Super.VehicleDestroyed(V);
+    super.VehicleDestroyed(V);
 }
 
 //=============================================================================

@@ -62,18 +62,18 @@ defaultproperties
      ShellDiameter=5.000000
      bIsAlliedShell=false
      PenetrationMag=565.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
      ImpactDamage=315
-     ShellHitDirtEffectClass=Class'ROEffects.TankHEHitDirtEffect'
-     ShellHitSnowEffectClass=Class'ROEffects.TankHEHitSnowEffect'
-     ShellHitWoodEffectClass=Class'ROEffects.TankHEHitWoodEffect'
-     ShellHitRockEffectClass=Class'ROEffects.TankHEHitRockEffect'
-     ShellHitWaterEffectClass=Class'ROEffects.TankHEHitWaterEffect'
+     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
+     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
+     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
+     ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
+     ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
      BallisticCoefficient=1.190000
      Speed=50392.000000
      MaxSpeed=50392.000000
      Damage=260.000000
      DamageRadius=565.000000
-     MyDamageType=Class'DH_Vehicles.DH_PanzerIIILCannonShellDamageHE'
+     MyDamageType=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageHE'
      Tag="Sprgr.Patr.38"
 }

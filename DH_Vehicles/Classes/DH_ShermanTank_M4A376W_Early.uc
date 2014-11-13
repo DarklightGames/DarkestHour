@@ -7,5 +7,5 @@ class DH_ShermanTank_M4A376W_Early extends DH_ShermanTank_M4A376W;
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanCannonPawn_M4A376W_Early')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A376W_Early')
 }

@@ -11,7 +11,7 @@ class DH_GreyhoundArmoredCar extends DH_ArmoredWheeledVehicle;
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext');
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext');
@@ -26,7 +26,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -57,10 +57,10 @@ defaultproperties
     SteerSpeed=75.000000
     TurnDamping=100.000000
     SteerBoneName="Drive_wheel"
-    ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.000000,Y=34.000000,Z=45.000000),ExhaustRotation=(Pitch=34000,Yaw=-5000))
-    PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'

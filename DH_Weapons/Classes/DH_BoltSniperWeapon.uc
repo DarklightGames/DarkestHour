@@ -570,7 +570,7 @@ function bool FillAmmo()
 {
     local bool Temp;
 
-    Temp = Super.FillAmmo();
+    Temp = super.FillAmmo();
     CalculateBulletCount();
 
     return Temp;
@@ -578,7 +578,7 @@ function bool FillAmmo()
 
 function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
 {
-    Super.GiveAmmo(m, WP, bJustSpawned);
+    super.GiveAmmo(m, WP, bJustSpawned);
     CalculateBulletCount();
 }
 
@@ -586,7 +586,7 @@ function bool HandlePickupQuery(pickup Item)
 {
     local bool Temp;
 
-    Temp = Super.HandlePickupQuery(Item);
+    Temp = super.HandlePickupQuery(Item);
     CalculateBulletCount();
 
     return Temp;

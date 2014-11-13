@@ -500,7 +500,7 @@ simulated event PostRender(canvas Canvas)
     if (!bSetColour)
        SetAlliedColour();
 
-    Super.PostRender(Canvas);
+    super.PostRender(Canvas);
 }
 
 
@@ -1995,7 +1995,7 @@ simulated function DrawObjectives(Canvas C)
     if (Level.NetMode == NM_Standalone && bShowDebugInfoOnMap)
     {
         // PSYONIX: DEBUG - Show all vehicles on map who have no driver
-        foreach DynamicActors(Class'Vehicle',V)
+        foreach DynamicActors(class'Vehicle',V)
         {
                 widget = MapIconRally[V.GetTeamNum()];
                 widget.TextureScale = 0.04f;
@@ -2030,7 +2030,7 @@ simulated function DrawObjectives(Canvas C)
     {
         if (NetDebugMode == ND_All)
         {
-            foreach DynamicActors(Class'Actor',NetActor)
+            foreach DynamicActors(class'Actor',NetActor)
             {
 
                 if (!NetActor.bStatic && !NetActor.bNoDelete)
@@ -2045,7 +2045,7 @@ simulated function DrawObjectives(Canvas C)
         else if (NetDebugMode == ND_VehiclesOnly)
         {
             // PSYONIX: DEBUG - Show all vehicles on map who have no driver
-            foreach DynamicActors(Class'Vehicle',V)
+            foreach DynamicActors(class'Vehicle',V)
             {
                 widget = MapIconRally[V.GetTeamNum()];
                 widget.TextureScale = 0.04f;
@@ -2056,7 +2056,7 @@ simulated function DrawObjectives(Canvas C)
         }
         else if (NetDebugMode == ND_PlayersOnly)
         {
-            foreach DynamicActors(Class'DH_Pawn', DHP)
+            foreach DynamicActors(class'DH_Pawn', DHP)
             {
                 widget = MapIconTeam[DHP.GetTeamNum()];
                 widget.TextureScale = 0.04f;
@@ -2066,7 +2066,7 @@ simulated function DrawObjectives(Canvas C)
         }
         else if (NetDebugMode == ND_PawnsOnly)
         {
-            foreach DynamicActors(Class'Pawn',NetPawn)
+            foreach DynamicActors(class'Pawn',NetPawn)
             {
                 if (Vehicle(NetPawn) != none)
                 {
@@ -2088,7 +2088,7 @@ simulated function DrawObjectives(Canvas C)
         }
         if (NetDebugMode == ND_AllWithText)
         {
-            foreach DynamicActors(Class'Actor',NetActor)
+            foreach DynamicActors(class'Actor',NetActor)
             {
 
                 if (!NetActor.bStatic && !NetActor.bNoDelete)

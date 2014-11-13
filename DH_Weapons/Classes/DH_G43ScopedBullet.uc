@@ -11,9 +11,9 @@ class DH_G43ScopedBullet extends DH_Bullet;
 
 defaultproperties
 {
-     MyVehicleDamage=Class'DH_Weapons.DH_G43ScopedVehDamType'
+     MyVehicleDamage=class'DH_Weapons.DH_G43ScopedVehDamType'
      BallisticCoefficient=0.594000
      Speed=47075.000000
      Damage=115.000000
-     MyDamageType=Class'DH_Weapons.DH_G43ScopedDamType'
+     MyDamageType=class'DH_Weapons.DH_G43ScopedDamType'
 }

@@ -33,9 +33,9 @@ defaultproperties
      Models(4)="US_AutumnInf5"
      bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_BARWeapon',Amount=6,AssociatedAttachment=Class'DH_Weapons.DH_M1CarbineAmmoPouch')
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet1stEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet1stEMb'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_SMG
      Limit=2

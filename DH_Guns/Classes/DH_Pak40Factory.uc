@@ -9,6 +9,6 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Guns.DH_Pak40ATGun'
+     VehicleClass=class'DH_Guns.DH_Pak40ATGun'
      Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_body'
 }

@@ -128,6 +128,6 @@ defaultproperties
      Speed=1100.000000
      Damage=180.000000
      DamageRadius=639.000000
-     MyDamageType=Class'DH_Weapons.DH_StielGranateDamType'
+     MyDamageType=class'DH_Weapons.DH_StielGranateDamType'
      StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw'
 }

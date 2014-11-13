@@ -111,7 +111,7 @@ defaultproperties
 {
      Damage=525
      DamageRadius=512
-     MyDamageType=Class'DH_LevelActors.DHATMineDamage'
+     MyDamageType=class'DH_LevelActors.DHATMineDamage'
      Momentum=3000
      bHidden=true
 }

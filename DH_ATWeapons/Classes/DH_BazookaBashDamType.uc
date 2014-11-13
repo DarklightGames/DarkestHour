@@ -12,7 +12,7 @@ class DH_BazookaBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_ATWeapons.DH_BazookaWeapon'
+     WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
      DeathString="%o was smacked with %k's Bazooka."
      FemaleSuicide="%o turned the rocket on herself."
      MaleSuicide="%o turned the rocket on himself."

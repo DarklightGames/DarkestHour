@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Colt M1911 Pistol"
      MaxDesireability=0.100000
-     InventoryType=Class'DH_Weapons.DH_ColtM1911Weapon'
+     InventoryType=class'DH_Weapons.DH_ColtM1911Weapon'
      PickupMessage="You got the Colt M1911."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

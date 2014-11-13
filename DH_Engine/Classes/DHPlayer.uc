@@ -1064,7 +1064,7 @@ state Mantling
                 Pawn.Velocity = vect(0,0,0);
         }
 
-        Super.PlayerTick(DeltaTime);
+        super.PlayerTick(DeltaTime);
     }
 
     function Timer()
@@ -1304,7 +1304,7 @@ ignores SeePlayer, HearNoise, Bump;
                     checkpoint = Pawn.Location;
                     checkpoint.Z -= (Pawn.CollisionHeight + 6.0);
                     HitActor = Trace(HitLocation, HitNormal, checkpoint, Pawn.Location, false);
-                    if (HitActor != None)
+                    if (HitActor != none)
                         GotoState(Pawn.LandMovementState);
                     else
                     {
@@ -1586,7 +1586,7 @@ exec function DebugHints()
 
 function BecomeSpectator()
 {
-    if (Pawn != None)
+    if (Pawn != none)
     {
         Pawn.Suicide();
     }
@@ -1623,11 +1623,11 @@ function HitThis(ROArtilleryTrigger RAT)
 
         if (PawnTeam ==  0)
         {
-            RAT.PlaySound(RAT.GermanConfirmSound, SLOT_None, 3.0, false, 100, 1.0,true);
+            RAT.PlaySound(RAT.GermanConfirmSound, SLOT_none, 3.0, false, 100, 1.0,true);
         }
         else
         {
-            RAT.PlaySound(RAT.RussianConfirmSound, SLOT_None, 3.0, false, 100, 1.0,true);
+            RAT.PlaySound(RAT.RussianConfirmSound, SLOT_none, 3.0, false, 100, 1.0,true);
         }
 
         GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
@@ -1648,11 +1648,11 @@ function HitThis(ROArtilleryTrigger RAT)
     {
         if (PawnTeam ==  0)
         {
-            RAT.PlaySound(RAT.GermanDenySound, SLOT_None, 3.0, false, 100,1.0,true);
+            RAT.PlaySound(RAT.GermanDenySound, SLOT_none, 3.0, false, 100,1.0,true);
         }
         else
         {
-            RAT.PlaySound(RAT.RussianDenySound, SLOT_None, 3.0, false, 100,1.0,true);
+            RAT.PlaySound(RAT.RussianDenySound, SLOT_none, 3.0, false, 100,1.0,true);
         }
 
         TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + ROTeamGame(Level.Game).LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
@@ -1742,7 +1742,7 @@ exec function LeaveBody()
 function ServerLeaveBody()
 {
     Pawn.UnPossessed();
-    Pawn.SetPhysics(PHYS_None);
+    Pawn.SetPhysics(PHYS_none);
     Pawn.Velocity = vect(0, 0, 0);
     Pawn = none;
 }
@@ -1828,8 +1828,8 @@ defaultproperties
      GlobalDetailLevel=5
      DesiredFOV=90.000000
      DefaultFOV=90.000000
-     PlayerReplicationInfoClass=Class'DH_Engine.DHPlayerReplicationInfo'
-     PawnClass=Class'DH_Engine.DH_Pawn'
+     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
+     PawnClass=class'DH_Engine.DH_Pawn'
      SpawnPointIndex=-1
      VehiclePoolIndex=-1
 }

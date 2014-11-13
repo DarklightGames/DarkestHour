@@ -31,7 +31,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
       L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
       L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
@@ -48,7 +48,7 @@ simulated function UpdatePrecacheMaterials()
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -120,16 +120,16 @@ defaultproperties
      EngineRPMSoundRange=5000.000000
      SteerBoneName="Steering"
      RevMeterScale=4000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-100.000000,Y=60.000000,Z=-10.000000),ExhaustRotation=(Pitch=36000,Yaw=-5000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_M3A1HalftrackGunPawn',WeaponBone="mg_base")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_M3A1HalftrackPassengerOne',WeaponBone="passenger_l_1")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_M3A1HalftrackPassengerTwo',WeaponBone="passenger_l_3")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_M3A1HalftrackPassengerThree',WeaponBone="passenger_l_5")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_M3A1HalftrackPassengerFour',WeaponBone="passenger_r_2")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_M3A1HalftrackPassengerFive',WeaponBone="passenger_r_3")
-     PassengerWeapons(6)=(WeaponPawnClass=Class'DH_Vehicles.DH_M3A1HalftrackPassengerSix',WeaponBone="passenger_r_5")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackGunPawn',WeaponBone="mg_base")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerOne',WeaponBone="passenger_l_1")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerTwo',WeaponBone="passenger_l_3")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerThree',WeaponBone="passenger_l_5")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFour',WeaponBone="passenger_r_2")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFive',WeaponBone="passenger_r_3")
+     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerSix',WeaponBone="passenger_r_5")
      IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'

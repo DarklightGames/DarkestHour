@@ -8,7 +8,7 @@ class DH_Stug3GCannon extends DH_ROTankCannon;
 defaultproperties
 {
      InitialTertiaryAmmo=5
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_Stug3GCannonShellSmoke'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellSmoke'
      SecondarySpread=0.001270
      TertiarySpread=0.003570
      ManualRotationsPerSecond=0.025000
@@ -58,7 +58,7 @@ defaultproperties
      RangeSettings(25)=3000
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=4
-     DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -79,8 +79,8 @@ defaultproperties
      bAmbientAltFireSound=true
      FireInterval=4.000000
      AltFireInterval=0.070000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
@@ -88,8 +88,8 @@ defaultproperties
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_Stug3GCannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_MG34VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -113,8 +113,8 @@ defaultproperties
      InitialPrimaryAmmo=27
      InitialSecondaryAmmo=23
      InitialAltAmmo=150
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_Stug3GCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_Stug3GCannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellHE'
      Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_turret_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
      Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'

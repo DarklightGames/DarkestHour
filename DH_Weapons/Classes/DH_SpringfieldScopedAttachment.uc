@@ -24,9 +24,9 @@ simulated function AnimEnd(int Channel)
 
 defaultproperties
 {
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdNagant'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
      MuzzleBoneName="Muzzle"
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mmGreen'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
      bAnimNotifiedShellEjects=true
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"

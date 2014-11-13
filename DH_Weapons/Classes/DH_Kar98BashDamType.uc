@@ -12,7 +12,7 @@ class DH_Kar98BashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_Kar98Weapon'
+     WeaponClass=class'DH_Weapons.DH_Kar98Weapon'
      DeathString="%o was killed by %k's Karabiner 98k."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

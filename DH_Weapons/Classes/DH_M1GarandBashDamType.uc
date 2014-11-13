@@ -12,7 +12,7 @@ class DH_M1GarandBashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_M1GarandWeapon'
+     WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
      DeathString="%o was smacked with %k's M1 Garand."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

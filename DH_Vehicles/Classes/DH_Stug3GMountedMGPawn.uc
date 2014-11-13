@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
     local vector Offset;
     local vector Loc;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     Offset.Z += 220;
     Loc = GetBoneCoords('loader_player').ZAxis;
@@ -83,7 +83,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     Gotostate('LeavingVehicle');
 
-    Super.ClientKDriverLeave(PC);
+    super.ClientKDriverLeave(PC);
 }
 
 function bool KDriverLeave(bool bForceLeave)
@@ -387,7 +387,7 @@ defaultproperties
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
      DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
      bMultiPosition=true
-     GunClass=Class'DH_Vehicles.DH_Stug3GMountedMG'
+     GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
      bCustomAiming=true
      bHasAltFire=false
      CameraBone="loader_cam"
@@ -402,7 +402,7 @@ defaultproperties
      TPCamWorldOffset=(Z=120.000000)
      VehiclePositionString="manning a StuG III Ausf.G MG34"
      VehicleNameString="StuG III Ausf.G MG34"
-     HUDOverlayClass=Class'DH_Vehicles.DH_Stug3GOverlayMG'
+     HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
      HUDOverlayFOV=45.000000
      PitchUpLimit=6000
      PitchDownLimit=63500

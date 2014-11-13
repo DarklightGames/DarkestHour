@@ -102,6 +102,6 @@ defaultproperties
      ExplosionSound(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
      Damage=140.000000
      DamageRadius=785.000000
-     MyDamageType=Class'DH_Weapons.DH_M1GrenadeDamType'
+     MyDamageType=class'DH_Weapons.DH_M1GrenadeDamType'
      StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.M1Grenade_throw'
 }

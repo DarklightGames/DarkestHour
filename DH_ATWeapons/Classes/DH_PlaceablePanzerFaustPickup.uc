@@ -155,12 +155,12 @@ function inventory SpawnWeaponCopy(pawn Other)
 
 defaultproperties
 {
-     WeaponType=Class'DH_ATWeapons.DH_PanzerFaustWeapon'
+     WeaponType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
      TouchMessage="Pick Up: Panzerfaust 60"
      bAmmoPickupIsWeapon=true
      AmmoAmount=1
      MaxDesireability=0.780000
-     InventoryType=Class'DH_ATWeapons.DH_PanzerFaustWeapon'
+     InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
      PickupMessage="You got the Panzerfaust 60."
      PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
      PickupForce="AssaultRiflePickup"

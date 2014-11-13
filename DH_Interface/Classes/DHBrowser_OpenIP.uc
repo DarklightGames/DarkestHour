@@ -11,7 +11,7 @@ var localized string EditBoxHint;
 
 function InitComponent(GUIController pMyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(pMyController, MyOwner);
+    super.InitComponent(pMyController, MyOwner);
 
     ed_Data.MyEditBox.OnKeyEvent = InternalOnKeyEvent;
     b_OK.SetHint(OKButtonHint);
@@ -60,7 +60,7 @@ function ApplyURL(string URL)
 
 function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 {
-    if (!Super.InternalOnKeyEvent(Key,State,Delta))
+    if (!super.InternalOnKeyEvent(Key,State,Delta))
         return ed_Data.MyEditBox.InternalOnKeyEvent(Key,State,Delta);
 }
 

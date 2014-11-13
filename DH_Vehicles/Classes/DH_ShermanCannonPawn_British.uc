@@ -7,7 +7,7 @@ class DH_ShermanCannonPawn_British extends DH_ShermanCannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_ShermanCannon_British'
+     GunClass=class'DH_Vehicles.DH_ShermanCannon_British'
      VehiclePositionString="in a Sherman Mk.II Cannon "
      VehicleNameString="Sherman Mk.II Cannon"
 }

@@ -31,7 +31,7 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_body_ext');
         L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
@@ -46,7 +46,7 @@ simulated function UpdatePrecacheMaterials()
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
         Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_scoop_ext');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -108,11 +108,11 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-116.000000,Z=35.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanCannonPawn_DDay',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_ShermanMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_DDay',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn',WeaponBone="Mg_placement")
      IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
      StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
      ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'

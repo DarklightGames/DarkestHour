@@ -68,7 +68,7 @@ function DriverLeft()
     MotionSoundVolume=0.0;
     UpdateMovementSound();
 
-    Super.DriverLeft();
+    super.DriverLeft();
 }
 
 simulated function UpdateMovementSound()
@@ -118,7 +118,7 @@ simulated function Tick(float DeltaTime)
         }
         UpdateMovementSound();
 
-    Super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
     if (bEngineDead || bEngineOff)
     {
@@ -135,7 +135,7 @@ simulated function Tick(float DeltaTime)
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB');
@@ -146,7 +146,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -197,13 +197,13 @@ defaultproperties
      EngineRPMSoundRange=6000.000000
      SteerBoneName="Steer_Wheel"
      RevMeterScale=4000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-140.000000,Y=45.000000),ExhaustRotation=(Pitch=34000,Roll=-5000))
      ExhaustPipes(1)=(ExhaustPosition=(X=-140.000000,Y=-45.000000),ExhaustRotation=(Pitch=34000,Roll=5000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_KubelwagenPassengerOne',WeaponBone="body")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_KubelwagenPassengerTwo',WeaponBone="body")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_KubelwagenPassengerThree',WeaponBone="body")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerOne',WeaponBone="body")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerTwo',WeaponBone="body")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerThree',WeaponBone="body")
      IdleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
      StartUpSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
      ShutDownSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'

@@ -20,10 +20,10 @@ defaultproperties
      Models(4)="WHAu_5"
      Models(5)="WHAu_6"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98ScopedWeapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
-     SecondaryWeapons(1)=(Item=Class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-     Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetCover'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
      PrimaryWeaponType=WT_Sniper
      Limit=2
 }

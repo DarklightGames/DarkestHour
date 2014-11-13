@@ -60,7 +60,7 @@ defaultproperties
      DHPenetrationTable(9)=3.000000
      DHPenetrationTable(10)=2.300000
      ShellDiameter=5.000000
-     ShellImpactDamage=Class'DH_Vehicles.DH_Sdkfz2342CannonShellDamageAP'
+     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2342CannonShellDamageAP'
      ImpactDamage=390
      BallisticCoefficient=1.190000
      Speed=50392.000000

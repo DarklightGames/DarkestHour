@@ -7,7 +7,7 @@ class DH_BrenMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_BrenBashDamType'
+     DamageType=class'DH_Weapons.DH_BrenBashDamType'
      TraceRange=75.000000
      BashBackAnim="bash_pullback"
      BashHoldAnim="bash_hold"

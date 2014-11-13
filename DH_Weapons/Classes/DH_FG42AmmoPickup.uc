@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: Fallschirmjägergewehr 42 ammunition"
      AmmoAmount=20
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_FG42Ammo'
+     InventoryType=class'DH_Weapons.DH_FG42Ammo'
      PickupMessage="You picked up Fallschirmjägergewehr 42 ammunition."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

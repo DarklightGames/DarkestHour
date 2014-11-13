@@ -42,15 +42,15 @@ simulated function PostBeginPlay()
 DefaultProperties
 {
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
-        FadeOut=True
-        FadeIn=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
-        UseColorScale=True
+        FadeOut=true
+        FadeIn=true
+        RespawnDeadParticles=false
+        SpinParticles=true
+        UseSizeScale=true
+        UseRegularSizeScale=false
+        UniformSize=true
+        AutomaticInitialSpawning=false
+        UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.900000
@@ -73,16 +73,16 @@ DefaultProperties
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
-        FadeOut=True
-        FadeIn=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
+        FadeOut=true
+        FadeIn=true
+        RespawnDeadParticles=false
+        SpinParticles=true
+        UseSizeScale=true
+        UseRegularSizeScale=false
+        UniformSize=true
+        AutomaticInitialSpawning=false
         Acceleration=(Z=-0.200000)
-        UseColorScale=True
+        UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.800000
@@ -110,16 +110,16 @@ DefaultProperties
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
-        FadeOut=True
-        FadeIn=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
+        FadeOut=true
+        FadeIn=true
+        RespawnDeadParticles=false
+        SpinParticles=true
+        UseSizeScale=true
+        UseRegularSizeScale=false
+        UniformSize=true
+        AutomaticInitialSpawning=false
         Acceleration=(Z=-0.200000)
-        UseColorScale=True
+        UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.800000
@@ -146,16 +146,16 @@ DefaultProperties
     Emitters(2)=SpriteEmitter'SpriteEmitter2'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
-        FadeOut=True
-        FadeIn=True
-        RespawnDeadParticles=False
-        SpinParticles=True
-        UseSizeScale=True
-        UseRegularSizeScale=False
-        UniformSize=True
-        AutomaticInitialSpawning=False
+        FadeOut=true
+        FadeIn=true
+        RespawnDeadParticles=false
+        SpinParticles=true
+        UseSizeScale=true
+        UseRegularSizeScale=false
+        UniformSize=true
+        AutomaticInitialSpawning=false
         Acceleration=(X=1.000000,Y=1.000000)
-        UseColorScale=True
+        UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.500000

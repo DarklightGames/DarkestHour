@@ -29,7 +29,7 @@ simulated function PostBeginPlay()
     if (bDebugROBallistics)
         bDebugBallistics = true;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     OrigLoc = Location;
 }
@@ -346,7 +346,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     if (bDebugMode) log(">>>"@Other@"=="@Instigator@"||"@Other.Base@"=="@Instigator@"||"@!Other.bBlockHitPointTraces);
 
-//  Super.ProcessTouch(Other, HitLocation);
+//  super.ProcessTouch(Other, HitLocation);
     //>>>>
     if (Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
         return;
@@ -503,6 +503,6 @@ defaultproperties
      PenetrationScale=0.080000
      DistortionScale=0.400000
      WhizType=1
-     ImpactEffect=Class'DH_Effects.DH_BulletHitEffect'
-     WhizSoundEffect=Class'DH_Effects.DH_BulletWhiz'
+     ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
+     WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
 }

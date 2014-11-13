@@ -227,7 +227,7 @@ simulated function Tick(float DeltaTime)
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex3.ext_vehicles.M36_body');
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M10_treads');
@@ -244,7 +244,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int2');
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -308,10 +308,10 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-100.000000,Z=40.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_JacksonCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonCannonPawn',WeaponBone="Turret_placement")
      IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'

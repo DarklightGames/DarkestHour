@@ -12,5 +12,5 @@ defaultproperties
      DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extB')
      DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extB')
      FireImpulse=(X=-80000.000000)
-     GunClass=Class'DH_Vehicles.DH_ShermanCannonB_M4A176W'
+     GunClass=class'DH_Vehicles.DH_ShermanCannonB_M4A176W'
 }

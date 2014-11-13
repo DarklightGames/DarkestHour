@@ -19,11 +19,11 @@ defaultproperties
      MGBeltBones(7)="Case02"
      MGBeltBones(8)="Case01"
      MGBeltBones(9)="Case"
-     BeltBulletClass=Class'DH_Weapons.DH_30calBeltRound'
+     BeltBulletClass=class'DH_Weapons.DH_30calBeltRound'
      bTrackBarrelHeat=true
      bCanFireFromHip=false
      InitialBarrels=1
-     BarrelClass=Class'DH_Weapons.DH_30CalBarrel'
+     BarrelClass=class'DH_Weapons.DH_30CalBarrel'
      BarrelSteamBone="bipod"
      IdleToBipodDeploy="Rest_2_Bipod"
      BipodDeployToIdle="Bipod_2_Rest"
@@ -45,8 +45,8 @@ defaultproperties
      IronSightDisplayFOV=35.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_Weapons.DH_30calFire'
-     FireModeClass(1)=Class'ROInventory.ROEmptyFireClass'
+     FireModeClass(0)=class'DH_Weapons.DH_30calFire'
+     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
      IdleAnim="Rest_Idle"
      SelectAnim="Draw"
      PutDownAnim="putaway"
@@ -57,9 +57,9 @@ defaultproperties
      CurrentRating=0.400000
      bSniping=true
      DisplayFOV=70.000000
-     PickupClass=Class'DH_Weapons.DH_30calPickup'
+     PickupClass=class'DH_Weapons.DH_30calPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_30calAttachment'
+     AttachmentClass=class'DH_Weapons.DH_30calAttachment'
      ItemName="M1919A4 Browning Machine Gun"
      Mesh=SkeletalMesh'DH_30Cal_1st.30Cal'
 }

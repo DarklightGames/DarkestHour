@@ -42,13 +42,13 @@ defaultproperties
      ShellDiameter=7.500000
      bIsAlliedShell=false
      PenetrationMag=1000.000000
-     ShellImpactDamage=Class'DH_Guns.DH_Pak40CannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_Pak40CannonShellDamageAP'
      ImpactDamage=455
      BallisticCoefficient=2.100000
      Speed=33073.000000
      MaxSpeed=33073.000000
      Damage=415.000000
      DamageRadius=1350.000000
-     MyDamageType=Class'DH_Guns.DH_Pak40CannonShellDamageHE'
+     MyDamageType=class'DH_Guns.DH_Pak40CannonShellDamageHE'
      Tag="Sprgr.Patr.34"
 }

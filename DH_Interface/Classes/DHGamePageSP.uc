@@ -39,7 +39,7 @@ function PrepareToPlay(out string GameURL, optional string OverrideMap)
     local int i;
     local byte Value;
 
-    Super.PrepareToPlay(GameURL, OverrideMap);
+    super.PrepareToPlay(GameURL, OverrideMap);
 
     i = RuleInfo.FindIndex("BotMode");
 

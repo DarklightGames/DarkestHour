@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Gewehr 43"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_G43Weapon'
+     InventoryType=class'DH_Weapons.DH_G43Weapon'
      PickupMessage="You got the Gewehr 43."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

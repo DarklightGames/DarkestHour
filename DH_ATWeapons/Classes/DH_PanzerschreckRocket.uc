@@ -17,10 +17,10 @@ defaultproperties
      DHPenetrationTable(6)=17.500000
      bIsHEATRound=true
      bIsAlliedShell=false
-     ShellImpactDamage=Class'DH_ATWeapons.DH_PanzerschreckImpactDamType'
+     ShellImpactDamage=class'DH_ATWeapons.DH_PanzerschreckImpactDamType'
      ImpactDamage=625
      Speed=6337.000000
      MaxSpeed=6337.000000
-     MyDamageType=Class'DH_ATWeapons.DH_PanzerschreckDamType'
+     MyDamageType=class'DH_ATWeapons.DH_PanzerschreckDamType'
      StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Panzerschreck_shell'
 }

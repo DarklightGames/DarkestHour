@@ -9,7 +9,7 @@ class DH_JagdpanzerIVL48Destroyer_Snow extends DH_JagdpanzerIVL48Destroyer;
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_armor_snow');
@@ -26,12 +26,12 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.panzer4F2_treadsnow');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonPawn_Snow')
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonPawn_Snow')
      DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.Jagdpanzer4.Jagdpanzer4_dest48_snow'
      Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'
      Skins(1)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_armor_snow'

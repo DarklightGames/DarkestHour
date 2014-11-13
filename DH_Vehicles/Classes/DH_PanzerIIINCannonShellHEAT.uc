@@ -72,14 +72,14 @@ defaultproperties
      DHPenetrationTable(10)=10.000000
      ShellDiameter=7.500000
      bIsAlliedShell=false
-     TracerEffect=Class'DH_Effects.DH_OrangeTankShellTracerBig'
-     ShellImpactDamage=Class'DH_Vehicles.DH_PanzerIIINCannonShellImpactDamageHEAT'
+     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracerBig'
+     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIINCannonShellImpactDamageHEAT'
      ImpactDamage=650
      BallisticCoefficient=2.000000
      Speed=25348.000000
      MaxSpeed=25348.000000
      Damage=450.000000
      DamageRadius=200.000000
-     MyDamageType=Class'DH_Vehicles.DH_PanzerIIINCannonShellDamageHEAT'
+     MyDamageType=class'DH_Vehicles.DH_PanzerIIINCannonShellDamageHEAT'
      Tag="Gr.38 Hl/C"
 }

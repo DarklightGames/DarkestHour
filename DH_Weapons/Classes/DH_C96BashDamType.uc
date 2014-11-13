@@ -12,7 +12,7 @@ class DH_C96BashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_C96Weapon'
+     WeaponClass=class'DH_Weapons.DH_C96Weapon'
      DeathString="%o was smacked with %k's Mauser C96."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

@@ -11,7 +11,7 @@ defaultproperties
      TouchMessage="Pick Up: Enfield No. 4 sniper"
      DropLifeTime=10.000000
      MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
+     InventoryType=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
      PickupMessage="You got the Enfield No. 4 sniper."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

@@ -28,10 +28,10 @@ defaultproperties
      Models(4)="US_29Inf5B"
      bIsGunner=true
      SleeveTexture=Texture'DHUSCharactersTex.Sleeves.US_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_30calWeapon',Amount=6)
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-     Headgear(0)=Class'DH_USPlayers.DH_AmericanHelmet29thEMa'
-     Headgear(1)=Class'DH_USPlayers.DH_AmericanHelmet29thEMb'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon',Amount=6)
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thEMa'
+     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet29thEMb'
      bCarriesMGAmmo=false
      PrimaryWeaponType=WT_LMG
      Limit=1

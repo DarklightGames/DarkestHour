@@ -221,7 +221,7 @@ defaultproperties
      ElevationMaximum=90.000000
      ElevationMinimum=45.000000
      ElevationStride=0.500000
-     FireEmitterClass=Class'DH_Effects.DH_MortarFireEffect'
+     FireEmitterClass=class'DH_Effects.DH_MortarFireEffect'
      PitchUpLimit=0
      PitchDownLimit=0
      bOwnerNoSee=true

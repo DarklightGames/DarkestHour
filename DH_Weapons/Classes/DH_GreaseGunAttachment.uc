@@ -7,9 +7,9 @@ class DH_GreaseGunAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdPPSH'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
      MuzzleBoneName="Muzzle"
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject9x19mm'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
      PA_MovementAnims(0)="stand_jogF_pps43"
      PA_MovementAnims(1)="stand_jogB_pps43"
      PA_MovementAnims(2)="stand_jogL_pps43"

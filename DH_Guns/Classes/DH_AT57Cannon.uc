@@ -58,11 +58,11 @@ defaultproperties
      WeaponFireOffset=20.000000
      RotationsPerSecond=0.025000
      FireInterval=3.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Guns.DH_AT57CannonShell'
+     ProjectileClass=class'DH_Guns.DH_AT57CannonShell'
      ShakeRotMag=(Z=110.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=2.000000
@@ -79,8 +79,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=60
      InitialSecondaryAmmo=25
-     PrimaryProjectileClass=Class'DH_Guns.DH_AT57CannonShell'
-     SecondaryProjectileClass=Class'DH_Guns.DH_AT57CannonShellHE'
+     PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
+     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
      Mesh=SkeletalMesh'DH_AT57_anm.AT57_turret'
      Skins(0)=Texture'DH_Artillery_Tex.57mmGun.57mmGun'
      Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'

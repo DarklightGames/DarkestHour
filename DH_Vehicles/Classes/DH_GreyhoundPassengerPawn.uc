@@ -25,7 +25,7 @@ function bool TryToDrive(Pawn P)
         }
     }
 
-    return Super.TryToDrive(P);
+    return super.TryToDrive(P);
 }
 
 defaultproperties

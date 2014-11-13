@@ -7,12 +7,12 @@ class DH_Flakvierling38CannonShellHE extends DH_Sdkfz2341CannonShellHE;
 
 defaultproperties
 {
-     ShellImpactDamage=Class'DH_Guns.DH_Flakvierling38CannonShellDamageHE'
-     ShellHitDirtEffectClass=Class'ROEffects.GrenadeExplosion'
-     ShellHitSnowEffectClass=Class'ROEffects.GrenadeExplosion'
-     ShellHitWoodEffectClass=Class'ROEffects.GrenadeExplosion'
-     ShellHitRockEffectClass=Class'ROEffects.GrenadeExplosion'
-     ShellHitWaterEffectClass=Class'ROEffects.GrenadeExplosion'
+     ShellImpactDamage=class'DH_Guns.DH_Flakvierling38CannonShellDamageHE'
+     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
+     ShellHitSnowEffectClass=class'ROEffects.GrenadeExplosion'
+     ShellHitWoodEffectClass=class'ROEffects.GrenadeExplosion'
+     ShellHitRockEffectClass=class'ROEffects.GrenadeExplosion'
+     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
      SpeedFudgeScale=0.500000
      LightType=LT_Steady
      LightEffect=LE_QuadraticNonIncidence

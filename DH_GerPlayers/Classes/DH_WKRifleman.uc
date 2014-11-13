@@ -18,7 +18,7 @@ defaultproperties
      Models(2)="WK_3"
      Models(3)="WK_4"
      SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-     Headgear(0)=Class'DH_GerPlayers.DH_KriegsmarineHelmet'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+     Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineHelmet'
 }

@@ -9,6 +9,6 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Vehicles.DH_Sdkfz2341ArmoredCar'
+     VehicleClass=class'DH_Vehicles.DH_Sdkfz2341ArmoredCar'
      Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
 }

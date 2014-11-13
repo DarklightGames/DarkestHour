@@ -10,8 +10,8 @@ defaultproperties
 {
      VoiceType="DH_USPlayers.DHUSVoice"
      AltVoiceType="DH_USPlayers.DHUSVoice"
-     DetachedArmClass=Class'ROEffects.SeveredArmSovTunic'
-     DetachedLegClass=Class'ROEffects.SeveredLegSovTunic'
+     DetachedArmClass=class'ROEffects.SeveredArmSovTunic'
+     DetachedLegClass=class'ROEffects.SeveredLegSovTunic'
      RolePawnClass="DH_USPlayers.DH_AmericanPawn"
      Side=SIDE_Allies
 }

@@ -118,7 +118,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
 
 simulated function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     EngineHealth=EngineHealthMax;
 
@@ -265,7 +265,7 @@ simulated function Tick(float dt)
     local bool lostTraction;
     local float ThrottlePosition;
 
-    Super.Tick(dt);
+    super.Tick(dt);
 
     // Pack the throttle setting into a byte to replicate it
     if (Role == ROLE_Authority)
@@ -500,7 +500,7 @@ function bool KDriverLeave(bool bForceLeave)
     {
         OldVel = Velocity;
 
-        bSuperDriverLeave = Super.KDriverLeave(bForceLeave);
+        bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
         OldVel.Z += 75;
         Instigator.AddVelocity(OldVel);
@@ -508,7 +508,7 @@ function bool KDriverLeave(bool bForceLeave)
         return bSuperDriverLeave;
     }
     else
-        Super.KDriverLeave(bForceLeave);
+        super.KDriverLeave(bForceLeave);
 }
 
 function bool PlaceExitingDriver()
@@ -850,9 +850,9 @@ defaultproperties
      DamagedStartUpSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
      PointValue=1.000000
      DriverTraceDist=4500.000000
-     DestructionEffectClass=Class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-     DisintegrationEffectClass=Class'ROEffects.ROVehicleDestroyedEmitter'
-     DisintegrationEffectLowClass=Class'ROEffects.ROVehicleDestroyedEmitter_simple'
+     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
      ExplosionSoundRadius=1000.000000
      ExplosionDamage=325.000000
      ExplosionRadius=700.000000

@@ -148,5 +148,5 @@ defaultproperties
 {
      PreLaunchTraceDistance=1312.000000
      NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
-     SmokeEmitterClass=Class'ROEffects.ROPistolMuzzleSmoke'
+     SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
 }

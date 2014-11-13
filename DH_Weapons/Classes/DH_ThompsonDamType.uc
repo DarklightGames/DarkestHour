@@ -9,12 +9,12 @@ class DH_ThompsonDamType extends ROWeaponProjectileDamageType
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
-     WeaponClass=Class'DH_Weapons.DH_ThompsonWeapon'
+     WeaponClass=class'DH_Weapons.DH_ThompsonWeapon'
      DeathString="%o was killed by %k's M1A1 Thompson."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."
      GibModifier=0.000000
-     PawnDamageEmitter=Class'ROEffects.ROBloodPuff'
+     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
      KDamageImpulse=1000.000000
      KDeathVel=100.000000
      KDeathUpKick=0.000000

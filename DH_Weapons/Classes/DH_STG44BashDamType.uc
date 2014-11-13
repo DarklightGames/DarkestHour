@@ -12,7 +12,7 @@ class DH_STG44BashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_STG44Weapon'
+     WeaponClass=class'DH_Weapons.DH_STG44Weapon'
      DeathString="%o was smacked by %k's Sturmgewehr 44."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

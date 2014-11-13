@@ -10,7 +10,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: PIAT"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_ATWeapons.DH_PIATWeapon'
+     InventoryType=class'DH_ATWeapons.DH_PIATWeapon'
      PickupMessage="You got the PIAT."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

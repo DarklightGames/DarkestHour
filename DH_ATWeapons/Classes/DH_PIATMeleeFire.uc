@@ -7,7 +7,7 @@ class DH_PIATMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_ATWeapons.DH_PIATBashDamType'
+     DamageType=class'DH_ATWeapons.DH_PIATBashDamType'
      TraceRange=75.000000
      BashBackAnim="bash_pullback"
      BashHoldAnim="bash_hold"

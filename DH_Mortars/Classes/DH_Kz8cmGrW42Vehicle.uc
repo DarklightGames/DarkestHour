@@ -11,7 +11,7 @@ defaultproperties
 {
      PlayerResupplyAmounts(0)=4
      PlayerResupplyAmounts(1)=1
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Mortars.DH_Kz8cmGrW42VehicleWeaponPawn',WeaponBone="Vehicle_attachment01")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Mortars.DH_Kz8cmGrW42VehicleWeaponPawn',WeaponBone="Vehicle_attachment01")
      VehicleNameString="Kurz 8cm Granatwerfer 42"
      Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_vehicle'
 }

@@ -19,7 +19,7 @@ simulated function DrawHUD(Canvas Canvas)
     PC = PlayerController(Controller);
     if (PC == none)
     {
-        Super.RenderOverlays(Canvas);
+        super.RenderOverlays(Canvas);
         //log("PanzerTurret PlayerController was none, returning");
         return;
     }
@@ -100,7 +100,7 @@ defaultproperties
      DriverPositions(0)=(ViewLocation=(X=20.000000,Y=-12.000000,Z=10.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idle_binoc",ViewPitchUpLimit=2731,ViewPitchDownLimit=64626,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,bDrawOverlays=true,bExposed=true)
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
      DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
-     GunClass=Class'DH_Guns.DH_AT57Cannon'
+     GunClass=class'DH_Guns.DH_AT57Cannon'
      CameraBone="Gun"
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'

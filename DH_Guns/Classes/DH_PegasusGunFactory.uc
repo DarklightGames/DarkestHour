@@ -7,5 +7,5 @@ class DH_PegasusGunFactory extends DH_Flak88Factory;
 
 defaultproperties
 {
-     VehicleClass=Class'DH_Guns.DH_PegasusGun'
+     VehicleClass=class'DH_Guns.DH_PegasusGun'
 }

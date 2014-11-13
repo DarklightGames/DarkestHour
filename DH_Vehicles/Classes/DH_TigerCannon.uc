@@ -90,7 +90,7 @@ defaultproperties
      RangeSettings(30)=4000
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=8
-     DummyTracerClass=Class'DH_Vehicles.DH_MG34VehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
      mTracerInterval=0.495867
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -109,8 +109,8 @@ defaultproperties
      bAmbientAltFireSound=true
      FireInterval=7.000000
      AltFireInterval=0.070580
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
@@ -118,8 +118,8 @@ defaultproperties
      RotateSound=Sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
      AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_TigerCannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_MG34VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -138,8 +138,8 @@ defaultproperties
      InitialPrimaryAmmo=48
      InitialSecondaryAmmo=44
      InitialAltAmmo=150
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_TigerCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_TigerCannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
      Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_ext'
      Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
      SoundVolume=120

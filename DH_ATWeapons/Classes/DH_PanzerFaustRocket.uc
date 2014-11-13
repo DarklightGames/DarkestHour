@@ -9,7 +9,7 @@ class DH_PanzerFaustRocket extends DH_RocketProj; //PanzerFaustRocket;
 
 simulated function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (SmokeTrail != none)
     {
@@ -35,11 +35,11 @@ defaultproperties
      bIsHEATRound=true
      bIsAlliedShell=false
      bHasTracer=false
-     ShellImpactDamage=Class'DH_ATWeapons.DH_PanzerFaustImpactDamType'
+     ShellImpactDamage=class'DH_ATWeapons.DH_PanzerFaustImpactDamType'
      ImpactDamage=650
      BallisticCoefficient=0.075000
      Speed=2716.000000
      MaxSpeed=2716.000000
-     MyDamageType=Class'DH_ATWeapons.DH_PanzerFaustDamType'
+     MyDamageType=class'DH_ATWeapons.DH_PanzerFaustDamType'
      StaticMesh=StaticMesh'DH_Military_Axis.Weapons.Panzerfaust_warhead'
 }

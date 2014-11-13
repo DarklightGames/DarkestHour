@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Nebelhandgranate 39"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Equipment.DH_NebelGranate39Weapon'
+     InventoryType=class'DH_Equipment.DH_NebelGranate39Weapon'
      PickupMessage="You got the Nebelhandgranate 39."
      PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
      PickupForce="AssaultRiflePickup"

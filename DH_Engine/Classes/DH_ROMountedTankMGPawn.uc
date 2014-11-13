@@ -60,7 +60,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
 {
     local vector Offset;
 
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     Offset.Z += 200;
 
@@ -78,7 +78,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
-    Super.ClientKDriverLeave(PC);
+    super.ClientKDriverLeave(PC);
 }
 
 function bool PlaceExitingDriver()
@@ -154,7 +154,7 @@ simulated function DrawHUD(Canvas Canvas)
     PC = PlayerController(Controller);
     if (PC == none)
     {
-        Super.RenderOverlays(Canvas);
+        super.RenderOverlays(Canvas);
         //log("PanzerTurret PlayerController was none, returning");
         return;
     }

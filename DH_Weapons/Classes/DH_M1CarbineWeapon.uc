@@ -28,8 +28,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      FreeAimRotationSpeed=7.000000
-     FireModeClass(0)=Class'DH_Weapons.DH_M1CarbineFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_M1CarbineMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_M1CarbineFire'
+     FireModeClass(1)=class'DH_Weapons.DH_M1CarbineMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -40,9 +40,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_M1CarbinePickup'
+     PickupClass=class'DH_Weapons.DH_M1CarbinePickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_M1CarbineAttachment'
+     AttachmentClass=class'DH_Weapons.DH_M1CarbineAttachment'
      ItemName="M1 Carbine"
      Mesh=SkeletalMesh'DH_M1Carbine_1st.M1Carbine'
      bUseHighDetailOverlayIndex=true

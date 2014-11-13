@@ -7,8 +7,8 @@ class DH_Kar98MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_Kar98BashDamType'
-     BayonetDamageType=Class'DH_Weapons.DH_Kar98BayonetDamType'
+     DamageType=class'DH_Weapons.DH_Kar98BashDamType'
+     BayonetDamageType=class'DH_Weapons.DH_Kar98BayonetDamType'
      TraceRange=75.000000
      BayonetTraceRange=125.000000
      BashBackAnim="bash_pullback"

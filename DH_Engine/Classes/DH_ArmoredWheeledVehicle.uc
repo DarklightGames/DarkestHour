@@ -350,7 +350,7 @@ function bool KDriverLeave(bool bForceLeave)
         return false;
     }
     else
-        Super.KDriverLeave(bForceLeave);
+        super.KDriverLeave(bForceLeave);
 
 }
 
@@ -375,7 +375,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
-        DamageType = Class'ROSuicided';
+        DamageType = class'ROSuicided';
         Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')

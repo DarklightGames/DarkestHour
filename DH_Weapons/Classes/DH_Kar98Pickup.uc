@@ -26,7 +26,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Karabiner 98k"
      MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_Kar98Weapon'
+     InventoryType=class'DH_Weapons.DH_Kar98Weapon'
      PickupMessage="You got the Karabiner 98k."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

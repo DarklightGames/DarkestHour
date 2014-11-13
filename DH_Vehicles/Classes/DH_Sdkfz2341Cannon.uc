@@ -497,7 +497,7 @@ defaultproperties
      RangeSettings(12)=1200
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=12
-     DummyTracerClass=Class'DH_Vehicles.DH_MG42VehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer'
      mTracerInterval=0.350000
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -518,8 +518,8 @@ defaultproperties
      AltFireSpread=0.002000
      FireInterval=0.200000
      AltFireInterval=0.050000
-     FlashEmitterClass=Class'ROEffects.MuzzleFlash3rdSTG'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
@@ -527,8 +527,8 @@ defaultproperties
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
      AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_Sdkfz2341CannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_MG42VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
      ShakeRotMag=(Z=5.000000)
      ShakeRotRate=(Z=100.000000)
      ShakeRotTime=2.000000
@@ -549,8 +549,8 @@ defaultproperties
      InitialPrimaryAmmo=10
      InitialSecondaryAmmo=10
      InitialAltAmmo=150
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_Sdkfz2341CannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
      Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
      Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'

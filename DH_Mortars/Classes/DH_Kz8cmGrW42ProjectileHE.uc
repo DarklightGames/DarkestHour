@@ -34,8 +34,8 @@ defaultproperties
      MaxSpeed=3936.000000
      Damage=300.000000
      DamageRadius=720.000000
-     MyDamageType=Class'DH_Mortars.DH_Kz8cmGrW42DamageType'
-     ExplosionDecal=Class'ROEffects.ArtilleryMarkDirt'
-     ExplosionDecalSnow=Class'ROEffects.ArtilleryMarkSnow'
+     MyDamageType=class'DH_Mortars.DH_Kz8cmGrW42DamageType'
+     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
+     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
      Tag="8cm Spgr."
 }

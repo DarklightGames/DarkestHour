@@ -9,6 +9,6 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Vehicles.DH_Stug3GDestroyer'
+     VehicleClass=class'DH_Vehicles.DH_Stug3GDestroyer'
      Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'
 }

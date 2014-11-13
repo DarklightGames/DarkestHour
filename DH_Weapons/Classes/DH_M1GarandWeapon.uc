@@ -122,8 +122,8 @@ defaultproperties
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
      FreeAimRotationSpeed=7.500000
-     FireModeClass(0)=Class'DH_Weapons.DH_M1GarandFire'
-     FireModeClass(1)=Class'DH_Weapons.DH_M1GarandMeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_M1GarandFire'
+     FireModeClass(1)=class'DH_Weapons.DH_M1GarandMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -134,9 +134,9 @@ defaultproperties
      bSniping=true
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_M1GarandPickup'
+     PickupClass=class'DH_Weapons.DH_M1GarandPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_M1GarandAttachment'
+     AttachmentClass=class'DH_Weapons.DH_M1GarandAttachment'
      ItemName="M1 Garand"
      Mesh=SkeletalMesh'DH_Garand_1st.M1_Garand'
 }

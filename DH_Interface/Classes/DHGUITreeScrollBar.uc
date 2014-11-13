@@ -9,7 +9,7 @@ var() editconst noexport GUITreeList List;
 
 function SetList(GUIListBase InList)
 {
-    Super.SetList(InList);
+    super.SetList(InList);
     List = GUITreeList(InList);
     if (List != none)
         ItemCount = List.VisibleCount;

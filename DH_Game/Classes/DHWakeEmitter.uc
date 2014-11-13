@@ -8,7 +8,7 @@ class DHWakeEmitter extends Emitter;
 function PostBeginPlay()
 {
     local float F;
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     if (Instigator != none)
     {

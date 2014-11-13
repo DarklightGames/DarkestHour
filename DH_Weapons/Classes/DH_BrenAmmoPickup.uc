@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: Bren magazine pouch"
      AmmoAmount=30
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_BrenAmmo'
+     InventoryType=class'DH_Weapons.DH_BrenAmmo'
      PickupMessage="You picked up a Bren magazine pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

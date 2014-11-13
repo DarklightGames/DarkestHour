@@ -7,7 +7,7 @@ class DH_JagdpanzerIVL48Factory_Snow extends DH_JagdpanzerIVL48Factory;
 
 defaultproperties
 {
-     VehicleClass=Class'DH_Vehicles.DH_JagdpanzerIVL48Destroyer_Snow'
+     VehicleClass=class'DH_Vehicles.DH_JagdpanzerIVL48Destroyer_Snow'
      Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'
      Skins(1)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_armor_snow'
      Skins(2)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_wheels_snow'

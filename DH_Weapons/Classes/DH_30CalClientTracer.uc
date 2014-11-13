@@ -7,7 +7,7 @@ class DH_30CalClientTracer extends ROClientTracer;
 
 defaultproperties
 {
-     mTracerClass=Class'DH_Weapons.DH_AmericanRedTracer'
+     mTracerClass=class'DH_Weapons.DH_AmericanRedTracer'
      DeflectedMesh=StaticMesh'DH_Tracers.US_Tracer_Ball'
      BallisticCoefficient=0.410000
      SpeedFudgeScale=0.750000

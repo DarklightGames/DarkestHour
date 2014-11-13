@@ -26,11 +26,11 @@ defaultproperties
      Models(2)="WH_3"
      Models(3)="WH_4"
      SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-     PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_G43Weapon',Amount=9,AssociatedAttachment=Class'ROInventory.ROG43AmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-     Headgear(0)=Class'DH_GerPlayers.DH_HeerHelmetThree'
-     Headgear(1)=Class'DH_GerPlayers.DH_HeerHelmetTwo'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',Amount=9,AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
+     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      Limit=1

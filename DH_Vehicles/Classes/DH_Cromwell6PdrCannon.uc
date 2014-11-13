@@ -88,7 +88,7 @@ defaultproperties
      AddedPitch=50
      ReloadSound=Sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
      NumAltMags=6
-     DummyTracerClass=Class'DH_Vehicles.DH_BesaVehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_BesaVehicleClientTracer'
      mTracerInterval=0.460000
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -107,8 +107,8 @@ defaultproperties
      bAmbientAltFireSound=true
      FireInterval=4.000000
      AltFireInterval=0.092000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
@@ -116,8 +116,8 @@ defaultproperties
      RotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
      AltFireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_BesaVehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -138,8 +138,8 @@ defaultproperties
      InitialPrimaryAmmo=45
      InitialSecondaryAmmo=30
      InitialAltAmmo=225
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_Cromwell6PdrCannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShellHE'
      Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell_6pdr_turret_ext'
      Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
      Skins(1)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'

@@ -28,11 +28,11 @@ defaultproperties
      Models(4)="12SS_5"
      Models(5)="12SS_6"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_STG44Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROSTG44AmmoPouch')
-     PrimaryWeapons(1)=(Item=Class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=Class'ROInventory.ROMP40AmmoPouch')
-     Grenades(0)=(Item=Class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-     Headgear(0)=Class'DH_GerPlayers.DH_SSHelmetOne'
-     Headgear(1)=Class'DH_GerPlayers.DH_SSHelmetTwo'
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_STG44Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
+     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
+     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      Limit=4

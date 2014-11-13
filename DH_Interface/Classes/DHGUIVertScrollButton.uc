@@ -12,7 +12,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         StyleName="DHGripButton";
         ImageIndex = 7;
         }
-    Super.Initcomponent(MyController, MyOwner);
+    super.Initcomponent(MyController, MyOwner);
 }
 
 defaultproperties

@@ -10,7 +10,7 @@ defaultproperties
      TouchMessage="Pick Up: Enfield No. 2 ammunition pouch"
      AmmoAmount=7
      MaxDesireability=0.300000
-     InventoryType=Class'DH_Weapons.DH_EnfieldNo2Ammo'
+     InventoryType=class'DH_Weapons.DH_EnfieldNo2Ammo'
      PickupMessage="You picked up an Enfield No. 2 ammunition pouch."
      PickupForce="MinigunAmmoPickup"
      DrawType=DT_StaticMesh

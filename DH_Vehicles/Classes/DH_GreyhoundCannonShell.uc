@@ -25,13 +25,13 @@ defaultproperties
      DHPenetrationTable(10)=3.000000
      ShellDiameter=3.700000
      bShatterProne=true
-     ShellShatterEffectClass=Class'DH_Effects.DH_TankAPShellShatterSmall'
-     TracerEffect=Class'DH_Effects.DH_RedTankShellTracer'
-     ShellImpactDamage=Class'DH_Vehicles.DH_GreyhoundCannonShellDamageAP'
+     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatterSmall'
+     TracerEffect=class'DH_Effects.DH_RedTankShellTracer'
+     ShellImpactDamage=class'DH_Vehicles.DH_GreyhoundCannonShellDamageAP'
      ImpactDamage=250
      VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
      VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-     ShellHitVehicleEffectClass=Class'ROEffects.TankAPHitPenetrateSmall'
+     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
      BallisticCoefficient=0.984000
      Speed=53291.000000
      MaxSpeed=53291.000000

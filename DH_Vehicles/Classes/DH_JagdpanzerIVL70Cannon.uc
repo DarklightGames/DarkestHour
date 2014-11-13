@@ -8,7 +8,7 @@ class DH_JagdpanzerIVL70Cannon extends DH_ROTankCannon;
 defaultproperties
 {
      InitialTertiaryAmmo=15
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
      SecondarySpread=0.001200
      ManualRotationsPerSecond=0.025000
      PoweredRotationsPerSecond=0.025000
@@ -72,11 +72,11 @@ defaultproperties
      WeaponFireOffset=10.000000
      RotationsPerSecond=0.025000
      FireInterval=7.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -93,8 +93,8 @@ defaultproperties
      BeginningIdleAnim="Overlay_Idle"
      InitialPrimaryAmmo=35
      InitialSecondaryAmmo=5
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellAPCR'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellAPCR'
      Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L70_turret_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
      Skins(1)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'

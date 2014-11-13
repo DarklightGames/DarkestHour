@@ -9,6 +9,6 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Vehicles.DH_AchillesTank'
+     VehicleClass=class'DH_Vehicles.DH_AchillesTank'
      Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_body_ext'
 }

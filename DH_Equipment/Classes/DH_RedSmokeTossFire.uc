@@ -101,6 +101,6 @@ defaultproperties
      bRecommendSplashDamage=false
      MaxHoldTime=4.950000
      PreFireAnim="Pre_Fire"
-     AmmoClass=Class'DH_Equipment.DH_RedSmokeAmmo'
-     ProjectileClass=Class'DH_Equipment.DH_RedSmokeProjectile'
+     AmmoClass=class'DH_Equipment.DH_RedSmokeAmmo'
+     ProjectileClass=class'DH_Equipment.DH_RedSmokeProjectile'
 }

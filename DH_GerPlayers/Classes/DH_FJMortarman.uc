@@ -39,13 +39,13 @@ defaultproperties
      Models(3)="FJ4"
      Models(4)="FJ5"
      SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=Class'ROInventory.ROKar98AmmoPouch')
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_P38Weapon',Amount=1)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
      GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
      GivenItems(1)="DH_Equipment.DH_GerBinocularsItem"
-     Headgear(0)=Class'DH_GerPlayers.DH_FJHelmetCamo1'
-     Headgear(1)=Class'DH_GerPlayers.DH_FJHelmetCamo2'
-     Headgear(2)=Class'DH_GerPlayers.DH_FJHelmetNet1'
+     Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamo1'
+     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamo2'
+     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
      PrimaryWeaponType=WT_SemiAuto
      Limit=1
 }

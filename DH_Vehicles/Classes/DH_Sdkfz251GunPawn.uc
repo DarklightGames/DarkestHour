@@ -17,7 +17,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     Gotostate('EnteringVehicle');
 
-    Super.ClientKDriverEnter(PC);
+    super.ClientKDriverEnter(PC);
 
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
@@ -183,7 +183,7 @@ function bool KDriverLeave(bool bForceLeave)
 
     OldVel = Velocity;
 
-    bSuperDriverLeave = Super.KDriverLeave(bForceLeave);
+    bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
     OldVel.Z += 50;
     Instigator.Velocity = OldVel;
@@ -199,7 +199,7 @@ defaultproperties
      DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
      bMultiPosition=true
      bMustBeTankCrew=false
-     GunClass=Class'DH_Vehicles.DH_Sdkfz251Gun'
+     GunClass=class'DH_Vehicles.DH_Sdkfz251Gun'
      bCustomAiming=true
      PositionInArray=0
      bHasAltFire=false
@@ -213,7 +213,7 @@ defaultproperties
      TPCamWorldOffset=(Z=120.000000)
      VehiclePositionString="in a Sdkfz-251 Gun Position"
      VehicleNameString="Sdkfz-251 Gun"
-     HUDOverlayClass=Class'ROVehicles.ROVehMG34Overlay'
+     HUDOverlayClass=class'ROVehicles.ROVehMG34Overlay'
      HUDOverlayFOV=45.000000
      PitchUpLimit=4000
      PitchDownLimit=61000

@@ -112,15 +112,15 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-175.000000,Y=-52.000000,Z=55.000000),ExhaustRotation=(Pitch=22000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIIILCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIIIPassengerOne',WeaponBone="body")
-     PassengerWeapons(3)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIIIPassengerTwo',WeaponBone="body")
-     PassengerWeapons(4)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIIIPassengerThree',WeaponBone="body")
-     PassengerWeapons(5)=(WeaponPawnClass=Class'DH_Vehicles.DH_PanzerIIIPassengerFour',WeaponBone="body")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIILCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIPassengerOne',WeaponBone="body")
+     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIPassengerTwo',WeaponBone="body")
+     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIPassengerThree',WeaponBone="body")
+     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIPassengerFour',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.Panzeriii.PanzerIII_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_stop'

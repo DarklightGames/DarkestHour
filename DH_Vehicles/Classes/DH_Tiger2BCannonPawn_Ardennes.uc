@@ -7,5 +7,5 @@ class DH_Tiger2BCannonPawn_Ardennes extends DH_Tiger2BCannonPawn;
 
 defaultproperties
 {
-     GunClass=Class'DH_Vehicles.DH_Tiger2BCannon_Ardennes'
+     GunClass=class'DH_Vehicles.DH_Tiger2BCannon_Ardennes'
 }

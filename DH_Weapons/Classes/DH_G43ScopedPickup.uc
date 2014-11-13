@@ -27,7 +27,7 @@ defaultproperties
      TouchMessage="Pick Up: Gewehr 43"
      DropLifeTime=10.000000
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_G43ScopedWeapon'
+     InventoryType=class'DH_Weapons.DH_G43ScopedWeapon'
      PickupMessage="You got the Gewehr 43."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

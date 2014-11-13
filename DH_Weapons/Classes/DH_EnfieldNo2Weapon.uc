@@ -38,8 +38,8 @@ defaultproperties
      IronSightDisplayFOV=40.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_Weapons.DH_EnfieldNo2Fire'
-     FireModeClass(1)=Class'DH_Weapons.DH_EnfieldNo2MeleeFire'
+     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo2Fire'
+     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo2MeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -49,9 +49,9 @@ defaultproperties
      CurrentRating=0.350000
      DisplayFOV=70.000000
      bCanRestDeploy=true
-     PickupClass=Class'DH_Weapons.DH_EnfieldNo2Pickup'
+     PickupClass=class'DH_Weapons.DH_EnfieldNo2Pickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_Weapons.DH_EnfieldNo2Attachment'
+     AttachmentClass=class'DH_Weapons.DH_EnfieldNo2Attachment'
      ItemName="Enfield No2 Revolver"
      Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
 }

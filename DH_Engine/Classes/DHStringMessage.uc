@@ -17,7 +17,7 @@ static function string AssembleString(
     HUD myHUD,
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,
-    optional String MessageString
+    optional string MessageString
     )
 {
     return MessageString;

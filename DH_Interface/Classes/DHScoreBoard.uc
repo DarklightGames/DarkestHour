@@ -593,5 +593,5 @@ defaultproperties
      HeaderImage=Texture'DH_GUI_Tex.GUI.DH_Headerbar'
      TeamColors(0)=(B=80,G=80,R=200)
      TeamColors(1)=(B=75,G=150,R=80)
-     HudClass=Class'DH_Engine.DHHud'
+     HudClass=class'DH_Engine.DHHud'
 }

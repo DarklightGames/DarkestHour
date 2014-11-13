@@ -11,5 +11,5 @@ defaultproperties
      DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_turret_ext')
      DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_turret_ext')
      DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_turret_ext')
-     GunClass=Class'DH_Vehicles.DH_ShermanCannon_Snow'
+     GunClass=class'DH_Vehicles.DH_ShermanCannon_Snow'
 }

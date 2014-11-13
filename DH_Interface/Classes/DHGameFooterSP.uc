@@ -12,7 +12,7 @@ var UT2K4GamePageBase Owner;
 
 function InitComponent(GUIController InController, GUIComponent InOwner)
 {
-    Super.InitComponent(InController, InOwner);
+    super.InitComponent(InController, InOwner);
     Owner = UT2K4GamePageBase(MenuOwner);
     b_Primary.OnClick = Owner.InternalOnClick;
     //b_Secondary.OnClick = Owner.InternalOnClick;
@@ -23,7 +23,7 @@ function SetupButtons(optional string bPerButtonSizes)
 {
     b_Primary.Caption = PrimaryCaption;
     b_Primary.SetHint(PrimaryHint);
-    Super.SetupButtons(bPerButtonSizes);
+    super.SetupButtons(bPerButtonSizes);
 }
 
 defaultproperties

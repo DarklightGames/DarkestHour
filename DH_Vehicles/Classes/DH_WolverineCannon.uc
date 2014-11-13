@@ -38,7 +38,7 @@ function DecrementRange()
 defaultproperties
 {
      InitialTertiaryAmmo=24
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_WolverineCannonShellHE'
+     TertiaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHE'
      SecondarySpread=0.001000
      TertiarySpread=0.001350
      ManualRotationsPerSecond=0.010000
@@ -84,11 +84,11 @@ defaultproperties
      WeaponFireOffset=200.000000
      RotationsPerSecond=0.010000
      FireInterval=5.000000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
      FireSoundVolume=512.000000
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_WolverineCannonShell'
+     ProjectileClass=class'DH_Vehicles.DH_WolverineCannonShell'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -102,8 +102,8 @@ defaultproperties
      BeginningIdleAnim="com_idle_close"
      InitialPrimaryAmmo=25
      InitialSecondaryAmmo=5
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_WolverineCannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_WolverineCannonShellHVAP'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHVAP'
      Mesh=SkeletalMesh'DH_Wolverine_anm.M10_turret_ext'
      Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
      Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'

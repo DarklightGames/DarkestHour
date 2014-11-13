@@ -7,7 +7,7 @@ class DH_STG44MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_STG44BashDamType'
+     DamageType=class'DH_Weapons.DH_STG44BashDamType'
      TraceRange=75.000000
      BashBackAnim="bash_pullback"
      BashHoldAnim="bash_hold"

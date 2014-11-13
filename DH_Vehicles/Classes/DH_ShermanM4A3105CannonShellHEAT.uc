@@ -29,7 +29,7 @@ defaultproperties
      DHPenetrationTable(9)=12.800000
      DHPenetrationTable(10)=12.800000
      ShellDiameter=10.500000
-     ShellImpactDamage=Class'DH_Vehicles.DH_Sherman105ShellImpactDamageHEAT'
+     ShellImpactDamage=class'DH_Vehicles.DH_Sherman105ShellImpactDamageHEAT'
      ImpactDamage=650
      BallisticCoefficient=2.960000
      SpeedFudgeScale=0.700000
@@ -37,6 +37,6 @@ defaultproperties
      MaxSpeed=22994.000000
      Damage=415.000000
      DamageRadius=700.000000
-     MyDamageType=Class'DH_Vehicles.DH_Sherman105CannonShellDamageHEAT'
+     MyDamageType=class'DH_Vehicles.DH_Sherman105CannonShellDamageHEAT'
      Tag="M67 HEAT"
 }

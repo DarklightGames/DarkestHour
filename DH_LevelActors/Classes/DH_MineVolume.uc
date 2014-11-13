@@ -9,7 +9,7 @@ var()   bool            bInitiallyActive;   //Will start active if true
 
 function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     bActive = bInitiallyActive;
 }

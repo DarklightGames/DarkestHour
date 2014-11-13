@@ -17,9 +17,9 @@ defaultproperties
      Models(1)="RMCRad2"
      Models(2)="RMCRad3"
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-     PrimaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
+     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
      GivenItems(0)="DH_Equipment.DH_USRadioItem"
-     Headgear(0)=Class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
+     Headgear(0)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
      PrimaryWeaponType=WT_SMG
      Limit=1
 }

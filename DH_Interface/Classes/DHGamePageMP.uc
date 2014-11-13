@@ -7,7 +7,7 @@ class DHGamePageMP extends UT2K4GamePageMP;
 
 function InitComponent(GUIController InController, GUIComponent InOwner)
 {
-    Super.InitComponent(InController, InOwner);
+    super.InitComponent(InController, InOwner);
         class'DHInterfaceUtil'.static.SetROStyle(InController, Controls);
     RuleInfo = new(none) class'Engine.PlayInfo';
         c_Tabs.RemoveTab(PanelCaption[0]);

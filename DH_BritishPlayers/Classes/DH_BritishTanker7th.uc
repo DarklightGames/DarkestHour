@@ -17,8 +17,8 @@ defaultproperties
      Models(1)="Brit_Tanker2"
      Models(2)="Brit_Tanker3"
      SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-     SecondaryWeapons(0)=(Item=Class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
-     Headgear(0)=Class'DH_BritishPlayers.DH_BritishTankerBeret'
+     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
+     Headgear(0)=class'DH_BritishPlayers.DH_BritishTankerBeret'
      PrimaryWeaponType=WT_SMG
      bEnhancedAutomaticControl=true
      bCanBeTankCrew=true

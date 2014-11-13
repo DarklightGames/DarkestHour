@@ -62,7 +62,7 @@ defaultproperties
      DHPenetrationTable(10)=8.700000
      ShellDiameter=7.620000
      bShatterProne=true
-     ShellImpactDamage=Class'DH_Guns.DH_17PounderCannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_17PounderCannonShellDamageAP'
      ImpactDamage=580
      BallisticCoefficient=2.450000
      Speed=53351.000000

@@ -139,7 +139,7 @@ replication
 
 simulated function PostBeginPlay()
 {
-    Super.PostBeginPlay();
+    super.PostBeginPlay();
 
     // From UnrealPawn
     if (Level.bStartup && !bNoDefaultInventory)
@@ -166,7 +166,7 @@ simulated function PostBeginPlay()
 
 simulated function Tick(float DeltaTime)
 {
-    Super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
     //if (bIsMantling)
       //  DoMantle(DeltaTime);
@@ -378,7 +378,7 @@ function bool TeleSpawnProtected()
 function DeactivateSpawnProtection()
 {
     TeleSpawnProtEnds = -10000;
-    Super.DeactivateSpawnProtection();
+    super.DeactivateSpawnProtection();
 }
 
 // Set the vars so this bullet whiz is replicated to the owning client
@@ -579,7 +579,7 @@ simulated function ProcessHitFX()
             if (Headgear != none)
             {
                 if (DH_Headgear(HeadGear).bIsHelmet)
-                    DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 100.0);
+                    DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
                 HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
             }
         }
@@ -766,7 +766,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
         if (cumulativeDamage >=  Health)
         {
             if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
             TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
         }
     }
@@ -778,7 +778,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
             return;
 
         if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
         TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
     }
 }
@@ -1800,7 +1800,7 @@ simulated function SpawnGibs(Rotator HitRotation, float ChunkPerterbation)
         FlameFX.Kill();
     }
 
-    Super.SpawnGibs(HitRotation, ChunkPerterbation);
+    super.SpawnGibs(HitRotation, ChunkPerterbation);
 }
 
 simulated event Destroyed()
@@ -1813,7 +1813,7 @@ simulated event Destroyed()
         FlameFX.Kill();
     }
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 // Called by DH_GiveChuteTrigger, adds parachute items to player's inventory
@@ -3984,7 +3984,7 @@ function SetWalking(bool bNewIsWalking)
 defaultproperties
 {
      MinHurtSpeed=475.000000
-     DHSoundGroupClass=Class'DH_Engine.DH_PawnSoundGroup'
+     DHSoundGroupClass=class'DH_Engine.DH_PawnSoundGroup'
      HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
      PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
      MantleAnim_40C="mantle_crouch_40"
@@ -4014,17 +4014,17 @@ defaultproperties
      MantleAnim_84S="mantle_stand_84"
      MantleAnim_88S="mantle_stand_88"
      MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'
-     FlameEffect=Class'DH_Effects.DH_PlayerFlame'
+     FlameEffect=class'DH_Effects.DH_PlayerFlame'
      BurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay_ALT'
      DeadBurningOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerBurningOverlay'
      CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
      BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
      FireDamage=10
-     FireDamageClass=Class'DH_Engine.DH_BurningDamType'
+     FireDamageClass=class'DH_Engine.DH_BurningDamType'
      Stamina=25.000000
      DeployedPitchUpLimit=7300
      DeployedPitchDownLimit=-7300
-     ControllerClass=Class'DH_Engine.DHBot'
+     ControllerClass=class'DH_Engine.DHBot'
      AirAnims(0)="jumpF_mid_nade"
      AirAnims(1)="jumpB_mid_nade"
      AirAnims(2)="jumpL_mid_nade"

@@ -7,7 +7,7 @@ class DHIRC_System extends UT2k4IRC_System;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.Initcomponent(MyController, MyOwner);
+    super.Initcomponent(MyController, MyOwner);
         class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 }
 

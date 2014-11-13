@@ -12,7 +12,7 @@ class DH_G43BashDamType extends ROWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=Class'DH_Weapons.DH_G43Weapon'
+     WeaponClass=class'DH_Weapons.DH_G43Weapon'
      DeathString="%o was smacked with %k's Gewehr 43."
      FemaleSuicide="%o turned the gun on herself."
      MaleSuicide="%o turned the gun on himself."

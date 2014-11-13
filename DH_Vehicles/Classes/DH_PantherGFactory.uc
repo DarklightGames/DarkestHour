@@ -9,6 +9,6 @@ defaultproperties
 {
      RespawnTime=1.000000
      bFactoryActive=true
-     VehicleClass=Class'DH_Vehicles.DH_PantherGTank'
+     VehicleClass=class'DH_Vehicles.DH_PantherGTank'
      Mesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_ext'
 }

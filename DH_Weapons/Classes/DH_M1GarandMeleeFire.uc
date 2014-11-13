@@ -7,8 +7,8 @@ class DH_M1GarandMeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
-     DamageType=Class'DH_Weapons.DH_M1GarandBashDamType'
-     BayonetDamageType=Class'DH_Weapons.DH_M1GarandBayonetDamType'
+     DamageType=class'DH_Weapons.DH_M1GarandBashDamType'
+     BayonetDamageType=class'DH_Weapons.DH_M1GarandBayonetDamType'
      TraceRange=75.000000
      BayonetTraceRange=125.000000
      BashBackAnim="bash_pullback"

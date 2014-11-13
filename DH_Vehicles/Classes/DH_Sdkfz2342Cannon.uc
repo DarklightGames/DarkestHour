@@ -86,7 +86,7 @@ defaultproperties
      RangeSettings(20)=2000
      ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
      NumAltMags=10
-     DummyTracerClass=Class'DH_Vehicles.DH_MG42VehicleClientTracer'
+     DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer'
      mTracerInterval=0.350000
      bUsesTracers=true
      bAltFireTracersOnly=true
@@ -104,8 +104,8 @@ defaultproperties
      bAmbientAltFireSound=true
      FireInterval=4.000000
      AltFireInterval=0.050000
-     EffectEmitterClass=Class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=Class'ROVehicles.TankMGEmitter'
+     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
      bAmbientEmitterAltFireOnly=true
      FireSoundVolume=512.000000
      AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
@@ -113,8 +113,8 @@ defaultproperties
      RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
      AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
      FireForce="Explosion05"
-     ProjectileClass=Class'DH_Vehicles.DH_Sdkfz2342CannonShell'
-     AltFireProjectileClass=Class'DH_Vehicles.DH_MG42VehicleBullet'
+     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
+     AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
      ShakeRotMag=(Z=50.000000)
      ShakeRotRate=(Z=1000.000000)
      ShakeRotTime=4.000000
@@ -135,8 +135,8 @@ defaultproperties
      InitialPrimaryAmmo=35
      InitialSecondaryAmmo=20
      InitialAltAmmo=150
-     PrimaryProjectileClass=Class'DH_Vehicles.DH_Sdkfz2342CannonShell'
-     SecondaryProjectileClass=Class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
+     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
+     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
      Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
      Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
      SoundVolume=130

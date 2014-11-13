@@ -11,7 +11,7 @@ defaultproperties
      TouchMessage="Pick Up: M1903 Springfield sniper"
      DropLifeTime=10.000000
      MaxDesireability=0.400000
-     InventoryType=Class'DH_Weapons.DH_SpringfieldScopedWeapon'
+     InventoryType=class'DH_Weapons.DH_SpringfieldScopedWeapon'
      PickupMessage="You got the M1903 Springfield sniper."
      PickupForce="AssaultRiflePickup"
      DrawType=DT_StaticMesh

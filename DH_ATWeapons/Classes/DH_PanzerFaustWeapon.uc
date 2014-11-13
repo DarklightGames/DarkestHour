@@ -695,8 +695,8 @@ defaultproperties
      IronSightDisplayFOV=25.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_ATWeapons.DH_PanzerFaustFire'
-     FireModeClass(1)=Class'ROInventory.PanzerFaustMeleeFire'
+     FireModeClass(0)=class'DH_ATWeapons.DH_PanzerFaustFire'
+     FireModeClass(1)=class'ROInventory.PanzerFaustMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -706,9 +706,9 @@ defaultproperties
      CurrentRating=0.600000
      DisplayFOV=70.000000
      bCanAttachOnBack=true
-     PickupClass=Class'DH_ATWeapons.DH_PanzerFaustPickup'
+     PickupClass=class'DH_ATWeapons.DH_PanzerFaustPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_ATWeapons.DH_PanzerFaustAttachment'
+     AttachmentClass=class'DH_ATWeapons.DH_PanzerFaustAttachment'
      ItemName="Panzerfaust 60"
      Mesh=SkeletalMesh'Axis_Panzerfaust_1st.Panzerfaust_Mesh'
      HighDetailOverlay=Shader'Weapons1st_tex.Grenades.Panzerfaust_S'

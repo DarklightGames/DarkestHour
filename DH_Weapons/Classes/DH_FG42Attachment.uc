@@ -56,9 +56,9 @@ defaultproperties
      WA_SightDown_Fire="idle_FG42"
      WA_SightDown_Reload="idle_FG42"
      WA_SightDown_ReloadEmpty="idle_FG42"
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdSTG'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
      MuzzleBoneName="Muzzle"
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
      PA_MovementAnims(0)="stand_jogF_stg44"
      PA_MovementAnims(1)="stand_jogB_stg44"
      PA_MovementAnims(2)="stand_jogL_stg44"

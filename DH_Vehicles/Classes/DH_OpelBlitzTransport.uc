@@ -18,7 +18,7 @@ var()   name                              DecorationAttachBone;
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
@@ -29,7 +29,7 @@ simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 simulated function PostBeginPlay()
@@ -70,7 +70,7 @@ simulated event DestroyAppearance()
         ResupplyAttach.Destroy();
     }
 
-    Super.DestroyAppearance();
+    super.DestroyAppearance();
 }
 
 // Overridden due to the Onslaught team lock not working in RO
@@ -163,18 +163,18 @@ defaultproperties
      EngineRPMSoundRange=5000.000000
      SteerBoneName="WheelDrive"
      RevMeterScale=4000.000000
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-30.000000,Y=180.000000,Z=-50.000000),ExhaustRotation=(Pitch=36000,Yaw=5000))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_OpelBlitzPassengerOne',WeaponBone="passenger1")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_OpelBlitzPassengerFour',WeaponBone="passenger_l_3")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_OpelBlitzPassengerSeven',WeaponBone="passenger_r_3")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerOne',WeaponBone="passenger1")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerFour',WeaponBone="passenger_l_3")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerSeven',WeaponBone="passenger_r_3")
      IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
      DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
-     DisintegrationEffectClass=Class'ROEffects.ROVehicleObliteratedEmitter'
-     DisintegrationEffectLowClass=Class'ROEffects.ROVehicleObliteratedEmitter_simple'
+     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
+     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
      DisintegrationHealth=-1000.000000
      DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
      DestructionAngularMomentum=(Max=150.000000)

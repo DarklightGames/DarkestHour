@@ -205,7 +205,7 @@ simulated function Destroyed()
     if (RocketAttachment != none)
         RocketAttachment.Destroy();
 
-    Super.Destroyed();
+    super.Destroyed();
 }
 
 function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
@@ -600,8 +600,8 @@ defaultproperties
      IronSightDisplayFOV=25.000000
      ZoomInTime=0.400000
      ZoomOutTime=0.200000
-     FireModeClass(0)=Class'DH_ATWeapons.DH_PIATFire'
-     FireModeClass(1)=Class'DH_ATWeapons.DH_PIATMeleeFire'
+     FireModeClass(0)=class'DH_ATWeapons.DH_PIATFire'
+     FireModeClass(1)=class'DH_ATWeapons.DH_PIATMeleeFire'
      SelectAnim="Draw"
      PutDownAnim="putaway"
      SelectAnimRate=1.000000
@@ -612,9 +612,9 @@ defaultproperties
      DisplayFOV=70.000000
      bCanAttachOnBack=true
      bCanRestDeploy=true
-     PickupClass=Class'DH_ATWeapons.DH_PIATPickup'
+     PickupClass=class'DH_ATWeapons.DH_PIATPickup'
      BobDamping=1.600000
-     AttachmentClass=Class'DH_ATWeapons.DH_PIATAttachment'
+     AttachmentClass=class'DH_ATWeapons.DH_PIATAttachment'
      ItemName="PIAT"
      Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
      FillAmmoMagCount=1

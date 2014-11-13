@@ -39,18 +39,18 @@ defaultproperties
      ShellDiameter=5.700000
      bHasTracer=true
      PenetrationMag=630.000000
-     ShellImpactDamage=Class'DH_Guns.DH_AT57CannonShellDamageAP'
+     ShellImpactDamage=class'DH_Guns.DH_AT57CannonShellDamageAP'
      ImpactDamage=295
-     ShellHitDirtEffectClass=Class'ROEffects.TankHEHitDirtEffect'
-     ShellHitSnowEffectClass=Class'ROEffects.TankHEHitSnowEffect'
-     ShellHitWoodEffectClass=Class'ROEffects.TankHEHitWoodEffect'
-     ShellHitRockEffectClass=Class'ROEffects.TankHEHitRockEffect'
-     ShellHitWaterEffectClass=Class'ROEffects.TankHEHitWaterEffect'
+     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
+     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
+     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
+     ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
+     ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
      BallisticCoefficient=1.620000
      Speed=50152.000000
      MaxSpeed=50152.000000
      Damage=250.000000
      DamageRadius=600.000000
-     MyDamageType=Class'DH_Guns.DH_AT57CannonShellDamageHE'
+     MyDamageType=class'DH_Guns.DH_AT57CannonShellDamageHE'
      Tag="M303 HE"
 }

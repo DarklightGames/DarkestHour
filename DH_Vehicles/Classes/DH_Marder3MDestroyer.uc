@@ -234,7 +234,7 @@ simulated function Tick(float DeltaTime)
 
 static function StaticPrecache(LevelInfo L)
 {
-        Super.StaticPrecache(L);
+        super.StaticPrecache(L);
 
         L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext');
         L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext');
@@ -249,7 +249,7 @@ simulated function UpdatePrecacheMaterials()
         Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.treads.marder_treads');
         Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int');
 
-    Super.UpdatePrecacheMaterials();
+    super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
@@ -308,12 +308,12 @@ defaultproperties
      LeftLeverAxis=AXIS_Z
      RightLeverBoneName="lever_R"
      RightLeverAxis=AXIS_Z
-     ExhaustEffectClass=Class'ROEffects.ExhaustPetrolEffect'
-     ExhaustEffectLowClass=Class'ROEffects.ExhaustPetrolEffect_simple'
+     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
+     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
      ExhaustPipes(0)=(ExhaustPosition=(X=-142.000000,Y=-28.000000,Z=18.000000),ExhaustRotation=(Pitch=40050))
-     PassengerWeapons(0)=(WeaponPawnClass=Class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
-     PassengerWeapons(1)=(WeaponPawnClass=Class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
-     PassengerWeapons(2)=(WeaponPawnClass=Class'DH_Vehicles.DH_Marder3MPassengerOne',WeaponBone="body")
+     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
+     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
+     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MPassengerOne',WeaponBone="body")
      IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
      StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
      ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'

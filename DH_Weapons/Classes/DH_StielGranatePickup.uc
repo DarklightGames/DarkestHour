@@ -23,7 +23,7 @@ defaultproperties
 {
      TouchMessage="Pick Up: Stielhandgranate 39/43"
      MaxDesireability=0.780000
-     InventoryType=Class'DH_Weapons.DH_StielGranateWeapon'
+     InventoryType=class'DH_Weapons.DH_StielGranateWeapon'
      PickupMessage="You got the Stielhandgranate 39/43."
      PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
      PickupForce="AssaultRiflePickup"

@@ -7,8 +7,8 @@ class DH_G43Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-     mMuzFlashClass=Class'ROEffects.MuzzleFlash3rdSVT'
-     ROShellCaseClass=Class'ROAmmo.RO3rdShellEject762x54mm'
+     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"
      PA_MovementAnims(2)="stand_jogL_kar"
