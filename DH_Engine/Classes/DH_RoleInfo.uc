@@ -30,7 +30,8 @@ function PostBeginPlay()
 
 defaultproperties
 {
-     bCarriesATAmmo=true
-     bCarriesMortarAmmo=true
-     bCarriesMGAmmo=true
+    Texture=Texture'DHEngine_Tex.RoleInfo'
+    bCarriesATAmmo=true
+    bCarriesMortarAmmo=true
+    bCarriesMGAmmo=true
 }

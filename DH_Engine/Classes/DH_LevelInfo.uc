@@ -46,6 +46,7 @@ var() ESpawnMode SpawnMode;
 
 defaultproperties
 {
+    Texture=Texture'DHEngine_Tex.LevelInfo'
     SmokeBrightnessOverride=255
     AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
