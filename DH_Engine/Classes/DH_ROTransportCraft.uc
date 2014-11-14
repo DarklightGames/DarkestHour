@@ -386,6 +386,7 @@ simulated function bool IsDisabled()
 
 defaultproperties
 {
+     bEnterringUnlocks=false
      LeftTreadIndex=1
      RightTreadIndex=2
      MaxCriticalSpeed=800.000000

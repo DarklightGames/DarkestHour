@@ -422,7 +422,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     }
 
     // Record if player is allowed to use tanks
-    if (P.IsHumanControlled() && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none && 
+    if (P.IsHumanControlled() && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none &&
         ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)
     {
         bPlayerIsTankCrew = true;
@@ -455,12 +455,12 @@ function Vehicle FindEntryVehicle(Pawn P)
         {
             ClosestDistSquared = DistSquared;
             ClosestWeaponPawn = WeaponPawns[x];
-        }    
+        }
         // If not, check if this is closest 'backup' weapon pawn player could occupy (used below if vehicle itself in range but no weapon pawn in range)
         else if (ClosestWeaponPawn == none && DistSquared < BackupDistSquared)
         {
             BackupDistSquared = DistSquared;
-            BackupWeaponPawn = WeaponPawns[x];            
+            BackupWeaponPawn = WeaponPawns[x];
         }
     }
 
@@ -3940,6 +3940,7 @@ simulated function ShrinkHUD();
 
 defaultproperties
 {
+     bEnterringUnlocks=false
      bAllowRiders=true
      UnbuttonedPositionIndex=2
      DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
