@@ -1602,7 +1602,7 @@ static function string ParseChatPercVar(Mutator BaseMutator, controller Who, str
         return Str;
     }
 
-    super.ParseChatPercVar(BaseMutator,Who,Cmd);
+    return Super.ParseChatPercVar(BaseMutator, Who,Cmd);
 }
 
 //Debug function for winning a round (needs admin or local)
