@@ -226,6 +226,16 @@ exec function DeploymentMenu(optional int Tab)
     ClientReplaceMenu("DH_Interface.DHSpawnMenu");
 }
 
+exec function VehicleSay(string Msg)
+{
+    if(Msg == "")
+    {
+        return;
+    }
+
+    super.VehicleSay(Msg);
+}
+
 // Overridden to increase max name length from 20 to 32 chars
 function ChangeName(coerce string S)
 {
