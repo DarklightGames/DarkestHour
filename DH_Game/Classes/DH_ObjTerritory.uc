@@ -86,7 +86,7 @@ var()   array<name>                 AlliesClearedCaptureEvents;
 var()   array<name>                 AxisClearedCaptureEvents;
 
 //Grouped Capture Operations (These will need to be the same in each grouped objective, unless you desire different actions based on the last captured grouped objective)
-var()   array<int>                  GroupedObjectiveReliances; //array of Objective Nums this objective is grouped with (no need to put itself)
+var()   array<int>                  GroupedObjectiveReliances; //array of Objective Nums this objective is grouped with (doesn't need to list itself)
 var()   array<ObjOperationAction>   AlliesCaptureGroupObjActions;
 var()   array<ObjOperationAction>   AxisCaptureGroupObjActions;
 var()   array<name>                 AlliesGroupedCaptureEvents;
@@ -182,7 +182,7 @@ function DoObjectiveAction(ObjOperationAction OOA)
     local bool ToggledStatus;
     local DarkesthourGame DHGame;
 
-    DHGame = DarkesthourGame(Level.Game); //Get Game Info
+    DHGame = DarkesthourGame(Level.Game);
 
     switch (OOA.Operation)
     {
@@ -225,13 +225,13 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     {
         bActive = false;
 
-        //Only turn off the timer if bUsePostCaptureOperations is false, we will turn it off after it's clear of enemies
+        //Only turn off the timer if bUsePostCaptureOperations is false, we will turn it off after it's clear of enemies (in timer)
         if (!bUsePostCaptureOperations)
         {
             SetTimer(0.0, false);
         }
 
-        DisableCapBarsForThisObj(); //this might need to go into the above if statement!
+        DisableCapBarsForThisObj(); //Might want to move this to above if statement, but would need testing
     }
 
     // Give players points for helping with the capture
@@ -302,12 +302,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 //Check if the grouped objective isn't captured for Axis
                 if (!DHGame.Objectives[GroupedObjectiveReliances[i]].isAxis())
                 {
-                    //One of the grouped objectives is not captured for axis yet
+                    //One of the grouped objectives is not captured for Axis yet
                     bGroupedObjNotSame = true;
                 }
             }
 
-            //If all the grouped objectives are captured for axis, do grouped actions
+            //If all the grouped objectives are captured for Axis, do grouped actions
             if (GroupedObjectiveReliances.Length > 0 && !bGroupedObjNotSame)
             {
                 for (i = 0; i < AxisCaptureGroupObjActions.Length; ++i)
@@ -353,15 +353,15 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             //Handle grouped objective checks/operations
             for (i = 0; i < GroupedObjectiveReliances.Length; ++i)
             {
-                //Check if the grouped objective isn't captured for Axis
+                //Check if the grouped objective isn't captured for Allies
                 if (!DHGame.Objectives[GroupedObjectiveReliances[i]].isAllies())
                 {
-                    //One of the grouped objectives is not captured for axis yet
+                    //One of the grouped objectives is not captured for Allies yet
                     bGroupedObjNotSame = true;
                 }
             }
 
-            //If all the grouped objectives are captured for axis, do grouped actions
+            //If all the grouped objectives are captured for Allies, do grouped actions
             if (GroupedObjectiveReliances.Length > 0 && !bGroupedObjNotSame)
             {
                 for (i = 0; i < AlliesCaptureGroupObjActions.Length; ++i)
