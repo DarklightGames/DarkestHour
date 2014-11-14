@@ -5,26 +5,6 @@
 
 class DHSayDeadMessage extends DHStringMessage;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
-var Color       GermanColour;
-var Color       USColour;
-var Color       BritishColour;
-var Color       CanadianColour;
-
-var localized   string  MessagePrefix;
-var localized   string  SpecPrefix;
-
-//=============================================================================
-// Functions
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-// RenderComplexMessage
-//-----------------------------------------------------------------------------
-
 static function RenderComplexMessage(
     Canvas Canvas,
     out float XL,
@@ -50,10 +30,6 @@ static function RenderComplexMessage(
     Canvas.DrawText(MessageString, false);
 }
 
-//-----------------------------------------------------------------------------
-// AssembleString
-//-----------------------------------------------------------------------------
-
 static function string AssembleString(
     HUD myHUD,
     optional int Switch,
@@ -71,10 +47,6 @@ static function string AssembleString(
     else
         return default.MessagePrefix$RelatedPRI_1.PlayerName$": "$MessageString;
 }
-
-//-----------------------------------------------------------------------------
-// GetDHConsoleColor
-//-----------------------------------------------------------------------------
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
@@ -95,10 +67,6 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
     else
         return default.DrawColor;
 }
-
-//=============================================================================
-// defaultproperties
-//=============================================================================
 
 defaultproperties
 {

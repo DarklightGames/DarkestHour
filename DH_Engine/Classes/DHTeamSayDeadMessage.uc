@@ -5,25 +5,6 @@
 
 class DHTeamSayDeadMessage extends DHStringMessage;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
-var Color       GermanColour;
-var Color       USColour;
-var Color       BritishColour;
-var Color       CanadianColour;
-
-var localized   string  MessagePrefix;
-
-//=============================================================================
-// Functions
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-// RenderComplexMessage
-//-----------------------------------------------------------------------------
-
 static function RenderComplexMessage(
     Canvas Canvas,
     out float XL,
@@ -35,8 +16,6 @@ static function RenderComplexMessage(
     optional Object OptionalObject
     )
 {
-    local string LocationName;
-
     if (RelatedPRI_1 == none)
         return;
 
@@ -45,29 +24,15 @@ static function RenderComplexMessage(
     else
         Canvas.DrawColor = default.USColour;
 
-/*  if (RelatedPRI_1.Team.TeamIndex == 0)
-        Canvas.SetDrawColor(192,64,64,255); //DrawColor = default.RussianColor;
-    else
-        Canvas.SetDrawColor(64,128,128,255); //DrawColor = default.GermanColor;
-*/
-
     Canvas.DrawText(default.MessagePrefix$RelatedPRI_1.PlayerName$" ", false);
     Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-    LocationName = RelatedPRI_1.GetLocationName();
 
-    if (LocationName != "")
-        Canvas.DrawText("("$LocationName$"):", false);
-    else
-        Canvas.DrawText(": ", false);
+    Canvas.DrawText(": ", false);
 
     Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
     Canvas.SetDrawColor(255,255,255,255); //DrawColor = default.DrawColor;
     Canvas.DrawText(MessageString, false);
 }
-
-//-----------------------------------------------------------------------------
-// AssembleString
-//-----------------------------------------------------------------------------
 
 static function string AssembleString(
     HUD myHUD,
@@ -76,20 +41,11 @@ static function string AssembleString(
     optional string MessageString
     )
 {
-    local string LocationName;
-
     if (RelatedPRI_1 == none)
         return "";
-    LocationName = RelatedPRI_1.GetLocationName();
-    if (LocationName == "")
-        return default.MessagePrefix$RelatedPRI_1.PlayerName@":"@MessageString;
-    else
-        return default.MessagePrefix$RelatedPRI_1.PlayerName$" ("$LocationName$"): "$MessageString;
-}
 
-//-----------------------------------------------------------------------------
-// GetDHConsoleColor
-//-----------------------------------------------------------------------------
+    return default.MessagePrefix$RelatedPRI_1.PlayerName@":"@MessageString;
+}
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
@@ -110,10 +66,6 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
     else
         return default.DrawColor;
 }
-
-//=============================================================================
-// defaultproperties
-//=============================================================================
 
 defaultproperties
 {

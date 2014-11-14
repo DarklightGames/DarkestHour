@@ -5,13 +5,13 @@
 
 class DHStringMessage extends LocalMessage;
 
-//=============================================================================
-// Functions
-//=============================================================================
+var()   color       GermanColour;
+var()   color       USColour;
+var()   color       BritishColour;
+var()   color       CanadianColour;
 
-//-----------------------------------------------------------------------------
-// AssembleString
-//-----------------------------------------------------------------------------
+var localized   string  MessagePrefix;
+var localized   string  SpecPrefix;
 
 static function string AssembleString(
     HUD myHUD,
@@ -23,23 +23,14 @@ static function string AssembleString(
     return MessageString;
 }
 
-//-----------------------------------------------------------------------------
-// GetDHConsoleColor
-//-----------------------------------------------------------------------------
-
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
     return default.DrawColor;
 }
 
-
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
-     bIsSpecial=false
-     Lifetime=8
-     PosY=0.700000
+    bIsSpecial=false
+    Lifetime=8
+    PosY=0.700000
 }

@@ -5,23 +5,6 @@
 
 class DHSayMessage extends DHStringMessage;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
-var()   color       GermanColour;
-var()   color       USColour;
-var()   color       BritishColour;
-var()   color       CanadianColour;
-
-//=============================================================================
-// Functions
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-// RenderComplexMessage
-//-----------------------------------------------------------------------------
-
 static function RenderComplexMessage(
     Canvas Canvas,
     out float XL,
@@ -47,10 +30,6 @@ static function RenderComplexMessage(
     Canvas.DrawText(MessageString, false);
 }
 
-//-----------------------------------------------------------------------------
-// AssembleString
-//-----------------------------------------------------------------------------
-
 static function string AssembleString(
     HUD myHUD,
     optional int Switch,
@@ -64,10 +43,6 @@ static function string AssembleString(
         return "";
     return RelatedPRI_1.PlayerName$": "$MessageString;
 }
-
-//-----------------------------------------------------------------------------
-// GetDHConsoleColor
-//-----------------------------------------------------------------------------
 
 static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
 {
@@ -89,16 +64,12 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
         return default.DrawColor;
 }
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
-     GermanColour=(B=80,G=80,R=200,A=255)
-     USColour=(B=75,G=170,R=85,A=255)
-     BritishColour=(B=190,G=140,R=64,A=255)
-     CanadianColour=(B=20,G=155,R=160,A=255)
-     bComplexString=true
-     bBeep=true
+    GermanColour=(B=80,G=80,R=200,A=255)
+    USColour=(B=75,G=170,R=85,A=255)
+    BritishColour=(B=190,G=140,R=64,A=255)
+    CanadianColour=(B=20,G=155,R=160,A=255)
+    bComplexString=true
+    bBeep=true
 }
