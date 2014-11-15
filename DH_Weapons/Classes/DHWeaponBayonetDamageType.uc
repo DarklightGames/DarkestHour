@@ -6,6 +6,11 @@
 class DHWeaponBayonetDamageType extends ROWeaponBayonetDamageType
     abstract;
 
+static function string DeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim)
+{
+    return Repl(default.DeathString, "%w", default.WeaponClass.default.ItemName, false);
+}
+
 defaultproperties
 {
     DeathString="%o was stabbed by %k's %w bayonet."

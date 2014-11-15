@@ -6,6 +6,11 @@
 class DHWeaponBashDamageType extends ROWeaponBashDamageType
     abstract;
 
+static function string DeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim)
+{
+    return Repl(default.DeathString, "%w", default.WeaponClass.default.ItemName, false);
+}
+
 defaultproperties
 {
     DeathString="%o was smacked by %k's %w."
