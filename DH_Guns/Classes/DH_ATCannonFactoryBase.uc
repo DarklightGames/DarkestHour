@@ -299,10 +299,6 @@ event VehicleDestroyed(Vehicle V)
     super.VehicleDestroyed(V);
 }
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
 }

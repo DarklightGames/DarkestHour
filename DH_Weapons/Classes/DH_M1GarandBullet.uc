@@ -5,10 +5,6 @@
 
 class DH_M1GarandBullet extends DH_Bullet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      MyVehicleDamage=class'DH_Weapons.DH_M1GarandVehDamType'

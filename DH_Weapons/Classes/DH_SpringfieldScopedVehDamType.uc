@@ -6,10 +6,6 @@
 class DH_SpringfieldScopedVehDamType extends ROVehicleDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt2_tex.deathicons.sniperkill'

@@ -50,10 +50,6 @@ static function string GetString(
     }
 }
 
-//==============================================================================
-// defaultproperties
-//==============================================================================
-
 defaultproperties
 {
      CannotRide="Cannot Ride This Vehicle"

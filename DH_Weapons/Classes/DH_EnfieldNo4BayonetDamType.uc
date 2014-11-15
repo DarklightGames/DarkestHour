@@ -6,10 +6,6 @@
 class DH_EnfieldNo4BayonetDamType extends ROWeaponBayonetDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_EnfieldNo4Weapon'

@@ -6,10 +6,6 @@
 class DH_ColtM1911BashDamType extends ROWeaponBashDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_ColtM1911Weapon'

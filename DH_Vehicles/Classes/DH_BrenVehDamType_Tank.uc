@@ -6,10 +6,6 @@
 class DH_BrenVehDamType_Tank extends ROVehicleDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'

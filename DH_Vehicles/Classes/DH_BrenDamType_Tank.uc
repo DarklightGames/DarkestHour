@@ -6,10 +6,6 @@
 class DH_BrenDamType_Tank extends ROWeaponProjectileDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'

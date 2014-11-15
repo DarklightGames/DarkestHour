@@ -6,10 +6,6 @@
 class DH_EnfieldNo4ScopedVehDamType extends ROVehicleDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt2_tex.deathicons.sniperkill'

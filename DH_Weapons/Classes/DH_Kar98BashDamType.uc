@@ -6,10 +6,6 @@
 class DH_Kar98BashDamType extends ROWeaponBashDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_Kar98Weapon'

@@ -31,11 +31,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     */
 }
 
-
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
 }

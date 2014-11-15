@@ -6,10 +6,6 @@
 class DH_MP40VehDamType extends ROVehicleDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'

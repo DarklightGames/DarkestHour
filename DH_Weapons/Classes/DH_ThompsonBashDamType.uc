@@ -6,10 +6,6 @@
 class DH_ThompsonBashDamType extends ROWeaponBashDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_ThompsonWeapon'

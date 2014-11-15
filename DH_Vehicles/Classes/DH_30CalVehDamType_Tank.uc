@@ -6,10 +6,6 @@
 class DH_30CalVehDamType_Tank extends ROVehicleDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'

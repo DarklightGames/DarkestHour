@@ -6,10 +6,6 @@
 class DH_VehicleCollisionDamType extends ROWeaponDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.mine'

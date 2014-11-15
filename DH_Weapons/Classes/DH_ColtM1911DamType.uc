@@ -6,10 +6,6 @@
 class DH_ColtM1911DamType extends ROWeaponProjectileDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'

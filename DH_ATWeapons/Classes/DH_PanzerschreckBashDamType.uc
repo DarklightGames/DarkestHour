@@ -6,10 +6,6 @@
 class DH_PanzerschreckBashDamType extends ROWeaponBashDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_ATWeapons.DH_PanzerschreckWeapon'

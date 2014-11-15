@@ -6,10 +6,6 @@
 class DH_Kar98DamType extends ROWeaponProjectileDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'

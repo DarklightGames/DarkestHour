@@ -5,10 +5,6 @@
 
 class DH_MG34Bullet extends DH_Bullet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      MyVehicleDamage=class'DH_Weapons.DH_MG34VehDamType'

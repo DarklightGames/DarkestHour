@@ -6,10 +6,6 @@
 class DH_PanzerschreckImpactDamType extends RORocketImpactDamage
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.schreckkill'

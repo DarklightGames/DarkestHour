@@ -6,10 +6,6 @@
 class DH_P08LugerDamType extends ROWeaponProjectileDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'

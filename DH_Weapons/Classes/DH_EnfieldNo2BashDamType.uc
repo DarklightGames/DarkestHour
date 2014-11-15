@@ -6,10 +6,6 @@
 class DH_EnfieldNo2BashDamType extends ROWeaponBashDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_EnfieldNo2Weapon'

@@ -6,10 +6,6 @@
 class DH_M1GrenadeDamType extends ROGrenadeDamType
     abstract;
 
-//=============================================================================
-// defaultproperties  `quit
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'

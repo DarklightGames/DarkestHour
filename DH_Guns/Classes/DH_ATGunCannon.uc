@@ -159,10 +159,6 @@ simulated function int LimitYaw(int yaw)
     return NewYaw;
 }
 
-//==============================================================================
-// defaultproperties
-//==============================================================================
-
 defaultproperties
 {
      FrontArmorFactor=1.000000

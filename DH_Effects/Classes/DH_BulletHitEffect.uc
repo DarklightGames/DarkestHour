@@ -43,10 +43,6 @@ simulated function PostNetBeginPlay()
         Spawn(HitEffects[ST].HitEffect,,, HitLoc, rotator(HitNormal));
 }
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
 }

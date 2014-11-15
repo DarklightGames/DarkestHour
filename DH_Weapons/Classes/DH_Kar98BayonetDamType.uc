@@ -6,10 +6,6 @@
 class DH_Kar98BayonetDamType extends ROWeaponBayonetDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_Kar98Weapon'

@@ -33,10 +33,6 @@ simulated function Material getRolePortrait()
         return DHRoleInfo.MenuImage;
 }
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
 }

@@ -5,10 +5,6 @@
 
 class DH_Kar98Bullet extends DH_Bullet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      MyVehicleDamage=class'DH_Weapons.DH_Kar98VehDamType'

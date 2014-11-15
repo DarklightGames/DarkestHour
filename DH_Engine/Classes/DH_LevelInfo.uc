@@ -40,10 +40,6 @@ var() sound AxisWinsMusic; //Optional override for Axis victory music
 
 var() ESpawnMode SpawnMode;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
     Texture=Texture'DHEngine_Tex.LevelInfo'

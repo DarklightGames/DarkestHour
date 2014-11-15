@@ -39,10 +39,6 @@ static function string GetString(
     }
 }
 
-//==============================================================================
-// defaultproperties
-//==============================================================================
-
 defaultproperties
 {
      GunManned="The Anti-Aircraft Gun Is Fully Crewed"

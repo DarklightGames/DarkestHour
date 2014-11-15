@@ -40,10 +40,6 @@ static function Sound GetHitSound(optional class<DamageType> DamageType)
     return default.GenericDeathSoundGroup;
 }*/
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      BurningPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Burning'

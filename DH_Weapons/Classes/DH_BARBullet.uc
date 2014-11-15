@@ -5,10 +5,6 @@
 
 class DH_BARBullet extends DH_Bullet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      MyVehicleDamage=class'DH_Weapons.DH_BARVehDamType'

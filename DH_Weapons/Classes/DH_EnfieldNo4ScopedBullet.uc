@@ -5,10 +5,6 @@
 
 class DH_EnfieldNo4ScopedBullet extends DH_Bullet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      MyVehicleDamage=class'DH_Weapons.DH_EnfieldNo4ScopedVehDamType'

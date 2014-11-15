@@ -6,10 +6,6 @@
 class DH_MG34VehDamType_Tank extends ROVehicleDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'

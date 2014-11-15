@@ -442,10 +442,6 @@ function Fire(optional float F)
     super.Fire(F);
 }
 
-//==============================================================================
-// defaultproperties
-//==============================================================================
-
 defaultproperties
 {
      OverlayCenterSize=1.000000

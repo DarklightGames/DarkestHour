@@ -6,10 +6,6 @@
 class DH_BazookaBashDamType extends ROWeaponBashDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'

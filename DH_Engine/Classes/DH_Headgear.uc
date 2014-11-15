@@ -8,10 +8,6 @@ class DH_Headgear extends ROHeadgear
 
 var bool bIsHelmet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      bIsHelmet=true

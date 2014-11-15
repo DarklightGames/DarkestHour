@@ -207,11 +207,6 @@ simulated function PostNetReceive()
         Spawn(DestroyedEffect, Owner,, (Location + (DestroyedEffectOffset >> Rotation)));
 }
 
-
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      SensorName="Shurek"

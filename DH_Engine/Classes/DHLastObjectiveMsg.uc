@@ -60,10 +60,6 @@ static function int getIconID(
     }
 }
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      AboutToWin="Last objective -- we have almost won the battle!"

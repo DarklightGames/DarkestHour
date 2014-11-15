@@ -6,10 +6,6 @@
 class DH_PanzerFaustDamType extends ROAntiTankProjectileDamType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt2_tex.deathicons.faustkill'

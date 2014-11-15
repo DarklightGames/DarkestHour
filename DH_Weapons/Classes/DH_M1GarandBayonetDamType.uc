@@ -6,10 +6,6 @@
 class DH_M1GarandBayonetDamType extends ROWeaponBayonetDamageType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'

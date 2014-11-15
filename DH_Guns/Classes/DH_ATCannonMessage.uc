@@ -40,10 +40,6 @@ static function string GetString(
 
 }
 
-//==============================================================================
-// defaultproperties
-//==============================================================================
-
 defaultproperties
 {
      GunManned="The Gun Is Fully Crewed"

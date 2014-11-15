@@ -6,10 +6,6 @@
 class DH_30calDamType extends ROWeaponProjectileDamageType
       abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'

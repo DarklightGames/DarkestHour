@@ -116,11 +116,6 @@ simulated function DrawHUD(Canvas Canvas)
             ActivateOverlay(false);
 }
 
-
-//==============================================================================
-// defaultproperties
-//==============================================================================
-
 defaultproperties
 {
      ScopeCenterScaleX=0.542000

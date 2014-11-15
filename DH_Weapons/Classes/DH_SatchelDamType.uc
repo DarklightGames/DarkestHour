@@ -6,10 +6,6 @@
 class DH_SatchelDamType extends ROSatchelDamType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      TankDamageModifier=0.800000

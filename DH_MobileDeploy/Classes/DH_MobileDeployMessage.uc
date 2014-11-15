@@ -48,10 +48,6 @@ static function string GetString(
 
 }
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      IsFull="The Mobile Deploy Vehicle is full."

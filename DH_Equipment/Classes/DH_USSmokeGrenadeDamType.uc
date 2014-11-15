@@ -6,10 +6,6 @@
 class DH_USSmokeGrenadeDamType extends ROGrenadeDamType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt_tex.deathicons.germgrenade'

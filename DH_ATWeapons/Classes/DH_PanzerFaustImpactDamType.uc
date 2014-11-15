@@ -6,10 +6,6 @@
 class DH_PanzerFaustImpactDamType extends RORocketImpactDamage
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'InterfaceArt2_tex.deathicons.faustkill'

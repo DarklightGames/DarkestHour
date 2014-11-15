@@ -6,10 +6,6 @@
 class DH_BazookaDamType extends ROAntiTankProjectileDamType
     abstract;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.zookakill'

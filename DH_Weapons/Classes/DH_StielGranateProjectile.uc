@@ -115,10 +115,6 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      FuzeLengthTimer=4.500000

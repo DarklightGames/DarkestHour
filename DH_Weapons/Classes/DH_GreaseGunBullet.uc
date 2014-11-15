@@ -5,10 +5,6 @@
 
 class DH_GreaseGunBullet extends DH_Bullet;
 
-//=============================================================================
-// defaultproperties
-//=============================================================================
-
 defaultproperties
 {
      WhizType=2
