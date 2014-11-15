@@ -7,22 +7,19 @@ class DH_BazookaAmmoMsg extends LocalMessage;
 
 var(Messages) localized string RocketLoaded;
 
-
 static function string GetString(
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,
     optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject
     )
-
 {
     switch(Switch)
     {
-            case 0:
-                    return default.RocketLoaded;
-
-            default:
-                return default.RocketLoaded;
+        case 0:
+            return default.RocketLoaded;
+        default:
+            return default.RocketLoaded;
     }
 }
 

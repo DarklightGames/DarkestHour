@@ -442,21 +442,6 @@ simulated function SpawnBomb()
     }
 }
 
-
-
-/*simulated state Reloading
-{
-    simulated function bool WeaponAllowProneChange()
-    {
-        return false;
-    }
-
-    simulated function bool WeaponAllowCrouchChange()
-    {
-        return false;
-    }
-}*/
-
 // Overridden to prevent picking up more than the intended max ammo count
 // MaxNumMags is actually set 1 higher than intended max, to facilitate unusual resupply/fillammo
 function bool HandlePickupQuery(pickup Item)

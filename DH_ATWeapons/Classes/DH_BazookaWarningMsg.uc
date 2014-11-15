@@ -21,18 +21,18 @@ static function string GetString(
 {
     switch(Switch)
     {
-            case 0:
-                return default.NoProneFire;
-            case 1:
-                return default.NeedSupport;
-            case 2:
-                return default.NoHipFire;
-            case 3:
-                return default.NotInIS;
-            case 4:
-                return default.NoProneReload;
-            default:
-                return default.NeedSupport;
+        case 0:
+            return default.NoProneFire;
+        case 1:
+            return default.NeedSupport;
+        case 2:
+            return default.NoHipFire;
+        case 3:
+            return default.NotInIS;
+        case 4:
+            return default.NoProneReload;
+        default:
+            return default.NeedSupport;
     }
 }
 
