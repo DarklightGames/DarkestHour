@@ -1395,12 +1395,12 @@ state Dying
     }
 
 Begin:
-	Sleep(0.2);
-	bInvulnerableBody = false;
-	if (!Level.Game.bGameEnded)
-	{
-	   PlayDyingSound();
-	}
+    Sleep(0.2);
+    bInvulnerableBody = false;
+    if (!Level.Game.bGameEnded)
+    {
+       PlayDyingSound();
+    }
 }
 
 // Prevented damage overlay from overriding burning overlay
@@ -1702,7 +1702,7 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
     }
     else
     {
-        NetUpdateFrequency = Default.NetUpdateFrequency;
+        NetUpdateFrequency = default.NetUpdateFrequency;
         PlayDying(DamageType, HitLocation);
         if (Level.Game.bGameEnded)
             return;
@@ -3417,7 +3417,7 @@ event UpdateEyeHeight(float DeltaTime)
 
     if (bTearOff)
     {
-        EyeHeight = Default.BaseEyeheight;
+        EyeHeight = default.BaseEyeheight;
         bUpdateEyeHeight = false;
         return;
     }

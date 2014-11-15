@@ -481,7 +481,8 @@ static function font GetPlayerNameFont(Canvas C)
         default.OverrideConsoleFontName = "";
     }
 
-    FontSize = Default.PlayerNameFontSize;
+    FontSize = default.PlayerNameFontSize;
+
     if (C.ClipX < 640)
         FontSize++;
     if (C.ClipX < 800)
@@ -1055,7 +1056,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
                     }
 
                     i = (current + 1) % lines.length;
-                   
+
                     while (true)
                     {
                         if (i == pending)
@@ -1254,7 +1255,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
             DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, coords, true, XL, YL, false, true);
 
             // Check if we should draw throttle
-            if (ROPlayer(vehicle.Controller) != none && 
+            if (ROPlayer(vehicle.Controller) != none &&
                 ((ROPlayer(vehicle.Controller).bInterpolatedTankThrottle && threadCraft != none) || (ROPlayer(vehicle.Controller).bInterpolatedVehicleThrottle && threadCraft == none)))
             {
                 // Draw throttle background
@@ -1395,7 +1396,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
 
 //          if (current >= vehicle.VehicleHudOccupantsX.Length - 1 || current < 0)
 //          {
-//              warn("vehicle.WeaponPawns[" $ (i-1) $ "].PositionInArray " $ current $ " causes out-of-bounds access in vehicle.VehicleHudOccupantsX[] (length is " $ 
+//              warn("vehicle.WeaponPawns[" $ (i-1) $ "].PositionInArray " $ current $ " causes out-of-bounds access in vehicle.VehicleHudOccupantsX[] (length is " $
 //                  vehicle.VehicleHudOccupantsX.Length $ ")");
 //          }
 //          else

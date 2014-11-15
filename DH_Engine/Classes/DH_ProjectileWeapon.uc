@@ -1167,18 +1167,18 @@ simulated state IronSightZoomIn extends Busy
         {
             if (ScopeDetail == RO_ModelScopeHigh)
             {
-                TargetDisplayFOV = Default.IronSightDisplayFOVHigh;
-                TargetPVO = Default.XoffsetHighDetail;
+                TargetDisplayFOV = default.IronSightDisplayFOVHigh;
+                TargetPVO = default.XoffsetHighDetail;
             }
             else if (ScopeDetail == RO_ModelScope)
             {
-                TargetDisplayFOV = Default.IronSightDisplayFOV;
-                TargetPVO = Default.XoffsetScoped;
+                TargetDisplayFOV = default.IronSightDisplayFOV;
+                TargetPVO = default.XoffsetScoped;
             }
             else
             {
-                TargetDisplayFOV = Default.IronSightDisplayFOV;
-                TargetPVO = Default.PlayerViewOffset;
+                TargetDisplayFOV = default.IronSightDisplayFOV;
+                TargetPVO = default.PlayerViewOffset;
             }
 
             DisplayFOV = TargetDisplayFOV;
