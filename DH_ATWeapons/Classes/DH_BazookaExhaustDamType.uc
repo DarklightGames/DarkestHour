@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_BazookaExhaustDamType extends ROGrenadeDamType
+class DH_BazookaExhaustDamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties

@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_M1GarandBayonetDamType extends DHWeaponBayonetDamageType
+class DHGrenadeDamageType extends ROGrenadeDamType
     abstract;
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_PanzerschreckExhaustDamType extends ROGrenadeDamType
+class DH_PanzerschreckExhaustDamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties

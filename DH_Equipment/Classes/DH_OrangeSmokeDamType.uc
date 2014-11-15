@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_OrangeSmokeDamType extends ROGrenadeDamType
+class DH_OrangeSmokeDamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties

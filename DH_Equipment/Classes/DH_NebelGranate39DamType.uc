@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_NebelGranate39DamType extends ROGrenadeDamType
+class DH_NebelGranate39DamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties

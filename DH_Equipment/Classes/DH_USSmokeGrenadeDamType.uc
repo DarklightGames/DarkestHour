@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_USSmokeGrenadeDamType extends ROGrenadeDamType
+class DH_USSmokeGrenadeDamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties

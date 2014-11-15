@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_StielGranateDamType extends ROGrenadeDamType
+class DH_StielGranateDamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties

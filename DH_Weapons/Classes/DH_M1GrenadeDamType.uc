@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_M1GrenadeDamType extends ROGrenadeDamType
+class DH_M1GrenadeDamType extends DHGrenadeDamageType
     abstract;
 
 defaultproperties
