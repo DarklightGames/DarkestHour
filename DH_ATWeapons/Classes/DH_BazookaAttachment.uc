@@ -6,9 +6,8 @@
 class DH_BazookaAttachment extends DHWeaponAttachment;
 
 var()   name            ExhaustBoneName;
-var     class<Emitter>          mExhFlashClass;
-var     Emitter                 mExhFlash3rd;
-
+var     class<Emitter>  mExhFlashClass;
+var     Emitter         mExhFlash3rd;
 
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated function PostBeginPlay()
@@ -24,14 +23,21 @@ simulated function PostBeginPlay()
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated event ThirdPersonEffects()
 {
+    local ROPawn P;
 
-    if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
+    P = ROPawn(Instigator);
+
+    if (Level.NetMode == NM_DedicatedServer || P == none)
+    {
         return;
+    }
 
-    if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
+    if (FlashCount > 0 && (FiringMode == 0 || bAltFireFlash))
     {
         if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
+        {
             return;
+        }
 
         WeaponLight();
 
@@ -40,22 +46,20 @@ simulated event ThirdPersonEffects()
 
         mExhFlash3rd = Spawn(mExhFlashClass);
         AttachToBone(mExhFlash3rd, ExhaustBoneName);
-
     }
 
-        if (FlashCount == 0)
-        {
-                ROPawn(Instigator).StopFiring();
-        }
-        else if (FiringMode == 0)
-        {
-                ROPawn(Instigator).StartFiring(false, bRapidFire);
-        }
-        else
-        {
-                ROPawn(Instigator).StartFiring(true, bAltRapidFire);
-        }
-
+    if (FlashCount == 0)
+    {
+        P.StopFiring();
+    }
+    else if (FiringMode == 0)
+    {
+        P.StartFiring(false, bRapidFire);
+    }
+    else
+    {
+        P.StartFiring(true, bAltRapidFire);
+    }
 }
 
 defaultproperties

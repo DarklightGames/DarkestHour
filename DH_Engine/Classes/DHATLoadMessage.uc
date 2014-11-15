@@ -24,7 +24,6 @@ static function string GetString(
             return default.BeenLoaded $ RelatedPRI_1.PlayerName;
         case 2:
             return default.UnLoaded;
-
         default:
             return default.LoadedGunner;
     }
@@ -40,12 +39,18 @@ static function int getIconID(
     if (RelatedPRI_1 != none && RelatedPRI_1.Team != none)
     {
         if (RelatedPRI_1.Team.TeamIndex == AXIS_TEAM_INDEX)
+        {
             return default.iconID;
+        }
         else
+        {
             return default.altIconID;
+        }
     }
     else
+    {
         return default.iconID;
+    }
 }
 
 defaultproperties

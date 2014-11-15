@@ -315,6 +315,8 @@ simulated function Fire(float F)
 
 simulated function PostFire()
 {
+    super.PostFire();
+
     if (Role == ROLE_Authority)
     {
         UpdateResupplyStatus();
@@ -451,7 +453,9 @@ simulated function PlayAssistedReload()
         SetTimer(AnimTimer - (AnimTimer * 0.1), false);
     }
     else
+    {
         SetTimer(AnimTimer,false);
+    }
 
     if (Instigator.IsLocallyControlled())
     {
@@ -480,11 +484,15 @@ function PerformReload()
     {
         if (bPlusOneLoading)
         {
-            //If there's only one bullet left(the one in the chamber), discard the clip
+            //If there's only one bullet left (the one in the chamber), discard the clip
             if (CurrentMagLoad == 1)
+            {
                 PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
+            }
             else
+            {
                 PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad - 1;
+            }
 
             AmmoCharge[0] = 1;
             bDidPlusOneReload = true;
