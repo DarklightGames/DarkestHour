@@ -216,6 +216,78 @@ function bool ResupplyAmmo()
     return bDidResupply;
 }
 
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    // Fix for suicide death messages
+    if (DamageType == class'Suicided')
+    {
+        DamageType = class'ROSuicided';
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+    }
+    else if (DamageType == class'ROSuicided')
+    {
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+    }
+
+    // Matt: shell's ProcessTouch now calls TD on VehicleWeapon instead of VehicleBase & for vehicle MG this is not counted as hit on vehicle itself
+    // But we can add any desired functionality here or in subclasses, e.g. shell could wreck MG
+
+    // Matt: removed as shell's ProcessTouch now calls TakeDamage directly on Driver if he was hit
+    //  if (HitDriver(Hitlocation, Momentum))
+//  {
+//      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+//  }
+}
+
+// Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
+simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
+{
+    local  coords  C;
+    local  vector  HeadLoc, B, M, Diff;
+    local  float   t, DotMM, Distance;
+
+    if (VehHitpoints[Index].PointBone == '')
+    {
+        return false;
+    }
+
+    C = GetBoneCoords(VehHitpoints[Index].PointBone);
+    HeadLoc = C.Origin + (VehHitpoints[Index].PointHeight * VehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
+    HeadLoc = HeadLoc + (VehHitpoints[Index].PointOffset >> rotator(C.Xaxis));
+
+    // Express snipe trace line in terms of B + tM
+    B = Loc;
+    M = Ray * 150.0;
+
+    // Find point-line squared distance
+    Diff = HeadLoc - B;
+    t = M dot Diff;
+
+    if (t > 0.0)
+    {
+        DotMM = M dot M;
+
+        if (t < DotMM)
+        {
+            t = t / DotMM;
+            Diff = Diff - (t * M);
+        }
+        else
+        {
+            t = 1.0;
+            Diff -= M;
+        }
+    }
+    else
+    {
+        t = 0.0;
+    }
+
+    Distance = Sqrt(Diff Dot Diff);
+
+    return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
+}
+
 defaultproperties
 {
      FireAttachBone="mg_pitch"

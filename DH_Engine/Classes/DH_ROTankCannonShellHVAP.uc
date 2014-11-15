@@ -6,189 +6,207 @@
 class DH_ROTankCannonShellHVAP extends DH_ROTankCannonShell;
 
 
+// Matt: re-worked, with commentary below
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    local ROVehicle HitVehicle;
+    local ROVehicle       HitVehicle;
     local ROVehicleWeapon HitVehicleWeapon;
-    local bool bHitVehicleDriver;
+    local vector          TempHitLocation, HitNormal, SavedVelocity;
+    local array<int>      HitPoints;
+    local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
-    local vector TempHitLocation, HitNormal;
-    local array<int>    HitPoints;
-
-    local float         TouchAngle;     // dummy variable
-
-    HitVehicleWeapon = ROVehicleWeapon(Other);
-    HitVehicle = ROVehicle(Other.Base);
-
-    TouchAngle=1.57;
-
-    if (Other == none || (SavedTouchActor != none && SavedTouchActor == Other) || Other.bDeleteMe ||
-        ROBulletWhipAttachment(Other) != none )
+    log("HVAP.ProcessTouch: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
+    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') || 
+        Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
     }
 
     SavedTouchActor = Other;
+    HitVehicleWeapon = ROVehicleWeapon(Other);
+    HitVehicle = ROVehicle(Other.Base);
 
-    if ((Other != instigator) && (Other.Base != instigator) && (Other.Owner != instigator) && (!Other.IsA('Projectile') || Other.bProjTarget))
+    // We hit a VehicleWeapon
+    if (HitVehicleWeapon != none && HitVehicle != none)
     {
-        if (HitVehicleWeapon != none && HitVehicle != none)
+        // We hit the Driver's collision box, not the actual VehicleWeapon
+        if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
         {
-            SavedHitActor = Pawn(Other.Base);
-
-            if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
+            // We actually hit the Driver
+            if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
             {
+                if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
+                {
+                    FirstHit = false;
+                    DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
+                }
 
-                if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
+                log("HVAP.ProcessTouch: hit driver, should damage him & shell continue"); // TEMP
+                if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
                 {
-                    bHitVehicleDriver = true;
+                    VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
                 }
-                else
-                {
-                    return;
-                }
+
+                Velocity *= 0.8; // hitting the Driver's body doesn't cause shell to explode, but we'll slow it down a bit
+            }
+            else
+            {
+                log("HVAP.ProcessTouch: hit driver area but not driver, shell should continue"); // TEMP
+                SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
             }
 
+            return; // exit so shell carries on, as it only hit Driver's collision box not actual VehicleWeapon (even if we hit the Driver, his body won't stop shell)
+        }
+
+        SavedHitActor = HitVehicle;
+
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
+            if (bIsAlliedShell)
+            {
+                Level.Game.Broadcast(self, "Dist:" @ VSize(LaunchLocation - Location) / 66.002 @ "yards, ImpactVel:" @ VSize(Velocity) / 18.395 @ "fps");
+            }
+            else
+            {
+                Level.Game.Broadcast(self, "Dist:" @ VSize(LaunchLocation - Location) / 60.352 @ "m, ImpactVel:" @ VSize(Velocity) / 60.352 @ "m/s");
+            }
+        }
+
+        // We hit a tank cannon (turret) but failed to penetrate
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateHVAP(HitLocation, Normal(Velocity), 
+            GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellImpactDamage, bShatterProne))
+        {
             if (bDebuggingText && Role == ROLE_Authority)
             {
-               if (!bIsAlliedShell)
-               {
-                  Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/60.352)$" m, ImpactVel: "$VSize(Velocity) / 60.352$" m/s");
-               }
-               else
-               {
-                  Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/66.002)$" yards, ImpactVel: "$VSize(Velocity) / 18.395$" fps");
-               }
+                Level.Game.Broadcast(self, "Turret ricochet!");
             }
 
-            if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateHVAP(HitLocation, Normal(Velocity), GetPenetration(LaunchLocation-HitLocation), TouchAngle, ShellImpactDamage, bShatterProne))
+            if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
             {
-                if (bDebuggingText && Role == ROLE_Authority)
-                {
-                    Level.Game.Broadcast(self, "Turret Ricochet!");
-                }
-
-                if (Drawdebuglines && Firsthit)
-                {
-                    FirstHit=false;
-                    DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
-                }
-
-                if (!bShatterProne || !DH_ROTankCannon(HitVehicleWeapon).bRoundShattered)
-                {
-                    // Don't save hitting this actor since we deflected
-                    SavedHitActor = none;
-                    // Don't update the position any more
-                    bUpdateSimulatedPosition=false;
-
-                    DoShakeEffect();
-                    DeflectWithoutNormal(Other, HitLocation);
-                    if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
-                       ROBot(Instigator.Controller).NotifyIneffectiveAttack(HitVehicle);
-                    return;
-                }
-                else
-                {
-                    ShatterExplode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
-
-                    // Don't update the position any more and don't move the projectile any more.
-                    bUpdateSimulatedPosition=false;
-                    SetPhysics(PHYS_none);
-                    SetDrawType(DT_none);
-
-                    HurtWall = none;
-                    if (Role == ROLE_Authority)
-                    {
-                       MakeNoise(1.0);
-                    }
-                    return;
-                }
+                FirstHit = false;
+                DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
             }
 
-            // Don't update the position any more and don't move the projectile any more.
-            bUpdateSimulatedPosition=false;
-            SetPhysics(PHYS_none);
-            SetDrawType(DT_none);
-
-            if (Role == ROLE_Authority)
+            // Round deflects off the turret
+            if (!bShatterProne || !DH_ROTankCannon(HitVehicleWeapon).bRoundShattered)
             {
-                if (!Other.Base.bStatic && !Other.Base.bWorldGeometry)
+                SavedHitActor = none; // don't save hitting this actor since we deflected
+                bUpdateSimulatedPosition = false; // don't replicate the position any more
+
+                DoShakeEffect();
+                DeflectWithoutNormal(HitVehicleWeapon, HitLocation);
+
+                if (Instigator != none && ROBot(Instigator.Controller) != none)
                 {
-                    if (Instigator == none || Instigator.Controller == none)
-                    {
-                        Other.Base.SetDelayedDamageInstigatorController(InstigatorController);
-                        if (bHitVehicleDriver)
-                        {
-                           Other.SetDelayedDamageInstigatorController(InstigatorController);
-                        }
-                    }
-
-                    if (Drawdebuglines && Firsthit)
-                    {
-                        FirstHit=false;
-                        DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 255, 0, 0);
-                    }
-
-                    if (savedhitactor != none)
-                    {
-                        Other.Base.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
-                    }
-
-                    if (bHitVehicleDriver)
-                    {
-                        Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
-                    }
-
-                    if (Other != none && !Other.bDeleteMe)
-                    {
-                        if (DamageRadius > 0 && Vehicle(Other.Base) != none && Vehicle(Other.Base).Health > 0)
-                            Vehicle(Other.Base).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, HitLocation);
-                        HurtWall = Other.Base;
-                    }
+                    ROBot(Instigator.Controller).NotifyIneffectiveAttack(HitVehicle);
                 }
-                MakeNoise(1.0);
             }
+            // Round shatters on turret
+            else
+            {
+                // Don't update the position any more and don't move the projectile any more
+                bUpdateSimulatedPosition = false;
+                SavedVelocity = Velocity; // PHYS_none zeroes Velocity, so we have to save it
+                SetPhysics(PHYS_none);
+                SetDrawType(DT_none);
 
-            Explode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
-            HurtWall = none;
+                ShatterExplode(HitLocation + ExploWallOut * Normal(-SavedVelocity), Normal(-SavedVelocity));
+                HurtWall = none;
+            }
 
             return;
         }
-        else
+
+        // Don't update the position any more and don't move the projectile any more
+        bUpdateSimulatedPosition = false;
+        SavedVelocity = Velocity; // PHYS_none zeroes Velocity, so we have to save it
+        SetPhysics(PHYS_none);
+        SetDrawType(DT_none);
+
+        if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
         {
-            if ((Pawn(Other) != none || RODestroyableStaticMesh(Other) != none) && Role==Role_Authority)
-            {
-                if (ROPawn(Other) != none)
-                {
-
-                    if (!Other.bDeleteMe)
-                    {
-                        Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535 * Normal(Velocity)), HitPoints, HitLocation,, 0);
-
-                        if (Other == none)
-                            return;
-                        else
-                            ROPawn(Other).ProcessLocationalDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
-
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
-                }
-            }
-            else if (Role==Role_Authority)
-            {
-                if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
-                    ROBot(Instigator.Controller).NotifyIneffectiveAttack(HitVehicle);
-            }
-
-            Explode(HitLocation,vect(0,0,1));
+            log("HVAP.ProcessTouch: DrawStayingDebugLine for turret penetration: Velocity =" @ Velocity @ " SavedVelocity =" @ SavedVelocity); // TEMP
+            FirstHit = false;
+            DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
         }
+
+        if (Role == ROLE_Authority)
+        {
+            if (Instigator == none || Instigator.Controller == none)
+            {
+                HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
+                HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
+            }
+
+            HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
+
+            if (DamageRadius > 0 && HitVehicle.Health > 0)
+            {
+                HitVehicle.DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, HitLocation);
+            }
+
+            HurtWall = HitVehicle;
+        }
+
+        Explode(HitLocation + ExploWallOut * Normal(-SavedVelocity), Normal(-SavedVelocity));
+        HurtWall = none;
+
+        return;
+    }
+    // We hit something other than a VehicleWeapon
+    else
+    {
+        // We hit a soldier ... potentially - first we need to run a HitPointTrace to make sure we actually hit part of his body, not just his collision area
+        if (Other.IsA('ROPawn'))
+        {
+            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation, , 0);
+
+            // We hit one of the body's hit points, so register a hit on the soldier
+            if (Other != none)
+            {
+                log("HVAP.ProcessTouch: successful HitPointTrace on ROPawn, calling ProcessLocationalDamage on it"); // TEMP
+                if (Role == ROLE_Authority)
+                {
+                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
+                }
+
+                Velocity *= 0.8; // hitting a body doesn't cause shell to explode, but we'll slow it down a bit
+            }
+            else log("HVAP.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
+
+            return; // exit without exploding, so shell continues on its flight
+        }
+        // We hit some other kind of pawn or a destroyable mesh
+        else if (Other.IsA('RODestroyableStaticMesh') || Other.IsA('Pawn'))
+        {
+            if (Role == ROLE_Authority)
+            {
+                Other.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+            }
+
+            // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a shell explode
+            if (Other.IsA('RODestroyableStaticMesh') && RODestroyableStaticMesh(Other).bWontStopBullets)
+            {
+                log("HVAP.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
+                return;
+            }
+            else if (Other.IsA('RODestroyableStaticMesh')) log("HVAP.ProcessTouch: exploding on destroyable SM"); // TEMP
+            else log("HVAP.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
+        }
+        // Otherwise we hit something we aren't going to damage
+        else if (Role == ROLE_Authority && Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
+        {
+            log("HVAP.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
+            ROBot(Instigator.Controller).NotifyIneffectiveAttack();
+        }
+
+        // Don't update the position any more and don't move the projectile any more
+        bUpdateSimulatedPosition = false;
+        SetPhysics(PHYS_none);
+        SetDrawType(DT_none);
+
+        Explode(HitLocation, vect(0.0,0.0,1.0));
+        HurtWall = none;
     }
 }
 
