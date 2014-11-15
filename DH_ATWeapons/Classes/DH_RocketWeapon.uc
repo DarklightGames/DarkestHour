@@ -519,11 +519,6 @@ function PerformReload()
 
     AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
 
-    if (Instigator.IsHumanControlled())
-    {
-        PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 0);
-    }
-
     if (AmmoAmount(0) > 0)
     {
         if (DHWeaponAttachment(ThirdPersonActor) != none)
