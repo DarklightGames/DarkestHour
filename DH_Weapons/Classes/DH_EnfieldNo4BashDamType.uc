@@ -3,16 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_EnfieldNo4BashDamType extends ROWeaponBashDamageType
+class DH_EnfieldNo4BashDamType extends DHWeaponBashDamageType
     abstract;
 
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_EnfieldNo4Weapon'
-     DeathString="%o was smacked with %k's Lee Enfield No.4."
-     FemaleSuicide="%o turned the gun on herself."
-     MaleSuicide="%o turned the gun on himself."
-     GibModifier=0.000000
-     KDamageImpulse=400.000000
-     HumanObliterationThreshhold=1000001
 }

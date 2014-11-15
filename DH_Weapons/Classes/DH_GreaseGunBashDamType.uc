@@ -3,16 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_GreaseGunBashDamType extends ROWeaponBashDamageType
+class DH_GreaseGunBashDamType extends DHWeaponBashDamageType
     abstract;
 
 defaultproperties
 {
      WeaponClass=class'DH_Weapons.DH_GreaseGunWeapon'
-     DeathString="%o was smacked with %k's Grease Gun."
-     FemaleSuicide="%o turned the gun on herself."
-     MaleSuicide="%o turned the gun on himself."
-     GibModifier=0.000000
-     KDamageImpulse=400.000000
-     HumanObliterationThreshhold=1000001
 }
