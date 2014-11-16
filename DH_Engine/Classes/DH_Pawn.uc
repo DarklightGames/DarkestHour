@@ -277,7 +277,7 @@ function PossessedBy(Controller C)
             if (HeadgearClass != none && Headgear == none && !bHatShotOff)
                 Headgear = Spawn(HeadgearClass, self);
 
-            for (i = 0; i < ArrayCount(AmmoPouchClasses); i++)
+            for (i = 0; i < arraycount(AmmoPouchClasses); i++)
             {
                 if (AmmoPouchClasses[i] == none)
                     break;
@@ -461,7 +461,7 @@ simulated function ProcessHitFX()
         return;
     }
 
-    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % ArrayCount(HitFX))
+    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % arraycount(HitFX))
     {
         j++;
         if (j > 30)
@@ -494,7 +494,7 @@ simulated function ProcessHitFX()
 //
 //          if (!PhysicsVolume.bWaterVolume) // don't attach effects under water
 //          {
-//              for(i = 0; i < ArrayCount(HitEffects); i++)
+//              for(i = 0; i < arraycount(HitEffects); i++)
 //              {
 //                  if (HitEffects[i] == none)
 //                      continue;

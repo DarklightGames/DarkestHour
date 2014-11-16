@@ -316,7 +316,7 @@ function FillRoleList()
 
     DHGRI = DHGameReplicationInfo(GRI);
 
-    for (i = 0; i < ArrayCount(DHGRI.DHAxisRoles); i++)
+    for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
     {
         if (desiredTeam == AXIS_TEAM_INDEX)
             role = DHGRI.DHAxisRoles[i];
@@ -344,13 +344,13 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
 
     if (team == AXIS_TEAM_INDEX)
     {
-        for (i = 0; i < ArrayCount(DHGRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
             if (DHGRI.DHAxisRoles[i] == role)
                 return i;
     }
     else if (team == ALLIES_TEAM_INDEX)
     {
-        for (i = 0; i < ArrayCount(DHGRI.DHAlliesRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); i++)
             if (DHGRI.DHAlliesRoles[i] == role)
                 return i;
     }
@@ -402,7 +402,7 @@ function AutoPickRole()
     if (desiredTeam == AXIS_TEAM_INDEX || desiredTeam == ALLIES_TEAM_INDEX)
     {
         // Pick the first non-full role
-        for (i = 0; i < ArrayCount(DHGRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
         {
             if (desiredTeam == AXIS_TEAM_INDEX)
             {

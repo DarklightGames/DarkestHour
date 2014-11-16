@@ -84,7 +84,7 @@ function AttachToPawn(Pawn P)
 
     if (TeamCanUse == AXIS_TEAM_INDEX || TeamCanUse == NEUTRAL_TEAM_INDEX)
     {
-        for(i = 0; i < ArrayCount(GRI.CarriedAxisRadios); ++i)
+        for(i = 0; i < arraycount(GRI.CarriedAxisRadios); ++i)
         {
             if (GRI.CarriedAxisRadios[i] == none)
             {
@@ -98,7 +98,7 @@ function AttachToPawn(Pawn P)
 
     if (TeamCanUse == ALLIES_TEAM_INDEX || TeamCanUse == NEUTRAL_TEAM_INDEX)
     {
-        for(i = 0; i < ArrayCount(GRI.CarriedAlliedRadios); ++i)
+        for(i = 0; i < arraycount(GRI.CarriedAlliedRadios); ++i)
         {
             if (GRI.CarriedAlliedRadios[i] == none)
             {

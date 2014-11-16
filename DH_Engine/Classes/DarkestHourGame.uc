@@ -143,7 +143,7 @@ function PostBeginPlay()
         DHGRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
         DHGRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
 
-        for (k = 0; k < ArrayCount(DHGRI.AxisRallyPoints); k++)
+        for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); k++)
         {
             DHGRI.AlliedRallyPoints[k].OfficerPRI = none;
             DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0,0,0);
@@ -152,7 +152,7 @@ function PostBeginPlay()
         }
 
         // Clear help requests array
-        for (k = 0; k < ArrayCount(DHGRI.AlliedHelpRequests); k++)
+        for (k = 0; k < arraycount(DHGRI.AlliedHelpRequests); k++)
         {
             DHGRI.AlliedHelpRequests[k].OfficerPRI = none;
             DHGRI.AlliedHelpRequests[k].requestType = 255;
@@ -308,7 +308,7 @@ function CheckResupplyVolumes()
 
     // Activate any vehicle factories that are actived based on spawn areas
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-    for(i = 0; i < ArrayCount(DHResupplyAreas); i++)
+    for(i = 0; i < arraycount(DHResupplyAreas); i++)
     {
         if (DHResupplyAreas[i] == none)
             continue;
@@ -684,7 +684,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 
     if (ThisBot != none)
     {
-        MyRole = Rand(ArrayCount(DHAxisRoles));
+        MyRole = Rand(arraycount(DHAxisRoles));
 
         do
         {
@@ -717,9 +717,9 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
                 {
                     MyRole++;
 
-                    //if (MyRole >= ArrayCount(AxisRoles))
+                    //if (MyRole >= arraycount(AxisRoles))
 
-                    if ((BotTeamNum == 0 && MyRole >= ArrayCount(DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= ArrayCount(DHAxisRoles)))
+                    if ((BotTeamNum == 0 && MyRole >= arraycount(DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= arraycount(DHAxisRoles)))
                         MyRole = 0;
                 }
             }
@@ -1003,7 +1003,7 @@ function AddRole(RORoleInfo NewRole)
 
     if (NewRole.Side == SIDE_Allies)
     {
-        if (AlliesRoleIndex >= ArrayCount(DHAlliesRoles))
+        if (AlliesRoleIndex >= arraycount(DHAlliesRoles))
         {
             warn(NewRole @ "ignored when adding Allied roles to the map, exceeded limit");
             return;
@@ -1015,7 +1015,7 @@ function AddRole(RORoleInfo NewRole)
     }
     else
     {
-        if (AxisRoleIndex >= ArrayCount(DHAxisRoles))
+        if (AxisRoleIndex >= arraycount(DHAxisRoles))
         {
             warn(NewRole @ "ignored when adding Axis roles to the map, exceeded limit");
             return;
@@ -1029,7 +1029,7 @@ function AddRole(RORoleInfo NewRole)
 
 function RORoleInfo GetRoleInfo(int Team, int Num)
 {
-    if (Team > 1 || Num < 0 || Num >= ArrayCount(DHAxisRoles))
+    if (Team > 1 || Num < 0 || Num >= arraycount(DHAxisRoles))
         return none;
 
     if (Team == AXIS_TEAM_INDEX)
@@ -1045,7 +1045,7 @@ function bool RoleLimitReached(int Team, int Num)
     local DHGameReplicationInfo DHGRI;
 
     // This shouldn't even happen, but if it does, just say the limit was reached
-    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= ArrayCount(DHAxisRoles))
+    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= arraycount(DHAxisRoles))
         return true;
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -1065,7 +1065,7 @@ function bool HumanWantsRole(int Team, int Num)
     local DHGameReplicationInfo DHGRI;
 
     // This shouldn't even happen, but if it does, just say the limit was reached
-    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= ArrayCount(DHAxisRoles))
+    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= arraycount(DHAxisRoles))
         return false;
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -1108,11 +1108,11 @@ function int GetVehicleRole(int Team, int Num)
     local int i;
 
     // This shouldn't even happen, but if it does, just say the limit was reached
-    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= ArrayCount(DHAxisRoles))
+    if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && DHAlliesRoles[Num] == none) || Num >= arraycount(DHAxisRoles))
         return -1;
 
     // Should probably do this team specific in case the teams have different amounts of roles
-    for (i = 0; i < ArrayCount(DHAxisRoles); i++)
+    for (i = 0; i < arraycount(DHAxisRoles); i++)
     {
         if (GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i))
         {
@@ -1129,7 +1129,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 
     if (ThisBot != none)
     {
-        MyRole = Rand(ArrayCount(DHAxisRoles));
+        MyRole = Rand(arraycount(DHAxisRoles));
 
         do
         {
@@ -1150,7 +1150,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
             {
                 Count++;
 
-                if (Count > ArrayCount(DHAxisRoles))
+                if (Count > arraycount(DHAxisRoles))
                 {
                     log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
                     return -1;
@@ -1159,7 +1159,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
                 {
                     MyRole++;
 
-                    if (MyRole >= ArrayCount(DHAxisRoles))
+                    if (MyRole >= arraycount(DHAxisRoles))
                         MyRole = 0;
                 }
             }
@@ -1183,7 +1183,7 @@ function UpdateRoleCounts()
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    for (i = 0; i < ArrayCount(DHAxisRoles); i++)
+    for (i = 0; i < arraycount(DHAxisRoles); i++)
     {
         if (DHAxisRoles[i] != none)
         {
@@ -1192,7 +1192,7 @@ function UpdateRoleCounts()
         }
     }
 
-    for (i = 0; i < ArrayCount(DHAlliesRoles); i++)
+    for (i = 0; i < arraycount(DHAlliesRoles); i++)
     {
         if (DHAlliesRoles[i] != none)
         {
@@ -1369,11 +1369,11 @@ function bool RoleExists(byte TeamID, DH_RoleInfo RI)
     local int i;
 
     if (TeamID == 0)
-        for(i = 0; i < ArrayCount(DHAxisRoles); i++)
+        for(i = 0; i < arraycount(DHAxisRoles); i++)
             if (DHAxisRoles[i] == RI)
                 return true;
     if (TeamID == 1)
-        for(i = 0; i < ArrayCount(DHAlliesRoles); i++)
+        for(i = 0; i < arraycount(DHAlliesRoles); i++)
             if (DHAlliesRoles[i] == RI)
                 return true;
 
@@ -1508,7 +1508,7 @@ function ResetMortarTargets()
         return;
 
     //Clear mortar allied targets.
-    for(k = 0; k < ArrayCount(GRI.AlliedMortarTargets); k++)
+    for(k = 0; k < arraycount(GRI.AlliedMortarTargets); k++)
     {
         GRI.AlliedMortarTargets[k].Location = vect(0, 0, 0);
         GRI.AlliedMortarTargets[k].HitLocation = vect(0, 0, 0);
@@ -1517,7 +1517,7 @@ function ResetMortarTargets()
     }
 
     //Clear mortar german targets.
-    for(k = 0; k < ArrayCount(GRI.GermanMortarTargets); k++)
+    for(k = 0; k < arraycount(GRI.GermanMortarTargets); k++)
     {
         GRI.GermanMortarTargets[k].Location = vect(0, 0, 0);
         GRI.GermanMortarTargets[k].HitLocation = vect(0, 0, 0);

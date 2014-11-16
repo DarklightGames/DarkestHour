@@ -40,7 +40,7 @@ LoopAnim(AnimName, AnimRate);               //DH - loop the anim
 
     // Init key info.
     super.BeginPlay();
-    KeyNum         = Clamp(KeyNum, 0, ArrayCount(KeyPos)-1);
+    KeyNum         = Clamp(KeyNum, 0, arraycount(KeyPos)-1);
     PhysAlpha      = 0.0;
     StartKeyNum = KeyNum;
 

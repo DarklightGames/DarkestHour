@@ -18,7 +18,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG1.ManageComponent(co_PurgeCacheDays);
 
-    for (i = 0; i < ArrayCount(PurgeCacheDaysText); i++)
+    for (i = 0; i < arraycount(PurgeCacheDaysText); i++)
     {
         co_PurgeCacheDays.AddItem(PurgeCacheDaysText[i]);
     }
@@ -50,7 +50,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
             PurgeCacheDays = int(s);
 
-            for(i = 0; i < ArrayCount(PurgeCacheDaysValues); ++i)
+            for(i = 0; i < arraycount(PurgeCacheDaysValues); ++i)
             {
                 if(PurgeCacheDays == PurgeCacheDaysValues[i])
                 {

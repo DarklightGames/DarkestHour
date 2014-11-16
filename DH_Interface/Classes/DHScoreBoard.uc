@@ -125,7 +125,7 @@ simulated function UpdateScoreBoard (Canvas C)
         }
     }
 
-    for (i = 0; i < ArrayCount(ROGameReplicationInfo(GRI).Objectives); i++)
+    for (i = 0; i < arraycount(ROGameReplicationInfo(GRI).Objectives); i++)
     {
         if (ROGameReplicationInfo(GRI).Objectives[i] == none)
             continue;

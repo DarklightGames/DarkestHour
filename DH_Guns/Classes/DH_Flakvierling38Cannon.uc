@@ -245,7 +245,7 @@ simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLoca
     local coords BarrelBoneCoords;
     local vector CurrentFireOffset;
 
-    if (Index < 0 || Index >= ArrayCount(BarrelBones))
+    if (Index < 0 || Index >= arraycount(BarrelBones))
     {
         return;
     }
