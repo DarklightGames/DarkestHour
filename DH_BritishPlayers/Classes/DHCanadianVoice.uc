@@ -3,24 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHCanadianVoice extends ROVoicePack;
+class DHCanadianVoice extends DHVoicePack;
 
 #exec OBJ LOAD FILE=..\Sounds\DH_US_Voice_Infantry.uax
 #exec OBJ LOAD FILE=..\Sounds\DH_US_Voice_vehicle.uax
-
-static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
-{
-    local name broadcasttype;
-    local vector myLoc;
-    //Log("ROVoicePack::PlayerSpeech() Type = "$Type$" Index = "$Index);
-        broadcasttype = 'GLOBAL';
-    if (Controller(PackOwner).Pawn == none)
-        myLoc = PackOwner.Location;
-    else
-        myLoc = Controller(PackOwner).Pawn.Location;
-
-    Controller(PackOwner).SendVoiceMessage(Controller(PackOwner).PlayerReplicationInfo, SquadLeader, Type, Index, broadcasttype, Controller(PackOwner).Pawn, myLoc);
-}
 
 defaultproperties
 {
@@ -78,9 +64,6 @@ defaultproperties
      ExtraSound(0)=SoundGroup'DH_US_Voice_Infantry.insults.i_will_kill_you'
      ExtraSound(1)=SoundGroup'DH_US_Voice_Infantry.insults.no_retreat'
      ExtraSound(2)=SoundGroup'DH_US_Voice_Infantry.insults.insult'
-     ShoutRadius=1024.000000
-     WhisperRadius=128.000000
-     bUseLocationalVoice=true
      AckSound(0)=SoundGroup'DH_US_Voice_Infantry.responses.yes'
      AckSound(1)=SoundGroup'DH_US_Voice_Infantry.responses.no'
      AckSound(2)=SoundGroup'DH_US_Voice_Infantry.responses.thanks'
