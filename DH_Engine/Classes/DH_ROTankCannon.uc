@@ -2393,24 +2393,22 @@ simulated function bool ConsumeAmmo(int Mode)
     return false;
 }
 
+// Modified to use DH's MainAmmoChargeExtra array
 function bool GiveInitialAmmo()
 {
-    local bool bDidResupply;
-
-    // If we don't need any ammo return false
-    if (MainAmmoCharge[0] != InitialPrimaryAmmo || MainAmmoCharge[1] != InitialSecondaryAmmo || MainAmmoCharge[2] != InitialTertiaryAmmo
-        || AltAmmoCharge != InitialAltAmmo || NumAltMags != default.NumAltMags)
+    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo || 
+        AltAmmoCharge != InitialAltAmmo || NumMags != default.NumMags || NumSecMags != default.NumSecMags || NumTertMags != default.NumTertMags || NumAltMags != default.NumAltMags)
     {
-        bDidResupply = true;
+        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
+        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
+        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
+        AltAmmoCharge = InitialAltAmmo;
+        NumAltMags = default.NumAltMags;
+
+        return true;
     }
 
-    MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
-    MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-    MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
-    AltAmmoCharge = InitialAltAmmo;
-    NumAltMags = default.NumAltMags;
-
-    return bDidResupply;
+    return false;
 }
 
 simulated function Timer()
