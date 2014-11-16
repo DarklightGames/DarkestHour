@@ -206,6 +206,27 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
+    if (MainAmmoCharge[0] < InitialPrimaryAmmo)
+    {
+        MainAmmoCharge[0] = InitialPrimaryAmmo;
+
+        bDidResupply = true;
+    }
+
+    if (MainAmmoCharge[1] < InitialSecondaryAmmo)
+    {
+        MainAmmoCharge[1] = InitialSecondaryAmmo;
+
+        bDidResupply = true;
+    }
+
+    if (AltAmmoCharge < InitialAltAmmo)
+    {
+        ++AltAmmoCharge;
+
+        bDidResupply = true;
+    }
+
     if (NumMags < default.NumMags)
     {
         ++NumMags;
@@ -214,6 +235,11 @@ function bool ResupplyAmmo()
     }
 
     return bDidResupply;
+}
+
+simulated function int getNumMags()
+{
+    return NumMags;
 }
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
