@@ -5,22 +5,19 @@
 
 class DH_RocketWeapon extends DH_SemiAutoWeapon;
 
-var()   int         Ranges[3];              // The angle to launch the projectile at different ranges
-var     int         RangeIndex;                         // Current range setting
-var     name        IronIdleAnimOne;                // Iron idle animation for range setting one
-var     name        IronIdleAnimTwo;                    // Iron idle animation for range setting two
-var     name        IronIdleAnimThree;                  // Iron idle animation for range setting three
-var     name        AssistedMagEmptyReloadAnim;     // 1st person animation for assisted empty reload
-var     name        AssistedMagPartialReloadAnim;      // 1st person animation for assisted partial reload
-var     int         NumMagsToResupply;          // Number of ammo mags to add when this weapon has been resupplied
+var()   int                     Ranges[3];                      // The angle to launch the projectile at different ranges
+var     int                     RangeIndex;                     // Current range setting
+var     name                    IronIdleAnims[3];               // Iron idle animation for range setting one
+var     name                    AssistedMagEmptyReloadAnim;     // 1st person animation for assisted empty reload
+var     name                    AssistedMagPartialReloadAnim;   // 1st person animation for assisted partial reload
+var     int                     NumMagsToResupply;              // Number of ammo mags to add when this weapon has been resupplied
 var     class<LocalMessage>     WarningMessageClass;
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerSetRange;
-
-    reliable if (Role==ROLE_Authority)
+    reliable if (Role == ROLE_Authority)
         ClientDoAssistedReload;
 }
 
@@ -30,14 +27,18 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     if (PrimaryAmmoArray.Length > MaxNumPrimaryMags)
+    {
         PrimaryAmmoArray.Remove(MaxNumPrimaryMags, (PrimaryAmmoArray.Length - MaxNumPrimaryMags));
+    }
 }
 
 // Overridden to support cycling the rocket aiming ranges
 simulated exec function Deploy()
 {
     if (IsBusy() || !bUsingSights)
+    {
         return;
+    }
 
     CycleRange();
 }
@@ -51,7 +52,7 @@ simulated function CycleRange()
     }
     else
     {
-        RangeIndex=0;
+        RangeIndex = 0;
     }
 
     DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
@@ -62,38 +63,27 @@ simulated function CycleRange()
     }
 
     if (Role < ROLE_Authority)
+    {
         ServerSetRange(RangeIndex);
+    }
 }
 
 // Switch the rocket aiming ranges on the server
 function ServerSetRange(int NewIndex)
 {
-    RangeIndex=NewIndex;
+    RangeIndex = NewIndex;
 
     DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 }
 
-// Ovveriden to play the rocket animations for different ranges
+//==============================================================================
+// Overiden to play the rocket animations for different ranges
+//==============================================================================
 simulated function PlayIdle()
 {
-    local name Anim;
-
     if (bUsingSights)
     {
-        switch(RangeIndex)
-        {
-            case 0:
-                Anim = IronIdleAnimOne;
-                break;
-            case 1:
-                Anim = IronIdleAnimTwo;
-                break;
-            case 2:
-                Anim = IronIdleAnimThree;
-                break;
-        }
-
-        LoopAnim(Anim, IdleAnimRate, 0.2);
+        LoopAnim(IronIdleAnims[RangeIndex], IdleAnimRate, 0.2);
     }
     else
     {
@@ -101,8 +91,11 @@ simulated function PlayIdle()
     }
 }
 
+//==============================================================================
 // Overriden to support projectile weapon specific functionality
-// Overriden so that when raised, the weapon has no rocket, thus requiring resupply - this prevents player from loading weapon before going into action
+// Overriden so that when raised, the weapon has no rocket, thus requiring
+// resupply - this prevents player from loading weapon before going into action
+//==============================================================================
 simulated state RaisingWeapon
 {
     simulated function BeginState()
@@ -110,13 +103,19 @@ simulated state RaisingWeapon
         local int Mode;
         local name Anim;
 
-        if (PrimaryAmmoArray.Length > 1) // This prevents rocket being lost on vehicle exit and when spawning with no other weapons
+        if (PrimaryAmmoArray.Length > 1)
+        {
+            // This prevents rocket being lost on vehicle exit and when spawning
+            // with no other weapons
             AmmoCharge[0] = 0;
+        }
 
-        // If we have quickly raised our sights right after putting the weapon away,
-        // take us out of ironsight mode
+        // If we have quickly raised our sights right after putting the weapon
+        // away, take us out of ironsight mode
         if (bUsingSights)
+        {
             ZoomOut(false);
+        }
 
         // Reset any zoom values
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -144,11 +143,13 @@ simulated state RaisingWeapon
         if (ClientState == WS_Hidden)
         {
             PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
-            ClientPlayForceFeedback(SelectForce);  // jdf
+
+            ClientPlayForceFeedback(SelectForce);
 
             if (Instigator.IsLocallyControlled())
             {
-                // determines if bayonet capable weapon should come up with bayonet on or off
+                // Determines if bayonet capable weapon should come up with
+                // bayonet on or off
                 if (bHasBayonet)
                 {
                     if (bBayonetMounted)
@@ -161,14 +162,16 @@ simulated state RaisingWeapon
                     }
                 }
 
-                if ((Mesh!=none) && HasAnim(Anim))
+                if (Mesh != none && HasAnim(Anim))
+                {
                     PlayAnim(Anim, SelectAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_BringUp;
         }
 
-        SetTimer(GetAnimDuration(Anim, SelectAnimRate),false);
+        SetTimer(GetAnimDuration(Anim, SelectAnimRate), false);
 
         for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
         {
@@ -181,9 +184,11 @@ simulated state RaisingWeapon
     }
 }
 
+//==============================================================================
 // Overriden to support empty put away anims
 // Overridden to add a rocket back into a player's inventory instead of making
 // it disappear
+//==============================================================================
 simulated state LoweringWeapon
 {
     simulated function BeginState()
@@ -202,7 +207,9 @@ simulated state LoweringWeapon
             CurrentMagCount++;
 
             if (Instigator.IsLocallyControlled())
-                PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage',2);
+            {
+                PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'DHATLoadMessage', 2);
+            }
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
@@ -214,7 +221,6 @@ simulated state LoweringWeapon
             Anim = PutDownAnim;
         }
 
-
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
             if (Instigator.IsLocallyControlled())
@@ -222,19 +228,25 @@ simulated state LoweringWeapon
                 for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
                 {
                     if (FireMode[Mode].bIsFiring)
+                    {
                         ClientStopFire(Mode);
+                    }
                 }
 
                 if (ClientState == WS_BringUp)
-                    TweenAnim(SelectAnim,PutDownTime);
+                {
+                    TweenAnim(SelectAnim, PutDownTime);
+                }
                 else if (HasAnim(Anim))
+                {
                     PlayAnim(Anim, PutDownAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_PutDown;
         }
 
-        SetTimer(GetAnimDuration(Anim, PutDownAnimRate),false);
+        SetTimer(GetAnimDuration(Anim, PutDownAnimRate), false);
 
         for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
         {
@@ -246,20 +258,37 @@ simulated state LoweringWeapon
 
 function UpdateResupplyStatus()
 {
-    if (CurrentMagCount > 0 && AmmoAmount(0) <= 0)
+    local DH_Pawn P;
+    local bool bIsLoaded;
+    local bool bHasAmmo;
+    local bool bHasFullAmmo;
+
+    P = DH_Pawn(Instigator);
+
+    if (P == none || P.Weapon != self)
     {
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-        DH_Pawn(Instigator).bWeaponNeedsReload = true;
+        // P is none or weapon is not currently equipped
+        return;
     }
-    else if (CurrentMagCount < MaxNumPrimaryMags - 1)
+
+    bIsLoaded = AmmoAmount(0) > 0;
+    bHasAmmo = CurrentMagCount > 0;
+    bHasFullAmmo = CurrentMagCount >= MaxNumPrimaryMags - 1;
+
+    if (bHasAmmo && !bIsLoaded)
     {
-        ROPawn(Instigator).bWeaponNeedsResupply = true;
-        DH_Pawn(Instigator).bWeaponNeedsReload = false;
+        P.bWeaponNeedsResupply = false;
+        P.bWeaponNeedsReload = true;
+    }
+    else if (!bHasFullAmmo)
+    {
+        P.bWeaponNeedsResupply = true;
+        P.bWeaponNeedsReload = false;
     }
     else
     {
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-        DH_Pawn(Instigator).bWeaponNeedsReload = false;
+        P.bWeaponNeedsResupply = false;
+        P.bWeaponNeedsReload = false;
     }
 }
 
@@ -269,21 +298,25 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (Role == ROLE_Authority)
     {
-        ROPawn(Instigator).bWeaponCanBeResupplied = true;
-        DH_Pawn(Instigator).bWeaponCanBeReloaded = true;
-
         UpdateResupplyStatus();
     }
 }
 
 simulated function bool PutDown()
 {
-    ROPawn(Instigator).bWeaponCanBeResupplied = false;
-    ROPawn(Instigator).bWeaponNeedsResupply = false;
-    DH_Pawn(Instigator).bWeaponCanBeReloaded = false;
-    DH_Pawn(Instigator).bWeaponNeedsReload = false;
+    local DH_Pawn P;
 
     return super.PutDown();
+
+    P = DH_Pawn(Instigator);
+
+    if (P != none)
+    {
+        P.bWeaponCanBeResupplied = false;
+        P.bWeaponNeedsResupply = false;
+        P.bWeaponCanBeReloaded = false;
+        P.bWeaponNeedsReload = false;
+    }
 }
 
 simulated function Fire(float F)
@@ -323,7 +356,9 @@ simulated function PostFire()
     }
 }
 
-// Don't autoswitch when we run out of ammo
+//==============================================================================
+// Don't auto-switch when we run out of ammo
+//==============================================================================
 simulated function OutOfAmmo()
 {
     if (!HasAmmo())
@@ -340,7 +375,9 @@ simulated function OutOfAmmo()
     }
 }
 
-// Overridden to prevent reloading unless weapon is empty and player is not proned
+//==============================================================================
+// Overridden to prevent reloading if out of ammo or player is prone
+//==============================================================================
 simulated function bool AllowReload()
 {
     if (Instigator.bIsCrawling)
@@ -388,8 +425,8 @@ Begin:
         }
     }
 
-    // Sometimes the client will get switched out of ironsight mode before getting to
-    // the reload function. This should catch that.
+    // Sometimes the client will get switched out of ironsight mode before
+    // getting to the reload function. This should catch that.
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
         if (DisplayFOV != default.DisplayFOV)
@@ -425,13 +462,12 @@ simulated state AssistedReloading extends Reloading
 
 // Overridden to avoid taking player out of sights
 Begin:
-    if (bUsingSights)
-    {
-    }
     DH_Pawn(Instigator).bWeaponNeedsReload = false;
 }
 
+//==============================================================================
 // Function to play assisted reload animations instead of standard ones
+//==============================================================================
 simulated function PlayAssistedReload()
 {
     local name Anim;
@@ -454,7 +490,7 @@ simulated function PlayAssistedReload()
     }
     else
     {
-        SetTimer(AnimTimer,false);
+        SetTimer(AnimTimer, false);
     }
 
     if (Instigator.IsLocallyControlled())
@@ -463,7 +499,9 @@ simulated function PlayAssistedReload()
     }
 }
 
+//==============================================================================
 // Overwritten to play rocket reload message
+//==============================================================================
 function PerformReload()
 {
     local int CurrentMagLoad;
@@ -484,7 +522,8 @@ function PerformReload()
     {
         if (bPlusOneLoading)
         {
-            //If there's only one bullet left (the one in the chamber), discard the clip
+            // If there's only one bullet left (the one in the chamber), discard
+            // the clip
             if (CurrentMagLoad == 1)
             {
                 PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
@@ -527,12 +566,9 @@ function PerformReload()
 
     AddAmmo(PrimaryAmmoArray[CurrentMagIndex], 0);
 
-    if (AmmoAmount(0) > 0)
+    if (AmmoAmount(0) > 0 && DHWeaponAttachment(ThirdPersonActor) != none)
     {
-        if (DHWeaponAttachment(ThirdPersonActor) != none)
-        {
-            DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
-        }
+        DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
     }
 
     ClientForceAmmoUpdate(0, AmmoAmount(0));
@@ -540,15 +576,10 @@ function PerformReload()
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
 }
 
-simulated state PendingAction
-{
-Begin:
-    if (bUsingSights)
-    {
-    }
-}
-
-// Overridden to set resupply variables and to stop already loaded rockets being lost on weapon pickup
+//==============================================================================
+// Overridden to set resupply variables and to stop already loaded rockets being
+// lost on weapon pickup
+//==============================================================================
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
     local int InitialAmount;
@@ -576,7 +607,9 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 function DropFrom(vector StartLocation)
 {
     if (!bCanThrow)
+    {
         return;
+    }
 
     ROPawn(Instigator).bWeaponCanBeResupplied = false;
     ROPawn(Instigator).bWeaponNeedsResupply = false;
@@ -588,22 +621,28 @@ function DropFrom(vector StartLocation)
 
 simulated function Destroyed()
 {
-    if (Role == ROLE_Authority && Instigator!= none && ROPawn(Instigator) != none)
+    local DH_Pawn P;
+
+    P = DH_Pawn(Instigator);
+
+    if (Role == ROLE_Authority && P != none)
     {
-        ROPawn(Instigator).bWeaponCanBeResupplied = false;
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-        DH_Pawn(Instigator).bWeaponCanBeReloaded = false;
-        DH_Pawn(Instigator).bWeaponNeedsReload = false;
+        P.bWeaponCanBeResupplied = false;
+        P.bWeaponNeedsResupply = false;
+        P.bWeaponCanBeReloaded = false;
+        P.bWeaponNeedsReload = false;
     }
 
     super.Destroyed();
 }
 
+//==============================================================================
 // Overridden to prevent picking up more than the intended max ammo count
-// MaxNumMags is actually set 1 higher than intended max, to facilitate unusual resupply/fillammo
-function bool HandlePickupQuery(pickup Item)
+// MaxNumMags is actually set 1 higher than intended max, to facilitate unusual
+// resupply/fillammo
+//==============================================================================
+function bool HandlePickupQuery(Pickup Item)
 {
-//    local WeaponPickup wpu;
     local int i, j;
     local bool bAddedMags;
 
@@ -692,8 +731,10 @@ function bool AssistedReload()
 {
     local bool bReloadAllowed;
 
-    if (bUsingSights && AmmoAmount(0) == 0 && CurrentMagCount > 0) //&& (instigator.bIsCrouched || instigator.bRestingWeapon)
+    if (bUsingSights && AmmoAmount(0) == 0 && CurrentMagCount > 0)
+    {
         bReloadAllowed = true;
+    }
 
     if (bReloadAllowed)
     {
@@ -712,13 +753,12 @@ function bool AssistedReload()
     }
 }
 
-
+//==============================================================================
 // This rocket has been resupplied by another player
+//==============================================================================
 function bool ResupplyAmmo()
 {
-    local int InitialAmount, i;
-
-    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
+    local int i;
 
     if (CurrentMagCount < MaxNumPrimaryMags - 1 && AmmoAmount(0) == 0)
     {
@@ -726,7 +766,7 @@ function bool ResupplyAmmo()
         {
             if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
             {
-                PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
+                PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
             }
         }
 
@@ -739,10 +779,8 @@ function bool ResupplyAmmo()
 
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 function bool IsATWeapon()
@@ -750,13 +788,22 @@ function bool IsATWeapon()
     return true;
 }
 
-//**************************************************************************************************************************
+function bool FillAmmo()
+{
+    local bool bDidFillAmmo;
+
+    bDidFillAmmo = super.FillAmmo();
+
+    UpdateResupplyStatus();
+
+    return bDidFillAmmo;
+}
 
 defaultproperties
 {
-     IronIdleAnimOne="Iron_idle"
-     IronIdleAnimTwo="iron_idleMid"
-     IronIdleAnimThree="iron_idleFar"
+     IronIdleAnims(0)="Iron_idle"
+     IronIdleAnims(1)="iron_idleMid"
+     IronIdleAnims(2)="iron_idleFar"
      AssistedMagEmptyReloadAnim="reloadA"
      AssistedMagPartialReloadAnim="reloadA"
      NumMagsToResupply=1
