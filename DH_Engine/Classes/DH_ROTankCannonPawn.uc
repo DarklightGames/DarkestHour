@@ -657,7 +657,22 @@ function float GetAltAmmoReloadState()
     {
         ProportionOfReloadRemaining = Gun.FireCountdown / GetSoundDuration(ROTankCannon(Gun).ReloadSound);
 
-        return Ceil(4.0 * ProportionOfReloadRemaining) / 4.0; // round to increments of 0.25
+        if (ProportionOfReloadRemaining >= 0.75)
+        {
+            return 1.0;
+        }
+        else if (ProportionOfReloadRemaining >= 0.5)
+        {
+            return 0.65;
+        }
+        else if (ProportionOfReloadRemaining >= 0.25)
+        {
+            return 0.45;
+        }
+        else
+        {
+            return 0.25;
+        }
     }
 }
 
