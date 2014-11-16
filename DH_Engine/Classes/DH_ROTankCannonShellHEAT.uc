@@ -77,7 +77,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    Switch(ST)
+                    switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:
@@ -197,7 +197,7 @@ simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    Switch(ST)
+                    switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:
@@ -299,7 +299,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
     log("HEAT.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
-    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') || 
+    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
@@ -356,7 +356,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateHEAT(HitLocation, Normal(Velocity), 
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateHEAT(HitLocation, Normal(Velocity),
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellImpactDamage, bIsHEATRound))
         {
             if (bDebuggingText && Role == ROLE_Authority)
@@ -881,7 +881,7 @@ simulated function Destroyed()
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    Switch(ST)
+                    switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:

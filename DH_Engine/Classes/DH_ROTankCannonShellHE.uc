@@ -18,7 +18,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
     log("HE.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
-    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') || 
+    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
@@ -75,7 +75,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity), 
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity),
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
         {
             if (bDebuggingText && Role == ROLE_Authority)
@@ -351,7 +351,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
             if (EffectIsRelevant(Location,false))
             {
-                Switch(ST)
+                switch(ST)
                 {
                     case EST_Snow:
                     case EST_Ice:
@@ -515,7 +515,7 @@ simulated function Destroyed()
                 PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
                 if (EffectIsRelevant(SavedHitLocation,false))
                 {
-                    Switch(ST)
+                    switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:

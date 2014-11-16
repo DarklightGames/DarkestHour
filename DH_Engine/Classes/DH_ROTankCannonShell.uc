@@ -24,7 +24,7 @@ simulated function PostBeginPlay()
 {
 
     // Set a longer lifespan for the shell if there is a possibility of a very long Range shot
-    Switch(Level.ViewDistanceLevel)
+    switch(Level.ViewDistanceLevel)
     {
         case VDL_Default_1000m:
             break;
@@ -138,7 +138,7 @@ simulated function Destroyed()
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    Switch(ST)
+                    switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:
@@ -249,7 +249,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    Switch(ST)
+                    switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:
