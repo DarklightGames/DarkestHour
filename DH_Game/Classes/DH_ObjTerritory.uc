@@ -709,6 +709,44 @@ function Timer()
     UpdateCompressedCapProgress();
 }
 
+//Theel: Overridden to correctly turn off capture bars for DH objective areas
+function DisableCapBarsForThisObj()
+{
+    local Pawn apawn;
+    local ROPawn P;
+    local ROVehicle ROVeh;
+    local ROVehicleWeaponPawn VehWepPawn;
+
+    // Go through and update capture bars
+    foreach DynamicActors(class'pawn', apawn)
+    {
+        P = ROPawn(apawn);
+        ROVeh = ROVehicle(apawn);
+        VehWepPawn = ROVehicleWeaponPawn(apawn);
+
+        if ( P != none )
+        {
+            //Log("P.CurrentCapArea & 0x0F: " $ (P.CurrentCapArea & 0x0F) @ "ObjNum: " $ ObjNum);
+            if ((P.CurrentCapArea & 0x0F) == ObjNum)
+                P.CurrentCapArea = 255;
+        }
+
+        // Disable the capture bar for rovehicles
+        if (  P == none && ROVeh != none )
+        {
+            if ((ROVeh.CurrentCapArea & 0x0F) == ObjNum)
+                ROVeh.CurrentCapArea = 255;
+        }
+
+        // Disable the capture bar for rovehiclepawns
+        if (  P == none && ROVeh == none && VehWepPawn != none)
+        {
+            if ((VehWepPawn.CurrentCapArea & 0x0F) == ObjNum)
+                VehWepPawn.CurrentCapArea = 255;
+        }
+    }
+}
+
 defaultproperties
 {
      bVehiclesCanCapture=true
