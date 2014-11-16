@@ -65,9 +65,9 @@ simulated event ThirdPersonEffects()
 defaultproperties
 {
      ExhaustBoneName="ejector"
-     mExhFlashClass=class'DH_ATWeapons.DH_Bazooka3rdPersonExhaustFX'
+     mExhFlashClass=class'DH_Effects.DH_Bazooka3rdPersonExhaustFX'
      PA_AssistedReloadAnim="crouch_reloadA_bazooka"
-     mMuzFlashClass=class'DH_ATWeapons.DH_Bazooka3rdPersonMuzzleFX'
+     mMuzFlashClass=class'DH_Effects.DH_Bazooka3rdPersonMuzzleFX'
      MuzzleBoneName="Muzzle"
      PA_MovementAnims(0)="stand_jogF_kar"
      PA_MovementAnims(1)="stand_jogB_kar"

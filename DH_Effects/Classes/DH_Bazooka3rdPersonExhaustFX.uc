@@ -33,7 +33,7 @@ defaultproperties
          LifetimeRange=(Min=8.000000,Max=12.000000)
          StartVelocityRange=(X=(Min=-100.000000,Max=-20.000000),Y=(Min=-2.000000,Max=-5.000000),Z=(Min=-2.000000,Max=5.000000))
      End Object
-     Emitters(0)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter0'
+     Emitters(0)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter0'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter1
          UseColorScale=true
@@ -60,7 +60,7 @@ defaultproperties
          LifetimeRange=(Min=0.500000,Max=1.000000)
          StartVelocityRange=(X=(Min=-300.000000,Max=-200.000000),Y=(Min=-2.000000,Max=-5.000000),Z=(Min=-2.000000,Max=5.000000))
      End Object
-     Emitters(1)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter1'
+     Emitters(1)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter1'
 
      Begin Object Class=SpriteEmitter Name=SpriteEmitter2
          UseColorScale=true
@@ -92,7 +92,7 @@ defaultproperties
          LifetimeRange=(Min=0.200000,Max=0.300000)
          StartVelocityRange=(X=(Min=-200.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
      End Object
-     Emitters(2)=SpriteEmitter'DH_ATWeapons.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter2'
+     Emitters(2)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonExhaustFX.SpriteEmitter2'
 
      AutoDestroy=true
      bLightChanged=true
