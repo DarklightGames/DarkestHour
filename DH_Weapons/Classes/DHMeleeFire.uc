@@ -8,7 +8,6 @@ class DHMeleeFire extends ROMeleeFire
 
 const SoundRadius = 32.000000;
 
-// TODO: Work out the hit effect and sound system for this
 function DoTrace(vector Start, Rotator Dir)
 {
     local vector End, HitLocation, HitNormal;
@@ -29,14 +28,8 @@ function DoTrace(vector Start, Rotator Dir)
     // if the player we hit was within range
     End = Start + 10000 * X;
 
-    //Instigator.ClearStayingDebugLines();
-
     // do precision hit point trace to see if we hit a player or something else
     Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start);
-
-    // Debugging
-    //log("VSize(Start-HitLocation) ="$VSize(Start-HitLocation));
-    //Instigator.DrawStayingDebugLine(Start, Start+GetTraceRange()* X, 0,255,0);
 
     if (Other == none || VSizeSquared(Start-HitLocation) > GetTraceRangeSquared())
     {
@@ -66,35 +59,29 @@ function DoTrace(vector Start, Rotator Dir)
 
             Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, TempVec);
 
-            // Debugging
-            //Instigator.DrawStayingDebugLine(TempVec, TempVec+GetTraceRange()* X, 255,255,0);
-
             if (Other != none)
             {
-                if (VSizeSquared(Start-HitLocation) < GetTraceRangeSquared())
+                if (VSizeSquared(Start - HitLocation) < GetTraceRangeSquared())
                 {
                     break;
                 }
-                else
-                {
-                    Other = none;
-                }
+
+                Other = none;
             }
         }
     }
 
-    if (Other != none && (VSizeSquared(Start-HitLocation) > GetTraceRangeSquared()))
+    if (Other != none && (VSizeSquared(Start - HitLocation) > GetTraceRangeSquared()))
     {
-        Other=none;
         return;
     }
 
     if (Other == none)
     {
-        Other = Instigator.Trace(HitLocation, HitNormal, End, Start, true,);
-        if (VSizeSquared(Start-HitLocation) > GetTraceRangeSquared())
+        Other = Instigator.Trace(HitLocation, HitNormal, End, Start, true);
+
+        if (VSizeSquared(Start - HitLocation) > GetTraceRangeSquared())
         {
-            Other=none;
             return;
         }
 
@@ -104,34 +91,30 @@ function DoTrace(vector Start, Rotator Dir)
             {
                 if (Weapon.bBayonetMounted)
                 {
-                    Weapon.PlaySound(GroundStabSound,SLOT_None,FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundStabSound, SLOT_None,FireVolume,, SoundRadius,, true);
                 }
                 else
                 {
-                    Weapon.PlaySound(GroundBashSound,SLOT_None,FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundBashSound, SLOT_None,FireVolume,, SoundRadius,, true);
                 }
             }
 
-            Other=none;
             return;
         }
     }
 
     if (Other != none && Other != Instigator && Other.Base != Instigator)
     {
-
         if (Weapon.bBayonetMounted)
         {
             scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime); // result 0 to 1
             Damage = BayonetDamageMin + scale * (BayonetDamageMax - BayonetDamageMin);
-            //log("Damage scale = "$scale$" Damage is "$Damage);
             ThisDamageType = BayonetDamageType;
         }
         else
         {
             scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime); // result 0 to 1
             Damage = DamageMin + scale * (DamageMax - DamageMin);
-            //log("Damage scale = "$scale$" Damage is "$Damage);
             ThisDamageType = DamageType;
         }
 
@@ -139,44 +122,39 @@ function DoTrace(vector Start, Rotator Dir)
         {
             // Update hit effect except for pawns (blood) other than vehicles.
             if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume')))
+            {
                 WeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other, HitLocation, HitNormal);
-
+            }
 
             HitPawn = ROPawn(Other);
 
             if (HitPawn != none)
             {
-                 // Hit detection debugging
-                 /*log("PreLaunchTrace hit "$HitPawn.PlayerReplicationInfo.PlayerName);
-                 HitPawn.HitStart = Start;
-                 HitPawn.HitEnd = End;*/
-
                  if (!HitPawn.bDeleteMe)
                  {
-                    DamageHitPoint[0]= HitPoints[HitPawn.GetHighestDamageHitIndex(HitPoints)];
-                    HitPawn.ProcessLocationalDamage(Damage, Instigator, HitLocation, MomentumTransfer*X,ThisDamageType,DamageHitPoint);
+                    DamageHitPoint[0] = HitPoints[HitPawn.GetHighestDamageHitIndex(HitPoints)];
+
+                    HitPawn.ProcessLocationalDamage(Damage, Instigator, HitLocation, MomentumTransfer * X, ThisDamageType, DamageHitPoint);
+
                     if (Weapon.bBayonetMounted)
                     {
-                        Weapon.PlaySound(PlayerStabSound,SLOT_None,FireVolume,, SoundRadius,, true);
+                        Weapon.PlaySound(PlayerStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
                     }
                     else
                     {
-                        Weapon.PlaySound(PlayerBashSound,SLOT_None,1.0,, SoundRadius,, true);
+                        Weapon.PlaySound(PlayerBashSound, SLOT_None, 1.0,, SoundRadius,, true);
                     }
                  }
-                 // Hit detection debugging
-                 //if (Level.NetMode == NM_Standalone)
-                 //   HitPawn.DrawBoneLocation();
             }
             else
             {
                 if (Weapon.bBayonetMounted)
                 {
-                    Weapon.PlaySound(GroundStabSound,SLOT_None, FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
                 }
                 else
                 {
-                    Weapon.PlaySound(GroundBashSound,SLOT_None, FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundBashSound, SLOT_None, FireVolume,, SoundRadius,, true);
                 }
 
                 Other.TakeDamage(Damage, Instigator, HitLocation, MomentumTransfer * X, ThisDamageType);
@@ -188,31 +166,24 @@ function DoTrace(vector Start, Rotator Dir)
         {
             if (RODestroyableStaticMesh(Other) != none)
             {
-                Other.TakeDamage(Damage, Instigator, HitLocation, MomentumTransfer*X, ThisDamageType);
+                Other.TakeDamage(Damage, Instigator, HitLocation, MomentumTransfer * X, ThisDamageType);
             }
 
             if (WeaponAttachment(Weapon.ThirdPersonActor) != none)
             {
-                WeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other,HitLocation,HitNormal);
+                WeaponAttachment(Weapon.ThirdPersonActor).UpdateHit(Other, HitLocation, HitNormal);
             }
 
             if (Weapon.bBayonetMounted)
             {
-                Weapon.PlaySound(GroundStabSound,SLOT_None,FireVolume,, SoundRadius,, true);
+                Weapon.PlaySound(GroundStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
             }
             else
             {
-                Weapon.PlaySound(GroundBashSound,SLOT_None,FireVolume,, SoundRadius,, true);
+                Weapon.PlaySound(GroundBashSound, SLOT_None, FireVolume,, SoundRadius,, true);
             }
         }
-    } // end of if (Other != none && (Other != Instigator || ReflectNum > 0))
-    else
-    {
-         HitLocation = End;
-         HitNormal = vect(0,0,0);
     }
-
-    return;
 }
 
 defaultproperties
