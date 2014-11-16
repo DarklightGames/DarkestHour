@@ -136,14 +136,14 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
         // Spawn the tracer from the tip of the third person weapon
         else
         {
-            Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start,true);
+            Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start, true);
 
             if (Other != none)
             {
                 Other = none;
 
                 // Make sure tracer wouldn't spawn inside of something
-                Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin,true);
+                Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin, true);
 
                 if (Other == none)
                 {
@@ -181,14 +181,14 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
             // Spawn the tracer from the tip of the third person weapon
             else
             {
-                Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start,true);
+                Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start, true);
 
                 if (Other != none)
                 {
                     Other = none;
 
                     // Make sure tracer wouldn't spawn inside of something
-                    Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin,true);
+                    Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin, true);
 
                     if (Other == none)
                     {

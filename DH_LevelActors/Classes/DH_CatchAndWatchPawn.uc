@@ -29,7 +29,7 @@ state Watch
 {
     function BeginState()
     {
-        SetTimer(1,true);
+        SetTimer(1, true);
     }
     function Timer()
     {

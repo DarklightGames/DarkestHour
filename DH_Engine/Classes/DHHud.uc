@@ -243,7 +243,7 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
     //C.TextSize(PRI.PlayerName, strX, strY);
     C.StrLen(PRI.PlayerName, XL, YL);
     C.SetPos(ScreenLocX - 0.5*XL , ScreenLocY - YL);
-    C.DrawText(PRI.PlayerName,true);
+    C.DrawText(PRI.PlayerName, true);
 
     C.SetPos(ScreenLocX, ScreenLocY);
 }
@@ -1397,7 +1397,7 @@ function DrawPlayerNames(Canvas C)
     }
 
     ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0,0,1);
-    HitActor = trace(HitLocation,HitNormal,ViewPos + 1600 * vector(PawnOwner.Controller.Rotation),ViewPos,true);
+    HitActor = Trace(HitLocation,HitNormal,ViewPos + 1600 * vector(PawnOwner.Controller.Rotation),ViewPos, true);
 
     //CHECK FOR MORTAR, Basnett 2011
     if (HitActor != none && DH_Pawn(PawnOwner) != none && DH_MortarVehicle(HitActor) != none)

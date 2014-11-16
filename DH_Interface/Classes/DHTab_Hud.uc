@@ -32,7 +32,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     {
         case ch_SimpleColours:
             bSimpleColours = class'DHHud'.default.bSimpleColours;
-            ch_SimpleColours.SetComponentValue(bSimpleColours,true);
+            ch_SimpleColours.SetComponentValue(bSimpleColours, true);
             break;
         case ch_ShowDeathMessages:
              bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;

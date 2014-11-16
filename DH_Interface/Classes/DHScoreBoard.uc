@@ -242,11 +242,11 @@ simulated function UpdateScoreBoard (Canvas C)
     }
 
     Y += cellHeight;
-    DrawCell(C,PlayerText $ " (" $ GECount $ ")",0,X,Y,CalcX(7,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,PlayerText $ " (" $ GECount $ ")",0,X,Y,CalcX(7,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
 
-    DrawCell(C,RoleText,0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,ScoreText,1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,PingText,1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,RoleText,0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,ScoreText,1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,PingText,1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
     Y += cellHeight;
     for(i = 0; i < GECount; i++)
     {
@@ -377,9 +377,9 @@ simulated function UpdateScoreBoard (Canvas C)
 
     Y += cellHeight;
 
-    DrawCell(C,TotalsText$" : ",0,CalcX(BaseGermanX,C),Y,CalcX(11,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,string(AxisTotalScore),1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,string(AvgPing[0]),1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,TotalsText$" : ",0,CalcX(BaseGermanX,C),Y,CalcX(11,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,string(AxisTotalScore),1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,string(AvgPing[0]),1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
 
     LeftY = Y;
 
@@ -411,10 +411,10 @@ simulated function UpdateScoreBoard (Canvas C)
     }
     Y += cellHeight;
 
-    DrawCell(C,PlayerText $ " (" $ RUCount $ ")",0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,RoleText,0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,ScoreText,1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,PingText,1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,PlayerText $ " (" $ RUCount $ ")",0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,RoleText,0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,ScoreText,1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,PingText,1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
     Y += cellHeight;
     for(i = 0; i < RUCount; i++)
     {
@@ -545,9 +545,9 @@ simulated function UpdateScoreBoard (Canvas C)
 
     Y += cellHeight;
 
-    DrawCell(C,TotalsText$" : ",0,CalcX(BaseRussianX,C),Y,CalcX(11,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,string(AlliesTotalScore),1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
-    DrawCell(C,string(AvgPing[1]),1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight,true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,TotalsText$" : ",0,CalcX(BaseRussianX,C),Y,CalcX(11,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,string(AlliesTotalScore),1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
+    DrawCell(C,string(AvgPing[1]),1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.Default.WhiteColor,TeamColor);
 
     RightY = Y;
 

@@ -67,7 +67,7 @@ function StartGame(string GameURL, bool bAlt)
     }
         else
                 PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute, false);
-            C.CloseAll(false,true);
+            C.CloseAll(false, true);
 }
 
 defaultproperties

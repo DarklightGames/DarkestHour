@@ -334,7 +334,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                 // If the person is looking at themselves in third person, spawn the tracer from the tip of the 3rd person weapon
                 if (WeapAttach != none && !Instigator.IsFirstPerson())
                 {
-                    Other = WeapAttach.Trace(HitLocation, HitNormal, Start + vector(Dir) * 65525, Start,true);
+                    Other = WeapAttach.Trace(HitLocation, HitNormal, Start + vector(Dir) * 65525, Start, true);
 
                     if (Other != none)
                     {

@@ -26,10 +26,10 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
         if ((ExistingPanel!=none) || (NewPanelClass != none))
         {
                 if (ExistingPanel != none)
-                        NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,true));
+                        NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel, true));
 
         else if (NewPanelClass != none)
-                        NewTabPanel = GUITabPanel(AddComponent(PanelClass,true));
+                        NewTabPanel = GUITabPanel(AddComponent(PanelClass, true));
 
                 if (NewTabPanel == none)
                 {
@@ -68,7 +68,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
         TabStack[TabStack.Length] = NewTabPanel.MyButton;
 
         if ((TabStack.Length==1 && bVisible) || (bForceActive))
-                        ActivateTab(NewTabPanel.MyButton,true);
+                        ActivateTab(NewTabPanel.MyButton, true);
 
                 else NewTabPanel.Hide();
                     return NewTabPanel;
@@ -89,10 +89,10 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
             if (ExistingPanel != none || NewPanelClass != none)
             {
                     if (ExistingPanel != none)
-                            NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,true));
+                            NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel, true));
 
                     else if (NewPanelClass != none)
-                            NewTabPanel = GUITabPanel(AddComponent(PanelClass,true));
+                            NewTabPanel = GUITabPanel(AddComponent(PanelClass, true));
 
                     if (NewTabPanel == none)
                     {
@@ -126,7 +126,7 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
                     TabStack.Insert(Pos, 1);
                     TabStack[Pos] = NewTabPanel.MyButton;
                     if (TabStack.Length==1 || bForceActive)
-                            ActivateTab(NewTabPanel.MyButton,true);
+                            ActivateTab(NewTabPanel.MyButton, true);
 
             else NewTabPanel.Hide();
                         return NewTabPanel;
@@ -140,7 +140,7 @@ function bool InternalTabClick(GUIComponent Sender)
         But = DHGUITabButton(Sender);
         if (But==none)
                 return false;
-        ActivateTab(But,true);
+        ActivateTab(But, true);
         return true;
 }
 

@@ -55,7 +55,7 @@ function ApplyURL(string URL)
         return;
 
     PlayerOwner().ClientTravel(URL, TRAVEL_Absolute, false);
-    Controller.CloseAll(false,true);
+    Controller.CloseAll(false, true);
 }
 
 function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)

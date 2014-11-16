@@ -2418,7 +2418,7 @@ simulated function Timer()
    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
    {
       //log(" Returning because there is no controller");
-      SetTimer(0.05,true);
+      SetTimer(0.05, true);
    }
    else if (CannonReloadState == CR_Empty)
    {

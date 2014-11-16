@@ -107,7 +107,7 @@ function UsedBy(Pawn user)
 
         if (user.GetTeamNum() == AXIS_TEAM_INDEX)
         {
-            user.PlaySound(GermanRequestSound, SLOT_None, 3.0, false, 100, 1.0,true);
+            user.PlaySound(GermanRequestSound, SLOT_None, 3.0, false, 100, 1.0, true);
 
             SetTimer(GetSoundDuration(GermanRequestSound), false);
         }

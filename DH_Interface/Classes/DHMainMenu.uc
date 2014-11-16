@@ -140,7 +140,7 @@ function bool ButtonClick(GUIComponent Sender)
             if (quickplayip != "")
             {
                 PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
-                Controller.CloseAll(false,true);
+                Controller.CloseAll(false, true);
             }
             break;
 
@@ -298,7 +298,7 @@ event Timer()
             if (bAttemptQuickPlay)
             {
                 PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
-                Controller.CloseAll(false,true);
+                Controller.CloseAll(false, true);
             }
         }
     }

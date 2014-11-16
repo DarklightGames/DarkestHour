@@ -13,7 +13,8 @@ var() bool bExactProjectileCollision;       // nonzero extent projectiles should
 simulated function PostBeginPlay()
 {
     LoopAnim(AnimName, AnimRate);
-        super.PostBeginPlay();
+
+    super.PostBeginPlay();
 }
 
 defaultproperties

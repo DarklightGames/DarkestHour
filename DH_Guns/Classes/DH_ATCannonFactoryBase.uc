@@ -224,7 +224,7 @@ function Activate(ROSideIndex T)
         bFactoryActive = true;
         SpawningBuildEffects = true;
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonTeamStatus(GunIndex,T);
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,true);
+        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, true);
         Timer();
     }
 }

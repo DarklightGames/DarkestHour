@@ -119,7 +119,7 @@ auto state Working
         KSetBlockKarma(false);
         NetUpdateTime = Level.TimeSeconds - 1;
         SetStaticMesh(SavedStaticMesh);
-        SetCollision(true,true,true);
+        SetCollision(true, true, true);
         KSetBlockKarma(true);               // Update karma collision
 
         bHidden = false;
@@ -141,7 +141,7 @@ auto state Working
             KSetBlockKarma(false);
 
             SetStaticMesh(DamagedMesh);
-            SetCollision(true,true,true);
+            SetCollision(true, true, true);
             KSetBlockKarma(true);               // Update karma collision
 
             bDamaged = true;

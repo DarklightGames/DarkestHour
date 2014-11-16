@@ -48,7 +48,7 @@ simulated function bool ReadyToFire(bool bAltFire)
     if( (MGReloadState != MG_ReadyToFire || !bClientCanFireMG) && !bAltFire )
     {
         ShakeView(false); // Matt: added to jolt when trying to fire empty
-        PlaySound(NoAmmoSound, SLOT_None,1.5,, 25, ,true); // Matt: added to play click sound when trying to fire empty
+        PlaySound(NoAmmoSound, SLOT_None,1.5,, 25, , true); // Matt: added to play click sound when trying to fire empty
         return false;
     }
 
@@ -97,7 +97,7 @@ simulated function Timer()
 
     // Matt: pause reload if there is the MG has no Controller or if buttoned up or in the process of buttoning or unbuttoning
     if ( MGP == none || MGP.Controller == none || MGP.DriverPositionIndex < MGP.UnbuttonedPositionIndex || MGP.IsInState('ViewTransition') )
-        SetTimer(0.05,true);
+        SetTimer(0.05, true);
 
     else if ( MGReloadState == MG_Empty )
     {

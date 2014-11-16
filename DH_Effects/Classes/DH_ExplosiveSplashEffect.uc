@@ -219,8 +219,8 @@ defaultproperties
 	End Object
 	Emitters(6)=SpriteEmitter'SpriteEmitter6'
 
-	Autodestroy=true
-	bnodelete=false
-	bhighdetail=true
-	remoterole=role_none
+	AutoDestroy=true
+	bNoDelete=false
+	bHighDetail=true
+	RemoteRole=ROLE_None
 }

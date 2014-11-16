@@ -12,7 +12,7 @@ function bool InternalOnClick(GUIComponent Sender)
     if (Sender == b_Main)
     {
         //Open main menu
-        Controller.CloseAll(false,true);
+        Controller.CloseAll(false, true);
         Controller.OpenMenu("DH_Interface.DHMainMenu");
         return true;
     }
