@@ -58,40 +58,41 @@ struct ObjOperationAction
 //--------------------------------------
 var()   bool                        bVehiclesCanCapture;
 var()   bool                        bTankersCanCapture;
-var()   int                         PlayersNeededToCapture;
-
-//Capture Operations (after capture)
-var()   array<ObjOperationAction>   AlliesCaptureObjActions;
-var()   array<ObjOperationAction>   AxisCaptureObjActions;
-var()   array<SpawnPointAction>     AlliesCaptureSpawnPointActions;
-var()   array<SpawnPointAction>     AxisCaptureSpawnPointActions;
-var()   array<VehiclePoolAction>    AlliesCaptureVehiclePoolActions;
-var()   array<VehiclePoolAction>    AxisCaptureVehiclePoolActions;
-var()   array<name>                 AlliesCaptureEvents;
-var()   array<name>                 AxisCaptureEvents;
-
-//Post Capture Cleared Operations (after capture and cleared of enemies)
 var()   bool                        bUsePostCaptureOperations; //Enables below variables to be used for post capture clear check/calls
 var()   bool                        bDisableWhenAlliesClearObj;
 var()   bool                        bDisableWhenAxisClearObj;
+var()   bool                        bGroupActionsAtDisable;
+var()   int                         PlayersNeededToCapture;
+
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
-var()   array<ObjOperationAction>   AlliesClearedCaptureObjActions;
-var()   array<ObjOperationAction>   AxisClearedCaptureObjActions;
-var()   array<SpawnPointAction>     AlliesClearedCaptureSpawnPointActions;
-var()   array<SpawnPointAction>     AxisClearedCaptureSpawnPointActions;
-var()   array<VehiclePoolAction>    AlliesClearedCaptureVehiclePoolActions;
-var()   array<VehiclePoolAction>    AxisClearedCaptureVehiclePoolActions;
-var()   array<name>                 AlliesClearedCaptureEvents;
-var()   array<name>                 AxisClearedCaptureEvents;
+
+//Capture Operations (after capture)
+var(DH_CaptureActions)   array<ObjOperationAction>   AlliesCaptureObjActions;
+var(DH_CaptureActions)   array<ObjOperationAction>   AxisCaptureObjActions;
+var(DH_CaptureActions)   array<SpawnPointAction>     AlliesCaptureSpawnPointActions;
+var(DH_CaptureActions)   array<SpawnPointAction>     AxisCaptureSpawnPointActions;
+var(DH_CaptureActions)   array<VehiclePoolAction>    AlliesCaptureVehiclePoolActions;
+var(DH_CaptureActions)   array<VehiclePoolAction>    AxisCaptureVehiclePoolActions;
+var(DH_CaptureActions)   array<name>                 AlliesCaptureEvents;
+var(DH_CaptureActions)   array<name>                 AxisCaptureEvents;
+
+//Post Capture Cleared Operations (after capture and cleared of enemies)
+var(DH_ClearedActions)   array<ObjOperationAction>   AlliesClearedCaptureObjActions;
+var(DH_ClearedActions)   array<ObjOperationAction>   AxisClearedCaptureObjActions;
+var(DH_ClearedActions)   array<SpawnPointAction>     AlliesClearedCaptureSpawnPointActions;
+var(DH_ClearedActions)   array<SpawnPointAction>     AxisClearedCaptureSpawnPointActions;
+var(DH_ClearedActions)   array<VehiclePoolAction>    AlliesClearedCaptureVehiclePoolActions;
+var(DH_ClearedActions)   array<VehiclePoolAction>    AxisClearedCaptureVehiclePoolActions;
+var(DH_ClearedActions)   array<name>                 AlliesClearedCaptureEvents;
+var(DH_ClearedActions)   array<name>                 AxisClearedCaptureEvents;
 
 //Grouped Capture Operations (These will need to be the same in each grouped objective, unless you desire different actions based on the last captured grouped objective)
-var()   bool                        bGroupActionsAtDisable;
-var()   array<int>                  GroupedObjectiveReliances; //array of Objective Nums this objective is grouped with (doesn't need to list itself)
-var()   array<ObjOperationAction>   AlliesCaptureGroupObjActions;
-var()   array<ObjOperationAction>   AxisCaptureGroupObjActions;
-var()   array<name>                 AlliesGroupedCaptureEvents;
-var()   array<name>                 AxisGroupedCaptureEvents;
+var(DH_GroupedActions)   array<int>                  GroupedObjectiveReliances; //array of Objective Nums this objective is grouped with (doesn't need to list itself)
+var(DH_GroupedActions)   array<ObjOperationAction>   AlliesCaptureGroupObjActions;
+var(DH_GroupedActions)   array<ObjOperationAction>   AxisCaptureGroupObjActions;
+var(DH_GroupedActions)   array<name>                 AlliesGroupedCaptureEvents;
+var(DH_GroupedActions)   array<name>                 AxisGroupedCaptureEvents;
 
 //--------------------------------------
 //Functions
