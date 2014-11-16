@@ -104,17 +104,6 @@ var     bool    bDeployingMortar;   // Whether or not the pawn is deploying his 
 var     float   MortarDeployYaw;    // Yaw at which the pawn began deploying the mortar.
 var     bool    bMortarCanBeResupplied;
 
-//var(ROAnimations)     name        LowMantleAnim;
-//var(ROAnimations)     name        MedMantleAnim;
-//var(ROAnimations)     name        HighMantleAnim;
-
-//==========================================
-// DH_Pawn functions
-//==========================================
-
-//=============
-// Replication
-//=============
 replication
 {
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
@@ -125,17 +114,7 @@ replication
 
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
-
-        // MantleDist, MantleMidPoint, bReachedMidPoint, MantleBobDepthMod, MantleEndPoint, bIsMantling, MantleYaw,
-
-//  reliable if (bNetDirty && Role < ROLE_Authority)
-//      NewAcceleration;
-        //  bSetMantleEyeHeight; //bStartMantleBob, bEndMantleBob;
 }
-
-//-----------------------------------------------------------------------------
-// PostBeginPlay
-//-----------------------------------------------------------------------------
 
 simulated function PostBeginPlay()
 {
@@ -168,9 +147,6 @@ simulated function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
 
-    //if (bIsMantling)
-      //  DoMantle(DeltaTime);
-
     // Lets keep the effects client side, the server has enough to deal with
     if (level.NetMode != NM_DEDICATEDSERVER)
     {
@@ -183,8 +159,6 @@ simulated function Tick(float DeltaTime)
             EndBurnFX();
     }
 
-    //ClientMessage("NetMode:" @ Level.NetMode @ "HasMortar:" @ HasMortarInInventory());
-
     //Forces us to equip a mortar if we have one on us.
     if (Level.NetMode != NM_DedicatedServer && HasMortarInInventory() && Weapon.Name != 'DH_Kz8cmGrW42Weapon' && Weapon.Name != 'DH_M2MortarWeapon')
         SwitchWeapon(9);    //Mortars are inventory group 9, deal with it.
@@ -196,7 +170,9 @@ simulated function Tick(float DeltaTime)
         TakeDamage(FireDamage, FireStarter, Location, vect(0,0,0), FireDamageClass);
 
         if (Weapon != none)
+        {
             BurningDropWeaps();
+        }
     }
 }
 
@@ -229,8 +205,6 @@ function PossessedBy(Controller C)
     // From XPawn
     if (Controller != none)
         OldController = Controller;
-
-    // MergeTODO: Refactor this, I don't think this is the best place to spawn attachments
 
     // Handle dummy attachments
     if (Role == ROLE_Authority)
@@ -285,7 +259,6 @@ function PossessedBy(Controller C)
                 AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
             }
         }
-
 
         //We just check if we've already been possessed once.  If not, we run this.
         if (!bHasBeenPossessed)
@@ -385,11 +358,6 @@ function DeactivateSpawnProtection()
 // Overridden to call a customised function to spawn the sound
 event PawnWhizzed(vector WhizLocation, int WhizType)
 {
-/*ClientMessage("PawnWhizzed with WhizType: "@WhizType);
-ClientMessage("Level.TimeSeconds: "@Level.TimeSeconds);
-ClientMessage("LastWhippedTime: "@LastWhippedTime);
-ClientMessage("Level.TimeSeconds - LastWhippedTime: "@Level.TimeSeconds - LastWhippedTime);*/
-
     if ((Level.TimeSeconds - LastWhippedTime) > (0.1 + FRand() * 0.15)) // (0.15 + FRand() * 0.15))
     {
         LastWhippedTime = Level.TimeSeconds;
@@ -418,8 +386,6 @@ simulated event HandleSnapSound(int WhizType)
         // Anything above WhizType of 2 is a friendly bullet at very close range, so don't suppress
         if (WhizType == 1 || WhizType == 2)
             DHPlayer(Controller).PlayerWhizzed(VSizeSquared(Location - mWhizSoundLocation));
-
-//        ClientMessage("Played Snap with WhizType: "@WhizType);
     }
 }
 
@@ -427,20 +393,6 @@ simulated event HandleSnapSound(int WhizType)
 // Why this is still called by the engine I truly don't know
 simulated event HandleWhizSound()
 {
-    // Don't play whiz sounds for bots, or from other players
-/*  if (IsHumanControlled() && IsLocallyControlled())
-    {
-        ClientMessage("Playing PawnWhizType: " @PawnWhizType);
-
-        if (PawnWhizType == 1)
-            Spawn(class'DH_BulletSnap',,, mWhizSoundLocation);    // Supersonic rounds
-        else
-            Spawn(class'DH_BulletWhiz',,, mWhizSoundLocation);     // Subsonic rounds
-
-        DHPlayer(Controller).PlayerWhizzed(VSizeSquared(Location - mWhizSoundLocation));
-        ClientMessage("Running new HandleWhizSound");
-     }       */
-//     ClientMessage("HandleWhizSound Running when it shouldn't be");
 }
 
 //-----------------------------------------------------------------------------
@@ -488,20 +440,6 @@ simulated function ProcessHitFX()
         if (!Level.bDropDetail && !class'GameInfo'.static.NoBlood())
         {
             AttachEffect(BleedingEmitterClass, HitFX[SimHitFxTicker].bone, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
-
-
-//          HitFX[SimHitFxTicker].damtype.static.GetHitEffects(HitEffects, Health);
-//
-//          if (!PhysicsVolume.bWaterVolume) // don't attach effects under water
-//          {
-//              for(i = 0; i < arraycount(HitEffects); i++)
-//              {
-//                  if (HitEffects[i] == none)
-//                      continue;
-//
-//                  AttachEffect(HitEffects[i], HitFX[SimHitFxTicker].bone, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
-//              }
-//          }
         }
         if (class'GameInfo'.static.UseLowGore())
             HitFX[SimHitFxTicker].bSever = false;
@@ -554,21 +492,7 @@ simulated function ProcessHitFX()
                 case 'head':
                     HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
                     break;
-
-//                case 'spine':
-//                case 'Upperspine':
-//                case 'none':
-//                    bGibbed = true;
-//                    break;
             }
-            //never hide the head
-//            if (HitFX[SimHitFXTicker].bone == 'head')
-//            {
-//              if (Headgear != none)
-//              {
-//                  Headgear.Destroy();
-//              }
-//            }
 
             if (HitFX[SimHitFXTicker].bone != 'Spine' && HitFX[SimHitFXTicker].bone != 'UpperSpine')
                 HideBone(HitFX[SimHitFxTicker].bone);
@@ -586,86 +510,12 @@ simulated function ProcessHitFX()
     }
 }
 
-// Deletes Parachute weapon classes from player's inventory
-// Based on DropWeaponInventory()
-/*singular function DestroyChute()
-{
-    local Inventory Inv;
-    local Weapon invWeapon;
-    local int count, i;
-    local array<class> DeletedClasses;
-    local bool bAlreadyUsedClass;
-
-    count=0;
-    Inv=Inventory;
-
-    // consider doing a check on count to make sure it doesn't get too high
-    // and force Unreal to crash with a run away loop
-    while((Inv != none) && (count < 15))// 500
-    {
-        count++;
-
-        if (Inv.IsA('Weapon'))
-        {
-            invWeapon = Weapon(Inv);
-
-            ClientMessage("Current weapon check is "$invWeapon.Class);
-
-            if (invWeapon.IsA('DH_ParachuteStaticLine') || invWeapon.IsA('DH_ParachuteItem')) // ParachuteItem does secondary check in its own RaisingWeapon function in case of lag
-            {
-            //ClientMessage("Weapon should be a chute: "$invWeapon.Class);
-                for (i=0;i<DeletedClasses.Length;i++)
-                {
-                    //ClientMessage("Deleted classes "$i$" = "$DeletedClasses[i]);
-                    if (invWeapon.Class == DeletedClasses[i])
-                    {
-                        bAlreadyUsedClass = true;
-                        break;
-                    }
-                }
-
-                if (!bAlreadyUsedClass)
-                {
-                    // because the weapon is destroyed from inventory need to start over again
-                    // and search through the inventory from the beginning.
-                    DeletedClasses[DeletedClasses.Length] = invWeapon.Class;
-                    Controller.ClientSwitchToBestWeapon();
-                    Instigator.DeleteInventory(invWeapon);
-//                    if (invWeapon.IsA('DH_ParachuteStaticLine'))
-                        invWeapon.Destroy();
-                    Inv = Inventory;
-                    ClientMessage("Just deleted weapon "$invWeapon.Class);
-                }
-                else
-                {
-                    //ClientMessage("Trying to drop the same weapon: "$invWeapon.Class$" twice - possible lag bug cause");
-                    Inv=Inv.Inventory;
-                }
-            }
-            else
-            {
-                Inv=Inv.Inventory;
-            }
-        }
-        else
-        {
-            Inv=Inv.Inventory;
-        }
-
-        bAlreadyUsedClass=false;
-    }
-}*/
-
 // Process a precision hit
 function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocation, vector momentum, class<DamageType> damageType, array<int> PointsHit)
 {
     local int actualDamage, originalDamage, cumulativeDamage, totalDamage, i;
     local int HighestDamagePoint, HighestDamageAmount;
     local vector HitDirection;
-    // Hit detection debugging
-    /*local coords CO;
-    local vector HeadLoc;
-    local bool bFirstHit;*/
 
     originalDamage = damage;
 
@@ -692,31 +542,11 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
             HighestDamagePoint = PointsHit[i];
         }
 
-        //log("We hit "$GetEnum(enum'EPawnHitPointType',Hitpoints[PointsHit[i]].HitPointType));
-
-        // Hit detection debugging
-        /*if (PointsHit[i] != 0 && !bFirstHit)
-        {
-            CO = GetBoneCoords(Hitpoints[PointsHit[i]].PointBone);
-            HeadLoc = CO.Origin;
-            HeadLoc = HeadLoc + (Hitpoints[PointsHit[i]].PointOffset >> GetBoneRotation(Hitpoints[PointsHit[i]].PointBone));
-
-            DrawLocation = HeadLoc;
-            DrawRotation = GetBoneRotation(Hitpoints[PointsHit[i]].PointBone);
-            DrawIndex = PointsHit[i];
-            HitPointDebugByte++;
-            bFirstHit = true;
-        }*/
-
         if (Hitpoints[PointsHit[i]].HitPointType == PHP_Leg || Hitpoints[PointsHit[i]].HitPointType == PHP_Foot)
         {
             if (ActualDamage > 0)
             {
-                /*
-                Crazy new functionality, dawg.
-                If we've been shot in the foot or the leg, we have a chance to 'fall' and drop our weapon.
-                It's guaranteed to trigger if we're sprinting, but only 50/50 chance if we're not.
-                */
+                //If we've been shot in the foot or the leg, we have a chance to 'fall' and drop our weapon.
                 if (DHPlayer(Controller) != none && !bIsCrawling && bIsSprinting)
                 {
                     //Zero stamina and fall to the ground if
@@ -759,7 +589,6 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
         }
 
         // Update the locational damage list
-        //UpdateDamageList(Hitpoints[PointsHit[i]].HitPointType);
         UpdateDamageList(PointsHit[i] - 1);
 
         // Lets exit out if one of the shots killed the player
@@ -779,6 +608,7 @@ function ProcessLocationalDamage(int Damage, Pawn instigatedBy, vector hitlocati
 
         if (damageType.default.HumanObliterationThreshhold != 1000001) // Sneaky way of identifying Melee damage classes using existing DamageType parent
             PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+
         TakeDamage(totalDamage, instigatedBy, hitlocation, momentum, damageType, HighestDamagePoint);
     }
 }
@@ -869,9 +699,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    //ClientMessage("Hit area:" @ HitBone @ "Damage:" @ ActualDamage);
-
     Health -= actualDamage;
+
     if (HitLocation == vect(0,0,0))
         HitLocation = Location;
 
@@ -1261,7 +1090,6 @@ state Dying
             if (bDeRes)
                 return;
 
-            //log("HIT RAGDOLL. M:"$Momentum);
             // Throw the body if its a rocket explosion or shock combo
             if (damageType.Name == 'ROSMineDamType' || damageType.Name == 'DH_StielGranateDamType' || damageType.Name == 'ROMineDamType' || damageType.Name == 'DH_M1GrenadeDamType')
             {
@@ -1311,9 +1139,7 @@ state Dying
         {
             if (InstigatedBy != none)
             {
-
-                // Figure out which direction to spin:
-
+                // Figure out which direction to spin
                 if (InstigatedBy.Location != Location)
                 {
                     SelfToInstigator = InstigatedBy.Location - Location;
@@ -1911,21 +1737,6 @@ function AddDefaultInventory()
                     CreateInventory(S);
             }
 
-/* I'm sorry, Chicken, but this makes no sense at all. -Colin
-            // If either grenade type is coloured smoke, but not both, give both to the player, otherwise only give the primary one
-            if (S != "")
-            {
-                if (T != "")
-                {
-                    if ((S == "DH_Equipment.DH_RedSmokeWeapon" || S == "DH_Equipment.DH_OrangeSmokeWeapon") ^^ (T == "DH_Equipment.DH_RedSmokeWeapon" || T == "DH_Equipment.DH_OrangeSmokeWeapon"))
-                        CreateInventory(T);
-                }
-
-                CreateInventory(S);
-            }
-*/
-
-
             if (RI != none)
             {
                 for (i = 0; i < RI.GivenItems.Length; i++)
@@ -1943,17 +1754,6 @@ function AddDefaultInventory()
 
             if (S != "")
                 CreateInventory(S);
-
-            // Not letting bots have nades till we get code in so bots can use them well - Ramm
-/*          S = B.GetGrenadeWeapon();
-
-            if (S != "")
-                CreateInventory(S);
-
-            S = P.GetSecGrenadeWeapon();
-
-            if (S != "")
-                CreateInventory(S); */
 
             RI = B.GetRoleInfo();
 
@@ -1979,18 +1779,6 @@ function AddDefaultInventory()
                 for (i = RI.GivenItems.Length - 1; i >= 0; i--)
                     CreateInventory(RI.GivenItems[i]);
             }
-
-/*
-            S = P.GetSecGrenadeWeapon();
-
-            if (S != "")
-                CreateInventory(S);
-
-            S = P.GetGrenadeWeapon();
-
-            if (S != "")
-                CreateInventory(S);
-                */
 
             // Actually gives us 3 grenades, check that out.
             for(i = 0; i < 3; i++)
@@ -2133,7 +1921,6 @@ simulated function PlayAssistedReload()
         WeaponState = GS_ReloadSingle;
     }
 }
-
 
 // Called on the server. Sends a message to the client to let them know to play the Mantle animation
 function HandleMantle()
@@ -2476,14 +2263,9 @@ simulated event SetAnimAction(name NewAction)
     }
 }
 
-
 //------------------------
-//
 // Mantling Functions
-//
 //------------------------
-
-
 simulated function HUDCheckMantle()
 {
     // Only run this on the client, otherwise we'll bring servers to their knees
@@ -2533,15 +2315,6 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         {
             return false;
         }
-
-        /*Spawn(class 'RODebugTracer',self,,StartLoc,NonPitchRot);
-        Spawn(class 'RODebugTracer',self,,StartLoc + vector(NonPitchRot) * 50,NonPitchRot);
-        Spawn(class 'RODebugTracer',self,,HitLoc,Rotator(HitNorm));
-        Spawn(class 'RODebugTracer',self,,StartLoc + vect(0,0,27),NonPitchRot);
-        Spawn(class 'RODebugTracer',self,,StartLoc - vect(0,0,27),NonPitchRot);*/
-
-        //ClientMessage("Object in front of us");
-
 
         /* Sloped walls pose a problem. BSP are ok, but meshes seem to play havoc with traces that start inside them.
         To get around this, we'll do a flat trace (i.e. with no height) at 0.5uu above the max climb height (the extra
@@ -2609,33 +2382,6 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
             bCrouchMantle = false;
         }
 
-        //MantleDist = 15 + CollisionRadius;
-
-        /*StartLoc = Location;
-        EndLoc = MantleEndPoint;
-
-        if (bCrouchMantle)
-        {
-            Extent.Z = CrouchHeight - 1; // Allow for inaccurate endpoint reporting
-            EndLoc.Z = MantleEndPoint.Z + CrouchHeight;
-        }
-        else
-        {
-            Extent.Z = CollisionHeight - 1; // Allow for inaccurate endpoint reporting
-            EndLoc.Z = MantleEndPoint.Z + CollisionHeight;
-        }
-
-        StartLoc.Z = EndLoc.Z;
-
-        // Ensure that there's a clear path for the player to climb through to the final location
-        // by doing a roughly player sized trace from the start location to the final location at the latter's height
-        if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
-        {
-            //ClientMessage("Path check obstructed - climbing path is blocked");
-            return false;
-        }*/
-
-
         // -----
         // Calculations for the actual mantle action
         // Only run when server initiates an actual mantle
@@ -2692,46 +2438,6 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
                 }
             }
 
-            /*StartLoc = Location;
-            StartLoc.Z = HitLoc.Z;
-            EndLoc = StartLoc;
-            EndLoc.Z -= 92;*/
-
-            /*Trace(HitLoc, HitNorm, EndLoc, StartLoc, false);
-            Spawn(class 'RODebugTracer',self,,HitLoc,NonPitchRot);
-
-            ClientMessage("NewMantleHeight: "@StartLoc.Z - HitLoc.Z);
-            MantleHeight = StartLoc.Z - HitLoc.Z;*/
-
-
-            // if stepping up a low object into a non-confined space, no need to "crouch"
-            /*if (MantleHeight < 45)
-            {
-                Extent.Z =  56; // Half of 112, which is min for standing
-                StartLoc.Z += 8;
-                EndLoc.Z += 8;
-
-                // Is space high enough to stand?
-                if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
-                {
-                    MantleEndPoint.Z += CrouchHeight + 1;
-                }
-                else
-                {
-                    //bUprightMantle = true;
-                    MantleEndPoint.Z += CollisionHeight;
-                }
-            }
-            else
-                MantleEndPoint.Z += CrouchHeight + 1; // These +1 are required to clear the object
-
-            MantleMidPoint = Location;
-            MantleMidPoint.Z = MantleEndPoint.Z - (MantleHeight / 2);
-
-            bReachedMidPoint = false;
-
-            MantleBobDepthMod = 1 - MantleHeight / 100;*/
-
             bIsMantling = true;
             StartMantleTime = Level.TimeSeconds;
             bCanMantle = false; // Removes icon while mantling
@@ -2773,16 +2479,12 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 function PreMantle()
 {
     SetSprinting(false);
-    //SetPhysics(PHYS_RootMotion);
     SetPhysics(PHYS_Flying);
+
     bCollideWorld = false;
     WeaponAttachment.SetDrawType(DT_none);
     AirSpeed = default.GroundSpeed;
     AccelRate = 50000;
-
-    //LockRootMotion(1);
-//  MantleStartLocation = Location;
-//  MantleStartLocation.Z += 25;
 
     if (Role < ROLE_Authority)
         PlayMantle();
@@ -2829,9 +2531,6 @@ function DoMantle(float DeltaTime)
         if (NewAcceleration.Z > 0 && (MantleHeight >= 80 || bCrouchMantle))
             NewAcceleration.Z += 500; // Try to compensate for the slight errors caused by varying DeltaTime
     }
-
-//  ClientMessage("RootDelta is: "$RootDelta$"  Accel is: "$NewAcceleration$"  Velocity: "$Velocity$"  FinalVelocity: "$FinalVelocity$"  DeltaVelocity: "$DeltaVelocity$"  DeltaTime: "$DeltaTime);
-//  log("RootDelta is: "$RootDelta$"  Accel is: "$NewAcceleration$"  Velocity: "$Velocity$"  FinalVelocity: "$FinalVelocity$"  DeltaVelocity: "$DeltaVelocity$"  DeltaTime: "$DeltaTime);
 }
 
 function PostMantle()
@@ -2908,8 +2607,6 @@ function TestMantleSuccess()
         SetLocation(MantleEndPoint);
         Velocity = vect(0,0,0);
         NewAcceleration = vect(0,0,0);
-
-        //ClientMessage("WARNING: Packet Loss Detected");
     }
 }
 
@@ -3101,123 +2798,6 @@ simulated state Mantling
     }
 }
 
-/*function PreMantle()
-{
-    SetSprinting(false);
-    MantleLowerWeapon();
-    StartMantleTime = Level.TimeSeconds;
-
-    // Stop native code from resetting our animation
-    bPhysicsAnimUpdate = false;
-    HandleMantle();
-
-    // Allow greater air speed to facilitate our "climb"
-    // Adjust speed depending on height of the climb
-    if (MantleHeight < 45)
-        AirSpeed = 220;
-    else if (MantleHeight < 65)
-        AirSpeed = 130;
-    else
-        AirSpeed = 90;
-}
-
-// Returns true while still in progress, false when it's finished
-function bool DoMantle()
-{
-    local vector NoZLoc, NoZDest;
-
-    if (Controller.Rotation.Pitch != 0)
-        return true;
-
-    if (!bMantleSetPitch)
-    {
-        bStartMantleBob = true;
-        bMantleSetPitch = true;
-    }
-
-    if (bStartMantleBob && !bEndMantleBob)
-        return true;
-
-    if (Physics != PHYS_Flying)
-    {
-        SetPhysics(PHYS_Flying);
-        bCollideWorld = false;
-
-        //if (!bUprightMantle)
-            MantleAdjustHeight(true);
-    }
-
-    if (!bReachedMidPoint && Location.Z < MantleMidPoint.Z)
-    {
-        NoZLoc = Location;
-        NoZLoc.Z = 0;
-        NoZDest = MantleEndPoint;
-        NoZDest.Z = 0;
-
-        if (VSize(NoZDest - NoZLoc) > MantleDist * 0.75)
-            NewAcceleration = 50 * Normal(NoZDest - NoZLoc);
-        else
-            NewAcceleration = 50 * Normal(NoZLoc - NoZDest);
-        NewAcceleration.Z = 2000;
-    }
-    else if (Location.Z < MantleEndPoint.Z + 5)
-    {
-        if (!bReachedMidPoint)
-        {
-            bReachedMidPoint = true;
-        }
-
-        NoZLoc = Location;
-        NoZLoc.Z = 0;
-        NoZDest = MantleEndPoint;
-        NoZDest.Z = 0;
-
-        if (VSize(NoZDest - NoZLoc) > MantleDist * 0.25)
-            NewAcceleration = 75 * Normal(NoZDest - NoZLoc);
-        else
-            NewAcceleration = 40 * Normal(NoZLoc - NoZDest);
-
-        if (Velocity.Z < 65)
-            NewAcceleration.Z = 0;
-        else
-            NewAcceleration.Z = -175;
-    }
-    else
-    {
-        NewAcceleration = vect(0,0,0);
-        Velocity = 50 * vector(GetViewRotation());
-        SetPhysics(PHYS_Falling);
-        bCollideWorld = true;
-
-        return false;
-    }
-
-    return true;
-}
-
-function PostMantle()
-{
-    bIsMantling = false;
-    bPhysicsAnimUpdate = true;
-    MantleRaiseWeapon();
-    SetPhysics(PHYS_Falling);
-    bCollideWorld = true;
-    AirSpeed = default.AirSpeed;
-    //bUprightMantle = false;
-    ClientForceStaminaUpdate(Stamina);
-    NextJumpTime = Level.TimeSeconds + 2.0;
-    bMantleSetPitch = false;
-
-    if (!bIsCrouched)
-        MantleAdjustHeight(false);
-
-    BaseEyeheight = default.BaseEyeheight;
-
-    // Allows eyeheight to properly reset when cancelling mantle during the bob phase
-    if (bStartMantleBob && !bEndMantleBob)
-        bEndMantleBob = true;
-}*/
-
 simulated function MantleLowerWeapon()
 {
     if (DHWeapon(Weapon) != none)
@@ -3253,29 +2833,6 @@ simulated function MantleRaiseWeapon()
     else if (DH_BinocularsItem(Weapon) != none)
         DH_BinocularsItem(Weapon).bIsMantling = false;
 }
-
-/*simulated function MantleAdjustHeight(bool bLowerHeight)
-{
-    local float HeightAdjust;
-
-    if (bLowerHeight)
-    {
-        // Can't crouch in midair, so emulate the stance change here instead
-        //HeightAdjust = default.CollisionHeight - CrouchHeight;
-        //SetLocation(Location - (HeightAdjust * vect(0,0,1)));
-        SetCollisionSize(CollisionRadius,CrouchHeight);
-        //PrePivot = default.PrePivot + (HeightAdjust * vect(0,0,1));
-    }
-    else
-    {
-        //HeightAdjust = default.CollisionHeight - CrouchHeight;
-        //SetLocation(Location + (HeightAdjust * vect(0,0,1)));
-        SetCollisionSize(CollisionRadius,default.CollisionHeight);
-        //PrePivot = default.PrePivot;
-        //BaseEyeHeight = default.BaseEyeHeight;
-    }
-}*/
-
 
 simulated function CrouchMantleAdjust()
 {
@@ -3360,60 +2917,9 @@ event UpdateEyeHeight(float DeltaTime)
         }
 
         Controller.AdjustView(DeltaTime);
-        return;
 
+        return;
     }
-
-
-
-
-    // Pre-mantle head bob - this really isn't the best place to do this, but it'll do for now
-    /*if (bStartMantleBob)
-    {
-        if (bEndMantleBob)
-        {
-            smooth = FMin(0.9, 10.0 * DeltaTime);
-            OldEyeHeight = EyeHeight;
-            EyeHeight = FMin(EyeHeight * (1 - 0.6*smooth) + BaseEyeHeight * 0.6*smooth, BaseEyeHeight);
-            LandBob *= (1 - smooth);
-
-            if (Eyeheight >= BaseEyeheight - 1)
-            {
-                bStartMantleBob = false;
-                bEndMantleBob = false;
-                Eyeheight = BaseEyeheight;
-
-                // sneak these in here, just to prevent a second bob if we start climbing just as we land
-                bJustLanded = false;
-                bLandRecovery = false;
-            }
-        }
-        else
-        {
-            smooth = FMin(0.65, 10.0 * DeltaTime);
-            OldEyeHeight = EyeHeight;
-            EyeHeight = EyeHeight * (1 - 0.25 * smooth);
-            LandBob += 0.03 * (OldEyeHeight - Eyeheight);
-
-            if ((Eyeheight < MantleBobDepthMod * default.BaseEyeheight + 1) || (LandBob > 3) )
-            {
-                bEndMantleBob = true;
-                //Eyeheight = 0.25 * BaseEyeheight + 1;
-                //if (!bUprightMantle)
-                //{
-                    // HACK - Lower the eye height for the climb to hide the transition to crouch at the end (crouch can't be set while PHYS_Flying during the "climb")
-                    // This _needs_ to be running after the down bob though otherwise the heights are screwed
-                    BaseEyeheight = CrouchEyeHeightMod * CrouchHeight;
-                //}
-            }
-        }
-
-        Controller.AdjustView(DeltaTime);
-        return;
-    }*/
-
-    // end DH
-
 
     if (bTearOff)
     {
