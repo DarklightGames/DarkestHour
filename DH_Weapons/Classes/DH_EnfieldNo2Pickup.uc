@@ -6,19 +6,6 @@
 class DH_EnfieldNo2Pickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-static function StaticPrecache(LevelInfo L)
-{
-/*  L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.colt45');
-    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.tt33pouch');
-    L.AddPrecacheMaterial(Material'Weapons3rd_tex.Soviet.tt33_world');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.Pistols.TT33_S');
-    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.tt33_ammo'); */
-}
-
 defaultproperties
 {
      TouchMessage="Pick Up: Enfield No. 2 Revolver"

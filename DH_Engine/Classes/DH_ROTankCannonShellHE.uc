@@ -339,7 +339,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         if (SavedHitActor != none)
         {
              PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
                 if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
@@ -349,7 +349,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         else
         {
             PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 switch(ST)
                 {
@@ -415,7 +415,7 @@ simulated function NonPenetrateExplode(vector HitLocation, vector HitNormal)
     if (!bDidExplosionFX)
     {
         PlaySound(VehicleDeflectSound,,5.5*TransientSoundVolume);
-        if (EffectIsRelevant(Location,false))
+        if (EffectIsRelevant(Location, false))
         {
             Spawn(ShellDeflectEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
         }
@@ -439,7 +439,7 @@ simulated function NonPenetrateExplode(vector HitLocation, vector HitNormal)
     if (Level.NetMode == NM_DedicatedServer)
     {
         bCollided = true;
-        SetCollision(false,false);
+        SetCollision(false, false);
     }
     else
     {
@@ -503,7 +503,7 @@ simulated function Destroyed()
             {
                 PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
 
-                if (EffectIsRelevant(SavedHitLocation,false))
+                if (EffectIsRelevant(SavedHitLocation, false))
                 {
                     Spawn(ShellHitVehicleEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
                     if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
@@ -513,7 +513,7 @@ simulated function Destroyed()
             else
             {
                 PlaySound(DirtHitSound,,5.5*TransientSoundVolume);
-                if (EffectIsRelevant(SavedHitLocation,false))
+                if (EffectIsRelevant(SavedHitLocation, false))
                 {
                     switch(ST)
                     {
@@ -563,7 +563,7 @@ simulated function Destroyed()
         else
         {
             PlaySound(VehicleDeflectSound,,5.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 Spawn(ShellDeflectEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
             }

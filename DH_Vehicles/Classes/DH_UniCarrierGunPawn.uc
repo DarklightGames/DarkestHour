@@ -5,10 +5,6 @@
 
 class DH_UniCarrierGunPawn extends ROMountedTankMGPawn;
 
-
-/* PointOfView()
-We don't ever want to allow behindview. It doesn't work with our system - Ramm
-*/
 simulated function bool PointOfView()
 {
     return false;
@@ -130,17 +126,6 @@ simulated function DrawHUD(Canvas Canvas)
     local vector GunOffset;
 
     PC = PlayerController(Controller);
-
-    // Zap the lame crosshair - Ramm
-/*  if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim)
-    {
-        Canvas.DrawColor = CrosshairColor;
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-    }  */
-
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {

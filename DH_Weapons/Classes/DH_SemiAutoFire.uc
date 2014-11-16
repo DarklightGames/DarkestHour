@@ -5,20 +5,6 @@
 
 class DH_SemiAutoFire extends DH_ProjectileFire;
 
-
-//defaultproperties
-//{
-///* RO SPECIFIC VARIABLES */
-//
-///* UT VARIABLES THAT WERE CHANGED for RO */
-//  FireEndAnim=none
-//    FireLoopAnim=none
-//    SmokeEmitterClass=none
-//
-//    bDelayedRecoil=true
-//    DelayedRecoilTime=0.05
-//}
-
 defaultproperties
 {
      PctRestDeployRecoil=0.750000

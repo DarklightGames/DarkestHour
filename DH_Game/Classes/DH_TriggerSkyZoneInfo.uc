@@ -17,20 +17,6 @@ var() bool  bInitiallyFading;  //    "     "   initially fading up or down.
 var float     TimeSinceTriggered;
 var bool      bIsOn;
 
-//-----------------------------------------------------------------------------
-// Replication.
-/*
-replication {
-
-    unreliable if ((!bSkipActorPropertyReplication || bNetInitial) && (Role==ROLE_Authority)
-                    && bNetDirty)
-             DistanceFogColor;
-
-}
-*/
-//-----------------------------------------------------------------------------
-// Methods.
-
 simulated event PostBeginPlay()
 {
    super.PostBeginPlay();
@@ -61,8 +47,6 @@ simulated event PostBeginPlay()
    }
 
 }
-
-
 
 simulated function Tick(float DeltaTime)
 {

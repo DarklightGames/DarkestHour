@@ -27,8 +27,6 @@ event ModeDoFire()
     }
 
     super.ModeDoFire();
-
-//  DH_PIATWeapon(Weapon).PostFire();
 }
 
 function PlayFiring()
@@ -80,9 +78,9 @@ function PlayFiring()
         }
     }
 
-    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
 
-    ClientPlayForceFeedback(FireForce);  // jdf
+    ClientPlayForceFeedback(FireForce);
 
     FireCount++;
 }

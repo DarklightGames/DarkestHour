@@ -145,7 +145,7 @@ simulated function Elevate()
         Elevation += ElevationStride;
 
         if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
-            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
     }
 }
 
@@ -156,7 +156,7 @@ simulated function Depress()
         Elevation -= ElevationStride;
 
         if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
-            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+            DHPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
     }
 }
 

@@ -75,26 +75,6 @@ simulated function DrawHUD(Canvas Canvas)
                     Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, (Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY / ScreenRatio / OverlayCenterScale) - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale - 1) / 2);
                 else
                     Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2, ScopePositionY  * Canvas.ClipY / ScreenRatio / OverlayCenterScale - Canvas.ClipY * (1/ScreenRatio/OverlayCenterScale-1)/2);
-
-                    //Canvas.DrawTileScaled(CannonScopeCenter, scale * ScopeCenterScaleX / ScreenRatio / OverlayCenterScale, scale * ScopeCenterScaleY / ScreenRatio / OverlayCenterScale);
-
-                /*
-                // Draw the range setting
-                if (Gun != none && bShowRangeText)
-                {
-                    Canvas.Style = ERenderStyle.STY_Normal;
-
-                    SavedColor = Canvas.DrawColor;
-                    WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255,175);
-                    Canvas.DrawColor = WhiteColor;
-                    MapX = RangePositionX * Canvas.ClipX;
-                    MapY = RangePositionY * Canvas.ClipY;
-                    Canvas.SetPos(MapX,MapY);
-                    Canvas.Font = class'ROHUD'.Static.GetSmallMenuFont(Canvas);
-                    Canvas.StrLen(Gun.GetRange()$" "$RangeText, XL, YL);
-                    Canvas.DrawTextJustified(Gun.GetRange()$" "$RangeText, 2, MapX, MapY, MapX + XL, MapY+YL);
-                    Canvas.DrawColor = SavedColor;
-                }*/
             }
             else if (DriverPositionIndex == PeriscopePositionIndex)
             {

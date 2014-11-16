@@ -169,13 +169,8 @@ simulated function ClientDoCannonReload()
 simulated function bool ReadyToFire(bool bAltFire)
 {
     local int Mode;
-    /*
-    if (CannonReloadState != CR_ReadyToFire)
-    {
-        return false;
-    }
-    */
-    if (    bAltFire)
+
+    if (bAltFire)
         Mode = 2;
     else if (ProjectileClass == PrimaryProjectileClass)
         Mode = 0;
@@ -413,7 +408,7 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
     if (FlashEmitter != none)
         FlashEmitter.Trigger(Self, Instigator);
 
-    if ((EffectEmitterClass != none) && EffectIsRelevant(Location,false))
+    if ((EffectEmitterClass != none) && EffectIsRelevant(Location, false))
         EffectEmitter = spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
 
     OwningPawn = ROVehicleWeaponPawn(Instigator);

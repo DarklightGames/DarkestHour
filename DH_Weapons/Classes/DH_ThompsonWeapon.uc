@@ -69,7 +69,7 @@ simulated state SwitchingFireMode extends Busy
             PlayAnim(Anim, 1.0, FastTweenTime);
         }
 
-        SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime,false);
+        SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime, false);
 
         ServerChangeFireMode();
 

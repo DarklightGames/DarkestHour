@@ -22,9 +22,8 @@ replication
         bCanBeResupplied;
 }
 
-/*
-GotoState called from DH_Pawn.Died to let us know the owner is dead and we should destroy ourselves.
-*/
+
+//GotoState called from DH_Pawn.Died to let us know the owner is dead and we should destroy ourselves.
 simulated state PendingDestroy
 {
 Begin:

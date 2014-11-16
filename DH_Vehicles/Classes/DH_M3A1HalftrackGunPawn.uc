@@ -5,9 +5,6 @@
 
 class DH_M3A1HalftrackGunPawn extends DH_ROMountedTankMGPawn;
 
-/* PointOfView()
-We don't ever want to allow behindview. It doesn't work with our system - Ramm
-*/
 simulated function bool PointOfView()
 {
     return false;
@@ -19,7 +16,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super.ClientKDriverEnter(PC);
 
-    HUDOverlayOffset=default.HUDOverlayOffset;
+    HUDOverlayOffset = default.HUDOverlayOffset;
 }
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
@@ -41,8 +38,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     }
 
     CameraRotation =  WeaponAimRot;
-
-
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
     if (CameraBone != '' && Gun != none)
@@ -103,17 +98,6 @@ simulated function DrawHUD(Canvas Canvas)
 
     PC = PlayerController(Controller);
 
-    // Zap the lame crosshair - Ramm
-/*  if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim)
-    {
-        Canvas.DrawColor = CrosshairColor;
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-    }  */
-
-
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())
@@ -125,9 +109,7 @@ simulated function DrawHUD(Canvas Canvas)
             CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
             GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
 
-            // Make the first person gun appear lower when your sticking your head up
- //           GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 3));
-            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1));    //****************************************************
+            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1));
             GunOffset += HUDOverlayOffset;
 
             // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm

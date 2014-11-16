@@ -381,9 +381,9 @@ simulated function PlayReload()
         AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
     else
-        SetTimer(AnimTimer,false);
+        SetTimer(AnimTimer, false);
 
     if (Instigator.IsLocallyControlled())
     {
@@ -531,9 +531,9 @@ simulated state DeployingBipod extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
 
         SetPlayerFOV(PlayerIronsightFOV);
     }
@@ -632,9 +632,9 @@ simulated state UndeployingBipod extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
 
         ResetPlayerFOV();
     }

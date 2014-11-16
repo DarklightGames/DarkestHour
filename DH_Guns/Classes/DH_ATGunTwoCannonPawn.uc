@@ -36,7 +36,7 @@ simulated exec function SwitchFireMode()
     if (Gun != none && DH_ATGunCannon(Gun) != none && DH_ATGunCannon(Gun).bMultipleRoundTypes)
     {
         if (Controller != none && ROPlayer(Controller) != none)
-            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
 
         ServerToggleExtraRoundType();
     }

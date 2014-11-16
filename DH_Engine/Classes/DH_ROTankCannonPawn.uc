@@ -195,7 +195,7 @@ simulated exec function SwitchFireMode()
     if (Gun != none && DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).bMultipleRoundTypes)
     {
         if (Controller != none && ROPlayer(Controller) != none)
-            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
 
         ServerToggleExtraRoundType();
     }
@@ -208,53 +208,6 @@ function ServerToggleExtraRoundType()
         ROTankCannon(Gun).ToggleRoundType();
     }
 }
-/*
-// Overridden to switch to toggled turrets
-simulated exec function Deploy()
-{
-
-    if (bTurretRingDamaged)
-    return;
-
-    if (Gun != none && DH_ROTankCannon(Gun) != none && !bManualTraverseOnly && !bEngineOff )
-    {
-        if (Controller != none && ROPlayer(Controller) != none)
-            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
-
-        if (DH_ROTankCannon(Gun).bManualTurret)
-        {
-            ToggleTurretMode(true);
-
-            if (Role < ROLE_Authority)
-                ServerToggleTurretMode(true);
-        }
-        else
-        {
-            ToggleTurretMode(false);
-
-            if (Role < ROLE_Authority)
-                ServerToggleTurretMode(false);
-        }
-    }
-}
-
-simulated function ToggleTurretMode(bool bPowerOn)
-{
-     if (Gun != none && DH_ROTankCannon(Gun) != none)
-     {
-        if (bPowerOn)
-        {
-            DH_ROTankCannon(Gun).bManualTurret=false;
-            bTurretPowerOn=true;
-        }
-        else
-        {
-            DH_ROTankCannon(Gun).bManualTurret=true;
-            bTurretPowerOn=false;
-        }
-    }
-}
- */
 
 // Server side
 simulated function DamageCannonOverlay()
@@ -443,13 +396,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
 
-//    log("clientK DriverPos "$DriverPositionIndex);
-//  log("clientK PendingPos "$PendingPositionIndex);
-
-    /*
-    DHPlayer(PC).QueueHint(41, true);
-    */
-
     PendingPositionIndex = InitialPositionIndex;
     ServerChangeDriverPos();
 }
@@ -580,7 +526,7 @@ simulated state ViewTransition
             {
 //                  if (IsLocallyControlled())
                     Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0),false);
+                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
             }
             else
                 GotoState('');
@@ -589,7 +535,7 @@ simulated state ViewTransition
         {
 //              if (IsLocallyControlled())
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0),false);
+            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
         }
         else
         {

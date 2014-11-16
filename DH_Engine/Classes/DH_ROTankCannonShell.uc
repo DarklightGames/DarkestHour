@@ -125,7 +125,7 @@ simulated function Destroyed()
             DoShakeEffect();
 
             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-            if (EffectIsRelevant(SavedHitLocation,false))
+            if (EffectIsRelevant(SavedHitLocation, false))
             {
                 Spawn(ShellHitVehicleEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
                 if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
@@ -134,7 +134,7 @@ simulated function Destroyed()
         }
         else
         {
-            if (EffectIsRelevant(SavedHitLocation,false))
+            if (EffectIsRelevant(SavedHitLocation, false))
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
@@ -236,7 +236,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             DoShakeEffect();
 
             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
                 if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
@@ -245,7 +245,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         }
         else
         {
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {

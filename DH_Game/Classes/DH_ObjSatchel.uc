@@ -24,11 +24,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     }
 
     BroadcastLocalizedMessage(class'DHObjectiveMsg', Team + 2, none, none, self);
-    /*
-    // Notify our analytics server.
-    if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).Analytics != none)
-        DarkestHourGame(Level.Game).Analytics.NotifyCapture(self, Team);\
-    */
 }
 
 defaultproperties

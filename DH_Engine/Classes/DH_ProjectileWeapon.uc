@@ -290,9 +290,8 @@ simulated function bool ShouldUseFreeAim()
     return false;
 }
 
-/* BestMode()
-choose between regular or alt-fire
-*/
+
+//choose between regular or alt-fire
 function byte BestMode()
 {
     local AIController C;
@@ -357,7 +356,7 @@ simulated state RaisingWeapon
         if (ClientState == WS_Hidden)
         {
             PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
-            ClientPlayForceFeedback(SelectForce);  // jdf
+            ClientPlayForceFeedback(SelectForce);
 
             if (Instigator.IsLocallyControlled())
             {
@@ -381,7 +380,7 @@ simulated state RaisingWeapon
             ClientState = WS_BringUp;
         }
 
-        SetTimer(GetAnimDuration(Anim, SelectAnimRate),false);
+        SetTimer(GetAnimDuration(Anim, SelectAnimRate), false);
 
         for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
         {
@@ -421,17 +420,6 @@ simulated state LoweringWeapon
 
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
-/*          if ((Instigator.PendingWeapon != none) && !Instigator.PendingWeapon.bForceSwitch)
-            {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
-                {
-                    //if (FireMode[Mode].bFireOnRelease && FireMode[Mode].bIsFiring)
-                    //    return false;
-                    if (FireMode[Mode].NextFireTime > Level.TimeSeconds + FireMode[Mode].FireRate*(1.f - MinReloadPct))
-                        DownDelay = FMax(DownDelay, FireMode[Mode].NextFireTime - Level.TimeSeconds - FireMode[Mode].FireRate*(1.f - MinReloadPct));
-                }
-            }*/
-
             if (Instigator.IsLocallyControlled())
             {
                 for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
@@ -449,7 +437,7 @@ simulated state LoweringWeapon
             ClientState = WS_PutDown;
         }
 
-        SetTimer(GetAnimDuration(Anim, PutDownAnimRate),false);
+        SetTimer(GetAnimDuration(Anim, PutDownAnimRate), false);
 
         for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
         {
@@ -705,9 +693,9 @@ simulated function PlayStartCrawl()
     AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
     else
-        SetTimer(AnimTimer,false);
+        SetTimer(AnimTimer, false);
 }
 
 // Overriden to support empty crawling anims
@@ -776,7 +764,7 @@ simulated function PlayEndCrawl()
         PlayAnim(Anim, 1.0, FastTweenTime);
     }
 
-    SetTimer(GetAnimDuration(Anim, 1.0) + FastTweenTime,false);
+    SetTimer(GetAnimDuration(Anim, 1.0) + FastTweenTime, false);
 }
 
 //=============================================================================
@@ -894,9 +882,9 @@ simulated state AttachingBayonet extends Busy
         AnimTimer = GetAnimDuration(BayoAttachAnim, 1.0) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
     }
 
 // Take the player out of iron sights if they are in ironsights
@@ -966,9 +954,9 @@ simulated state DetachingBayonet extends Busy
         AnimTimer = GetAnimDuration(BayoDetachAnim, 1.0) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
     }
 
 // Take the player out of iron sights if they are in ironsights
@@ -1151,9 +1139,9 @@ simulated state IronSightZoomIn extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.15),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.15), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
 
         SetPlayerFOV(PlayerIronsightFOV);
     }
@@ -1233,9 +1221,9 @@ simulated state IronSightZoomOut extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.15),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.15), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
     }
 
     simulated function EndState()
@@ -1341,7 +1329,7 @@ simulated state TweenDown extends Busy
 Begin:
     if (bUsingSights)
     {
-        SetTimer(Default.ZoomOutTime + 0.1,false);
+        SetTimer(Default.ZoomOutTime + 0.1, false);
 
         if (Role == ROLE_Authority)
             ServerZoomOut(false);
@@ -1507,7 +1495,7 @@ simulated function PlayStartSprint()
         PlayAnim(Anim, 1.5, FastTweenTime);
     }
 
-    SetTimer(GetAnimDuration(Anim, 1.5) + FastTweenTime,false);
+    SetTimer(GetAnimDuration(Anim, 1.5) + FastTweenTime, false);
 }
 
 simulated state WeaponSprinting
@@ -1561,7 +1549,7 @@ simulated function PlayEndSprint()
         PlayAnim(Anim, 1.5, FastTweenTime);
     }
 
-    SetTimer(GetAnimDuration(Anim, 1.5) + FastTweenTime,false);
+    SetTimer(GetAnimDuration(Anim, 1.5) + FastTweenTime, false);
 }
 
 
@@ -1777,9 +1765,9 @@ simulated function PlayReload()
     AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
     else
-        SetTimer(AnimTimer,false);
+        SetTimer(AnimTimer, false);
 
     if (Instigator.IsLocallyControlled())
     {
@@ -1945,7 +1933,7 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
             CurrentMagCount = PrimaryAmmoArray.Length - 1;
         }
 
-        if ((WP != none) /*&& ((WP.AmmoAmount[0] > 0) || (WP.AmmoAmount[1] > 0)) */)
+        if (WP != none)
         {
             InitialAmount = WP.AmmoAmount[m];
             PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
@@ -2182,7 +2170,7 @@ simulated function Fire(float F)
     player = DHPlayer(Instigator.Controller);
 
     if (AmmoAmount(0) < 1 && !IsBusy())
-        PlayOwnedSound(FireMode[0].NoAmmoSound,SLOT_None,1.0,,,,false);
+        PlayOwnedSound(FireMode[0].NoAmmoSound, SLOT_None,1.0,,,, false);
 }
 
 //------------------------------------------------------------------------------

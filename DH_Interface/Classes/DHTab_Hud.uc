@@ -170,49 +170,14 @@ function SaveSettings()
 
     if (H != none)
     {
-        /*
-        if (H.bSimpleColours != bSimpleColours)
-        {
-            H.bSimpleColours = bSimpleColours;
-            H.bSetColour = false;
-            bSave = true;
-        }
-
-        if (H.bShowDeathMessages != bShowDeathMessages)
-        {
-            H.bShowDeathMessages = bShowDeathMessages;
-            bSave = true;
-        }
-
-        if (H.bShowVoiceIcon != bShowVoiceIcon)
-        {
-            H.bShowVoiceIcon = bShowVoiceIcon;
-            bSave = true;
-        }
-
-        if (bSave)
-            H.SaveConfig();
-        */
     }
     else
     {
-            class'DHHud'.default.bSimpleColours = bSimpleColours;
-            class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
-            class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
-            class'DHHud'.static.StaticSaveConfig();
+        class'DHHud'.default.bSimpleColours = bSimpleColours;
+        class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
+        class'DHHud'.default.bShowVoiceIcon = bShowVoiceIcon;
+        class'DHHud'.static.StaticSaveConfig();
     }
-
-/*    if (H.bSimpleColours != bSimpleColours)
-    {
-        H.bSimpleColours = bSimpleColours;
-        H.SetAlliedColour();
-        //H.bSetColour = false;
-        bSave = true;
-    }
-
-    if (bSave)
-        H.SaveConfig();
-*/
 }
 
 function InternalOnChange(GUIComponent Sender)

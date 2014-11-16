@@ -10,41 +10,6 @@ var    int          CSpread; // Spread for canister shot
 var    int          ProjPerFire; // Number of projectiles to spawn on each shot
 var    bool         bLastShot;  // Prevents shoot effects playing for each projectile spawned
 
-//var    bool         bUsePreLaunchTrace; // Whether or not to do a performance improving trace before potentially spawning projectiles
-//var    float        PreLaunchTraceDistance; // Distance to do initial trace
-
-// Special tracer handling for this type of cannon
-/*simulated function UpdateTracer()
-{
-    local rotator SpawnDir;
-
-    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-        return;
-
-
-    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-    {
-        if (Instigator != none && Instigator.IsLocallyControlled())
-        {
-            SpawnDir = WeaponFireRotation;
-        }
-        else
-        {
-            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-        }
-
-        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
-        {
-            SpawnDir.Pitch += AddedPitch;
-        }
-
-        Spawn(DummyTracerClass,,, WeaponFireLocation, SpawnDir);
-
-        mLastTracerTime = Level.TimeSeconds;
-    }
-}
-*/
-
 state ProjectileFireMode
 {
     function Fire(Controller C)
@@ -196,7 +161,9 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             else
             {
                 if (bAmbientFireSound)
+                {
                     AmbientSound = FireSoundClass;
+                }
                 else
                 {
                     PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);

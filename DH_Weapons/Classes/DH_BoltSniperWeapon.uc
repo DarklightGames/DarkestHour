@@ -153,7 +153,7 @@ simulated state Reloading
         {
             if (anim == PreReloadAnim)
             {
-                SetTimer(0.0,false);
+                SetTimer(0.0, false);
                 ReloadState = RS_ReloadLooped;
                 PlayReload();
             }
@@ -161,7 +161,7 @@ simulated state Reloading
             {
                 if (NumRoundsToLoad == 0 || bInterruptReload)
                 {
-                    SetTimer(0.0,false);
+                    SetTimer(0.0, false);
                     ReloadState = RS_PostReload;
                     PlayPostReload();
 
@@ -300,7 +300,7 @@ Begin:
 
 simulated function PlayPreReload()
 {
-    SetTimer(GetAnimDuration(PreReloadAnim, 1.0) + FastTweenTime,false);
+    SetTimer(GetAnimDuration(PreReloadAnim, 1.0) + FastTweenTime, false);
 
     if (Instigator.IsLocallyControlled())
     {
@@ -311,22 +311,22 @@ simulated function PlayPreReload()
 simulated function PlayReload()
 {
     // Need to add tween time to this
-    SetTimer(GetAnimDuration(SingleReloadAnim, 1.0)/* + FastTweenTime*/,false);
+    SetTimer(GetAnimDuration(SingleReloadAnim, 1.0), false);
 
     if (Instigator.IsLocallyControlled())
     {
         NumRoundsToLoad--;
-        PlayAnim(SingleReloadAnim, 1.0/*, FastTweenTime*/);
+        PlayAnim(SingleReloadAnim, 1.0);
     }
 }
 
 simulated function PlayPostReload()
 {
-    SetTimer(GetAnimDuration(PostReloadAnim, 1.0) /*+ FastTweenTime*/,false);
+    SetTimer(GetAnimDuration(PostReloadAnim, 1.0), false);
 
     if (Instigator.IsLocallyControlled())
     {
-        PlayAnim(PostReloadAnim, 1.0/*, FastTweenTime*/);
+        PlayAnim(PostReloadAnim, 1.0);
     }
 }
 
@@ -487,7 +487,7 @@ simulated state WorkingBolt extends Busy
 
         if (Instigator.IsLocallyControlled())
         {
-            SetTimer(BoltWaitTime,false);
+            SetTimer(BoltWaitTime, false);
         }
         else
         {
@@ -496,7 +496,7 @@ simulated state WorkingBolt extends Busy
             // help alleviate situations where the client finishes bolting before the
             // server registers the bolting as finished
             BoltWaitTime = BoltWaitTime - (BoltWaitTime * 0.1);
-            SetTimer(BoltWaitTime,false);
+            SetTimer(BoltWaitTime, false);
         }
     }
 
@@ -557,11 +557,11 @@ simulated state PostFiring
         bWaitingToBolt=true;
         if (bUsingSights)
         {
-            SetTimer(GetAnimDuration(DH_ProjectileFire(FireMode[0]).FireIronAnim, 1.0),false);
+            SetTimer(GetAnimDuration(DH_ProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
         }
         else
         {
-            SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0),false);
+            SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0), false);
         }
     }
 }

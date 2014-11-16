@@ -57,30 +57,6 @@ LoopAnim(AnimName, AnimRate);               //DH - loop the anim
     Follower = none;
 }
 
-/*
-function PostBeginPlay()
-{
-    local int n;
-
-        AnimName='c47_in_flight';
-    LoopAnim(AnimName, 1);              //DH - loop the anim
-
-    for (n = 0; n < KeyMoveTime.length; n++)
-        KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
-
-    super.PostBeginPlay();
-
-    MoveTime = KeyMoveSpeed[ KeyNum ];
-
-    if (bActAsClientMover && Level.NetMode == NM_DedicatedServer)
-    {
-        SetTimer(0, false);
-        SetPhysics(PHYS_none);
-        GotoState('ServerIdle');
-    }
-}
-*/
-
 defaultproperties
 {
      AnimName="c47_in_flight"

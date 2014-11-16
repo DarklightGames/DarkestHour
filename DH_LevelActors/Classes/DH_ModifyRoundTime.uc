@@ -69,10 +69,6 @@ event Trigger(Actor Other, Pawn EventInstigator)
         Level.Game.BroadcastLocalizedMessage(class'DH_ModifyRoundTimeMessage', 0, none, none, self);
 }
 
-//=============================================================================
-// Default properties
-//=============================================================================
-
 defaultproperties
 {
      Seconds=60

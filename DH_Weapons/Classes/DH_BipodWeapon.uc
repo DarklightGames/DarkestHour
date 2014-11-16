@@ -198,9 +198,9 @@ simulated state DeployingBipod extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
 
         SetPlayerFOV(PlayerDeployFOV);
     }
@@ -294,9 +294,9 @@ simulated state UndeployingBipod extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-            SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+            SetTimer(AnimTimer - (AnimTimer * 0.1), false);
         else
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
 
         ResetPlayerFOV();
     }
@@ -526,48 +526,6 @@ Begin:
         SmoothZoom(false);
     }
 }
-
-/*
-simulated function ZoomIn(bool bAnimateTransition)
-{
-    Instigator.ClientMessage("ZoomIn");
-
-    //Make the player stop firing when they go to iron sights
-    if (FireMode[0] != none && FireMode[0].bIsFiring)
-        FireMode[0].StopFiring();
-
-    //Don't allow player to go to iron sights while in melee mode
-    if (FireMode[1] != none && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking')))
-        return;
-
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        SetPlayerFOV(PlayerDeployFOV);
-
-    if (bAnimateTransition)
-        GotoState('IronSightZoomIn');
-
-    bUsingSights = true;
-    ROPawn(Instigator).SetIronSightAnims(true);
-}
-
-simulated function ZoomOut(bool bAnimateTransition)
-{
-    Instigator.ClientMessage("ZoomOut");
-
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
-        ResetPlayerFOV();
-
-    if (bAnimateTransition)
-        GotoState('IronSightZoomOut');
-
-    bUsingSights = false;
-    ROPawn(Instigator).SetIronSightAnims(false);
-}
-*/
-
-//=============================================================================
-// Default Properties
-//=============================================================================
 
 defaultproperties
 {

@@ -16,17 +16,6 @@ function bool FillAmmo(){return false;}
 function bool ResupplyAmmo(){return false;}
 simulated function bool IsFiring(){return false;}
 
-/*function PickupFunction(Pawn Other)
-{
-    if (DH_Pawn(Instigator).bKillChute)
-    {
-        Enable('Tick');
-        log("Parachute Tick enabled");
-    }
-    else
-        log("Parachute Tick not enabled");
-}*/
-
 simulated function Tick(float DeltaTime)
 {
     if (bChuteDeployed)

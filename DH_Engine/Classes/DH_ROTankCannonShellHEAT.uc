@@ -28,18 +28,6 @@ var bool bDidPenetrationExplosionFX; // Already did the penetration explosion ef
 
 var         bool                bNoWorldPen;   // Rocket has hit something other than the world and should be destroyed without running world penetration check
 
-/*
-simulated function Landed(vector HitNormal) // Matt: just re-stating the super
-{
-    Explode(Location,HitNormal);
-}
-
-function BlowUp(vector HitLocation) // Matt: just re-stating the super
-{
-    HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-    MakeNoise(1.0);
-}
-*/
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local vector TraceHitLocation, TraceHitNormal;
@@ -64,7 +52,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
             PlaySound(ExplosionSound[Rand(3)],,2.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitNormal*16,rotator(HitLocation));
                 if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
@@ -73,11 +61,11 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         }
         else
         {
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    switch(ST)
+                    Switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:
@@ -147,7 +135,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         if (Level.NetMode == NM_DedicatedServer)
         {
             bCollided = true;
-            SetCollision(false,false);
+            SetCollision(false, false);
         }
         else
         {
@@ -184,7 +172,7 @@ simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
 
             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
             PlaySound(ExplodeSound[Rand(3)],,2.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitLocation*16,rotator(HitLocation));
                 if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
@@ -193,11 +181,11 @@ simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
         }
         else
         { */
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    switch(ST)
+                    Switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:
@@ -265,7 +253,7 @@ simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
     if (Level.NetMode == NM_DedicatedServer)
     {
         bCollided = true;
-        SetCollision(false,false);
+        SetCollision(false, false);
     }
     else
     {
@@ -608,7 +596,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
                 tmpMaxWall += 16;
             else
                 tmpMaxWall = MaxWall;
-            tmpHit = Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * tmpMaxWall,false);
+            tmpHit = Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * tmpMaxWall, false);
 
             //if (bDebugMode) log("in do-while - tmpMaxWall:"@tmpMaxWall@" tmpHit:"@tmpHit);
 
@@ -620,67 +608,22 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     }
     else
     {
-        tmpHit = Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * MaxWall,false);
-        //if (bDebugMode) log("MaxWall <= 16 - MaxWall:"@MaxWall@" tmpHit:"@tmpHit);
+        tmpHit = Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * MaxWall, false);
     }
 
-    //if (bDebugMode) log("MaxWall:"@MaxWall@" tmpHit:"@tmpHit@" TmpHitLocation:"@TmpHitLocation@" TmpHitNormal:"@TmpHitNormal);
-
-//  if (Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * MaxWall,false) != none)
     if (tmpHit != none)
     {
         if (SetLocation(TmpHitLocation + (vect(0.5,0,0) * X)))
         {
-        /*  if (Role == ROLE_Authority)
-            {
-                tmpWallDiff = VSize(LastLoc - Location) / 2.0;
-                MaxWall -= tmpWallDiff;
-                tmpWallDiff /= 100.0;
-
-                // material dependant damage, velocity and direction changes
-                if ((tmpWallDiff * 2.0 * (1 + Hardness / 4)) < 1.0)
-                    Damage *= 1.0 - tmpWallDiff * 2.0 * (1 + Hardness / 4);
-                else
-                    Damage *= 0.01;
-
-                if ((tmpWallDiff * (1 + Hardness / 2)) < 1.0)
-                    Velocity *= 1.0 - tmpWallDiff * (1 + Hardness / 2);
-                else
-                    Velocity *= 0.01;
-
-                // would result in about 20° max for a hardness of 5 and around 2° max for a hardness of .5
-                if (DistortionScale > 0.0) {
-                    distortion.Yaw = 3000 * Hardness / 2 * (FRand()-0.5);
-                    distortion.Pitch = 3000 * Hardness / 2 * (FRand()-0.5);
-                    distortion.Roll = 3000 * Hardness / 2 * (FRand()-0.5);
-                    Velocity = Velocity >> (distortion * DistortionScale);
-                }
-
-                if (bDebugMode) log("INFO - resulting Velocity:"@Vsize(Velocity)@Velocity@" N "@Normal(Velocity)@" resulting Damage"@Damage@" resulting MaxWall:"@MaxWall@" tmpWallDiff:"@tmpWallDiff@" Hardness:"@Hardness@" distortion"@distortion);
-            }       */
-
-            // spawn an impact effect on the backside of the wall too
-/*          if (ROVehicle(tmpHit) != none)
-            {
-                if (Level.NetMode != NM_DedicatedServer)
-                {
-                    VehEffect = Spawn(class'ROVehicleHitEffect',,, TmpHitLocation, rotator(-TmpHitNormal));
-                    VehEffect.InitHitEffects(TmpHitLocation,TmpHitNormal);
-                }
-            }
-            else if (ShellHitRockEffectClass != none && (Level.NetMode != NM_DedicatedServer))
-            {
-                Spawn(ShellHitRockEffectClass,,, TmpHitLocation, rotator(-TmpHitNormal));
-            }*/
             PenetrationExplode(TmpHitLocation + PeneExploWallOut * TmpHitNormal, TmpHitNormal);
 
             bInHitWall = false;
 
-            if (MaxWall < 1.0) {
-                //if (bDebugMode) log(">>>> Projectile - destroy:"@self);
+            if (MaxWall < 1.0)
+            {
                 if (Level.NetMode == NM_DedicatedServer) {
                     bCollided = true;
-                    SetCollision(false,false);
+                    SetCollision(false, false);
                 }
                 else {
                     Destroy();
@@ -689,11 +632,10 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
         }
         else
         {
-            //if (bDebugMode) log(">>>> Projectile - destroy:"@self);
             if (Level.NetMode == NM_DedicatedServer)
             {
                 bCollided = true;
-                SetCollision(false,false);
+                SetCollision(false, false);
             }
             else
             {
@@ -703,11 +645,10 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     }
     else
     {
-        //if (bDebugMode) log(">>>> Projectile - destroy:"@self);
         if (Level.NetMode == NM_DedicatedServer)
         {
             bCollided = true;
-            SetCollision(false,false);
+            SetCollision(false, false);
         }
         else
         {
@@ -735,11 +676,9 @@ simulated function CheckWall(vector HitNormal, vector X)
             Hardness = 0.7;
             break;
         case EST_Rock :
-//          Hardness = 2.0;
             Hardness = 2.5;
             break;
         case EST_Metal :
-//          Hardness = 8.0; // too much
             Hardness = 4.0;
             break;
         case EST_Wood :
@@ -752,7 +691,6 @@ simulated function CheckWall(vector HitNormal, vector X)
             Hardness = 0.2;
             break;
         case EST_Ice :
-//          Hardness = 1.0;
             Hardness = 0.8;
             break;
         case EST_Snow :
@@ -774,7 +712,6 @@ simulated function CheckWall(vector HitNormal, vector X)
             Hardness = 0.3;
             break;
         case EST_MetalArmor :
-//          Hardness = 16.0;
             Hardness = 10.0;
             break;
         case EST_Paper :
@@ -794,54 +731,9 @@ simulated function CheckWall(vector HitNormal, vector X)
             break;
     }
 
-    //if (bDebugMode) log("Hit Surface type:"@HitSurfaceType@"with hardness of"@Hardness);
-
     return;
 }
 
-/* HE Shell explosion for when it hit a tank but didn't penetrate
-simulated function NonPenetrateExplode(vector HitLocation, vector HitNormal)
-{
-    if (bCollided)
-        return;
-
-    DoShakeEffect();
-
-    if (!bDidExplosionFX)
-    {
-        PlaySound(VehicleDeflectSound,,5.5*TransientSoundVolume);
-        if (EffectIsRelevant(Location,false))
-        {
-            Spawn(ShellDeflectEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-        }
-
-        PlaySound(ExplosionSound[Rand(3)],,5.5*TransientSoundVolume);
-
-        bDidExplosionFX=true;
-    }
-
-    if (Corona != none)
-        Corona.Destroy();
-
-    // Save the hit info for when the shell is destroyed
-    SavedHitLocation = HitLocation;
-    SavedHitNormal = HitNormal;
-    AmbientSound=none;
-
-    BlowUp(HitLocation);
-
-    // Give the bullet a little time to play the hit effect client side before destroying the bullet
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        bCollided = true;
-        SetCollision(false,false);
-    }
-    else
-    {
-        Destroy();
-    }
-}
-*/
 simulated function Destroyed()
 {
     local vector TraceHitLocation, TraceHitNormal;
@@ -868,7 +760,7 @@ simulated function Destroyed()
 
             PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
             PlaySound(ExplosionSound[Rand(3)],,2.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 Spawn(ShellHitVehicleEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
                 if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
@@ -877,11 +769,11 @@ simulated function Destroyed()
         }
         else
         {
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 if (!PhysicsVolume.bWaterVolume)
                 {
-                    switch(ST)
+                    Switch(ST)
                     {
                         case EST_Snow:
                         case EST_Ice:

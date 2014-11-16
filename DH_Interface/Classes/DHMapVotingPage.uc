@@ -15,44 +15,6 @@ function bool AlignBK(Canvas C)
     return false;
 }
 
-
-/*defaultproperties
-{
-     i_MapListBackground=none
-
-     Begin Object Class=MapVoteCountMultiColumnListBox Name=VoteCountListBox
-         WinTop=0.077369
-         WinLeft=0.020000
-         WinWidth=0.960000
-         WinHeight=0.267520
-         bVisibleWhenEmpty=true
-         bBoundToParent=true
-         bScaleToParent=true
-         HeaderColumnPerc(0)=0.400000
-         HeaderColumnPerc(1)=0.200000
-         FontScale=FNS_Small
-         DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
-     End Object
-     lb_VoteCountListBox=VoteCountListBox
-
-     Begin Object Class=moComboBox Name=GameTypeCombo
-         CaptionWidth=0.350000
-         Caption="Filter Game Type:"
-         bScaleToParent=true
-         bVisible=false
-     End Object
-     co_GameType=GameTypeCombo
-
-
-     Begin Object Class=GUIImage Name=MapCountListBackground
-         Image=Texture'InterfaceArt_tex.Menu.buttonGreyDark01'
-         ImageStyle=ISTY_Stretched
-         OnDraw=AlignBK
-     End Object
-     i_MapCountListBackground=MapCountListBackground
-
-} */
-
 defaultproperties
 {
      Begin Object Class=MapVoteCountMultiColumnListBox Name=VoteCountListBox

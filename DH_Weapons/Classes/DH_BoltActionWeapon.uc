@@ -124,7 +124,7 @@ simulated state WorkingBolt extends Busy
 
         if (Instigator.IsLocallyControlled())
         {
-            SetTimer(BoltWaitTime,false);
+            SetTimer(BoltWaitTime, false);
         }
         else
         {
@@ -133,7 +133,7 @@ simulated state WorkingBolt extends Busy
             // help alleviate situations where the client finishes bolting before the
             // server registers the bolting as finished
             BoltWaitTime = BoltWaitTime - (BoltWaitTime * 0.1);
-            SetTimer(BoltWaitTime,false);
+            SetTimer(BoltWaitTime, false);
         }
     }
 
@@ -188,11 +188,11 @@ simulated state PostFiring
         bWaitingToBolt=true;
         if (bUsingSights)
         {
-            SetTimer(GetAnimDuration(DH_ProjectileFire(FireMode[0]).FireIronAnim, 1.0),false);
+            SetTimer(GetAnimDuration(DH_ProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
         }
         else
         {
-            SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0),false);
+            SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0), false);
         }
     }
 }

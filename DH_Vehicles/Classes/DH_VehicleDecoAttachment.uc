@@ -6,22 +6,9 @@
 class DH_VehicleDecoAttachment extends RODummyAttachment
     abstract;
 
-
 simulated function PostBeginPlay()
 {
 }
-
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
-static function StaticPrecache(LevelInfo L)
-{
-}
-
-//=============================================================================
-// defaultproperties
-//=============================================================================
 
 defaultproperties
 {

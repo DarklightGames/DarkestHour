@@ -107,7 +107,7 @@ simulated function Timer()
             PlaySound(MGReloadSoundOne, SLOT_Misc, 2,, 150,, false); // Matt: doubled the default volume
 
         MGReloadState = MG_ReloadedPart1;
-        SetTimer(GetSoundDuration(MGReloadSoundOne),false);
+        SetTimer(GetSoundDuration(MGReloadSoundOne), false);
     }
 
     else if ( MGReloadState == MG_ReloadedPart1 )
@@ -118,7 +118,7 @@ simulated function Timer()
             PlaySound(MGReloadSoundTwo, SLOT_Misc, 2,, 150,, false);
 
         MGReloadState = MG_ReloadedPart2;
-        SetTimer(GetSoundDuration(MGReloadSoundTwo),false);
+        SetTimer(GetSoundDuration(MGReloadSoundTwo), false);
     }
 
     else if ( MGReloadState == MG_ReloadedPart2 )
@@ -129,7 +129,7 @@ simulated function Timer()
             PlaySound(MGReloadSoundThree, SLOT_Misc, 2,, 150,, false);
 
         MGReloadState = MG_ReloadedPart3;
-        SetTimer(GetSoundDuration(MGReloadSoundThree),false);
+        SetTimer(GetSoundDuration(MGReloadSoundThree), false);
    }
 
    else if ( MGReloadState == MG_ReloadedPart3 )
@@ -140,7 +140,7 @@ simulated function Timer()
             PlaySound(MGReloadSoundFour, SLOT_Misc, 2,, 150,, false);
 
         MGReloadState = MG_ReloadedPart4;
-        SetTimer(GetSoundDuration(MGReloadSoundFour),false);
+        SetTimer(GetSoundDuration(MGReloadSoundFour), false);
     }
 
     else if ( MGReloadState == MG_ReloadedPart4 )
@@ -153,7 +153,7 @@ simulated function Timer()
         }
 
         MGReloadState = MG_ReadyToFire;
-        SetTimer(0.0,false);
+        SetTimer(0.0, false);
     }
 }
 

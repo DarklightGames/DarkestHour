@@ -107,21 +107,6 @@ function bool TryToDrive(Pawn P)
     if (DH_Pawn(P).bOnFire)
         return false;
 
-/*  Deny entry to bots - cos on Benouville Bridge map - the Brit bots all go for gun & ignore bridge
-    if (!p.IsHumanControlled())
-    {
-        bTeamLocked=true;
-        DenyEntry(P, 3);
-        return false;
-    }
-    if (p.IsHumanControlled())
-    {
-        bTeamLocked=false;
-    }
-
-
-*/
-
     //don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
@@ -211,34 +196,6 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
         super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
 
-    /*
-    // Don't allow your own teammates to destroy vehicles in spawns - HACK: Allow friendly fire for AT Guns
-    if (!bDriverAlreadyEntered)
-    {
-        if (InstigatedBy != none)
-            InstigatorController = instigatedBy.Controller;
-
-        if (InstigatorController == none)
-        {
-            if (DamageType.default.bDelayedDamage)
-                InstigatorController = DelayedDamageInstigatorController;
-        }
-
-        if (InstigatorController != none)
-        {
-            InstigatorTeam = InstigatorController.GetTeamNum();
-
-            if ((GetTeamNum() != 255) && (InstigatorTeam != 255))
-            {
-                if (GetTeamNum() == InstigatorTeam)
-                {
-                    return;
-                }
-            }
-        }
-    }
-    */
-
     // Hacked in APC damage mods for AT Guns, but bullets/bayo/bashing still shouldn't work...
     if (DamageType != none)
     {
@@ -311,10 +268,6 @@ function exec DamageTank()
 {
     Health /= 2;
 }
-
-//==============================================================================
-// Default Properties
-//==============================================================================
 
 defaultproperties
 {

@@ -20,9 +20,7 @@ function Fire(optional float F)
     super.Fire(F);
 }
 
-/* PointOfView()
-We don't ever want to allow behindview. It doesn't work with our system - Ramm
-*/
+//We don't ever want to allow behindview. It doesn't work with our system - Ramm
 simulated function bool PointOfView()
 {
     return false;
@@ -129,17 +127,6 @@ simulated function DrawHUD(Canvas Canvas)
 
     PC = PlayerController(Controller);
 
-    // Zap the lame crosshair - Ramm
-/*  if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim)
-    {
-        Canvas.DrawColor = CrosshairColor;
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-    }  */
-
-
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering() && DriverPositionIndex < 2)
@@ -151,9 +138,7 @@ simulated function DrawHUD(Canvas Canvas)
             CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
             GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
 
-            // Make the first person gun appear lower when your sticking your head up
- //           GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 3));
-            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1));    //****************************************************
+            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1));
             GunOffset += HUDOverlayOffset;
 
             // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
@@ -204,81 +189,7 @@ simulated state ViewTransition
         super.EndState();
     }
 }
-/*
-simulated function DrawHUD(Canvas Canvas)
-{
-        local PlayerController PC;
-        local vector CameraLocation;
-        local rotator CameraRotation;
-        local float  SavedOpacity;
-        local float scale;
-        local Actor ViewActor;
 
-        PC = PlayerController(Controller);
-
-        if (PC == none)
-        {
-            super.RenderOverlays(Canvas);
-            //log("PanzerTurret PlayerController was none, returning");
-            return;
-        }
-        else if (!PC.bBehindView)
-        {
-            // store old opacity and set to 1.0 for map overlay rendering
-            SavedOpacity = Canvas.ColorModulate.W;
-            Canvas.ColorModulate.W = 1.0;
-
-            Canvas.DrawColor.A = 255;
-            Canvas.Style = ERenderStyle.STY_Alpha;
-
-                scale = Canvas.SizeY / 1200.0;
-
-            if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
-            {
-               if (DriverPositionIndex == 0)
-               {
-               }
-               else
-               {
-                  DrawBinocsOverlay(Canvas);
-               }
-            }
-           // reset HudOpacity to original value
-           Canvas.ColorModulate.W = SavedOpacity;
-
-           // Draw tank, turret, ammo count, passenger list
-           if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
-              ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
-        }
-
-    // Zap the lame crosshair - Ramm
-    if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
-    {
-        Canvas.DrawColor = CrosshairColor;
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-    }
-
-
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
-    {
-        if (!Level.IsSoftwareRendering())
-        {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            HUDOverlay.SetRotation(CameraRotation);
-            Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
-        }
-    }
-    else
-        ActivateOverlay(false);
-
-}
-*/
-//AB CODE
 simulated function DrawBinocsOverlay(Canvas Canvas)
 {
     local float ScreenRatio;

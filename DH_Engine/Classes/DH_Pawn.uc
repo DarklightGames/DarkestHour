@@ -713,7 +713,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         if (bOnFire)
         {
             BurnTimeLeft = 10;
-            SetTimer(1.0,false);
+            SetTimer(1.0, false);
             DH_PlayerFlame(FlameFX).PlayerDied();
         }
 
@@ -744,7 +744,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         CancelMantle();
         DHPlayer(Controller).GoToState('PlayerWalking');
-        DHPlayer(Controller).SetTimer(0.0,false);
+        DHPlayer(Controller).SetTimer(0.0, false);
     }
 }
 
@@ -1123,7 +1123,7 @@ state Dying
                     bOnFire = true;
 
                 BurnTimeLeft = 10;
-                SetTimer(1.0,false);
+                SetTimer(1.0, false);
             }
             else
             {
@@ -1400,7 +1400,7 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
     // Turn off the auxilary collision when the player dies
     if (AuxCollisionCylinder != none)
     {
-        AuxCollisionCylinder.SetCollision(false,false,false);
+        AuxCollisionCylinder.SetCollision(false, false, false);
     }
 
     DamageBeyondZero = Health;
@@ -1973,19 +1973,19 @@ simulated function PlayMantle()
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !IsLocallyControlled()))
     {
-        SetTimer(AnimTimer,false);
+        SetTimer(AnimTimer, false);
     }
     else
     {
         // Instigator gets a slightly longer blend time to allow other clients to better sync animation with movement
         if (Role < ROLE_Authority && IsLocallyControlled())
         {
-            SetTimer(AnimTimer + 0.05,false);
+            SetTimer(AnimTimer + 0.05, false);
             PlayAnim(Anim,1.0,0.15,0);
         }
         else
         {
-            SetTimer(AnimTimer,false);
+            SetTimer(AnimTimer, false);
             PlayAnim(Anim,1.0,0.1,0);
         }
     }
@@ -2045,7 +2045,7 @@ simulated function PlayEndMantle()
     }
 
     //if (Role == ROLE_Authority)
-        SetTimer(0.1,false);
+        SetTimer(0.1, false);
 
 //  bPhysicsAnimUpdate = true;
 //  LockRootMotion(0);
@@ -2756,7 +2756,7 @@ simulated state Mantling
                 PlayEndMantle();
             }
 
-            DHPlayer(Controller).SetTimer(0.1,false);
+            DHPlayer(Controller).SetTimer(0.1, false);
             DHPlayer(Controller).bDidMantle = true;
         }
         else

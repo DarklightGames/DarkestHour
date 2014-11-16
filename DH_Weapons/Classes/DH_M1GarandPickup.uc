@@ -6,20 +6,6 @@
 class DH_M1GarandPickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-static function StaticPrecache(LevelInfo L)
-{
-/*  L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.M1_Garand');
-    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.kar98pouch');
-    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.m1garand');
-    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.m1garandAmmo');
-    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.m1garandBayo');
-    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.kar98_ammo'); */
-}
-
 defaultproperties
 {
      TouchMessage="Pick Up: M1 Garand"

@@ -190,7 +190,7 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
             InitialAmount = InitialAmount * 2;
         }
 
-        if ((WP != none) /*&& ((WP.AmmoAmount[0] > 0) || (WP.AmmoAmount[1] > 0)) */)
+        if (WP != none)
         {
             InitialAmount = WP.AmmoAmount[m];
             PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;

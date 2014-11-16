@@ -131,25 +131,7 @@ var     bool                bOldEngineOff;
 var     float               IgnitionSwitchTime;
 
 var     float               DriverTraceDist; //CheckReset() variable
-/*
-//DH CODE: Revised Armor System
-// Angle below which to use lower armor values/slopes
-var     float           FrontArmorFaceMin;
-var     float           RightArmorFaceMin;
-var     float           LeftArmorFaceMin;
-var     float           RearArmorFaceMin;
 
-//Lower Armor Values
-var     float           LFrontArmorFactor;
-var     float           LRightArmorFactor;
-var     float           LLeftArmorFactor;
-var     float           LRearArmorFactor;
-
-var     float           LFrontArmorSlope;
-var     float           LRightArmorSlope;
-var     float           LLeftArmorSlope;
-var     float           LRearArmorSlope;
-*/
 //Upper armor values
 var     float           UFrontArmorFactor;
 var     float           URightArmorFactor;
@@ -864,14 +846,14 @@ simulated state ViewTransition
 
          if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
          {
-             SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim, 1.0),false);
+             SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim, 1.0), false);
 
              //log("HandleTransition Player Transition Up!");
                  PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
          }
          else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
          {
-             SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim, 1.0),false);
+             SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim, 1.0), false);
 
              //log("HandleTransition Player Transition Down!");
                  PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
@@ -903,34 +885,9 @@ simulated state ViewTransition
     }
 
 Begin:
-    //log("ViewTransition Begin!");
     HandleTransition();
     Sleep(0.2);
 }
-
-/*function DriverDied()
-{
-    DriverPositionIndex=InitialPositionIndex;
-    Super(ROVehicle).DriverDied();
-    MaybeDestroyVehicle();
-}*/
-
-/*simulated state EnteringVehicle
-{
-    simulated function HandleEnter()
-    {
-        if (DriverPositions[InitialPositionIndex].PositionMesh != none)
-            LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
-
-        if (PlayerController(Controller) != none)
-            PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
-    }
-
-Begin:
-    HandleEnter();
-    Sleep(0.2);
-    GotoState('');
-}*/
 
 function bool TryToDrive(Pawn P)
 {
@@ -1370,19 +1327,6 @@ function DamageTrack(bool bLeftTrack)
     }
 }
 
-/*
-//server side
-simulated function ShowTreadDamage()
-{
-   ClientShowTreadDamage();
-}
-
-simulated function ClientShowTreadDamage()
-{
-
-}
-*/
-
 // Check to see if something hit a certain Hitpoint
 function bool IsNewPointShot(vector loc, vector ray, float AdditionalScale, int index)
 {
@@ -1401,7 +1345,7 @@ function bool IsNewPointShot(vector loc, vector ray, float AdditionalScale, int 
 
     // Express snipe trace line in terms of B + tM
     B = loc;
-    M = ray * 150/*(2.0 * CollisionHeight + 2.0 * CollisionRadius)*/;
+    M = ray * 150;
 
     // Find Point-Line Squared Distance
     diff = HeadLoc - B;
@@ -1983,14 +1927,8 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
-        {
-            return true; //just to play the effect
-        }
-        */
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(-Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -2093,14 +2031,8 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
-        {
-            return true; //just to play the effect
-        }
-        */
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -2206,10 +2138,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
     {
        HitAngle = 360 + (HitAngle* -1);
     }
-    /*
-    if (bDebuggingText && Role == ROLE_Authority)
-    Level.Game.Broadcast(self, "HitAngle: "$HitAngle$"degrees");
-    */
+
     if (HitAngle >= FrontLeftAngle || Hitangle < FrontRightAngle)  //Frontal hit
     {
 
@@ -2269,14 +2198,8 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
-        {
-            return true; //just to play the effect
-        }
-        */
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(-Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -2379,14 +2302,8 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
-        {
-            return true; //just to play the effect
-        }
-        */
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -2492,10 +2409,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     {
        HitAngle = 360 + (HitAngle* -1);
     }
-    /*
-    if (bDebuggingText && Role == ROLE_Authority)
-    Level.Game.Broadcast(self, "HitAngle: "$HitAngle$"degrees");
-    */
+
     if (HitAngle >= FrontLeftAngle || Hitangle < FrontRightAngle)  //Frontal hit
     {
 
@@ -2555,14 +2469,8 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
-        {
-            return true; //just to play the effect
-        }
-        */
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(-Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -2666,13 +2574,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
 
         if (bDebugTreadText && Role == ROLE_Authority)
         Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
-        {
-            return true; //just to play the effect
-        }
-        */
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -2779,10 +2681,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
     {
        HitAngle = 360 + (HitAngle* -1);
     }
-    /*
-    if (bDebuggingText && Role == ROLE_Authority)
-    Level.Game.Broadcast(self, "HitAngle: "$HitAngle$"degrees");
-    */
+
     if (HitAngle >= FrontLeftAngle || Hitangle < FrontRightAngle)  //Frontal hit
     {
 
@@ -2802,7 +2701,6 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
         //Fix hit detection bug
         if (InAngleDegrees > 90)
         {
-
             if (bPenetrationText && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit Bug: Switching from front to rear");
@@ -2811,7 +2709,9 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
 
             //Run a pre-check
             if (URearArmorFactor > PenetrationNumber)
+            {
                 return false;
+            }
 
             bRearHit=true;
 
@@ -2842,14 +2742,10 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
         {
-            return true; //just to play the effect
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
         }
-        */
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(-Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -2950,14 +2846,10 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
         {
-            return true; //just to play the effect
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
         }
-        */
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -3063,10 +2955,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     {
        HitAngle = 360 + (HitAngle* -1);
     }
-    /*
-    if (bDebuggingText && Role == ROLE_Authority)
-    Level.Game.Broadcast(self, "HitAngle: "$HitAngle$"degrees");
-    */
+
     if (HitAngle >= FrontLeftAngle || Hitangle < FrontRightAngle)  //Frontal hit
     {
 
@@ -3126,14 +3015,10 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
         {
-            return true; //just to play the effect
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
         }
-        */
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(-Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -3234,14 +3119,10 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (bDebugTreadText && Role == ROLE_Authority)
-        Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
-        /*
-        if ((InAngle > TreadHitMinAngle) && (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-           class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold))
         {
-            return true; //just to play the effect
+            Level.Game.Broadcast(self, "InAngle: "$InAngle$"degrees");
         }
-        */
+
         InAngle= Acos(Normal(-HitRotation) dot Normal(Y));
         InAngleDegrees = InAngle * 57.2957795131;
 
@@ -3442,11 +3323,6 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             }
             else if (NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
             {
-                /*
-                if ()
-                Level.Game.Broadcast(self, "Periscope Hit");
-                DamageCannonOverlay();
-                */
             }
             else if (NewVehHitpoints[i].NewHitPointType == NHP_Traverse && bProjectilePenetrated == true) //useful for assault guns
             {
@@ -3843,31 +3719,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
-
-/*
-// test0r
-function exec DamageLeftTread()
-{
-    bLeftTrackDamaged = true;
-}
-
-// test0r
-function exec DamageRightTread()
-{
-    bRightTrackDamaged = true;
-}
-
-// test0r
-function exec TestEngineDamage()
-{
-    EngineHealth=0;
-}
-*/
-
-//simulated function SwitchWeapon(byte F)
-//{
-//    ServerChangeDriverPosition(F);
-//}
 
 function ServerChangeDriverPosition(byte F)
 {

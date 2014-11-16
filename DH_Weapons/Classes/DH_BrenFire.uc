@@ -9,12 +9,11 @@ var(FireAnims)  name        BipodDeployFireAnim;
 var(FireAnims)  name        BipodDeployFireLoopAnim;
 var(FireAnims)  name        BipodDeployFireEndAnim;
 
-//**************************************************************************************************
-
 function PlayFiring()
 {
-local   DH_BrenWeapon   BipodStatus;
-BipodStatus = DH_BrenWeapon(Owner);
+    local   DH_BrenWeapon   BipodStatus;
+
+    BipodStatus = DH_BrenWeapon(Owner);
 
     if (Weapon.Mesh != none)
     {
@@ -24,11 +23,11 @@ BipodStatus = DH_BrenWeapon(Owner);
             {
                 if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireLoopAnim))
                 {
-                Weapon.PlayAnim(BipodDeployFireLoopAnim, FireAnimRate, 0.0);
+                    Weapon.PlayAnim(BipodDeployFireLoopAnim, FireAnimRate, 0.0);
                 }
                 else
                 {
-                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
+                    Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
                 }
             }
             else
@@ -64,9 +63,9 @@ BipodStatus = DH_BrenWeapon(Owner);
     }
 
     if (FireSounds.Length > 0)
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
 
-    ClientPlayForceFeedback(FireForce);  // jdf
+    ClientPlayForceFeedback(FireForce);
 
     FireCount++;
 }

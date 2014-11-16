@@ -99,14 +99,6 @@ simulated event Touch(Actor Other)
 
             PlayEntrySplash(Other);
         }
-        /*
-        else if ( Other.IsA('ROArtilleryShell') && !Level.bDropDetail && Level.DetailMode != DM_Low )
-        {
-            //I should custom make a arty emitter that only has water (so it doesn't double up on smoke/explosion effects)
-            EntryActor = class'ROArtilleryWaterEmitter';
-            PlayEntrySplash(Other);
-        }
-        */
     }
 }
 

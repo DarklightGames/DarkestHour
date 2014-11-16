@@ -27,8 +27,6 @@ simulated function bool Accept(actor Incoming, Actor Source)
     {
         oldRot = Incoming.Rotation;
         newRot.Yaw = Rotation.Yaw;
-        /*if (Source != none)
-            newRot.Yaw += (32768 + Incoming.Rotation.Yaw - Source.Rotation.Yaw);*/
     }
 
     if (Pawn(Incoming) != none)

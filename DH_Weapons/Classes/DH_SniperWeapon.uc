@@ -36,60 +36,14 @@ var   Shader            ScopeScriptedShader;    // The shader that combines the 
 var   Material          ScriptedTextureFallback;// The texture to render if the users system doesn't support shaders
 
 // new scope vars
-var   Combiner          ScriptedScopeCombiner;
+var   Combiner  ScriptedScopeCombiner;
 
-var   texture           TexturedScopeTexture;
-var() float             OverlayCenterScale;
-var() float             OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-var()   float   OverlayCorrectionX;
-var()   float   OverlayCorrectionY;
-
-
-var   bool              bInitializedScope;      // Set to true when the scope has been initialized
-
-//=============================================================================
-// Functions
-//=============================================================================
-
-//===========================================
-// Used for debugging the weapons and scopes- Ramm
-//===========================================
-
-// Commented out for the release build
-/*
-exec function pfov(int thisFOV)
-{
-    if (!class'ROEngine.ROLevelInfo'.static.RODebugMode())
-        return;
-
-    scopePortalFOV = thisFOV;
-}
-
-exec function pPitch(int num)
-{
-    if (!class'ROEngine.ROLevelInfo'.static.RODebugMode())
-        return;
-
-    scopePitch = num;
-    scopePitchHigh = num;
-}
-
-exec function pYaw(int num)
-{
-    if (!class'ROEngine.ROLevelInfo'.static.RODebugMode())
-        return;
-
-    scopeYaw = num;
-    scopeYawHigh = num;
-}
-
-simulated exec function TexSize(int i, int j)
-{
-    if (!class'ROEngine.ROLevelInfo'.static.RODebugMode())
-        return;
-
-    ScopeScriptedTexture.SetSize(i, j);
-}*/
+var   texture   TexturedScopeTexture;
+var() float     OverlayCenterScale;
+var() float     OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var() float     OverlayCorrectionX;
+var() float     OverlayCorrectionY;
+var   bool      bInitializedScope;      // Set to true when the scope has been initialized
 
 // Helper function for the scope system. The scope system checks here to see when it should draw the portal.
 // If you want to limit any times the portal should/shouldn't be drawn, add them here.
@@ -415,7 +369,7 @@ simulated state IronSightZoomOut
                 PlayerViewZoom(false);
         }
 
-        SetTimer(GetAnimDuration(IronPutDown, 1.0) + FastTweenTime,false);
+        SetTimer(GetAnimDuration(IronPutDown, 1.0) + FastTweenTime, false);
     }
 }
 
@@ -471,10 +425,6 @@ simulated function PreTravelCleanUp()
         ScopeScriptedShader = none;
     }
 }
-
-//=============================================================================
-// Default Properties
-//=============================================================================
 
 defaultproperties
 {

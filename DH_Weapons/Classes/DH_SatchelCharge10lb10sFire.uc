@@ -7,8 +7,6 @@ class DH_SatchelCharge10lb10sFire extends SatchelCharge10lb10sFire;
 
 defaultproperties
 {
-    //** Ammo properties **//
     AmmoClass=class'DH_Weapons.DH_SachelChargeAmmo'
-
     ProjectileClass=class'DH_Weapons.DH_SatchelCharge10lb10sProjectile'
 }

@@ -5,10 +5,6 @@
 
 class DH_SmokeShellEffect extends Emitter;
 
-//==============================================================================
-// Default Properties
-//==============================================================================
-
 defaultproperties
 {
      Begin Object Class=SpriteEmitter Name=SpriteEmitter0

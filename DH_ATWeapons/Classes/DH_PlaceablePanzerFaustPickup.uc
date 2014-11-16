@@ -14,7 +14,6 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Ammo.Warhead1st');
     L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.Panzerfaust_world');
     L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.Panzerfaust_S');
-    //L.AddPrecacheMaterial(Material'ROInterfaceArt.HUD.hud_g43');
 }
 
 auto state Pickup
@@ -24,9 +23,7 @@ auto state Pickup
         return true;
     }
 
-    /* ValidTouch()
-     Validate touch (if valid return true to let other pick me up and trigger event).
-    */
+    //Validate touch (if valid return true to let other pick me up and trigger event).
     function bool ValidTouch(actor Other)
     {
         // make sure its a live player

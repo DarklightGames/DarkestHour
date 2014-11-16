@@ -178,7 +178,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             PlaySound(VehicleHitSound,, 5.5 * TransientSoundVolume);
             PlaySound(ExplodeSound[Rand(3)],, 2.5 * TransientSoundVolume);
 
-            if (EffectIsRelevant(Location,false))
+            if (EffectIsRelevant(Location, false))
             {
                 Spawn(ShellHitVehicleEffectClass,,,HitLocation + HitNormal*16,rotator(HitLocation));
 
@@ -266,7 +266,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         if (Level.NetMode == NM_DedicatedServer)
         {
             bCollided = true;
-            SetCollision(false,false);
+            SetCollision(false, false);
         }
         else
         {
@@ -371,7 +371,7 @@ simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
     if (Level.NetMode == NM_DedicatedServer)
     {
         bCollided = true;
-        SetCollision(false,false);
+        SetCollision(false, false);
     }
     else
     {
@@ -562,7 +562,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     Other.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
                 }
             }
-            else if (Role==Role_Authority)
+            else if (Role==ROLE_Authority)
             {
                 if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
                 {
@@ -748,7 +748,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
                 if (Level.NetMode == NM_DedicatedServer)
                 {
                     bCollided = true;
-                    SetCollision(false,false);
+                    SetCollision(false, false);
                 }
                 else
                 {

@@ -106,14 +106,6 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         SmokeEmitter = Spawn(ExplodeDirtEffectClass,self,, Location, rotator(vect(0,0,1)));
         SmokeEmitter.SetBase(Self);
     }
-
-    /*
-    // Mark Rally Point
-    if (Instigator.IsLocallyControlled())
-    {
-        ROPlayer(Instigator.Controller).ServerSaveRallyPointNoTrace(Location);
-    }
-    */
 }
 
 simulated function Destroyed()

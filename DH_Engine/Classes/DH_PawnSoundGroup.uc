@@ -21,25 +21,6 @@ static function Sound GetHitSound(optional class<DamageType> DamageType)
     return default.WoundingPainSoundGroup;
 }
 
-/*static function Sound GetDeathSound(optional int HitIndex)
-{
-    //Check for a Head shot
-    if (HitIndex == 1)
-        return default.HeadShotDeathSoundGroup;
-    //Check for Upper Torso shot
-    else if (HitIndex == 2)
-        return default.UpperBodyShotDeathSoundGroup;
-    //Check for Lower Torso shot
-    else if (HitIndex == 3)
-        return default.LowerBodyShotDeathSoundGroup;
-    //Check for Arm/Hand and Leg/Foot shot
-    else if (HitIndex >= 4 && HitIndex <= 15)
-        return default.LimbShotDeathSoundGroup;
-
-    //Hit somewhere without a group, return a generic sound
-    return default.GenericDeathSoundGroup;
-}*/
-
 defaultproperties
 {
      BurningPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Burning'

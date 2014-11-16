@@ -6,19 +6,6 @@
 class DH_C96Pickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-static function StaticPrecache(LevelInfo L)
-{
-/*  L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.M1A1_Thompson');
-    L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.AmmoPouches.Thompson_Ammo_pickup');
-    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.ThompsonA');
-    L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.ThompsonB');
-    L.AddPrecacheMaterial(Material'DH_Weapon_tex.weapon_icons.Thompson_ammo'); */
-}
-
 defaultproperties
 {
      TouchMessage="Pick Up: Mauser C96 pistol"

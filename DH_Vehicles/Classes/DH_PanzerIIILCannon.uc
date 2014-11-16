@@ -5,39 +5,6 @@
 
 class DH_PanzerIIILCannon extends DH_ROTankCannon;
 
-/*
-// Special tracer handling for this type of cannon
-simulated function UpdateTracer()
-{
-    local rotator SpawnDir;
-
-    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-        return;
-
-
-    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-    {
-        if (Instigator != none && Instigator.IsLocallyControlled())
-        {
-            SpawnDir = WeaponFireRotation;
-        }
-        else
-        {
-            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-        }
-
-        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
-        {
-            SpawnDir.Pitch += AddedPitch;
-        }
-
-        Spawn(DummyTracerClass,,, WeaponFireLocation, SpawnDir);
-
-        mLastTracerTime = Level.TimeSeconds;
-    }
-}
-*/
-
 defaultproperties
 {
      InitialTertiaryAmmo=30

@@ -27,7 +27,7 @@ simulated function Timer()
          }
          CannonReloadState = CR_ReloadedPart1;
          GetSoundDuration(ReloadSoundTwo) + GetSoundDuration(ReloadSoundThree);
-         SetTimer(GetSoundDuration(ReloadSoundOne),false);
+         SetTimer(GetSoundDuration(ReloadSoundOne), false);
    }
    else if (CannonReloadState == CR_ReloadedPart1)
    {
@@ -42,7 +42,7 @@ simulated function Timer()
 
          CannonReloadState = CR_ReloadedPart2;
          GetSoundDuration(ReloadSoundThree);
-         SetTimer(GetSoundDuration(ReloadSoundTwo),false);
+         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
    }
    else if (CannonReloadState == CR_ReloadedPart2)
    {
@@ -56,7 +56,7 @@ simulated function Timer()
          }
 
          CannonReloadState = CR_ReloadedPart3;
-         SetTimer(GetSoundDuration(ReloadSoundThree),false);
+         SetTimer(GetSoundDuration(ReloadSoundThree), false);
    }
    else if (CannonReloadState == CR_ReloadedPart3)
    {
@@ -65,7 +65,7 @@ simulated function Timer()
             bClientCanFireCannon = true;
         }
         CannonReloadState = CR_ReadyToFire;
-        SetTimer(0.0,false);
+        SetTimer(0.0, false);
    }
 }
 
@@ -102,14 +102,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
-
-    //Added ability for gunner to take nade, bash, and bayonet damage
-    /*   Removed this if/then to fix player vulnerability bug that was fixed in the After-Hourz AT-Gun fixes.
-    if (HitDriver(Hitlocation, Momentum) || ClassIsChildOf(DamageType,class'ROGrenadeDamType') || ClassIsChildOf(DamageType,class'ROWeaponBashDamageType') || ClassIsChildOf(DamageType,class'ROWeaponBayonetDamageType'))
-    {
-         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-    }
-    */
 }
 
 // There aren't any angles that are below the driver angle for the AT Gun cannon

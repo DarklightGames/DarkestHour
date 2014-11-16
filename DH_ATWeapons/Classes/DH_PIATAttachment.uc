@@ -29,17 +29,6 @@ simulated event ThirdPersonEffects()
     if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
         return;
 
-/*  if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
-    {
-        if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))
-            return;
-
-        WeaponLight();
-
-        mMuzFlash3rd = Spawn(mMuzFlashClass);
-        AttachToBone(mMuzFlash3rd, MuzzleBoneName);
-    }*/
-
     if (FlashCount == 0)
     {
         ROPawn(Instigator).StopFiring();

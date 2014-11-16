@@ -111,14 +111,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
             }
         }
 
-        // Process recoil
-        // Handle recoil if the framerate is really low causing deltatime to be really high
-/*      if (deltatime >= RecoilSpeed && ((Level.TimeSeconds - LastRecoilTime) <= (deltatime + (deltatime * 0.03))))
-        {
-            NewRotation += (RecoilRotator/RecoilSpeed) * deltatime/(deltatime/RecoilSpeed);
-        }
-        // Standard recoil
-        else*/ if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
+        if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
         {
             NewRotation += (RecoilRotator/RecoilSpeed) * deltatime;
         }
@@ -132,15 +125,6 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 
     NewPlayerRotation = NewRotation;
 
-//  if (Level.TimeSeconds - LastFreeAimSuspendTime < 0.5)
-//  {
-//      FreeAimBlendAmount = (Level.TimeSeconds - LastFreeAimSuspendTime)/0.5;
-//  }
-//  else
-//  {
-        FreeAimBlendAmount = 1;
-//  }
-
     // Add the freeaim movement in
     if (!bHudLocksPlayerRotation)
     {
@@ -148,15 +132,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
         WeaponBufferRotation.Pitch += (FAAWeaponRotationFactor * DeltaTime * aLookUp) * FreeAimBlendAmount;
     }
 
-    // Process recoil
-    // Handle recoil if the framerate is really low causing deltatime to be really high
-/*  if (deltatime >= RecoilSpeed && ((Level.TimeSeconds - LastRecoilTime) <= (deltatime + (deltatime * 0.03))))
-    {
-        AppliedRecoil = (RecoilRotator/RecoilSpeed) * deltatime/(deltatime/RecoilSpeed);
-        WeaponBufferRotation += AppliedRecoil;
-    }
-    // standard recoil
-    else*/ if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
+    if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
     {
         AppliedRecoil = (RecoilRotator/RecoilSpeed) * deltatime;
         WeaponBufferRotation += AppliedRecoil;
@@ -165,9 +141,6 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     {
         RecoilRotator = rot(0,0,0);
     }
-
-    // Add recoil from a weapon that has been fired
-    //WeaponBufferRotation += RecoilRotator;
 
     // Do the pitch and yaw limitation
     YawAdjust = WeaponBufferRotation.Yaw & 65535;
@@ -558,30 +531,20 @@ function ServerSaveArtilleryPosition()
     //StartTrace = Pawn.Location + Pawn.EyePosition();
     HitActor = trace(HitLocation,HitNormal,StartTrace + TraceDist * vector(AimRot),StartTrace,true, , HitMaterial);
 
-     RVT = Spawn(class'ROVolumeTest',self,,HitLocation);
+    RVT = Spawn(class'ROVolumeTest',self,,HitLocation);
 
-    /*if (Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon'))
+    if ((RVT != none && RVT.IsInNoArtyVolume()) || HitActor == none || HitNormal == vect(0, 0, -1))
     {
-    }
-    else*/ if ((RVT != none && RVT.IsInNoArtyVolume()) || HitActor == none || HitNormal == vect(0, 0, -1))
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
-            RVT.Destroy();
-            return;
-        }
-
+        ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
         RVT.Destroy();
-
-        ReceiveLocalizedMessage(class'ROArtilleryMsg', 0);
-
-    /*if (Pawn.Weapon != none && Pawn.Weapon.IsA('DH_RedSmokeWeapon'))
-    {
+        return;
     }
-    else
-    {*/
-    SavedArtilleryCoords = HitLocation;
-    //}
 
+    RVT.Destroy();
+
+    ReceiveLocalizedMessage(class'ROArtilleryMsg', 0);
+
+    SavedArtilleryCoords = HitLocation;
 }
 
 simulated function float GetMaxViewDistance()
@@ -883,18 +846,6 @@ function ServerLoadATAmmo(Pawn Gunner)
 //-----------------------------------------------------------------------------
 state PlayerWalking
 {
-
-    // --------------------------------
-    // For debugging
-
-    /*function ClientSetBehindView(bool B)
-    {
-        super(PlayerController).ClientSetBehindView(B);
-    }*/
-
-    // --------------------------------
-
-
     // Added a test for mantling
     function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
     {
@@ -1063,9 +1014,9 @@ state PlayerWalking
 
 state Mantling
 {
-    /* For reasons unknown, native prediction on the server insists on altering the client's velocity once
-    its animation finishes. This forcibly resets that velocity just long enough for the
-    server to catch up and end the state */
+    //For reasons unknown, native prediction on the server insists on altering the client's velocity once
+    //its animation finishes. This forcibly resets that velocity just long enough for the
+    //server to catch up and end the state
     event PlayerTick(float DeltaTime)
     {
         if (bDidMantle && Role < ROLE_Authority)
@@ -1129,23 +1080,6 @@ state Mantling
 
         DHP = DH_Pawn(Pawn);
 
-        /*if (!bLockJump && Level.TimeSeconds - LastMantleUpdate > 0.3)
-        {
-            DHP.SetLocation(DHP.MantleStartLocation);
-            SetTimer(0.0, false);
-            DHP.CancelMantle();
-
-            if (Role == ROLE_Authority)
-                GotoState('PlayerWalking');
-
-            bLockJump = true;
-            if (Role == ROLE_Authority)
-                ClientMessage("WARNING: Packet Loss Detected - Mantle Aborted!");
-            return;
-        }
-        else
-            LastMantleUpdate = Level.TimeSeconds;*/
-
         if (bPressedJump && !bLockJump)
         {
             SetTimer(0.0, false);
@@ -1167,29 +1101,6 @@ state Mantling
         {
             DHP.DoMantle(DeltaTime);
         }
-        /*else if (DH_Pawn(Pawn).bIsMantling)
-        {
-            SetTimer(0.1, false);
-        }*/
-
-        /*if (!bDidMantle)
-        {
-            if (!DH_Pawn(Pawn).DoMantle(DeltaTime))
-            {
-                bDidMantle = true;
-                DH_Pawn(Pawn).MantleAdjustHeight(false);
-            }
-            DH_Pawn(Pawn).DoMantle()
-        }
-        else
-        {
-            if (Physics != PHYS_Flying && Physics != PHYS_Falling && !DH_Pawn(Pawn).bIsCrouched)
-            {
-                DH_Pawn(Pawn).ShouldCrouch(true);
-                SetTimer(0.5,false);
-            }
-
-        }*/
     }
 
     function PlayerMove(float DeltaTime)
@@ -1319,7 +1230,7 @@ ignores SeePlayer, HearNoise, Bump;
                     else
                     {
                         Enable('Timer');
-                        SetTimer(0.7,false);
+                        SetTimer(0.7, false);
                     }
                 }
             }
@@ -1409,112 +1320,7 @@ function int GetSecGrenadeAmmo()
     return RI.Grenades[GrenadeWeapon + 1].Amount;
 }
 
-
-/*function ServerToggleBehindView()
-{
-    local bool B;
-
-    B = !bBehindView;
-    ClientSetBehindView(B);
-    bBehindView = B;
-
-    //ClientMessage("Running ServerToggle");
-}
-
-// Overridden for testing camera angles - TODO: remove before live build
-function CalcBehindView(out vector CameraLocation, out rotator CameraRotation, float Dist)
-{
-    local vector View,HitLocation,HitNormal;
-    local float ViewDist,RealDist;
-    local vector globalX,globalY,globalZ;
-    local vector localX,localY,localZ;
-    // dead behindview locked stuff
-    local ROPawn rpawn;
-    local rotator ViewRot;
-    local coords C;
-
-    // Red Orchestra stuff to prevent players from looking around when this is the enforced view mode
-    if (IsSpectating() && bLockedBehindView)
-    {
-        CameraRotation = ViewTarget.Rotation;
-
-        RPawn = ROPawn(ViewTarget);
-
-        if (RPawn != none)
-        {
-            CameraRotation.Pitch = RPawn.SmoothViewPitch;
-            CameraRotation.Yaw = RPawn.SmoothViewYaw;
-        }
-        //Dist *= 0.5;
-    }
-    else if (IsInState('Dead') && bLockedBehindView)
-    {
-        RPawn = ROPawn(ViewTarget);
-
-        if (RPawn != none)
-        {
-            C = ViewTarget.GetBoneCoords(RPawn.HeadBone);
-
-            // Rotate the view the proper direction
-            ViewRot = OrthoRotation(-C.YAxis, -C.ZAxis, C.XAxis);
-
-            CameraRotation = ViewRot;
-        }
-        else
-        {
-            CameraRotation = Rotation;
-        }
-    }
-    else
-    {
-        CameraRotation = Rotation;
-        //CameraRotation.yaw -= 16384;
-    }
-
-    CameraRotation.Roll = 0;
-    CameraLocation.Z += 12;
-
-    // add view rotation offset to cameraview (amb)
-    CameraRotation += CameraDeltaRotation;
-
-    View = vect(1,0,0) >> CameraRotation;
-
-    // add view radius offset to camera location and move viewpoint up from origin (amb)
-    RealDist = Dist;
-    Dist += CameraDeltaRad;
-
-    if (Trace(HitLocation, HitNormal, CameraLocation - Dist * vector(CameraRotation), CameraLocation,false,vect(10,10,10)) != none)
-        ViewDist = FMin((CameraLocation - HitLocation) dot View, Dist);
-    else
-        ViewDist = Dist;
-
-    if (!bBlockCloseCamera || !bValidBehindCamera || (ViewDist > 10 + FMax(ViewTarget.CollisionRadius, ViewTarget.CollisionHeight)))
-    {
-        //Log("Update Cam ");
-        bValidBehindCamera = true;
-        OldCameraLoc = CameraLocation - ViewDist * View;
-        OldCameraRot = CameraRotation;
-    }
-    else
-    {
-        //Log("Dont Update Cam "$bBlockCloseCamera@bValidBehindCamera@ViewDist);
-        SetRotation(OldCameraRot);
-    }
-
-    CameraLocation = OldCameraLoc;
-    CameraRotation = OldCameraRot;
-
-    // add view swivel rotation to cameraview (amb)
-    GetAxes(CameraSwivel,globalX,globalY,globalZ);
-    localX = globalX >> CameraRotation;
-    localY = globalY >> CameraRotation;
-    localZ = globalZ >> CameraRotation;
-    CameraRotation = OrthoRotation(localX,localY,localZ);
-}*/
-
-/**
-* Smooth field of view transition.
-*/
+//Smooth field of view transition.
 function AdjustView(float DeltaTime)
 {
     if (FOVAngle != DesiredFOV)
@@ -1582,17 +1388,6 @@ simulated function QueueHint(byte HintIndex, bool bForceNext)
     if (DHHintManager != none)
         DHHintManager.QueueHint(HintIndex, bForceNext);
 }
-
-/*
-// For debug
-exec function DebugHints()
-{
-    if (DHHintManager != none)
-        DHHintManager.DebugHints();
-    else
-        log("No HintManager present in DHPlayer. Are hints enabled?");
-}
-*/
 
 function BecomeSpectator()
 {

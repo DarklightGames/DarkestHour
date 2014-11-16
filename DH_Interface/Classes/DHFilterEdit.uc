@@ -59,17 +59,9 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
     sb_Options.ManageComponent(ck_Passworded);
     sb_Options.ManageComponent(ck_Bots);
     sb_Options.ManageComponent(cb_Stats);
-// if _RO_
     sb_Options.ManageComponent(ck_VACOnly);
-/*
-// end if _RO_
-    sb_Options.ManageComponent(cb_WeaponStay);
-    sb_Options.ManageComponent(cb_Translocator);
-// if _RO_
-*/
     RemoveComponent(cb_WeaponStay);
     RemoveComponent(cb_Translocator);
-// end if _RO_
     sb_Options.ManageComponent(cb_Mutators);
 
     for (i=0;i<3;i++)
@@ -259,31 +251,13 @@ function bool OkClick(GUIComponent Server)
     if (ck_Bots.IsChecked())
         Rules[Cnt++] = BuildRule("nobots","true", QT_Equals);
 
-// if _RO_
     if (ck_VACOnly.IsChecked())
         Rules[Cnt++] = BuildRule("vacsecure","true", QT_Equals);
-// end if _RO_
 
     if (cb_Stats.GetIndex()==1)
         Rules[Cnt++] = BuildRule("stats","true", QT_Equals);
     else if (cb_Stats.GetIndex()==2)
         Rules[Cnt++] = BuildRule("stats","false", QT_Equals);
-
-// if _RO_
-/*
-// end if _RO_
-    if (cb_WeaponStay.GetIndex()==1)
-        Rules[Cnt++] = BuildRule("weaponstay","true", QT_Equals);
-    else if (cb_WeaponStay.GetIndex()==2)
-        Rules[Cnt++] = BuildRule("weaponstay","false", QT_Equals);
-
-    if (cb_Translocator.GetIndex()==1)
-        Rules[Cnt++] = BuildRule("transloc","true", QT_Equals);
-    else if (cb_Translocator.GetIndex()==2)
-        Rules[Cnt++] = BuildRule("transloc","false", QT_Equals);
-// if _RO_
-*/
-// end if _RO_
 
     if (cb_Mutators.GetIndex()==0)
         Rules[Cnt++] = BuildRule("nomutators","true", QT_Equals);

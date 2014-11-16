@@ -178,7 +178,7 @@ function Timer()
                         bResupplied = true;
                     }
 
-                    if (!P.bHasMortarAmmo /*&& DHRI.bCarriesMortarAmmo*/)
+                    if (!P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo)
                     {
                         P.bHasMortarAmmo = true;
                         bResupplied = true;

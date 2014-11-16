@@ -9,12 +9,10 @@ var(FireAnims)  name        SightUpFireIronAnim;
 var(FireAnims)  name        SightUpFireIronLoopAnim;
 var(FireAnims)  name        SightUpFireIronEndAnim;
 
-//**************************************************************************************************
-
 function PlayFiring()
 {
-local   DH_FG42Weapon   SightStatus;
-SightStatus = DH_FG42Weapon(Owner);
+    local   DH_FG42Weapon   SightStatus;
+    SightStatus = DH_FG42Weapon(Owner);
 
     if (Weapon.Mesh != none)
     {
@@ -24,11 +22,11 @@ SightStatus = DH_FG42Weapon(Owner);
             {
                 if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronLoopAnim))
                 {
-                Weapon.PlayAnim(SightUpFireIronLoopAnim, FireAnimRate, 0.0);
+                    Weapon.PlayAnim(SightUpFireIronLoopAnim, FireAnimRate, 0.0);
                 }
                 else
                 {
-                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
+                    Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
                 }
             }
             else
@@ -49,11 +47,11 @@ SightStatus = DH_FG42Weapon(Owner);
             {
                 if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronLoopAnim))
                 {
-                Weapon.PlayAnim(SightUpFireIronAnim, FireAnimRate, FireTweenTime);
+                    Weapon.PlayAnim(SightUpFireIronAnim, FireAnimRate, FireTweenTime);
                 }
                 else
                 {
-                Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
+                    Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
                 }
             }
             else
@@ -64,27 +62,29 @@ SightStatus = DH_FG42Weapon(Owner);
     }
 
     if (FireSounds.Length > 0)
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+    {
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+    }
 
-    ClientPlayForceFeedback(FireForce);  // jdf
+    ClientPlayForceFeedback(FireForce);
 
     FireCount++;
 }
 
 function PlayFireEnd()
 {
-local   DH_FG42Weapon   SightStatus;
-SightStatus = DH_FG42Weapon(Owner);
+    local   DH_FG42Weapon   SightStatus;
+    SightStatus = DH_FG42Weapon(Owner);
 
     if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronEndAnim))
     {
         if (Instigator.bBipodDeployed && Weapon.HasAnim(SightUpFireIronEndAnim))
         {
-        Weapon.PlayAnim(SightUpFireIronEndAnim, FireEndAnimRate, FireTweenTime);
+            Weapon.PlayAnim(SightUpFireIronEndAnim, FireEndAnimRate, FireTweenTime);
         }
         else
         {
-        Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
+            Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
         }
     }
     else if (Weapon.HasAnim(FireEndAnim))

@@ -38,7 +38,7 @@ function Reset()
     if (bAutoStart)
         Trigger(self, none);
 
-    SetTimer(3,false);
+    SetTimer(3, false);
 }
 
 function Timer()
@@ -63,7 +63,6 @@ event Trigger(Actor Other, Pawn EventInstigator)
         if (NewURLs[RandomNum] != "")
             TeleReference.URL = NewURLs[RandomNum];
 
-        /*bEventsByTrigger &&*/
         if (bCallCorrelatedEvents && CorrelatedEvents[RandomNum] != '')
         {
             TriggerEvent(CorrelatedEvents[RandomNum], self, none); //Triggers the correlated event

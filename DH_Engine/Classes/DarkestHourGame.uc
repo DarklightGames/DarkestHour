@@ -251,11 +251,8 @@ function PostBeginPlay()
             o++;
         }
 
-        /*
-        Added for our overriden DHSpawnArea class.  Saves me having to
-        check in subsequent functions repeatedly.  Just lay 'em all out here once.
-        Colin Basnett, 2010
-        */
+        //Added for our overriden DHSpawnArea class.  Saves me having to
+        //check in subsequent functions repeatedly.  Just lay 'em all out here once.
         foreach AllActors(class'DHSpawnArea', DHSA)
         {
             if (DHSA.bMortarmanSpawnArea)
@@ -464,14 +461,6 @@ function CheckMortarmanSpawnAreas()
 
 function CheckTankCrewSpawnAreas()
 {
-    /*
-    If you're wondering what I was thinking here, this avoids me having to
-    override massive state functions so I could call a fancy CheckMortarmanSpawnAreas
-    function.  But since the check functions are always called in sequence together,
-    there's no point in doing all that.  I'll just append this to the
-    CheckTankCrewSpawnAreas function.
-    -Colin, 2010
-    */
     super.CheckTankCrewSpawnAreas();
 
     CheckMortarmanSpawnAreas();
@@ -688,7 +677,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 
         do
         {
-            if (FRand() < LevelInfo.VehicleBotRoleBalance /*0.3*/)
+            if (FRand() < LevelInfo.VehicleBotRoleBalance)
             {
                 AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
 
@@ -698,9 +687,6 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
                     break;
                 }
             }
-
-            // Override to allow bots to use MG/AT for testing purposes
-//          if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole))
 
             // Temp hack to prevent bots from getting MG roles
             if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || (GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG) ||
@@ -987,12 +973,8 @@ function AddDefaultInventory(Pawn aPawn)
     SetPlayerDefaults(aPawn);
 }
 
-/*
-The following is a clusterfuck of hacky overriding of RO's arbitrarily low limit
-of roles from 10 to 16.
--Basnett 23/12/2010
-*/
-
+//The following is a clusterfuck of hacky overriding of RO's arbitrarily low limit
+//of roles from 10 to 16.
 function AddRole(RORoleInfo NewRole)
 {
     local DHGameReplicationInfo DHGRI;
@@ -1133,7 +1115,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 
         do
         {
-            if (FRand() < LevelInfo.VehicleBotRoleBalance /*0.3*/)
+            if (FRand() < LevelInfo.VehicleBotRoleBalance)
             {
                 AltRole = GetVehicleRole(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole);
 
@@ -1359,7 +1341,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
-    /* Removes console spam whenever you kill an empty tank. */
+    //Removes console spam whenever you kill an empty tank
     if (Killed != none)
         super.Killed(Killer, Killed, KilledPawn, DamageType);
 }

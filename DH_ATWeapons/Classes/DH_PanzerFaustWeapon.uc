@@ -63,33 +63,6 @@ function ServerSetRange(int NewIndex)
     ROProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 }
 
-/*
-//DH Code
-simulated function Fire(float F)
-{
-    //Level.Game.Broadcast(self, "Fire");
-
-    if (bUsingSights)
-    {
-        DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
-
-        if (Role < ROLE_Authority)
-            ServerSetRange(RangeIndex);
-    }
-    else
-    {
-    DH_ProjectileFire(FireMode[0]).AddedPitch = 0;
-
-        if (Role < ROLE_Authority)
-            ServerSetRange(RangeIndex);
-    }
-
-    super.Fire(F);
-
-    //Level.Game.Broadcast(self, "Added pitch = "$DH_ProjectileFire(FireMode[0]).AddedPitch);
-}
-*/
-
 // Ovveriden to play the panzerfaust animations for different ranges
 simulated function PlayIdle()
 {
@@ -404,7 +377,7 @@ simulated state PostFiring
 
     simulated function BeginState()
     {
-        SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0),false);
+        SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0), false);
     }
 
     simulated function EndState()
@@ -519,17 +492,6 @@ simulated state AutoLoweringWeapon
 
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
-/*          if ((Instigator.PendingWeapon != none) && !Instigator.PendingWeapon.bForceSwitch)
-            {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
-                {
-                    //if (FireMode[Mode].bFireOnRelease && FireMode[Mode].bIsFiring)
-                    //    return false;
-                    if (FireMode[Mode].NextFireTime > Level.TimeSeconds + FireMode[Mode].FireRate*(1.f - MinReloadPct))
-                        DownDelay = FMax(DownDelay, FireMode[Mode].NextFireTime - Level.TimeSeconds - FireMode[Mode].FireRate*(1.f - MinReloadPct));
-                }
-            }*/
-
             if (Instigator.IsLocallyControlled())
             {
 
@@ -548,7 +510,7 @@ simulated state AutoLoweringWeapon
             ClientState = WS_PutDown;
         }
 
-        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate),false);
+        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
 
         for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
         {
@@ -598,39 +560,6 @@ Begin:
         }
     }
 }
-
-
-
-//
-//simulated function bool AllowClientStartFire(int mode)
-//{
-//    local bool canFire;
-//
-//    canFire = true;
-//
-//    if (RocketAttachment == none)
-//    {
-//        canFire = false;
-//    }
-//
-//  return canFire;
-//}
-//
-//
-///*simulated state FireAnimPlay
-//{
-//  simulated function BeginState()
-//  {
-//      SetServerWeaponState(GetStateName());
-//  }
-//
-//    simulated function EndState()
-//    {
-//        ClientState = WS_ReadyToFire;
-//        bWeaponAllowsSprint = true;
-//
-//    }
-//}*/
 
 simulated state RaisingWeapon
 {

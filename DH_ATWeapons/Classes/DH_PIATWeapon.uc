@@ -340,11 +340,8 @@ simulated function Fire(float F)
     }
 
     super.Fire(F);
-
-    //Level.Game.Broadcast(self, "Added pitch = "$DH_ProjectileFire(FireMode[0]).AddedPitch);
 }
 
-//************************************************************************
 simulated function PostBeginPlay()
 {
     local vector RocketLoc;
@@ -382,25 +379,23 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (/*WP != none && WP.AmmoAmount[m] < 1 && */AmmoAmount(0) < 1)
+        if (AmmoAmount(0) < 1)
         {
-            //log("Destroyed the fp ammoround");
             if (RocketAttachment != none)
+            {
                 RocketAttachment.Destroy();
+            }
         }
         else
         {
+            //log("didnt Destroyed the fp ammoround");
+            if (RocketAttachment == none)
+            {
+                RocketLoc = GetBoneCoords('Warhead').Origin;
+                RocketAttachment = Spawn(class 'DH_PIATAmmoRound', self,, RocketLoc);
 
-           //log("didnt Destroyed the fp ammoround");
-           if (RocketAttachment == none)
-           {
-
-                    RocketLoc = GetBoneCoords('Warhead').Origin;
-
-                    RocketAttachment = Spawn(class 'DH_PIATAmmoRound',self,, RocketLoc);
-
-               AttachToBone(RocketAttachment, 'Warhead');
-           }
+                AttachToBone(RocketAttachment, 'Warhead');
+            }
         }
     }
 
@@ -500,15 +495,6 @@ function bool HandlePickupQuery(pickup Item)
             }
         }
     }
-
-/*  if (class == Item.InventoryType)
-    {
-        wpu = WeaponPickup(Item);
-        if (wpu != none)
-            return !wpu.AllowRepeatPickup();
-        else
-            return false;
-    }*/
 
     // Drop current weapon and pickup the one on the ground
     if (Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup &&

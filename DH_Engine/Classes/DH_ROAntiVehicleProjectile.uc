@@ -91,7 +91,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
     log("AP.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
-    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') || 
+    if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
         return;
@@ -148,7 +148,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity), 
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity),
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
         {
             if (bDebuggingText && Role == ROLE_Authority)
@@ -420,9 +420,10 @@ simulated function DoShakeEffect()
         if (PC != none && PC.ViewTarget != none)
         {
             Dist = VSize(Location - PC.ViewTarget.Location);
+
             if (Dist < PenetrationMag * 3.0 && ShellDiameter > 2.0)
             {
-                scale = (PenetrationMag*3.0  - Dist) / (PenetrationMag*3.0 /*4.0*/);
+                scale = (PenetrationMag * 3.0  - Dist) / (PenetrationMag * 3.0);
                 scale *= BlurEffectScalar;
 
                 PC.ShakeView(ShakeRotMag*Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag*Scale, ShakeOffsetRate, ShakeOffsetTime);
@@ -448,7 +449,7 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
     if (!bDidExplosionFX)
     {
         PlaySound(ShatterVehicleHitSound,,5.5*TransientSoundVolume);
-        if (EffectIsRelevant(Location,false))
+        if (EffectIsRelevant(Location, false))
         {
             Spawn(ShellShatterEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
         }
@@ -472,7 +473,7 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
     if (Level.NetMode == NM_DedicatedServer)
     {
         bCollided = true;
-        SetCollision(false,false);
+        SetCollision(false, false);
     }
     else
     {

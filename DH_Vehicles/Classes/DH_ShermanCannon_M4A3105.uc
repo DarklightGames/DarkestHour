@@ -50,7 +50,7 @@ function IncrementRange()
     if (CurrentRangeIndex < RangeSettings.Length - 1)
     {
         if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
 
         CurrentRangeIndex++;
     }
@@ -61,7 +61,7 @@ function DecrementRange()
     if (CurrentRangeIndex > 0)
     {
         if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick',false,,SLOT_Interface);
+            //ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,,SLOT_Interface);
 
         CurrentRangeIndex --;
     }

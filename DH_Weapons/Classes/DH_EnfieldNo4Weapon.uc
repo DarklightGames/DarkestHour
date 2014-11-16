@@ -49,9 +49,9 @@ simulated function PlayReload()
     AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
-        SetTimer(AnimTimer - (AnimTimer * 0.1),false);
+        SetTimer(AnimTimer - (AnimTimer * 0.1), false);
     else
-        SetTimer(AnimTimer,false);
+        SetTimer(AnimTimer, false);
 
     if (Instigator.IsLocallyControlled())
     {
@@ -212,7 +212,7 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
             InitialAmount = InitialAmount * 2;
         }
 
-        if ((WP != none) /*&& ((WP.AmmoAmount[0] > 0) || (WP.AmmoAmount[1] > 0)) */)
+        if (WP != none)
         {
             InitialAmount = WP.AmmoAmount[m];
             PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;

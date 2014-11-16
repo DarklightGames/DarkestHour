@@ -70,23 +70,17 @@ Begin:
     GotoState('');
 }
 
-/* PointOfView()
-We don't ever want to allow behindview. It doesn't work with our system - Ramm
-*/
 simulated function bool PointOfView()
 {
     return false;
 }
 
-
 // Overriden to handle mesh swapping when entering the vehicle
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     Gotostate('EnteringVehicle');
-    super.ClientKDriverEnter(PC);
 
-//    log("clientK DriverPos "$DriverPositionIndex);
-//  log("clientK PendingPos "$PendingPositionIndex);
+    super.ClientKDriverEnter(PC);
 
     PendingPositionIndex = InitialPositionIndex;
     ServerChangeDriverPos();
@@ -201,7 +195,7 @@ simulated state ViewTransition
             {
 //                  if (IsLocallyControlled())
                     Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0),false);
+                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
             }
             else
                 GotoState('');
@@ -210,7 +204,7 @@ simulated state ViewTransition
         {
 //              if (IsLocallyControlled())
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0),false);
+            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
         }
         else
         {
@@ -370,25 +364,7 @@ simulated function DrawHUD(Canvas Canvas)
             }
         }
     }
-    /*
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
-    {
-        if (!Level.IsSoftwareRendering())
-        {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
 
-            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-            CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
-
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            HUDOverlay.SetRotation(CameraRotation);
-            Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-        }
-    }
-    else
-        ActivateOverlay(false);
-    */
     if (PC != none)
         // Draw tank, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)

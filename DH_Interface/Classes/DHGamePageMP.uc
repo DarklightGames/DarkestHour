@@ -66,7 +66,7 @@ function StartGame(string GameURL, bool bAlt)
             PlayerOwner().ConsoleCommand("relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
     }
         else
-                PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute,false);
+                PlayerOwner().ClientTravel(GameURL $ "?Listen",TRAVEL_Absolute, false);
             C.CloseAll(false,true);
 }
 

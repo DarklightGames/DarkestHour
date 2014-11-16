@@ -7,7 +7,7 @@ class DH_OrangeSmokeEffect extends Emitter;
 
 simulated function PostBeginPlay()
 {
-    SetTimer(20,false);
+    SetTimer(20, false);
 }
 
 simulated function Timer()
@@ -30,7 +30,7 @@ simulated function Timer()
     Emitters[0].FadeOutStartTime -= 1;
 
     if (Emitters[0].StartVelocityRange.X.Min < 0)
-        SetTimer(1,false);
+        SetTimer(1, false);
 }
 
 defaultproperties

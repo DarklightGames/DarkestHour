@@ -101,8 +101,10 @@ function BreakApart(vector HitLocation, optional vector momentum)
     // bHidden will trigger the effect
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if ((DestroyedEffect!=none) /*&& EffectIsRelevant(location,false)*/)
+        if (DestroyedEffect != none)
+        {
             Spawn(DestroyedEffect, Owner,, (Location + (DestroyedEffectOffset >> Rotation)));
+        }
     }
 
     gotostate('Broken');
@@ -147,7 +149,7 @@ auto state Working
         else
         {
                 bHidden = true;
-                SetCollision(false,false,false);
+                SetCollision(false, false, false);
         }
     }
 
@@ -170,26 +172,6 @@ auto state Working
             BreakApart(HitLocation, Momentum);
         }
     }
-
-/*  function Bump(actor Other)
-    {
-        log("Got bumped by "$Other);
-
-        if (Mover(Other) != none && Mover(Other).bResetting)
-            return;
-
-        if (ROVehicle(Other) != none)
-        {
-            log(Other$" hit us");
-
-            if (VSize(Other.Velocity)>100)
-            {
-                BreakApart(Other.Location, Other.Velocity);
-            }
-        }
-    }*/
-
-
 }
 
 state Broken
@@ -197,7 +179,6 @@ state Broken
     function BeginState()
     {
         super.BeginState();
-        //NetUpdateFrequency=2;
     }
 }
 

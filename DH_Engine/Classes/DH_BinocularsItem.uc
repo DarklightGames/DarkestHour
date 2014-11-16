@@ -65,7 +65,7 @@ simulated state StartMantle extends Busy
             ClientState = WS_PutDown;
         }
 
-        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate),false);
+        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
 
         for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
         {

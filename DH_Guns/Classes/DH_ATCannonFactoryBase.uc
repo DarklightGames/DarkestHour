@@ -235,7 +235,7 @@ function Deactivate()
 
     if (Role == ROLE_Authority && LastSpawnedVehicle != none && LastSpawnedVehicle.Health <= 0)
     {
-       ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,false);
+       ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 }
 
@@ -246,7 +246,7 @@ simulated function Reset()
 {
     if (Role == ROLE_Authority)
     {
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,false);
+        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 
     //log("Reset got called for "$self);
@@ -293,7 +293,7 @@ event VehicleDestroyed(Vehicle V)
 {
     if (TotalSpawnedVehicles >= VehicleRespawnLimit || !bFactoryActive)
     {
-        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex,false);
+        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 
     super.VehicleDestroyed(V);

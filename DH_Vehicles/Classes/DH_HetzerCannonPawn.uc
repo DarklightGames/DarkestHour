@@ -147,7 +147,7 @@ simulated state ViewTransition
             if( Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim) )
             {
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0),false);
+                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
             }
             else
                 GotoState('');
@@ -155,7 +155,7 @@ simulated state ViewTransition
         else if ( Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim) )
         {
             Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0),false);
+            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
         }
         else
         {

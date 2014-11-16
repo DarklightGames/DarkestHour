@@ -184,12 +184,6 @@ function UpdateRoleEquipment()
                     count = 3;
                 }
 
-/*                if (desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteStaticLine" || desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteStaticline"
-                     || desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteStaticline" || desiredRole.GivenItems[i] == "DH_Equipment.DH_Parachutestaticline") //|| desiredRole.GivenItems[i] == "DH_Equipment.DH_ParachuteItem")
-                {
-                    bHideItem = true;
-                }*/
-
                 if (!bHideItem)
                 {
                 if (WeaponAttach.default.menuImage != none)
@@ -431,9 +425,6 @@ function AutoPickRole()
     else
         ChangeDesiredRole(none);
 }
-
-//*************************************************************************************************************************************************************
-//*************************************************************************************************************************************************************
 
 defaultproperties
 {

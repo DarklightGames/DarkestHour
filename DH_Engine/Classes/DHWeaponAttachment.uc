@@ -46,7 +46,7 @@ simulated event ThirdPersonEffects()
                 }
                 else
                 {
-                    Spawn(class'DH_BulletHitEffect',,, mHitLocation, Rotator(-mHitNormal));
+                    Spawn(class'DH_BulletHitEffect',,, mHitLocation, rotator(-mHitNormal));
                     CheckForSplash();
                 }
             }
@@ -66,12 +66,6 @@ simulated event ThirdPersonEffects()
 
         if (!bAnimNotifiedShellEjects)
             SpawnShells(1.0);
-
-        /*if (ROSmoke != none)
-        {
-            log("spawning a smoke particle");
-            ROSmoke.SpawnParticle(2);
-        }*/
     }
 
     if (FlashCount == 0)

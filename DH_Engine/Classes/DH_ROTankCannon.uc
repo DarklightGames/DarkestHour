@@ -679,12 +679,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
        HitAngle = 360 + (HitAngle* -1);
     }
 
-    /*
-    if (side >= 0)
-    {
-       HitAngle = 360 + (HitAngle* -1);
-    }
-    */
     HitAngle = HitAngle - WeaponRotationDegrees;
 
     if (HitAngle < 0)
@@ -951,12 +945,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
        HitAngle = 360 + (HitAngle* -1);
     }
 
-    /*
-    if (side >= 0)
-    {
-       HitAngle = 360 + (HitAngle* -1);
-    }
-    */
     HitAngle = HitAngle - WeaponRotationDegrees;
 
     if (HitAngle < 0)
@@ -1223,12 +1211,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
        HitAngle = 360 + (HitAngle* -1);
     }
 
-    /*
-    if (side >= 0)
-    {
-       HitAngle = 360 + (HitAngle* -1);
-    }
-    */
     HitAngle = HitAngle - WeaponRotationDegrees;
 
     if (HitAngle < 0)
@@ -1496,12 +1478,6 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
        HitAngle = 360 + (HitAngle* -1);
     }
 
-    /*
-    if (side >= 0)
-    {
-       HitAngle = 360 + (HitAngle* -1);
-    }
-    */
     HitAngle = HitAngle - WeaponRotationDegrees;
 
     if (HitAngle < 0)
@@ -1769,12 +1745,6 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
        HitAngle = 360 + (HitAngle* -1);
     }
 
-    /*
-    if (side >= 0)
-    {
-       HitAngle = 360 + (HitAngle* -1);
-    }
-    */
     HitAngle = HitAngle - WeaponRotationDegrees;
 
     if (HitAngle < 0)
@@ -2462,7 +2432,7 @@ simulated function Timer()
          }
          CannonReloadState = CR_ReloadedPart1;
          GetSoundDuration(ReloadSoundThree) + GetSoundDuration(ReloadSoundFour);
-         SetTimer(GetSoundDuration(ReloadSoundOne),false);
+         SetTimer(GetSoundDuration(ReloadSoundOne), false);
    }
    else if (CannonReloadState == CR_ReloadedPart1)
    {
@@ -2477,7 +2447,7 @@ simulated function Timer()
 
          CannonReloadState = CR_ReloadedPart2;
          GetSoundDuration(ReloadSoundFour);
-         SetTimer(GetSoundDuration(ReloadSoundTwo),false);
+         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
    }
    else if (CannonReloadState == CR_ReloadedPart2)
    {
@@ -2491,7 +2461,7 @@ simulated function Timer()
          }
 
          CannonReloadState = CR_ReloadedPart3;
-         SetTimer(GetSoundDuration(ReloadSoundThree),false);
+         SetTimer(GetSoundDuration(ReloadSoundThree), false);
    }
    else if (CannonReloadState == CR_ReloadedPart3)
    {
@@ -2505,7 +2475,7 @@ simulated function Timer()
          }
 
          CannonReloadState = CR_ReloadedPart4;
-         SetTimer(GetSoundDuration(ReloadSoundFour),false);
+         SetTimer(GetSoundDuration(ReloadSoundFour), false);
    }
    else if (CannonReloadState == CR_ReloadedPart4)
    {
@@ -2514,7 +2484,7 @@ simulated function Timer()
             bClientCanFireCannon = true;
         }
         CannonReloadState = CR_ReadyToFire;
-        SetTimer(0.0,false);
+        SetTimer(0.0, false);
    }
 }
 

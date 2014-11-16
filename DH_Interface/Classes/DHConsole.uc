@@ -31,7 +31,7 @@ event ConnectFailure(string FailCode,string URL)
             if(SavedPasswords[Index].Server == Server)
             {
                 ViewportOwner.Actor.ClearProgressMessages();
-                ViewportOwner.Actor.ClientTravel(URL$"?password="$SavedPasswords[Index].Password,TRAVEL_Absolute,false);
+                ViewportOwner.Actor.ClientTravel(URL$"?password="$SavedPasswords[Index].Password,TRAVEL_Absolute, false);
                 return;
             }
         }
@@ -116,7 +116,7 @@ event ConnectFailure(string FailCode,string URL)
         {
             SteamLoginRetryCount++;
 
-            ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute,false);
+            ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute, false);
             ViewportOwner.GUIController.CloseAll(false, true);
             return;
         }
@@ -134,7 +134,7 @@ event ConnectFailure(string FailCode,string URL)
         {
             SteamLoginRetryCount++;
 
-            ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute,false);
+            ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute, false);
             ViewportOwner.GUIController.CloseAll(false, true);
             return;
         }

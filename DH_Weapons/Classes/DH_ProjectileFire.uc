@@ -212,19 +212,13 @@ function CalcSpreadModifiers()
 
     if (Instigator.bBipodDeployed)
     {
-        //if (ROMGbase(ROWeaponPtr).bIsMounted)
-            Spread *= BipodDeployedSpreadModifier;
-        //else
-        //  Spread *= 2.0;
-        //log("Your MG spread is "$Spread);
+        Spread *= BipodDeployedSpreadModifier;
     }
 
     if (ROP.LeanAmount != 0)
     {
         Spread *= LeanSpreadModifier;
     }
-
-    //log("Final Spread is "$Spread);
 }
 
 
@@ -296,16 +290,8 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
                     if (HitPawn != none)
                     {
-                         // Hit detection debugging
-                         /*log("PreLaunchTrace hit "$HitPawn.PlayerReplicationInfo.PlayerName);
-                         HitPawn.HitStart = Start;
-                         HitPawn.HitEnd = End;*/
-                         if (!HitPawn.bDeleteMe)
+                        if (!HitPawn.bDeleteMe)
                             HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType,HitPoints);
-
-                         // Hit detection debugging
-                         //if (Level.NetMode == NM_Standalone)
-                         //   HitPawn.DrawBoneLocation();
                     }
                     else
                     {
@@ -404,9 +390,9 @@ function PlayFiring()
     }
 
     if (FireSounds.Length > 0)
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,,,false);
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
 
-    ClientPlayForceFeedback(FireForce);  // jdf
+    ClientPlayForceFeedback(FireForce);
 
     FireCount++;
 }

@@ -55,20 +55,6 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
     }
 }
 
-// Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
-/*simulated function PostBeginPlay()
-{
-    local vector Offset;
-
-    super.PostBeginPlay();
-
-    Offset.Z += 200;
-
-    ExitPositions[0]=GetBoneCoords('mg_pitch');// + Offset;
-    ExitPositions[1]=GetBoneCoords('mg_pitch');// + Offset;
-}
-*/
-
 // Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
 simulated function ClientKDriverLeave(PlayerController PC)
 {
@@ -253,7 +239,7 @@ function float GetAmmoReloadState() // TEMP partial demo, pending consolidation 
             return 0.0;
         }
         else if (Role == ROLE_Authority && MG.bReloading && MG.TimerRate > 0.0)
-        {            
+        {
             ProportionOfReloadRemaining = 1.0 - (MG.TimerCounter / MG.TimerRate);
 
             return Ceil(4.0 * ProportionOfReloadRemaining) / 4.0; // round to increments of 0.25

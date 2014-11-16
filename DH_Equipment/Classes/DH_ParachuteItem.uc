@@ -68,47 +68,50 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     }
 }
 
-//******************************************************************************
 simulated state RaisingWeapon
 {
-        simulated function Timer()
-        {
+    simulated function Timer()
+    {
         GotoState('Idle');
-        }
+    }
 
-        simulated function BeginState()
-        {
+    simulated function BeginState()
+    {
         local DHPlayer player;
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if (Instigator.Physics == PHYS_Falling) // If player is falling, this resets stamina to full (stam removed when chute deploys in ParachuteStaticLine)
+        // If player is falling, this resets stamina to full (stam removed when chute deploys in ParachuteStaticLine)
+        if (Instigator.Physics == PHYS_Falling)
         {
             bUsedParachute = true;
             DH_Pawn(Instigator).Stamina = DH_Pawn(Instigator).default.Stamina;
         }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if (ClientState == WS_Hidden)
         {
             PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
-            ClientPlayForceFeedback(SelectForce);  // jdf
+
+            ClientPlayForceFeedback(SelectForce);
 
             if (Instigator.IsLocallyControlled())
             {
-                if ((Mesh!=none) && HasAnim(SelectAnim))
+                if (Mesh!=none && HasAnim(SelectAnim))
+                {
                     PlayAnim(SelectAnim, SelectAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_BringUp;
         }
 
-        SetTimer(GetAnimDuration(SelectAnim, SelectAnimRate),false);
+        SetTimer(GetAnimDuration(SelectAnim, SelectAnimRate), false);
 
         // Hint check
         player = DHPlayer(Instigator.Controller);
 
         if (player != none)
+        {
             player.QueueHint(2, true);
+        }
     }
 
     simulated function EndState()
@@ -134,15 +137,19 @@ simulated state LoweringWeapon
             if (Instigator.IsLocallyControlled())
             {
                 if (ClientState == WS_BringUp)
+                {
                     TweenAnim(SelectAnim,PutDownTime);
+                }
                 else if (HasAnim(PutDownAnim))
+                {
                     PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_PutDown;
         }
 
-        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate),false);
+        SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
     }
 
     simulated function EndState()
@@ -165,42 +172,40 @@ simulated state LoweringWeapon
                 }
             }
         }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         if (bUsedParachute && Instigator.Physics != PHYS_Falling)
         {
-            Instigator.DeleteInventory(self); // If the player has already parachuted, once StaticLine calls the weapon change, this item self deletes
+            Instigator.DeleteInventory(self);
         }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        }
+    }
 }
 
 //******************************************************************************
 // Overwritten to prevent 1st person arms & chute changing pitch rotation
 simulated event RenderOverlays(Canvas Canvas)
 {
-//  local int m;
-        local rotator RollMod;
-        local rotator YawMod;
-        local ROPlayer Playa;
+    local rotator RollMod;
+    local rotator YawMod;
+    local ROPlayer Playa;
 
+    if (Instigator == none)
+    {
+        return;
+    }
 
-        if (Instigator == none)
-            return;
-
-        // Lets avoid having to do multiple casts every tick - Ramm
-        Playa = ROPlayer(Instigator.Controller);
+    // Lets avoid having to do multiple casts every tick - Ramm
+    Playa = ROPlayer(Instigator.Controller);
 
     Canvas.DrawActor(none, false, true);    // amb: Clear the z-buffer here
     SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
     RollMod = Instigator.GetViewRotation();
     YawMod.Yaw = RollMod.Yaw;
-        SetRotation(YawMod);
+    SetRotation(YawMod);
 
-        bDrawingFirstPerson = true;
-        Canvas.DrawActor(self, false, false, 90);   //DisplayFOV);
-        bDrawingFirstPerson = false;
+    bDrawingFirstPerson = true;
+    Canvas.DrawActor(self, false, false, 90);   //DisplayFOV);
+    bDrawingFirstPerson = false;
 }
-//******************************************************************************
 
 simulated function AnimEnd(int channel)
 {
@@ -232,12 +237,7 @@ simulated function bool IsBusy()
 
 simulated function bool WeaponCanSwitch()
 {
-    if (Instigator.Physics == PHYS_Falling)
-    {
-    // Prevent any weapon use until safely on the ground
-    return false;
-    }
-    else return true;
+    return Instigator.Physics != PHYS_Falling;
 }
 
 simulated function bool WeaponAllowSprint()
