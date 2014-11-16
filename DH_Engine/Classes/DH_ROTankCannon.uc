@@ -2397,7 +2397,7 @@ simulated function bool ConsumeAmmo(int Mode)
 function bool GiveInitialAmmo()
 {
     if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo || 
-        AltAmmoCharge != InitialAltAmmo || NumMags != default.NumMags || NumSecMags != default.NumSecMags || NumTertMags != default.NumTertMags || NumAltMags != default.NumAltMags)
+        AltAmmoCharge != InitialAltAmmo || NumAltMags != default.NumAltMags)
     {
         MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
         MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
