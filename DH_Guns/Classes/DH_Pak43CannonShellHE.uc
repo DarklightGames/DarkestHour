@@ -45,6 +45,7 @@ defaultproperties
      DHPenetrationTable(9)=1.900000
      DHPenetrationTable(10)=1.500000
      ShellDiameter=8.800000
+     bIsAlliedShell=false
      PenetrationMag=1020.000000
      ShellImpactDamage=class'DH_Guns.DH_Pak43CannonShellDamageAP'
      ImpactDamage=550

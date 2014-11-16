@@ -80,5 +80,6 @@ defaultproperties
      Damage=450.000000
      DamageRadius=200.000000
      MyDamageType=class'DH_Vehicles.DH_PanzerIVCannonShellDamageHEAT'
+     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
      Tag="Gr.38 Hl/C"
 }
