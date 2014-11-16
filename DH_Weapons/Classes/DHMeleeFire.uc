@@ -8,7 +8,7 @@ class DHMeleeFire extends ROMeleeFire
 
 const SoundRadius = 32.000000;
 
-function DoTrace(vector Start, Rotator Dir)
+function DoTrace(vector Start, rotator Dir)
 {
     local vector End, HitLocation, HitNormal;
     local Actor Other;
@@ -31,7 +31,7 @@ function DoTrace(vector Start, Rotator Dir)
     // do precision hit point trace to see if we hit a player or something else
     Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start);
 
-    if (Other == none || VSizeSquared(Start-HitLocation) > GetTraceRangeSquared())
+    if (Other == none || VSizeSquared(Start - HitLocation) > GetTraceRangeSquared())
     {
         for(i = 0; i < 4; i++)
         {
@@ -91,11 +91,11 @@ function DoTrace(vector Start, Rotator Dir)
             {
                 if (Weapon.bBayonetMounted)
                 {
-                    Weapon.PlaySound(GroundStabSound, SLOT_None,FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
                 }
                 else
                 {
-                    Weapon.PlaySound(GroundBashSound, SLOT_None,FireVolume,, SoundRadius,, true);
+                    Weapon.PlaySound(GroundBashSound, SLOT_None, FireVolume,, SoundRadius,, true);
                 }
             }
 
@@ -105,15 +105,15 @@ function DoTrace(vector Start, Rotator Dir)
 
     if (Other != none && Other != Instigator && Other.Base != Instigator)
     {
+        scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime); // result 0 to 1
+
         if (Weapon.bBayonetMounted)
         {
-            scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime); // result 0 to 1
             Damage = BayonetDamageMin + scale * (BayonetDamageMax - BayonetDamageMin);
             ThisDamageType = BayonetDamageType;
         }
         else
         {
-            scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime); // result 0 to 1
             Damage = DamageMin + scale * (DamageMax - DamageMin);
             ThisDamageType = DamageType;
         }
