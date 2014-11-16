@@ -158,8 +158,6 @@ simulated function SetAlliedColour()
 
     if (DHGRI != none)
     {
-//       log("SAC running, nation ID: "$DHGRI.AlliedNationID);
-
          if (bSimpleColours || DHGRI.AlliedNationID == 1)
          {
              CaptureBarTeamColors[1].R=64;
@@ -169,7 +167,6 @@ simulated function SetAlliedColour()
              SideColors[1].G=140;
              SideColors[1].B=190;
              AlliedNationID = 1;
-//             log("SAC has run, colour is blue");
          }
          else if (DHGRI.AlliedNationID == 2)
          {
@@ -180,7 +177,6 @@ simulated function SetAlliedColour()
              SideColors[1].G=155;
              SideColors[1].B=20;
              AlliedNationID = 2;
-//             log("SAC has run, colour is yellow");
          }
          else
          {
@@ -242,7 +238,6 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
         C.DrawColor = GetTeamColour(PRI.Team.TeamIndex);
     else
         C.DrawColor = GetTeamColour(0);
-        //C.DrawColor = class'PlayerController'.Default.TeamBeaconTeamColors[0];
 
     C.Font = GetPlayerNameFont(C);
     //C.TextSize(PRI.PlayerName, strX, strY);
@@ -398,7 +393,8 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
 
         // Figure what width to use to break the string at
         InitialXL = Message.DX;
-//      TempXL = Min(InitialXL, C.SizeX * class'ROCriticalMessage'.default.maxMessageWidth); // Matt: replaced by line below to use max width specified in ROCriticalMessage subclass
+
+        // Matt: replaced by line below to use max width specified in ROCriticalMessage subclass
         TempXL = Min(InitialXL, C.SizeX * class<ROCriticalMessage>(Message.Message).default.maxMessageWidth);
 
         if (TempXL < Message.DY * 8.0) // only wrap if we have enough text
@@ -460,7 +456,6 @@ function color GetTeamColour(byte Team)
     if (!bSetColour)
     {
        SetAlliedColour();
-       //log("Running SAC from GetTeamColour");
     }
 
     return SideColors[Team];
@@ -513,13 +508,8 @@ simulated event PostRender(canvas Canvas)
 simulated function DrawHudPassC(Canvas C)
 {
     local VoiceChatRoom VCR;
-    //local float PortraitWidth,PortraitHeight, Abbrev, SmallH, NameWidth;
-    //local string PortraitString;
-
     local ROPawn ROP;
     local DHGameReplicationInfo GRI;
-    //local int i;
-    //local float X, Y, XL, YL, alpha;
     local float Y, XL, YL, alpha;
     local string S;
     local color myColor;
@@ -664,7 +654,6 @@ simulated function DrawHudPassC(Canvas C)
                 // Check width & height of text label
                 S = class'ROTeamGame'.static.ParseLoadingHintNoColor(OpenMapText, PlayerController(Owner));
                 C.Font = getSmallMenuFont(C);
-                //C.TextSize(S, XL, YL);
 
                 // Draw text
                 MapUpdatedText.text = S;
@@ -697,10 +686,6 @@ simulated function DrawHudPassC(Canvas C)
 
     if ((Level.NetMode == NM_Standalone || GRI.bAllowNetDebug) && bShowRelevancyDebugOverlay)
        DrawNetworkActors(C);
-
-    // Comment Out for Release
-    //if (Level.NetMode == NM_StandAlone)
-    //  DrawCrosshair(C);
 
     // portrait
     if ((bShowPortrait || (bShowPortraitVC && Level.TimeSeconds - LastPlayerIDTalkingTime < 2.0)))
@@ -785,75 +770,6 @@ simulated function DrawHudPassC(Canvas C)
             //Draw the voice icon
             DrawVoiceIcon(C, PortraitPRI);
         }
-
-        /*
-        PortraitWidth = 0.125 * C.ClipY;
-        PortraitHeight = 1.5 * PortraitWidth;
-        C.DrawColor = WhiteColor;
-
-        C.SetPos(-PortraitWidth*PortraitX + 0.025*PortraitWidth,0.5*(C.ClipY-PortraitHeight) + 0.025*PortraitHeight);
-        C.DrawTile(Portrait, PortraitWidth, PortraitHeight, 0, 0, 256, 384);
-
-        C.SetPos(-PortraitWidth*PortraitX,0.5*(C.ClipY-PortraitHeight));
-        C.Font = GetFontSizeIndex(C,-2);
-        PortraitString = PortraitPRI.PlayerName;
-        C.StrLen(PortraitString,XL,YL);
-        if (XL > PortraitWidth)
-        {
-            C.Font = GetFontSizeIndex(C,-4);
-            C.StrLen(PortraitString,XL,YL);
-            if (XL > PortraitWidth)
-            {
-                Abbrev = float(len(PortraitString)) * PortraitWidth/XL;
-                PortraitString = left(PortraitString,Abbrev);
-                C.StrLen(PortraitString,XL,YL);
-            }
-        }
-
-        // Merge - Don't think we need this
-//      C.DrawColor = C.static.MakeColor(160,160,160);
-//      C.SetPos(-PortraitWidth*PortraitX + 0.025*PortraitWidth,0.5*(C.ClipY-PortraitHeight) + 0.025*PortraitHeight);
-//      C.DrawTile(Material'XGameShaders.ModuNoise', PortraitWidth, PortraitHeight, 0.0, 0.0, 512, 512);
-
-        C.DrawColor = WhiteColor;
-        C.SetPos(-PortraitWidth*PortraitX,0.5*(C.ClipY-PortraitHeight));
-        //C.DrawTileStretched(texture 'InterfaceContent.Menu.BorderBoxA1', 1.05 * PortraitWidth, 1.05*PortraitHeight);
-        C.DrawTileStretched(Texture'InterfaceArt_tex.Menu.RODisplay', 1.05 * PortraitWidth, 1.05*PortraitHeight);
-
-        C.DrawColor = WhiteColor;
-
-        X = C.ClipY/256-PortraitWidth*PortraitX;
-        Y = 0.5*(C.ClipY+PortraitHeight) + 0.06*PortraitHeight;
-        C.SetPos(X + 0.5 * (PortraitWidth - XL), Y);
-
-        if (PortraitPRI != none)
-        {
-            if (PortraitPRI.Team != none)
-            {
-                if (PortraitPRI.Team.TeamIndex == 0)
-                    C.DrawColor = RedColor;
-                else
-                    C.DrawColor = TurqColor;
-            }
-
-            C.DrawText(PortraitString,true);
-
-            if (Level.TimeSeconds - LastPlayerIDTalkingTime < 2.0
-                && PortraitPRI.ActiveChannel != -1
-                && PlayerOwner.VoiceReplicationInfo != none)
-            {
-                VCR = PlayerOwner.VoiceReplicationInfo.GetChannelAt(PortraitPRI.ActiveChannel);
-                if (VCR != none)
-                {
-                    PortraitString = "(" @ VCR.GetTitle() @ ")";
-                    C.StrLen(PortraitString, XL, YL);
-                    if (PortraitX == 0)
-                        C.SetPos(Max(0, X + 0.5 * (PortraitWidth - XL)), Y + YL);
-                    else C.SetPos(X + 0.5 * (PortraitWidth - XL), Y + YL);
-                    C.DrawText(PortraitString);
-                }
-            }
-        }*/
     }
     if (bShowWeaponInfo && PawnOwner != none && PawnOwner.Weapon != none)
         PawnOwner.Weapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
@@ -871,12 +787,10 @@ simulated function DrawHudPassC(Canvas C)
     }
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------------------
 // DrawVehicleIcon - draws all the vehicle HUD info, e.g. vehicle icon, passengers, ammo, speed, throttle
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 //----------------------------------------------------------------------------------------------------------------------------------
-
 function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWeaponPawn passenger)
 {
     local  ROTreadCraft           threadCraft;
@@ -1362,11 +1276,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
         {
             if (i - 1 >= vehicle.WeaponPawns.Length)
             {
-//              warn("VehicleHudOccupantsX[" $ i $ "] causes out-of-bounds access in vehicle.WeaponPawns[] (length is " $ vehicle.WeaponPawns.Length $ ")");
-//              continue;
-                break; // Matt: added to replace lines above - if we're already beyond WeaponPawns.Length, there's no point continuing with the for loop
+                // Matt: added to replace lines above - if we're already beyond WeaponPawns.Length, there's no point continuing with the for loop
+                break;
             }
-            else if (vehicle.WeaponPawns[i - 1] == none) // Matt: added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
+            // Matt: added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
+            else if (vehicle.WeaponPawns[i - 1] == none)
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
             }
@@ -1390,24 +1304,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
             }
 
-            // Matt: removed as I see no purpose in this - we know we have a valid WeaponPawn & a valid VehicleHudOccupantsX entry, so just draw it using i as the index
-            // Check to make sure replicated array index doesn't cause out of bounds access
-//          current = vehicle.WeaponPawns[i - 1].PositionInArray;
-
-//          if (current >= vehicle.VehicleHudOccupantsX.Length - 1 || current < 0)
-//          {
-//              warn("vehicle.WeaponPawns[" $ (i-1) $ "].PositionInArray " $ current $ " causes out-of-bounds access in vehicle.VehicleHudOccupantsX[] (length is " $
-//                  vehicle.VehicleHudOccupantsX.Length $ ")");
-//          }
-//          else
-//          {
-//              VehicleOccupants.PosX = vehicle.VehicleHudOccupantsX[current + 1];
-//              VehicleOccupants.PosY = vehicle.VehicleHudOccupantsY[current + 1];
-//              DrawSpriteWidgetClipped(Canvas, VehicleOccupants, coords, true);
-//          }
-
             VehicleOccupants.PosX = vehicle.VehicleHudOccupantsX[i];
             VehicleOccupants.PosY = vehicle.VehicleHudOccupantsY[i];
+
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, coords, true);
         }
     }
@@ -1808,7 +1707,6 @@ function DrawPlayerNames(Canvas C)
     }
 }
 
-
 //-----------------------------------------------------------------------------
 // DrawObjectives - Renders the objectives on the HUD similar to the scoreboard
 //-----------------------------------------------------------------------------
@@ -1911,10 +1809,6 @@ simulated function DrawObjectives(Canvas C)
 
     // Calculate absolute coordinates of level map
     GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, subCoords);
-    //subCoords.PosX = MapCoords.PosX + MapCoords.width * MapLevelBounds.PosX;
-    //subCoords.PosY = MapCoords.PosY + MapCoords.height * MapLevelBounds.PosY;
-    //subCoords.height = MapCoords.height * MapLevelBounds.TextureScale;
-    //subCoords.width = subCoords.height; // We want to show a square map, so force coords to be square
 
     // Save coordinates for use in menu page
     MapLevelImageCoordinates = subCoords;
@@ -1983,13 +1877,6 @@ simulated function DrawObjectives(Canvas C)
                 MapIconATGun.Tints[1] = WhiteColor;
                 DrawIconOnMap(C, subCoords, MapIconATGun, myMapScale, DHGRI.ATCannons[i].ATCannonLocation, MapCenter);
             }
-//            else
-//            {
-//              MapIconATGun.Tints[0] = GrayColor;
-//                MapIconATGun.Tints[1] = GrayColor;
-//              MapIconATGun.Tints[0].A = 125;
-//                MapIconATGun.Tints[1].A = 125;
-//            }
         }
     }
 
@@ -2007,9 +1894,6 @@ simulated function DrawObjectives(Canvas C)
                 // Empty Vehicle
                 if (Bot(V.Controller) == none && (ROWheeledVehicle(V) != none && V.NumPassengers() == 0))
                     DrawDebugIconOnMap(C, subCoords, widget, myMapScale, V.Location, MapCenter, "");
-                // VehicleWeapon
-//              else if (Bot(V.Controller) != none && VehicleWeaponPawn(V) != none)
-//                  DrawDebugIconOnMap(C, subCoords, widget, myMapScale, V.Location + vect(0,25,0), MapCenter, Left(Bot(V.Controller).Squad.GetOrders(),1)$" P");
                 // Vehicle
                 else if (VehicleWeaponPawn(V) == none && V.Controller != none)
                     DrawDebugIconOnMap(C, subCoords, widget, myMapScale, V.Location, MapCenter, Left(Bot(V.Controller).Squad.GetOrders(),1)$" "$V.NumPassengers());
@@ -2033,7 +1917,6 @@ simulated function DrawObjectives(Canvas C)
         {
             foreach DynamicActors(class'Actor',NetActor)
             {
-
                 if (!NetActor.bStatic && !NetActor.bNoDelete)
                 {
                     widget = MapIconNeutral;
@@ -2051,6 +1934,7 @@ simulated function DrawObjectives(Canvas C)
                 widget = MapIconRally[V.GetTeamNum()];
                 widget.TextureScale = 0.04f;
                 widget.RenderStyle = STY_Normal;
+
                 if (ROWheeledVehicle(V) != none)
                     DrawDebugIconOnMap(C, subCoords, widget, myMapScale, V.Location, MapCenter, "");
             }
@@ -2062,6 +1946,7 @@ simulated function DrawObjectives(Canvas C)
                 widget = MapIconTeam[DHP.GetTeamNum()];
                 widget.TextureScale = 0.04f;
                 widget.RenderStyle = STY_Normal;
+
                 DrawDebugIconOnMap(C, subCoords, widget, myMapScale, DHP.Location, MapCenter, "");
             }
         }
@@ -2084,6 +1969,7 @@ simulated function DrawObjectives(Canvas C)
 
                 widget.TextureScale = 0.04f;
                 widget.RenderStyle = STY_Normal;
+
                 DrawDebugIconOnMap(C, subCoords, widget, myMapScale, NetPawn.Location, MapCenter, "");
             }
         }
@@ -2091,7 +1977,6 @@ simulated function DrawObjectives(Canvas C)
         {
             foreach DynamicActors(class'Actor',NetActor)
             {
-
                 if (!NetActor.bStatic && !NetActor.bNoDelete)
                 {
                     widget = MapIconNeutral;
@@ -2102,6 +1987,7 @@ simulated function DrawObjectives(Canvas C)
 
                     // Remove the package name, if it exists
                     Pos = InStr(S, ".");
+
                     if (Pos != -1)
                         S = Mid(S, Pos + 1);
 
@@ -2115,6 +2001,7 @@ simulated function DrawObjectives(Canvas C)
     {
         // Draw the marked arty strike
         temp = player.SavedArtilleryCoords;
+
         if (temp != vect(0,0,0))
         {
             bShowArtyCoords = true;
@@ -2486,10 +2373,6 @@ simulated function DrawObjectives(Canvas C)
     // Draw legend title
     DrawTextWidgetClipped(C, MapLegendTitle, subCoords, XL, YL, YL_one);
 
-    // Set initial icon + text values
-    //MapLegendIcons.OffsetY = 0;
-    //MapLegendTexts.OffsetY = 0;
-
     // Draw legend elements
     LegendItemsIndex = 2; // no item at position #0 and #1 (reserved for title)
     DrawLegendElement(C, subCoords, MapIconTeam[AXIS_TEAM_INDEX], LegendAxisObjectiveText);
@@ -2605,10 +2488,6 @@ simulated function DrawObjectives(Canvas C)
         DrawTextWidgetClipped(C, MapObjectivesTexts, subCoords, XL, YL, YL_one);
     }
 
-    // Draw timer
-    //DrawSpriteWidgetClipped(C, ClockBase, MapCoords, true, XL, YL, false, true);
-    //DrawSpriteWidgetClipped(C, ClockHand, MapCoords, true, XL, YL, false, true);
-
     // Draw the instruction header
     S = class'ROTeamGame'.static.ParseLoadingHintNoColor(SituationMapInstructionsText, PlayerController(Owner));
     C.DrawColor = WhiteColor;
@@ -2671,17 +2550,6 @@ simulated function UpdateHud()
     {
         if (PawnOwner != none)
         {
-            // Set pawn color
-            // Took this out for now. Since one or two shots kills you, and
-            // the colors look kinda funny on the hud, This probably isn't
-            // needed. Add it back in if we decide otherwise - Ramm
-            //if (PawnOwner.Health > 50)
-                HealthFigure.Tints[0] = WhiteColor;
-            //else if (PawnOwner.Health > 25)
-            //  HealthFigure.Tints[0] = GoldColor;
-            //else
-            //  HealthFigure.Tints[0] = RedColor;
-
             P = ROPawn(PawnOwner);
             if (P != none)
             {
@@ -2715,8 +2583,6 @@ simulated function UpdateHud()
             }
             else
                 HealthFigureStamina.WidgetTexture = NationHealthFiguresStamina[Nation];
-            //ClockBase.WidgetTexture = NationClockBases[Nation];
-            //ClockHand.WidgetTexture = NationClockHands[Nation];
         }
     }
 
@@ -3093,15 +2959,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         defenders_ratio = 1 - attackers_ratio;
     }
 
-    // test0r
-    //Canvas.Font = GetConsoleFont(Canvas);
-    //Canvas.SetPos(Canvas.ClipX * 0.1, Canvas.clipy * 0.2);
-    //Canvas.DrawText("attackers_ratio = " $ attackers_ratio $ ", defenders_ratio = " $ defenders_ratio);
-    //Canvas.SetPos(Canvas.ClipX * 0.1, Canvas.clipy * 0.25);
-    //Canvas.DrawText("CurrentCapAlliesCappers = " $ CurrentCapAlliesCappers $ ", CurrentCapAxisCappers = " $ CurrentCapAxisCappers);
-
     // Draw capture bar at 50% faded if we're at a stalemate
-
     if (CurrentCapAxisCappers == CurrentCapAlliesCappers)
     {
         CaptureBarAttacker.Tints[TeamIndex].A /= 2;
