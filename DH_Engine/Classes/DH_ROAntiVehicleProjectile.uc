@@ -151,11 +151,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity),
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
         {
-            if (bDebuggingText && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Turret ricochet!");
-            }
-
             if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
             {
                 FirstHit = false;
@@ -165,6 +160,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // Round deflects off the turret
             if (!bShatterProne || !DH_ROTankCannon(HitVehicleWeapon).bRoundShattered)
             {
+                if (bDebuggingText && Role == ROLE_Authority)
+                {
+                    Level.Game.Broadcast(self, "Turret ricochet!");
+                }
+
                 SavedHitActor = none; // don't save hitting this actor since we deflected
                 bUpdateSimulatedPosition = false; // don't replicate the position any more
 
@@ -179,6 +179,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // Round shatters on turret
             else
             {
+                if (bDebuggingText && Role == ROLE_Authority)
+                {
+                    Level.Game.Broadcast(self, "Round shattered on turret");
+                }
+
                 // Don't update the position any more and don't move the projectile any more
                 bUpdateSimulatedPosition = false;
                 SavedVelocity = Velocity; // PHYS_none zeroes Velocity, so we have to save it
@@ -200,7 +205,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
         {
-            log("AP.ProcessTouch: DrawStayingDebugLine for turret penetration: Velocity =" @ Velocity @ " SavedVelocity =" @ SavedVelocity); // TEMP
             FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
         }
@@ -483,9 +487,6 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
-    bDebuggingText=true // TEMP
-    Drawdebuglines=true // TEMP
-
      bIsAlliedShell=true
      ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatter'
      ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'

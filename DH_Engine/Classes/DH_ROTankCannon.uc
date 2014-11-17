@@ -2411,6 +2411,17 @@ function bool GiveInitialAmmo()
     return false;
 }
 
+// Matt: modified so only sets timer if the new reload state needs it
+simulated function ClientSetReloadState(ECannonReloadState NewState)
+{
+    CannonReloadState = NewState;
+
+    if (CannonReloadState != CR_Waiting  && CannonReloadState != CR_ReadyToFire)
+    {
+        SetTimer(0.01, false);
+    }
+}
+
 simulated function Timer()
 {
    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)

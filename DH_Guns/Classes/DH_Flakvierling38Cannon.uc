@@ -66,7 +66,8 @@ state ProjectileFireMode
     }
 }
 
-event bool AttemptFire(Controller C, bool bAltFire)
+/*
+event bool AttemptFire(Controller C, bool bAltFire) // Matt: removed so we inherit new function from 234/1
 {
     if (bAltFire)
     {
@@ -160,6 +161,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
     return false;
 }
+*/
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
@@ -181,8 +183,22 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         GetBarrelLocationAndRotation(2, BarrelLocation[1], BarrelRotation[1]);
     }
 
-    for(i = 0; i < 2; i++)
+    for (i = 0; i < 2; i++)
     {
+        if (ProjectileClass == PrimaryProjectileClass) // Matt: added
+        {
+            if (bMixedMagFireAP)
+            {
+                ProjClass = SecondaryProjectileClass;
+            }
+            else
+            {
+                ProjClass = TertiaryProjectileClass;
+            }
+
+            bMixedMagFireAP = !bMixedMagFireAP;
+        }
+
         FireRot = BarrelRotation[i];
 
         // used only for Human players. Lets cannons with non centered aim points have a different aiming location
@@ -200,7 +216,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
         }
 
-        P = spawn(ProjClass, none, , StartLocation, FireRot); //self
+        P = Spawn(ProjClass, none, , StartLocation, FireRot); //self
 
         if (P != none)
         {
@@ -222,7 +238,9 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                     AmbientSoundScaling = AltFireSoundScaling;
                 }
                 else
+                {
                     PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
+                }
             }
             else
             {
@@ -237,6 +255,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             }
         }
     }
+
     return P;
 }
 
@@ -266,7 +285,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     // Calculate fire offset in world space
     WeaponBoneCoords = GetBoneCoords(BarrelBones[BarrelBoneIndex++]);
 
-    BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 4);
+    BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 3); // Matt: changed from max of 4, as there are 4 BarrelBones so indexed from 0 to 3
 
     if (bWasAltFire)
     {
@@ -292,7 +311,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
 simulated event FlashMuzzleFlash(bool bWasAltFire)
 {
-    local ROVehicleWeaponPawn OwningPawn;
+//  local ROVehicleWeaponPawn OwningPawn; // Matt: this isn't doing anything?
 
     if (Role == ROLE_Authority)
     {
@@ -321,16 +340,30 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
 
     if (FireAnimationIndex == 0)
     {
-        FlashEmitters[0].Trigger(Self, Instigator);
-        FlashEmitters[3].Trigger(Self, Instigator);
+        if (FlashEmitters[0] != none) // Matt: added these ifs to prevent "accessed none" errors on server (& general good practice)
+        {
+            FlashEmitters[0].Trigger(Self, Instigator);
+        }
+
+        if (FlashEmitters[3] != none)
+        {
+            FlashEmitters[3].Trigger(Self, Instigator);
+        }
     }
     else
     {
-        FlashEmitters[1].Trigger(Self, Instigator);
-        FlashEmitters[2].Trigger(Self, Instigator);
+        if (FlashEmitters[1] != none)
+        {
+            FlashEmitters[1].Trigger(Self, Instigator);
+        }
+
+        if (FlashEmitters[2] != none)
+        {
+            FlashEmitters[2].Trigger(Self, Instigator);
+        }
     }
 
-    OwningPawn = ROVehicleWeaponPawn(Instigator);
+//  OwningPawn = ROVehicleWeaponPawn(Instigator); // Matt: this isn't doing anything?
 }
 
 simulated function InitEffects()
@@ -357,7 +390,8 @@ simulated function InitEffects()
     }
 }
 
-function ToggleRoundType()
+/*
+function ToggleRoundType() // Matt: removed as new 234/1 function should cover it
 {
     if (!HasMagazines(0) && !HasMagazines(1))
     {
@@ -374,7 +408,7 @@ function ToggleRoundType()
     }
 }
 
-simulated function bool HasAmmo(int Mode)
+simulated function bool HasAmmo(int Mode) // Matt: removed as think this is wrong - having mags shouldn't count as HasAmmo, otherwise ReadyToFire will return true as one example
 {
     switch(Mode)
     {
@@ -385,6 +419,29 @@ simulated function bool HasAmmo(int Mode)
     }
 
     return false;
+}
+*/
+
+// Matt: added these functions from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon:
+simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
+{
+   return true;
+}
+simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
+{
+    return true;
+}
+simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
+{
+    return true;
+}
+simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bIsHEATRound)
+{
+    return true;
+}
+simulated function bool BelowDriverAngle(vector loc, vector ray)
+{
+    return false; // there aren't any angles that are below the driver angle for an AT Gun cannon
 }
 
 defaultproperties
@@ -398,21 +455,25 @@ defaultproperties
      SightBone="Object002"
      TraverseWheelBone="yaw_w"
      ElevationWheelBone="pitch_w"
-     NumMags=16
-     NumSecMags=4
+     NumMags=12    // Matt: was 16
+     NumSecMags=4  // Matt: was 4
+     NumTertMags=4 // Matt: added
      AddedPitch=50
      WeaponFireOffset=64.000000
      RotationsPerSecond=0.050000
+     ManualRotationsPerSecond=0.05  // Matt: added
+     PoweredRotationsPerSecond=0.05 // Matt: added
      FireInterval=0.150000
      FlashEmitterClass=class'DH_Guns.DH_Flakvierling38MuzzleFlash'
-     ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
+     ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: changed, was 'DH_Guns.DH_Flakvierling38CannonShellAP'
      AltFireProjectileClass=none
      CustomPitchUpLimit=15474
      CustomPitchDownLimit=64990
      InitialPrimaryAmmo=40
      InitialSecondaryAmmo=40
-     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
-     SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'
+     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: added class & made primary     
+     SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'  // Matt: was primary
+     TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'   // Matt: was secondary
      Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
      Skins(0)=Texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }
