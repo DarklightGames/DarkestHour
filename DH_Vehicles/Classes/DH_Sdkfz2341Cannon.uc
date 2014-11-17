@@ -769,9 +769,9 @@ defaultproperties
      RearRightAngle=130.0
      RearLeftAngle=230.0
      
-     NumMags=2 // 15     // Matt: was 25
-     NumSecMags=1 // 15  // Matt: was 20
-     NumTertMags=1 // 15 // Matt: added
+     NumMags=15     // Matt: was 25
+     NumSecMags=15  // Matt: was 20
+     NumTertMags=15 // Matt: added
      ReloadSoundOne=Sound'Vehicle_reloads.Reloads.T60_reload_01'
      ReloadSoundTwo=Sound'DH_GerVehicleSounds2.Reloads.234_reload_02'
      ReloadSoundThree=Sound'DH_GerVehicleSounds2.Reloads.234_reload_03'

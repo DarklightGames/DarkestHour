@@ -455,7 +455,7 @@ defaultproperties
      SightBone="Object002"
      TraverseWheelBone="yaw_w"
      ElevationWheelBone="pitch_w"
-     NumMags=12    // Matt: was 16
+     NumMags=12    // Matt: was 16 AP
      NumSecMags=4  // Matt: was 4
      NumTertMags=4 // Matt: added
      AddedPitch=50
