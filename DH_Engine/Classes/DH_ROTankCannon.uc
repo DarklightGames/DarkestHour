@@ -2393,24 +2393,33 @@ simulated function bool ConsumeAmmo(int Mode)
     return false;
 }
 
+// Modified to use DH's MainAmmoChargeExtra array
 function bool GiveInitialAmmo()
 {
-    local bool bDidResupply;
-
-    // If we don't need any ammo return false
-    if (MainAmmoCharge[0] != InitialPrimaryAmmo || MainAmmoCharge[1] != InitialSecondaryAmmo || MainAmmoCharge[2] != InitialTertiaryAmmo
-        || AltAmmoCharge != InitialAltAmmo || NumAltMags != default.NumAltMags)
+    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo || 
+        AltAmmoCharge != InitialAltAmmo || NumAltMags != default.NumAltMags)
     {
-        bDidResupply = true;
+        MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
+        MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
+        MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
+        AltAmmoCharge = InitialAltAmmo;
+        NumAltMags = default.NumAltMags;
+
+        return true;
     }
 
-    MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
-    MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
-    MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
-    AltAmmoCharge = InitialAltAmmo;
-    NumAltMags = default.NumAltMags;
+    return false;
+}
 
-    return bDidResupply;
+// Matt: modified so only sets timer if the new reload state needs it
+simulated function ClientSetReloadState(ECannonReloadState NewState)
+{
+    CannonReloadState = NewState;
+
+    if (CannonReloadState != CR_Waiting  && CannonReloadState != CR_ReadyToFire)
+    {
+        SetTimer(0.01, false);
+    }
 }
 
 simulated function Timer()

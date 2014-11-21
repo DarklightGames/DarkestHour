@@ -13,8 +13,8 @@ simulated function Trigger(Actor Other, Pawn EventInstigator)
     Emitters[3].SpawnParticle(2);
     Emitters[4].SpawnParticle(2);
     Emitters[5].SpawnParticle(1);
-    Emitters[6].SpawnParticle(3);
-    Emitters[7].SpawnParticle(3);
+//  Emitters[6].SpawnParticle(3); // Matt: removed as don't exist & so spams thousands of "array out of bounds" log errors
+//  Emitters[7].SpawnParticle(3);
 }
 
 defaultproperties

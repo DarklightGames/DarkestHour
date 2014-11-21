@@ -17,7 +17,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local array<int>      HitPoints;
     local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
-    log("HE.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
+    if (bDebuggingText) log("HE.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
     if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
@@ -43,7 +43,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                log("HE.ProcessTouch: hit driver, should damage him & shell continue"); // TEMP
+                if (bDebuggingText) log("HE.ProcessTouch: hit driver, authority should damage him & shell continue"); // TEMP
                 if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
                 {
                     VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
@@ -53,7 +53,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
             else
             {
-                log("HE.ProcessTouch: hit driver area but not driver, shell should continue"); // TEMP
+                if (bDebuggingText) log("HE.ProcessTouch: hit driver area but not driver, shell should continue"); // TEMP
                 SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
             }
 
@@ -78,56 +78,37 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity),
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
         {
-            if (bDebuggingText && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Turret ricochet!");
-            }
-
             if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
             {
                 FirstHit = false;
                 DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
             }
 
-            // Round deflects off the turret
-            if (!bShatterProne || !DH_ROTankCannon(HitVehicleWeapon).bRoundShattered)
+            if (bDebuggingText && Role == ROLE_Authority)
             {
-                SavedHitActor = none; // don't save hitting this actor since we deflected
-                bUpdateSimulatedPosition = false; // don't replicate the position any more
-
-                DoShakeEffect();
-                DeflectWithoutNormal(HitVehicleWeapon, HitLocation);
-
-                if (Instigator != none && ROBot(Instigator.Controller) != none)
-                {
-                    ROBot(Instigator.Controller).NotifyIneffectiveAttack(HitVehicle);
-                }
-            }
-            // Round shatters on turret
-            else
-            {
-                // Don't update the position any more and don't move the projectile any more
-                bUpdateSimulatedPosition = false;
-                SavedVelocity = Velocity; // PHYS_none zeroes Velocity, so we have to save it
-                SetPhysics(PHYS_none);
-                SetDrawType(DT_none);
-
-                ShatterExplode(HitLocation + ExploWallOut * Normal(-SavedVelocity), Normal(-SavedVelocity));
-                HurtWall = none;
+                Level.Game.Broadcast(self, "HE/Smoke failed to penetrate turret!");
             }
 
-            return;
+            NonPenetrateExplode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity)); // no deflection for HE, just detonate without damage
+
+            // Don't update the position any more and don't move the projectile any more
+            bUpdateSimulatedPosition = false;
+            SetPhysics(PHYS_None);
+            SetDrawType(DT_None);
+
+            HurtWall = none;
+
+            return;            
         }
 
         // Don't update the position any more and don't move the projectile any more
         bUpdateSimulatedPosition = false;
-        SavedVelocity = Velocity; // PHYS_none zeroes Velocity, so we have to save it
-        SetPhysics(PHYS_none);
-        SetDrawType(DT_none);
+        SavedVelocity = Velocity; // PHYS_None zeroes Velocity, so we have to save it
+        SetPhysics(PHYS_None);
+        SetDrawType(DT_None);
 
         if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
         {
-            log("HE.ProcessTouch: DrawStayingDebugLine for turret penetration: Velocity =" @ Velocity @ " SavedVelocity =" @ SavedVelocity); // TEMP
             FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
         }
@@ -166,7 +147,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)
             {
-                log("HE.ProcessTouch: successful HitPointTrace on ROPawn, calling ProcessLocationalDamage on it"); // TEMP
+                if (bDebuggingText) log("HE.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
                 if (Role == ROLE_Authority)
                 {
                     ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
@@ -174,7 +155,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                 Velocity *= 0.8; // hitting a body doesn't cause shell to explode, but we'll slow it down a bit
             }
-            else log("HE.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
+            else if (bDebuggingText) log("HE.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
 
             return; // exit without exploding, so shell continues on its flight
         }
@@ -189,23 +170,23 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a shell explode
             if (Other.IsA('RODestroyableStaticMesh') && RODestroyableStaticMesh(Other).bWontStopBullets)
             {
-                log("HE.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
+                if (bDebuggingText) log("HE.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
                 return;
             }
-            else if (Other.IsA('RODestroyableStaticMesh')) log("HE.ProcessTouch: exploding on destroyable SM"); // TEMP
-            else log("HE.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
+            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) log("HE.ProcessTouch: exploding on destroyable SM"); // TEMP
+            else if (bDebuggingText) log("HE.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
         }
         // Otherwise we hit something we aren't going to damage
         else if (Role == ROLE_Authority && Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
         {
-            log("HE.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
+            if (bDebuggingText) log("HE.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
             ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
 
         // Don't update the position any more and don't move the projectile any more
         bUpdateSimulatedPosition = false;
-        SetPhysics(PHYS_none);
-        SetDrawType(DT_none);
+        SetPhysics(PHYS_None);
+        SetDrawType(DT_None);
 
         Explode(HitLocation, vect(0.0,0.0,1.0));
         HurtWall = none;
@@ -245,8 +226,8 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
         // Don't update the position any more and don't move the projectile any more.
         bUpdateSimulatedPosition=false;
-        SetPhysics(PHYS_none);
-        SetDrawType(DT_none);
+        SetPhysics(PHYS_None);
+        SetDrawType(DT_None);
 
         if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer) )
         {
@@ -270,8 +251,8 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
     // Don't update the position any more and don't move the projectile any more.
     bUpdateSimulatedPosition=false;
-    SetPhysics(PHYS_none);
-    SetDrawType(DT_none);
+    SetPhysics(PHYS_None);
+    SetDrawType(DT_None);
 
     SavedHitActor = Pawn(Wall);
 

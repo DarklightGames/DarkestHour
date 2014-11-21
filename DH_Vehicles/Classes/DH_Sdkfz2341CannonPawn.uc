@@ -5,7 +5,8 @@
 
 class DH_Sdkfz2341CannonPawn extends DH_GermanTankCannonPawn;
 
-simulated exec function SwitchFireMode()
+/*
+simulated exec function SwitchFireMode() // Matt: removed as the Super works fine now that the cannon class extends DH_ROTankCannon
 {
     if (Gun != none && ROTankCannon(Gun) != none && ROTankCannon(Gun).bMultipleRoundTypes)
     {
@@ -16,7 +17,7 @@ simulated exec function SwitchFireMode()
     }
 }
 
-function bool ResupplyAmmo()
+function bool ResupplyAmmo() // Matt: removed as the Super works fine now, as it calls ResupplyAmmo on the cannon class, which now handles it all correctly
 {
     local bool bResupplied;
     local DH_Sdkfz2341Cannon G;
@@ -41,7 +42,7 @@ function bool ResupplyAmmo()
     return bResupplied;
 }
 
-function bool KDriverLeave(bool bForceLeave)
+function bool KDriverLeave(bool bForceLeave) // Matt: removed as the Super works fine; no need for this
 {
     local bool bSuperDriverLeave;
 
@@ -70,6 +71,7 @@ function DriverDied()
     if (GetVehicleBase().Health > 0)
         SetRotatingStatus(0);
 }
+*/
 
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
 function float getAmmoReloadState()
@@ -79,7 +81,9 @@ function float getAmmoReloadState()
     cannon = ROTankCannon(gun);
 
     if (cannon == none)
+    {
         return 0.0;
+    }
 
     switch (cannon.CannonReloadState)
     {
@@ -93,6 +97,19 @@ function float getAmmoReloadState()
     }
 
     return 0.0;
+}
+
+// Matt: modified as 234/1 uses FireCountdown for cannon AND coaxial MG, so we need to check it against both FireInterval & AltFireInterval (in super)
+function float GetAltAmmoReloadState()
+{
+    if (Gun.FireCountdown <= Gun.FireInterval)
+    {
+        return 0.0;
+    }
+    else
+    {
+        return super.GetAltAmmoReloadState();
+    }
 }
 
 defaultproperties

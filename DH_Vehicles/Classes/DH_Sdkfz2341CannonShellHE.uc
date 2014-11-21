@@ -41,6 +41,7 @@ defaultproperties
      DHPenetrationTable(6)=0.300000
      DHPenetrationTable(7)=0.100000
      ShellDiameter=2.000000
+     bIsAlliedShell=false
      BlurTime=2.000000
      BlurEffectScalar=0.900000
      PenetrationMag=110.000000

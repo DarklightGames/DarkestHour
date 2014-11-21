@@ -32,7 +32,8 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-simulated function UpdateTurretReferences()
+/*
+simulated function UpdateTurretReferences() // Matt: removed as only re-states the Super - incorrectly now as Super has since been fixed
 {
     local int i;
 
@@ -60,6 +61,7 @@ simulated function UpdateTurretReferences()
         }
     }
 }
+*/
 
 defaultproperties
 {
