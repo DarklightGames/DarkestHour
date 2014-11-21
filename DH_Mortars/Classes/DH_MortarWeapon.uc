@@ -143,7 +143,7 @@ simulated function ServerDeployEnd()
         return;
     }
 
-    V = Spawn(VehicleClass, Instigator, , HitLocation, SpawnRotation);
+    V = Spawn(VehicleClass, Instigator,, HitLocation, SpawnRotation);
     V.TryToDrive(P);
 
     Destroy();
@@ -160,7 +160,7 @@ simulated function bool CanDeploy()
 
     P = DH_Pawn(Instigator);
 
-    VolumeTest = Spawn(class'ROVolumeTest', , , P.Location);
+    VolumeTest = Spawn(class'ROVolumeTest',, , P.Location);
 
     if (VolumeTest.IsInNoArtyVolume())
     {
@@ -215,7 +215,7 @@ simulated function bool CanDeploy()
     TraceStart = P.Location;
     TraceEnd = TraceStart - vect(0, 0, 128);
 
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true, , Material);
+    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true,, Material);
 
     //----------------------------------------------
     //Check that our surface exists and it is static

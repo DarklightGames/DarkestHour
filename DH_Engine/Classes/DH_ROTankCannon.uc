@@ -2256,7 +2256,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     if (bCannonShellDebugging)
         Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
 
-    P = spawn(ProjClass, none, , StartLocation, FireRot); //self
+    P = spawn(ProjClass, none,, StartLocation, FireRot); //self
 
    //swap to the next round type after firing
     if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)

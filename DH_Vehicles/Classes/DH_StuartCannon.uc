@@ -116,7 +116,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                 Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
 
 
-   P = spawn(ProjClass, none, , StartLocation, FireRot);
+   P = spawn(ProjClass, none,, StartLocation, FireRot);
 
 
         if (bGunFireDebug)

@@ -32,8 +32,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (!bDud)
         {
-            Spawn(SmokeEmitterClass, self, , HitLocation, rotator(vect(0, 0, 1)));
-            PlaySound(SmokeIgniteSound, SLOT_None, 4.0, , 200);
+            Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0, 0, 1)));
+            PlaySound(SmokeIgniteSound, SLOT_None, 4.0,, 200);
             SetPhysics(PHYS_none);
         }
     }

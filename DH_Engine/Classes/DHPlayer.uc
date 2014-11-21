@@ -37,7 +37,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
-        ServerSpawnVehicle, ServerChangeSpawn;
+        ServerChangeSpawn;
 
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
@@ -529,7 +529,7 @@ function ServerSaveArtilleryPosition()
     }
 
     //StartTrace = Pawn.Location + Pawn.EyePosition();
-    HitActor = Trace(HitLocation,HitNormal,StartTrace + TraceDist * vector(AimRot),StartTrace, true, , HitMaterial);
+    HitActor = Trace(HitLocation,HitNormal,StartTrace + TraceDist * vector(AimRot),StartTrace, true,, HitMaterial);
 
     RVT = Spawn(class'ROVolumeTest',self,,HitLocation);
 
@@ -669,7 +669,7 @@ function ServerSaveMortarTarget()
 
     TraceStart = Pawn.Location + Pawn.EyePosition();
     TraceEnd = TraceStart + (vector(Rotation) * GetMaxViewDistance());
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true, ,);
+    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true,,);
 
     VT = Spawn(class'ROVolumeTest', self,, HitLocation);
 
@@ -788,7 +788,7 @@ function ServerSaveMortarTarget()
     if (bMortarTargetMarked)
     {
         //[DH]Basnett has marked a mortar target.
-        Level.Game.BroadcastLocalizedMessage(class'DH_MortarTargetMessage', 2, PlayerReplicationInfo, ,);
+        Level.Game.BroadcastLocalizedMessage(class'DH_MortarTargetMessage', 2, PlayerReplicationInfo,,);
     }
     else
         //----------------------------------------------------------------------
@@ -1552,39 +1552,10 @@ function ServerLeaveBody()
     Pawn = none;
 }
 
-exec function RoundPause()
+exec function DebugRoundPause()
 {
     DarkestHourGame(Level.Game).RoundDuration = 9999999;
     DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RoundDuration = 9999999;
-}
-
-exec function DebugTryVehicleSpawn(byte PoolIndex, byte SpawnIndex)
-{
-    local byte SpawnError;
-
-    ServerSpawnVehicle(PoolIndex, SpawnIndex, SpawnError);
-}
-
-//TODO: have the server call something like this when it tries to spawn a dude
-function ServerSpawnVehicle(byte PoolIndex, byte SpawnIndex, out byte SpawnError)
-{
-    local Vehicle V;
-
-    if (Pawn == none)
-    {
-        return;
-    }
-
-    V = DarkestHourGame(Level.Game).SpawnManager.SpawnVehicle(self, PoolIndex, SpawnIndex, SpawnError);
-
-    if (V == none)
-    {
-        Level.Game.Broadcast(self, "ServerSpawnVehicle failed with error code" @ SpawnError);
-
-        return;
-    }
-
-    ROHud(myHUD).FadeToBlack(1.0, true);
 }
 
 function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)

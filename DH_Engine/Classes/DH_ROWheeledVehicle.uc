@@ -458,7 +458,7 @@ function ServerStartEngine()
                 AmbientSound = none;
 
                 if (ShutDownSound != none)
-                PlaySound(ShutDownSound, SLOT_None, 1.0, , 300.0);
+                PlaySound(ShutDownSound, SLOT_None, 1.0,, 300.0);
 
                 Throttle=0;
                 ThrottleAmount=0;
@@ -474,7 +474,7 @@ function ServerStartEngine()
             if (Level.TimeSeconds - IgnitionSwitchTime > 4.0)
             {
                 if (StartUpSound != none)
-                PlaySound(StartUpSound, SLOT_None, 1.0, , 300.0);
+                PlaySound(StartUpSound, SLOT_None, 1.0,, 300.0);
 
                 if (IdleSound != none)
                 AmbientSound = IdleSound;
@@ -597,7 +597,7 @@ event TakeImpactDamage(float AccelMag)
     // FIXME - scale sound volume to damage amount
     if (ImpactDamageSounds.Length > 0)
     {
-        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], , TransientSoundVolume * 2.5);
+        PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)],, TransientSoundVolume * 2.5);
     }
 
     if (Health < 0 && (Level.TimeSeconds - LastImpactExplosionTime) > TimeBetweenImpactExplosions)

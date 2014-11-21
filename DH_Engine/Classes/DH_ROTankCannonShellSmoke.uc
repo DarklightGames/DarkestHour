@@ -24,7 +24,7 @@ simulated function NonPenetrateExplode(vector HitLocation, vector HitNormal)
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SmokeEmitter = Spawn(SmokeEffectClass, self, , HitLocation, rotator(-HitNormal));
+        SmokeEmitter = Spawn(SmokeEffectClass, self,, HitLocation, rotator(-HitNormal));
         SmokeEmitter.SetBase(Self);
     }
 }
@@ -35,7 +35,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SmokeEmitter = Spawn(SmokeEffectClass, self, , HitLocation, rotator(-HitNormal));
+        SmokeEmitter = Spawn(SmokeEffectClass, self,, HitLocation, rotator(-HitNormal));
         SmokeEmitter.SetBase(Self);
     }
 }

@@ -2927,8 +2927,8 @@ event UpdateEyeHeight(float DeltaTime)
         bUpdateEyeHeight = false;
         return;
     }
-    HitActor = trace(HitLocation,HitNormal,Location + (CollisionHeight + MAXSTEPHEIGHT + 14) * vect(0,0,1),
-                    Location + CollisionHeight * vect(0,0,1),true);
+    HitActor = Trace(HitLocation,HitNormal,Location + (CollisionHeight + MAXSTEPHEIGHT + 14) * vect(0,0,1),
+                    Location + CollisionHeight * vect(0,0,1), true);
     if (HitActor == none)
         MaxEyeHeight = CollisionHeight + MAXSTEPHEIGHT;
     else

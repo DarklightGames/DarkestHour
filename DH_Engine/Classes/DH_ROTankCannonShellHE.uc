@@ -161,7 +161,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // We hit a soldier ... potentially - first we need to run a HitPointTrace to make sure we actually hit part of his body, not just his collision area
         if (Other.IsA('ROPawn'))
         {
-            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation, , 0);
+            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation,, 0);
 
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)

@@ -115,7 +115,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     In the end, I opted to go with a slight velocity adjustment, as this scales
     fairly nicely at all ranges. -Basnett */
 
-    P = Spawn(ProjClass, Owner, , SpawnLocation, SpawnRotation);
+    P = Spawn(ProjClass, Owner,, SpawnLocation, SpawnRotation);
 
     if (!bDebugNoSpread)
         P.Velocity = vector(P.Rotation) * ((ProjClass.default.MaxSpeed) + ((FRand() - 0.5) * 2.0 * (ProjClass.default.MaxSpeed * 0.05)));
@@ -133,7 +133,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
     }
 
-    PlaySound(FireSound, , 4.0);
+    PlaySound(FireSound,, 4.0);
 
     return P;
 }

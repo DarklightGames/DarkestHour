@@ -79,7 +79,7 @@ simulated function GetHitSurfaceType(out ESurfaceTypes SurfaceType)
     local vector HitLocation, HitNormal;
     local Material M;
 
-    Trace(HitLocation, HitNormal, Location + vect(0, 0, -16), Location + vect(0, 0, 16), false, , M);
+    Trace(HitLocation, HitNormal, Location + vect(0, 0, -16), Location + vect(0, 0, 16), false,, M);
 
     if (M == none)
         SurfaceType = EST_Default;
@@ -92,7 +92,7 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (Location != vect(0,0,0))
-            Spawn(class'DH_Effects.DH_MortarFireEffect', , , Location, Rotation);
+            Spawn(class'DH_Effects.DH_MortarFireEffect',, , Location, Rotation);
 
         Enable('Tick');
     }
@@ -285,7 +285,7 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
     GetHitEmitterClass(HitEmitterClass, HitSurfaceType);
     GetHitSound(HitSound, HitSurfaceType);
 
-    Spawn(HitEmitterClass, , , HitLocation, rotator(HitNormal));
+    Spawn(HitEmitterClass,, , HitLocation, rotator(HitNormal));
     PlaySound(HitSound, SLOT_None, 4.0 * TransientSoundVolume);
 }
 

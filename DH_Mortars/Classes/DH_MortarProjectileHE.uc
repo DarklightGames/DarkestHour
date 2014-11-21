@@ -94,8 +94,8 @@ simulated function BlowUp(vector HitLocation)
     GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
     GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
     GetExplosionSound(ExplosionSound, HitSurfaceType);
-    Spawn(ExplosionEmitterClass, self, , HitLocation);
-    Spawn(ExplosionDecalClass, self, , HitLocation, rotator(vect(0, 0, -1)));
+    Spawn(ExplosionEmitterClass, self,, HitLocation);
+    Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0, 0, -1)));
     PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248, 1.0, true);
     DoShakeEffect();
 }
@@ -111,7 +111,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local ROVolumeTest VT;
 
-    VT = Spawn(class'ROVolumeTest', , , HitLocation);
+    VT = Spawn(class'ROVolumeTest',, , HitLocation);
 
     if (VT.IsInNoArtyVolume())
     {

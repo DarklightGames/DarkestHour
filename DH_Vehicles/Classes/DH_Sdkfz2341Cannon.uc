@@ -120,7 +120,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     //Level.Game.Broadcast(self, ProjClass);
 
-    P = spawn(ProjClass, none, , StartLocation, FireRot); //self
+    P = spawn(ProjClass, none,, StartLocation, FireRot); //self
 
     //log("WeaponFireRotation = "$WeaponFireRotation);
 

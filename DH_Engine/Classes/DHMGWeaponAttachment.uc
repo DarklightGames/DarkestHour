@@ -30,7 +30,7 @@ simulated function SpawnShells(float amountPerSec)
         && ROShellCaseClass != none)
     {
         ejectorloc = GetBoneCoords(ShellEjectionBoneName);
-        ejectorrot = rotator(Normal(PhysicsVolume.Gravity));//GetBoneRotation(ShellEjectionBoneName);
+        ejectorrot = rotator(Normal(PhysicsVolume.Gravity));
 
         // for some reason, the bone origin to too far forward
         spawnlocation = ejectorloc.Origin;

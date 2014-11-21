@@ -48,7 +48,7 @@ simulated function bool ReadyToFire(bool bAltFire)
     if( (MGReloadState != MG_ReadyToFire || !bClientCanFireMG) && !bAltFire )
     {
         ShakeView(false); // Matt: added to jolt when trying to fire empty
-        PlaySound(NoAmmoSound, SLOT_None,1.5,, 25, , true); // Matt: added to play click sound when trying to fire empty
+        PlaySound(NoAmmoSound, SLOT_None,1.5,, 25,, true); // Matt: added to play click sound when trying to fire empty
         return false;
     }
 

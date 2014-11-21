@@ -5,15 +5,7 @@
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 var DH_RoleInfo     DHRoleInfo;
-
-//=============================================================================
-// replication
-//=============================================================================
 
 replication
 {
@@ -21,16 +13,16 @@ replication
         DHRoleInfo;
 }
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 simulated function Material getRolePortrait()
 {
     if (DHRoleInfo == none)
+    {
         return none;
+    }
     else
+    {
         return DHRoleInfo.MenuImage;
+    }
 }
 
 defaultproperties
