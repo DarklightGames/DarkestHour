@@ -3779,6 +3779,8 @@ simulated function ShrinkHUD();
 
 defaultproperties
 {
+     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
+
      bEnterringUnlocks=false
      bAllowRiders=true
      UnbuttonedPositionIndex=2
