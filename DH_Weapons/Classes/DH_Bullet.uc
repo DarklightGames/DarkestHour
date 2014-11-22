@@ -7,14 +7,6 @@ class DH_Bullet extends ROBullet
     config(DH_Penetration)
     abstract;
 
-var bool bInHitWall;
-
-var float MaxWall;      // Maximum wall penetration
-var float WScale;       // Penetration depth scale factor to take into account; weapon scale
-var float Hardness;     // wall hardness, calculated in CheckWall for surface type
-
-var globalconfig float  PenetrationScale;   // global Penetration depth scale factor
-var globalconfig float  DistortionScale;    // global Distortion scale factor
 var globalconfig bool   bDebugMode;         // If true, give our detailed report in log.
 var globalconfig bool   bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
 
@@ -141,15 +133,15 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 OrigLoc = Instigator.Location;
             }
 
-            BulletDist = VSize(Location - OrigLoc) / 60.352; // Calculate distance travelled by bullet in metres
+            BulletDistance = VSize(Location - OrigLoc) / 60.352; // Calculate distance travelled by bullet in metres
 
             // If it's FF at close range, we won't suppress, so send a different WT through
-            if (BulletDist < 10.0 && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
+            if (BulletDistance < 10.0 && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
             {
                 WhizType = 3;
             }
 
-            if (BulletDist < 20.0 && WhizType == 1) // Bullets only "snap" after a certain distance in reality, same goes here
+            if (BulletDistance < 20.0 && WhizType == 1) // Bullets only "snap" after a certain distance in reality, same goes here
             {
                 WhizType = 2;
             }
@@ -242,9 +234,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
 defaultproperties
 {
-     WScale=1.000000
-     PenetrationScale=0.080000
-     DistortionScale=0.400000
      WhizType=1
      ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
      WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
