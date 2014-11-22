@@ -154,7 +154,7 @@ event ConnectFailure(string FailCode,string URL)
 
 
 
-DefaultProperties
+defaultproperties
 {
 
 }

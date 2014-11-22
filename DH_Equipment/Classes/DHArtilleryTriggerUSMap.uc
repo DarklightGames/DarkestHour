@@ -4,3 +4,7 @@
 //==============================================================================
 
 class DHArtilleryTriggerUSMap extends DHArtilleryTrigger;
+
+defaultproperties
+{
+}

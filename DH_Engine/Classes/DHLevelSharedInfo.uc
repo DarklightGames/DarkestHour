@@ -15,7 +15,7 @@ var() rangevector WindDirectionSpeed; //Used to make smoke grenades match other 
 //date : to indicate when this level takes place, so we can properly assign correct variants of ammo etc.
 //
 
-DefaultProperties
+defaultproperties
 {
     bHidden=true
     //RemoteRole=ROLE_none

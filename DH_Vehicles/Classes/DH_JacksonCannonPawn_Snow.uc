@@ -5,7 +5,7 @@
 
 class DH_JacksonCannonPawn_Snow extends DH_JacksonCannonPawn;
 
-DefaultProperties
+defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_JacksonCannon_Snow'
 }

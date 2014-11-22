@@ -5,7 +5,7 @@
 
 class DH_SachelChargeAmmo extends ROAmmunition;
 
-DefaultProperties
+defaultproperties
 {
     ItemName="Satchel Charge"
     IconMaterial=Material'InterfaceArt_tex.HUD.satchel_ammo' // ReplaceMe!!!

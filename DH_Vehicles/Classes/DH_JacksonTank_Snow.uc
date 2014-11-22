@@ -27,7 +27,7 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-DefaultProperties
+defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonCannonPawn_Snow',WeaponBone="Turret_placement")
     Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.M36_Bodysnow_ext'
