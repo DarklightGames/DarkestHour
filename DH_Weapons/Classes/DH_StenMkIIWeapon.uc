@@ -10,9 +10,6 @@ class DH_StenMkIIWeapon extends DH_AutoWeapon;
 var   name     SelectFireAnim;  // Animation for selecting the firing mode
 var   name     SelectFireIronAnim;// Animation for selecting the firing mode in ironsights
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (Role<ROLE_Authority)

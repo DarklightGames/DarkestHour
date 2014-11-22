@@ -154,9 +154,6 @@ function bool PlaceExitingDriver()
     return false;
 }
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (bNetDirty && Role==ROLE_Authority)

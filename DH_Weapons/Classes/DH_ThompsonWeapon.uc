@@ -10,9 +10,6 @@ class DH_ThompsonWeapon extends DH_AutoWeapon;
 var   name      SelectFireAnim;
 var   name      SelectFireIronAnim;
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (Role < ROLE_Authority)

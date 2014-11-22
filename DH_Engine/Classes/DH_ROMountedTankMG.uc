@@ -6,7 +6,6 @@
 class DH_ROMountedTankMG extends ROMountedTankMG
       abstract;
 
-
 // Stuff for fire effects - Ch!cKeN
 var()   name                                    FireAttachBone;
 var()   vector                                  FireEffectOffset;
@@ -22,9 +21,6 @@ var()   sound ReloadSound; // sound of this MG reloading
 var     bool  bReloading;  // This MG is currently reloading
 var     int   NumMags;     // Number of mags carried for this MG;
 
-//==============================================================================
-// replication
-//==============================================================================
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -32,7 +28,6 @@ replication
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         bReloading, NumMags;
 }
-
 
 simulated function Tick(float DeltaTime)
 {

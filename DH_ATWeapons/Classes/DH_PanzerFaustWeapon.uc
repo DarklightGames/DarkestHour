@@ -13,9 +13,6 @@ var     name        IronIdleAnimOne;        // Iron idle animation for range set
 var     name        IronIdleAnimTwo;        // Iron idle animation for range setting two
 var     name        IronIdleAnimThree;      // Iron idle animation for range setting three
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (Role<ROLE_Authority)

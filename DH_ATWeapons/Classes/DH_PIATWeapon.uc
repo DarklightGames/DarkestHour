@@ -17,9 +17,6 @@ var     ROFPAmmoRound            RocketAttachment;     // The first person ammo 
 
 var int     NumMagsToResupply;          // Number of ammo mags to add when this weapon has been resupplied
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (Role<ROLE_Authority)

@@ -11,9 +11,6 @@ var     name    SelectFireAnim;
 var     name    SelectFireIronAnim;
 var     name    SightUpSelectFireIronAnim;
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (Role<ROLE_Authority)

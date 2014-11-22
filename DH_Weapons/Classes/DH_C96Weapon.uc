@@ -10,9 +10,6 @@ class DH_C96Weapon extends DH_FastAutoWeapon;
 var     name    SelectFireAnim;
 var     name    SelectFireIronAnim;
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (Role<ROLE_Authority)

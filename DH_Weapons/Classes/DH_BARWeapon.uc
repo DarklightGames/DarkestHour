@@ -13,9 +13,6 @@ var     name    SightUpSelectFireIronAnim;
 var     bool    bSlowFireRate;
 var     int     NumMagsToResupply;      // Number of ammo mags to add when this weapon has been resupplied
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (Role < ROLE_Authority)

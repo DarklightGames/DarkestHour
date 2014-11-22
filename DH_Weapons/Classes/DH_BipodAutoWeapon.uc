@@ -14,10 +14,6 @@ var     name    SightUpMagPartialReloadAnim;
 var     name            IdleToBipodDeployEmpty;     // anim for bipod rest state to deployed empty state
 var     name            BipodDeployToIdleEmpty;     // anim for bipod deployed state to rest empty state
 
-//=============================================================================
-// replication
-//=============================================================================
-
 replication
 {
     reliable if (Role < ROLE_Authority)
