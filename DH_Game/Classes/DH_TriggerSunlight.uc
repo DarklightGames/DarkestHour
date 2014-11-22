@@ -6,8 +6,6 @@
 class DH_TriggerSunlight extends Sunlight
     hidecategories(Emitter,Force,Karma,Corona);
 
-//-----------------------------------------------------------------------------
-// Variables.
 var() color OnColor;       // Color when sunlight is on
 var() color OffColor;      // Color when light is off
 
@@ -21,9 +19,6 @@ var bool    bIsOn;
 
 var() float ChangeTimeTwo;
 var float SwapTime;
-
-//-----------------------------------------------------------------------------
-// Methods.
 
 event PostBeginPlay()
 {

@@ -5,8 +5,6 @@
 
 class DH_TriggerSkyZoneInfo extends SkyZoneInfo;
 
-//-----------------------------------------------------------------------------
-// Variables.
 var() color OnColor;       // Color when light is on
 var() color OffColor;      // Color when light is off
 

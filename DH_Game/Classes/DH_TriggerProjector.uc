@@ -5,8 +5,6 @@
 
 class DH_TriggerProjector extends Projector;
 
-//-----------------------------------------------------------------------------
-// Variables.
 var(Projector) Color ProjColorOn;       // The light color if the projector is on.
 var(Projector) Color ProjColorOff;      //  "    "     "   if the projector is off.
 var(Projector) Color ProjTintOn;        // These colors are overlaid over the projection
@@ -26,16 +24,11 @@ var Material  MaskTexture;
 var(Projector) float ChangeTimeTwo;
 var float SwapTime;
 
-//-----------------------------------------------------------------------------
-// Replication.
 replication
 {
     reliable if (ROLE == ROLE_Authority)
                 ScriptTexture;
 }
-
-//-----------------------------------------------------------------------------
-// Methods.
 
 simulated event PostBeginPlay()
 {

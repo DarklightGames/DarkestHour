@@ -5,11 +5,6 @@
 
 class DH_ClientMaterialTrigger extends MaterialTrigger;
 
-
-//=============================================================================
-// Variables
-//=============================================================================
-
 // whether triggering resets or triggers the materials
 var(MaterialTrigger) enum ETriggerAction {
   TriggerTriggers,

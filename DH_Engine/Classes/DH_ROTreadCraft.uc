@@ -18,10 +18,6 @@ struct ExitPositionPair
     var float DistanceSquared;
 };
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 // Set-up for new hitpoint types
 enum ENewHitPointType
 {

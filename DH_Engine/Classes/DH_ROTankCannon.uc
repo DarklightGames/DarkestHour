@@ -5,14 +5,8 @@
 
 class DH_ROTankCannon extends ROTankCannon
     abstract;
-     //  config(xGunsightDebugging)
-
 
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
-
-//=============================================================================
-// Variables
-//=============================================================================
 
 // Variables for up to three ammo types
 var     int MainAmmoChargeExtra[3];
@@ -72,7 +66,6 @@ var bool    bDriverDebugging;
 var   config    bool        bGunFireDebug;
 var() config    bool        bGunsightSettingMode;
 
-//==============================================================================
 replication
 {
      reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
@@ -87,7 +80,6 @@ replication
      reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
         bManualTurret;
 }
-
 
 simulated function Tick(float DeltaTime)
 {
@@ -172,7 +164,6 @@ simulated function bool PenetrationAPC(float ArmorFactor, float CompoundAngle, f
     if (CompoundAngleDegrees > 90)
     {
         CompoundAngleDegrees = 180 - CompoundAngleDegrees;
-
     }
 
     if (bDebuggingText)

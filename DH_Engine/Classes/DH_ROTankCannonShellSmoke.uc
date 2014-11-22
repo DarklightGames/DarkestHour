@@ -5,19 +5,12 @@
 
 class DH_ROTankCannonShellSmoke extends DH_ROTankCannonShellHE;
 
-
-//==============================================================================
-// Variables
-//==============================================================================
 var()  float            DestroyTimer;
 var    bool             bCalledDestroy;
 var    Emitter          SmokeEmitter;
 
 var()  class<Emitter>   SmokeEffectClass;
 
-//==============================================================================
-// Functions
-//==============================================================================
 simulated function NonPenetrateExplode(vector HitLocation, vector HitNormal)
 {
     super.NonPenetrateExplode(HitLocation, HitNormal);

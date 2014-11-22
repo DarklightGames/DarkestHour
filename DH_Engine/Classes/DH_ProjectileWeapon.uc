@@ -6,10 +6,6 @@
 class DH_ProjectileWeapon extends DHWeapon
     abstract;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 // Animations
 var         name        MagEmptyReloadAnim;         // anim for reloads when a weapon has an empty magazine/box, this anim will be used by bolt actions when inserting a full stripper clip
 var         name        MagPartialReloadAnim;       // anim for reloads when a weapon still has ammo in magazine/box
@@ -85,14 +81,6 @@ var     name                BarrelSteamBone;        // bone we attach the barrel
 var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
 var     float               PlayerDeployFOV;
 
-//=============================================================================
-// Replication
-//=============================================================================
-
-
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
@@ -148,9 +136,6 @@ exec function LogAmmo()
     Log("There are" @ PrimaryAmmoArray.Length @ "mags");
 }
 
-//=============================================================================
-// Rendering
-//=============================================================================
 simulated event RenderOverlays(Canvas Canvas)
 {
     local int i;

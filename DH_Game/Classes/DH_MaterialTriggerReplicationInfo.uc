@@ -5,11 +5,6 @@
 
 class DH_MaterialTriggerReplicationInfo extends ReplicationInfo;
 
-
-//=============================================================================
-// Variables
-//=============================================================================
-
 var Material MaterialToTrigger;
 var string MaterialName;
 var int ClientTriggerCount;
@@ -20,11 +15,6 @@ var struct TTriggerData {
   var Pawn EventInstigator;
   var byte TriggerAction; // 0 = nothing/idle, 1 = trigger, 2 = reset
 } LastTriggerings[10];
-
-
-//=============================================================================
-// Replication
-//=============================================================================
 
 replication
 {

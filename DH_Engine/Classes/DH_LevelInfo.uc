@@ -6,10 +6,6 @@
 class DH_LevelInfo extends ROLevelInfo
     placeable;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 enum EAxisNation
 {
     NATION_Germany,

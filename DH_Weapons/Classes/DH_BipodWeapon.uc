@@ -6,10 +6,6 @@
 class DH_BipodWeapon extends DH_ProjectileWeapon
     abstract;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 // Animations for bipod mounted weapon hipped and deployed states
 var     name            IdleToBipodDeploy;          // anim for bipod rest state to deployed state
 var     name            BipodDeployToIdle;          // anim for bipod deployed state to rest state
@@ -21,10 +17,6 @@ var     name            BipodDeployToHip;           // anim for bipod deployed s
 
 var     name            IdleToBipodDeployEmpty;     // anim for bipod rest state to deployed empty state
 var     name            BipodDeployToIdleEmpty;     // anim for bipod deployed state to rest empty state
-
-//=============================================================================
-// replication
-//=============================================================================
 
 replication
 {

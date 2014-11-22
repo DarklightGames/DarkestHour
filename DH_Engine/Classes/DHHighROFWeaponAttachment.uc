@@ -6,10 +6,6 @@
 class DHHighROFWeaponAttachment extends ROWeaponAttachment
     abstract;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 // Struct that holds the info we need to launch our client side hit effect
 struct ShotInfo
 {
@@ -40,10 +36,6 @@ var()   bool            bUsesTracers;           // true if the weapon uses trace
 var()   int             TracerFrequency;        // how often a tracer is loaded in.  Assume to be 1 in valueof(TracerFrequency)
 var     byte            NextTracerCounter;      // when this equals TracerFrequency, spawn a tracer
 
-//=============================================================================
-// replication
-//=============================================================================
-
 replication
 {
     // Bullet whiz var - Server to client
@@ -70,10 +62,6 @@ simulated function Rot2Int(rotator R, out int N)
     // 0xF - Yaw (16-bit signed integer)
     N = ((R.Pitch << 16) & 0XFFFF0000) | (R.Yaw & 0xFFFF);
 }
-
-//=============================================================================
-// Variables
-//=============================================================================
 
 // Here we spawn our client side effect rounds if the shot count has changed
 simulated function PostNetReceive()
