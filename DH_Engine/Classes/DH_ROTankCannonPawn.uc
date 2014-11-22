@@ -680,6 +680,8 @@ simulated function ShrinkHUD();
 
 defaultproperties
 {
+    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
+
     bShowRangeText=true
     GunsightPositions=1
     GunsightOpticsName="ScopeNameHere"
