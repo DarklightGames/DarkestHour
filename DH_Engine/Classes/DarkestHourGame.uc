@@ -1666,13 +1666,15 @@ function DHRestartPlayer(Controller C)
     {
         Log("attempting to spawn vehicle at VP" @ DHC.VehiclePoolIndex @ "SP" @ DHC.SpawnPointIndex);
 
-        SpawnManager.SpawnVehicle(DHC, DHC.VehiclePoolIndex, DHC.SpawnPointIndex, SpawnError);   //TODO: remove need for passing in selection, indices exists in DHC
+//      SpawnManager.SpawnVehicle(DHC, DHC.VehiclePoolIndex, DHC.SpawnPointIndex, SpawnError);   //TODO: remove need for passing in selection, indices exists in DHC
+        SpawnManager.SpawnVehicle(DHC, SpawnError); // Matt: replaced line above as wrong function params and won't compile
     }
     else
     {
         Log("attempting to spawn infantry at SP" @ DHC.SpawnPointIndex);
 
-        SpawnError = SpawnManager.SpawnInfantry(DHC, DHC.SpawnPointIndex, SpawnLocation, SpawnRotation);   //TODO: remove need for passing in selection, SPI exists in DHC
+//      SpawnError = SpawnManager.SpawnInfantry(DHC, DHC.SpawnPointIndex, SpawnLocation, SpawnRotation);   //TODO: remove need for passing in selection, SPI exists in DHC
+        SpawnManager.SpawnInfantry(DHC, SpawnError); // Matt: replaced line above as wrong function params and won't compile
     }
 
     if (SpawnError != class'DHSpawnManager'.default.SpawnError_none)
