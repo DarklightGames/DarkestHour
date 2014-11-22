@@ -69,12 +69,12 @@ var     bool                bBarrelDamaged;         // barrel is close to failur
 var     bool                bBarrelFailed;          // barrel overheated and can't be used
 var     bool                bCanFireFromHip;        // If true this weapon has a hip firing mode
 
-var     byte                ActiveBarrel;           // barrel being used
+var     byte                BarrelIndex;           // barrel being used
 var     byte                RemainingBarrels;       // number of barrels still left, INCLUDES the active barrel
 var     byte                InitialBarrels;         // barrels initially given
 
 var     class<DH_MGBarrel>  BarrelClass;            // barrel type we use now
-var     array<DH_MGBarrel>  BarrelArray;            // The array of carried MG barrels for this weapon
+var     array<DH_MGBarrel>  Barrels;                // The array of carried MG barrels for this weapon
 
 // Barrel steam info
 var     class<Emitter>      ROBarrelSteamEmitterClass;
@@ -83,10 +83,7 @@ var     name                BarrelSteamBone;        // bone we attach the barrel
 
 // MG specific animations
 var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
-
-var     float           PlayerDeployFOV;
-
-
+var     float               PlayerDeployFOV;
 
 //=============================================================================
 // Replication
@@ -109,7 +106,9 @@ replication
 }
 
 // Implemented in subclasses
-function ServerWorkBolt(){}
+function ServerWorkBolt()
+{
+}
 
 // Play an idle animation on the server so that the weapon will be
 // in the right position for free-aim calculations (not the ref pose)
@@ -129,22 +128,24 @@ exec function LogAmmo()
     local int i;
 
     if (!class'ROEngine.ROLevelInfo'.static.RODebugMode())
+    {
         return;
+    }
 
-    for(i=0; i<PrimaryAmmoArray.Length; i++)
+    for(i = 0; i < PrimaryAmmoArray.Length; i++)
     {
         if (i == CurrentMagIndex)
         {
-            log("Current mag has "$PrimaryAmmoArray[i]$" ammo");
+            Log("Current mag has" @ PrimaryAmmoArray[i] @ "ammo");
         }
         else
         {
-            log("Stowed mag has "$PrimaryAmmoArray[i]$" ammo");
+            Log("Stowed mag has " @ PrimaryAmmoArray[i] @ "ammo");
         }
     }
 
-    log("Primary Ammo Count is "$AmmoAmount(0));
-    log("There are "$PrimaryAmmoArray.Length$" mags");
+    Log("Primary Ammo Count is" @ AmmoAmount(0));
+    Log("There are" @ PrimaryAmmoArray.Length @ "mags");
 }
 
 //=============================================================================
@@ -152,7 +153,7 @@ exec function LogAmmo()
 //=============================================================================
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local int m;
+    local int i;
     local rotator RollMod;
     local ROPlayer Playa;
     //For lean - Justin
@@ -162,24 +163,28 @@ simulated event RenderOverlays(Canvas Canvas)
     local rotator RotOffset;
 
     if (Instigator == none)
+    {
         return;
+    }
 
     // Lets avoid having to do multiple casts every tick - Ramm
     Playa = ROPlayer(Instigator.Controller);
 
     // Don't draw the weapon if we're not viewing our own pawn
     if (Playa != none && Playa.ViewTarget != Instigator)
+    {
         return;
+    }
 
     // draw muzzleflashes/smoke for all fire modes so idle state won't
     // cause emitters to just disappear
     Canvas.DrawActor(none, false, true); // amb: Clear the z-buffer here
 
-    for (m = 0; m < NUM_FIRE_MODES; m++)
+    for (i = 0; i < NUM_FIRE_MODES; i++)
     {
-        if (FireMode[m] != none)
+        if (FireMode[i] != none)
         {
-            FireMode[m].DrawMuzzleFlash(Canvas);
+            FireMode[i].DrawMuzzleFlash(Canvas);
         }
     }
 
@@ -188,6 +193,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
     //Adjust weapon position for lean
     rpawn = ROPawn(Instigator);
+
     if (rpawn != none && rpawn.LeanAmount != 0)
     {
         leanangle += rpawn.LeanAmount;
@@ -236,14 +242,19 @@ simulated event RenderOverlays(Canvas Canvas)
     if (bUsingSights && Playa != none)
     {
         bDrawingFirstPerson = true;
-        Canvas.DrawBoundActor(self, false, false,DisplayFOV,Playa.Rotation,Playa.WeaponBufferRotation,Instigator.CalcZoomedDrawOffset(self));
+
+        Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+
         bDrawingFirstPerson = false;
     }
     else
     {
         SetRotation(RollMod);
+
         bDrawingFirstPerson = true;
+
         Canvas.DrawActor(self, false, false, DisplayFOV);
+
         bDrawingFirstPerson = false;
     }
 }
@@ -255,7 +266,7 @@ function SetServerOrientation(rotator NewRotation)
     if (bUsesFreeAim && !bUsingSights)
     {
         // Remove the roll component so the weapon doesn't tilt with the terrain
-        WeaponRotation = Instigator.GetViewRotation();// + FARotation;
+        WeaponRotation = Instigator.GetViewRotation();
 
         WeaponRotation.Pitch += NewRotation.Pitch;
         WeaponRotation.Yaw += NewRotation.Yaw;
@@ -271,6 +282,7 @@ function coords GetMuzzleCoords()
 {
     // have to update the location of the weapon before getting the coords
     SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
+
     return GetBoneCoords('Muzzle');
 }
 
@@ -297,8 +309,11 @@ function byte BestMode()
     local AIController C;
 
     C = AIController(Instigator.Controller);
+
     if (C == none || C.Enemy == none)
+    {
         return 0;
+    }
 
     if (!FireMode[1].bMeleeMode)
     {
@@ -306,7 +321,9 @@ function byte BestMode()
     }
 
     if (VSize(C.Enemy.Location - Instigator.Location) < 125 && FRand() < 0.3)
+    {
         return 1;
+    }
 
     return 0;
 }
@@ -322,13 +339,15 @@ simulated state RaisingWeapon
 {
     simulated function BeginState()
     {
-        local int Mode;
+        local int i;
         local name Anim;
 
         // If we have quickly raised our sights right after putting the weapon away,
         // take us out of ironsight mode
         if (bUsingSights)
+        {
             ZoomOut(false);
+        }
 
         // Reset any zoom values
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -373,8 +392,10 @@ simulated state RaisingWeapon
                     }
                 }
 
-                if ((Mesh!=none) && HasAnim(Anim))
+                if (Mesh != none && HasAnim(Anim))
+                {
                     PlayAnim(Anim, SelectAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_BringUp;
@@ -382,13 +403,13 @@ simulated state RaisingWeapon
 
         SetTimer(GetAnimDuration(Anim, SelectAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        for (i = 0; i < NUM_FIRE_MODES; i++)
         {
-            FireMode[Mode].bIsFiring = false;
-            FireMode[Mode].HoldTime = 0.0;
-            FireMode[Mode].bServerDelayStartFire = false;
-            FireMode[Mode].bServerDelayStopFire = false;
-            FireMode[Mode].bInstantStop = false;
+            FireMode[i].bIsFiring = false;
+            FireMode[i].HoldTime = 0.0;
+            FireMode[i].bServerDelayStartFire = false;
+            FireMode[i].bServerDelayStopFire = false;
+            FireMode[i].bInstantStop = false;
         }
     }
 }
@@ -397,15 +418,24 @@ simulated state RaisingWeapon
 simulated state LoweringWeapon
 {
     // Don't zoom in when we're lowering the weapon
-    simulated function PerformZoom(bool bZoomStatus){}
+    simulated function PerformZoom(bool bZoomStatus)
+    {
+    }
+
     // Don't allow a reload if we're putting the weapon away
-    simulated function bool AllowReload() {return false;}
+    simulated function bool AllowReload()
+    {
+        return false;
+    }
+
     // dont allow the bayo to be attached while lowering the weapon
-    simulated exec function Deploy(){}
+    simulated exec function Deploy()
+    {
+    }
 
     simulated function BeginState()
     {
-        local int Mode;
+        local int i;
         local name Anim;
 
         if (AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
@@ -417,21 +447,26 @@ simulated state LoweringWeapon
             Anim = PutDownAnim;
         }
 
-
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
             if (Instigator.IsLocallyControlled())
             {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+                for (i = 0; i < NUM_FIRE_MODES; i++)
                 {
-                    if (FireMode[Mode].bIsFiring)
-                        ClientStopFire(Mode);
+                    if (FireMode[i].bIsFiring)
+                    {
+                        ClientStopFire(i);
+                    }
                 }
 
                 if (ClientState == WS_BringUp)
-                    TweenAnim(SelectAnim,PutDownTime);
+                {
+                    TweenAnim(SelectAnim, PutDownTime);
+                }
                 else if (HasAnim(Anim))
+                {
                     PlayAnim(Anim, PutDownAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_PutDown;
@@ -439,10 +474,10 @@ simulated state LoweringWeapon
 
         SetTimer(GetAnimDuration(Anim, PutDownAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        for (i = 0; i < NUM_FIRE_MODES; i++)
         {
-            FireMode[Mode].bServerDelayStartFire = false;
-            FireMode[Mode].bServerDelayStopFire = false;
+            FireMode[i].bServerDelayStartFire = false;
+            FireMode[i].bServerDelayStopFire = false;
         }
 
         ResetPlayerFOV();
@@ -471,9 +506,9 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
-//      else
-//          ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -481,6 +516,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
         }
     }
@@ -490,7 +526,7 @@ Begin:
 //// client & server ////
 simulated function bool StartFire(int Mode)
 {
-    local int alt;
+    local int Alt;
 
     if (AmmoAmount(0) <= 0 || bBarrelFailed)
     {
@@ -498,20 +534,26 @@ simulated function bool StartFire(int Mode)
     }
 
     if (!ReadyToFire(Mode))
+    {
         return false;
+    }
 
     if (Mode == 0)
-        alt = 1;
+    {
+        Alt = 1;
+    }
     else
-        alt = 0;
+    {
+        Alt = 0;
+    }
 
     FireMode[Mode].bIsFiring = true;
     FireMode[Mode].NextFireTime = Level.TimeSeconds + FireMode[Mode].PreFireTime;
 
-    if (FireMode[alt].bModeExclusive)
+    if (FireMode[Alt].bModeExclusive)
     {
         // prevents rapidly alternating fire modes
-        FireMode[Mode].NextFireTime = FMax(FireMode[Mode].NextFireTime, FireMode[alt].NextFireTime);
+        FireMode[Mode].NextFireTime = FMax(FireMode[Mode].NextFireTime, FireMode[Alt].NextFireTime);
     }
 
     if (Instigator.IsLocallyControlled())
@@ -520,6 +562,7 @@ simulated function bool StartFire(int Mode)
         {
             FireMode[Mode].PlayPreFire();
         }
+
         FireMode[Mode].FireCount = 0;
     }
 
@@ -540,7 +583,9 @@ simulated function bool StartFire(int Mode)
 simulated event NotifyCrawlMoving()
 {
     if (!bUsingSights)
+    {
         super.NotifyCrawlMoving();
+    }
 }
 
 simulated state StartCrawling
@@ -617,28 +662,34 @@ simulated state StartCrawling
         {
             Direction = ROPawn(Instigator).Get8WayDirection();
 
-            if (Direction == 0 ||  Direction == 2 ||  Direction == 3 || Direction == 4 ||
-                Direction == 5)
+            switch (Direction)
             {
-                if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
-                {
-                    LoopAnim(CrawlForwardEmptyAnim, 1.0, 0.2);
-                }
-                else if (HasAnim(CrawlForwardAnim))
-                {
-                    LoopAnim(CrawlForwardAnim, 1.0, 0.2);
-                }
-            }
-            else
-            {
-                if (AmmoAmount(0) < 1 && HasAnim(CrawlBackwardEmptyAnim))
-                {
-                    LoopAnim(CrawlBackwardEmptyAnim, 1.0, 0.2);
-                }
-                else if (HasAnim(CrawlBackwardAnim))
-                {
-                    LoopAnim(CrawlBackwardAnim, 1.0, 0.2);
-                }
+                case 0:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
+                    {
+                        LoopAnim(CrawlForwardEmptyAnim, 1.0, 0.2);
+                    }
+                    else if (HasAnim(CrawlForwardAnim))
+                    {
+                        LoopAnim(CrawlForwardAnim, 1.0, 0.2);
+                    }
+
+                    break;
+                default:
+                    if (AmmoAmount(0) < 1 && HasAnim(CrawlBackwardEmptyAnim))
+                    {
+                        LoopAnim(CrawlBackwardEmptyAnim, 1.0, 0.2);
+                    }
+                    else if (HasAnim(CrawlBackwardAnim))
+                    {
+                        LoopAnim(CrawlBackwardAnim, 1.0, 0.2);
+                    }
+
+                    break;
             }
         }
     }
@@ -648,9 +699,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -658,6 +713,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
         }
     }
@@ -693,9 +749,13 @@ simulated function PlayStartCrawl()
     AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+    {
         SetTimer(AnimTimer - (AnimTimer * 0.1), false);
+    }
     else
+    {
         SetTimer(AnimTimer, false);
+    }
 }
 
 // Overriden to support empty crawling anims
@@ -767,9 +827,9 @@ simulated function PlayEndCrawl()
     SetTimer(GetAnimDuration(Anim, 1.0) + FastTweenTime, false);
 }
 
-//=============================================================================
+//==============================================================================
 // Bayonet attach/detach functionality
-//=============================================================================
+//==============================================================================
 
 // Hide the bayonet. Also called by anim notifies to hide bayonet during the attach/detach transition
 simulated function HideBayonet()
@@ -786,18 +846,13 @@ simulated function ShowBayonet()
 
 simulated exec function Deploy()
 {
-    if (IsBusy() || !bHasBayonet || (FireMode[1] != none && FireMode[1].bMeleeMode &&
-    (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))))
+    if (IsBusy() || !bHasBayonet ||
+        (FireMode[1] != none && FireMode[1].bMeleeMode && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))))
+    {
         return;
+    }
 
-    if (bBayonetMounted)
-    {
-        ChangeBayoStatus(false);
-    }
-    else
-    {
-        ChangeBayoStatus(true);
-    }
+    ChangeBayoStatus(!bBayonetMounted);
 }
 
 simulated function ChangeBayoStatus(bool bBayoStatus)
@@ -805,16 +860,15 @@ simulated function ChangeBayoStatus(bool bBayoStatus)
     if (bBayoStatus)
     {
         GotoState('AttachingBayonet');
-
-        if (Role < ROLE_Authority)
-            ServerChangeBayoStatus(true);
     }
     else
     {
         GotoState('DetachingBayonet');
+    }
 
-        if (Role < ROLE_Authority)
-            ServerChangeBayoStatus(false);
+    if (Role < ROLE_Authority)
+    {
+        ServerChangeBayoStatus(bBayoStatus);
     }
 }
 
@@ -855,9 +909,13 @@ simulated state AttachingBayonet extends Busy
     simulated function Timer()
     {
         if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+        {
             GotoState('StartCrawling');
+        }
         else
+        {
             GotoState('Idle');
+        }
     }
 
     simulated function BeginState()
@@ -867,7 +925,9 @@ simulated state AttachingBayonet extends Busy
         bBayonetMounted = true;
 
         if (DHWeaponAttachment(ThirdPersonActor) != none)
+        {
             DHWeaponAttachment(ThirdPersonActor).bBayonetAttached = true;
+        }
 
         if (Instigator.IsLocallyControlled())
         {
@@ -881,10 +941,15 @@ simulated state AttachingBayonet extends Busy
 
         AnimTimer = GetAnimDuration(BayoAttachAnim, 1.0) + FastTweenTime;
 
-        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        if (Level.NetMode == NM_DedicatedServer ||
+            (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        {
             SetTimer(AnimTimer - (AnimTimer * 0.1), false);
+        }
         else
+        {
             SetTimer(AnimTimer, false);
+        }
     }
 
 // Take the player out of iron sights if they are in ironsights
@@ -892,14 +957,20 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
             if (bPlayerFOVZooms)
+            {
                 PlayerViewZoom(false);
+            }
 
             SmoothZoom(false);
             ResetPlayerFOV();
@@ -927,9 +998,13 @@ simulated state DetachingBayonet extends Busy
     simulated function Timer()
     {
         if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+        {
             GotoState('StartCrawling');
+        }
         else
+        {
             GotoState('Idle');
+        }
     }
 
     simulated function BeginState()
@@ -939,7 +1014,9 @@ simulated state DetachingBayonet extends Busy
         bBayonetMounted = false;
 
         if (DHWeaponAttachment(ThirdPersonActor) != none)
+        {
             DHWeaponAttachment(ThirdPersonActor).bBayonetAttached = false;
+        }
 
         if (Instigator.IsLocallyControlled())
         {
@@ -954,9 +1031,13 @@ simulated state DetachingBayonet extends Busy
         AnimTimer = GetAnimDuration(BayoDetachAnim, 1.0) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        {
             SetTimer(AnimTimer - (AnimTimer * 0.1), false);
+        }
         else
+        {
             SetTimer(AnimTimer, false);
+        }
     }
 
 // Take the player out of iron sights if they are in ironsights
@@ -964,9 +1045,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -974,6 +1059,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
             ResetPlayerFOV();
         }
@@ -985,25 +1071,22 @@ Begin:
 //=============================================================================
 simulated function ROIronSights()
 {
-    if (bUsingSights)
-    {
-        PerformZoom(false); //Un-ironsight
-    }
-    else
-    {
-        PerformZoom(true);  //Ironsight
-    }
+    PerformZoom(!bUsingSights);
 }
 
 simulated function PerformZoom(bool bZoomStatus)
 {
     if (IsBusy() && !IsCrawling())
+    {
         return;
+    }
 
     if (bZoomStatus)
     {
         if (Instigator.Physics == PHYS_Falling)
+        {
             return;
+        }
 
         //Don't allow them to go to iron sights during a melee attack
         if (FireMode[1] != none && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking')))
@@ -1014,18 +1097,18 @@ simulated function PerformZoom(bool bZoomStatus)
         ZoomIn(true);
 
         if (Role < ROLE_Authority)
+        {
             ServerZoomIn(true);
-
-        //PlayerController(Instigator.Controller).DesiredFOV = 48.0;
+        }
     }
     else
     {
         ZoomOut(true);
 
         if (Role < ROLE_Authority)
+        {
             ServerZoomOut(true);
-
-        //PlayerController(Instigator.Controller).DesiredFOV = PlayerController(Instigator.Controller).DefaultFOV;
+        }
     }
 }
 
@@ -1033,17 +1116,25 @@ simulated function ZoomIn(bool bAnimateTransition)
 {
     //Make the player stop firing when they go to iron sights
     if (FireMode[0] != none && FireMode[0].bIsFiring)
+    {
         FireMode[0].StopFiring();
+    }
 
     //Don't allow player to go to iron sights while in melee mode
     if (FireMode[1] != none && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking')))
+    {
         return;
+    }
 
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    {
         SetPlayerFOV(PlayerIronsightFOV);
+    }
 
     if (bAnimateTransition)
+    {
         GotoState('IronSightZoomIn');
+    }
 
     bUsingSights = true;
     ROPawn(Instigator).SetIronSightAnims(true);
@@ -1057,10 +1148,14 @@ function ServerZoomIn(bool bAnimateTransition)
 simulated function ZoomOut(bool bAnimateTransition)
 {
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    {
         ResetPlayerFOV();
+    }
 
     if (bAnimateTransition)
+    {
         GotoState('IronSightZoomOut');
+    }
 
     bUsingSights = false;
     ROPawn(Instigator).SetIronSightAnims(false);
@@ -1074,7 +1169,6 @@ function ServerZoomOut(bool bAnimateTransition)
 simulated function PlayerViewZoom(bool ZoomDirection)
 {
     // currently, this instantly zooms the weapon into the new fov
-
     if (ZoomDirection)
     {
         bPlayerViewIsZoomed = true;
@@ -1083,6 +1177,7 @@ simulated function PlayerViewZoom(bool ZoomDirection)
     else
     {
         bPlayerViewIsZoomed = false;
+
         if (Instigator.Controller != none)
         {
             PlayerController(Instigator.Controller).DefaultFOV = 72;
@@ -1138,10 +1233,15 @@ simulated state IronSightZoomIn extends Busy
 
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
-        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        if (Level.NetMode == NM_DedicatedServer ||
+            (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        {
             SetTimer(AnimTimer - (AnimTimer * 0.15), false);
+        }
         else
+        {
             SetTimer(AnimTimer, false);
+        }
 
         SetPlayerFOV(PlayerIronsightFOV);
     }
@@ -1178,7 +1278,6 @@ Begin:
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
         SmoothZoom(true);
-        //DisplayFOV = IronSightDisplayFOV;
     }
 }
 
@@ -1221,15 +1320,21 @@ simulated state IronSightZoomOut extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        {
             SetTimer(AnimTimer - (AnimTimer * 0.15), false);
+        }
         else
+        {
             SetTimer(AnimTimer, false);
+        }
     }
 
     simulated function EndState()
     {
         if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+        {
             NotifyCrawlMoving();
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -1245,9 +1350,9 @@ Begin:
         {
             PlayerViewZoom(false);
         }
+
         SmoothZoom(false);
         ResetPlayerFOV();
-        //DisplayFOV = default.DisplayFOV;
     }
 }
 
@@ -1312,7 +1417,6 @@ simulated state TweenDown extends Busy
         }
     }
 
-
     simulated function BeginState()
     {
     }
@@ -1332,11 +1436,16 @@ Begin:
         SetTimer(Default.ZoomOutTime + 0.1, false);
 
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
-        if (Instigator.IsLocallyControlled() || (Instigator.DrivenVehicle != none && Instigator.DrivenVehicle.IsLocallyControlled()))
+        if (Instigator.IsLocallyControlled() ||
+            (Instigator.DrivenVehicle != none && Instigator.DrivenVehicle.IsLocallyControlled()))
         {
             PlayIdle();
 
@@ -1398,9 +1507,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         // We'll want to sleep however long this zoom out takes
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -1409,6 +1522,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
             ResetPlayerFOV();
         }
@@ -1431,21 +1545,26 @@ simulated state StartSprinting
         if (Instigator.IsLocallyControlled())
         {
             // Make the sprinting animation match the sprinting speed
-            LoopSpeed=1.5;
+            LoopSpeed = 1.5;
 
             Speed2d = VSize(Instigator.Velocity);
-            LoopSpeed = ((Speed2d/(Instigator.Default.GroundSpeed * Instigator.SprintPct))*1.5);
+            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * 1.5;
 
             if ((AmmoAmount(0) <= 0) && HasAnim(SprintLoopEmptyAnim))
+            {
                 Anim = SprintLoopEmptyAnim;
+            }
             else
+            {
                 Anim = SprintLoopAnim;
+            }
 
             if (HasAnim(SprintLoopAnim))
+            {
                 LoopAnim(Anim, LoopSpeed, 0.2);
+            }
         }
     }
-
 
     simulated function BeginState()
     {
@@ -1457,9 +1576,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -1467,6 +1590,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
             ResetPlayerFOV();
         }
@@ -1485,10 +1609,14 @@ simulated function PlayStartSprint()
 {
     local name Anim;
 
-    if ((AmmoAmount(0) <= 0) && HasAnim(SprintStartEmptyAnim))
+    if (AmmoAmount(0) <= 0 && HasAnim(SprintStartEmptyAnim))
+    {
         Anim = SprintStartEmptyAnim;
+    }
     else
+    {
         Anim = SprintStartAnim;
+    }
 
     if (Instigator.IsLocallyControlled())
     {
@@ -1509,18 +1637,24 @@ simulated state WeaponSprinting
         if (Instigator.IsLocallyControlled())
         {
             // Make the sprinting animation match the sprinting speed
-            LoopSpeed=1.5;
+            LoopSpeed = 1.5;
 
             Speed2d = VSize(Instigator.Velocity);
-            LoopSpeed = ((Speed2d/(Instigator.Default.GroundSpeed * Instigator.SprintPct))*1.5);
+            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * 1.5;
 
-            if ((AmmoAmount(0) <= 0) && HasAnim(SprintLoopEmptyAnim))
+            if (AmmoAmount(0) <= 0 && HasAnim(SprintLoopEmptyAnim))
+            {
                 Anim = SprintLoopEmptyAnim;
+            }
             else
+            {
                 Anim = SprintLoopAnim;
+            }
 
             if (HasAnim(SprintLoopAnim))
+            {
                 LoopAnim(Anim, LoopSpeed, FastTweenTime);
+            }
         }
     }
 
@@ -1539,10 +1673,14 @@ simulated function PlayEndSprint()
 {
     local name Anim;
 
-    if ((AmmoAmount(0) <= 0) && HasAnim(SprintEndEmptyAnim))
+    if (AmmoAmount(0) <= 0 && HasAnim(SprintEndEmptyAnim))
+    {
         Anim = SprintEndEmptyAnim;
+    }
     else
+    {
         Anim = SprintEndAnim;
+    }
 
     if (Instigator.IsLocallyControlled())
     {
@@ -1558,16 +1696,15 @@ simulated function PlayEndSprint()
 //=============================================================================
 simulated function OutOfAmmo()
 {
-    if (!HasAmmo())
+    if (!HasAmmo() && DHWeaponAttachment(ThirdPersonActor) != none)
     {
-        if (DHWeaponAttachment(ThirdPersonActor) != none)
-        {
-            DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
-        }
+        DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
     }
 
     if (Instigator == none || !Instigator.IsLocallyControlled() || HasAmmo())
+    {
         return;
+    }
 
     if (AIController(Instigator.Controller) != none)
     {
@@ -1578,7 +1715,9 @@ simulated function OutOfAmmo()
 simulated exec function ROManualReload()
 {
     if (!AllowReload())
+    {
         return;
+    }
 
     if (Level.Netmode == NM_Client && !IsBusy())
     {
@@ -1590,22 +1729,13 @@ simulated exec function ROManualReload()
 
 simulated function bool AllowReload()
 {
-    if (IsFiring() || IsBusy())
-        return false;
-
-    // Can't reload if we don't have a mag to put in
-    if (CurrentMagCount < 1)
-        return false;
-
-    return true;
+    return !IsFiring() && !IsBusy() && CurrentMagCount >= 1;
 }
-
 
 simulated function int GetHudAmmoCount()
 {
     return CurrentMagCount;
 }
-
 
 function ServerRequestReload()
 {
@@ -1656,15 +1786,21 @@ simulated state Reloading extends Busy
     simulated function Timer()
     {
         if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+        {
             GotoState('StartCrawling');
+        }
         else
+        {
             GotoState('Idle');
+        }
     }
 
     simulated function BeginState()
     {
         if (Role == ROLE_Authority)
+        {
             ROPawn(Instigator).HandleStandardReload();
+        }
 
         PlayReload();
         ResetPlayerFOV();
@@ -1673,7 +1809,9 @@ simulated state Reloading extends Busy
     simulated function EndState()
     {
         if (Role == ROLE_Authority)
-                PerformReload();
+        {
+            PerformReload();
+        }
 
         bWaitingToBolt = false;
     }
@@ -1683,9 +1821,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -1693,6 +1835,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
         }
     }
@@ -1733,9 +1876,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -1743,6 +1890,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
         }
     }
@@ -1765,9 +1913,13 @@ simulated function PlayReload()
     AnimTimer = GetAnimDuration(Anim, 1.0) + FastTweenTime;
 
     if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+    {
         SetTimer(AnimTimer - (AnimTimer * 0.1), false);
+    }
     else
+    {
         SetTimer(AnimTimer, false);
+    }
 
     if (Instigator.IsLocallyControlled())
     {
@@ -1798,9 +1950,13 @@ function PerformReload()
         {
             //If there's only one bullet left(the one in the chamber), discard the clip
             if (CurrentMagLoad == 1)
+            {
                 PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
+            }
             else
+            {
                 PrimaryAmmoArray[CurrentMagIndex] = CurrentMagLoad - 1;
+            }
 
             AmmoCharge[0] = 1;
             bDidPlusOneReload = true;
@@ -1837,15 +1993,15 @@ function PerformReload()
     {
         if (AmmoStatus(0) > 0.5)
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',0);
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 0);
         }
         else if (AmmoStatus(0) > 0.2)
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',1);
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 1);
         }
         else
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',2);
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 2);
         }
     }
 
@@ -1907,171 +2063,167 @@ function bool FillAmmo()
     return bDidFillAmmo;
 }
 
-function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
+function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
 {
     local bool bJustSpawnedAmmo;
-    local int addAmount, InitialAmount, i;
+    local int AddAmount, InitialAmount, i;
+    local DHWeaponPickup DHWP;
 
-    if (FireMode[m] != none && FireMode[m].AmmoClass != none)
+    if (FireMode[M] != none && FireMode[M].AmmoClass != none)
     {
-        Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
+        Ammo[M] = Ammunition(Instigator.FindInventoryType(FireMode[M].AmmoClass));
+
         bJustSpawnedAmmo = false;
 
-        if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
+        if (FireMode[M].AmmoClass == none || (M != 0 && FireMode[M].AmmoClass == FireMode[0].AmmoClass))
+        {
             return;
+        }
 
-        InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
+        InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && WP == none)
         {
             PrimaryAmmoArray.Length = InitialNumPrimaryMags;
-            for(i=0; i<PrimaryAmmoArray.Length; i++)
+
+            for(i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
-            CurrentMagIndex=0;
-            CurrentMagCount = PrimaryAmmoArray.Length - 1;
+
+            CurrentMagIndex = 0;
         }
 
         if (WP != none)
         {
-            InitialAmount = WP.AmmoAmount[m];
-            PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
+            InitialAmount = WP.AmmoAmount[M];
+
+            DHWP = DHWeaponPickup(WP);
+
+            if (DHWP != none)
+            {
+                for (i = 0; i < DHWP.AmmoMags.Length; ++i)
+                {
+                    PrimaryAmmoArray[i] = DHWP.AmmoMags[i];
+                }
+
+                CurrentMagIndex = DHWP.LoadedMagazineIndex;
+            }
         }
 
-        if (Ammo[m] != none)
+        CurrentMagCount = PrimaryAmmoArray.Length - 1;
+
+        if (Ammo[M] != none)
         {
-            addamount = InitialAmount + Ammo[m].AmmoAmount;
-            Ammo[m].Destroy();
+            AddAmount = InitialAmount + Ammo[M].AmmoAmount;
+
+            Ammo[M].Destroy();
         }
         else
-            addAmount = InitialAmount;
+        {
+            AddAmount = InitialAmount;
+        }
 
-        AddAmmo(addAmount,m);
+        AddAmmo(AddAmount, M);
     }
 }
 
 function bool AddAmmo(int AmmoToAdd, int Mode)
 {
-    if (AmmoClass[0] == AmmoClass[mode])
-        mode = 0;
+    if (AmmoClass[0] == AmmoClass[Mode])
+    {
+        Mode = 0;
+    }
+
     if (Level.GRI.WeaponBerserk > 1.0)
-        AmmoCharge[mode] = MaxAmmo(Mode);
-    else if (AmmoCharge[mode] < MaxAmmo(mode))
-        AmmoCharge[mode] = Min(MaxAmmo(mode), AmmoCharge[mode]+AmmoToAdd);
+    {
+        AmmoCharge[Mode] = MaxAmmo(Mode);
+    }
+    else if (AmmoCharge[mode] < MaxAmmo(Mode))
+    {
+        AmmoCharge[Mode] = Min(MaxAmmo(Mode), AmmoCharge[Mode] + AmmoToAdd);
+    }
 
     NetUpdateTime = Level.TimeSeconds - 1;
+
     return true;
 }
 
-function bool HandlePickupQuery(pickup Item)
+function bool HandlePickupQuery(Pickup Item)
 {
-    local WeaponPickup wpu;
-    local int i, j;
-    local bool bAddedMags;
+    local WeaponPickup WP;
 
-    if (bNoAmmoInstances)
+    //WP = DHWeaponPickup(Item);
+
+    if (WP != none)
     {
-        // handle ammo pickups
-        for (i=0; i<2; i++)
+        //TODO: give ammo from downed weapon and remove it!
+    }
+
+    if (Class == Item.InventoryType)
+    {
+        WP = WeaponPickup(Item);
+
+        if (WP != none)
         {
-            if ((item.inventorytype == AmmoClass[i]) && (AmmoClass[i] != none))
-            {
-                if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-                {
-                    // Handle multi mag ammo type pickups
-                    if (ROMultiMagAmmoPickup(Item) != none)
-                    {
-                        for(j=0; j<ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
-                        {
-                            if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-                            {
-                                PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];//DropAmmo(StartLocation, PrimaryAmmoArray[i]);
-                                bAddedMags=true;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    // Handle standard/old style ammo pickups
-                    else
-                    {
-                        PrimaryAmmoArray[PrimaryAmmoArray.Length] = Min(MaxAmmo(i), Ammo(item).AmmoAmount);
-                        bAddedMags=true;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
-
-                // if we added mags, update the mag count and force a net update
-                if (bAddedMags)
-                {
-                    CurrentMagCount = PrimaryAmmoArray.Length - 1;
-                    NetUpdateTime = Level.TimeSeconds - 1;
-                }
-
-                item.AnnouncePickup(Pawn(Owner));
-                item.SetRespawn();
-                return true;
-            }
+            return !WP.AllowRepeatPickup();
+        }
+        else
+        {
+            return false;
         }
     }
 
-    if (class == Item.InventoryType)
-    {
-        wpu = WeaponPickup(Item);
-        if (wpu != none)
-            return !wpu.AllowRepeatPickup();
-        else
-            return false;
-    }
-
     // Drop current weapon and pickup the one on the ground
-    if (Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup &&
-        Item.InventoryType.default.InventoryGroup == InventoryGroup && Instigator.CanThrowWeapon())
+    if (Instigator.Weapon != none &&
+        Instigator.Weapon.InventoryGroup == InventoryGroup &&
+        Item.InventoryType.default.InventoryGroup == InventoryGroup &&
+        Instigator.CanThrowWeapon())
     {
         ROPlayer(Instigator.Controller).ThrowWeapon();
+
         return false;
     }
 
     // Avoid multiple weapons in the same slot
     if (Item.InventoryType.default.InventoryGroup == InventoryGroup)
+    {
         return true;
+    }
 
     if (Inventory == none)
+    {
         return false;
+    }
 
     return Inventory.HandlePickupQuery(Item);
 }
 
 function DropFrom(vector StartLocation)
 {
-    local int m, i, j;
-    local int DropMagCount;
-    local Pickup Pickup, TempPickup;
-    local ROMultiMagAmmoPickup AmmoPickup;
-    local rotator R;
-    local float PVelX, PVelY;
+    local int i;
+    local Pickup Pickup;
 
     if (!bCanThrow)
+    {
         return;
+    }
 
     if (Instigator != none && bUsingSights)
     {
         bUsingSights = false;
+
         ROPawn(Instigator).SetIronSightAnims(false);
     }
 
     ClientWeaponThrown();
 
-    for (m = 0; m < NUM_FIRE_MODES; m++)
+    for (i = 0; i < NUM_FIRE_MODES; i++)
     {
-        if (FireMode[m].bIsFiring)
-            StopFire(m);
+        if (FireMode[i].bIsFiring)
+        {
+            StopFire(i);
+        }
     }
 
     if (Instigator != none)
@@ -2079,98 +2231,33 @@ function DropFrom(vector StartLocation)
         DetachFromPawn(Instigator);
     }
 
-    Pickup = Spawn(PickupClass,,, StartLocation,Rotation);
+    Pickup = Spawn(PickupClass,,, StartLocation, Rotation);
+
     if (Pickup != none)
     {
         Pickup.InitDroppedPickupFor(self);
         Pickup.Velocity = Velocity;
-
-        PVelX = Pickup.Velocity.X;
-        PVelY = Pickup.Velocity.Y;
-
-        Pickup.Velocity.X = RandRange(PVelX - 100, PVelX + 100);
-        Pickup.Velocity.Y = RandRange(PVelY - 100, PVelY + 100);
+        Pickup.Velocity.X += RandRange(-100, 100);
+        Pickup.Velocity.Y += RandRange(-100, 100);
 
         if (Instigator.Health > 0)
+        {
             WeaponPickup(Pickup).bThrown = true;
-    }
-
-    // Handle multi mag ammo type pickups
-    if (class<ROMultiMagAmmoPickup>(AmmoPickupClass(0)) != none && CurrentMagCount > 0)
-    {
-        R.Yaw = rand(65536);
-        TempPickup = spawn(AmmoPickupClass(0),,,StartLocation,R);
-
-        AmmoPickup = ROMultiMagAmmoPickup(TempPickup);
-
-        if (AmmoPickup == none)
-        {
-            return;
-        }
-        AmmoPickup.InitDroppedPickupFor(self);
-
-        AmmoPickup.Velocity.X = Rand(200);
-        AmmoPickup.Velocity.Y = Rand(200);
-        AmmoPickup.Velocity.Z = Rand(100);
-
-        AmmoPickup.AmmoMags.Length = CurrentMagCount;
-
-        for(j=0; j<PrimaryAmmoArray.Length; j++)
-        {
-            if (j != CurrentMagIndex)
-            {
-                AmmoPickup.AmmoMags[DropMagCount] = PrimaryAmmoArray[j];
-                DropMagCount++;
-            }
-        }
-    }
-    // Handle standard/old style ammo pickups
-    else
-    {
-        for (i = 0; i < PrimaryAmmoArray.Length; i++)
-        {
-            if (i != CurrentMagIndex)
-            {
-                DropAmmo(StartLocation, PrimaryAmmoArray[i]);
-            }
         }
     }
 
     Destroy();
-
-}
-
-// Drop a mag of ammo of our ammo pickup class type
-function DropAmmo(vector DropLocation, int MagAmmoAmount)
-{
-    local Pickup A;
-    local rotator R;
-
-    R.Yaw = rand(65536);
-    A = spawn(AmmoPickupClass(0),,,DropLocation,R);
-
-    if (A == none)
-    {
-        return;
-    }
-    A.InitDroppedPickupFor(self);
-    Ammo(A).AmmoAmount = MagAmmoAmount;
-
-    A.Velocity.X = Rand(200);
-    A.Velocity.Y = Rand(200);
-    A.Velocity.Z = Rand(100);
 }
 
 // The empty sound if your out of ammo
 simulated function Fire(float F)
 {
-    local DHPlayer player;
-
-    // Hint check
-    player = DHPlayer(Instigator.Controller);
-
     if (AmmoAmount(0) < 1 && !IsBusy())
-        PlayOwnedSound(FireMode[0].NoAmmoSound, SLOT_None,1.0,,,, false);
+    {
+        PlayOwnedSound(FireMode[0].NoAmmoSound, SLOT_None, 1.0,,,, false);
+    }
+
+    super.Fire(F);
 }
 
 //------------------------------------------------------------------------------
@@ -2197,8 +2284,6 @@ function ServerSwitchBarrels()
     GotoState('ChangingBarrels');
 }
 
-
-
 simulated exec function ROMGOperation()
 {
     if (!AllowBarrelChange())
@@ -2216,18 +2301,7 @@ simulated exec function ROMGOperation()
 
 simulated function bool AllowBarrelChange()
 {
-    if (IsFiring() || IsBusy())
-    {
-        return false;
-    }
-
-    // Can't reload if we don't have a mag to put in
-    if (RemainingBarrels < 2 || !bTrackBarrelHeat || IsInState('ChangingBarrels'))
-    {
-        return false;
-    }
-
-    return Instigator.bBipodDeployed;
+    return !IsFiring() && !IsBusy() && RemainingBarrels >= 2 && bTrackBarrelHeat && !IsInState('ChangingBarrels') && Instigator.bBipodDeployed;
 }
 
 // State where we are changing the barrel out for our MG
@@ -2329,55 +2403,55 @@ function PerformBarrelChange()
     }
 
     // if the barrel has failed, we're going to toss it, so remove it from the barrel array
-    if (BarrelArray[ActiveBarrel].bBarrelFailed && BarrelArray[ActiveBarrel] != none)
+    if (Barrels[BarrelIndex].bBarrelFailed && Barrels[BarrelIndex] != none)
     {
-        BarrelArray[ActiveBarrel].Destroy();
+        Barrels[BarrelIndex].Destroy();
 
-        BarrelArray.Remove(ActiveBarrel,1);
+        Barrels.Remove(BarrelIndex,1);
 
-        RemainingBarrels = byte(BarrelArray.Length);
+        RemainingBarrels = byte(Barrels.Length);
     }
 
     // we only have one barrel left now
     if (RemainingBarrels == 1)
     {
-        if ((ActiveBarrel >= (BarrelArray.Length - 1)) || (BarrelArray.Length == 1))
+        if ((BarrelIndex >= (Barrels.Length - 1)) || (Barrels.Length == 1))
         {
-            ActiveBarrel = 0;
+            BarrelIndex = 0;
         }
         else
         {
-            ++ActiveBarrel;
+            ++BarrelIndex;
         }
 
         // put the new barrel in the use state for heat increments and steaming
-        if (BarrelArray[ActiveBarrel] != none)
+        if (Barrels[BarrelIndex] != none)
         {
-            BarrelArray[ActiveBarrel].GotoState('BarrelInUse');
+            Barrels[BarrelIndex].GotoState('BarrelInUse');
         }
     }
     else
     {
         // At this point, we have more than 1 barrel, and the one being replaced
-        // hasn't failed, so we'll switch the ActiveBarrel tracker and also place
+        // hasn't failed, so we'll switch the BarrelIndex tracker and also place
         // the barrels in new states for whether they're on or off
 
-        // first place the current ActiveBarrel in the BarrelOff state
-        BarrelArray[ActiveBarrel].GotoState('BarrelOff');
+        // first place the current BarrelIndex in the BarrelOff state
+        Barrels[BarrelIndex].GotoState('BarrelOff');
 
-        if ((ActiveBarrel >= (BarrelArray.Length - 1)) || (BarrelArray.Length == 1))
+        if ((BarrelIndex >= (Barrels.Length - 1)) || (Barrels.Length == 1))
         {
-            ActiveBarrel = 0;
+            BarrelIndex = 0;
         }
         else
         {
-            ActiveBarrel++;
+            BarrelIndex++;
         }
 
         // put the new barrel in the use state for heat increments and steaming
-        if (BarrelArray[ActiveBarrel] != none)
+        if (Barrels[BarrelIndex] != none)
         {
-            BarrelArray[ActiveBarrel].GotoState('BarrelInUse');
+            Barrels[BarrelIndex].GotoState('BarrelInUse');
         }
     }
 
@@ -2390,9 +2464,9 @@ function PerformBarrelChange()
 //------------------------------------------------------------------------------
 function ResetBarrelProperties()
 {
-    bBarrelFailed = BarrelArray[ActiveBarrel].bBarrelFailed;
-    bBarrelSteaming = BarrelArray[ActiveBarrel].bBarrelSteaming;
-    bBarrelDamaged = BarrelArray[ActiveBarrel].bBarrelDamaged;
+    bBarrelFailed = Barrels[BarrelIndex].bBarrelFailed;
+    bBarrelSteaming = Barrels[BarrelIndex].bBarrelSteaming;
+    bBarrelDamaged = Barrels[BarrelIndex].bBarrelDamaged;
 
     if (DHWeaponAttachment(ThirdPersonActor) != none && DHWeaponAttachment(ThirdPersonActor).SoundPitch != 64)
     {
@@ -2453,15 +2527,15 @@ function GiveBarrels(optional Pickup Pickup)
         {
             tempBarrel = Spawn(BarrelClass, self);
 
-            BarrelArray[i] = tempBarrel;
+            Barrels[i] = tempBarrel;
 
             if (i == 0)
             {
-                BarrelArray[i].GotoState('BarrelInUse');
+                Barrels[i].GotoState('BarrelInUse');
             }
             else
             {
-                BarrelArray[i].GotoState('BarrelOff');
+                Barrels[i].GotoState('BarrelOff');
             }
         }
     }
@@ -2471,27 +2545,27 @@ function GiveBarrels(optional Pickup Pickup)
 
         tempBarrel = Spawn(BarrelClass, self);
 
-        BarrelArray[0] = tempBarrel;
+        Barrels[0] = tempBarrel;
 
-        BarrelArray[0].GotoState('BarrelInUse');
-        BarrelArray[0].DH_MGCelsiusTemp = P.DH_MGCelsiusTemp;
-        BarrelArray[0].bBarrelFailed = P.bBarrelFailed;
-        BarrelArray[0].UpdateBarrelStatus();        // update the barrel for the weapon we just picked up
+        Barrels[0].GotoState('BarrelInUse');
+        Barrels[0].Temperature = P.Temperature;
+        Barrels[0].bBarrelFailed = P.bBarrelFailed;
+        Barrels[0].UpdateBarrelStatus();        // update the barrel for the weapon we just picked up
 
         if (P.bHasSpareBarrel)
         {
              tempBarrel2 = Spawn(BarrelClass, self);
 
-             BarrelArray[1] = tempBarrel2;
-             BarrelArray[1].GotoState('BarrelOff');
+             Barrels[1] = tempBarrel2;
+             Barrels[1].GotoState('BarrelOff');
 
-             BarrelArray[1].DH_MGCelsiusTemp = P.DH_MGCelsiusTemp2;
-             BarrelArray[1].UpdateSpareBarrelStatus();
+             Barrels[1].Temperature = P.Temperature2;
+             Barrels[1].UpdateSpareBarrelStatus();
         }
     }
 
-    ActiveBarrel = 0;
-    RemainingBarrels = byte(BarrelArray.Length);
+    BarrelIndex = 0;
+    RemainingBarrels = byte(Barrels.Length);
 }
 
 // Overriden to set additional RO Variables when a weapon is given to the player
@@ -2508,12 +2582,12 @@ simulated function Destroyed()
 
     super.Destroyed();
 
-    // remove and destroy the barrels in the BarrelArray array
-    for(i = 0; i < BarrelArray.Length; ++i)
+    // remove and destroy the barrels in the Barrels array
+    for(i = 0; i < Barrels.Length; ++i)
     {
-        if (BarrelArray[i] != none)
+        if (Barrels[i] != none)
         {
-            BarrelArray[i].Destroy();
+            Barrels[i].Destroy();
         }
     }
 
@@ -2523,26 +2597,30 @@ simulated function Destroyed()
         ROBarrelSteamEmitter.Destroy();
     }
 
-    BarrelArray.Remove(0, BarrelArray.Length);
+    Barrels.Remove(0, Barrels.Length);
 }
 
 // Overriden to support notifying the barrels that we have fired
-simulated function bool ConsumeAmmo(int Mode, float load, optional bool bAmountNeededIsMax)
+simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     local float SoundModifier;
+    local DH_MGBarrel B;
 
-    if (BarrelArray.Length > 0 && ActiveBarrel >= 0 && ActiveBarrel < BarrelArray.Length)
+    if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
     {
+        B = Barrels[BarrelIndex];
+
         if (Role == ROLE_Authority)
         {
-            BarrelArray[ActiveBarrel].WeaponFired();
+            B.WeaponFired();
         }
 
         if (ROWeaponAttachment(ThirdPersonActor) != none)
         {
-            if (bBarrelDamaged && BarrelArray[ActiveBarrel] != none)
+            if (bBarrelDamaged)
             {
-                SoundModifier = FMax(52, 64 - ((BarrelArray[ActiveBarrel].DH_MGCelsiusTemp - BarrelArray[ActiveBarrel].DH_MGCriticalTemp)/(BarrelArray[ActiveBarrel].DH_MGFailTemp - BarrelArray[ActiveBarrel].DH_MGCriticalTemp) * 52));
+                SoundModifier = FMax(52, 64 - ((B.Temperature - B.CriticalTemperature) / (B.FailureTemperature - B.CriticalTemperature) * 52));
+
                 ROWeaponAttachment(ThirdPersonActor).SoundPitch = SoundModifier;
             }
             else if (ROWeaponAttachment(ThirdPersonActor).SoundPitch != 64)
@@ -2552,7 +2630,7 @@ simulated function bool ConsumeAmmo(int Mode, float load, optional bool bAmountN
         }
     }
 
-    return super.ConsumeAmmo(Mode, load, bAmountNeededIsMax);
+    return super.ConsumeAmmo(Mode, Load, bAmountNeededIsMax);
 }
 
 defaultproperties

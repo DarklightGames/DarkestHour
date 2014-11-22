@@ -9,10 +9,10 @@ class DH_MGBarrel extends Actor;
 // Variables
 //=============================================================================
 
-var     float       DH_MGCelsiusTemp;           // current barrel temp
+var     float       Temperature;           // current barrel temp
 var     float       DH_MGSteamTemp,              // temp barrel begins to steam
-                    DH_MGCriticalTemp,          // temp barrel steams alot and conefire error introduced
-                    DH_MGFailTemp,              // temp at which barrel fails and unusable
+                    CriticalTemperature,          // temp barrel steams alot and conefire error introduced
+                    FailureTemperature,              // temp at which barrel fails and unusable
                     BarrelCoolingRate,          // rate/second the barrel cools at
                     FiringHeatIncrement;        // deg C/shot the barrel heat is increased
 
@@ -35,7 +35,7 @@ simulated function PostBeginPlay()
     {
         LevelCTemp = FtoCelsiusConversion(DarkestHourGame(Level.Game).LevelInfo.TempFahrenheit);
 
-        DH_MGCelsiusTemp = LevelCTemp;
+        Temperature = LevelCTemp;
     }
 }
 
@@ -77,17 +77,17 @@ function float FtoCelsiusConversion(INT Fahrenheit)
 function WeaponFired()
 {
     // Increment the barrel temp by 1 deg C for firing
-    DH_MGCelsiusTemp += FiringHeatIncrement;
+    Temperature += FiringHeatIncrement;
 
     // Only CheckBarrelSteaming if the barrel isn't steaming yet
-    if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
+    if (!bBarrelSteaming && (Temperature > DH_MGSteamTemp))
     {
         bBarrelSteaming = true;
 
         DH_ProjectileWeapon(Owner).ToggleBarrelSteam(bBarrelSteaming);
     }
 
-    if (DH_MGCelsiusTemp > DH_MGFailTemp)
+    if (Temperature > FailureTemperature)
     {
         bBarrelFailed = true;
     }
@@ -112,14 +112,14 @@ function UpdateBarrelStatus()
         W.bBarrelFailed = true;
     }
 
-    if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
+    if (!bBarrelSteaming && (Temperature > DH_MGSteamTemp))
     {
         bBarrelSteaming = true;
 
         W.ToggleBarrelSteam(bBarrelSteaming);
     }
 
-    if (!bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp))
+    if (!bBarrelDamaged && (Temperature > CriticalTemperature))
     {
         bBarrelDamaged = true;
         W.bBarrelDamaged = true;
@@ -129,12 +129,12 @@ function UpdateBarrelStatus()
 // Will update this barrel status when it's not currently in use without affecting the weapon
 function UpdateSpareBarrelStatus()
 {
-    if (!bBarrelSteaming && (DH_MGCelsiusTemp > DH_MGSteamTemp))
+    if (!bBarrelSteaming && (Temperature > DH_MGSteamTemp))
     {
         bBarrelSteaming = true;
     }
 
-    if (!bBarrelDamaged && (DH_MGCelsiusTemp > DH_MGCriticalTemp))
+    if (!bBarrelDamaged && (Temperature > CriticalTemperature))
     {
         bBarrelDamaged = true;
     }
@@ -169,7 +169,7 @@ state BarrelInUse
 
         // make sure this is done on the authority
         // if temp is at the level temp, don't bother with anything else
-        if (Role < ROLE_Authority || DH_MGCelsiusTemp == LevelCTemp)
+        if (Role < ROLE_Authority || Temperature == LevelCTemp)
         {
             return;
         }
@@ -182,16 +182,16 @@ state BarrelInUse
         }
 
         // lower the barrel temp or set to Level ambient temp if it goes below
-        if (DH_MGCelsiusTemp > LevelCTemp)
+        if (Temperature > LevelCTemp)
         {
-            DH_MGCelsiusTemp -= (BarrelTimerRate * BarrelCoolingRate);
+            Temperature -= (BarrelTimerRate * BarrelCoolingRate);
         }
-        else if (DH_MGCelsiusTemp < LevelCTemp)
+        else if (Temperature < LevelCTemp)
         {
-            DH_MGCelsiusTemp = LevelCTemp;
+            Temperature = LevelCTemp;
         }
 
-        if (bBarrelSteaming && (DH_MGCelsiusTemp < DH_MGSteamTemp))
+        if (bBarrelSteaming && (Temperature < DH_MGSteamTemp))
         {
             bBarrelSteaming = false;
 
@@ -199,7 +199,7 @@ state BarrelInUse
         }
 
         // Questionable, once the barrel is damaged, does it ever really get better again?
-        if (bBarrelDamaged && (DH_MGCelsiusTemp < DH_MGCriticalTemp))
+        if (bBarrelDamaged && (Temperature < CriticalTemperature))
         {
             bBarrelDamaged = false;
 
@@ -229,28 +229,28 @@ state BarrelOff
     function Timer()
     {
         // make sure this is done on the authority
-        if (Role < ROLE_Authority || DH_MGCelsiusTemp == LevelCTemp)
+        if (Role < ROLE_Authority || Temperature == LevelCTemp)
         {
             return;
         }
 
         // lower the barrel temp or set to Level ambient temp if it goes below
-        if (DH_MGCelsiusTemp > LevelCTemp)
+        if (Temperature > LevelCTemp)
         {
-            DH_MGCelsiusTemp -= (BarrelTimerRate * BarrelCoolingRate);
+            Temperature -= (BarrelTimerRate * BarrelCoolingRate);
         }
 
-        else if (DH_MGCelsiusTemp < LevelCTemp)
+        else if (Temperature < LevelCTemp)
         {
-            DH_MGCelsiusTemp = LevelCTemp;
+            Temperature = LevelCTemp;
         }
 
-        if (bBarrelSteaming && (DH_MGCelsiusTemp < DH_MGSteamTemp))
+        if (bBarrelSteaming && (Temperature < DH_MGSteamTemp))
         {
             bBarrelSteaming = false;
         }
 
-        if (bBarrelDamaged && (DH_MGCelsiusTemp < DH_MGCriticalTemp))
+        if (bBarrelDamaged && (Temperature < CriticalTemperature))
         {
             bBarrelDamaged = false;
         }
@@ -260,8 +260,8 @@ state BarrelOff
 defaultproperties
 {
      DH_MGSteamTemp=225.000000
-     DH_MGCriticalTemp=250.000000
-     DH_MGFailTemp=275.000000
+     CriticalTemperature=250.000000
+     FailureTemperature=275.000000
      BarrelCoolingRate=1.000000
      FiringHeatIncrement=1.000000
      BarrelTimerRate=0.100000

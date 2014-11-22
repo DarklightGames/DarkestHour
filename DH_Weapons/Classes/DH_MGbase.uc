@@ -6,20 +6,12 @@
 class DH_MGbase extends DH_BipodWeapon
     abstract;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 // MG Resupplying
-var     int                 NumMagsToResupply;      // Number of ammo mags to add when this weapon has been resupplied
+var     int                     NumMagsToResupply;      // Number of ammo mags to add when this weapon has been resupplied
 
 var     array<ROFPAmmoRound>    MGBeltArray;        // An array of first person ammo rounds
 var     array<name>             MGBeltBones;        // An array of bone names to attach the belt to
-var()   class<ROFPAmmoRound>    BeltBulletClass;    // The class to spawn for each bullet on the ammo belt
-
-//=============================================================================
-// Functions
-//=============================================================================
+var     class<ROFPAmmoRound>    BeltBulletClass;    // The class to spawn for each bullet on the ammo belt
 
 simulated function PostBeginPlay()
 {
@@ -30,7 +22,6 @@ simulated function PostBeginPlay()
         SpawnAmmoBelt();
     }
 }
-
 
 // Handles making ammo belt bullets disappear
 simulated function UpdateAmmoBelt()
@@ -55,7 +46,7 @@ simulated function SpawnAmmoBelt()
 
     for (i = 0; i < MGBeltBones.Length; ++i)
     {
-        MGBeltArray[i] = Spawn(BeltBulletClass,self);
+        MGBeltArray[i] = Spawn(BeltBulletClass, self);
 
         AttachToBone(MGBeltArray[i], MGBeltBones[i]);
     }
@@ -87,10 +78,7 @@ simulated function bool IsBusy()
 
 simulated exec function Deploy()
 {
-    //Added a check to make sure we're not moving, this should fix a bug
-    //that would sometimes allow you deploy, then when you fired no
-    //bullets would come out. -Basnett
-    if (IsBusy() || Instigator.Velocity != vect(0,0,0))
+    if (IsBusy() || VSizeSquared(Instigator.Velocity) != 0)
     {
         return;
     }
@@ -211,27 +199,30 @@ simulated function Destroyed()
 simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {
     local int i;
+    local DH_MGBarrel Barrel;
 
     super.DisplayDebug(Canvas, YL, YPos);
 
     Canvas.SetDrawColor(0, 255, 0);
 
-    // remove and destroy the barrels in the BarrelArray array
-    for(i = 0; i < BarrelArray.Length; i++)
+    // remove and destroy the barrels in the Barrels array
+    for(i = 0; i < Barrels.Length; i++)
     {
-        if (BarrelArray[i] != none)
+        Barrel = Barrels[i];
+
+        if (Barrel != none)
         {
-            if (i == ActiveBarrel)
+            if (i == BarrelIndex)
             {
-                Canvas.DrawText("Active Barrel Temp: "$BarrelArray[i].DH_MGCelsiusTemp$" State: "$BarrelArray[i].GetStateName());
+                Canvas.DrawText("Active Barrel Temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
             }
             else
             {
-                Canvas.DrawText("Hidden Barrel Temp: "$BarrelArray[i].DH_MGCelsiusTemp$" State: "$BarrelArray[i].GetStateName());
+                Canvas.DrawText("Hidden Barrel Temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
             }
 
             YPos += YL;
-            Canvas.SetPos(4,YPos);
+            Canvas.SetPos(4, YPos);
         }
     }
 }
@@ -416,7 +407,7 @@ function SetServerOrientation(rotator NewRotation)
     if (bUsesFreeAim && bUsingSights)
     {
         // Remove the roll component so the weapon doesn't tilt with the terrain
-        WeaponRotation = Instigator.GetViewRotation();// + FARotation;
+        WeaponRotation = Instigator.GetViewRotation();
 
         WeaponRotation.Pitch += NewRotation.Pitch;
         WeaponRotation.Yaw += NewRotation.Yaw;
