@@ -28,9 +28,6 @@ replication
         ServerToggleExtraRoundType;
 }
 
-//==============================================================================
-// Functions
-//==============================================================================
 simulated exec function SwitchFireMode()
 {
     if (Gun != none && DH_ATGunCannon(Gun) != none && DH_ATGunCannon(Gun).bMultipleRoundTypes)

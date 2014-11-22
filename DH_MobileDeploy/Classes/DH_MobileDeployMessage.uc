@@ -5,23 +5,11 @@
 
 class DH_MobileDeployMessage extends LocalMessage;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 var(Messages) localized string IsFull;
 var(Messages) localized string IsDestroyed;
 var(Messages) localized string IsInCapture;
 var(Messages) localized string EnemyNear;
 var(Messages) localized string MustBeSquadLeader;
-
-//=============================================================================
-// Functions
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-// GetString
-//-----------------------------------------------------------------------------
 
 static function string GetString(
     optional int Switch,
@@ -45,7 +33,6 @@ static function string GetString(
         default:
             return default.IsFull;
     }
-
 }
 
 defaultproperties

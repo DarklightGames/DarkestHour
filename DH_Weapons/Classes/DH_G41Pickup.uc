@@ -6,10 +6,6 @@
 class DH_G41Pickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.g41');

@@ -10,10 +10,6 @@ class DH_WillysJeep extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\Sounds\DH_AlliedVehicleSounds.uax
 #exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
 
-//==============================================================================
-// Hack in appropriate motion sounds
-//==============================================================================
-
 var()   float                 MaxPitchSpeed;
 
 var()       sound               EngineSound;       //  Put Engine sound in right place!
@@ -23,10 +19,6 @@ var         ROSoundAttachment   InteriorRumbleSoundAttach;
 var         float               MotionSoundVolume;
 var()       name                RumbleSoundBone;
 var()       name                EngineSoundBone;
-
-//==============================================================================
-// Functions
-//==============================================================================
 
 //The following functions are empty functions
 simulated function NextWeapon();   //no need to switch views, there is only one for the driver.

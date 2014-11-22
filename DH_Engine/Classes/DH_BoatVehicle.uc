@@ -22,16 +22,6 @@ var         ROSoundAttachment           EngineSoundAttach;
 var         float                       MotionSoundVolume;
 
 var         sound                       DestroyedBurningSound;
-/*
-// Matt: none of these are used and some conflict with local variables or function parameters
-var()   float           MaxPitchSpeed;
-var()   float           BoatFloatTraceDistance;
-var     float           HitDist, HoverAdd;
-var     vector          TraceStart, TraceEnd, HitLocation, HitNormal;
-var     actor           HitActor;
-var     bool            bBoatFloat;
-*/
-//var     array<BoatSprayEffect> BoatSpray; // FL, FR, RL, RR
 
 var     Material  DestroyedVehicleTexture; // Matt: added to remove literal reference to Higgins boat
 var     name      DestAnimName;
@@ -131,10 +121,6 @@ function bool PlaceExitingDriver()
 
     return false;
 }
-
-//=============================================================================
-// Functions
-//=============================================================================
 
 // Overridden to play the correct idle animation for the vehicle
 simulated function PostBeginPlay()

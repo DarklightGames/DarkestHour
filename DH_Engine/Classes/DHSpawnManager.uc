@@ -74,10 +74,6 @@ var private array<DHSpawnPoint>         SpawnPoints;
 var private DHGameReplicationInfo       GRI;
 var private config bool                 bDebug;
 
-//-----------------------------------------------------------
-// Functions
-//-----------------------------------------------------------
-
 function PostBeginPlay()
 {
     local byte i;

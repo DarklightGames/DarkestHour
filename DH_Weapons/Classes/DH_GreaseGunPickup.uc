@@ -6,16 +6,6 @@
 class DH_GreaseGunPickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-static function StaticPrecache(LevelInfo L)
-{
-//  L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms_3rdP.M3GreaseGun_3rdP');
-
-}
-
 defaultproperties
 {
      TouchMessage="Pick Up: Grease Gun"

@@ -5,9 +5,6 @@
 
 class DH_VehicleMessage extends ROVehicleMessage;
 
-//==============================================================================
-// Variables
-//==============================================================================
 var(Messages) localized string CannotRide;
 var(Messages) localized string VehicleFull;
 var(Messages) localized string CannotExit;
@@ -15,9 +12,6 @@ var(Messages) localized string AssaultGunExit;
 var(Messages) localized string OverSpeed;
 var(Messages) localized string VehicleBurning;
 
-//==============================================================================
-// Functions
-//==============================================================================
 static function string GetString(
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,

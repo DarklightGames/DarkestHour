@@ -12,10 +12,6 @@ class DH_ATGun extends DH_ROTreadCraft
 var  DH_ATCannonFactoryBase   DHParentFactory;
 var  ROVehicleFactory         ROParentFactory;
 
-
-//==============================================================================
-// Functions
-//==============================================================================
 //The following functions are empty functions
 simulated function UpdateMovementSound();          //removed due to no movement sound needed
 simulated function SetupTreads();                  //removed due to no need to setup treads

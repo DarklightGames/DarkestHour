@@ -6,10 +6,6 @@
 class DH_StielGranatePickup extends ROOneShotWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate');

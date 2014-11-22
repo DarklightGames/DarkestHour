@@ -6,10 +6,6 @@
 class DH_ModifyRoundTimeMessage extends ROCriticalMessage
     notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function string GetString(
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,

@@ -6,10 +6,6 @@
 class DH_STG44Pickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.stg44');

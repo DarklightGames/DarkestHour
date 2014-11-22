@@ -5,10 +5,6 @@
 
 class DH_FastAutoFire extends DH_AutomaticFire;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 // internal class vars
 var     float                   LastCalcTime;               // Internal var used to calculate when to replicate the dual shots
 var DHHighROFWeaponAttachment   HiROFWeaponAttachment;      // A high ROF WA that this class will use to pack fire info
@@ -26,11 +22,6 @@ var     byte                    AmbientFireVolume;          // The ambient fire 
 // High ROF system
 var     float                   PackingThresholdTime;       // If the shots are closer than this amount, the dual shot will be used
 var() class<ROServerBullet>     ServerProjectileClass;      // class for the server only projectile for this weapon
-
-
-//=============================================================================
-// Functions
-//=============================================================================
 
 // overriden to support packing two shots together to save net bandwidth
 function DoFireEffect()

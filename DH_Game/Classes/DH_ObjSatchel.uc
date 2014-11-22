@@ -6,14 +6,6 @@
 class DH_ObjSatchel extends ROObjSatchel
     placeable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-// HandleCompletion - Overridden
-//-----------------------------------------------------------------------------
-
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
     bActive = false;

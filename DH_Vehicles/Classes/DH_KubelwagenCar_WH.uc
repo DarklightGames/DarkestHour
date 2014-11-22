@@ -11,10 +11,6 @@ class DH_KubelwagenCar_WH extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc2.usx
 #exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
 
-//==============================================================================
-// Hack in appropriate motion sounds
-//==============================================================================
-
 var()   float                 MaxPitchSpeed;
 
 var()       sound               EngineSound;       //  Put Engine sound in right place!
@@ -25,14 +21,9 @@ var         float               MotionSoundVolume;
 var()       name                RumbleSoundBone;
 var()       name                EngineSoundBone;
 
-//==============================================================================
-// Functions
-//==============================================================================
-
 //The following functions are empty functions
 simulated function NextWeapon();   //no need to switch views, there is only one for the driver.
 simulated function PrevWeapon();   //no need to switch views, there is only one for the driver.
-
 
 simulated function PostBeginPlay()
 {

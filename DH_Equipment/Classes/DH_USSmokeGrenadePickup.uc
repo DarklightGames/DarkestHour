@@ -6,10 +6,6 @@
 class DH_USSmokeGrenadePickup extends ROOneShotWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 defaultproperties
 {
      TouchMessage="Pick Up: US M15 Smoke Grenade"

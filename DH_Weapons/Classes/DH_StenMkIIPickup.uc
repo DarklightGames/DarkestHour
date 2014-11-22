@@ -6,16 +6,6 @@
 class DH_StenMkIIPickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-static function StaticPrecache(LevelInfo L)
-{
-//  L.AddPrecacheMaterial(Material'DH_Weapon_tex.AlliedSmallArms.Sten');
-
-}
-
 defaultproperties
 {
      TouchMessage="Pick Up: Sten MkII"

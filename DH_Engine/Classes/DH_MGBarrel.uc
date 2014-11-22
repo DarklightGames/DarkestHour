@@ -5,28 +5,18 @@
 
 class DH_MGBarrel extends Actor;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 var     float       Temperature;           // current barrel temp
 var     float       DH_MGSteamTemp,              // temp barrel begins to steam
                     CriticalTemperature,          // temp barrel steams alot and conefire error introduced
                     FailureTemperature,              // temp at which barrel fails and unusable
                     BarrelCoolingRate,          // rate/second the barrel cools at
                     FiringHeatIncrement;        // deg C/shot the barrel heat is increased
-
 var     bool        bBarrelFailed,              // if barrel passes ROMGFailTemp, becomes true and barrel unusable
                     bBarrelSteaming,            // if barrel passes ROMGSteamTemp, we'll start steaming the barrel
                     bBarrelDamaged;             // if barrel passes ROMGCriticalTemp, becomes true and conefire error introduced
-
 var     int         LevelCTemp;                 //  The temperature of the level we're playing in
-
 var     float       BarrelTimerRate;            // How fast to call the timer for this barrel. We don't really need to cool the Barrel every tick
 
-//=============================================================================
-// Functions
-//=============================================================================
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();

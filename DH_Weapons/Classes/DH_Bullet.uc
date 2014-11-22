@@ -17,7 +17,6 @@ var globalconfig bool   bDebugROBallistics; // If true, set bDebugBallistics to 
 //==============================================================================
 var int WhizType;      // Sent in a HitPointTrace for ROBulletWhipAttachment in order to only do snaps for supersonic rounds
 
-
 simulated function PostBeginPlay()
 {
     if (bDebugROBallistics)

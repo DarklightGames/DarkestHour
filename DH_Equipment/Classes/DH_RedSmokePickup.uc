@@ -6,10 +6,6 @@
 class DH_RedSmokePickup extends ROOneShotWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 defaultproperties
 {
      TouchMessage="Pick Up: M16 Red Smoke Grenade"

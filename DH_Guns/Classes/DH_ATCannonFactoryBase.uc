@@ -6,9 +6,6 @@
 class DH_ATCannonFactoryBase extends DH_VehicleFactory
     abstract;
 
-//==============================================================================
-// Variables
-//==============================================================================
 var()   bool    bUseRandomizer;             // Whether or not to use the randomization system
 var     int     GunIndex;                   // The index of this gun in the GRI ATCannon array which allows it to appear on the situation map.
 var()   string  GroupTag;                   // A tag used by the randomizer to spawn at guns by groups
@@ -17,9 +14,6 @@ var     bool    bMasterFactory;             // This factory is the master gun fa
 var()   int     MaxRandomFactoriesActive;   // The maximum number of AT Gun Factories to have active at one time for a particular Group (based on the grouptag)
 var     array<int> ActivatedIndexes;
 
-//==============================================================================
-// Functions
-//==============================================================================
 simulated event PostBeginPlay()
 {
     super.PostBeginPlay();

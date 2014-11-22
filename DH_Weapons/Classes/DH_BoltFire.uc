@@ -5,10 +5,6 @@
 
 class DH_BoltFire extends DH_ProjectileFire;
 
-//=============================================================================
-// functions
-//=============================================================================
-
 // Overriden to support our recoil system
 event ModeDoFire()
 {

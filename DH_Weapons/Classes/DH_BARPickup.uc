@@ -6,14 +6,6 @@
 class DH_BARPickup extends DHWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-static function StaticPrecache(LevelInfo L)
-{
-}
-
 defaultproperties
 {
      TouchMessage="Pick Up: M1918A2 Browning Automatic Rifle"

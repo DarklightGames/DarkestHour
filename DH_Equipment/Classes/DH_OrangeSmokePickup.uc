@@ -6,10 +6,6 @@
 class DH_OrangeSmokePickup extends ROOneShotWeaponPickup
    notplaceable;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 defaultproperties
 {
      TouchMessage="Pick Up: RauchSichtzeichen Orange 160"

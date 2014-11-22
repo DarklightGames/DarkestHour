@@ -38,12 +38,10 @@ var()   array<CarHitpoint>      CarVehHitpoints;        // An array of possible 
 simulated function UpdateMovementSound();
 simulated function SetupTreads();
 simulated function DestroyTreads();
+
 function DamageTrack(bool bLeftTrack);
 
-//==============================================================================
-// Functions
-//==============================================================================
-// Returns true if this tank is disabled
+
 simulated function bool IsDisabled()
 {
     return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax/3));

@@ -5,10 +5,6 @@
 
 class DH_ProjectileFire extends ROWeaponFire;
 
-//=============================================================================
-// Variables
-//=============================================================================
-
 var()           int         ProjPerFire;                // How many projectiles are spawn each fire, set to 1
 var()           vector      ProjSpawnOffset;            // +x forward, +y right, +z up
 var()           vector      FAProjSpawnOffset;          // ProjSpawnOffset for free-aim mode +x forward, +y right, +z up
@@ -44,10 +40,6 @@ var             float       BlurTime;
 var             float       BlurTimeIronsight;
 var             float       BlurScale;
 var             float       BlurScaleIronsight;
-
-//=============================================================================
-// functions
-//=============================================================================
 
 function float MaxRange()
 {

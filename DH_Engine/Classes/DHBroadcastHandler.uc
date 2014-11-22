@@ -5,10 +5,6 @@
 
 class DHBroadcastHandler extends ROBroadcastHandler;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
 event AllowBroadcastLocalized(actor Sender, class<LocalMessage> Message,
     optional int Switch, optional PlayerReplicationInfo RelatedPRI_1,
     optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)

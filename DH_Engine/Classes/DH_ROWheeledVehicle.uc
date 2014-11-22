@@ -67,9 +67,6 @@ struct ExitPositionPair
 
 var bool bDebugExitPositions;
 
-//==============================================================================
-// Functions
-//==============================================================================
 replication
 {
     reliable if (bNetDirty && Role==ROLE_Authority)

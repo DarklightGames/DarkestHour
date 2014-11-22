@@ -166,12 +166,8 @@ var bool    bEmittersOn;
 var bool    bMustBeUnbuttonedToBecomePassenger;
 var int     FirstPassengerWeaponPawnIndex;
 
-//=============================================================================
-// replication
-//=============================================================================
 replication
 {
-
     reliable if (bNetDirty && Role==ROLE_Authority)
         EngineHealthMax, UnbuttonedPositionIndex, bEngineOnFire, bOnFire;
 
@@ -187,10 +183,6 @@ replication
     reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
         bEngineDead, bEngineOff;
 }
-
-//=============================================================================
-// functions
-//=============================================================================
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {

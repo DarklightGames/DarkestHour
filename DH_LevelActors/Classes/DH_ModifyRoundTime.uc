@@ -5,9 +5,6 @@
 
 class DH_ModifyRoundTime extends DH_ModifyActors;
 
-//=============================================================================
-// Variables
-//=============================================================================
 
 var(DH_ModifyRoundTime) enum ERoundTimeOperator
 {
@@ -19,10 +16,6 @@ var(DH_ModifyRoundTime) int         Seconds;                //The amount of seco
 var(DH_ModifyRoundTime) bool        bShowMessage;           //Whether or not to display a message when this actor is triggered.
 var(DH_ModifyRoundTime) bool        bPlaySound;             //Whether or not to play a sound when this actor is triggered.
 var(DH_ModifyRoundTime) sound       Sound;                  //The sound to play when this actor is triggered.
-
-//=============================================================================
-// Functions
-//=============================================================================
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {

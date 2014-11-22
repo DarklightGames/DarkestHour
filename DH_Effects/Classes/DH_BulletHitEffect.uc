@@ -5,13 +5,6 @@
 
 class DH_BulletHitEffect extends ROBulletHitEffect;
 
-//=============================================================================
-// Functions
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-// PostNetBeginPlay
-//-----------------------------------------------------------------------------
 simulated function PostNetBeginPlay()
 {
     local ESurfaceTypes ST;
@@ -23,15 +16,11 @@ simulated function PostNetBeginPlay()
     //Velocity
     Trace(HitLoc, HitNormal, Location + vector(Rotation) * 16, Location, false,, HitMat);
 
-    //Level.Game.Broadcast(self, "HitMat = " $HitMat.SurfaceType$" Effect = "$HitEffects[ST].Effect$" Particle Effect = "$HitEffects[ST].ParticleEffect$" TempEffect = "$HitEffects[ST].TempEffect);
-    //log("
 
     if (HitMat == none)
         ST = EST_Default;
     else
         ST = ESurfaceTypes(HitMat.SurfaceType);
-
-//  Level.Game.Broadcast(self, "HitMat = " $HitMat.SurfaceType$" Effect = "$HitEffects[ST].Effect$" Particle Effect = "$HitEffects[ST].ParticleEffect$" TempEffect = "$HitEffects[ST].TempEffect);
 
     if (HitEffects[ST].HitDecal != none)
         Spawn(HitEffects[ST].HitDecal, self,, Location, Rotation);
