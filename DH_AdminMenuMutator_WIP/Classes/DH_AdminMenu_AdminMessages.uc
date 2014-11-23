@@ -124,7 +124,7 @@ defaultproperties
     ConfirmDisablePlayerIcon="Press enter to confirm you want to DISABLE the player location icon on the map"
     ConfirmEnablePlayerIcon="Press enter to confirm you want to RE-ENABLE the player location icon on the map"
     ConfirmKillAll="Press enter to confirm you want to KILL ALL players"
-    EnterGameSpeed="Please specify the new games speed (1 is normal)"
+    EnterGameSpeed="Please specify the new game speed multiplier (1 is normal)"
     DestroyActorInSights="Press enter to confirm you want to DESTROY the actor in your sights"
     
 }
