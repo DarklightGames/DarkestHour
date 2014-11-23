@@ -30,7 +30,7 @@ defaultproperties
          SecondsBeforeInactive=0.000000
          LifetimeRange=(Min=1.500000,Max=2.500000)
      End Object
-     Emitters(0)=TrailEmitter'DH_Weapons.DH_AmericanRedTracer.TrailEmitter0'
+     Emitters(0)=TrailEmitter'DH_Effects.DH_AmericanRedTracer.TrailEmitter0'
 
      AutoDestroy=true
      bNoDelete=false
