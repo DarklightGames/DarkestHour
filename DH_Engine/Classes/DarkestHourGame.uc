@@ -1559,20 +1559,21 @@ function RestartPlayer(Controller C)
 
 //This function add functionality so when you type "%r" in teamsay it'll output helpful debug info
 //for reporting bugs in MP (returns mapname & coordinates)
-static function string ParseChatPercVar(Mutator BaseMutator, controller Who, string Cmd)
+static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, string Cmd)
 {
     local string Str;
     local string MapName;
-    local int i, j;
 
-    if (Who.Pawn==none)
+    if (Who.Pawn == none)
+    {
         return Cmd;
+    }
 
     //Coordinates
-    if (cmd~="%R")
+    if (cmd ~= "%r")
     {
         //Get the level name string
-        MapName = string(Who.outer);
+        MapName = string(Who.Outer);
 
         if (MapName == "")
         {
@@ -1581,10 +1582,11 @@ static function string ParseChatPercVar(Mutator BaseMutator, controller Who, str
 
         //Finish parsing the string
         Str = "Map:" @ MapName @ "Coord:" @ string(Who.Pawn.Location) @ "Report: ";
+
         return Str;
     }
 
-    return Super.ParseChatPercVar(BaseMutator, Who,Cmd);
+    return super.ParseChatPercVar(BaseMutator, Who,Cmd);
 }
 
 //Debug function for winning a round (needs admin or local)
@@ -1597,15 +1599,7 @@ function DHRestartPlayer(Controller C)
 {
     local TeamInfo BotTeam, OtherTeam;
     local DHPlayer DHC;
-    local NavigationPoint startSpot;
-    local int TeamNum;
-    local class<Pawn> DefaultPlayerClass;
-    local Vehicle V, Best;
-    local vector ViewDir;
-    local float BestDist, Dist;
     local byte SpawnError;
-    local vector SpawnLocation;
-    local rotator SpawnRotation;
 
     DHC = DHPlayer(C);
 
@@ -1662,72 +1656,12 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
-    if (DHC.VehiclePoolIndex != -1)
-    {
-        Log("attempting to spawn vehicle at VP" @ DHC.VehiclePoolIndex @ "SP" @ DHC.SpawnPointIndex);
+    SpawnManager.SpawnPlayer(DHC, SpawnError);
 
-        SpawnManager.SpawnVehicle(DHC, DHC.VehiclePoolIndex, DHC.SpawnPointIndex, SpawnError);   //TODO: remove need for passing in selection, indices exists in DHC
-    }
-    else
-    {
-        Log("attempting to spawn infantry at SP" @ DHC.SpawnPointIndex);
-
-        SpawnError = SpawnManager.SpawnInfantry(DHC, DHC.SpawnPointIndex, SpawnLocation, SpawnRotation);   //TODO: remove need for passing in selection, SPI exists in DHC
-    }
-
-    if (SpawnError != class'DHSpawnManager'.default.SpawnError_none)
+    if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
     {
         Error("Spawn Error =" @ SpawnError);
-
-        return;
     }
-
-    //if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
-    //{
-         //BaseMutator.PlayerChangedClass(C);
-    //}
-
-    if (C.PawnClass != none)
-    {
-        C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
-    }
-
-    if (C.Pawn == none)
-    {
-        DefaultPlayerClass = GetDefaultPlayerClass(C);
-
-        C.Pawn = Spawn(DefaultPlayerClass,,, SpawnLocation, SpawnRotation);
-    }
-
-    if (C.Pawn == none)
-    {
-        log("Couldn't spawn player of type " $ C.PawnClass $ " at " $ StartSpot);
-
-        C.GotoState('Dead');
-
-        if (PlayerController(C) != none)
-        {
-            PlayerController(C).ClientGotoState('Dead','Begin');
-        }
-
-        return;
-    }
-
-    if (PlayerController(C) != none)
-    {
-        PlayerController(C).TimeMargin = -0.1;
-    }
-
-    C.Pawn.Anchor = startSpot;
-    C.Pawn.LastStartSpot = PlayerStart(startSpot);
-    C.Pawn.LastStartTime = Level.TimeSeconds;
-    C.PreviousPawnClass = C.Pawn.Class;
-    C.Possess(C.Pawn);
-    C.PawnClass = C.Pawn.Class;
-    C.Pawn.PlayTeleportEffect(true, true);
-    C.ClientSetRotation(C.Pawn.Rotation);
-
-    AddDefaultInventory(C.Pawn);
 }
 
 //Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer
