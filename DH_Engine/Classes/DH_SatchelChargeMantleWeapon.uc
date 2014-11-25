@@ -20,29 +20,39 @@ simulated state StartMantle extends Busy
     {
         // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
         if (!bIsMantling)
+        {
             GoToState('RaisingWeapon');
+        }
         else
+        {
             SetTimer(0.2, false);
+        }
     }
 
     simulated function BeginState()
     {
-        local int Mode;
+        local int i;
 
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
             if (Instigator.IsLocallyControlled())
             {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+                for (i = 0; i < NUM_FIRE_MODES; i++)
                 {
-                    if (FireMode[Mode].bIsFiring)
-                        ClientStopFire(Mode);
+                    if (FireMode[i].bIsFiring)
+                    {
+                        ClientStopFire(i);
+                    }
                 }
 
                 if (ClientState == WS_BringUp)
+                {
                     TweenAnim(SelectAnim,PutDownTime);
+                }
                 else if (HasAnim(PutDownAnim))
+                {
                     PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_PutDown;
@@ -50,17 +60,19 @@ simulated state StartMantle extends Busy
 
         SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        for (i = 0; i < NUM_FIRE_MODES; i++)
         {
-            FireMode[Mode].bServerDelayStartFire = false;
-            FireMode[Mode].bServerDelayStopFire = false;
+            FireMode[i].bServerDelayStartFire = false;
+            FireMode[i].bServerDelayStopFire = false;
         }
     }
 
     simulated function EndState()
     {
         if (ClientState == WS_PutDown)
+        {
             ClientState = WS_Hidden;
+        }
     }
 }
 

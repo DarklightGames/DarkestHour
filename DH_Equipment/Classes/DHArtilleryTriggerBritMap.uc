@@ -4,3 +4,7 @@
 //==============================================================================
 
 class DHArtilleryTriggerBritMap extends DHArtilleryTrigger;
+
+defaultproperties
+{
+}

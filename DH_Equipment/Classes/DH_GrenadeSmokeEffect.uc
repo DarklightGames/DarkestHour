@@ -39,7 +39,7 @@ simulated function PostBeginPlay()
     //Lets get the wind direction and speed and set the first sprite emitter accordingly
 }
 
-DefaultProperties
+defaultproperties
 {
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true

@@ -5,10 +5,10 @@
 
 class DHWireCuttersItem extends ROWeapon;
 
-var() float BinocsEnlargementFactor;
-
 #exec OBJ LOAD FILE=Weapon_overlays.utx
 #exec OBJ LOAD FILE=..\Animations\Common_Binoc_1st.ukx
+
+var() float BinocsEnlargementFactor;
 
 function bool FillAmmo()
 {
@@ -36,9 +36,9 @@ simulated function bool IsBusy()
     return false;
 }
 
-//=============================================================================
+//==============================================================================
 // Functions overriden because binoculars don't shoot
-//=============================================================================
+//==============================================================================
 simulated function ClientWeaponSet(bool bPossiblySwitch)
 {
     Instigator = Pawn(Owner);

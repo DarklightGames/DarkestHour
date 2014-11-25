@@ -68,22 +68,33 @@ function PlayFiring()
 event ModeDoFire()
 {
     if (!AllowFire())
+    {
         return;
+    }
 
     if (MaxHoldTime > 0.0)
+    {
         HoldTime = FMin(HoldTime, MaxHoldTime);
+    }
 
     // server
     if (Weapon.Role == ROLE_Authority)
     {
         Weapon.ConsumeAmmo(ThisModeNum, Load);
+
         DoFireEffect();
+
         HoldTime = 0;   // if bot decides to stop firing, HoldTime must be reset first
-        if ((Instigator == none) || (Instigator.Controller == none))
+
+        if (Instigator == none || Instigator.Controller == none)
+        {
             return;
+        }
 
         if (AIController(Instigator.Controller) != none)
+        {
             AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
+        }
 
         Instigator.DeactivateSpawnProtection();
     }
@@ -92,7 +103,7 @@ event ModeDoFire()
     if (Instigator.IsLocallyControlled())
     {
         // This could be dangerous. if we are low on ammo, go ahead and
-        // decriment the ammo client side. This will ensure the proper
+        // decrement the ammo client side. This will ensure the proper
         // anims play for weapon firing in laggy situations.
         if (Weapon.Role < ROLE_Authority)
         {
@@ -100,7 +111,9 @@ event ModeDoFire()
         }
 
         if (!bDelayedRecoil)
+        {
             HandleRecoil();
+        }
 
         ShakeView();
         PlayFiring();
@@ -108,7 +121,10 @@ event ModeDoFire()
         if (!bMeleeMode)
         {
             if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
+            {
                 EjectShell();
+            }
+
             FlashMuzzleFlash();
             StartMuzzleSmoke();
         }
@@ -124,9 +140,13 @@ event ModeDoFire()
     if (bFireOnRelease)
     {
         if (bIsFiring)
+        {
             NextFireTime += MaxHoldTime + FireRate;
+        }
         else
+        {
             NextFireTime = Level.TimeSeconds + FireRate;
+        }
     }
     else
     {
@@ -140,6 +160,7 @@ event ModeDoFire()
     if (Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none)
     {
         bIsFiring = false;
+
         Weapon.PutDown();
     }
 }
@@ -150,3 +171,4 @@ defaultproperties
      NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
      SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
 }
+

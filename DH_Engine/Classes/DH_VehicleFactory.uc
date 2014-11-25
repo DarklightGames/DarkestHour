@@ -6,17 +6,16 @@
 class DH_VehicleFactory extends ROVehicleFactory
     abstract;
 
-var()   name    FactoryDepletedEvent;
+var() name FactoryDepletedEvent;
 
 function SpawnVehicle()
 {
     super.SpawnVehicle();
 
-    if (FactoryDepletedEvent == '')
-        return;
-
-    if (TotalSpawnedVehicles >= VehicleRespawnLimit)
+    if (FactoryDepletedEvent != '' && TotalSpawnedVehicles >= VehicleRespawnLimit)
+    {
         TriggerEvent(FactoryDepletedEvent, self, none);
+    }
 }
 
 defaultproperties

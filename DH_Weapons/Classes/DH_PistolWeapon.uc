@@ -40,7 +40,7 @@ simulated function AnimEnd(int channel)
         {
             PlayIdle();
         }
-        else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
@@ -55,7 +55,10 @@ simulated function AnimEnd(int channel)
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
+    {
         FireMode[Mode].bInstantStop = true;
+    }
+
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
         if (!IsAnimating(0))
@@ -66,8 +69,11 @@ simulated event StopFire(int Mode)
 
     FireMode[Mode].bIsFiring = false;
     FireMode[Mode].StopFiring();
+
     if (!FireMode[Mode].bFireOnRelease)
+    {
         ZeroFlashCount(Mode);
+    }
 }
 
 defaultproperties
@@ -75,3 +81,4 @@ defaultproperties
      Priority=5
      InventoryGroup=3
 }
+
