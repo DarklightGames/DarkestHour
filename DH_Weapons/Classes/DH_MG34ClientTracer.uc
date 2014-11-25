@@ -3,19 +3,15 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_MG34ClientTracer extends ROClientTracer;
+class DH_MG34ClientTracer extends DH_ClientTracer;
 
 defaultproperties
 {
-     mTracerClass=class'DH_Effects.DH_GermanYellowOrangeTracer'
-     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
-     BallisticCoefficient=0.515000
-     SpeedFudgeScale=0.750000
-     Speed=47678.000000
-     LightHue=30
-     LightSaturation=128
-     LightRadius=10.000000
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer'
-     DrawScale=2.000000
+    mTracerClass=class'DH_Effects.DH_GermanYellowOrangeTracer'
+    StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer'
+    DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
+    Speed=47678.000000
+    SpeedFudgeScale=0.750000
+    BallisticCoefficient=0.515000
+    LightHue=30
 }
