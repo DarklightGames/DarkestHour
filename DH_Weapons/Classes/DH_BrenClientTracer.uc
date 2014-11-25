@@ -7,7 +7,7 @@ class DH_BrenClientTracer extends ROClientTracer;
 
 defaultproperties
 {
-     mTracerClass=class'DH_Weapons.DH_AmericanRedTracer'
+     mTracerClass=class'DH_Effects.DH_AmericanRedTracer'
      DeflectedMesh=StaticMesh'DH_Tracers.US_TracerVehicle_Ball'
      BallisticCoefficient=0.390000
      SpeedFudgeScale=0.750000

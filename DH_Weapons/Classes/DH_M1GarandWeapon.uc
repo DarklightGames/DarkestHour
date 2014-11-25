@@ -106,7 +106,7 @@ defaultproperties
      IronBringUpEmpty="Iron_In_empty"
      IronPutDown="iron_out"
      IronPutDownEmpty="Iron_Out_empty"
-     SelectEmptyAnim="
+//   SelectEmptyAnim=" // Matt: removed as causes warning & no "Draw_empty" anim exists for Garand
      BayoAttachAnim="Bayonet_on"
      BayoDetachAnim="Bayonet_off"
      BayonetBoneName="bayonet"
