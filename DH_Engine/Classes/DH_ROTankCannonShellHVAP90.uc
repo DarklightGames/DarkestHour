@@ -34,7 +34,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We actually hit the Driver
             if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
             {
-                if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
+                if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
                 {
                     FirstHit = false;
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
@@ -75,7 +75,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateHVAPLarge(HitLocation, Normal(Velocity), 
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellImpactDamage, bShatterProne))
         {
-            if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
+            if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
             {
                 FirstHit = false;
                 DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
@@ -127,7 +127,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         SetPhysics(PHYS_None);
         SetDrawType(DT_None);
 
-        if (Drawdebuglines && Firsthit && Level.NetMode != NM_DedicatedServer)
+        if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
         {
             FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
@@ -247,7 +247,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
             Level.Game.Broadcast(self, "Hull Ricochet!");
         }
 
-        if (Drawdebuglines && Firsthit)
+        if (DrawDebugLines && Firsthit)
         {
             FirstHit=false;
             DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
@@ -310,7 +310,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
             if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
-                if (Drawdebuglines && Firsthit)
+                if (DrawDebugLines && Firsthit)
                 {
                     FirstHit=false;
                     DrawStayingDebugLine(Location, Location-(Normal(SavedVelocity)*500), 255, 0, 0);

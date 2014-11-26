@@ -4,7 +4,8 @@
 //==============================================================================
 
 class DH_RocketProj extends DH_ROAntiVehicleProjectile
-      config(DH_Penetration);
+    config(DH_Penetration)
+    abstract; // Matt: added
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
 

@@ -7,15 +7,11 @@ class DH_Bullet extends ROBullet
     config(DH_Penetration)
     abstract;
 
+var int WhizType; // Sent in HitPointTrace for ROBulletWhipAttachment to only do snaps for supersonic rounds (0 = none, 1 = close supersonic bullet, 2 = subsonic or distant bullet)
+
 var globalconfig bool   bDebugMode;         // If true, give our detailed report in log.
 var globalconfig bool   bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
 
-//==============================================================================
-// 0 = none
-// 1 = close supersonic bullet
-// 2 = subsonic or distant bullet
-//==============================================================================
-var int WhizType;      // Sent in a HitPointTrace for ROBulletWhipAttachment in order to only do snaps for supersonic rounds
 
 simulated function PostBeginPlay()
 {
@@ -31,14 +27,14 @@ simulated function PostBeginPlay()
 
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    local vector X, Y, Z;
-    local float V;
-    local bool  bHitWhipAttachment;
+    local vector             X, Y, Z;
+    local float              V;
+    local bool               bHitWhipAttachment;
     local ROVehicleHitEffect VehEffect;
-    local DH_Pawn HitPawn;
-    local vector TempHitLocation, HitNormal;
-    local array<int> HitPoints;
-    local float BulletDistance;
+    local DH_Pawn            HitPawn;
+    local vector             TempHitLocation, HitNormal;
+    local array<int>         HitPoints;
+    local float              BulletDistance;
 
     if (bDebugMode && Pawn(Other) != none)
     {
@@ -69,7 +65,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     {
         if (ROVehicleWeapon(Other) != none && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, Velocity))
         {
-            VehEffect = Spawn(class'ROVehicleHitEffect',,, HitLocation, rotator(Normal(Velocity)));
+            VehEffect = Spawn(class'ROVehicleHitEffect', , , HitLocation, rotator(Normal(Velocity)));
             VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
         }
     }
@@ -93,7 +89,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     // If the bullet collides right after launch, it doesn't have any velocity yet.
     // Use the rotation instead and give it the default speed - Ramm
-    if (V < 25)
+    if (V < 25.0)
     {
         if (bDebugMode)
         {
@@ -101,7 +97,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         GetAxes(Rotation, X, Y, Z);
-
         V = default.Speed;
     }
     else
@@ -118,16 +113,16 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     {
         if (bDebugMode)
         {
-            log(">>> ProcessTouch ROBulletWhipAttachment ... ");
+            Log(">>> ProcessTouch ROBulletWhipAttachment ... ");
         }
 
-        bHitWhipAttachment=true;
+//      bHitWhipAttachment = true;
 
         if (!Other.Base.bDeleteMe)
         {
             // If bullet collides immediately after launch, it has no location (or so it would appear, go figure)
             // Lets check against the firer's location instead
-            if (OrigLoc == vect(0, 0, 0))
+            if (OrigLoc == vect(0.0,0.0,0.0))
             {
                 OrigLoc = Instigator.Location;
             }
@@ -135,21 +130,21 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             BulletDistance = VSize(Location - OrigLoc) / 60.352; // Calculate distance travelled by bullet in metres
 
             // If it's FF at close range, we won't suppress, so send a different WT through
-            if (BulletDistance < 10.0 && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
+            if (BulletDistance < 10.0 && Instigator != none && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none && 
+                DH_Pawn(Other.Base).Controller != none && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
             {
                 WhizType = 3;
             }
-
-            if (BulletDistance < 20.0 && WhizType == 1) // Bullets only "snap" after a certain distance in reality, same goes here
+            else if (BulletDistance < 20.0 && WhizType == 1) // Bullets only "snap" after a certain distance in reality, same goes here
             {
                 WhizType = 2;
             }
 
-            Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535 * X), HitPoints, HitLocation,, WhizType);
+            Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , WhizType);
 
             if (bDebugMode)
             {
-                log(">>> ProcessTouch HitPointTrace ... "@Other);
+                Log(">>> ProcessTouch HitPointTrace ... " @ Other);
             }
 
             if (Other == none)
@@ -160,6 +155,11 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
 
             HitPawn = DH_Pawn(Other);
+
+            if (HitPawn == none) // Matt: added to refactor, replacing various bHitWhipAttachment lines (means we didn't actually register a hit on the player)
+            {
+                bHitWhipAttachment = true;
+            }
         }
         else
         {
@@ -169,7 +169,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     if (bDebugMode)
     {
-        log(">>> ProcessTouch MinPenetrateVelocity ... "@V@">"@(MinPenetrateVelocity * ScaleFactor));
+        Log(">>> ProcessTouch MinPenetrateVelocity ... " @ V @ ">" @ (MinPenetrateVelocity * ScaleFactor));
     }
 
     if (V > MinPenetrateVelocity * ScaleFactor)
@@ -181,37 +181,37 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 // Hit detection debugging
                 if (bDebugMode)
                 {
-                    log(">>> ProcessTouch ProcessLocationalDamage ... "@HitPawn);
+                    Log(">>> ProcessTouch ProcessLocationalDamage ... " @ HitPawn);
                 }
 
                 if (!HitPawn.bDeleteMe)
                 {
-                    HitPawn.ProcessLocationalDamage(Damage - 20 * (1 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType,HitPoints);
+                    HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType,HitPoints);
                 }
 
-                 bHitWhipAttachment = false;
+//              bHitWhipAttachment = false;
             }
             else
             {
                 if (bDebugMode)
                 {
-                    Log(">>> ProcessTouch Other.TakeDamage ... "@Other);
+                    Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
                 }
 
-                Other.TakeDamage(Damage - 20 * (1 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
             }
         }
         else
         {
             if (bDebugMode)
             {
-                Log(">>> ProcessTouch Nothing cClientside... ");
+                Log(">>> ProcessTouch Nothing Clientside... ");
             }
 
-            if (HitPawn != none)
-            {
-                bHitWhipAttachment = false;
-            }
+//          if (HitPawn != none)
+//          {
+//              bHitWhipAttachment = false;
+//          }
         }
     }
 
@@ -233,8 +233,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
 defaultproperties
 {
-     WhizType=1
-     ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
-     WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
+    WhizType=1
+    ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
+    WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
 }
-

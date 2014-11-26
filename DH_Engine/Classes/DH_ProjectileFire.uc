@@ -20,7 +20,7 @@ var             float       SnapTraceDistance;          // Essentially the dista
 var()           bool        bUsesTracers;               // true if the weapon uses tracers in it's ammo loadout
 var()           int         TracerFrequency;            // how often a tracer is loaded in.  Assume to be 1 in valueof(TracerFrequency)
 var             byte        NextTracerCounter;
-var() class<ROClientTracer> DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage)
+var class<DH_ClientTracer>  DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: was class ROClientTracer
 
 
 // Weapon spread/innaccuracy variables
