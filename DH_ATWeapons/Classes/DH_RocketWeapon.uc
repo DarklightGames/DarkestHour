@@ -193,17 +193,15 @@ simulated state LoweringWeapon
 {
     simulated function BeginState()
     {
-        local int Mode, InitialAmount;
+        local int Mode;
         local name Anim;
 
         super.BeginState();
 
-        InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
-
         if (AmmoAmount(0) > 0 && CurrentMagCount < InitialNumPrimaryMags - 1)
         {
             PrimaryAmmoArray.Insert(CurrentMagIndex, 1);
-            PrimaryAmmoArray[CurrentMagIndex] = InitialAmount;
+            PrimaryAmmoArray[CurrentMagIndex] = FireMode[0].AmmoClass.Default.InitialAmount;
             CurrentMagCount++;
 
             if (Instigator.IsLocallyControlled())
