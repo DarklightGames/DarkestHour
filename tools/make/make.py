@@ -1,6 +1,6 @@
 import os
 import sys
-import getopt
+import argparse
 import subprocess
 import time
 import ConfigParser
@@ -15,10 +15,7 @@ class MultiOrderedDict(OrderedDict):
         else:
             super(OrderedDict, self).__setitem__(key, value)
 
-def print_usage():
-	print "usage: make.py --mod=<ModName>"
-
-def main(argv):
+def main():
 	#red orchestra directory
 	ro_dir = os.environ.get('RODIR')
 
@@ -38,26 +35,11 @@ def main(argv):
 		sys.exit(1)
 
 	#parse options
-	try:
-		opts, args = getopt.getopt(argv, "c", ["mod="])
-	except:
-		print "error: invalid arguments"
-		print_usage()
-		sys.exit(1)
+	argparser = argparse.ArgumentParser()
+	argparser.add_argument('-mod', required=True)
+	args = argparser.parse_args()
 
-	mod = None
-	should_clean = False
-
-	for opt, arg in opts:
-		if opt == "--mod":
-			mod = arg
-		elif opt == "--clean":
-			should_clean = True
-
-	if mod == None:
-		print "error: could not resolve mod"
-		print_usage()
-		sys.exit(1)
+	mod = args.mod
 
 	#mod directory
 	mod_dir = os.path.join(ro_dir, mod)
@@ -146,4 +128,4 @@ def main(argv):
 				os.remove(os.path.join(root, file))
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+   main()
