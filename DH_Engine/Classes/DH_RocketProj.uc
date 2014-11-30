@@ -425,7 +425,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We actually hit the Driver
             if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
             {
-                if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
+                if (ShouldDrawDebugLines())
                 {
                     FirstHit = false;
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
@@ -461,7 +461,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateHEAT(HitLocation, Normal(Velocity), 
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellImpactDamage, bIsHEATRound))
         {
-            if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
+            if (ShouldDrawDebugLines())
             {
                 FirstHit = false;
                 DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
@@ -490,7 +490,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         SetPhysics(PHYS_None);
         SetDrawType(DT_None);
 
-        if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
+        if (ShouldDrawDebugLines())
         {
             FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
@@ -623,7 +623,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
             Level.Game.Broadcast(self, "Hull Ricochet!");
         }
 
-        if (DrawDebugLines && Firsthit)
+        if (ShouldDrawDebugLines())
         {
             FirstHit = false;
             DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
@@ -670,7 +670,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
             if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
-                if (DrawDebugLines && Firsthit)
+                if (ShouldDrawDebugLines())
                 {
                     FirstHit = false;
                     DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500), 255, 0, 0);
