@@ -775,17 +775,18 @@ simulated function DrawHudPassC(Canvas C)
         PawnOwner.Weapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
 
     // Slow, for debugging only
-    if (bDebugDriverCollision && class'ROEngine.ROLevelInfo'.static.RODebugMode())
+    if (bDebugDriverCollision && class'DH_LevelInfo'.static.DHDebugMode()) // Matt: was 'ROEngine.ROLevelInfo'.static.RODebugMode())
     {
         DrawVehiclePointSphere();
     }
 
     // Slow, for debugging only
-    if (bDebugPlayerCollision && class'ROEngine.ROLevelInfo'.static.RODebugMode())
+    if (bDebugPlayerCollision && class'DH_LevelInfo'.static.DHDebugMode()) // Matt: was 'ROEngine.ROLevelInfo'.static.RODebugMode())
     {
         DrawPointSphere();
     }
 }
+
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // DrawVehicleIcon - draws all the vehicle HUD info, e.g. vehicle icon, passengers, ammo, speed, throttle

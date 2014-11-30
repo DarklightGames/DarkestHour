@@ -1481,6 +1481,51 @@ function HitThis(ROArtilleryTrigger RAT)
     }
 }
 
+
+// Matt: DH version
+// This would be incredibly useful but for some reason the debug spheres are not being drawn & I can't work out why ! Gets as far as calling DrawDebugSphere in Hud's DrawVehiclePointSphere
+simulated exec function DriverCollisionDebug()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
+    {
+        ROHud(myHUD).bDebugDriverCollision = !ROHud(myHUD).bDebugDriverCollision;
+        Log("bDebugDriverCollision =" @ ROHud(myHUD).bDebugDriverCollision);
+    }
+}
+
+// Matt: DH version
+simulated exec function PlayerCollisionDebug()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
+    {
+        ROHud(myHUD).bDebugPlayerCollision = !ROHud(myHUD).bDebugPlayerCollision;
+        Log("bDebugPlayerCollision =" @ ROHud(myHUD).bDebugPlayerCollision);
+    }
+}
+
+// Matt: DH version
+exec function ClearLines()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ClearStayingDebugLines();
+    }
+}
+
+// Matt: new exec
+exec function ClearArrows()
+{
+    local RODebugTracer Tracer;
+
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        foreach DynamicActors(class'RODebugTracer', Tracer)
+        {
+            Tracer.Destroy();
+        }
+    }
+}
+
 simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
 {
     local ROTreadCraft V;
