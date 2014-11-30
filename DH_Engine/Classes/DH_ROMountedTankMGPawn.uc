@@ -298,7 +298,6 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
-    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
     OverlayCenterSize=1.000000
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }

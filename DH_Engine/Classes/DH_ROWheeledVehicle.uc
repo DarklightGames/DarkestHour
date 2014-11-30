@@ -857,7 +857,6 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
-     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
      ObjectCollisionResistance=1.000000
      EngineHealthMax=30
      bEngineOff=true

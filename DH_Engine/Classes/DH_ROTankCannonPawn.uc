@@ -361,8 +361,6 @@ simulated state EnteringVehicle
 {
     simulated function HandleEnter()
     {
-            //if (DriverPositions[0].PositionMesh != none)
-            //  LinkMesh(DriverPositions[0].PositionMesh);
         if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone ||  Level.Netmode == NM_ListenServer)
         {
             if (DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
@@ -493,10 +491,10 @@ simulated state ViewTransition
         if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+            {
                 Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+            }
         }
-
-         // bDrawDriverinTP=true;//Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
         if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
             && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
@@ -521,8 +519,7 @@ simulated state ViewTransition
         {
             if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
             {
-//                  if (IsLocallyControlled())
-                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
                 SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
             }
             else
@@ -530,8 +527,7 @@ simulated state ViewTransition
         }
         else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
         {
-//              if (IsLocallyControlled())
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
             SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
         }
         else
@@ -556,7 +552,6 @@ simulated state ViewTransition
         if (PlayerController(Controller) != none)
         {
             PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            //PlayerController(Controller).SetRotation(Gun.GetBoneRotation('Camera_com'));
         }
     }
 
@@ -582,8 +577,6 @@ simulated state LeavingVehicle
             Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
             Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
         }
-
-        //LinkMesh(Default.Mesh);
 
         if (Gun.HasAnim(Gun.BeginningIdleAnim))
         {
@@ -697,10 +690,8 @@ function ServerToggleDebugExits()
     }
 }
 
-
 defaultproperties
 {
-    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
     bShowRangeText=true
     GunsightPositions=1
     GunsightOpticsName="ScopeNameHere"
