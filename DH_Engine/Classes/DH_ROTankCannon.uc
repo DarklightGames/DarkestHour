@@ -1960,11 +1960,16 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Matt: shell's ProcessTouch now calls TD on VehicleWeapon instead of VehicleBase, but for tank cannon this is counted as hit on vehicle so we call TD on that
     else if (VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).VehicleBase != none)
     {
+        if (DamageType.default.bDelayedDamage && InstigatedBy != none) // added bDelayedDamage as otherwise this isn't relevant
+        {
+            VehicleWeaponPawn(Owner).VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
+        }
+
         VehicleWeaponPawn(Owner).VehicleBase.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
 
-    // Matt: removed as shell's ProcessTouch now calls TakeDamage directly on Driver if he was hit
-    //  if (HitDriver(Hitlocation, Momentum))
+    // Matt: removed as shell & bullet's ProcessTouch now call TakeDamage directly on Driver if he was hit
+//  if (HitDriver(Hitlocation, Momentum))
 //  {
 //      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 //  }

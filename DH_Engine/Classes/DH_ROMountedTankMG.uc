@@ -51,7 +51,6 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-
 simulated function DestroyEffects()
 {
     super.DestroyEffects();
@@ -250,10 +249,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
 
-    // Matt: shell's ProcessTouch now calls TD on VehicleWeapon instead of VehicleBase & for vehicle MG this is not counted as hit on vehicle itself
-    // But we can add any desired functionality here or in subclasses, e.g. shell could wreck MG
+/**
+    Matt: shell's ProcessTouch now calls TD on VehicleWeapon instead of VehicleBase & for vehicle MG this is not counted as hit on vehicle itself
+    But we can add any desired functionality here or in subclasses, e.g. shell could wreck MG
+    Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
+*/
 
-    // Matt: removed as shell's ProcessTouch now calls TakeDamage directly on Driver if he was hit
+    // Matt: removed as shell & bullet's ProcessTouch now call TakeDamage directly on Driver if he was hit
     //  if (HitDriver(Hitlocation, Momentum))
 //  {
 //      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);

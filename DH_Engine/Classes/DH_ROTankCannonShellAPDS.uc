@@ -133,11 +133,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         if (Role == ROLE_Authority)
         {
-            if (Instigator == none || Instigator.Controller == none)
-            {
-                HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
-                HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
-            }
+            // Matt: removed as SetDDI is irrelevant to VehWeapon (empty function) & for Vehicle we'll let the VehWeapon call SetDDI on the Vehicle only if it's calling TakeDamage on it
+//          if (ShellImpactDamage.default.bDelayedDamage && Instigator == none || Instigator.Controller == none)
+//          {
+//              HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
+//              HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
+//          }
 
             HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
 
