@@ -39,7 +39,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    FirstHit = false;
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
@@ -80,7 +79,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (ShouldDrawDebugLines())
             {
-                FirstHit = false;
                 DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
             }
 
@@ -109,7 +107,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         if (ShouldDrawDebugLines())
         {
-            FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
         }
 

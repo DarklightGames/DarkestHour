@@ -37,7 +37,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    FirstHit = false;
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
@@ -78,7 +77,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (ShouldDrawDebugLines())
             {
-                FirstHit = false;
                 DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
             }
 
@@ -130,7 +128,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         if (ShouldDrawDebugLines())
         {
-            FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
         }
 
@@ -250,8 +247,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
         if (ShouldDrawDebugLines())
         {
-            FirstHit=false;
-            DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
+            DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
         }
 
         if (!bShatterProne || !DH_ROTreadCraft(Wall).bRoundShattered)
@@ -312,9 +308,9 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    FirstHit=false;
-                    DrawStayingDebugLine(Location, Location-(Normal(SavedVelocity)*500), 255, 0, 0);
+                    DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
                 }
+
                 Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
             }
 

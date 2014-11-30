@@ -113,7 +113,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    FirstHit = false;
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
@@ -154,7 +153,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         {
             if (ShouldDrawDebugLines())
             {
-                FirstHit = false;
                 DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
             }
 
@@ -206,7 +204,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         if (ShouldDrawDebugLines())
         {
-            FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
         }
 
@@ -326,9 +323,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
         if (ShouldDrawDebugLines())
         {
-            FirstHit=false;
-            DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
-            // DrawStayingDebugLine(Location, Location + 1000*HitNormal, 255, 0, 255);
+            DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
         }
 
         if (!bShatterProne || !DH_ROTreadCraft(Wall).bRoundShattered)
@@ -389,9 +384,9 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    FirstHit=false;
-                    DrawStayingDebugLine(Location, Location-(Normal(SavedVelocity)*500), 255, 0, 0);
+                    DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
                 }
+
                 Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
             }
 
@@ -489,8 +484,10 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
 // Matt: added to easily avoid drawing debug lines on a dedicated server or if this isn't the first hit
 simulated function bool ShouldDrawDebugLines()
 {
-    if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
+    if (DrawDebugLines && FirstHit && Level.NetMode != NM_DedicatedServer)
     {
+        FirstHit = false;
+
         return true;
     }
 }
