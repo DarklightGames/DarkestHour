@@ -846,6 +846,19 @@ function ServerLoadATAmmo(Pawn Gunner)
 //-----------------------------------------------------------------------------
 state PlayerWalking
 {
+    // Matt: modified to allow behind view in debug mode
+    function ClientSetBehindView(bool B)
+    {
+        if (B && Role < ROLE_Authority && !class'DH_LevelInfo'.static.DHDebugMode()) // added !DHDebugMode
+        {
+            ServerCancelBehindview();
+
+            return;
+        }
+
+        super(PlayerController).ClientSetBehindView(B);
+    }
+
     // Added a test for mantling
     function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
     {
@@ -1481,6 +1494,36 @@ function HitThis(ROArtilleryTrigger RAT)
     }
 }
 
+// Matt: modified to call ToggleBehindView to avoid code repetition
+exec function BehindView(bool B)
+{
+    if (B != bBehindView)
+    {
+        ToggleBehindView();
+    }
+}
+
+// Matt: modified to avoid wasteful call to server if we know behind view isn't allowed (note can't do other checks here, as client can't access GameInfo's bAllowBehindView)
+exec function ToggleBehindView()
+{
+    if (Vehicle(Pawn) == none || Vehicle(Pawn).bAllowViewChange || class'DH_LevelInfo'.static.DHDebugMode()) // allow vehicles to limit view changes
+    {
+        ServerToggleBehindview();
+    }
+}
+
+// Modified to allow behind view if we are in DHDebugMode (during development only) & to disallow behind view just because a player is a game admin
+function ServerToggleBehindView()
+{
+    if (Level.NetMode == NM_Standalone || Level.Game.bAllowBehindView || PlayerReplicationInfo.bOnlySpectator || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (Vehicle(Pawn) == none || Vehicle(Pawn).bAllowViewChange || class'DH_LevelInfo'.static.DHDebugMode()) // allow vehicles to limit view changes
+        {
+            bBehindView = !bBehindView;
+            ClientSetBehindView(bBehindView);
+        }
+    }
+}
 
 // Matt: DH version
 // This would be incredibly useful but for some reason the debug spheres are not being drawn & I can't work out why ! Gets as far as calling DrawDebugSphere in Hud's DrawVehiclePointSphere
