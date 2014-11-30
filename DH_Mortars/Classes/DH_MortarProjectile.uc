@@ -133,13 +133,14 @@ simulated function Tick(float DeltaTime)
 
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    //--------------------------------------------------------------------------
-    // This is to prevent jerks from walking infront of the mortar and blowing
-    // us up.
-    if (DH_Pawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384)
+    // This is to prevent jerks from walking in front of the mortar and blowing us up
+    if (DH_Pawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0)
+    {
         return;
+    }
 
-    super.ProcessTouch(Other, HitLocation);
+    // Matt TEST - we are doubling up calls to Explode here, as the super also calls it - talk with Basnett & confirm we need the Explode version below, in which case presumably ditch the Super
+    super.ProcessTouch(Other, HitLocation); // Super from Projectile just does: if (Other != Instigator) Explode(HitLocation, Normal(HitLocation - Other.Location));
 
     Explode(HitLocation, Normal(Other.Location - Location));
 }
