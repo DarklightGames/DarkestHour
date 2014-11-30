@@ -205,6 +205,21 @@ simulated function HitWall(vector HitNormal, actor Wall)
     }
 }
 
+
+// Matt: modified to call HitWall for other types of actor (not just ROBulletWhipAttachment), so grenades etc bounce off things like turrrets // TEST
+simulated function ProcessTouch(Actor Other, vector HitLocation)
+{
+    if (Other == Instigator || Other.Base == Instigator)
+    {
+        return;
+    }
+
+//  if (ROBulletWhipAttachment(Other) != none) // removed
+//  {
+        HitWall(Normal(HitLocation - Other.Location), Other);
+//  }
+}
+
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     BlowUp(HitLocation);
