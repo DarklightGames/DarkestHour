@@ -6,6 +6,15 @@
 class DH_ROMountedTankMG extends ROMountedTankMG
       abstract;
 
+// Reload stuff
+var()   sound ReloadSound; // sound of this MG reloading
+var     bool  bReloading;  // This MG is currently reloading
+var     int   NumMags;     // Number of mags carried for this MG;
+
+// MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
+var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
+var DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
+
 // Stuff for fire effects - Ch!cKeN
 var()   name                                    FireAttachBone;
 var()   vector                                  FireEffectOffset;
@@ -17,16 +26,41 @@ var     float                                   BurnTime;
 var     class<DamageType>   VehicleBurningDamType;
 var     float               PlayerFireDamagePerSec;
 
-var()   sound ReloadSound; // sound of this MG reloading
-var     bool  bReloading;  // This MG is currently reloading
-var     int   NumMags;     // Number of mags carried for this MG;
-
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire;
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         bReloading, NumMags;
+}
+//==============================================================================
+
+// Matt: modified to handle new collision static mesh actor, if one has been specified
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (CollisionMeshActorClass != none)
+    {
+        CollisionMeshActor = Spawn(CollisionMeshActorClass, self); // vital that this VehicleWeapon owns the col mesh actor
+
+        if (CollisionMeshActor != none)
+        {
+            // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
+            SetCollision(false, false); // bCollideActors & bBlockActors both false
+            bBlockNonZeroExtentTraces = false;
+            bBlockZeroExtentTraces = false;
+
+            // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the MG
+            AttachToBone(CollisionMeshActor, YawBone);
+
+            // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the MG
+            AttachToBone(CollisionMeshActor, YawBone);
+
+            // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the MG
+            SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
+        }
+    }
 }
 
 simulated function Tick(float DeltaTime)
@@ -309,6 +343,16 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
     Distance = Sqrt(Diff Dot Diff);
 
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
+}
+
+simulated function Destroyed() // Matt: added
+{
+    if (CollisionMeshActor != none)
+    {
+        CollisionMeshActor.Destroy();
+    }
+
+    super.Destroyed();
 }
 
 defaultproperties

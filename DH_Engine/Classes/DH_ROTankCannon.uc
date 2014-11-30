@@ -9,62 +9,67 @@ class DH_ROTankCannon extends ROTankCannon
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // Variables for up to three ammo types
-var     int MainAmmoChargeExtra[3];
-var()   int InitialTertiaryAmmo;
-var()   class<Projectile>   TertiaryProjectileClass;
+var   int   MainAmmoChargeExtra[3];
+var() int   InitialTertiaryAmmo;
+var() class<Projectile> TertiaryProjectileClass;
 
 // Shot dispersion can be customized by round type
-var()   float SecondarySpread;
-var()   bool  bUsesSecondarySpread;
-var()   float TertiarySpread;
-var()   bool  bUsesTertiarySpread;
+var() float SecondarySpread;
+var() bool  bUsesSecondarySpread;
+var() float TertiarySpread;
+var() bool  bUsesTertiarySpread;
 
 //Manual turret stuff
-var     float   ManualRotationsPerSecond;
-var     float   PoweredRotationsPerSecond;
+var   float ManualRotationsPerSecond;
+var   float PoweredRotationsPerSecond;
+var   bool  bManualTurret;
 
 // Stuff for fire effects - Ch!cKeN
-var()   name                                    FireAttachBone;
-var()   vector                                  FireEffectOffset;
-var     class<VehicleDamagedEffect>             FireEffectClass;
-var     VehicleDamagedEffect                    TurretHatchFireEffect;
-var     bool                                    bOnFire;   // Set by Treadcraft base to notify when to start fire effects
-var     float                                   BurnTime;
+var() name                        FireAttachBone;
+var() vector                      FireEffectOffset;
+var   class<VehicleDamagedEffect> FireEffectClass;
+var   VehicleDamagedEffect        TurretHatchFireEffect;
+var   bool                        bOnFire; // set by Treadcraft base to notify when to start fire effects
+var   float                       BurnTime;
 
 // Armor Penetration stuff
-var     bool    bIsAssaultGun; //used to defeat the Stug/JP bug
-var     bool    bWasHEATRound;
-var     bool    bHasAddedSideArmor;
-var     bool    bProjectilePenetrated;
-var     bool    bWasShatterProne;
-var     bool    bRoundShattered;
+var   bool  bIsAssaultGun; //used to defeat the Stug/JP bug
+var   bool  bWasHEATRound;
+var   bool  bHasAddedSideArmor;
+var   bool  bProjectilePenetrated;
+var   bool  bWasShatterProne;
+var   bool  bRoundShattered;
 
-var     float   FrontArmorFactor;
-var     float   RightArmorFactor;
-var     float   LeftArmorFactor;
-var     float   RearArmorFactor;
+var   float FrontArmorFactor;
+var   float RightArmorFactor;
+var   float LeftArmorFactor;
+var   float RearArmorFactor;
 
-var     float   FrontArmorSlope;
-var     float   RightArmorSlope;
-var     float   LeftArmorSlope;
-var     float   RearArmorSlope;
+var   float FrontArmorSlope;
+var   float RightArmorSlope;
+var   float LeftArmorSlope;
+var   float RearArmorSlope;
 
-var     float   DHArmorSlopeTable[16];
-
-var     bool    bManualTurret;
+var   float DHArmorSlopeTable[16];
 
 var() float FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
+var   float MinCommanderHitZ; // Matt: minimum height above which a projectile hit must have struck commander's collision box (hit location offset, relative to mesh origin)
+
+// Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
+var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
+var DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
+
 //Debugging help
-var bool    bDrawPenetration;
-var bool    bDebuggingText;
-var bool    bPenetrationText;
-var bool    bLogPenetration;
-var bool    bDriverDebugging;
+var   bool  bDrawPenetration;
+var   bool  bDebuggingText;
+var   bool  bPenetrationText;
+var   bool  bLogPenetration;
+var   bool  bDriverDebugging;
 
 // Debugging and calibration stuff
-var   config    bool        bGunFireDebug;
-var() config    bool        bGunsightSettingMode;
+var   config bool bGunFireDebug;
+var() config bool bGunsightSettingMode;
 
 replication
 {
@@ -80,11 +85,36 @@ replication
      reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
         bManualTurret;
 }
+//==============================================================================
+
+// Matt: modified to handle new collision static mesh actor, if one has been specified
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (CollisionMeshActorClass != none)
+    {
+        CollisionMeshActor = Spawn(CollisionMeshActorClass, self); // vital that this VehicleWeapon owns the col mesh actor
+
+        if (CollisionMeshActor != none)
+        {
+            // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
+            SetCollision(false, false); // bCollideActors & bBlockActors both false
+            bBlockNonZeroExtentTraces = false;
+            bBlockZeroExtentTraces = false;
+
+            // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the turret
+            CollisionMeshActor.bHardAttach = true;
+            AttachToBone(CollisionMeshActor, YawBone);
+
+            // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the turret
+            CollisionMeshActor.SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
+        }
+    }
+}
 
 simulated function Tick(float DeltaTime)
 {
-    super.Tick(DeltaTime);
-
     if (bOnFire && TurretHatchFireEffect == none)
     {
         // Lets randomise the fire start times to desync them with the driver and engine ones
@@ -2734,6 +2764,16 @@ function bool ResupplyAmmo()
     }
 
     return bDidResupply;
+}
+
+simulated function Destroyed() // Matt: added
+{
+    if (CollisionMeshActor != none)
+    {
+        CollisionMeshActor.Destroy();
+    }
+
+    super.Destroyed();
 }
 
 defaultproperties

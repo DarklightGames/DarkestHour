@@ -81,6 +81,47 @@ simulated function float GetOverMatch (float ArmorFactor, float ShellDiameter)
 
 }
 
+// Matt: modified to handle new VehicleWeapon collision mesh actor
+// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
+simulated singular function Touch(Actor Other)
+{
+    local vector HitLocation, HitNormal;
+
+    if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
+    {
+        Other = Other.Owner;
+        log(Tag @ "Touch event: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Other.Tag); // TEMP
+    }
+
+//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
+
+    if (Other != none && (Other.bProjTarget || Other.bBlockActors))
+    {
+        LastTouched = Other;
+
+        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        {
+            ProcessTouch(Other,Location);
+            LastTouched = none;
+        }
+        else
+        {
+            if (Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
+            {
+                HitLocation = Location;
+            }
+
+            ProcessTouch(Other, HitLocation);
+            LastTouched = none;
+
+            if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none)
+            {
+                ClientSideTouch(Other, HitLocation);
+            }
+        }
+    }
+}
+
 // Matt: re-worked, with commentary below
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
