@@ -170,8 +170,8 @@ replication
     reliable if (bNetDirty && bNetOwner && Role==ROLE_Authority)
         MaxCriticalSpeed;
 
-    reliable if (Role<ROLE_Authority)
-        TakeFireDamage, ServerStartEngine;
+    reliable if (Role < ROLE_Authority)
+        TakeFireDamage, ServerStartEngine, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
 
     reliable if (Role == ROLE_Authority)
         bProjectilePenetrated, bFirstHit, bRoundShattered, bPeriscopeDamaged;
@@ -236,13 +236,13 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (bDebugExitPositions)
+    if (class'DH_ROTreadCraft'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
             ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
 
-            Spawn(class'RODebugTracer',,, ExitPosition);
+            Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
@@ -3780,6 +3780,24 @@ simulated function ShrinkHUD();
 defaultproperties
 {
      bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
+
+// Matt: allows debugging exit positions to be toggled for all DH_ROTreadCrafts
+exec function ToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {    
+        ServerToggleDebugExits();
+    }
+}
+
+function ServerToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        class'DH_ROTreadCraft'.default.bDebugExitPositions = !class'DH_ROTreadCraft'.default.bDebugExitPositions;
+        log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
+    }
+}
 
      bEnterringUnlocks=false
      bAllowRiders=true

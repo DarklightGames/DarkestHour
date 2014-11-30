@@ -63,6 +63,22 @@ var     bool    bPenetrationText;
 var     bool    bLogPenetration;
 var     bool    bDebugExitPositions;
 
+replication
+{
+    reliable if (bNetDirty && Role==ROLE_Authority)
+        UnbuttonedPositionIndex;
+
+    // functions called by client on server
+    reliable if (Role < ROLE_Authority)
+        ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
+
+    // Functions called by server on client
+    reliable if (Role==ROLE_Authority)
+        bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
+
+}
+
+
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -125,13 +141,13 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (bDebugExitPositions)
+    if (class'DH_ROTankCannonPawn'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all cannon pawns
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
             ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
 
-            Spawn(class'RODebugTracer',,,ExitPosition);
+            Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
@@ -153,22 +169,6 @@ function bool PlaceExitingDriver()
 
     return false;
 }
-
-replication
-{
-    reliable if (bNetDirty && Role==ROLE_Authority)
-        UnbuttonedPositionIndex;
-
-    // functions called by client on server
-    reliable if (Role<ROLE_Authority)
-        ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay; //
-
-    // Functions called by server on client
-    reliable if (Role==ROLE_Authority)
-        bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
-
-}
-
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
 {
@@ -681,6 +681,25 @@ simulated function ShrinkHUD();
 defaultproperties
 {
     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
+
+
+// Matt: allows debugging exit positions to be toggled for all cannon pawns
+exec function ToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {    
+        ServerToggleDebugExits();
+    }
+}
+
+function ServerToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        class'DH_ROTankCannonPawn'.default.bDebugExitPositions = !class'DH_ROTankCannonPawn'.default.bDebugExitPositions;
+        log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
+    }
+}
 
     bShowRangeText=true
     GunsightPositions=1

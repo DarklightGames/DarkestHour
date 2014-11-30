@@ -49,7 +49,11 @@ simulated function Timer()
 
     if (bDebug)
     {
-        DrawStayingDebugLine(DebugLocation, Location, 255, 0, 0);
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            DrawStayingDebugLine(DebugLocation, Location, 255, 0, 0);
+        }
+
         DebugLocation = Location;
     }
 }
@@ -170,7 +174,10 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (bDebug)
     {
-        DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
+        }
 
         log((DebugForward dot (Location - OrigLoc) * UU2M) @ (DebugRight dot (Location - OrigLoc) * UU2M));
     }

@@ -72,8 +72,8 @@ replication
     reliable if (bNetDirty && Role==ROLE_Authority)
         EngineHealthMax;
 
-    reliable if (Role<ROLE_Authority)
-        ServerStartEngine;
+    reliable if (Role < ROLE_Authority)
+        ServerStartEngine, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
 
     reliable if (Role == ROLE_Authority)
         bResupplyVehicle;
@@ -533,13 +533,13 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (bDebugExitPositions)
+    if (class'DH_ROWheeledVehicle'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROWheeledVehicles
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
             ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
 
-            Spawn(class'RODebugTracer',,, ExitPosition);
+            Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
@@ -840,6 +840,24 @@ simulated function ShrinkHUD();
 defaultproperties
 {
      bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
+
+// Matt: allows debugging exit positions to be toggled for all DH_ROWheeledVehicles
+exec function ToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {    
+        ServerToggleDebugExits();
+    }
+}
+
+function ServerToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        class'DH_ROWheeledVehicle'.default.bDebugExitPositions = !class'DH_ROWheeledVehicle'.default.bDebugExitPositions;
+        log("DH_ROWheeledVehicle.bDebugExitPositions =" @ class'DH_ROWheeledVehicle'.default.bDebugExitPositions);
+    }
+}
 
      ObjectCollisionResistance=1.000000
      EngineHealthMax=30

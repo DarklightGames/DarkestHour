@@ -24,6 +24,13 @@ struct ExitPositionPair
 
 var bool bDebugExitPositions;
 
+replication
+{
+    reliable if (Role < ROLE_Authority)
+        ServerToggleDebugExits; // Matt: added
+}
+
+
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -97,13 +104,13 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (bDebugExitPositions)
+    if (class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
             ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
 
-            Spawn(class'RODebugTracer',,,ExitPosition);
+            Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
@@ -274,6 +281,24 @@ simulated function ShrinkHUD();
 defaultproperties
 {
     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
+
+// Matt: allows debugging exit positions to be toggled for all MG pawns
+exec function ToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {    
+        ServerToggleDebugExits();
+    }
+}
+
+function ServerToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions = !class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions;
+        log("DH_ROMountedTankMGPawn.bDebugExitPositions =" @ class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions);
+    }
+}
 
     OverlayCenterSize=1.000000
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
