@@ -231,7 +231,6 @@ simulated singular function Touch(Actor Other)
     if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
     {
         Other = Other.Owner;
-        log(Tag @ "Touch event: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Other.Tag); // TEMP
     }
 
 //  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here

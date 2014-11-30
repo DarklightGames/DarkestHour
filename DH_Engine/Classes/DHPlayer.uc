@@ -547,6 +547,35 @@ function ServerSaveArtilleryPosition()
     SavedArtilleryCoords = HitLocation;
 }
 
+/* =================================================================================== *
+* ServerArtyStrike()
+* Spawn the artillery strike at the appropriate position.
+*
+* modified by: Ramm 10/21/04
+* =================================================================================== */
+function ServerArtyStrike()
+{
+    local vector                SpawnLocation;
+    local ROGameReplicationInfo GRI;
+    local DH_ArtillerySpawner   Spawner;
+
+    GRI = ROGameReplicationInfo(GameReplicationInfo);
+
+    SpawnLocation = SavedArtilleryCoords;
+    SpawnLocation.Z = GRI.NorthEastBounds.Z;
+
+    Spawner = Spawn(class'DH_ArtillerySpawner', self, , SpawnLocation, rotator(PhysicsVolume.Gravity)); // Matt: changed to DH_ArtillerySpawner
+
+    if (Spawner == none)
+    {
+        log("Error spawning artillery shell spawner");
+    }
+    else
+    {
+        Spawner.OriginalArtyLocation = SavedArtilleryCoords;
+    }
+}
+
 simulated function float GetMaxViewDistance()
 {
     if (Pawn != none && Pawn.Region.Zone != none && Pawn.Region.Zone.bDistanceFog)

@@ -1476,6 +1476,52 @@ state RoundInPlay
     }
 }
 
+// Matt: modified to replace ROArtillerySpawner with DH_ArtillerySpawner
+state ResetGameCountdown
+{
+    function BeginState()
+    {
+        local DH_ArtillerySpawner AS;
+
+        RoundStartTime = ElapsedTime + 10.0;
+
+        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
+        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+
+        // Destroy any artillery spawners so they don't keep calling airstrikes.
+        foreach DynamicActors(class'DH_ArtillerySpawner', AS)
+        {
+            AS.Destroy();
+        }
+
+        Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 10);
+    }
+}
+
+//-----------------------------------------------------------------------------
+// RoundOver - Wait period before a new round begins
+//-----------------------------------------------------------------------------
+
+// Matt: modified to replace ROArtillerySpawner with DH_ArtillerySpawner
+state RoundOver
+{
+    function BeginState()
+    {
+        local DH_ArtillerySpawner AS;
+
+        RoundStartTime = ElapsedTime;
+        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
+        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+
+        // Destroy any artillery spawners so they don't keep calling airstrikes.
+        foreach DynamicActors(class'DH_ArtillerySpawner', AS)
+        {
+            AS.Destroy();
+        }
+
+    }
+}
+
 function ResetMortarTargets()
 {
     local int k;

@@ -3,66 +3,57 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHMinefield_ATMine extends ROMine;
+class DH_ArtilleryShell extends ROArtilleryShell;
 
 
-// Overridden to explode on vehicles only // Matt: also modified to handle new VehicleWeapon collision mesh actor
+// Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
-singular function Touch(Actor Other)
+simulated singular function Touch(Actor Other)
 {
-    local int RandomNum;
+    local vector HitLocation, HitNormal;
 
     if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
     {
         Other = Other.Owner;
     }
 
-    if (Pawn(Other) == none || Vehicle(Other) == none)
-    {
-        return;
-    }
-    
-    if (Role == ROLE_Authority)
-    {
-        // Hurt the vehicle itself
-        Other.TakeDamage(Damage, none, Location, Location, MyDamageType);
+//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
 
-        if (DH_ROTreadCraft(Other) != none)
+    if (Other != none && (Other.bProjTarget || Other.bBlockActors))
+    {
+        LastTouched = Other;
+
+        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
         {
-            // Lets possibly de-track the vehicle (80% chance)
-            RandomNum = Rand(100);
-
-            if (RandomNum < 80)
+            ProcessTouch(Other,Location);
+            LastTouched = none;
+        }
+        else
+        {
+            if (Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
             {
-                if (vector(Other.Rotation) dot Normal(Location - Other.Location) > 0.0)
-                {
-                    DH_ROTreadCraft(Other).DamageTrack(true);
-                }
-                else
-                {
-                    DH_ROTreadCraft(Other).DamageTrack(false);
-                }
+                HitLocation = Location;
+            }
+
+            ProcessTouch(Other, HitLocation);
+            LastTouched = none;
+
+            if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none)
+            {
+                ClientSideTouch(Other, HitLocation);
             }
         }
-
-        // Hurt others around it
-        HurtRadius(Damage, DamageRadius, MyDamageType, Momentum, Location);
-
-        SetCollision(false, false, false);
     }
-
-    SpawnExplosionEffects();
 }
 
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local Actor  Victims, LastTouched;
+    local actor  Victims;
     local float  damageScale, dist;
     local vector dir;
-    local vector TraceHitLocation, TraceHitNormal;
-    local Actor  TraceHitActor;
+    local ROPawn P;
 
     if (bHurtEntry)
     {
@@ -81,12 +72,9 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         }
 
         // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
-        if (Victims != self && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
+        if (Victims != self && HurtWall != Victims && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
         {
-            // if there's a vehicle between the player and explosion, don't apply damage
-            TraceHitActor = Trace(TraceHitLocation, TraceHitNormal, Victims.Location, Location);
-
-            if (Vehicle(TraceHitActor) != none && TraceHitActor != Victims)
+            if (P == Victims)
             {
                 continue;
             }
@@ -95,6 +83,28 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
             dist = FMax(1.0, VSize(dir));
             dir = dir / dist;
             damageScale = 1.0 - FMax(0.0, (dist - Victims.CollisionRadius) / DamageRadius);
+
+            P = ROPawn(Victims);
+
+            if (P == none)
+            {
+                P = ROPawn(Victims.Base);
+            }
+
+            if (P != none)
+            {
+                damageScale *= P.GetExposureTo(Location + 50.0 * -Normal(PhysicsVolume.Gravity));
+
+                if (damageScale <= 0.0)
+                {
+                    continue;
+                }
+            }
+
+            if (Instigator == none || Instigator.Controller == none)
+            {
+                Victims.SetDelayedDamageInstigatorController(InstigatorController);
+            }
 
             if (Victims == LastTouched)
             {
@@ -105,7 +115,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
             if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
             {
-                Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, Instigator.Controller, DamageType, Momentum, HitLocation);
+                Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, InstigatorController, DamageType, Momentum, HitLocation);
             }
         }
     }
@@ -129,14 +139,14 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
         if (Instigator == none || Instigator.Controller == none)
         {
-            Victims.SetDelayedDamageInstigatorController(Instigator.Controller);
+            Victims.SetDelayedDamageInstigatorController(InstigatorController);
         }
 
         Victims.TakeDamage(damageScale * DamageAmount, Instigator, Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * dir, damageScale * Momentum * dir, DamageType);
 
         if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
         {
-            Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, Instigator.Controller, DamageType, Momentum, HitLocation);
+            Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, InstigatorController, DamageType, Momentum, HitLocation);
         }
     }
 
@@ -145,9 +155,4 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
 defaultproperties
 {
-     Damage=525
-     DamageRadius=512.0
-     MyDamageType=class'DH_LevelActors.DHATMineDamage'
-     Momentum=3000.0
-     bHidden=true
 }
