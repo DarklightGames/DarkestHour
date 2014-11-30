@@ -278,15 +278,11 @@ function float GetAmmoReloadState() // TEMP partial demo, pending consolidation 
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
-defaultproperties
-{
-    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
-
 // Matt: allows debugging exit positions to be toggled for all MG pawns
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
-    {    
+    {
         ServerToggleDebugExits();
     }
 }
@@ -300,6 +296,9 @@ function ServerToggleDebugExits()
     }
 }
 
+defaultproperties
+{
+    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
     OverlayCenterSize=1.000000
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }

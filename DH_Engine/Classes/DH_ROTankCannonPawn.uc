@@ -678,16 +678,12 @@ function float GetAltAmmoReloadState()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
-defaultproperties
-{
-    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
-
 
 // Matt: allows debugging exit positions to be toggled for all cannon pawns
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
-    {    
+    {
         ServerToggleDebugExits();
     }
 }
@@ -701,6 +697,10 @@ function ServerToggleDebugExits()
     }
 }
 
+
+defaultproperties
+{
+    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
     bShowRangeText=true
     GunsightPositions=1
     GunsightOpticsName="ScopeNameHere"

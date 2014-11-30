@@ -3777,15 +3777,11 @@ simulated function int NumPassengers()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
-defaultproperties
-{
-     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
-
 // Matt: allows debugging exit positions to be toggled for all DH_ROTreadCrafts
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
-    {    
+    {
         ServerToggleDebugExits();
     }
 }
@@ -3799,6 +3795,9 @@ function ServerToggleDebugExits()
     }
 }
 
+defaultproperties
+{
+     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
      bEnterringUnlocks=false
      bAllowRiders=true
      UnbuttonedPositionIndex=2

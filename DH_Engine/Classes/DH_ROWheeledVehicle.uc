@@ -837,15 +837,11 @@ function ServerChangeDriverPosition(byte F)
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
-defaultproperties
-{
-     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
-
 // Matt: allows debugging exit positions to be toggled for all DH_ROWheeledVehicles
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
-    {    
+    {
         ServerToggleDebugExits();
     }
 }
@@ -859,6 +855,9 @@ function ServerToggleDebugExits()
     }
 }
 
+defaultproperties
+{
+     bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
      ObjectCollisionResistance=1.000000
      EngineHealthMax=30
      bEngineOff=true
