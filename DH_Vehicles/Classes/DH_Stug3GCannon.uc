@@ -62,6 +62,7 @@ defaultproperties
      mTracerInterval=0.495867
      bUsesTracers=true
      bAltFireTracersOnly=true
+     MinCommanderHitHeight=30.0 // note there is no other collision box (e.g. mantlet) so every hit on the stug cannon is actually a hit on commander's collision box
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-1.000000,Z=12.000000))
      VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-1.000000,Z=-10.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'

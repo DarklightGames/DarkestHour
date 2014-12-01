@@ -54,7 +54,7 @@ var   float DHArmorSlopeTable[16];
 
 var() float FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
-var   float MinCommanderHitZ; // Matt: minimum height above which a projectile hit must have struck commander's collision box (hit location offset, relative to mesh origin)
+var   float MinCommanderHitHeight; // Matt: minimum height above which a projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 
 // Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
 var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -2545,40 +2545,103 @@ simulated function ShakeView(bool bWasAltFire)
     }
 }
 
+/*
+// Matt: deprecated function, along with MaxDriverHitAngle variable - is now handled using new MinCommanderHitHeight variable in re-worked HitDriverArea function
 // Returns true if the bullet hits below the angle that would hit the commander
-simulated function bool BelowDriverAngle(vector loc, vector ray)
+simulated function bool BelowDriverAngle(vector Loc, vector Ray)
 {
-    local float InAngle;
-    local vector X,Y,Z;
-    local vector HitDir;
+    local float  InAngle;
+    local vector X, Y, Z, HitDir, HeadLoc;
     local coords C;
-    local vector HeadLoc;
 
-    GetAxes(Rotation,X,Y,Z);
+    GetAxes(Rotation, X, Y, Z);
 
     C = GetBoneCoords(VehHitpoints[0].PointBone);
     HeadLoc = C.Origin + (VehHitpoints[0].PointHeight * VehHitpoints[0].PointScale * C.XAxis);
     HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> Rotator(C.Xaxis));
 
-    HitDir = loc - HeadLoc;
+    HitDir = Loc - HeadLoc;
 
     InAngle= Acos(Normal(HitDir) dot Normal(C.ZAxis));
 
     if (bDriverDebugging)
     {
-        log("Inangle = "$InAngle$" MaxDriverHitAngle = "$MaxDriverHitAngle);
-        Level.Game.Broadcast(self, "Inangle = "$InAngle$" MaxDriverHitAngle = "$MaxDriverHitAngle);
+        log("InAngle =" @ InAngle @ "MaxDriverHitAngle =" @ MaxDriverHitAngle);
+
+        if (Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "InAngle =" @ InAngle @ "MaxDriverHitAngle =" @ MaxDriverHitAngle);
+        }
 
         ClearStayingDebugLines();
-
-        DrawStayingDebugLine(HeadLoc, (HeadLoc + (30 * Normal(C.ZAxis))), 255, 0, 0); // SLOW! Use for debugging only!
-        DrawStayingDebugLine(loc, (loc + (45 * Normal(ray))), 0, 255, 0); // SLOW! Use for debugging only!
+        DrawStayingDebugLine(HeadLoc, (HeadLoc + (30.0 * Normal(C.ZAxis))), 255, 0, 0); // SLOW! Use for debugging only!
+        DrawStayingDebugLine(Loc, (Loc + (45.0 * Normal(Ray))), 0, 255, 0);             // SLOW! Use for debugging only!
     }
 
     if (InAngle > MaxDriverHitAngle)
     {
+        if (bDriverDebugging && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Hit angle is too low to hit commander");
+        }
+
+        return true;
+    }
+
+    return false;
+}
+*/
+// Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the commander's collision box?"
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+{
+    local vector HitOffset;
+
+    HitOffset = (Hitlocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
+
+    // We must have hit the commander's collision box (HitOffset.Z is how far the HitLocation is above the mesh origin)
+    if (HitOffset.Z >= MinCommanderHitHeight)
+    {
         if (bDriverDebugging)
-            Level.Game.Broadcast(self, "Hit angle is too low");
+        {
+            log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
+
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
+            }
+        }
+
+        return true;
+    }
+    // We can't have hit the commander so we must have hit the turret (or some other collision box)
+    else
+    {
+        if (bDriverDebugging)
+        {
+            log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
+
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
+            }
+        }
+
+        return false;
+    }
+}
+
+// Matt: slightly different concept to work more accurately & simply with projectiles
+// Think of this function as asking "is there an exposed commander there & did we actually hit him, not just his collision box?"
+simulated function bool HitDriver(vector Hitlocation, vector Momentum)
+{
+    local ROVehicleWeaponPawn PwningPawn;
+
+    PwningPawn = ROVehicleWeaponPawn(Owner);
+
+    // Commander is present & is not buttoned up & we hit commander's collision box & hit one of the hit points representing his head or torso
+    if (PwningPawn != none && PwningPawn.Driver != none && !PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].bExposed && 
+        HitDriverArea(HitLocation, Momentum) && IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1))
+    {
         return true;
     }
 
@@ -2592,7 +2655,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
     local  vector  HeadLoc, B, M, Diff;
     local  float   t, DotMM, Distance;
 
-    if (VehHitpoints[Index].PointBone == '')
+    if (VehHitpoints.Length <= Index || VehHitpoints[Index].PointBone == '') // added check against array length to avoid "out of bounds" errors
     {
         return false;
     }

@@ -53,6 +53,7 @@ defaultproperties
      RangeSettings(18)=1800
      RangeSettings(19)=1900
      RangeSettings(20)=2000
+     MinCommanderHitHeight=42.5;
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=15.000000,Y=6.000000,Z=3.000000))
      YawBone="Turret"
      PitchBone="Gun"
