@@ -66,33 +66,55 @@ var()   int                         PlayersNeededToCapture;
 
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
+var     bool                        bAlliesContesting;
+var     bool                        bAxisContesting;
 
 //Capture Operations (after capture)
-var(DH_CaptureActions)   array<ObjOperationAction>   AlliesCaptureObjActions;
-var(DH_CaptureActions)   array<ObjOperationAction>   AxisCaptureObjActions;
-var(DH_CaptureActions)   array<SpawnPointAction>     AlliesCaptureSpawnPointActions;
-var(DH_CaptureActions)   array<SpawnPointAction>     AxisCaptureSpawnPointActions;
-var(DH_CaptureActions)   array<VehiclePoolAction>    AlliesCaptureVehiclePoolActions;
-var(DH_CaptureActions)   array<VehiclePoolAction>    AxisCaptureVehiclePoolActions;
-var(DH_CaptureActions)   array<name>                 AlliesCaptureEvents;
-var(DH_CaptureActions)   array<name>                 AxisCaptureEvents;
+var(DH_CaptureActions)      array<ObjOperationAction>   AlliesCaptureObjActions;
+var(DH_CaptureActions)      array<ObjOperationAction>   AxisCaptureObjActions;
+var(DH_CaptureActions)      array<SpawnPointAction>     AlliesCaptureSpawnPointActions;
+var(DH_CaptureActions)      array<SpawnPointAction>     AxisCaptureSpawnPointActions;
+var(DH_CaptureActions)      array<VehiclePoolAction>    AlliesCaptureVehiclePoolActions;
+var(DH_CaptureActions)      array<VehiclePoolAction>    AxisCaptureVehiclePoolActions;
+var(DH_CaptureActions)      array<name>                 AlliesCaptureEvents;
+var(DH_CaptureActions)      array<name>                 AxisCaptureEvents;
 
 //Post Capture Cleared Operations (after capture and cleared of enemies)
-var(DH_ClearedActions)   array<ObjOperationAction>   AlliesClearedCaptureObjActions;
-var(DH_ClearedActions)   array<ObjOperationAction>   AxisClearedCaptureObjActions;
-var(DH_ClearedActions)   array<SpawnPointAction>     AlliesClearedCaptureSpawnPointActions;
-var(DH_ClearedActions)   array<SpawnPointAction>     AxisClearedCaptureSpawnPointActions;
-var(DH_ClearedActions)   array<VehiclePoolAction>    AlliesClearedCaptureVehiclePoolActions;
-var(DH_ClearedActions)   array<VehiclePoolAction>    AxisClearedCaptureVehiclePoolActions;
-var(DH_ClearedActions)   array<name>                 AlliesClearedCaptureEvents;
-var(DH_ClearedActions)   array<name>                 AxisClearedCaptureEvents;
+var(DH_ClearedActions)      array<ObjOperationAction>   AlliesClearedCaptureObjActions;
+var(DH_ClearedActions)      array<ObjOperationAction>   AxisClearedCaptureObjActions;
+var(DH_ClearedActions)      array<SpawnPointAction>     AlliesClearedCaptureSpawnPointActions;
+var(DH_ClearedActions)      array<SpawnPointAction>     AxisClearedCaptureSpawnPointActions;
+var(DH_ClearedActions)      array<VehiclePoolAction>    AlliesClearedCaptureVehiclePoolActions;
+var(DH_ClearedActions)      array<VehiclePoolAction>    AxisClearedCaptureVehiclePoolActions;
+var(DH_ClearedActions)      array<name>                 AlliesClearedCaptureEvents;
+var(DH_ClearedActions)      array<name>                 AxisClearedCaptureEvents;
 
 //Grouped Capture Operations (These will need to be the same in each grouped objective, unless you desire different actions based on the last captured grouped objective)
-var(DH_GroupedActions)   array<int>                  GroupedObjectiveReliances; //array of Objective Nums this objective is grouped with (doesn't need to list itself)
-var(DH_GroupedActions)   array<ObjOperationAction>   AlliesCaptureGroupObjActions;
-var(DH_GroupedActions)   array<ObjOperationAction>   AxisCaptureGroupObjActions;
-var(DH_GroupedActions)   array<name>                 AlliesGroupedCaptureEvents;
-var(DH_GroupedActions)   array<name>                 AxisGroupedCaptureEvents;
+var(DH_GroupedActions)      array<int>                  GroupedObjectiveReliances; //array of Objective Nums this objective is grouped with (doesn't need to list itself)
+var(DH_GroupedActions)      array<ObjOperationAction>   AlliesCaptureGroupObjActions;
+var(DH_GroupedActions)      array<ObjOperationAction>   AxisCaptureGroupObjActions;
+var(DH_GroupedActions)      array<name>                 AlliesGroupedCaptureEvents;
+var(DH_GroupedActions)      array<name>                 AxisGroupedCaptureEvents;
+
+//Contested Operations (used when a side begins capturing)
+var(DH_ContestedActions)    array<ObjOperationAction>   AlliesContestObjActions;
+var(DH_ContestedActions)    array<ObjOperationAction>   AxisContestObjActions;
+var(DH_ContestedActions)    array<SpawnPointAction>     AlliesContestSpawnPointActions;
+var(DH_ContestedActions)    array<SpawnPointAction>     AxisContestSpawnPointActions;
+var(DH_ContestedActions)    array<VehiclePoolAction>    AlliesContestVehiclePoolActions;
+var(DH_ContestedActions)    array<VehiclePoolAction>    AxisContestVehiclePoolActions;
+var(DH_ContestedActions)    array<name>                 AlliesContestEvents;
+var(DH_ContestedActions)    array<name>                 AxisContestEvents;
+
+//Contest End Operations (used when a side fails to capture and contest ends)
+var(DH_ContestEndActions)   array<ObjOperationAction>   AlliesContestEndObjActions;
+var(DH_ContestEndActions)   array<ObjOperationAction>   AxisContestEndObjActions;
+var(DH_ContestEndActions)   array<SpawnPointAction>     AlliesContestEndSpawnPointActions;
+var(DH_ContestEndActions)   array<SpawnPointAction>     AxisContestEndSpawnPointActions;
+var(DH_ContestEndActions)   array<VehiclePoolAction>    AlliesContestEndVehiclePoolActions;
+var(DH_ContestEndActions)   array<VehiclePoolAction>    AxisContestEndVehiclePoolActions;
+var(DH_ContestEndActions)   array<name>                 AlliesContestEndEvents;
+var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
 
 //--------------------------------------
 //Functions
@@ -119,6 +141,8 @@ function Reset()
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
+    bAlliesContesting = false;
+    bAxisContesting = false;
 }
 
 function DoSpawnPointAction(SpawnPointAction SPA)
@@ -204,6 +228,108 @@ function DoObjectiveAction(ObjOperationAction OOA)
     }
 }
 
+function HandleContestedActions(int Team, bool bStarted)
+{
+    local int i;
+
+    //Contested started
+    if (bStarted)
+    {
+        if (Team == AXIS_TEAM_INDEX)
+        {
+            for (i = 0; i < AxisContestObjActions.Length; ++i)
+            {
+                DoObjectiveAction(AxisContestObjActions[i]);
+            }
+
+            for (i = 0; i < AxisContestSpawnPointActions.Length; ++i)
+            {
+                DoSpawnPointAction(AxisContestSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AxisContestVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AxisContestVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AxisContestEvents.Length; ++i)
+            {
+                TriggerEvent(AxisContestEvents[i], none, none);
+            }
+        }
+        else if (Team == ALLIES_TEAM_INDEX)
+        {
+            for (i = 0; i < AlliesContestObjActions.Length; ++i)
+            {
+                DoObjectiveAction(AlliesContestObjActions[i]);
+            }
+
+            for (i = 0; i < AlliesContestSpawnPointActions.Length; ++i)
+            {
+                DoSpawnPointAction(AlliesContestSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AlliesContestVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AlliesContestVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AlliesContestEvents.Length; ++i)
+            {
+                TriggerEvent(AlliesContestEvents[i], none, none);
+            }
+        }
+    }
+    //Contested failed/ended
+    else
+    {
+        if (Team == AXIS_TEAM_INDEX)
+        {
+            for (i = 0; i < AxisContestEndObjActions.Length; ++i)
+            {
+                DoObjectiveAction(AxisContestEndObjActions[i]);
+            }
+
+            for (i = 0; i < AxisContestEndSpawnPointActions.Length; ++i)
+            {
+                DoSpawnPointAction(AxisContestEndSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AxisContestEndVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AxisContestEndVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AxisContestEndEvents.Length; ++i)
+            {
+                TriggerEvent(AxisContestEndEvents[i], none, none);
+            }
+        }
+        else if (Team == ALLIES_TEAM_INDEX)
+        {
+            for (i = 0; i < AlliesContestEndObjActions.Length; ++i)
+            {
+                DoObjectiveAction(AlliesContestEndObjActions[i]);
+            }
+
+            for (i = 0; i < AlliesContestEndSpawnPointActions.Length; ++i)
+            {
+                DoSpawnPointAction(AlliesContestEndSpawnPointActions[i]);
+            }
+
+            for (i = 0; i < AlliesContestEndVehiclePoolActions.Length; ++i)
+            {
+                DoVehiclePoolAction(AlliesContestEndVehiclePoolActions[i]);
+            }
+
+            for (i = 0; i < AlliesContestEndEvents.Length; ++i)
+            {
+                TriggerEvent(AlliesContestEndEvents[i], none, none);
+            }
+        }
+    }
+}
+
 function HandleGroupActions(int Team)
 {
     local int i;
@@ -212,7 +338,7 @@ function HandleGroupActions(int Team)
 
     DHGame = DarkesthourGame(Level.Game);
 
-    if(Team == AXIS_TEAM_INDEX)
+    if (Team == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < GroupedObjectiveReliances.Length; ++i)
         {
@@ -280,9 +406,11 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     DHGame = DarkesthourGame(Level.Game);
     VM = DHGame.SpawnManager;
 
-    //I think we need some type of check here if DHGame == None or VM Theel Debug
+    //I think we need some type of check here if DHGame == None and/or VM Theel Debug
 
     CurrentCapProgress = 0.0;
+    bAlliesContesting = false; //set to false as the objective was captured
+    bAxisContesting = false; //...
 
     // If it's not recapturable, make it inactive
     if (!bRecaptureable)
@@ -601,6 +729,13 @@ function Timer()
         }
         else
         {
+            //Axis Are Contesting Capture
+            if (!bAxisContesting) //this stops multiple actions each timer loop
+            {
+                HandleContestedActions(AXIS_TEAM_INDEX, true);
+                bAxisContesting = true;
+            }
+
             CurrentCapTeam = AXIS_TEAM_INDEX;
             CurrentCapProgress += 0.25 * Rate[AXIS_TEAM_INDEX];
         }
@@ -613,6 +748,13 @@ function Timer()
         }
         else
         {
+            //Allies Are Contesting Capture
+            if (!bAlliesContesting) //this stops multiple actions each timer loop
+            {
+                HandleContestedActions(ALLIES_TEAM_INDEX, true);
+                bAlliesContesting = true;
+            }
+
             CurrentCapTeam = ALLIES_TEAM_INDEX;
             CurrentCapProgress += 0.25 * Rate[ALLIES_TEAM_INDEX];
         }
@@ -629,9 +771,26 @@ function Timer()
     CurrentCapProgress = FClamp(CurrentCapProgress, 0.0, 1.0);
 
     if (CurrentCapProgress == 0.0)
+    {
+        //CurrentCapProgress hit zero again, so we should check if the objective was contested and handle any necessary actions
+        if (bAxisContesting)
+        {
+            HandleContestedActions(AXIS_TEAM_INDEX, false);
+        }
+        else if (bAlliesContesting)
+        {
+            HandleContestedActions(ALLIES_TEAM_INDEX, false);
+        }
+        //Contest has ended
+        bAxisContesting = false;
+        bAlliesContesting = false;
+
         CurrentCapTeam = NEUTRAL_TEAM_INDEX;
+    }
     else if (CurrentCapProgress == 1.0)
+    {
         ObjectiveCompleted(none, CurrentCapTeam);
+    }
 
     // Go through and update capture bars
     for (C = Level.ControllerList; C != none; C = C.NextController)
