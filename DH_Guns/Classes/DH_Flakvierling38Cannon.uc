@@ -469,10 +469,10 @@ defaultproperties
      AltFireProjectileClass=none
      CustomPitchUpLimit=15474
      CustomPitchDownLimit=64990
-     InitialPrimaryAmmo=80   // Matt: was 40
-     InitialSecondaryAmmo=80 // Matt: was 40
-     InitialTertiaryAmmo=80  // Matt: added
-     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: added class & made primary     
+     InitialPrimaryAmmo=40
+     InitialSecondaryAmmo=40
+     InitialTertiaryAmmo=40
+     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: added class & made primary
      SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'  // Matt: was primary
      TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'   // Matt: was secondary
      Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
