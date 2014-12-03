@@ -36,6 +36,13 @@ var() sound AxisWinsMusic; //Optional override for Axis victory music
 
 var() ESpawnMode SpawnMode;
 
+var const bool bDHDebugMode; // flag for whether debug commands can be run
+
+singular static function bool DHDebugMode()
+{
+    return default.bDHDebugMode;
+}
+
 defaultproperties
 {
     Texture=Texture'DHEngine_Tex.LevelInfo'
@@ -43,5 +50,5 @@ defaultproperties
     AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
+    bDHDebugMode=true // Matt: TEMP during development to aid testing - remove before release !
 }
-

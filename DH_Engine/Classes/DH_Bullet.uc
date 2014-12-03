@@ -7,7 +7,8 @@ class DH_Bullet extends ROBullet
     config(DH_Penetration)
     abstract;
 
-var int WhizType; // Sent in HitPointTrace for ROBulletWhipAttachment to only do snaps for supersonic rounds (0 = none, 1 = close supersonic bullet, 2 = subsonic or distant bullet)
+var int   WhizType; // Sent in HitPointTrace for ROBulletWhipAttachment to only do snaps for supersonic rounds (0 = none, 1 = close supersonic bullet, 2 = subsonic or distant bullet)
+var Actor SavedTouchActor; // Matt: added (same as shell) to prevent recurring ProcessTouch on same actor (e.g. was screwing up tracer ricochets from VehicleWeapons like turrets)
 
 var globalconfig bool   bDebugMode;         // If true, give our detailed report in log.
 var globalconfig bool   bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
@@ -25,11 +26,52 @@ simulated function PostBeginPlay()
     OrigLoc = Location;
 }
 
+// Matt: modified to handle new VehicleWeapon collision mesh actor
+// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
+simulated singular function Touch(Actor Other)
+{
+    local vector HitLocation, HitNormal;
+
+    if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
+    {
+        Other = Other.Owner;
+    }
+
+//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
+
+    if (Other != none && (Other.bProjTarget || Other.bBlockActors))
+    {
+        LastTouched = Other;
+
+        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        {
+            ProcessTouch(Other,Location);
+            LastTouched = none;
+        }
+        else
+        {
+            if (Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
+            {
+                HitLocation = Location;
+            }
+
+            ProcessTouch(Other, HitLocation);
+            LastTouched = none;
+
+            if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none)
+            {
+                ClientSideTouch(Other, HitLocation);
+            }
+        }
+    }
+}
+
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local vector             X, Y, Z;
     local float              V;
-    local bool               bHitWhipAttachment;
+    local bool               bHitWhipAttachment, bHitVehicleDriver;
+    local ROVehicleWeapon    HitVehicleWeapon;
     local ROVehicleHitEffect VehEffect;
     local DH_Pawn            HitPawn;
     local vector             TempHitLocation, HitNormal;
@@ -51,7 +93,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         Log(">>>" @ Other @ "==" @ Instigator @ "||" @ Other.Base @ "==" @ Instigator @ "||" @ !Other.bBlockHitPointTraces);
     }
 
-    if (Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
+    if (SavedTouchActor == Other || Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
     {
         return;
     }
@@ -61,9 +103,28 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         Log(">>> ProcessTouch 3");
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
+    SavedTouchActor = Other;
+    HitVehicleWeapon = ROVehicleWeapon(Other);
+
+    // We hit a VehicleWeapon // Matt: added this block to handle VehicleWeapon 'driver' hit detection much better (very similar to a shell)
+    if (HitVehicleWeapon != none)
     {
-        if (ROVehicleWeapon(Other) != none && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, Velocity))
+        // We hit the Driver's collision box, not the actual VehicleWeapon
+        if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
+        {
+            // We actually hit the Driver
+            if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
+            {
+                bHitVehicleDriver = true;
+            }
+            else
+            {
+                SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
+
+                return;
+            }
+        }
+        else if (Level.NetMode != NM_DedicatedServer)
         {
             VehEffect = Spawn(class'ROVehicleHitEffect', , , HitLocation, rotator(Normal(Velocity)));
             VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
@@ -186,19 +247,34 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                 if (!HitPawn.bDeleteMe)
                 {
-                    HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType,HitPoints);
+                    HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
                 }
 
 //              bHitWhipAttachment = false;
             }
             else
             {
-                if (bDebugMode)
+                if (bHitVehicleDriver) // Matt: added to call TakeDamage directly on the Driver if we hit him
                 {
-                    Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
-                }
+                    if (VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
+                    {
+                        if (bDebugMode)
+                        {
+                            Log(">>> ProcessTouch VehicleWeaponPawn.Driver.TakeDamage ... " @ VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver);
+                        }
 
-                Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                        VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                    }
+                }
+                else
+                {
+                    if (bDebugMode)
+                    {
+                        Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
+                    }
+
+                    Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                }
             }
         }
         else

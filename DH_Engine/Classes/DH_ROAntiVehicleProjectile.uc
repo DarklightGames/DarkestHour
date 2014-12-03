@@ -81,6 +81,47 @@ simulated function float GetOverMatch (float ArmorFactor, float ShellDiameter)
 
 }
 
+// Matt: modified to handle new VehicleWeapon collision mesh actor
+// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
+simulated singular function Touch(Actor Other)
+{
+    local vector HitLocation, HitNormal;
+
+    if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
+    {
+        Other = Other.Owner;
+        log(Tag @ "Touch event: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Other.Tag); // TEMP
+    }
+
+//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
+
+    if (Other != none && (Other.bProjTarget || Other.bBlockActors))
+    {
+        LastTouched = Other;
+
+        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        {
+            ProcessTouch(Other,Location);
+            LastTouched = none;
+        }
+        else
+        {
+            if (Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
+            {
+                HitLocation = Location;
+            }
+
+            ProcessTouch(Other, HitLocation);
+            LastTouched = none;
+
+            if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none)
+            {
+                ClientSideTouch(Other, HitLocation);
+            }
+        }
+    }
+}
+
 // Matt: re-worked, with commentary below
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
@@ -111,9 +152,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We actually hit the Driver
             if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
             {
-                if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
+                if (ShouldDrawDebugLines())
                 {
-                    FirstHit = false;
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
@@ -152,9 +192,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity),
             GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
         {
-            if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
+            if (ShouldDrawDebugLines())
             {
-                FirstHit = false;
                 DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
             }
 
@@ -204,19 +243,19 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         SetPhysics(PHYS_None);
         SetDrawType(DT_None);
 
-        if (DrawDebugLines && Firsthit && Level.NetMode != NM_DedicatedServer)
+        if (ShouldDrawDebugLines())
         {
-            FirstHit = false;
             DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
         }
 
         if (Role == ROLE_Authority)
         {
-            if (Instigator == none || Instigator.Controller == none)
-            {
-                HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
-                HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
-            }
+            // Matt: removed as SetDDI is irrelevant to VehWeapon (empty function) & for Vehicle we'll let the VehWeapon call SetDDI on the Vehicle only if it's calling TakeDamage on it
+//          if (ShellImpactDamage.default.bDelayedDamage && Instigator == none || Instigator.Controller == none)
+//          {
+//              HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
+//              HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
+//          }
 
             HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
 
@@ -324,11 +363,9 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
             Level.Game.Broadcast(self, "Hull Ricochet!");
         }
 
-        if (DrawDebugLines && Firsthit)
+        if (ShouldDrawDebugLines())
         {
-            FirstHit=false;
-            DrawStayingDebugLine(Location, Location-(Normal(Velocity)*500), 0, 255, 0);
-            // DrawStayingDebugLine(Location, Location + 1000*HitNormal, 255, 0, 255);
+            DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
         }
 
         if (!bShatterProne || !DH_ROTreadCraft(Wall).bRoundShattered)
@@ -387,11 +424,11 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
             if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
-                if (DrawDebugLines && Firsthit)
+                if (ShouldDrawDebugLines())
                 {
-                    FirstHit=false;
-                    DrawStayingDebugLine(Location, Location-(Normal(SavedVelocity)*500), 255, 0, 0);
+                    DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
                 }
+
                 Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
             }
 
@@ -483,6 +520,17 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
     else
     {
         Destroy();
+    }
+}
+
+// Matt: added to easily avoid drawing debug lines on a dedicated server or if this isn't the first hit
+simulated function bool ShouldDrawDebugLines()
+{
+    if (DrawDebugLines && FirstHit && Level.NetMode != NM_DedicatedServer)
+    {
+        FirstHit = false;
+
+        return true;
     }
 }
 

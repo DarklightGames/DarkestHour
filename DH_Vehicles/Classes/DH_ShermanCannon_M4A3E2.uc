@@ -106,6 +106,7 @@ defaultproperties
      mTracerInterval=0.600000
      bUsesTracers=true
      bAltFireTracersOnly=true
+     MinCommanderHitHeight=57.0;
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-2.000000))
      VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-24.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'

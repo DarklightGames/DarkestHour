@@ -204,7 +204,6 @@ defaultproperties
      CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire01'
      CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire02'
      CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire03'
-     MaxDriverHitAngle=2.800000
      ProjectileDescriptions(0)="HE"
      ProjectileDescriptions(1)="HEAT"
      ProjectileDescriptions(2)="Canister"
@@ -239,6 +238,8 @@ defaultproperties
      mTracerInterval=0.495867
      bUsesTracers=true
      bAltFireTracersOnly=true
+//   MaxDriverHitAngle=2.8 // Matt: deprecated (was used in BelowDriverAngle function, now deprecated, & variable replaced by MinCommanderHitHeight used in re-worked HitDriverArea)
+     MinCommanderHitHeight=34.5
      VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-5.000000,Z=17.000000))
      VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-5.000000,Z=-5.000000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'

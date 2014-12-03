@@ -49,7 +49,11 @@ simulated function Timer()
 
     if (bDebug)
     {
-        DrawStayingDebugLine(DebugLocation, Location, 255, 0, 0);
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            DrawStayingDebugLine(DebugLocation, Location, 255, 0, 0);
+        }
+
         DebugLocation = Location;
     }
 }
@@ -127,15 +131,56 @@ simulated function Tick(float DeltaTime)
 
 }
 
+// Matt: modified to handle new VehicleWeapon collision mesh actor
+// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
+simulated singular function Touch(Actor Other)
+{
+    local vector HitLocation, HitNormal;
+
+    if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
+    {
+        Other = Other.Owner;
+    }
+
+//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
+
+    if (Other != none && (Other.bProjTarget || Other.bBlockActors))
+    {
+        LastTouched = Other;
+
+        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        {
+            ProcessTouch(Other,Location);
+            LastTouched = none;
+        }
+        else
+        {
+            if (Other.TraceThisActor(HitLocation, HitNormal, Location, Location - 2.0 * Velocity, GetCollisionExtent()))
+            {
+                HitLocation = Location;
+            }
+
+            ProcessTouch(Other, HitLocation);
+            LastTouched = none;
+
+            if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none)
+            {
+                ClientSideTouch(Other, HitLocation);
+            }
+        }
+    }
+}
+
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    //--------------------------------------------------------------------------
-    // This is to prevent jerks from walking infront of the mortar and blowing
-    // us up.
-    if (DH_Pawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384)
+    // This is to prevent jerks from walking in front of the mortar and blowing us up
+    if (DH_Pawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0)
+    {
         return;
+    }
 
-    super.ProcessTouch(Other, HitLocation);
+    // Matt TEST - we are doubling up calls to Explode here, as the super also calls it - talk with Basnett & confirm we need the Explode version below, in which case presumably ditch the Super
+    super.ProcessTouch(Other, HitLocation); // Super from Projectile just does: if (Other != Instigator) Explode(HitLocation, Normal(HitLocation - Other.Location));
 
     Explode(HitLocation, Normal(Other.Location - Location));
 }
@@ -170,7 +215,10 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (bDebug)
     {
-        DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
+        }
 
         log((DebugForward dot (Location - OrigLoc) * UU2M) @ (DebugRight dot (Location - OrigLoc) * UU2M));
     }

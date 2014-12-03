@@ -161,47 +161,55 @@ simulated function DoShakeEffect()
     }
 }
 
+// Matt: modified to handle new VehicleWeapon collision mesh actor
+// If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local actor Victims;
-    local float damageScale, dist;
-    local vector dir;
-    local ROPawn P;
+    local Actor         Victims;
+    local float         damageScale, dist;
+    local vector        dir;
+    local ROPawn        P;
     local array<ROPawn> CheckedROPawns;
-    local int i;
-    local bool bAlreadyChecked;
-    local Controller C;
-    local float DamageExposure;
-    local bool bAlreadyDead;
-
-    // Antarian 9/12/2004
-    local vector TraceHitLocation,
-                 TraceHitNormal;
-    local actor  TraceHitActor;
+    local int           i;
+    local bool          bAlreadyChecked;
+    local Controller    C;
+    local float         DamageExposure;
+    local bool          bAlreadyDead;
+    local vector        TraceHitLocation, TraceHitNormal;
+    local Actor         TraceHitActor;
 
     if (bHurtEntry)
+    {
         return;
+    }
 
     bHurtEntry = true;
 
     foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
     {
-        // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
-        if ((Victims != self) && (Hurtwall != Victims) && (Victims.Role == ROLE_Authority) && !Victims.IsA('FluidSurfaceInfo'))
+        // If hit collision mesh actor then switch to actual VehicleWeapon
+        if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
         {
-            // Antarian 9/12/2004
+            Victims = Victims.Owner;
+            log(Tag @ "HurtRadius: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
+        }
+
+        // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
+        if (Victims != self && HurtWall != Victims && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
+        {
             // do a trace to the actor
             TraceHitActor = Trace(TraceHitLocation, TraceHitNormal, Victims.Location, Location);
 
             // if there's a vehicle between the player and explosion, don't apply damage
-            if ((Vehicle(TraceHitActor) != none) && (TraceHitActor != Victims))
+            if (Vehicle(TraceHitActor) != none && TraceHitActor != Victims)
+            {
                 continue;
-            // end of Antarian's 9/12/2004 contribution
+            }
 
             dir = Victims.Location - HitLocation;
-            dist = FMax(1, VSize(dir));
+            dist = FMax(1.0, VSize(dir));
             dir = dir / dist;
-            damageScale = 1 - FMax(0, (dist - Victims.CollisionRadius) / DamageRadius);
+            damageScale = 1.0 - FMax(0.0, (dist - Victims.CollisionRadius) / DamageRadius);
 
             P = ROPawn(Victims);
 
@@ -228,19 +236,23 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
                     continue;
                 }
 
-                //Check if this pawn is already dead.
+                // Check if this pawn is already dead
                 if (P.Health > 0)
+                {
                     bAlreadyDead = false;
+                }
                 else
+                {
                     bAlreadyDead = true;
+                }
 
-                DamageExposure = P.GetExposureTo(Location + 15 * -Normal(PhysicsVolume.Gravity));
+                DamageExposure = P.GetExposureTo(Location + 15.0 * -Normal(PhysicsVolume.Gravity));
 
                 damageScale *= DamageExposure;
 
                 CheckedROPawns[CheckedROPawns.Length] = P;
 
-                if (damageScale <= 0)
+                if (damageScale <= 0.0)
                 {
                     P = none;
                     continue;
@@ -253,59 +265,63 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
             }
 
             if (Instigator == none || Instigator.Controller == none)
+            {
                 Victims.SetDelayedDamageInstigatorController(DamageInstigator);
+            }
 
             if (Victims == LastTouched)
+            {
                 LastTouched = none;
+            }
 
-            Victims.TakeDamage
-            (
-                damageScale * DamageAmount,
-                Instigator,
-                Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * dir,
-                (damageScale * Momentum * dir),
-                DamageType
-            );
+            Victims.TakeDamage(damageScale * DamageAmount, Instigator, Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * dir, damageScale * Momentum * dir, DamageType);
 
             if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
+            {
                 Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, DamageInstigator, DamageType, Momentum, HitLocation);
+            }
 
-            //------------------------------------------------------------------
-            //Give additional points to the observer and the mortarman for
-            //working together for a kill!
-            if (!bAlreadyDead && Pawn(Victims) != none && Pawn(Victims).Health <= 0 && (DamageInstigator.GetTeamNum() != Pawn(Victims).GetTeamNum()))
+            //Give additional points to the observer and the mortarman for working together for a kill!
+            if (!bAlreadyDead && Pawn(Victims) != none && Pawn(Victims).Health <= 0 && DamageInstigator.GetTeamNum() != Pawn(Victims).GetTeamNum())
             {
                 GetClosestMortarTargetController(C);
 
                 if (C != none)
+                {
                     DarkestHourGame(Level.Game).ScoreMortarSpotAssist(C, DamageInstigator);
+                }
             }
         }
     }
 
-    if ((LastTouched != none) && (LastTouched != self) && (LastTouched.Role == ROLE_Authority) && !LastTouched.IsA('FluidSurfaceInfo'))
+    if (LastTouched != none && LastTouched != self && LastTouched.Role == ROLE_Authority && !LastTouched.IsA('FluidSurfaceInfo'))
     {
         Victims = LastTouched;
         LastTouched = none;
+
+        // If hit collision mesh actor then switch to actual VehicleWeapon
+        if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
+        {
+            Victims = Victims.Owner;
+            log(Tag @ "HurtRadius part II: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
+        }
+
         dir = Victims.Location - HitLocation;
-        dist = FMax(1,VSize(dir));
-        dir = dir/dist;
-        damageScale = FMax(Victims.CollisionRadius/(Victims.CollisionRadius + Victims.CollisionHeight),1 - FMax(0,(dist - Victims.CollisionRadius)/DamageRadius));
+        dist = FMax(1.0, VSize(dir));
+        dir = dir / dist;
+        damageScale = FMax(Victims.CollisionRadius / (Victims.CollisionRadius + Victims.CollisionHeight), 1.0 - FMax(0.0, (dist - Victims.CollisionRadius) / DamageRadius));
 
         if (Instigator == none || Instigator.Controller == none)
+        {
             Victims.SetDelayedDamageInstigatorController(DamageInstigator);
+        }
 
-        Victims.TakeDamage
-        (
-            damageScale * DamageAmount,
-            Instigator,
-            Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * dir,
-            (damageScale * Momentum * dir),
-            DamageType
-        );
+        Victims.TakeDamage(damageScale * DamageAmount, Instigator, Victims.Location - 0.5 * (Victims.CollisionHeight + Victims.CollisionRadius) * dir, damageScale * Momentum * dir, DamageType);
 
         if (Vehicle(Victims) != none && Vehicle(Victims).Health > 0)
+        {
             Vehicle(Victims).DriverRadiusDamage(DamageAmount, DamageRadius, DamageInstigator, DamageType, Momentum, HitLocation);
+        }
     }
 
     bHurtEntry = false;

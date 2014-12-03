@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_GrenadeProjectile_Smoke extends DH_GrenadeProjectile
-	abstract;
+    abstract;
 
 var float   DestroyTimer;
 var bool    bCalledDestroy;
@@ -15,15 +15,15 @@ var sound   SmokeSound;
 // Modified to handle destruction of actor after set time
 simulated function Tick(float DeltaTime)
 {
-	super.Tick(DeltaTime);
+    super.Tick(DeltaTime);
 
-	DestroyTimer -= DeltaTime;
+    DestroyTimer -= DeltaTime;
 
-	if (DestroyTimer <= 0.0 && !bCalledDestroy)
-	{
-		bCalledDestroy = true;
-		Destroy();
-	}
+    if (DestroyTimer <= 0.0 && !bCalledDestroy)
+    {
+        bCalledDestroy = true;
+        Destroy();
+    }
 }
 
 // Modified to remove 'Fear' stuff, as not an exploding grenade
@@ -50,20 +50,20 @@ simulated function Landed(vector HitNormal)
 // Modified to add smoke effects & remove actor destruction
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-	BlowUp(HitLocation);
+    BlowUp(HitLocation);
 
-	if (Role == ROLE_Authority)
-	{
-		AmbientSound = SmokeSound;
-	}
+    if (Role == ROLE_Authority)
+    {
+        AmbientSound = SmokeSound;
+    }
 
-	PlaySound(ExplosionSound[Rand(3)], , 1.0, , 200);
+    PlaySound(ExplosionSound[Rand(3)], , 1.0, , 200);
 
     if (Level.NetMode != NM_DedicatedServer)
-	{
-	    SmokeEmitter = Spawn(ExplodeDirtEffectClass, self, , Location, rotator(vect(0.0,0.0,1.0)));
-	    SmokeEmitter.SetBase(Self);
-	}
+    {
+        SmokeEmitter = Spawn(ExplodeDirtEffectClass, self, , Location, rotator(vect(0.0,0.0,1.0)));
+        SmokeEmitter.SetBase(Self);
+    }
 }
 
 // Modified to remove everything relating to explosion & damage, as not an exploding grenade
@@ -83,7 +83,7 @@ simulated function Destroyed()
 
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Kill();
+        SmokeEmitter.Kill();
     }
 }
 
@@ -92,10 +92,10 @@ function Reset()
 {
     if (SmokeEmitter != none)
     {
-    	SmokeEmitter.Destroy();
+        SmokeEmitter.Destroy();
     }
 
-	super.Reset();
+    super.Reset();
 }
 
 defaultproperties

@@ -18,7 +18,6 @@ simulated function PostBeginPlay()
     local Vector HitNormal;
     local Actor  TraceHitActor;
 
-    log("Client bullet spawned"); // TEMP
     if (bDebugROBallistics) // from DH_Bullet
     {
         bDebugBallistics = true;
@@ -34,15 +33,15 @@ simulated function PostBeginPlay()
         OrigLoc = Location;
 
         TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + (Instigator.CollisionRadius + 5.0) * vector(Rotation), true);
+        Log("Debug tracing: TraceHitActor=" @ TraceHitActor);
 
         if (TraceHitActor.IsA('ROBulletWhipAttachment'))
         {
             TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), TraceHitLoc + 5.0 * vector(Rotation), true);
         }
 
-        // super slow debugging
-        Spawn(class'RODebugTracerGreen', self, , TraceHitLoc, Rotation); // added back in this class (commented out in ROBallisticProjectile)
-        Log("Debug tracing: TraceHitActor=" @ TraceHitActor);
+        // super slow debugging (added back in this class - was commented out in ROBallisticProjectile)
+        Spawn(class'DH_DebugTracerGreen', self, , TraceHitLoc, Rotation);
     }
 
     OrigLoc = Location; // from DH_Bullet, as seems necessary for WhizType handling, but wasn't originally being inherited
@@ -53,7 +52,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local vector             X, Y, Z;
     local float              V;
-    local bool               bHitWhipAttachment;
+    local bool               bHitWhipAttachment, bHitVehicleDriver;
+    local ROVehicleWeapon    HitVehicleWeapon;
     local ROVehicleHitEffect VehEffect;
     local DH_Pawn            HitPawn;
     local vector             TempHitLocation, HitNormal;
@@ -72,10 +72,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     if (bDebugMode)
     {
-        log(">>>" @ Other @ "==" @ Instigator @ "||" @ Other.Base @ "==" @ Instigator @ "||" @ !Other.bBlockHitPointTraces);
+        Log(">>>" @ Other @ "==" @ Instigator @ "||" @ Other.Base @ "==" @ Instigator @ "||" @ !Other.bBlockHitPointTraces);
     }
 
-    if (Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
+    if (SavedTouchActor == Other || Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
     {
         return;
     }
@@ -85,9 +85,28 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         Log(">>> ProcessTouch 3");
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
+    SavedTouchActor = Other;
+    HitVehicleWeapon = ROVehicleWeapon(Other);
+
+    // We hit a VehicleWeapon // Matt: added this block to handle VehicleWeapon 'driver' hit detection much better (very similar to a shell)
+    if (HitVehicleWeapon != none)
     {
-        if (ROVehicleWeapon(Other) != none && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, Velocity))
+        // We hit the Driver's collision box, not the actual VehicleWeapon
+        if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
+        {
+            // We actually hit the Driver
+            if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
+            {
+                bHitVehicleDriver = true;
+            }
+            else
+            {
+                SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
+
+                return;
+            }
+        }
+        else if (Level.NetMode != NM_DedicatedServer)
         {
             VehEffect = Spawn(class'ROVehicleHitEffect', , , HitLocation, rotator(Normal(Velocity)));
             VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
@@ -193,7 +212,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     if (bDebugMode)
     {
-        log(">>> ProcessTouch MinPenetrateVelocity ... " @ V @ ">" @ (MinPenetrateVelocity * ScaleFactor));
+        Log(">>> ProcessTouch MinPenetrateVelocity ... " @ V @ ">" @ (MinPenetrateVelocity * ScaleFactor));
     }
 
     if (V > MinPenetrateVelocity * ScaleFactor)
@@ -217,12 +236,27 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
             else
             {
-                if (bDebugMode)
+                if (bHitVehicleDriver) // Matt: added to call TakeDamage directly on the Driver if we hit him
                 {
-                    Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
-                }
+                    if (VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
+                    {
+                        if (bDebugMode)
+                        {
+                            Log(">>> ProcessTouch VehicleWeaponPawn.Driver.TakeDamage ... " @ VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver);
+                        }
 
-                Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                        VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                    }
+                }
+                else
+                {
+                    if (bDebugMode)
+                    {
+                        Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
+                    }
+
+                    Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                }
             }
         }
         else
@@ -271,17 +305,17 @@ simulated function HitWall(vector HitNormal, actor Wall)
 
 //  if (Role == ROLE_Authority) // Matt: all this function override does is remove this block, but it won't do anything on a client anyway, so the override is pretty pointless
 //  {
-		// Have to use special damage for vehicles, otherwise it doesn't register for some reason - Ramm
-//  	if (ROVehicle(Wall) != none)
-//  	{
-//  		Wall.TakeDamage(Damage - 20.0 * (1.0 - VSize(Velocity) / default.Speed), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
-//  	}
-//  	else if (Mover(Wall) != none || DestroMesh != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
-//  	{
-//  		Wall.TakeDamage(Damage - 20.0 * (1.0 - VSize(Velocity) / default.Speed), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
-//  	}
+        // Have to use special damage for vehicles, otherwise it doesn't register for some reason - Ramm
+//      if (ROVehicle(Wall) != none)
+//      {
+//          Wall.TakeDamage(Damage - 20.0 * (1.0 - VSize(Velocity) / default.Speed), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
+//      }
+//      else if (Mover(Wall) != none || DestroMesh != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+//      {
+//          Wall.TakeDamage(Damage - 20.0 * (1.0 - VSize(Velocity) / default.Speed), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+//      }
 
-//  	MakeNoise(1.0);
+//      MakeNoise(1.0);
 //  }
 
     // Spawn the bullet hit effect

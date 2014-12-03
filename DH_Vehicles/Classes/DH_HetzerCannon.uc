@@ -100,6 +100,7 @@ defaultproperties
      RangeSettings(23)=2600
      RangeSettings(24)=2800
      RangeSettings(25)=3000
+     MinCommanderHitHeight=15.0;
      VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=24.799999))
      VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=-8.000000,Z=2.400000))
      hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'

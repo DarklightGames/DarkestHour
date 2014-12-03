@@ -2341,7 +2341,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
         if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
         {
-            //Spawn(class 'RODebugTracer',self,,HitLoc,Rotator(HitNorm));
+            //Spawn(class'DH_DebugTracer',self,,HitLoc,Rotator(HitNorm));
             //ClientMessage("Object is too high to mantle");
             return false;
         }
@@ -2418,12 +2418,12 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
             for(i=0; i<5; i++)
             {
-                //Spawn(class 'RODebugTracer',self,,EndLoc,NonPitchRot);
+                //Spawn(class'DH_DebugTracer',self,,EndLoc,NonPitchRot);
 
                 if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
                 {
                     //ClientMessage("Hit object at reported MantleEndPoint - "@i);
-                    //Spawn(class 'RODebugTracer',self,,HitLoc,Rotator(HitNorm));
+                    //Spawn(class'DH_DebugTracer',self,,HitLoc,Rotator(HitNorm));
                     break;
                 }
                 else

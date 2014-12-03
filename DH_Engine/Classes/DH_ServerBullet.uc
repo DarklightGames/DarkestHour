@@ -6,21 +6,7 @@
 class DH_ServerBullet extends DH_Bullet // Matt: originally extended ROServerBullet
     abstract;
 
-
-simulated function PostBeginPlay() // TEMP to log
-{
-    log("Server bullet spawned");
-    if (bDebugROBallistics)
-    {
-        bDebugBallistics = true;
-    }
-
-    super(ROBullet).PostBeginPlay();
-
-    OrigLoc = Location;
-}
 /*
-
 // Matt: variables now inherited from DH_Bullet:
 var globalconfig bool   bDebugMode;
 var globalconfig bool   bDebugROBallistics;
@@ -41,7 +27,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
 {
     local vector             X, Y, Z;
     local float              V;
-    local bool               bHitWhipAttachment;
+    local bool               bHitWhipAttachment, bHitVehicleDriver;
+    local ROVehicleWeapon    HitVehicleWeapon;
     local ROVehicleHitEffect VehEffect;
     local DH_Pawn            HitPawn;
     local vector             TempHitLocation, HitNormal;
@@ -63,7 +50,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
         Log(">>>" @ Other @ "==" @ Instigator @ "||" @ Other.Base @ "==" @ Instigator @ "||" @ !Other.bBlockHitPointTraces);
     }
 
-    if (Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
+    if (SavedTouchActor == Other || Other == Instigator || Other.Base == Instigator || !Other.bBlockHitPointTraces)
     {
         return;
     }
@@ -73,9 +60,28 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
         Log(">>> ProcessTouch 3");
     }
 
-    if (Level.NetMode != NM_DedicatedServer) // note this is relevant as server bullet is spawned on standalone or listen server
+    SavedTouchActor = Other;
+    HitVehicleWeapon = ROVehicleWeapon(Other);
+
+    // We hit a VehicleWeapon // Matt: added this block to handle VehicleWeapon 'driver' hit detection much better (very similar to a shell)
+    if (HitVehicleWeapon != none)
     {
-        if (ROVehicleWeapon(Other) != none && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, Velocity))
+        // We hit the Driver's collision box, not the actual VehicleWeapon
+        if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
+        {
+            // We actually hit the Driver
+            if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
+            {
+                bHitVehicleDriver = true;
+            }
+            else
+            {
+                SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
+
+                return;
+            }
+        }
+        else if (Level.NetMode != NM_DedicatedServer) // note this is relevant as server bullet is spawned on standalone or listen server
         {
             VehEffect = Spawn(class'ROVehicleHitEffect', , , HitLocation, rotator(Normal(Velocity)));
             VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
@@ -168,10 +174,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
 
             HitPawn = DH_Pawn(Other);
 
-//          if (HitPawn == none) // Matt: added to refactor, replacing various bHitWhipAttachment lines (means we didn't actually register a hit on the player)
-//          {
-//              bHitWhipAttachment = true;
-//          }
+            if (HitPawn == none) // Matt: added to refactor, replacing various bHitWhipAttachment lines (means we didn't actually register a hit on the player)
+            {
+                bHitWhipAttachment = true;
+            }
         }
         else
         {
@@ -205,12 +211,27 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
             }
             else
             {
-                if (bDebugMode)
+                if (bHitVehicleDriver) // Matt: added to call TakeDamage directly on the Driver if we hit him
                 {
-                    Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
-                }
+                    if (VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
+                    {
+                        if (bDebugMode)
+                        {
+                            Log(">>> ProcessTouch VehicleWeaponPawn.Driver.TakeDamage ... " @ VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver);
+                        }
 
-                Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                        VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                    }
+                }
+                else
+                {
+                    if (bDebugMode)
+                    {
+                        Log(">>> ProcessTouch Other.TakeDamage ... " @ Other);
+                    }
+
+                    Other.TakeDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, HitLocation, MomentumTransfer * X, MyDamageType);
+                }
             }
         }
         else

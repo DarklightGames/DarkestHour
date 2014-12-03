@@ -30,6 +30,13 @@ struct ExitPositionPair
 
 var bool bDebugExitPositions;
 
+replication
+{
+    reliable if (Role < ROLE_Authority)
+        ServerToggleDebugExits; // Matt: added
+}
+
+
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -103,13 +110,13 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (bDebugExitPositions)
+    if (class'DH_ROPassengerPawn'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all rider pawns
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
             ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
 
-            Spawn(class'RODebugTracer',,,ExitPosition);
+            Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
@@ -320,6 +327,24 @@ simulated function SwitchWeapon(byte F)
     }
 }
 
+// Matt: allows debugging exit positions to be toggled for all rider pawns
+exec function ToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {    
+        ServerToggleDebugExits();
+    }
+}
+
+function ServerToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        class'DH_ROPassengerPawn'.default.bDebugExitPositions = !class'DH_ROPassengerPawn'.default.bDebugExitPositions;
+        log("DH_ROPassengerPawn.bDebugExitPositions =" @ class'DH_ROPassengerPawn'.default.bDebugExitPositions);
+    }
+}
+
 defaultproperties
 {
     WeaponFov=80.000000
@@ -328,5 +353,4 @@ defaultproperties
     bDesiredBehindView=false
     DriverDamageMult=1.000000
     bKeepDriverAuxCollision=true
-    bDebugExitPositions=true
 }

@@ -13,7 +13,6 @@ var     byte            Bounces;
 var()   float           DampenFactor;
 var()   float           DampenFactorParallel;
 var     StaticMesh      DeflectedMesh;
-var Actor SavedTouchActor; // Matt: added (same as shell) to prevent recurring ProcessTouch on same actor, which screwed up tracer ricochets from VehicleWeapons, e.g. turrets
 
 // var()   float        mTracerInterval; // Matt: not used
 // var()   Effects      Corona;          // Matt: not used
@@ -22,45 +21,13 @@ var Actor SavedTouchActor; // Matt: added (same as shell) to prevent recurring P
 // Modified to spawn tracer effect
 simulated function PostBeginPlay()
 {
-    local Vector HitNormal; // TEMP to log
-    local Actor  TraceHitActor; // TEMP to log
-
-    log("Client tracer spawned"); // TEMP
     if (Level.bDropDetail)
     {
         bDynamicLight = false;
         LightType = LT_None;
     }
 
-//    super.PostBeginPlay(); // TEMP replaced by below to log only once:
-    if (bDebugROBallistics) // from DH_Bullet
-    {
-        bDebugBallistics = true;
-    }
-
-    Acceleration = vect(0.0,0.0,0.0); // new in this class, not sure what it does, maybe something native
-    Velocity = vector(Rotation) * Speed;
-    BCInverse = 1.0 / BallisticCoefficient;
-
-    if (bDebugBallistics && ROPawn(Instigator) != none) // ROPawn added in this class
-    {
-        FlightTime = 0.0;
-        OrigLoc = Location;
-
-        TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + (Instigator.CollisionRadius + 5.0) * vector(Rotation), true);
-
-        if (TraceHitActor.IsA('ROBulletWhipAttachment'))
-        {
-            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), TraceHitLoc + 5.0 * vector(Rotation), true);
-        }
-
-        // super slow debugging
-        Spawn(class'RODebugTracerGreen', self, , TraceHitLoc, Rotation); // added back in this class (commented out in ROBallisticProjectile)
-        Log("Debug tracing: TraceHitActor=" @ TraceHitActor);
-    }
-
-    OrigLoc = Location; // from DH_Bullet, as seems necessary for WhizType handling, but wasn't originally being inherited
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -84,7 +51,8 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
     local Vector             X, Y, Z;
     local float              V;
     local bool               bHitWhipAttachment;
-//  local ROVehicleHitEffect VehEffect;
+    local ROVehicleWeapon    HitVehicleWeapon;
+    local ROVehicleHitEffect VehEffect;
 //  local DH_Pawn            HitPawn;
     local Vector             TempHitLocation, HitNormal;
     local array<int>         HitPoints;
@@ -96,14 +64,33 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
     }
 
     SavedTouchActor = Other; // Matt: added
+    HitVehicleWeapon = ROVehicleWeapon(Other);
 
-    if (Level.NetMode != NM_DedicatedServer)
+    // We hit a VehicleWeapon
+    if (HitVehicleWeapon != none)
     {
-        if (ROVehicleWeapon(Other) != none && !ROVehicleWeapon(Other).HitDriverArea(HitLocation, Velocity))
+        // We hit the Driver's collision box, not the actual VehicleWeapon
+        if (HitVehicleWeapon.HitDriverArea(HitLocation, Velocity))
         {
-            // Matt: removed vehicle hit effects as tracer spawns as well as normal bullet, so we end up doubling up the hit effect
-//          VehEffect = Spawn(class'ROVehicleHitEffect', , , HitLocation, rotator(Normal(Velocity)));
-//          VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
+            // We actually hit the Driver
+            if (HitVehicleWeapon.HitDriver(HitLocation, Velocity))
+            {
+            }
+            else
+            {
+                SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
+
+                return;
+            }
+        }
+        else if (Level.NetMode != NM_DedicatedServer)
+        {
+            // Spawn the bullet hit effect // Matt: only if tracer has already deflected, meaning real bullet no longer exists , otherwise we end up doubling up the hit effect
+            if (Bounces < default.Bounces)
+            {
+                VehEffect = Spawn(class'ROVehicleHitEffect', , , HitLocation, rotator(Normal(Velocity)));
+                VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
+            }
 
             bDeflect = true;
         }
@@ -151,7 +138,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 
     if (!bHitWhipAttachment)
     {
-        // Deflect unless bullet speed is low
+        // Must have hit VehicleWeapon so deflect unless bullet speed is low
         if (bDeflect && VSizeSquared(Velocity) > 500000.0)
         {
             // Matt: added this trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
@@ -168,7 +155,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 // Modified to add deflection (& also remove causing damage, although would not happen on a client anyway as not an authority role)
 simulated function HitWall(vector HitNormal, actor Wall)
 {
-//  local ROVehicleHitEffect      VehEffect;
+    local ROVehicleHitEffect      VehEffect;
 //  local RODestroyableStaticMesh DestroMesh;
 
     if (WallHitActor != none && WallHitActor == Wall)
@@ -191,19 +178,19 @@ simulated function HitWall(vector HitNormal, actor Wall)
     WallHitActor = Wall;
 //  DestroMesh = RODestroyableStaticMesh(Wall); // Matt: removed as unnecessary
 
-    // Spawn the bullet hit effect // Matt: removed vehicle hit effects as tracer spawns as well as normal bullet, so we end up doubling up the hit effect
-//  if (Level.NetMode != NM_DedicatedServer)
-//  {
-//      if (ROVehicle(Wall) != none)
-//      {
-//          VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
-//          VehEffect.InitHitEffects(Location, HitNormal);
-//      }
-//      else if (ImpactEffect != none)
-//      {
-//          Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
-//      }
-//  }
+    // Spawn the bullet hit effect // Matt: only if tracer has already deflected, meaning real bullet no longer exists , otherwise we end up doubling up the hit effect
+    if (Bounces < default.Bounces && Level.NetMode != NM_DedicatedServer)
+    {
+        if (ROVehicle(Wall) != none)
+        {
+            VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
+            VehEffect.InitHitEffects(Location, HitNormal);
+        }
+        else if (ImpactEffect != none)
+        {
+            Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
+        }
+    }
 
     super(ROBallisticProjectile).HitWall(HitNormal, Wall);
 

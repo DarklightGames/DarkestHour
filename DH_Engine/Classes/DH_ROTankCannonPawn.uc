@@ -63,6 +63,22 @@ var     bool    bPenetrationText;
 var     bool    bLogPenetration;
 var     bool    bDebugExitPositions;
 
+replication
+{
+    reliable if (bNetDirty && Role==ROLE_Authority)
+        UnbuttonedPositionIndex;
+
+    // functions called by client on server
+    reliable if (Role < ROLE_Authority)
+        ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
+
+    // Functions called by server on client
+    reliable if (Role==ROLE_Authority)
+        bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
+
+}
+
+
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -125,13 +141,13 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (bDebugExitPositions)
+    if (class'DH_ROTankCannonPawn'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all cannon pawns
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
             ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
 
-            Spawn(class'RODebugTracer',,,ExitPosition);
+            Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
@@ -153,22 +169,6 @@ function bool PlaceExitingDriver()
 
     return false;
 }
-
-replication
-{
-    reliable if (bNetDirty && Role==ROLE_Authority)
-        UnbuttonedPositionIndex;
-
-    // functions called by client on server
-    reliable if (Role<ROLE_Authority)
-        ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay; //
-
-    // Functions called by server on client
-    reliable if (Role==ROLE_Authority)
-        bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
-
-}
-
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
 {
@@ -361,8 +361,6 @@ simulated state EnteringVehicle
 {
     simulated function HandleEnter()
     {
-            //if (DriverPositions[0].PositionMesh != none)
-            //  LinkMesh(DriverPositions[0].PositionMesh);
         if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone ||  Level.Netmode == NM_ListenServer)
         {
             if (DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
@@ -493,10 +491,10 @@ simulated state ViewTransition
         if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+            {
                 Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+            }
         }
-
-         // bDrawDriverinTP=true;//Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
         if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
             && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
@@ -521,8 +519,7 @@ simulated state ViewTransition
         {
             if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
             {
-//                  if (IsLocallyControlled())
-                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
+                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
                 SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
             }
             else
@@ -530,8 +527,7 @@ simulated state ViewTransition
         }
         else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
         {
-//              if (IsLocallyControlled())
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
+            Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
             SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
         }
         else
@@ -556,7 +552,6 @@ simulated state ViewTransition
         if (PlayerController(Controller) != none)
         {
             PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            //PlayerController(Controller).SetRotation(Gun.GetBoneRotation('Camera_com'));
         }
     }
 
@@ -582,8 +577,6 @@ simulated state LeavingVehicle
             Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
             Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
         }
-
-        //LinkMesh(Default.Mesh);
 
         if (Gun.HasAnim(Gun.BeginningIdleAnim))
         {
@@ -678,10 +671,27 @@ function float GetAltAmmoReloadState()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
+
+// Matt: allows debugging exit positions to be toggled for all cannon pawns
+exec function ToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ServerToggleDebugExits();
+    }
+}
+
+function ServerToggleDebugExits()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        class'DH_ROTankCannonPawn'.default.bDebugExitPositions = !class'DH_ROTankCannonPawn'.default.bDebugExitPositions;
+        log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
+    }
+}
+
 defaultproperties
 {
-    bAllowViewChange=true // Matt: TEMP during development to aid testing - remove before release !
-
     bShowRangeText=true
     GunsightPositions=1
     GunsightOpticsName="ScopeNameHere"
