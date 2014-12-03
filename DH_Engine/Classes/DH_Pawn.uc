@@ -1418,18 +1418,28 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
         Weapon.HolderDied();
         TossVel = vector(GetViewRotation());
         TossVel = TossVel * ((Velocity Dot TossVel) + 50) + vect(0,0,200);
-        TossWeapon(TossVel);
+
+        if ((damageType != none) && !damageType.default.bThrowRagdoll)
+        {
+            TossWeapon(TossVel);
+        }
     }
 
-    DropWeaponInventory(TossVel);       // drops all weapons in inventory
+    //Check if damage type wouldn't destroy weapon usability then drop inventory
+    //Debug Theel - Eventually this needs to be a proper check of damage type
+    if ((damageType != none) && !damageType.default.bThrowRagdoll)
+    {
+        DropWeaponInventory(TossVel);
+    }
 
-    if (CarriedRadioTrigger != none)        //Remove artillery trigger
+    if (CarriedRadioTrigger != none) //Remove artillery trigger
         DestroyRadioTrigger();
 
     if (OwnedMortar != none)
         OwnedMortar.GotoState('PendingDestroy');
 
     //Clear any mortar targetting information in the GRI and our own pawn.
+    /* Theel Debug (Temp remove mortar target removal on death)
     if (DHPlayer(Controller) != none)
     {
         if (DHPlayer(Controller).MortarHitLocation != vect(0,0,0))
@@ -1462,6 +1472,7 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
             DHPlayer(Controller).MortarTargetIndex = 255;
         }
     }
+    */
 
     if (DrivenVehicle != none)
     {
