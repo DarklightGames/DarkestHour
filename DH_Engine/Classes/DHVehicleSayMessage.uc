@@ -7,32 +7,6 @@ class DHVehicleSayMessage extends DHStringMessage;
 
 var Color           VehicleMessageColor;
 
-static function RenderComplexMessage(
-    Canvas Canvas,
-    out float XL,
-    out float YL,
-    optional string MessageString,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
-{
-    if (RelatedPRI_1 == none)
-        return;
-
-    Canvas.SetDrawColor(default.VehicleMessageColor.R,default.VehicleMessageColor.G,default.VehicleMessageColor.B,default.VehicleMessageColor.A);
-
-    Canvas.DrawText(RelatedPRI_1.PlayerName$" ", false);
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-
-    Canvas.DrawText(": ", false);
-
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-    Canvas.SetDrawColor(255,255,255,255); //DrawColor = default.DrawColor;
-    Canvas.DrawText(MessageString, false);
-}
-
 static function string AssembleString(
     HUD myHUD,
     optional int Switch,

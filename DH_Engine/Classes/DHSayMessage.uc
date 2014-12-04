@@ -5,31 +5,6 @@
 
 class DHSayMessage extends DHStringMessage;
 
-static function RenderComplexMessage(
-    Canvas Canvas,
-    out float XL,
-    out float YL,
-    optional string MessageString,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
-{
-    if (RelatedPRI_1 == none)
-        return;
-
-    if (RelatedPRI_1.Team.TeamIndex == 0)
-        Canvas.DrawColor = default.GermanColour;
-    else
-        Canvas.DrawColor = default.USColour;
-
-    Canvas.DrawText(RelatedPRI_1.PlayerName$": ", false);
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-    Canvas.DrawColor = default.DrawColor;
-    Canvas.DrawText(MessageString, false);
-}
-
 static function string AssembleString(
     HUD myHUD,
     optional int Switch,
