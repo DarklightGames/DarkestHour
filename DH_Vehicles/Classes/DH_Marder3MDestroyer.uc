@@ -214,7 +214,7 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    Super(ROWheeledVehicle).Tick(DeltaTime);
+    super(ROWheeledVehicle).Tick(DeltaTime);
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {

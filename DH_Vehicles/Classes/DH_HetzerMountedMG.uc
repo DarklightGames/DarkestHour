@@ -52,13 +52,13 @@ simulated function bool ReadyToFire(bool bAltFire)
         return false;
     }
 
-    return Super(VehicleWeapon).ReadyToFire(bAltFire);
+    return super(VehicleWeapon).ReadyToFire(bAltFire);
 }
 
 // Matt: reverted back to CeaseFire from VehicleWeapon as parent DH_HiddenTankHullMG introduces auto-reload of MG when runs out of ammo
 function CeaseFire(Controller C, bool bWasAltFire)
 {
-    Super(VehicleWeapon).CeaseFire(C, bWasAltFire);
+    super(VehicleWeapon).CeaseFire(C, bWasAltFire);
 }
 
 // Matt: doesn't actually handle MG reload, it just sets the MG to empty and waiting for reload - but redefining this avoids need to redefine the lengthy AttemptFire

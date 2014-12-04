@@ -2728,7 +2728,7 @@ function DisplayMessages(Canvas C)
     local float FadeOutBeginTime;
     local byte Alpha;
 
-    Super(HudBase).DisplayMessages(C);
+    super(HudBase).DisplayMessages(C);
 
     if (!bShowDeathMessages)
         return;

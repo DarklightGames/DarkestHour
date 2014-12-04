@@ -11,7 +11,7 @@ simulated function PostBeginPlay() // Matt: modified to lower the commander's ex
     local vector Offset;
     local vector Loc;
 
-    Super(Vehicle).PostBeginPlay(); // Matt: skipping over the super in DH_ROTankCannonPawn
+    super(Vehicle).PostBeginPlay(); // Matt: skipping over the super in DH_ROTankCannonPawn
 
     Offset.Z += 165; // Matt: this was 250 but the exit was a long way above the roof
     Loc = GetBoneCoords('com_player').ZAxis;

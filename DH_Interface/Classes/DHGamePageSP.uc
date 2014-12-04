@@ -13,7 +13,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         local DHTab_MainSP tab;
         local DHIAMultiColumnRulesPanel tab2;
 
-        Super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
+        super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
         class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
         RuleInfo = new(none) class'Engine.PlayInfo';
 

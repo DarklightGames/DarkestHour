@@ -7,7 +7,7 @@ class DH_HetzerDestroyer_SnowTwo_Bushes extends DH_HetzerDestroyer;
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super(ROTreadCraft).StaticPrecache(L);
+    super(ROTreadCraft).StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_body_snow2');
    	L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treadsnow');

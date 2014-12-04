@@ -549,7 +549,7 @@ simulated function ClientDoCannonReload() // Matt: this is a new function, speci
 
 simulated function Tick(float Delta) // Matt: removed as was having no effect originally, but now we actually want the DH_ROTankCannon turret fire effects
 {
-    Super(ROVehicleWeapon).Tick(Delta);
+    super(ROVehicleWeapon).Tick(Delta);
 }
 */
 

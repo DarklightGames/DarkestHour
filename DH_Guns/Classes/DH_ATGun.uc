@@ -92,7 +92,7 @@ simulated function Tick(float DeltaTime)
     if (Level.Netmode == NM_DedicatedServer && SoundVolume != default.SoundVolume)
         SoundVolume = default.SoundVolume;
 
-    Super(ROWheeledVehicle).Tick(DeltaTime);
+    super(ROWheeledVehicle).Tick(DeltaTime);
 }
 
 // Overridden due to the Onslaught team lock not working in RO
@@ -185,7 +185,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
     {

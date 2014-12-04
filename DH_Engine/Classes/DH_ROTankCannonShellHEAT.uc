@@ -534,7 +534,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
     SavedHitActor = Pawn(Wall);
 
-    Super(ROBallisticProjectile).HitWall(HitNormal, Wall);
+    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
 
     if (Role == ROLE_Authority)
     {

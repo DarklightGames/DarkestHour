@@ -14,7 +14,7 @@ delegate        OnChangeDifficulty(int index);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super(UT2K4GameTabBase).InitComponent(MyController, MyOwner);
+    super(UT2K4GameTabBase).InitComponent(MyController, MyOwner);
 
         class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 

@@ -13,7 +13,7 @@ class DH_HetzerDestroyer extends DH_ROTreadCraftB;
 
 static function StaticPrecache(LevelInfo L)
 {
-    Super(ROTreadCraft).StaticPrecache(L);
+    super(ROTreadCraft).StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_body');
    	L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treads');
@@ -77,7 +77,7 @@ function bool KDriverLeave(bool bForceLeave)
  	    return false;
  	}
 	else
-		return Super(ROWheeledVehicle).KDriverLeave(bForceLeave); // Matt: skipping over the Super in DH_ROTreadcraft
+		return super(ROWheeledVehicle).KDriverLeave(bForceLeave); // Matt: skipping over the Super in DH_ROTreadcraft
 }
 
 defaultproperties
