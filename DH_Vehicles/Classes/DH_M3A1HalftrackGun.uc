@@ -105,7 +105,7 @@ simulated function Timer()
    {
         if (Role == ROLE_Authority)
         {
-            bReloading=false;
+            bReloading = false;
             MainAmmoCharge[0] = InitialPrimaryAmmo;
             NetUpdateTime = Level.TimeSeconds - 1;
         }

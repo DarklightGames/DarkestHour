@@ -179,7 +179,7 @@ function DoFireEffect()
                 R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
                 R.Pitch = AppliedSpread * (FRand()-0.5);
                 R.Roll = AppliedSpread * (FRand()-0.5);
-                SpawnProjectile(StartProj, Rotator(X >> R));
+                SpawnProjectile(StartProj, rotator(X >> R));
             }
             break;
 
@@ -190,7 +190,7 @@ function DoFireEffect()
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
-                SpawnProjectile(StartProj, Rotator(X >> Aim));
+                SpawnProjectile(StartProj, rotator(X >> Aim));
             }
             break;
 
@@ -227,10 +227,10 @@ simulated function EjectShell()
             EjectOffset = Instigator.Location + Instigator.EyePosition();
             EjectOffset = EjectOffset + X * ShellIronSightOffset.X + Y * ShellIronSightOffset.Y +  Z * ShellIronSightOffset.Z;
 
-            EjectRot = Rotator(Y);
+            EjectRot = rotator(Y);
             EjectRot.Yaw += 16384;
             Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
-            EjectRot = Rotator(Y);
+            EjectRot = rotator(Y);
             EjectRot += ShellRotOffsetIron;
 
             EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
@@ -253,9 +253,9 @@ simulated function EjectShell()
 
             EjectOffset = EjectOffset + EjectCoords.XAxis * ShellHipOffset.X + EjectCoords.YAxis * ShellHipOffset.Y +  EjectCoords.ZAxis * ShellHipOffset.Z;
 
-            EjectRot = Rotator(-EjectCoords.YAxis);
+            EjectRot = rotator(-EjectCoords.YAxis);
             Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
-            EjectRot = Rotator(EjectCoords.XAxis);
+            EjectRot = rotator(EjectCoords.XAxis);
             EjectRot += ShellRotOffsetHip;
 
             EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);

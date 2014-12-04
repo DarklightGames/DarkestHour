@@ -24,7 +24,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
                     c_Channel.TabStack[i].Style=none;   // needed to reset style
             c_Channel.TabStack[i].FontScale=FNS_Medium;
             c_Channel.TabStack[i].bAutoSize=true;
-            c_Channel.TabStack[i].bAutoShrink=false;
+            c_Channel.TabStack[i].bAutoShrink = false;
             c_Channel.TabStack[i].StyleName="DHTabTextButtonStyle";
             c_Channel.TabStack[i].Initcomponent(MyController, c_Channel);
         }

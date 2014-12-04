@@ -152,7 +152,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
         if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
             return;
 
-        InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
+        InitialAmount = FireMode[m].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && AP == none)
         {

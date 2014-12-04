@@ -236,8 +236,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (bFPNoZFromCameraPitch)
     {
-        VehicleZ = vect(0,0,1) >> Rotation;
-        CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+        VehicleZ = vect(0, 0, 1) >> Rotation;
+        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
         CameraLocation -= CamViewOffsetZAmount * VehicleZ;
     }
 
@@ -336,7 +336,7 @@ simulated event DestroyAppearance()
     }
 
     //Become the dead vehicle mesh // Matt: removed as in this case we aren't switching to a destroyed static mesh
-//  SetPhysics(PHYS_none);
+//  SetPhysics(PHYS_None);
 //  KSetBlockKarma(false);
 //  SetDrawType(DT_Mesh);
 //  KSetBlockKarma(true);
@@ -374,7 +374,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0,0,0));
+        KAddImpulse(LinearImpulse, vect(0, 0, 0));
         KAddAngularImpulse(AngularImpulse);
     }
 }

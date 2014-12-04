@@ -20,7 +20,7 @@ function bool TryToDrive(Pawn P)
     }
     if (p.IsHumanControlled())
             {
-        bTeamLocked=false;
+        bTeamLocked = false;
     }
 
     //don't allow vehicle to be stolen when somebody is in a turret

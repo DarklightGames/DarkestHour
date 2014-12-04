@@ -208,7 +208,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     }
 
     if (bLogPenetration)
-        log("VehHitpoints and HitPointDamage start, damage = "$Damage);
+        Log("VehHitpoints and HitPointDamage start, damage = "$Damage);
 
     for(i=0; i<VehHitpoints.Length; i++)
     {

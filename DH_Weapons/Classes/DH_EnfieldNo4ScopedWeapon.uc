@@ -141,7 +141,7 @@ function bool FillAmmo()
         return false;
     }
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     PrimaryAmmoArray.Length = MaxNumPrimaryMags;
     for(i=0; i<PrimaryAmmoArray.Length; i++)
@@ -173,7 +173,7 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
         if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
             return;
 
-        InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
+        InitialAmount = FireMode[m].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && WP == none)
         {

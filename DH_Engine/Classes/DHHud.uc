@@ -204,7 +204,7 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
     local int PlayerDist;
 //  local Actor Hit;
 
-    log("Are we even getting here?");
+    Log("Are we even getting here?");
 
     PRI = P.PlayerReplicationInfo;
 
@@ -230,7 +230,7 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     if (!FastTrace(P.Location, PlayerOwner.Pawn.Location))
     {
-            log("Fasttrace from "$P$" to "$PlayerOwner.Pawn$" Failed ");
+            Log("Fasttrace from "$P$" to "$PlayerOwner.Pawn$" Failed ");
         return;
     }
 
@@ -298,7 +298,7 @@ function AddDHTextMessage(string M, class<DHStringMessage> MessageClass, PlayerR
 {
     local int i;
 
-    if (bMessageBeep && MessageClass.Default.bBeep)
+    if (bMessageBeep && MessageClass.default.bBeep)
         PlayerOwner.PlayBeepSound();
 
     for(i=0; i<ConsoleMessageCount; i++)
@@ -320,7 +320,7 @@ function AddDHTextMessage(string M, class<DHStringMessage> MessageClass, PlayerR
     }
 
     TextMessages[i].Text = M;
-    TextMessages[i].MessageLife = Level.TimeSeconds + MessageClass.Default.LifeTime;
+    TextMessages[i].MessageLife = Level.TimeSeconds + MessageClass.default.LifeTime;
     TextMessages[i].TextColor = MessageClass.static.GetDHConsoleColor(PRI, AlliedNationID, bSimpleColours);
     TextMessages[i].PRI = PRI;
 }
@@ -1397,7 +1397,7 @@ function DrawPlayerNames(Canvas C)
        //log("Running SAC from DrawPlayerNames");
     }
 
-    ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0,0,1);
+    ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0, 0, 1);
     HitActor = Trace(HitLocation,HitNormal,ViewPos + 1600 * vector(PawnOwner.Controller.Rotation),ViewPos, true);
 
     //CHECK FOR MORTAR, Basnett 2011
@@ -1867,7 +1867,7 @@ simulated function DrawObjectives(Canvas C)
     // Draw AT-Guns
     for (i = 0; i < arraycount(DHGRI.ATCannons); i++)
     {
-        if (DHGRI.ATCannons[i].ATCannonLocation != vect(0,0,0) && DHGRI.ATCannons[i].Team == PlayerOwner.GetTeamNum())
+        if (DHGRI.ATCannons[i].ATCannonLocation != vect(0, 0, 0) && DHGRI.ATCannons[i].Team == PlayerOwner.GetTeamNum())
         {
             if (DHGRI.ATCannons[i].ATCannonLocation.Z > 0)  // ATCannon is active is the Z location is greater than 0
             {
@@ -2003,7 +2003,7 @@ simulated function DrawObjectives(Canvas C)
         // Draw the marked arty strike
         temp = player.SavedArtilleryCoords;
 
-        if (temp != vect(0,0,0))
+        if (temp != vect(0, 0, 0))
         {
             bShowArtyCoords = true;
             widget = MapIconArtyStrike;
@@ -2037,7 +2037,7 @@ simulated function DrawObjectives(Canvas C)
     {
         // Draw the in-progress arty strikes
         if (OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX)
-           if (DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0,0,0))
+           if (DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0, 0, 0))
            {
                DrawIconOnMap(C, subCoords, MapIconArtyStrike, myMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
                bShowArtyStrike = true;
@@ -2052,7 +2052,7 @@ simulated function DrawObjectives(Canvas C)
                 temp = DHGRI.AlliedRallyPoints[i].RallyPointLocation;
 
             // Draw the marked rally point
-            if (temp != vect(0,0,0))
+            if (temp != vect(0, 0, 0))
             {
                 bShowRally = true;
                 DrawIconOnMap(C, subCoords, MapIconRally[OwnerTeam], myMapScale, temp, MapCenter);
@@ -2154,7 +2154,7 @@ simulated function DrawObjectives(Canvas C)
                         break;
 
                     default:
-                        log("Unknown requestType found in AxisHelpRequests[i]: " $ DHGRI.AxisHelpRequests[i].requestType);
+                        Log("Unknown requestType found in AxisHelpRequests[i]: " $ DHGRI.AxisHelpRequests[i].requestType);
                 }
             }
 
@@ -2164,7 +2164,7 @@ simulated function DrawObjectives(Canvas C)
             {
                 for(i = 0; i < arraycount(DHGRI.GermanMortarTargets); i++)
                 {
-                    if (DHGRI.GermanMortarTargets[i].Location != vect(0,0,0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
+                    if (DHGRI.GermanMortarTargets[i].Location != vect(0, 0, 0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
                         DrawIconOnMap(C, subCoords, MapIconMortarTarget, myMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
                 }
             }
@@ -2173,13 +2173,13 @@ simulated function DrawObjectives(Canvas C)
             //Draw hit location for mortar observer's confirmed hits on his own target.
             if (RI != none && RI.bIsMortarObserver && player != none && player.MortarTargetIndex != 255)
             {
-                if (DHGRI.GermanMortarTargets[player.MortarTargetIndex].HitLocation != vect(0,0,0) && DHGRI.GermanMortarTargets[player.MortarTargetIndex].bCancelled == 0)
+                if (DHGRI.GermanMortarTargets[player.MortarTargetIndex].HitLocation != vect(0, 0, 0) && DHGRI.GermanMortarTargets[player.MortarTargetIndex].bCancelled == 0)
                     DrawIconOnMap(C, subCoords, MapIconMortarHit, myMapScale, DHGRI.GermanMortarTargets[player.MortarTargetIndex].HitLocation, MapCenter);
             }
 
             //------------------------------------------------------------------
             //Draw hit location for mortar operator if he has a valid hit location.
-            if (RI != none && RI.bCanUseMortars && player != none && player.MortarHitLocation != vect(0,0,0))
+            if (RI != none && RI.bCanUseMortars && player != none && player.MortarHitLocation != vect(0, 0, 0))
                 DrawIconOnMap(C, subCoords, MapIconMortarHit, myMapScale, player.MortarHitLocation, MapCenter);
 
         }
@@ -2218,7 +2218,7 @@ simulated function DrawObjectives(Canvas C)
                         break;
 
                     default:
-                        log("Unknown requestType found in AlliedHelpRequests[i]: " $ DHGRI.AlliedHelpRequests[i].requestType);
+                        Log("Unknown requestType found in AlliedHelpRequests[i]: " $ DHGRI.AlliedHelpRequests[i].requestType);
                 }
             }
 
@@ -2226,7 +2226,7 @@ simulated function DrawObjectives(Canvas C)
             //Draw all mortar targets on the map.
             for(i = 0; i < arraycount(DHGRI.AlliedMortarTargets); i++)
             {
-                if (DHGRI.AlliedMortarTargets[i].Location != vect(0,0,0) && DHGRI.AlliedMortarTargets[i].bCancelled == 0)
+                if (DHGRI.AlliedMortarTargets[i].Location != vect(0, 0, 0) && DHGRI.AlliedMortarTargets[i].bCancelled == 0)
                     DrawIconOnMap(C, subCoords, MapIconMortarTarget, myMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
             }
 
@@ -2234,13 +2234,13 @@ simulated function DrawObjectives(Canvas C)
             //Draw hit location for mortar observer's confirmed hits on his own target.
             if (RI != none && RI.bIsMortarObserver && player != none && player.MortarTargetIndex != 255)
             {
-                if (DHGRI.AlliedMortarTargets[player.MortarTargetIndex].HitLocation != vect(0,0,0) && DHGRI.GermanMortarTargets[player.MortarTargetIndex].bCancelled == 0)
+                if (DHGRI.AlliedMortarTargets[player.MortarTargetIndex].HitLocation != vect(0, 0, 0) && DHGRI.GermanMortarTargets[player.MortarTargetIndex].bCancelled == 0)
                     DrawIconOnMap(C, subCoords, MapIconMortarHit, myMapScale, DHGRI.AlliedMortarTargets[player.MortarTargetIndex].HitLocation, MapCenter);
             }
 
             //------------------------------------------------------------------
             //Draw hit location for mortar operator if he has a valid hit location.
-            if (RI != none && RI.bCanUseMortars && player != none && player.MortarHitLocation != vect(0,0,0))
+            if (RI != none && RI.bCanUseMortars && player != none && player.MortarHitLocation != vect(0, 0, 0))
                 DrawIconOnMap(C, subCoords, MapIconMortarHit, myMapScale, player.MortarHitLocation, MapCenter);
         }
     }
@@ -2692,7 +2692,7 @@ simulated function DrawVoiceIconC(Canvas C, Pawn P)
     PawnDirection = Normal(PawnDirection);
 
     //Ensure we're not drawing icons from players behind us.
-    if (Acos(PawnDirection Dot vector(CameraRotation)) > 1.5705)
+    if (Acos(PawnDirection dot vector(CameraRotation)) > 1.5705)
         return;
 
     ScreenPosition = C.WorldToScreen(WorldLocation);    //Get screen position

@@ -178,7 +178,7 @@ simulated function Landed(vector HitNormal)
 {
     if (Bounces <= 0)
     {
-        SetPhysics(PHYS_none);
+        SetPhysics(PHYS_None);
         SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
 
         if (Role == ROLE_Authority)

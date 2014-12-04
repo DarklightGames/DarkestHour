@@ -404,7 +404,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local array<int>      HitPoints;
     local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
-    if (bDebuggingText) log("Rocket.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
+    if (bDebuggingText) Log("Rocket.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
 
     if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
@@ -430,7 +430,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                if (bDebuggingText) log("Rocket.ProcessTouch: hit driver, authority should damage him & explode"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: hit driver, authority should damage him & explode"); // TEMP
                 if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
                 {
                     VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
@@ -438,7 +438,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
             else
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: hit driver area but not driver, rocket should continue"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: hit driver area but not driver, rocket should continue"); // TEMP
                 SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
                 return;
             }
@@ -531,7 +531,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
                 if (Role == ROLE_Authority)
                 {
                     ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
@@ -539,7 +539,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
             else
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
                 return; // exit without exploding, so rocket continues on its flight
             }
         }
@@ -554,16 +554,16 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a rocket explode
             if (Other.IsA('RODestroyableStaticMesh') && RODestroyableStaticMesh(Other).bWontStopBullets)
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
                 return;
             }
-            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) log("Rocket.ProcessTouch: exploding on destroyable SM"); // TEMP
-            else if (bDebuggingText) log("Rocket.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
+            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) Log("Rocket.ProcessTouch: exploding on destroyable SM"); // TEMP
+            else if (bDebuggingText) Log("Rocket.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
         }
         // Otherwise we hit something we aren't going to damage
         else if (Role == ROLE_Authority && Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
         {
-            if (bDebuggingText) log("Rocket.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
+            if (bDebuggingText) Log("Rocket.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
             ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
 
@@ -861,7 +861,7 @@ simulated function CheckWall(vector HitNormal, vector X)
 
     if (bDebugMode)
     {
-        log("Hit Surface type:"@HitSurfaceType@"with hardness of"@Hardness);
+        Log("Hit Surface type:"@HitSurfaceType@"with hardness of"@Hardness);
     }
 
     return;

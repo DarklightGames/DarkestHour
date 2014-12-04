@@ -79,7 +79,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function InternalOnOpen()
 {
-        log("MainMenu: starting music "$MenuSong);
+        Log("MainMenu: starting music "$MenuSong);
         PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
 }
 

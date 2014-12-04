@@ -341,7 +341,7 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROPassengerPawn'.default.bDebugExitPositions = !class'DH_ROPassengerPawn'.default.bDebugExitPositions;
-        log("DH_ROPassengerPawn.bDebugExitPositions =" @ class'DH_ROPassengerPawn'.default.bDebugExitPositions);
+        Log("DH_ROPassengerPawn.bDebugExitPositions =" @ class'DH_ROPassengerPawn'.default.bDebugExitPositions);
     }
 }
 

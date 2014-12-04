@@ -19,8 +19,8 @@ simulated function PostBeginPlay() // Matt: modified to lower the commander's ex
     ExitPositions[0] = Loc + Offset;
     ExitPositions[1] = ExitPositions[0];
 
-    bTurretRingDamaged=false;
-    bGunPivotDamaged=false;
+    bTurretRingDamaged = false;
+    bGunPivotDamaged = false;
 }
 
 // Matt: modified to prevent tank crew from switching to rider positions unless unbuttoned
@@ -248,7 +248,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if(bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -259,8 +259,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if(bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }

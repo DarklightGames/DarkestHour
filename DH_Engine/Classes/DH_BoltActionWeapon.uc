@@ -139,7 +139,7 @@ simulated state WorkingBolt extends Busy
 
     simulated function EndState()
     {
-        bWaitingToBolt=false;
+        bWaitingToBolt = false;
         FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; //fire now!
     }
 }

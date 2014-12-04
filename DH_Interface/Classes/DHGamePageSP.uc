@@ -60,7 +60,7 @@ function PrepareToPlay(out string GameURL, optional string OverrideMap)
                 GameURL $= "?bAutoNumBots=false?NumBots="$RuleInfo.Settings[i].Value;
         }
     }
-    log("Prepare to play GameURL= "$GameURL);
+    Log("Prepare to play GameURL= "$GameURL);
 }
 
 function InternalOnChangeDifficulty(int index)
@@ -94,7 +94,7 @@ function InternalOnDifficultyChanged(int index, int tag)
         if (gametab != none)
         {
                 gametab.SilentSetDifficulty(index);
-                log("difficulty changed.");
+                Log("difficulty changed.");
         }
 }
 

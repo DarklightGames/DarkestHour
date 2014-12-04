@@ -27,8 +27,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
              li_Maps.bSorted = true;
                 lb_Maps.NotifyContextSelect = HandleContextSelect;
         }
-    lb_Maps.bBoundToParent=false;
-    lb_Maps.bScaleToParent=false;
+    lb_Maps.bBoundToParent = false;
+    lb_Maps.bScaleToParent = false;
     sb_Selection.ManageComponent(lb_Maps);
     asb_Scroll.ManageComponent(lb_MapDesc);
 
@@ -64,7 +64,7 @@ function InitGameType()
                         break;
                 }
         }
-    log("Current game type = "$CurrentGameType.ClassName);
+    Log("Current game type = "$CurrentGameType.ClassName);
 
      if (i == Games.Length)
             return;

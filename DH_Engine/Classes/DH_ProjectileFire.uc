@@ -62,7 +62,7 @@ function DoFireEffect()
 
     //log("Projectile Firing, location of muzzle is "$Weapon.GetBoneCoords('Muzzle').Origin);
     //if (ROProjectileWeapon(Instigator.weapon) != none)
-    //  log("MuzzleCoords location = "$ROProjectileWeapon(Instigator.weapon).GetMuzzleCoords().Origin);
+    //  Log("MuzzleCoords location = "$ROProjectileWeapon(Instigator.weapon).GetMuzzleCoords().Origin);
     // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
     // Temp commented out until we add the free-aim system in
     if (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed)
@@ -139,7 +139,7 @@ function DoFireEffect()
                 R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
                 R.Pitch = AppliedSpread * (FRand()-0.5);
                 R.Roll = AppliedSpread * (FRand()-0.5);
-                SpawnProjectile(StartProj, Rotator(X >> R));
+                SpawnProjectile(StartProj, rotator(X >> R));
             }
             break;
 
@@ -150,7 +150,7 @@ function DoFireEffect()
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
-                SpawnProjectile(StartProj, Rotator(X >> Aim));
+                SpawnProjectile(StartProj, rotator(X >> Aim));
             }
             break;
 

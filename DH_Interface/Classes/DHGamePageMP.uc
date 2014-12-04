@@ -61,8 +61,8 @@ function StartGame(string GameURL, bool bAlt)
     {
             if (mcServerRules != none)
             GameURL $= mcServerRules.Play();
-                    log("GameURL is "$GameURL);
-                    log("ConsoleCommand  is "$"relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
+                    Log("GameURL is "$GameURL);
+                    Log("ConsoleCommand  is "$"relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
             PlayerOwner().ConsoleCommand("relaunch"@GameURL@"-server -mod=DarkestHour -log=server.log");
     }
         else

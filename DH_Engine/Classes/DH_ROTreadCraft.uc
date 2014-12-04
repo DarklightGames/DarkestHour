@@ -460,7 +460,7 @@ function KDriverEnter(Pawn p)
 
     // lets bots start vehicle
     if (!p.IsHumanControlled())
-       bEngineOff=false;
+       bEngineOff = false;
 
     //check to see if Engine is already on when entering
     if (bEngineOff)
@@ -645,7 +645,7 @@ function ServerStartEngine()
             Throttle=0;
             ThrottleAmount=0;
             bDisableThrottle=true;
-            bWantsToThrottle=false;
+            bWantsToThrottle = false;
             bEngineOff=true;
 
             TurnDamping = 0.0;
@@ -667,9 +667,9 @@ function ServerStartEngine()
                 AmbientSound = IdleSound;
 
             Throttle=0;
-            bDisableThrottle=false;
+            bDisableThrottle = false;
             bWantsToThrottle=true;
-            bEngineOff=false;
+            bEngineOff = false;
 
             IgnitionSwitchTime = Level.TimeSeconds;
 
@@ -794,7 +794,7 @@ event CheckReset()
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
                 return;
             }
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0,0,1), Location + CollisionHeight * vect(0,0,1)))
+            else if (FastTrace(P.Location + P.CollisionHeight * vect(0, 0, 1), Location + CollisionHeight * vect(0, 0, 1)))
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Initiating FastTrace Reset Check...");
@@ -968,7 +968,7 @@ simulated function PostBeginPlay()
 
     //Engine starting and stopping stuff
     //bEngineOff=true;
-    //bEngineDead=false;
+    //bEngineDead = false;
     //bDisableThrottle=true;
     //bFirstHit=true;
 
@@ -983,7 +983,7 @@ simulated function PostNetBeginPlay()
     super.PostNetBeginPlay();
 
     if (!bEngineOff)
-        bEngineOff=false;
+        bEngineOff = false;
 
 }
 
@@ -1182,10 +1182,10 @@ simulated function Tick(float DeltaTime)
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=vect(0,0,0);
+        velocity=vect(0, 0, 0);
         Throttle=0;
         ThrottleAmount=0;
-        bWantsToThrottle=false;
+        bWantsToThrottle = false;
         bDisableThrottle=true;
         Steering=0;
     }
@@ -1223,7 +1223,7 @@ event TakeFireDamage(float DeltaTime)
                 DelayedDamageInstigatorController = none;
             }
 
-            DamageEngine(EngineFireDamagePerSec, WhoSetEngineOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType);
+            DamageEngine(EngineFireDamagePerSec, WhoSetEngineOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
             EngineBurnTime = Level.TimeSeconds;
         }
 
@@ -1239,7 +1239,7 @@ event TakeFireDamage(float DeltaTime)
 
             if (FRand() < EngineToHullFireChance)  // - was 2%
             {
-                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType); // This will set bOnFire the first time it runs
+                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType); // This will set bOnFire the first time it runs
             }
             FireCheckTime = Level.TimeSeconds;
         }
@@ -1248,7 +1248,7 @@ event TakeFireDamage(float DeltaTime)
     // Engine fire dies down 30 seconds after engine health hits zero
     if (Level.TimeSeconds - EngineBurnTime > 30 && bEngineOnFire && !bOnFire)
     {
-        bEngineOnFire=false;
+        bEngineOnFire = false;
         bDisableThrottle=true;
         bEngineDead=true;
         DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
@@ -1279,23 +1279,23 @@ event TakeFireDamage(float DeltaTime)
 
         if (Driver != none) //afflict the driver
         {
-            Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0,0,0), VehicleBurningDamType);
+            Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
         }
         else if (WeaponPawns[0] != none && WeaponPawns[0].Driver != none && bTurretFireTriggered == true) //afflict the commander
         {
-            WeaponPawns[0].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0,0,0), VehicleBurningDamType);
+            WeaponPawns[0].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
         }
         else if (WeaponPawns[1] != none && WeaponPawns[1].Driver != none && bHullMGFireTriggered == true) //afflict the hull gunner
         {
-            WeaponPawns[1].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0,0,0), VehicleBurningDamType);
+            WeaponPawns[1].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
         }
 
         if (FRand() < FireDetonationChance) // Chance of cooking off ammo/igniting fuel before health runs out
         {
-            TakeDamage(Health, WhoSetOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType);
+            TakeDamage(Health, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
         }
         else
-            TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType);
+            TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
 
         BurnTime = Level.TimeSeconds;
     }
@@ -1305,12 +1305,12 @@ function DamageTrack(bool bLeftTrack)
 {
     if (bLeftTrack)
     {
-        bDisableThrottle=false;
+        bDisableThrottle = false;
         bLeftTrackDamaged=true;
     }
     else
     {
-        bDisableThrottle=false;
+        bDisableThrottle = false;
         bRightTrackDamaged=true;
     }
 }
@@ -1329,7 +1329,7 @@ function bool IsNewPointShot(vector loc, vector ray, float AdditionalScale, int 
 
     HeadLoc = C.Origin + (NewVehHitpoints[index].PointHeight * NewVehHitpoints[index].PointScale * AdditionalScale * C.XAxis);
 
-    HeadLoc = HeadLoc + (NewVehHitpoints[index].PointOffset >> Rotator(C.Xaxis));
+    HeadLoc = HeadLoc + (NewVehHitpoints[index].PointOffset >> rotator(C.Xaxis));
 
     // Express snipe trace line in terms of B + tM
     B = loc;
@@ -1355,7 +1355,7 @@ function bool IsNewPointShot(vector loc, vector ray, float AdditionalScale, int 
     else
         t = 0;
 
-    Distance = Sqrt(diff Dot diff);
+    Distance = Sqrt(diff dot diff);
 
     return (Distance < (NewVehHitpoints[index].PointRadius * NewVehHitpoints[index].PointScale * AdditionalScale));
 }
@@ -1807,7 +1807,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationAPC(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, GetOverMatch(GunMantletArmorFactor, ShellDiameter), bShatterProne);
     }
 
@@ -1821,7 +1821,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2082,7 +2082,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationHVAP(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
@@ -2096,7 +2096,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2353,7 +2353,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationHVAPLarge(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
@@ -2367,7 +2367,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2625,7 +2625,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationAPDS(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
@@ -2639,7 +2639,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2899,7 +2899,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationHEAT(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bIsHEATRound);
     }
 
@@ -2913,7 +2913,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -3258,7 +3258,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             HitPointDamage *= VehicleDamageMod;
 
             if (bLogPenetration)
-                log(" We hit "$GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType)$" hitpoint.");
+                Log(" We hit "$GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType)$" hitpoint.");
 
 
             if (VehHitpoints[i].HitPointType == HP_Engine)
@@ -3297,7 +3297,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
         HitPointDamage=Damage;
 
         if (bLogPenetration)
-          log(" We hit "$GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType)$" hitpoint.");
+          Log(" We hit "$GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType)$" hitpoint.");
 
         if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
         {
@@ -3336,14 +3336,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Driver killed");
-                Driver.TakeDamage(150, instigatedBy, Location, vect(0,0,0), DamageType);
+                Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
             }
 
             if (bRearHit == false && WeaponPawns[1] != none && WeaponPawns[1].Driver != none && FRand() < Damage/GunnerKillChance)
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Hull Gunner killed");
-                WeaponPawns[1].Driver.TakeDamage(150, instigatedBy, Location, vect(0,0,0), DamageType);
+                WeaponPawns[1].Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
             }
         }
         else
@@ -3354,7 +3354,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     Level.Game.Broadcast(self, "Commander killed");
-                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0,0,0), DamageType);
+                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
                 }
 
                 if (FRand() < Damage/OpticsDamageChance)
@@ -3492,13 +3492,13 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     }
 
     //reset everything
-    bWasHEATRound=false;
-    bRearHit=false;
-    bFirstHit=false;
-    bProjectilePenetrated=false;
-    bWasShatterProne=false;
-    bRoundShattered=false;
-    bWasTurretHit=false;
+    bWasHEATRound = false;
+    bRearHit = false;
+    bFirstHit = false;
+    bProjectilePenetrated = false;
+    bWasShatterProne = false;
+    bRoundShattered = false;
+    bWasTurretHit = false;
 }
 
 // Handle the Engine Damage
@@ -3657,7 +3657,7 @@ simulated event DestroyAppearance()
     }
 
     // Become the dead vehicle mesh
-    SetPhysics(PHYS_none);
+    SetPhysics(PHYS_None);
     KSetBlockKarma(false);
     SetDrawType(DT_StaticMesh);
     SetStaticMesh(DestroyedVehicleMesh);
@@ -3693,7 +3693,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0,0,0));
+        KAddImpulse(LinearImpulse, vect(0, 0, 0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
@@ -3791,7 +3791,7 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROTreadCraft'.default.bDebugExitPositions = !class'DH_ROTreadCraft'.default.bDebugExitPositions;
-        log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
+        Log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
     }
 }
 

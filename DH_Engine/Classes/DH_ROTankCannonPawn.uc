@@ -183,8 +183,8 @@ simulated function PostBeginPlay()
     ExitPositions[0] = Loc + Offset;
     ExitPositions[1] = ExitPositions[0];
 
-    bTurretRingDamaged=false;
-    bGunPivotDamaged=false;
+    bTurretRingDamaged = false;
+    bGunPivotDamaged = false;
 }
 
 simulated exec function SwitchFireMode()
@@ -316,7 +316,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -327,8 +327,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -572,7 +572,7 @@ simulated state LeavingVehicle
             TurretYaw.Yaw = GetVehicleBase().Rotation.Yaw - CustomAim.Yaw;
             TurretPitch.Pitch = GetVehicleBase().Rotation.Pitch - CustomAim.Pitch;
 
-            Gun.LinkMesh(Gun.Default.Mesh);
+            Gun.LinkMesh(Gun.default.Mesh);
 
             Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
             Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
@@ -686,7 +686,7 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROTankCannonPawn'.default.bDebugExitPositions = !class'DH_ROTankCannonPawn'.default.bDebugExitPositions;
-        log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
+        Log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
     }
 }
 

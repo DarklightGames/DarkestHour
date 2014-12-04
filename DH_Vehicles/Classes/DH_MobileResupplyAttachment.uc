@@ -101,7 +101,7 @@ function Timer()
 
         if (Team==OWNER_Neutral || recvr.GetTeamNum()==Team)
         {
-            bResupplied=false;
+            bResupplied = false;
             P = DH_Pawn(recvr);
             V = Vehicle(recvr);
 

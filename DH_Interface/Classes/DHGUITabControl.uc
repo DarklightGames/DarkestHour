@@ -33,7 +33,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
 
                 if (NewTabPanel == none)
                 {
-                        log("Could not create panel for"@NewPanelClass);
+                        Log("Could not create panel for"@NewPanelClass);
                         return none;
                 }
 

@@ -17,7 +17,7 @@ event InitializeController()
         RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
 
     LastGameType="DH_Engine.DarkestHourGame";
-    log("DHGUIController initialized ");
+    Log("DHGUIController initialized ");
 }
 
 

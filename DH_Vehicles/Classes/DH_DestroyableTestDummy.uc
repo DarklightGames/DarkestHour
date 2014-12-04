@@ -81,7 +81,7 @@ function BroadcastCriticalMessage(Pawn instigatedBy)
             {
                 PRI = instigatedBy.PlayerReplicationInfo;
                 //if (PRI == none)
-                //    log("no valid PRI!!!");
+                //    Log("no valid PRI!!!");
             }
             else
             {

@@ -201,7 +201,7 @@ simulated state LoweringWeapon
         if (AmmoAmount(0) > 0 && CurrentMagCount < InitialNumPrimaryMags - 1)
         {
             PrimaryAmmoArray.Insert(CurrentMagIndex, 1);
-            PrimaryAmmoArray[CurrentMagIndex] = FireMode[0].AmmoClass.Default.InitialAmount;
+            PrimaryAmmoArray[CurrentMagIndex] = FireMode[0].AmmoClass.default.InitialAmount;
             CurrentMagCount++;
 
             if (Instigator.IsLocallyControlled())
@@ -583,7 +583,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
     local int InitialAmount;
     local bool bJustSpawned;
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     super.GiveTo(Other,Pickup);
 

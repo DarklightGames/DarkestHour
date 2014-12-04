@@ -108,7 +108,7 @@ function DoFireEffect()
                 R.Pitch = AppliedSpread * (FRand()-0.5);
                 R.Roll = AppliedSpread * (FRand()-0.5);
 
-                HandleProjectileSpawning(StartProj, Rotator(X >> R));
+                HandleProjectileSpawning(StartProj, rotator(X >> R));
             }
             break;
 
@@ -119,7 +119,7 @@ function DoFireEffect()
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
-                HandleProjectileSpawning(StartProj, Rotator(X >> Aim));
+                HandleProjectileSpawning(StartProj, rotator(X >> Aim));
             }
             break;
 

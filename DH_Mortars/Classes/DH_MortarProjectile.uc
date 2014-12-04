@@ -95,7 +95,7 @@ simulated function PostBeginPlay()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (Location != vect(0,0,0))
+        if (Location != vect(0, 0, 0))
             Spawn(class'DH_Effects.DH_MortarFireEffect',, , Location, Rotation);
 
         Enable('Tick');
@@ -267,7 +267,7 @@ function SetHitLocation(vector HitLocation)
         // Find the closest mortar target.
         for(i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
-            if (GRI.GermanMortarTargets[i].Location == vect(0,0,0))
+            if (GRI.GermanMortarTargets[i].Location == vect(0, 0, 0))
                 continue;
 
             MortarTargetDistance = VSize(GRI.GermanMortarTargets[i].Location - HitLocation);
@@ -284,7 +284,7 @@ function SetHitLocation(vector HitLocation)
         // targets were close enough.
         if (ClosestMortarTargetIndex == 255)
         {
-            C.MortarHitLocation = vect(0,0,0);
+            C.MortarHitLocation = vect(0, 0, 0);
             return;
         }
 
@@ -296,7 +296,7 @@ function SetHitLocation(vector HitLocation)
         // Find the closest mortar target.
         for(i = 0; i < arraycount(GRI.AlliedMortarTargets); I++)
         {
-            if (GRI.AlliedMortarTargets[i].Location == vect(0,0,0))
+            if (GRI.AlliedMortarTargets[i].Location == vect(0, 0, 0))
                 continue;
 
             MortarTargetDistance = VSize(GRI.AlliedMortarTargets[i].Location - HitLocation);
@@ -313,7 +313,7 @@ function SetHitLocation(vector HitLocation)
         // targets were close enough.
         if (ClosestMortarTargetIndex == 255)
         {
-            C.MortarHitLocation = vect(0,0,0);
+            C.MortarHitLocation = vect(0, 0, 0);
             return;
         }
 

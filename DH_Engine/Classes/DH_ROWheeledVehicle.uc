@@ -121,7 +121,7 @@ simulated function PostBeginPlay()
 
     //Engine starting and stopping stuff
     //bEngineOff=true;
-    //bEngineDead=false;
+    //bEngineDead = false;
     //bDisableThrottle=true;
 }
 
@@ -132,7 +132,7 @@ function KDriverEnter(Pawn P)
     PreviousPositionIndex=InitialPositionIndex;
 
     if (!p.IsHumanControlled())
-       bEngineOff=false;
+       bEngineOff = false;
 
     //check to see if Engine is already on when entering
     if (bEngineOff)
@@ -338,7 +338,7 @@ simulated function Tick(float dt)
 
     if (bEngineDead || bEngineOff)
     {
-        velocity=vect(0,0,0);
+        velocity=vect(0, 0, 0);
         Throttle=0;
         ThrottleAmount=0;
         bDisableThrottle=true;
@@ -477,8 +477,8 @@ function ServerStartEngine()
                 AmbientSound = IdleSound;
 
                 Throttle=0;
-                bDisableThrottle=false;
-                bEngineOff=false;
+                bDisableThrottle = false;
+                bEngineOff = false;
 
                 IgnitionSwitchTime = Level.TimeSeconds;
             }
@@ -639,7 +639,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0,0,0));
+        KAddImpulse(LinearImpulse, vect(0, 0, 0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
@@ -709,7 +709,7 @@ event CheckReset()
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
                 return;
             }
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0,0,1), Location + CollisionHeight * vect(0,0,1)))
+            else if (FastTrace(P.Location + P.CollisionHeight * vect(0, 0, 1), Location + CollisionHeight * vect(0, 0, 1)))
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Initiating FastTrace Reset Check...");
@@ -812,7 +812,7 @@ simulated event DestroyAppearance()
     }
 
     // Become the dead vehicle mesh
-    SetPhysics(PHYS_none);
+    SetPhysics(PHYS_None);
     KSetBlockKarma(false);
     SetDrawType(DT_StaticMesh);
     SetStaticMesh(DestroyedVehicleMesh);
@@ -851,7 +851,7 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROWheeledVehicle'.default.bDebugExitPositions = !class'DH_ROWheeledVehicle'.default.bDebugExitPositions;
-        log("DH_ROWheeledVehicle.bDebugExitPositions =" @ class'DH_ROWheeledVehicle'.default.bDebugExitPositions);
+        Log("DH_ROWheeledVehicle.bDebugExitPositions =" @ class'DH_ROWheeledVehicle'.default.bDebugExitPositions);
     }
 }
 

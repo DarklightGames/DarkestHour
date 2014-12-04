@@ -111,7 +111,7 @@ function bool ResupplyAmmo()
 {
     local int InitialAmount, i;
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     for(i=NumMagsToResupply; i>0; i--)
     {

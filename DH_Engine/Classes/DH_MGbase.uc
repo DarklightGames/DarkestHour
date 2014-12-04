@@ -451,7 +451,7 @@ function bool ResupplyAmmo()
 
     if (CurrentMagCount == MaxNumPrimaryMags - 1)
     {
-        ROPawn(Instigator).bWeaponNeedsResupply=false;
+        ROPawn(Instigator).bWeaponNeedsResupply = false;
     }
 
     return true;

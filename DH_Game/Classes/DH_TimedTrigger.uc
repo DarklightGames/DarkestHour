@@ -25,7 +25,7 @@ simulated function Timer()
     {
         TriggerEvent(Event, self, none);
         Log("TRIGGERED EVENT!");
-        bIsStateOne=false;
+        bIsStateOne = false;
     }
 }
 

@@ -27,7 +27,7 @@ function PostBeginPlay()
     if (bActAsClientMover && Level.NetMode == NM_DedicatedServer)
     {
         SetTimer(0, false);
-        SetPhysics(PHYS_none);
+        SetPhysics(PHYS_None);
         GotoState('ServerIdle');
     }
 }

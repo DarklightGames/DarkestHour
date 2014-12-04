@@ -66,7 +66,7 @@ function EvaluateRandom()
         // Must have a group tag set
         if (GunFactory.GroupTag == "" && GunFactory.bUseRandomizer)
         {
-          log("Error - GroupTag not set");
+          Log("Error - GroupTag not set");
           continue;
         }
 
@@ -162,7 +162,7 @@ function ProcessRandomActivation()
         // Must have a group tag set
         if (GunFactory.GroupTag == "")
         {
-          log("Error - GroupTag not set");
+          Log("Error - GroupTag not set");
           continue;
         }
 
@@ -258,7 +258,7 @@ simulated function Reset()
              //log(self$" Resetting mastergun on round end");
              TotalSpawnedVehicles=0;
              Deactivate();
-             bRandomEvaluated=false;
+             bRandomEvaluated = false;
              EvaluateRandom();
          }
          else if (!bRandomEvaluated)
@@ -272,7 +272,7 @@ simulated function Reset()
     else
     {
          TotalSpawnedVehicles=0;
-         Deactivate();//bFactoryActive=false;
+         Deactivate();//bFactoryActive = false;
     }
 }
 

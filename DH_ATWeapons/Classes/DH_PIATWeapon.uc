@@ -218,7 +218,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
         if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
             return;
 
-        InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
+        InitialAmount = FireMode[m].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && AP == none)
         {
@@ -520,7 +520,7 @@ function bool ResupplyAmmo()
     if (AmmoAmount(0) > 0)
         bIsLoaded = true;
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     for(i=NumMagsToResupply; i>0; i--)
     {

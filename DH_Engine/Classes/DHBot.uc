@@ -45,7 +45,7 @@ ignores HearNoise, Bump;
         StopStartTime = Level.TimeSeconds;
         bHasFired = false;
         if ((Pawn.Physics != PHYS_Flying) || (Pawn.MinFlySpeed == 0))
-        Pawn.Acceleration = vect(0,0,0); //stop
+        Pawn.Acceleration = vect(0, 0, 0); //stop
 
         if ((Pawn.Weapon != none) && Pawn.Weapon.FocusOnLeader(false))
             Target = Focus;

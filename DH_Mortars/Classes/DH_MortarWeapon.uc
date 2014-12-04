@@ -227,7 +227,7 @@ simulated function bool CanDeploy()
 
     //------------------------------------------------------------------
     //Check that the surface angle is less than our deploy angle maximum
-    if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+    if (Acos(HitNormal dot vect(0, 0, 1)) > DeployAngleMaximum)
     {
         Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
         return false;
@@ -271,7 +271,7 @@ simulated function bool CanDeploy()
         }
         //------------------------------------------------------------------
         //Check that the surface angle is less than our deploy angle maximum
-        if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+        if (Acos(HitNormal dot vect(0, 0, 1)) > DeployAngleMaximum)
         {
             //------------------------------
             //Cannot deploy on this surface.

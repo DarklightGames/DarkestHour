@@ -57,7 +57,7 @@ function PostBeginPlay()
         }
         else
         {
-            log("DarkestHourGame: More than one ROLevelInfo detected!");
+            Log("DarkestHourGame: More than one ROLevelInfo detected!");
             break;
         }
     }
@@ -71,7 +71,7 @@ function PostBeginPlay()
         }
         else
         {
-            log("DarkestHourGame: More than one DH_LevelInfo detected!");
+            Log("DarkestHourGame: More than one DH_LevelInfo detected!");
             break;
         }
     }
@@ -85,7 +85,7 @@ function PostBeginPlay()
         }
         else
         {
-            log("DarkestHourGame: More than one DHLevelSharedInfo detected!");
+            Log("DarkestHourGame: More than one DHLevelSharedInfo detected!");
             break;
         }
     }
@@ -97,7 +97,7 @@ function PostBeginPlay()
 
     if (LevelInfo == none)
     {
-        log("DarkestHourGame: No DH_LevelInfo detected!");
+        Log("DarkestHourGame: No DH_LevelInfo detected!");
     }
     else
     {
@@ -152,9 +152,9 @@ function PostBeginPlay()
         for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); k++)
         {
             DHGRI.AlliedRallyPoints[k].OfficerPRI = none;
-            DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0,0,0);
+            DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0, 0, 0);
             DHGRI.AxisRallyPoints[k].OfficerPRI = none;
-            DHGRI.AxisRallyPoints[k].RallyPointLocation = vect(0,0,0);
+            DHGRI.AxisRallyPoints[k].RallyPointLocation = vect(0, 0, 0);
         }
 
         // Clear help requests array
@@ -199,13 +199,13 @@ function PostBeginPlay()
         {
              //NorthEastCorner = NE;
              DHGRI.NorthEastBounds = NE.Location;
-            // log("Found Northeastcorner");
+            // Log("Found Northeastcorner");
         }
         foreach AllActors(class'ROMapBoundsSW', SW)
         {
              //SouthWestCorner = SW;
              DHGRI.SouthWestBounds = SW.Location;
-            // log("Found SouthWestcorner");
+            // Log("Found SouthWestcorner");
         }
 
         // Find all the radios
@@ -276,7 +276,7 @@ function PostBeginPlay()
         LevelInfo.Allies.SpawnLimit *= MaxPlayerRatio;
         LevelInfo.Axis.SpawnLimit *= MaxPlayerRatio;
 
-        log("MaxPlayerRatio = "$MaxPlayerRatio);
+        Log("MaxPlayerRatio = "$MaxPlayerRatio);
 
         //Make sure MaxTeamDifference is an acceptable value
         if (MaxTeamDifference < 1)
@@ -619,7 +619,7 @@ function Bot SpawnBot(optional string botName)
     // Change default bot class
     Chosen.PawnClass = class<Pawn>(DynamicLoadObject(DefaultPlayerClassName, class'class'));
 
-    NewBot = DHBot(Spawn(Chosen.PawnClass.Default.ControllerClass));
+    NewBot = DHBot(Spawn(Chosen.PawnClass.default.ControllerClass));
 
 
     if (NewBot != none)
@@ -736,7 +736,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 
                 if (Count > 10)
                 {
-                    log("DarkestHourGame: Unable to find a suitable role in SpawnBot()");
+                    Log("DarkestHourGame: Unable to find a suitable role in SpawnBot()");
                     return -1;
                 }
                 else
@@ -1177,7 +1177,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 
                 if (Count > arraycount(DHAxisRoles))
                 {
-                    log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
+                    Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
                     return -1;
                 }
                 else

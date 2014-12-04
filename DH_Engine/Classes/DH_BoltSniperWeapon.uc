@@ -344,7 +344,7 @@ function int GetRoundsToLoad()
     }
 
 
-    AmountNeeded = AmmoClass[0].Default.InitialAmount - CurrentMagLoad;
+    AmountNeeded = AmmoClass[0].default.InitialAmount - CurrentMagLoad;
 
     if (AmountNeeded > CurrentBulletCount)
         AmountToAdd = CurrentBulletCount;
@@ -508,7 +508,7 @@ simulated state WorkingBolt extends Busy
                 PlayerViewZoom(true);
         }
 
-        bWaitingToBolt=false;
+        bWaitingToBolt = false;
         FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; //fire now!
     }
 }

@@ -218,7 +218,7 @@ simulated function Tick(float DeltaTime)
         if (RightTreadPanner != none)
         {
             RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity Dot vector(Rotation) < 0)
+            if (Velocity dot vector(Rotation) < 0)
                 RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
             RightTreadPanner.PanRate -= LinTurnSpeed;
         }

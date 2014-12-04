@@ -30,7 +30,7 @@ state ProjectileFireMode
                 R.Pitch = CSpread * (FRand()-0.5);
                 R.Roll = CSpread * (FRand()-0.5);
 
-                WeaponFireRotation = Rotator(X >> R);
+                WeaponFireRotation = rotator(X >> R);
 
                 if (projectileID == 0)
                     bLastShot = false;
@@ -38,7 +38,7 @@ state ProjectileFireMode
                     bLastShot = true;
 
                 if (bGunFireDebug)
-                    log("Firing Canister shot with angle: "@WeaponFireRotation);
+                    Log("Firing Canister shot with angle: "@WeaponFireRotation);
 
                 SpawnProjectile(ProjectileClass, false);
             }
@@ -84,10 +84,10 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                 // new tank shell dispersion function somwhere here...
 
         if (bGunFireDebug)
-                log("After pitch corrections FireRot "$FireRot);
+                Log("After pitch corrections FireRot "$FireRot);
 
     if (bGunFireDebug)
-                log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+                Log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
 
     if (bDoOffsetTrace)
     {
@@ -120,7 +120,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
 
         if (bGunFireDebug)
-                log("At the moment of spawning FireRot "$FireRot);
+                Log("At the moment of spawning FireRot "$FireRot);
 
    //swap to the next round type after firing (hmm shoudn't I have this moved? Or REMOVED ???)
 
@@ -130,7 +130,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         {
                 ProjectileClass = PendingProjectileClass;
                 if (bGunFireDebug)
-                        log("Projectile class was changed to PendingProjClass by SpawnProjectile function");
+                        Log("Projectile class was changed to PendingProjClass by SpawnProjectile function");
         }
     }
 

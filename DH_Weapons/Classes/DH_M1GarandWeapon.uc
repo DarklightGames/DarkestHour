@@ -43,7 +43,7 @@ function PerformReload()
         return;
     }
 
-    if (CurrentMagLoad < FireMode[0].AmmoClass.Default.InitialAmount)
+    if (CurrentMagLoad < FireMode[0].AmmoClass.default.InitialAmount)
     {
         PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
     }

@@ -275,7 +275,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
         if (!bUsingSights)
         {
-           log("Warning, drawing overlay texture and we aren't zoomed!!!");
+           Log("Warning, drawing overlay texture and we aren't zoomed!!!");
         }
 
         Canvas.DrawColor.A = 255;

@@ -18,7 +18,7 @@ function PlayerExit(Controller Exiting)
 
     ExitingPlayerIndex = -1;
 
-    log("____PlayerExit", 'MapVoteDebug');
+    Log("____PlayerExit", 'MapVoteDebug');
 
     if (bMapVote || bKickVote || bMatchSetup)
     {
@@ -28,7 +28,7 @@ function PlayerExit(Controller Exiting)
             // remove players vote from vote count
             if (MVRI[i] != none && (MVRI[i].PlayerOwner == none || MVRI[i].PlayerOwner == Exiting))
             {
-                log("exiting player MVRI found " $ i,'MapVoteDebug');
+                Log("exiting player MVRI found " $ i,'MapVoteDebug');
 
                 ExitingPlayerIndex = i;
 
@@ -63,7 +63,7 @@ function PlayerExit(Controller Exiting)
 
             if (MVRI[i] != none && (MVRI[i].PlayerOwner == none || MVRI[i].PlayerOwner == Exiting))
             {
-                log("___Destroying VRI...",'MapVoteDebug');
+                Log("___Destroying VRI...",'MapVoteDebug');
 
                 MVRI[i].Destroy();
                 MVRI[i] = none;

@@ -177,7 +177,7 @@ simulated function SetImage()
     Map = AddSpaces(Map);
     Map = Lower(Map);
 
-    log("DHServerLoading: Map name = " $Map);
+    Log("DHServerLoading: Map name = " $Map);
             mat = Material'MenuBlack';
             DrawOpImage(Operations[0]).Image = mat;
 
