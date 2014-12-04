@@ -1420,9 +1420,10 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 
     bShouldGib = DamageType != none && (DamageType.default.bAlwaysGibs || ((Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold));
 
-    if (!bShouldGib)
+    if (!bShouldGib && DrivenVehicle == none)
     {
-        //Drop inventory if player was not completely gibbed
+        //Drop inventory if player is not in a vehicle and is not about to be
+        //completely obliterated
         DropWeaponInventory(TossVel);
     }
 
