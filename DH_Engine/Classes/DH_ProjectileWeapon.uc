@@ -2136,22 +2136,45 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
 
 function bool HandlePickupQuery(Pickup Item)
 {
+    local int i;
     local WeaponPickup WP;
-
-    //WP = DHWeaponPickup(Item);
-
-    if (WP != none)
-    {
-        //TODO: give ammo from downed weapon and remove it!
-    }
+    local DHWeaponPickup DHWP;
+    local array<int> LoadedMagazineIndices;
 
     if (Class == Item.InventoryType)
     {
+        // Pickup is our weapon type
         WP = WeaponPickup(Item);
 
         if (WP != none)
         {
-            return !WP.AllowRepeatPickup();
+            DHWP = DHWeaponPickup(WP);
+
+            if (DHWP != none)
+            {
+                // Gets loaded magazines from the pickup and adds them to our weapon
+                LoadedMagazineIndices = DHWP.GetLoadedMagazineIndices();
+
+                Log("LoadedMagazineIndices.Length" @ LoadedMagazineIndices.Length);
+
+                for (i = 0; i < LoadedMagazineIndices.Length; ++i)
+                {
+                    Log("LoadedMagazineIndices[" $ i $ "] =" @ LoadedMagazineIndices[i] @ DHWP.AmmoMags[LoadedMagazineIndices[i]]);
+                }
+
+                for (i = 0; i < LoadedMagazineIndices.Length && PrimaryAmmoArray.Length < MaxNumPrimaryMags; ++i)
+                {
+                    PrimaryAmmoArray[PrimaryAmmoArray.Length] = DHWP.AmmoMags[LoadedMagazineIndices[i]];
+                }
+
+                CurrentMagCount = PrimaryAmmoArray.Length - 1;
+
+                return false;
+            }
+            else
+            {
+                return !WP.AllowRepeatPickup();
+            }
         }
         else
         {
