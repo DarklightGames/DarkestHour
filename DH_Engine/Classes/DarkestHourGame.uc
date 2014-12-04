@@ -19,6 +19,7 @@ var     DH_RoleInfo                 DHAxisRoles[16];
 var     DH_RoleInfo                 DHAlliesRoles[16];
 
 var     DHSpawnManager              SpawnManager;
+var     DHObstacleManager           ObstacleManager;
 
 //-----------------------------------------------------------------------------
 // PostBeginPlay - Find the level info and objectives
@@ -87,6 +88,11 @@ function PostBeginPlay()
             log("DarkestHourGame: More than one DHLevelSharedInfo detected!");
             break;
         }
+    }
+
+    foreach AllActors(class'DHObstacleManager', ObstacleManager)
+    {
+        break;
     }
 
     if (LevelInfo == none)
@@ -305,10 +311,13 @@ function CheckResupplyVolumes()
 
     // Activate any vehicle factories that are actived based on spawn areas
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+
     for(i = 0; i < arraycount(DHResupplyAreas); i++)
     {
         if (DHResupplyAreas[i] == none)
+        {
             continue;
+        }
 
         if (DHResupplyAreas[i].bUsesSpawnAreas)
         {
@@ -361,7 +370,9 @@ function CheckMortarmanSpawnAreas()
     for (i = 0; i < DHMortarSpawnAreas.Length; i++)
     {
         if (!DHMortarSpawnAreas[i].bEnabled)
+        {
             continue;
+        }
 
         //axis & (no best | this one has higher precedence)
         if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none ||
@@ -401,10 +412,15 @@ function CheckMortarmanSpawnAreas()
             }
 
             if (bReqsMet)
+            {
                 Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
             else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
+            {
                 Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
         }
+
         //allies & (no best | this one has higher precedence)
         if (DHMortarSpawnAreas[i].bAlliesSpawn &&
             (Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
@@ -430,7 +446,6 @@ function CheckMortarmanSpawnAreas()
                 {
                     bSomeReqsMet = true;
                     break;
-                    //log("Setting Allied  bSomeReqsMet to true");
                 }
             }
 
@@ -449,9 +464,13 @@ function CheckMortarmanSpawnAreas()
             }
 
             if (bReqsMet)
+            {
                 Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
             else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
+            {
                 Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
         }
     }
 
@@ -477,7 +496,9 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
     P = PlayerStart(N);
 
     if (P == none || Player == none)
+    {
         return -10000000;
+    }
 
     DHRI = DH_RoleInfo(DHPlayerReplicationInfo(Player.PlayerReplicationInfo).RoleInfo);
 
@@ -486,7 +507,9 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         if (CurrentTankCrewSpawnArea[Team]!= none && Player != none && DHRI.bCanBeTankCrew)
         {
             if (P.Tag != CurrentTankCrewSpawnArea[Team].Tag)
+            {
                 return -9000000;
+            }
         }
 
         //----------------------------------------------------------------------
@@ -495,34 +518,48 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         else if (DHCurrentMortarSpawnArea[Team] != none && Player != none && DHRI != none && DHRI.bCanUseMortars)
         {
             if (P.Tag != DHCurrentMortarSpawnArea[Team].Tag)
+            {
                 return -9000000;
+            }
         }
         else
         {
             if (P.Tag != CurrentSpawnArea[Team].Tag)
+            {
                 return -9000000;
+            }
         }
     }
     else if (Team != P.TeamNumber)
+    {
         return -9000000;
-
-    //super(DeathMath).RatePlayerStart(N, Team, Controller);
-    //TODO: everything after this is a modified version of DeathMath.RatePlayerStart
+    }
 
     P = PlayerStart(N);
 
-    if ((P == none) || !P.bEnabled || P.PhysicsVolume.bWaterVolume)
+    if (P == none || !P.bEnabled || P.PhysicsVolume.bWaterVolume)
+    {
         return -10000000;
+    }
 
     //assess candidate
     if (P.bPrimaryStart)
+    {
         Score = 10000000;
+    }
     else
+    {
         Score = 5000000;
-    if ((N == LastStartSpot) || (N == LastPlayerStartSpot))
+    }
+
+    if (N == LastStartSpot || N == LastPlayerStartSpot)
+    {
         Score -= 10000.0;
+    }
     else
+    {
         Score += 3000 * FRand(); //randomize
+    }
 
     for (OtherPlayer = Level.ControllerList; OtherPlayer != none; OtherPlayer = OtherPlayer.NextController)
     {
@@ -575,13 +612,13 @@ function Bot SpawnBot(optional string botName)
     Chosen = BotTeam.ChooseBotClass(botName);
 
     if (Chosen.PawnClass == none)
-        Chosen.Init(); //amb
+    {
+        Chosen.Init();
+    }
 
     // Change default bot class
-
     Chosen.PawnClass = class<Pawn>(DynamicLoadObject(DefaultPlayerClassName, class'class'));
 
-    // log("Chose pawn class "$Chosen.PawnClass);
     NewBot = DHBot(Spawn(Chosen.PawnClass.Default.ControllerClass));
 
 
@@ -607,9 +644,13 @@ function Bot SpawnBot(optional string botName)
 
         // Increment the RoleCounter for the new role
         if (BotTeam.TeamIndex == AXIS_TEAM_INDEX)
+        {
             DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[NewBot.CurrentRole]++;
+        }
         else if (BotTeam.TeamIndex == ALLIES_TEAM_INDEX)
+        {
             DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[NewBot.CurrentRole]++;
+        }
 
         // Tone down the "gamey" bot parameters
         NewBot.Jumpiness = 0.0;
@@ -651,7 +692,6 @@ function Bot SpawnBot(optional string botName)
                 NewBot.StrafingAbility = -1.0;
                 break;
         }
-
 
         DHPlayerReplicationInfo(NewBot.PlayerReplicationInfo).RoleInfo = RI;
         ChangeWeapons(NewBot, -2, -2, -2);
@@ -727,9 +767,12 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
 {
     if (Killer == none || Points <= 0 || Killer.PlayerReplicationInfo == none || Killer.GetTeamNum() == Vehicle.GetTeamNum())
+    {
         return;
+    }
 
     Killer.PlayerReplicationInfo.Score += Points;
+
     ScoreEvent(Killer.PlayerReplicationInfo, Points, "Vehicle_kill");
 }
 
@@ -1787,6 +1830,14 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
     ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
 
     return true;
+}
+
+exec function DebugObstacles(optional int Option)
+{
+    if (ObstacleManager != none)
+    {
+        ObstacleManager.ServerDebugObstacles(Option);
+    }
 }
 
 defaultproperties

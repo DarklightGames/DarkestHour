@@ -5,35 +5,104 @@
 
 class DHObstacle extends Actor;
 
-var()   StaticMesh   DestroyedStaticMesh;
+var     int         Index;
 
-event Touch(Actor Other)
+var     StaticMesh  IntactStaticMesh;
+var()   StaticMesh  ClearedStaticMesh;
+var()   Sound       ClearSound;
+var()   float       SpawnClearedChance;
+
+simulated function bool IsCleared()
 {
-    super.Touch(Other);
+    return IsInState('Cleared');
+}
 
-    //TODO: requires a certain speed?
-    if (Other.IsA('SVehicle'))
+function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    IntactStaticMesh = StaticMesh;
+
+    if (Level.NetMode == NM_Client)
     {
-        GotoState('DestroyedState');
+        bTearOff = true;
     }
 }
 
-event Bump(Actor Other)
+event Touch(Actor Other)
 {
-    super.Bump(Other);
+    local SVehicle V;
 
-    Level.Game.Broadcast(self, "Bump" @ Other);
+    if (Level.NetMode != NM_Client)
+    {
+        V = SVehicle(Other);
+
+        //TODO: destruction requires a certain speed?
+        if (V != none)
+        {
+            SetCleared(true);
+        }
+    }
 }
 
-state DestroyedState
+state Intact
 {
     function BeginState()
     {
-        Level.Game.Broadcast(self, "Destroyed");
+        local DHObstacleManager OM;
 
-        SetStaticMesh(DestroyedStaticMesh);
-
+        SetStaticMesh(IntactStaticMesh);
         KSetBlockKarma(false);
+
+        if (Role == ROLE_Authority)
+        {
+            OM = DarkestHourGame(Level.Game).ObstacleManager;
+
+            if (OM != none)
+            {
+                OM.SetCleared(self, false);
+            }
+        }
+    }
+}
+
+state Cleared
+{
+    function BeginState()
+    {
+        local DHObstacleManager OM;
+
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            Log(ClearSound);
+
+            PlayOwnedSound(ClearSound, SLOT_None);
+        }
+
+        SetStaticMesh(ClearedStaticMesh);
+        KSetBlockKarma(true);
+
+        if (Role == ROLE_Authority)
+        {
+            OM = DarkestHourGame(Level.Game).ObstacleManager;
+
+            if (OM != none)
+            {
+                OM.SetCleared(self, true);
+            }
+        }
+    }
+}
+
+simulated function SetCleared(bool bIsCleared)
+{
+    if (bIsCleared)
+    {
+        GotoState('Cleared');
+    }
+    else
+    {
+        GotoState('Intact');
     }
 }
 
@@ -50,6 +119,6 @@ defaultproperties
     bStatic=false
     bStaticLighting=true
     DrawType=DT_StaticMesh
-    Role=ROLE_None
+    SpawnClearedChance=0.0
 }
 
