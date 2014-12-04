@@ -20,7 +20,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
                 }
         }
 
-        if (ExistingPanel==none)
+        if (ExistingPanel == none)
                 NewPanelClass = class<GUITabPanel>(Controller.AddComponentClass(PanelClass));
 
         if ((ExistingPanel!=none) || (NewPanelClass != none))
@@ -43,7 +43,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
         else
                 {
                         NewTabButton = new class'DHGUITabButton';
-                        if (NewTabButton==none)
+                        if (NewTabButton == none)
                         {
                             return none;
                         }
@@ -105,7 +105,7 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
                     else
                     {
                             NewTabButton = new class'DHGUITabButton';
-                            if (NewTabButton==none)
+                            if (NewTabButton == none)
                             {
                     return none;
                             }
@@ -138,7 +138,7 @@ function bool InternalTabClick(GUIComponent Sender)
 {
         local DHGUITabButton But;
         But = DHGUITabButton(Sender);
-        if (But==none)
+        if (But == none)
                 return false;
         ActivateTab(But, true);
         return true;

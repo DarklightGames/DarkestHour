@@ -29,7 +29,7 @@ function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, floa
         else
         {
             C.SetPos(X, Y);
-            if (SelectedImage==none)
+            if (SelectedImage == none)
                 C.DrawTile(Controller.DefaultPens[0], XL, YL,0,0,32,32);
             else
             {
