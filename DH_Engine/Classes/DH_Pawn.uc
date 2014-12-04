@@ -1362,9 +1362,7 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
 //-----------------------------------------------------------------------------
 // Died - A few minor additions
 // DH added removal of radioman arty triggers on death - PsYcH0_Ch!cKeN
-// DH added removal of mortar targets on death - Basnett
 //-----------------------------------------------------------------------------
-
 function Died(Controller Killer, class<DamageType> damageType, vector HitLocation)
 {
     local vector            TossVel;
@@ -1372,13 +1370,17 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
     local NavigationPoint   N;
     local float DamageBeyondZero;
     local vector HitDirection;
-    local DHGameReplicationInfo GRI;
+    local bool bShouldGib;
 
     if (bDeleteMe || Level.bLevelChange || Level.Game == none)
+    {
         return; // already destroyed, or level is being cleaned up
+    }
 
     if (DamageType.default.bCausedByWorld && (Killer == none || Killer == Controller) && LastHitBy != none)
+    {
         Killer = LastHitBy;
+    }
     else if (bOnFire) // Person who starts the fire always gets the credit
     {
         Killer = FireStarter.Controller;
@@ -1390,12 +1392,15 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
     if (Level.Game.PreventDeath(self, Killer, damageType, HitLocation))
     {
         Health = max(Health, 1); //mutator should set this higher
+
         return;
     }
 
     // Reset root bone if mantling when killed
     if (bIsMantling)
+    {
         ResetRootBone();
+    }
 
     // Turn off the auxilary collision when the player dies
     if (AuxCollisionCylinder != none)
@@ -1409,70 +1414,24 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
-        DamageType = class'ROSuicided';
-
-    if (Weapon != none && (DrivenVehicle == none || DrivenVehicle.bAllowWeaponToss))
     {
-        if (Controller != none)
-            Controller.LastPawnWeapon = Weapon.Class;
-        Weapon.HolderDied();
-        TossVel = vector(GetViewRotation());
-        TossVel = TossVel * ((Velocity Dot TossVel) + 50) + vect(0,0,200);
-
-        if ((damageType != none) && !damageType.default.bThrowRagdoll)
-        {
-            TossWeapon(TossVel);
-        }
+        DamageType = class'ROSuicided';
     }
 
-    //Check if damage type wouldn't destroy weapon usability then drop inventory
-    //Debug Theel - Eventually this needs to be a proper check of damage type
-    if ((damageType != none) && !damageType.default.bThrowRagdoll)
+    bShouldGib = DamageType != none && (DamageType.default.bAlwaysGibs || ((Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold));
+
+    if (!bShouldGib)
     {
+        //Drop inventory if player was not completely gibbed
         DropWeaponInventory(TossVel);
     }
 
-    if (CarriedRadioTrigger != none) //Remove artillery trigger
-        DestroyRadioTrigger();
+    DestroyRadioTrigger();
 
     if (OwnedMortar != none)
-        OwnedMortar.GotoState('PendingDestroy');
-
-    //Clear any mortar targetting information in the GRI and our own pawn.
-    /* Theel Debug (Temp remove mortar target removal on death)
-    if (DHPlayer(Controller) != none)
     {
-        if (DHPlayer(Controller).MortarHitLocation != vect(0,0,0))
-            DHPlayer(Controller).MortarHitLocation = vect(0,0,0);
-
-        if (DHPlayer(Controller).MortarTargetIndex != 255)
-        {
-            GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-            if (GRI != none)
-            {
-                if (GetTeamNum() == 0)
-                {
-                    GRI.GermanMortarTargets[DHPlayer(Controller).MortarTargetIndex].Controller = none;
-                    GRI.GermanMortarTargets[DHPlayer(Controller).MortarTargetIndex].HitLocation = vect(0,0,0);
-                    GRI.GermanMortarTargets[DHPlayer(Controller).MortarTargetIndex].Location = vect(0,0,0);
-                    GRI.GermanMortarTargets[DHPlayer(Controller).MortarTargetIndex].Time = 0;
-                    GRI.GermanMortarTargets[DHPlayer(Controller).MortarTargetIndex].bCancelled = 0;
-                }
-                else
-                {
-                    GRI.AlliedMortarTargets[DHPlayer(Controller).MortarTargetIndex].Controller = none;
-                    GRI.AlliedMortarTargets[DHPlayer(Controller).MortarTargetIndex].HitLocation = vect(0,0,0);
-                    GRI.AlliedMortarTargets[DHPlayer(Controller).MortarTargetIndex].Location = vect(0,0,0);
-                    GRI.AlliedMortarTargets[DHPlayer(Controller).MortarTargetIndex].Time = 0;
-                    GRI.AlliedMortarTargets[DHPlayer(Controller).MortarTargetIndex].bCancelled = 0;
-                }
-            }
-
-            DHPlayer(Controller).MortarTargetIndex = 255;
-        }
+        OwnedMortar.GotoState('PendingDestroy');
     }
-    */
 
     if (DrivenVehicle != none)
     {
@@ -1486,65 +1445,94 @@ function Died(Controller Killer, class<DamageType> damageType, vector HitLocatio
         Level.Game.Killed(Killer, Controller, self, damageType);
     }
     else
+    {
         Level.Game.Killed(Killer, Controller(Owner), self, damageType);
+    }
 
     DrivenVehicle = none;
 
     if (Killer != none)
+    {
         TriggerEvent(Event, self, Killer.Pawn);
+    }
     else
+    {
         TriggerEvent(Event, self, none);
+    }
 
     // make sure to untrigger any triggers requiring player touch
     if (IsPlayerPawn() || WasPlayerPawn())
     {
         PhysicsVolume.PlayerPawnDiedInVolume(self);
-        ForEach TouchingActors(class'Trigger',T)
+
+        foreach TouchingActors(class'Trigger',T)
+        {
             T.PlayerToucherDied(self);
+        }
 
         // event for HoldObjectives
         foreach TouchingActors(class'NavigationPoint', N)
+        {
             if (N.bReceivePlayerToucherDiedNotify)
+            {
                 N.PlayerToucherDied(Self);
+            }
+        }
     }
 
     // remove powerup effects, etc.
     RemovePowerups();
 
     Velocity.Z *= 1.3;
+
     if (IsHumanControlled())
+    {
         PlayerController(Controller).ForceDeathUpdate();
-    if (DHPlayer(Controller) != none
-         && class<ROWeaponDamageType>(DamageType) != none
-         && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring == true)
+    }
+
+    if (DHPlayer(Controller) != none &&
+        class<ROWeaponDamageType>(DamageType) != none &&
+        class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring)
     {
         HitDirection = Location - HitLocation;
         HitDirection.Z = 0.0f;
         HitDirection = normal(HitDirection);
 
-        DHPlayer(Controller).PlayerJarred(HitDirection,3.0f);
+        DHPlayer(Controller).PlayerJarred(HitDirection, 3.0f);
     }
-    if ((DamageType != none) && DamageType.default.bAlwaysGibs && !class'GameInfo'.static.UseLowGore())
+
+    if (DamageType != none && DamageType.default.bAlwaysGibs && !class'GameInfo'.static.UseLowGore())
     {
         if (Level.NetMode == NM_DedicatedServer)
-           DoDamageFX('obliterate',1010,class'RODiedInTankDamType', Rotation);
+        {
+           DoDamageFX('obliterate', 1010, class'RODiedInTankDamType', Rotation);
+        }
+
         ChunkUp(Rotation, DamageType.default.GibPerterbation);
     }
-    else if (DamageType != none && (Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold &&
-        !class'GameInfo'.static.UseLowGore())
+    else if (DamageType != none && (Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold && !class'GameInfo'.static.UseLowGore())
     {
         if (Level.NetMode == NM_DedicatedServer)
-           DoDamageFX('obliterate',1010,class'RODiedInTankDamType', Rotation);
+        {
+           DoDamageFX('obliterate', 1010, class'RODiedInTankDamType', Rotation);
+        }
+
         ChunkUp(rotator(GetTearOffMomemtum()), DamageType.default.GibPerterbation);
     }
     else
     {
         NetUpdateFrequency = default.NetUpdateFrequency;
         PlayDying(DamageType, HitLocation);
+
         if (Level.Game.bGameEnded)
+        {
             return;
+        }
+
         if (!bPhysicsAnimUpdate && !IsLocallyControlled())
+        {
             ClientDying(DamageType, HitLocation);
+        }
     }
 }
 
@@ -1692,14 +1680,24 @@ function DestroyRadioTrigger()
 {
     local DHGameReplicationInfo TmpGRI;
 
+    if (CarriedRadioTrigger == none)
+    {
+        return;
+    }
+
     TmpGRI = DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo);
 
     if (TmpGRI != none)
     {
         if (CarriedRadioTrigger.TeamCanUse == AT_Allies)
+        {
             TmpGRI.CarriedAlliedRadios[GRIRadioPos] = none;
+        }
+
         if (CarriedRadioTrigger.TeamCanUse == AT_Axis)
+        {
             TmpGRI.CarriedAxisRadios[GRIRadioPos] = none;
+        }
     }
 
     CarriedRadioTrigger.Destroy();
