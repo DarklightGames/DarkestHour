@@ -5,7 +5,6 @@
 
 class DH_M1GrenadeProjectile extends DH_GrenadeProjectile;
 
-
 defaultproperties
 {
     FuzeLengthTimer=4.0 // Matt: added as default is now 4.5 instead of 4.0

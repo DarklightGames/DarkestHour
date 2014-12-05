@@ -66,7 +66,6 @@ var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, 
 
 var             sound           MantleSound;
 
-
 // Burning
 var bool                bOnFire;                         // Whether Pawn is on fire or not
 var bool                bBurnFXOn;                       // Whether Fire FX are enabled or not
@@ -1034,7 +1033,6 @@ simulated function SetWeaponAttachment(ROWeaponAttachment NewAtt)
 
     WeaponAttachment.AnimEnd(0);
 }
-
 
 // Handles the stamina calculations and sprinting functionality
 // Modified to prevent stamina recharging during a mantle - Ch!cKeN

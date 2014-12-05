@@ -5,7 +5,6 @@
 
 class DH_USrifleman29th extends DH_US_29th_Infantry;
 
-
 function class<ROHeadgear> GetHeadgear()
 {
     if (FRand() < 0.2)

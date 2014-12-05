@@ -375,7 +375,6 @@ simulated state IronSightZoomOut
     }
 }
 
-
 simulated event Destroyed()
 {
     if (ScopeScriptedTexture != none)

@@ -5,7 +5,6 @@
 
 class DH_YellowGreenTankShellTracer extends Effects;
 
-
 //  More realistic shell tracer, harder to see
 // (commander by binoculars can see it better than gunner, as in real life)
 

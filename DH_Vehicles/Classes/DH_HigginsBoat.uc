@@ -14,7 +14,6 @@ var         float               RampSoundVolume;
 
 var name            RampDownIdleAnim;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -152,7 +151,6 @@ function DriverDied()
     DriverLeft();
     MaybeDestroyVehicle();
 }
-
 
 // Called by notifies!!
 function RampUpIdle()

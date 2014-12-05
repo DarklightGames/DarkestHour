@@ -685,7 +685,6 @@ function ServerStartEngine()
     }
 }
 
-
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
 function ServerChangeViewPoint(bool bForward)
 {
@@ -1073,7 +1072,6 @@ simulated function Tick(float DeltaTime)
                 Skins[RightTreadIndex]=DamagedTreadPanner;
 
         }
-
 
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
         // VSize() is very CPU intensive - Ramm
@@ -2018,7 +2016,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
 
         return PenetrationAPC(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, GetOverMatch(URearArmorFactor, ShellDiameter), bShatterProne);
 
-
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
     {
@@ -2288,7 +2285,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
         bRearHit=true;
 
         return PenetrationHVAP(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
-
 
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
@@ -2560,7 +2556,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
 
         return PenetrationHVAPLarge(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
 
-
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
     {
@@ -2626,7 +2621,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
        return false;
     }
 }
-
 
 simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
@@ -3175,7 +3169,6 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     }
 }
 
-
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
 //              for Tanks, we'll probably want to prevent bullets from doing damage too
 function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -3231,7 +3224,6 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
         }
     }
 
-
     // Modify the damage based on what it should do to the vehicle; overloaded here so tank cannot take any bullet/bash/bayo damage
     if (DamageType != none)
     {
@@ -3273,7 +3265,6 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 
             if (bLogPenetration)
                 Log(" We hit "$GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType)$" hitpoint.");
-
 
             if (VehHitpoints[i].HitPointType == HP_Engine)
             {

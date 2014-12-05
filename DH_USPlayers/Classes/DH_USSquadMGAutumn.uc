@@ -5,7 +5,6 @@
 
 class DH_USSquadMGAutumn extends DH_US_Autumn_Infantry;
 
-
 function class<ROHeadgear> GetHeadgear()
 {
     if (FRand() < 0.2)

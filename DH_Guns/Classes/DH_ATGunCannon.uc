@@ -7,7 +7,6 @@ class DH_ATGunCannon extends DH_ROTankCannon
       config(xGunsightDebugging)
       abstract;
 
-
 simulated function Timer()
 {
    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)

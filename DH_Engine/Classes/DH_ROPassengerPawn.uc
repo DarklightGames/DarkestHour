@@ -36,7 +36,6 @@ replication
         ServerToggleDebugExits; // Matt: added
 }
 
-
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;

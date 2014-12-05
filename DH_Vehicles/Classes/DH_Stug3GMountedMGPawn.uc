@@ -5,10 +5,8 @@
 
 class DH_Stug3GMountedMGPawn extends DH_ROMountedTankMGPawn;
 
-
 var     int             InitialPositionIndex; // Initial Gunner Position
 var     int             UnbuttonedPositionIndex; // Lowest pos number where player is unbuttoned
-
 
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
@@ -282,7 +280,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-
 function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
 {
     local rotator NewRotation;
@@ -311,7 +308,6 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
         }
     }
 }
-
 
 // Gunner cannot fire MG when he is buttoned inside tank (because he's not mounted on the damn gun!)
 function Fire(optional float F)

@@ -138,7 +138,6 @@ simulated function ROIronSights()
  }
 }
 
-
 // returns true if this weapon should use free-aim in this particular state
 simulated function bool ShouldUseFreeAim()
 {

@@ -5,7 +5,6 @@
 
 class DH_KubelwagenCar_WH extends DH_ROWheeledVehicle;
 
-
 #exec OBJ LOAD FILE=..\Animations\DH_Kubelwagen_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc2.usx

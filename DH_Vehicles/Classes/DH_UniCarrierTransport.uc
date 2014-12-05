@@ -10,7 +10,6 @@ class DH_UniCarrierTransport extends DH_ROTransportCraft;
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\Sounds\Vehicle_EnginesTwo.uax
 
-
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));

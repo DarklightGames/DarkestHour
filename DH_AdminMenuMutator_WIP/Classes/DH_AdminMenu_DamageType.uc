@@ -9,7 +9,6 @@
 class DH_AdminMenu_DamageType extends DamageType
     abstract;
 
-
 defaultproperties
 {
     DeathString="%o was re-spawned by an admin"

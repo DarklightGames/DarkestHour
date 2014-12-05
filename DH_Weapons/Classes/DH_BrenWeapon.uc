@@ -37,7 +37,6 @@ simulated function AnimEnd(int channel)
         }
 }
 
-
 //================================================
 // Following 5 functions to allow resupply on Bren
 //================================================

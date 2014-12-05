@@ -5,7 +5,6 @@
 
 class DHCreditsPage extends LargeWindow;
 
-
 const NUM_CREDIT_LINES = 120;
 
 var automated GUIButton b_Close;
@@ -13,7 +12,6 @@ var automated GUIButton b_Close;
 var automated GUIScrollTextBox lb_credits;
 
 var localized string credit_lines[NUM_CREDIT_LINES];
-
 
 function AddSystemMenu()
 {
@@ -32,8 +30,6 @@ function AddSystemMenu()
     // Do not want OnClick() called from MousePressed()
     b_ExitButton.bRepeatClick = false;
 }
-
-
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {

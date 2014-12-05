@@ -6,7 +6,6 @@
 class DH_BoltActionWeapon extends DH_ProjectileWeapon
     abstract;
 
-
 // Overriden because we don't want to allow reloading unless the weapon is out of
 // ammo
 simulated function bool AllowReload()

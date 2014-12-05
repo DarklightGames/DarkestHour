@@ -5,7 +5,6 @@
 
 class DHGUIButton extends GUIButton;
 
-
 defaultproperties
 {
     StyleName="DHMenuTextButtonStyle"

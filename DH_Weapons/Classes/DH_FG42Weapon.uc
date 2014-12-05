@@ -30,7 +30,6 @@ function ServerChangeFireMode()
     FireMode[0].bWaitForRelease = !FireMode[0].bWaitForRelease;
 }
 
-
 simulated state SwitchingFireMode extends Busy
 {
     simulated function bool ReadyToFire(int Mode)

@@ -66,7 +66,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     CameraRotation =  WeaponAimRot;
 
-
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
     if (CameraBone != '' && Gun != none)

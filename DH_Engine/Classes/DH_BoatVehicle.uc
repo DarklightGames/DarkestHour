@@ -37,7 +37,6 @@ struct ExitPositionPair
 
 var bool bDebugExitPositions;
 
-
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -175,7 +174,6 @@ function DriverLeft()
     super.DriverLeft();
 }
 
-
 simulated function PostNetReceive()
 {
     super.PostNetReceive();
@@ -244,7 +242,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
-
 
 simulated function Destroyed()
 {

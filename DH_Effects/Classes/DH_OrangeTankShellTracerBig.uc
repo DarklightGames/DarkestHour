@@ -5,8 +5,6 @@
 
 class DH_OrangeTankShellTracerBig extends Effects;
 
-
-
 auto state Start
 {
     simulated function Tick(float dt)

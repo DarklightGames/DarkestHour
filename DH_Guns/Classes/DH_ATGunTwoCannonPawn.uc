@@ -136,7 +136,6 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
 
-
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())
@@ -151,7 +150,6 @@ simulated function DrawHUD(Canvas Canvas)
     else
         ActivateOverlay(false);
 }
-
 
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
@@ -193,7 +191,6 @@ function ServerChangeViewPoint(bool bForward)
         }
      }
 }
-
 
 // Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
 simulated function ClientKDriverLeave(PlayerController PC)
@@ -256,7 +253,6 @@ function bool PlaceExitingDriver()
 
     return false;
 }
-
 
 //Options
 //1: Implemented: Modified PlaceExitingDriver so that it handles placing the player on exit better. - Ramm
@@ -401,8 +397,6 @@ simulated function DrawDebugCylinder(vector Base,vector X, vector Y,vector Z, FL
     local float AngleDelta;
     local vector LastVertex, Vertex;
     local int SideIndex;
-
-
 
     AngleDelta = 2.0f * PI / NumSides;
     LastVertex = Base + X * Radius;

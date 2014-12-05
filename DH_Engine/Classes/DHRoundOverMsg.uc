@@ -106,7 +106,6 @@ static simulated function ClientReceive(
     }
 }
 
-
 defaultproperties
 {
     //WinMusic variables are now defined in DH_LevelInfo with new default that uses groups

@@ -5,7 +5,6 @@
 
 class DH_ParachuteStaticLine extends Weapon;
 
-
 #exec OBJ LOAD FILE=..\Sounds\DH_SundrySounds.uax
 #exec OBJ LOAD FILE=..\Sounds\Inf_Player.uax
 

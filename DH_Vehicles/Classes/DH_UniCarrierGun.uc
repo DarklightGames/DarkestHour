@@ -5,7 +5,6 @@
 
 class DH_UniCarrierGun extends UniCarrierGun;
 
-
 // Play the reload animation on the client
 simulated function ClientDoReload()
 {

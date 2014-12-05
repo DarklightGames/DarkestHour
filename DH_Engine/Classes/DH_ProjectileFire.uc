@@ -22,7 +22,6 @@ var()           int         TracerFrequency;            // how often a tracer is
 var             byte        NextTracerCounter;
 var class<DH_ClientTracer>  DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: was class ROClientTracer
 
-
 // Weapon spread/innaccuracy variables
 var             float       AppliedSpread;              // spread applied to the projectile
 var()           float       CrouchSpreadModifier;       // Modifier applied when player is crouched
@@ -212,7 +211,6 @@ function CalcSpreadModifiers()
         Spread *= LeanSpreadModifier;
     }
 }
-
 
 /* =================================================================================== *
 * SpawnProjectile()

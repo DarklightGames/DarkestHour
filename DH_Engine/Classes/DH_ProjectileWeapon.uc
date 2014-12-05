@@ -287,7 +287,6 @@ simulated function bool ShouldUseFreeAim()
     return false;
 }
 
-
 //choose between regular or alt-fire
 function byte BestMode()
 {
@@ -1674,7 +1673,6 @@ simulated function PlayEndSprint()
 
     SetTimer(GetAnimDuration(Anim, 1.5) + FastTweenTime, false);
 }
-
 
 //=============================================================================
 // Reloading/Ammunition

@@ -210,7 +210,6 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-
 static function StaticPrecache(LevelInfo L)
 {
         super.StaticPrecache(L);

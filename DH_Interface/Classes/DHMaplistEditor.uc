@@ -25,7 +25,6 @@ function AddSystemMenu()
     b_ExitButton.bRepeatClick = false;
 }
 
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
         super.InitComponent(MyController, MyOwner);

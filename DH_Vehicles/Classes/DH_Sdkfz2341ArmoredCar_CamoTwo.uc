@@ -5,8 +5,6 @@
 
 class DH_Sdkfz2341ArmoredCar_CamoTwo extends DH_Sdkfz2341ArmoredCar;
 
-
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

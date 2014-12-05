@@ -5,7 +5,6 @@
 
 class DH_C96AmmoPouch extends ROAmmoPouch;
 
-
 static function StaticPrecache(LevelInfo L)
 {
 }

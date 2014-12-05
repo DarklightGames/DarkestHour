@@ -53,7 +53,6 @@ simulated event ThirdPersonEffects()
         }
     }
 
-
     if (FlashCount > 0 && ((FiringMode == 0) || bAltFireFlash))
     {
         if ((Level.TimeSeconds - LastRenderTime > 0.2) && (PlayerController(Instigator.Controller) == none))

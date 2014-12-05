@@ -13,7 +13,6 @@ simulated function UpdateTracer()
     if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
         return;
 
-
     if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
     {
         if (Instigator != none && Instigator.IsLocallyControlled())

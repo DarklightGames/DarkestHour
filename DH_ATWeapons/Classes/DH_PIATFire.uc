@@ -9,7 +9,6 @@ var     name        FireIronAnimOne;    // Iron Fire animation for range setting
 var     name        FireIronAnimTwo;    // Iron Fire animation for range setting two
 var     name        FireIronAnimThree;  // Iron Fire animation for range setting three
 
-
 event ModeDoFire()
 {
     if (!Weapon.bUsingSights)

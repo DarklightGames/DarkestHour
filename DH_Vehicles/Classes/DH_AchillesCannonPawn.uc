@@ -5,7 +5,6 @@
 
 class DH_AchillesCannonPawn extends DH_BritishTankCannonPawn;
 
-
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {

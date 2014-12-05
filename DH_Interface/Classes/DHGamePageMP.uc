@@ -47,7 +47,6 @@ function bool GameTypeLocked()
                 mcRules.UpdateBotSetting(i);
         }
 
-
     return false;
 }
 

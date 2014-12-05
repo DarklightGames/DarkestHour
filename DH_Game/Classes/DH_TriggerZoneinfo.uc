@@ -55,8 +55,6 @@ simulated event PostBeginPlay()
 
 }
 
-
-
 simulated function Tick(float DeltaTime)
 {
     local float percent;

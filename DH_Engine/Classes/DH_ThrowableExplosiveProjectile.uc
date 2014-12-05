@@ -11,7 +11,6 @@ var class<Emitter> ExplodeDirtEffectClass;
 var class<Emitter> ExplodeSnowEffectClass;
 var class<Emitter> ExplodeMidAirEffectClass;
 
-
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
@@ -424,7 +423,6 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 }
 
 simulated function WeaponLight(); // empty function; can be subclassed
-
 
 simulated function PhysicsVolumeChange(PhysicsVolume Volume)
 {

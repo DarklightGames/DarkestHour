@@ -78,7 +78,6 @@ replication
 
 }
 
-
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -670,7 +669,6 @@ function float GetAltAmmoReloadState()
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
 simulated function ShrinkHUD();
-
 
 // Matt: allows debugging exit positions to be toggled for all cannon pawns
 exec function ToggleDebugExits()

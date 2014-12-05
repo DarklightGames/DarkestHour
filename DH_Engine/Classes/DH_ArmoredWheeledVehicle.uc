@@ -41,7 +41,6 @@ simulated function DestroyTreads();
 
 function DamageTrack(bool bLeftTrack);
 
-
 simulated function bool IsDisabled()
 {
     return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax/3));
@@ -88,7 +87,6 @@ simulated function PostBeginPlay()
  simulated event DrivingStatusChanged()
 {
     local PlayerController PC;
-
 
     PC = Level.GetLocalPlayerController();
 

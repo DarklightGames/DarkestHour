@@ -5,7 +5,6 @@
 
 class DH_WillysJeep_Snow extends DH_WillysJeep;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

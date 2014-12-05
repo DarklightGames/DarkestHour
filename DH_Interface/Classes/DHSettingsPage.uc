@@ -111,7 +111,6 @@ function BackButtonClicked()
         }
 }
 
-
 function DefaultsButtonClicked()
 {
     ActivePanel.ResetClicked();

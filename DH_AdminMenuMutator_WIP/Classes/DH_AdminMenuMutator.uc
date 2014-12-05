@@ -11,10 +11,8 @@
 //=================================================================================================================================
 class DH_AdminMenuMutator extends Mutator;
 
-
 #exec OBJ LOAD FILE=..\Sounds\DH_KlaxonSound.uax
 //#exec AUDIO IMPORT FILE="..\DarkestHour\DH_AdminMenuMutator_WIP\Sounds\Submarine-Klaxon.wav" NAME="Klaxon" // TEMP, would compile klaxon warning sound as part of this code package
-
 
 const  BOTH_TEAMS_INDEX = 99;           // an index no. representing that an action is to be performed on both teams (adding to RO's ALLIES_TEAM_INDEX & AXIS_TEAM_INDEX)
 const  ERROR_INDEX = -1;                // an index number representing an error return, e.g. could not find a match
@@ -45,7 +43,6 @@ var  config  bool      bShowRealismMenu;       // unless set to true, the realis
 var  config  bool      bBypassAdminLogin;      // allows the option of disabling admin checks, e.g. if used on a test server
 var  config  bool      bDebug;                 // if true, various events will be logged
 var  config  sound     WarningSound;           // the sound to play when sending an admin warning message to a player (default is a klaxon)
-
 
 ////////////////////////////  INITIALISATION FUNCTIONS  ////////////////////////////////////////////////////////////////////////////////
 

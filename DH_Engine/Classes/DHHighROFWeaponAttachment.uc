@@ -43,7 +43,6 @@ replication
         SavedDualShot, DualShotCount;
 }
 
-
 simulated function Int2Rot(int N, out rotator R)
 {
     //-------------------------

@@ -5,7 +5,6 @@
 
 class DH_ShermanTank_M4A375W_Snow extends DH_ShermanTank_M4A375W;
 
-
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex2.utx
 
 static function StaticPrecache(LevelInfo L)

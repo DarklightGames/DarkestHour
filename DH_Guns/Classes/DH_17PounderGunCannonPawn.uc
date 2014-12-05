@@ -5,8 +5,6 @@
 
 class DH_17PounderGunCannonPawn extends DH_ATGunTwoCannonPawn;
 
-
-
 var() float ScopeCenterScaleX;
 var() float ScopeCenterScaleY;
 

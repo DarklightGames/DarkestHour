@@ -5,8 +5,6 @@
 
 class DH_PIATRocket extends DH_RocketProj;
 
-
-
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();

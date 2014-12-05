@@ -9,7 +9,6 @@ class DH_BritishTankCannonPawn extends DH_ROTankCannonPawn
 var() float ScopeCenterScaleX;
 var() float ScopeCenterScaleY;
 
-
 var     texture                 PeriscopeOverlay;
 
 simulated function DrawHUD(Canvas Canvas)
@@ -131,7 +130,6 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
         Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
-
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {

@@ -5,7 +5,6 @@
 
 class DHFilterListPage extends UT2K4_FilterListPage;
 
-
 function AddSystemMenu()
 {
     local eFontScale tFontScale;
@@ -23,7 +22,6 @@ function AddSystemMenu()
     // Do not want OnClick() called from MousePressed()
     b_ExitButton.bRepeatClick = false;
 }
-
 
 function InitFilterList()
 {

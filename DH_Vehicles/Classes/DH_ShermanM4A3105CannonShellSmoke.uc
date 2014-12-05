@@ -5,7 +5,6 @@
 
 class DH_ShermanM4A3105CannonShellSmoke extends DH_ShermanCannonShellSmoke;
 
-
 defaultproperties
 {
     	SmokeEffectClass=class'DH_Effects.DH_SmokeShellEffect_Large'

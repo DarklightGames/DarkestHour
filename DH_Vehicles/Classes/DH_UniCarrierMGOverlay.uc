@@ -5,7 +5,6 @@
 
 class DH_UniCarrierMGOverlay extends VehicleHUDOverlay;
 
-
 #exec OBJ LOAD FILE=..\Animations\DH_Bren_1st.ukx
 
 defaultproperties

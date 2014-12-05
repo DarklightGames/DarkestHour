@@ -35,11 +35,9 @@ var     Obituary                DHObituaries[8];
 
 var const float VOICE_ICON_DIST_MAX;
 
-
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
-
 
 simulated function UpdatePrecacheMaterials()
 {
@@ -148,7 +146,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
 }
 
-
 // This is potentially called from 5 different functions, as GameReplicationInfo isn't replicating until _after_ PostNetBeginPlay()
 simulated function SetAlliedColour()
 {
@@ -247,7 +244,6 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     C.SetPos(ScreenLocX, ScreenLocY);
 }
-
 
 //-----------------------------------------------------------------------------
 // Message - Changed message classes
@@ -499,7 +495,6 @@ simulated event PostRender(canvas Canvas)
     super.PostRender(Canvas);
 }
 
-
 //-----------------------------------------------------------------------------
 // DrawHudPassC - Draw all the widgets here
 // Modified to add mantling icon - PsYcH0_Ch!cKeN
@@ -670,7 +665,6 @@ simulated function DrawHudPassC(Canvas C)
                 MapUpdatedIcon.OffsetY = default.MapUpdatedText.OffsetY * MapUpdatedIcon.TextureScale;
             }
 
-
             // Draw icon
             MapUpdatedIcon.Tints[0] = myColor; MapUpdatedIcon.Tints[1] = myColor;
             DrawSpriteWidgetClipped(C, MapUpdatedIcon, coords, true, XL, YL, true, true, true);
@@ -786,7 +780,6 @@ simulated function DrawHudPassC(Canvas C)
         DrawPointSphere();
     }
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // DrawVehicleIcon - draws all the vehicle HUD info, e.g. vehicle icon, passengers, ammo, speed, throttle
@@ -1367,7 +1360,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
         }
     }
 }
-
 
 //-----------------------------------------------------------------------------
 // DrawPlayerNames - Draws identify info for friendlies
@@ -2283,7 +2275,6 @@ simulated function DrawObjectives(Canvas C)
         }
         else
             DrawIconOnMap(C, subCoords, widget, myMapScale, DHGRI.Objectives[i].Location, MapCenter, 1, DHGRI.Objectives[i].ObjName, DHGRI, i);
-
 
         // If the objective isn't completely captured, overlay a flashing icon from other team
         if (DHGRI.Objectives[i].CompressedCapProgress != 0 && DHGRI.Objectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)

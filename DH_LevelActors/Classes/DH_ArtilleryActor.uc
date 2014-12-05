@@ -12,7 +12,6 @@ var()   int                         MaxRounds;      //0 = infinite
 var     int                         NumRoundsFired; //default to 0
 var     array<DH_ArtilleryActor>    ArtyReferences; //References of attached
 
-
 function PostBeginPlay()
 {
     local DH_ArtilleryActor RAA;

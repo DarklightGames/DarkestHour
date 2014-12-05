@@ -5,7 +5,6 @@
 
 class DH_ROTankCannonShellHVAP extends DH_ROTankCannonShell;
 
-
 // Matt: re-worked, with commentary below
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {

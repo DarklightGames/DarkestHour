@@ -5,7 +5,6 @@
 
 class DH_ROTankCannonShellHEAT extends DH_ROTankCannonShell;
 
-
 var sound               ExplosionSound[3];        // sound of this shell exploding
 
 // Penetration
@@ -824,7 +823,6 @@ simulated function Destroyed()
 
     super.Destroyed();
 }
-
 
 //-----------------------------------------------------------------------------
 // PhysicsVolumeChange - Blow up HE rounds when they hit water

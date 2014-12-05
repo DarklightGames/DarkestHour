@@ -22,18 +22,15 @@ replication
     TriggerCount, LastTriggerings, MaterialName;
 }
 
-
 simulated function PostBeginPlay()
 {
   SetTimer(0.1, true);
 }
 
-
 function SetMaterialToTrigger(string newMaterial)
 {
   MaterialName = newMaterial;
 }
-
 
 function TriggerMaterial(Actor Other, Pawn EventInstigator)
 {
@@ -43,13 +40,11 @@ function TriggerMaterial(Actor Other, Pawn EventInstigator)
   LastTriggerings[TriggerCount % 10].TriggerAction = 1;
 }
 
-
 function ResetMaterial()
 {
   TriggerCount++;
   LastTriggerings[TriggerCount % 10].TriggerAction = 2;
 }
-
 
 simulated function Timer()
 {

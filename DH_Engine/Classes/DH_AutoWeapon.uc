@@ -56,7 +56,6 @@ simulated function NotifyOwnerJumped()
     super.NotifyOwnerJumped();
 }
 
-
 // tells bot whether to charge or back off while using this weapon
 function float SuggestAttackStyle()
 {

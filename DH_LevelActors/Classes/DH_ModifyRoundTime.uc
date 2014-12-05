@@ -5,7 +5,6 @@
 
 class DH_ModifyRoundTime extends DH_ModifyActors;
 
-
 var(DH_ModifyRoundTime) enum ERoundTimeOperator
 {
     RTO_Add,

@@ -228,7 +228,6 @@ function CustomFilter.AFilterRule BuildRule(string Key, string Value, MasterServ
     return NewRule;
 }
 
-
 function bool OkClick(GUIComponent Server)
 {
     local array<CustomFilter.AFilterRule> Rules;

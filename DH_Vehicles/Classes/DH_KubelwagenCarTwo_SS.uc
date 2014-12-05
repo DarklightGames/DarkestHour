@@ -5,7 +5,6 @@
 
 class DH_KubelwagenCarTwo_SS extends DH_KubelwagenCar_WH;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

@@ -5,7 +5,6 @@
 
 class DH_ROTankCannonShell extends DH_ROAntiVehicleProjectile;
 
-
 var     bool    bHitWater;
 
 struct RangePoint
@@ -18,7 +17,6 @@ var()   array<RangePoint>   MechanicalRanges;   // The Range setting values for 
 var()   array<RangePoint>   OpticalRanges;      // The Range setting values for tank cannons that do optical sight adjustments for aiming
 var     bool                bMechanicalAiming;  // Uses the Mechanical Range settings for this projectile
 var     bool                bOpticalAiming;     // Uses the Optical Range settings for this projectile (usually Allied sights only)
-
 
 simulated function PostBeginPlay()
 {
@@ -193,7 +191,6 @@ simulated function Destroyed()
 
     super.Destroyed();
 }
-
 
 simulated function Landed(vector HitNormal)
 {

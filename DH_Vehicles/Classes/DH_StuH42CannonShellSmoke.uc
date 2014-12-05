@@ -5,7 +5,6 @@
 
 class DH_StuH42CannonShellSmoke extends DH_Stug3GCannonShellSmoke;
 
-
 defaultproperties
 {
     	SmokeEffectClass=class'DH_Effects.DH_SmokeShellEffect_Large'

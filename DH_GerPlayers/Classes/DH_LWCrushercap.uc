@@ -7,7 +7,6 @@ class DH_LWCrushercap extends DH_Headgear;
 
 #exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
 
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheMaterial(Material'DHGermanCharactersTex.RMFGerHeadgear.ger_LW_crashcap');

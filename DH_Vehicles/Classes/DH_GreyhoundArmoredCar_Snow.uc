@@ -5,7 +5,6 @@
 
 class DH_GreyhoundArmoredCar_Snow extends DH_GreyhoundArmoredCar;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

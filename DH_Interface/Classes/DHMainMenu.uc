@@ -83,7 +83,6 @@ function InternalOnOpen()
         PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
 }
 
-
 function OnClose(optional Bool bCanceled)
 {
 }
@@ -122,7 +121,6 @@ function bool CanClose(optional Bool bCanceled)
 
     return false;
 }
-
 
 function bool ButtonClick(GUIComponent Sender)
 {

@@ -254,7 +254,6 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
     SavedHitActor = Pawn(Wall);
 
-
     if (Role == ROLE_Authority)
     {
         if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
@@ -557,8 +556,6 @@ simulated function Destroyed()
     // Don't want to spawn the effect on the super
     super(ROAntiVehicleProjectile).Destroyed();
 }
-
-
 
 //-----------------------------------------------------------------------------
 // PhysicsVolumeChange - Blow up HE rounds when they hit water

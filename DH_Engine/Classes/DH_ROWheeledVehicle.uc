@@ -8,7 +8,6 @@ class DH_ROWheeledVehicle extends ROWheeledVehicle
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
-
 enum ECarHitPointType
 {
     CHP_Normal,
@@ -604,7 +603,6 @@ event TakeImpactDamage(float AccelMag)
         LastImpactExplosionTime = Level.TimeSeconds;
     }
 }
-
 
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {

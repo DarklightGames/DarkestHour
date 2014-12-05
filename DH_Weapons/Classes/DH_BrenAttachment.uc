@@ -15,8 +15,6 @@ var()   name        WA_SightDown_Fire;
 var()   name        WA_SightDown_Reload;
 var()   name        WA_SightDown_ReloadEmpty;
 
-
-
 // Overwritten to allow for Bren deployed anims
 simulated function PlayIdle()
 {

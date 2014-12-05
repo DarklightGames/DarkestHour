@@ -12,7 +12,6 @@ var globalconfig bool   bDebugMode;
 var globalconfig bool   bDebugROBallistics;
 var int                 WhizType;
 
-
 simulated function PostBeginPlay() // Matt: DH_Bullet does this now
 {
     if (bDebugROBallistics)

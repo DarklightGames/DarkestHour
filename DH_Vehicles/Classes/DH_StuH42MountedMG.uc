@@ -5,7 +5,6 @@
 
 class DH_StuH42MountedMG extends ROVehicleWeapon;
 
-
 var()   sound ReloadSound; // sound of this MG reloading
 var     bool  bReloading;  // This MG is currently reloading
 var     int   NumMags;     // Number of mags carried for this MG;
@@ -63,7 +62,6 @@ simulated function Tick(float DeltaTime)
         }
     }
 }
-
 
 simulated function DestroyEffects()
 {

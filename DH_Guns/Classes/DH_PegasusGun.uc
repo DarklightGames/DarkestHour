@@ -5,8 +5,6 @@
 
 class DH_PegasusGun extends DH_Flak88Gun;
 
-
-
 function bool TryToDrive(Pawn P)
 {
     local int x;

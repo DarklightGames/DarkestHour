@@ -5,7 +5,6 @@
 
 class DH_USSquadMG2ndR extends DH_US_2ndRangersBattalion;
 
-
 function class<ROHeadgear> GetHeadgear()
 {
     if (FRand() < 0.2)

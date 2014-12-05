@@ -8,7 +8,6 @@
 //=============================================================================================
 class DH_AdminMenu_ParachuteStaticLine extends DH_ParachuteStaticLine;
 
-
 simulated function Tick(float DeltaTime)
 {
     if (Instigator != none)

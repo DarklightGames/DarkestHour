@@ -17,7 +17,6 @@ var         bool        bInterruptReload;       // Stop reload part way through?
 
 var         Material    AmmoIcon;               // Icon to use instead of regular ammo one
 
-
 enum EReloadState
 {
     RS_none,
@@ -342,7 +341,6 @@ function int GetRoundsToLoad()
     {
         return 0;
     }
-
 
     AmountNeeded = AmmoClass[0].default.InitialAmount - CurrentMagLoad;
 

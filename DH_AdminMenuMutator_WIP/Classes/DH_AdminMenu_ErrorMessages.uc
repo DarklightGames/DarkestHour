@@ -8,10 +8,8 @@
 //============================================================================================================================
 class DH_AdminMenu_ErrorMessages extends LocalMessage;
 
-
 var  localized  string  MissingNameText;
 var  localized  string  ErrorMessage[28];
-
 
 static function string AssembleMessage(byte MessageNumber, optional string InsertedName)
 {

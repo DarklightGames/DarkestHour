@@ -307,7 +307,6 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         SwayTime = 0.0;
     }
 
-
     if (bInterpolating || ((Pawn != none) && Pawn.bInterpolating))
     {
         ViewShake(deltaTime);
@@ -1235,7 +1234,6 @@ state Mantling
         }
     }
 }
-
 
 // Removes the awkward "jump" out of water
 // This has not been tested to much capacity

@@ -91,7 +91,6 @@ function ServerSetRange(int NewIndex)
     }
 }
 
-
 // Ovveriden to play the panzerfaust animations for different ranges
 simulated function PlayIdle()
 {

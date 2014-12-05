@@ -5,7 +5,6 @@
 
 class DH_USSniperWinter extends DH_US_Winter_Infantry;
 
-
 function class<ROHeadgear> GetHeadgear()
 {
     if (FRand() < 0.2)

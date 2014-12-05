@@ -118,7 +118,6 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
 
-
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())

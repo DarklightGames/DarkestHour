@@ -5,7 +5,6 @@
 
 class DH_HellcatCannon extends DH_ROTankCannon;
 
-
 // American tanks must use the actual sight markings to aim!
 simulated function int GetRange()
 {

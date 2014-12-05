@@ -8,7 +8,6 @@
 //===============================================================================================
 class DH_AdminMenu_AdminMessages extends LocalMessage;
 
-
 // Localised so different language versions could be produced:
 var(Messages)  localized  string  EnterPrivateMessage;
 var(Messages)  localized  string  EnterWarningMessage;
@@ -34,7 +33,6 @@ var(Messages)  localized  string  ConfirmEnablePlayerIcon;
 var(Messages)  localized  string  ConfirmKillAll;
 var(Messages)  localized  string  EnterGameSpeed;
 var(Messages)  localized  string  DestroyActorInSights;
-
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

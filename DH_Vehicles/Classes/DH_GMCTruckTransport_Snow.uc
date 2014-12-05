@@ -5,7 +5,6 @@
 
 class DH_GMCTruckTransport_Snow extends DH_GMCTruckTransport;
 
-
 static function StaticPrecache(LevelInfo L)
 {
         super.StaticPrecache(L);

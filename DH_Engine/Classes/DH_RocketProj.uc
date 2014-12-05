@@ -44,7 +44,6 @@ replication
         bOutOfPropellant;
 }
 
-
 simulated function PostBeginPlay()
 {
     if (bDebugROBallistics)

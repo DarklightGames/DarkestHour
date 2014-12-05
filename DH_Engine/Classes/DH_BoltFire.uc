@@ -37,7 +37,6 @@ event ModeDoFire()
         else
             SetTimer(DelayedRecoilTime, false);
 
-
         ShakeView();
         PlayFiring();
 

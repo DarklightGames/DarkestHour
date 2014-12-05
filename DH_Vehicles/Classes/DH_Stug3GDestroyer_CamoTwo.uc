@@ -85,7 +85,6 @@ simulated function Tick(float DeltaTime)
                 Skins[RightTreadIndex]=DamagedTreadPanner;
         }
 
-
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
         // VSize() is very CPU intensive - Ramm
         MySpeed = VSize(Velocity);

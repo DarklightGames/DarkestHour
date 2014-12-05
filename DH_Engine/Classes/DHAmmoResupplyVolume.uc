@@ -38,7 +38,6 @@ function PostBeginPlay()
     SetTimer(1.0, true);
 }
 
-
 function Timer()
 {
     local Pawn recvr;

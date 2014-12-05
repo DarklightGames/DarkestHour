@@ -5,12 +5,10 @@
 
 class DH_StuH42MountedMGPawn extends DH_ROMountedTankMGPawn;
 
-
 #exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
 
 var     int             InitialPositionIndex; // Initial Gunner Position
 var     int             UnbuttonedPositionIndex; // Lowest pos number where player is unbuttoned
-
 
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
@@ -26,7 +24,6 @@ simulated function PostBeginPlay()
     ExitPositions[0] = Loc + Offset;
     ExitPositions[1] = ExitPositions[0];
 }
-
 
 // Commander cannot fire cannon when unbutonned
 function Fire(optional float F)
@@ -296,7 +293,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
-
 
 function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
 {

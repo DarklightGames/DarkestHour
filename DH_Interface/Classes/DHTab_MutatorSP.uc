@@ -5,7 +5,6 @@
 
 class DHTab_MutatorSP extends UT2K4Tab_MutatorSP;
 
-
 var automated DHGUIPlainBackground  sb_ButtonBackground;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)

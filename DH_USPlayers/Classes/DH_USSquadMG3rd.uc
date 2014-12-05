@@ -5,7 +5,6 @@
 
 class DH_USSquadMG3rd extends DH_US_3rd_Infantry;
 
-
 function class<ROHeadgear> GetHeadgear()
 {
     if (FRand() < 0.2)

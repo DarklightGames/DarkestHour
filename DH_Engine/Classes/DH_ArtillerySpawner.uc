@@ -5,7 +5,6 @@
 
 class DH_ArtillerySpawner extends ROArtillerySpawner;
 
-
 // Matt: modified to spawn DH_ArtilleryShell instead of RO version
 function Timer()
 {

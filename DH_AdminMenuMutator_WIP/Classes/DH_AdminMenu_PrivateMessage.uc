@@ -7,11 +7,9 @@
 //========================================================================================================
 class DH_AdminMenu_PrivateMessage extends ROCriticalMessage;
 
-
 // Localised so different language versions could be produced:
 var  localized  string  MessageHeader;
 var  localized  string  MessageChatPrefix;
-
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

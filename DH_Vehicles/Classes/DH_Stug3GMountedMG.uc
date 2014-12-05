@@ -5,7 +5,6 @@
 
 class DH_Stug3GMountedMG extends ROVehicleWeapon;
 
-
 var     bool  bReloading;  // This MG is currently reloading
 var     int   NumMags;     // Number of mags carried for this MG;
 var()   float ReloadLength;// Length of the reload animation. Sorry for the literal, but the Hud Overlay isn't spawned on the server.

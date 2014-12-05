@@ -15,8 +15,6 @@ var()   name        WA_SightDown_Fire;
 var()   name        WA_SightDown_Reload;
 var()   name        WA_SightDown_ReloadEmpty;
 
-
-
 // Overwritten to allow for FG42 deployed anims - not the best way of doing this but saves having to overwrite functions in ROPawn
 simulated function PlayIdle()
 {

@@ -5,7 +5,6 @@
 
 class DH_USSquadMG29th extends DH_US_29th_Infantry;
 
-
 function class<ROHeadgear> GetHeadgear()
 {
     if (FRand() < 0.2)

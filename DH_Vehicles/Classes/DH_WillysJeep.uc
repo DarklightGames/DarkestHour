@@ -24,7 +24,6 @@ var()       name                EngineSoundBone;
 simulated function NextWeapon();   //no need to switch views, there is only one for the driver.
 simulated function PrevWeapon();   //no need to switch views, there is only one for the driver.
 
-
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();

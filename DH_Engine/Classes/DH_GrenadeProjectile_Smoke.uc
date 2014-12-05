@@ -11,7 +11,6 @@ var bool    bCalledDestroy;
 var Emitter SmokeEmitter;
 var sound   SmokeSound;
 
-
 // Modified to handle destruction of actor after set time
 simulated function Tick(float DeltaTime)
 {

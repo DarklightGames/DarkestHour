@@ -197,7 +197,6 @@ function SetVehiclePoolMaxActives(byte PoolIndex, byte MaxActive)
     VehiclePoolMaxActives[PoolIndex] = MaxActive;
 }
 
-
 function SetVehiclePoolNextAvailableTime(byte PoolIndex, float NextAvailableTime)
 {
     VehiclePoolNextAvailableTimes[PoolIndex] = NextAvailableTime;

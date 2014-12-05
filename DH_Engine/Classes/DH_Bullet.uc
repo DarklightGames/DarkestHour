@@ -13,7 +13,6 @@ var Actor SavedTouchActor; // Matt: added (same as shell) to prevent recurring P
 var globalconfig bool   bDebugMode;         // If true, give our detailed report in log.
 var globalconfig bool   bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
 
-
 simulated function PostBeginPlay()
 {
     if (bDebugROBallistics)

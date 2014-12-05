@@ -17,13 +17,11 @@ var     float ButtonVGap;
 var     float BarHeight;
 var     float BarVPos;
 
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(Mycontroller, MyOwner);
     PlayerOwner().ClearProgressMessages();
 }
-
 
 function bool InternalOnClick(GUIComponent Sender)
 {

@@ -12,7 +12,6 @@ var bool bSimpleColours;
 var bool bShowDeathMessages;
 var bool bShowVoiceIcon;
 
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);

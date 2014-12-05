@@ -5,7 +5,6 @@
 
 class DH_WSSHatPanzer2 extends DH_Headgear;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.SS_HG_1');

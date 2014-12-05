@@ -128,7 +128,6 @@ simulated function Tick(float DeltaTime)
         Disable('Tick');
     }
 
-
 }
 
 // Matt: modified to handle new VehicleWeapon collision mesh actor

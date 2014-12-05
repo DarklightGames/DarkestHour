@@ -5,7 +5,6 @@
 
 class DH_ShermanFireFlyCannonPawn extends DH_BritishTankCannonPawn;
 
-
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;

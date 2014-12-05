@@ -5,7 +5,6 @@
 
 class DH_HeerCrushercap extends DH_Headgear;
 
-
 #exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
 
 static function StaticPrecache(LevelInfo L)

@@ -115,9 +115,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         if (bCannonShellDebugging)
                 Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
 
-
    P = spawn(ProjClass, none,, StartLocation, FireRot);
-
 
         if (bGunFireDebug)
                 Log("At the moment of spawning FireRot "$FireRot);

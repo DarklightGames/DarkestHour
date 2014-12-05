@@ -15,7 +15,6 @@ var()   name                              ResupplyAttachBone;
 var     DH_OpelBlitzDecoAttachment        DecorationAttach;
 var()   name                              DecorationAttachBone;
 
-
 static function StaticPrecache(LevelInfo L)
 {
         super.StaticPrecache(L);

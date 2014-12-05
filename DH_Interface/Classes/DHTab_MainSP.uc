@@ -69,7 +69,6 @@ function InitGameType()
      if (i == Games.Length)
             return;
 
-
         SetGameTypeCaption();
 
         if (bReloadMaps)

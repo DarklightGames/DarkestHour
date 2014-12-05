@@ -9,7 +9,6 @@ var()   name            ExhaustBoneName;
 var     class<Emitter>          mExhFlashClass;
 var     Emitter                 mExhFlash3rd;
 
-
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated function PostBeginPlay()
 {

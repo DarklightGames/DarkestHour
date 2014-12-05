@@ -5,7 +5,6 @@
 
 class DH_DestroyableTestDummy extends RODestroyableStaticMeshBase;
 
-
 var()         name          SensorName;
 
 replication

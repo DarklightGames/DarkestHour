@@ -8,7 +8,6 @@
 //=============================================================================================================
 class DH_AdminMenu_Replicator extends Actor;
 
-
 var  array<string>  MenuArray;             // the standard local menu interactions to be created
 var  string         PrivateMessage;        // stores any private message from an admin to a player, which can then be accessed by the message class
 var  bool           bHasInteraction;       // a clientside fail-safe to make sure we don't create more than 1 grid overlay interaction
@@ -34,7 +33,6 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientPrivateMessage;
 }
-
 
 // Serverside, copies variables from the mutator, which will then get replicated to each clientside version of this helper actor
 function PostBeginPlay()

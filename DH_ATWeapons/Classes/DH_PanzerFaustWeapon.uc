@@ -88,7 +88,6 @@ simulated function PlayIdle()
     }
 }
 
-
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
     local int m;
@@ -137,7 +136,6 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
         Destroy();
     }
 }
-
 
 function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
 {
@@ -388,12 +386,10 @@ simulated state PostFiring
     }
 }
 
-
 simulated function PostFire()
 {
     GotoState('PostFiring');
 }
-
 
 //------------------------------------------------------------------------------
 // SelfDestroy(RO) - This is run server-side, it will destroy a weapon in a
@@ -417,7 +413,6 @@ function SelfDestroy()
     ClientWeaponThrown();
     Destroy();
 }
-
 
 simulated state AutoLoweringWeapon
 {

@@ -5,7 +5,6 @@
 
 class DH_Marder3MMountedMG extends ROVehicleWeapon;
 
-
 var     bool  bReloading;  // This MG is currently reloading
 var     int   NumMags;     // Number of mags carried for this MG;
 var()   float ReloadLength;// Length of the reload animation. Sorry for the literal, but the Hud Overlay isn't spawned on the server.
@@ -19,7 +18,6 @@ replication
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         bReloading, NumMags;
 }
-
 
 // Limit the left and right movement of the driver
 simulated function int LimitYaw(int yaw)

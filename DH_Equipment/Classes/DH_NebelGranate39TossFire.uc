@@ -50,7 +50,6 @@ function DoFireEffect()
         StartProj = HitLocation;
     }
 
-
     Aim = AdjustAim(StartProj, AimError);
 
     //log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);

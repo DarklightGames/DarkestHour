@@ -7,7 +7,6 @@
 //===============================================================================================================
 class DH_AdminMenu_TestSM extends StaticMeshActor;
 
-
 defaultproperties
 {
     bExactProjectileCollision=false

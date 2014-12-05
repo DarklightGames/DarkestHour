@@ -5,8 +5,6 @@
 
 class DH_RedTankShellTracer extends Effects;
 
-
-
 auto state Start
 {
     simulated function Tick(float dt)

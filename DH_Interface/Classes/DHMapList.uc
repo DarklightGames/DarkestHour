@@ -6,7 +6,6 @@
 class DHMapList extends MapList
         config;
 
-
 function ClearMapsArray()
 {
     Maps.Remove(0,Maps.Length);

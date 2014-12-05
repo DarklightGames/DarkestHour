@@ -15,7 +15,6 @@ var()   name                              ResupplyAttachBone;
 var     DH_GMCTruckDecoAttachment         DecorationAttach;
 var()   name                              DecorationAttachBone;
 
-
 static function StaticPrecache(LevelInfo L)
 {
         super.StaticPrecache(L);

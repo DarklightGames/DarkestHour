@@ -125,7 +125,6 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
 
 // ************************************************************************************************************************************************************************************
 
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
         localController = MyController;

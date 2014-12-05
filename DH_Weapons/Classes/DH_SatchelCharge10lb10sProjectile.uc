@@ -9,7 +9,6 @@ class DH_SatchelCharge10lb10sProjectile extends DH_ThrowableExplosiveProjectile;
 var PlayerReplicationInfo SavedPRI;
 var Pawn                  SavedInstigator;
 
-
 simulated function PostBeginPlay()
 {
     if (Role == ROLE_Authority)

@@ -120,7 +120,6 @@ function int GetRoundsToLoad()
         return 0;
     }
 
-
     AmountNeeded = 10 - CurrentMagLoad;
 
     if (AmountNeeded > CurrentBulletCount)

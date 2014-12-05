@@ -20,11 +20,9 @@ event InitializeController()
     Log("DHGUIController initialized ");
 }
 
-
 function PurgeObjectReferences()
 {
 }
-
 
 static simulated event Validate()
 {

@@ -203,7 +203,6 @@ simulated function Tick(float DeltaTime)
                 ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
         }
 
-
         KGetRigidBodyState(BodyState);
         LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 

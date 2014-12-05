@@ -7,7 +7,6 @@ class DH_KubelwagenCar_Snow extends DH_KubelwagenCar_WH;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

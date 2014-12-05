@@ -1439,7 +1439,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     }
 }
 
-
 simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
 
@@ -1915,7 +1914,6 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
 
         return PenetrationHEAT(RearArmorFactor, GetCompoundAngle(InAngleDegrees, RearArmorSlope), PenetrationNumber, bIsHEATRound);
 
-
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Left
     {
@@ -2152,7 +2150,6 @@ event bool AttemptFire(Controller C, bool bAltFire)
             FireCountdown = AltFireInterval;
             AltFire(C);
 
-
             if (AltAmmoCharge < 1)
                 HandleReload();
         }
@@ -2324,7 +2321,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     return P;
 }
-
 
 function CeaseFire(Controller C, bool bWasAltFire)
 {
@@ -2760,7 +2756,6 @@ function DecreaseAddedPitch()
     if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
         ROPlayer(Instigator.Controller).ClientMessage("Sight old value ="$MechanicalRangesValue$"        new value = "$MechanicalRangesValue+Correction$"        correction = "$Correction);
 }
-
 
 simulated function DestroyEffects()
 {
