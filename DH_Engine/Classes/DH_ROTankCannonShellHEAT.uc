@@ -839,28 +839,28 @@ simulated function PhysicsVolumeChange(PhysicsVolume Volume)
 
 defaultproperties
 {
-     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-     WScale=1.000000
-     PenetrationDamage=250.000000
-     PenetrationDamageRadius=500.000000
-     EnergyFactor=1000.000000
-     PeneExploWallOut=75.000000
-     PenetrationScale=0.080000
-     DistortionScale=0.400000
-     bIsHEATRound=true
-     ShakeRotMag=(Y=0.000000)
-     ShakeRotRate=(Z=2500.000000)
-     BlurTime=6.000000
-     BlurEffectScalar=2.100000
-     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-     ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
-     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
-     DamageRadius=300.000000
-     MyDamageType=class'DH_HEATCannonShellDamage'
-     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-     LifeSpan=10.000000
-     SoundRadius=1000.000000
+    ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
+    ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
+    ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
+    WScale=1.000000
+    PenetrationDamage=250.000000
+    PenetrationDamageRadius=500.000000
+    EnergyFactor=1000.000000
+    PeneExploWallOut=75.000000
+    PenetrationScale=0.080000
+    DistortionScale=0.400000
+    bIsHEATRound=true
+    ShakeRotMag=(Y=0.000000)
+    ShakeRotRate=(Z=2500.000000)
+    BlurTime=6.000000
+    BlurEffectScalar=2.100000
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
+    ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
+    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
+    DamageRadius=300.000000
+    MyDamageType=class'DH_HEATCannonShellDamage'
+    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
+    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+    LifeSpan=10.000000
+    SoundRadius=1000.000000
 }

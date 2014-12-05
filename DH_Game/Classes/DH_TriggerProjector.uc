@@ -237,17 +237,17 @@ simulated function Reset()
 
 defaultproperties
 {
-     ProjColorOn=(B=255,G=255,R=255,A=255)
-     ProjColorOff=(A=255)
-     ProjTintOn=(B=128,G=128,R=128,A=255)
-     ProjTintOff=(B=128,G=128,R=128,A=255)
-     ChangeTime=60.000000
-     ChangeTimeTwo=0.001000
-     SwapTime=0.001000
-     bClipBSP=true
-     bStatic=false
-     bNoDelete=true
-     bAlwaysRelevant=true
-     RemoteRole=ROLE_SimulatedProxy
-     bGameRelevant=true
+    ProjColorOn=(B=255,G=255,R=255,A=255)
+    ProjColorOff=(A=255)
+    ProjTintOn=(B=128,G=128,R=128,A=255)
+    ProjTintOff=(B=128,G=128,R=128,A=255)
+    ChangeTime=60.000000
+    ChangeTimeTwo=0.001000
+    SwapTime=0.001000
+    bClipBSP=true
+    bStatic=false
+    bNoDelete=true
+    bAlwaysRelevant=true
+    RemoteRole=ROLE_SimulatedProxy
+    bGameRelevant=true
 }

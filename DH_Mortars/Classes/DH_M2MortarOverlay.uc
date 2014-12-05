@@ -9,5 +9,5 @@ class DH_M2MortarOverlay extends DH_MortarOverlay;
 
 defaultproperties
 {
-     Mesh=SkeletalMesh'DH_Mortars_1st.M2_Mortar1st'
+    Mesh=SkeletalMesh'DH_Mortars_1st.M2_Mortar1st'
 }

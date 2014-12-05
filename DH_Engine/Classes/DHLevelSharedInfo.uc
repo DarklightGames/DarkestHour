@@ -19,7 +19,6 @@ defaultproperties
 {
     bHidden=true
     //RemoteRole=ROLE_none
-
     RemoteRole=ROLE_SimulatedProxy
     SmokeBrightnessOverride=255
     //AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'

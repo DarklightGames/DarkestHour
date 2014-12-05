@@ -8,6 +8,6 @@ class DH_Ger_WaffenSS extends DH_RoleInfo
 
 defaultproperties
 {
-     VoiceType="DH_GerPlayers.DHGerVoice"
-     AltVoiceType="DH_GerPlayers.DHGerVoice"
+    VoiceType="DH_GerPlayers.DHGerVoice"
+    AltVoiceType="DH_GerPlayers.DHGerVoice"
 }

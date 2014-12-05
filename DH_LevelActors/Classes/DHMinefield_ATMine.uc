@@ -145,9 +145,9 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
 defaultproperties
 {
-     Damage=525
-     DamageRadius=512.0
-     MyDamageType=class'DH_LevelActors.DHATMineDamage'
-     Momentum=3000.0
-     bHidden=true
+    Damage=525
+    DamageRadius=512.0
+    MyDamageType=class'DH_LevelActors.DHATMineDamage'
+    Momentum=3000.0
+    bHidden=true
 }

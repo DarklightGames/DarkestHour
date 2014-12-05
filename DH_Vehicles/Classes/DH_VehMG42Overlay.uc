@@ -9,6 +9,6 @@ class DH_VehMG42Overlay extends VehicleHUDOverlay;
 
 defaultproperties
 {
-     Mesh=SkeletalMesh'DH_Mg42_1st.VMG42_Mesh'
-     Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    Mesh=SkeletalMesh'DH_Mg42_1st.VMG42_Mesh'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 }

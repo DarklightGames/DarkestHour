@@ -8,8 +8,8 @@ class DH_PanzerIVCannonShellImpactDamageHEAT extends ROTankShellImpactDamage
 
 defaultproperties
 {
-     APCDamageModifier=0.650000
-     TreadDamageModifier=0.750000
-     DeathString="%o was killed by %k's Panzer IV HEAT shell."
-     bArmorStops=true // Matt: added so side skirts stop HEAT round
+    APCDamageModifier=0.650000
+    TreadDamageModifier=0.750000
+    DeathString="%o was killed by %k's Panzer IV HEAT shell."
+    bArmorStops=true // Matt: added so side skirts stop HEAT round
 }

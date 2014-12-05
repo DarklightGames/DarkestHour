@@ -7,7 +7,7 @@ class DH_WillysJeepFactory extends DH_USVehicles;
 
 defaultproperties
 {
-     RespawnTime=1.000000
-     VehicleClass=class'DH_Vehicles.DH_WillysJeep'
-     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
+    RespawnTime=1.000000
+    VehicleClass=class'DH_Vehicles.DH_WillysJeep'
+    Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
 }

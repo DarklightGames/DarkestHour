@@ -199,6 +199,6 @@ simulated state PostFiring
 
 defaultproperties
 {
-     FreeAimRotationSpeed=6.000000
-     bCanAttachOnBack=true
+    FreeAimRotationSpeed=6.000000
+    bCanAttachOnBack=true
 }

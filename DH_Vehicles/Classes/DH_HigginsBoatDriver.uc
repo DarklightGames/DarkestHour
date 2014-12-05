@@ -147,17 +147,17 @@ function int LimitPawnPitch(int pitch)
 
 defaultproperties
 {
-     BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-     bLimitYaw=true
-     bLimitPitch=true
-     HudName="Engineer"
-     DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000)
-     DriverPositions(1)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
-     bMultiPosition=true
-     CameraBone="Camera_com"
-     DrivePos=(X=0.000000,Y=0.000000,Z=-15.000000)
-     DriveAnim="stand_idlehip_satchel"
-     EntryRadius=350.000000
-     VehicleNameString="Higgins Boat"
-     HUDOverlayFOV=90.000000
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    bLimitYaw=true
+    bLimitPitch=true
+    HudName="Engineer"
+    DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000)
+    DriverPositions(1)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    bMultiPosition=true
+    CameraBone="Camera_com"
+    DrivePos=(X=0.000000,Y=0.000000,Z=-15.000000)
+    DriveAnim="stand_idlehip_satchel"
+    EntryRadius=350.000000
+    VehicleNameString="Higgins Boat"
+    HUDOverlayFOV=90.000000
 }

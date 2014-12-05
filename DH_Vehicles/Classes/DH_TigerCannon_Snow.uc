@@ -7,5 +7,5 @@ class DH_TigerCannon_Snow extends DH_TigerCannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Titger1snow_ext'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Titger1snow_ext'
 }

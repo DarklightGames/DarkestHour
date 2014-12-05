@@ -8,5 +8,5 @@ class DH_HeerTankCrew extends DH_Ger_Heer
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.WH_TankerPawn"
+    RolePawnClass="DH_GerPlayers.WH_TankerPawn"
 }

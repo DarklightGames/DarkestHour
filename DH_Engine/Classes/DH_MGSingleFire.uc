@@ -276,8 +276,8 @@ simulated function EjectShell()
 
 defaultproperties
 {
-     PctHipMGPenalty=2.000000
-     bWaitForRelease=true
-     BlurTime=0.04
-     BlurTimeIronsight=0.04
+    PctHipMGPenalty=2.000000
+    bWaitForRelease=true
+    BlurTime=0.04
+    BlurTimeIronsight=0.04
 }

@@ -29,8 +29,8 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerCannonPawn_CamoTwo')
-     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerMountedMGPawn_CamoTwo')
-     Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body_camo2'
-     Skins(3)=Texture'VegetationSMT.WildBushesFall.WildBush_A_FallB'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerCannonPawn_CamoTwo')
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerMountedMGPawn_CamoTwo')
+    Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body_camo2'
+    Skins(3)=Texture'VegetationSMT.WildBushesFall.WildBush_A_FallB'
 }

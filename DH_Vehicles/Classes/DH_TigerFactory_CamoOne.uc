@@ -7,6 +7,6 @@ class DH_TigerFactory_CamoOne extends DH_TigerFactory;
 
 defaultproperties
 {
-     VehicleClass=class'DH_Vehicles.DH_TigerTank_CamoOne'
-     Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_ext'
+    VehicleClass=class'DH_Vehicles.DH_TigerTank_CamoOne'
+    Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_ext'
 }

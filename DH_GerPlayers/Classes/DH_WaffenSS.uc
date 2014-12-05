@@ -8,5 +8,5 @@ class DH_WaffenSS extends DH_Ger_WaffenSS
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_WaffenSSPawn"
+    RolePawnClass="DH_GerPlayers.DH_WaffenSSPawn"
 }

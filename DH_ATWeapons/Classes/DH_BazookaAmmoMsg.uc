@@ -25,11 +25,11 @@ static function string GetString(
 
 defaultproperties
 {
-     RocketLoaded="Rocket Loaded"
-     bIsUnique=true
-     bIsConsoleMessage=false
-     Lifetime=2
-     PosX=0.280000
-     PosY=0.930000
-     FontSize=-2
+    RocketLoaded="Rocket Loaded"
+    bIsUnique=true
+    bIsConsoleMessage=false
+    Lifetime=2
+    PosX=0.280000
+    PosY=0.930000
+    FontSize=-2
 }

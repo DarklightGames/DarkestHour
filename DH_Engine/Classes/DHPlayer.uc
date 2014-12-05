@@ -1710,19 +1710,19 @@ function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
 
 defaultproperties
 {
-     FlinchRotMag=(X=100.000000,Z=100.000000)
-     FlinchRotRate=(X=1000.000000,Z=1000.000000)
-     FlinchRotTime=1.000000
-     FlinchOffsetMag=(X=100.000000,Z=100.000000)
-     FlinchOffsetRate=(X=1000.000000,Z=1000.000000)
-     FlinchOffsetTime=1.000000
-     MortarTargetIndex=255
-     ROMidGameMenuClass="DH_Interface.DHRoleSelection"
-     GlobalDetailLevel=5
-     DesiredFOV=90.000000
-     DefaultFOV=90.000000
-     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
-     PawnClass=class'DH_Engine.DH_Pawn'
-     SpawnPointIndex=-1
-     VehiclePoolIndex=-1
+    FlinchRotMag=(X=100.000000,Z=100.000000)
+    FlinchRotRate=(X=1000.000000,Z=1000.000000)
+    FlinchRotTime=1.000000
+    FlinchOffsetMag=(X=100.000000,Z=100.000000)
+    FlinchOffsetRate=(X=1000.000000,Z=1000.000000)
+    FlinchOffsetTime=1.000000
+    MortarTargetIndex=255
+    ROMidGameMenuClass="DH_Interface.DHRoleSelection"
+    GlobalDetailLevel=5
+    DesiredFOV=90.000000
+    DefaultFOV=90.000000
+    PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
+    PawnClass=class'DH_Engine.DH_Pawn'
+    SpawnPointIndex=-1
+    VehiclePoolIndex=-1
 }

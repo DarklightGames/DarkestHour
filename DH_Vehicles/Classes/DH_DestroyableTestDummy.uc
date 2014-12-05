@@ -190,5 +190,5 @@ simulated function PostNetReceive()
 
 defaultproperties
 {
-     SensorName="Shurek"
+    SensorName="Shurek"
 }

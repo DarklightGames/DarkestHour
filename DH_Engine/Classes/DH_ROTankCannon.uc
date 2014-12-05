@@ -2841,14 +2841,14 @@ simulated function Destroyed() // Matt: added
 
 defaultproperties
 {
-     bUsesSecondarySpread=true
-     bUsesTertiarySpread=true
-     ManualRotationsPerSecond=0.011111
-     PoweredRotationsPerSecond=0.050000
-     FireAttachBone="com_player"
-     FireEffectOffset=(Z=-20.000000)
-     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-     bManualTurret=true
-     CannonReloadState=CR_Waiting
-     AltFireSpread=0.002000
+    bUsesSecondarySpread=true
+    bUsesTertiarySpread=true
+    ManualRotationsPerSecond=0.011111
+    PoweredRotationsPerSecond=0.050000
+    FireAttachBone="com_player"
+    FireEffectOffset=(Z=-20.000000)
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+    bManualTurret=true
+    CannonReloadState=CR_Waiting
+    AltFireSpread=0.002000
 }

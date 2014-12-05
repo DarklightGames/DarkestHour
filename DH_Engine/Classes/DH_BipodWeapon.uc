@@ -521,7 +521,7 @@ Begin:
 
 defaultproperties
 {
-     PlayerDeployFOV=60.000000
-     Priority=10
-     bCanBipodDeploy=true
+    PlayerDeployFOV=60.000000
+    Priority=10
+    bCanBipodDeploy=true
 }

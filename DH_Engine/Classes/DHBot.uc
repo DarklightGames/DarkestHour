@@ -123,6 +123,6 @@ function SetPawnClass(string inClass, string inCharacter)
 
 defaultproperties
 {
-     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
-     PawnClass=class'DH_Engine.DH_Pawn'
+    PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
+    PawnClass=class'DH_Engine.DH_Pawn'
 }

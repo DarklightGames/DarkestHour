@@ -97,9 +97,9 @@ function DoFireEffect()
 
 defaultproperties
 {
-     bSplashDamage=false
-     bRecommendSplashDamage=false
-     MaxHoldTime=4.950000
-     AmmoClass=class'DH_Equipment.DH_RedSmokeAmmo'
-     ProjectileClass=class'DH_Equipment.DH_RedSmokeProjectile'
+    bSplashDamage=false
+    bRecommendSplashDamage=false
+    MaxHoldTime=4.950000
+    AmmoClass=class'DH_Equipment.DH_RedSmokeAmmo'
+    ProjectileClass=class'DH_Equipment.DH_RedSmokeProjectile'
 }

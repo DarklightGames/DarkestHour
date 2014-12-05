@@ -118,47 +118,47 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-     ScopeCenterScaleX=0.542000
-     ScopeCenterScaleY=0.542000
-     OverlayCenterSize=0.542000
-     CannonScopeOverlay=Texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
-     CannonScopeCenter=Texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
-     BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-     RangeText="Yards"
-     BinocPositionIndex=2
-     WeaponFov=24.000000
-     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
-     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
-     DriverPositions(0)=(ViewLocation=(X=40.000000,Y=-17.000000,Z=22.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret',TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPitchUpLimit=3004,ViewPitchDownLimit=64444,ViewPositiveYawLimit=5460,ViewNegativeYawLimit=-5460,bDrawOverlays=true,bExposed=true)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
-     GunClass=class'DH_Guns.DH_17PounderGunCannon'
-     CameraBone="gun01"
-     RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-     PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-     RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-     bFPNoZFromCameraPitch=true
-     DrivePos=(X=-12.000000,Y=-12.000000,Z=-49.000000)
-     DriveAnim="crouch_idlehold_bayo"
-     ExitPositions(0)=(X=-150.000000,Y=0.000000,Z=0.000000)
-     ExitPositions(1)=(X=-100.000000,Y=0.000000,Z=0.000000)
-     ExitPositions(2)=(X=-100.000000,Y=20.000000,Z=0.000000)
-     ExitPositions(3)=(X=-100.000000,Y=-20.000000,Z=0.000000)
-     ExitPositions(4)=(Y=50.000000,Z=0.000000)
-     ExitPositions(5)=(Y=-50.000000,Z=0.000000)
-     ExitPositions(6)=(X=-50.000000,Y=-50.000000,Z=0.000000)
-     ExitPositions(7)=(X=-50.000000,Y=50.000000,Z=0.000000)
-     ExitPositions(8)=(X=-75.000000,Y=75.000000,Z=0.000000)
-     ExitPositions(9)=(X=-75.000000,Y=-75.000000,Z=0.000000)
-     ExitPositions(10)=(X=-40.000000,Y=0.000000,Z=5.000000)
-     ExitPositions(11)=(X=-60.000000,Y=0.000000,Z=5.000000)
-     ExitPositions(12)=(X=-60.000000,Z=10.000000)
-     ExitPositions(13)=(X=-60.000000,Z=15.000000)
-     ExitPositions(14)=(X=-60.000000,Z=20.000000)
-     ExitPositions(15)=(Z=5.000000)
-     EntryRadius=200.000000
-     VehiclePositionString="Using a 17 Pounder AT-Gun"
-     VehicleNameString="17 Pounder AT-Gun"
-     bKeepDriverAuxCollision=true
-     SoundVolume=130
+    ScopeCenterScaleX=0.542000
+    ScopeCenterScaleY=0.542000
+    OverlayCenterSize=0.542000
+    CannonScopeOverlay=Texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    RangeText="Yards"
+    BinocPositionIndex=2
+    WeaponFov=24.000000
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+    DriverPositions(0)=(ViewLocation=(X=40.000000,Y=-17.000000,Z=22.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret',TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPitchUpLimit=3004,ViewPitchDownLimit=64444,ViewPositiveYawLimit=5460,ViewNegativeYawLimit=-5460,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    GunClass=class'DH_Guns.DH_17PounderGunCannon'
+    CameraBone="gun01"
+    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    bFPNoZFromCameraPitch=true
+    DrivePos=(X=-12.000000,Y=-12.000000,Z=-49.000000)
+    DriveAnim="crouch_idlehold_bayo"
+    ExitPositions(0)=(X=-150.000000,Y=0.000000,Z=0.000000)
+    ExitPositions(1)=(X=-100.000000,Y=0.000000,Z=0.000000)
+    ExitPositions(2)=(X=-100.000000,Y=20.000000,Z=0.000000)
+    ExitPositions(3)=(X=-100.000000,Y=-20.000000,Z=0.000000)
+    ExitPositions(4)=(Y=50.000000,Z=0.000000)
+    ExitPositions(5)=(Y=-50.000000,Z=0.000000)
+    ExitPositions(6)=(X=-50.000000,Y=-50.000000,Z=0.000000)
+    ExitPositions(7)=(X=-50.000000,Y=50.000000,Z=0.000000)
+    ExitPositions(8)=(X=-75.000000,Y=75.000000,Z=0.000000)
+    ExitPositions(9)=(X=-75.000000,Y=-75.000000,Z=0.000000)
+    ExitPositions(10)=(X=-40.000000,Y=0.000000,Z=5.000000)
+    ExitPositions(11)=(X=-60.000000,Y=0.000000,Z=5.000000)
+    ExitPositions(12)=(X=-60.000000,Z=10.000000)
+    ExitPositions(13)=(X=-60.000000,Z=15.000000)
+    ExitPositions(14)=(X=-60.000000,Z=20.000000)
+    ExitPositions(15)=(Z=5.000000)
+    EntryRadius=200.000000
+    VehiclePositionString="Using a 17 Pounder AT-Gun"
+    VehicleNameString="17 Pounder AT-Gun"
+    bKeepDriverAuxCollision=true
+    SoundVolume=130
 }

@@ -7,5 +7,5 @@ class DH_Tiger2BCannon_Ardennes extends DH_Tiger2BCannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.tiger2B_body_ardennes'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.tiger2B_body_ardennes'
 }

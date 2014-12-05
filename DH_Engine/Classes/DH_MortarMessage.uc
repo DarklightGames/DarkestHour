@@ -52,14 +52,14 @@ static function string GetString(
 
 defaultproperties
 {
-     MustCrouch="You must be crouched to deploy your mortar."
-     MustBeStill="You cannot deploy your mortar while moving."
-     CannotLean="You cannot deploy your mortar while leaning."
-     BadSurface="You cannot deploy your mortar on this surface."
-     NotEnoughRoom="You do not have enough room to deploy your mortar here."
-     CannotDeploy="You cannot deploy your mortar here."
-     InWater="You cannot deploy your mortar in water."
-     NotQualified="You are not qualified to operate this mortar."
-     InUse="You cannot operate this mortar as it is currently in use."
-     EnemyMortar="You cannot operate enemy mortars."
+    MustCrouch="You must be crouched to deploy your mortar."
+    MustBeStill="You cannot deploy your mortar while moving."
+    CannotLean="You cannot deploy your mortar while leaning."
+    BadSurface="You cannot deploy your mortar on this surface."
+    NotEnoughRoom="You do not have enough room to deploy your mortar here."
+    CannotDeploy="You cannot deploy your mortar here."
+    InWater="You cannot deploy your mortar in water."
+    NotQualified="You are not qualified to operate this mortar."
+    InUse="You cannot operate this mortar as it is currently in use."
+    EnemyMortar="You cannot operate enemy mortars."
 }

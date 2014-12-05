@@ -268,13 +268,11 @@ defaultproperties
 {
     DrawType=DT_StaticMesh
     DrawScale=2.000000
-
     mTracerPullback=150.00
     bBounce=true
     Bounces=2
     DampenFactor=0.1
     DampenFactorParallel=0.05
-
     LightType=LT_Steady
     LightBrightness=90.000000
     LightRadius=10.000000

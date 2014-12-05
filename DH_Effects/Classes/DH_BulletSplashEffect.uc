@@ -41,7 +41,6 @@ defaultproperties
         LifetimeRange=(Min=1.000000,Max=1.500000)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
         FadeIn=true
@@ -78,7 +77,6 @@ defaultproperties
         SpawningSoundProbability=(Min=0.7500000,Max=0.7500000)
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
         FadeIn=true
@@ -104,7 +102,6 @@ defaultproperties
         StartVelocityRange=(X=(Min=100.000000,Max=200.000000),Y=(Min=-75.000000,Max=75.000000),Z=(Min=-75.000000,Max=75.000000))
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter2'
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         FadeOut=true
         FadeIn=true
@@ -130,7 +127,6 @@ defaultproperties
         LifetimeRange=(Min=0.500000,Max=0.500000)
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter3'
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter4
         FadeOut=true
         FadeIn=true
@@ -165,7 +161,6 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.000000,RelativeVelocity=(X=0.150000,Y=0.100000,Z=0.100000))
     End Object
     Emitters(4)=SpriteEmitter'SpriteEmitter4'
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter5
         FadeOut=true
         FadeIn=true
@@ -199,7 +194,6 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
     Emitters(5)=SpriteEmitter'SpriteEmitter5'
-
     Begin Object Class=SpriteEmitter Name=SpriteEmitter6
         FadeOut=true
         FadeIn=true
@@ -233,7 +227,6 @@ defaultproperties
         VelocityScale(2)=(RelativeTime=1.000000)
     End Object
     Emitters(6)=SpriteEmitter'SpriteEmitter6'
-
     AutoDestroy=true
     bNoDelete=false
     bHighDetail=true

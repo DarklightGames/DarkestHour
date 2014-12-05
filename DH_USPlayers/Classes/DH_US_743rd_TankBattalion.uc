@@ -8,5 +8,5 @@ class DH_US_743rd_TankBattalion extends DH_US_Armoured_Units
 
 defaultproperties
 {
-     RolePawnClass="DH_USPlayers.DH_USTankerPawn"
+    RolePawnClass="DH_USPlayers.DH_USTankerPawn"
 }

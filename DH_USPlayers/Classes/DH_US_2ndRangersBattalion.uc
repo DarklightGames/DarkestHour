@@ -8,5 +8,5 @@ class DH_US_2ndRangersBattalion extends DH_US_Infantry_Units
 
 defaultproperties
 {
-     RolePawnClass="DH_USPlayers.DH_USRiflemanPawn"
+    RolePawnClass="DH_USPlayers.DH_USRiflemanPawn"
 }

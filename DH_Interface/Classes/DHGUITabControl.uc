@@ -146,7 +146,7 @@ function bool InternalTabClick(GUIComponent Sender)
 
 defaultproperties
 {
-     bFillSpace=true
-     StyleName="DHHeader"
-     OnActivate=DHGUITabControl.InternalOnActivate
+    bFillSpace=true
+    StyleName="DHHeader"
+    OnActivate=DHGUITabControl.InternalOnActivate
 }

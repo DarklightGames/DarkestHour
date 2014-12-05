@@ -140,6 +140,6 @@ function Reset()
 
 defaultproperties
 {
-     bResetStamina=true
+    bResetStamina=true
 }
 

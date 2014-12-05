@@ -17,6 +17,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 defaultproperties
 {
-     ImageIndex=6
-     StyleName="DHGripButton"
+    ImageIndex=6
+    StyleName="DHGripButton"
 }

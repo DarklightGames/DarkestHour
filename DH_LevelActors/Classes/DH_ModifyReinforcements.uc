@@ -154,8 +154,8 @@ function int AddRespawnsRandomly()
 
 defaultproperties
 {
-     bModifyIfDepleted=true
-     bUseTeamMessage=true
-     messagetype="CriticalEvent"
-     Sound=Sound'Miscsounds.Music.notify_drum'
+    bModifyIfDepleted=true
+    bUseTeamMessage=true
+    messagetype="CriticalEvent"
+    Sound=Sound'Miscsounds.Music.notify_drum'
 }

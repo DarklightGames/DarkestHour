@@ -7,5 +7,5 @@ class DH_WolverineTank_Early extends DH_WolverineTank;
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn_Early')
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn_Early')
 }

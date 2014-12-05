@@ -8,5 +8,5 @@ class DH_HeerCamo extends DH_Ger_Heer
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_HeerPawn"
+    RolePawnClass="DH_GerPlayers.DH_HeerPawn"
 }

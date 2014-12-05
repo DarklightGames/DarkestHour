@@ -160,45 +160,41 @@ function InternalOnChange(GUIComponent Sender)
 
 defaultproperties
 {
-     Begin Object Class=DHGUIProportionalContainer Name=myBackgroundGroup
-         bNoCaption=true
-         WinTop=0.036614
-         WinLeft=0.025156
-         WinWidth=0.949688
-         WinHeight=0.900000
-         OnPreDraw=myBackgroundGroup.InternalPreDraw
-     End Object
-     sb_Background=DHGUIProportionalContainer'DH_Interface.DHIAMultiColumnRulesPanel.myBackgroundGroup'
-
-     Begin Object Class=DHmoCheckBox Name=AdvancedButton
-         Caption="View Advanced Options"
-         OnCreateComponent=AdvancedButton.InternalOnCreateComponent
-         WinTop=0.948334
-         WinLeft=0.000000
-         WinWidth=0.350000
-         WinHeight=0.040000
-         RenderWeight=1.000000
-         TabOrder=1
-         bBoundToParent=true
-         bScaleToParent=true
-         OnChange=DHIAMultiColumnRulesPanel.InternalOnChange
-     End Object
-     ch_Advanced=DHmoCheckBox'DH_Interface.DHIAMultiColumnRulesPanel.AdvancedButton'
-
-     i_bk=none
-
-     Begin Object Class=DHGUIMultiOptionListBox Name=RuleListBox
-         SelectedStyleName="DHListSelectionStyle"
-         SectionStyleName="DHNoBox"
-         bVisibleWhenEmpty=true
-         OnCreateComponent=UT2K4PlayInfoPanel.ListBoxCreateComponent
-         StyleName="DHNoBox"
-         WinHeight=0.930009
-         TabOrder=0
-         bBoundToParent=true
-         bScaleToParent=true
-         OnChange=UT2K4PlayInfoPanel.InternalOnChange
-     End Object
-     lb_Rules=DHGUIMultiOptionListBox'DH_Interface.DHIAMultiColumnRulesPanel.RuleListBox'
-
+    Begin Object Class=DHGUIProportionalContainer Name=myBackgroundGroup
+        bNoCaption=true
+        WinTop=0.036614
+        WinLeft=0.025156
+        WinWidth=0.949688
+        WinHeight=0.900000
+        OnPreDraw=myBackgroundGroup.InternalPreDraw
+    End Object
+    sb_Background=DHGUIProportionalContainer'DH_Interface.DHIAMultiColumnRulesPanel.myBackgroundGroup'
+    Begin Object Class=DHmoCheckBox Name=AdvancedButton
+        Caption="View Advanced Options"
+        OnCreateComponent=AdvancedButton.InternalOnCreateComponent
+        WinTop=0.948334
+        WinLeft=0.000000
+        WinWidth=0.350000
+        WinHeight=0.040000
+        RenderWeight=1.000000
+        TabOrder=1
+        bBoundToParent=true
+        bScaleToParent=true
+        OnChange=DHIAMultiColumnRulesPanel.InternalOnChange
+    End Object
+    ch_Advanced=DHmoCheckBox'DH_Interface.DHIAMultiColumnRulesPanel.AdvancedButton'
+    i_bk=none
+    Begin Object Class=DHGUIMultiOptionListBox Name=RuleListBox
+        SelectedStyleName="DHListSelectionStyle"
+        SectionStyleName="DHNoBox"
+        bVisibleWhenEmpty=true
+        OnCreateComponent=UT2K4PlayInfoPanel.ListBoxCreateComponent
+        StyleName="DHNoBox"
+        WinHeight=0.930009
+        TabOrder=0
+        bBoundToParent=true
+        bScaleToParent=true
+        OnChange=UT2K4PlayInfoPanel.InternalOnChange
+    End Object
+    lb_Rules=DHGUIMultiOptionListBox'DH_Interface.DHIAMultiColumnRulesPanel.RuleListBox'
 }

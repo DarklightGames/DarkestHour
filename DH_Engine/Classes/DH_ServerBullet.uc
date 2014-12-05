@@ -332,9 +332,8 @@ simulated function HitWall(vector HitNormal, actor Wall)
 defaultproperties
 {
     RemoteRole=ROLE_None // only exists on the server // Matt: this is what this class is all about really - no replication of bullet actor to clients
-
-//  WScale=1.000000           // Matt: not used
-//  PenetrationScale=0.080000 // Matt: not used
-//  DistortionScale=0.400000  // Matt: not used
-//  WhizType=1                // Matt: now inherited from DH_Bullet
+    //  WScale=1.000000           // Matt: not used
+    //  PenetrationScale=0.080000 // Matt: not used
+    //  DistortionScale=0.400000  // Matt: not used
+    //  WhizType=1                // Matt: now inherited from DH_Bullet
 }

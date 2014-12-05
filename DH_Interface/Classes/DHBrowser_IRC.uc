@@ -33,15 +33,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 defaultproperties
 {
-     Begin Object Class=DHGUITabControl Name=ChannelTabControl
-         bDockPanels=true
-         WinHeight=1.000000
-         bAcceptsInput=true
-         OnActivate=ChannelTabControl.InternalOnActivate
-     End Object
-     c_Channel=DHGUITabControl'DH_Interface.DHBrowser_IRC.ChannelTabControl'
-
-     SystemPageClass="DH_Interface.DHIRC_System"
-     PublicChannelClass="DH_Interface.DHIRC_Channel"
-     PrivateChannelClass="DH_Interface.DHIRC_Private"
+    Begin Object Class=DHGUITabControl Name=ChannelTabControl
+        bDockPanels=true
+        WinHeight=1.000000
+        bAcceptsInput=true
+        OnActivate=ChannelTabControl.InternalOnActivate
+    End Object
+    c_Channel=DHGUITabControl'DH_Interface.DHBrowser_IRC.ChannelTabControl'
+    SystemPageClass="DH_Interface.DHIRC_System"
+    PublicChannelClass="DH_Interface.DHIRC_Channel"
+    PrivateChannelClass="DH_Interface.DHIRC_Private"
 }

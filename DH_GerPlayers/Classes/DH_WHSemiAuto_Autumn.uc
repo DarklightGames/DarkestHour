@@ -7,5 +7,5 @@ class DH_WHSemiAuto_Autumn extends Note;
 
 defaultproperties
 {
-     Text="Deprecated role."
+    Text="Deprecated role."
 }

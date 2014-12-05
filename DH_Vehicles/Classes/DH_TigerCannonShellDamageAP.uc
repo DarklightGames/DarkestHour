@@ -7,7 +7,7 @@ class DH_TigerCannonShellDamageAP extends ROTankShellImpactDamage; //ROWeaponDam
 
 defaultproperties
 {
-     APCDamageModifier=0.750000
-     VehicleDamageModifier=1.500000
-     DeathString="%o was killed by %k's Tiger I APCBC shell."
+    APCDamageModifier=0.750000
+    VehicleDamageModifier=1.500000
+    DeathString="%o was killed by %k's Tiger I APCBC shell."
 }

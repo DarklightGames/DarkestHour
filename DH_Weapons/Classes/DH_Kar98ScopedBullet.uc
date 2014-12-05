@@ -7,9 +7,9 @@ class DH_Kar98ScopedBullet extends DH_Bullet;
 
 defaultproperties
 {
-     MyVehicleDamage=class'DH_Weapons.DH_Kar98ScopedVehDamType'
-     BallisticCoefficient=0.594000
-     Speed=47678.000000
-     Damage=115.000000
-     MyDamageType=class'DH_Weapons.DH_Kar98ScopedDamType'
+    MyVehicleDamage=class'DH_Weapons.DH_Kar98ScopedVehDamType'
+    BallisticCoefficient=0.594000
+    Speed=47678.000000
+    Damage=115.000000
+    MyDamageType=class'DH_Weapons.DH_Kar98ScopedDamType'
 }

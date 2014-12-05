@@ -51,6 +51,6 @@ function Reset()
 
 defaultproperties
 {
-     DelayTime=60.000000
-     bIsStateOne=true
+    DelayTime=60.000000
+    bIsStateOne=true
 }

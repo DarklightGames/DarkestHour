@@ -8,6 +8,6 @@ class DHGUIButton extends GUIButton;
 
 defaultproperties
 {
-     StyleName="DHMenuTextButtonStyle"
-     OnKeyEvent=DHGUIButton.InternalOnKeyEvent
+    StyleName="DHMenuTextButtonStyle"
+    OnKeyEvent=DHGUIButton.InternalOnKeyEvent
 }

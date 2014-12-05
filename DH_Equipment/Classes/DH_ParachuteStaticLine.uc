@@ -224,7 +224,7 @@ simulated function AnimEnd(int channel)
 
 defaultproperties
 {
-     InventoryGroup=11
-     AttachmentClass=class'DH_Equipment.DH_ParachuteAttachment'
-     ItemName="Staticline"
+    InventoryGroup=11
+    AttachmentClass=class'DH_Equipment.DH_ParachuteAttachment'
+    ItemName="Staticline"
 }

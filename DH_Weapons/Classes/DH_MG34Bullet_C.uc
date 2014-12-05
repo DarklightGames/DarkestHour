@@ -7,6 +7,6 @@ class DH_MG34Bullet_C extends DH_ClientBullet;
 
 defaultproperties
 {
-     BallisticCoefficient=0.515000
-     Speed=47678.000000
+    BallisticCoefficient=0.515000
+    Speed=47678.000000
 }

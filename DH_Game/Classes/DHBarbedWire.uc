@@ -13,7 +13,6 @@ var() sound DestroySound;
 defaultproperties
 {
     DrawType=DT_StaticMesh
-
     bStatic=false
     bNoDelete=true
     bUseCylinderCollision=false

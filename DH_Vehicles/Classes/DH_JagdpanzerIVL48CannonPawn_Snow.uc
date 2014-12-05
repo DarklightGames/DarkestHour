@@ -7,5 +7,5 @@ class DH_JagdpanzerIVL48CannonPawn_Snow extends DH_JagdpanzerIVL48CannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_JagdpanzerIVL48Cannon_Snow'
+    GunClass=class'DH_Vehicles.DH_JagdpanzerIVL48Cannon_Snow'
 }

@@ -386,14 +386,14 @@ simulated function bool IsDisabled()
 
 defaultproperties
 {
-     bEnterringUnlocks=false
-     LeftTreadIndex=1
-     RightTreadIndex=2
-     MaxCriticalSpeed=800.000000
-     WheelRotationScale=500
-     PointValue=2.000000
-     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-     VehicleSpikeTime=60.000000
-     bIsApc=true
-     bKeepDriverAuxCollision=false
+    bEnterringUnlocks=false
+    LeftTreadIndex=1
+    RightTreadIndex=2
+    MaxCriticalSpeed=800.000000
+    WheelRotationScale=500
+    PointValue=2.000000
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    VehicleSpikeTime=60.000000
+    bIsApc=true
+    bKeepDriverAuxCollision=false
 }

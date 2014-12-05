@@ -536,20 +536,20 @@ simulated function bool ShouldDrawDebugLines()
 
 defaultproperties
 {
-     bIsAlliedShell=true
-     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatter'
-     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-     ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-     ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-     ShatterSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-     ShatterSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
-     ShakeRotMag=(Y=50.000000,Z=200.000000)
-     ShakeRotRate=(Y=500.000000,Z=1500.000000)
-     ShakeRotTime=3.000000
-     ShakeOffsetMag=(Z=10.000000)
-     ShakeOffsetRate=(Z=200.000000)
-     ShakeOffsetTime=5.000000
-     BlurTime=3.000000
-     BlurEffectScalar=1.900000
-     PenetrationMag=100.000000
+    bIsAlliedShell=true
+    ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatter'
+    ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
+    ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
+    ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
+    ShatterSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
+    ShatterSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+    ShakeRotMag=(Y=50.000000,Z=200.000000)
+    ShakeRotRate=(Y=500.000000,Z=1500.000000)
+    ShakeRotTime=3.000000
+    ShakeOffsetMag=(Z=10.000000)
+    ShakeOffsetRate=(Z=200.000000)
+    ShakeOffsetTime=5.000000
+    BlurTime=3.000000
+    BlurEffectScalar=1.900000
+    PenetrationMag=100.000000
 }

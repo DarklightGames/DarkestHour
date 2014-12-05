@@ -14,6 +14,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 defaultproperties
 {
-     IRCNickColor=(B=150,R=255)
-     IRCInfoColor=(B=130,R=160)
+    IRCNickColor=(B=150,R=255)
+    IRCInfoColor=(B=130,R=160)
 }

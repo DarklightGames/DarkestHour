@@ -25,8 +25,8 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerCannonPawn_Snow')
-     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Jagdtiger.Jagdtiger_destsnow'
-     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.JagdTiger_body_snow'
-     Skins(4)=Texture'DH_VehiclesGE_tex3.ext_vehicles.JagdTiger_skirtwinter'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerCannonPawn_Snow')
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Jagdtiger.Jagdtiger_destsnow'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.JagdTiger_body_snow'
+    Skins(4)=Texture'DH_VehiclesGE_tex3.ext_vehicles.JagdTiger_skirtwinter'
 }

@@ -7,5 +7,5 @@ class DH_PantherGCannonPawn_ArdennesOne extends DH_PantherGCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_PantherGCannon_ArdennesOne'
+    GunClass=class'DH_Vehicles.DH_PantherGCannon_ArdennesOne'
 }

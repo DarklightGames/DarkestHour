@@ -7,6 +7,6 @@ class DH_Pak40CannonLate extends DH_Pak40Cannon;
 
 defaultproperties
 {
-     InitialPrimaryAmmo=15
-     InitialSecondaryAmmo=3
+    InitialPrimaryAmmo=15
+    InitialSecondaryAmmo=3
 }

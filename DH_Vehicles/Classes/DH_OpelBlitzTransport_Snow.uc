@@ -24,5 +24,5 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.OpelBlitz_body_snow'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.OpelBlitz_body_snow'
 }

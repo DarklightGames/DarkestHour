@@ -7,5 +7,5 @@ class DH_JagdpantherCannonPawn_ArdennesOne extends DH_JagdpantherCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_JagdpantherCannon_ArdennesOne'
+    GunClass=class'DH_Vehicles.DH_JagdpantherCannon_ArdennesOne'
 }

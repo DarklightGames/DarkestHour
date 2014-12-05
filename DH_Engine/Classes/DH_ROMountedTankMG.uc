@@ -357,8 +357,8 @@ simulated function Destroyed() // Matt: added
 
 defaultproperties
 {
-     FireAttachBone="mg_pitch"
-     FireEffectOffset=(X=10.000000,Z=5.000000)
-     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-     VehicleBurningDamType=class'DH_VehicleBurningDamType'
+    FireAttachBone="mg_pitch"
+    FireEffectOffset=(X=10.000000,Z=5.000000)
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+    VehicleBurningDamType=class'DH_VehicleBurningDamType'
 }

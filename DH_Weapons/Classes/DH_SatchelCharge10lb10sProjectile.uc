@@ -111,7 +111,6 @@ defaultproperties
     CollisionRadius=4.000000
     CollisionHeight=4.000000
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Satchel_throw'
-
     ShakeRotMag=(X=0.0,Y=0.0,Z=300.0)
     ShakeRotRate=(Z=2500.0)
     ShakeRotTime=3.0

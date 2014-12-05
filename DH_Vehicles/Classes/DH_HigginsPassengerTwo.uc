@@ -7,7 +7,7 @@ class DH_HigginsPassengerTwo extends DH_HigginsPassengerPawn;
 
 defaultproperties
 {
-     PositionInArray=2
-     DrivePos=(X=0.000000,Y=0.000000,Z=20.000000)
-     DriveAnim="higgins_rider2_idle"
+    PositionInArray=2
+    DrivePos=(X=0.000000,Y=0.000000,Z=20.000000)
+    DriveAnim="higgins_rider2_idle"
 }

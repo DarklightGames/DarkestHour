@@ -99,5 +99,5 @@ simulated state StartMantle extends Busy
 
 defaultproperties
 {
-     PlayerIronsightFOV=60.000000
+    PlayerIronsightFOV=60.000000
 }

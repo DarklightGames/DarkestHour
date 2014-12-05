@@ -8,5 +8,5 @@ class DH_US_82nd_Airborne extends DH_US_Airborne_Units
 
 defaultproperties
 {
-     RolePawnClass="DH_USPlayers.DH_USABPawn"
+    RolePawnClass="DH_USPlayers.DH_USABPawn"
 }

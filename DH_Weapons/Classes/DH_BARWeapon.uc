@@ -197,20 +197,20 @@ function bool IsMGWeapon()
 
 defaultproperties
 {
-     SelectFireAnim="switch_fire"
-     SelectFireIronAnim="Iron_switch_fire"
-     SightUpSelectFireIronAnim="SightUp_iron_switch_fire"
-     bSlowFireRate=true
-     NumMagsToResupply=2
-     MaxNumPrimaryMags=6
-     InitialNumPrimaryMags=6
-     IronSightDisplayFOV=25.000000
-     FreeAimRotationSpeed=2.000000
-     bHasSelectFire=true
-     FireModeClass(0)=class'DH_Weapons.DH_BARFire'
-     FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
-     PickupClass=class'DH_Weapons.DH_BARPickup'
-     AttachmentClass=class'DH_Weapons.DH_BARAttachment'
-     ItemName="Browning Automatic Rifle"
-     Mesh=SkeletalMesh'DH_BAR_1st.BAR'
+    SelectFireAnim="switch_fire"
+    SelectFireIronAnim="Iron_switch_fire"
+    SightUpSelectFireIronAnim="SightUp_iron_switch_fire"
+    bSlowFireRate=true
+    NumMagsToResupply=2
+    MaxNumPrimaryMags=6
+    InitialNumPrimaryMags=6
+    IronSightDisplayFOV=25.000000
+    FreeAimRotationSpeed=2.000000
+    bHasSelectFire=true
+    FireModeClass(0)=class'DH_Weapons.DH_BARFire'
+    FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
+    PickupClass=class'DH_Weapons.DH_BARPickup'
+    AttachmentClass=class'DH_Weapons.DH_BARAttachment'
+    ItemName="Browning Automatic Rifle"
+    Mesh=SkeletalMesh'DH_BAR_1st.BAR'
 }

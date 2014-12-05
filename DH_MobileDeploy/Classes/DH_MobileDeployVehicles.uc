@@ -34,5 +34,5 @@ function SpawnVehicle()
 
 defaultproperties
 {
-     bRequiresSLToDrive=true
+    bRequiresSLToDrive=true
 }

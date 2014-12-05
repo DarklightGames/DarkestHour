@@ -7,6 +7,6 @@ class DH_Flak88Factory_Tan extends DH_Flak88Factory;
 
 defaultproperties
 {
-     VehicleClass=class'DH_Guns.DH_Flak88Gun_Tan'
-     Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88_tanpaint'
+    VehicleClass=class'DH_Guns.DH_Flak88Gun_Tan'
+    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88_tanpaint'
 }

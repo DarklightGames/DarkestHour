@@ -474,8 +474,8 @@ function bool FillAmmo()
 
 defaultproperties
 {
-     bCanFireFromHip=true
-     InitialBarrels=2
-     NumMagsToResupply=2
+    bCanFireFromHip=true
+    InitialBarrels=2
+    NumMagsToResupply=2
 }
 

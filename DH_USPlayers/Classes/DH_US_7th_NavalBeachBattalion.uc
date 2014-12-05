@@ -8,5 +8,5 @@ class DH_US_7th_NavalBeachBattalion extends DH_US_Infantry_Units
 
 defaultproperties
 {
-     RolePawnClass="DH_USPlayers.DH_USRiflemanPawn"
+    RolePawnClass="DH_USPlayers.DH_USRiflemanPawn"
 }

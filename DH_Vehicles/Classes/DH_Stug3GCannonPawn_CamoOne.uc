@@ -7,5 +7,5 @@ class DH_Stug3GCannonPawn_CamoOne extends DH_Stug3GCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_Stug3GCannon_CamoOne'
+    GunClass=class'DH_Vehicles.DH_Stug3GCannon_CamoOne'
 }

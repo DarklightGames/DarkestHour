@@ -8,5 +8,5 @@ class DH_StenMkIIBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_StenMkIIWeapon'
+    WeaponClass=class'DH_Weapons.DH_StenMkIIWeapon'
 }

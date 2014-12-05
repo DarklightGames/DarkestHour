@@ -17,16 +17,16 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Nebelhandgranate 39"
-     MaxDesireability=0.780000
-     InventoryType=class'DH_Equipment.DH_NebelGranate39Weapon'
-     PickupMessage="You got the Nebelhandgranate 39."
-     PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.gersmokenade'
-     PrePivot=(Z=3.000000)
-     AmbientGlow=0
-     CollisionRadius=15.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: Nebelhandgranate 39"
+    MaxDesireability=0.780000
+    InventoryType=class'DH_Equipment.DH_NebelGranate39Weapon'
+    PickupMessage="You got the Nebelhandgranate 39."
+    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.gersmokenade'
+    PrePivot=(Z=3.000000)
+    AmbientGlow=0
+    CollisionRadius=15.000000
+    CollisionHeight=3.000000
 }

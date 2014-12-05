@@ -71,5 +71,5 @@ function bool IsGrenade()
 
 defaultproperties
 {
-     InventoryGroup=2
+    InventoryGroup=2
 }

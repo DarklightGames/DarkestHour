@@ -15,10 +15,10 @@ function InternalOnCreateComponent(GUIComponent NewComp, GUIComponent Sender)
 
 defaultproperties
 {
-     DHButtonStyleName="DHSmallTextButtonStyle"
-     CaptionWidth=0.000000
-     ComponentClassName="DH_Interface.DHGUIButton"
-     LabelStyleName="DHLargeText"
-     StyleName="DHSmallTextButtonStyle"
-     WinHeight=0.040000
+    DHButtonStyleName="DHSmallTextButtonStyle"
+    CaptionWidth=0.000000
+    ComponentClassName="DH_Interface.DHGUIButton"
+    LabelStyleName="DHLargeText"
+    StyleName="DHSmallTextButtonStyle"
+    WinHeight=0.040000
 }

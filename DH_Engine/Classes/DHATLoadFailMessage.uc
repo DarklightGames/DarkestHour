@@ -19,5 +19,5 @@ static function string GetString(
 
 defaultproperties
 {
-     CantLoad=" must be deployed to be reloaded"
+    CantLoad=" must be deployed to be reloaded"
 }

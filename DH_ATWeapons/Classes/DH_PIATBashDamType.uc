@@ -8,5 +8,5 @@ class DH_PIATBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_ATWeapons.DH_PIATWeapon'
+    WeaponClass=class'DH_ATWeapons.DH_PIATWeapon'
 }

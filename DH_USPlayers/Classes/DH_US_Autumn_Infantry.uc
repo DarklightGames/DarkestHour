@@ -8,5 +8,5 @@ class DH_US_Autumn_Infantry extends DH_US_Infantry_Units
 
 defaultproperties
 {
-     RolePawnClass="DH_USPlayers.DH_USRiflemanAutumnPawn"
+    RolePawnClass="DH_USPlayers.DH_USRiflemanAutumnPawn"
 }

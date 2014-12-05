@@ -30,8 +30,8 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 
 defaultproperties
 {
-     VehicleMessageColor=(B=170,G=30,R=170,A=255)
-     MessagePrefix="*VEHICLE* "
-     bComplexString=true
-     bBeep=true
+    VehicleMessageColor=(B=170,G=30,R=170,A=255)
+    MessagePrefix="*VEHICLE* "
+    bComplexString=true
+    bBeep=true
 }

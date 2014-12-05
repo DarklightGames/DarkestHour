@@ -7,5 +7,5 @@ class DH_Sdkfz251GunPawn_SnowOne extends DH_Sdkfz251GunPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_Sdkfz251Gun_SnowOne'
+    GunClass=class'DH_Vehicles.DH_Sdkfz251Gun_SnowOne'
 }

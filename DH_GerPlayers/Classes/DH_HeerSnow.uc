@@ -8,5 +8,5 @@ class DH_HeerSnow extends DH_Ger_Heer
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_HeerSnowPawn"
+    RolePawnClass="DH_GerPlayers.DH_HeerSnowPawn"
 }

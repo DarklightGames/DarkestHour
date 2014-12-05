@@ -7,5 +7,5 @@ class DH_Sdkfz2342Cannon_CamoTwo extends DH_Sdkfz2342Cannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_camo2'
+    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_camo2'
 }

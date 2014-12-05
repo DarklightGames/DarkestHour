@@ -10,8 +10,8 @@ class DH_Sdkfz2342CannonShellDamageAP extends ROTankShellImpactDamage
 
 defaultproperties
 {
-     APCDamageModifier=0.750000
-     VehicleDamageModifier=0.850000
-     TreadDamageModifier=0.750000
-     DeathString="%o was killed by %k's Sdkfz 234/2 APC shell."
+    APCDamageModifier=0.750000
+    VehicleDamageModifier=0.850000
+    TreadDamageModifier=0.750000
+    DeathString="%o was killed by %k's Sdkfz 234/2 APC shell."
 }

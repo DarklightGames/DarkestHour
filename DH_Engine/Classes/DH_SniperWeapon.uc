@@ -430,10 +430,10 @@ simulated function PreTravelCleanUp()
 
 defaultproperties
 {
-     ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
-     OverlayCenterSize=0.700000
-     bIsSniper=true
-     FreeAimRotationSpeed=6.000000
-     bCanAttachOnBack=true
+    ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
+    OverlayCenterSize=0.700000
+    bIsSniper=true
+    FreeAimRotationSpeed=6.000000
+    bCanAttachOnBack=true
 }
 

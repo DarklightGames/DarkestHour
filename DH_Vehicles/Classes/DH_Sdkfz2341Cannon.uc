@@ -755,116 +755,115 @@ function bool ResupplyAmmo()
 
 defaultproperties
 {
-     // Matt: all added, as this is now a DH_ROTankCannon:
-     FrontArmorFactor=0.8
-     RightArmorFactor=0.8
-     LeftArmorFactor=0.8
-     RearArmorFactor=0.8
-     FrontArmorSlope=30.0
-     RightArmorSlope=30.0
-     LeftArmorSlope=30.0
-     RearArmorSlope=30.0
-     FrontLeftAngle=306.0
-     FrontRightAngle=54.0
-     RearRightAngle=130.0
-     RearLeftAngle=230.0
-     
-     NumMags=15     // Matt: was 25
-     NumSecMags=15  // Matt: was 20
-     NumTertMags=15 // Matt: added
-     ReloadSoundOne=Sound'Vehicle_reloads.Reloads.T60_reload_01'
-     ReloadSoundTwo=Sound'DH_GerVehicleSounds2.Reloads.234_reload_02'
-     ReloadSoundThree=Sound'DH_GerVehicleSounds2.Reloads.234_reload_03'
-     ReloadSoundFour=Sound'Vehicle_reloads.Reloads.T60_reload_04'
-     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'
-     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire02G'
-     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'
-     ProjectileDescriptions(0)="Mixed" // Matt: was "AP"
-     ProjectileDescriptions(1)="AP"    // Matt: was "HE-T"
-     ProjectileDescriptions(2)="HE-T"  // Matt: added
-     RangeSettings(1)=100
-     RangeSettings(2)=200
-     RangeSettings(3)=300
-     RangeSettings(4)=400
-     RangeSettings(5)=500
-     RangeSettings(6)=600
-     RangeSettings(7)=700
-     RangeSettings(8)=800
-     RangeSettings(9)=900
-     RangeSettings(10)=1000
-     RangeSettings(11)=1100
-     RangeSettings(12)=1200
-     ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
-     NumAltMags=12
-     DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer'
-     mTracerInterval=0.350000
-     bUsesTracers=true
-     bAltFireTracersOnly=true
-     MinCommanderHitHeight=21.0
-     VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=12.000000,Y=4.000000,Z=34.000000))
-     VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=12.000000,Y=4.000000,Z=12.000000))
-     hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
-     YawBone="Turret"
-     PitchBone="Gun"
-     PitchUpLimit=15000
-     PitchDownLimit=45000
-     WeaponFireAttachmentBone="Barrel"
-     GunnerAttachmentBone="com_attachment"
-     WeaponFireOffset=5.000000
-     AltFireOffset=(X=-54.000000,Y=-24.000000,Z=-3.000000)
-     RotationsPerSecond=0.040000
-     ManualRotationsPerSecond=0.04  // Matt: added
-     PoweredRotationsPerSecond=0.04 // Matt: added
-     bAmbientAltFireSound=true
-     Spread=0.003000
-     bUsesSecondarySpread=false // Matt: added so uses Spread
-     bUsesTertiarySpread=false  // Matt: added so uses Spread
-//   AltFireSpread=0.002000     // Matt: removed as is inherited default from DHROTC
-     FireInterval=0.200000
-     AltFireInterval=0.050000
-     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
-     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=true
-     CannonDustEmitterClass=none // Matt: avoids having to override FlashMuzzleFlash function
-     FireEffectOffset=(X=20.0,Y=-5.0,Z=20.0) // Matt: added
-     FireSoundVolume=512.000000
-     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-     AltFireSoundScaling=3.000000
-     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-     FireForce="Explosion05"
-     bIsRepeatingFF=true // Matt: added, as strongly suspect this should be true, like a tank mounted MG
-     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed' // Matt: changed
-     AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
-     ShakeRotMag=(Z=5.000000)
-     ShakeRotRate=(Z=100.000000)
-     ShakeRotTime=2.000000
-     ShakeOffsetMag=(Z=0.500000)
-     ShakeOffsetRate=(Z=10.000000)
-     ShakeOffsetTime=2.000000
-     AltShakeRotMag=(X=0.010000,Y=0.010000,Z=0.010000)
-     AltShakeRotRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-     AltShakeRotTime=2.000000
-     AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
-     AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-     AltShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
-     CustomPitchUpLimit=12743
-     CustomPitchDownLimit=64443
-     BeginningIdleAnim="com_idle_close"
-     InitialPrimaryAmmo=10
-     InitialSecondaryAmmo=10
-     InitialTertiaryAmmo=10 // Matt: added
-     InitialAltAmmo=150
-     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed' // Matt: added class & made primary
-     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'    // Matt: was primary
-     TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'   // Matt: was secondary
-     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext'
-     Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
-     Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
-     Skins(2)=Texture'Weapons1st_tex.MG.mg42_barrel'
-     Skins(3)=Texture'Weapons1st_tex.MG.mg42'
-     SoundVolume=100
-     SoundRadius=256.000000
+    // Matt: all added, as this is now a DH_ROTankCannon:
+    FrontArmorFactor=0.8
+    RightArmorFactor=0.8
+    LeftArmorFactor=0.8
+    RearArmorFactor=0.8
+    FrontArmorSlope=30.0
+    RightArmorSlope=30.0
+    LeftArmorSlope=30.0
+    RearArmorSlope=30.0
+    FrontLeftAngle=306.0
+    FrontRightAngle=54.0
+    RearRightAngle=130.0
+    RearLeftAngle=230.0
+    NumMags=15     // Matt: was 25
+    NumSecMags=15  // Matt: was 20
+    NumTertMags=15 // Matt: added
+    ReloadSoundOne=Sound'Vehicle_reloads.Reloads.T60_reload_01'
+    ReloadSoundTwo=Sound'DH_GerVehicleSounds2.Reloads.234_reload_02'
+    ReloadSoundThree=Sound'DH_GerVehicleSounds2.Reloads.234_reload_03'
+    ReloadSoundFour=Sound'Vehicle_reloads.Reloads.T60_reload_04'
+    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'
+    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire02G'
+    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'
+    ProjectileDescriptions(0)="Mixed" // Matt: was "AP"
+    ProjectileDescriptions(1)="AP"    // Matt: was "HE-T"
+    ProjectileDescriptions(2)="HE-T"  // Matt: added
+    RangeSettings(1)=100
+    RangeSettings(2)=200
+    RangeSettings(3)=300
+    RangeSettings(4)=400
+    RangeSettings(5)=500
+    RangeSettings(6)=600
+    RangeSettings(7)=700
+    RangeSettings(8)=800
+    RangeSettings(9)=900
+    RangeSettings(10)=1000
+    RangeSettings(11)=1100
+    RangeSettings(12)=1200
+    ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
+    NumAltMags=12
+    DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer'
+    mTracerInterval=0.350000
+    bUsesTracers=true
+    bAltFireTracersOnly=true
+    MinCommanderHitHeight=21.0
+    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=12.000000,Y=4.000000,Z=34.000000))
+    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=12.000000,Y=4.000000,Z=12.000000))
+    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    YawBone="Turret"
+    PitchBone="Gun"
+    PitchUpLimit=15000
+    PitchDownLimit=45000
+    WeaponFireAttachmentBone="Barrel"
+    GunnerAttachmentBone="com_attachment"
+    WeaponFireOffset=5.000000
+    AltFireOffset=(X=-54.000000,Y=-24.000000,Z=-3.000000)
+    RotationsPerSecond=0.040000
+    ManualRotationsPerSecond=0.04  // Matt: added
+    PoweredRotationsPerSecond=0.04 // Matt: added
+    bAmbientAltFireSound=true
+    Spread=0.003000
+    bUsesSecondarySpread=false // Matt: added so uses Spread
+    bUsesTertiarySpread=false  // Matt: added so uses Spread
+    //   AltFireSpread=0.002000     // Matt: removed as is inherited default from DHROTC
+    FireInterval=0.200000
+    AltFireInterval=0.050000
+    FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
+    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    bAmbientEmitterAltFireOnly=true
+    CannonDustEmitterClass=none // Matt: avoids having to override FlashMuzzleFlash function
+    FireEffectOffset=(X=20.0,Y=-5.0,Z=20.0) // Matt: added
+    FireSoundVolume=512.000000
+    AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
+    AltFireSoundScaling=3.000000
+    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
+    FireForce="Explosion05"
+    bIsRepeatingFF=true // Matt: added, as strongly suspect this should be true, like a tank mounted MG
+    ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed' // Matt: changed
+    AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
+    ShakeRotMag=(Z=5.000000)
+    ShakeRotRate=(Z=100.000000)
+    ShakeRotTime=2.000000
+    ShakeOffsetMag=(Z=0.500000)
+    ShakeOffsetRate=(Z=10.000000)
+    ShakeOffsetTime=2.000000
+    AltShakeRotMag=(X=0.010000,Y=0.010000,Z=0.010000)
+    AltShakeRotRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
+    AltShakeRotTime=2.000000
+    AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
+    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
+    AltShakeOffsetTime=2.000000
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    CustomPitchUpLimit=12743
+    CustomPitchDownLimit=64443
+    BeginningIdleAnim="com_idle_close"
+    InitialPrimaryAmmo=10
+    InitialSecondaryAmmo=10
+    InitialTertiaryAmmo=10 // Matt: added
+    InitialAltAmmo=150
+    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed' // Matt: added class & made primary
+    SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'    // Matt: was primary
+    TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'   // Matt: was secondary
+    Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
+    Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
+    Skins(2)=Texture'Weapons1st_tex.MG.mg42_barrel'
+    Skins(3)=Texture'Weapons1st_tex.MG.mg42'
+    SoundVolume=100
+    SoundRadius=256.000000
 }

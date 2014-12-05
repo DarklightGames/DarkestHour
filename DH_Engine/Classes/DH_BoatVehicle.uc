@@ -381,46 +381,46 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 
 defaultproperties
 {
-     DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-//   MaxPitchSpeed=600.000000 // deprecated
-//   BoatFloatTraceDistance=10000.000000 // deprecated
-     PointValue=1.000000
-     ChangeUpPoint=1990.000000
-     ChangeDownPoint=1000.000000
-     SteerBoneName="steeringwheel"
-     DustSlipRate=0.000000
-     DustSlipThresh=100000.000000
-     ViewShakeRadius=600.000000
-     ViewShakeOffsetMag=(X=0.500000,Z=2.000000)
-     ViewShakeOffsetFreq=7.000000
-     DisintegrationHealth=-10000.000000
-     DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
-     DestructionAngularMomentum=(Max=150.000000)
-     ExplosionSoundRadius=800.000000
-     ExplosionDamage=300.000000
-     ExplosionRadius=600.000000
-     ImpactDamageMult=0.001000
-     TimeTilDissapear=15.000000
-     IdleTimeBeforeReset=30.000000
-     InitialPositionIndex=0
-     VehicleSpikeTime=15.000000
-     VehHitpoints(0)=(PointBone="Driver")
-     VehicleMass=12.000000
-     bKeyVehicle=true
-     bFPNoZFromCameraPitch=true
-     CenterSpringForce="SpringONSSRV"
-     VehiclePositionString="in a Boat"
-     VehicleNameString="Boat"
-     StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
-     MaxDesireability=0.100000
-     ObjectiveGetOutDist=1500.000000
-     WaterDamage=0.000000
-     bCanSwim=true
-     GroundSpeed=200.000000
-     WaterSpeed=200.000000
-     PitchUpLimit=500
-     PitchDownLimit=58000
-     CollisionRadius=300.000000
-     CollisionHeight=45.000000
-     bDebugExitPositions=true
+    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    //   MaxPitchSpeed=600.000000 // deprecated
+    //   BoatFloatTraceDistance=10000.000000 // deprecated
+    PointValue=1.000000
+    ChangeUpPoint=1990.000000
+    ChangeDownPoint=1000.000000
+    SteerBoneName="steeringwheel"
+    DustSlipRate=0.000000
+    DustSlipThresh=100000.000000
+    ViewShakeRadius=600.000000
+    ViewShakeOffsetMag=(X=0.500000,Z=2.000000)
+    ViewShakeOffsetFreq=7.000000
+    DisintegrationHealth=-10000.000000
+    DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
+    DestructionAngularMomentum=(Max=150.000000)
+    ExplosionSoundRadius=800.000000
+    ExplosionDamage=300.000000
+    ExplosionRadius=600.000000
+    ImpactDamageMult=0.001000
+    TimeTilDissapear=15.000000
+    IdleTimeBeforeReset=30.000000
+    InitialPositionIndex=0
+    VehicleSpikeTime=15.000000
+    VehHitpoints(0)=(PointBone="Driver")
+    VehicleMass=12.000000
+    bKeyVehicle=true
+    bFPNoZFromCameraPitch=true
+    CenterSpringForce="SpringONSSRV"
+    VehiclePositionString="in a Boat"
+    VehicleNameString="Boat"
+    StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
+    MaxDesireability=0.100000
+    ObjectiveGetOutDist=1500.000000
+    WaterDamage=0.000000
+    bCanSwim=true
+    GroundSpeed=200.000000
+    WaterSpeed=200.000000
+    PitchUpLimit=500
+    PitchDownLimit=58000
+    CollisionRadius=300.000000
+    CollisionHeight=45.000000
+    bDebugExitPositions=true
 }

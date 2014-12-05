@@ -35,5 +35,5 @@ function Reset()
 
 defaultproperties
 {
-     bInitiallyActive=true
+    bInitiallyActive=true
 }

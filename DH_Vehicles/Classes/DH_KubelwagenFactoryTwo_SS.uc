@@ -7,6 +7,6 @@ class DH_KubelwagenFactoryTwo_SS extends DH_KubelwagenFactory_WH;
 
 defaultproperties
 {
-     VehicleClass=class'DH_Vehicles.DH_KubelwagenCarTwo_SS'
-     Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb2'
+    VehicleClass=class'DH_Vehicles.DH_KubelwagenCarTwo_SS'
+    Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb2'
 }

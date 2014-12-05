@@ -9,7 +9,7 @@ class DH_StuartCannonShellDamageAP extends ROTankShellImpactDamage; //ROWeaponDa
 
 defaultproperties
 {
-     APCDamageModifier=0.750000
-     TreadDamageModifier=0.750000
-     DeathString="%o was killed by %k's Stuart APC shell."
+    APCDamageModifier=0.750000
+    TreadDamageModifier=0.750000
+    DeathString="%o was killed by %k's Stuart APC shell."
 }

@@ -308,9 +308,9 @@ simulated function EjectShell()
 
 defaultproperties
 {
-     PctHipMGPenalty=2.000000
-     PreLaunchTraceDistance=2624.000000
-     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
-     BlurTime=0.04
-     BlurTimeIronsight=0.04
+    PctHipMGPenalty=2.000000
+    PreLaunchTraceDistance=2624.000000
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    BlurTime=0.04
+    BlurTimeIronsight=0.04
 }

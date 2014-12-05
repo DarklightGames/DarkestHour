@@ -7,5 +7,5 @@ class DH_OpelBlitzResupplyAttachment extends DH_MobileResupplyAttachment;
 
 defaultproperties
 {
-     Team=OWNER_Axis
+    Team=OWNER_Axis
 }

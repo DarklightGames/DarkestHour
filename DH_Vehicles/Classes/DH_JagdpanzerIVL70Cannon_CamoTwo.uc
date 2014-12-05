@@ -7,5 +7,5 @@ class DH_JagdpanzerIVL70Cannon_CamoTwo extends DH_JagdpanzerIVL70Cannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo3'
+    Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo3'
 }

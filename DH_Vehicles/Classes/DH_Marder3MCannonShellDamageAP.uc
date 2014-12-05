@@ -8,7 +8,7 @@ class DH_Marder3MCannonShellDamageAP extends ROTankShellImpactDamage
 
 defaultproperties
 {
-     APCDamageModifier=0.750000
-     VehicleDamageModifier=1.500000
-     DeathString="%o was killed by %k's Marder III APCBC shell."
+    APCDamageModifier=0.750000
+    VehicleDamageModifier=1.500000
+    DeathString="%o was killed by %k's Marder III APCBC shell."
 }

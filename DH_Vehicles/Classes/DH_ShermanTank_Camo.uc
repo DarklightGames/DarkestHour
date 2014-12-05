@@ -29,7 +29,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_Camo')
-     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest2'
-     Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_camo1'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_Camo')
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest2'
+    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_camo1'
 }

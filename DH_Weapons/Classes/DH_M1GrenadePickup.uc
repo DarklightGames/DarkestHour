@@ -8,15 +8,15 @@ class DH_M1GrenadePickup extends ROOneShotWeaponPickup
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Mk II Grenade"
-     MaxDesireability=0.780000
-     InventoryType=class'DH_Weapons.DH_M1GrenadeWeapon'
-     PickupMessage="You got the Mk II Grenade."
-     PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1_Grenade'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=15.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: Mk II Grenade"
+    MaxDesireability=0.780000
+    InventoryType=class'DH_Weapons.DH_M1GrenadeWeapon'
+    PickupMessage="You got the Mk II Grenade."
+    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1_Grenade'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=15.000000
+    CollisionHeight=3.000000
 }

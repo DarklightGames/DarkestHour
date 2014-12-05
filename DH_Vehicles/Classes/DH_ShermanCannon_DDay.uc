@@ -48,11 +48,11 @@ simulated function int LimitYaw(int yaw)
 
 defaultproperties
 {
-     YawStartConstraint=-25000.000000
-     YawEndConstraint=25000.000000
-     MaxPositiveYaw=23666
-     MaxNegativeYaw=-23666
-     bLimitYaw=true
-     InitialPrimaryAmmo=35
-     InitialSecondaryAmmo=50
+    YawStartConstraint=-25000.000000
+    YawEndConstraint=25000.000000
+    MaxPositiveYaw=23666
+    MaxNegativeYaw=-23666
+    bLimitYaw=true
+    InitialPrimaryAmmo=35
+    InitialSecondaryAmmo=50
 }

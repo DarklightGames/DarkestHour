@@ -148,14 +148,14 @@ simulated function Reset()
 
 defaultproperties
 {
-     OnColor=(B=16,G=88,R=112,A=255)
-     OffColor=(B=48,G=24,R=16,A=255)
-     ChangeTime=60.000000
-     ChangeTimeTwo=0.001000
-     SwapTime=0.001000
-     bStatic=false
-     bAlwaysRelevant=true
-     bSkipActorPropertyReplication=false
-     RemoteRole=ROLE_SimulatedProxy
-     bGameRelevant=true
+    OnColor=(B=16,G=88,R=112,A=255)
+    OffColor=(B=48,G=24,R=16,A=255)
+    ChangeTime=60.000000
+    ChangeTimeTwo=0.001000
+    SwapTime=0.001000
+    bStatic=false
+    bAlwaysRelevant=true
+    bSkipActorPropertyReplication=false
+    RemoteRole=ROLE_SimulatedProxy
+    bGameRelevant=true
 }

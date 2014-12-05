@@ -945,7 +945,7 @@ function DisableCapBarsForThisObj()
 
 defaultproperties
 {
-     bVehiclesCanCapture=true
-     bTankersCanCapture=true
-     PlayersNeededToCapture=1
+    bVehiclesCanCapture=true
+    bTankersCanCapture=true
+    PlayersNeededToCapture=1
 }

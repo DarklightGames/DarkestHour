@@ -78,7 +78,7 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-     Priority=5
-     InventoryGroup=3
+    Priority=5
+    InventoryGroup=3
 }
 

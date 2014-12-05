@@ -10,5 +10,5 @@ class DH_UniCarrierMGOverlay extends VehicleHUDOverlay;
 
 defaultproperties
 {
-     Mesh=SkeletalMesh'DH_Bren_1st.BrenV'
+    Mesh=SkeletalMesh'DH_Bren_1st.BrenV'
 }

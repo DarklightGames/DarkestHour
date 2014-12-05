@@ -85,7 +85,6 @@ defaultproperties
     EngineHealth=100
     bIsApc=true
     DriverAttachmentBone="driver_attachment"
-
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         BoneName="wheel_FR"
@@ -95,7 +94,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.RFWheel'
-
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_FL"
@@ -105,7 +103,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LFWheel'
-
     Begin Object Class=SVehicleWheel Name=MRWheel
         bPoweredWheel=true
         BoneName="wheel_MR"
@@ -115,7 +112,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.MRWheel'
-
     Begin Object Class=SVehicleWheel Name=MLWheel
         bPoweredWheel=true
         BoneName="wheel_ML"
@@ -125,7 +121,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.MLWheel'
-
     Begin Object Class=SVehicleWheel Name=RRWheel
         bPoweredWheel=true
         BoneName="wheel_RR"
@@ -135,7 +130,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.RRWheel'
-
     Begin Object Class=SVehicleWheel Name=LRWheel
         bPoweredWheel=true
         BoneName="wheel_LR"
@@ -145,7 +139,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LRWheel'
-
     VehicleMass=5.000000
     bHasHandbrake=false
     DrivePos=(X=5.000000,Y=-2.000000,Z=5.000000)
@@ -190,6 +183,5 @@ defaultproperties
         KImpactThreshold=700.000000
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_GreyhoundArmoredCar.KParams0'
-
     HighDetailOverlayIndex=1
 }

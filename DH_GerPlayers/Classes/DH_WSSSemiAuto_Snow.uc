@@ -7,5 +7,5 @@ class DH_WSSSemiAuto_Snow extends Note;
 
 defaultproperties
 {
-     Text="Deprecated role."
+    Text="Deprecated role."
 }

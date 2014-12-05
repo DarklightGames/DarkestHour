@@ -320,14 +320,14 @@ function bool FillAmmo()
 
 defaultproperties
 {
-     DeployRadius=32.000000
-     DeployAngleMaximum=0.349066
-     FireModeClass(0)=class'DH_Mortars.DH_MortarWeaponFire'
-     FireModeClass(1)=class'DH_Mortars.DH_MortarWeaponFire'
-     AIRating=1.000000
-     CurrentRating=1.000000
-     bCanThrow=false
-     bCanSway=false
-     InventoryGroup=9
-     BobDamping=1.600000
+    DeployRadius=32.000000
+    DeployAngleMaximum=0.349066
+    FireModeClass(0)=class'DH_Mortars.DH_MortarWeaponFire'
+    FireModeClass(1)=class'DH_Mortars.DH_MortarWeaponFire'
+    AIRating=1.000000
+    CurrentRating=1.000000
+    bCanThrow=false
+    bCanSway=false
+    InventoryGroup=9
+    BobDamping=1.600000
 }

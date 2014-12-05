@@ -267,64 +267,63 @@ function exec DamageTank()
 
 defaultproperties
 {
-     UFrontArmorFactor=0.800000
-     URightArmorFactor=0.800000
-     ULeftArmorFactor=0.800000
-     URearArmorFactor=0.800000
-     PointValue=2.000000
-     TreadVelocityScale=0.000000
-     FrontLeftAngle=302.000000
-     FrontRightAngle=58.000000
-     RearRightAngle=122.000000
-     RearLeftAngle=238.000000
-     IdleRPM=0.000000
-     EngineRPMSoundRange=0.000000
-     bSpecialTankTurning=false
-     ViewShakeRadius=100.000000
-     ViewShakeOffsetFreq=1.000000
-     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-     DisintegrationHealth=-1000000000.000000
-     DestructionLinearMomentum=(Min=0.000000,Max=0.000000)
-     DestructionAngularMomentum=(Min=0.000000,Max=0.000000)
-     DamagedEffectClass=class'AHZ_ROVehicles.ATCannonDamagedEffect'
-     bMustBeTankCommander=false
-     VehicleHudEngineX=0.000000
-     VehicleHudEngineY=0.000000
-     EngineHealth=1
-     bMultiPosition=false
-     TouchMessage="Use the "
-     VehicleMass=5.000000
-     VehiclePositionString="using an AT-Gun"
-     VehicleNameString="AT-Gun"
-     RanOverDamageType=none
-     CrushedDamageType=none
-     RanOverSound=none
-     StolenAnnouncement=
-     MaxDesireability=1.900000
-     WaterDamage=0.000000
-     VehicleDrowningDamType=none
-     bSpecialHUD=false
-     CollisionRadius=75.000000
-     CollisionHeight=100.000000
-     Begin Object Class=KarmaParamsRBFull Name=KParams0
-         KInertiaTensor(0)=1.000000
-         KInertiaTensor(3)=3.000000
-         KInertiaTensor(5)=3.000000
-         KCOMOffset=(Z=-0.500000)
-         KLinearDamping=0.050000
-         KAngularDamping=0.050000
-         KStartEnabled=true
-         bKNonSphericalInertia=true
-         KMaxAngularSpeed=0.000000
-         bHighDetailOnly=false
-         bClientOnly=false
-         bKDoubleTickRate=true
-         bDestroyOnWorldPenetrate=true
-         bDoSafetime=true
-         KFriction=0.500000
-         KImpactThreshold=700.000000
-     End Object
-     KParams=KarmaParamsRBFull'DH_Guns.DH_ATGun.KParams0'
-
+    UFrontArmorFactor=0.800000
+    URightArmorFactor=0.800000
+    ULeftArmorFactor=0.800000
+    URearArmorFactor=0.800000
+    PointValue=2.000000
+    TreadVelocityScale=0.000000
+    FrontLeftAngle=302.000000
+    FrontRightAngle=58.000000
+    RearRightAngle=122.000000
+    RearLeftAngle=238.000000
+    IdleRPM=0.000000
+    EngineRPMSoundRange=0.000000
+    bSpecialTankTurning=false
+    ViewShakeRadius=100.000000
+    ViewShakeOffsetFreq=1.000000
+    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DisintegrationHealth=-1000000000.000000
+    DestructionLinearMomentum=(Min=0.000000,Max=0.000000)
+    DestructionAngularMomentum=(Min=0.000000,Max=0.000000)
+    DamagedEffectClass=class'AHZ_ROVehicles.ATCannonDamagedEffect'
+    bMustBeTankCommander=false
+    VehicleHudEngineX=0.000000
+    VehicleHudEngineY=0.000000
+    EngineHealth=1
+    bMultiPosition=false
+    TouchMessage="Use the "
+    VehicleMass=5.000000
+    VehiclePositionString="using an AT-Gun"
+    VehicleNameString="AT-Gun"
+    RanOverDamageType=none
+    CrushedDamageType=none
+    RanOverSound=none
+    StolenAnnouncement=
+    MaxDesireability=1.900000
+    WaterDamage=0.000000
+    VehicleDrowningDamType=none
+    bSpecialHUD=false
+    CollisionRadius=75.000000
+    CollisionHeight=100.000000
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.000000
+        KInertiaTensor(3)=3.000000
+        KInertiaTensor(5)=3.000000
+        KCOMOffset=(Z=-0.500000)
+        KLinearDamping=0.050000
+        KAngularDamping=0.050000
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        KMaxAngularSpeed=0.000000
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.500000
+        KImpactThreshold=700.000000
+    End Object
+    KParams=KarmaParamsRBFull'DH_Guns.DH_ATGun.KParams0'
 }

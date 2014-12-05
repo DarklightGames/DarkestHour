@@ -152,19 +152,19 @@ function inventory SpawnWeaponCopy(pawn Other)
 
 defaultproperties
 {
-     WeaponType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
-     TouchMessage="Pick Up: Panzerfaust 60"
-     bAmmoPickupIsWeapon=true
-     AmmoAmount=1
-     MaxDesireability=0.780000
-     InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
-     PickupMessage="You got the Panzerfaust 60."
-     PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
-     PrePivot=(Z=3.000000)
-     AmbientGlow=10
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    WeaponType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
+    TouchMessage="Pick Up: Panzerfaust 60"
+    bAmmoPickupIsWeapon=true
+    AmmoAmount=1
+    MaxDesireability=0.780000
+    InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
+    PickupMessage="You got the Panzerfaust 60."
+    PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
+    PrePivot=(Z=3.000000)
+    AmbientGlow=10
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

@@ -37,13 +37,13 @@ static function string GetString(
 
 defaultproperties
 {
-     IsFull="The Mobile Deploy Vehicle is full."
-     IsDestroyed="The Mobile Deploy Vehicle is destroyed."
-     IsInCapture="The Mobile Deploy Vehicle is in a capture area."
-     EnemyNear="The Mobile Deploy Vehicle has enemies nearby."
-     MustBeSquadLeader="You must be a Squad Leader to drive this mobile deploy vehicle."
-     bFadeMessage=true
-     DrawColor=(B=36,G=28,R=214)
-     PosY=0.750000
-     FontSize=2
+    IsFull="The Mobile Deploy Vehicle is full."
+    IsDestroyed="The Mobile Deploy Vehicle is destroyed."
+    IsInCapture="The Mobile Deploy Vehicle is in a capture area."
+    EnemyNear="The Mobile Deploy Vehicle has enemies nearby."
+    MustBeSquadLeader="You must be a Squad Leader to drive this mobile deploy vehicle."
+    bFadeMessage=true
+    DrawColor=(B=36,G=28,R=214)
+    PosY=0.750000
+    FontSize=2
 }

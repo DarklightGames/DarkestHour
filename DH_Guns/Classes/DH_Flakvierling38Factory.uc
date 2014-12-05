@@ -9,6 +9,6 @@ class DH_Flakvierling38Factory extends DH_ATCannonFactoryBase;
 
 defaultproperties
 {
-     VehicleClass=class'DH_Guns.DH_Flakvierling38Gun'
-     Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_base'
+    VehicleClass=class'DH_Guns.DH_Flakvierling38Gun'
+    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_base'
 }

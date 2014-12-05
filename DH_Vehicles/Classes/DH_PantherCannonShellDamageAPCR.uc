@@ -8,7 +8,7 @@ class DH_PantherCannonShellDamageAPCR extends ROTankShellImpactDamage
 
 defaultproperties
 {
-     APCDamageModifier=0.500000
-     TreadDamageModifier=0.950000
-     DeathString="%o was killed by %k's Panther APCR shell."
+    APCDamageModifier=0.500000
+    TreadDamageModifier=0.950000
+    DeathString="%o was killed by %k's Panther APCR shell."
 }

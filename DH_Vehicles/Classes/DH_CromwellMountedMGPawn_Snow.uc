@@ -7,5 +7,5 @@ class DH_CromwellMountedMGPawn_Snow extends DH_CromwellMountedMGPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_CromwellMountedMG_Snow'
+    GunClass=class'DH_Vehicles.DH_CromwellMountedMG_Snow'
 }

@@ -25,6 +25,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
-     HighDetailOverlay=Texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
+    Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
+    HighDetailOverlay=Texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
 }

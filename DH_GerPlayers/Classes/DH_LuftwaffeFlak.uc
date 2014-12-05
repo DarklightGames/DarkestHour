@@ -8,5 +8,5 @@ class DH_LuftwaffeFlak extends DH_Ger_Luftwaffe
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_LuftwaffeFlakPawn"
+    RolePawnClass="DH_GerPlayers.DH_LuftwaffeFlakPawn"
 }

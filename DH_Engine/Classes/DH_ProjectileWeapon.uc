@@ -2643,17 +2643,17 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
 
 defaultproperties
 {
-     IronSwitchAnimRate=1.000000
-     FastTweenTime=0.200000
-     Priority=9
-     bUsesFreeAim=true
-     LightType=LT_Steady
-     LightEffect=LE_NonIncidence
-     LightHue=30
-     LightSaturation=150
-     LightBrightness=255.000000
-     LightRadius=4.000000
-     LightPeriod=3
-     FillAmmoMagCount=1
-     ROBarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
+    IronSwitchAnimRate=1.000000
+    FastTweenTime=0.200000
+    Priority=9
+    bUsesFreeAim=true
+    LightType=LT_Steady
+    LightEffect=LE_NonIncidence
+    LightHue=30
+    LightSaturation=150
+    LightBrightness=255.000000
+    LightRadius=4.000000
+    LightPeriod=3
+    FillAmmoMagCount=1
+    ROBarrelSteamEmitterClass=class'ROEffects.ROMGSteam'
 }

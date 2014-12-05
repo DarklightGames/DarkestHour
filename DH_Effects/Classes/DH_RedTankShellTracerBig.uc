@@ -22,11 +22,11 @@ auto state Start
 
 defaultproperties
 {
-     bTrailerSameRotation=true
-     Physics=PHYS_Trailer
-     Texture=Texture'DH_FX_Tex.Effects.RedFlare'
-     DrawScale=0.010000
-     Skins(0)=Texture'DH_FX_Tex.Effects.RedFlare'
-     Style=STY_Additive
-     Mass=13.000000
+    bTrailerSameRotation=true
+    Physics=PHYS_Trailer
+    Texture=Texture'DH_FX_Tex.Effects.RedFlare'
+    DrawScale=0.010000
+    Skins(0)=Texture'DH_FX_Tex.Effects.RedFlare'
+    Style=STY_Additive
+    Mass=13.000000
 }

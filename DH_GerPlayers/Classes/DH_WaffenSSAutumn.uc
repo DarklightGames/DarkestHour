@@ -8,5 +8,5 @@ class DH_WaffenSSAutumn extends DH_Ger_WaffenSS
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_WaffenSSAutumnPawn"
+    RolePawnClass="DH_GerPlayers.DH_WaffenSSAutumnPawn"
 }

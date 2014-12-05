@@ -10,8 +10,8 @@ class DH_PanzerIIILCannonShellDamageAPCR extends ROTankShellImpactDamage
 
 defaultproperties
 {
-     APCDamageModifier=0.650000
-     VehicleDamageModifier=0.850000
-     TreadDamageModifier=0.750000
-     DeathString="%o was killed by %k's Panzer III Ausf.L APCR shell."
+    APCDamageModifier=0.650000
+    VehicleDamageModifier=0.850000
+    TreadDamageModifier=0.750000
+    DeathString="%o was killed by %k's Panzer III Ausf.L APCR shell."
 }

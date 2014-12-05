@@ -13,5 +13,5 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     Mesh=SkeletalMesh'dhgear_anm.M1Garand_pouch'
+    Mesh=SkeletalMesh'dhgear_anm.M1Garand_pouch'
 }

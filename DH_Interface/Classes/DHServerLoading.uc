@@ -323,12 +323,10 @@ defaultproperties
 {
     loadingMapPrefix="Deploying to"
     loadingMapAuthorPrefix="Author:"
-
     OfficialMapText="Official Map"
     OfficialMapIcon=texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CustomMapText="Community Map"
     CustomMapIcon=texture'DH_GUI_Tex.Menu.CommunityMapLogo'
-
     //The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreens.LoadingScreenDHDefault"
     Backgrounds(1)="DH_GUI_Tex.LoadingScreens.LoadingScreenBoisJacques"
@@ -362,7 +360,6 @@ defaultproperties
     Operations(2)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpMapname'
     Operations(4)=DrawOpImage'ROInterface.ROServerLoading.OpVACImg'
     Operations(5)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpVACText'
-
     Begin Object class=DrawOpImage Name=OpConstitutionImg
         Top=0.015
         Lft=0.685
@@ -373,7 +370,6 @@ defaultproperties
         SubYL=128
     End Object
     Operations(6)=OpConstitutionImg
-
     Begin Object class=RODrawOpShadowedText Name=OpConstitutionText
         Top=0.02
         Lft=0.735
@@ -385,7 +381,6 @@ defaultproperties
         //bWrapText=true
     End Object
     Operations(7)=OpConstitutionText
-
     Begin Object class=RODrawOpShadowedText Name=OpMapAuthorText
         Top=0.02
         Lft=0.05
@@ -397,5 +392,4 @@ defaultproperties
         //bWrapText=true
     End Object
     Operations(8)=OpMapAuthorText
-
 }

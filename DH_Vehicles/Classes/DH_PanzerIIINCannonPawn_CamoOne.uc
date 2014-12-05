@@ -7,5 +7,5 @@ class DH_PanzerIIINCannonPawn_CamoOne extends DH_PanzerIIINCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_PanzerIIINCannon_CamoOne'
+    GunClass=class'DH_Vehicles.DH_PanzerIIINCannon_CamoOne'
 }

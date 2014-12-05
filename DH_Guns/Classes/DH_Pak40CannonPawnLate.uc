@@ -7,5 +7,5 @@ class DH_Pak40CannonPawnLate extends DH_Pak40CannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Guns.DH_Pak40CannonLate'
+    GunClass=class'DH_Guns.DH_Pak40CannonLate'
 }

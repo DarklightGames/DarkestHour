@@ -8,5 +8,5 @@ class DH_ThompsonBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_ThompsonWeapon'
+    WeaponClass=class'DH_Weapons.DH_ThompsonWeapon'
 }

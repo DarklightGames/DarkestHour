@@ -7,8 +7,8 @@ class DH_ShermanFireflyFactory extends DH_BritishVehicles;
 
 defaultproperties
 {
-     RespawnTime=1.000000
-     bFactoryActive=true
-     VehicleClass=class'DH_Vehicles.DH_ShermanFireflyTank'
-     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'
+    RespawnTime=1.000000
+    bFactoryActive=true
+    VehicleClass=class'DH_Vehicles.DH_ShermanFireflyTank'
+    Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'
 }

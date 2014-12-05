@@ -97,10 +97,10 @@ function DoFireEffect()
 
 defaultproperties
 {
-     bSplashDamage=false
-     bRecommendSplashDamage=false
-     MaxHoldTime=4.950000
-     PreFireAnim="Pre_Fire"
-     AmmoClass=class'DH_Equipment.DH_USSmokeGrenadeAmmo'
-     ProjectileClass=class'DH_Equipment.DH_USSmokeGrenadeProjectile'
+    bSplashDamage=false
+    bRecommendSplashDamage=false
+    MaxHoldTime=4.950000
+    PreFireAnim="Pre_Fire"
+    AmmoClass=class'DH_Equipment.DH_USSmokeGrenadeAmmo'
+    ProjectileClass=class'DH_Equipment.DH_USSmokeGrenadeProjectile'
 }

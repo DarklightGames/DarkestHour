@@ -7,5 +7,5 @@ class DH_HetzerCannonPawn_Snow extends DH_HetzerCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_HetzerCannon_Snow'
+    GunClass=class'DH_Vehicles.DH_HetzerCannon_Snow'
 }

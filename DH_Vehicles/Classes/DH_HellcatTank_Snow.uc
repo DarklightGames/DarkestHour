@@ -29,11 +29,11 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatCannonPawn_Snow')
-     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_destsnow'
-     Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_snow'
-     Skins(1)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_snow'
-     Skins(2)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_snow'
-     Skins(3)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treadsnow'
-     Skins(4)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treadsnow'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatCannonPawn_Snow')
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_destsnow'
+    Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_snow'
+    Skins(1)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_snow'
+    Skins(2)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_snow'
+    Skins(3)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treadsnow'
+    Skins(4)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treadsnow'
 }

@@ -13,7 +13,7 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     bIsHelmet=false
-     Mesh=SkeletalMesh'gear_anm.ger_tankercap_cap'
-     Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.SS_HG_1'
+    bIsHelmet=false
+    Mesh=SkeletalMesh'gear_anm.ger_tankercap_cap'
+    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.SS_HG_1'
 }

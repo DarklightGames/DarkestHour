@@ -8,5 +8,5 @@ class DH_FJ_Bandolier extends DH_Fallschirmjager
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_FJBandolierPawn"
+    RolePawnClass="DH_GerPlayers.DH_FJBandolierPawn"
 }

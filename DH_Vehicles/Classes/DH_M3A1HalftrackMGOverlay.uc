@@ -9,5 +9,5 @@ class DH_M3A1HalftrackMGOverlay extends VehicleHUDOverlay;
 
 defaultproperties
 {
-     Mesh=SkeletalMesh'DH_30Cal_1st.30Cal_S'
+    Mesh=SkeletalMesh'DH_30Cal_1st.30Cal_S'
 }

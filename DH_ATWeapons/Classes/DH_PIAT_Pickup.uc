@@ -142,19 +142,19 @@ function inventory SpawnWeaponCopy(pawn Other)
 
 defaultproperties
 {
-     WeaponType=class'DH_ATWeapons.DH_PIATWeapon'
-     TouchMessage="Pick Up: PIAT"
-     bAmmoPickupIsWeapon=true
-     AmmoAmount=1
-     MaxDesireability=0.780000
-     InventoryType=class'DH_ATWeapons.DH_PIATAmmo'
-     PickupMessage="You got the PIAT."
-     PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
-     PrePivot=(Z=3.000000)
-     AmbientGlow=10
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    WeaponType=class'DH_ATWeapons.DH_PIATWeapon'
+    TouchMessage="Pick Up: PIAT"
+    bAmmoPickupIsWeapon=true
+    AmmoAmount=1
+    MaxDesireability=0.780000
+    InventoryType=class'DH_ATWeapons.DH_PIATAmmo'
+    PickupMessage="You got the PIAT."
+    PickupSound=Sound'Inf_Weapons_Foley.Misc.WeaponPickup'
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
+    PrePivot=(Z=3.000000)
+    AmbientGlow=10
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

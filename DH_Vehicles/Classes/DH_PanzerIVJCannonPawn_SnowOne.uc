@@ -7,5 +7,5 @@ class DH_PanzerIVJCannonPawn_SnowOne extends DH_PanzerIVJCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_PanzerIVJCannon_SnowOne'
+    GunClass=class'DH_Vehicles.DH_PanzerIVJCannon_SnowOne'
 }

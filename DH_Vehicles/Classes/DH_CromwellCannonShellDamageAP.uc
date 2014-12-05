@@ -8,8 +8,8 @@ class DH_CromwellCannonShellDamageAP extends ROTankShellImpactDamage
 
 defaultproperties
 {
-     APCDamageModifier=0.750000
-     VehicleDamageModifier=1.500000
-     TreadDamageModifier=0.850000
-     DeathString="%o was killed by %k's Cromwell APC shell."
+    APCDamageModifier=0.750000
+    VehicleDamageModifier=1.500000
+    TreadDamageModifier=0.850000
+    DeathString="%o was killed by %k's Cromwell APC shell."
 }

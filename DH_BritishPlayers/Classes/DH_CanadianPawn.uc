@@ -7,5 +7,5 @@ class DH_CanadianPawn extends DH_Pawn;
 
 defaultproperties
 {
-     Species=class'DH_BritishPlayers.DH_Canadian'
+    Species=class'DH_BritishPlayers.DH_Canadian'
 }

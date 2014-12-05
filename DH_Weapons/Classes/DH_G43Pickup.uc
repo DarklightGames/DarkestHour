@@ -17,14 +17,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Gewehr 43"
-     MaxDesireability=0.780000
-     InventoryType=class'DH_Weapons.DH_G43Weapon'
-     PickupMessage="You got the Gewehr 43."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.g43'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: Gewehr 43"
+    MaxDesireability=0.780000
+    InventoryType=class'DH_Weapons.DH_G43Weapon'
+    PickupMessage="You got the Gewehr 43."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.g43'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

@@ -43,14 +43,14 @@ function string GetSortString(int i)
 
 defaultproperties
 {
-     ColumnHeadings(0)="MapName"
-     ColumnHeadings(1)="Votes"
-     ColumnHeadings(2)="none"
-     InitColumnPerc(0)=0.700000
-     InitColumnPerc(1)=0.300000
-     InitColumnPerc(2)=0.000000
-     ColumnHeadingHints(0)="Map Name"
-     ColumnHeadingHints(1)="Number of votes registered for this map."
-     ColumnHeadingHints(2)="none"
-     SortColumn=1
+    ColumnHeadings(0)="MapName"
+    ColumnHeadings(1)="Votes"
+    ColumnHeadings(2)="none"
+    InitColumnPerc(0)=0.700000
+    InitColumnPerc(1)=0.300000
+    InitColumnPerc(2)=0.000000
+    ColumnHeadingHints(0)="Map Name"
+    ColumnHeadingHints(1)="Number of votes registered for this map."
+    ColumnHeadingHints(2)="none"
+    SortColumn=1
 }

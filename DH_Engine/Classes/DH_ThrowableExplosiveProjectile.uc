@@ -445,7 +445,6 @@ defaultproperties
     DampenFactorParallel=0.8
     Physics=PHYS_Falling
     bFixedRotationDir=true
-
     FailureRate=0.01 // failure rate is default to 1 in 100
     ShrapnelCount=0
     ImpactSound=sound'Inf_Weapons_Foley.grenadeland'
@@ -453,7 +452,6 @@ defaultproperties
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     DrawType=DT_StaticMesh
-
     bDynamicLight=false
     LightType=LT_Pulse
     LightEffect=LE_NonIncidence

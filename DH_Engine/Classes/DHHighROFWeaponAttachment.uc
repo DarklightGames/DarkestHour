@@ -216,6 +216,6 @@ function ShotInfo MakeShotInfo(vector NewLocation, rotator SetRotation)
 
 defaultproperties
 {
-     TracerFrequency=4
-     bNetNotify=true
+    TracerFrequency=4
+    bNetNotify=true
 }

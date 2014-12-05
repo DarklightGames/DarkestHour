@@ -151,11 +151,11 @@ state Deactivated
 
 defaultproperties
 {
-     XWidth=512
-     YWidth=512
-     PercentToSucceed=80
-     CallIntervalMin=10
-     CallIntervalMax=20
-     bAutoStart=true
-     MaxRounds=50
+    XWidth=512
+    YWidth=512
+    PercentToSucceed=80
+    CallIntervalMin=10
+    CallIntervalMax=20
+    bAutoStart=true
+    MaxRounds=50
 }

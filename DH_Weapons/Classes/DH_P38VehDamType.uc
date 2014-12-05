@@ -8,12 +8,12 @@ class DH_P38VehDamType extends ROVehicleDamageType
 
 defaultproperties
 {
-     HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
-     WeaponClass=class'DH_Weapons.DH_P38Weapon'
-     DeathString="%o was killed by %k's Walther P38."
-     FemaleSuicide="%o turned the gun on herself."
-     MaleSuicide="%o turned the gun on himself."
-     GibModifier=0.000000
-     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
-     KDamageImpulse=200.000000
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
+    WeaponClass=class'DH_Weapons.DH_P38Weapon'
+    DeathString="%o was killed by %k's Walther P38."
+    FemaleSuicide="%o turned the gun on herself."
+    MaleSuicide="%o turned the gun on himself."
+    GibModifier=0.000000
+    PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+    KDamageImpulse=200.000000
 }

@@ -18,28 +18,26 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 defaultproperties
 {
-     Begin Object Class=DHGUISplitter Name=HorzSplitter
-         DefaultPanels(0)="DH_Interface.DHBrowser_ServerListBox"
-         DefaultPanels(1)="DH_Interface.DHGUISplitter"
-         MaxPercentage=0.900000
-         OnReleaseSplitter=DHBrowser_ServerListPageFavorites.InternalReleaseSplitter
-         OnCreateComponent=DHBrowser_ServerListPageFavorites.InternalOnCreateComponent
-         IniOption="@Internal"
-         WinHeight=1.000000
-         RenderWeight=1.000000
-         OnLoadINI=DHBrowser_ServerListPageFavorites.InternalOnLoadINI
-     End Object
-     sp_Main=DHGUISplitter'DH_Interface.DHBrowser_ServerListPageFavorites.HorzSplitter'
-
-     RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
-     PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
-     DetailSplitterPosition=0.465621
-     Begin Object Class=ROGUIContextMenu Name=FavoritesContextMenu
-         OnOpen=DHBrowser_ServerListPageFavorites.ContextMenuOpened
-         OnSelect=DHBrowser_ServerListPageFavorites.ContextSelect
-     End Object
-     ContextMenu=ROGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
-
-     bStandardized=true
-     StandardHeight=0.800000
+    Begin Object Class=DHGUISplitter Name=HorzSplitter
+        DefaultPanels(0)="DH_Interface.DHBrowser_ServerListBox"
+        DefaultPanels(1)="DH_Interface.DHGUISplitter"
+        MaxPercentage=0.900000
+        OnReleaseSplitter=DHBrowser_ServerListPageFavorites.InternalReleaseSplitter
+        OnCreateComponent=DHBrowser_ServerListPageFavorites.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinHeight=1.000000
+        RenderWeight=1.000000
+        OnLoadINI=DHBrowser_ServerListPageFavorites.InternalOnLoadINI
+    End Object
+    sp_Main=DHGUISplitter'DH_Interface.DHBrowser_ServerListPageFavorites.HorzSplitter'
+    RulesListBoxClass="DH_Interface.DHBrowser_RulesListBox"
+    PlayersListBoxClass="DH_Interface.DHBrowser_PlayersListBox"
+    DetailSplitterPosition=0.465621
+    Begin Object Class=ROGUIContextMenu Name=FavoritesContextMenu
+        OnOpen=DHBrowser_ServerListPageFavorites.ContextMenuOpened
+        OnSelect=DHBrowser_ServerListPageFavorites.ContextSelect
+    End Object
+    ContextMenu=ROGUIContextMenu'DH_Interface.DHBrowser_ServerListPageFavorites.FavoritesContextMenu'
+    bStandardized=true
+    StandardHeight=0.800000
 }

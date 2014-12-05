@@ -101,5 +101,5 @@ simulated function AnimEnd(int channel)
 
 defaultproperties
 {
-     bCanAttachOnBack=true
+    bCanAttachOnBack=true
 }

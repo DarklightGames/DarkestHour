@@ -7,5 +7,5 @@ class DH_HellcatCannonPawn_Snow extends DH_HellcatCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_HellcatCannon_Snow'
+    GunClass=class'DH_Vehicles.DH_HellcatCannon_Snow'
 }

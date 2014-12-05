@@ -164,7 +164,6 @@ defaultproperties
 {
     //** Info **//
     ItemName="Wire Cutters"
-
     //** Display **//
     Mesh=mesh'Common_Binoc_1st.binoculars'
     DrawScale=1.0
@@ -174,19 +173,15 @@ defaultproperties
     HighDetailOverlay=Material'Weapons1st_tex.SniperScopes.Binoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-
     //** Weapon Firing **//
     //FireModeClass(0)=SVT40Fire
     //FireModeClass(1)=SVT40MeleeFire
-
     //** Weapon Functionality **//
     bCanRestDeploy=true
     bUsesFreeAim=false
-
     //** Inventory/Ammo **//
     //PickupClass=class'SVT40Pickup'
     AttachmentClass=class'BinocularsAttachment'
-
     //** Animation **//
     // Rates
     SelectAnimRate=1.0
@@ -200,24 +195,20 @@ defaultproperties
     CrawlBackwardAnim=crawlB
     CrawlStartAnim=crawl_in
     CrawlEndAnim=crawl_out
-
-     //** Zooming **//
+    //** Zooming **//
     ZoomInTime=0.4
     ZoomOutTime=0.2
     PlayerFOVZoom=10
     bPlayerFOVZooms=true
-
     //** Bot/AI **//
     AIRating=+0.0
     CurrentRating=0.0
     bSniping=false // So bots will use this weapon to take long range shots
-
     //** Misc **//
     SelectForce="SwitchToAssaultRifle"
     bCanThrow=false
     bCanSway=false
     InventoryGroup=4
     Priority=1
-
     BinocsEnlargementFactor=0.2
 }

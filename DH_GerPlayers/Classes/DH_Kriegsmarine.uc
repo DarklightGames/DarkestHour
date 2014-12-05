@@ -8,5 +8,5 @@ class DH_Kriegsmarine extends DH_Ger_Kriegsmarine
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_KriegsmarinePawn"
+    RolePawnClass="DH_GerPlayers.DH_KriegsmarinePawn"
 }

@@ -7,5 +7,5 @@ class DH_JagdpantherCannonPawn_CamoTwo extends DH_JagdpantherCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_JagdpantherCannon_CamoTwo'
+    GunClass=class'DH_Vehicles.DH_JagdpantherCannon_CamoTwo'
 }

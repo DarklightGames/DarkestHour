@@ -8,5 +8,5 @@ class DH_M1GarandBayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
+    WeaponClass=class'DH_Weapons.DH_M1GarandWeapon'
 }

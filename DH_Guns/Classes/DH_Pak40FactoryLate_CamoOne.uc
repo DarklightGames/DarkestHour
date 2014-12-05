@@ -7,5 +7,5 @@ class DH_Pak40FactoryLate_CamoOne extends DH_Pak40Factory;
 
 defaultproperties
 {
-     VehicleClass=class'DH_Guns.DH_Pak40ATGunLate_CamoOne'
+    VehicleClass=class'DH_Guns.DH_Pak40ATGunLate_CamoOne'
 }

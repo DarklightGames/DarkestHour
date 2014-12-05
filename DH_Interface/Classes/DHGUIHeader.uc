@@ -7,5 +7,5 @@ class DHGUIHeader extends GUIHeader;
 
 defaultproperties
 {
-     StyleName="DHHeader"
+    StyleName="DHHeader"
 }

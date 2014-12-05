@@ -335,5 +335,5 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
 defaultproperties
 {
-     bShatterProne=true
+    bShatterProne=true
 }
