@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHVehicleSayMessage extends DHStringMessage;
+class DHVehicleSayMessage extends DHLocalMessage;
 
 var Color           VehicleMessageColor;
 

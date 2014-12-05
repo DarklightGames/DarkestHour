@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHVehicleDestroyedMessage extends DHStringMessage;
+class DHVehicleDestroyedMessage extends DHLocalMessage;
 
 static function string AssembleString(
     HUD myHUD,

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHTeamSayDeadMessage extends DHStringMessage;
+class DHTeamSayDeadMessage extends DHLocalMessage;
 
 static function string AssembleString(
     HUD myHUD,

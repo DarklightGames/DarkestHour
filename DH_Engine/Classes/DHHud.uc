@@ -252,7 +252,7 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
 {
     local Class<LocalMessage> MessageClassType;
-    local Class<DHStringMessage> DHMessageClassType;
+    local Class<DHLocalMessage> DHMessageClassType;
 
     switch(MsgType)
     {
@@ -283,14 +283,14 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
         case 'DeathMessage':
             return;
         default:
-            DHMessageClassType = class'DHStringMessage';
+            DHMessageClassType = class'DHLocalMessage';
             break;
     }
 
     AddDHTextMessage(Msg,DHMessageClassType,PRI);
 }
 
-function AddDHTextMessage(string M, class<DHStringMessage> MessageClass, PlayerReplicationInfo PRI)
+function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerReplicationInfo PRI)
 {
     local int i;
 
