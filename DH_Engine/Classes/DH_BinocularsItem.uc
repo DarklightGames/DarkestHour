@@ -37,9 +37,13 @@ simulated state StartMantle extends Busy
     {
         // Stay in this state until the mantle is complete, to keep the weapon lowered without actually switching it
         if (!bIsMantling)
+        {
             GoToState('RaisingWeapon');
+        }
         else
+        {
             SetTimer(0.2, false);
+        }
     }
 
     simulated function BeginState()
@@ -53,13 +57,19 @@ simulated state StartMantle extends Busy
                 for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
                 {
                     if (FireMode[Mode].bIsFiring)
+                    {
                         ClientStopFire(Mode);
+                    }
                 }
 
                 if (ClientState == WS_BringUp)
+                {
                     TweenAnim(SelectAnim,PutDownTime);
+                }
                 else if (HasAnim(PutDownAnim))
+                {
                     PlayAnim(PutDownAnim, PutDownAnimRate, 0.0);
+                }
             }
 
             ClientState = WS_PutDown;
@@ -77,7 +87,9 @@ simulated state StartMantle extends Busy
     simulated function EndState()
     {
         if (ClientState == WS_PutDown)
+        {
             ClientState = WS_Hidden;
+        }
     }
 }
 
