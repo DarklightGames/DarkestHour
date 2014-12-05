@@ -4,13 +4,9 @@
 //==============================================================================
 
 class DH_MortarVehicle extends ROVehicle
-abstract;
+    abstract;
 
 var DH_Pawn OwningPawn;
-
-var bool    bRequiresMortarOperator;
-
-//Resupply
 var bool    bCanBeResupplied;
 var int     PlayerResupplyAmounts[2];
 
@@ -42,8 +38,11 @@ function PlayerResupply()
     WeaponPawns[0].Gun.MainAmmoCharge[1] = Clamp(WeaponPawns[0].Gun.MainAmmoCharge[1] + PlayerResupplyAmounts[1], 0, WeaponPawns[0].GunClass.default.InitialSecondaryAmmo);
 
     //If we're full of ammo now, then we can't be resupplied.
-    if (WeaponPawns[0].Gun.MainAmmoCharge[0] == WeaponPawns[0].GunClass.default.InitialPrimaryAmmo && WeaponPawns[0].Gun.MainAmmoCharge[1] == WeaponPawns[0].GunClass.default.InitialSecondaryAmmo)
+    if (WeaponPawns[0].Gun.MainAmmoCharge[0] == WeaponPawns[0].GunClass.default.InitialPrimaryAmmo &&
+        WeaponPawns[0].Gun.MainAmmoCharge[1] == WeaponPawns[0].GunClass.default.InitialSecondaryAmmo)
+    {
         bCanBeResupplied = false;
+    }
 }
 
 function bool TryToDrive(Pawn P)
@@ -56,14 +55,16 @@ function bool TryToDrive(Pawn P)
     PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
     RI = DH_RoleInfo(PRI.RoleInfo);
 
-    if (DHP == none || PRI == none || RI == none || (!RI.bCanUseMortars && bRequiresMortarOperator))
+    if (DHP == none || PRI == none || RI == none || !RI.bCanUseMortars)
     {
         P.ReceiveLocalizedMessage(class'DH_MortarMessage', 8);
         return false;
     }
 
     if (DHP.bIsCrawling)
+    {
         return false;
+    }
 
     if (WeaponPawns[0].Driver != none)
     {
@@ -78,7 +79,9 @@ function bool TryToDrive(Pawn P)
     }
 
     if (bEnteredOnce && DHP.Weapon.IsA('DH_MortarWeapon'))
+    {
         return false;
+    }
 
     WeaponPawns[0].KDriverEnter(DHP);
 
@@ -91,14 +94,18 @@ function bool TryToDrive(Pawn P)
 
 simulated function SetMortarOwner(DH_Pawn P)
 {
-    if (OwningPawn != none && OwningPawn != P)  //New owner.
-        OwningPawn.OwnedMortar = none;  //Remove previous ownership.
+    if (OwningPawn != none && OwningPawn != P)  //New owner
+    {
+        OwningPawn.OwnedMortar = none;  //Remove previous ownership
+    }
 
     OwningPawn = P;
     P.OwnedMortar = self;
 
     if (IsInState('PendingDestroy'))
+    {
         GotoState('');
+    }
 }
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -109,7 +116,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
-     bRequiresMortarOperator=true
      ExplosionSoundRadius=0.000000
      ExplosionDamage=0.000000
      ExplosionRadius=0.000000

@@ -7,7 +7,6 @@ class DH_DebugTracer extends RODebugTracer;
 
 var bool bTimerDestroys;
 
-
 simulated function PostBeginPlay()
 {
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)

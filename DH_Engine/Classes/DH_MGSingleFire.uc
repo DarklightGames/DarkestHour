@@ -16,9 +16,13 @@ function PlayFireEnd()
     RPW = DH_ProjectileWeapon(Weapon);
 
     if (RPW.HasAnim(FireEndAnim) && !Instigator.bBipodDeployed)
+    {
         RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);
+    }
     else if (RPW.HasAnim(FireIronEndAnim) && Instigator.bBipodDeployed)
+    {
         RPW.PlayAnim(FireIronEndAnim, FireEndAnimRate, TweenTime);
+    }
 }
 
 // Overridden to support hip firing MGs
@@ -35,7 +39,9 @@ simulated function HandleRecoil()
     }
 
     if (ROP == none || ROPwn == none)
+    {
         return;
+    }
 
     if (!ROP.bFreeCamera)
     {
@@ -43,7 +49,9 @@ simulated function HandleRecoil()
         NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
 
         if (Rand(2) == 1)
+        {
             NewRecoilRotation.Yaw *= -1;
+        }
 
         if (Instigator.Physics == PHYS_Falling)
         {
@@ -109,6 +117,7 @@ function DoFireEffect()
     local coords MuzzlePosition;
 
     Instigator.MakeNoise(1.0);
+
     Weapon.GetViewAxes(X,Y,Z);
 
     // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
@@ -119,6 +128,7 @@ function DoFireEffect()
 
         // check if projectile would spawn through a wall and adjust start location accordingly
         Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
+
         if (Other != none)
         {
             StartProj = HitLocation;
@@ -126,20 +136,16 @@ function DoFireEffect()
     }
     else
     {
-        MuzzlePosition = Weapon.GetMuzzleCoords();//Weapon.GetBoneCoords('Muzzle');
+        MuzzlePosition = Weapon.GetMuzzleCoords();
 
         // Get the muzzle position and scale it down 5 times (since the model is scaled up 5 times in the editor)
         StartTrace = MuzzlePosition.Origin - Weapon.Location;
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
-
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
-
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
+        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);
 
         // Instead of just checking walls, lets check all actors. That way we won't have rounds
         // spawning on the other side of players and missing them altogether - Ramm 10/14/04
@@ -148,11 +154,11 @@ function DoFireEffect()
             StartProj = HitLocation;
         }
     }
+
     Aim = AdjustAim(StartProj, AimError);
 
     // For free-aim, just use where the muzzlebone is pointing
-    if (!Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim
-        && Instigator.IsHumanControlled())
+    if (!Instigator.bBipodDeployed && Instigator.Weapon.bUsesFreeAim && Instigator.IsHumanControlled())
     {
         Aim = rotator(MuzzlePosition.XAxis);
     }
@@ -161,7 +167,7 @@ function DoFireEffect()
 
     CalcSpreadModifiers();
 
-    if ((DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged)
+    if (DH_MGBase(Owner) != none && DH_MGBase(Owner).bBarrelDamaged)
     {
         AppliedSpread = 4 * Spread;
     }
@@ -174,26 +180,27 @@ function DoFireEffect()
     {
         case SS_Random:
             X = vector(Aim);
+
             for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-                R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
-                R.Pitch = AppliedSpread * (FRand()-0.5);
-                R.Roll = AppliedSpread * (FRand()-0.5);
+                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
+                R.Pitch = AppliedSpread * (FRand() - 0.5);
+                R.Roll = AppliedSpread * (FRand() - 0.5);
+
                 SpawnProjectile(StartProj, rotator(X >> R));
             }
             break;
-
         case SS_Line:
             for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-                theta = AppliedSpread*PI/32768*(projectileID - float(SpawnCount-1)/2.0);
+                theta = AppliedSpread * PI / 32768 * (projectileID - float(SpawnCount - 1) / 2.0);
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
+
                 SpawnProjectile(StartProj, rotator(X >> Aim));
             }
             break;
-
         default:
             SpawnProjectile(StartProj, Aim);
     }
@@ -225,11 +232,11 @@ simulated function EjectShell()
             Weapon.GetViewAxes(X,Y,Z);
 
             EjectOffset = Instigator.Location + Instigator.EyePosition();
-            EjectOffset = EjectOffset + X * ShellIronSightOffset.X + Y * ShellIronSightOffset.Y +  Z * ShellIronSightOffset.Z;
+            EjectOffset = EjectOffset + X * ShellIronSightOffset.X + Y * ShellIronSightOffset.Y + Z * ShellIronSightOffset.Z;
 
             EjectRot = rotator(Y);
             EjectRot.Yaw += 16384;
-            Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
+            Shell = Weapon.Spawn(ShellEjectClass, none,, EjectOffset, EjectRot);
             EjectRot = rotator(Y);
             EjectRot += ShellRotOffsetIron;
 
@@ -237,7 +244,7 @@ simulated function EjectShell()
             EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
             EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
 
-            Shell.Velocity = (Shell.MinStartSpeed + FRand() * (Shell.MaxStartSpeed-Shell.MinStartSpeed)) * vector(EjectRot);
+            Shell.Velocity = (Shell.MinStartSpeed + FRand() * (Shell.MaxStartSpeed - Shell.MinStartSpeed)) * vector(EjectRot);
         }
     }
     else
@@ -254,7 +261,7 @@ simulated function EjectShell()
             EjectOffset = EjectOffset + EjectCoords.XAxis * ShellHipOffset.X + EjectCoords.YAxis * ShellHipOffset.Y +  EjectCoords.ZAxis * ShellHipOffset.Z;
 
             EjectRot = rotator(-EjectCoords.YAxis);
-            Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
+            Shell=Weapon.Spawn(ShellEjectClass, none,, EjectOffset, EjectRot);
             EjectRot = rotator(EjectCoords.XAxis);
             EjectRot += ShellRotOffsetHip;
 
@@ -262,7 +269,7 @@ simulated function EjectShell()
             EjectRot.Pitch = EjectRot.Pitch + Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
             EjectRot.Roll = EjectRot.Roll + Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
 
-            Shell.Velocity = (Shell.MinStartSpeed + FRand() * (Shell.MaxStartSpeed-Shell.MinStartSpeed)) * vector(EjectRot);
+            Shell.Velocity = (Shell.MinStartSpeed + FRand() * (Shell.MaxStartSpeed - Shell.MinStartSpeed)) * vector(EjectRot);
         }
     }
 }

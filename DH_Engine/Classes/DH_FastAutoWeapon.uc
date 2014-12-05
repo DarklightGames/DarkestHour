@@ -26,10 +26,14 @@ function float MaxRange()
 simulated function bool StartFire(int Mode)
 {
     if (FireMode[Mode].bMeleeMode)
+    {
         return super.StartFire(Mode);
+    }
 
     if (!super.StartFire(Mode))  // returns false when mag is empty
+    {
        return false;
+    }
 
     if (AmmoAmount(0) <= 0)
     {

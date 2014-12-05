@@ -37,8 +37,6 @@ simulated singular function Touch(Actor Other)
         Other = Other.Owner;
     }
 
-//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
-
     if (Other != none && (Other.bProjTarget || Other.bBlockActors))
     {
         LastTouched = Other;
@@ -177,8 +175,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             Log(">>> ProcessTouch ROBulletWhipAttachment ... ");
         }
 
-//      bHitWhipAttachment = true;
-
         if (!Other.Base.bDeleteMe)
         {
             // If bullet collides immediately after launch, it has no location (or so it would appear, go figure)
@@ -249,8 +245,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 {
                     HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
                 }
-
-//              bHitWhipAttachment = false;
             }
             else
             {
@@ -283,11 +277,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 Log(">>> ProcessTouch Nothing Clientside... ");
             }
-
-//          if (HitPawn != none)
-//          {
-//              bHitWhipAttachment = false;
-//          }
         }
     }
 

@@ -25,28 +25,28 @@ static function string GetString(
 {
     switch(Switch)
     {
-    case 1:
-        return default.MustCrouch;
-    case 3:
-        return default.MustBeStill;
-    case 4:
-        return default.BadSurface;
-    case 5:
-        return default.NotEnoughRoom;
-    case 6:
-        return default.CannotLean;
-    case 7:
-        return default.InWater;
-    case 8:
-        return default.NotQualified;
-    case 9:
-        return default.InUse;
-    case 10:
-        return default.EnemyMortar;
-    case 11:
-        return default.CannotDeploy;
-    default:
-        return default.CannotDeploy;
+        case 1:
+            return default.MustCrouch;
+        case 3:
+            return default.MustBeStill;
+        case 4:
+            return default.BadSurface;
+        case 5:
+            return default.NotEnoughRoom;
+        case 6:
+            return default.CannotLean;
+        case 7:
+            return default.InWater;
+        case 8:
+            return default.NotQualified;
+        case 9:
+            return default.InUse;
+        case 10:
+            return default.EnemyMortar;
+        case 11:
+            return default.CannotDeploy;
+        default:
+            return default.CannotDeploy;
     }
 }
 

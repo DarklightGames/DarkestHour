@@ -5,7 +5,6 @@
 
 class DH_ROTreadCraftB extends DH_ROTreadCraft;
 
-
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;

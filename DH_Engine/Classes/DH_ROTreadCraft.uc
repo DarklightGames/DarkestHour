@@ -162,6 +162,9 @@ var bool    bEmittersOn;
 var bool    bMustBeUnbuttonedToBecomePassenger;
 var int     FirstPassengerWeaponPawnIndex;
 
+var rotator LeftTreadPanDirection;
+var rotator RightTreadPanDirection;
+
 replication
 {
     reliable if (bNetDirty && Role==ROLE_Authority)
@@ -267,14 +270,14 @@ function bool PlaceExitingDriver()
 
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-        L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 
     super.UpdatePrecacheMaterials();
 }
@@ -285,18 +288,21 @@ simulated function bool HitPenetrationPoint(vector HitLocation, vector HitRay);
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanDirection = LeftTreadPanDirection;
         LeftTreadPanner.PanRate = 0.0;
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
+
     RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanDirection = RightTreadPanDirection;
         RightTreadPanner.PanRate = 0.0;
         Skins[RightTreadIndex] = RightTreadPanner;
     }
@@ -3560,9 +3566,7 @@ function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector 
         SoundVolume=255;
         SoundRadius=600;
     }
-
 }
-
 
 // Check to see if vehicle should destroy itself
 // Stops vehicle from premature detonation when on fire
@@ -3865,4 +3869,6 @@ defaultproperties
      EngineHealth=300
      bMustBeUnbuttonedToBecomePassenger=true
      FirstPassengerWeaponPawnIndex=255
+     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
 }

@@ -14,10 +14,6 @@ var()   float           DampenFactor;
 var()   float           DampenFactorParallel;
 var     StaticMesh      DeflectedMesh;
 
-// var()   float        mTracerInterval; // Matt: not used
-// var()   Effects      Corona;          // Matt: not used
-
-
 // Modified to spawn tracer effect
 simulated function PostBeginPlay()
 {
@@ -53,7 +49,6 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
     local bool               bHitWhipAttachment;
     local ROVehicleWeapon    HitVehicleWeapon;
     local ROVehicleHitEffect VehEffect;
-//  local DH_Pawn            HitPawn;
     local Vector             TempHitLocation, HitNormal;
     local array<int>         HitPoints;
     local bool               bDeflect;
@@ -112,13 +107,9 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 
     if (ROBulletWhipAttachment(Other) != none)
     {
-//      bHitWhipAttachment=true;
-
         if (!Other.Base.bDeleteMe) // Matt: added if/else, same as bullets, as seems just as relevant
         {
             Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , 1);
-
-//          HitPawn = DH_Pawn(Other);
 
             if (DH_Pawn(Other) == none) // Matt: added to refactor, replacing various HitPawn & bHitWhipAttachment lines (means we didn't actually register a hit on the player)
             {
@@ -130,11 +121,6 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
             return;
         }
     }
-
-//  if (HitPawn != none)
-//  {
-//      bHitWhipAttachment = false;
-//  }
 
     if (!bHitWhipAttachment)
     {
