@@ -43,6 +43,19 @@ struct NewHitpoint
     var() ENewHitPointType  NewHitPointType;    // What type of hit point this is
 };
 
+// Schurzen
+struct SchurzenType
+{
+    var  class<RODummyAttachment>         SchurzenClass; // a possible schurzen decorative attachment class, with different degrees of damage
+    var  byte                             PercentChance; // the % chance of this deco attachment being the one spawned
+};
+
+var  SchurzenType              SchurzenTypes[4]; // an array of possible schurzen attachments
+var  byte                      SchurzenIndex;    // the schurzen index number selected randomly to be spawned for this vehicle
+var  RODummyAttachment         Schurzen;         // actor reference to the schurzen deco attachment, so it can be destroyed when the vehicle gets destroyed
+var  vector                    SchurzenOffset;   // the positional offset from the attachment bone
+var  Material                  SchurzenTexture;  // the camo skin for the schurzen attachment
+
 var()   array<NewHitpoint>      NewVehHitpoints;        // An array of possible small points that can be hit. Index zero is always the driver
 
 var     bool    bProjectilePenetrated; //Shell has passed penetration test and has entered the hull or turret
@@ -167,10 +180,13 @@ var rotator RightTreadPanDirection;
 
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
+        SchurzenIndex;
+
+    reliable if (bNetDirty && Role == ROLE_Authority)
         EngineHealthMax, UnbuttonedPositionIndex, bEngineOnFire, bOnFire;
 
-    reliable if (bNetDirty && bNetOwner && Role==ROLE_Authority)
+    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         MaxCriticalSpeed;
 
     reliable if (Role < ROLE_Authority)
@@ -969,6 +985,8 @@ simulated function bool IsDisabled()
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
 {
+    local  byte RandomNumber, CumulativeChance, i;
+
     super.PostBeginPlay();
 
     //Engine starting and stopping stuff
@@ -981,6 +999,22 @@ simulated function PostBeginPlay()
 
     EngineFireDamagePerSec = EngineHealthMax * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
     DamagedEffectFireDamagePerSec = HealthMax * 0.02; //~100 seconds from regular tank fire threshold to detontation from full health, damage is every 2 seconds, so double intended
+
+    if (Role == ROLE_Authority && SchurzenTexture != none)
+    {
+        RandomNumber = RAND(100);
+
+        for (i = 0; i < arraycount(SchurzenTypes); i++)
+        {
+            CumulativeChance += SchurzenTypes[i].PercentChance;
+
+            if (RandomNumber < CumulativeChance)
+            {
+                SchurzenIndex = i;
+                break;
+            }
+        }
+    }
 }
 
 simulated function PostNetBeginPlay()
@@ -988,7 +1022,22 @@ simulated function PostNetBeginPlay()
     super.PostNetBeginPlay();
 
     if (!bEngineOff)
+    {
         bEngineOff = false;
+    }
+
+    // Only spawn schurzen if a valid attachment class has been selected
+    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
+    {
+        Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
+
+        if (Schurzen != none)
+        {
+            Schurzen.Skins[0] = SchurzenTexture; // set the deco attachment's camo skin
+            AttachToBone(Schurzen, 'body');
+            Schurzen.SetRelativeLocation(SchurzenOffset);
+        }
+    }
 
 }
 
@@ -3586,6 +3635,11 @@ simulated function Destroyed()
     }
 
     super.Destroyed();
+
+    if (Schurzen != none)
+    {
+        Schurzen.Destroy();
+    }
 }
 
 simulated event DestroyAppearance()
@@ -3668,6 +3722,11 @@ simulated event DestroyAppearance()
     SetPhysics(PHYS_Karma);
     Skins.length = 0;
     NetPriority = 2;
+
+    if (Schurzen != none)
+    {
+        Schurzen.Destroy();
+    }
 }
 
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
