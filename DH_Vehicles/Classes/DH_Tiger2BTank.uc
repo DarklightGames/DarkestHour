@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Tiger2BTank extends DH_ROTreadCraftB;
+class DH_Tiger2BTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Tiger2B_anm.ukx
 #exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax

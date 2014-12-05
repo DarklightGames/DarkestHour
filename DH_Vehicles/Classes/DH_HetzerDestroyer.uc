@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_HetzerDestroyer extends DH_ROTreadCraftB;
+class DH_HetzerDestroyer extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Hetzer_anm_V1.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Hetzer_tex_V1.utx
@@ -16,68 +16,68 @@ static function StaticPrecache(LevelInfo L)
     super(ROTreadCraft).StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_body');
-   	L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treads');
-   	L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_int');
-   	L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.Hetzer_driver_glass');
-   	L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');	
+    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treads');
+    L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_int');
+    L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.Hetzer_driver_glass');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_body');
-   	Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treads');
-   	Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_int');
-   	Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.Hetzer_driver_glass');
-   	Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treads');
+    Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_int');
+    Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.Hetzer_driver_glass');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 
-	Super(ROTreadCraft).UpdatePrecacheMaterials();
+    Super(ROTreadCraft).UpdatePrecacheMaterials();
 }
 
 // Matt: modified to play BeginningIdleAnim on internal mesh when entering vehicle - necessary to get camera into correct place for initial DriverPosition 1
 simulated state EnteringVehicle
 {
-	simulated function HandleEnter()
-	{
-		if( DriverPositions[InitialPositionIndex].PositionMesh != none) // Matt: updated to use DriverPositions[InitialPositionIndex] instead of DriverPositions[0]
-	 		LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
+    simulated function HandleEnter()
+    {
+        if( DriverPositions[InitialPositionIndex].PositionMesh != none) // Matt: updated to use DriverPositions[InitialPositionIndex] instead of DriverPositions[0]
+            LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
 
-		if( HasAnim(BeginningIdleAnim)) // Matt: added to play BeginningIdleAnim when entering vehicle and we switch to the internal mesh (similar to ROVehicleWeaponPawn) 
-			PlayAnim(BeginningIdleAnim);
-			
-		if( PlayerController(Controller) != none )
-			PlayerController(Controller).SetFOV( DriverPositions[InitialPositionIndex].ViewFOV );
-	}
+        if( HasAnim(BeginningIdleAnim)) // Matt: added to play BeginningIdleAnim when entering vehicle and we switch to the internal mesh (similar to ROVehicleWeaponPawn)
+            PlayAnim(BeginningIdleAnim);
+
+        if( PlayerController(Controller) != none )
+            PlayerController(Controller).SetFOV( DriverPositions[InitialPositionIndex].ViewFOV );
+    }
 }
 
 // Matt: modified to prevent tank crew from 'teleporting' outside to rider positions
 function ServerChangeDriverPosition(byte F)
 {
-	if( F > 3 ) // Matt: if trying to switch to vehicle position 4 or 5, which are the rider positions
-	{
-		Instigator.ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 0); // "You must exit through the commander's or loader's hatch"
-		return;
-	}
+    if( F > 3 ) // Matt: if trying to switch to vehicle position 4 or 5, which are the rider positions
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 0); // "You must exit through the commander's or loader's hatch"
+        return;
+    }
 
-	super.ServerChangeDriverPosition(F);
+    super.ServerChangeDriverPosition(F);
 }
 
 // Matt: modified to play a different message if trying to exit from the driver's position (can exit from loader's hatch as well as commander's)
 function bool KDriverLeave(bool bForceLeave)
 {
-	// if player is not unbuttoned and is trying to exit rather than switch positions, don't let them out
-	// bForceLeave is always true for position switch, so checking against false means no risk of locking someone in one slot
-	if( !bForceLeave && !bSpecialExiting && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')) )
-	{
-	    DenyEntry(Instigator, 4); // I realise that this is actually denying EXIT, but the function does the exact same thing - Ch!cken
-		return false;
- 	}
- 	else if ( !bForceLeave && bSpecialExiting )
- 	{
-		Instigator.ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 0); // Matt: now says "You must exit through the commander's or loader's hatch"
- 	    return false;
- 	}
-	else
-		return super(ROWheeledVehicle).KDriverLeave(bForceLeave); // Matt: skipping over the Super in DH_ROTreadcraft
+    // if player is not unbuttoned and is trying to exit rather than switch positions, don't let them out
+    // bForceLeave is always true for position switch, so checking against false means no risk of locking someone in one slot
+    if( !bForceLeave && !bSpecialExiting && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')) )
+    {
+        DenyEntry(Instigator, 4); // I realise that this is actually denying EXIT, but the function does the exact same thing - Ch!cken
+        return false;
+    }
+    else if ( !bForceLeave && bSpecialExiting )
+    {
+        Instigator.ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 0); // Matt: now says "You must exit through the commander's or loader's hatch"
+        return false;
+    }
+    else
+        return super(ROWheeledVehicle).KDriverLeave(bForceLeave); // Matt: skipping over the Super in DH_ROTreadcraft
 }
 
 defaultproperties

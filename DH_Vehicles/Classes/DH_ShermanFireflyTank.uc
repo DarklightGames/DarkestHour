@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_ShermanFireflyTank extends DH_ROTreadCraftB;
+class DH_ShermanFireflyTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanFirefly_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUK_tex.utx

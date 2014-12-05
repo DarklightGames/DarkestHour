@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_WolverineTank extends DH_ROTreadCraftB;
+class DH_WolverineTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Wolverine_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx

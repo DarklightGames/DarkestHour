@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_JagdpantherTank extends DH_ROTreadCraftB;
+class DH_JagdpantherTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Jagdpanther_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx

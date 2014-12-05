@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_StuartTank extends DH_ROTreadCraftB;
+class DH_StuartTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Stuart_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx

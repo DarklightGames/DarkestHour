@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_HellcatTank extends DH_ROTreadCraftB;
+class DH_HellcatTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Hellcat_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex5.utx

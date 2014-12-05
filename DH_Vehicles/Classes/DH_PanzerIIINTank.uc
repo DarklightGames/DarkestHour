@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_PanzerIIINTank extends DH_ROTreadCraftB;
+class DH_PanzerIIINTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Panzer3_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx
