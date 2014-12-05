@@ -8,26 +8,6 @@ class DH_PanzerIIINTank extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\Animations\DH_Panzer3_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(32768, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super(ROTreadCraft).StaticPrecache(L);
@@ -239,4 +219,6 @@ defaultproperties
      VehicleHudOccupantsY(5)=0.75
      VehicleHudOccupantsX(6)=0.625
      VehicleHudOccupantsY(6)=0.70
+     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

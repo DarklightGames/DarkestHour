@@ -9,42 +9,22 @@ class DH_Marder3MDestroyer extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Animations\DH_Marder3M_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(32768, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-        L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.treads.marder_treads');
-        L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.treads.marder_treads');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.treads.marder_treads');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.treads.marder_treads');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int');
 
     super.UpdatePrecacheMaterials();
 }
@@ -249,5 +229,6 @@ defaultproperties
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_Marder3MDestroyer.KParams0'
-
+     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

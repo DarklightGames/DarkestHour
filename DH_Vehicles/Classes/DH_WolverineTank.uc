@@ -9,29 +9,6 @@ class DH_WolverineTank extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex2.utx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 32768, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 simulated function Tick(float DeltaTime)
 {
     //local PlayerController PC;
@@ -449,5 +426,6 @@ defaultproperties
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_WolverineTank.KParams0'
-
+     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
 }

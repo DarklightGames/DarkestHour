@@ -5,7 +5,6 @@
 
 class DH_PantherGTank_ArdennesOne extends DH_PantherGTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

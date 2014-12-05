@@ -5,7 +5,6 @@
 
 class DH_Cromwell6PdrTank_Snow extends DH_Cromwell6PdrTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

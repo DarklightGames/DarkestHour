@@ -5,7 +5,6 @@
 
 class DH_Tiger2BTank_Ardennes extends DH_Tiger2BTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -13,7 +12,6 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.Tiger2B_body_ardennes');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.Tiger2B_treads');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.Tiger2B_body_int');
-
 }
 
 simulated function UpdatePrecacheMaterials()

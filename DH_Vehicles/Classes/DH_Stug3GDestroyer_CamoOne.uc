@@ -5,7 +5,6 @@
 
 class DH_Stug3GDestroyer_CamoOne extends DH_Stug3GDestroyer;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

@@ -5,7 +5,6 @@
 
 class DH_JagdpantherTank_ArdennesOne extends DH_JagdpantherTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

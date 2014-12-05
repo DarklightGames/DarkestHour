@@ -9,44 +9,24 @@ class DH_ShermanFireflyTank extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-        L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_body_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.Treads.FireFly_treads');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_armor_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_hatch_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_body_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.Treads.FireFly_treads');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_armor_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_hatch_int');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_body_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.Treads.FireFly_treads');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_armor_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_hatch_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_body_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.Treads.FireFly_treads');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_armor_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_hatch_int');
 
     super.UpdatePrecacheMaterials();
 }

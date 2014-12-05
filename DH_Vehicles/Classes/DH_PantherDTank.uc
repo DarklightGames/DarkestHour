@@ -35,7 +35,7 @@ simulated function PostBeginPlay()
     if (Role == ROLE_Authority && SchurzenTexture != none)
     {
         RandomNumber = RAND(100);
-        
+
         for (i = 0; i < arraycount(SchurzenTypes); i++)
         {
             CumulativeChance += SchurzenTypes[i].PercentChance;
@@ -90,29 +90,6 @@ simulated function Destroyed()
     }
 }
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(32768, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -130,20 +107,20 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.PantherG_treads');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int');
     Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int_s');
-    Level.AddPrecacheMaterial(SchurzenTexture); 
+    Level.AddPrecacheMaterial(SchurzenTexture);
 
     super.UpdatePrecacheMaterials();
 }
 
 defaultproperties
 {
-	SchurzenTexture=none // Matt: we don't have a schurzen skin for this camo variant, so add here if one gets made
-	SchurzenTypes(0)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenOne',PercentChance=30)   // undamaged schurzen
-	SchurzenTypes(1)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenTwo',PercentChance=15)   // missing front panel on right & middle panel on left
-	SchurzenTypes(2)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenThree',PercentChance=10) // with front panels missing on both sides
-	SchurzenTypes(3)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenFour',PercentChance=15)  // most badly damaged, with 3 panels missing
-	SchurzenOffset=(X=45.5,Y=7.45,Z=-1.0)
-	SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
+    SchurzenTexture=none // Matt: we don't have a schurzen skin for this camo variant, so add here if one gets made
+    SchurzenTypes(0)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenOne',PercentChance=30)   // undamaged schurzen
+    SchurzenTypes(1)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenTwo',PercentChance=15)   // missing front panel on right & middle panel on left
+    SchurzenTypes(2)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenThree',PercentChance=10) // with front panels missing on both sides
+    SchurzenTypes(3)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenFour',PercentChance=15)  // most badly damaged, with 3 panels missing
+    SchurzenOffset=(X=45.5,Y=7.45,Z=-1.0)
+    SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
 
      UnbuttonedPositionIndex=1
      MaxCriticalSpeed=932.000000
@@ -358,4 +335,6 @@ defaultproperties
      HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
      bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=3
+     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

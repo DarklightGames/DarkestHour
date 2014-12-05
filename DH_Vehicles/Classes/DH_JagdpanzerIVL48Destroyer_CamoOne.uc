@@ -5,7 +5,6 @@
 
 class DH_JagdpanzerIVL48Destroyer_CamoOne extends DH_JagdpanzerIVL48Destroyer;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

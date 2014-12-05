@@ -9,42 +9,22 @@ class DH_ShermanTank_DDay extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, -16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, -16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_body_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_scoop_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_body_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_scoop_ext');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_body_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_scoop_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_body_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_scoop_ext');
 
     super.UpdatePrecacheMaterials();
 }
@@ -253,5 +233,6 @@ defaultproperties
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_ShermanTank_DDay.KParams0'
-
+     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=-16384)
+     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=-16384)
 }

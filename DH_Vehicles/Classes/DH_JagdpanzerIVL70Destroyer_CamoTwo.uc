@@ -5,7 +5,6 @@
 
 class DH_JagdpanzerIVL70Destroyer_CamoTwo extends DH_JagdpanzerIVL70Destroyer;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -13,7 +12,6 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo3');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo3');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo3');
-
 }
 
 simulated function UpdatePrecacheMaterials()

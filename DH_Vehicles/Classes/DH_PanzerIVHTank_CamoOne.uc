@@ -5,7 +5,6 @@
 
 class DH_PanzerIVHTank_CamoOne extends DH_PanzerIVHTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);

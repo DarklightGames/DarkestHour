@@ -5,29 +5,8 @@
 
 class DH_JacksonTank extends DH_ROTreadCraftB;
 
-
 #exec OBJ LOAD FILE=..\Animations\DH_Jackson_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex4.utx
-
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(32768, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
 
 simulated function Tick(float DeltaTime)
 {
@@ -440,5 +419,6 @@ defaultproperties
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_JacksonTank.KParams0'
-
+     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

@@ -5,7 +5,6 @@
 
 class DH_PanzerIIINTank_CamoOne extends DH_PanzerIIINTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super(ROTreadCraft).StaticPrecache(L);

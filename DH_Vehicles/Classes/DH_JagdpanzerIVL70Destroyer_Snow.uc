@@ -5,7 +5,6 @@
 
 class DH_JagdpanzerIVL70Destroyer_Snow extends DH_JagdpanzerIVL70Destroyer;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -15,7 +14,6 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_wheels_snow');
     L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.panzer4F2_treadsnow');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int');
-
 }
 
 simulated function UpdatePrecacheMaterials()

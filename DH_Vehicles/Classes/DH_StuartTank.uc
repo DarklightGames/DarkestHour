@@ -8,45 +8,20 @@ class DH_StuartTank extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\Animations\DH_Stuart_anm.ukx
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 32768, 16384);
-        RightTreadPanner.PanRate = 0.0;
-
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.M5_body_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.M5_body_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.M5_body_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.M5_body_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
 
     super.UpdatePrecacheMaterials();
 }
@@ -234,4 +209,6 @@ defaultproperties
      TransientSoundRadius=1500.000000
      CollisionRadius=175.000000
      CollisionHeight=60.000000
+     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
 }

@@ -10,7 +10,6 @@ static function StaticPrecache(LevelInfo L)
     super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.Tiger_body_222');
-
 }
 
 simulated function UpdatePrecacheMaterials()

@@ -13,13 +13,13 @@ static function StaticPrecache(LevelInfo L)
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.jagdtiger_body_snow');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.jagdtiger_skirtwinter');
-
 }
 
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.jagdtiger_body_snow');
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.jagdtiger_skirtwinter');
+
     super.UpdatePrecacheMaterials();
 }
 

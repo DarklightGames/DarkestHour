@@ -5,7 +5,6 @@
 
 class DH_PanzerIVJTank_SnowTwo extends DH_PanzerIVJTank;
 
-
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex5.utx
 
 static function StaticPrecache(LevelInfo L)

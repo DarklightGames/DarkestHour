@@ -11,26 +11,6 @@ class DH_JagdtigerTank extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex3.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc2.usx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(32768, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -39,7 +19,6 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.Tiger2B_treads');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.Tiger2B_body_int');
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdtiger_skirtdetails');
-
 }
 
 simulated function UpdatePrecacheMaterials()
@@ -260,4 +239,6 @@ defaultproperties
      HighDetailOverlay=Texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
      bUseHighDetailOverlayIndex=true
      HighDetailOverlayIndex=3
+     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
+     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

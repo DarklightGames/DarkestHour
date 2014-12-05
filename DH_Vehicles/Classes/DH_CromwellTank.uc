@@ -8,29 +8,6 @@ class DH_CromwellTank extends DH_ROTreadCraftB;
 #exec OBJ LOAD FILE=..\Animations\DH_Cromwell_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 0);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 0);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -60,7 +37,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
     Canvas.SetPos(0.0,0.0);
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) * 0.6, 
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) * 0.6,
         PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio * 0.85);
 }
 
@@ -269,5 +246,6 @@ defaultproperties
          KImpactThreshold=700.000000
      End Object
      KParams=KarmaParamsRBFull'DH_Vehicles.DH_CromwellTank.KParams0'
-
+     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
+     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=0)
 }
