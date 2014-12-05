@@ -9,225 +9,24 @@ class DH_HellcatTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex5.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3
 
-simulated function Tick(float DeltaTime)
-{
-    //local PlayerController PC;
-    local float MotionSoundTemp;
-    local KRigidBodyState BodyState;
-    local float MySpeed;
-    local int i;
-
-    KGetRigidBodyState(BodyState);
-    LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
-
-    // Damaged treads cause vehicle to swerve and turn without control
-    if (Controller != none)
-    {
-        if (bLeftTrackDamaged)
-        {
-            Throttle = FClamp(Throttle, -0.50, 0.50);
-            if (Controller.IsA('ROPlayer'))
-                ROPlayer(Controller).aStrafe = -32768;
-            else if (Controller.IsA('ROBot'))
-                Steering = 1;
-        }
-        else if (bRightTrackDamaged)
-        {
-            Throttle = FClamp(Throttle, -0.50, 0.50);
-            if (Controller.IsA('ROPlayer'))
-                ROPlayer(Controller).aStrafe = 32768;
-            else if (Controller.IsA('ROBot'))
-                Steering = -1;
-        }
-    }
-
-    // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
-    {
-        if (bDisableThrottle)
-        {
-            if (bWantsToThrottle)
-            {
-                IntendedThrottle=1.0;
-            }
-            else if (IntendedThrottle > 0)
-            {
-                IntendedThrottle -= (DeltaTime * 0.5);
-            }
-            else
-            {
-                IntendedThrottle=0;
-            }
-        }
-        else
-        {
-            if (bLeftTrackDamaged)
-            {
-                 if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
-                    LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                 LeftTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
-            }
-
-            if (bRightTrackDamaged)
-            {
-                 if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
-                    RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                 RightTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
-            }
-
-            SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
-
-            if (SoundVolume != default.SoundVolume)
-            {
-                SoundVolume = default.SoundVolume;
-            }
-
-            if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
-                Skins[LeftTreadIndex]=DamagedTreadPanner;
-
-            if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
-                Skins[RightTreadIndex]=DamagedTreadPanner;
-        }
-
-        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
-        // VSize() is very CPU intensive - Ramm
-        MySpeed = VSize(Velocity);
-
-        // Setup sounds that are dependent on velocity
-        MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
-        if (MySpeed > 0.1)
-        {
-            MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
-        }
-        else
-        {
-            MotionSoundVolume=0;
-        }
-        UpdateMovementSound();
-
-        if (LeftTreadPanner != none)
-        {
-            LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity dot vector(Rotation) < 0)
-                LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
-            LeftTreadPanner.PanRate += LinTurnSpeed;
-        }
-
-        if (RightTreadPanner != none)
-        {
-            RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity dot vector(Rotation) < 0)
-                RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
-            RightTreadPanner.PanRate -= LinTurnSpeed;
-        }
-
-        // Animate the tank wheels
-        LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-        RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
-
-        for(i=0; i<LeftWheelBones.Length; i++)
-        {
-              SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
-        }
-
-        for(i=0; i<RightWheelBones.Length; i++)
-        {
-              SetBoneRotation(RightWheelBones[i], RightWheelRot);
-        }
-
-        if (MySpeed >= MaxCriticalSpeed)
-        {
-            if (Controller.IsA('ROPlayer'))
-                ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
-        }
-    }
-
-    // This will slow the tank way down when it tries to turn at high speeds
-    if (ForwardVel > 0.0)
-        WheelLatFrictionScale = InterpCurveEval(AddedLatFriction, ForwardVel);
-    else
-        WheelLatFrictionScale = default.WheelLatFrictionScale;
-
-    if (bEngineOnFire || (bOnFire && Health > 0))
-    {
-        if (DamagedEffectHealthFireFactor != 1.0)
-        {
-            DamagedEffectHealthFireFactor = 1.0;
-            DamagedEffect.UpdateDamagedEffect(true, 0, false, false);
-        }
-
-        if (bOnFire && DriverHatchFireEffect == none)
-        {
-            // Lets randomise the fire start times to desync them with the turret and engine ones
-            if (Level.TimeSeconds - DriverHatchBurnTime > 0.2)
-            {
-                if (FRand() < 0.1)
-                {
-                    DriverHatchFireEffect = Spawn(FireEffectClass);
-                    AttachToBone(DriverHatchFireEffect, FireAttachBone);
-                    DriverHatchFireEffect.SetRelativeLocation(FireEffectOffset);
-                    DriverHatchFireEffect.SetEffectScale(DamagedEffectScale);
-                    DriverHatchFireEffect.UpdateDamagedEffect(true, 0, false, false);
-                }
-                DriverHatchBurnTime = Level.TimeSeconds;
-            }
-
-            if (!bTurretFireTriggered && WeaponPawns[0] != none)
-            {
-                DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
-                bTurretFireTriggered = true;
-            }
-        }
-
-        TakeFireDamage(DeltaTime);
-    }
-    else if (EngineHealth <= 0 && Health > 0)
-    {
-        if (DamagedEffectHealthFireFactor != 0)
-        {
-            DamagedEffectHealthFireFactor = 0.0;
-            DamagedEffectHealthHeavySmokeFactor = 1.0;
-            DamagedEffect.UpdateDamagedEffect(false, 0, false, false); // reset fire effects
-            DamagedEffect.UpdateDamagedEffect(false, 0, false, true);  // set the tank to smoke instead of burn
-        }
-    }
-
-    super(ROWheeledVehicle).Tick(DeltaTime);
-
-    if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
-    {
-        velocity=vect(0, 0, 0);
-        Throttle=0;
-        ThrottleAmount=0;
-        bWantsToThrottle = false;
-        bDisableThrottle=true;
-        Steering=0;
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        CheckEmitters();
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
-        L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treads');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treads');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treads');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treads');
 
     super.UpdatePrecacheMaterials();
 }
