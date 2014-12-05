@@ -1,8 +1,7 @@
-// *************************************************************************
-//
-//  ***   DarkestHourGame (TeamGame)   ***
-//
-// *************************************************************************
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DarkestHourGame extends ROTeamGame;
 
@@ -328,12 +327,12 @@ function CheckResupplyVolumes()
                     CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
                      DHGRI.ResupplyAreas[i].bActive = true;
-                     DHResupplyAreas[i].Activate();
+                     DHResupplyAreas[i].bActive = true;
                 }
                 else
                 {
                     DHGRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].Deactivate();
+                    DHResupplyAreas[i].bActive = false;
                 }
             }
 
@@ -344,19 +343,19 @@ function CheckResupplyVolumes()
                     CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
                      DHGRI.ResupplyAreas[i].bActive = true;
-                     DHResupplyAreas[i].Activate();
+                     DHResupplyAreas[i].bActive = true;
                 }
                 else
                 {
                     DHGRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].Deactivate();
+                    DHResupplyAreas[i].bActive = false;
                 }
             }
         }
         else
         {
-            DHGRI.ResupplyAreas[i].bActive = !DHResupplyAreas[i].bUsesSpawnAreas;
-            DHResupplyAreas[i].Activate();
+            DHGRI.ResupplyAreas[i].bActive = true;
+            DHResupplyAreas[i].bActive = true;
         }
     }
 }

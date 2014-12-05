@@ -33,7 +33,9 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     if (!bUsesSpawnAreas)
-        Activate();
+    {
+        bActive = true;
+    }
 
     SetTimer(1.0, true);
 }
@@ -196,20 +198,12 @@ event UnTouch(Actor Other)
     }
 }
 
-function Activate()
-{
-    bActive = true;
-}
-
-function Deactivate()
-{
-    bActive = false;
-}
-
 function Reset()
 {
     if (!bUsesSpawnAreas)
-        Activate();
+    {
+        bActive = true;
+    }
 }
 
 defaultproperties
