@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_WHArtilleryGunner extends DH_HeerArtilleryCrew;
+class DH_WHArtilleryGunner extends DH_Heer;
 
 function class<ROHeadgear> GetHeadgear()
 {

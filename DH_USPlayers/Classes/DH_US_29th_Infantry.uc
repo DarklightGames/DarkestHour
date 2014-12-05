@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_US_29th_Infantry extends DH_US_Infantry_Units
+class DH_US_29th_Infantry extends DH_American_Units
     abstract;
 
 defaultproperties

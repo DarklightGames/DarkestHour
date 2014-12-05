@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_LuftwaffeFlak extends DH_Ger_Luftwaffe
+class DH_LuftwaffeFlak extends DH_German_Units
     abstract;
 
 defaultproperties

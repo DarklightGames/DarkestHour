@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_12thSS extends DH_Ger_WaffenSS;
+class DH_12thSS extends DH_German_Units;
 
 defaultproperties
 {

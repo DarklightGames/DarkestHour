@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_HeerTankCrew extends DH_Ger_Heer
+class DH_HeerTankCrew extends DH_German_Units
     abstract;
 
 defaultproperties
