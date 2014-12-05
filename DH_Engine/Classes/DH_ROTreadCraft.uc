@@ -1153,12 +1153,20 @@ simulated function Tick(float DeltaTime)
                 }
                 DriverHatchBurnTime = Level.TimeSeconds;
             }
-            else if (!bTurretFireTriggered)
+            else if (!bTurretFireTriggered &&
+                     WeaponPawns.Length > 0 &&
+                     WeaponPawns[0] != none &&
+                     WeaponPawns[0].Gun != none &&
+                     WeaponPawns[0].Gun.IsA('DH_ROTankCannon'))
             {
                 DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
                 bTurretFireTriggered = true;
             }
-            else if (!bHullMGFireTriggered)
+            else if (!bHullMGFireTriggered &&
+                     WeaponPawns.Length > 1 &&
+                     WeaponPawns[1] != none &&
+                     WeaponPawns[1].Gun != none &&
+                     WeaponPawns[1].Gun.IsA('DH_ROMountedTankMG'))
             {
                 DH_ROMountedTankMG(WeaponPawns[1].Gun).bOnFire = true;
                 bHullMGFireTriggered = true;
