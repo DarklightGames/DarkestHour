@@ -432,7 +432,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 * =================================================================================== */
 function ServerSaveArtilleryPosition()
 {
-    local actor HitActor;
+    local Actor HitActor;
     local vector HitLocation, HitNormal, StartTrace;
     local Material HitMaterial;
     local DHGameReplicationInfo GRI;
@@ -1244,7 +1244,7 @@ ignores SeePlayer, HearNoise, Bump;
 
     function bool NotifyPhysicsVolumeChange( PhysicsVolume NewVolume )
     {
-        local actor HitActor;
+        local Actor HitActor;
         local vector HitLocation, HitNormal, checkpoint;
 
         if ( !NewVolume.bWaterVolume )

@@ -1368,7 +1368,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle vehicle, optional ROVehicleWea
 
 function DrawPlayerNames(Canvas C)
 {
-    local actor HitActor;
+    local Actor HitActor;
     local vector HitLocation, HitNormal, ViewPos;
     local vector ScreenPos, Loc, X, Y, Z, Dir;
     local float strX, strY;

@@ -271,7 +271,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CameraRotation =  WeaponAimRot;
         // Make the cannon view have no roll
         CameraRotation.Roll = 0;
-        //CameraRotation.Pitch -= ROTankCannon(Gun).AddedPitch; // AB
     }
     else if (bPCRelativeFPRotation)
     {
@@ -504,14 +503,17 @@ simulated state ViewTransition
         WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
 
         FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-        //FPCamViewOffset = DriverPositions[DriverPositionIndex].ViewOffset; // depractated
 
         if (DriverPositionIndex != 0)
         {
             if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+            {
                 PlayerController(Controller).SetFOV(WeaponFOV);
+            }
             else
+            {
                 PlayerController(Controller).DesiredFOV = WeaponFOV;
+            }
         }
 
         if (LastPositionIndex < DriverPositionIndex)
@@ -522,7 +524,9 @@ simulated state ViewTransition
                 SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
             }
             else
+            {
                 GotoState('');
+            }
         }
         else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
         {
@@ -543,7 +547,9 @@ simulated state ViewTransition
     simulated function AnimEnd(int channel)
     {
         if (IsLocallyControlled())
+        {
             GotoState('');
+        }
     }
 
     simulated function EndState()
@@ -564,8 +570,8 @@ simulated state LeavingVehicle
     simulated function HandleExit()
     {
         local rotator TurretYaw, TurretPitch;
-        // Make the new mesh you swap to have the same rotation as the old one
 
+        // Make the new mesh you swap to have the same rotation as the old one
         if (Gun != none)
         {
             TurretYaw.Yaw = GetVehicleBase().Rotation.Yaw - CustomAim.Yaw;
@@ -684,6 +690,7 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROTankCannonPawn'.default.bDebugExitPositions = !class'DH_ROTankCannonPawn'.default.bDebugExitPositions;
+
         Log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
     }
 }

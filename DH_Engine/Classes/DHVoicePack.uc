@@ -8,10 +8,7 @@ class DHVoicePack extends ROVoicePack
 
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
-    local name BroadcastType;
     local vector MyLocation;
-
-    BroadcastType = 'GLOBAL';
 
     if (Controller(PackOwner).Pawn == none)
     {
@@ -22,7 +19,7 @@ static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadL
         MyLocation = Controller(PackOwner).Pawn.Location;
     }
 
-    Controller(PackOwner).SendVoiceMessage(Controller(PackOwner).PlayerReplicationInfo, SquadLeader, Type, Index, broadcasttype, Controller(PackOwner).Pawn, MyLocation);
+    Controller(PackOwner).SendVoiceMessage(Controller(PackOwner).PlayerReplicationInfo, SquadLeader, Type, Index, 'GLOBAL', Controller(PackOwner).Pawn, MyLocation);
 }
 
 defaultproperties

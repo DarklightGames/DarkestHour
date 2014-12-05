@@ -107,7 +107,6 @@ function Timer()
                     bResupplied = true;
                 }
             }
-
         }
 
         if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
@@ -152,9 +151,11 @@ event Touch(Actor Other)
     local Vehicle V;
 
     if (!bActive)
+    {
         return;
+    }
 
-    ROP=ROPawn(Other);
+    ROP = ROPawn(Other);
     V = Vehicle(Other);
 
     if (ROP != none)
@@ -184,7 +185,7 @@ event UnTouch(Actor Other)
     local ROPawn ROP;
     local Vehicle V;
 
-    ROP=ROPawn(Other);
+    ROP = ROPawn(Other);
     V = Vehicle(Other);
 
     if (ROP != none)

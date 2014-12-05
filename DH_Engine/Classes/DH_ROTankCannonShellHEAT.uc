@@ -466,7 +466,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     local vector TmpHitLocation, TmpHitNormal, X,Y,Z, LastLoc;
     local float xH; //,EnergyFactor;
     //local rotator distortion;
-    local actor tmpHit;
+    local Actor tmpHit;
 
     local vector SavedVelocity;
 //  local PlayerController PC;

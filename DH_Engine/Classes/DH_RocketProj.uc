@@ -582,7 +582,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     local float tmpMaxWall;
     local vector TmpHitLocation, TmpHitNormal, X, Y, Z, LastLoc;
     local float xH;
-    local actor tmpHit;
+    local Actor tmpHit;
     local vector SavedVelocity;
     local float HitAngle;
 
