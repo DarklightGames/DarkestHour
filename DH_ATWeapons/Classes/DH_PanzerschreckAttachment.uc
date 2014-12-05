@@ -23,7 +23,6 @@ simulated function PostBeginPlay()
 // Overridden because the 3rd person effects are handled differently for the panzerfaust
 simulated event ThirdPersonEffects()
 {
-
     if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
         return;
 
