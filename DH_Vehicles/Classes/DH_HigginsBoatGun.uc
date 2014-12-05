@@ -12,7 +12,7 @@ var()   float ReloadLength;// Length of the reload animation. Sorry for the lite
 replication
 {
     // Functions server can call.
-    reliable if (Role==ROLE_Authority)
+    reliable if (Role == ROLE_Authority)
         ClientDoReload;
 
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)

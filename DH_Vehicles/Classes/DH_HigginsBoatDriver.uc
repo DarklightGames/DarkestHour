@@ -12,7 +12,7 @@ var()       bool        bLimitPitch;                    // limit pitching up and
 
 replication
 {
-    reliable if (bNetInitial && Role==ROLE_Authority)
+    reliable if (bNetInitial && Role == ROLE_Authority)
         bLimitYaw, bLimitPitch;
 }
 

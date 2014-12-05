@@ -30,7 +30,7 @@ var     enum    EMGReloadState
 replication
 {
     // Variables the server should send to the client
-    reliable if( bNetDirty && Role==ROLE_Authority )
+    reliable if( bNetDirty && Role == ROLE_Authority )
         bClientCanFireMG;
 
     // Functions the server calls on the client side.

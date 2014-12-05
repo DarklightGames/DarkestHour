@@ -16,7 +16,7 @@ replication
         NumMags, NumSecMags, NumTertMags; // Matt: added NumTertMags
 
     // Functions the server calls on the client side.
-//  reliable if (Role==ROLE_Authority)
+//  reliable if (Role == ROLE_Authority)
 //      ClientDoCannonReload; // Matt: replaced by existing ClientSetReloadState
 }
 

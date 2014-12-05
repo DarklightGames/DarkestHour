@@ -65,7 +65,7 @@ var     bool    bDebugExitPositions;
 
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         UnbuttonedPositionIndex;
 
     // functions called by client on server
@@ -73,7 +73,7 @@ replication
         ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
 
     // Functions called by server on client
-    reliable if (Role==ROLE_Authority)
+    reliable if (Role == ROLE_Authority)
         bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
 
 }

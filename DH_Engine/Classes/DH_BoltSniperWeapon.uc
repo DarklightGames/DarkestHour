@@ -29,7 +29,7 @@ var     EReloadState            ReloadState;
 
 replication
 {
-    reliable if (bNetDirty && bNetOwner && (Role==ROLE_Authority))
+    reliable if (bNetDirty && bNetOwner && (Role == ROLE_Authority))
         CurrentBulletCount;
 
     reliable if (Role < ROLE_Authority)

@@ -76,10 +76,10 @@ replication
      reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
        MainAmmoChargeExtra;
 
-     reliable if (bNetDirty && Role==ROLE_Authority)
+     reliable if (bNetDirty && Role == ROLE_Authority)
        bOnFire;
 
-     reliable if (Role==ROLE_Authority)
+     reliable if (Role == ROLE_Authority)
        bProjectilePenetrated, bRoundShattered; //bManualTurret moved from bNetDirty (in 5.0)
 
      reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)

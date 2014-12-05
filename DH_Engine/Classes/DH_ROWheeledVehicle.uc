@@ -68,7 +68,7 @@ var bool bDebugExitPositions;
 
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         EngineHealthMax;
 
     reliable if (Role < ROLE_Authority)

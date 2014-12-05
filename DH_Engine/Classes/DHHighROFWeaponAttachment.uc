@@ -39,7 +39,7 @@ var     byte            NextTracerCounter;      // when this equals TracerFreque
 replication
 {
     // Bullet whiz var - Server to client
-    reliable if (bNetDirty && (Role==ROLE_Authority))
+    reliable if (bNetDirty && (Role == ROLE_Authority))
         SavedDualShot, DualShotCount;
 }
 

@@ -40,7 +40,7 @@ var bool bNoWorldPen;                // Rocket has hit something other than the 
 
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         bOutOfPropellant;
 }
 
