@@ -23,7 +23,7 @@ var     float               PlayerFireDamagePerSec;
 replication
 {
     // Functions server can call.
-    reliable if (Role==ROLE_Authority)
+    reliable if (Role == ROLE_Authority)
         ClientDoReload;
 
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
