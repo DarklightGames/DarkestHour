@@ -724,7 +724,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -774,7 +774,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -818,7 +818,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -867,7 +867,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -990,7 +990,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1039,7 +1039,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1083,7 +1083,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1132,7 +1132,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1256,7 +1256,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1305,7 +1305,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1349,7 +1349,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1398,7 +1398,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1522,7 +1522,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1571,7 +1571,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1615,7 +1615,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1665,7 +1665,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -1789,7 +1789,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1838,7 +1838,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1882,7 +1882,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1932,7 +1932,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 

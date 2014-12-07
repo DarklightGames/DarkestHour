@@ -67,21 +67,21 @@ simulated function PostBeginPlay()
 
         if (LeftTreadSoundAttach == none)
         {
-            LeftTreadSoundAttach = Spawn(class 'ROSoundAttachment');
+            LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
             LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
             AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
         }
 
         if (RightTreadSoundAttach == none)
         {
-            RightTreadSoundAttach = Spawn(class 'ROSoundAttachment');
+            RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
             RightTreadSoundAttach.AmbientSound = RightTreadSound;
             AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
         }
 
         if (InteriorRumbleSoundAttach == none)
         {
-            InteriorRumbleSoundAttach = Spawn(class 'ROSoundAttachment');
+            InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
             InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
             AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
         }

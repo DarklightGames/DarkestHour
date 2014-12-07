@@ -580,7 +580,7 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
     CalculateBulletCount();
 }
 
-function bool HandlePickupQuery(pickup Item)
+function bool HandlePickupQuery(Pickup Item)
 {
     local bool Temp;
 

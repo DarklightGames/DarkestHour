@@ -349,7 +349,7 @@ simulated function PostBeginPlay()
 
        RocketLoc = GetBoneCoords('Warhead').Origin;
 
-       RocketAttachment = Spawn(class 'DH_PIATAmmoRound',self,, RocketLoc);
+       RocketAttachment = Spawn(class'DH_PIATAmmoRound',self,, RocketLoc);
 
        AttachToBone(RocketAttachment, 'Warhead');
     }
@@ -388,7 +388,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
             if (RocketAttachment == none)
             {
                 RocketLoc = GetBoneCoords('Warhead').Origin;
-                RocketAttachment = Spawn(class 'DH_PIATAmmoRound', self,, RocketLoc);
+                RocketAttachment = Spawn(class'DH_PIATAmmoRound', self,, RocketLoc);
 
                 AttachToBone(RocketAttachment, 'Warhead');
             }
@@ -427,7 +427,7 @@ simulated function SpawnBomb()
 
        RocketLoc = GetBoneCoords('Warhead').Origin;
 
-       RocketAttachment = Spawn(class 'DH_PIATAmmoRound',self,, RocketLoc);
+       RocketAttachment = Spawn(class'DH_PIATAmmoRound',self,, RocketLoc);
 
        AttachToBone(RocketAttachment, 'Warhead');
     }
@@ -435,7 +435,7 @@ simulated function SpawnBomb()
 
 // Overridden to prevent picking up more than the intended max ammo count
 // MaxNumMags is actually set 1 higher than intended max, to facilitate unusual resupply/fillammo
-function bool HandlePickupQuery(pickup Item)
+function bool HandlePickupQuery(Pickup Item)
 {
 //    local WeaponPickup wpu;
     local int i, j;

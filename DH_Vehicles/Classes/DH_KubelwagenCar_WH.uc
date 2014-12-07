@@ -34,7 +34,7 @@ simulated function PostBeginPlay()
         //add this back in if we add engine sound attachment points
         if (EngineSoundAttach == none)
         {
-             EngineSoundAttach = Spawn(class 'ROSoundAttachment');
+             EngineSoundAttach = Spawn(class'ROSoundAttachment');
              EngineSoundAttach.AmbientSound = EngineSound;
              //EngineSoundAttach.SoundVolume = default.SoundVolume;
              AttachToBone(EngineSoundAttach, EngineSoundBone);
@@ -42,7 +42,7 @@ simulated function PostBeginPlay()
 
         if (InteriorRumbleSoundAttach == none)
         {
-             InteriorRumbleSoundAttach = Spawn(class 'ROSoundAttachment');
+             InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
              InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
              //InteriorRumbleSoundAttach.SoundVolume = default.SoundVolume;
              AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);

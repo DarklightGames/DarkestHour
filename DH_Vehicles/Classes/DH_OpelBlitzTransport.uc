@@ -37,13 +37,13 @@ simulated function PostBeginPlay()
 
      if (ResupplyAttach == none)
      {
-           ResupplyAttach = Spawn(class 'DH_OpelBlitzResupplyAttachment');
+           ResupplyAttach = Spawn(class'DH_OpelBlitzResupplyAttachment');
            AttachToBone(ResupplyAttach, ResupplyAttachBone);
      }
 
      if (DecorationAttach == none)
      {
-           DecorationAttach = Spawn(class 'DH_OpelBlitzDecoAttachment');
+           DecorationAttach = Spawn(class'DH_OpelBlitzDecoAttachment');
            AttachToBone(DecorationAttach, DecorationAttachBone);
      }
 

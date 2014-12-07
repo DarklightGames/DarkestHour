@@ -53,7 +53,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)

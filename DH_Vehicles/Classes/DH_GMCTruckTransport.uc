@@ -35,13 +35,13 @@ simulated function PostBeginPlay()
 
      if (ResupplyAttach == none)
      {
-           ResupplyAttach = Spawn(class 'DH_GMCTruckResupplyAttachment');
+           ResupplyAttach = Spawn(class'DH_GMCTruckResupplyAttachment');
            AttachToBone(ResupplyAttach, ResupplyAttachBone);
      }
 
      if (DecorationAttach == none)
      {
-           DecorationAttach = Spawn(class 'DH_GMCTruckDecoAttachment');
+           DecorationAttach = Spawn(class'DH_GMCTruckDecoAttachment');
            AttachToBone(DecorationAttach, DecorationAttachBone);
      }
 

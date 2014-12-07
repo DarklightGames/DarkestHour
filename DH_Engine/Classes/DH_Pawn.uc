@@ -122,7 +122,7 @@ simulated function PostBeginPlay()
 
     if (AuxCollisionCylinder == none)
     {
-        AuxCollisionCylinder = Spawn(class 'DH_BulletWhipAttachment', self);
+        AuxCollisionCylinder = Spawn(class'DH_BulletWhipAttachment', self);
         AttachToBone(AuxCollisionCylinder, 'spine');
     }
 

@@ -440,7 +440,7 @@ simulated function Destroyed()
     {
         Start = Location + 32 * vect(0, 0, 1);
 
-        foreach VisibleCollidingActors(class 'ROPawn', Victims, DamageRadius, Start)
+        foreach VisibleCollidingActors(class'ROPawn', Victims, DamageRadius, Start)
         {
             // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
             if (Victims != self)

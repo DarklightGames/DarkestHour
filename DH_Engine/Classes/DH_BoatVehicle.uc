@@ -140,7 +140,7 @@ simulated function PostBeginPlay()
     {
             if (WashSoundAttachL == none)
             {
-                    WashSoundAttachL = Spawn(class 'ROSoundAttachment');
+                    WashSoundAttachL = Spawn(class'ROSoundAttachment');
                     WashSoundAttachL.AmbientSound = WashSound;
                     WashSoundAttachL.SoundVolume = 75;
                     WashSoundAttachL.SoundRadius = 300;
@@ -148,7 +148,7 @@ simulated function PostBeginPlay()
             }
             if (WashSoundAttachR == none)
             {
-                    WashSoundAttachR = Spawn(class 'ROSoundAttachment');
+                    WashSoundAttachR = Spawn(class'ROSoundAttachment');
                     WashSoundAttachR.AmbientSound = WashSound;
                     WashSoundAttachR.SoundVolume = 75;
                     WashSoundAttachR.SoundRadius = 300;
@@ -156,7 +156,7 @@ simulated function PostBeginPlay()
             }
             if (EngineSoundAttach == none)
             {
-                    EngineSoundAttach = Spawn(class 'ROSoundAttachment');
+                    EngineSoundAttach = Spawn(class'ROSoundAttachment');
                     EngineSoundAttach.AmbientSound = EngineSound;
                     EngineSoundAttach.SoundVolume = 150;
                     EngineSoundAttach.SoundRadius = 1000;

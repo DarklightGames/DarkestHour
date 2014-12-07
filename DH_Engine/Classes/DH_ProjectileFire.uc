@@ -85,11 +85,11 @@ function DoFireEffect()
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
 
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
 

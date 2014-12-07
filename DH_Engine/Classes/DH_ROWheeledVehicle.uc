@@ -695,7 +695,7 @@ event CheckReset()
         return;
     }
 
-    foreach CollidingActors(class 'Pawn', P, 4000.0) //was 4000.0
+    foreach CollidingActors(class'Pawn', P, 4000.0) //was 4000.0
     {
         if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum())  //traces only work on friendly players nearby
         {
