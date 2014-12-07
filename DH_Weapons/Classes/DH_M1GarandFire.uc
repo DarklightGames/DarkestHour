@@ -5,15 +5,15 @@
 
 class DH_M1GarandFire extends DH_SemiAutoFire;
 
-var()       array<sound>    FirePingSounds;                 // An array of the last round firing sound with ping
-var(FireAnims)  name        FireLastAnim;               //last round animation
-var(FireAnims)  name        FireIronlastAnim;               //iron last round animation
+var()           array<sound>    FirePingSounds;     // An array of the last round firing sound with ping
+var(FireAnims)  name            FireLastAnim;       //last round animation
+var(FireAnims)  name            FireIronlastAnim;   //iron last round animation
 
-var             bool        NextShotIsLast;               // Set on the second last shot to facilitate clip eject
+var             bool            NextShotIsLast;     // Set on the second last shot to facilitate clip eject
 
 function ServerPlayFiring()
 {
-    local   DH_M1GarandWeapon   Gun;
+    local DH_M1GarandWeapon Gun;
 
     Gun = DH_M1GarandWeapon(Weapon);
 
@@ -35,8 +35,8 @@ function ServerPlayFiring()
 
 function PlayFiring()   // overridden to make last round eject clip & add audible ping
 {
-    local   DH_M1GarandWeapon   Gun;
-    local   bool                IsLastRound;
+    local DH_M1GarandWeapon Gun;
+    local bool IsLastRound;
 
     Gun = DH_M1GarandWeapon(Weapon);
     IsLastRound = Gun.bIsLastRound;

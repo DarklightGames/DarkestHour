@@ -7,10 +7,8 @@ class DH_SatchelCharge10lb10sAttachment extends ROWeaponAttachment;
 
 simulated event ThirdPersonEffects()
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer && ROPawn(Instigator) != none)
     {
-        if (ROPawn(Instigator) == none)
-            return;
         if (FlashCount == 0)
         {
             ROPawn(Instigator).StopFiring();

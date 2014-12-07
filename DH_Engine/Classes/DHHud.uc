@@ -753,9 +753,14 @@ simulated function DrawHudPassC(Canvas C)
             VCR = PlayerOwner.VoiceReplicationInfo.GetChannelAt(PortraitPRI.ActiveChannel);
 
             if (VCR != none)
+            {
                 PortraitText[1].text = "(" @ VCR.GetTitle() @ ")";
+            }
             else
+            {
                 PortraitText[1].text = "(?)";
+            }
+
             PortraitText[1].OffsetX = PortraitText[0].OffsetX;
 
             PortraitText[1].Tints[TeamIndex] = PortraitText[0].Tints[TeamIndex];
@@ -766,7 +771,9 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
     if (bShowWeaponInfo && PawnOwner != none && PawnOwner.Weapon != none)
+    {
         PawnOwner.Weapon.NewDrawWeaponInfo(C, 0.86 * C.ClipY);
+    }
 
     // Slow, for debugging only
     if (bDebugDriverCollision && class'DH_LevelInfo'.static.DHDebugMode()) // Matt: was 'ROEngine.ROLevelInfo'.static.RODebugMode())

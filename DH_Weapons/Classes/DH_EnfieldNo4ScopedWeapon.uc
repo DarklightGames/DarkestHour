@@ -11,7 +11,9 @@ class DH_EnfieldNo4ScopedWeapon extends DH_BoltSniperWeapon;
 // Handles initializing and swithing between different scope modes
 simulated function UpdateScopeMode()
 {
-    if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() &&
+    if (Level.NetMode != NM_DedicatedServer &&
+        Instigator != none &&
+        Instigator.IsLocallyControlled() &&
         Instigator.IsHumanControlled())
     {
         if (ScopeDetail == RO_ModelScope)
@@ -30,7 +32,7 @@ simulated function UpdateScopeMode()
             }
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(512,512);
+            ScopeScriptedTexture.SetSize(512, 512);
             ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
@@ -123,9 +125,13 @@ function int GetRoundsToLoad()
     AmountNeeded = 10 - CurrentMagLoad;
 
     if (AmountNeeded > CurrentBulletCount)
+    {
         AmountToAdd = CurrentBulletCount;
+    }
     else
+    {
         AmountToAdd = AmountNeeded;
+    }
 
     return AmountToAdd;
 }
@@ -143,11 +149,13 @@ function bool FillAmmo()
     InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-    for(i=0; i<PrimaryAmmoArray.Length; i++)
+
+    for(i = 0; i < PrimaryAmmoArray.Length; i++)
     {
         PrimaryAmmoArray[i] = InitialAmount;
     }
-    CurrentMagIndex=0;
+
+    CurrentMagIndex = 0;
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
 
     // HACK: Because the No4 uses two mags, the initial amount needs to be two mags
@@ -169,19 +177,23 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
         Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
         bJustSpawnedAmmo = false;
 
-        if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
+        if (FireMode[m].AmmoClass == none || (m != 0 && FireMode[m].AmmoClass == FireMode[0].AmmoClass))
+        {
             return;
+        }
 
         InitialAmount = FireMode[m].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && WP == none)
         {
             PrimaryAmmoArray.Length = InitialNumPrimaryMags;
-            for(i=0; i<PrimaryAmmoArray.Length; i++)
+
+            for(i = 0; i < PrimaryAmmoArray.Length; i++)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
-            CurrentMagIndex=0;
+
+            CurrentMagIndex = 0;
             CurrentMagCount = PrimaryAmmoArray.Length - 1;
 
             // HACK: Because the No4 uses two mags, the initial amount needs to be two mags
@@ -201,7 +213,9 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
             Ammo[m].Destroy();
         }
         else
+        {
             addAmount = InitialAmount;
+        }
 
         AddAmmo(addAmount,m);
         CalculateBulletCount();

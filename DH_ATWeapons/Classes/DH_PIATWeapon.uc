@@ -19,7 +19,7 @@ var int     NumMagsToResupply;          // Number of ammo mags to add when this 
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerSetRange;
 }
 

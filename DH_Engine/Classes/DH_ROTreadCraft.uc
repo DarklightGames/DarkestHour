@@ -1449,7 +1449,6 @@ simulated function float GetOverMatch(float ArmorFactor, float ShellDiameter)
 //DH CODE: Calculate APC/APCBC penetration
 simulated function bool PenetrationAPC(float ArmorFactor, float CompoundAngle, float PenetrationNumber, float OverMatchFactor, bool bShatterProne)
 {
-
     local float EffectiveArmor;
     local float CompoundAngleDegrees;
     local float SlopeMultiplier;
@@ -3658,7 +3657,7 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for(i=0;i<Weapons.Length;i++)
+        for(i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
                 Weapons[i].Destroy();

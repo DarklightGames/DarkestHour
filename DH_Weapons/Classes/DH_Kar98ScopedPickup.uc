@@ -6,10 +6,6 @@
 class DH_Kar98ScopedPickup extends DHWeaponPickup
    notplaceable;
 
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.k98scoped');

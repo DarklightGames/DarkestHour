@@ -24,7 +24,7 @@ var()   int     OverlayCorrectionX, OverlayCorrectionY; // scope center correcti
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerToggleExtraRoundType;
 }
 

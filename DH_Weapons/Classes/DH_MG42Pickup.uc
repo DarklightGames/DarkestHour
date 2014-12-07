@@ -6,17 +6,11 @@
 class DH_MG42Pickup extends DHWeaponPickup
    notplaceable;
 
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheMaterial(Material'Weapons1st_tex.Arms.hands_gergloves');
-
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.mg42');
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Ammo.mg42magazine');
-//  L.AddPrecacheStaticMesh(StaticMesh'EffectsSM.Ger_Tracer');
     L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.MG42_World');
     L.AddPrecacheMaterial(Material'Weapons1st_tex.MG.MG42_S');
     L.AddPrecacheMaterial(Material'Weapons1st_tex.MG.mg42bipod_spec');

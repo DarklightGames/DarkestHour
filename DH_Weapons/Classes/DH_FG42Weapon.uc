@@ -7,20 +7,22 @@ class DH_FG42Weapon extends DH_BipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Fallschirmgewehr42_1st.ukx
 
-var     name    SelectFireAnim;
-var     name    SelectFireIronAnim;
-var     name    SightUpSelectFireIronAnim;
+var name SelectFireAnim;
+var name SelectFireIronAnim;
+var name SightUpSelectFireIronAnim;
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerChangeFireMode;
 }
 
 simulated exec function SwitchFireMode()
 {
     if (IsBusy() || FireMode[0].bIsFiring || FireMode[1].bIsFiring)
+    {
         return;
+    }
 
     GotoState('SwitchingFireMode');
 }
@@ -69,7 +71,7 @@ simulated state SwitchingFireMode extends Busy
 
         if (Instigator.IsLocallyControlled())
         {
-                PlayAnim(Anim, 1.0, FastTweenTime);
+            PlayAnim(Anim, 1.0, FastTweenTime);
         }
 
         SetTimer(GetAnimDuration(SelectAnim, 1.0) + FastTweenTime, false);

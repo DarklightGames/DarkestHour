@@ -100,7 +100,7 @@ simulated function AnimEnd(int channel)
         {
             PlayIdle();
         }
-        else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }

@@ -68,7 +68,9 @@ simulated function NotifyOwnerJumped()
             BipodDeploy(false);
 
             if (Role < ROLE_Authority)
+            {
                 ServerBipodDeploy(false);
+            }
         }
     }
 }

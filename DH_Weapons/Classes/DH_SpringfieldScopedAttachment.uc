@@ -16,10 +16,8 @@ simulated function AnimEnd(int Channel)
     {
         return;
     }
-    else
-    {
-        super.AnimEnd(Channel);
-    }
+
+    super.AnimEnd(Channel);
 }
 
 defaultproperties

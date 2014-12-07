@@ -26,8 +26,10 @@ auto state Pickup
     function bool ValidTouch(actor Other)
     {
         // make sure its a live player
-        if ((Pawn(Other) == none) || !Pawn(Other).bCanPickupInventory || (Pawn(Other).Health <= 0) || (Pawn(Other).DrivenVehicle == none && Pawn(Other).Controller == none))
+        if (Pawn(Other) == none || !Pawn(Other).bCanPickupInventory || Pawn(Other).Health <= 0 || (Pawn(Other).DrivenVehicle == none && Pawn(Other).Controller == none))
+        {
             return false;
+        }
 
         if (ROPawn(Other) != none && ROPawn(Other).AutoTraceActor != none && ROPawn(Other).AutoTraceActor == self)
         {
@@ -35,14 +37,18 @@ auto state Pickup
         }
         // make sure not touching through wall
         else if (!FastTrace(Other.Location, Location))
+        {
             return false;
+        }
 
         // make sure game will let player pick me up
         if (Level.Game.PickupQuery(Pawn(Other), self))
         {
             TriggerEvent(Event, self, Pawn(Other));
+
             return true;
         }
+
         return false;
     }
 
@@ -62,21 +68,25 @@ auto state Pickup
         local bool bHasWeapon;
 
         if (user == none)
+        {
             return;
+        }
 
         // check if Other has a primary weapon
         if (user != none && user.Inventory != none)
         {
-            for (Inv=user.Inventory; Inv!=none; Inv=Inv.Inventory)
+            for (Inv = user.Inventory; Inv != none; Inv = Inv.Inventory)
             {
                 if (Inv != none && Weapon(Inv) != none)
                 {
                     if (Inv.class == WeaponType)
                     {
                         if (Weapon(Inv).AmmoMaxed(0))
+                        {
                             return;
-                        else
-                            bHasWeapon = true;
+                        }
+
+                        bHasWeapon = true;
                     }
                 }
             }
@@ -86,13 +96,20 @@ auto state Pickup
         if (ValidTouch(user))
         {
             if (bHasWeapon)
+            {
                 Copy = SpawnCopy(user);
+            }
             else
+            {
                 Copy = SpawnWeaponCopy(user);
+            }
 
             AnnouncePickup(user);
+
             if (Copy != none)
+            {
                 Copy.PickupFunction(user);
+            }
 
             SetRespawn();
         }
@@ -101,12 +118,15 @@ auto state Pickup
     function Timer()
     {
         if (bDropped)
+        {
             GotoState('FadeOut');
+        }
     }
 
     function BeginState()
     {
         UntriggerEvent(Event, self, none);
+
         if (bDropped)
         {
             AddToNavigation();
@@ -117,7 +137,9 @@ auto state Pickup
     function EndState()
     {
         if (bDropped)
+        {
             RemoveFromNavigation();
+        }
     }
 
 Begin:
@@ -142,7 +164,9 @@ function inventory SpawnWeaponCopy(pawn Other)
         Inventory = none;
     }
     else
-        Copy = Other.spawn(WeaponType,Other,,,rot(0,0,0));
+    {
+        Copy = Other.spawn(WeaponType,Other,,, rot(0,0,0));
+    }
 
     Copy.GiveTo(Other, self);
 

@@ -11,7 +11,8 @@ var(FireAnims)  name        SightUpFireIronEndAnim;
 
 function PlayFiring()
 {
-    local   DH_FG42Weapon   SightStatus;
+    local DH_FG42Weapon SightStatus;
+
     SightStatus = DH_FG42Weapon(Owner);
 
     if (Weapon.Mesh != none)
@@ -73,7 +74,8 @@ function PlayFiring()
 
 function PlayFireEnd()
 {
-    local   DH_FG42Weapon   SightStatus;
+    local DH_FG42Weapon SightStatus;
+
     SightStatus = DH_FG42Weapon(Owner);
 
     if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronEndAnim))

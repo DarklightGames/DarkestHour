@@ -15,7 +15,7 @@ var     name        IronIdleAnimThree;      // Iron idle animation for range set
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerSetRange;
 
 }

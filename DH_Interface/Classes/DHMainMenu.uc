@@ -83,7 +83,7 @@ function InternalOnOpen()
         PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
 }
 
-function OnClose(optional Bool bCanceled)
+function OnClose(optional bool bCanceled)
 {
 }
 
@@ -114,7 +114,7 @@ function bool MyKeyEvent(out byte Key,out byte State,float delta)
         return false;
 }
 
-function bool CanClose(optional Bool bCanceled)
+function bool CanClose(optional bool bCanceled)
 {
     if (AllowClose)
         Controller.OpenMenu(Controller.GetQuitPage());

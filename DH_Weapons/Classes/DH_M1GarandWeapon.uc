@@ -7,7 +7,7 @@ class DH_M1GarandWeapon extends DH_SemiAutoWeapon;
 
 #exec OBJ LOAD FILE=..\DarkestHour\Animations\DH_Garand_1st.ukx
 
-var Bool    bIsLastRound;
+var bool bIsLastRound;
 
 //overwritten to support garand last round clip eject for Client only
 simulated function Fire(float F)
@@ -28,7 +28,9 @@ simulated function BringUp(optional Weapon PrevWeapon)
     super.BringUp(PrevWeapon);
 
     if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+    {
         DHPlayer(Instigator.Controller).QueueHint(4, true);
+    }
 }
 
 // Do the actual ammo swapping
@@ -71,15 +73,15 @@ function PerformReload()
     {
         if (AmmoStatus(0) > 0.5)
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',0);
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 0);
         }
         else if (AmmoStatus(0) > 0.2)
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',1);
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 1);
         }
         else
         {
-            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage',2);
+            PlayerController(Instigator.Controller).ReceiveLocalizedMessage(class'ROAmmoWeightMessage', 2);
         }
     }
 

@@ -11,19 +11,22 @@ class DH_MG34Weapon extends DH_MGbase;
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
-        FireMode[Mode].bInstantStop = true;
-    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
-        if (!IsAnimating(0))
-        {
-            PlayIdle();
-        }
+        FireMode[Mode].bInstantStop = true;
+    }
+
+    if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease && !IsAnimating(0))
+    {
+        PlayIdle();
     }
 
     FireMode[Mode].bIsFiring = false;
     FireMode[Mode].StopFiring();
+
     if (!FireMode[Mode].bFireOnRelease)
+    {
         ZeroFlashCount(Mode);
+    }
 }
 
 defaultproperties

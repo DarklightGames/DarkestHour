@@ -12,7 +12,7 @@ var     name    SelectFireIronAnim;
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerChangeFireMode;
 }
 
@@ -78,14 +78,7 @@ simulated state SwitchingFireMode extends Busy
 // used by the hud icons for select fire
 simulated function bool UsingAutoFire()
 {
-    if (FireMode[0].bWaitForRelease)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return !FireMode[0].bWaitForRelease;
 }
 
 simulated function AnimEnd(int channel)
@@ -120,7 +113,10 @@ simulated function AnimEnd(int channel)
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
+    {
         FireMode[Mode].bInstantStop = true;
+    }
+
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
         if (!IsAnimating(0))
@@ -131,8 +127,11 @@ simulated event StopFire(int Mode)
 
     FireMode[Mode].bIsFiring = false;
     FireMode[Mode].StopFiring();
+
     if (!FireMode[Mode].bFireOnRelease)
+    {
         ZeroFlashCount(Mode);
+    }
 }
 
 defaultproperties

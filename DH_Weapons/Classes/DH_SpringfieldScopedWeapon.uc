@@ -11,14 +11,14 @@ class DH_SpringfieldScopedWeapon extends DH_BoltSniperWeapon;
 // Handles initializing and swithing between different scope modes
 simulated function UpdateScopeMode()
 {
-    if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() &&
-        Instigator.IsHumanControlled())
+    if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
         if (ScopeDetail == RO_ModelScope)
         {
             scopePortalFOV = default.scopePortalFOV;
             IronSightDisplayFOV = default.IronSightDisplayFOV;
             bPlayerFOVZooms = false;
+
             if (bUsingSights)
             {
                 PlayerViewOffset = XoffsetScoped;
@@ -30,7 +30,7 @@ simulated function UpdateScopeMode()
             }
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(512,512);
+            ScopeScriptedTexture.SetSize(512, 512);
             ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
@@ -60,6 +60,7 @@ simulated function UpdateScopeMode()
             scopePortalFOV = scopePortalFOVHigh;
             IronSightDisplayFOV = default.IronSightDisplayFOVHigh;
             bPlayerFOVZooms = false;
+
             if (bUsingSights)
             {
                 PlayerViewOffset = XoffsetHighDetail;
@@ -69,8 +70,9 @@ simulated function UpdateScopeMode()
             {
                 ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
             }
+
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(1024,1024);
+            ScopeScriptedTexture.SetSize(1024, 1024);
             ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)

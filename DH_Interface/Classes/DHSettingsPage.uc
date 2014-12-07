@@ -84,7 +84,7 @@ function bool InternalOnCanClose(optional bool bCanceled)
     return true;
 }
 
-function InternalOnClose(optional Bool bCanceled)
+function InternalOnClose(optional bool bCanceled)
 {
         local rotator NewRot;
         NewRot = PlayerOwner().Rotation;

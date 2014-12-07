@@ -222,13 +222,16 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 {
     if (bTurretRingDamaged && bGunPivotDamaged)
     {
-       if (bDebuggingText && Role == ROLE_Authority)
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
           Level.Game.Broadcast(self, "Gun & Turret disabled");
-       super.HandleTurretRotation(DeltaTime,0,0);
+        }
+
+        super.HandleTurretRotation(DeltaTime,0,0);
     }
     else if (!bTurretRingDamaged && bGunPivotDamaged)
     {
-       if (bDebuggingText && Role == ROLE_Authority)
+        if (bDebuggingText && Role == ROLE_Authority)
           Level.Game.Broadcast(self, "Gun disabled");
        super.HandleTurretRotation(DeltaTime,YawChange,0);
     }
