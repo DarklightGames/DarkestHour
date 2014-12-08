@@ -37,7 +37,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
-        ServerChangeSpawn;
+        ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles;
 
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
@@ -388,7 +388,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             ViewRotation.Pitch = ROPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
         }
 
-        if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bDeployingMortar))
+        if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bIsDeployingMortar))
         {
             ROPwn.LimitYaw(ViewRotation.Yaw);
         }
@@ -982,10 +982,11 @@ state PlayerWalking
         // Update acceleration.
         NewAccel = aForward*X + aStrafe*Y;
         NewAccel.Z = 0;
-        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bDeployingMortar)
-            NewAccel = vect(0, 0, 0);
 
-        //DoubleClickMove = PlayerInput.CheckForDoubleClickMove(1.1*DeltaTime/Level.TimeDilation);
+        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar)
+        {
+            NewAccel = vect(0, 0, 0);
+        }
 
         GroundPitch = 0;
         ViewRotation = Rotation;
@@ -996,13 +997,11 @@ state PlayerWalking
             if (Pawn.bBipodDeployed && NewAccel != vect(0, 0, 0))
             {
                 ROBipodWeapon(Pawn.Weapon).ForceUndeploy();
-//              DH_BipodAutoWeapon(Pawn.Weapon).ForceUndeploy();
             }
 
             // tell pawn about any direction changes to give it a chance to play appropriate animation
             //if walking, look up/down stairs - unless player is rotating view
-             if ((bLook == 0)
-                && (((Pawn.Acceleration != vect(0, 0, 0)) && bSnapToLevel) || !bKeyboardLook))
+             if (bLook == 0 && ((Pawn.Acceleration != vect(0, 0, 0) && bSnapToLevel) || !bKeyboardLook))
             {
                 if (bLookUpStairs || bSnapToLevel)
                 {
@@ -1026,12 +1025,19 @@ state PlayerWalking
             bPressedJump = false;
         }
         else
+        {
             bSaveJump = false;
+        }
 
         if (Role < ROLE_Authority) // then save this move and replicate it
+        {
             ReplicateMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
+        }
         else
+        {
             ProcessMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
+        }
+
         bPressedJump = bSaveJump;
     }
 
@@ -1704,6 +1710,28 @@ function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
     self.VehiclePoolIndex = VehiclePoolIndex;
 
     bReadyToSpawn = true;   //TODO: do a more thorough check here
+}
+
+function ServerClearObstacle(int Index)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.ObstacleManager != none)
+    {
+        G.ObstacleManager.ClearObstacle(Index);
+    }
+}
+
+exec function DebugObstacles(optional int Option)
+{
+    ServerDebugObstacles(Option);
+}
+
+function ServerDebugObstacles(optional int Option)
+{
+    DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
 }
 
 defaultproperties

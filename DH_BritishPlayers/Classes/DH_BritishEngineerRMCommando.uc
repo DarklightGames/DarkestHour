@@ -38,7 +38,7 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
-    GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
+    GivenItems(0)="DH_Equipment.DHWireCuttersItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'

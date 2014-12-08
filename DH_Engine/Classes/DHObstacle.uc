@@ -5,12 +5,20 @@
 
 class DHObstacle extends Actor;
 
-var     int         Index;
+var     int             Index;
 
-var     StaticMesh  IntactStaticMesh;
-var()   StaticMesh  ClearedStaticMesh;
-var()   Sound       ClearSound;
-var()   float       SpawnClearedChance;
+var     StaticMesh      IntactStaticMesh;
+var()   StaticMesh      ClearedStaticMesh;
+var()   sound           ClearSound;
+var()   float           SpawnClearedChance;
+var()   bool            bCanBeClearedWithWireCutters;
+var()   class<Emitter>  ClearEmitter;
+
+replication
+{
+    reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
+        Index, IntactStaticMesh, ClearedStaticMesh;
+}
 
 simulated function bool IsCleared()
 {
@@ -22,75 +30,75 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     IntactStaticMesh = StaticMesh;
-
-    if (Level.NetMode == NM_Client)
-    {
-        bTearOff = true;
-    }
 }
 
-event Touch(Actor Other)
+simulated function PostNetBeginPlay()
 {
-    local SVehicle V;
+    local DHObstacleManager OM;
 
-    if (Level.NetMode != NM_Client)
+    if (Role != ROLE_Authority)
     {
-        V = SVehicle(Other);
-
-        //TODO: destruction requires a certain speed?
-        if (V != none)
+        foreach AllActors(class'DHObstacleManager', OM)
         {
-            SetCleared(true);
+            OM.Obstacles[Index] = self;
         }
     }
 }
 
-state Intact
+simulated state Intact
 {
-    function BeginState()
+    simulated function BeginState()
     {
-        local DHObstacleManager OM;
+        Log("Obstacle" @ Index @ "Intact");
 
         SetStaticMesh(IntactStaticMesh);
         KSetBlockKarma(false);
+    }
+
+    event Touch(Actor Other)
+    {
+        local DarkestHourGame G;
 
         if (Role == ROLE_Authority)
         {
-            OM = DarkestHourGame(Level.Game).ObstacleManager;
-
-            if (OM != none)
+            if (SVehicle(Other) != none)
             {
-                OM.SetCleared(self, false);
+                G = DarkestHourGame(Level.Game);
+
+                if (G != none && G.ObstacleManager != none)
+                {
+                    //TODO: destruction requires a certain speed?
+                    G.ObstacleManager.SetCleared(self, true);
+                }
             }
         }
+
+        super.Touch(Other);
     }
 }
 
-state Cleared
+simulated state Cleared
 {
-    function BeginState()
+    simulated function BeginState()
     {
-        local DHObstacleManager OM;
+        Log("Obstacle" @ Index @ "Cleared");
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            Log(ClearSound);
+            //TODO: this is super quiet for some reason
+            if (ClearSound != none)
+            {
+                PlayOwnedSound(ClearSound, SLOT_None);
+            }
 
-            PlayOwnedSound(ClearSound, SLOT_None);
+            if (ClearEmitter != none)
+            {
+                Spawn(ClearEmitter, none, '', Location, Rotation);
+            }
         }
 
         SetStaticMesh(ClearedStaticMesh);
-        KSetBlockKarma(true);
-
-        if (Role == ROLE_Authority)
-        {
-            OM = DarkestHourGame(Level.Game).ObstacleManager;
-
-            if (OM != none)
-            {
-                OM.SetCleared(self, true);
-            }
-        }
+        KSetBlockKarma(false);
     }
 }
 
@@ -112,6 +120,8 @@ defaultproperties
     bBlockActors=true
     bBlockKarma=true
     bBlockProjectiles=true
+    bBlockHitPointTraces=true
+    bBlockNonZeroExtentTraces=true
     bCanBeDamaged=true
     bCollideActors=true
     bCollideWorld=false
@@ -119,6 +129,11 @@ defaultproperties
     bStatic=false
     bStaticLighting=true
     DrawType=DT_StaticMesh
+    bNetTemporary=true
+    bAlwaysRelevant=true
+    RemoteRole=ROLE_None
+
     SpawnClearedChance=0.0
+    bCanBeClearedWithWireCutters=true
 }
 

@@ -85,10 +85,15 @@ var Pawn                FireStarter;        // Who set a player on fire
 var bool                bHasBeenPossessed;  // Fixes players getting new ammunition when they get out of vehicles.
 
 // Mortars
-var     Actor   OwnedMortar;        // Mortar vehicle associated with this actor, used to destroy upon death.
-var     bool    bDeployingMortar;   // Whether or not the pawn is deploying his mortar.  Used for disabling movement.
-var     float   MortarDeployYaw;    // Yaw at which the pawn began deploying the mortar.
+var     Actor   OwnedMortar;                // Mortar vehicle associated with this actor, used to destroy upon death.
+var     bool    bIsDeployingMortar;         // Whether or not the pawn is deploying his mortar.  Used for disabling movement.
 var     bool    bMortarCanBeResupplied;
+
+// Obstacle clearing
+var bool                bIsClearingObstacle;
+
+var bool                bLockViewRotation;
+var rotator             LockViewRotation;
 
 replication
 {
@@ -3318,9 +3323,9 @@ function LimitYaw(out int yaw)
     {
         yaw = MantleYaw;
     }
-    else if (bDeployingMortar)
+    else if (bLockViewRotation)
     {
-        yaw = MortarDeployYaw;
+        yaw = LockViewRotation.Yaw;
     }
 }
 
@@ -3473,9 +3478,9 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
         }
     }
 
-    if (bDeployingMortar)
+    if (bLockViewRotation)
     {
-        Pitch = 0;
+        Pitch = LockViewRotation.Pitch;
     }
 
     return Pitch;
@@ -3506,7 +3511,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (TraceWall(16384, 64) || bLeaningLeft || bIsSprinting || bIsMantling || bDeployingMortar)
+    if (TraceWall(16384, 64) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar)
     {
         bLeanRight = false;
         return;
@@ -3520,7 +3525,7 @@ simulated function LeanRight()
 
 simulated function LeanLeft()
 {
-    if (TraceWall(-16384, 64) || bLeaningRight || bIsSprinting || bIsMantling || bDeployingMortar)
+    if (TraceWall(-16384, 64) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar)
     {
         bLeanLeft = false;
         return;
@@ -3818,6 +3823,12 @@ function SetWalking(bool bNewIsWalking)
     {
         bIsWalking = bNewIsWalking;
     }
+}
+
+simulated function SetLockViewRotation(bool bShouldLockViewRotation, optional rotator LockViewRotation)
+{
+    self.bLockViewRotation = bShouldLockViewRotation;
+    self.LockViewRotation = LockViewRotation;
 }
 
 defaultproperties

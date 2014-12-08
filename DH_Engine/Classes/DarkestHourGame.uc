@@ -1831,14 +1831,6 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
     return true;
 }
 
-exec function DebugObstacles(optional int Option)
-{
-    if (ObstacleManager != none)
-    {
-        ObstacleManager.ServerDebugObstacles(Option);
-    }
-}
-
 defaultproperties
 {
      WinLimit=3

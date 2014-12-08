@@ -30,7 +30,7 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
-    GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
+    GivenItems(0)="DH_Equipment.DHWireCuttersItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stEMb'
     PrimaryWeaponType=WT_SemiAuto

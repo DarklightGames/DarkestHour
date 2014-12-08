@@ -7,20 +7,47 @@ class DHObstacleManager extends Actor
     placeable;
 
 var array<DHObstacle> Obstacles;
-var byte Bitfield[255];
-var byte SavedBitfield[255];
+
+var byte Bitfield[128];
+var byte SavedBitfield[128];
 
 var config bool bDebug;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         Bitfield;
-    reliable if (Role < ROLE_Authority)
-        ServerDebugObstacles;
 }
 
-function ServerDebugObstacles(optional int Option)
+simulated function PostBeginPlay()
+{
+    local DHObstacle Obstacle;
+
+    super.PostBeginPlay();
+
+    if (Role == ROLE_Authority)
+    {
+        foreach AllActors(class'DHObstacle', Obstacle)
+        {
+            Obstacle.Index = Obstacles.Length;
+
+            Obstacles[Obstacles.Length] = Obstacle;
+
+            if (FRand() < Obstacle.SpawnClearedChance)
+            {
+                SetCleared(Obstacle, true);
+            }
+
+            // Now that the obstacle has an index in the server's obstacle list,
+            // it is safe to replicate this actor.
+            Obstacle.RemoteRole = ROLE_SimulatedProxy;
+        }
+    }
+
+    Log("[DHOM] Obstacle Count:" @ Obstacles.Length);
+}
+
+function DebugObstacles(optional int Option)
 {
     local int i;
 
@@ -36,49 +63,48 @@ function ServerDebugObstacles(optional int Option)
         case 0: // Make all obstacles intact
             for (i = 0; i < Obstacles.Length; ++i)
             {
-                Obstacles[i].SetCleared(false);
+                SetCleared(Obstacles[i], false);
             }
             break;
         case 1: // Clear all obstacles
             for (i = 0; i < Obstacles.Length; ++i)
             {
-                Obstacles[i].SetCleared(true);
+                SetCleared(Obstacles[i], true);
             }
             break;
         case 2: // Randomly make all obstacles intact or cleared (50/50 chance)
             for (i = 0; i < Obstacles.Length; ++i)
             {
-                Obstacles[i].SetCleared(FRand() >= 0.5);
+                SetCleared(Obstacles[i], FRand() >= 0.5);
             }
             break;
     }
+}
+
+function ClearObstacle(int Index)
+{
+    if (bDebug)
+    {
+        Level.Game.Broadcast(self, "ClearObstacle(" $ Index $ ")");
+    }
+
+    if (Index < 0 || Index >= Obstacles.Length)
+    {
+        if (bDebug)
+        {
+            Level.Game.Broadcast(self, "Obstacle index (" $ Index $ ") outside of range!");
+        }
+
+        return;
+    }
+
+    SetCleared(Obstacles[Index], true);
 }
 
 simulated function GetBitfieldIndexAndMask(int Index, out int ByteIndex, out byte Mask)
 {
     ByteIndex = Index / 8;
     Mask = (1 << (Index % 8));
-}
-
-simulated function PostBeginPlay()
-{
-    local DHObstacle Obstacle;
-
-    super.PostBeginPlay();
-
-    foreach AllActors(class'DHObstacle', Obstacle)
-    {
-        Obstacle.Index = Obstacles.Length;
-
-        Obstacles[Obstacles.Length] = Obstacle;
-
-        if (FRand() < Obstacle.SpawnClearedChance)
-        {
-            SetCleared(Obstacle, true);
-        }
-    }
-
-    Log("[DHOM] Obstacle Count:" @ Obstacles.Length);
 }
 
 simulated event PostNetReceive()
@@ -89,9 +115,9 @@ simulated event PostNetReceive()
     local bool bWasCleared;
     local byte Mask;
 
-    super.PostNetReceive();
-
     Log("[DHOM] PostNetReceive");
+
+    super.PostNetReceive();
 
     if (Role < ROLE_Authority)
     {
@@ -103,6 +129,8 @@ simulated event PostNetReceive()
                 //no change
                 continue;
             }
+
+            Log("[DHOM] Byte" @ i @ "changed");
 
             //byte has changed, drill down and find what bit(s) changed
             for (j = 0; j < 8; ++j)
@@ -116,6 +144,8 @@ simulated event PostNetReceive()
                 if (bDidStateChange)
                 {
                     ObstacleIndex = (i * 8) + j;
+
+                    Log("[DHOM] Bit" @ j @ "changed (index" @ ObstacleIndex $ ")");
 
                     if (ObstacleIndex >= Obstacles.Length)
                     {
@@ -142,6 +172,7 @@ simulated function Reset()
         for (i = 0; i < arraycount(Bitfield); ++i)
         {
             Bitfield[i] = 0;
+            //TODO: not right, needs to run a full re-calc on cleared status
         }
     }
 }
@@ -150,6 +181,13 @@ function SetCleared(DHObstacle Obstacle, bool bIsCleared)
 {
     local int ByteIndex;
     local byte Mask;
+
+    if (bDebug)
+    {
+        Level.Game.Broadcast(self, "SetCleared(" $ Obstacle $ ", " $ bIsCleared $ ")");
+    }
+
+    Obstacle.SetCleared(bIsCleared);
 
     GetBitfieldIndexAndMask(Obstacle.Index, ByteIndex, Mask);
 
@@ -166,5 +204,13 @@ function SetCleared(DHObstacle Obstacle, bool bIsCleared)
 defaultproperties
 {
     bDebug=true
+    bHidden=true
+    bStatic=true
+    bNoDelete=true
+    bAlwaysRelevant=true
+    RemoteRole=ROLE_SimulatedProxy
+    bOnlyDirtyReplication=true
+    bSkipActorPropertyReplication=true
+    bNetNotify=true
 }
 
