@@ -61,7 +61,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
                     FactoryReference[i].bUsesSpawnAreas = bUseSpawnArea;
 
                 //Check to see if leveler set bInstantDestroyEmpty and if the vehicle is empty
-                if (bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty())
+                if (FactoryReference[i].LastSpawnedVehicle != none && bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty())
                     ROVehicle(FactoryReference[i].LastSpawnedVehicle).Destroy(); //Destroy the vehicle
             }
         break;
@@ -81,7 +81,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
                     if (bChangeUseSpawnArea)
                         FactoryReference[i].bUsesSpawnAreas = bUseSpawnArea;
 
-                    if (bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty())
+                    if (FactoryReference[i].LastSpawnedVehicle != none && bInstantDestroyEmpty && ROVehicle(FactoryReference[i].LastSpawnedVehicle).IsVehicleEmpty())
                         ROVehicle(FactoryReference[i].LastSpawnedVehicle).Destroy();
                 }
             }
