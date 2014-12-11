@@ -27,7 +27,6 @@ static function string GetString(
         default:
             return default.LoadedGunner;
     }
-
 }
 
 static function int getIconID(
