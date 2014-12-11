@@ -388,7 +388,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             ViewRotation.Pitch = ROPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
         }
 
-        if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bIsDeployingMortar))
+        if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bIsDeployingMortar || ROPwn.bIsCuttingWire))
         {
             ROPwn.LimitYaw(ViewRotation.Yaw);
         }
@@ -983,7 +983,7 @@ state PlayerWalking
         NewAccel = aForward*X + aStrafe*Y;
         NewAccel.Z = 0;
 
-        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar)
+        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire)
         {
             NewAccel = vect(0, 0, 0);
         }

@@ -6,10 +6,9 @@
 class DHObstacleManager extends Actor
     placeable;
 
-var array<DHObstacle> Obstacles;
-
-var byte Bitfield[128];
-var byte SavedBitfield[128];
+var array<DHObstacle>   Obstacles;
+var byte                Bitfield[128];
+var byte                SavedBitfield[128];
 
 var config bool bDebug;
 
@@ -43,8 +42,6 @@ simulated function PostBeginPlay()
             Obstacle.RemoteRole = ROLE_SimulatedProxy;
         }
     }
-
-    Log("[DHOM] Obstacle Count:" @ Obstacles.Length);
 }
 
 function DebugObstacles(optional int Option)
@@ -83,18 +80,8 @@ function DebugObstacles(optional int Option)
 
 function ClearObstacle(int Index)
 {
-    if (bDebug)
-    {
-        Level.Game.Broadcast(self, "ClearObstacle(" $ Index $ ")");
-    }
-
     if (Index < 0 || Index >= Obstacles.Length)
     {
-        if (bDebug)
-        {
-            Level.Game.Broadcast(self, "Obstacle index (" $ Index $ ") outside of range!");
-        }
-
         return;
     }
 
@@ -115,8 +102,6 @@ simulated event PostNetReceive()
     local bool bWasCleared;
     local byte Mask;
 
-    Log("[DHOM] PostNetReceive");
-
     super.PostNetReceive();
 
     if (Role < ROLE_Authority)
@@ -130,8 +115,6 @@ simulated event PostNetReceive()
                 continue;
             }
 
-            Log("[DHOM] Byte" @ i @ "changed");
-
             //byte has changed, drill down and find what bit(s) changed
             for (j = 0; j < 8; ++j)
             {
@@ -144,8 +127,6 @@ simulated event PostNetReceive()
                 if (bDidStateChange)
                 {
                     ObstacleIndex = (i * 8) + j;
-
-                    Log("[DHOM] Bit" @ j @ "changed (index" @ ObstacleIndex $ ")");
 
                     if (ObstacleIndex >= Obstacles.Length)
                     {
@@ -181,11 +162,6 @@ function SetCleared(DHObstacle Obstacle, bool bIsCleared)
 {
     local int ByteIndex;
     local byte Mask;
-
-    if (bDebug)
-    {
-        Level.Game.Broadcast(self, "SetCleared(" $ Obstacle $ ", " $ bIsCleared $ ")");
-    }
 
     Obstacle.SetCleared(bIsCleared);
 

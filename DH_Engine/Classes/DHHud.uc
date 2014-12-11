@@ -9,6 +9,7 @@ var(ROHud)  SpriteWidget    VehicleAltAmmoReloadIcon; // ammo reload icon for a 
 var(ROHud)  SpriteWidget    VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
 var(DHHud)  SpriteWidget    MapIconCarriedRadio;
 var(DHHud)  SpriteWidget    CanMantleIcon;
+var(DHHud)  SpriteWidget    CanCutWireIcon;
 var(DHHud)  SpriteWidget    VoiceIcon;
 var(DHHud)  SpriteWidget    MapIconMortarTarget;
 var(DHHud)  SpriteWidget    MapIconMortarHit;
@@ -78,7 +79,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Rfoot');
 
     Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.HUD.MGDeploy');
-    //Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.HUD.CanMantle');
     Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.HUD.Compass2_main');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.HUD.TexRotator0');
     Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.OverheadMap.overheadmap_background');
@@ -538,9 +538,18 @@ simulated function DrawHudPassC(Canvas C)
     if (PawnOwner != none && PawnOwner.bCanBipodDeploy)
         DrawSpriteWidget(C, MGDeployIcon);
 
-    // Show Mantling icon if an object can be climbed
-    if (PawnOwner != none && DH_Pawn(PawnOwner) != none && DH_Pawn(PawnOwner).bCanMantle)
-        DrawSpriteWidget(C, CanMantleIcon);
+    if (PawnOwner != none && DH_Pawn(PawnOwner) != none)
+    {
+        if (DH_Pawn(PawnOwner).bCanMantle)
+        {
+            // Show Mantling icon if an object can be climbed
+            DrawSpriteWidget(C, CanMantleIcon);
+        }
+        else if(DH_Pawn(PawnOwner).bCanCutWire)
+        {
+            DrawSpriteWidget(C, CanCutWireIcon);
+        }
+    }
 
     // Draw the icon for weapon resting
     if (PawnOwner != none)
@@ -3154,6 +3163,7 @@ defaultproperties
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
     MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.800000,DrawPivot=DP_LowerMiddle,PosX=0.550000,PosY=0.980000,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanCutWireIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.800000,DrawPivot=DP_LowerMiddle,PosX=0.550000,PosY=0.980000,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     VoiceIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Communication.Voice',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=63),TextureScale=0.500000,DrawPivot=DP_MiddleMiddle,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     MapIconMortarTarget=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=64),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(R=255,A=255),Tints[1]=(R=255,A=255))
     MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.050000,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))

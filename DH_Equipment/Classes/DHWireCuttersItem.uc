@@ -61,9 +61,9 @@ simulated state Cutting
 
         P = DH_Pawn(Instigator);
 
-        if (P != none && P.Controller != none)
+        if (P != none)
         {
-            P.SetLockViewRotation(true, P.Controller.Rotation);
+            P.SetIsCuttingWire(true);
         }
 
         // TODO: swap this out with variable
@@ -89,30 +89,60 @@ simulated state Cutting
 
         if (P != none)
         {
-            //Unlock view rotation
-            P.SetLockViewRotation(false);
+            P.SetIsCuttingWire(false);
         }
     }
 
     simulated function AnimEnd(int Channel)
     {
         local DHPlayer P;
+        local name SeqName;
+        local float AnimRate, AnimFrame;
 
-        if (Instigator != none)
-        {
-            P = DHPlayer(Instigator.Controller);
+        GetAnimParams(Channel, SeqName, AnimFrame, AnimRate);
 
-            if (P != none && ObstacleBeingCut != none)
-            {
-                // Tell server to clear obstacle
-                P.ServerClearObstacle(ObstacleBeingCut.Index);
-            }
-        }
-
-        // Get out of cutting state
-        GotoState('');
+        Log(SeqName);
 
         super.AnimEnd(Channel);
+
+        switch (SeqName)
+        {
+            case 'cutStart':
+                Log("1");
+                PlayAnim('cutVin');
+                break;
+            case 'cutVin':
+                Log("2");
+                PlayAnim('cutVout');
+                break;
+            case 'cutVout':
+                Log("3");
+                PlayAnim('cutHin');
+                break;
+            case 'cutHin':
+                Log("4");
+                PlayAnim('cutHout');
+                break;
+            case 'cutHout':
+                Log("5");
+                PlayAnim('cutEnd');
+
+                if (Instigator != none)
+                {
+                    P = DHPlayer(Instigator.Controller);
+
+                    if (P != none && ObstacleBeingCut != none)
+                    {
+                        // Tell server to clear obstacle
+                        P.ServerClearObstacle(ObstacleBeingCut.Index);
+                    }
+
+                    // Get out of cutting state
+                    GotoState('');
+                }
+
+                break;
+        }
     }
 }
 
@@ -148,7 +178,7 @@ simulated function Fire(float F)
 defaultproperties
 {
     ItemName="Wire Cutters"
-    Mesh=mesh'Common_Binoc_1st.binoculars'
+    Mesh=mesh'axis_wirecutter_1st.wirecutters'
     DrawScale=1.0
     DisplayFOV=70
     IronSightDisplayFOV=70
@@ -158,15 +188,15 @@ defaultproperties
     HighDetailOverlayIndex=2
     bCanRestDeploy=false
     bUsesFreeAim=false
-    AttachmentClass=class'BinocularsAttachment'
+    AttachmentClass=class'DHWireCuttersAttachment'
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
     SelectAnim=Draw
-    PutDownAnim=Put_Away
+    PutDownAnim=putaway
     CrawlForwardAnim=crawlF
     CrawlBackwardAnim=crawlB
-    CrawlStartAnim=crawl_in
-    CrawlEndAnim=crawl_out
+    CrawlStartAnim=crawlIn
+    CrawlEndAnim=crawlOut
     ZoomInTime=0.4
     ZoomOutTime=0.2
     PlayerFOVZoom=10
@@ -180,5 +210,8 @@ defaultproperties
     Priority=1
     FireModeClass(0)=class'ROInventory.ROEmptyFireClass'
     FireModeClass(1)=class'ROInventory.ROEmptyFireClass'
-    CutAnim=Zoom_In
+    CutAnim=cutStart
+    SprintStartAnim=sprintStart
+    SprintLoopAnim=sprintMiddle
+    SprintEndAnim=sprintEnd
 }

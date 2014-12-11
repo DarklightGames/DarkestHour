@@ -125,7 +125,7 @@ defaultproperties
     bCanBeDamaged=true
     bCollideActors=true
     bCollideWorld=false
-    bWorldGeometry=false
+    bWorldGeometry=true
     bStatic=false
     bStaticLighting=true
     DrawType=DT_StaticMesh

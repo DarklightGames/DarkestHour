@@ -90,7 +90,8 @@ var     bool    bIsDeployingMortar;         // Whether or not the pawn is deploy
 var     bool    bMortarCanBeResupplied;
 
 // Obstacle clearing
-var bool                bIsClearingObstacle;
+var bool                bCanCutWire;
+var bool                bIsCuttingWire;
 
 var bool                bLockViewRotation;
 var rotator             LockViewRotation;
@@ -315,7 +316,7 @@ function PossessedBy(Controller C)
     }
 }
 
-simulated function HelmetShotOff(Rotator Rotation)
+simulated function HelmetShotOff(rotator Rotation)
 {
     local DroppedHeadGear Hat;
 
@@ -3511,7 +3512,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (TraceWall(16384, 64) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar)
+    if (TraceWall(16384, 64) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanRight = false;
         return;
@@ -3525,7 +3526,7 @@ simulated function LeanRight()
 
 simulated function LeanLeft()
 {
-    if (TraceWall(-16384, 64) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar)
+    if (TraceWall(-16384, 64) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanLeft = false;
         return;
@@ -3829,6 +3830,16 @@ simulated function SetLockViewRotation(bool bShouldLockViewRotation, optional ro
 {
     self.bLockViewRotation = bShouldLockViewRotation;
     self.LockViewRotation = LockViewRotation;
+}
+
+simulated function SetIsCuttingWire(bool bIsCuttingWire)
+{
+    self.bIsCuttingWire = bIsCuttingWire;
+
+    if (Controller != none)
+    {
+        SetLockViewRotation(bIsCuttingWire, Controller.Rotation);
+    }
 }
 
 defaultproperties
