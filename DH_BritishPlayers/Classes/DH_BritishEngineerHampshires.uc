@@ -43,5 +43,5 @@ defaultproperties
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
     PrimaryWeaponType=WT_SMG
-    Limit=1
+    Limit=3
 }

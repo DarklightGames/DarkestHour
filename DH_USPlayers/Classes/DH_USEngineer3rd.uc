@@ -35,5 +35,5 @@ defaultproperties
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
     PrimaryWeaponType=WT_SemiAuto
-    Limit=1
+    Limit=3
 }

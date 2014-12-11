@@ -41,10 +41,10 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
-    GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
+    GivenItems(0)="DH_Equipment.DHWireCuttersItem"
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
     PrimaryWeaponType=WT_SMG
-    Limit=1
+    Limit=3
 }
