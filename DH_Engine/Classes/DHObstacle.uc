@@ -3,21 +3,36 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHObstacle extends Actor;
+class DHObstacle extends Actor
+    placeable;
 
-var     int             Index;
+struct UncompressedPosition
+{
+    var float LocationX;
+    var float LocationY;
+    var float LocationZ;
+    var int Pitch;
+    var int Yaw;
+    var int Roll;
+    var float ScaleX;
+    var float ScaleY;
+    var float ScaleZ;
+};
 
-var     StaticMesh      IntactStaticMesh;
-var()   StaticMesh      ClearedStaticMesh;
-var()   sound           ClearSound;
-var()   float           SpawnClearedChance;
-var()   bool            bCanBeClearedWithWireCutters;
-var()   class<Emitter>  ClearEmitter;
+var     int                     Index;
+var     UncompressedPosition    UP;
+
+var     StaticMesh              IntactStaticMesh;
+var()   StaticMesh              ClearedStaticMesh;
+var()   sound                   ClearSound;
+var()   float                   SpawnClearedChance;
+var()   bool                    bCanBeClearedWithWireCutters;
+var()   class<Emitter>          ClearEmitter;
 
 replication
 {
     reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
-        Index, IntactStaticMesh, ClearedStaticMesh;
+        Index, IntactStaticMesh, ClearedStaticMesh, UP;
 }
 
 simulated function bool IsCleared()
@@ -30,11 +45,22 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     IntactStaticMesh = StaticMesh;
+    UP.LocationX = Location.X;
+    UP.LocationY = Location.Y;
+    UP.LocationZ = Location.Z;
+    UP.Pitch = Rotation.Pitch;
+    UP.Yaw = Rotation.Yaw;
+    UP.Roll = Rotation.Roll;
+    UP.ScaleX = DrawScale3D.X * DrawScale;
+    UP.ScaleY = DrawScale3D.Y * DrawScale;
+    UP.ScaleZ = DrawScale3D.Z * DrawScale;
 }
 
 simulated function PostNetBeginPlay()
 {
     local DHObstacleManager OM;
+    local vector L, S;
+    local rotator R;
 
     if (Role != ROLE_Authority)
     {
@@ -42,6 +68,21 @@ simulated function PostNetBeginPlay()
         {
             OM.Obstacles[Index] = self;
         }
+
+        L.X = UP.LocationX;
+        L.Y = UP.LocationY;
+        L.Z = UP.LocationZ;
+        SetLocation(L);
+
+        R.Pitch = UP.Pitch;
+        R.Yaw = UP.Yaw;
+        R.Roll = UP.Roll;
+        SetRotation(R);
+
+        S.X = UP.ScaleX;
+        S.Y = UP.ScaleY;
+        S.Z = UP.ScaleZ;
+        SetDrawScale3D(S);
     }
 }
 
@@ -125,14 +166,14 @@ defaultproperties
     bCanBeDamaged=true
     bCollideActors=true
     bCollideWorld=false
-    bWorldGeometry=true
+    bWorldGeometry=false
     bStatic=false
     bStaticLighting=true
     DrawType=DT_StaticMesh
     bNetTemporary=true
     bAlwaysRelevant=true
     RemoteRole=ROLE_None
-
+    bCompressedPosition=false
     SpawnClearedChance=0.0
     bCanBeClearedWithWireCutters=true
 }
