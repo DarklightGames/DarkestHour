@@ -103,6 +103,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 }
 
+// Matt: reinstating original RO functions for AT guns, as generally don't have gunner's collision & if they do (e.g. German 88mm) they need different handling from new commander hit system
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+{
+    return super(ROVehicleWeapon).HitDriverArea(HitLocation, Momentum);
+}
+
+simulated function bool HitDriver(vector Hitlocation, vector Momentum)
+{
+    return super(ROVehicleWeapon).HitDriver(Hitlocation, Momentum);
+}
+
 // There aren't any angles that are below the driver angle for the AT Gun cannon
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
