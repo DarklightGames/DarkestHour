@@ -194,7 +194,7 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local vector        VNorm;
     local ESurfaceTypes ST;

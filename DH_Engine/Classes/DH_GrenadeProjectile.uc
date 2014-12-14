@@ -39,7 +39,7 @@ simulated function PostBeginPlay()
 }
 
 // Modified from ROGrenadeProjectile to alter ImpactSound speed threshold & volume
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local vector        VNorm;
     local ESurfaceTypes ST;

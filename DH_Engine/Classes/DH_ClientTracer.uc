@@ -153,7 +153,7 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 }
 
 // Modified to add deflection (& also remove causing damage, although would not happen on a client anyway as not an authority role)
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicleHitEffect      VehEffect;
 //  local RODestroyableStaticMesh DestroMesh;
@@ -192,10 +192,10 @@ simulated function HitWall(vector HitNormal, actor Wall)
         }
     }
 
-    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
+//  super(ROBallisticProjectile).HitWall(HitNormal, Wall); // Matt: removed as is debug only & not necessary for tracer
 
     // Don't want to destroy the bullet if its going through something like glass
-    if (Wall.IsA('RODestroyableStaticMesh') && RODestroyableStaticMesh(Wall).bWontStopBullets)
+    if (RODestroyableStaticMesh(Wall) != none && RODestroyableStaticMesh(Wall).bWontStopBullets)
     {
         return;
     }

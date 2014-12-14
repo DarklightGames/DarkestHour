@@ -30,7 +30,7 @@ simulated function PostBeginPlay()
     if (bDebugBallistics && ROPawn(Instigator) != none) // ROPawn added in this class
     {
         FlightTime = 0.0;
-        OrigLoc = Location;
+//      OrigLoc = Location; // set below, regardless of whether debugging
 
         TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + (Instigator.CollisionRadius + 5.0) * vector(Rotation), true);
         Log("Debug tracing: TraceHitActor=" @ TraceHitActor);
@@ -290,7 +290,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 }
 
 // Matt: all this function override does is remove the TakeDamage block, but that won't execute on a net client anyway, so this override is pointless
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicleHitEffect      VehEffect;
     local RODestroyableStaticMesh DestroMesh;
@@ -332,7 +332,7 @@ simulated function HitWall(vector HitNormal, actor Wall)
         }
     }
 
-    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
+    super(ROBallisticProjectile).HitWall(HitNormal, Wall); // is debug only
 
     // Don't want to destroy the bullet if its going through something like glass
     if (DestroMesh != none && DestroMesh.bWontStopBullets)

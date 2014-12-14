@@ -265,7 +265,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
 }
 
 // Matt: removed as all this function override did was remove the spawn hit effects block, which is actually needed by a listen server & won't run on a dedicated server anyway !
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicleHitEffect      VehEffect; // Matt: added back as needed by listen server
     local RODestroyableStaticMesh DestroMesh;
@@ -301,14 +301,13 @@ simulated function HitWall(vector HitNormal, actor Wall)
 //          VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
 //          VehEffect.InitHitEffects(Location, HitNormal);
 //      }
-        // Spawn the bullet hit effect client side
 //      else if (ImpactEffect != none)
 //      {
 //          Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
 //      }
 //  }
 
-    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
+    super(ROBallisticProjectile).HitWall(HitNormal, Wall); // is debug only
 
     // Don't want to destroy the bullet if its going through something like glass
     if (DestroMesh != none && DestroMesh.bWontStopBullets)

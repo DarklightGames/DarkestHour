@@ -185,7 +185,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     Explode(HitLocation, Normal(Other.Location - Location));
 }
 
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     super.HitWall(HitNormal, Wall);
 
