@@ -24,20 +24,20 @@ function DenyEntry(Pawn P, int MessageNum)
 
 defaultproperties
 {
-     VehicleHudTurret=TexRotator'DH_Flakvierling38_tex.flak.flakv38_turret_rot'
-     VehicleHudTurretLook=TexRotator'DH_Flakvierling38_tex.flak.flakv38_turret_look'
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flakvierling38CannonPawn',WeaponBone="Turret_placement")
-     DestroyedVehicleMesh=StaticMesh'DH_Flakvierling38_stc.flakv38.flakv38_destroyed'
-     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-     DamagedEffectClass=none
-     DamagedEffectHealthSmokeFactor=0.000000
-     DamagedEffectHealthMediumSmokeFactor=0.000000
-     DamagedEffectHealthHeavySmokeFactor=0.000000
-     VehicleHudImage=Texture'DH_Flakvierling38_tex.flak.flakv38_base'
-     VehicleHudOccupantsX(0)=0.000000
-     VehicleHudOccupantsX(1)=0.000000
-     VehiclePositionString="using a Flakvierling 38"
-     VehicleNameString="Flakvierling 38"
-     Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_base'
+    VehicleHudTurret=TexRotator'DH_Flakvierling38_tex.flak.flakv38_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Flakvierling38_tex.flak.flakv38_turret_look'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flakvierling38CannonPawn',WeaponBone="Turret_placement")
+    DestroyedVehicleMesh=StaticMesh'DH_Flakvierling38_stc.flakv38.flakv38_destroyed'
+    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DamagedEffectClass=none
+    DamagedEffectHealthSmokeFactor=0.000000
+    DamagedEffectHealthMediumSmokeFactor=0.000000
+    DamagedEffectHealthHeavySmokeFactor=0.000000
+    VehicleHudImage=Texture'DH_Flakvierling38_tex.flak.flakv38_base'
+    VehicleHudOccupantsX(0)=0.000000
+    VehicleHudOccupantsX(1)=0.000000
+    VehiclePositionString="using a Flakvierling 38"
+    VehicleNameString="Flakvierling 38"
+    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_base'
 }

@@ -8,5 +8,5 @@ class DH_Kar98BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_Kar98Weapon'
+    WeaponClass=class'DH_Weapons.DH_Kar98Weapon'
 }

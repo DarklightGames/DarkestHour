@@ -451,7 +451,7 @@ function bool ResupplyAmmo()
 
     if (CurrentMagCount == MaxNumPrimaryMags - 1)
     {
-        ROPawn(Instigator).bWeaponNeedsResupply=false;
+        ROPawn(Instigator).bWeaponNeedsResupply = false;
     }
 
     return true;
@@ -474,8 +474,8 @@ function bool FillAmmo()
 
 defaultproperties
 {
-     bCanFireFromHip=true
-     InitialBarrels=2
-     NumMagsToResupply=2
+    bCanFireFromHip=true
+    InitialBarrels=2
+    NumMagsToResupply=2
 }
 

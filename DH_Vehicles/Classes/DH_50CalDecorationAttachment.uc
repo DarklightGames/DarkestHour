@@ -9,5 +9,5 @@ class DH_50CalDecorationAttachment extends DH_VehicleDecoAttachment;
 
 defaultproperties
 {
-     Mesh=SkeletalMesh'DH_Weapons3rd_anm.50Cal_3rd'
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.50Cal_3rd'
 }

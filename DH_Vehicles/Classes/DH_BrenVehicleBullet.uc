@@ -7,9 +7,9 @@ class DH_BrenVehicleBullet extends DH_Bullet;
 
 defaultproperties
 {
-     MyVehicleDamage=class'DH_Vehicles.DH_BrenVehDamType_Tank'
-     BallisticCoefficient=0.390000
-     Speed=44117.000000
-     Damage=115.000000
-     MyDamageType=class'DH_Vehicles.DH_BrenDamType_Tank'
+    MyVehicleDamage=class'DH_Vehicles.DH_BrenVehDamType_Tank'
+    BallisticCoefficient=0.390000
+    Speed=44117.000000
+    Damage=115.000000
+    MyDamageType=class'DH_Vehicles.DH_BrenDamType_Tank'
 }

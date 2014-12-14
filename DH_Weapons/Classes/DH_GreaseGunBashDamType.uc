@@ -8,5 +8,5 @@ class DH_GreaseGunBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_GreaseGunWeapon'
+    WeaponClass=class'DH_Weapons.DH_GreaseGunWeapon'
 }

@@ -7,6 +7,6 @@ class DHmoEditBox extends moEditBox;
 
 defaultproperties
 {
-     ComponentClassName="DH_Interface.DHGUIEditBox"
-     LabelStyleName="DHLargeText"
+    ComponentClassName="DH_Interface.DHGUIEditBox"
+    LabelStyleName="DHLargeText"
 }

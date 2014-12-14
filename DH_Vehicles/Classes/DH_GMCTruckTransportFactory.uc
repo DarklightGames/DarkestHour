@@ -7,7 +7,7 @@ class DH_GMCTruckTransportFactory extends DH_USVehicles;
 
 defaultproperties
 {
-     RespawnTime=1.000000
-     VehicleClass=class'DH_Vehicles.DH_GMCTruckTransport'
-     Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'
+    RespawnTime=1.000000
+    VehicleClass=class'DH_Vehicles.DH_GMCTruckTransport'
+    Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'
 }

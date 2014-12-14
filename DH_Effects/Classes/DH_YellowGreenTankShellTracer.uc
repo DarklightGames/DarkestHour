@@ -5,7 +5,6 @@
 
 class DH_YellowGreenTankShellTracer extends Effects;
 
-
 //  More realistic shell tracer, harder to see
 // (commander by binoculars can see it better than gunner, as in real life)
 
@@ -24,11 +23,11 @@ auto state Start
 
 defaultproperties
 {
-     bTrailerSameRotation=true
-     Physics=PHYS_Trailer
-     Texture=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
-     DrawScale=0.010000
-     Skins(0)=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
-     Style=STY_Additive
-     Mass=13.000000
+    bTrailerSameRotation=true
+    Physics=PHYS_Trailer
+    Texture=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
+    DrawScale=0.010000
+    Skins(0)=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
+    Style=STY_Additive
+    Mass=13.000000
 }

@@ -8,5 +8,5 @@ class DH_FG42BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_FG42Weapon'
+    WeaponClass=class'DH_Weapons.DH_FG42Weapon'
 }

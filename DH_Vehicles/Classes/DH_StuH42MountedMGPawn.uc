@@ -5,12 +5,10 @@
 
 class DH_StuH42MountedMGPawn extends DH_ROMountedTankMGPawn;
 
-
 #exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
 
 var     int             InitialPositionIndex; // Initial Gunner Position
 var     int             UnbuttonedPositionIndex; // Lowest pos number where player is unbuttoned
-
 
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
@@ -26,7 +24,6 @@ simulated function PostBeginPlay()
     ExitPositions[0] = Loc + Offset;
     ExitPositions[1] = ExitPositions[0];
 }
-
 
 // Commander cannot fire cannon when unbutonned
 function Fire(optional float F)
@@ -276,7 +273,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -287,8 +284,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -296,7 +293,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
-
 
 function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
 {
@@ -373,30 +369,30 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-     UnbuttonedPositionIndex=1
-     OverlayCenterSize=0.700000
-     MGOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
-     FirstPersonGunShakeScale=0.850000
-     WeaponFov=41.000000
-     DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-     bMultiPosition=true
-     GunClass=class'DH_Vehicles.DH_StuH42MountedMG'
-     bCustomAiming=true
-     bHasAltFire=false
-     CameraBone="Gun"
-     bPCRelativeFPRotation=true
-     bDesiredBehindView=false
-     DrivePos=(Z=-9.000000)
-     DriveAnim="VPanzer3_com_idle_close"
-     EntryRadius=130.000000
-     FPCamPos=(X=4.000000,Z=-1.500000)
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="on a StuH42 Ausf.G MG34"
-     VehicleNameString="StuH42 Ausf.G MG34"
-     HUDOverlayFOV=45.000000
-     PitchUpLimit=6000
-     PitchDownLimit=63500
+    UnbuttonedPositionIndex=1
+    OverlayCenterSize=0.700000
+    MGOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
+    FirstPersonGunShakeScale=0.850000
+    WeaponFov=41.000000
+    DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    bMultiPosition=true
+    GunClass=class'DH_Vehicles.DH_StuH42MountedMG'
+    bCustomAiming=true
+    bHasAltFire=false
+    CameraBone="Gun"
+    bPCRelativeFPRotation=true
+    bDesiredBehindView=false
+    DrivePos=(Z=-9.000000)
+    DriveAnim="VPanzer3_com_idle_close"
+    EntryRadius=130.000000
+    FPCamPos=(X=4.000000,Z=-1.500000)
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="on a StuH42 Ausf.G MG34"
+    VehicleNameString="StuH42 Ausf.G MG34"
+    HUDOverlayFOV=45.000000
+    PitchUpLimit=6000
+    PitchDownLimit=63500
 }

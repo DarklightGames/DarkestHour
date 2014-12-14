@@ -9,7 +9,6 @@
 class DH_AdminMenu_MenuBase extends Interaction
     abstract;
 
-    
 const  ITEMS_PER_PAGE = 10; // how many menu items are to be displayed on one page
 
 var  localized array<string>  MenuText;             // array of the menu option description to be displayed (localised so different language versions could be produced)
@@ -39,7 +38,6 @@ var  config  string    AdminName, AdminPassword;    // local player's own admin 
 var  config  color     MenuColour;                  // a default is set but can be overridden in config
 var  config  float     MenuPosX, MenuPosY;          // top left positioning of menus on the screen, ranging from 0 to 1 (a default is set but can be overridden in config)
 var  config  bool      bDebug;                      // if true, various events will be logged
-
 
 // Triggered when an interaction is created, which happens every round as re remove & re-create menus each time
 // However it is often too early to do setup stuff, e.g. wouldn't have Replicator reference & may not have GRI

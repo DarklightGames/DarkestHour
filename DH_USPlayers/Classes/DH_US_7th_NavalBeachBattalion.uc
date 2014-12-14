@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_US_7th_NavalBeachBattalion extends DH_US_Infantry_Units
+class DH_US_7th_NavalBeachBattalion extends DH_American_Units
     abstract;
 
 defaultproperties
 {
-     RolePawnClass="DH_USPlayers.DH_USRiflemanPawn"
+    RolePawnClass="DH_USPlayers.DH_USRiflemanPawn"
 }

@@ -8,7 +8,7 @@ class DH_Sherman105ShellImpactDamageHEAT extends ROTankShellImpactDamage
 
 defaultproperties
 {
-     APCDamageModifier=0.750000
-     DeathString="%o was killed by %k's Sherman(105) HEAT shell."
-     bArmorStops=true
+    APCDamageModifier=0.750000
+    DeathString="%o was killed by %k's Sherman(105) HEAT shell."
+    bArmorStops=true
 }

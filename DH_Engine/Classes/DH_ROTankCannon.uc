@@ -76,10 +76,10 @@ replication
      reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
        MainAmmoChargeExtra;
 
-     reliable if (bNetDirty && Role==ROLE_Authority)
+     reliable if (bNetDirty && Role == ROLE_Authority)
        bOnFire;
 
-     reliable if (Role==ROLE_Authority)
+     reliable if (Role == ROLE_Authority)
        bProjectilePenetrated, bRoundShattered; //bManualTurret moved from bNetDirty (in 5.0)
 
      reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
@@ -269,16 +269,16 @@ simulated function bool PenetrationAPC(float ArmorFactor, float CompoundAngle, f
         else if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.19) //shatter gap
         {
             bRoundShattered=true;
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
         else if (PenetrationRatio < 1.0)
         {
 
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -294,8 +294,8 @@ simulated function bool PenetrationAPC(float ArmorFactor, float CompoundAngle, f
         }
         else
         {
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -362,16 +362,16 @@ simulated function bool PenetrationHVAP(float ArmorFactor, float CompoundAngle, 
         else if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.34)
         {
             bRoundShattered=true;
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
         else if (PenetrationRatio < 1.0)
         {
 
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -387,8 +387,8 @@ simulated function bool PenetrationHVAP(float ArmorFactor, float CompoundAngle, 
         }
         else
         {
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -456,16 +456,16 @@ simulated function bool PenetrationHVAPLarge(float ArmorFactor, float CompoundAn
         else if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.27)
         {
             bRoundShattered=true;
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
         else if (PenetrationRatio < 1.0)
         {
 
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -481,8 +481,8 @@ simulated function bool PenetrationHVAPLarge(float ArmorFactor, float CompoundAn
         }
         else
         {
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -542,16 +542,16 @@ simulated function bool PenetrationAPDS(float ArmorFactor, float CompoundAngle, 
         else if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.20)
         {
             bRoundShattered=true;
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
         else if (PenetrationRatio < 1.0)
         {
 
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -567,8 +567,8 @@ simulated function bool PenetrationAPDS(float ArmorFactor, float CompoundAngle, 
         }
         else
         {
-            DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-            DH_ROTreadCraft(Base).bWasTurretHit=false;
+            DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+            DH_ROTreadCraft(Base).bWasTurretHit = false;
             bProjectilePenetrated = false;
             return false;
         }
@@ -634,8 +634,8 @@ simulated function bool PenetrationHEAT(float ArmorFactor, float CompoundAngle, 
     }
     else
     {
-        DH_ROTreadCraft(Base).bProjectilePenetrated=false;
-        DH_ROTreadCraft(Base).bWasTurretHit=false;
+        DH_ROTreadCraft(Base).bProjectilePenetrated = false;
+        DH_ROTreadCraft(Base).bWasTurretHit = false;
         bProjectilePenetrated = false;
         return false;
     }
@@ -669,7 +669,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -724,7 +724,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -774,7 +774,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -818,7 +818,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -867,7 +867,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -935,7 +935,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -990,7 +990,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1039,7 +1039,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1083,7 +1083,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1132,7 +1132,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1201,7 +1201,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -1256,7 +1256,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1305,7 +1305,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1349,7 +1349,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1398,7 +1398,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1439,7 +1439,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     }
 }
 
-
 simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
 
@@ -1468,7 +1467,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -1523,7 +1522,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1572,7 +1571,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1616,7 +1615,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1666,7 +1665,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -1735,7 +1734,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -1790,7 +1789,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1839,7 +1838,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -1883,7 +1882,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -1915,7 +1914,6 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
 
         return PenetrationHEAT(RearArmorFactor, GetCompoundAngle(InAngleDegrees, RearArmorSlope), PenetrationNumber, bIsHEATRound);
 
-
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Left
     {
@@ -1934,7 +1932,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -2152,7 +2150,6 @@ event bool AttemptFire(Controller C, bool bAltFire)
             FireCountdown = AltFireInterval;
             AltFire(C);
 
-
             if (AltAmmoCharge < 1)
                 HandleReload();
         }
@@ -2254,7 +2251,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
 
     if (bCannonShellDebugging)
-        log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        Log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
 
     if (bDoOffsetTrace)
     {
@@ -2324,7 +2321,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     return P;
 }
-
 
 function CeaseFire(Controller C, bool bWasAltFire)
 {
@@ -2558,7 +2554,7 @@ simulated function bool BelowDriverAngle(vector Loc, vector Ray)
 
     C = GetBoneCoords(VehHitpoints[0].PointBone);
     HeadLoc = C.Origin + (VehHitpoints[0].PointHeight * VehHitpoints[0].PointScale * C.XAxis);
-    HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> Rotator(C.Xaxis));
+    HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> rotator(C.Xaxis));
 
     HitDir = Loc - HeadLoc;
 
@@ -2566,7 +2562,7 @@ simulated function bool BelowDriverAngle(vector Loc, vector Ray)
 
     if (bDriverDebugging)
     {
-        log("InAngle =" @ InAngle @ "MaxDriverHitAngle =" @ MaxDriverHitAngle);
+        Log("InAngle =" @ InAngle @ "MaxDriverHitAngle =" @ MaxDriverHitAngle);
 
         if (Role == ROLE_Authority)
         {
@@ -2603,7 +2599,7 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
     {
         if (bDriverDebugging)
         {
-            log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
+            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Assume hit commander's collision box");
 
             if (Role == ROLE_Authority)
             {
@@ -2618,7 +2614,7 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
     {
         if (bDriverDebugging)
         {
-            log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
+            Log("HitOffset.Z =" @ HitOffset.Z @ "MinCommanderHitHeight =" @ MinCommanderHitHeight @ " Must have missed commander's collision box");
 
             if (Role == ROLE_Authority)
             {
@@ -2692,7 +2688,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
         t = 0.0;
     }
 
-    Distance = Sqrt(Diff Dot Diff);
+    Distance = Sqrt(Diff dot Diff);
 
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
 }
@@ -2760,7 +2756,6 @@ function DecreaseAddedPitch()
     if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
         ROPlayer(Instigator.Controller).ClientMessage("Sight old value ="$MechanicalRangesValue$"        new value = "$MechanicalRangesValue+Correction$"        correction = "$Correction);
 }
-
 
 simulated function DestroyEffects()
 {
@@ -2841,14 +2836,14 @@ simulated function Destroyed() // Matt: added
 
 defaultproperties
 {
-     bUsesSecondarySpread=true
-     bUsesTertiarySpread=true
-     ManualRotationsPerSecond=0.011111
-     PoweredRotationsPerSecond=0.050000
-     FireAttachBone="com_player"
-     FireEffectOffset=(Z=-20.000000)
-     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-     bManualTurret=true
-     CannonReloadState=CR_Waiting
-     AltFireSpread=0.002000
+    bUsesSecondarySpread=true
+    bUsesTertiarySpread=true
+    ManualRotationsPerSecond=0.011111
+    PoweredRotationsPerSecond=0.050000
+    FireAttachBone="com_player"
+    FireEffectOffset=(Z=-20.000000)
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+    bManualTurret=true
+    CannonReloadState=CR_Waiting
+    AltFireSpread=0.002000
 }

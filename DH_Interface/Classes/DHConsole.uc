@@ -5,7 +5,6 @@
 
 class DHConsole extends ROConsole;
 
-
 //Testing override of this function in hopes to stop the Unknown Steam Error bug
 event ConnectFailure(string FailCode,string URL)
 {
@@ -22,7 +21,7 @@ event ConnectFailure(string FailCode,string URL)
         FailCode = Left(FailCode,i);
     }
 
-    log("Connect Failure: "@FailCode$"["$Error$"] ("$URL$")",'Debug');
+    Log("Connect Failure: "@FailCode$"["$Error$"] ("$URL$")",'Debug');
 
     if(FailCode == "NEEDPW")
     {
@@ -148,13 +147,10 @@ event ConnectFailure(string FailCode,string URL)
     }
     // end _RO_
 
-    log("Unhandled connection failure!  FailCode '"$FailCode@"'   URL '"$URL$"'");
+    Log("Unhandled connection failure!  FailCode '"$FailCode@"'   URL '"$URL$"'");
     ViewportOwner.Actor.ProgressCommand("menu:"$class'GameEngine'.default.DisconnectMenuClass,FailCode,Error);
 }
 
-
-
 defaultproperties
 {
-
 }

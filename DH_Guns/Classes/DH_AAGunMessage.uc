@@ -35,9 +35,9 @@ static function string GetString(
 
 defaultproperties
 {
-     GunManned="The Anti-Aircraft Gun Is Fully Crewed"
-     CannotUse="Cannot Use This Anti-Aircraft Gun"
-     NoExit="No Exit Location Can Be Found For This Anti-Aicraft Gun"
-     NotQualified="You Are Not Qualified To Operate Anti-Aircraft Guns"
-     VehicleIsEnemy="Cannot Use An Enemy Anti-Aicraft Gun"
+    GunManned="The Anti-Aircraft Gun Is Fully Crewed"
+    CannotUse="Cannot Use This Anti-Aircraft Gun"
+    NoExit="No Exit Location Can Be Found For This Anti-Aicraft Gun"
+    NotQualified="You Are Not Qualified To Operate Anti-Aircraft Guns"
+    VehicleIsEnemy="Cannot Use An Enemy Anti-Aicraft Gun"
 }

@@ -7,5 +7,5 @@ class DH_JagdpanzerIVL48Cannon_CamoOne extends DH_JagdpanzerIVL48Cannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo2'
+    Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo2'
 }

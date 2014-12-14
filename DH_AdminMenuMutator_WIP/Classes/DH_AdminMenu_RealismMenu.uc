@@ -9,7 +9,6 @@
 //=============================================================================
 class DH_AdminMenu_RealismMenu extends DH_AdminMenu_MenuBase;
 
-
 exec function RealismMenu()
 {
     GoToState('MenuVisible');

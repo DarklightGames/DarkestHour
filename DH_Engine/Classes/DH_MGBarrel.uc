@@ -249,15 +249,15 @@ state BarrelOff
 
 defaultproperties
 {
-     DH_MGSteamTemp=225.000000
-     CriticalTemperature=250.000000
-     FailureTemperature=275.000000
-     BarrelCoolingRate=1.000000
-     FiringHeatIncrement=1.000000
-     BarrelTimerRate=0.100000
-     DrawType=DT_none
-     bHidden=true
-     bReplicateMovement=false
-     RemoteRole=ROLE_none
-     NetPriority=1.400000
+    DH_MGSteamTemp=225.000000
+    CriticalTemperature=250.000000
+    FailureTemperature=275.000000
+    BarrelCoolingRate=1.000000
+    FiringHeatIncrement=1.000000
+    BarrelTimerRate=0.100000
+    DrawType=DT_none
+    bHidden=true
+    bReplicateMovement=false
+    RemoteRole=ROLE_none
+    NetPriority=1.400000
 }

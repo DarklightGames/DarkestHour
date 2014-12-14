@@ -7,9 +7,9 @@ class DH_BesaVehicleBullet extends DH_Bullet;
 
 defaultproperties
 {
-     MyVehicleDamage=class'DH_Vehicles.DH_BesaVehDamType_Tank'
-     BallisticCoefficient=0.410000
-     Speed=49670.000000
-     Damage=115.000000
-     MyDamageType=class'DH_Vehicles.DH_BesaDamType_Tank'
+    MyVehicleDamage=class'DH_Vehicles.DH_BesaVehDamType_Tank'
+    BallisticCoefficient=0.410000
+    Speed=49670.000000
+    Damage=115.000000
+    MyDamageType=class'DH_Vehicles.DH_BesaDamType_Tank'
 }

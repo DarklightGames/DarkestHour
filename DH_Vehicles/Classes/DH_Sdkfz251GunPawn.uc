@@ -39,7 +39,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     CameraRotation =  WeaponAimRot;
 
-
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
     if (CameraBone != '' && Gun != none)
@@ -48,7 +47,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
 
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
@@ -60,8 +59,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -179,28 +178,28 @@ function bool KDriverLeave(bool bForceLeave)
 
 defaultproperties
 {
-     FirstPersonGunShakeScale=2.000000
-     WeaponFov=72.000000
-     DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-     bMultiPosition=true
-     bMustBeTankCrew=false
-     GunClass=class'DH_Vehicles.DH_Sdkfz251Gun'
-     bCustomAiming=true
-     PositionInArray=0
-     bHasAltFire=false
-     CameraBone="Camera_com"
-     bDesiredBehindView=false
-     DriveRot=(Yaw=16384)
-     DriveAnim="VHalftrack_com_idle"
-     EntryRadius=130.000000
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="in a Sdkfz-251 Gun Position"
-     VehicleNameString="Sdkfz-251 Gun"
-     HUDOverlayClass=class'ROVehicles.ROVehMG34Overlay'
-     HUDOverlayFOV=45.000000
-     PitchUpLimit=4000
-     PitchDownLimit=61000
+    FirstPersonGunShakeScale=2.000000
+    WeaponFov=72.000000
+    DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    bMultiPosition=true
+    bMustBeTankCrew=false
+    GunClass=class'DH_Vehicles.DH_Sdkfz251Gun'
+    bCustomAiming=true
+    PositionInArray=0
+    bHasAltFire=false
+    CameraBone="Camera_com"
+    bDesiredBehindView=false
+    DriveRot=(Yaw=16384)
+    DriveAnim="VHalftrack_com_idle"
+    EntryRadius=130.000000
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="in a Sdkfz-251 Gun Position"
+    VehicleNameString="Sdkfz-251 Gun"
+    HUDOverlayClass=class'ROVehicles.ROVehMG34Overlay'
+    HUDOverlayFOV=45.000000
+    PitchUpLimit=4000
+    PitchDownLimit=61000
 }

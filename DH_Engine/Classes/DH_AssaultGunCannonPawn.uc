@@ -118,7 +118,6 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
 
-
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())
@@ -145,8 +144,8 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
 defaultproperties
 {
-     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
-     OverlayCenterSize=0.650000
-     DestroyedScopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
-     BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
+    OverlayCenterSize=0.650000
+    DestroyedScopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
 }

@@ -5,7 +5,6 @@
 
 class DH_DebugTracerGreen extends DH_DebugTracer;
 
-
 defaultproperties
 {
     StaticMesh=StaticMesh'DebugObjects.debugarrow2'

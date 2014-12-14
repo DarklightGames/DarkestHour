@@ -9,7 +9,6 @@ class DH_BritishTankCannonPawn extends DH_ROTankCannonPawn
 var() float ScopeCenterScaleX;
 var() float ScopeCenterScaleY;
 
-
 var     texture                 PeriscopeOverlay;
 
 simulated function DrawHUD(Canvas Canvas)
@@ -132,7 +131,6 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
 
-
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())
@@ -159,13 +157,13 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
 defaultproperties
 {
-     ScopeCenterScaleX=0.900000
-     ScopeCenterScaleY=0.900000
-     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-     OverlayCenterSize=0.900000
-     DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-     ScopePositionX=0.215000
-     ScopePositionY=0.500000
-     BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-     RangeText="Yards"
+    ScopeCenterScaleX=0.900000
+    ScopeCenterScaleY=0.900000
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
+    OverlayCenterSize=0.900000
+    DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
+    ScopePositionX=0.215000
+    ScopePositionY=0.500000
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    RangeText="Yards"
 }

@@ -68,7 +68,9 @@ simulated function NotifyOwnerJumped()
             BipodDeploy(false);
 
             if (Role < ROLE_Authority)
+            {
                 ServerBipodDeploy(false);
+            }
         }
     }
 }
@@ -521,7 +523,7 @@ Begin:
 
 defaultproperties
 {
-     PlayerDeployFOV=60.000000
-     Priority=10
-     bCanBipodDeploy=true
+    PlayerDeployFOV=60.000000
+    Priority=10
+    bCanBipodDeploy=true
 }

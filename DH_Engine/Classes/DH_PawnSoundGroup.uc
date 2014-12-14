@@ -23,5 +23,5 @@ static function Sound GetHitSound(optional class<DamageType> DamageType)
 
 defaultproperties
 {
-     BurningPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Burning'
+    BurningPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Burning'
 }

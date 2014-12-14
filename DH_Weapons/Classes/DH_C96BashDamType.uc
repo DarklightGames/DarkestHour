@@ -8,5 +8,5 @@ class DH_C96BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_C96Weapon'
+    WeaponClass=class'DH_Weapons.DH_C96Weapon'
 }

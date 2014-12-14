@@ -4,7 +4,6 @@
 
 class DH_RedSmokeProjectile extends DH_GrenadeProjectile_Smoke;
 
-
 defaultproperties
 {
     LifeSpan=50.000000

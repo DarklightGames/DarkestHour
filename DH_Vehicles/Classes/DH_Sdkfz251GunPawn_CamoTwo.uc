@@ -7,5 +7,5 @@ class DH_Sdkfz251GunPawn_CamoTwo extends DH_Sdkfz251GunPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_Sdkfz251Gun_CamoTwo'
+    GunClass=class'DH_Vehicles.DH_Sdkfz251Gun_CamoTwo'
 }

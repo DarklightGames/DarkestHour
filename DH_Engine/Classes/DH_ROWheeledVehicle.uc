@@ -8,7 +8,6 @@ class DH_ROWheeledVehicle extends ROWheeledVehicle
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
-
 enum ECarHitPointType
 {
     CHP_Normal,
@@ -69,7 +68,7 @@ var bool bDebugExitPositions;
 
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         EngineHealthMax;
 
     reliable if (Role < ROLE_Authority)
@@ -121,7 +120,7 @@ simulated function PostBeginPlay()
 
     //Engine starting and stopping stuff
     //bEngineOff=true;
-    //bEngineDead=false;
+    //bEngineDead = false;
     //bDisableThrottle=true;
 }
 
@@ -132,7 +131,7 @@ function KDriverEnter(Pawn P)
     PreviousPositionIndex=InitialPositionIndex;
 
     if (!p.IsHumanControlled())
-       bEngineOff=false;
+       bEngineOff = false;
 
     //check to see if Engine is already on when entering
     if (bEngineOff)
@@ -338,7 +337,7 @@ simulated function Tick(float dt)
 
     if (bEngineDead || bEngineOff)
     {
-        velocity=vect(0,0,0);
+        velocity=vect(0, 0, 0);
         Throttle=0;
         ThrottleAmount=0;
         bDisableThrottle=true;
@@ -477,8 +476,8 @@ function ServerStartEngine()
                 AmbientSound = IdleSound;
 
                 Throttle=0;
-                bDisableThrottle=false;
-                bEngineOff=false;
+                bDisableThrottle = false;
+                bEngineOff = false;
 
                 IgnitionSwitchTime = Level.TimeSeconds;
             }
@@ -605,7 +604,6 @@ event TakeImpactDamage(float AccelMag)
     }
 }
 
-
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
     local vector LinearImpulse, AngularImpulse;
@@ -639,7 +637,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0,0,0));
+        KAddImpulse(LinearImpulse, vect(0, 0, 0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
@@ -697,7 +695,7 @@ event CheckReset()
         return;
     }
 
-    foreach CollidingActors(class 'Pawn', P, 4000.0) //was 4000.0
+    foreach CollidingActors(class'Pawn', P, 4000.0) //was 4000.0
     {
         if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum())  //traces only work on friendly players nearby
         {
@@ -709,7 +707,7 @@ event CheckReset()
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
                 return;
             }
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0,0,1), Location + CollisionHeight * vect(0,0,1)))
+            else if (FastTrace(P.Location + P.CollisionHeight * vect(0, 0, 1), Location + CollisionHeight * vect(0, 0, 1)))
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Initiating FastTrace Reset Check...");
@@ -812,7 +810,7 @@ simulated event DestroyAppearance()
     }
 
     // Become the dead vehicle mesh
-    SetPhysics(PHYS_none);
+    SetPhysics(PHYS_None);
     KSetBlockKarma(false);
     SetDrawType(DT_StaticMesh);
     SetStaticMesh(DestroyedVehicleMesh);
@@ -851,38 +849,38 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROWheeledVehicle'.default.bDebugExitPositions = !class'DH_ROWheeledVehicle'.default.bDebugExitPositions;
-        log("DH_ROWheeledVehicle.bDebugExitPositions =" @ class'DH_ROWheeledVehicle'.default.bDebugExitPositions);
+        Log("DH_ROWheeledVehicle.bDebugExitPositions =" @ class'DH_ROWheeledVehicle'.default.bDebugExitPositions);
     }
 }
 
 defaultproperties
 {
-     ObjectCollisionResistance=1.000000
-     EngineHealthMax=30
-     bEngineOff=true
-     VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
-     DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-     DamagedStartUpSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
-     PointValue=1.000000
-     DriverTraceDist=4500.000000
-     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-     ExplosionSoundRadius=1000.000000
-     ExplosionDamage=325.000000
-     ExplosionRadius=700.000000
-     DamagedEffectHealthSmokeFactor=0.750000
-     DamagedEffectHealthMediumSmokeFactor=0.500000
-     DamagedEffectHealthHeavySmokeFactor=0.250000
-     DamagedEffectHealthFireFactor=0.150000
-     ImpactDamageTicks=2.000000
-     ImpactDamageThreshold=20.000000
-     ImpactDamageMult=0.500000
-     IdleTimeBeforeReset=90.000000
-     VehicleSpikeTime=30.000000
-     EngineHealth=30
-     ObjectiveGetOutDist=1500.000000
-     bKeepDriverAuxCollision=true
-     HealthMax=175.000000
-     Health=175
+    ObjectCollisionResistance=1.000000
+    EngineHealthMax=30
+    bEngineOff=true
+    VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
+    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    DamagedStartUpSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
+    PointValue=1.000000
+    DriverTraceDist=4500.000000
+    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    ExplosionSoundRadius=1000.000000
+    ExplosionDamage=325.000000
+    ExplosionRadius=700.000000
+    DamagedEffectHealthSmokeFactor=0.750000
+    DamagedEffectHealthMediumSmokeFactor=0.500000
+    DamagedEffectHealthHeavySmokeFactor=0.250000
+    DamagedEffectHealthFireFactor=0.150000
+    ImpactDamageTicks=2.000000
+    ImpactDamageThreshold=20.000000
+    ImpactDamageMult=0.500000
+    IdleTimeBeforeReset=90.000000
+    VehicleSpikeTime=30.000000
+    EngineHealth=30
+    ObjectiveGetOutDist=1500.000000
+    bKeepDriverAuxCollision=true
+    HealthMax=175.000000
+    Health=175
 }

@@ -8,7 +8,6 @@
 //=============================================================================
 class DH_AdminMenu_PlayerActionsMenu extends DH_AdminMenu_MenuBase;
 
-
 exec function PlayerActionsMenu(string PlayerName)
 {
     if (!bInitialVariablesSet)

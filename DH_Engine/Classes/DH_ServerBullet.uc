@@ -12,7 +12,6 @@ var globalconfig bool   bDebugMode;
 var globalconfig bool   bDebugROBallistics;
 var int                 WhizType;
 
-
 simulated function PostBeginPlay() // Matt: DH_Bullet does this now
 {
     if (bDebugROBallistics)
@@ -331,9 +330,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 defaultproperties
 {
     RemoteRole=ROLE_None // only exists on the server // Matt: this is what this class is all about really - no replication of bullet actor to clients
-
-//  WScale=1.000000           // Matt: not used
-//  PenetrationScale=0.080000 // Matt: not used
-//  DistortionScale=0.400000  // Matt: not used
-//  WhizType=1                // Matt: now inherited from DH_Bullet
+    //  WScale=1.000000           // Matt: not used
+    //  PenetrationScale=0.080000 // Matt: not used
+    //  DistortionScale=0.400000  // Matt: not used
+    //  WhizType=1                // Matt: now inherited from DH_Bullet
 }

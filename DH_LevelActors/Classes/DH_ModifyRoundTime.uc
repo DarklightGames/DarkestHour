@@ -5,7 +5,6 @@
 
 class DH_ModifyRoundTime extends DH_ModifyActors;
 
-
 var(DH_ModifyRoundTime) enum ERoundTimeOperator
 {
     RTO_Add,
@@ -64,9 +63,9 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 defaultproperties
 {
-     Seconds=60
-     bShowMessage=true
-     bPlaySound=true
-     Sound=Sound'Miscsounds.Music.notify_drum'
-     Texture=Texture'Engine.S_Trigger'
+    Seconds=60
+    bShowMessage=true
+    bPlaySound=true
+    Sound=Sound'Miscsounds.Music.notify_drum'
+    Texture=Texture'Engine.S_Trigger'
 }

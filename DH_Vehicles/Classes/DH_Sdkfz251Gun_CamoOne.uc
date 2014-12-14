@@ -7,5 +7,5 @@ class DH_Sdkfz251Gun_CamoOne extends DH_Sdkfz251Gun;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo1'
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo1'
 }

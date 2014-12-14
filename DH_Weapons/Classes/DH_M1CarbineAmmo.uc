@@ -7,10 +7,9 @@ class DH_M1CarbineAmmo extends ROAmmunition;
 
 defaultproperties
 {
-     MaxAmmo=16
-     InitialAmount=15
-     PickupClass=class'DH_Weapons.DH_M1CarbineAmmoPickup'
-     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Carbine_ammo'
-     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
-     ItemName="M1 Carbine mag"
+    MaxAmmo=16
+    InitialAmount=15
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Carbine_ammo'
+    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
+    ItemName="M1 Carbine mag"
 }

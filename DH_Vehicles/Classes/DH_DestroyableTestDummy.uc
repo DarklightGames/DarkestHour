@@ -5,7 +5,6 @@
 
 class DH_DestroyableTestDummy extends RODestroyableStaticMeshBase;
 
-
 var()         name          SensorName;
 
 replication
@@ -81,7 +80,7 @@ function BroadcastCriticalMessage(Pawn instigatedBy)
             {
                 PRI = instigatedBy.PlayerReplicationInfo;
                 //if (PRI == none)
-                //    log("no valid PRI!!!");
+                //    Log("no valid PRI!!!");
             }
             else
             {
@@ -190,5 +189,5 @@ simulated function PostNetReceive()
 
 defaultproperties
 {
-     SensorName="Shurek"
+    SensorName="Shurek"
 }

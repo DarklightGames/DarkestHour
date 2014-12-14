@@ -5,7 +5,6 @@
 
 class DH_PanzerIVGLateTank_CamoOne extends DH_PanzerIVGLateTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -24,6 +23,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVGLateCannonPawn_CamoOne')
-     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_body_camo1'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVGLateCannonPawn_CamoOne')
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_body_camo1'
 }

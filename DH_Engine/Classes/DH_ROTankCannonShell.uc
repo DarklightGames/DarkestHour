@@ -5,7 +5,6 @@
 
 class DH_ROTankCannonShell extends DH_ROAntiVehicleProjectile;
 
-
 var     bool    bHitWater;
 
 struct RangePoint
@@ -18,7 +17,6 @@ var()   array<RangePoint>   MechanicalRanges;   // The Range setting values for 
 var()   array<RangePoint>   OpticalRanges;      // The Range setting values for tank cannons that do optical sight adjustments for aiming
 var     bool                bMechanicalAiming;  // Uses the Mechanical Range settings for this projectile
 var     bool                bOpticalAiming;     // Uses the Optical Range settings for this projectile (usually Allied sights only)
-
 
 simulated function PostBeginPlay()
 {
@@ -194,7 +192,6 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-
 simulated function Landed(vector HitNormal)
 {
     Explode(Location,HitNormal);
@@ -306,50 +303,50 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
-     bHasTracer=true
-     TracerEffect=class'DH_Effects.DH_RedTankShellTracerBig'
-     ShellImpactDamage=class'DH_TankShellImpactDamage'
-     ImpactDamage=400
-     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
-     DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
-     RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
-     WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-     WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrate'
-     ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
-     ShellHitDirtEffectClass=class'ROEffects.TankAPHitDirtEffect'
-     ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
-     ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
-     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
-     ShellHitWaterEffectClass=class'ROEffects.TankAPHitWaterEffect'
-     AmbientVolumeScale=5.000000
-     SpeedFudgeScale=0.500000
-     InitialAccelerationTime=0.200000
-     Speed=500.000000
-     MaxSpeed=22000.000000
-     Damage=100.000000
-     DamageRadius=5.000000
-     MomentumTransfer=10000.000000
-     MyDamageType=class'DH_TankShellAPExplosionDamage'
-     ExplosionDecal=class'ROEffects.TankAPMarkDirt'
-     ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
-     bNetTemporary=false
-     bUpdateSimulatedPosition=true
-     AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01'
-     LifeSpan=7.500000
-     AmbientGlow=96
-     FluidSurfaceShootStrengthMod=10.000000
-     SoundVolume=255
-     SoundRadius=700.000000
-     TransientSoundVolume=1.000000
-     TransientSoundRadius=1000.000000
-     bUseCollisionStaticMesh=true
-     bFixedRotationDir=true
-     RotationRate=(Roll=50000)
-     DesiredRotation=(Roll=30000)
-     ForceType=FT_Constant
-     ForceRadius=100.000000
-     ForceScale=5.000000
+    bHasTracer=true
+    TracerEffect=class'DH_Effects.DH_RedTankShellTracerBig'
+    ShellImpactDamage=class'DH_TankShellImpactDamage'
+    ImpactDamage=400
+    VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
+    RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
+    WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
+    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrate'
+    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
+    ShellHitDirtEffectClass=class'ROEffects.TankAPHitDirtEffect'
+    ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
+    ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
+    ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
+    ShellHitWaterEffectClass=class'ROEffects.TankAPHitWaterEffect'
+    AmbientVolumeScale=5.000000
+    SpeedFudgeScale=0.500000
+    InitialAccelerationTime=0.200000
+    Speed=500.000000
+    MaxSpeed=22000.000000
+    Damage=100.000000
+    DamageRadius=5.000000
+    MomentumTransfer=10000.000000
+    MyDamageType=class'DH_TankShellAPExplosionDamage'
+    ExplosionDecal=class'ROEffects.TankAPMarkDirt'
+    ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
+    bNetTemporary=false
+    bUpdateSimulatedPosition=true
+    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01'
+    LifeSpan=7.500000
+    AmbientGlow=96
+    FluidSurfaceShootStrengthMod=10.000000
+    SoundVolume=255
+    SoundRadius=700.000000
+    TransientSoundVolume=1.000000
+    TransientSoundRadius=1000.000000
+    bUseCollisionStaticMesh=true
+    bFixedRotationDir=true
+    RotationRate=(Roll=50000)
+    DesiredRotation=(Roll=30000)
+    ForceType=FT_Constant
+    ForceRadius=100.000000
+    ForceScale=5.000000
 }

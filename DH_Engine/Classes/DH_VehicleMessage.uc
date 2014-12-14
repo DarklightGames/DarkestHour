@@ -46,10 +46,10 @@ static function string GetString(
 
 defaultproperties
 {
-     CannotRide="Cannot Ride This Vehicle"
-     VehicleFull="All Rider Positions are Occupied"
-     CannotExit="You Must Unbutton the Hatch to Exit"
-     AssaultGunExit="You Must Exit Through Commander's Hatch"
-     OverSpeed="Slow Down!"
-     Vehicleburning="Vehicle is on Fire!"
+    CannotRide="Cannot Ride This Vehicle"
+    VehicleFull="All Rider Positions are Occupied"
+    CannotExit="You Must Unbutton the Hatch to Exit"
+    AssaultGunExit="You Must Exit Through Commander's Hatch"
+    OverSpeed="Slow Down!"
+    Vehicleburning="Vehicle is on Fire!"
 }

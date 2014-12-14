@@ -17,7 +17,6 @@ var         bool        bInterruptReload;       // Stop reload part way through?
 
 var         Material    AmmoIcon;               // Icon to use instead of regular ammo one
 
-
 enum EReloadState
 {
     RS_none,
@@ -30,7 +29,7 @@ var     EReloadState            ReloadState;
 
 replication
 {
-    reliable if (bNetDirty && bNetOwner && (Role==ROLE_Authority))
+    reliable if (bNetDirty && bNetOwner && (Role == ROLE_Authority))
         CurrentBulletCount;
 
     reliable if (Role < ROLE_Authority)
@@ -343,8 +342,7 @@ function int GetRoundsToLoad()
         return 0;
     }
 
-
-    AmountNeeded = AmmoClass[0].Default.InitialAmount - CurrentMagLoad;
+    AmountNeeded = AmmoClass[0].default.InitialAmount - CurrentMagLoad;
 
     if (AmountNeeded > CurrentBulletCount)
         AmountToAdd = CurrentBulletCount;
@@ -508,7 +506,7 @@ simulated state WorkingBolt extends Busy
                 PlayerViewZoom(true);
         }
 
-        bWaitingToBolt=false;
+        bWaitingToBolt = false;
         FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; //fire now!
     }
 }
@@ -582,7 +580,7 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
     CalculateBulletCount();
 }
 
-function bool HandlePickupQuery(pickup Item)
+function bool HandlePickupQuery(Pickup Item)
 {
     local bool Temp;
 

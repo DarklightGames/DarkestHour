@@ -26,7 +26,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M3A1Halftrack_body_snow'
-     Skins(5)=Texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
-     Skins(6)=Texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
+    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M3A1Halftrack_body_snow'
+    Skins(5)=Texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
+    Skins(6)=Texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
 }

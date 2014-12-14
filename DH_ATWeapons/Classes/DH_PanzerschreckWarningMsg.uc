@@ -37,9 +37,9 @@ static function string GetString(
 
 defaultproperties
 {
-     NoProneFire="You cannot fire the Panzerschreck while prone"
-     NeedSupport="You must be crouched or weapon rested to fire the Panzerschreck"
-     NoHipFire="You cannot fire the Panzerschreck from the hip"
-     NotInIS="You must shoulder the Panzerschreck for an assisted reload"
-     NoProneReload="You cannot reload the Panzerschreck while prone"
+    NoProneFire="You cannot fire the Panzerschreck while prone"
+    NeedSupport="You must be crouched or weapon rested to fire the Panzerschreck"
+    NoHipFire="You cannot fire the Panzerschreck from the hip"
+    NotInIS="You must shoulder the Panzerschreck for an assisted reload"
+    NoProneReload="You cannot reload the Panzerschreck while prone"
 }

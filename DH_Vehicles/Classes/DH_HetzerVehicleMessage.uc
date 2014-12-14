@@ -32,9 +32,9 @@ static function string GetString(
 
 defaultproperties
 {
-     CannotExit="You must exit through the commander's or loader's hatch"
-     UnbuttonToReloadMG="You must open the hatch to reload the MG"
-     CannotFireMGUnbuttoned="You cannot fire the MG while unbuttoned"
-     MGBlockingHatch="The MG is blocking the hatch - turn it sideways to open"
-     bFadeMessage=false
+    CannotExit="You must exit through the commander's or loader's hatch"
+    UnbuttonToReloadMG="You must open the hatch to reload the MG"
+    CannotFireMGUnbuttoned="You cannot fire the MG while unbuttoned"
+    MGBlockingHatch="The MG is blocking the hatch - turn it sideways to open"
+    bFadeMessage=false
 }

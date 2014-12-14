@@ -6,10 +6,6 @@
 class DH_Kar98Pickup extends DHWeaponPickup
    notplaceable;
 
-//-----------------------------------------------------------------------------
-// StaticPrecache
-//-----------------------------------------------------------------------------
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.k98');
@@ -24,14 +20,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Karabiner 98k"
-     MaxDesireability=0.400000
-     InventoryType=class'DH_Weapons.DH_Kar98Weapon'
-     PickupMessage="You got the Karabiner 98k."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.k98'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=25.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: Karabiner 98k"
+    MaxDesireability=0.400000
+    InventoryType=class'DH_Weapons.DH_Kar98Weapon'
+    PickupMessage="You got the Karabiner 98k."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.k98'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=25.000000
+    CollisionHeight=3.000000
 }

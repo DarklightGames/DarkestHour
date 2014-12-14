@@ -5,10 +5,8 @@
 
 class DHWireCuttersItem extends ROWeapon;
 
-#exec OBJ LOAD FILE=Weapon_overlays.utx
-#exec OBJ LOAD FILE=..\Animations\Common_Binoc_1st.ukx
-
-var() float BinocsEnlargementFactor;
+var name        CutAnim;
+var DHObstacle  ObstacleBeingCut;
 
 function bool FillAmmo()
 {
@@ -30,143 +28,157 @@ simulated function bool ShouldUseFreeAim()
     return false;
 }
 
-// Not busy in the idle state because we never fire
 simulated function bool IsBusy()
 {
     return false;
 }
 
-//==============================================================================
-// Functions overriden because binoculars don't shoot
-//==============================================================================
-simulated function ClientWeaponSet(bool bPossiblySwitch)
-{
-    Instigator = Pawn(Owner);
-
-    bPendingSwitch = bPossiblySwitch;
-
-    if (Instigator == none)
-    {
-        GotoState('PendingClientWeaponSet');
-        return;
-    }
-
-    ClientState = WS_Hidden;
-    GotoState('Hidden');
-
-    if (Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled())
-        return;
-
-    if (Instigator.Weapon == self || Instigator.PendingWeapon == self) // this weapon was switched to while waiting for replication, switch to it now
-    {
-        if (Instigator.PendingWeapon != none)
-            Instigator.ChangedWeapon();
-        else
-            BringUp();
-        return;
-    }
-
-    if (Instigator.PendingWeapon != none && Instigator.PendingWeapon.bForceSwitch)
-        return;
-
-    if (Instigator.Weapon == none)
-    {
-        Instigator.PendingWeapon = self;
-        Instigator.ChangedWeapon();
-    }
-    else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
-    {
-        if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
-            return;
-        if (Instigator.PendingWeapon != none)
-        {
-            if (RateSelf() > Instigator.PendingWeapon.RateSelf())
-            {
-                Instigator.PendingWeapon = self;
-                Instigator.Weapon.PutDown();
-            }
-        }
-        else if (RateSelf() > Instigator.Weapon.RateSelf())
-        {
-            Instigator.PendingWeapon = self;
-            Instigator.Weapon.PutDown();
-        }
-    }
-}
-
-simulated function AnimEnd(int channel)
-{
-    if (ClientState == WS_ReadyToFire)
-    {
-        if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
-        {
-            PlayIdle();
-        }
-    }
-}
-
-simulated event ClientStartFire(int Mode)
-{
-    return;
-}
-
-simulated event StopFire(int Mode)
-{
-    // Don're fire binocs
-    return;
-}
-
 simulated exec function ROManualReload()
 {
-    // Can't reload binocs
     return;
 }
 
-// Attempt to save the artillery strike positions
+simulated state Cutting
+{
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponAllowProneChange()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponCanSwitch()
+    {
+        return false;
+    }
+
+    simulated function BeginState()
+    {
+        local DH_Pawn P;
+
+        P = DH_Pawn(Instigator);
+
+        if (P != none)
+        {
+            P.SetIsCuttingWire(true);
+        }
+
+        // TODO: swap this out with variable
+        PlayAnim(CutAnim);
+    }
+
+    simulated event bool StartFire(int Mode)
+    {
+        return false;
+    }
+
+    simulated event StopFire(int Mode)
+    {
+        // NOTE: this doesn't do anything :/
+        GotoState('');
+    }
+
+    simulated function EndState()
+    {
+        local DH_Pawn P;
+
+        P = DH_Pawn(Instigator);
+
+        if (P != none)
+        {
+            P.SetIsCuttingWire(false);
+        }
+    }
+
+    simulated function AnimEnd(int Channel)
+    {
+        local DHPlayer P;
+        local name SeqName;
+        local float AnimRate, AnimFrame;
+
+        GetAnimParams(Channel, SeqName, AnimFrame, AnimRate);
+
+        Log(SeqName);
+
+        super.AnimEnd(Channel);
+
+        switch (SeqName)
+        {
+            case 'cutStart':
+                Log("1");
+                PlayAnim('cutVin');
+                break;
+            case 'cutVin':
+                Log("2");
+                PlayAnim('cutVout');
+                break;
+            case 'cutVout':
+                Log("3");
+                PlayAnim('cutHin');
+                break;
+            case 'cutHin':
+                Log("4");
+                PlayAnim('cutHout');
+                break;
+            case 'cutHout':
+                Log("5");
+                PlayAnim('cutEnd');
+
+                if (Instigator != none)
+                {
+                    P = DHPlayer(Instigator.Controller);
+
+                    if (P != none && ObstacleBeingCut != none)
+                    {
+                        // Tell server to clear obstacle
+                        P.ServerClearObstacle(ObstacleBeingCut.Index);
+                    }
+
+                    // Get out of cutting state
+                    GotoState('');
+                }
+
+                break;
+        }
+    }
+}
+
 simulated function Fire(float F)
 {
-    // added check for player to be in iron view to save arty coords - Antarian
-    if (Instigator == none || Instigator.Controller == none || AIController(Instigator.Controller) != none || !bUsingSights)
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local DHObstacle O;
+
+    if (Instigator == none ||
+        Instigator.Controller == none ||
+        Instigator.IsProneTransitioning() ||
+        Instigator.Velocity != vect(0, 0 ,0))
     {
-       return;
+        return;
     }
 
-    // server
-    if (Instigator.IsLocallyControlled())
-    {
-       ROPlayer(Instigator.Controller).ServerSaveArtilleryPosition();
-    }
-}
+    TraceStart = Instigator.Location;
+    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * 100.0; //TODO: adjust this value
 
-//=============================================================================
-// Sprinting
-//=============================================================================
-simulated function SetSprinting(bool bNewSprintStatus)
-{
-    if (bNewSprintStatus && !IsInState('WeaponSprinting') && !IsInState('RaisingWeapon')
-        && !IsInState('LoweringWeapon') && ClientState != WS_PutDown && ClientState != WS_Hidden)
+    foreach TraceActors(class'DHObstacle', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1, 1, 1))
     {
-        GotoState('StartSprinting');
-    }
-    else if (!bNewSprintStatus && IsInState('WeaponSprinting') ||
-        IsInState('StartSprinting'))
-    {
-        GotoState('EndSprinting');
-    }
-}
+        if (O != none && !O.IsCleared() && O.bCanBeClearedWithWireCutters)
+        {
+            ObstacleBeingCut = O;
 
-simulated function bool CanThrow()
-{
-    return false;
+            GotoState('Cutting');
+        }
+
+        break;
+    }
 }
 
 defaultproperties
 {
-    //** Info **//
     ItemName="Wire Cutters"
-
-    //** Display **//
-    Mesh=mesh'Common_Binoc_1st.binoculars'
+    Mesh=mesh'axis_wirecutter_1st.wirecutters'
     DrawScale=1.0
     DisplayFOV=70
     IronSightDisplayFOV=70
@@ -174,50 +186,32 @@ defaultproperties
     HighDetailOverlay=Material'Weapons1st_tex.SniperScopes.Binoc_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-
-    //** Weapon Firing **//
-    //FireModeClass(0)=SVT40Fire
-    //FireModeClass(1)=SVT40MeleeFire
-
-    //** Weapon Functionality **//
-    bCanRestDeploy=true
+    bCanRestDeploy=false
     bUsesFreeAim=false
-
-    //** Inventory/Ammo **//
-    //PickupClass=class'SVT40Pickup'
-    AttachmentClass=class'BinocularsAttachment'
-
-    //** Animation **//
-    // Rates
+    AttachmentClass=class'DHWireCuttersAttachment'
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
-    // Draw/Put Away
     SelectAnim=Draw
-    PutDownAnim=Put_Away
-    // Ironsites
-    // Crawling
+    PutDownAnim=putaway
     CrawlForwardAnim=crawlF
     CrawlBackwardAnim=crawlB
-    CrawlStartAnim=crawl_in
-    CrawlEndAnim=crawl_out
-
-     //** Zooming **//
+    CrawlStartAnim=crawlIn
+    CrawlEndAnim=crawlOut
     ZoomInTime=0.4
     ZoomOutTime=0.2
     PlayerFOVZoom=10
     bPlayerFOVZooms=true
-
-    //** Bot/AI **//
     AIRating=+0.0
     CurrentRating=0.0
-    bSniping=false // So bots will use this weapon to take long range shots
-
-    //** Misc **//
-    SelectForce="SwitchToAssaultRifle"
+    bSniping=false
     bCanThrow=false
     bCanSway=false
     InventoryGroup=4
     Priority=1
-
-    BinocsEnlargementFactor=0.2
+    FireModeClass(0)=class'ROInventory.ROEmptyFireClass'
+    FireModeClass(1)=class'ROInventory.ROEmptyFireClass'
+    CutAnim=cutStart
+    SprintStartAnim=sprintStart
+    SprintLoopAnim=sprintMiddle
+    SprintEndAnim=sprintEnd
 }

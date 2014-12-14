@@ -272,10 +272,10 @@ simulated function Fire(float F)
 
 defaultproperties
 {
-     PutDownAnim="PutDown"
-     bCanThrow=false
-     InventoryGroup=12
-     ItemName="Parachute"
-     AttachmentBone="HIP"
-     Mesh=SkeletalMesh'DH_Parachute_anm.Parachute1st'
+    PutDownAnim="PutDown"
+    bCanThrow=false
+    InventoryGroup=12
+    ItemName="Parachute"
+    AttachmentBone="HIP"
+    Mesh=SkeletalMesh'DH_Parachute_anm.Parachute1st'
 }

@@ -66,7 +66,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     CameraRotation =  WeaponAimRot;
 
-
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
     if (CameraBone != '' && Gun != none)
@@ -75,7 +74,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
 
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
@@ -87,8 +86,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -159,32 +158,32 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-     FirstPersonGunShakeScale=1.500000
-     WeaponFov=60.000000
-     DriverPositions(0)=(ViewLocation=(X=10.000000),ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
-     bMultiPosition=true
-     bMustBeTankCrew=false
-     GunClass=class'DH_Vehicles.DH_UniCarrierGun'
-     bCustomAiming=true
-     PositionInArray=0
-     bHasAltFire=false
-     CameraBone="Camera_com"
-     bDesiredBehindView=false
-     DrivePos=(X=-11.000000,Y=-4.000000,Z=31.000000)
-     DriveRot=(Yaw=16384)
-     DriveAnim="VUC_com_idle_close"
-     EntryRadius=130.000000
-     FPCamPos=(X=10.000000)
-     TPCamDistance=50.000000
-     TPCamLookat=(X=-25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="in a Mk.I Bren Carrier Gun Position"
-     VehicleNameString="Mk.I Bren Carrier Gun"
-     HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
-     HUDOverlayOffset=(X=-6.000000)
-     HUDOverlayFOV=35.000000
-     bKeepDriverAuxCollision=true
-     PitchUpLimit=4000
-     PitchDownLimit=60000
+    FirstPersonGunShakeScale=1.500000
+    WeaponFov=60.000000
+    DriverPositions(0)=(ViewLocation=(X=10.000000),ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
+    bMultiPosition=true
+    bMustBeTankCrew=false
+    GunClass=class'DH_Vehicles.DH_UniCarrierGun'
+    bCustomAiming=true
+    PositionInArray=0
+    bHasAltFire=false
+    CameraBone="Camera_com"
+    bDesiredBehindView=false
+    DrivePos=(X=-11.000000,Y=-4.000000,Z=31.000000)
+    DriveRot=(Yaw=16384)
+    DriveAnim="VUC_com_idle_close"
+    EntryRadius=130.000000
+    FPCamPos=(X=10.000000)
+    TPCamDistance=50.000000
+    TPCamLookat=(X=-25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="in a Mk.I Bren Carrier Gun Position"
+    VehicleNameString="Mk.I Bren Carrier Gun"
+    HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
+    HUDOverlayOffset=(X=-6.000000)
+    HUDOverlayFOV=35.000000
+    bKeepDriverAuxCollision=true
+    PitchUpLimit=4000
+    PitchDownLimit=60000
 }

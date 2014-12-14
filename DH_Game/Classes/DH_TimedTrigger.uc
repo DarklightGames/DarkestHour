@@ -25,7 +25,7 @@ simulated function Timer()
     {
         TriggerEvent(Event, self, none);
         Log("TRIGGERED EVENT!");
-        bIsStateOne=false;
+        bIsStateOne = false;
     }
 }
 
@@ -51,6 +51,6 @@ function Reset()
 
 defaultproperties
 {
-     DelayTime=60.000000
-     bIsStateOne=true
+    DelayTime=60.000000
+    bIsStateOne=true
 }

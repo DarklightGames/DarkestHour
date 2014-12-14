@@ -100,7 +100,7 @@ simulated function AnimEnd(int channel)
         {
             PlayIdle();
         }
-        else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
@@ -135,41 +135,40 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-     SelectFireAnim="switch_fire"
-     SelectFireIronAnim="Iron_switch_fire"
-     MagEmptyReloadAnim="reload_empty"
-     MagPartialReloadAnim="reload_half"
-     IronIdleAnim="Iron_idle"
-     IronBringUp="iron_in"
-     IronPutDown="iron_out"
-     MaxNumPrimaryMags=7
-     InitialNumPrimaryMags=7
-     bPlusOneLoading=true
-     PlayerIronsightFOV=65.000000
-     CrawlForwardAnim="crawlF"
-     CrawlBackwardAnim="crawlB"
-     CrawlStartAnim="crawl_in"
-     CrawlEndAnim="crawl_out"
-     IronSightDisplayFOV=30.000000
-     ZoomInTime=0.400000
-     ZoomOutTime=0.200000
-     bHasSelectFire=true
-     FireModeClass(0)=class'DH_Weapons.DH_ThompsonFire'
-     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
-     SelectAnim="Draw"
-     PutDownAnim="putaway"
-     SelectAnimRate=1.000000
-     PutDownAnimRate=1.000000
-     SelectForce="SwitchToAssaultRifle"
-     AIRating=0.700000
-     CurrentRating=0.700000
-     DisplayFOV=70.000000
-     bCanRestDeploy=true
-     PickupClass=class'DH_Weapons.DH_ThompsonPickup'
-     BobDamping=1.600000
-     AttachmentClass=class'DH_Weapons.DH_ThompsonAttachment'
-     ItemName="M1A1 Thompson"
-     Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson'
-     bUseHighDetailOverlayIndex=true
-     HighDetailOverlayIndex=2
+    SelectFireAnim="switch_fire"
+    SelectFireIronAnim="Iron_switch_fire"
+    MagEmptyReloadAnim="reload_empty"
+    MagPartialReloadAnim="reload_half"
+    IronIdleAnim="Iron_idle"
+    IronBringUp="iron_in"
+    IronPutDown="iron_out"
+    MaxNumPrimaryMags=7
+    InitialNumPrimaryMags=7
+    bPlusOneLoading=true
+    PlayerIronsightFOV=65.000000
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    IronSightDisplayFOV=30.000000
+    ZoomInTime=0.400000
+    ZoomOutTime=0.200000
+    bHasSelectFire=true
+    FireModeClass(0)=class'DH_Weapons.DH_ThompsonFire'
+    FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
+    SelectAnim="Draw"
+    PutDownAnim="putaway"
+    SelectAnimRate=1.000000
+    PutDownAnimRate=1.000000
+    AIRating=0.700000
+    CurrentRating=0.700000
+    DisplayFOV=70.000000
+    bCanRestDeploy=true
+    PickupClass=class'DH_Weapons.DH_ThompsonPickup'
+    BobDamping=1.600000
+    AttachmentClass=class'DH_Weapons.DH_ThompsonAttachment'
+    ItemName="M1A1 Thompson"
+    Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 }

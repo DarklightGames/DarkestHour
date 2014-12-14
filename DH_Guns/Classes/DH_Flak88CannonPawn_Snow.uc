@@ -7,5 +7,5 @@ class DH_Flak88CannonPawn_Snow extends DH_Flak88CannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Guns.DH_Flak88Cannon_Snow'
+    GunClass=class'DH_Guns.DH_Flak88Cannon_Snow'
 }

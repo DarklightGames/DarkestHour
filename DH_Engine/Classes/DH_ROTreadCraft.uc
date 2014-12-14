@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ROTreadCraft extends ROTreadCraft
-        abstract;
+    abstract;
 
 #exec OBJ LOAD FILE=..\textures\DH_InterfaceArt_tex.utx
 #exec OBJ LOAD FILE=..\sounds\Amb_Destruction.uax
@@ -42,6 +42,19 @@ struct NewHitpoint
     var() float             DamageMultiplier;   // Amount to scale damage to the vehicle if this point is hit
     var() ENewHitPointType  NewHitPointType;    // What type of hit point this is
 };
+
+// Schurzen
+struct SchurzenType
+{
+    var  class<RODummyAttachment>         SchurzenClass; // a possible schurzen decorative attachment class, with different degrees of damage
+    var  byte                             PercentChance; // the % chance of this deco attachment being the one spawned
+};
+
+var  SchurzenType              SchurzenTypes[4]; // an array of possible schurzen attachments
+var  byte                      SchurzenIndex;    // the schurzen index number selected randomly to be spawned for this vehicle
+var  RODummyAttachment         Schurzen;         // actor reference to the schurzen deco attachment, so it can be destroyed when the vehicle gets destroyed
+var  vector                    SchurzenOffset;   // the positional offset from the attachment bone
+var  Material                  SchurzenTexture;  // the camo skin for the schurzen attachment
 
 var()   array<NewHitpoint>      NewVehHitpoints;        // An array of possible small points that can be hit. Index zero is always the driver
 
@@ -162,12 +175,18 @@ var bool    bEmittersOn;
 var bool    bMustBeUnbuttonedToBecomePassenger;
 var int     FirstPassengerWeaponPawnIndex;
 
+var rotator LeftTreadPanDirection;
+var rotator RightTreadPanDirection;
+
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
+        SchurzenIndex;
+
+    reliable if (bNetDirty && Role == ROLE_Authority)
         EngineHealthMax, UnbuttonedPositionIndex, bEngineOnFire, bOnFire;
 
-    reliable if (bNetDirty && bNetOwner && Role==ROLE_Authority)
+    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         MaxCriticalSpeed;
 
     reliable if (Role < ROLE_Authority)
@@ -267,14 +286,14 @@ function bool PlaceExitingDriver()
 
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-        L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 
     super.UpdatePrecacheMaterials();
 }
@@ -285,18 +304,21 @@ simulated function bool HitPenetrationPoint(vector HitLocation, vector HitRay);
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanDirection = LeftTreadPanDirection;
         LeftTreadPanner.PanRate = 0.0;
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
+
     RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanDirection = RightTreadPanDirection;
         RightTreadPanner.PanRate = 0.0;
         Skins[RightTreadIndex] = RightTreadPanner;
     }
@@ -460,7 +482,7 @@ function KDriverEnter(Pawn p)
 
     // lets bots start vehicle
     if (!p.IsHumanControlled())
-       bEngineOff=false;
+       bEngineOff = false;
 
     //check to see if Engine is already on when entering
     if (bEngineOff)
@@ -645,7 +667,7 @@ function ServerStartEngine()
             Throttle=0;
             ThrottleAmount=0;
             bDisableThrottle=true;
-            bWantsToThrottle=false;
+            bWantsToThrottle = false;
             bEngineOff=true;
 
             TurnDamping = 0.0;
@@ -667,9 +689,9 @@ function ServerStartEngine()
                 AmbientSound = IdleSound;
 
             Throttle=0;
-            bDisableThrottle=false;
+            bDisableThrottle = false;
             bWantsToThrottle=true;
-            bEngineOff=false;
+            bEngineOff = false;
 
             IgnitionSwitchTime = Level.TimeSeconds;
 
@@ -678,7 +700,6 @@ function ServerStartEngine()
         }
     }
 }
-
 
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
 function ServerChangeViewPoint(bool bForward)
@@ -782,7 +803,7 @@ event CheckReset()
         return;
     }
 
-    foreach CollidingActors(class 'Pawn', P, 4000.0) //was 4000.0
+    foreach CollidingActors(class'Pawn', P, 4000.0) //was 4000.0
     {
         if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum())  //traces only work on friendly players nearby
         {
@@ -794,7 +815,7 @@ event CheckReset()
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
                 return;
             }
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0,0,1), Location + CollisionHeight * vect(0,0,1)))
+            else if (FastTrace(P.Location + P.CollisionHeight * vect(0, 0, 1), Location + CollisionHeight * vect(0, 0, 1)))
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Initiating FastTrace Reset Check...");
@@ -964,11 +985,13 @@ simulated function bool IsDisabled()
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
 {
+    local  byte RandomNumber, CumulativeChance, i;
+
     super.PostBeginPlay();
 
     //Engine starting and stopping stuff
     //bEngineOff=true;
-    //bEngineDead=false;
+    //bEngineDead = false;
     //bDisableThrottle=true;
     //bFirstHit=true;
 
@@ -976,6 +999,22 @@ simulated function PostBeginPlay()
 
     EngineFireDamagePerSec = EngineHealthMax * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
     DamagedEffectFireDamagePerSec = HealthMax * 0.02; //~100 seconds from regular tank fire threshold to detontation from full health, damage is every 2 seconds, so double intended
+
+    if (Role == ROLE_Authority && SchurzenTexture != none)
+    {
+        RandomNumber = RAND(100);
+
+        for (i = 0; i < arraycount(SchurzenTypes); i++)
+        {
+            CumulativeChance += SchurzenTypes[i].PercentChance;
+
+            if (RandomNumber < CumulativeChance)
+            {
+                SchurzenIndex = i;
+                break;
+            }
+        }
+    }
 }
 
 simulated function PostNetBeginPlay()
@@ -983,7 +1022,22 @@ simulated function PostNetBeginPlay()
     super.PostNetBeginPlay();
 
     if (!bEngineOff)
-        bEngineOff=false;
+    {
+        bEngineOff = false;
+    }
+
+    // Only spawn schurzen if a valid attachment class has been selected
+    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
+    {
+        Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
+
+        if (Schurzen != none)
+        {
+            Schurzen.Skins[0] = SchurzenTexture; // set the deco attachment's camo skin
+            AttachToBone(Schurzen, 'body');
+            Schurzen.SetRelativeLocation(SchurzenOffset);
+        }
+    }
 
 }
 
@@ -1067,7 +1121,6 @@ simulated function Tick(float DeltaTime)
                 Skins[RightTreadIndex]=DamagedTreadPanner;
 
         }
-
 
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
         // VSize() is very CPU intensive - Ramm
@@ -1153,12 +1206,20 @@ simulated function Tick(float DeltaTime)
                 }
                 DriverHatchBurnTime = Level.TimeSeconds;
             }
-            else if (!bTurretFireTriggered)
+            else if (!bTurretFireTriggered &&
+                     WeaponPawns.Length > 0 &&
+                     WeaponPawns[0] != none &&
+                     WeaponPawns[0].Gun != none &&
+                     WeaponPawns[0].Gun.IsA('DH_ROTankCannon'))
             {
                 DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
                 bTurretFireTriggered = true;
             }
-            else if (!bHullMGFireTriggered)
+            else if (!bHullMGFireTriggered &&
+                     WeaponPawns.Length > 1 &&
+                     WeaponPawns[1] != none &&
+                     WeaponPawns[1].Gun != none &&
+                     WeaponPawns[1].Gun.IsA('DH_ROMountedTankMG'))
             {
                 DH_ROMountedTankMG(WeaponPawns[1].Gun).bOnFire = true;
                 bHullMGFireTriggered = true;
@@ -1178,14 +1239,14 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    Super(ROWheeledVehicle).Tick(DeltaTime);
+    super(ROWheeledVehicle).Tick(DeltaTime);
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=vect(0,0,0);
+        velocity=vect(0, 0, 0);
         Throttle=0;
         ThrottleAmount=0;
-        bWantsToThrottle=false;
+        bWantsToThrottle = false;
         bDisableThrottle=true;
         Steering=0;
     }
@@ -1223,7 +1284,7 @@ event TakeFireDamage(float DeltaTime)
                 DelayedDamageInstigatorController = none;
             }
 
-            DamageEngine(EngineFireDamagePerSec, WhoSetEngineOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType);
+            DamageEngine(EngineFireDamagePerSec, WhoSetEngineOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
             EngineBurnTime = Level.TimeSeconds;
         }
 
@@ -1239,7 +1300,7 @@ event TakeFireDamage(float DeltaTime)
 
             if (FRand() < EngineToHullFireChance)  // - was 2%
             {
-                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType); // This will set bOnFire the first time it runs
+                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType); // This will set bOnFire the first time it runs
             }
             FireCheckTime = Level.TimeSeconds;
         }
@@ -1248,7 +1309,7 @@ event TakeFireDamage(float DeltaTime)
     // Engine fire dies down 30 seconds after engine health hits zero
     if (Level.TimeSeconds - EngineBurnTime > 30 && bEngineOnFire && !bOnFire)
     {
-        bEngineOnFire=false;
+        bEngineOnFire = false;
         bDisableThrottle=true;
         bEngineDead=true;
         DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
@@ -1279,23 +1340,23 @@ event TakeFireDamage(float DeltaTime)
 
         if (Driver != none) //afflict the driver
         {
-            Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0,0,0), VehicleBurningDamType);
+            Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
         }
         else if (WeaponPawns[0] != none && WeaponPawns[0].Driver != none && bTurretFireTriggered == true) //afflict the commander
         {
-            WeaponPawns[0].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0,0,0), VehicleBurningDamType);
+            WeaponPawns[0].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
         }
         else if (WeaponPawns[1] != none && WeaponPawns[1].Driver != none && bHullMGFireTriggered == true) //afflict the hull gunner
         {
-            WeaponPawns[1].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0,0,0), VehicleBurningDamType);
+            WeaponPawns[1].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
         }
 
         if (FRand() < FireDetonationChance) // Chance of cooking off ammo/igniting fuel before health runs out
         {
-            TakeDamage(Health, WhoSetOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType);
+            TakeDamage(Health, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
         }
         else
-            TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0,0,0), vect(0,0,0), VehicleBurningDamType);
+            TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
 
         BurnTime = Level.TimeSeconds;
     }
@@ -1305,12 +1366,12 @@ function DamageTrack(bool bLeftTrack)
 {
     if (bLeftTrack)
     {
-        bDisableThrottle=false;
+        bDisableThrottle = false;
         bLeftTrackDamaged=true;
     }
     else
     {
-        bDisableThrottle=false;
+        bDisableThrottle = false;
         bRightTrackDamaged=true;
     }
 }
@@ -1329,7 +1390,7 @@ function bool IsNewPointShot(vector loc, vector ray, float AdditionalScale, int 
 
     HeadLoc = C.Origin + (NewVehHitpoints[index].PointHeight * NewVehHitpoints[index].PointScale * AdditionalScale * C.XAxis);
 
-    HeadLoc = HeadLoc + (NewVehHitpoints[index].PointOffset >> Rotator(C.Xaxis));
+    HeadLoc = HeadLoc + (NewVehHitpoints[index].PointOffset >> rotator(C.Xaxis));
 
     // Express snipe trace line in terms of B + tM
     B = loc;
@@ -1355,7 +1416,7 @@ function bool IsNewPointShot(vector loc, vector ray, float AdditionalScale, int 
     else
         t = 0;
 
-    Distance = Sqrt(diff Dot diff);
+    Distance = Sqrt(diff dot diff);
 
     return (Distance < (NewVehHitpoints[index].PointRadius * NewVehHitpoints[index].PointScale * AdditionalScale));
 }
@@ -1388,7 +1449,6 @@ simulated function float GetOverMatch(float ArmorFactor, float ShellDiameter)
 //DH CODE: Calculate APC/APCBC penetration
 simulated function bool PenetrationAPC(float ArmorFactor, float CompoundAngle, float PenetrationNumber, float OverMatchFactor, bool bShatterProne)
 {
-
     local float EffectiveArmor;
     local float CompoundAngleDegrees;
     local float SlopeMultiplier;
@@ -1807,7 +1867,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationAPC(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, GetOverMatch(GunMantletArmorFactor, ShellDiameter), bShatterProne);
     }
 
@@ -1821,7 +1881,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -1867,7 +1927,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -1926,7 +1986,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -1970,7 +2030,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -2004,7 +2064,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
 
         return PenetrationAPC(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, GetOverMatch(URearArmorFactor, ShellDiameter), bShatterProne);
 
-
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
     {
@@ -2030,7 +2089,7 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -2082,7 +2141,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationHVAP(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
@@ -2096,7 +2155,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2139,7 +2198,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -2197,7 +2256,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -2241,7 +2300,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -2275,7 +2334,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
 
         return PenetrationHVAP(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
 
-
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
     {
@@ -2301,7 +2359,7 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -2353,7 +2411,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationHVAPLarge(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
@@ -2367,7 +2425,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2410,7 +2468,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -2468,7 +2526,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -2512,7 +2570,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -2546,7 +2604,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
 
         return PenetrationHVAPLarge(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
 
-
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
     {
@@ -2572,7 +2629,7 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -2613,7 +2670,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     }
 }
 
-
 simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
 
@@ -2625,7 +2681,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationAPDS(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
@@ -2639,7 +2695,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2682,7 +2738,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -2743,7 +2799,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -2787,7 +2843,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -2847,7 +2903,7 @@ simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -2899,7 +2955,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
 
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
-       bAssaultWeaponHit=false;
+       bAssaultWeaponHit = false;
        return PenetrationHEAT(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bIsHEATRound);
     }
 
@@ -2913,7 +2969,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     //  Penetration Debugging
     if (bLogPenetration)
     {
-        log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
+        Log("Raw hitangle = "$HitAngle$" Converted hitangle = "$(57.2957795131 * HitAngle));
     }
 
     // Convert the angle into degrees from radians
@@ -2956,7 +3012,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the front of the vehicle!!!!");
         }
 
@@ -3016,7 +3072,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the left side of the vehicle!!!!");
         }
 
@@ -3060,7 +3116,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-X),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the back of the vehicle!!!!");
         }
 
@@ -3120,7 +3176,7 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(Y),0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000*Normal(-HitRotation),255, 255, 0);
-            Spawn(class 'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
+            Spawn(class'ROEngine.RODebugTracer',self,,HitLocation,rotator(HitRotation));
             log ("We hit the right side of the vehicle!!!!");
         }
 
@@ -3161,7 +3217,6 @@ simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRota
     }
 }
 
-
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
 //              for Tanks, we'll probably want to prevent bullets from doing damage too
 function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -3180,7 +3235,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
     {
@@ -3216,7 +3271,6 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             }
         }
     }
-
 
     // Modify the damage based on what it should do to the vehicle; overloaded here so tank cannot take any bullet/bash/bayo damage
     if (DamageType != none)
@@ -3258,8 +3312,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             HitPointDamage *= VehicleDamageMod;
 
             if (bLogPenetration)
-                log(" We hit "$GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType)$" hitpoint.");
-
+                Log(" We hit "$GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType)$" hitpoint.");
 
             if (VehHitpoints[i].HitPointType == HP_Engine)
             {
@@ -3297,7 +3350,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
         HitPointDamage=Damage;
 
         if (bLogPenetration)
-          log(" We hit "$GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType)$" hitpoint.");
+          Log(" We hit "$GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType)$" hitpoint.");
 
         if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
         {
@@ -3336,14 +3389,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Driver killed");
-                Driver.TakeDamage(150, instigatedBy, Location, vect(0,0,0), DamageType);
+                Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
             }
 
             if (bRearHit == false && WeaponPawns[1] != none && WeaponPawns[1].Driver != none && FRand() < Damage/GunnerKillChance)
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Hull Gunner killed");
-                WeaponPawns[1].Driver.TakeDamage(150, instigatedBy, Location, vect(0,0,0), DamageType);
+                WeaponPawns[1].Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
             }
         }
         else
@@ -3354,7 +3407,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     Level.Game.Broadcast(self, "Commander killed");
-                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0,0,0), DamageType);
+                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
                 }
 
                 if (FRand() < Damage/OpticsDamageChance)
@@ -3492,13 +3545,13 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     }
 
     //reset everything
-    bWasHEATRound=false;
-    bRearHit=false;
-    bFirstHit=false;
-    bProjectilePenetrated=false;
-    bWasShatterProne=false;
-    bRoundShattered=false;
-    bWasTurretHit=false;
+    bWasHEATRound = false;
+    bRearHit = false;
+    bFirstHit = false;
+    bProjectilePenetrated = false;
+    bWasShatterProne = false;
+    bRoundShattered = false;
+    bWasTurretHit = false;
 }
 
 // Handle the Engine Damage
@@ -3552,9 +3605,7 @@ function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector 
         SoundVolume=255;
         SoundRadius=600;
     }
-
 }
-
 
 // Check to see if vehicle should destroy itself
 // Stops vehicle from premature detonation when on fire
@@ -3583,6 +3634,11 @@ simulated function Destroyed()
     }
 
     super.Destroyed();
+
+    if (Schurzen != none)
+    {
+        Schurzen.Destroy();
+    }
 }
 
 simulated event DestroyAppearance()
@@ -3601,7 +3657,7 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for(i=0;i<Weapons.Length;i++)
+        for(i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
                 Weapons[i].Destroy();
@@ -3657,7 +3713,7 @@ simulated event DestroyAppearance()
     }
 
     // Become the dead vehicle mesh
-    SetPhysics(PHYS_none);
+    SetPhysics(PHYS_None);
     KSetBlockKarma(false);
     SetDrawType(DT_StaticMesh);
     SetStaticMesh(DestroyedVehicleMesh);
@@ -3665,6 +3721,11 @@ simulated event DestroyAppearance()
     SetPhysics(PHYS_Karma);
     Skins.length = 0;
     NetPriority = 2;
+
+    if (Schurzen != none)
+    {
+        Schurzen.Destroy();
+    }
 }
 
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
@@ -3693,7 +3754,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0,0,0));
+        KAddImpulse(LinearImpulse, vect(0, 0, 0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
@@ -3791,70 +3852,138 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROTreadCraft'.default.bDebugExitPositions = !class'DH_ROTreadCraft'.default.bDebugExitPositions;
-        log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
+        Log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
     }
+}
+
+simulated function DrawHUD(Canvas Canvas)
+{
+    local PlayerController PC;
+    local vector CameraLocation;
+    local rotator CameraRotation;
+    local Actor ViewActor;
+    local float SavedOpacity;   //to keep players from seeing outside the periscope overlay
+
+    if (IsLocallyControlled() && ActiveWeapon < Weapons.length && Weapons[ActiveWeapon] != none && Weapons[ActiveWeapon].bShowAimCrosshair && Weapons[ActiveWeapon].bCorrectAim)
+    {
+        Canvas.DrawColor = CrosshairColor;
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
+
+        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
+        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0+1, CrosshairY*2.0+1, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
+    }
+
+    PC = PlayerController(Controller);
+
+    if (PC == none)
+    {
+        super.RenderOverlays(Canvas);
+        //log("PanzerTurret PlayerController was none, returning");
+        return;
+    }
+    else if (!PC.bBehindView)
+    {
+
+       SavedOpacity = Canvas.ColorModulate.W;
+       Canvas.ColorModulate.W = 1.0;
+
+       if (DriverPositions[DriverPositionIndex].bDrawOverlays && HUDOverlay == none && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+       {
+           DrawPeriscopeOverlay(Canvas);
+       }
+        // reset HudOpacity to original value
+        Canvas.ColorModulate.W = SavedOpacity;
+        DrawVehicle(Canvas);
+        DrawPassengers(Canvas);
+    }
+
+    if (PC != none && !PC.bBehindView && HUDOverlay != none && DriverPositions[DriverPositionIndex].bDrawOverlays)
+    {
+        if (!Level.IsSoftwareRendering())
+        {
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            HUDOverlay.SetRotation(CameraRotation);
+            Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
+        }
+    }
+    else
+         ActivateOverlay(false);
+}
+
+simulated function DrawPeriscopeOverlay(Canvas Canvas)
+{
+    local float ScreenRatio;
+
+    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
+    Canvas.SetPos(0,0);
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties
 {
-     bEnterringUnlocks=false
-     bAllowRiders=true
-     UnbuttonedPositionIndex=2
-     DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-     LeftTreadIndex=1
-     RightTreadIndex=2
-     MaxCriticalSpeed=700.000000
-     AmmoIgnitionProbability=0.750000
-     TreadDamageThreshold=0.500000
-     DriverKillChance=1150.000000
-     GunnerKillChance=1150.000000
-     CommanderKillChance=950.000000
-     OpticsDamageChance=3000.000000
-     GunDamageChance=1250.000000
-     TraverseDamageChance=2000.000000
-     TurretDetonationThreshold=1750.000000
-     FireAttachBone="driver_player"
-     FireEffectOffset=(Z=-10.000000)
-     EngineFireChance=0.500000
-     EngineFireHEATChance=0.850000
-     HullFireChance=0.250000
-     HullFireHEATChance=0.500000
-     VehicleBurningDamType=class'DH_VehicleBurningDamType'
-     PlayerFireDamagePerSec=15.000000
-     bFirstHit=true
-     FireDetonationChance=0.070000
-     EngineToHullFireChance=0.050000
-     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-     DamagedPeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
-     VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
-     DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-     DamagedStartUpSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
-     DamagedShutDownSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_stop_damaged'
-     SmokingEngineSound=Sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
-     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-     EngineHealthMax=300
-     bEngineOff=true
-     DriverTraceDist=4500.000000
-     GunMantletArmorFactor=10.000000
-     GunMantletSlope=10.000000
-     WaitForCrewTime=7.000000
-     ChassisTorqueScale=0.900000
-     ChangeUpPoint=2050.000000
-     ChangeDownPoint=1100.000000
-     ViewShakeRadius=50.000000
-     ViewShakeOffsetMag=(X=0.000000,Z=0.000000)
-     ViewShakeOffsetFreq=0.000000
-     ExplosionSoundRadius=1000.000000
-     ExplosionDamage=575.000000
-     ExplosionRadius=900.000000
-     DamagedEffectHealthSmokeFactor=0.850000
-     DamagedEffectHealthMediumSmokeFactor=0.650000
-     DamagedEffectHealthHeavySmokeFactor=0.350000
-     DamagedEffectHealthFireFactor=0.000000
-     TimeTilDissapear=90.000000
-     IdleTimeBeforeReset=200.000000
-     VehicleSpikeTime=60.000000
-     EngineHealth=300
-     bMustBeUnbuttonedToBecomePassenger=true
-     FirstPassengerWeaponPawnIndex=255
+    bEnterringUnlocks=false
+    bAllowRiders=true
+    UnbuttonedPositionIndex=2
+    DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    LeftTreadIndex=1
+    RightTreadIndex=2
+    MaxCriticalSpeed=700.000000
+    AmmoIgnitionProbability=0.750000
+    TreadDamageThreshold=0.500000
+    DriverKillChance=1150.000000
+    GunnerKillChance=1150.000000
+    CommanderKillChance=950.000000
+    OpticsDamageChance=3000.000000
+    GunDamageChance=1250.000000
+    TraverseDamageChance=2000.000000
+    TurretDetonationThreshold=1750.000000
+    FireAttachBone="driver_player"
+    FireEffectOffset=(Z=-10.000000)
+    EngineFireChance=0.500000
+    EngineFireHEATChance=0.850000
+    HullFireChance=0.250000
+    HullFireHEATChance=0.500000
+    VehicleBurningDamType=class'DH_VehicleBurningDamType'
+    PlayerFireDamagePerSec=15.000000
+    bFirstHit=true
+    FireDetonationChance=0.070000
+    EngineToHullFireChance=0.050000
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
+    DamagedPeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
+    VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
+    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    DamagedStartUpSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
+    DamagedShutDownSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_stop_damaged'
+    SmokingEngineSound=Sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+    EngineHealthMax=300
+    bEngineOff=true
+    DriverTraceDist=4500.000000
+    GunMantletArmorFactor=10.000000
+    GunMantletSlope=10.000000
+    WaitForCrewTime=7.000000
+    ChassisTorqueScale=0.900000
+    ChangeUpPoint=2050.000000
+    ChangeDownPoint=1100.000000
+    ViewShakeRadius=50.000000
+    ViewShakeOffsetMag=(X=0.000000,Z=0.000000)
+    ViewShakeOffsetFreq=0.000000
+    ExplosionSoundRadius=1000.000000
+    ExplosionDamage=575.000000
+    ExplosionRadius=900.000000
+    DamagedEffectHealthSmokeFactor=0.850000
+    DamagedEffectHealthMediumSmokeFactor=0.650000
+    DamagedEffectHealthHeavySmokeFactor=0.350000
+    DamagedEffectHealthFireFactor=0.000000
+    TimeTilDissapear=90.000000
+    IdleTimeBeforeReset=200.000000
+    VehicleSpikeTime=60.000000
+    EngineHealth=300
+    bMustBeUnbuttonedToBecomePassenger=true
+    FirstPassengerWeaponPawnIndex=255
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
 }

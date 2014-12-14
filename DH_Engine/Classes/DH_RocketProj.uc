@@ -40,10 +40,9 @@ var bool bNoWorldPen;                // Rocket has hit something other than the 
 
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         bOutOfPropellant;
 }
-
 
 simulated function PostBeginPlay()
 {
@@ -404,7 +403,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local array<int>      HitPoints;
     local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
-    if (bDebuggingText) log("Rocket.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
+    if (bDebuggingText) Log("Rocket.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
 
     if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
@@ -430,7 +429,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                if (bDebuggingText) log("Rocket.ProcessTouch: hit driver, authority should damage him & explode"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: hit driver, authority should damage him & explode"); // TEMP
                 if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
                 {
                     VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
@@ -438,7 +437,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
             else
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: hit driver area but not driver, rocket should continue"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: hit driver area but not driver, rocket should continue"); // TEMP
                 SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
                 return;
             }
@@ -531,7 +530,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
                 if (Role == ROLE_Authority)
                 {
                     ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
@@ -539,7 +538,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
             else
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
                 return; // exit without exploding, so rocket continues on its flight
             }
         }
@@ -554,16 +553,16 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a rocket explode
             if (Other.IsA('RODestroyableStaticMesh') && RODestroyableStaticMesh(Other).bWontStopBullets)
             {
-                if (bDebuggingText) log("Rocket.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
+                if (bDebuggingText) Log("Rocket.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
                 return;
             }
-            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) log("Rocket.ProcessTouch: exploding on destroyable SM"); // TEMP
-            else if (bDebuggingText) log("Rocket.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
+            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) Log("Rocket.ProcessTouch: exploding on destroyable SM"); // TEMP
+            else if (bDebuggingText) Log("Rocket.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
         }
         // Otherwise we hit something we aren't going to damage
         else if (Role == ROLE_Authority && Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
         {
-            if (bDebuggingText) log("Rocket.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
+            if (bDebuggingText) Log("Rocket.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
             ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
 
@@ -583,7 +582,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     local float tmpMaxWall;
     local vector TmpHitLocation, TmpHitNormal, X, Y, Z, LastLoc;
     local float xH;
-    local actor tmpHit;
+    local Actor tmpHit;
     local vector SavedVelocity;
     local float HitAngle;
 
@@ -861,7 +860,7 @@ simulated function CheckWall(vector HitNormal, vector X)
 
     if (bDebugMode)
     {
-        log("Hit Surface type:"@HitSurfaceType@"with hardness of"@Hardness);
+        Log("Hit Surface type:"@HitSurfaceType@"with hardness of"@Hardness);
     }
 
     return;
@@ -976,52 +975,52 @@ simulated function Destroyed()
 
 defaultproperties
 {
-     ExplodeSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-     ExplodeSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-     ExplodeSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
-     StraightFlightTime=0.200000
-     WScale=1.000000
-     PenetrationDamage=250.000000
-     PenetrationDamageRadius=250.000000
-     EnergyFactor=1000.000000
-     PeneExploWallOut=75.000000
-     PenetrationScale=0.080000
-     DistortionScale=0.400000
-     bHasTracer=true
-     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
-     BlurTime=6.000000
-     PenetrationMag=250.000000
-     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
-     ImpactDamage=675
-     VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-     WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-     ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
-     ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
-     ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
-     ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
-     ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
-     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
-     BallisticCoefficient=0.050000
-     Damage=300.000000
-     DamageRadius=250.000000
-     MomentumTransfer=10000.000000
-     ExplosionDecal=class'ROEffects.RocketMarkDirt'
-     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
-     LightType=LT_Steady
-     LightEffect=LE_QuadraticNonIncidence
-     LightHue=28
-     LightBrightness=255.000000
-     LightRadius=5.000000
-     DrawType=DT_StaticMesh
-     CullDistance=7500.000000
-     bDynamicLight=true
-     bNetTemporary=false
-     bUpdateSimulatedPosition=true
-     LifeSpan=15.000000
-     AmbientGlow=96
-     FluidSurfaceShootStrengthMod=10.000000
-     bFixedRotationDir=true
-     ForceType=FT_Constant
-     ForceRadius=100.000000
-     ForceScale=5.000000
+    ExplodeSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    ExplodeSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
+    ExplodeSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    StraightFlightTime=0.200000
+    WScale=1.000000
+    PenetrationDamage=250.000000
+    PenetrationDamageRadius=250.000000
+    EnergyFactor=1000.000000
+    PeneExploWallOut=75.000000
+    PenetrationScale=0.080000
+    DistortionScale=0.400000
+    bHasTracer=true
+    TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
+    BlurTime=6.000000
+    PenetrationMag=250.000000
+    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
+    ImpactDamage=675
+    VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
+    ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
+    ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
+    ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
+    ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
+    ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
+    BallisticCoefficient=0.050000
+    Damage=300.000000
+    DamageRadius=250.000000
+    MomentumTransfer=10000.000000
+    ExplosionDecal=class'ROEffects.RocketMarkDirt'
+    ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
+    LightType=LT_Steady
+    LightEffect=LE_QuadraticNonIncidence
+    LightHue=28
+    LightBrightness=255.000000
+    LightRadius=5.000000
+    DrawType=DT_StaticMesh
+    CullDistance=7500.000000
+    bDynamicLight=true
+    bNetTemporary=false
+    bUpdateSimulatedPosition=true
+    LifeSpan=15.000000
+    AmbientGlow=96
+    FluidSurfaceShootStrengthMod=10.000000
+    bFixedRotationDir=true
+    ForceType=FT_Constant
+    ForceRadius=100.000000
+    ForceScale=5.000000
 }

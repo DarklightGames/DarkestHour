@@ -12,7 +12,6 @@ var()   int                         MaxRounds;      //0 = infinite
 var     int                         NumRoundsFired; //default to 0
 var     array<DH_ArtilleryActor>    ArtyReferences; //References of attached
 
-
 function PostBeginPlay()
 {
     local DH_ArtilleryActor RAA;
@@ -151,11 +150,11 @@ state Deactivated
 
 defaultproperties
 {
-     XWidth=512
-     YWidth=512
-     PercentToSucceed=80
-     CallIntervalMin=10
-     CallIntervalMax=20
-     bAutoStart=true
-     MaxRounds=50
+    XWidth=512
+    YWidth=512
+    PercentToSucceed=80
+    CallIntervalMin=10
+    CallIntervalMax=20
+    bAutoStart=true
+    MaxRounds=50
 }

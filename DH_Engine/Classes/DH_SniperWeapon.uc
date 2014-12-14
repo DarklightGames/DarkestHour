@@ -275,7 +275,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
         if (!bUsingSights)
         {
-           log("Warning, drawing overlay texture and we aren't zoomed!!!");
+           Log("Warning, drawing overlay texture and we aren't zoomed!!!");
         }
 
         Canvas.DrawColor.A = 255;
@@ -375,7 +375,6 @@ simulated state IronSightZoomOut
     }
 }
 
-
 simulated event Destroyed()
 {
     if (ScopeScriptedTexture != none)
@@ -430,10 +429,10 @@ simulated function PreTravelCleanUp()
 
 defaultproperties
 {
-     ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
-     OverlayCenterSize=0.700000
-     bIsSniper=true
-     FreeAimRotationSpeed=6.000000
-     bCanAttachOnBack=true
+    ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
+    OverlayCenterSize=0.700000
+    bIsSniper=true
+    FreeAimRotationSpeed=6.000000
+    bCanAttachOnBack=true
 }
 

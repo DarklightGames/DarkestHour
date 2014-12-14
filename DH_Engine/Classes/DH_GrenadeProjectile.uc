@@ -7,8 +7,7 @@ class DH_GrenadeProjectile extends DH_ThrowableExplosiveProjectile // incorporat
     abstract;
 
 var bool bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end
-    
-    
+
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
 {
@@ -108,7 +107,6 @@ defaultproperties
     CollisionRadius=4.0
     bSwitchToZeroCollision=true
     bUseCollisionStaticMesh=true
-
     ShakeRotMag=(X=0.0,Y=0.0,Z=200.0)
     ShakeRotRate=(Z=2500.0)
     ShakeRotTime=4.0

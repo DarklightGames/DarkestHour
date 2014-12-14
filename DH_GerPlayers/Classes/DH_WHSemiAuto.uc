@@ -7,5 +7,5 @@ class DH_WHSemiAuto extends Note;
 
 defaultproperties
 {
-     Text="Deprecated role."
+    Text="Deprecated role."
 }

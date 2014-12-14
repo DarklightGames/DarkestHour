@@ -5,7 +5,6 @@
 
 class DH_PanzerIIINTank_CamoOne extends DH_PanzerIIINTank;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super(ROTreadCraft).StaticPrecache(L);
@@ -30,7 +29,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     bHasAddedSideArmor=true
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIINCannonPawn_CamoOne')
-     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
+    bHasAddedSideArmor=true
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIINCannonPawn_CamoOne')
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
 }

@@ -7,5 +7,5 @@ class DH_Flak88Cannon_Green extends DH_Flak88Cannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88_greenpaint'
+    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88_greenpaint'
 }

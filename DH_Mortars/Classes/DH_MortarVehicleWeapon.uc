@@ -217,14 +217,14 @@ simulated function bool IsSmokePending()
 
 defaultproperties
 {
-     Elevation=75.000000
-     ElevationMaximum=90.000000
-     ElevationMinimum=45.000000
-     ElevationStride=0.500000
-     FireEmitterClass=class'DH_Effects.DH_MortarFireEffect'
-     PitchUpLimit=0
-     PitchDownLimit=0
-     bOwnerNoSee=true
-     CollisionHeight=0.0
-     CollisionRadius=0.0
+    Elevation=75.000000
+    ElevationMaximum=90.000000
+    ElevationMinimum=45.000000
+    ElevationStride=0.500000
+    FireEmitterClass=class'DH_Effects.DH_MortarFireEffect'
+    PitchUpLimit=0
+    PitchDownLimit=0
+    bOwnerNoSee=true
+    CollisionHeight=0.0
+    CollisionRadius=0.0
 }

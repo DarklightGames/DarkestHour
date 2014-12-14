@@ -5,7 +5,6 @@
 
 class DH_WillysJeep_Snow extends DH_WillysJeep;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -23,7 +22,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
-     HighDetailOverlay=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
-     bUseHighDetailOverlayIndex=true
+    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
+    HighDetailOverlay=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
+    bUseHighDetailOverlayIndex=true
 }

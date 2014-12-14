@@ -7,5 +7,5 @@ class DH_PegasusGunPawn extends DH_Flak88CannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Guns.DH_PegasusGunCannon'
+    GunClass=class'DH_Guns.DH_PegasusGunCannon'
 }

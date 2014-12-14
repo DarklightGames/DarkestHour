@@ -34,7 +34,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         {
             Spawn(SmokeEmitterClass, self,, HitLocation, rotator(vect(0, 0, 1)));
             PlaySound(SmokeIgniteSound, SLOT_None, 4.0,, 200);
-            SetPhysics(PHYS_none);
+            SetPhysics(PHYS_None);
         }
     }
 
@@ -43,10 +43,10 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
 defaultproperties
 {
-     SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
-     SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-     SmokeSoundDuration=30.000000
-     SmokeEmitterClass=class'ROEffects.GrenadeSmokeEffect'
-     SoundVolume=255
-     SoundRadius=200.000000
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    SmokeSoundDuration=30.000000
+    SmokeEmitterClass=class'ROEffects.GrenadeSmokeEffect'
+    SoundVolume=255
+    SoundRadius=200.000000
 }

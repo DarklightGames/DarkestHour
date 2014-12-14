@@ -50,9 +50,9 @@ static function int getIconID(
 
 defaultproperties
 {
-     AboutToWin="Last objective -- we have almost won the battle!"
-     AboutToLose="Last objective -- we have almost lost the battle!"
-     iconID=12
-     altIconID=13
-     iconTexture=Texture'DH_GUI_Tex.GUI.criticalmessages_icons'
+    AboutToWin="Last objective -- we have almost won the battle!"
+    AboutToLose="Last objective -- we have almost lost the battle!"
+    iconID=12
+    altIconID=13
+    iconTexture=Texture'DH_GUI_Tex.GUI.criticalmessages_icons'
 }

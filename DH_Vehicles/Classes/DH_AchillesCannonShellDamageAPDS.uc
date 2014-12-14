@@ -8,7 +8,7 @@ class DH_AchillesCannonShellDamageAPDS extends ROTankShellImpactDamage //ROWeapo
 
 defaultproperties
 {
-     APCDamageModifier=0.500000
-     TreadDamageModifier=0.850000
-     DeathString="%o was killed by %k's Achilles APDS shell."
+    APCDamageModifier=0.500000
+    TreadDamageModifier=0.850000
+    DeathString="%o was killed by %k's Achilles APDS shell."
 }

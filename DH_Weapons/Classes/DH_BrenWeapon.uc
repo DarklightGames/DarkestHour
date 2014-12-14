@@ -11,32 +11,31 @@ var     int     NumMagsToResupply;      // Number of ammo mags to add when this 
 
 simulated function AnimEnd(int channel)
 {
-        local   name    anim;
-        local   float   frame, rate;
+    local   name    anim;
+    local   float   frame, rate;
 
-        GetAnimParams(0, anim, frame, rate);
+    GetAnimParams(0, anim, frame, rate);
 
-        if (ClientState == WS_ReadyToFire)
+    if (ClientState == WS_ReadyToFire)
+    {
+        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         {
-                if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
-                {
-                        PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
-                }
-                else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
-                {
-                        PlayIdle();
-                }
-                else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
-                {
-                        PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
-                }
-                else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
-                {
-                        PlayIdle();
-                }
+            PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         }
+        else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
+        {
+            PlayIdle();
+        }
+        else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        {
+            PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
+        }
+        else if ((FireMode[0] == none || !FireMode[0].bIsFiring) && (FireMode[1] == none || !FireMode[1].bIsFiring))
+        {
+            PlayIdle();
+        }
+    }
 }
-
 
 //================================================
 // Following 5 functions to allow resupply on Bren
@@ -87,7 +86,9 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 function DropFrom(vector StartLocation)
 {
     if (!bCanThrow)
+    {
         return;
+    }
 
     ROPawn(Instigator).bWeaponCanBeResupplied = false;
     ROPawn(Instigator).bWeaponNeedsResupply = false;
@@ -111,9 +112,9 @@ function bool ResupplyAmmo()
 {
     local int InitialAmount, i;
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
-    for(i=NumMagsToResupply; i>0; i--)
+    for(i = NumMagsToResupply; i > 0; i--)
     {
         if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
         {
@@ -134,18 +135,18 @@ function bool IsMGWeapon()
 
 defaultproperties
 {
-     NumMagsToResupply=2
-     SightUpIronBringUp="Deploy"
-     SightUpIronPutDown="undeploy"
-     SightUpIronIdleAnim="deploy_idle"
-     SightUpMagEmptyReloadAnim="deploy_reload_empty"
-     SightUpMagPartialReloadAnim="deploy_reload_half"
-     MaxNumPrimaryMags=6
-     InitialNumPrimaryMags=6
-     FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
-     FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'
-     PickupClass=class'DH_Weapons.DH_BrenPickup'
-     AttachmentClass=class'DH_Weapons.DH_BrenAttachment'
-     ItemName="Bren Mk.IV"
-     Mesh=SkeletalMesh'DH_Bren_1st.Bren'
+    NumMagsToResupply=2
+    SightUpIronBringUp="Deploy"
+    SightUpIronPutDown="undeploy"
+    SightUpIronIdleAnim="deploy_idle"
+    SightUpMagEmptyReloadAnim="deploy_reload_empty"
+    SightUpMagPartialReloadAnim="deploy_reload_half"
+    MaxNumPrimaryMags=6
+    InitialNumPrimaryMags=6
+    FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
+    FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'
+    PickupClass=class'DH_Weapons.DH_BrenPickup'
+    AttachmentClass=class'DH_Weapons.DH_BrenAttachment'
+    ItemName="Bren Mk.IV"
+    Mesh=SkeletalMesh'DH_Bren_1st.Bren'
 }

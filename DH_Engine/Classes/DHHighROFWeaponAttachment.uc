@@ -39,10 +39,9 @@ var     byte            NextTracerCounter;      // when this equals TracerFreque
 replication
 {
     // Bullet whiz var - Server to client
-    reliable if (bNetDirty && (Role==ROLE_Authority))
+    reliable if (bNetDirty && (Role == ROLE_Authority))
         SavedDualShot, DualShotCount;
 }
-
 
 simulated function Int2Rot(int N, out rotator R)
 {
@@ -216,6 +215,6 @@ function ShotInfo MakeShotInfo(vector NewLocation, rotator SetRotation)
 
 defaultproperties
 {
-     TracerFrequency=4
-     bNetNotify=true
+    TracerFrequency=4
+    bNetNotify=true
 }

@@ -252,7 +252,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if(bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -263,8 +263,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if(bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -346,28 +346,28 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
 
 defaultproperties
 {
-     UnbuttonedPositionIndex=1
-     OverlayCenterSize=0.700000
-     MGOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
-     FirstPersonGunShakeScale=0.850000
-     WeaponFov=41.000000
-     DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionUpAnim="loader_open",DriverTransitionAnim="VT60_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true)
-     DriverPositions(1)=(ViewLocation=(X=5.000000,Z=8.000000),ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionDownAnim="loader_close",DriverTransitionAnim="VT60_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
-     bMultiPosition=true
-     GunClass=class'DH_Vehicles.DH_HetzerMountedMG'
-     bCustomAiming=true
-     bHasAltFire=false
-     CameraBone="Gun"
-     bPCRelativeFPRotation=true
-     bDesiredBehindView=false
-     bFPNoZFromCameraPitch=true
-     DrivePos=(X=17.000000,Y=6.000000,Z=-1.500000)
-     DriveAnim="VT60_com_idle_close"
-     EntryRadius=130.000000
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="on a Hetzer remote MG"
-     VehicleNameString="Hetzer remote MG"
-     HUDOverlayFOV=45.000000
+    UnbuttonedPositionIndex=1
+    OverlayCenterSize=0.700000
+    MGOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
+    FirstPersonGunShakeScale=0.850000
+    WeaponFov=41.000000
+    DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionUpAnim="loader_open",DriverTransitionAnim="VT60_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true)
+    DriverPositions(1)=(ViewLocation=(X=5.000000,Z=8.000000),ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionDownAnim="loader_close",DriverTransitionAnim="VT60_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
+    bMultiPosition=true
+    GunClass=class'DH_Vehicles.DH_HetzerMountedMG'
+    bCustomAiming=true
+    bHasAltFire=false
+    CameraBone="Gun"
+    bPCRelativeFPRotation=true
+    bDesiredBehindView=false
+    bFPNoZFromCameraPitch=true
+    DrivePos=(X=17.000000,Y=6.000000,Z=-1.500000)
+    DriveAnim="VT60_com_idle_close"
+    EntryRadius=130.000000
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="on a Hetzer remote MG"
+    VehicleNameString="Hetzer remote MG"
+    HUDOverlayFOV=45.000000
 }

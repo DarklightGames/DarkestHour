@@ -5,7 +5,6 @@
 
 class DH_ArtilleryShell extends ROArtilleryShell;
 
-
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated singular function Touch(Actor Other)
@@ -23,7 +22,7 @@ simulated singular function Touch(Actor Other)
     {
         LastTouched = Other;
 
-        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        if (Velocity == vect(0,0,0) || Other.IsA('Mover'))
         {
             ProcessTouch(Other,Location);
             LastTouched = none;
@@ -50,7 +49,7 @@ simulated singular function Touch(Actor Other)
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
-    local actor  Victims;
+    local Actor  Victims;
     local float  damageScale, dist;
     local vector dir;
     local ROPawn P;
@@ -62,7 +61,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)

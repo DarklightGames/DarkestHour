@@ -9,14 +9,15 @@ class DH_AutomaticFire extends DH_ProjectileFire
 // Overriden to make the player stop firing when they switch to from ironsights
 simulated function bool AllowFire()
 {
-    if (Weapon.IsInState('IronSightZoomIn') || Weapon.IsInState('IronSightZoomOut') || Weapon.IsInState('TweenDown') || Instigator.bIsSprinting)
+    if (Weapon.IsInState('IronSightZoomIn') ||
+        Weapon.IsInState('IronSightZoomOut') ||
+        Weapon.IsInState('TweenDown') ||
+        Instigator.bIsSprinting)
     {
         return false;
     }
-    else
-    {
-        return super.AllowFire();
-    }
+
+    return super.AllowFire();
 }
 
 function ModeTick(float dt)
@@ -31,7 +32,7 @@ function ModeTick(float dt)
 
 defaultproperties
 {
-     PreLaunchTraceDistance=1312.000000
-     bPawnRapidFireAnim=true
+    PreLaunchTraceDistance=1312.000000
+    bPawnRapidFireAnim=true
 }
 

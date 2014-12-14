@@ -5,7 +5,6 @@
 
 class DH_Sdkfz2341CannonShellMixed extends DH_Sdkfz2341CannonShell;
 
-
 // Matt: this is only a dummy class and this projectile should never be spawned, so just in case we'll destroy & log
 simulated function PreBeginPlay()
 {

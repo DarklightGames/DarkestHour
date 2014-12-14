@@ -66,103 +66,6 @@ state ProjectileFireMode
     }
 }
 
-/*
-event bool AttemptFire(Controller C, bool bAltFire) // Matt: removed so we inherit new function from 234/1
-{
-    if (bAltFire)
-    {
-        return false;
-    }
-
-    if (Role != ROLE_Authority || bForceCenterAim)
-    {
-        return false;
-    }
-
-    if ((!bAltFire && CannonReloadState == CR_ReadyToFire && FireCountdown <= 0) || (bAltFire && FireCountdown <= 0))
-    {
-        CalcWeaponFire(bAltFire);
-
-        if (bCorrectAim)
-        {
-            WeaponFireRotation = AdjustAim(bAltFire);
-        }
-
-        if (Spread > 0)
-        {
-            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
-        }
-
-        DualFireOffset *= -1;
-
-        Instigator.MakeNoise(1.0);
-
-        if (ProjectileClass == PrimaryProjectileClass)
-        {
-            if (!ConsumeAmmo(0))
-            {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
-
-                HandlePrimaryCannonReload();
-
-                return false;
-            }
-            else
-            {
-                if (MainAmmoCharge[0] == 0 && !HasMagazines(0) && HasMagazines(1))
-                {
-                    ToggleRoundType();
-                    HandleSecondaryCannonReload();
-                }
-            }
-
-            FireCountdown = FireInterval;
-
-            Fire(C);
-
-            if (MainAmmoCharge[0] < 1)
-            {
-                HandlePrimaryCannonReload();
-            }
-        }
-        else if (ProjectileClass == SecondaryProjectileClass)
-        {
-            if (!ConsumeAmmo(1))
-            {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
-
-                HandleSecondaryCannonReload();
-
-                return false;
-            }
-            else
-            {
-                if (MainAmmoCharge[1] == 0 && !HasMagazines(1) && HasMagazines(0))
-                {
-                    ToggleRoundType();
-                    HandlePrimaryCannonReload();
-                }
-            }
-
-            FireCountdown = FireInterval;
-
-            Fire(C);
-
-            if (MainAmmoCharge[1] < 1)
-            {
-                HandleSecondaryCannonReload();
-            }
-        }
-
-        AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
-
-        return true;
-    }
-
-    return false;
-}
-*/
-
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local int i;
@@ -311,8 +214,6 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
 simulated event FlashMuzzleFlash(bool bWasAltFire)
 {
-//  local ROVehicleWeaponPawn OwningPawn; // Matt: this isn't doing anything?
-
     if (Role == ROLE_Authority)
     {
         if (bWasAltFire)
@@ -390,38 +291,6 @@ simulated function InitEffects()
     }
 }
 
-/*
-function ToggleRoundType() // Matt: removed as new 234/1 function should cover it
-{
-    if (!HasMagazines(0) && !HasMagazines(1))
-    {
-        return;
-    }
-
-    if ((PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none) && HasMagazines(1))
-    {
-        PendingProjectileClass = SecondaryProjectileClass;
-    }
-    else if (PendingProjectileClass == SecondaryProjectileClass && HasMagazines(0))
-    {
-        PendingProjectileClass = PrimaryProjectileClass;
-    }
-}
-
-simulated function bool HasAmmo(int Mode) // Matt: removed as think this is wrong - having mags shouldn't count as HasAmmo, otherwise ReadyToFire will return true as one example
-{
-    switch(Mode)
-    {
-        case 0:
-            return (MainAmmoCharge[0] > 0 || NumMags > 0);
-        case 1:
-            return (MainAmmoCharge[1] > 0 || NumSecMags > 0);
-    }
-
-    return false;
-}
-*/
-
 // Matt: added these functions from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon:
 simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
@@ -446,35 +315,35 @@ simulated function bool BelowDriverAngle(vector loc, vector ray)
 
 defaultproperties
 {
-     BarrelBones(0)="g1"
-     BarrelBones(1)="G2"
-     BarrelBones(2)="g3"
-     BarrelBones(3)="g4"
-     FireAnimations(0)="shoot_open"
-     FireAnimations(1)="Shoot_open2"
-     SightBone="Object002"
-     TraverseWheelBone="yaw_w"
-     ElevationWheelBone="pitch_w"
-     NumMags=12    // Matt: was 16 AP
-     NumSecMags=4  // Matt: was 4
-     NumTertMags=4 // Matt: added
-     AddedPitch=50
-     WeaponFireOffset=64.000000
-     RotationsPerSecond=0.050000
-     ManualRotationsPerSecond=0.05  // Matt: added
-     PoweredRotationsPerSecond=0.05 // Matt: added
-     FireInterval=0.150000
-     FlashEmitterClass=class'DH_Guns.DH_Flakvierling38MuzzleFlash'
-     ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: changed, was 'DH_Guns.DH_Flakvierling38CannonShellAP'
-     AltFireProjectileClass=none
-     CustomPitchUpLimit=15474
-     CustomPitchDownLimit=64990
-     InitialPrimaryAmmo=80   // Matt: was 40
-     InitialSecondaryAmmo=80 // Matt: was 40
-     InitialTertiaryAmmo=80  // Matt: added
-     PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: added class & made primary     
-     SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'  // Matt: was primary
-     TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'   // Matt: was secondary
-     Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
-     Skins(0)=Texture'DH_Flakvierling38_tex.flak.FlakVeirling'
+    BarrelBones(0)="g1"
+    BarrelBones(1)="G2"
+    BarrelBones(2)="g3"
+    BarrelBones(3)="g4"
+    FireAnimations(0)="shoot_open"
+    FireAnimations(1)="Shoot_open2"
+    SightBone="Object002"
+    TraverseWheelBone="yaw_w"
+    ElevationWheelBone="pitch_w"
+    NumMags=12    // Matt: was 16 AP
+    NumSecMags=4  // Matt: was 4
+    NumTertMags=4 // Matt: added
+    AddedPitch=50
+    WeaponFireOffset=64.000000
+    RotationsPerSecond=0.050000
+    ManualRotationsPerSecond=0.05  // Matt: added
+    PoweredRotationsPerSecond=0.05 // Matt: added
+    FireInterval=0.150000
+    FlashEmitterClass=class'DH_Guns.DH_Flakvierling38MuzzleFlash'
+    ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: changed, was 'DH_Guns.DH_Flakvierling38CannonShellAP'
+    AltFireProjectileClass=none
+    CustomPitchUpLimit=15474
+    CustomPitchDownLimit=64990
+    InitialPrimaryAmmo=40
+    InitialSecondaryAmmo=40
+    InitialTertiaryAmmo=40
+    PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: added class & made primary
+    SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'  // Matt: was primary
+    TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'   // Matt: was secondary
+    Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
+    Skins(0)=Texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }

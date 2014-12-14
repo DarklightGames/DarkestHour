@@ -5,10 +5,8 @@
 
 class DH_Stug3GMountedMGPawn extends DH_ROMountedTankMGPawn;
 
-
 var     int             InitialPositionIndex; // Initial Gunner Position
 var     int             UnbuttonedPositionIndex; // Lowest pos number where player is unbuttoned
-
 
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
@@ -261,7 +259,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -272,8 +270,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -281,7 +279,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
-
 
 function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
 {
@@ -311,7 +308,6 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
         }
     }
 }
-
 
 // Gunner cannot fire MG when he is buttoned inside tank (because he's not mounted on the damn gun!)
 function Fire(optional float F)
@@ -364,30 +360,30 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-     UnbuttonedPositionIndex=1
-     FirstPersonGunShakeScale=2.000000
-     WeaponFov=72.000000
-     DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-     DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-     bMultiPosition=true
-     GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
-     bCustomAiming=true
-     bHasAltFire=false
-     CameraBone="loader_cam"
-     bPCRelativeFPRotation=true
-     bDesiredBehindView=false
-     DrivePos=(X=16.000000,Z=20.000000)
-     DriveRot=(Yaw=16384)
-     DriveAnim="VHalftrack_com_idle"
-     EntryRadius=130.000000
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="manning a StuG III Ausf.G MG34"
-     VehicleNameString="StuG III Ausf.G MG34"
-     HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
-     HUDOverlayFOV=45.000000
-     PitchUpLimit=6000
-     PitchDownLimit=63500
+    UnbuttonedPositionIndex=1
+    FirstPersonGunShakeScale=2.000000
+    WeaponFov=72.000000
+    DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    bMultiPosition=true
+    GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
+    bCustomAiming=true
+    bHasAltFire=false
+    CameraBone="loader_cam"
+    bPCRelativeFPRotation=true
+    bDesiredBehindView=false
+    DrivePos=(X=16.000000,Z=20.000000)
+    DriveRot=(Yaw=16384)
+    DriveAnim="VHalftrack_com_idle"
+    EntryRadius=130.000000
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="manning a StuG III Ausf.G MG34"
+    VehicleNameString="StuG III Ausf.G MG34"
+    HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
+    HUDOverlayFOV=45.000000
+    PitchUpLimit=6000
+    PitchDownLimit=63500
 }

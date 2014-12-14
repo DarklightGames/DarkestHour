@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_LuftwaffeFlak extends DH_Ger_Luftwaffe
+class DH_LuftwaffeFlak extends DH_German_Units
     abstract;
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_LuftwaffeFlakPawn"
+    RolePawnClass="DH_GerPlayers.DH_LuftwaffeFlakPawn"
 }

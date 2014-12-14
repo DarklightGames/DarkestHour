@@ -7,6 +7,6 @@ class DHGUITreeList extends GUITreeList;
 
 defaultproperties
 {
-     SelectedStyleName="DHListSelectionStyle"
-     StyleName="DHSmallText"
+    SelectedStyleName="DHListSelectionStyle"
+    StyleName="DHSmallText"
 }

@@ -7,7 +7,7 @@ class DH_JagdpanzerIVL70CannonShellDamageAPCR extends ROTankShellImpactDamage; /
 
 defaultproperties
 {
-     APCDamageModifier=0.500000
-     TreadDamageModifier=0.950000
-     DeathString="%o was killed by %k's Jagdpanzer IV APCR shell."
+    APCDamageModifier=0.500000
+    TreadDamageModifier=0.950000
+    DeathString="%o was killed by %k's Jagdpanzer IV APCR shell."
 }

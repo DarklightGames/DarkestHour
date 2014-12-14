@@ -8,8 +8,8 @@ class DH_TankShellAPExplosionDamage extends ROTankShellExplosionDamage
 
 defaultproperties
 {
-     TankDamageModifier=0.000000
-     APCDamageModifier=0.050000
-     VehicleDamageModifier=0.250000
-     TreadDamageModifier=0.050000
+    TankDamageModifier=0.000000
+    APCDamageModifier=0.050000
+    VehicleDamageModifier=0.250000
+    TreadDamageModifier=0.050000
 }

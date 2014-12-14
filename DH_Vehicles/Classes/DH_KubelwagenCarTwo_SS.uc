@@ -5,7 +5,6 @@
 
 class DH_KubelwagenCarTwo_SS extends DH_KubelwagenCar_WH;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -24,7 +23,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen.Kubelwagen_ss_dest'
-     Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb'
-     HighDetailOverlay=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb2'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen.Kubelwagen_ss_dest'
+    Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb'
+    HighDetailOverlay=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb2'
 }

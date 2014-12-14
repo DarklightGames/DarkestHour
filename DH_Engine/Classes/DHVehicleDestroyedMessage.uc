@@ -3,23 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHVehicleDestroyedMessage extends DHStringMessage;
-
-static function RenderComplexMessage(
-    Canvas Canvas,
-    out float XL,
-    out float YL,
-    optional string MessageString,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
-{
-    Canvas.DrawColor = default.DrawColor;
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-    Canvas.DrawText(MessageString, false);
-}
+class DHVehicleDestroyedMessage extends DHLocalMessage;
 
 static function string AssembleString(
     HUD myHUD,

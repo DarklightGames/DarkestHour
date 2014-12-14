@@ -23,7 +23,6 @@ var     byte                    AmbientFireVolume;          // The ambient fire 
 var     float                   PackingThresholdTime;       // If the shots are closer than this amount, the dual shot will be used
 var()   class<DH_ServerBullet>  ServerProjectileClass;      // class for the server only projectile for this weapon // Matt: was class ROServerBullet
 
-
 // overriden to support packing two shots together to save net bandwidth
 function DoFireEffect()
 {
@@ -37,6 +36,7 @@ function DoFireEffect()
     local coords MuzzlePosition;
 
     Instigator.MakeNoise(1.0);
+
     Weapon.GetViewAxes(X,Y,Z);
 
     // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
@@ -47,6 +47,7 @@ function DoFireEffect()
 
         // check if projectile would spawn through a wall and adjust start location accordingly
         Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
+
         if (Other != none)
         {
             StartProj = HitLocation;
@@ -54,18 +55,14 @@ function DoFireEffect()
     }
     else
     {
-        MuzzlePosition = Weapon.GetMuzzleCoords();//Weapon.GetBoneCoords('Muzzle');
+        MuzzlePosition = Weapon.GetMuzzleCoords();
 
         // Get the muzzle position and scale it down 5 times (since the model is scaled up 5 times in the editor)
         StartTrace = MuzzlePosition.Origin - Weapon.Location;
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
-
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
-
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
 
@@ -76,11 +73,11 @@ function DoFireEffect()
             StartProj = HitLocation;
         }
     }
+
     Aim = AdjustAim(StartProj, AimError);
 
     // For free-aim, just use where the muzzlebone is pointing
-    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim
-        && Instigator.IsHumanControlled())
+    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim && Instigator.IsHumanControlled())
     {
         Aim = rotator(MuzzlePosition.XAxis);
     }
@@ -89,7 +86,7 @@ function DoFireEffect()
 
     CalcSpreadModifiers();
 
-    if ((DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged)
+    if (DH_MGBase(Owner) != none && DH_MGBase(Owner).bBarrelDamaged)
     {
         AppliedSpread = 4 * Spread;
     }
@@ -102,27 +99,26 @@ function DoFireEffect()
     {
         case SS_Random:
             X = vector(Aim);
+
             for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-                R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
-                R.Pitch = AppliedSpread * (FRand()-0.5);
-                R.Roll = AppliedSpread * (FRand()-0.5);
+                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
+                R.Pitch = AppliedSpread * (FRand() - 0.5);
+                R.Roll = AppliedSpread * (FRand() - 0.5);
 
-                HandleProjectileSpawning(StartProj, Rotator(X >> R));
+                HandleProjectileSpawning(StartProj, rotator(X >> R));
             }
             break;
-
         case SS_Line:
             for (projectileID = 0; projectileID < SpawnCount; projectileID++)
             {
-                theta = AppliedSpread*PI/32768*(projectileID - float(SpawnCount-1)/2.0);
+                theta = AppliedSpread * PI / 32768 * (projectileID - float(SpawnCount - 1) / 2.0);
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
-                HandleProjectileSpawning(StartProj, Rotator(X >> Aim));
+                HandleProjectileSpawning(StartProj, rotator(X >> Aim));
             }
             break;
-
         default:
             HandleProjectileSpawning(StartProj, Aim);
     }
@@ -134,6 +130,7 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
     if (Level.NetMode == NM_Standalone)
     {
        super(DH_ProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
+
        return;
     }
 
@@ -176,6 +173,7 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
             {
                 HiROFWeaponAttachment.DualShotCount = 1;
             }
+
             HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
 
             HiROFWeaponAttachment.bUnReplicatedShot = false;
@@ -193,9 +191,13 @@ function PlayFireEnd()
     RPW = DH_ProjectileWeapon(Weapon);
 
     if (RPW.HasAnim(FireEndAnim) && !RPW.bUsingSights && !Instigator.bBipodDeployed)
+    {
         RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);
+    }
     else if (RPW.HasAnim(FireIronEndAnim) && (RPW.bUsingSights || Instigator.bBipodDeployed))
+    {
         RPW.PlayAnim(FireIronEndAnim, FireEndAnimRate, TweenTime);
+    }
 }
 
 // Sends the fire class to the looping state
@@ -211,8 +213,10 @@ function PlayAmbientSound(Sound aSound)
 
     WA = WeaponAttachment(Weapon.ThirdPersonActor);
 
-    if (Weapon == none || (WA == none))
+    if (Weapon == none || WA == none)
+    {
         return;
+    }
 
     if (aSound == none)
     {
@@ -235,10 +239,6 @@ event ModeDoFire()
     {
         super.ModeDoFire();
     }
-//    else if (abs(ROWeaponPtr.mouseClickTime - Level.TimeSeconds) < 0.02)
-//    {
-//      PlayWeaponEmptySound();
-//    }
 }
 
 /* =================================================================================== *
@@ -259,16 +259,20 @@ state FireLoop
         RPW = DH_ProjectileWeapon(Weapon);
 
         if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
-            weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
+        {
+            Weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
+        }
         else
+        {
             Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
+        }
 
         PlayAmbientSound(AmbientFireSound);
     }
 
     // Overriden because we play an anbient fire sound
-    function PlayFiring() {}
-    function ServerPlayFiring() {}
+    function PlayFiring() { }
+    function ServerPlayFiring() { }
 
     function EndState()
     {
@@ -279,7 +283,9 @@ state FireLoop
 
         //If we are not switching weapons, go to the idle state
         if (!Weapon.IsInState('LoweringWeapon'))
+        {
             ROWeapon(Weapon).GotoState('Idle');
+        }
     }
 
     function StopFiring()
@@ -287,6 +293,7 @@ state FireLoop
         if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment.bUnReplicatedShot == true)
         {
             HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
+
             if (HiROFWeaponAttachment.DualShotCount == 255)
             {
                 HiROFWeaponAttachment.DualShotCount = 254;
@@ -295,6 +302,7 @@ state FireLoop
             {
                 HiROFWeaponAttachment.DualShotCount = 255;
             }
+
             HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
         }
 
@@ -323,7 +331,7 @@ state FireLoop
 *
 * modified by: Ramm 1/17/05
 * =================================================================================== */
-function projectile SpawnProjectile(vector Start, Rotator Dir)
+function Projectile SpawnProjectile(vector Start, Rotator Dir)
 {
     local Projectile spawnedprojectile;
     local vector ProjectileDir, End, HitLocation, HitNormal, SnapTraceEnd;
@@ -343,7 +351,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
         SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir;
 
         // Lets avoid all that casting
-         WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
+        WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
 
         // Do precision hit point pre-launch trace to see if we hit a player or something else
         Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound trigger
@@ -360,10 +368,12 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                 {
                     HitPawn = ROPawn(Other);
 
-                    if (HitPawn != none )
+                    if (HitPawn != none)
                     {
                         if (!HitPawn.bDeleteMe)
+                        {
                             HitPawn.ProcessLocationalDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyDamageType,HitPoints);
+                        }
                     }
                     else
                     {
@@ -375,7 +385,8 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
             {
                 if (RODestroyableStaticMesh(Other) != none)
                 {
-                    Other.TakeDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyDamageType);
+                    Other.TakeDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ServerProjectileClass.default.MyDamageType);
+
                     if (RODestroyableStaticMesh(Other).bWontStopBullets)
                     {
                         Other = none;
@@ -386,22 +397,28 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
         // Return because we already hit something
         if (Other != none)
+        {
             return none;
+        }
     }
 
     if (ServerProjectileClass != none)
+    {
         spawnedprojectile = Spawn(ServerProjectileClass,,, Start, Dir);
+    }
 
     if (spawnedprojectile == none)
+    {
         return none;
+    }
 
     return spawnedprojectile;
 }
 
 defaultproperties
 {
-     LoopFireAnimRate=1.000000
-     IronLoopFireAnimRate=1.000000
-     PackingThresholdTime=0.100000
-     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    LoopFireAnimRate=1.000000
+    IronLoopFireAnimRate=1.000000
+    PackingThresholdTime=0.100000
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
 }

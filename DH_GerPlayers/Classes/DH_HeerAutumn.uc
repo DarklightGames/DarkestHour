@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_HeerAutumn extends DH_Ger_Heer
+class DH_HeerAutumn extends DH_German_Units
     abstract;
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_HeerAutumnPawn"
+    RolePawnClass="DH_GerPlayers.DH_HeerAutumnPawn"
 }

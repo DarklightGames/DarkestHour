@@ -13,7 +13,6 @@ var Actor SavedTouchActor; // Matt: added (same as shell) to prevent recurring P
 var globalconfig bool   bDebugMode;         // If true, give our detailed report in log.
 var globalconfig bool   bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
 
-
 simulated function PostBeginPlay()
 {
     if (bDebugROBallistics)
@@ -36,8 +35,6 @@ simulated singular function Touch(Actor Other)
     {
         Other = Other.Owner;
     }
-
-//  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
 
     if (Other != none && (Other.bProjTarget || Other.bBlockActors))
     {
@@ -177,8 +174,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             Log(">>> ProcessTouch ROBulletWhipAttachment ... ");
         }
 
-//      bHitWhipAttachment = true;
-
         if (!Other.Base.bDeleteMe)
         {
             // If bullet collides immediately after launch, it has no location (or so it would appear, go figure)
@@ -249,8 +244,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 {
                     HitPawn.ProcessLocationalDamage(Damage - 20.0 * (1.0 - V / default.Speed), Instigator, TempHitLocation, MomentumTransfer * X, MyDamageType, HitPoints);
                 }
-
-//              bHitWhipAttachment = false;
             }
             else
             {
@@ -283,11 +276,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 Log(">>> ProcessTouch Nothing Clientside... ");
             }
-
-//          if (HitPawn != none)
-//          {
-//              bHitWhipAttachment = false;
-//          }
         }
     }
 

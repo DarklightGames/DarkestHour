@@ -7,7 +7,6 @@ class DH_PanzerIIILTank_Camo extends DH_PanzerIIILTank;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super(ROTreadCraft).StaticPrecache(L);
@@ -34,9 +33,9 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     bHasAddedSideArmor=true
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIILCannonPawn_Camo')
-     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_dest'
-     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer3n_body'
-     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
+    bHasAddedSideArmor=true
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIILCannonPawn_Camo')
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_dest'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer3n_body'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
 }

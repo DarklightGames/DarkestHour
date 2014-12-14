@@ -10,7 +10,7 @@ class DH_GreyhoundCannonShellDamageAP extends ROTankShellImpactDamage //ROWeapon
 
 defaultproperties
 {
-     APCDamageModifier=0.750000
-     TreadDamageModifier=0.750000
-     DeathString="%o was killed by %k's Greyhound APC shell."
+    APCDamageModifier=0.750000
+    TreadDamageModifier=0.750000
+    DeathString="%o was killed by %k's Greyhound APC shell."
 }

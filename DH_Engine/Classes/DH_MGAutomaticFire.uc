@@ -171,11 +171,11 @@ function DoFireEffect()
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
 
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
 
@@ -218,7 +218,7 @@ function DoFireEffect()
                 R.Pitch = AppliedSpread * (FRand()-0.5);
                 R.Roll = AppliedSpread * (FRand()-0.5);
 
-                HandleProjectileSpawning(StartProj, Rotator(X >> R));
+                HandleProjectileSpawning(StartProj, rotator(X >> R));
             }
             break;
 
@@ -229,7 +229,7 @@ function DoFireEffect()
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
-                HandleProjectileSpawning(StartProj, Rotator(X >> Aim));
+                HandleProjectileSpawning(StartProj, rotator(X >> Aim));
             }
             break;
 
@@ -266,10 +266,10 @@ simulated function EjectShell()
             EjectOffset = Instigator.Location + Instigator.EyePosition();
             EjectOffset = EjectOffset + X * ShellIronSightOffset.X + Y * ShellIronSightOffset.Y +  Z * ShellIronSightOffset.Z;
 
-            EjectRot = Rotator(Y);
+            EjectRot = rotator(Y);
             EjectRot.Yaw += 16384;
             Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
-            EjectRot = Rotator(Y);
+            EjectRot = rotator(Y);
             EjectRot += ShellRotOffsetIron;
 
             EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
@@ -292,9 +292,9 @@ simulated function EjectShell()
 
             EjectOffset = EjectOffset + EjectCoords.XAxis * ShellHipOffset.X + EjectCoords.YAxis * ShellHipOffset.Y +  EjectCoords.ZAxis * ShellHipOffset.Z;
 
-            EjectRot = Rotator(-EjectCoords.YAxis);
+            EjectRot = rotator(-EjectCoords.YAxis);
             Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
-            EjectRot = Rotator(EjectCoords.XAxis);
+            EjectRot = rotator(EjectCoords.XAxis);
             EjectRot += ShellRotOffsetHip;
 
             EjectRot.Yaw = EjectRot.Yaw + Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
@@ -308,9 +308,9 @@ simulated function EjectShell()
 
 defaultproperties
 {
-     PctHipMGPenalty=2.000000
-     PreLaunchTraceDistance=2624.000000
-     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
-     BlurTime=0.04
-     BlurTimeIronsight=0.04
+    PctHipMGPenalty=2.000000
+    PreLaunchTraceDistance=2624.000000
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    BlurTime=0.04
+    BlurTimeIronsight=0.04
 }

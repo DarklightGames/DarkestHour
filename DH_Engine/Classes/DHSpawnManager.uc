@@ -359,7 +359,7 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
 
     if (C.Pawn == none)
     {
-        log("Couldn't spawn player of type" @ C.PawnClass @ "at" @ SpawnLocation);
+        Log("Couldn't spawn player of type" @ C.PawnClass @ "at" @ SpawnLocation);
 
         C.GotoState('Dead');
 

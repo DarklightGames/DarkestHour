@@ -24,7 +24,7 @@ var()   int     OverlayCorrectionX, OverlayCorrectionY; // scope center correcti
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerToggleExtraRoundType;
 }
 
@@ -136,7 +136,6 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
 
-
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())
@@ -151,7 +150,6 @@ simulated function DrawHUD(Canvas Canvas)
     else
         ActivateOverlay(false);
 }
-
 
 // Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
@@ -193,7 +191,6 @@ function ServerChangeViewPoint(bool bForward)
         }
      }
 }
-
 
 // Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
 simulated function ClientKDriverLeave(PlayerController PC)
@@ -256,7 +253,6 @@ function bool PlaceExitingDriver()
 
     return false;
 }
-
 
 //Options
 //1: Implemented: Modified PlaceExitingDriver so that it handles placing the player on exit better. - Ramm
@@ -402,8 +398,6 @@ simulated function DrawDebugCylinder(vector Base,vector X, vector Y,vector Z, FL
     local vector LastVertex, Vertex;
     local int SideIndex;
 
-
-
     AngleDelta = 2.0f * PI / NumSides;
     LastVertex = Base + X * Radius;
 
@@ -441,36 +435,36 @@ function Fire(optional float F)
 
 defaultproperties
 {
-     OverlayCenterSize=1.000000
-     BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
-     HudName="Gunner"
-     bMustBeTankCrew=false
-     FireImpulse=(X=-1000.000000)
-     bHasFireImpulse=false
-     bHasAltFire=false
-     bPCRelativeFPRotation=true
-     bDesiredBehindView=false
-     DriveAnim="crouch_idle_binoc"
-     ExitPositions(0)=(X=-40.000000,Y=-10.000000,Z=50.000000)
-     ExitPositions(1)=(X=-40.000000,Y=-10.000000,Z=60.000000)
-     ExitPositions(2)=(X=-40.000000,Y=25.000000,Z=50.000000)
-     ExitPositions(3)=(X=-40.000000,Y=-25.000000,Z=50.000000)
-     ExitPositions(4)=(Y=68.000000,Z=50.000000)
-     ExitPositions(5)=(Y=-68.000000,Z=50.000000)
-     ExitPositions(6)=(Y=68.000000,Z=25.000000)
-     ExitPositions(7)=(Y=-68.000000,Z=25.000000)
-     ExitPositions(8)=(X=-60.000000,Y=-5.000000,Z=25.000000)
-     ExitPositions(9)=(X=-90.000000,Z=50.000000)
-     ExitPositions(10)=(X=-90.000000,Y=-45.000000,Z=50.000000)
-     ExitPositions(11)=(X=-90.000000,Y=45.000000,Z=50.000000)
-     ExitPositions(12)=(X=-90.000000,Z=20.000000)
-     ExitPositions(13)=(X=-90.000000,Z=75.000000)
-     ExitPositions(14)=(X=-125.000000,Z=60.000000)
-     ExitPositions(15)=(X=-250.000000,Z=75.000000)
-     EntryRadius=130.000000
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-25.000000,Z=0.000000)
-     TPCamWorldOffset=(Y=50.000000,Z=120.000000)
-     PitchUpLimit=6000
-     PitchDownLimit=64000
+    OverlayCenterSize=1.000000
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    HudName="Gunner"
+    bMustBeTankCrew=false
+    FireImpulse=(X=-1000.000000)
+    bHasFireImpulse=false
+    bHasAltFire=false
+    bPCRelativeFPRotation=true
+    bDesiredBehindView=false
+    DriveAnim="crouch_idle_binoc"
+    ExitPositions(0)=(X=-40.000000,Y=-10.000000,Z=50.000000)
+    ExitPositions(1)=(X=-40.000000,Y=-10.000000,Z=60.000000)
+    ExitPositions(2)=(X=-40.000000,Y=25.000000,Z=50.000000)
+    ExitPositions(3)=(X=-40.000000,Y=-25.000000,Z=50.000000)
+    ExitPositions(4)=(Y=68.000000,Z=50.000000)
+    ExitPositions(5)=(Y=-68.000000,Z=50.000000)
+    ExitPositions(6)=(Y=68.000000,Z=25.000000)
+    ExitPositions(7)=(Y=-68.000000,Z=25.000000)
+    ExitPositions(8)=(X=-60.000000,Y=-5.000000,Z=25.000000)
+    ExitPositions(9)=(X=-90.000000,Z=50.000000)
+    ExitPositions(10)=(X=-90.000000,Y=-45.000000,Z=50.000000)
+    ExitPositions(11)=(X=-90.000000,Y=45.000000,Z=50.000000)
+    ExitPositions(12)=(X=-90.000000,Z=20.000000)
+    ExitPositions(13)=(X=-90.000000,Z=75.000000)
+    ExitPositions(14)=(X=-125.000000,Z=60.000000)
+    ExitPositions(15)=(X=-250.000000,Z=75.000000)
+    EntryRadius=130.000000
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-25.000000,Z=0.000000)
+    TPCamWorldOffset=(Y=50.000000,Z=120.000000)
+    PitchUpLimit=6000
+    PitchDownLimit=64000
 }

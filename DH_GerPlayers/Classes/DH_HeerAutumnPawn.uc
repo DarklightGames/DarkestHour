@@ -7,5 +7,5 @@ class DH_HeerAutumnPawn extends DH_Pawn;
 
 defaultproperties
 {
-     Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam2'
+    Skins(0)=Texture'DHGermanCharactersTex.Heer.HeerParkaCam2'
 }

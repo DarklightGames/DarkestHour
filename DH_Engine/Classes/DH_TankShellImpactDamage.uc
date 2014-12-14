@@ -10,7 +10,7 @@ class DH_TankShellImpactDamage extends ROTankShellImpactDamage //ROWeaponDamageT
 
 defaultproperties
 {
-     APCDamageModifier=0.250000
-     TreadDamageModifier=0.850000
-     HumanObliterationThreshhold=250
+    APCDamageModifier=0.250000
+    TreadDamageModifier=0.850000
+    HumanObliterationThreshhold=250
 }

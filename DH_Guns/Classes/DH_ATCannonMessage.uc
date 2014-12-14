@@ -36,8 +36,8 @@ static function string GetString(
 
 defaultproperties
 {
-     GunManned="The Gun Is Fully Crewed"
-     CannotUse="Cannot Use This Gun"
-     NoExit="No Exit Location Can Not Be Found For This AT-Gun"
-     VehicleIsEnemy="Cannot Use An Enemy AT-Gun"
+    GunManned="The Gun Is Fully Crewed"
+    CannotUse="Cannot Use This Gun"
+    NoExit="No Exit Location Can Not Be Found For This AT-Gun"
+    VehicleIsEnemy="Cannot Use An Enemy AT-Gun"
 }

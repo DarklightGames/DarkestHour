@@ -10,7 +10,6 @@ static function StaticPrecache(LevelInfo L)
     super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex3.ext_vehicles.tiger_body_ardennes');
-
 }
 
 simulated function UpdatePrecacheMaterials()
@@ -22,7 +21,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerCannonPawn_Ardennes')
-     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_Destroyed'
-     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.tiger_body_ardennes'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerCannonPawn_Ardennes')
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_Destroyed'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.tiger_body_ardennes'
 }

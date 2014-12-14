@@ -8,5 +8,5 @@ class DH_SatchelCharge10lb10sPickup extends SatchelCharge10lb10sPickup
 
 defaultproperties
 {
-     InventoryType=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
+    InventoryType=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
 }

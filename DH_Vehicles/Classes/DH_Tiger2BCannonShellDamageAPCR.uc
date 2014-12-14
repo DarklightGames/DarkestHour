@@ -7,6 +7,6 @@ class DH_Tiger2BCannonShellDamageAPCR extends ROTankShellImpactDamage; //ROWeapo
 
 defaultproperties
 {
-     APCDamageModifier=0.500000
-     DeathString="%o was killed by %k's King Tiger APCR shell."
+    APCDamageModifier=0.500000
+    DeathString="%o was killed by %k's King Tiger APCR shell."
 }

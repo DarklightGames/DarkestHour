@@ -9,6 +9,6 @@ class DH_Flakvierling38CannonShellDamageHE extends DH_Sdkfz2341CannonShellDamage
 
 defaultproperties
 {
-     HUDIcon=Texture'DH_Flakvierling38_tex.flak.flakv38_icon'
-     DeathString="%o was killed by %k's Flakvierling 38 HE shell."
+    HUDIcon=Texture'DH_Flakvierling38_tex.flak.flakv38_icon'
+    DeathString="%o was killed by %k's Flakvierling 38 HE shell."
 }

@@ -7,5 +7,5 @@ class DH_JagdpantherCannon_CamoTwo extends DH_JagdpantherCannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_ambush'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_ambush'
 }

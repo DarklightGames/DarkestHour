@@ -7,7 +7,6 @@
 
 class DH_NebelGranate39Projectile extends DH_GrenadeProjectile_Smoke;
 
-
 defaultproperties
 {
     bIsStickGrenade=true

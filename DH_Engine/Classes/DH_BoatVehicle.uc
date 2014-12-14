@@ -37,7 +37,6 @@ struct ExitPositionPair
 
 var bool bDebugExitPositions;
 
-
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -141,7 +140,7 @@ simulated function PostBeginPlay()
     {
             if (WashSoundAttachL == none)
             {
-                    WashSoundAttachL = Spawn(class 'ROSoundAttachment');
+                    WashSoundAttachL = Spawn(class'ROSoundAttachment');
                     WashSoundAttachL.AmbientSound = WashSound;
                     WashSoundAttachL.SoundVolume = 75;
                     WashSoundAttachL.SoundRadius = 300;
@@ -149,7 +148,7 @@ simulated function PostBeginPlay()
             }
             if (WashSoundAttachR == none)
             {
-                    WashSoundAttachR = Spawn(class 'ROSoundAttachment');
+                    WashSoundAttachR = Spawn(class'ROSoundAttachment');
                     WashSoundAttachR.AmbientSound = WashSound;
                     WashSoundAttachR.SoundVolume = 75;
                     WashSoundAttachR.SoundRadius = 300;
@@ -157,7 +156,7 @@ simulated function PostBeginPlay()
             }
             if (EngineSoundAttach == none)
             {
-                    EngineSoundAttach = Spawn(class 'ROSoundAttachment');
+                    EngineSoundAttach = Spawn(class'ROSoundAttachment');
                     EngineSoundAttach.AmbientSound = EngineSound;
                     EngineSoundAttach.SoundVolume = 150;
                     EngineSoundAttach.SoundRadius = 1000;
@@ -174,7 +173,6 @@ function DriverLeft()
     UpdateMovementSound();
     super.DriverLeft();
 }
-
 
 simulated function PostNetReceive()
 {
@@ -236,15 +234,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (bFPNoZFromCameraPitch)
     {
-        VehicleZ = vect(0,0,1) >> Rotation;
-        CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+        VehicleZ = vect(0, 0, 1) >> Rotation;
+        CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
         CameraLocation -= CamViewOffsetZAmount * VehicleZ;
     }
 
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
-
 
 simulated function Destroyed()
 {
@@ -336,7 +333,7 @@ simulated event DestroyAppearance()
     }
 
     //Become the dead vehicle mesh // Matt: removed as in this case we aren't switching to a destroyed static mesh
-//  SetPhysics(PHYS_none);
+//  SetPhysics(PHYS_None);
 //  KSetBlockKarma(false);
 //  SetDrawType(DT_Mesh);
 //  KSetBlockKarma(true);
@@ -374,53 +371,53 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0,0,0));
+        KAddImpulse(LinearImpulse, vect(0, 0, 0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
 
 defaultproperties
 {
-     DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-//   MaxPitchSpeed=600.000000 // deprecated
-//   BoatFloatTraceDistance=10000.000000 // deprecated
-     PointValue=1.000000
-     ChangeUpPoint=1990.000000
-     ChangeDownPoint=1000.000000
-     SteerBoneName="steeringwheel"
-     DustSlipRate=0.000000
-     DustSlipThresh=100000.000000
-     ViewShakeRadius=600.000000
-     ViewShakeOffsetMag=(X=0.500000,Z=2.000000)
-     ViewShakeOffsetFreq=7.000000
-     DisintegrationHealth=-10000.000000
-     DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
-     DestructionAngularMomentum=(Max=150.000000)
-     ExplosionSoundRadius=800.000000
-     ExplosionDamage=300.000000
-     ExplosionRadius=600.000000
-     ImpactDamageMult=0.001000
-     TimeTilDissapear=15.000000
-     IdleTimeBeforeReset=30.000000
-     InitialPositionIndex=0
-     VehicleSpikeTime=15.000000
-     VehHitpoints(0)=(PointBone="Driver")
-     VehicleMass=12.000000
-     bKeyVehicle=true
-     bFPNoZFromCameraPitch=true
-     CenterSpringForce="SpringONSSRV"
-     VehiclePositionString="in a Boat"
-     VehicleNameString="Boat"
-     StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
-     MaxDesireability=0.100000
-     ObjectiveGetOutDist=1500.000000
-     WaterDamage=0.000000
-     bCanSwim=true
-     GroundSpeed=200.000000
-     WaterSpeed=200.000000
-     PitchUpLimit=500
-     PitchDownLimit=58000
-     CollisionRadius=300.000000
-     CollisionHeight=45.000000
-     bDebugExitPositions=true
+    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    //   MaxPitchSpeed=600.000000 // deprecated
+    //   BoatFloatTraceDistance=10000.000000 // deprecated
+    PointValue=1.000000
+    ChangeUpPoint=1990.000000
+    ChangeDownPoint=1000.000000
+    SteerBoneName="steeringwheel"
+    DustSlipRate=0.000000
+    DustSlipThresh=100000.000000
+    ViewShakeRadius=600.000000
+    ViewShakeOffsetMag=(X=0.500000,Z=2.000000)
+    ViewShakeOffsetFreq=7.000000
+    DisintegrationHealth=-10000.000000
+    DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
+    DestructionAngularMomentum=(Max=150.000000)
+    ExplosionSoundRadius=800.000000
+    ExplosionDamage=300.000000
+    ExplosionRadius=600.000000
+    ImpactDamageMult=0.001000
+    TimeTilDissapear=15.000000
+    IdleTimeBeforeReset=30.000000
+    InitialPositionIndex=0
+    VehicleSpikeTime=15.000000
+    VehHitpoints(0)=(PointBone="Driver")
+    VehicleMass=12.000000
+    bKeyVehicle=true
+    bFPNoZFromCameraPitch=true
+    CenterSpringForce="SpringONSSRV"
+    VehiclePositionString="in a Boat"
+    VehicleNameString="Boat"
+    StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
+    MaxDesireability=0.100000
+    ObjectiveGetOutDist=1500.000000
+    WaterDamage=0.000000
+    bCanSwim=true
+    GroundSpeed=200.000000
+    WaterSpeed=200.000000
+    PitchUpLimit=500
+    PitchDownLimit=58000
+    CollisionRadius=300.000000
+    CollisionHeight=45.000000
+    bDebugExitPositions=true
 }

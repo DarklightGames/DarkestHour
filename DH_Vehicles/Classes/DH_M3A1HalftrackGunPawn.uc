@@ -46,7 +46,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
 
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
@@ -58,8 +58,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -176,31 +176,31 @@ function bool KDriverLeave(bool bForceLeave)
 
 defaultproperties
 {
-     FirstPersonGunShakeScale=0.750000
-     WeaponFov=60.000000
-     DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-     bMultiPosition=true
-     bMustBeTankCrew=false
-     GunClass=class'DH_Vehicles.DH_M3A1HalftrackGun'
-     bCustomAiming=true
-     PositionInArray=0
-     bHasAltFire=false
-     CameraBone="Camera_com"
-     bDesiredBehindView=false
-     DrivePos=(Y=-5.000000,Z=14.000000)
-     DriveRot=(Yaw=16384)
-     DriveAnim="VHalftrack_com_idle"
-     EntryRadius=130.000000
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="on a M3A1 Halftrack .30 Cal"
-     VehicleNameString="M3A1 Halftrack .30 Cal"
-     HUDOverlayClass=class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
-     HUDOverlayOffset=(X=-2.000000)
-     HUDOverlayFOV=35.000000
-     bKeepDriverAuxCollision=true
-     PitchUpLimit=4000
-     PitchDownLimit=60000
+    FirstPersonGunShakeScale=0.750000
+    WeaponFov=60.000000
+    DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    bMultiPosition=true
+    bMustBeTankCrew=false
+    GunClass=class'DH_Vehicles.DH_M3A1HalftrackGun'
+    bCustomAiming=true
+    PositionInArray=0
+    bHasAltFire=false
+    CameraBone="Camera_com"
+    bDesiredBehindView=false
+    DrivePos=(Y=-5.000000,Z=14.000000)
+    DriveRot=(Yaw=16384)
+    DriveAnim="VHalftrack_com_idle"
+    EntryRadius=130.000000
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="on a M3A1 Halftrack .30 Cal"
+    VehicleNameString="M3A1 Halftrack .30 Cal"
+    HUDOverlayClass=class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
+    HUDOverlayOffset=(X=-2.000000)
+    HUDOverlayFOV=35.000000
+    bKeepDriverAuxCollision=true
+    PitchUpLimit=4000
+    PitchDownLimit=60000
 }

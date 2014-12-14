@@ -8,5 +8,5 @@ class DH_EnfieldNo4BayonetDamType extends DHWeaponBayonetDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_EnfieldNo4Weapon'
+    WeaponClass=class'DH_Weapons.DH_EnfieldNo4Weapon'
 }

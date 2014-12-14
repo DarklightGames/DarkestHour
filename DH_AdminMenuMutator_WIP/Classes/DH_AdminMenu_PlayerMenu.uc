@@ -8,10 +8,8 @@
 //==========================================================================================
 class DH_AdminMenu_PlayerMenu extends DH_AdminMenu_MenuBase;
 
-
 var  localized string     Label_AimedPlayer, Label_RealismMenu; // menu labels localised so different language versions could be produced
 var  localized EInputKey  KeyForRealismMenu;                    // also localised to allow default R key to be changed to suit a different language
-
 
 exec function Menu()
 {

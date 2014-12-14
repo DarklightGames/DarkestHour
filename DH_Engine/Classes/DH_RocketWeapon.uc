@@ -201,7 +201,7 @@ simulated state LoweringWeapon
         if (AmmoAmount(0) > 0 && CurrentMagCount < InitialNumPrimaryMags - 1)
         {
             PrimaryAmmoArray.Insert(CurrentMagIndex, 1);
-            PrimaryAmmoArray[CurrentMagIndex] = FireMode[0].AmmoClass.Default.InitialAmount;
+            PrimaryAmmoArray[CurrentMagIndex] = FireMode[0].AmmoClass.default.InitialAmount;
             CurrentMagCount++;
 
             if (Instigator.IsLocallyControlled())
@@ -583,7 +583,7 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
     local int InitialAmount;
     local bool bJustSpawned;
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     super.GiveTo(Other,Pickup);
 
@@ -799,38 +799,37 @@ function bool FillAmmo()
 
 defaultproperties
 {
-     IronIdleAnims(0)="Iron_idle"
-     IronIdleAnims(1)="iron_idleMid"
-     IronIdleAnims(2)="iron_idleFar"
-     AssistedMagEmptyReloadAnim="reloadA"
-     AssistedMagPartialReloadAnim="reloadA"
-     NumMagsToResupply=1
-     MagEmptyReloadAnim="Reloads"
-     MagPartialReloadAnim="Reloads"
-     IronBringUp="iron_in"
-     IronPutDown="iron_out"
-     MaxNumPrimaryMags=3
-     InitialNumPrimaryMags=3
-     CrawlForwardAnim="crawlF"
-     CrawlBackwardAnim="crawlB"
-     CrawlStartAnim="crawl_in"
-     CrawlEndAnim="crawl_out"
-     IronSightDisplayFOV=25.000000
-     ZoomInTime=0.400000
-     ZoomOutTime=0.200000
-     FreeAimRotationSpeed=7.500000
-     SelectAnim="Draw"
-     PutDownAnim="putaway"
-     SelectAnimRate=1.000000
-     PutDownAnimRate=1.000000
-     SelectForce="SwitchToAssaultRifle"
-     AIRating=0.600000
-     CurrentRating=0.600000
-     bSniping=true
-     DisplayFOV=70.000000
-     Priority=8
-     bCanRestDeploy=true
-     InventoryGroup=5
-     BobDamping=1.600000
-     FillAmmoMagCount=1
+    IronIdleAnims(0)="Iron_idle"
+    IronIdleAnims(1)="iron_idleMid"
+    IronIdleAnims(2)="iron_idleFar"
+    AssistedMagEmptyReloadAnim="reloadA"
+    AssistedMagPartialReloadAnim="reloadA"
+    NumMagsToResupply=1
+    MagEmptyReloadAnim="Reloads"
+    MagPartialReloadAnim="Reloads"
+    IronBringUp="iron_in"
+    IronPutDown="iron_out"
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=3
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    IronSightDisplayFOV=25.000000
+    ZoomInTime=0.400000
+    ZoomOutTime=0.200000
+    FreeAimRotationSpeed=7.500000
+    SelectAnim="Draw"
+    PutDownAnim="putaway"
+    SelectAnimRate=1.000000
+    PutDownAnimRate=1.000000
+    AIRating=0.600000
+    CurrentRating=0.600000
+    bSniping=true
+    DisplayFOV=70.000000
+    Priority=8
+    bCanRestDeploy=true
+    InventoryGroup=5
+    BobDamping=1.600000
+    FillAmmoMagCount=1
 }

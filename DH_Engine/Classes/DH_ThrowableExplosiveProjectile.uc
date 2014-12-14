@@ -11,7 +11,6 @@ var class<Emitter> ExplodeDirtEffectClass;
 var class<Emitter> ExplodeSnowEffectClass;
 var class<Emitter> ExplodeMidAirEffectClass;
 
-
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
@@ -54,7 +53,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
@@ -178,7 +177,7 @@ simulated function Landed(vector HitNormal)
 {
     if (Bounces <= 0)
     {
-        SetPhysics(PHYS_none);
+        SetPhysics(PHYS_None);
         SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
 
         if (Role == ROLE_Authority)
@@ -425,7 +424,6 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
 
 simulated function WeaponLight(); // empty function; can be subclassed
 
-
 simulated function PhysicsVolumeChange(PhysicsVolume Volume)
 {
     if (Volume.bWaterVolume)
@@ -445,7 +443,6 @@ defaultproperties
     DampenFactorParallel=0.8
     Physics=PHYS_Falling
     bFixedRotationDir=true
-
     FailureRate=0.01 // failure rate is default to 1 in 100
     ShrapnelCount=0
     ImpactSound=sound'Inf_Weapons_Foley.grenadeland'
@@ -453,7 +450,6 @@ defaultproperties
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     DrawType=DT_StaticMesh
-
     bDynamicLight=false
     LightType=LT_Pulse
     LightEffect=LE_NonIncidence

@@ -11,7 +11,6 @@ var bool    bCalledDestroy;
 var Emitter SmokeEmitter;
 var sound   SmokeSound;
 
-    
 // Modified to handle destruction of actor after set time
 simulated function Tick(float DeltaTime)
 {
@@ -31,15 +30,8 @@ simulated function Landed(vector HitNormal)
 {
     if (Bounces <= 0)
     {
-        SetPhysics(PHYS_none);
+        SetPhysics(PHYS_None);
         SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, Rotation.Yaw * 0.000095873))));
-
-//      if (Role == ROLE_Authority)
-//      {
-//          Fear = Spawn(class'AvoidMarker');
-//          Fear.SetCollisionSize(DamageRadius, 200.0);
-//          Fear.StartleBots();
-//      }
     }
     else
     {
@@ -61,7 +53,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SmokeEmitter = Spawn(ExplodeDirtEffectClass, self, , Location, rotator(vect(0.0,0.0,1.0)));
+        SmokeEmitter = Spawn(ExplodeDirtEffectClass, self,, Location, rotator(vect(0, 0, 1)));
         SmokeEmitter.SetBase(Self);
     }
 }
@@ -78,9 +70,6 @@ function BlowUp(vector HitLocation)
 // Modified to destroy SmokeEmitter & also to remove everything relating to explosion, as not an exploding grenade
 simulated function Destroyed()
 {
-    // Matt: removed as the super is mostly about blast damage & also destroying the bot Fear marker, neither of which are relevant to a smoke grenade
-//  super(ROThrowableExplosiveProjectile).Destroyed();
-
     if (SmokeEmitter != none)
     {
         SmokeEmitter.Kill();

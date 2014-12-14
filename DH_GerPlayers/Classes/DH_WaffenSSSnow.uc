@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_WaffenSSSnow extends DH_Ger_WaffenSS
+class DH_WaffenSSSnow extends DH_German_Units
     abstract;
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_WaffenSSSnowPawn"
+    RolePawnClass="DH_GerPlayers.DH_WaffenSSSnowPawn"
 }

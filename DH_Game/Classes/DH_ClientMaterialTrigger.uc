@@ -22,7 +22,6 @@ var(MaterialTrigger) enum EUnriggerAction {
 // array holding the ReplicationInfos for clientside triggering
 var array<DH_MaterialTriggerReplicationInfo> ReplicatedMaterialTriggers;
 
-
 //=============================================================================
 // PostBeginPlay
 //
@@ -40,7 +39,6 @@ function PostBeginPlay()
     ReplicatedMaterialTriggers[i].SetMaterialToTrigger(string(MaterialsToTrigger[i]));
   }
 }
-
 
 //=============================================================================
 // Trigger
@@ -67,7 +65,6 @@ function Trigger(Actor Other, Pawn EventInstigator)
         ReplicatedMaterialTriggers[i].ResetMaterial();
   }
 }
-
 
 //=============================================================================
 // Untrigger

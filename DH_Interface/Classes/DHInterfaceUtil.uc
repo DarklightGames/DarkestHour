@@ -50,7 +50,6 @@ final simulated static function int SetROStyle(GUIController MyController, array
                 moComboBox(Components[i]).MyComboBox.MyShowListBtn.StyleName = myStyleName;
                 moComboBox(Components[i]).MyComboBox.MyShowListBtn.Style = MyController.GetStyle(myStyleName,tFontScale);
 
-
                 tFontScale = moComboBox(Components[i]).MyComboBox.MyListBox.MyScrollBar.MyScrollZone.FontScale;
                 myStyleName = "ROScrollZone";
                 moComboBox(Components[i]).MyComboBox.MyListBox.MyScrollBar.MyScrollZone.StyleName = myStyleName;
@@ -378,5 +377,5 @@ final simulated static function int ReformatLists(GUIController MyController, GU
 
 defaultproperties
 {
-     HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay'
+    HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay'
 }

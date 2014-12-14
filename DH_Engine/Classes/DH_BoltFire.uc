@@ -37,7 +37,6 @@ event ModeDoFire()
         else
             SetTimer(DelayedRecoilTime, false);
 
-
         ShakeView();
         PlayFiring();
 
@@ -69,8 +68,8 @@ event ModeDoFire()
 
 defaultproperties
 {
-     PctRestDeployRecoil=0.650000
-     bDelayedRecoil=true
-     DelayedRecoilTime=0.050000
-     bAnimNotifiedShellEjects=true
+    PctRestDeployRecoil=0.650000
+    bDelayedRecoil=true
+    DelayedRecoilTime=0.050000
+    bAnimNotifiedShellEjects=true
 }

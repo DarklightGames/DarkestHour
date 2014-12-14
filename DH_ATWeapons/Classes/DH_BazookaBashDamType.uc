@@ -8,5 +8,5 @@ class DH_BazookaBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
+    WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
 }

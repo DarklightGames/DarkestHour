@@ -7,5 +7,5 @@ class DH_GMCTruckResupplyAttachment extends DH_MobileResupplyAttachment;
 
 defaultproperties
 {
-     Team=OWNER_Allies
+    Team=OWNER_Allies
 }

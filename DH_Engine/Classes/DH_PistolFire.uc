@@ -167,8 +167,8 @@ event ModeDoFire()
 
 defaultproperties
 {
-     PreLaunchTraceDistance=1312.000000
-     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
-     SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
+    PreLaunchTraceDistance=1312.000000
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
+    SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
 }
 

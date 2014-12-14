@@ -7,10 +7,9 @@ class DH_BARAmmo extends ROAmmunition;
 
 defaultproperties
 {
-     MaxAmmo=21
-     InitialAmount=20
-     PickupClass=class'DH_Weapons.DH_BARAmmoPickup'
-     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_ammo'
-     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
-     ItemName="BAR Magazine"
+    MaxAmmo=21
+    InitialAmount=20
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.BAR_ammo'
+    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
+    ItemName="BAR Magazine"
 }

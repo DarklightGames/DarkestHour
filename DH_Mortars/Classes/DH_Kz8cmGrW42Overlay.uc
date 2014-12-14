@@ -9,5 +9,5 @@ class DH_Kz8cmGrW42Overlay extends DH_MortarOverlay;
 
 defaultproperties
 {
-     Mesh=SkeletalMesh'DH_Mortars_1st.Kz8cmGrW42'
+    Mesh=SkeletalMesh'DH_Mortars_1st.Kz8cmGrW42'
 }

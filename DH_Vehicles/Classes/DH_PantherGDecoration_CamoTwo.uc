@@ -9,8 +9,8 @@ class DH_PantherGDecoration_CamoTwo extends DH_VehicleDecoAttachment;
 
 defaultproperties
 {
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'DH_VehicleDecoGE_stc.Panther.schurzen04'
-     CullDistance=80000.000000
-     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2'
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'DH_VehicleDecoGE_stc.Panther.schurzen04'
+    CullDistance=80000.000000
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2'
 }

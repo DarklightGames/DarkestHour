@@ -14,7 +14,6 @@ var         float               RampSoundVolume;
 
 var name            RampDownIdleAnim;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -153,7 +152,6 @@ function DriverDied()
     MaybeDestroyVehicle();
 }
 
-
 // Called by notifies!!
 function RampUpIdle()
 {
@@ -179,180 +177,175 @@ function bool EncroachingOn(Actor Other)
 
 defaultproperties
 {
-     RampDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
-     RampUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
-     RampSoundVolume=180.000000
-     RampDownIdleAnim="Ramp_Idle"
-     DriverCameraBoneName="Camera_driver"
-     WashSound=Sound'DH_AlliedVehicleSounds.higgins.wash01'
-     WashSoundBoneL="Wash_L"
-     WashSoundBoneR="Wash_R"
-     EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
-     EngineSoundBone="Engine"
-//   MaxPitchSpeed=150.000000 // deprecated
-     DestAnimName="Higgins-Idle"
-     DestAnimRate=1.000000
-     WheelSoftness=0.025000
-     WheelPenScale=1.200000
-     WheelPenOffset=0.010000
-     WheelRestitution=0.100000
-     WheelInertia=0.100000
-     WheelLongFrictionFunc=(Points=(,(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
-     WheelLongSlip=0.001000
-     WheelLatSlipFunc=(Points=(,(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
-     WheelLongFrictionScale=1.100000
-     WheelLatFrictionScale=1.550000
-     WheelHandbrakeSlip=0.010000
-     WheelHandbrakeFriction=0.100000
-     WheelSuspensionTravel=10.000000
-     WheelSuspensionMaxRenderTravel=5.000000
-     FTScale=0.030000
-     ChassisTorqueScale=0.095000
-     MinBrakeFriction=4.000000
-     MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
-     TorqueCurve=(Points=((OutVal=1.000000),(InVal=200.000000,OutVal=0.750000),(InVal=1500.000000,OutVal=2.000000),(InVal=2200.000000)))
-     GearRatios(0)=-0.200000
-     GearRatios(1)=0.200000
-     GearRatios(2)=0.350000
-     GearRatios(3)=0.500000
-     GearRatios(4)=0.630000
-     TransRatio=0.090000
-     LSDFactor=1.000000
-     EngineBrakeFactor=0.000100
-     EngineBrakeRPMScale=0.100000
-     MaxBrakeTorque=20.000000
-     SteerSpeed=20.000000
-     TurnDamping=50.000000
-     StopThreshold=100.000000
-     HandbrakeThresh=200.000000
-     EngineInertia=0.100000
-     SteerBoneName="Master3z00"
-     RevMeterScale=4000.000000
-     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
-     ExhaustPipes(0)=(ExhaustPosition=(X=-270.000000,Y=-30.000000,Z=23.000000),ExhaustRotation=(Pitch=31000))
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatGunnerPawn',WeaponBone="mg_base")
-     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="Master1z00")
-     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="Master1z00")
-     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerThree',WeaponBone="Master1z00")
-     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="Master1z00")
-     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="Master1z00")
-     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="Master1z00")
-     IdleSound=Sound'DH_AlliedVehicleSounds.HigginsIdle01'
-     StartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
-     ShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
-     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_destroyed'
-     DamagedEffectOffset=(X=-170.000000,Y=20.000000,Z=50.000000)
-     VehicleTeam=1
-     SteeringScaleFactor=2.000000
-     BeginningIdleAnim="Higgins-Idle"
-     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Drop",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.000000)
-     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.000000)
-     VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
-     VehicleHudOccupantsX(0)=0.430000
-     VehicleHudOccupantsX(1)=0.570000
-     VehicleHudOccupantsX(2)=0.430000
-     VehicleHudOccupantsX(3)=0.430000
-     VehicleHudOccupantsX(4)=0.430000
-     VehicleHudOccupantsX(5)=0.570000
-     VehicleHudOccupantsX(6)=0.570000
-     VehicleHudOccupantsX(7)=0.570000
-     VehicleHudOccupantsY(0)=0.670000
-     VehicleHudOccupantsY(1)=0.670000
-     VehicleHudOccupantsY(3)=0.400000
-     VehicleHudOccupantsY(4)=0.500000
-     VehicleHudOccupantsY(5)=0.300000
-     VehicleHudOccupantsY(6)=0.400000
-     VehicleHudOccupantsY(7)=0.500000
-     VehicleHudEngineY=0.000000
-     VehHitpoints(0)=(PointBone="driver_player",PointOffset=(Z=45.000000))
-     VehHitpoints(1)=(PointRadius=50.000000,PointBone="Master1z00",PointOffset=(X=-160.000000,Z=60.000000))
-     bIsApc=true
-     DriverAttachmentBone="driver_player"
-     Begin Object Class=SVehicleWheel Name=LFWheel
-         bPoweredWheel=true
-         SteerType=VST_Steered
-         BoneName="wheel_LF"
-         BoneRollAxis=AXIS_Y
-         BoneOffset=(Z=-6.000000)
-         WheelRadius=30.000000
-     End Object
-     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LFWheel'
-
-     Begin Object Class=SVehicleWheel Name=RFWheel
-         bPoweredWheel=true
-         SteerType=VST_Steered
-         BoneName="wheel_RF"
-         BoneRollAxis=AXIS_Y
-         BoneOffset=(Z=-6.000000)
-         WheelRadius=30.000000
-     End Object
-     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RFWheel'
-
-     Begin Object Class=SVehicleWheel Name=LRWheel
-         bPoweredWheel=true
-         SteerType=VST_Inverted
-         BoneName="wheel_LR"
-         BoneRollAxis=AXIS_Y
-         BoneOffset=(Z=-6.000000)
-         WheelRadius=30.000000
-     End Object
-     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LRWheel'
-
-     Begin Object Class=SVehicleWheel Name=RRWheel
-         bPoweredWheel=true
-         SteerType=VST_Inverted
-         BoneName="wheel_RR"
-         BoneRollAxis=AXIS_Y
-         BoneOffset=(Z=-6.000000)
-         WheelRadius=30.000000
-     End Object
-     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RRWheel'
-
-     VehicleMass=6.000000
-     DrivePos=(Z=10.000000)
-     DriveAnim="stand_idlehip_satchel"
-     ExitPositions(0)=(X=-30.000000,Y=-38.000000,Z=150.000000)
-     ExitPositions(1)=(X=-30.000000,Y=-38.000000,Z=150.000000)
-     EntryRadius=350.000000
-     FPCamPos=(Z=30.000000)
-     TPCamDistance=375.000000
-     TPCamLookat=(X=0.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=100.000000)
-     DriverDamageMult=1.000000
-     VehiclePositionString="in a Higgins Boat"
-     VehicleNameString="Higgins Boat"
-     MaxDesireability=1.900000
-     GroundSpeed=80.000000
-     WaterSpeed=80.000000
-     HealthMax=800.000000
-     Health=800
-     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
-     Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
-     DestroyedVehicleTexture=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
-     CollisionRadius=100.000000
-     CollisionHeight=60.000000
-     Begin Object Class=KarmaParamsRBFull Name=KParams0
-         KInertiaTensor(0)=1.300000
-         KInertiaTensor(3)=4.000000
-         KInertiaTensor(5)=4.500000
-         KLinearDamping=0.050000
-         KAngularDamping=0.050000
-         KBuoyancy=1.200000
-         KStartEnabled=true
-         bKNonSphericalInertia=true
-         bHighDetailOnly=false
-         bClientOnly=false
-         bKDoubleTickRate=true
-         bKStayUpright=true
-         bKAllowRotate=true
-         bDestroyOnWorldPenetrate=true
-         bDoSafetime=true
-         KFriction=0.500000
-         KImpactThreshold=850.000000
-     End Object
-     KParams=KarmaParamsRBFull'DH_Vehicles.DH_HigginsBoat.KParams0'
-
-     bUseHighDetailOverlayIndex=true
-     HighDetailOverlayIndex=3
+    RampDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
+    RampUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
+    RampSoundVolume=180.000000
+    RampDownIdleAnim="Ramp_Idle"
+    DriverCameraBoneName="Camera_driver"
+    WashSound=Sound'DH_AlliedVehicleSounds.higgins.wash01'
+    WashSoundBoneL="Wash_L"
+    WashSoundBoneR="Wash_R"
+    EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
+    EngineSoundBone="Engine"
+    //   MaxPitchSpeed=150.000000 // deprecated
+    DestAnimName="Higgins-Idle"
+    DestAnimRate=1.000000
+    WheelSoftness=0.025000
+    WheelPenScale=1.200000
+    WheelPenOffset=0.010000
+    WheelRestitution=0.100000
+    WheelInertia=0.100000
+    WheelLongFrictionFunc=(Points=(,(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
+    WheelLongSlip=0.001000
+    WheelLatSlipFunc=(Points=(,(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
+    WheelLongFrictionScale=1.100000
+    WheelLatFrictionScale=1.550000
+    WheelHandbrakeSlip=0.010000
+    WheelHandbrakeFriction=0.100000
+    WheelSuspensionTravel=10.000000
+    WheelSuspensionMaxRenderTravel=5.000000
+    FTScale=0.030000
+    ChassisTorqueScale=0.095000
+    MinBrakeFriction=4.000000
+    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
+    TorqueCurve=(Points=((OutVal=1.000000),(InVal=200.000000,OutVal=0.750000),(InVal=1500.000000,OutVal=2.000000),(InVal=2200.000000)))
+    GearRatios(0)=-0.200000
+    GearRatios(1)=0.200000
+    GearRatios(2)=0.350000
+    GearRatios(3)=0.500000
+    GearRatios(4)=0.630000
+    TransRatio=0.090000
+    LSDFactor=1.000000
+    EngineBrakeFactor=0.000100
+    EngineBrakeRPMScale=0.100000
+    MaxBrakeTorque=20.000000
+    SteerSpeed=20.000000
+    TurnDamping=50.000000
+    StopThreshold=100.000000
+    HandbrakeThresh=200.000000
+    EngineInertia=0.100000
+    SteerBoneName="Master3z00"
+    RevMeterScale=4000.000000
+    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
+    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    ExhaustPipes(0)=(ExhaustPosition=(X=-270.000000,Y=-30.000000,Z=23.000000),ExhaustRotation=(Pitch=31000))
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatGunnerPawn',WeaponBone="mg_base")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="Master1z00")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="Master1z00")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerThree',WeaponBone="Master1z00")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="Master1z00")
+    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="Master1z00")
+    PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="Master1z00")
+    IdleSound=Sound'DH_AlliedVehicleSounds.HigginsIdle01'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_destroyed'
+    DamagedEffectOffset=(X=-170.000000,Y=20.000000,Z=50.000000)
+    VehicleTeam=1
+    SteeringScaleFactor=2.000000
+    BeginningIdleAnim="Higgins-Idle"
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Drop",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.000000)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.000000)
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
+    VehicleHudOccupantsX(0)=0.430000
+    VehicleHudOccupantsX(1)=0.570000
+    VehicleHudOccupantsX(2)=0.430000
+    VehicleHudOccupantsX(3)=0.430000
+    VehicleHudOccupantsX(4)=0.430000
+    VehicleHudOccupantsX(5)=0.570000
+    VehicleHudOccupantsX(6)=0.570000
+    VehicleHudOccupantsX(7)=0.570000
+    VehicleHudOccupantsY(0)=0.670000
+    VehicleHudOccupantsY(1)=0.670000
+    VehicleHudOccupantsY(3)=0.400000
+    VehicleHudOccupantsY(4)=0.500000
+    VehicleHudOccupantsY(5)=0.300000
+    VehicleHudOccupantsY(6)=0.400000
+    VehicleHudOccupantsY(7)=0.500000
+    VehicleHudEngineY=0.000000
+    VehHitpoints(0)=(PointBone="driver_player",PointOffset=(Z=45.000000))
+    VehHitpoints(1)=(PointRadius=50.000000,PointBone="Master1z00",PointOffset=(X=-160.000000,Z=60.000000))
+    bIsApc=true
+    DriverAttachmentBone="driver_player"
+    Begin Object Class=SVehicleWheel Name=LFWheel
+        bPoweredWheel=true
+        SteerType=VST_Steered
+        BoneName="wheel_LF"
+        BoneRollAxis=AXIS_Y
+        BoneOffset=(Z=-6.000000)
+        WheelRadius=30.000000
+    End Object
+    Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LFWheel'
+    Begin Object Class=SVehicleWheel Name=RFWheel
+        bPoweredWheel=true
+        SteerType=VST_Steered
+        BoneName="wheel_RF"
+        BoneRollAxis=AXIS_Y
+        BoneOffset=(Z=-6.000000)
+        WheelRadius=30.000000
+    End Object
+    Wheels(1)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RFWheel'
+    Begin Object Class=SVehicleWheel Name=LRWheel
+        bPoweredWheel=true
+        SteerType=VST_Inverted
+        BoneName="wheel_LR"
+        BoneRollAxis=AXIS_Y
+        BoneOffset=(Z=-6.000000)
+        WheelRadius=30.000000
+    End Object
+    Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LRWheel'
+    Begin Object Class=SVehicleWheel Name=RRWheel
+        bPoweredWheel=true
+        SteerType=VST_Inverted
+        BoneName="wheel_RR"
+        BoneRollAxis=AXIS_Y
+        BoneOffset=(Z=-6.000000)
+        WheelRadius=30.000000
+    End Object
+    Wheels(3)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RRWheel'
+    VehicleMass=6.000000
+    DrivePos=(Z=10.000000)
+    DriveAnim="stand_idlehip_satchel"
+    ExitPositions(0)=(X=-30.000000,Y=-38.000000,Z=150.000000)
+    ExitPositions(1)=(X=-30.000000,Y=-38.000000,Z=150.000000)
+    EntryRadius=350.000000
+    FPCamPos=(Z=30.000000)
+    TPCamDistance=375.000000
+    TPCamLookat=(X=0.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=100.000000)
+    DriverDamageMult=1.000000
+    VehiclePositionString="in a Higgins Boat"
+    VehicleNameString="Higgins Boat"
+    MaxDesireability=1.900000
+    GroundSpeed=80.000000
+    WaterSpeed=80.000000
+    HealthMax=800.000000
+    Health=800
+    Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
+    DestroyedVehicleTexture=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
+    CollisionRadius=100.000000
+    CollisionHeight=60.000000
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.300000
+        KInertiaTensor(3)=4.000000
+        KInertiaTensor(5)=4.500000
+        KLinearDamping=0.050000
+        KAngularDamping=0.050000
+        KBuoyancy=1.200000
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bKStayUpright=true
+        bKAllowRotate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=0.500000
+        KImpactThreshold=850.000000
+    End Object
+    KParams=KarmaParamsRBFull'DH_Vehicles.DH_HigginsBoat.KParams0'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=3
 }

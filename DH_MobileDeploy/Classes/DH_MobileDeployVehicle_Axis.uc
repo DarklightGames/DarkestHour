@@ -105,8 +105,8 @@ simulated function ClientKDriverLeave(PlayerController PC)
 
 defaultproperties
 {
-     bMustBeSL=true
-     PointValue=3.000000
-     bNeverReset=true
-     Skins(0)=Texture'DH_MDV_Tex.AlliedMDV.Halftrack_body_MDV_camo2'
+    bMustBeSL=true
+    PointValue=3.000000
+    bNeverReset=true
+    Skins(0)=Texture'DH_MDV_Tex.AlliedMDV.Halftrack_body_MDV_camo2'
 }

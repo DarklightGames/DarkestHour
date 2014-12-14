@@ -7,6 +7,6 @@ class DH_PanzerIVJCannon_SnowTwo extends DH_PanzerIVJCannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow1'
-     Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_camo1'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow1'
+    Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_camo1'
 }

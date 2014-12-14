@@ -37,7 +37,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
-        ServerChangeSpawn;
+        ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles;
 
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
@@ -71,7 +71,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
         {
             if (WeaponBufferRotation.Yaw > 32768)
             {
-                WeaponBufferRotation.Yaw += YawTweenRate * deltatime;
+                WeaponBufferRotation.Yaw += YawTweenRate * DeltaTime;
 
                 if (WeaponBufferRotation.Yaw > 65536)
                 {
@@ -80,7 +80,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
             }
             else
             {
-                WeaponBufferRotation.Yaw -= YawTweenRate * deltatime;
+                WeaponBufferRotation.Yaw -= YawTweenRate * DeltaTime;
 
                 if (WeaponBufferRotation.Yaw <  0)
                 {
@@ -93,7 +93,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
         {
             if (WeaponBufferRotation.Pitch > 32768)
             {
-                WeaponBufferRotation.Pitch += PitchTweenRate * deltatime;
+                WeaponBufferRotation.Pitch += PitchTweenRate * DeltaTime;
 
                 if (WeaponBufferRotation.Pitch > 65536)
                 {
@@ -102,7 +102,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
             }
             else
             {
-                WeaponBufferRotation.Pitch -= PitchTweenRate * deltatime;
+                WeaponBufferRotation.Pitch -= PitchTweenRate * DeltaTime;
 
                 if (WeaponBufferRotation.Pitch <  0)
                 {
@@ -113,7 +113,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 
         if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
         {
-            NewRotation += (RecoilRotator/RecoilSpeed) * deltatime;
+            NewRotation += (RecoilRotator/RecoilSpeed) * DeltaTime;
         }
         else
         {
@@ -134,7 +134,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 
     if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
     {
-        AppliedRecoil = (RecoilRotator/RecoilSpeed) * deltatime;
+        AppliedRecoil = (RecoilRotator/RecoilSpeed) * DeltaTime;
         WeaponBufferRotation += AppliedRecoil;
     }
     else
@@ -307,7 +307,6 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         SwayTime = 0.0;
     }
 
-
     if (bInterpolating || ((Pawn != none) && Pawn.bInterpolating))
     {
         ViewShake(deltaTime);
@@ -389,7 +388,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             ViewRotation.Pitch = ROPwn.LimitPitch(ViewRotation.Pitch, DeltaTime);
         }
 
-        if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bDeployingMortar))
+        if (ROPwn != none && (ROPwn.bBipodDeployed || ROPwn.bIsMantling || ROPwn.bIsDeployingMortar || ROPwn.bIsCuttingWire))
         {
             ROPwn.LimitYaw(ViewRotation.Yaw);
         }
@@ -419,7 +418,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         NewRotation.Roll = Rotation.Roll;
 
         if (!bRotateToDesired && (Pawn != none) && (!bFreeCamera || !bBehindView))
-            Pawn.FaceRotation(NewRotation, deltatime);
+            Pawn.FaceRotation(NewRotation, DeltaTime);
     }
 }
 
@@ -433,7 +432,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 * =================================================================================== */
 function ServerSaveArtilleryPosition()
 {
-    local actor HitActor;
+    local Actor HitActor;
     local vector HitLocation, HitNormal, StartTrace;
     local Material HitMaterial;
     local DHGameReplicationInfo GRI;
@@ -568,7 +567,7 @@ function ServerArtyStrike()
 
     if (Spawner == none)
     {
-        log("Error spawning artillery shell spawner");
+        Log("Error spawning artillery shell spawner");
     }
     else
     {
@@ -785,7 +784,7 @@ function ServerSaveMortarTarget()
             if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self)
             {
                 GRI.GermanMortarTargets[i].Controller = self;
-                GRI.GermanMortarTargets[i].HitLocation = vect(0,0,0);
+                GRI.GermanMortarTargets[i].HitLocation = vect(0, 0, 0);
                 GRI.GermanMortarTargets[i].Location = HitLocation;
                 GRI.GermanMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.GermanMortarTargets[i].bCancelled = 0;
@@ -802,7 +801,7 @@ function ServerSaveMortarTarget()
             if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self)
             {
                 GRI.AlliedMortarTargets[i].Controller = self;
-                GRI.AlliedMortarTargets[i].HitLocation = vect(0,0,0);
+                GRI.AlliedMortarTargets[i].HitLocation = vect(0, 0, 0);
                 GRI.AlliedMortarTargets[i].Location = HitLocation;
                 GRI.AlliedMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.AlliedMortarTargets[i].bCancelled = 0;
@@ -983,10 +982,11 @@ state PlayerWalking
         // Update acceleration.
         NewAccel = aForward*X + aStrafe*Y;
         NewAccel.Z = 0;
-        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bDeployingMortar)
-            NewAccel = vect(0,0,0);
 
-        //DoubleClickMove = PlayerInput.CheckForDoubleClickMove(1.1*DeltaTime/Level.TimeDilation);
+        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire)
+        {
+            NewAccel = vect(0, 0, 0);
+        }
 
         GroundPitch = 0;
         ViewRotation = Rotation;
@@ -994,16 +994,14 @@ state PlayerWalking
         if (Pawn.Physics == PHYS_Walking)
         {
             // Take the bipod weapon out of deployed if the player tries to move
-            if (Pawn.bBipodDeployed && NewAccel != vect(0,0,0))
+            if (Pawn.bBipodDeployed && NewAccel != vect(0, 0, 0))
             {
                 ROBipodWeapon(Pawn.Weapon).ForceUndeploy();
-//              DH_BipodAutoWeapon(Pawn.Weapon).ForceUndeploy();
             }
 
             // tell pawn about any direction changes to give it a chance to play appropriate animation
             //if walking, look up/down stairs - unless player is rotating view
-             if ((bLook == 0)
-                && (((Pawn.Acceleration != vect(0,0,0)) && bSnapToLevel) || !bKeyboardLook))
+             if (bLook == 0 && ((Pawn.Acceleration != vect(0, 0, 0) && bSnapToLevel) || !bKeyboardLook))
             {
                 if (bLookUpStairs || bSnapToLevel)
                 {
@@ -1027,12 +1025,19 @@ state PlayerWalking
             bPressedJump = false;
         }
         else
+        {
             bSaveJump = false;
+        }
 
         if (Role < ROLE_Authority) // then save this move and replicate it
+        {
             ReplicateMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
+        }
         else
+        {
             ProcessMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
+        }
+
         bPressedJump = bSaveJump;
     }
 
@@ -1063,8 +1068,8 @@ state Mantling
     {
         if (bDidMantle && Role < ROLE_Authority)
         {
-            if (Pawn.Velocity != vect(0,0,0))
-                Pawn.Velocity = vect(0,0,0);
+            if (Pawn.Velocity != vect(0, 0, 0))
+                Pawn.Velocity = vect(0, 0, 0);
         }
 
         super.PlayerTick(DeltaTime);
@@ -1159,7 +1164,7 @@ state Mantling
         if (!bDidMantle && DHP.bIsMantling)
             NewAccel = DHP.NewAcceleration;
         else
-            NewAccel = vect(0,0,0);
+            NewAccel = vect(0, 0, 0);
 
         // Update rotation.
         SetRotation(ViewRotation);
@@ -1183,12 +1188,12 @@ state Mantling
             if (Role == ROLE_Authority)
             {
                 ClientMessage("SERVER ENTER Controller Mantling state");
-                log("SERVER ENTER Controller Mantling state");
+                Log("SERVER ENTER Controller Mantling state");
             }
             else
             {
                 ClientMessage("CLIENT ENTER Controller Mantling state");
-                log("CLIENT ENTER Controller Mantling state");
+                Log("CLIENT ENTER Controller Mantling state");
             }
         }
 
@@ -1212,12 +1217,12 @@ state Mantling
             if (Role == ROLE_Authority)
             {
                 ClientMessage("SERVER EXIT Controller Mantling state");
-                log("SERVER EXIT Controller Mantling state");
+                Log("SERVER EXIT Controller Mantling state");
             }
             else
             {
                 ClientMessage("CLIENT EXIT Controller Mantling state");
-                log("CLIENT EXIT Controller Mantling state");
+                Log("CLIENT EXIT Controller Mantling state");
             }
         }
 
@@ -1231,11 +1236,10 @@ state Mantling
         if (bMantleDebug && Pawn.IsLocallyControlled())
         {
             ClientMessage("------------- End Mantle Debug -------------");
-            log("------------- End Mantle Debug -------------");
+            Log("------------- End Mantle Debug -------------");
         }
     }
 }
-
 
 // Removes the awkward "jump" out of water
 // This has not been tested to much capacity
@@ -1246,7 +1250,7 @@ ignores SeePlayer, HearNoise, Bump;
 
     function bool NotifyPhysicsVolumeChange( PhysicsVolume NewVolume )
     {
-        local actor HitActor;
+        local Actor HitActor;
         local vector HitLocation, HitNormal, checkpoint;
 
         if ( !NewVolume.bWaterVolume )
@@ -1664,7 +1668,7 @@ exec function LeaveBody()
 function ServerLeaveBody()
 {
     Pawn.UnPossessed();
-    Pawn.SetPhysics(PHYS_none);
+    Pawn.SetPhysics(PHYS_None);
     Pawn.Velocity = vect(0, 0, 0);
     Pawn = none;
 }
@@ -1708,21 +1712,43 @@ function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
     bReadyToSpawn = true;   //TODO: do a more thorough check here
 }
 
+function ServerClearObstacle(int Index)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.ObstacleManager != none)
+    {
+        G.ObstacleManager.ClearObstacle(Index);
+    }
+}
+
+exec function DebugObstacles(optional int Option)
+{
+    ServerDebugObstacles(Option);
+}
+
+function ServerDebugObstacles(optional int Option)
+{
+    DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
+}
+
 defaultproperties
 {
-     FlinchRotMag=(X=100.000000,Z=100.000000)
-     FlinchRotRate=(X=1000.000000,Z=1000.000000)
-     FlinchRotTime=1.000000
-     FlinchOffsetMag=(X=100.000000,Z=100.000000)
-     FlinchOffsetRate=(X=1000.000000,Z=1000.000000)
-     FlinchOffsetTime=1.000000
-     MortarTargetIndex=255
-     ROMidGameMenuClass="DH_Interface.DHRoleSelection"
-     GlobalDetailLevel=5
-     DesiredFOV=90.000000
-     DefaultFOV=90.000000
-     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
-     PawnClass=class'DH_Engine.DH_Pawn'
-     SpawnPointIndex=-1
-     VehiclePoolIndex=-1
+    FlinchRotMag=(X=100.000000,Z=100.000000)
+    FlinchRotRate=(X=1000.000000,Z=1000.000000)
+    FlinchRotTime=1.000000
+    FlinchOffsetMag=(X=100.000000,Z=100.000000)
+    FlinchOffsetRate=(X=1000.000000,Z=1000.000000)
+    FlinchOffsetTime=1.000000
+    MortarTargetIndex=255
+    ROMidGameMenuClass="DH_Interface.DHRoleSelection"
+    GlobalDetailLevel=5
+    DesiredFOV=90.000000
+    DefaultFOV=90.000000
+    PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
+    PawnClass=class'DH_Engine.DH_Pawn'
+    SpawnPointIndex=-1
+    VehiclePoolIndex=-1
 }

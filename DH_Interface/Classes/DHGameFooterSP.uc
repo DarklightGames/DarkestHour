@@ -28,28 +28,26 @@ function SetupButtons(optional string bPerButtonSizes)
 
 defaultproperties
 {
-     Begin Object Class=GUIButton Name=GamePrimaryButton
-         StyleName="DHSmallTextButtonStyle"
-         WinTop=0.085678
-         WinLeft=0.880000
-         WinWidth=0.120000
-         WinHeight=0.036482
-         TabOrder=0
-         bBoundToParent=true
-         OnKeyEvent=GamePrimaryButton.InternalOnKeyEvent
-     End Object
-     b_Primary=GUIButton'DH_Interface.DHGameFooterSP.GamePrimaryButton'
-
-     Begin Object Class=GUIButton Name=GameBackButton
-         Caption="Back"
-         StyleName="DHSmallTextButtonStyle"
-         WinTop=0.085678
-         WinWidth=0.120000
-         WinHeight=0.036482
-         TabOrder=2
-         bBoundToParent=true
-         OnKeyEvent=GameBackButton.InternalOnKeyEvent
-     End Object
-     b_Back=GUIButton'DH_Interface.DHGameFooterSP.GameBackButton'
-
+    Begin Object Class=GUIButton Name=GamePrimaryButton
+        StyleName="DHSmallTextButtonStyle"
+        WinTop=0.085678
+        WinLeft=0.880000
+        WinWidth=0.120000
+        WinHeight=0.036482
+        TabOrder=0
+        bBoundToParent=true
+        OnKeyEvent=GamePrimaryButton.InternalOnKeyEvent
+    End Object
+    b_Primary=GUIButton'DH_Interface.DHGameFooterSP.GamePrimaryButton'
+    Begin Object Class=GUIButton Name=GameBackButton
+        Caption="Back"
+        StyleName="DHSmallTextButtonStyle"
+        WinTop=0.085678
+        WinWidth=0.120000
+        WinHeight=0.036482
+        TabOrder=2
+        bBoundToParent=true
+        OnKeyEvent=GameBackButton.InternalOnKeyEvent
+    End Object
+    b_Back=GUIButton'DH_Interface.DHGameFooterSP.GameBackButton'
 }

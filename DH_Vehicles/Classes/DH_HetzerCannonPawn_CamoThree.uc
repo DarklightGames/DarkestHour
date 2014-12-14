@@ -7,5 +7,5 @@ class DH_HetzerCannonPawn_CamoThree extends DH_HetzerCannonPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_HetzerCannon_CamoThree'
+    GunClass=class'DH_Vehicles.DH_HetzerCannon_CamoThree'
 }

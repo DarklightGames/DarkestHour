@@ -8,7 +8,6 @@
 //========================================================================================
 class DH_AdminMenu_ObjectivesMenu extends DH_AdminMenu_MenuBase;
 
-
 exec function ObjectivesMenu(string Action, optional string PlayerName)
 {
     if (!bInitialVariablesSet)

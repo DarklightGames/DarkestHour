@@ -5,7 +5,6 @@
 
 class DH_ROTankCannonShellHEAT extends DH_ROTankCannonShell;
 
-
 var sound               ExplosionSound[3];        // sound of this shell exploding
 
 // Penetration
@@ -286,7 +285,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local array<int>      HitPoints;
     local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
 
-    if (bDebuggingText) log("HEAT.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
+    if (bDebuggingText) Log("HEAT.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
     if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
     {
@@ -311,7 +310,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                if (bDebuggingText) log("HEAT.ProcessTouch: hit driver, authority should damage him & shell continue"); // TEMP
+                if (bDebuggingText) Log("HEAT.ProcessTouch: hit driver, authority should damage him & shell continue"); // TEMP
                 if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
                 {
                     VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
@@ -321,7 +320,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
             else
             {
-                if (bDebuggingText) log("HEAT.ProcessTouch: hit driver area but not driver, shell should continue"); // TEMP
+                if (bDebuggingText) Log("HEAT.ProcessTouch: hit driver area but not driver, shell should continue"); // TEMP
                 SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
             }
 
@@ -414,7 +413,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)
             {
-                if (bDebuggingText) log("HEAT.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
+                if (bDebuggingText) Log("HEAT.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
                 if (Role == ROLE_Authority)
                 {
                     ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
@@ -422,7 +421,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                 Velocity *= 0.8; // hitting a body doesn't cause shell to explode, but we'll slow it down a bit
             }
-            else if (bDebuggingText) log("HEAT.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
+            else if (bDebuggingText) Log("HEAT.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
 
             return; // exit without exploding, so shell continues on its flight
         }
@@ -437,16 +436,16 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a shell explode
             if (Other.IsA('RODestroyableStaticMesh') && RODestroyableStaticMesh(Other).bWontStopBullets)
             {
-                if (bDebuggingText) log("HEAT.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
+                if (bDebuggingText) Log("HEAT.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
                 return;
             }
-            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) log("HEAT.ProcessTouch: exploding on destroyable SM"); // TEMP
-            else if (bDebuggingText) log("HEAT.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
+            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) Log("HEAT.ProcessTouch: exploding on destroyable SM"); // TEMP
+            else if (bDebuggingText) Log("HEAT.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
         }
         // Otherwise we hit something we aren't going to damage
         else if (Role == ROLE_Authority && Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
         {
-            if (bDebuggingText) log("HEAT.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
+            if (bDebuggingText) Log("HEAT.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
             ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
 
@@ -467,7 +466,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     local vector TmpHitLocation, TmpHitNormal, X,Y,Z, LastLoc;
     local float xH; //,EnergyFactor;
     //local rotator distortion;
-    local actor tmpHit;
+    local Actor tmpHit;
 
     local vector SavedVelocity;
 //  local PlayerController PC;
@@ -513,7 +512,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
         // Don't save hitting this actor since we deflected
         SavedHitActor = none;
         // Don't update the position any more
-        bUpdateSimulatedPosition=false;
+        bUpdateSimulatedPosition = false;
 
         //Deflect(HitNormal, Wall);
         Explode(Location + ExploWallOut * HitNormal, HitNormal);
@@ -528,13 +527,13 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
         return;
 
     // Don't update the position any more and don't move the projectile any more.
-    bUpdateSimulatedPosition=false;
+    bUpdateSimulatedPosition = false;
     SetPhysics(PHYS_None);
     SetDrawType(DT_None);
 
     SavedHitActor = Pawn(Wall);
 
-    Super(ROBallisticProjectile).HitWall(HitNormal, Wall);
+    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
 
     if (Role == ROLE_Authority)
     {
@@ -571,7 +570,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
     bInHitWall = true;
 
-    //if (bDebugMode) log("HitWall - Starting Penetration Check");
+    //if (bDebugMode) Log("HitWall - Starting Penetration Check");
 
     GetAxes(Rotation,X,Y,Z);
 
@@ -581,7 +580,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     //EnergyFactor = 1000;         // EnergyFactor = (0.001*Vsize(Velocity))**2;
     MaxWall = EnergyFactor * xH * PenetrationScale * WScale;
 
-    //if (bDebugMode) log("INFO - Velocity:"@Vsize(Velocity)@Velocity@" N "@Normal(Velocity)@" NRG Factor"@EnergyFactor@" MaxWall:"@MaxWall);
+    //if (bDebugMode) Log("INFO - Velocity:"@Vsize(Velocity)@Velocity@" N "@Normal(Velocity)@" NRG Factor"@EnergyFactor@" MaxWall:"@MaxWall);
 
     // due to MaxWall getting into very high ranges we need to make shorter trace checks till we reach the full MaxWall value
     if (MaxWall > 16)
@@ -594,7 +593,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
                 tmpMaxWall = MaxWall;
             tmpHit = Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * tmpMaxWall, false);
 
-            //if (bDebugMode) log("in do-while - tmpMaxWall:"@tmpMaxWall@" tmpHit:"@tmpHit);
+            //if (bDebugMode) Log("in do-while - tmpMaxWall:"@tmpMaxWall@" tmpHit:"@tmpHit);
 
             // due to StaticMeshs resulting in a hit even with the trace starting right inside of them (terrain and BSP 'space' would return none)
             if ((tmpHit != none) && !SetLocation(TmpHitLocation + (vect(0.5,0,0) * X)))
@@ -825,7 +824,6 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-
 //-----------------------------------------------------------------------------
 // PhysicsVolumeChange - Blow up HE rounds when they hit water
 //-----------------------------------------------------------------------------
@@ -839,28 +837,28 @@ simulated function PhysicsVolumeChange(PhysicsVolume Volume)
 
 defaultproperties
 {
-     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
-     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
-     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
-     WScale=1.000000
-     PenetrationDamage=250.000000
-     PenetrationDamageRadius=500.000000
-     EnergyFactor=1000.000000
-     PeneExploWallOut=75.000000
-     PenetrationScale=0.080000
-     DistortionScale=0.400000
-     bIsHEATRound=true
-     ShakeRotMag=(Y=0.000000)
-     ShakeRotRate=(Z=2500.000000)
-     BlurTime=6.000000
-     BlurEffectScalar=2.100000
-     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
-     ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
-     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
-     DamageRadius=300.000000
-     MyDamageType=class'DH_HEATCannonShellDamage'
-     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
-     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-     LifeSpan=10.000000
-     SoundRadius=1000.000000
+    ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
+    ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
+    ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
+    WScale=1.000000
+    PenetrationDamage=250.000000
+    PenetrationDamageRadius=500.000000
+    EnergyFactor=1000.000000
+    PeneExploWallOut=75.000000
+    PenetrationScale=0.080000
+    DistortionScale=0.400000
+    bIsHEATRound=true
+    ShakeRotMag=(Y=0.000000)
+    ShakeRotRate=(Z=2500.000000)
+    BlurTime=6.000000
+    BlurEffectScalar=2.100000
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
+    ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
+    ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
+    DamageRadius=300.000000
+    MyDamageType=class'DH_HEATCannonShellDamage'
+    ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
+    ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+    LifeSpan=10.000000
+    SoundRadius=1000.000000
 }

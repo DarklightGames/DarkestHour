@@ -66,7 +66,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     CameraRotation =  WeaponAimRot;
 
-
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
     if (CameraBone != '' && Gun != none)
@@ -75,7 +74,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
 
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
@@ -87,8 +86,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -201,34 +200,34 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 
 defaultproperties
 {
-     BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-     BinocsPositionIndex=2
-     FirstPersonGunShakeScale=0.750000
-     WeaponFov=60.000000
-     HudName="Engineer"
-     DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-     bMultiPosition=true
-     bMustBeTankCrew=false
-     GunClass=class'DH_Vehicles.DH_HigginsBoatGun'
-     bCustomAiming=true
-     PositionInArray=0
-     bHasAltFire=false
-     CameraBone="Camera_com"
-     bDesiredBehindView=false
-     DrivePos=(Y=-5.000000,Z=14.000000)
-     DriveRot=(Yaw=16384)
-     DriveAnim="VHalftrack_com_idle"
-     EntryRadius=350.000000
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="in a Higgins Boat"
-     VehicleNameString="Higgins Boat"
-     HUDOverlayClass=class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
-     HUDOverlayOffset=(X=-2.000000)
-     HUDOverlayFOV=35.000000
-     PitchUpLimit=8000
-     PitchDownLimit=60000
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    BinocsPositionIndex=2
+    FirstPersonGunShakeScale=0.750000
+    WeaponFov=60.000000
+    HudName="Engineer"
+    DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    bMultiPosition=true
+    bMustBeTankCrew=false
+    GunClass=class'DH_Vehicles.DH_HigginsBoatGun'
+    bCustomAiming=true
+    PositionInArray=0
+    bHasAltFire=false
+    CameraBone="Camera_com"
+    bDesiredBehindView=false
+    DrivePos=(Y=-5.000000,Z=14.000000)
+    DriveRot=(Yaw=16384)
+    DriveAnim="VHalftrack_com_idle"
+    EntryRadius=350.000000
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="in a Higgins Boat"
+    VehicleNameString="Higgins Boat"
+    HUDOverlayClass=class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
+    HUDOverlayOffset=(X=-2.000000)
+    HUDOverlayFOV=35.000000
+    PitchUpLimit=8000
+    PitchDownLimit=60000
 }

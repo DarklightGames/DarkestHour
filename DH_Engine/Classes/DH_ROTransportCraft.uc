@@ -67,21 +67,21 @@ simulated function PostBeginPlay()
 
         if (LeftTreadSoundAttach == none)
         {
-            LeftTreadSoundAttach = Spawn(class 'ROSoundAttachment');
+            LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
             LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
             AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
         }
 
         if (RightTreadSoundAttach == none)
         {
-            RightTreadSoundAttach = Spawn(class 'ROSoundAttachment');
+            RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
             RightTreadSoundAttach.AmbientSound = RightTreadSound;
             AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
         }
 
         if (InteriorRumbleSoundAttach == none)
         {
-            InteriorRumbleSoundAttach = Spawn(class 'ROSoundAttachment');
+            InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
             InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
             AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
         }
@@ -203,7 +203,6 @@ simulated function Tick(float DeltaTime)
                 ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
         }
 
-
         KGetRigidBodyState(BodyState);
         LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
 
@@ -218,7 +217,7 @@ simulated function Tick(float DeltaTime)
         if (RightTreadPanner != none)
         {
             RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity Dot vector(Rotation) < 0)
+            if (Velocity dot vector(Rotation) < 0)
                 RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
             RightTreadPanner.PanRate -= LinTurnSpeed;
         }
@@ -257,7 +256,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        Super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
     {
@@ -386,14 +385,14 @@ simulated function bool IsDisabled()
 
 defaultproperties
 {
-     bEnterringUnlocks=false
-     LeftTreadIndex=1
-     RightTreadIndex=2
-     MaxCriticalSpeed=800.000000
-     WheelRotationScale=500
-     PointValue=2.000000
-     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-     VehicleSpikeTime=60.000000
-     bIsApc=true
-     bKeepDriverAuxCollision=false
+    bEnterringUnlocks=false
+    LeftTreadIndex=1
+    RightTreadIndex=2
+    MaxCriticalSpeed=800.000000
+    WheelRotationScale=500
+    PointValue=2.000000
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    VehicleSpikeTime=60.000000
+    bIsApc=true
+    bKeepDriverAuxCollision=false
 }

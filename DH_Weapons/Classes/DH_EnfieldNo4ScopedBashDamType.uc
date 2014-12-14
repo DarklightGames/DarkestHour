@@ -8,5 +8,5 @@ class DH_EnfieldNo4ScopedBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
+    WeaponClass=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon'
 }

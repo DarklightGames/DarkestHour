@@ -9,5 +9,5 @@ class DH_Pak40ATGunLate extends DH_Pak40ATGun;
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak40CannonPawnLate')
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Pak40CannonPawnLate')
 }

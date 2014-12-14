@@ -10,14 +10,14 @@ class DH_BazookaWeapon extends DH_RocketWeapon;
 defaultproperties
 {
     Ranges(0)=15
-	Ranges(1)=850
-	Ranges(2)=2450
-	FireModeClass(0)=class'DH_ATWeapons.DH_BazookaFire'
-	FireModeClass(1)=class'DH_ATWeapons.DH_BazookaMeleeFire'
-	PickupClass=class'DH_ATWeapons.DH_BazookaPickup'
-	AttachmentClass=class'DH_ATWeapons.DH_BazookaAttachment'
-	ItemName="M1A1 Bazooka"
-	Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka'
-	FillAmmoMagCount=1
-	WarningMessageClass=class'DH_ATWeapons.DH_BazookaWarningMsg'
+    Ranges(1)=850
+    Ranges(2)=2450
+    FireModeClass(0)=class'DH_ATWeapons.DH_BazookaFire'
+    FireModeClass(1)=class'DH_ATWeapons.DH_BazookaMeleeFire'
+    PickupClass=class'DH_ATWeapons.DH_BazookaPickup'
+    AttachmentClass=class'DH_ATWeapons.DH_BazookaAttachment'
+    ItemName="M1A1 Bazooka"
+    Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka'
+    FillAmmoMagCount=1
+    WarningMessageClass=class'DH_ATWeapons.DH_BazookaWarningMsg'
 }

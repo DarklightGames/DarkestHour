@@ -1,16 +1,14 @@
-// *************************************************************************
-//
-//  ***   DarkestHourGame (TeamGame)   ***
-//
-// *************************************************************************
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 
 class DarkestHourGame extends ROTeamGame;
 
-var     DH_LevelInfo                DHLevelInfo;                // Stores the DH_LevelInfo so we can access its properties
-var     DHLevelSharedInfo           DHSharedInfo;               // Stores the DHLevelSharedInfo so we can access its properties
+var     DH_LevelInfo                DHLevelInfo;
+var     DHLevelSharedInfo           DHSharedInfo; //Debug Theel
 
-// Ammo resupply
-var     DHAmmoResupplyVolume        DHResupplyAreas[10];        // Ammo resupply area
+var     DHAmmoResupplyVolume        DHResupplyAreas[10];
 
 var     array<DHSpawnArea>          DHMortarSpawnAreas;
 var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
@@ -19,10 +17,20 @@ var     DH_RoleInfo                 DHAxisRoles[16];
 var     DH_RoleInfo                 DHAlliesRoles[16];
 
 var     DHSpawnManager              SpawnManager;
+var     DHObstacleManager           ObstacleManager;
 
-//-----------------------------------------------------------------------------
-// PostBeginPlay - Find the level info and objectives
-//-----------------------------------------------------------------------------
+
+// Overridden to make new clamp of MaxPlayers from 64 to 128
+event InitGame(string Options, out string Error)
+{
+    Super.InitGame(Options, Error);
+
+    if( bIgnore32PlayerLimit )
+    {
+        MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
+        default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
+    }
+}
 
 function PostBeginPlay()
 {
@@ -40,7 +48,8 @@ function PostBeginPlay()
     local float MaxPlayerRatio;
     local DHSpawnArea DHSA;
 
-    super.PostBeginPlay();
+    //Don't call the RO super because we already do everything for DH and don't want levels using ROLevelInfo
+    super(TeamGame).PostBeginPlay();
 
     if (MaxIdleTime > 0)
         Level.bKickLiveIdlers = true;
@@ -56,7 +65,7 @@ function PostBeginPlay()
         }
         else
         {
-            log("DarkestHourGame: More than one ROLevelInfo detected!");
+            Log("DarkestHourGame: More than one ROLevelInfo detected!");
             break;
         }
     }
@@ -70,12 +79,12 @@ function PostBeginPlay()
         }
         else
         {
-            log("DarkestHourGame: More than one DH_LevelInfo detected!");
+            Log("DarkestHourGame: More than one DH_LevelInfo detected!");
             break;
         }
     }
 
-    // Find and set the DHLevelSharedInfo
+    // Find and set the DHLevelSharedInfo * Debug Theel
     foreach AllActors(class'DHLevelSharedInfo', DLSI)
     {
         if (DHSharedInfo == none)
@@ -84,217 +93,228 @@ function PostBeginPlay()
         }
         else
         {
-            log("DarkestHourGame: More than one DHLevelSharedInfo detected!");
+            Log("DarkestHourGame: More than one DHLevelSharedInfo detected!");
             break;
         }
     }
 
-    if (LevelInfo == none)
+    foreach AllActors(class'DHObstacleManager', ObstacleManager)
     {
-        log("DarkestHourGame: No DH_LevelInfo detected!");
+        break;
+    }
+
+    // Darkest Hour Game Check
+    // Prevents ROLevelInfo from working with DH levels
+    if (LevelInfo == none || !LevelInfo.IsA('DH_LevelInfo'))
+    {
+        Warn("DarkestHourGame: No DH_LevelInfo detected!");
+        Warn("Level may not be using DH_LevelInfo and needs to be!");
+        return; //Don't setup the game if LevelInfo isn't DH
+    }
+
+    //We made it here so lets setup our DarkestHourGame
+
+    // Setup Spectator Viewpoints
+    for (n = 0; n < LevelInfo.EntryCamTags.Length; n++)
+    {
+        foreach AllActors(class'SpectatorCam', ViewPoint, LevelInfo.EntryCamTags[n])
+        {
+            ViewPoints[ViewPoints.Length] = ViewPoint;
+            //log("Added Viewpoint "$ViewPoint.Tag);
+        }
+    }
+
+    RoundDuration = LevelInfo.RoundDuration * 60;
+
+    // Setup some GRI stuff
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (DHGRI == none)
+        return;
+
+    DHGRI.bAllowNetDebug = bAllowNetDebug;
+    DHGRI.PreStartTime = PreStartTime;
+    DHGRI.RoundDuration = RoundDuration;
+    DHGRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
+    DHGRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+    DHGRI.ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
+    DHGRI.ReinforcementInterval[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ReinforcementInterval;
+    DHGRI.UnitName[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitName;
+    DHGRI.UnitName[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitName;
+    DHGRI.NationIndex[AXIS_TEAM_INDEX] = LevelInfo.Axis.Nation;
+    DHGRI.NationIndex[ALLIES_TEAM_INDEX] = LevelInfo.Allies.Nation;
+    DHGRI.UnitInsignia[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitInsignia;
+    DHGRI.UnitInsignia[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitInsignia;
+    DHGRI.MapImage = LevelInfo.MapImage;
+    DHGRI.bPlayerMustReady = bPlayersMustBeReady;
+    DHGRI.RoundLimit = RoundLimit;
+    DHGRI.MaxPlayers = MaxPlayers;
+    DHGRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
+    DHGRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
+
+    // Artillery
+    DHGRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
+    DHGRI.ArtilleryStrikeLimit[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ArtilleryStrikeLimit;
+    DHGRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
+    DHGRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
+    DHGRI.LastArtyStrikeTime[AXIS_TEAM_INDEX] = LevelInfo.GetStrikeInterval(AXIS_TEAM_INDEX);
+    DHGRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
+    DHGRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
+    DHGRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
+
+    for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); k++)
+    {
+        DHGRI.AlliedRallyPoints[k].OfficerPRI = none;
+        DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0, 0, 0);
+        DHGRI.AxisRallyPoints[k].OfficerPRI = none;
+        DHGRI.AxisRallyPoints[k].RallyPointLocation = vect(0, 0, 0);
+    }
+
+    // Clear help requests array
+    for (k = 0; k < arraycount(DHGRI.AlliedHelpRequests); k++)
+    {
+        DHGRI.AlliedHelpRequests[k].OfficerPRI = none;
+        DHGRI.AlliedHelpRequests[k].requestType = 255;
+        DHGRI.AxisHelpRequests[k].OfficerPRI = none;
+        DHGRI.AxisHelpRequests[k].requestType = 255;
+    }
+
+    ResetMortarTargets();
+
+    if (LevelInfo.OverheadOffset == OFFSET_90)
+    {
+        DHGRI.OverheadOffset = 90;
+    }
+    else if (LevelInfo.OverheadOffset == OFFSET_180)
+    {
+        DHGRI.OverheadOffset = 180;
+    }
+    else if (LevelInfo.OverheadOffset == OFFSET_270)
+    {
+        DHGRI.OverheadOffset = 270;
     }
     else
     {
-        // Spectator Viewpoints
-        for (n = 0; n < LevelInfo.EntryCamTags.Length; n++)
-        {
-            foreach AllActors(class'SpectatorCam', ViewPoint, LevelInfo.EntryCamTags[n])
+        DHGRI.OverheadOffset = 0;
+    }
+
+    // Store Allied Nationality for customising HUD
+    if (DHLevelInfo.AlliedNation == NATION_Britain)
+        DHGRI.AlliedNationID = 1;
+    else if (DHLevelInfo.AlliedNation == NATION_Canada)
+        DHGRI.AlliedNationID = 2;
+    else
+        DHGRI.AlliedNationID = 0;
+
+
+    // Find the location of the map bounds
+    foreach AllActors(class'ROMapBoundsNE', NE)
+    {
+         //NorthEastCorner = NE;
+         DHGRI.NorthEastBounds = NE.Location;
+        // Log("Found Northeastcorner");
+    }
+    foreach AllActors(class'ROMapBoundsSW', SW)
+    {
+         //SouthWestCorner = SW;
+         DHGRI.SouthWestBounds = SW.Location;
+        // Log("Found SouthWestcorner");
+    }
+
+    // Find all the radios
+    foreach AllActors(class'ROArtilleryTrigger', RAT)
+    {
+            if (RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both)
             {
-                ViewPoints[ViewPoints.Length] = ViewPoint;
-                //log("Added Viewpoint "$ViewPoint.Tag);
+               DHGRI.AxisRadios[i] = RAT;
+               i++;
             }
-        }
 
-        RoundDuration = LevelInfo.RoundDuration * 60;
+    }
 
-        // Setup some GRI stuff
-        DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-
-        if (DHGRI == none)
-            return;
-
-        DHGRI.bAllowNetDebug = bAllowNetDebug;
-        DHGRI.PreStartTime = PreStartTime;
-        DHGRI.RoundDuration = RoundDuration;
-        DHGRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
-        DHGRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
-        DHGRI.ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
-        DHGRI.ReinforcementInterval[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ReinforcementInterval;
-        DHGRI.UnitName[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitName;
-        DHGRI.UnitName[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitName;
-        DHGRI.NationIndex[AXIS_TEAM_INDEX] = LevelInfo.Axis.Nation;
-        DHGRI.NationIndex[ALLIES_TEAM_INDEX] = LevelInfo.Allies.Nation;
-        DHGRI.UnitInsignia[AXIS_TEAM_INDEX] = LevelInfo.Axis.UnitInsignia;
-        DHGRI.UnitInsignia[ALLIES_TEAM_INDEX] = LevelInfo.Allies.UnitInsignia;
-        DHGRI.MapImage = LevelInfo.MapImage;
-        DHGRI.bPlayerMustReady = bPlayersMustBeReady;
-        DHGRI.RoundLimit = RoundLimit;
-        DHGRI.MaxPlayers = MaxPlayers;
-        DHGRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
-        DHGRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
-
-        // Artillery
-        DHGRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
-        DHGRI.ArtilleryStrikeLimit[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ArtilleryStrikeLimit;
-        DHGRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
-        DHGRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
-        DHGRI.LastArtyStrikeTime[AXIS_TEAM_INDEX] = LevelInfo.GetStrikeInterval(AXIS_TEAM_INDEX);
-        DHGRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
-        DHGRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
-        DHGRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
-
-        for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); k++)
-        {
-            DHGRI.AlliedRallyPoints[k].OfficerPRI = none;
-            DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0,0,0);
-            DHGRI.AxisRallyPoints[k].OfficerPRI = none;
-            DHGRI.AxisRallyPoints[k].RallyPointLocation = vect(0,0,0);
-        }
-
-        // Clear help requests array
-        for (k = 0; k < arraycount(DHGRI.AlliedHelpRequests); k++)
-        {
-            DHGRI.AlliedHelpRequests[k].OfficerPRI = none;
-            DHGRI.AlliedHelpRequests[k].requestType = 255;
-            DHGRI.AxisHelpRequests[k].OfficerPRI = none;
-            DHGRI.AxisHelpRequests[k].requestType = 255;
-        }
-
-        ResetMortarTargets();
-
-        if (LevelInfo.OverheadOffset == OFFSET_90)
-        {
-            DHGRI.OverheadOffset = 90;
-        }
-        else if (LevelInfo.OverheadOffset == OFFSET_180)
-        {
-            DHGRI.OverheadOffset = 180;
-        }
-        else if (LevelInfo.OverheadOffset == OFFSET_270)
-        {
-            DHGRI.OverheadOffset = 270;
-        }
-        else
-        {
-            DHGRI.OverheadOffset = 0;
-        }
-
-        // Store Allied Nationality for customising HUD
-        if (DHLevelInfo.AlliedNation == NATION_Britain)
-            DHGRI.AlliedNationID = 1;
-        else if (DHLevelInfo.AlliedNation == NATION_Canada)
-            DHGRI.AlliedNationID = 2;
-        else
-            DHGRI.AlliedNationID = 0;
-
-
-        // Find the location of the map bounds
-        foreach AllActors(class'ROMapBoundsNE', NE)
-        {
-             //NorthEastCorner = NE;
-             DHGRI.NorthEastBounds = NE.Location;
-            // log("Found Northeastcorner");
-        }
-        foreach AllActors(class'ROMapBoundsSW', SW)
-        {
-             //SouthWestCorner = SW;
-             DHGRI.SouthWestBounds = SW.Location;
-            // log("Found SouthWestcorner");
-        }
-
-        // Find all the radios
-        foreach AllActors(class'ROArtilleryTrigger', RAT)
-        {
-                if (RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both)
-                {
-                   DHGRI.AxisRadios[i] = RAT;
-                   i++;
-                }
-
-        }
-
-        foreach AllActors(class'ROArtilleryTrigger', RAT)
-        {
-                if (RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
-                {
-                   DHGRI.AlliedRadios[j] = RAT;
-                   j++;
-                }
-
-        }
-
-        foreach AllActors(class'DHAmmoResupplyVolume', ARV)
-        {
-            DHResupplyAreas[m] = ARV;
-            DHGRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
-            DHGRI.ResupplyAreas[m].Team = ARV.Team;
-            DHGRI.ResupplyAreas[m].bActive = !ARV.bUsesSpawnAreas;
-            if (ARV.ResupplyType == RT_Players)
+    foreach AllActors(class'ROArtilleryTrigger', RAT)
+    {
+            if (RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
             {
-                DHGRI.ResupplyAreas[m].ResupplyType = 0;
+               DHGRI.AlliedRadios[j] = RAT;
+               j++;
             }
-            else if (ARV.ResupplyType == RT_Vehicles)
-            {
-                DHGRI.ResupplyAreas[m].ResupplyType = 1;
-            }
-            else if (ARV.ResupplyType == RT_All)
-            {
-                DHGRI.ResupplyAreas[m].ResupplyType = 2;
-            }
-            m++;
-        }
 
-        foreach AllActors(class'ROMineVolume', MV)
+    }
+
+    foreach AllActors(class'DHAmmoResupplyVolume', ARV)
+    {
+        DHResupplyAreas[m] = ARV;
+        DHGRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
+        DHGRI.ResupplyAreas[m].Team = ARV.Team;
+        DHGRI.ResupplyAreas[m].bActive = !ARV.bUsesSpawnAreas;
+        if (ARV.ResupplyType == RT_Players)
         {
-            MineVolumes[o] = MV;
-            //MineVolumes[o].bActive = !MV.bUsesSpawnAreas
-            o++;
+            DHGRI.ResupplyAreas[m].ResupplyType = 0;
         }
-
-        //Added for our overriden DHSpawnArea class.  Saves me having to
-        //check in subsequent functions repeatedly.  Just lay 'em all out here once.
-        foreach AllActors(class'DHSpawnArea', DHSA)
+        else if (ARV.ResupplyType == RT_Vehicles)
         {
-            if (DHSA.bMortarmanSpawnArea)
-                DHMortarSpawnAreas[p++] = DHSA;
+            DHGRI.ResupplyAreas[m].ResupplyType = 1;
         }
-
-        //Scale the Reinforcement limits based on the server's capacity
-        if (MaxPlayersOverride != 0 && MaxPlayersOverride < MaxPlayers)
-            MaxPlayerRatio = MaxPlayersOverride / 32.0f;
-        else
+        else if (ARV.ResupplyType == RT_All)
         {
-            MaxPlayersOverride = 0;
-            MaxPlayerRatio = MaxPlayers / 32.0f;
+            DHGRI.ResupplyAreas[m].ResupplyType = 2;
         }
-        LevelInfo.Allies.SpawnLimit *= MaxPlayerRatio;
-        LevelInfo.Axis.SpawnLimit *= MaxPlayerRatio;
+        m++;
+    }
 
-        log("MaxPlayerRatio = "$MaxPlayerRatio);
+    foreach AllActors(class'ROMineVolume', MV)
+    {
+        MineVolumes[o] = MV;
+        //MineVolumes[o].bActive = !MV.bUsesSpawnAreas
+        o++;
+    }
 
-        //Make sure MaxTeamDifference is an acceptable value
-        if (MaxTeamDifference < 1)
-            MaxTeamDifference = 1;
+    //Added for our overriden DHSpawnArea class.  Saves me having to
+    //check in subsequent functions repeatedly.  Just lay 'em all out here once.
+    foreach AllActors(class'DHSpawnArea', DHSA)
+    {
+        if (DHSA.bMortarmanSpawnArea)
+            DHMortarSpawnAreas[p++] = DHSA;
+    }
 
-        foreach AllActors(class'DHSpawnManager', SpawnManager)
-        {
-            break;
-        }
+    //Scale the Reinforcement limits based on the server's capacity
+    if (MaxPlayersOverride != 0 && MaxPlayersOverride < MaxPlayers)
+    {
+        MaxPlayerRatio = MaxPlayersOverride / 32.0f;
+    }
+    else
+    {
+        MaxPlayersOverride = 0;
+        MaxPlayerRatio = MaxPlayers / 32.0f;
+    }
+    LevelInfo.Allies.SpawnLimit *= MaxPlayerRatio;
+    LevelInfo.Axis.SpawnLimit *= MaxPlayerRatio;
 
-        if (SpawnManager == none)
-        {
-            Warn("DHSpawnManager could not be found");
-        }
+    Log("MaxPlayerRatio = "$MaxPlayerRatio);
 
-        //Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
-        if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
-        {
-            DHGRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length - 1);
-        }
-        if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
-        {
-            DHGRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
-        }
+    //Make sure MaxTeamDifference is an acceptable value
+    if (MaxTeamDifference < 1)
+        MaxTeamDifference = 1;
+
+    foreach AllActors(class'DHSpawnManager', SpawnManager)
+    {
+        break;
+    }
+
+    if (SpawnManager == none)
+    {
+        Warn("DHSpawnManager could not be found");
+    }
+
+    //Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
+    if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
+    {
+        DHGRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length - 1);
+    }
+    if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
+    {
+        DHGRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
     }
 }
 
@@ -305,10 +325,13 @@ function CheckResupplyVolumes()
 
     // Activate any vehicle factories that are actived based on spawn areas
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+
     for(i = 0; i < arraycount(DHResupplyAreas); i++)
     {
         if (DHResupplyAreas[i] == none)
+        {
             continue;
+        }
 
         if (DHResupplyAreas[i].bUsesSpawnAreas)
         {
@@ -319,12 +342,12 @@ function CheckResupplyVolumes()
                     CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
                      DHGRI.ResupplyAreas[i].bActive = true;
-                     DHResupplyAreas[i].Activate();
+                     DHResupplyAreas[i].bActive = true;
                 }
                 else
                 {
                     DHGRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].Deactivate();
+                    DHResupplyAreas[i].bActive = false;
                 }
             }
 
@@ -335,19 +358,19 @@ function CheckResupplyVolumes()
                     CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
                      DHGRI.ResupplyAreas[i].bActive = true;
-                     DHResupplyAreas[i].Activate();
+                     DHResupplyAreas[i].bActive = true;
                 }
                 else
                 {
                     DHGRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].Deactivate();
+                    DHResupplyAreas[i].bActive = false;
                 }
             }
         }
         else
         {
-            DHGRI.ResupplyAreas[i].bActive = !DHResupplyAreas[i].bUsesSpawnAreas;
-            DHResupplyAreas[i].Activate();
+            DHGRI.ResupplyAreas[i].bActive = true;
+            DHResupplyAreas[i].bActive = true;
         }
     }
 }
@@ -361,7 +384,9 @@ function CheckMortarmanSpawnAreas()
     for (i = 0; i < DHMortarSpawnAreas.Length; i++)
     {
         if (!DHMortarSpawnAreas[i].bEnabled)
+        {
             continue;
+        }
 
         //axis & (no best | this one has higher precedence)
         if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none ||
@@ -401,10 +426,15 @@ function CheckMortarmanSpawnAreas()
             }
 
             if (bReqsMet)
+            {
                 Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
             else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
+            {
                 Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
         }
+
         //allies & (no best | this one has higher precedence)
         if (DHMortarSpawnAreas[i].bAlliesSpawn &&
             (Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
@@ -430,7 +460,6 @@ function CheckMortarmanSpawnAreas()
                 {
                     bSomeReqsMet = true;
                     break;
-                    //log("Setting Allied  bSomeReqsMet to true");
                 }
             }
 
@@ -449,9 +478,13 @@ function CheckMortarmanSpawnAreas()
             }
 
             if (bReqsMet)
+            {
                 Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
             else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
+            {
                 Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
         }
     }
 
@@ -477,7 +510,9 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
     P = PlayerStart(N);
 
     if (P == none || Player == none)
+    {
         return -10000000;
+    }
 
     DHRI = DH_RoleInfo(DHPlayerReplicationInfo(Player.PlayerReplicationInfo).RoleInfo);
 
@@ -486,7 +521,9 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         if (CurrentTankCrewSpawnArea[Team]!= none && Player != none && DHRI.bCanBeTankCrew)
         {
             if (P.Tag != CurrentTankCrewSpawnArea[Team].Tag)
+            {
                 return -9000000;
+            }
         }
 
         //----------------------------------------------------------------------
@@ -495,34 +532,48 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         else if (DHCurrentMortarSpawnArea[Team] != none && Player != none && DHRI != none && DHRI.bCanUseMortars)
         {
             if (P.Tag != DHCurrentMortarSpawnArea[Team].Tag)
+            {
                 return -9000000;
+            }
         }
         else
         {
             if (P.Tag != CurrentSpawnArea[Team].Tag)
+            {
                 return -9000000;
+            }
         }
     }
     else if (Team != P.TeamNumber)
+    {
         return -9000000;
-
-    //super(DeathMath).RatePlayerStart(N, Team, Controller);
-    //TODO: everything after this is a modified version of DeathMath.RatePlayerStart
+    }
 
     P = PlayerStart(N);
 
-    if ((P == none) || !P.bEnabled || P.PhysicsVolume.bWaterVolume)
+    if (P == none || !P.bEnabled || P.PhysicsVolume.bWaterVolume)
+    {
         return -10000000;
+    }
 
     //assess candidate
     if (P.bPrimaryStart)
+    {
         Score = 10000000;
+    }
     else
+    {
         Score = 5000000;
-    if ((N == LastStartSpot) || (N == LastPlayerStartSpot))
+    }
+
+    if (N == LastStartSpot || N == LastPlayerStartSpot)
+    {
         Score -= 10000.0;
+    }
     else
+    {
         Score += 3000 * FRand(); //randomize
+    }
 
     for (OtherPlayer = Level.ControllerList; OtherPlayer != none; OtherPlayer = OtherPlayer.NextController)
     {
@@ -575,14 +626,14 @@ function Bot SpawnBot(optional string botName)
     Chosen = BotTeam.ChooseBotClass(botName);
 
     if (Chosen.PawnClass == none)
-        Chosen.Init(); //amb
+    {
+        Chosen.Init();
+    }
 
     // Change default bot class
-
     Chosen.PawnClass = class<Pawn>(DynamicLoadObject(DefaultPlayerClassName, class'class'));
 
-    // log("Chose pawn class "$Chosen.PawnClass);
-    NewBot = DHBot(Spawn(Chosen.PawnClass.Default.ControllerClass));
+    NewBot = DHBot(Spawn(Chosen.PawnClass.default.ControllerClass));
 
 
     if (NewBot != none)
@@ -607,9 +658,13 @@ function Bot SpawnBot(optional string botName)
 
         // Increment the RoleCounter for the new role
         if (BotTeam.TeamIndex == AXIS_TEAM_INDEX)
+        {
             DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[NewBot.CurrentRole]++;
+        }
         else if (BotTeam.TeamIndex == ALLIES_TEAM_INDEX)
+        {
             DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[NewBot.CurrentRole]++;
+        }
 
         // Tone down the "gamey" bot parameters
         NewBot.Jumpiness = 0.0;
@@ -651,7 +706,6 @@ function Bot SpawnBot(optional string botName)
                 NewBot.StrafingAbility = -1.0;
                 break;
         }
-
 
         DHPlayerReplicationInfo(NewBot.PlayerReplicationInfo).RoleInfo = RI;
         ChangeWeapons(NewBot, -2, -2, -2);
@@ -696,7 +750,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 
                 if (Count > 10)
                 {
-                    log("DarkestHourGame: Unable to find a suitable role in SpawnBot()");
+                    Log("DarkestHourGame: Unable to find a suitable role in SpawnBot()");
                     return -1;
                 }
                 else
@@ -727,9 +781,12 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
 {
     if (Killer == none || Points <= 0 || Killer.PlayerReplicationInfo == none || Killer.GetTeamNum() == Vehicle.GetTeamNum())
+    {
         return;
+    }
 
     Killer.PlayerReplicationInfo.Score += Points;
+
     ScoreEvent(Killer.PlayerReplicationInfo, Points, "Vehicle_kill");
 }
 
@@ -1134,7 +1191,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 
                 if (Count > arraycount(DHAxisRoles))
                 {
-                    log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
+                    Log("ROTeamGame: Unable to find a suitable role in SpawnBot()");
                     return -1;
                 }
                 else
@@ -1791,58 +1848,79 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
 
 defaultproperties
 {
-     WinLimit=3
-     ROHints(1)="You can 'cook' an Allied Mk II grenade by pressing the opposite fire button while holding the grenade back."
-     ROHints(13)="You cannot change the 30 Cal barrel, be careful not to overheat!"
-     ROHints(17)="Once you've fired the Bazooka or Panzerschreck get to fresh cover FAST, as the smoke of your backblast will reveal your location. Return fire almost certainly follow!"
-     ROHints(18)="Do not stand directly behind rocket weapons when they're firing; you can sustain serious injury from the exhaust!"
-     ROHints(19)="AT soldiers should always take a friend with them for ammo supplies, faster reloads and protection."
-     ROHints(20)="AT weapons will be automatically unloaded if you change to another weapon. It is a good idea to stick with a team-mate to speed up reloading when needed."
-     RussianNames(0)="Colin Basnett"
-     RussianNames(1)="Graham Merrit"
-     RussianNames(2)="Ian Campbell"
-     RussianNames(3)="Eric Parris"
-     RussianNames(4)="Tom McDaniel"
-     RussianNames(5)="Sam Cousins"
-     RussianNames(6)="Jeff Duquette"
-     RussianNames(7)="Chris Young"
-     RussianNames(8)="Kenneth Kjeldsen"
-     RussianNames(9)="John Wayne"
-     RussianNames(10)="Clint Eastwood"
-     RussianNames(11)="Tom Hanks"
-     RussianNames(12)="Leroy Jenkins"
-     RussianNames(13)="Telly Savalas"
-     RussianNames(14)="Audie Murphy"
-     RussianNames(15)="George Baker"
-     GermanNames(0)="Günther Liebing"
-     GermanNames(1)="Heinz Werner"
-     GermanNames(2)="Rudolf Giesler"
-     GermanNames(3)="Seigfried Hauber"
-     GermanNames(4)="Gustav Beier"
-     GermanNames(5)="Joseph Peitsch"
-     GermanNames(6)="Willi Eiken"
-     GermanNames(7)="Wolfgang Steyer"
-     GermanNames(8)="Rolf Steiner"
-     GermanNames(9)="Anton Müller"
-     GermanNames(10)="Klaus Triebig"
-     GermanNames(11)="Hans Grüschke"
-     GermanNames(12)="Wilhelm Krüger"
-     GermanNames(13)="Herrmann Dietrich"
-     GermanNames(14)="Erich Klein"
-     GermanNames(15)="Horst Altmann"
-     LoginMenuClass="DH_Interface.DHPlayerSetupPage"
-     DefaultPlayerClassName="DH_Engine.DH_Pawn"
-     ScoreBoardType="DH_Interface.DHScoreBoard"
-     HUDType="DH_Engine.DHHud"
-     MapListType="DH_Interface.DHMapList"
-     MapPrefix="DH"
-     BeaconName="DH"
-     BroadcastHandlerClass="DH_Engine.DHBroadcastHandler"
-     PlayerControllerClassName="DH_Engine.DHPlayer"
-     GameReplicationInfoClass=class'DH_Engine.DHGameReplicationInfo'
-     GameName="DarkestHourGame"
-     DecoTextName="DH_Engine.DarkestHourGame"
-     Acronym="DH"
-     VoiceReplicationInfoClass=class'DH_Engine.DHVoiceReplicationInfo'
-     VotingHandlerType="DH_Engine.DHVotingHandler"
+    //Default settings based on common used server settings in DH
+    bIgnore32PlayerLimit=True //Allows more than 32 players
+    bVACSecured=True
+
+    FFDamageLimit=0 //This stops the FF damage system from kicking based on FF damage
+    FFKillLimit=4 //New default of 4 unforgiven FF kills before punishment
+    FFArtyScale=0.5 //Makes it so arty FF kills count as .5
+    FFExplosivesScale=0.5 //Make it so other explosive FF kills count as .5
+
+    WinLimit=1 //1 round per map, server admins are able to customize win/rounds to the level in webadmin
+    RoundLimit=1
+
+    MaxTeamDifference=2
+    bAutoBalanceTeamsOnDeath=true //If teams become imbalanced it'll force the next player to die to the weaker team
+    MaxIdleTime=300
+
+    bShowServerIPOnScoreboard=true
+    bShowTimeOnScoreboard=true
+
+    //Strings/Hints
+    ROHints(1)="You can 'cook' an Allied Mk II grenade by pressing the opposite fire button while holding the grenade back."
+    ROHints(13)="You cannot change the 30 Cal barrel, be careful not to overheat!"
+    ROHints(17)="Once you've fired the Bazooka or Panzerschreck get to fresh cover FAST, as the smoke of your backblast will reveal your location. Return fire almost certainly follow!"
+    ROHints(18)="Do not stand directly behind rocket weapons when they're firing; you can sustain serious injury from the exhaust!"
+    ROHints(19)="AT soldiers should always take a friend with them for ammo supplies, faster reloads and protection."
+    ROHints(20)="AT weapons will be automatically unloaded if you change to another weapon. It is a good idea to stick with a team-mate to speed up reloading when needed."
+    RussianNames(0)="Colin Basnett"
+    RussianNames(1)="Graham Merrit"
+    RussianNames(2)="Ian Campbell"
+    RussianNames(3)="Eric Parris"
+    RussianNames(4)="Tom McDaniel"
+    RussianNames(5)="Sam Cousins"
+    RussianNames(6)="Jeff Duquette"
+    RussianNames(7)="Chris Young"
+    RussianNames(8)="Kenneth Kjeldsen"
+    RussianNames(9)="John Wayne"
+    RussianNames(10)="Clint Eastwood"
+    RussianNames(11)="Tom Hanks"
+    RussianNames(12)="Leroy Jenkins"
+    RussianNames(13)="Telly Savalas"
+    RussianNames(14)="Audie Murphy"
+    RussianNames(15)="George Baker"
+    GermanNames(0)="Günther Liebing"
+    GermanNames(1)="Heinz Werner"
+    GermanNames(2)="Rudolf Giesler"
+    GermanNames(3)="Seigfried Hauber"
+    GermanNames(4)="Gustav Beier"
+    GermanNames(5)="Joseph Peitsch"
+    GermanNames(6)="Willi Eiken"
+    GermanNames(7)="Wolfgang Steyer"
+    GermanNames(8)="Rolf Steiner"
+    GermanNames(9)="Anton Müller"
+    GermanNames(10)="Klaus Triebig"
+    GermanNames(11)="Hans Grüschke"
+    GermanNames(12)="Wilhelm Krüger"
+    GermanNames(13)="Herrmann Dietrich"
+    GermanNames(14)="Erich Klein"
+    GermanNames(15)="Horst Altmann"
+    Acronym="DH"
+    MapPrefix="DH"
+    BeaconName="DH"
+    GameName="DarkestHourGame"
+
+    //ClassReferences
+    LoginMenuClass="DH_Interface.DHPlayerSetupPage"
+    DefaultPlayerClassName="DH_Engine.DH_Pawn"
+    ScoreBoardType="DH_Interface.DHScoreBoard"
+    HUDType="DH_Engine.DHHud"
+    MapListType="DH_Interface.DHMapList"
+    BroadcastHandlerClass="DH_Engine.DHBroadcastHandler"
+    PlayerControllerClassName="DH_Engine.DHPlayer"
+    GameReplicationInfoClass=class'DH_Engine.DHGameReplicationInfo'
+    VoiceReplicationInfoClass=class'DH_Engine.DHVoiceReplicationInfo'
+    VotingHandlerType="DH_Engine.DHVotingHandler"
+    DecoTextName="DH_Engine.DarkestHourGame"
 }

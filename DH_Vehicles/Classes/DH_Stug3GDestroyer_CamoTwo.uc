@@ -5,26 +5,6 @@
 
 class DH_Stug3GDestroyer_CamoTwo extends DH_Stug3GDestroyer;
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 simulated function Tick(float DeltaTime)
 {
     //local PlayerController PC;
@@ -105,7 +85,6 @@ simulated function Tick(float DeltaTime)
                 Skins[RightTreadIndex]=DamagedTreadPanner;
         }
 
-
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
         // VSize() is very CPU intensive - Ramm
         MySpeed = VSize(Velocity);
@@ -133,7 +112,7 @@ simulated function Tick(float DeltaTime)
         if (RightTreadPanner != none)
         {
             RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity Dot vector(Rotation) < 0)
+            if (Velocity dot vector(Rotation) < 0)
                 RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
             RightTreadPanner.PanRate -= LinTurnSpeed;
         }
@@ -214,14 +193,14 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    Super(ROWheeledVehicle).Tick(DeltaTime);
+    super(ROWheeledVehicle).Tick(DeltaTime);
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=vect(0,0,0);
+        velocity=vect(0, 0, 0);
         Throttle=0;
         ThrottleAmount=0;
-        bWantsToThrottle=false;
+        bWantsToThrottle = false;
         bDisableThrottle=true;
         Steering=0;
     }
@@ -281,13 +260,13 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     GunMantletArmorFactor=8.000000
-     GunMantletSlope=45.000000
-     bHasAddedSideArmor=true
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn_CamoTwo')
-     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn')
-     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destlate'
-     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
-     Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_camo2'
-     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3G_armor_camo2'
+    GunMantletArmorFactor=8.000000
+    GunMantletSlope=45.000000
+    bHasAddedSideArmor=true
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn_CamoTwo')
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn')
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destlate'
+    Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_camo2'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3G_armor_camo2'
 }

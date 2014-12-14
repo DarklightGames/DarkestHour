@@ -70,12 +70,12 @@ static function int getIconID(
 
 defaultproperties
 {
-     TargetInvalid="Invalid mortar target."
-     NoMortarOperators="There are no mortar operators available."
-     TargetMarked="has marked a mortar target."
-     TargetCancelled="has cancelled a mortar target marker."
-     CannotMarkTargetYet="You cannot mark another mortar target marker yet."
-     CannotCancelTargetYet="You cannot cancel your mortar target yet."
-     TooManyMortarTargets="There are too many active mortar targets."
-     NoTargetToCancel="You have no mortar target to cancel."
+    TargetInvalid="Invalid mortar target."
+    NoMortarOperators="There are no mortar operators available."
+    TargetMarked="has marked a mortar target."
+    TargetCancelled="has cancelled a mortar target marker."
+    CannotMarkTargetYet="You cannot mark another mortar target marker yet."
+    CannotCancelTargetYet="You cannot cancel your mortar target yet."
+    TooManyMortarTargets="There are too many active mortar targets."
+    NoTargetToCancel="You have no mortar target to cancel."
 }

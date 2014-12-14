@@ -7,7 +7,7 @@ class DH_HigginsPassengerFive extends DH_HigginsPassengerPawn;
 
 defaultproperties
 {
-     PositionInArray=5
-     DrivePos=(X=0.000000,Y=0.000000,Z=20.000000)
-     DriveAnim="higgins_rider5_idle"
+    PositionInArray=5
+    DrivePos=(X=0.000000,Y=0.000000,Z=20.000000)
+    DriveAnim="higgins_rider5_idle"
 }

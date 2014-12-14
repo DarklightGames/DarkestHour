@@ -47,7 +47,9 @@ simulated function bool WeaponAllowCrouchChange()
     //-------------------------------------------------
     //Not if we're deploying, homie.
     if (bDeploying)
+    {
         return false;
+    }
 
     return super.WeaponAllowCrouchChange();
 }
@@ -72,7 +74,7 @@ simulated event AnimEnd(int Channel)
     //If the deploy animation ended, then let's let the server know about it.
     if (bDeploying)
     {
-        DH_Pawn(Instigator).bDeployingMortar = false;
+        DH_Pawn(Instigator).bIsDeployingMortar = false;
         ServerDeployEnd();
     }
 }
@@ -88,7 +90,9 @@ simulated exec function ROManualReload() { return; }
 simulated exec function Deploy()
 {
     if (!bDeploying)
+    {
         ClientDeploy();
+    }
 }
 
 //------------------------------
@@ -100,15 +104,18 @@ simulated function ClientDeploy()
     P = DH_Pawn(Instigator);
 
     if (IsBusy() || !CanDeploy() || P == none)
+    {
         return;
+    }
 
     PlayAnim(DeployAnimation);
     bDeploying = true;
 
     //-------------------------------------------------
     //This is so the pawn knows to limit pitch and yaw.
-    P.bDeployingMortar = true;
-    P.MortarDeployYaw = P.Rotation.Yaw;
+    P.bLockViewRotation = true;
+    P.LockViewRotation.Yaw = P.Rotation.Yaw;
+    P.LockViewRotation.Pitch = 0;
 
     //--------------------
     //Let's start
@@ -176,7 +183,9 @@ simulated function bool CanDeploy()
     //not checking this state was allowing the player to almost instantaneously
     //redeploy a mortar after undeploying.
     if (IsBusy() || IsInState('RaisingWeapon'))
+    {
         return false;
+    }
 
     //-----------------------------
     //Check that we're not in water
@@ -227,7 +236,7 @@ simulated function bool CanDeploy()
 
     //------------------------------------------------------------------
     //Check that the surface angle is less than our deploy angle maximum
-    if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+    if (Acos(HitNormal dot vect(0, 0, 1)) > DeployAngleMaximum)
     {
         Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
         return false;
@@ -271,7 +280,7 @@ simulated function bool CanDeploy()
         }
         //------------------------------------------------------------------
         //Check that the surface angle is less than our deploy angle maximum
-        if (Acos(HitNormal Dot vect(0, 0, 1)) > DeployAngleMaximum)
+        if (Acos(HitNormal dot vect(0, 0, 1)) > DeployAngleMaximum)
         {
             //------------------------------
             //Cannot deploy on this surface.
@@ -288,7 +297,9 @@ simulated function BringUp(optional Weapon PrevWeapon)
     super.BringUp(PrevWeapon);
 
     if (DHPlayer(Instigator.Controller) != none)
+    {
         DHPlayer(Instigator.Controller).QueueHint(6, false);
+    }
 }
 
 simulated function bool IsMortarWeapon()
@@ -303,7 +314,9 @@ function bool ResupplyAmmo()
     P = DH_Pawn(Instigator);
 
     if (P == none)
+    {
         return false;
+    }
 
     return P.ResupplyMortarAmmunition();
 }
@@ -320,14 +333,14 @@ function bool FillAmmo()
 
 defaultproperties
 {
-     DeployRadius=32.000000
-     DeployAngleMaximum=0.349066
-     FireModeClass(0)=class'DH_Mortars.DH_MortarWeaponFire'
-     FireModeClass(1)=class'DH_Mortars.DH_MortarWeaponFire'
-     AIRating=1.000000
-     CurrentRating=1.000000
-     bCanThrow=false
-     bCanSway=false
-     InventoryGroup=9
-     BobDamping=1.600000
+    DeployRadius=32.000000
+    DeployAngleMaximum=0.349066
+    FireModeClass(0)=class'DH_Mortars.DH_MortarWeaponFire'
+    FireModeClass(1)=class'DH_Mortars.DH_MortarWeaponFire'
+    AIRating=1.000000
+    CurrentRating=1.000000
+    bCanThrow=false
+    bCanSway=false
+    InventoryGroup=9
+    BobDamping=1.600000
 }

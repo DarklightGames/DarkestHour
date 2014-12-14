@@ -5,7 +5,6 @@
 
 class DH_GMCTruckTransport_Snow extends DH_GMCTruckTransport;
 
-
 static function StaticPrecache(LevelInfo L)
 {
         super.StaticPrecache(L);
@@ -22,5 +21,5 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_Allied_MilitarySM.American.GMC_snow'
+    Skins(0)=Texture'DH_Allied_MilitarySM.American.GMC_snow'
 }

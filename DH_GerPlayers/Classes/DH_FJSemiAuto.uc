@@ -7,5 +7,5 @@ class DH_FJSemiAuto extends Note;
 
 defaultproperties
 {
-     Text="Deprecated role."
+    Text="Deprecated role."
 }

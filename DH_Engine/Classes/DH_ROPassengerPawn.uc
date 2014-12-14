@@ -36,7 +36,6 @@ replication
         ServerToggleDebugExits; // Matt: added
 }
 
-
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
@@ -341,7 +340,7 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROPassengerPawn'.default.bDebugExitPositions = !class'DH_ROPassengerPawn'.default.bDebugExitPositions;
-        log("DH_ROPassengerPawn.bDebugExitPositions =" @ class'DH_ROPassengerPawn'.default.bDebugExitPositions);
+        Log("DH_ROPassengerPawn.bDebugExitPositions =" @ class'DH_ROPassengerPawn'.default.bDebugExitPositions);
     }
 }
 

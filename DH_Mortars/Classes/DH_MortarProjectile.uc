@@ -95,7 +95,7 @@ simulated function PostBeginPlay()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (Location != vect(0,0,0))
+        if (Location != vect(0, 0, 0))
             Spawn(class'DH_Effects.DH_MortarFireEffect',, , Location, Rotation);
 
         Enable('Tick');
@@ -127,7 +127,6 @@ simulated function Tick(float DeltaTime)
         PlaySound(DescendingSound, SLOT_None, 8.0, false, 512, Pitch, true);
         Disable('Tick');
     }
-
 
 }
 
@@ -267,7 +266,7 @@ function SetHitLocation(vector HitLocation)
         // Find the closest mortar target.
         for(i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
-            if (GRI.GermanMortarTargets[i].Location == vect(0,0,0))
+            if (GRI.GermanMortarTargets[i].Location == vect(0, 0, 0))
                 continue;
 
             MortarTargetDistance = VSize(GRI.GermanMortarTargets[i].Location - HitLocation);
@@ -284,7 +283,7 @@ function SetHitLocation(vector HitLocation)
         // targets were close enough.
         if (ClosestMortarTargetIndex == 255)
         {
-            C.MortarHitLocation = vect(0,0,0);
+            C.MortarHitLocation = vect(0, 0, 0);
             return;
         }
 
@@ -296,7 +295,7 @@ function SetHitLocation(vector HitLocation)
         // Find the closest mortar target.
         for(i = 0; i < arraycount(GRI.AlliedMortarTargets); I++)
         {
-            if (GRI.AlliedMortarTargets[i].Location == vect(0,0,0))
+            if (GRI.AlliedMortarTargets[i].Location == vect(0, 0, 0))
                 continue;
 
             MortarTargetDistance = VSize(GRI.AlliedMortarTargets[i].Location - HitLocation);
@@ -313,7 +312,7 @@ function SetHitLocation(vector HitLocation)
         // targets were close enough.
         if (ClosestMortarTargetIndex == 255)
         {
-            C.MortarHitLocation = vect(0,0,0);
+            C.MortarHitLocation = vect(0, 0, 0);
             return;
         }
 
@@ -383,18 +382,18 @@ simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
 
 defaultproperties
 {
-     DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
-     DudChance=0.010000
-     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
-     HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
-     HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
-     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
-     HitWaterEmitterClass=class'ROEffects.TankAPHitWaterEffect'
-     HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
-     HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
-     HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
-     HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
-     DrawType=DT_none
-     LifeSpan=60.000000
-     bBlockHitPointTraces=false
+    DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
+    DudChance=0.010000
+    HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
+    HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'
+    HitWoodEmitterClass=class'ROEffects.TankAPHitWoodEffect'
+    HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'
+    HitWaterEmitterClass=class'ROEffects.TankAPHitWaterEffect'
+    HitDirtSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
+    HitRockSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
+    HitWaterSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    HitWoodSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
+    DrawType=DT_none
+    LifeSpan=60.000000
+    bBlockHitPointTraces=false
 }

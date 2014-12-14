@@ -7,7 +7,7 @@ class DH_CromwellFactory extends DH_BritishVehicles;
 
 defaultproperties
 {
-     RespawnTime=1.000000
-     VehicleClass=class'DH_Vehicles.DH_CromwellTank'
-     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_ext'
+    RespawnTime=1.000000
+    VehicleClass=class'DH_Vehicles.DH_CromwellTank'
+    Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_ext'
 }

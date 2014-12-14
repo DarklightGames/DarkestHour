@@ -5,7 +5,6 @@
 
 class DH_PanzerIVJTank_SnowOne extends DH_PanzerIVJTank;
 
-
 #exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex5.utx
 
 static function StaticPrecache(LevelInfo L)
@@ -32,6 +31,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVJCannonPawn_SnowOne')
-     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow1'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVJCannonPawn_SnowOne')
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow1'
 }

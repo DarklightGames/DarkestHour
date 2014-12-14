@@ -30,7 +30,7 @@ simulated function PostTouch(actor Other)
     {
         // Teleport to a random teleporter in this local level, if more than one pick random.
 
-        foreach AllActors(class 'Teleporter', D)
+        foreach AllActors(class'Teleporter', D)
             if (string(D.tag)~=URL && D!=Self)
             {
                 Dest[i] = D;

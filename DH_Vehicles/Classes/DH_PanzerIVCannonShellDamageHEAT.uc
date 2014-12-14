@@ -8,7 +8,7 @@ class DH_PanzerIVCannonShellDamageHEAT extends DH_HEATCannonShellDamage
 
 defaultproperties
 {
-//  TreadDamageModifier=0.150000    // Matt: removed so uses default 0.2, same as all other HEAT damage classes
+    //  TreadDamageModifier=0.150000    // Matt: removed so uses default 0.2, same as all other HEAT damage classes
     DeathString="%o was burnt up by %k's Panzer IV HEAT shell."
-//  HumanObliterationThreshhold=325 // Matt: removed so uses default 400, same as all other HEAT damage classes
+    //  HumanObliterationThreshhold=325 // Matt: removed so uses default 400, same as all other HEAT damage classes
 }

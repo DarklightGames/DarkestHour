@@ -12,8 +12,8 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     bIsHelmet=false
-     Mesh=SkeletalMesh'dhgear_anm.Brit_Beret'
-     Skins(0)=Texture'DHBritishCharactersTex.Headgear.Brit_para_beret'
-     Skins(1)=Texture'DHBritishCharactersTex.Headgear.OxBucks_Badge'
+    bIsHelmet=false
+    Mesh=SkeletalMesh'dhgear_anm.Brit_Beret'
+    Skins(0)=Texture'DHBritishCharactersTex.Headgear.Brit_para_beret'
+    Skins(1)=Texture'DHBritishCharactersTex.Headgear.OxBucks_Badge'
 }

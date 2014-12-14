@@ -29,9 +29,9 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2342CannonPawn_Snow')
-     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_destsnow'
-     Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_body_snow'
-     Skins(1)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_wheels_snow'
-     Skins(2)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_extras_snow'
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2342CannonPawn_Snow')
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_destsnow'
+    Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_body_snow'
+    Skins(1)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_wheels_snow'
+    Skins(2)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_extras_snow'
 }

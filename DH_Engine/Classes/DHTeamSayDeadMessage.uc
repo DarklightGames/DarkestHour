@@ -3,36 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHTeamSayDeadMessage extends DHStringMessage;
-
-static function RenderComplexMessage(
-    Canvas Canvas,
-    out float XL,
-    out float YL,
-    optional string MessageString,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
-{
-    if (RelatedPRI_1 == none)
-        return;
-
-    if (RelatedPRI_1.Team.TeamIndex == 0)
-        Canvas.DrawColor = default.GermanColour;
-    else
-        Canvas.DrawColor = default.USColour;
-
-    Canvas.DrawText(default.MessagePrefix$RelatedPRI_1.PlayerName$" ", false);
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-
-    Canvas.DrawText(": ", false);
-
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-    Canvas.SetDrawColor(255,255,255,255); //DrawColor = default.DrawColor;
-    Canvas.DrawText(MessageString, false);
-}
+class DHTeamSayDeadMessage extends DHLocalMessage;
 
 static function string AssembleString(
     HUD myHUD,
@@ -69,11 +40,11 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 
 defaultproperties
 {
-     GermanColour=(B=55,G=55,R=150,A=255)
-     USColour=(B=60,G=125,R=65,A=255)
-     BritishColour=(B=140,G=105,R=50,A=255)
-     CanadianColour=(B=20,G=120,R=125,A=255)
-     MessagePrefix="(DEAD) *TEAM* "
-     bComplexString=true
-     bBeep=true
+    GermanColour=(B=55,G=55,R=150,A=255)
+    USColour=(B=60,G=125,R=65,A=255)
+    BritishColour=(B=140,G=105,R=50,A=255)
+    CanadianColour=(B=20,G=120,R=125,A=255)
+    MessagePrefix="(DEAD) *TEAM* "
+    bComplexString=true
+    bBeep=true
 }

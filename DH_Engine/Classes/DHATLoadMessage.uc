@@ -27,7 +27,6 @@ static function string GetString(
         default:
             return default.LoadedGunner;
     }
-
 }
 
 static function int getIconID(
@@ -55,9 +54,9 @@ static function int getIconID(
 
 defaultproperties
 {
-     LoadedGunner="Successfully reloaded "
-     BeenLoaded="You have been reloaded by "
-     UnLoaded="Rocket has been unloaded"
-     iconID=4
-     altIconID=5
+    LoadedGunner="Successfully reloaded "
+    BeenLoaded="You have been reloaded by "
+    UnLoaded="Rocket has been unloaded"
+    iconID=4
+    altIconID=5
 }

@@ -5,7 +5,6 @@
 
 class DHMinefield_ATMine extends ROMine;
 
-
 // Overridden to explode on vehicles only // Matt: also modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 singular function Touch(Actor Other)
@@ -71,7 +70,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
@@ -145,9 +144,9 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
 defaultproperties
 {
-     Damage=525
-     DamageRadius=512.0
-     MyDamageType=class'DH_LevelActors.DHATMineDamage'
-     Momentum=3000.0
-     bHidden=true
+    Damage=525
+    DamageRadius=512.0
+    MyDamageType=class'DH_LevelActors.DHATMineDamage'
+    Momentum=3000.0
+    bHidden=true
 }

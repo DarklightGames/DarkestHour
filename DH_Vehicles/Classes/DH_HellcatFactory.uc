@@ -7,8 +7,8 @@ class DH_HellcatFactory extends DH_USVehicles;
 
 defaultproperties
 {
-     RespawnTime=1.000000
-     bFactoryActive=true
-     VehicleClass=class'DH_Vehicles.DH_HellcatTank'
-     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
+    RespawnTime=1.000000
+    bFactoryActive=true
+    VehicleClass=class'DH_Vehicles.DH_HellcatTank'
+    Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
 }

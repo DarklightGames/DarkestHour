@@ -38,9 +38,9 @@ static function string GetString(
 
 defaultproperties
 {
-     NoProneFire="You cannot fire the Bazooka while prone"
-     NeedSupport="You must be crouched or weapon rested to fire the Bazooka"
-     NoHipFire="You cannot fire the Bazooka from the hip"
-     NotInIS="You must shoulder the Bazooka for an assisted reload"
-     NoProneReload="You cannot reload the Bazooka while prone"
+    NoProneFire="You cannot fire the Bazooka while prone"
+    NeedSupport="You must be crouched or weapon rested to fire the Bazooka"
+    NoHipFire="You cannot fire the Bazooka from the hip"
+    NotInIS="You must shoulder the Bazooka for an assisted reload"
+    NoProneReload="You cannot reload the Bazooka while prone"
 }

@@ -3,36 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHTeamSayMessage extends DHStringMessage;
-
-static function RenderComplexMessage(
-    Canvas Canvas,
-    out float XL,
-    out float YL,
-    optional string MessageString,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
-{
-    if (RelatedPRI_1 == none)
-        return;
-
-    if (RelatedPRI_1.Team.TeamIndex == 0)
-        Canvas.DrawColor = default.GermanColour;
-    else
-        Canvas.DrawColor = default.USColour;
-
-    Canvas.DrawText(default.MessagePrefix$RelatedPRI_1.PlayerName$" ", false);
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-
-    Canvas.DrawText(": ", false);
-
-    Canvas.SetPos(Canvas.CurX, Canvas.CurY - YL);
-    Canvas.SetDrawColor(255,255,255,255); //DrawColor = default.DrawColor;
-    Canvas.DrawText(MessageString, false);
-}
+class DHTeamSayMessage extends DHLocalMessage;
 
 static function string AssembleString(
     HUD myHUD,
@@ -69,11 +40,11 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 
 defaultproperties
 {
-     GermanColour=(B=80,G=80,R=200,A=255)
-     USColour=(B=75,G=170,R=85,A=255)
-     BritishColour=(B=190,G=140,R=64,A=255)
-     CanadianColour=(B=20,G=155,R=160,A=255)
-     MessagePrefix="*TEAM* "
-     bComplexString=true
-     bBeep=true
+    GermanColour=(B=80,G=80,R=200,A=255)
+    USColour=(B=75,G=170,R=85,A=255)
+    BritishColour=(B=190,G=140,R=64,A=255)
+    CanadianColour=(B=20,G=155,R=160,A=255)
+    MessagePrefix="*TEAM* "
+    bComplexString=true
+    bBeep=true
 }

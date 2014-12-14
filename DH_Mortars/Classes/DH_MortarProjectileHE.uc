@@ -185,7 +185,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
@@ -395,8 +395,8 @@ simulated function Destroyed()
 
 defaultproperties
 {
-     AirExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
-     GroundExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
-     SnowExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
-     WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
+    AirExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
+    GroundExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
+    SnowExplosionEmitterClass=class'DH_Effects.DH_MortarImpact60mm'
+    WaterExplosionEmitterClass=class'ROEffects.ROArtilleryWaterEmitter'
 }

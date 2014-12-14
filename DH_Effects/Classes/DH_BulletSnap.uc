@@ -14,5 +14,5 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-     WhizSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Snap'
+    WhizSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Snap'
 }

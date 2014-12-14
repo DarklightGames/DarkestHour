@@ -132,7 +132,7 @@ simulated function Timer()
    {
         if (Role == ROLE_Authority)
         {
-            bReloading=false;
+            bReloading = false;
             MainAmmoCharge[0] = InitialPrimaryAmmo;
             NetUpdateTime = Level.TimeSeconds - 1;
         }
@@ -340,7 +340,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
         t = 0.0;
     }
 
-    Distance = Sqrt(Diff Dot Diff);
+    Distance = Sqrt(Diff dot Diff);
 
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
 }
@@ -357,8 +357,8 @@ simulated function Destroyed() // Matt: added
 
 defaultproperties
 {
-     FireAttachBone="mg_pitch"
-     FireEffectOffset=(X=10.000000,Z=5.000000)
-     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-     VehicleBurningDamType=class'DH_VehicleBurningDamType'
+    FireAttachBone="mg_pitch"
+    FireEffectOffset=(X=10.000000,Z=5.000000)
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+    VehicleBurningDamType=class'DH_VehicleBurningDamType'
 }

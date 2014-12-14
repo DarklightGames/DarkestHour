@@ -8,5 +8,5 @@ class DH_STG44BashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_STG44Weapon'
+    WeaponClass=class'DH_Weapons.DH_STG44Weapon'
 }

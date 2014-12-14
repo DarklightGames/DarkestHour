@@ -39,7 +39,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     CameraRotation =  WeaponAimRot;
 
-
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
     if (CameraBone != '' && Gun != none)
@@ -48,7 +47,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
 
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
@@ -60,8 +59,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -132,28 +131,28 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-     FirstPersonGunShakeScale=2.000000
-     WeaponFov=60.000000
-     DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-     DriverPositions(1)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-     bMultiPosition=true
-     GunClass=class'DH_Vehicles.DH_Marder3MMountedMG'
-     bCustomAiming=true
-     bHasAltFire=false
-     CameraBone="loader_cam"
-     bPCRelativeFPRotation=true
-     bAllowViewChange=true
-     DrivePos=(X=7.000000,Z=-22.000000)
-     DriveRot=(Yaw=16384)
-     DriveAnim="VHalftrack_com_idle"
-     EntryRadius=130.000000
-     TPCamDistance=300.000000
-     TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
-     TPCamWorldOffset=(Z=120.000000)
-     VehiclePositionString="manning a Marder III Ausf.M MG34"
-     VehicleNameString="Marder III Ausf.M MG34"
-     HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
-     HUDOverlayFOV=45.000000
-     PitchUpLimit=6000
-     PitchDownLimit=63500
+    FirstPersonGunShakeScale=2.000000
+    WeaponFov=60.000000
+    DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    DriverPositions(1)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    bMultiPosition=true
+    GunClass=class'DH_Vehicles.DH_Marder3MMountedMG'
+    bCustomAiming=true
+    bHasAltFire=false
+    CameraBone="loader_cam"
+    bPCRelativeFPRotation=true
+    bAllowViewChange=true
+    DrivePos=(X=7.000000,Z=-22.000000)
+    DriveRot=(Yaw=16384)
+    DriveAnim="VHalftrack_com_idle"
+    EntryRadius=130.000000
+    TPCamDistance=300.000000
+    TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
+    TPCamWorldOffset=(Z=120.000000)
+    VehiclePositionString="manning a Marder III Ausf.M MG34"
+    VehicleNameString="Marder III Ausf.M MG34"
+    HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
+    HUDOverlayFOV=45.000000
+    PitchUpLimit=6000
+    PitchDownLimit=63500
 }

@@ -7,5 +7,5 @@ class DH_HetzerMountedMGPawn_SnowTwo extends DH_HetzerMountedMGPawn;
 
 defaultproperties
 {
-     GunClass=class'DH_Vehicles.DH_HetzerMountedMG_SnowTwo'
+    GunClass=class'DH_Vehicles.DH_HetzerMountedMG_SnowTwo'
 }

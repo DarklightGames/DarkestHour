@@ -65,7 +65,7 @@ var     bool    bDebugExitPositions;
 
 replication
 {
-    reliable if (bNetDirty && Role==ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         UnbuttonedPositionIndex;
 
     // functions called by client on server
@@ -73,11 +73,10 @@ replication
         ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
 
     // Functions called by server on client
-    reliable if (Role==ROLE_Authority)
+    reliable if (Role == ROLE_Authority)
         bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
 
 }
-
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
@@ -183,8 +182,8 @@ simulated function PostBeginPlay()
     ExitPositions[0] = Loc + Offset;
     ExitPositions[1] = ExitPositions[0];
 
-    bTurretRingDamaged=false;
-    bGunPivotDamaged=false;
+    bTurretRingDamaged = false;
+    bGunPivotDamaged = false;
 }
 
 simulated exec function SwitchFireMode()
@@ -223,13 +222,16 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 {
     if (bTurretRingDamaged && bGunPivotDamaged)
     {
-       if (bDebuggingText && Role == ROLE_Authority)
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
           Level.Game.Broadcast(self, "Gun & Turret disabled");
-       super.HandleTurretRotation(DeltaTime,0,0);
+        }
+
+        super.HandleTurretRotation(DeltaTime,0,0);
     }
     else if (!bTurretRingDamaged && bGunPivotDamaged)
     {
-       if (bDebuggingText && Role == ROLE_Authority)
+        if (bDebuggingText && Role == ROLE_Authority)
           Level.Game.Broadcast(self, "Gun disabled");
        super.HandleTurretRotation(DeltaTime,YawChange,0);
     }
@@ -272,7 +274,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CameraRotation =  WeaponAimRot;
         // Make the cannon view have no roll
         CameraRotation.Roll = 0;
-        //CameraRotation.Pitch -= ROTankCannon(Gun).AddedPitch; // AB
     }
     else if (bPCRelativeFPRotation)
     {
@@ -316,7 +317,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> WeaponAimRot;
+            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -327,8 +328,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0,0,1) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld Dot VehicleZ;
+            VehicleZ = vect(0, 0, 1) >> Rotation;
+            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
     }
@@ -505,14 +506,17 @@ simulated state ViewTransition
         WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
 
         FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-        //FPCamViewOffset = DriverPositions[DriverPositionIndex].ViewOffset; // depractated
 
         if (DriverPositionIndex != 0)
         {
             if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+            {
                 PlayerController(Controller).SetFOV(WeaponFOV);
+            }
             else
+            {
                 PlayerController(Controller).DesiredFOV = WeaponFOV;
+            }
         }
 
         if (LastPositionIndex < DriverPositionIndex)
@@ -523,7 +527,9 @@ simulated state ViewTransition
                 SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
             }
             else
+            {
                 GotoState('');
+            }
         }
         else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
         {
@@ -544,7 +550,9 @@ simulated state ViewTransition
     simulated function AnimEnd(int channel)
     {
         if (IsLocallyControlled())
+        {
             GotoState('');
+        }
     }
 
     simulated function EndState()
@@ -565,14 +573,14 @@ simulated state LeavingVehicle
     simulated function HandleExit()
     {
         local rotator TurretYaw, TurretPitch;
-        // Make the new mesh you swap to have the same rotation as the old one
 
+        // Make the new mesh you swap to have the same rotation as the old one
         if (Gun != none)
         {
             TurretYaw.Yaw = GetVehicleBase().Rotation.Yaw - CustomAim.Yaw;
             TurretPitch.Pitch = GetVehicleBase().Rotation.Pitch - CustomAim.Pitch;
 
-            Gun.LinkMesh(Gun.Default.Mesh);
+            Gun.LinkMesh(Gun.default.Mesh);
 
             Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
             Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
@@ -671,7 +679,6 @@ function float GetAltAmmoReloadState()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
-
 // Matt: allows debugging exit positions to be toggled for all cannon pawns
 exec function ToggleDebugExits()
 {
@@ -686,7 +693,8 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROTankCannonPawn'.default.bDebugExitPositions = !class'DH_ROTankCannonPawn'.default.bDebugExitPositions;
-        log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
+
+        Log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
     }
 }
 

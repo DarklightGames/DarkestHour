@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Kriegsmarine extends DH_Ger_Kriegsmarine
+class DH_Kriegsmarine extends DH_German_Units
     abstract;
 
 defaultproperties
 {
-     RolePawnClass="DH_GerPlayers.DH_KriegsmarinePawn"
+    RolePawnClass="DH_GerPlayers.DH_KriegsmarinePawn"
 }

@@ -7,9 +7,7 @@
 //=============================================================================
 class DH_AdminMenu_RolesMenu extends DH_AdminMenu_MenuBase;
 
-
 var  array<string>  AlliesRoleNames, AxisRoleNames; // arrays of role names for each team, built from either DH or RO role arrays
-
 
 exec function RolesMenu(string Team, string Action, string PlayerName)
 {

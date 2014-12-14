@@ -59,7 +59,7 @@ function InitDroppedPickupFor(Inventory Inv)
 
 function Tick(float dt)
 {
-    // make sure it's run on the
+    // make sure it's run on the server
     if (Role < ROLE_Authority)
     {
         return;
@@ -72,6 +72,24 @@ function Tick(float dt)
     {
         Temperature2 -= dt * BarrelCoolingRate;
     }
+}
+
+function array<int> GetLoadedMagazineIndices()
+{
+    local array<int> Indices;
+    local int i;
+
+    for (i = 0; i < AmmoMags.Length; ++i)
+    {
+        if (AmmoMags[i] <= 0)
+        {
+            continue;
+        }
+
+        Indices[Indices.Length] = i;
+    }
+
+    return Indices;
 }
 
 defaultproperties

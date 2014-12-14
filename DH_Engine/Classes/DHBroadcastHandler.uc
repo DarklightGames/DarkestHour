@@ -5,45 +5,50 @@
 
 class DHBroadcastHandler extends ROBroadcastHandler;
 
-event AllowBroadcastLocalized(actor Sender, class<LocalMessage> Message,
-    optional int Switch, optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+event AllowBroadcastLocalized(Actor Sender, class<LocalMessage> Message,
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject)
 {
     local Controller C;
     local PlayerController P;
     local DH_RoleInfo RI;
 
-    for (C=Level.ControllerList; C!=none; C=C.NextController)
+    for (C = Level.ControllerList; C != none; C = C.NextController)
     {
         P = PlayerController(C);
 
         // Only broadcast rally point messages to your same team, and only to other players
-        if ((class<RORallyMsg>(Message) != none) && switch == 1)
+        if (class<RORallyMsg>(Message) != none && switch == 1)
         {
             if (P != none && Controller(Sender) != none && P != Sender && P.PlayerReplicationInfo.Team == Controller(Sender).PlayerReplicationInfo.Team)
+            {
                 BroadcastLocalized(Sender, P, Message, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
         }
-
         // Send correct last-objective message depending on who's winning and on the reciever's team
-        else if (class<ROLastObjectiveMsg>(Message) != none && P != none && P.PlayerReplicationInfo != none
-            && P.PlayerReplicationInfo.Team != none)
+        else if (class<ROLastObjectiveMsg>(Message) != none && P != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
         {
             // If P.PRI.Team == switch, then that team is about to win. Broadcast an about-to-win
             // msg to that team. Else broadast an about-to-lost msg.
             if (P.PlayerReplicationInfo.Team.TeamIndex == switch)
+            {
                 BroadcastLocalized(Sender, P, Message, 0 + switch * 2, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
             else
+            {
                 BroadcastLocalized(Sender, P, Message, 1 + switch * 2, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
         }
-
         // Only send demo charge placed msg to teammates
-        else if (class<RODemolitionChargePlacedMsg>(Message) != none && P != none && P.PlayerReplicationInfo != none
-            && P.PlayerReplicationInfo.Team != none)
+        else if (class<RODemolitionChargePlacedMsg>(Message) != none && P != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
         {
             if (P.PlayerReplicationInfo.Team.TeamIndex == switch)
+            {
                 BroadcastLocalized(Sender, P, Message, switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
         }
-
         // If this message is a static mesh destroyed msg, figure who it should go to
         else if (class<RODestroyableSMDestroyedMsg>(Message) != none && ROPlayer(P) != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
         {
@@ -88,7 +93,9 @@ event AllowBroadcastLocalized(actor Sender, class<LocalMessage> Message,
                 P.Pawn.PlayerReplicationInfo == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo) == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo == none)
+            {
                 continue;
+            }
 
             RI = DH_RoleInfo(DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo);
 

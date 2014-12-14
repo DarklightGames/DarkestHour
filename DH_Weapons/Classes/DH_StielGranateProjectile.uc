@@ -5,7 +5,6 @@
 
 class DH_StielGranateProjectile extends DH_GrenadeProjectile;
 
-
 defaultproperties
 {
     bIsStickGrenade=true

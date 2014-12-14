@@ -3,37 +3,155 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHObstacle extends Actor;
+class DHObstacle extends Actor
+    placeable;
 
-var()   StaticMesh   DestroyedStaticMesh;
-
-event Touch(Actor Other)
+struct UncompressedPosition
 {
-    super.Touch(Other);
+    var float LocationX;
+    var float LocationY;
+    var float LocationZ;
+    var int Pitch;
+    var int Yaw;
+    var int Roll;
+    var float ScaleX;
+    var float ScaleY;
+    var float ScaleZ;
+};
 
-    //TODO: requires a certain speed?
-    if (Other.IsA('SVehicle'))
+var     int                     Index;
+var     UncompressedPosition    UP;
+
+var     StaticMesh              IntactStaticMesh;
+var()   StaticMesh              ClearedStaticMesh;
+var()   sound                   ClearSound;
+var()   float                   SpawnClearedChance;
+var()   bool                    bCanBeClearedWithWireCutters;
+var()   class<Emitter>          ClearEmitter;
+
+replication
+{
+    reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
+        Index, IntactStaticMesh, ClearedStaticMesh, UP;
+}
+
+simulated function bool IsCleared()
+{
+    return IsInState('Cleared');
+}
+
+function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    IntactStaticMesh = StaticMesh;
+    UP.LocationX = Location.X;
+    UP.LocationY = Location.Y;
+    UP.LocationZ = Location.Z;
+    UP.Pitch = Rotation.Pitch;
+    UP.Yaw = Rotation.Yaw;
+    UP.Roll = Rotation.Roll;
+    UP.ScaleX = DrawScale3D.X * DrawScale;
+    UP.ScaleY = DrawScale3D.Y * DrawScale;
+    UP.ScaleZ = DrawScale3D.Z * DrawScale;
+}
+
+simulated function PostNetBeginPlay()
+{
+    local DHObstacleManager OM;
+    local vector L, S;
+    local rotator R;
+
+    if (Role != ROLE_Authority)
     {
-        GotoState('DestroyedState');
+        foreach AllActors(class'DHObstacleManager', OM)
+        {
+            OM.Obstacles[Index] = self;
+        }
+
+        L.X = UP.LocationX;
+        L.Y = UP.LocationY;
+        L.Z = UP.LocationZ;
+        SetLocation(L);
+
+        R.Pitch = UP.Pitch;
+        R.Yaw = UP.Yaw;
+        R.Roll = UP.Roll;
+        SetRotation(R);
+
+        S.X = UP.ScaleX;
+        S.Y = UP.ScaleY;
+        S.Z = UP.ScaleZ;
+        SetDrawScale3D(S);
     }
 }
 
-event Bump(Actor Other)
+simulated state Intact
 {
-    super.Bump(Other);
+    simulated function BeginState()
+    {
+        Log("Obstacle" @ Index @ "Intact");
 
-    Level.Game.Broadcast(self, "Bump" @ Other);
+        SetStaticMesh(IntactStaticMesh);
+        KSetBlockKarma(false);
+    }
+
+    event Touch(Actor Other)
+    {
+        local DarkestHourGame G;
+
+        if (Role == ROLE_Authority)
+        {
+            if (SVehicle(Other) != none)
+            {
+                G = DarkestHourGame(Level.Game);
+
+                if (G != none && G.ObstacleManager != none)
+                {
+                    //TODO: destruction requires a certain speed?
+                    G.ObstacleManager.SetCleared(self, true);
+                }
+            }
+        }
+
+        super.Touch(Other);
+    }
 }
 
-state DestroyedState
+simulated state Cleared
 {
-    function BeginState()
+    simulated function BeginState()
     {
-        Level.Game.Broadcast(self, "Destroyed");
+        Log("Obstacle" @ Index @ "Cleared");
 
-        SetStaticMesh(DestroyedStaticMesh);
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            //TODO: this is super quiet for some reason
+            if (ClearSound != none)
+            {
+                PlayOwnedSound(ClearSound, SLOT_None);
+            }
 
+            if (ClearEmitter != none)
+            {
+                Spawn(ClearEmitter, none, '', Location, Rotation);
+            }
+        }
+
+        SetStaticMesh(ClearedStaticMesh);
         KSetBlockKarma(false);
+    }
+}
+
+simulated function SetCleared(bool bIsCleared)
+{
+    if (bIsCleared)
+    {
+        GotoState('Cleared');
+    }
+    else
+    {
+        GotoState('Intact');
     }
 }
 
@@ -43,6 +161,8 @@ defaultproperties
     bBlockActors=true
     bBlockKarma=true
     bBlockProjectiles=true
+    bBlockHitPointTraces=true
+    bBlockNonZeroExtentTraces=true
     bCanBeDamaged=true
     bCollideActors=true
     bCollideWorld=false
@@ -50,6 +170,11 @@ defaultproperties
     bStatic=false
     bStaticLighting=true
     DrawType=DT_StaticMesh
-    Role=ROLE_None
+    bNetTemporary=true
+    bAlwaysRelevant=true
+    RemoteRole=ROLE_None
+    bCompressedPosition=false
+    SpawnClearedChance=0.0
+    bCanBeClearedWithWireCutters=true
 }
 

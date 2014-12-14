@@ -5,8 +5,6 @@
 
 class DH_PegasusGun extends DH_Flak88Gun;
 
-
-
 function bool TryToDrive(Pawn P)
 {
     local int x;
@@ -20,7 +18,7 @@ function bool TryToDrive(Pawn P)
     }
     if (p.IsHumanControlled())
             {
-        bTeamLocked=false;
+        bTeamLocked = false;
     }
 
     //don't allow vehicle to be stolen when somebody is in a turret
@@ -91,26 +89,25 @@ function bool TryToDrive(Pawn P)
 
 defaultproperties
 {
-     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_PegasusGunPawn')
-     HealthMax=101.000000
-     Health=101
-     Begin Object Class=KarmaParamsRBFull Name=KParams0
-         KInertiaTensor(0)=1.000000
-         KInertiaTensor(3)=3.000000
-         KInertiaTensor(5)=3.000000
-         KLinearDamping=0.050000
-         KAngularDamping=0.050000
-         KStartEnabled=true
-         bKNonSphericalInertia=true
-         KMaxAngularSpeed=0.000000
-         bHighDetailOnly=false
-         bClientOnly=false
-         bKDoubleTickRate=true
-         bDestroyOnWorldPenetrate=true
-         bDoSafetime=true
-         KFriction=50.000000
-         KImpactThreshold=700.000000
-     End Object
-     KParams=KarmaParamsRBFull'DH_Guns.DH_PegasusGun.KParams0'
-
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_PegasusGunPawn')
+    HealthMax=101.000000
+    Health=101
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.000000
+        KInertiaTensor(3)=3.000000
+        KInertiaTensor(5)=3.000000
+        KLinearDamping=0.050000
+        KAngularDamping=0.050000
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        KMaxAngularSpeed=0.000000
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=true
+        bDestroyOnWorldPenetrate=true
+        bDoSafetime=true
+        KFriction=50.000000
+        KImpactThreshold=700.000000
+    End Object
+    KParams=KarmaParamsRBFull'DH_Guns.DH_PegasusGun.KParams0'
 }

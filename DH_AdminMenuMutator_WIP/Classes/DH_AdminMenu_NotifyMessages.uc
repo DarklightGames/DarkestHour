@@ -8,7 +8,6 @@
 //=========================================================================================================
 class DH_AdminMenu_NotifyMessages extends LocalMessage;
 
-
 // Localised so different language versions could be produced:
 var  localized  string  NotifyKill;
 var  localized  string  NotifySwitch;
@@ -21,7 +20,6 @@ var  localized  string  BroadcastPlayerIconDisabled;
 var  localized  string  BroadcastPlayerIconEnabled;
 var  localized  string  BroadcastKilledAllPlayers;
 var  localized  string  BroadcastChangedGameSpeed;
-
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

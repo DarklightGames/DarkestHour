@@ -5,7 +5,6 @@
 
 class DH_GreyhoundCannon extends DH_ROTankCannon;
 
-
 //Vars for Canister shot
 var    int          CSpread; // Spread for canister shot
 var    int          ProjPerFire; // Number of projectiles to spawn on each shot
@@ -34,7 +33,7 @@ state ProjectileFireMode
                 R.Pitch = CSpread * (FRand()-0.5);
                 R.Roll = CSpread * (FRand()-0.5);
 
-                WeaponFireRotation = Rotator(X >> R);
+                WeaponFireRotation = rotator(X >> R);
 
                 if (projectileID == 0)
                     bLastShot = false;
@@ -42,7 +41,7 @@ state ProjectileFireMode
                     bLastShot = true;
 
                 if (bGunFireDebug)
-                    log("Firing Canister shot with angle: "@WeaponFireRotation);
+                    Log("Firing Canister shot with angle: "@WeaponFireRotation);
 
                 SpawnProjectile(ProjectileClass, false);
             }
@@ -86,10 +85,10 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                 FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
 
         if (bGunFireDebug)
-                log("After pitch corrections FireRot "$FireRot);
+                Log("After pitch corrections FireRot "$FireRot);
 
     if (bGunFireDebug)
-                log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+                Log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
 
     if (bDoOffsetTrace)
     {
@@ -117,12 +116,10 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         if (bCannonShellDebugging)
                 Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
 
-
    P = spawn(ProjClass, none,, StartLocation, FireRot);
 
-
         if (bGunFireDebug)
-                log("At the moment of spawning FireRot "$FireRot);
+                Log("At the moment of spawning FireRot "$FireRot);
 
    //swap to the next round type after firing (hmm shoudn't I have this moved? Or REMOVED ???)
 
@@ -132,7 +129,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         {
                 ProjectileClass = PendingProjectileClass;
                 if (bGunFireDebug)
-                        log("Projectile class was changed to PendingProjClass by SpawnProjectile function");
+                        Log("Projectile class was changed to PendingProjClass by SpawnProjectile function");
         }
     }
 
@@ -204,94 +201,94 @@ function DecrementRange()
 
 defaultproperties
 {
-     CSpread=500
-     ProjPerFire=20
-     bLastShot=true
-     InitialTertiaryAmmo=8
-     TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterAmerican'
-     SecondarySpread=0.001450
-     ManualRotationsPerSecond=0.040000
-     PoweredRotationsPerSecond=0.040000
-     FrontArmorFactor=1.900000
-     RightArmorFactor=1.900000
-     LeftArmorFactor=1.900000
-     RearArmorFactor=1.900000
-     FrontLeftAngle=319.000000
-     FrontRightAngle=41.000000
-     RearRightAngle=139.000000
-     RearLeftAngle=221.000000
-     ReloadSoundOne=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01'
-     ReloadSoundTwo=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02'
-     ReloadSoundThree=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03'
-     ReloadSoundFour=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04'
-     CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
-     CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
-     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
-     ProjectileDescriptions(0)="APCBC"
-     ProjectileDescriptions(2)="Canister"
-     RangeSettings(1)=400
-     RangeSettings(2)=800
-     RangeSettings(3)=1200
-     RangeSettings(4)=1600
-     AddedPitch=26
-     ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
-     NumAltMags=6
-     DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
-     mTracerInterval=0.600000
-     bUsesTracers=true
-     bAltFireTracersOnly=true
-     MinCommanderHitHeight=40.5;
-     VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=12.000000,Y=4.000000,Z=-3.000000))
-     VehHitpoints(1)=(PointRadius=12.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=12.000000,Y=4.000000,Z=-20.000000))
-     hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
-     YawBone="Turret"
-     PitchBone="Gun"
-     PitchUpLimit=15000
-     PitchDownLimit=45000
-     WeaponFireAttachmentBone="Gun"
-     GunnerAttachmentBone="com_attachment"
-     WeaponFireOffset=110.000000
-     AltFireOffset=(X=40.000000,Y=11.000000)
-     RotationsPerSecond=0.040000
-     bAmbientAltFireSound=true
-     FireInterval=3.000000
-     AltFireInterval=0.120000
-     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
-     bAmbientEmitterAltFireOnly=true
-     FireSoundVolume=512.000000
-     AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
-     AltFireSoundScaling=3.000000
-     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
-     FireForce="Explosion05"
-     ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
-     AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
-     ShakeRotMag=(Z=50.000000)
-     ShakeRotRate=(Z=600.000000)
-     ShakeRotTime=4.000000
-     ShakeOffsetMag=(Z=5.000000)
-     ShakeOffsetRate=(Z=100.000000)
-     ShakeOffsetTime=6.000000
-     AltShakeRotMag=(X=0.010000,Y=0.010000,Z=0.010000)
-     AltShakeRotRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-     AltShakeRotTime=2.000000
-     AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
-     AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-     AltShakeOffsetTime=2.000000
-     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-     AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
-     CustomPitchUpLimit=3641
-     CustomPitchDownLimit=63716
-     BeginningIdleAnim="com_idle_close"
-     InitialPrimaryAmmo=24
-     InitialSecondaryAmmo=48
-     InitialAltAmmo=250
-     PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
-     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
-     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
-     Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-     Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
-     SoundVolume=100
-     SoundRadius=300.000000
+    CSpread=500
+    ProjPerFire=20
+    bLastShot=true
+    InitialTertiaryAmmo=8
+    TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterAmerican'
+    SecondarySpread=0.001450
+    ManualRotationsPerSecond=0.040000
+    PoweredRotationsPerSecond=0.040000
+    FrontArmorFactor=1.900000
+    RightArmorFactor=1.900000
+    LeftArmorFactor=1.900000
+    RearArmorFactor=1.900000
+    FrontLeftAngle=319.000000
+    FrontRightAngle=41.000000
+    RearRightAngle=139.000000
+    RearLeftAngle=221.000000
+    ReloadSoundOne=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01'
+    ReloadSoundTwo=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02'
+    ReloadSoundThree=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03'
+    ReloadSoundFour=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04'
+    CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
+    CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
+    CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
+    ProjectileDescriptions(0)="APCBC"
+    ProjectileDescriptions(2)="Canister"
+    RangeSettings(1)=400
+    RangeSettings(2)=800
+    RangeSettings(3)=1200
+    RangeSettings(4)=1600
+    AddedPitch=26
+    ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
+    NumAltMags=6
+    DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
+    mTracerInterval=0.600000
+    bUsesTracers=true
+    bAltFireTracersOnly=true
+    MinCommanderHitHeight=40.5;
+    VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=12.000000,Y=4.000000,Z=-3.000000))
+    VehHitpoints(1)=(PointRadius=12.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=12.000000,Y=4.000000,Z=-20.000000))
+    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    YawBone="Turret"
+    PitchBone="Gun"
+    PitchUpLimit=15000
+    PitchDownLimit=45000
+    WeaponFireAttachmentBone="Gun"
+    GunnerAttachmentBone="com_attachment"
+    WeaponFireOffset=110.000000
+    AltFireOffset=(X=40.000000,Y=11.000000)
+    RotationsPerSecond=0.040000
+    bAmbientAltFireSound=true
+    FireInterval=3.000000
+    AltFireInterval=0.120000
+    EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    bAmbientEmitterAltFireOnly=true
+    FireSoundVolume=512.000000
+    AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
+    AltFireSoundScaling=3.000000
+    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
+    FireForce="Explosion05"
+    ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
+    AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
+    ShakeRotMag=(Z=50.000000)
+    ShakeRotRate=(Z=600.000000)
+    ShakeRotTime=4.000000
+    ShakeOffsetMag=(Z=5.000000)
+    ShakeOffsetRate=(Z=100.000000)
+    ShakeOffsetTime=6.000000
+    AltShakeRotMag=(X=0.010000,Y=0.010000,Z=0.010000)
+    AltShakeRotRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
+    AltShakeRotTime=2.000000
+    AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
+    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
+    AltShakeOffsetTime=2.000000
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    CustomPitchUpLimit=3641
+    CustomPitchDownLimit=63716
+    BeginningIdleAnim="com_idle_close"
+    InitialPrimaryAmmo=24
+    InitialSecondaryAmmo=48
+    InitialAltAmmo=250
+    PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
+    SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
+    Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
+    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
+    SoundVolume=100
+    SoundRadius=300.000000
 }

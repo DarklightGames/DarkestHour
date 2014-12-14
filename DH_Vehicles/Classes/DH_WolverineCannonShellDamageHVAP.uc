@@ -7,7 +7,7 @@ class DH_WolverineCannonShellDamageHVAP extends ROTankShellImpactDamage; //ROWea
 
 defaultproperties
 {
-     APCDamageModifier=0.500000
-     TreadDamageModifier=0.950000
-     DeathString="%o was killed by %k's Wolverine HVAP shell."
+    APCDamageModifier=0.500000
+    TreadDamageModifier=0.950000
+    DeathString="%o was killed by %k's Wolverine HVAP shell."
 }

@@ -11,7 +11,9 @@ class DH_EnfieldNo4ScopedWeapon extends DH_BoltSniperWeapon;
 // Handles initializing and swithing between different scope modes
 simulated function UpdateScopeMode()
 {
-    if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() &&
+    if (Level.NetMode != NM_DedicatedServer &&
+        Instigator != none &&
+        Instigator.IsLocallyControlled() &&
         Instigator.IsHumanControlled())
     {
         if (ScopeDetail == RO_ModelScope)
@@ -30,7 +32,7 @@ simulated function UpdateScopeMode()
             }
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(512,512);
+            ScopeScriptedTexture.SetSize(512, 512);
             ScopeScriptedTexture.Client = self;
 
             if (ScriptedScopeCombiner == none)
@@ -120,13 +122,16 @@ function int GetRoundsToLoad()
         return 0;
     }
 
-
     AmountNeeded = 10 - CurrentMagLoad;
 
     if (AmountNeeded > CurrentBulletCount)
+    {
         AmountToAdd = CurrentBulletCount;
+    }
     else
+    {
         AmountToAdd = AmountNeeded;
+    }
 
     return AmountToAdd;
 }
@@ -141,14 +146,16 @@ function bool FillAmmo()
         return false;
     }
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-    for(i=0; i<PrimaryAmmoArray.Length; i++)
+
+    for(i = 0; i < PrimaryAmmoArray.Length; i++)
     {
         PrimaryAmmoArray[i] = InitialAmount;
     }
-    CurrentMagIndex=0;
+
+    CurrentMagIndex = 0;
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
 
     // HACK: Because the No4 uses two mags, the initial amount needs to be two mags
@@ -170,19 +177,23 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
         Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
         bJustSpawnedAmmo = false;
 
-        if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
+        if (FireMode[m].AmmoClass == none || (m != 0 && FireMode[m].AmmoClass == FireMode[0].AmmoClass))
+        {
             return;
+        }
 
-        InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
+        InitialAmount = FireMode[m].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && WP == none)
         {
             PrimaryAmmoArray.Length = InitialNumPrimaryMags;
-            for(i=0; i<PrimaryAmmoArray.Length; i++)
+
+            for(i = 0; i < PrimaryAmmoArray.Length; i++)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
-            CurrentMagIndex=0;
+
+            CurrentMagIndex = 0;
             CurrentMagCount = PrimaryAmmoArray.Length - 1;
 
             // HACK: Because the No4 uses two mags, the initial amount needs to be two mags
@@ -202,7 +213,9 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
             Ammo[m].Destroy();
         }
         else
+        {
             addAmount = InitialAmount;
+        }
 
         AddAmmo(addAmount,m);
         CalculateBulletCount();
@@ -211,51 +224,50 @@ function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
 
 defaultproperties
 {
-     PreReloadAnim="Single_Open"
-     SingleReloadAnim="Single_Insert"
-     PostReloadAnim="Single_Close"
-     lenseMaterialID=5
-     scopePortalFOVHigh=13.000000
-     scopePortalFOV=7.000000
-     scopeYaw=25
-     scopePitchHigh=20
-     scopeYawHigh=40
-     TexturedScopeTexture=Texture'DH_Weapon_tex.AlliedSmallArms.EnfieldNo4_Scope_Overlay'
-     IronIdleAnim="Scope_Idle"
-     IronBringUp="Scope_In"
-     IronPutDown="Scope_Out"
-     BayonetBoneName="bayonet"
-     BoltHipAnim="bolt_scope"
-     BoltIronAnim="iron_boltrest"
-     PostFireIronIdleAnim="Iron_idle"
-     PostFireIdleAnim="Idle"
-     MaxNumPrimaryMags=13
-     InitialNumPrimaryMags=13
-     CrawlForwardAnim="crawlF"
-     CrawlBackwardAnim="crawlB"
-     CrawlStartAnim="crawl_in"
-     CrawlEndAnim="crawl_out"
-     IronSightDisplayFOV=40.000000
-     IronSightDisplayFOVHigh=43.000000
-     ZoomInTime=0.400000
-     ZoomOutTime=0.400000
-     PlayerFOVZoom=27.000000
-     XoffsetHighDetail=(X=-12.000000)
-     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
-     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
-     SelectAnim="Draw"
-     PutDownAnim="putaway"
-     SelectAnimRate=1.000000
-     PutDownAnimRate=1.000000
-     SelectForce="SwitchToAssaultRifle"
-     AIRating=0.400000
-     CurrentRating=0.400000
-     bSniping=true
-     DisplayFOV=70.000000
-     bCanRestDeploy=true
-     PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
-     BobDamping=1.600000
-     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
-     ItemName="Scoped Enfield No.4"
-     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'
+    PreReloadAnim="Single_Open"
+    SingleReloadAnim="Single_Insert"
+    PostReloadAnim="Single_Close"
+    lenseMaterialID=5
+    scopePortalFOVHigh=13.000000
+    scopePortalFOV=7.000000
+    scopeYaw=25
+    scopePitchHigh=20
+    scopeYawHigh=40
+    TexturedScopeTexture=Texture'DH_Weapon_tex.AlliedSmallArms.EnfieldNo4_Scope_Overlay'
+    IronIdleAnim="Scope_Idle"
+    IronBringUp="Scope_In"
+    IronPutDown="Scope_Out"
+    BayonetBoneName="bayonet"
+    BoltHipAnim="bolt_scope"
+    BoltIronAnim="iron_boltrest"
+    PostFireIronIdleAnim="Iron_idle"
+    PostFireIdleAnim="Idle"
+    MaxNumPrimaryMags=13
+    InitialNumPrimaryMags=13
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    IronSightDisplayFOV=40.000000
+    IronSightDisplayFOVHigh=43.000000
+    ZoomInTime=0.400000
+    ZoomOutTime=0.400000
+    PlayerFOVZoom=27.000000
+    XoffsetHighDetail=(X=-12.000000)
+    FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
+    FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
+    SelectAnim="Draw"
+    PutDownAnim="putaway"
+    SelectAnimRate=1.000000
+    PutDownAnimRate=1.000000
+    AIRating=0.400000
+    CurrentRating=0.400000
+    bSniping=true
+    DisplayFOV=70.000000
+    bCanRestDeploy=true
+    PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
+    BobDamping=1.600000
+    AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
+    ItemName="Scoped Enfield No.4"
+    Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'
 }

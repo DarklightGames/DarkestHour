@@ -8,5 +8,5 @@ class DH_ModifyMDVTele extends Note
 
 defaultproperties
 {
-     Text="Please remove this actor from your level, the class will be deleted and will break your level"
+    Text="Please remove this actor from your level, the class will be deleted and will break your level"
 }

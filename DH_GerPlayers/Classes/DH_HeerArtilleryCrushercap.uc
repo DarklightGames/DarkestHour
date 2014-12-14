@@ -5,7 +5,6 @@
 
 class DH_HeerArtilleryCrushercap extends DH_Headgear;
 
-
 #exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
 
 static function StaticPrecache(LevelInfo L)
@@ -15,7 +14,7 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     bIsHelmet=false
-     Mesh=SkeletalMesh'DH_RMFHeadGear.ger_crashcap2'
-     Skins(0)=Texture'DHGermanCharactersTex.RMFGerHeadgear.ger_heer_SP_crashcap'
+    bIsHelmet=false
+    Mesh=SkeletalMesh'DH_RMFHeadGear.ger_crashcap2'
+    Skins(0)=Texture'DHGermanCharactersTex.RMFGerHeadgear.ger_heer_SP_crashcap'
 }

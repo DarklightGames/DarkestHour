@@ -19,7 +19,7 @@ var int     NumMagsToResupply;          // Number of ammo mags to add when this 
 
 replication
 {
-    reliable if (Role<ROLE_Authority)
+    reliable if (Role < ROLE_Authority)
         ServerSetRange;
 }
 
@@ -90,7 +90,6 @@ function ServerSetRange(int NewIndex)
         DH_ProjectileFire(FireMode[0]).AddedPitch = 0;
     }
 }
-
 
 // Ovveriden to play the panzerfaust animations for different ranges
 simulated function PlayIdle()
@@ -218,7 +217,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
         if ((FireMode[m].AmmoClass == none) || ((m != 0) && (FireMode[m].AmmoClass == FireMode[0].AmmoClass)))
             return;
 
-        InitialAmount = FireMode[m].AmmoClass.Default.InitialAmount;
+        InitialAmount = FireMode[m].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && AP == none)
         {
@@ -350,7 +349,7 @@ simulated function PostBeginPlay()
 
        RocketLoc = GetBoneCoords('Warhead').Origin;
 
-       RocketAttachment = Spawn(class 'DH_PIATAmmoRound',self,, RocketLoc);
+       RocketAttachment = Spawn(class'DH_PIATAmmoRound',self,, RocketLoc);
 
        AttachToBone(RocketAttachment, 'Warhead');
     }
@@ -389,7 +388,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
             if (RocketAttachment == none)
             {
                 RocketLoc = GetBoneCoords('Warhead').Origin;
-                RocketAttachment = Spawn(class 'DH_PIATAmmoRound', self,, RocketLoc);
+                RocketAttachment = Spawn(class'DH_PIATAmmoRound', self,, RocketLoc);
 
                 AttachToBone(RocketAttachment, 'Warhead');
             }
@@ -428,7 +427,7 @@ simulated function SpawnBomb()
 
        RocketLoc = GetBoneCoords('Warhead').Origin;
 
-       RocketAttachment = Spawn(class 'DH_PIATAmmoRound',self,, RocketLoc);
+       RocketAttachment = Spawn(class'DH_PIATAmmoRound',self,, RocketLoc);
 
        AttachToBone(RocketAttachment, 'Warhead');
     }
@@ -436,7 +435,7 @@ simulated function SpawnBomb()
 
 // Overridden to prevent picking up more than the intended max ammo count
 // MaxNumMags is actually set 1 higher than intended max, to facilitate unusual resupply/fillammo
-function bool HandlePickupQuery(pickup Item)
+function bool HandlePickupQuery(Pickup Item)
 {
 //    local WeaponPickup wpu;
     local int i, j;
@@ -520,7 +519,7 @@ function bool ResupplyAmmo()
     if (AmmoAmount(0) > 0)
         bIsLoaded = true;
 
-    InitialAmount = FireMode[0].AmmoClass.Default.InitialAmount;
+    InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
     for(i=NumMagsToResupply; i>0; i--)
     {
@@ -547,45 +546,44 @@ function bool bIsATWeapon()
 
 defaultproperties
 {
-     Ranges(0)=85
-     Ranges(1)=325
-     Ranges(2)=500
-     IronIdleAnimOne="Iron_idle"
-     IronIdleAnimTwo="iron_idleMid"
-     IronIdleAnimThree="iron_idleFar"
-     NumMagsToResupply=2
-     MagEmptyReloadAnim="Reload"
-     MagPartialReloadAnim="Reload"
-     IronBringUp="iron_in"
-     IronPutDown="iron_out"
-     BayonetBoneName="bayonet"
-     MaxNumPrimaryMags=3
-     InitialNumPrimaryMags=2
-     CrawlForwardAnim="crawlF"
-     CrawlBackwardAnim="crawlB"
-     CrawlStartAnim="crawl_in"
-     CrawlEndAnim="crawl_out"
-     IronSightDisplayFOV=25.000000
-     ZoomInTime=0.400000
-     ZoomOutTime=0.200000
-     FireModeClass(0)=class'DH_ATWeapons.DH_PIATFire'
-     FireModeClass(1)=class'DH_ATWeapons.DH_PIATMeleeFire'
-     SelectAnim="Draw"
-     PutDownAnim="putaway"
-     SelectAnimRate=1.000000
-     PutDownAnimRate=1.000000
-     SelectForce="SwitchToAssaultRifle"
-     AIRating=0.600000
-     CurrentRating=0.600000
-     DisplayFOV=70.000000
-     bCanAttachOnBack=true
-     bCanRestDeploy=true
-     PickupClass=class'DH_ATWeapons.DH_PIATPickup'
-     BobDamping=1.600000
-     AttachmentClass=class'DH_ATWeapons.DH_PIATAttachment'
-     ItemName="PIAT"
-     Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
-     FillAmmoMagCount=1
-     Priority=8
-     InventoryGroup=5
+    Ranges(0)=85
+    Ranges(1)=325
+    Ranges(2)=500
+    IronIdleAnimOne="Iron_idle"
+    IronIdleAnimTwo="iron_idleMid"
+    IronIdleAnimThree="iron_idleFar"
+    NumMagsToResupply=2
+    MagEmptyReloadAnim="Reload"
+    MagPartialReloadAnim="Reload"
+    IronBringUp="iron_in"
+    IronPutDown="iron_out"
+    BayonetBoneName="bayonet"
+    MaxNumPrimaryMags=3
+    InitialNumPrimaryMags=2
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    IronSightDisplayFOV=25.000000
+    ZoomInTime=0.400000
+    ZoomOutTime=0.200000
+    FireModeClass(0)=class'DH_ATWeapons.DH_PIATFire'
+    FireModeClass(1)=class'DH_ATWeapons.DH_PIATMeleeFire'
+    SelectAnim="Draw"
+    PutDownAnim="putaway"
+    SelectAnimRate=1.000000
+    PutDownAnimRate=1.000000
+    AIRating=0.600000
+    CurrentRating=0.600000
+    DisplayFOV=70.000000
+    bCanAttachOnBack=true
+    bCanRestDeploy=true
+    PickupClass=class'DH_ATWeapons.DH_PIATPickup'
+    BobDamping=1.600000
+    AttachmentClass=class'DH_ATWeapons.DH_PIATAttachment'
+    ItemName="PIAT"
+    Mesh=SkeletalMesh'DH_PIAT_1st.PIAT'
+    FillAmmoMagCount=1
+    Priority=8
+    InventoryGroup=5
 }

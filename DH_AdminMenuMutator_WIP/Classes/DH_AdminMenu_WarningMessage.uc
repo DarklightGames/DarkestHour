@@ -7,11 +7,9 @@
 //=======================================================================================================
 class DH_AdminMenu_WarningMessage extends ROCriticalMessage;
 
-
 // Localised so different language versions could be produced:
 var  localized  string  WarningHeader;
 var  localized  string  WarningChatPrefix;
-
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

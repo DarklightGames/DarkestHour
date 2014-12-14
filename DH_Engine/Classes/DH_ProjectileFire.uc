@@ -22,7 +22,6 @@ var()           int         TracerFrequency;            // how often a tracer is
 var             byte        NextTracerCounter;
 var class<DH_ClientTracer>  DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: was class ROClientTracer
 
-
 // Weapon spread/innaccuracy variables
 var             float       AppliedSpread;              // spread applied to the projectile
 var()           float       CrouchSpreadModifier;       // Modifier applied when player is crouched
@@ -62,7 +61,7 @@ function DoFireEffect()
 
     //log("Projectile Firing, location of muzzle is "$Weapon.GetBoneCoords('Muzzle').Origin);
     //if (ROProjectileWeapon(Instigator.weapon) != none)
-    //  log("MuzzleCoords location = "$ROProjectileWeapon(Instigator.weapon).GetMuzzleCoords().Origin);
+    //  Log("MuzzleCoords location = "$ROProjectileWeapon(Instigator.weapon).GetMuzzleCoords().Origin);
     // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
     // Temp commented out until we add the free-aim system in
     if (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed)
@@ -86,11 +85,11 @@ function DoFireEffect()
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
 
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        //Spawn(class 'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
 
@@ -139,7 +138,7 @@ function DoFireEffect()
                 R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
                 R.Pitch = AppliedSpread * (FRand()-0.5);
                 R.Roll = AppliedSpread * (FRand()-0.5);
-                SpawnProjectile(StartProj, Rotator(X >> R));
+                SpawnProjectile(StartProj, rotator(X >> R));
             }
             break;
 
@@ -150,7 +149,7 @@ function DoFireEffect()
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
-                SpawnProjectile(StartProj, Rotator(X >> Aim));
+                SpawnProjectile(StartProj, rotator(X >> Aim));
             }
             break;
 
@@ -212,7 +211,6 @@ function CalcSpreadModifiers()
         Spread *= LeanSpreadModifier;
     }
 }
-
 
 /* =================================================================================== *
 * SpawnProjectile()

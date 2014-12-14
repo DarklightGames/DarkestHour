@@ -12,5 +12,5 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-     bDramaticLighting=true
+    bDramaticLighting=true
 }

@@ -7,7 +7,6 @@ class DH_ATGunCannon extends DH_ROTankCannon
       config(xGunsightDebugging)
       abstract;
 
-
 simulated function Timer()
 {
    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
@@ -153,12 +152,12 @@ simulated function int LimitYaw(int yaw)
 
 defaultproperties
 {
-     FrontArmorFactor=1.000000
-     RightArmorFactor=0.800000
-     LeftArmorFactor=0.800000
-     RearArmorFactor=1.000000
-     FrontLeftAngle=332.000000
-     FrontRightAngle=28.000000
-     RearRightAngle=162.000000
-     RearLeftAngle=198.000000
+    FrontArmorFactor=1.000000
+    RightArmorFactor=0.800000
+    LeftArmorFactor=0.800000
+    RearArmorFactor=1.000000
+    FrontLeftAngle=332.000000
+    FrontRightAngle=28.000000
+    RearRightAngle=162.000000
+    RearLeftAngle=198.000000
 }

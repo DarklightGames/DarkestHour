@@ -13,7 +13,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         local DHTab_MainSP tab;
         local DHIAMultiColumnRulesPanel tab2;
 
-        Super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
+        super(UT2K4MainPage).Initcomponent(MyController, MyOwner);
         class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
         RuleInfo = new(none) class'Engine.PlayInfo';
 
@@ -60,7 +60,7 @@ function PrepareToPlay(out string GameURL, optional string OverrideMap)
                 GameURL $= "?bAutoNumBots=false?NumBots="$RuleInfo.Settings[i].Value;
         }
     }
-    log("Prepare to play GameURL= "$GameURL);
+    Log("Prepare to play GameURL= "$GameURL);
 }
 
 function InternalOnChangeDifficulty(int index)
@@ -94,63 +94,59 @@ function InternalOnDifficultyChanged(int index, int tag)
         if (gametab != none)
         {
                 gametab.SilentSetDifficulty(index);
-                log("difficulty changed.");
+                Log("difficulty changed.");
         }
 }
 
 defaultproperties
 {
-     PageCaption="Practice"
-     Begin Object Class=DHGUITabControl Name=PageTabs
-         bFillSpace=false
-         bDockPanels=true
-         TabHeight=0.060000
-         BackgroundStyleName="DHHeader"
-         WinHeight=0.044000
-         RenderWeight=0.490000
-         TabOrder=3
-         bAcceptsInput=true
-         OnActivate=PageTabs.InternalOnActivate
-         OnChange=DHGamePageSP.InternalOnChange
-     End Object
-     c_Tabs=DHGUITabControl'DH_Interface.DHGamePageSP.PageTabs'
-
-     Begin Object Class=DHGUIHeader Name=GamePageHeader
-         StyleName="DHTopper"
-         WinHeight=32.000000
-         RenderWeight=0.300000
-     End Object
-     t_Header=DHGUIHeader'DH_Interface.DHGamePageSP.GamePageHeader'
-
-     Begin Object Class=DHGameFooterSP Name=SPFooter
-         PrimaryCaption="Start Practice Game"
-         Spacer=0.010000
-         TextIndent=5
-         FontScale=FNS_Small
-         StyleName="DHFooter"
-         WinTop=0.950000
-         WinHeight=0.045000
-         RenderWeight=0.300000
-         TabOrder=8
-         OnPreDraw=SPFooter.InternalOnPreDraw
-     End Object
-     t_Footer=DHGameFooterSP'DH_Interface.DHGamePageSP.SPFooter'
-
-     Begin Object Class=GUIImage Name=BkChar
-         Image=Texture'DH_GUI_Tex.Menu.menuBackground'
-         ImageStyle=ISTY_Scaled
-         X1=0
-         Y1=0
-         X2=1024
-         Y2=1024
-         WinHeight=1.000000
-         RenderWeight=0.020000
-     End Object
-     i_bkChar=GUIImage'DH_Interface.DHGamePageSP.BkChar'
-
-     PanelClass(0)="none"
-     PanelClass(1)="DH_Interface.DHTab_MainSP"
-     PanelClass(2)="DH_Interface.DHIAMultiColumnRulesPanel"
-     PanelClass(3)="DH_Interface.DHTab_MutatorSP"
-     PanelClass(4)="none"
+    PageCaption="Practice"
+    Begin Object Class=DHGUITabControl Name=PageTabs
+        bFillSpace=false
+        bDockPanels=true
+        TabHeight=0.060000
+        BackgroundStyleName="DHHeader"
+        WinHeight=0.044000
+        RenderWeight=0.490000
+        TabOrder=3
+        bAcceptsInput=true
+        OnActivate=PageTabs.InternalOnActivate
+        OnChange=DHGamePageSP.InternalOnChange
+    End Object
+    c_Tabs=DHGUITabControl'DH_Interface.DHGamePageSP.PageTabs'
+    Begin Object Class=DHGUIHeader Name=GamePageHeader
+        StyleName="DHTopper"
+        WinHeight=32.000000
+        RenderWeight=0.300000
+    End Object
+    t_Header=DHGUIHeader'DH_Interface.DHGamePageSP.GamePageHeader'
+    Begin Object Class=DHGameFooterSP Name=SPFooter
+        PrimaryCaption="Start Practice Game"
+        Spacer=0.010000
+        TextIndent=5
+        FontScale=FNS_Small
+        StyleName="DHFooter"
+        WinTop=0.950000
+        WinHeight=0.045000
+        RenderWeight=0.300000
+        TabOrder=8
+        OnPreDraw=SPFooter.InternalOnPreDraw
+    End Object
+    t_Footer=DHGameFooterSP'DH_Interface.DHGamePageSP.SPFooter'
+    Begin Object Class=GUIImage Name=BkChar
+        Image=Texture'DH_GUI_Tex.Menu.menuBackground'
+        ImageStyle=ISTY_Scaled
+        X1=0
+        Y1=0
+        X2=1024
+        Y2=1024
+        WinHeight=1.000000
+        RenderWeight=0.020000
+    End Object
+    i_bkChar=GUIImage'DH_Interface.DHGamePageSP.BkChar'
+    PanelClass(0)="none"
+    PanelClass(1)="DH_Interface.DHTab_MainSP"
+    PanelClass(2)="DH_Interface.DHIAMultiColumnRulesPanel"
+    PanelClass(3)="DH_Interface.DHTab_MutatorSP"
+    PanelClass(4)="none"
 }

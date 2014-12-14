@@ -50,7 +50,6 @@ function DoFireEffect()
         StartProj = HitLocation;
     }
 
-
     Aim = AdjustAim(StartProj, AimError);
 
     //log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
@@ -75,7 +74,7 @@ function DoFireEffect()
                 R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
                 R.Pitch = AppliedSpread * (FRand()-0.5);
                 R.Roll = AppliedSpread * (FRand()-0.5);
-                SpawnProjectile(StartProj, Rotator(X >> R));
+                SpawnProjectile(StartProj, rotator(X >> R));
             }
             break;
 
@@ -86,7 +85,7 @@ function DoFireEffect()
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
-                SpawnProjectile(StartProj, Rotator(X >> Aim));
+                SpawnProjectile(StartProj, rotator(X >> Aim));
             }
             break;
 
@@ -97,10 +96,10 @@ function DoFireEffect()
 
 defaultproperties
 {
-     bSplashDamage=false
-     bRecommendSplashDamage=false
-     MaxHoldTime=4.950000
-     PreFireAnim="Pre_Fire"
-     AmmoClass=class'DH_Equipment.DH_RedSmokeAmmo'
-     ProjectileClass=class'DH_Equipment.DH_RedSmokeProjectile'
+    bSplashDamage=false
+    bRecommendSplashDamage=false
+    MaxHoldTime=4.950000
+    PreFireAnim="Pre_Fire"
+    AmmoClass=class'DH_Equipment.DH_RedSmokeAmmo'
+    ProjectileClass=class'DH_Equipment.DH_RedSmokeProjectile'
 }

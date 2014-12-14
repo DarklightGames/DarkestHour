@@ -8,5 +8,5 @@ class DH_P08LugerBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-     WeaponClass=class'DH_Weapons.DH_P08LugerWeapon'
+    WeaponClass=class'DH_Weapons.DH_P08LugerWeapon'
 }

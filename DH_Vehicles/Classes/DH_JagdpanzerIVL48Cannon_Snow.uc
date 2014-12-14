@@ -7,5 +7,5 @@ class DH_JagdpanzerIVL48Cannon_Snow extends DH_JagdpanzerIVL48Cannon;
 
 defaultproperties
 {
-     Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'
+    Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'
 }

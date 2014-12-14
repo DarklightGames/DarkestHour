@@ -7,14 +7,29 @@ class DHWireCuttersFireMode extends WeaponFire;
 
 simulated function bool AllowFire()
 {
-    if (Instigator == none)
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local Actor HitActor;
+    local DHObstacle O;
+
+    TraceStart = Weapon.Location;
+    TraceEnd = vector(Weapon.Rotation) * 100.0;
+
+    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+    O = DHObstacle(HitActor);
+
+    if (O == none || !O.bCanBeClearedWithWireCutters)
     {
         return false;
     }
 
-    if (Instigator.Velocity != vect(0, 0, 0))
+    Log(O);
+
+    if (Instigator == none ||
+        Instigator.IsProneTransitioning() ||
+        Instigator.Velocity != vect(0, 0 ,0))
     {
         return false;
+
     }
 
     return true;
@@ -22,17 +37,16 @@ simulated function bool AllowFire()
 
 function StartFiring()
 {
-    Level.Game.Broadcast(Instigator, "StartFiring");
+    Log("DHWireCuttersFireMode::StartFiring");
 }
 
 function StopFiring()
 {
-    Level.Game.Broadcast(Instigator, "StopFiring");
+    Log("DHWireCuttersFireMode::StopFiring");
 }
 
 /*event ModeDoFire()
 {
-
     if (!AllowFire())
     {
         return;
@@ -41,6 +55,7 @@ function StopFiring()
 
 event ModeHoldFire()
 {
+    super.ModeHoldFire
 
     if (!AllowFire())
     {

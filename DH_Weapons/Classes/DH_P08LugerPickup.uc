@@ -17,14 +17,14 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-     TouchMessage="Pick Up: Luger P08"
-     MaxDesireability=0.100000
-     InventoryType=class'DH_Weapons.DH_P08LugerWeapon'
-     PickupMessage="You got the Luger P08."
-     PickupForce="AssaultRiflePickup"
-     DrawType=DT_StaticMesh
-     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.luger'
-     PrePivot=(Z=3.000000)
-     CollisionRadius=15.000000
-     CollisionHeight=3.000000
+    TouchMessage="Pick Up: Luger P08"
+    MaxDesireability=0.100000
+    InventoryType=class'DH_Weapons.DH_P08LugerWeapon'
+    PickupMessage="You got the Luger P08."
+    PickupForce="AssaultRiflePickup"
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.luger'
+    PrePivot=(Z=3.000000)
+    CollisionRadius=15.000000
+    CollisionHeight=3.000000
 }

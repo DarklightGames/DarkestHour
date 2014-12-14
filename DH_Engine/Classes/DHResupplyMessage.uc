@@ -48,9 +48,9 @@ static function int getIconID(
 
 defaultproperties
 {
-     ResuppliedMortar="Successfully resupplied "
-     ResuppliedNoOperator="Successfully resupplied mortar."
-     BeenResupplied="You have received ammo from "
-     iconID=4
-     altIconID=5
+    ResuppliedMortar="Successfully resupplied "
+    ResuppliedNoOperator="Successfully resupplied mortar."
+    BeenResupplied="You have received ammo from "
+    iconID=4
+    altIconID=5
 }

@@ -5,7 +5,6 @@
 
 class DHC47Mover extends DHVariableTimedMover;
 
-
 var(InitialAnimation)   name    AnimName;
 var(InitialAnimation)   float   AnimRate;
 
@@ -59,12 +58,12 @@ LoopAnim(AnimName, AnimRate);               //DH - loop the anim
 
 defaultproperties
 {
-     AnimName="c47_in_flight"
-     AnimRate=1.000000
-     DrawType=DT_Mesh
-     CullDistance=16000.000000
-     Mesh=SkeletalMesh'DH_C47_anm.FlyingC47'
-     CollisionRadius=1800.000000
-     CollisionHeight=400.000000
-     bBlockKarma=true
+    AnimName="c47_in_flight"
+    AnimRate=1.000000
+    DrawType=DT_Mesh
+    CullDistance=16000.000000
+    Mesh=SkeletalMesh'DH_C47_anm.FlyingC47'
+    CollisionRadius=1800.000000
+    CollisionHeight=400.000000
+    bBlockKarma=true
 }

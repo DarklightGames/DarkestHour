@@ -32,7 +32,7 @@ static function string GetString(
 
 defaultproperties
 {
-     NoHipFire="You cannot fire the PIAT from the hip"
-     ReloadWarning="You need to be prone or weapon rested to reload the PIAT"
-     NeedSupport="You need to be prone or weapon rested to fire the PIAT"
+    NoHipFire="You cannot fire the PIAT from the hip"
+    ReloadWarning="You need to be prone or weapon rested to reload the PIAT"
+    NeedSupport="You need to be prone or weapon rested to fire the PIAT"
 }
