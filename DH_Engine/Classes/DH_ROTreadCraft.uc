@@ -610,7 +610,7 @@ simulated function StartEmitters()
     {
         Dust.length = Wheels.length;
 
-        for(i=0; i<Wheels.Length; i++)
+        for(i = 0; i<Wheels.Length; i++)
         {
             if (Dust[i] != none)
                 Dust[i].Destroy();
@@ -629,7 +629,7 @@ simulated function StartEmitters()
             Dust[i].SetDirtColor(Level.DustColor);
         }
 
-        for(i=0; i<ExhaustPipes.Length; i++)
+        for(i = 0; i<ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
                 ExhaustPipes[i].ExhaustEffect.Destroy();
@@ -664,11 +664,11 @@ function ServerStartEngine()
             if (ShutDownSound != none)
                 PlaySound(ShutDownSound, SLOT_None, 1.0);
 
-            Throttle=0;
-            ThrottleAmount=0;
-            bDisableThrottle=true;
+            Throttle = 0;
+            ThrottleAmount = 0;
+            bDisableThrottle = true;
             bWantsToThrottle = false;
-            bEngineOff=true;
+            bEngineOff = true;
 
             TurnDamping = 0.0;
 
@@ -688,9 +688,9 @@ function ServerStartEngine()
             if (IdleSound != none)
                 AmbientSound = IdleSound;
 
-            Throttle=0;
+            Throttle = 0;
             bDisableThrottle = false;
-            bWantsToThrottle=true;
+            bWantsToThrottle = true;
             bEngineOff = false;
 
             IgnitionSwitchTime = Level.TimeSeconds;
@@ -775,9 +775,13 @@ function DriverLeft()
     if (!bNeverReset && ParentFactory != none && (VSize(Location - ParentFactory.Location) > 5000.0 || !FastTrace(ParentFactory.Location, Location)))
     {
         if (bKeyVehicle)
+        {
             ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+        }
         else
-        ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+        {
+            ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+        }
     }
 
     super(Vehicle).DriverLeft();
@@ -990,10 +994,10 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     //Engine starting and stopping stuff
-    //bEngineOff=true;
+    //bEngineOff = true;
     //bEngineDead = false;
-    //bDisableThrottle=true;
-    //bFirstHit=true;
+    //bDisableThrottle = true;
+    //bFirstHit = true;
 
     EngineHealth=EngineHealthMax;
 
@@ -1160,12 +1164,12 @@ simulated function Tick(float DeltaTime)
         LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-        for(i=0; i<LeftWheelBones.Length; i++)
+        for(i = 0; i<LeftWheelBones.Length; i++)
         {
               SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
-        for(i=0; i<RightWheelBones.Length; i++)
+        for(i = 0; i<RightWheelBones.Length; i++)
         {
               SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
@@ -1247,7 +1251,7 @@ simulated function Tick(float DeltaTime)
         Throttle=0;
         ThrottleAmount=0;
         bWantsToThrottle = false;
-        bDisableThrottle=true;
+        bDisableThrottle = true;
         Steering=0;
     }
 
@@ -1310,8 +1314,8 @@ event TakeFireDamage(float DeltaTime)
     if (Level.TimeSeconds - EngineBurnTime > 30 && bEngineOnFire && !bOnFire)
     {
         bEngineOnFire = false;
-        bDisableThrottle=true;
-        bEngineDead=true;
+        bDisableThrottle = true;
+        bEngineDead = true;
         DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
 
         if (!bOnFire)
@@ -1367,12 +1371,12 @@ function DamageTrack(bool bLeftTrack)
     if (bLeftTrack)
     {
         bDisableThrottle = false;
-        bLeftTrackDamaged=true;
+        bLeftTrackDamaged = true;
     }
     else
     {
         bDisableThrottle = false;
-        bRightTrackDamaged=true;
+        bRightTrackDamaged = true;
     }
 }
 
