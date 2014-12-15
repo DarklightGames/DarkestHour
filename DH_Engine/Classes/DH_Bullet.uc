@@ -25,6 +25,11 @@ simulated function PostBeginPlay()
     OrigLoc = Location;
 }
 
+// Matt: emptied out as no longer using Tick to give delayed destruction on a server
+simulated function Tick(float DeltaTime)
+{
+}
+
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated singular function Touch(Actor Other)
@@ -290,6 +295,70 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     }
 
     if (!bHitWhipAttachment)
+    {
+        Destroy();
+    }
+}
+
+// Matt: modified to use much simpler method for delayed bullet destruction on a server & to include a listen server as well as dedicated
+simulated function HitWall(vector HitNormal, Actor Wall)
+{
+    local ROVehicleHitEffect      VehEffect;
+    local RODestroyableStaticMesh DestroMesh;
+
+    if (WallHitActor != none && WallHitActor == Wall)
+    {
+        return;
+    }
+
+    WallHitActor = Wall;
+    DestroMesh = RODestroyableStaticMesh(Wall);
+
+    if (Role == ROLE_Authority)
+    {
+        // Have to use special damage for vehicles, otherwise it doesn't register for some reason - Ramm
+        if (ROVehicle(Wall) != none)
+        {
+            Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
+        }
+        else if (Mover(Wall) != none || DestroMesh != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
+        {
+            Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+        }
+
+        MakeNoise(1.0);
+    }
+
+    // Spawn the bullet hit effect
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (ROVehicle(Wall) != none)
+        {
+            VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
+            VehEffect.InitHitEffects(Location, HitNormal);
+        }
+        else if (ImpactEffect != none)
+        {
+            Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
+        }
+    }
+
+    super(ROBallisticProjectile).HitWall(HitNormal, Wall); // is debug only
+
+    // Don't want to destroy the bullet if its going through something like glass
+    if (DestroMesh != none && DestroMesh.bWontStopBullets)
+    {
+        return;
+    }
+
+    // Give the bullet a little time to play the hit effect client side before destroying the bullet
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+    {
+        LifeSpan = DestroyTime; // bCollided = true; // Matt: setting a short LifeSpan is a much simpler way to give delayed destruction on server, avoiding need to use Tick
+        SetCollision(false, false);
+        bCollideWorld = false; // Matt: added to prevent continuing calls to HitWall on server, while bullet persists
+    }
+    else
     {
         Destroy();
     }
