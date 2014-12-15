@@ -300,7 +300,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     }
 }
 
-// Matt: modified to use much simpler method for delayed bullet destruction on a server & to include a listen server as well as dedicated
+// Matt: modified to remove delayed destruction of bullet on a server, as serves no purpose for a bullet
+// Bullet is bNetTemporary, meaning it gets torn off on client as soon as it replicates, receiving no further input from server, so delaying destruction on server has no effect
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicleHitEffect      VehEffect;
@@ -351,17 +352,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         return;
     }
 
-    // Give the bullet a little time to play the hit effect client side before destroying the bullet
-    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
-    {
-        LifeSpan = DestroyTime; // bCollided = true; // Matt: setting a short LifeSpan is a much simpler way to give delayed destruction on server, avoiding need to use Tick
-        SetCollision(false, false);
-        bCollideWorld = false; // Matt: added to prevent continuing calls to HitWall on server, while bullet persists
-    }
-    else
-    {
-        Destroy();
-    }
+    // Matt: removed the section that used to "Give the bullet a little time to play the hit effect client side before destroying the bullet"
+
+    Destroy();
 }
 
 defaultproperties

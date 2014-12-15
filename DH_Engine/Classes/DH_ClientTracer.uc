@@ -142,7 +142,6 @@ simulated function ProcessTouch(Actor Other, Vector HitLocation)
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicleHitEffect      VehEffect;
-//  local RODestroyableStaticMesh DestroMesh;
 
     if (WallHitActor != none && WallHitActor == Wall)
     {
@@ -162,7 +161,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     WallHitActor = Wall;
-//  DestroMesh = RODestroyableStaticMesh(Wall); // Matt: removed as unnecessary
 
     // Spawn the bullet hit effect // Matt: only if tracer has already deflected, meaning real bullet no longer exists , otherwise we end up doubling up the hit effect
     if (Bounces < default.Bounces && Level.NetMode != NM_DedicatedServer)
@@ -186,26 +184,17 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         return;
     }
 
-    // Give the bullet a little time to play the hit effect client side before destroying the bullet // Matt: removed as client tracer will never exist on a server
-//  if (Level.NetMode == NM_DedicatedServer)
-//  {
-//      bCollided = true;
-//      SetCollision(false, false);
-//  }
-//  else
-//  {
-        // Deflect off wall unless bullet speed is low
-        if (VSizeSquared(Velocity) < 500000.0)
-        {
-            bBounce = false;
-            Bounces = 0;
-            Destroy();
-        }
-        else
-        {
-            Deflect(HitNormal);
-        }
-//  }
+    // Deflect off wall unless bullet speed is low
+    if (VSizeSquared(Velocity) < 500000.0)
+    {
+        bBounce = false;
+        Bounces = 0;
+        Destroy();
+    }
+    else
+    {
+        Deflect(HitNormal);
+    }
 }
 
 // New function to handle tracer deflection off things

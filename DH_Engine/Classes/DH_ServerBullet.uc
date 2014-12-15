@@ -266,7 +266,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
 // Matt: removed as all this function override did was remove the spawn hit effects block, which is actually needed by a listen server & won't run on a dedicated server anyway !
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local ROVehicleHitEffect      VehEffect; // Matt: added back as needed by listen server
+    local ROVehicleHitEffect      VehEffect;
     local RODestroyableStaticMesh DestroMesh;
 
     if (WallHitActor != none && WallHitActor == Wall)
@@ -282,29 +282,29 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         // Have to use special damage for vehicles, otherwise it doesn't register for some reason - Ramm
         if (ROVehicle(Wall) != none)
         {
-            Wall.TakeDamage(Damage - 20.0 * (1.0 - VSize(Velocity) / default.Speed), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
+            Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
         }
         else if (Mover(Wall) != none || DestroMesh != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
         {
-            Wall.TakeDamage(Damage - 20.0 * (1.0 - VSize(Velocity) / default.Speed), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+            Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
         }
 
         MakeNoise(1.0);
     }
 
     // Spawn the bullet hit effect
-//  if (Level.NetMode != NM_DedicatedServer) // Matt: added back as needed by listen server
-//  {
-//      if (ROVehicle(Wall) != none) // Matt: all this function override does is removed this block, which is actually needed by a listen server & won't run on a dedicated server anyway !
-//      {
-//          VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
-//          VehEffect.InitHitEffects(Location, HitNormal);
-//      }
-//      else if (ImpactEffect != none)
-//      {
-//          Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
-//      }
-//  }
+    if (Level.NetMode != NM_DedicatedServer) // Matt: added back to server bullet as needed by listen server
+    {
+        if (ROVehicle(Wall) != none) // Matt: all this function override does is removed this block, which is actually needed by a listen server & won't run on a dedicated server anyway !
+        {
+            VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
+            VehEffect.InitHitEffects(Location, HitNormal);
+        }
+        else if (ImpactEffect != none)
+        {
+            Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
+        }
+    }
 
     super(ROBallisticProjectile).HitWall(HitNormal, Wall); // is debug only
 
@@ -314,16 +314,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         return;
     }
 
-    // Give the bullet a little time to play the hit effect client side before destroying the bullet
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        bCollided = true;
-        SetCollision(false, false);
-    }
-    else
-    {
-        Destroy();
-    }
+    Destroy();
 }
 */
 
