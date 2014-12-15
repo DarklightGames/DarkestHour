@@ -37,7 +37,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
-        ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles;
+        ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
 
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
@@ -1732,6 +1732,28 @@ exec function DebugObstacles(optional int Option)
 function ServerDebugObstacles(optional int Option)
 {
     DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
+}
+
+// Matt: added for easy way to write to log in-game, during testing or development
+exec function DoLog(string LogMessage)
+{
+    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    {
+        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+
+        if (Role < ROLE_Authority)
+        {
+            ServerDoLog(LogMessage);
+        }
+    }
+}
+
+function ServerDoLog(string LogMessage)
+{
+    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    {
+        Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
+    }
 }
 
 defaultproperties
