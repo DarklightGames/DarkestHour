@@ -70,12 +70,11 @@ replication
 
     // functions called by client on server
     reliable if (Role < ROLE_Authority)
-        ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
+        ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay, ServerToggleDebugExits, ServerToggleDriverDebug;
 
     // Functions called by server on client
     reliable if (Role == ROLE_Authority)
         bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged, ClientDamageCannonOverlay; //bOpticsLit, ClientLightOverlay
-
 }
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
@@ -678,6 +677,24 @@ function float GetAltAmmoReloadState()
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
 simulated function ShrinkHUD();
+
+// Matt: allows 'Driver' (commander) debugging to be toggled for all cannon pawns
+exec function ToggleDriverDebug()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ServerToggleDriverDebug();
+    }
+}
+
+function ServerToggleDriverDebug()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        class'DH_ROTankCannon'.default.bDriverDebugging = !class'DH_ROTankCannon'.default.bDriverDebugging;
+        Log("DH_ROTankCannon.bDriverDebugging =" @ class'DH_ROTankCannon'.default.bDriverDebugging);
+    }
+}
 
 // Matt: allows debugging exit positions to be toggled for all cannon pawns
 exec function ToggleDebugExits()
