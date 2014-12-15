@@ -24,7 +24,7 @@ simulated function PostBeginPlay()
     if (bDebugBallistics && ROPawn(Instigator) != none) // ROPawn added in this class
     {
         FlightTime = 0.0;
-        OrigLoc = Location;
+//      OrigLoc = Location; // set below, regardless of whether debugging
 
         TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + (Instigator.CollisionRadius + 5.0) * vector(Rotation), true);
         Log("Debug tracing: TraceHitActor=" @ TraceHitActor);

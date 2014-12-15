@@ -818,7 +818,7 @@ defaultproperties
     Spread=0.003000
     bUsesSecondarySpread=false // Matt: added so uses Spread
     bUsesTertiarySpread=false  // Matt: added so uses Spread
-    //   AltFireSpread=0.002000     // Matt: removed as is inherited default from DHROTC
+//  AltFireSpread=0.002000     // Matt: removed as is inherited default from DHROTC
     FireInterval=0.200000
     AltFireInterval=0.050000
     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'

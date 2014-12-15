@@ -264,7 +264,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation) // Matt: was in
 }
 
 // Matt: removed as all this function override did was remove the spawn hit effects block, which is actually needed by a listen server & won't run on a dedicated server anyway !
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicleHitEffect      VehEffect; // Matt: added back as needed by listen server
     local RODestroyableStaticMesh DestroMesh;
@@ -300,14 +300,13 @@ simulated function HitWall(vector HitNormal, actor Wall)
 //          VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
 //          VehEffect.InitHitEffects(Location, HitNormal);
 //      }
-        // Spawn the bullet hit effect client side
 //      else if (ImpactEffect != none)
 //      {
 //          Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
 //      }
 //  }
 
-    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
+    super(ROBallisticProjectile).HitWall(HitNormal, Wall); // is debug only
 
     // Don't want to destroy the bullet if its going through something like glass
     if (DestroMesh != none && DestroMesh.bWontStopBullets)
@@ -331,8 +330,8 @@ simulated function HitWall(vector HitNormal, actor Wall)
 defaultproperties
 {
     RemoteRole=ROLE_None // only exists on the server // Matt: this is what this class is all about really - no replication of bullet actor to clients
-    //  WScale=1.000000           // Matt: not used
-    //  PenetrationScale=0.080000 // Matt: not used
-    //  DistortionScale=0.400000  // Matt: not used
-    //  WhizType=1                // Matt: now inherited from DH_Bullet
+//  WScale=1.000000           // Matt: not used
+//  PenetrationScale=0.080000 // Matt: not used
+//  DistortionScale=0.400000  // Matt: not used
+//  WhizType=1                // Matt: now inherited from DH_Bullet
 }

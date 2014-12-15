@@ -23,7 +23,7 @@ var     DHObstacleManager           ObstacleManager;
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
 {
-    Super.InitGame(Options, Error);
+    super.InitGame(Options, Error);
 
     if( bIgnore32PlayerLimit )
     {
@@ -120,7 +120,7 @@ function PostBeginPlay()
         foreach AllActors(class'SpectatorCam', ViewPoint, LevelInfo.EntryCamTags[n])
         {
             ViewPoints[ViewPoints.Length] = ViewPoint;
-            //log("Added Viewpoint "$ViewPoint.Tag);
+            //Log("Added Viewpoint "$ViewPoint.Tag);
         }
     }
 

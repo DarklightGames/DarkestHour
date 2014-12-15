@@ -184,7 +184,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     Explode(HitLocation, Normal(Other.Location - Location));
 }
 
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     super.HitWall(HitNormal, Wall);
 
@@ -219,7 +219,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             DrawStayingDebugLine(DebugLocation, DebugLocation, 255, 0, 255);
         }
 
-        log((DebugForward dot (Location - OrigLoc) * UU2M) @ (DebugRight dot (Location - OrigLoc) * UU2M));
+        Log((DebugForward dot (Location - OrigLoc) * UU2M) @ (DebugRight dot (Location - OrigLoc) * UU2M));
     }
 }
 

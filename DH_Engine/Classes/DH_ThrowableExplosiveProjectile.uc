@@ -59,7 +59,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
-            log(Tag @ "HurtRadius: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
+            Log(Tag @ "HurtRadius: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
         }
 
         // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
@@ -148,7 +148,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
-            log(Tag @ "HurtRadius part II: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
+            Log(Tag @ "HurtRadius part II: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
         }
 
         dir = Victims.Location - HitLocation;
@@ -193,7 +193,7 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-simulated function HitWall(vector HitNormal, actor Wall)
+simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local vector        VNorm;
     local ESurfaceTypes ST;

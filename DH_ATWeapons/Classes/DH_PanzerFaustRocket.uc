@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_PanzerFaustRocket extends DH_RocketProj; //PanzerFaustRocket;
+class DH_PanzerFaustRocket extends DH_RocketProj;
 
 #exec OBJ LOAD FILE=..\Staticmeshes\DH_Military_Axis.usx
 
