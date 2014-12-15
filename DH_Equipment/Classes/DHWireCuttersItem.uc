@@ -70,17 +70,6 @@ simulated state Cutting
         PlayAnim(CutAnim);
     }
 
-    simulated event bool StartFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated event StopFire(int Mode)
-    {
-        // NOTE: this doesn't do anything :/
-        GotoState('');
-    }
-
     simulated function EndState()
     {
         local DH_Pawn P;
@@ -101,30 +90,23 @@ simulated state Cutting
 
         GetAnimParams(Channel, SeqName, AnimFrame, AnimRate);
 
-        Log(SeqName);
-
         super.AnimEnd(Channel);
 
         switch (SeqName)
         {
             case 'cutStart':
-                Log("1");
                 PlayAnim('cutVin');
                 break;
             case 'cutVin':
-                Log("2");
                 PlayAnim('cutVout');
                 break;
             case 'cutVout':
-                Log("3");
                 PlayAnim('cutHin');
                 break;
             case 'cutHin':
-                Log("4");
                 PlayAnim('cutHout');
                 break;
             case 'cutHout':
-                Log("5");
                 PlayAnim('cutEnd');
 
                 if (Instigator != none)
@@ -169,9 +151,9 @@ simulated function Fire(float F)
             ObstacleBeingCut = O;
 
             GotoState('Cutting');
-        }
 
-        break;
+            break;
+        }
     }
 }
 

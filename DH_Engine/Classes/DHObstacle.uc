@@ -6,6 +6,11 @@
 class DHObstacle extends Actor
     placeable;
 
+//------------------------------------------------------------------------------
+// Because this is a non-static actor, location and rotations are quantized down
+// by default. Replicating this struct allows us the highest level of positional
+// precision possible over the network.
+//------------------------------------------------------------------------------
 struct UncompressedPosition
 {
     var float LocationX;
@@ -21,8 +26,8 @@ struct UncompressedPosition
 
 var     int                     Index;
 var     UncompressedPosition    UP;
-
 var     StaticMesh              IntactStaticMesh;
+
 var()   StaticMesh              ClearedStaticMesh;
 var()   sound                   ClearSound;
 var()   float                   SpawnClearedChance;
@@ -40,20 +45,29 @@ simulated function bool IsCleared()
     return IsInState('Cleared');
 }
 
+simulated function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    IntactStaticMesh = StaticMesh;
+}
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    IntactStaticMesh = StaticMesh;
-    UP.LocationX = Location.X;
-    UP.LocationY = Location.Y;
-    UP.LocationZ = Location.Z;
-    UP.Pitch = Rotation.Pitch;
-    UP.Yaw = Rotation.Yaw;
-    UP.Roll = Rotation.Roll;
-    UP.ScaleX = DrawScale3D.X * DrawScale;
-    UP.ScaleY = DrawScale3D.Y * DrawScale;
-    UP.ScaleZ = DrawScale3D.Z * DrawScale;
+    if (Role == ROLE_Authority)
+    {
+        UP.LocationX = Location.X;
+        UP.LocationY = Location.Y;
+        UP.LocationZ = Location.Z;
+        UP.Pitch = Rotation.Pitch;
+        UP.Yaw = Rotation.Yaw;
+        UP.Roll = Rotation.Roll;
+        UP.ScaleX = DrawScale3D.X * DrawScale;
+        UP.ScaleY = DrawScale3D.Y * DrawScale;
+        UP.ScaleZ = DrawScale3D.Z * DrawScale;
+    }
 }
 
 simulated function PostNetBeginPlay()
@@ -86,19 +100,26 @@ simulated function PostNetBeginPlay()
     }
 }
 
-simulated state Intact
+auto simulated state Intact
 {
     simulated function BeginState()
     {
-        Log("Obstacle" @ Index @ "Intact");
-
         SetStaticMesh(IntactStaticMesh);
         KSetBlockKarma(false);
+
+        super.BeginState();
+    }
+
+    simulated function EndState()
+    {
+        super.EndState();
     }
 
     event Touch(Actor Other)
     {
         local DarkestHourGame G;
+
+        Log(Other);
 
         if (Role == ROLE_Authority)
         {
@@ -122,8 +143,6 @@ simulated state Cleared
 {
     simulated function BeginState()
     {
-        Log("Obstacle" @ Index @ "Cleared");
-
         if (Level.NetMode != NM_DedicatedServer)
         {
             //TODO: this is super quiet for some reason
@@ -140,6 +159,8 @@ simulated state Cleared
 
         SetStaticMesh(ClearedStaticMesh);
         KSetBlockKarma(false);
+
+        super.BeginState();
     }
 }
 

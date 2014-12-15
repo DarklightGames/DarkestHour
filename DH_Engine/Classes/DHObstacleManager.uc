@@ -37,8 +37,6 @@ simulated function PostBeginPlay()
                 SetCleared(Obstacle, true);
             }
 
-            // Now that the obstacle has an index in the server's obstacle list,
-            // it is safe to replicate this actor.
             Obstacle.RemoteRole = ROLE_SimulatedProxy;
         }
     }
@@ -52,8 +50,6 @@ function DebugObstacles(optional int Option)
     {
         return;
     }
-
-    Level.Game.Broadcast(self, "Debugging Obstacles:" @ Option);
 
     switch (Option)
     {
@@ -74,6 +70,9 @@ function DebugObstacles(optional int Option)
             {
                 SetCleared(Obstacles[i], FRand() >= 0.5);
             }
+            break;
+        case 3:
+            Level.Game.Broadcast(self, "Obstacle Count:" @ Obstacles.Length);
             break;
     }
 }
@@ -165,15 +164,18 @@ function SetCleared(DHObstacle Obstacle, bool bIsCleared)
 
     Obstacle.SetCleared(bIsCleared);
 
-    GetBitfieldIndexAndMask(Obstacle.Index, ByteIndex, Mask);
+    if (Level.NetMode != NM_Client)
+    {
+        GetBitfieldIndexAndMask(Obstacle.Index, ByteIndex, Mask);
 
-    if (bIsCleared)
-    {
-        Bitfield[ByteIndex] = (Bitfield[ByteIndex] | Mask);
-    }
-    else
-    {
-        Bitfield[ByteIndex] = (Bitfield[ByteIndex] & ~Mask);
+        if (bIsCleared)
+        {
+            Bitfield[ByteIndex] = (Bitfield[ByteIndex] | Mask);
+        }
+        else
+        {
+            Bitfield[ByteIndex] = (Bitfield[ByteIndex] & ~Mask);
+        }
     }
 }
 
