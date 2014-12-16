@@ -6,6 +6,19 @@
 class DH_ROAntiVehicleProjectile extends ROAntiVehicleProjectile
         abstract;
 
+enum ERoundType
+{
+    RT_APC,
+    RT_HE,
+    RT_HVAP,
+    RT_APDS,
+    RT_HEAT,
+    RT_Smoke,
+    RT_AP,
+    RT_APBC,
+};
+
+var     ERoundType  RoundType;                      // Matt: added to identify round type, making it easier to write more generic functionality & avoid code repetition
 var     float       DHPenetrationTable[11];
 
 var     float       ShellDiameter;                  // to assist in T/d calculations
@@ -189,8 +202,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity),
-            GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             if (ShouldDrawDebugLines())
             {
@@ -355,7 +367,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
         }
     }
 
-    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrateAPC(Location, Normal(Velocity), GetPenetration(LaunchLocation-Location), HitAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
+    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
 
         if (bDebuggingText && Role == ROLE_Authority)
@@ -536,6 +548,7 @@ simulated function bool ShouldDrawDebugLines()
 
 defaultproperties
 {
+    RoundType=RT_APC
     bIsAlliedShell=true
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatter'
     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'

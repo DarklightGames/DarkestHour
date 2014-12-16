@@ -74,8 +74,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateAPC(HitLocation, Normal(Velocity),
-            GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             if (ShouldDrawDebugLines())
             {
@@ -214,7 +213,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
         }
     }
 
-    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrateAPC(Location, Normal(Velocity), GetPenetration(LaunchLocation-Location), HitAngle, ShellDiameter, ShellImpactDamage, bShatterProne))
+    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
         if (Role == ROLE_Authority)
         {
@@ -570,6 +569,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume Volume)
 
 defaultproperties
 {
+    RoundType=RT_HE
     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'

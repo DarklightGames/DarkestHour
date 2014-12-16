@@ -68,6 +68,12 @@ simulated function Timer()
    }
 }
 
+// Matt: added to replace deprecated 'should penetrate' functions below
+simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+{
+   return true;
+}
+
 simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
 {
    return true;

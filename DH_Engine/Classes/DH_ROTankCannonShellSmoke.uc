@@ -66,6 +66,7 @@ simulated function Tick(float DeltaTime)
 
 defaultproperties
 {
+    RoundType=RT_Smoke
     DestroyTimer=20.000000
     SmokeEffectClass=class'DH_Effects.DH_SmokeShellEffect'
     bMechanicalAiming=true

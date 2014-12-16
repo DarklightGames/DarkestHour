@@ -456,8 +456,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrateHEAT(HitLocation, Normal(Velocity), 
-            GetPenetration(LaunchLocation - HitLocation), TouchAngle, ShellImpactDamage, bIsHEATRound))
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             if (ShouldDrawDebugLines())
             {
@@ -613,7 +612,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
         }
     }
 
-    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrateHEAT(Location, Normal(Velocity), GetPenetration(LaunchLocation-Location), HitAngle, ShellImpactDamage, bIsHEATRound))
+    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -975,6 +974,7 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    RoundType=RT_HEAT
     ExplodeSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     ExplodeSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplodeSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
