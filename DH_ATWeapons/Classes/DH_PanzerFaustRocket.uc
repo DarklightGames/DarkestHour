@@ -32,7 +32,6 @@ defaultproperties
     DHPenetrationTable(4)=21.500000
     DHPenetrationTable(5)=21.500000
     DHPenetrationTable(6)=21.500000
-    bIsHEATRound=true
     bIsAlliedShell=false
     bHasTracer=false
     ShellImpactDamage=class'DH_ATWeapons.DH_PanzerFaustImpactDamType'

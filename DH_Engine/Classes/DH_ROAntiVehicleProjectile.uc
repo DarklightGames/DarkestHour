@@ -23,7 +23,7 @@ var     float       DHPenetrationTable[11];
 
 var     float       ShellDiameter;                  // to assist in T/d calculations
 
-var     bool        bIsHEATRound;                   // Triggers different penetration calcs for HEAT projectiles (generally rockets)
+//var   bool        bIsHEATRound;                   // Triggers different penetration calcs for HEAT projectiles (generally rockets) // Matt: removed as unnecessary, as we now have RoundType=RT_HEAT
 var     bool        bIsAlliedShell;                 // just for debugging stuff, maybe later for shell shatter
 var     bool        bShatterProne;                  // assists with shatter gap calculations
 

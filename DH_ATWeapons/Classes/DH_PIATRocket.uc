@@ -30,7 +30,6 @@ defaultproperties
     DHPenetrationTable(4)=9.100000
     DHPenetrationTable(5)=9.100000
     DHPenetrationTable(6)=9.100000
-    bIsHEATRound=true
     bHasTracer=false
     ShellImpactDamage=class'DH_ATWeapons.DH_PIATImpactDamType'
     ImpactDamage=650

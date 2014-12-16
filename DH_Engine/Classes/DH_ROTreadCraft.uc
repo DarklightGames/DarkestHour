@@ -63,7 +63,7 @@ var()   bool    bAllowRiders;
 var     bool    bAssaultWeaponHit;  //used to defeat the Stug/JP bug
 var     bool    bIsAssaultGun;
 
-var     bool    bWasShatterProne;
+// var  bool    bWasShatterProne; // Matt: deprecated
 var     bool    bRoundShattered;
 
 var     int     UnbuttonedPositionIndex;
@@ -1916,281 +1916,6 @@ simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, flo
     bRoundShattered = bShattered; // now we set the replicated variable
 }
 
-//DH CODE: Calculate APC/APCBC penetration
-simulated function bool PenetrationAPC(float ArmorFactor, float CompoundAngle, float PenetrationNumber, float OverMatchFactor, bool bShatterProne)
-{
-    local float EffectiveArmor;
-    local float CompoundAngleDegrees;
-    local float SlopeMultiplier;
-    local float PenetrationRatio;
-
-    //convert angle back to degrees
-    CompoundAngleDegrees = CompoundAngle * 57.2957795131;
-
-    //fix
-    if (CompoundAngleDegrees > 90)
-    {
-        CompoundAngleDegrees = 180 - CompoundAngleDegrees;
-    }
-
-    if (bDebuggingText)
-    {
-        Level.Game.Broadcast(self, "CompoundAngle: "$CompoundAngleDegrees);
-    }
-
-    //After Bird & Livingston
-    DHArmorSlopeTable[0]= 1.01 * (OverMatchFactor**0.0225);  //10
-    DHArmorSlopeTable[1]= 1.03 * (OverMatchFactor**0.0327);  //15
-    DHArmorSlopeTable[2]= 1.10 * (OverMatchFactor**0.0454);  //20
-    DHArmorSlopeTable[3]= 1.17 * (OverMatchFactor**0.0549);  //25
-    DHArmorSlopeTable[4]= 1.27 * (OverMatchFactor**0.0655);  //30
-    DHArmorSlopeTable[5]= 1.39 * (OverMatchFactor**0.0993);  //35
-    DHArmorSlopeTable[6]= 1.54 * (OverMatchFactor**0.1388);  //40
-    DHArmorSlopeTable[7]= 1.72 * (OverMatchFactor**0.1655);  //45
-    DHArmorSlopeTable[8]= 1.94 * (OverMatchFactor**0.2035);  //50
-    DHArmorSlopeTable[9]= 2.12 * (OverMatchFactor**0.2427);  //55
-    DHArmorSlopeTable[10]= 2.56 * (OverMatchFactor**0.2450); //60
-    DHArmorSlopeTable[11]= 3.20 * (OverMatchFactor**0.3354); //65
-    DHArmorSlopeTable[12]= 3.98 * (OverMatchFactor**0.3478); //70
-    DHArmorSlopeTable[13]= 5.17 * (OverMatchFactor**0.3831); //75
-    DHArmorSlopeTable[14]= 8.09 * (OverMatchFactor**0.4131); //80
-    DHArmorSlopeTable[15]= 11.32 * (OverMatchFactor**0.4550); //85
-
-    //SlopeMultiplier calcs - using linear interpolation
-    if      (CompoundAngleDegrees < 10)  SlopeMultiplier = (DHArmorSlopeTable[0] + (10 - CompoundAngleDegrees) * (DHArmorSlopeTable[0]-DHArmorSlopeTable[1]) / 10);
-    else if (CompoundAngleDegrees < 15)  SlopeMultiplier = (DHArmorSlopeTable[1] + (15 - CompoundAngleDegrees) * (DHArmorSlopeTable[0]-DHArmorSlopeTable[1]) / 5);
-    else if (CompoundAngleDegrees < 20)  SlopeMultiplier = (DHArmorSlopeTable[2] + (20 - CompoundAngleDegrees) * (DHArmorSlopeTable[1]-DHArmorSlopeTable[2]) / 5);
-    else if (CompoundAngleDegrees < 25)  SlopeMultiplier = (DHArmorSlopeTable[3] + (25 - CompoundAngleDegrees) * (DHArmorSlopeTable[2]-DHArmorSlopeTable[3]) / 5);
-    else if (CompoundAngleDegrees < 30)  SlopeMultiplier = (DHArmorSlopeTable[4] + (30 - CompoundAngleDegrees) * (DHArmorSlopeTable[3]-DHArmorSlopeTable[4]) / 5);
-    else if (CompoundAngleDegrees < 35)  SlopeMultiplier = (DHArmorSlopeTable[5] + (35 - CompoundAngleDegrees) * (DHArmorSlopeTable[4]-DHArmorSlopeTable[5]) / 5);
-    else if (CompoundAngleDegrees < 40)  SlopeMultiplier = (DHArmorSlopeTable[6] + (40 - CompoundAngleDegrees) * (DHArmorSlopeTable[5]-DHArmorSlopeTable[6]) / 5);
-    else if (CompoundAngleDegrees < 45)  SlopeMultiplier = (DHArmorSlopeTable[7] + (45 - CompoundAngleDegrees) * (DHArmorSlopeTable[6]-DHArmorSlopeTable[7]) / 5);
-    else if (CompoundAngleDegrees < 50)  SlopeMultiplier = (DHArmorSlopeTable[8] + (50 - CompoundAngleDegrees) * (DHArmorSlopeTable[7]-DHArmorSlopeTable[8]) / 5);
-    else if (CompoundAngleDegrees < 55)  SlopeMultiplier = (DHArmorSlopeTable[9] + (55 - CompoundAngleDegrees) * (DHArmorSlopeTable[8]-DHArmorSlopeTable[9]) / 5);
-    else if (CompoundAngleDegrees < 60)  SlopeMultiplier = (DHArmorSlopeTable[10] + (60 - CompoundAngleDegrees) * (DHArmorSlopeTable[9]-DHArmorSlopeTable[10]) / 5);
-    else if (CompoundAngleDegrees < 65)  SlopeMultiplier = (DHArmorSlopeTable[11] + (65 - CompoundAngleDegrees) * (DHArmorSlopeTable[10]-DHArmorSlopeTable[11]) / 5);
-    else if (CompoundAngleDegrees < 70)  SlopeMultiplier = (DHArmorSlopeTable[12] + (70 - CompoundAngleDegrees) * (DHArmorSlopeTable[11]-DHArmorSlopeTable[12]) / 5);
-    else if (CompoundAngleDegrees < 75)  SlopeMultiplier = (DHArmorSlopeTable[13] + (75 - CompoundAngleDegrees) * (DHArmorSlopeTable[12]-DHArmorSlopeTable[13]) / 5);
-    else if (CompoundAngleDegrees < 80)  SlopeMultiplier = (DHArmorSlopeTable[14] + (80 - CompoundAngleDegrees) * (DHArmorSlopeTable[13]-DHArmorSlopeTable[14]) / 5);
-    else if (CompoundAngleDegrees < 85)  SlopeMultiplier = (DHArmorSlopeTable[15] + (85 - CompoundAngleDegrees) * (DHArmorSlopeTable[14]-DHArmorSlopeTable[15]) / 5);
-    else SlopeMultiplier = DHArmorSlopeTable[15];
-
-    if (bDebuggingText)
-    {
-        Level.Game.Broadcast(self, "SlopeMultiplier: "$SlopeMultiplier);
-    }
-
-    EffectiveArmor = ArmorFactor * SlopeMultiplier;
-    PenetrationRatio = PenetrationNumber / EffectiveArmor;
-
-    if (bPenetrationText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Effective Armor: "$EffectiveArmor*10$"mm");
-        Level.Game.Broadcast(self, "Shot penetration: "$PenetrationNumber*10$"mm");
-    }
-
-    if (bShatterProne)
-        bWasShatterProne = true;
-
-    //test for shatter gap
-    if (bWasShatterProne && OverMatchFactor > 0.8)
-    {
-        if ((PenetrationRatio >= 1.0 && PenetrationRatio < 1.06) || PenetrationRatio > 1.19)
-        {
-            bProjectilePenetrated = true; //to determine if interior damage is done
-            return true;
-        }
-        else if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.19) //shatter gap
-        {
-            bRoundShattered=true;
-            bProjectilePenetrated = false;
-            return false;
-        }
-        else if (PenetrationRatio < 1.0)
-        {
-            bProjectilePenetrated = false;
-            return false;
-        }
-    }
-    else
-    {
-        if (PenetrationRatio >= 1.0)
-        {
-            bProjectilePenetrated = true; //to determine if interior damage is done
-            return true;
-        }
-        else
-        {
-            bProjectilePenetrated = false;
-            return false;
-        }
-    }
-}
-
-//DH CODE: Calculate HVAP penetration
-simulated function bool PenetrationHVAP(float ArmorFactor, float CompoundAngle, float PenetrationNumber, bool bShatterProne)
-{
-
-    local float EffectiveArmor;
-    local float CompoundAngleDegrees;
-    local float CompoundExp;
-    local float PenetrationRatio;
-
-    //convert angle back to degrees
-    CompoundAngleDegrees = CompoundAngle * 57.2957795131;
-
-    //fix
-    if (CompoundAngleDegrees > 90)
-    {
-        CompoundAngleDegrees = 180 - CompoundAngleDegrees;
-
-    }
-
-    if (bDebuggingText)
-    {
-        Level.Game.Broadcast(self, "CompoundAngle: "$CompoundAngleDegrees);
-    }
-
-    //New EffectiveArmor calcs
-    if (CompoundAngleDegrees <= 25)
-    {
-       CompoundExp = CompoundAngleDegrees**2.2;
-       EffectiveArmor = (ArmorFactor * (2.71828 ** (CompoundExp * 0.0001727)));
-    }
-    else
-    {
-       CompoundExp = CompoundAngleDegrees**1.5;
-       EffectiveArmor = (ArmorFactor * 0.7277 * (2.71828 ** (CompoundExp * 0.003787)));
-    }
-
-    PenetrationRatio = PenetrationNumber / EffectiveArmor;
-
-    if (bPenetrationText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Effective Armor: "$EffectiveArmor*10$"mm");
-        Level.Game.Broadcast(self, "Shot penetration: "$PenetrationNumber*10$"mm");
-    }
-
-    if (bShatterProne)
-        bWasShatterProne = true;
-
-    //test for shatter gap
-    if (bWasShatterProne)
-    {
-        if ((PenetrationRatio >= 1.0 && PenetrationRatio < 1.10) || PenetrationRatio > 1.34)
-        {
-            bProjectilePenetrated = true; //to determine if interior damage is done
-            return true;
-        }
-        else if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.34)
-        {
-            bRoundShattered=true;
-            bProjectilePenetrated = false;
-            return false;
-        }
-        else if (PenetrationRatio < 1.0)
-        {
-            bProjectilePenetrated = false;
-            return false;
-        }
-    }
-    else
-    {
-        if (PenetrationRatio >= 1.0)
-        {
-            bProjectilePenetrated = true; //to determine if interior damage is done
-            return true;
-        }
-        else
-        {
-            bProjectilePenetrated = false;
-            return false;
-        }
-    }
-}
-
-//DH CODE: Calculate HVAP penetration - 90mm
-simulated function bool PenetrationHVAPLarge(float ArmorFactor, float CompoundAngle, float PenetrationNumber, bool bShatterProne)
-{
-
-    local float EffectiveArmor;
-    local float CompoundAngleDegrees;
-    local float CompoundExp;
-    local float PenetrationRatio;
-
-    //convert angle back to degrees
-    CompoundAngleDegrees = CompoundAngle * 57.2957795131;
-
-    //fix
-    if (CompoundAngleDegrees > 90)
-    {
-        CompoundAngleDegrees = 180 - CompoundAngleDegrees;
-
-    }
-
-    if (bDebuggingText)
-    {
-        Level.Game.Broadcast(self, "CompoundAngle: "$CompoundAngleDegrees);
-    }
-
-    //New EffectiveArmor calcs
-    if (CompoundAngleDegrees <= 30)
-    {
-       CompoundExp = CompoundAngleDegrees**1.75;
-       EffectiveArmor = (ArmorFactor * (2.71828 ** (CompoundExp * 0.000662)));
-    }
-    else
-    {
-       CompoundExp = CompoundAngleDegrees**2.2;
-       EffectiveArmor = (ArmorFactor * 0.9043 * (2.71828 ** (CompoundExp * 0.0001987)));
-    }
-
-    PenetrationRatio = PenetrationNumber / EffectiveArmor;
-
-    if (bPenetrationText && Role == ROLE_Authority)
-    {
-        Level.Game.Broadcast(self, "Effective Armor: "$EffectiveArmor*10$"mm");
-        Level.Game.Broadcast(self, "Shot penetration: "$PenetrationNumber*10$"mm");
-    }
-
-    if (bShatterProne)
-        bWasShatterProne = true;
-
-    //test for shatter gap
-    if (bWasShatterProne)
-    {
-        if ((PenetrationRatio >= 1.0 && PenetrationRatio < 1.10) || PenetrationRatio > 1.27)
-        {
-            bProjectilePenetrated = true; //to determine if interior damage is done
-            return true;
-        }
-        else if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.27)
-        {
-            bRoundShattered=true;
-            bProjectilePenetrated = false;
-            return false;
-        }
-        else if (PenetrationRatio < 1.0)
-        {
-            bProjectilePenetrated = false;
-            return false;
-        }
-    }
-    else
-    {
-        if (PenetrationRatio >= 1.0)
-        {
-            bProjectilePenetrated = true; //to determine if interior damage is done
-            return true;
-        }
-        else
-        {
-            bProjectilePenetrated = false;
-            return false;
-        }
-    }
-}
-
 //DH CODE: Calculate APDS penetration
 simulated function bool PenetrationAPDS(float ArmorFactor, float CompoundAngle, float PenetrationNumber, bool bShatterProne)
 {
@@ -2228,10 +1953,6 @@ simulated function bool PenetrationAPDS(float ArmorFactor, float CompoundAngle, 
     }
 
     if (bShatterProne)
-        bWasShatterProne = true;
-
-    //test for shatter gap
-    if (bWasShatterProne)
     {
         if ((PenetrationRatio >= 1.0 && PenetrationRatio < 1.06) || PenetrationRatio > 1.20)
         {
@@ -2338,7 +2059,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
        bAssaultWeaponHit = false;
-       return PenetrationAPC(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, GetOverMatch(GunMantletArmorFactor, ShellDiameter), bShatterProne);
     }
 
     // Figure out which side we hit
@@ -2417,7 +2137,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
 
             bRearHit=true;
 
-            return PenetrationAPC(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, GetOverMatch(URearArmorFactor, ShellDiameter), bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2429,7 +2148,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
         if (UFrontArmorFactor > PenetrationNumber)
             return false;
 
-        return PenetrationAPC(UFrontArmorFactor, GetCompoundAngle(InAngleDegrees, UFrontArmorSlope), PenetrationNumber, GetOverMatch(UFrontArmorFactor, ShellDiameter), bShatterProne);
 
     }
     else if (HitAngle >= FrontRightAngle && Hitangle < RearRightAngle)     //Left side hit
@@ -2473,7 +2191,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             if (URightArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationAPC(URightArmorFactor, GetCompoundAngle(InAngleDegrees, URightArmorSlope), PenetrationNumber, GetOverMatch(URightArmorFactor, ShellDiameter), bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2485,7 +2202,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
         if (ULeftArmorFactor > PenetrationNumber)
             return false;
 
-        return PenetrationAPC(ULeftArmorFactor, GetCompoundAngle(InAngleDegrees, ULeftArmorSlope), PenetrationNumber, GetOverMatch(ULeftArmorFactor, ShellDiameter), bShatterProne);
 
     }
     else if (HitAngle >= RearRightAngle && Hitangle < RearLeftAngle)  //Rear hit
@@ -2518,7 +2234,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             if (UFrontArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationAPC(UFrontArmorFactor, GetCompoundAngle(InAngleDegrees, UFrontArmorSlope), PenetrationNumber, GetOverMatch(UFrontArmorFactor, ShellDiameter), bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2532,7 +2247,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
 
         bRearHit=true;
 
-        return PenetrationAPC(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, GetOverMatch(URearArmorFactor, ShellDiameter), bShatterProne);
 
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
@@ -2577,7 +2291,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
             if (ULeftArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationAPC(ULeftArmorFactor, GetCompoundAngle(InAngleDegrees, ULeftArmorSlope), PenetrationNumber, GetOverMatch(ULeftArmorFactor, ShellDiameter), bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2589,7 +2302,6 @@ simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotat
         if (URightArmorFactor > PenetrationNumber)
             return false;
 
-        return PenetrationAPC(URightArmorFactor, GetCompoundAngle(InAngleDegrees, URightArmorSlope), PenetrationNumber, GetOverMatch(URightArmorFactor, ShellDiameter), bShatterProne);
 
     }
     else
@@ -2612,7 +2324,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
        bAssaultWeaponHit = false;
-       return PenetrationHVAP(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
     // Figure out which side we hit
@@ -2688,7 +2399,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
 
             bRearHit=true;
 
-            return PenetrationHVAP(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2700,7 +2410,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
         if (UFrontArmorFactor > PenetrationNumber)
             return false;
 
-        return PenetrationHVAP(UFrontArmorFactor, GetCompoundAngle(InAngleDegrees, UFrontArmorSlope), PenetrationNumber, bShatterProne);
     }
     else if (HitAngle >= FrontRightAngle && Hitangle < RearRightAngle)     //Left side hit
     {
@@ -2743,7 +2452,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             if (URightArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationHVAP(URightArmorFactor, GetCompoundAngle(InAngleDegrees, URightArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2755,7 +2463,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
         if (ULeftArmorFactor > PenetrationNumber)
                 return false;
 
-        return PenetrationHVAP(ULeftArmorFactor, GetCompoundAngle(InAngleDegrees, ULeftArmorSlope), PenetrationNumber, bShatterProne);
 
     }
     else if (HitAngle >= RearRightAngle && Hitangle < RearLeftAngle)  //Rear hit
@@ -2788,7 +2495,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             if (UFrontArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationHVAP(UFrontArmorFactor, GetCompoundAngle(InAngleDegrees, UFrontArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2802,7 +2508,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
 
         bRearHit=true;
 
-        return PenetrationHVAP(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
 
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
@@ -2847,7 +2552,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
             if (ULeftArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationHVAP(ULeftArmorFactor, GetCompoundAngle(InAngleDegrees, ULeftArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2859,7 +2563,6 @@ simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRota
         if (URightArmorFactor > PenetrationNumber)
             return false;
 
-        return PenetrationHVAP(URightArmorFactor, GetCompoundAngle(InAngleDegrees, URightArmorSlope), PenetrationNumber, bShatterProne);
 
     }
     else
@@ -2882,7 +2585,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
     if (bAssaultWeaponHit) //Big fat HACK to defeat Stug/JP bug
     {
        bAssaultWeaponHit = false;
-       return PenetrationHVAPLarge(GunMantletArmorFactor, GetCompoundAngle(InAngleDegrees, GunMantletSlope), PenetrationNumber, bShatterProne);
     }
 
     // Figure out which side we hit
@@ -2958,7 +2660,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
 
             bRearHit=true;
 
-            return PenetrationHVAPLarge(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -2970,7 +2671,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
         if (UFrontArmorFactor > PenetrationNumber)
             return false;
 
-        return PenetrationHVAPLarge(UFrontArmorFactor, GetCompoundAngle(InAngleDegrees, UFrontArmorSlope), PenetrationNumber, bShatterProne);
     }
     else if (HitAngle >= FrontRightAngle && Hitangle < RearRightAngle)     //Left side hit
     {
@@ -3013,7 +2713,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             if (URightArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationHVAPLarge(URightArmorFactor, GetCompoundAngle(InAngleDegrees, URightArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -3025,7 +2724,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
         if (ULeftArmorFactor > PenetrationNumber)
                 return false;
 
-        return PenetrationHVAPLarge(ULeftArmorFactor, GetCompoundAngle(InAngleDegrees, ULeftArmorSlope), PenetrationNumber, bShatterProne);
 
     }
     else if (HitAngle >= RearRightAngle && Hitangle < RearLeftAngle)  //Rear hit
@@ -3058,7 +2756,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             if (UFrontArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationHVAPLarge(UFrontArmorFactor, GetCompoundAngle(InAngleDegrees, UFrontArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -3072,7 +2769,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
 
         bRearHit=true;
 
-        return PenetrationHVAPLarge(URearArmorFactor, GetCompoundAngle(InAngleDegrees, URearArmorSlope), PenetrationNumber, bShatterProne);
 
     }
     else if (HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle)  //Right
@@ -3117,7 +2813,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
             if (ULeftArmorFactor > PenetrationNumber)
                 return false;
 
-            return PenetrationHVAPLarge(ULeftArmorFactor, GetCompoundAngle(InAngleDegrees, ULeftArmorSlope), PenetrationNumber, bShatterProne);
         }
 
         if (bPenetrationText && Role == ROLE_Authority)
@@ -3129,7 +2824,6 @@ simulated function bool DHShouldPenetrateHVAPLarge(vector HitLocation, vector Hi
         if (URightArmorFactor > PenetrationNumber)
             return false;
 
-        return PenetrationHVAPLarge(URightArmorFactor, GetCompoundAngle(InAngleDegrees, URightArmorSlope), PenetrationNumber, bShatterProne);
 
     }
     else
@@ -4019,7 +3713,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     bRearHit = false;
     bFirstHit = false;
     bProjectilePenetrated = false;
-    bWasShatterProne = false;
+//  bWasShatterProne = false; // deprecated
     bRoundShattered = false;
     bWasTurretHit = false;
 }
