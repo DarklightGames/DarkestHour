@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_StielGranatePickup extends ROOneShotWeaponPickup
+class DH_StielGranatePickup extends DHOneShotWeaponPickup
    notplaceable;
 
 static function StaticPrecache(LevelInfo L)
@@ -17,12 +17,8 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-    TouchMessage="Pick Up: Stielhandgranate 39/43"
-    MaxDesireability=0.780000
     InventoryType=class'DH_Weapons.DH_StielGranateWeapon'
-    PickupMessage="You got the Stielhandgranate 39/43."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate'
     PrePivot=(Z=3.000000)
     CollisionRadius=15.000000
