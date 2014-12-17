@@ -5,7 +5,7 @@
 
 class DH_ATGunCannon extends DH_ROTankCannon
       config(xGunsightDebugging)
-      abstract;
+    abstract;
 
 simulated function Timer()
 {

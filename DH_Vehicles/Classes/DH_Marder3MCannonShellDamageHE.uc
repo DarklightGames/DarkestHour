@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_Marder3MCannonShellDamageHE extends ROTankShellExplosionDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

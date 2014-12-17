@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_WolverineCannonShellDamageHVAP extends ROTankShellImpactDamage; //ROWeaponDamageType
+class DH_WolverineCannonShellDamageHVAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

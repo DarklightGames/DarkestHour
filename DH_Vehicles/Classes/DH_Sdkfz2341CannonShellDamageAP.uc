@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Sdkfz2341CannonShellDamageAP extends ROTankShellImpactDamage
-      abstract;
+class DH_Sdkfz2341CannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

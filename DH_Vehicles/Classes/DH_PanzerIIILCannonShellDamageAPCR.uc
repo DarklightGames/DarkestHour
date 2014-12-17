@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_PanzerIIILCannonShellDamageAPCR extends ROTankShellImpactDamage
-      abstract;
+class DH_PanzerIIILCannonShellDamageAPCR extends DHTankShellImpactDamage
+    abstract;
 
 //Damage class for shells in the 37mm to 50mm calibers
 

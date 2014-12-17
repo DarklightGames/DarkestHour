@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Tiger2BCannonShellDamageAPCR extends ROTankShellImpactDamage; //ROWeaponDamageType
+class DH_Tiger2BCannonShellDamageAPCR extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_AssaultGunCannonPawn extends DH_ROTankCannonPawn
-       abstract;
+     abstract;
 
 var     texture                 PeriscopeOverlay;
 

@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ArmoredWheeledVehicle extends DH_ROTreadCraft
-      abstract;
+    abstract;
 
 enum ECarHitPointType
 {

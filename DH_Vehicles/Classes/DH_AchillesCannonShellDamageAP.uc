@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_AchillesCannonShellDamageAP extends ROTankShellImpactDamage //ROWeaponDamageType
-      abstract;
+class DH_AchillesCannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

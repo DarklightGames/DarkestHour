@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ROTankCannonPawn extends ROTankCannonPawn
-        abstract;
+      abstract;
 
 struct ExitPositionPair
 {

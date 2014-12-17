@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_StuH42CannonShellDamageHEAT extends DH_HEATCannonShellDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

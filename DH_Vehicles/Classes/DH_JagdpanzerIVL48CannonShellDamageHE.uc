@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_JagdpanzerIVL48CannonShellDamageHE extends ROTankShellExplosionDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

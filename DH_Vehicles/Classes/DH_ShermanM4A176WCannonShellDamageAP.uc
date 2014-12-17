@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_ShermanM4A176WCannonShellDamageAP extends ROTankShellImpactDamage;
+class DH_ShermanM4A176WCannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

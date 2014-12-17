@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ROMountedTankMG extends ROMountedTankMG
-      abstract;
+    abstract;
 
 // Reload stuff
 var()   sound ReloadSound; // sound of this MG reloading

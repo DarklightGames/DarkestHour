@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_GermanTankCannonPawn extends DH_ROTankCannonPawn
-       abstract;
+     abstract;
 
 var() float ScopeCenterScale;
 var         TexRotator ScopeCenterRotator;

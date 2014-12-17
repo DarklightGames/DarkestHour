@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ROAntiVehicleProjectile extends ROAntiVehicleProjectile
-        abstract;
+      abstract;
 
 enum ERoundType
 {

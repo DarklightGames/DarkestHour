@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Marder3MCannonShellDamageAP extends ROTankShellImpactDamage
-      abstract;
+class DH_Marder3MCannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

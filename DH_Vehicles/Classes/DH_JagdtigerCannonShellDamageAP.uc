@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_JagdtigerCannonShellDamageAP extends ROTankShellImpactDamage; //ROWeaponDamageType
+class DH_JagdtigerCannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

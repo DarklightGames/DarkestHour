@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DHATMineDamage extends ROTankShellExplosionDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

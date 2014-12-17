@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_GreyhoundCannonShellDamageHE extends ROTankShellExplosionDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_JagdpantherCannonShellDamageAP extends ROTankShellImpactDamage
-      abstract;
+class DH_JagdpantherCannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
-      abstract;
+    abstract;
 
 #exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
 

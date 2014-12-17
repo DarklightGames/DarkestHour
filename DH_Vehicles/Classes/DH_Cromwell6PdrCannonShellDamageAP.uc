@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Cromwell6PdrCannonShellDamageAP extends ROTankShellImpactDamage;
+class DH_Cromwell6PdrCannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

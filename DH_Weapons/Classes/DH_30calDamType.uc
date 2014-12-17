@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_30calDamType extends DHWeaponProjectileDamageType
-      abstract;
+    abstract;
 
 defaultproperties
 {

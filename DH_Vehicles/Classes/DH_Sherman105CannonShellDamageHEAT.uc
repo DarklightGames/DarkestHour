@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_Sherman105CannonShellDamageHEAT extends DH_HEATCannonShellDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

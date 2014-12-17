@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_PanzerIIINCannonShellDamageHEAT extends DH_HEATCannonShellDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

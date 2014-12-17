@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_30calVehDamType extends DHVehicleDamageType
-      abstract;
+    abstract;
 
 defaultproperties
 {

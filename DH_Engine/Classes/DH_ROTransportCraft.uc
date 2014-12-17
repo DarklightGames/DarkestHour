@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ROTransportCraft extends DH_ROWheeledVehicle
-      abstract;
+    abstract;
 
 var()   float                 MaxPitchSpeed;
 var VariableTexPanner LeftTreadPanner, RightTreadPanner;

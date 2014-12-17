@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_HellcatCannonShellDamageAP extends ROTankShellImpactDamage
-      abstract;
+class DH_HellcatCannonShellDamageAP extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

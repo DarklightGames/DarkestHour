@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_HECannonShellDamage extends ROTankShellExplosionDamage
-      abstract;
+    abstract;
 
 defaultproperties
 {

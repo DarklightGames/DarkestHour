@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_JagdpanzerIVL70CannonShellDamageAPCR extends ROTankShellImpactDamage; //ROWeaponDamageType
+class DH_JagdpanzerIVL70CannonShellDamageAPCR extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {

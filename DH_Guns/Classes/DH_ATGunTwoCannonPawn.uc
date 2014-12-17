@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_ATGunTwoCannonPawn extends AssaultGunCannonPawn
-       abstract;
+     abstract;
 
 // Note to future developers:  RAMM created a new class to hold many of these functions called ATGunCannonPawn for the MapPack.
 //     I would have extended from that but ATGunCannonPawn itself extends from RussianTankCannonPawn.  I needed

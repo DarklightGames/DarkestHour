@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Sherman105ShellImpactDamageHEAT extends ROTankShellImpactDamage
-      abstract;
+class DH_Sherman105ShellImpactDamageHEAT extends DHTankShellImpactDamage
+    abstract;
 
 defaultproperties
 {
