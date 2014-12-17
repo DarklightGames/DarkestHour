@@ -110,6 +110,7 @@ static function string GetLocalString(
 defaultproperties
 {
     DrawType=DT_StaticMesh
+    AmbientGlow=0
     PickupMessage="You got the %w"
     TouchMessage="Pick up: %w"
 }

@@ -8,6 +8,7 @@ class DH_PanzerFaustPickup extends PanzerFaustPickup
 
 defaultproperties
 {
+    AmbientGlow=0
     TouchMessage="Pick Up: Panzerfaust 60"
     InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
     PickupMessage="You got the Panzerfaust 60."
