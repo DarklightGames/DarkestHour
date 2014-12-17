@@ -245,7 +245,7 @@ simulated function int getNumMags()
 
 defaultproperties
 {
-    ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
+    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=8
     FireAttachBone="gunner_int"
     FireEffectOffset=(Z=5.000000)
@@ -256,7 +256,7 @@ defaultproperties
     bUsesTracers=true
     VehHitpoints(0)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(Z=-16.000000))
     bIsMountedTankMG=true
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=10000
@@ -297,8 +297,8 @@ defaultproperties
     InitialPrimaryAmmo=75
     CullDistance=8000.000000
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
-    Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
+    Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
     bCollideActors=true
     bBlockActors=true
     bProjTarget=true

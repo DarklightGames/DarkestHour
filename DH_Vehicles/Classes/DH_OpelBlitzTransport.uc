@@ -169,8 +169,8 @@ defaultproperties
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerFour',WeaponBone="passenger_l_3")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerSeven',WeaponBone="passenger_r_3")
     IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.BA64.BA64_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.BA64.BA64_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
@@ -186,7 +186,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.000000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.000000)
     InitialPositionIndex=0
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
     VehicleHudOccupantsX(0)=0.450000
     VehicleHudOccupantsX(1)=0.550000
     VehicleHudOccupantsX(2)=0.450000
@@ -267,8 +267,8 @@ defaultproperties
     HealthMax=150.000000
     Health=150
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
+    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

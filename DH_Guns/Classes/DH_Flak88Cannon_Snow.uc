@@ -7,5 +7,5 @@ class DH_Flak88Cannon_Snow extends DH_Flak88Cannon;
 
 defaultproperties
 {
-    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88_Snow'
+    Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88_Snow'
 }

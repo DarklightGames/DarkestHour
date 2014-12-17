@@ -8,6 +8,6 @@ class DH_BesaVehDamType_Tank extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_30calWeapon'
 }

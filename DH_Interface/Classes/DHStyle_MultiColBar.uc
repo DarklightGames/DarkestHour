@@ -25,10 +25,10 @@ defaultproperties
     FontNames(14)="DHMenuFont"
     FontColors(3)=(B=255)
     FontColors(4)=(B=255,G=255,R=255)
-    Images(0)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(1)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(2)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(3)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(4)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(0)=texture'InterfaceArt_tex.Menu.empty'
+    Images(1)=texture'InterfaceArt_tex.Menu.empty'
+    Images(2)=texture'InterfaceArt_tex.Menu.empty'
+    Images(3)=texture'InterfaceArt_tex.Menu.empty'
+    Images(4)=texture'InterfaceArt_tex.Menu.empty'
     BorderOffsets(1)=0
 }

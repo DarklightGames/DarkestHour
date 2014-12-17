@@ -119,17 +119,17 @@ defaultproperties
     CenterRotationFactor=2048
     OverlayCenterSize=0.733330
     UnbuttonedPositionIndex=1
-    DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
     ScopePositionX=0.237000
     ScopePositionY=0.150000
     BinocPositionIndex=2
     WeaponFov=30.000000
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
+    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
+    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
     DriverPositions(0)=(ViewLocation=(X=40.000000,Y=12.000000,Z=3.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)

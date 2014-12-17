@@ -62,8 +62,8 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.000000,Y=34.000000,Z=45.000000),ExhaustRotation=(Pitch=34000,Yaw=-5000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.M8_Destroyed'
     DisintegrationHealth=-100000.000000
     DamagedEffectScale=0.750000
@@ -74,7 +74,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,ViewFOV=90.000000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=9500,ViewPitchDownLimit=60065,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.greyhound_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.greyhound_body'
     VehicleHudOccupantsX(0)=0.450000
     VehicleHudOccupantsX(2)=0.550000
     VehicleHudOccupantsY(0)=0.350000
@@ -158,9 +158,9 @@ defaultproperties
     PitchUpLimit=500
     PitchDownLimit=58000
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
+    Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
+    Skins(2)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

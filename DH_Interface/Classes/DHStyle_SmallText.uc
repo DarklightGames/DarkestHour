@@ -23,9 +23,9 @@ defaultproperties
     FontNames(12)="DHSmallFont"
     FontNames(13)="DHSmallFont"
     FontNames(14)="DHSmallFont"
-    Images(0)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(1)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(2)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(3)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(4)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(0)=texture'InterfaceArt_tex.Menu.empty'
+    Images(1)=texture'InterfaceArt_tex.Menu.empty'
+    Images(2)=texture'InterfaceArt_tex.Menu.empty'
+    Images(3)=texture'InterfaceArt_tex.Menu.empty'
+    Images(4)=texture'InterfaceArt_tex.Menu.empty'
 }

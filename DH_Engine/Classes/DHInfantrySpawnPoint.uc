@@ -8,6 +8,6 @@ class DHInfantrySpawnPoint extends DHSpawnPoint
 
 defaultproperties
 {
-    Texture=Texture'DHEngine_Tex.Editor.Soldier'
+    Texture=texture'DHEngine_Tex.Editor.Soldier'
 }
 

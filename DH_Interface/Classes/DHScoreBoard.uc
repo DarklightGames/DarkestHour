@@ -79,7 +79,7 @@ simulated function UpdateScoreBoard (Canvas C)
     C.Style = 5;
     C.SetDrawColor(0,0,0,128);
     C.SetPos(0.0,0.0);
-    C.DrawRect(Texture'WhiteSquareTexture',C.ClipX,C.ClipY);
+    C.DrawRect(texture'WhiteSquaretexture',C.ClipX,C.ClipY);
 
     C.SetPos(0.0,CalcY(0.5,C));
     C.SetDrawColor(255,255,255,255);
@@ -590,7 +590,7 @@ simulated function UpdateScoreBoard (Canvas C)
 defaultproperties
 {
     bFirstRun=true
-    HeaderImage=Texture'DH_GUI_Tex.GUI.DH_Headerbar'
+    HeaderImage=texture'DH_GUI_Tex.GUI.DH_Headerbar'
     TeamColors(0)=(B=80,G=80,R=200)
     TeamColors(1)=(B=75,G=150,R=80)
     HudClass=class'DH_Engine.DHHud'

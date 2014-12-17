@@ -26,12 +26,12 @@ defaultproperties
     Article="an "
     PluralName="Anti-Tank Soldiers"
     InfoText="The anti-tank soldier is tasked with locating and destroying or disabling enemy vehicles.  Armed with close-range anti-tank weaponry, he must often get dangerously close to his target in order to assure a hit.  His weaponry can also be effective against enemy fortifications."
-    MenuImage=Texture'DHUSCharactersTex.Icons.ABAT'
+    MenuImage=texture'DHUSCharactersTex.Icons.ABAT'
     Models(0)="US_506101AB1"
     Models(1)="US_506101AB2"
     Models(2)="US_506101AB3"
     bIsGunner=true
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
+    SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)

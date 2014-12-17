@@ -41,7 +41,7 @@ defaultproperties
     RightTreadIndex=3
     MaxCriticalSpeed=729.000000
     FireAttachBone="Player_Driver"
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     UFrontArmorFactor=7.200000
     URightArmorFactor=3.000000
     ULeftArmorFactor=3.000000
@@ -51,9 +51,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=225.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L01'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R01'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L01'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R01'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble01'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="body"
@@ -102,8 +102,8 @@ defaultproperties
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIPassengerThree',WeaponBone="body")
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Panzeriii.PanzerIII_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_dest2'
     DamagedEffectScale=0.850000
     DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
@@ -112,7 +112,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=70.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",DriverTransitionAnim="VPanzer3_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000)
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panzer3_body'
+    VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.panzer3_body'
     VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=85.000000,Y=-27.000000,Z=30.000000),bPenetrationPoint=false)
     VehHitpoints(1)=(PointRadius=30.000000,PointHeight=32.000000,PointOffset=(X=-70.000000,Z=6.000000),DamageMultiplier=1.000000)
     VehHitpoints(2)=(PointRadius=10.000000,PointHeight=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=-25.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
@@ -196,12 +196,12 @@ defaultproperties
     HealthMax=475.000000
     Health=475
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(3)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(4)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
-    Skins(5)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
+    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    Skins(2)=texture'axis_vehicles_tex.Treads.Panzer3_treads'
+    Skins(3)=texture'axis_vehicles_tex.Treads.Panzer3_treads'
+    Skins(4)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
+    Skins(5)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

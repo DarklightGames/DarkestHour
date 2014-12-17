@@ -31,7 +31,7 @@ enum StatusModifyType
 
 defaultproperties
 {
-    Texture=Texture'DHEngine_Tex.LevelActor'
+    Texture=texture'DHEngine_Tex.LevelActor'
     bHidden=true
     RemoteRole=ROLE_none
 }

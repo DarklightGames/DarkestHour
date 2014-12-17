@@ -69,7 +69,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=4.000000,Max=5.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
+        Texture=texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.100000)

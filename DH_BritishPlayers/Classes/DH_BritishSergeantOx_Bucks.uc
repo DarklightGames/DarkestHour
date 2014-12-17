@@ -13,12 +13,12 @@ defaultproperties
     Article="a "
     PluralName="Corporals"
     InfoText="The corporal is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the corporal's presence is an excellent force multiplier to the units under his command."
-    MenuImage=Texture'DHBritishCharactersTex.Icons.Para_Sg'
+    MenuImage=texture'DHBritishCharactersTex.Icons.Para_Sg'
     Models(0)="paraSarg1"
     Models(1)="paraSarg2"
     Models(2)="paraSarg3"
     bIsLeader=true
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
+    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_ThompsonWeapon',Amount=6)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)

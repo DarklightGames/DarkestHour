@@ -56,7 +56,7 @@ defaultproperties
         ParticlesPerSecond=10.000000
         InitialParticlesPerSecond=10.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'DH_FX_Tex.Fire.FireAnim16F'
+        Texture=texture'DH_FX_Tex.Fire.FireAnim16F'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         SecondsBeforeInactive=30.000000
@@ -93,7 +93,7 @@ defaultproperties
         ParticlesPerSecond=12.000000
         InitialParticlesPerSecond=12.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'DH_FX_Tex.Fire.FireAnim16F'
+        Texture=texture'DH_FX_Tex.Fire.FireAnim16F'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         SecondsBeforeInactive=30.000000
@@ -127,7 +127,7 @@ defaultproperties
         ParticlesPerSecond=4.000000
         InitialParticlesPerSecond=4.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_1'
+        Texture=texture'Effects_Tex.explosions.DSmoke_1'
         LifetimeRange=(Min=0.700000,Max=0.800000)
         StartVelocityRange=(X=(Min=10.000000,Max=10.000000),Y=(Min=10.000000,Max=10.000000),Z=(Min=50.000000,Max=100.000000))
         VelocityLossRange=(X=(Max=0.050000),Y=(Max=0.050000),Z=(Max=0.050000))
@@ -141,7 +141,7 @@ defaultproperties
     bNoDelete=false
     bDynamicLight=true
     bOnlyDrawIfAttached=true
-    AmbientSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    AmbientSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     bFullVolume=true
     SoundVolume=255
     bNotOnDedServer=false

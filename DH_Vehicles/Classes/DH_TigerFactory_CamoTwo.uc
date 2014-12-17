@@ -9,5 +9,5 @@ defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_TigerTank_CamoTwo'
     Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Tiger_body_222'
+    Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.Tiger_body_222'
 }

@@ -8,7 +8,7 @@ class DHATMineDamage extends ROTankShellExplosionDamage
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.mine'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.mine'
     TankDamageModifier=0.150000
     APCDamageModifier=0.500000
     VehicleDamageModifier=0.850000

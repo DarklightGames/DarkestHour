@@ -60,7 +60,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.000000,Max=50.000000),Y=(Min=50.000000,Max=50.000000),Z=(Min=50.000000,Max=50.000000))
         InitialParticlesPerSecond=5.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'DH_FX_Tex.Smoke.grenadesmokeOrange'
+        Texture=texture'DH_FX_Tex.Smoke.grenadesmokeOrange'
         LifetimeRange=(Min=25.000000,Max=30.000000)
         StartVelocityRange=(X=(Min=-15.000000,Max=15.000000),Y=(Min=-10.000000,Max=10.000000),Z=(Min=40.000000,Max=70.000000))
         VelocityLossRange=(X=(Min=0.200000,Max=0.200000),Y=(Min=0.050000,Max=0.050000),Z=(Min=0.100000,Max=0.100000))

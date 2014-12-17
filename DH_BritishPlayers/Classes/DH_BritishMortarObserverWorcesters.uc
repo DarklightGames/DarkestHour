@@ -28,14 +28,14 @@ defaultproperties
     Article="a "
     PluralName="Mortar Observers"
     InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
-    MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_MortarObserver'
+    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_MortarObserver'
     Models(0)="Wor_1"
     Models(1)="Wor_2"
     Models(2)="Wor_3"
     Models(3)="Wor_4"
     Models(4)="Wor_5"
     Models(5)="Wor_6"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=1)
     GivenItems(0)="DH_Equipment.DH_USMortarBinocularsItem"

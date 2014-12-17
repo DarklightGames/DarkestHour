@@ -26,7 +26,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=0.500000)
         StartSizeRange=(X=(Min=2.000000,Max=2.000000))
         InitialParticlesPerSecond=2000.000000
-        Texture=Texture'Effects_Tex.Weapons.trailblur'
+        Texture=texture'Effects_Tex.Weapons.trailblur'
         SecondsBeforeInactive=0.000000
         LifetimeRange=(Min=1.500000,Max=2.500000)
     End Object

@@ -25,12 +25,12 @@ defaultproperties
     Article="a "
     PluralName="Sergeants"
     InfoText="The sergeant is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the sergeant's presence is an excellent force multiplier to the units under his command."
-    MenuImage=Texture'DHUSCharactersTex.Icons.ABSg'
+    MenuImage=texture'DHUSCharactersTex.Icons.ABSg'
     Models(0)="US_502101ABSarg1"
     Models(1)="US_502101ABSarg2"
     Models(2)="US_502101ABSarg3"
     bIsLeader=true
-    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
+    SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)

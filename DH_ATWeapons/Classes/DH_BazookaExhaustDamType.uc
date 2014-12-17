@@ -8,7 +8,7 @@ class DH_BazookaExhaustDamType extends DHGrenadeDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.backblastkill'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.backblastkill'
     bCauseViewJarring=true
     WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
     DeathString="%o was cooked by the exhaust from %k's %w."

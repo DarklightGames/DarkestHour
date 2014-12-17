@@ -155,6 +155,6 @@ defaultproperties
     ScopeCenterScale=0.750000
     ScopeCenterScaleX=1.000000
     ScopeCenterScaleY=1.000000
-    CannonScopeOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.German_sight_background'
+    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
 }

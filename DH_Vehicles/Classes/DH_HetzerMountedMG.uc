@@ -159,11 +159,11 @@ simulated function Timer()
 
 defaultproperties
 {
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
-    MGReloadSoundOne=Sound'Inf_Weapons_Foley.mg34.mg34_reload01_000'
-    MGReloadSoundTwo=Sound'Inf_Weapons_Foley.mg34.mg34_reload02_039'
-    MGReloadSoundThree=Sound'Inf_Weapons_Foley.mg34.mg34_reload03_104'
-    MGReloadSoundFour=Sound'Inf_Weapons_Foley.mg34.mg34_reload04_170'
+    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    MGReloadSoundOne=sound'Inf_Weapons_Foley.mg34.mg34_reload01_000'
+    MGReloadSoundTwo=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039'
+    MGReloadSoundThree=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104'
+    MGReloadSoundFour=sound'Inf_Weapons_Foley.mg34.mg34_reload04_170'
     bClientCanFireMG=true
     MGReloadState=MG_ReadyToFire
     NumMags=12
@@ -173,7 +173,7 @@ defaultproperties
     mTracerInterval=0.495867
     VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=12.500000,Y=6.000000,Z=43.000000))
     VehHitpoints(1)=(PointRadius=17.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=5.000000,Y=6.000000,Z=18.500000))
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     YawStartConstraint=0.000000
     YawEndConstraint=65535.000000
@@ -200,9 +200,9 @@ defaultproperties
     BeginningIdleAnim="loader_idle_close"
     InitialPrimaryAmmo=50
     Mesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg'
-    Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
-    Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
+    Skins(0)=texture'DH_Hetzer_tex_V1.hetzer_body'
+    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
     bCollideActors=true
     bBlockActors=true
     bProjTarget=true

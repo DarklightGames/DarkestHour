@@ -43,11 +43,11 @@ defaultproperties
     RStyles(2)=MSTY_Alpha
     RStyles(3)=MSTY_Translucent
     RStyles(4)=MSTY_Alpha
-    Images(0)=Texture'DH_GUI_Tex.Menu.DHDisplay'
-    Images(1)=Texture'DH_GUI_Tex.Menu.DHDisplay'
-    Images(2)=Texture'DH_GUI_Tex.Menu.DHDisplay'
-    Images(3)=Texture'DH_GUI_Tex.Menu.DHDisplay'
-    Images(4)=Texture'DH_GUI_Tex.Menu.DHDisplay'
+    Images(0)=texture'DH_GUI_Tex.Menu.DHDisplay'
+    Images(1)=texture'DH_GUI_Tex.Menu.DHDisplay'
+    Images(2)=texture'DH_GUI_Tex.Menu.DHDisplay'
+    Images(3)=texture'DH_GUI_Tex.Menu.DHDisplay'
+    Images(4)=texture'DH_GUI_Tex.Menu.DHDisplay'
     ImgStyle(0)=ISTY_Scaled
     ImgStyle(1)=ISTY_Scaled
     ImgStyle(2)=ISTY_Scaled

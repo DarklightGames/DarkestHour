@@ -8,7 +8,7 @@ class DHPlayerSetupPage extends ROUT2K4PlayerSetupPage;
 defaultproperties
 {
     Begin Object Class=GUIImage Name=MyBackground
-        Image=Texture'InterfaceArt_tex.Menu.button_normal'
+        Image=texture'InterfaceArt_tex.Menu.button_normal'
         ImageStyle=ISTY_Stretched
         WinHeight=1.000000
         RenderWeight=0.000100

@@ -7,5 +7,5 @@ class DH_ShermanCannon_British extends DH_ShermanCannon;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext'
 }

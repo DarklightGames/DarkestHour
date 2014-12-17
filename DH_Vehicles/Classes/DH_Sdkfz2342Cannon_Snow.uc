@@ -7,5 +7,5 @@ class DH_Sdkfz2342Cannon_Snow extends DH_Sdkfz2342Cannon;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_snow'
+    Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_snow'
 }

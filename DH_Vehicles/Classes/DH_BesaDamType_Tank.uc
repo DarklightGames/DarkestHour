@@ -8,7 +8,7 @@ class DH_BesaDamType_Tank extends ROWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_30calWeapon'
     DeathString="%o was killed by %k's vehicle Besa machinegun."
     FemaleSuicide="%o turned the gun on herself."

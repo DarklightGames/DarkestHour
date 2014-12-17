@@ -7,5 +7,5 @@ class DH_StuartCannon_Snow extends DH_StuartCannon;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M5_body_snow'
+    Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.M5_body_snow'
 }

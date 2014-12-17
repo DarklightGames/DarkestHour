@@ -25,10 +25,10 @@ defaultproperties
     FrontRightAngle=67.000000
     RearRightAngle=113.000000
     RearLeftAngle=247.000000
-    ReloadSoundOne=Sound'Vehicle_reloads.Reloads.STUG_III_reload_01'
-    ReloadSoundTwo=Sound'Vehicle_reloads.Reloads.STUG_III_reload_02'
-    ReloadSoundThree=Sound'Vehicle_reloads.Reloads.STUG_III_reload_03'
-    ReloadSoundFour=Sound'Vehicle_reloads.Reloads.STUG_III_reload_04'
+    ReloadSoundOne=sound'Vehicle_reloads.Reloads.STUG_III_reload_01'
+    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.STUG_III_reload_02'
+    ReloadSoundThree=sound'Vehicle_reloads.Reloads.STUG_III_reload_03'
+    ReloadSoundFour=sound'Vehicle_reloads.Reloads.STUG_III_reload_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
@@ -75,7 +75,7 @@ defaultproperties
     FireInterval=7.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
     ShakeRotMag=(Z=50.000000)
@@ -97,9 +97,9 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellAPCR'
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L70_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
-    Skins(1)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
-    Skins(2)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
+    Skins(1)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(2)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
     SoundVolume=130
     SoundRadius=200.000000
 }

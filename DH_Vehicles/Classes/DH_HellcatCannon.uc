@@ -51,10 +51,10 @@ defaultproperties
     FrontRightAngle=36.000000
     RearRightAngle=144.000000
     RearLeftAngle=216.000000
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
-    ReloadSoundFour=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
+    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
@@ -84,7 +84,7 @@ defaultproperties
     FireInterval=5.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
     ShakeRotMag=(Z=50.000000)
@@ -103,8 +103,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHVAP'
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
+    Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
     SoundVolume=130
     SoundRadius=300.000000
 }

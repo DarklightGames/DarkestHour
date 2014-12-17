@@ -71,8 +71,8 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=69.000000,Z=45.000000),ExhaustRotation=(Pitch=36000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2342CannonPawn',WeaponBone="Turret_placement")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_dest'
     DisintegrationHealth=-100000.000000
     DamagedEffectScale=0.800000
@@ -82,7 +82,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500,ViewFOV=90.000000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.234_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.234_body'
     VehicleHudOccupantsX(0)=0.480000
     VehicleHudOccupantsX(2)=0.000000
     VehicleHudOccupantsY(0)=0.320000
@@ -121,11 +121,11 @@ defaultproperties
     PitchUpLimit=500
     PitchDownLimit=58000
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
-    Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_wheels_dunk'
-    Skins(2)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
-    Skins(3)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories'
-    Skins(4)=Texture'DH_VehiclesGE_tex6.int_vehicles.sdkfz2341_body_int'
+    Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
+    Skins(1)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_wheels_dunk'
+    Skins(2)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
+    Skins(3)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories'
+    Skins(4)=texture'DH_VehiclesGE_tex6.int_vehicles.sdkfz2341_body_int'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

@@ -27,14 +27,14 @@ defaultproperties
     Article="a "
     PluralName="Lance Corporals"
     InfoText="The lance corporal is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
-    MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_LanceCorporal'
+    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_LanceCorporal'
     Models(0)="RMC1"
     Models(1)="RMC2"
     Models(2)="RMC3"
     Models(3)="RMC4"
     Models(4)="RMC5"
     Models(5)="RMC6"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_ThompsonWeapon',Amount=6)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)

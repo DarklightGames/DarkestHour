@@ -11,5 +11,5 @@ defaultproperties
     VehicleClass=class'DH_Vehicles.DH_KubelwagenCar_WH'
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
     Skins(0)=FinalBlend'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB'
-    Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
+    Skins(1)=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
 }

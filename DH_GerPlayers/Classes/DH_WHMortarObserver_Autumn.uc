@@ -21,14 +21,14 @@ defaultproperties
     Article="a "
     PluralName="Mortar Observers"
     InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
-    MenuImage=Texture'DHGermanCharactersTex.Icons.WH_MortarObserver'
+    MenuImage=texture'DHGermanCharactersTex.Icons.WH_MortarObserver'
     Models(0)="WHAu_1"
     Models(1)="WHAu_2"
     Models(2)="WHAu_3"
     Models(3)="WHAu_4"
     Models(4)="WHAu_5"
     Models(5)="WHAu_6"
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
+    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     GivenItems(0)="DH_Equipment.DH_GerMortarBinocularsItem"

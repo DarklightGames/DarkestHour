@@ -87,9 +87,9 @@ defaultproperties
 {
     MaxPitchSpeed=125.000000
     TreadVelocityScale=80.000000
-    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
     LeftTrackSoundBone="Wheel_T_L_3"
     RightTrackSoundBone="Wheel_T_R_3"
     RumbleSoundBone="body"
@@ -155,8 +155,8 @@ defaultproperties
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerThree',WeaponBone="passenger_r_1")
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_UniCarrierPassengerFour',WeaponBone="passenger_r_2")
     IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
-    StartUpSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_start'
-    ShutDownSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
+    StartUpSound=sound'Vehicle_EnginesTwo.UC.UC_engine_start'
+    ShutDownSound=sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
     DisintegrationHealth=-1000.000000
     DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
@@ -169,7 +169,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'InterfaceArt2_tex.Tank_Hud.Carrier_body'
+    VehicleHudImage=texture'InterfaceArt2_tex.Tank_Hud.Carrier_body'
     VehicleHudOccupantsX(0)=0.580000
     VehicleHudOccupantsX(1)=0.460000
     VehicleHudOccupantsX(2)=0.390000
@@ -266,10 +266,10 @@ defaultproperties
     HealthMax=275.000000
     Health=275
     Mesh=SkeletalMesh'DH_allies_carrier_anm.Carrier_body_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext'
-    Skins(1)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(2)=Texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(3)=Texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext'
+    Skins(1)=texture'allies_vehicles_tex.Treads.T60_treads'
+    Skins(2)=texture'allies_vehicles_tex.Treads.T60_treads'
+    Skins(3)=texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
     CollisionRadius=175.000000
     CollisionHeight=40.000000
     Begin Object Class=KarmaParamsRBFull Name=KParams0

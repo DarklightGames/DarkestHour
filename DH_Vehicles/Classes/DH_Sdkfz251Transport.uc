@@ -51,9 +51,9 @@ defaultproperties
 {
     MaxPitchSpeed=350.000000
     TreadVelocityScale=80.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
     LeftTrackSoundBone="steer_wheel_LF"
     RightTrackSoundBone="steer_wheel_RF"
     RumbleSoundBone="body"
@@ -127,8 +127,8 @@ defaultproperties
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerFive',WeaponBone="passenger_r_2")
     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz251PassengerSix',WeaponBone="passenger_r_3")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Halftrack.Halftrack_Destoyed'
     DisintegrationHealth=-10000.000000
     DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
@@ -140,7 +140,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="Vhalftrack_driver_idle",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vhalftrack_driver_idle",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.halftrack_body'
+    VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.halftrack_body'
     VehicleHudOccupantsX(0)=0.450000
     VehicleHudOccupantsX(2)=0.450000
     VehicleHudOccupantsX(3)=0.450000
@@ -233,10 +233,10 @@ defaultproperties
     HealthMax=325.000000
     Health=325
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.halftrack_ext'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
-    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.halftrack_int'
+    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.halftrack_ext'
+    Skins(1)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
+    Skins(2)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
+    Skins(3)=texture'axis_vehicles_tex.int_vehicles.halftrack_int'
     CollisionRadius=175.000000
     CollisionHeight=40.000000
     Begin Object Class=KarmaParamsRBFull Name=KParams0

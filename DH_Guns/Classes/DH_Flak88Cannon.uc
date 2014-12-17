@@ -8,9 +8,9 @@ class DH_Flak88Cannon extends DH_ATGunCannon;
 defaultproperties
 {
     SecondarySpread=0.001250
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
@@ -53,7 +53,7 @@ defaultproperties
     FireInterval=4.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     ShakeRotMag=(Z=110.000000)
@@ -72,8 +72,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak88CannonShellHE'
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_turret'
-    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
-    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
+    Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88'
+    Skins(1)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
     SoundVolume=130
     SoundRadius=200.000000
 }

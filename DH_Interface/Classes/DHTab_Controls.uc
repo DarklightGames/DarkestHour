@@ -8,7 +8,7 @@ class DHTab_Controls extends ROTab_Controls;
 defaultproperties
 {
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
-        HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
+        HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
         Caption="Bindings"
         LeftPadding=0.000000
         RightPadding=0.000000

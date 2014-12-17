@@ -29,7 +29,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.000000,Max=45.000000),Y=(Min=30.000000,Max=45.000000),Z=(Min=30.000000,Max=45.000000))
         InitialParticlesPerSecond=5000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=texture'Effects_Tex.explosions.DSmoke_2'
         LifetimeRange=(Min=8.000000,Max=12.000000)
         StartVelocityRange=(X=(Min=-100.000000,Max=-20.000000),Y=(Min=-2.000000,Max=-5.000000),Z=(Min=-2.000000,Max=5.000000))
     End Object
@@ -55,7 +55,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=3.000000,Max=5.000000))
         InitialParticlesPerSecond=5000.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=texture'Effects_Tex.explosions.DSmoke_2'
         LifetimeRange=(Min=0.500000,Max=1.000000)
         StartVelocityRange=(X=(Min=-300.000000,Max=-200.000000),Y=(Min=-2.000000,Max=-5.000000),Z=(Min=-2.000000,Max=5.000000))
     End Object
@@ -84,7 +84,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=3.000000,Max=5.000000))
         InitialParticlesPerSecond=5000.000000
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.explosions.impact_2frame'
+        Texture=texture'Effects_Tex.explosions.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.200000,Max=0.300000)

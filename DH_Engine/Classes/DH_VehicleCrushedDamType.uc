@@ -8,7 +8,7 @@ class DH_VehicleCrushedDamType extends ROWeaponDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.mine'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.mine'
     APCDamageModifier=1.000000
     VehicleDamageModifier=1.000000
     TreadDamageModifier=0.750000

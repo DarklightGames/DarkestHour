@@ -45,7 +45,7 @@ defaultproperties
     RightTreadIndex=3
     MaxCriticalSpeed=638.000000
     TreadDamageThreshold=0.750000
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=8.000000
     URightArmorFactor=4.000000
     ULeftArmorFactor=4.000000
@@ -59,9 +59,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=100.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L08'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R08'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R08'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
@@ -113,8 +113,8 @@ defaultproperties
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVPassengerOne',WeaponBone="body")
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpanzerIVPassengerTwo',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.Jagdpanzer4.Jagdpanzer4_dest70'
     DamagedEffectScale=0.900000
     DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
@@ -122,7 +122,7 @@ defaultproperties
     BeginningIdleAnim="Overlay_Idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L70_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L70_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5000,ViewNegativeYawLimit=-5500,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_body'
     VehicleHudOccupantsX(0)=0.430000
     VehicleHudOccupantsX(1)=0.460000
     VehicleHudOccupantsX(2)=0.600000
@@ -215,12 +215,12 @@ defaultproperties
     HealthMax=525.000000
     Health=525
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L70_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
-    Skins(1)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo1'
-    Skins(2)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
-    Skins(3)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
-    Skins(4)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
-    Skins(5)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
+    Skins(1)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo1'
+    Skins(2)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
+    Skins(3)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
+    Skins(4)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
+    Skins(5)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

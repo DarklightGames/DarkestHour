@@ -8,7 +8,7 @@ class DH_M1GrenadeDamType extends DHGrenadeDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
+    HUDIcon=texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
     WeaponClass=class'DH_Weapons.DH_M1GrenadeWeapon'
     DeathString="%o was blown up by %k's %w."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'

@@ -25,7 +25,7 @@ defaultproperties
     FireLoopAnim="Shoot_Loop"
     FireEndAnim="Shoot_End"
     TweenTime=0.000000
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     FireRate=0.120000
     AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
     ShakeRotMag=(X=50.000000,Y=50.000000,Z=150.000000)

@@ -43,11 +43,11 @@ defaultproperties
     RStyles(2)=MSTY_Alpha
     RStyles(3)=MSTY_Alpha
     RStyles(4)=MSTY_Alpha
-    Images(0)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(1)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(2)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(3)=Texture'InterfaceArt_tex.Menu.empty'
-    Images(4)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(0)=texture'InterfaceArt_tex.Menu.empty'
+    Images(1)=texture'InterfaceArt_tex.Menu.empty'
+    Images(2)=texture'InterfaceArt_tex.Menu.empty'
+    Images(3)=texture'InterfaceArt_tex.Menu.empty'
+    Images(4)=texture'InterfaceArt_tex.Menu.empty'
     ImgStyle(0)=ISTY_Scaled
     ImgStyle(1)=ISTY_Scaled
     ImgStyle(2)=ISTY_Scaled

@@ -8,5 +8,5 @@ class DH_Flak88Gun_Green extends DH_Flak88Gun;
 defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak88CannonPawn_Green')
-    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88_greenpaint'
+    Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88_greenpaint'
 }

@@ -8,9 +8,9 @@ class DH_Pak40Cannon extends DH_ATGunCannon;
 defaultproperties
 {
     SecondarySpread=0.001270
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
@@ -48,7 +48,7 @@ defaultproperties
     FireInterval=3.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     ShakeRotMag=(Z=110.000000)
@@ -70,9 +70,9 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHE'
     Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_turret'
-    Skins(0)=Texture'MilitaryAxisSMT.Artillery.RO_BC_pak40'
-    Skins(1)=Texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
-    Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
+    Skins(0)=texture'MilitaryAxisSMT.Artillery.RO_BC_pak40'
+    Skins(1)=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    Skins(2)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
     SoundVolume=130
     SoundRadius=200.000000
 }

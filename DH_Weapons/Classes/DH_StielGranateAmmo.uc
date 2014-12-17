@@ -9,7 +9,7 @@ defaultproperties
 {
     MaxAmmo=2
     InitialAmount=2
-    IconMaterial=Texture'InterfaceArt_tex.HUD.sticknade_ammo'
+    IconMaterial=texture'InterfaceArt_tex.HUD.sticknade_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
     ItemName="StielHandGrenate"
 }

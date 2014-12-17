@@ -298,5 +298,5 @@ function ServerToggleDebugExits()
 defaultproperties
 {
     OverlayCenterSize=1.000000
-    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }

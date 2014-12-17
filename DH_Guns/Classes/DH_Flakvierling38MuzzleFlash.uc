@@ -42,7 +42,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=16.000000,Max=16.000000),Y=(Min=32.000000,Max=32.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         SubdivisionScale(0)=0.500000
@@ -75,7 +75,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=80.000000,Max=80.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
         StartVelocityRange=(X=(Min=10.000000,Max=30.000000))
@@ -108,7 +108,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=80.000000,Max=80.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
         InitialDelayRange=(Min=0.050000,Max=0.050000)
@@ -141,7 +141,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000)
         StartSizeRange=(X=(Min=80.000000,Max=80.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
+        Texture=texture'Effects_Tex.Weapons.MP3rdPmuzzle_smoke1frame'
         SubdivisionScale(0)=0.500000
         LifetimeRange=(Min=0.200000,Max=0.200000)
     End Object
@@ -171,7 +171,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=12.000000,Max=12.000000),Y=(Min=24.000000,Max=24.000000))
         DrawStyle=PTDS_Brighten
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         SubdivisionScale(0)=0.500000
@@ -188,7 +188,7 @@ defaultproperties
         Opacity=0.200000
         MaxParticles=1
         StartSizeRange=(X=(Min=400.000000,Max=400.000000))
-        Texture=Texture'Effects_Tex.BulletHits.glowfinal'
+        Texture=texture'Effects_Tex.BulletHits.glowfinal'
         LifetimeRange=(Min=0.100000,Max=0.100000)
     End Object
     Emitters(5)=SpriteEmitter'DH_Guns.DH_Flakvierling38MuzzleFlash.SpriteEmitter5'

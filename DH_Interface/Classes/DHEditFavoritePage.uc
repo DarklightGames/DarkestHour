@@ -66,7 +66,7 @@ defaultproperties
     End Object
     ed_Data=DHmoEditBox'DH_Interface.DHEditFavoritePage.IpEntryBox'
     Begin Object Class=FloatingImage Name=MessageWindowFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay1'
+        Image=texture'DH_GUI_Tex.Menu.DHDisplay1'
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"

@@ -7,11 +7,11 @@ class DH_CromwellMountedMG extends DH_ROMountedTankMG;
 
 defaultproperties
 {
-    ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
+    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=6
     DummyTracerClass=class'DH_Vehicles.DH_BesaVehicleClientTracer'
     mTracerInterval=0.460000
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
     YawStartConstraint=0.000000
     YawEndConstraint=65535.000000

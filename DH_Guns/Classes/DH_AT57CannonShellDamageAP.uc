@@ -7,7 +7,7 @@ class DH_AT57CannonShellDamageAP extends ROTankShellImpactDamage;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
     APCDamageModifier=0.750000
     TreadDamageModifier=0.850000
     DeathString="%o was killed by %k's 57mm AT-Gun APC shell."

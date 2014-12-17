@@ -431,7 +431,7 @@ defaultproperties
     PctBipodDeployRecoil=0.050000
     bLeadTarget=true
     bInstantHit=false
-    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireForce="AssaultRifleFire"
     WarnTargetPct=0.500000
     BlurTime=0.1

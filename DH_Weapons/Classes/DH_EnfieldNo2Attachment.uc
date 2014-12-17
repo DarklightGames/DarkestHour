@@ -196,7 +196,7 @@ defaultproperties
     WA_ReloadEmpty="idle_enfieldno2"
     WA_ProneReload="idle_enfieldno2"
     WA_ProneReloadEmpty="idle_enfieldno2"
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
     MenuDescription="Enfield No2: revolver. Standard issue sidearm in the British Army using .38 caliber rounds. Maximum effective range: 50 metres."
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo2_3rd'

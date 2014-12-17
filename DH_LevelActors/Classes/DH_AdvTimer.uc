@@ -125,7 +125,7 @@ state Done
 
 defaultproperties
 {
-    Texture=Texture'DHEngine_Tex.ClockTimer'
+    Texture=texture'DHEngine_Tex.ClockTimer'
     messagetype="CriticalEvent"
     TimeMin=30
     TimeMax=30

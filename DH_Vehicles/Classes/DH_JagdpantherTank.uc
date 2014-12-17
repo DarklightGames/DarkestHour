@@ -33,7 +33,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    SchurzenTexture=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2' // ideally get better matching texture made, but for now this is passable match
+    SchurzenTexture=texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2' // ideally get better matching texture made, but for now this is passable match
     SchurzenTypes(0)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenOne',PercentChance=30)   // undamaged schurzen
     SchurzenTypes(1)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenTwo',PercentChance=15)   // missing front panel on right & middle panel on left
     SchurzenTypes(2)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenThree',PercentChance=10) // with front panels missing on both sides
@@ -51,7 +51,7 @@ defaultproperties
     MaxCriticalSpeed=1002.000000
     TreadDamageThreshold=0.850000
     FireEffectOffset=(X=-15.000000)
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=8.200000
     URightArmorFactor=5.000000
     ULeftArmorFactor=5.000000
@@ -64,9 +64,9 @@ defaultproperties
     PointValue=4.000000
     MaxPitchSpeed=80.000000
     TreadVelocityScale=225.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L05'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R05'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L05'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R05'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
     LeftTrackSoundBone="Wheel_L_1"
     RightTrackSoundBone="Wheel_R_1"
     RumbleSoundBone="body"
@@ -111,15 +111,15 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherMountedMGPawn',WeaponBone="Mg_attachment")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Jagdpanther.Jagdpanther_dest'
     DamagedEffectScale=1.100000
     DamagedEffectOffset=(X=-135.000000,Y=20.000000,Z=108.000000)
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_body'
     VehicleHudOccupantsX(0)=0.430000
     VehicleHudOccupantsX(1)=0.550000
     VehicleHudOccupantsX(2)=0.590000
@@ -211,11 +211,11 @@ defaultproperties
     HealthMax=600.000000
     Health=600
     Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
-    Skins(4)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_body_int'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
+    Skins(1)=texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
+    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
+    Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
+    Skins(4)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_body_int'
     SoundPitch=32
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000

@@ -27,14 +27,14 @@ defaultproperties
     Article="a "
     PluralName="Snipers"
     InfoText="The sniper is tasked with the specialized goal of eliminating key hostile units and shaking enemy morale through careful marksmanship and fieldcraft.  Through patient observation, the sniper is also capable of providing valuable reconnaissance which can have a significant impact on the outcome of the battle."
-    MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_Snip'
+    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_Snip'
     Models(0)="RMC1"
     Models(1)="RMC2"
     Models(2)="RMC3"
     Models(3)="RMC4"
     Models(4)="RMC5"
     Models(5)="RMC6"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon',Amount=18)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)

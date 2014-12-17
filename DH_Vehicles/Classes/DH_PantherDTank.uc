@@ -41,7 +41,7 @@ defaultproperties
     UnbuttonedPositionIndex=1
     MaxCriticalSpeed=932.000000
     TreadDamageThreshold=0.850000
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=8.500000
     URightArmorFactor=4.000000
     ULeftArmorFactor=4.000000
@@ -53,9 +53,9 @@ defaultproperties
     PointValue=4.000000
     MaxPitchSpeed=100.000000
     TreadVelocityScale=225.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L05'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R05'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L05'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R05'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
@@ -106,15 +106,15 @@ defaultproperties
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerThree',WeaponBone="body")
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
     DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed'
     DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
     InitialPositionIndex=0
-    VehicleHudImage=Texture'InterfaceArt_tex.Tank_Hud.panther_body'
+    VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.panther_body'
     VehicleHudOccupantsX(0)=0.450000
     VehicleHudOccupantsY(0)=0.380000
     VehicleHudOccupantsX(2)=0.550000
@@ -210,10 +210,10 @@ defaultproperties
     HealthMax=600.000000
     Health=600
     Mesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
+    Skins(1)=texture'axis_vehicles_tex.Treads.PantherG_treads'
+    Skins(2)=texture'axis_vehicles_tex.Treads.PantherG_treads'
+    Skins(3)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     SoundPitch=32
     SoundRadius=2500.000000
     TransientSoundRadius=5000.000000

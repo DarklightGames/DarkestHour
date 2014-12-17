@@ -8,7 +8,7 @@ class DH_StenMkIIDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
     WeaponClass=class'DH_Weapons.DH_StenMkIIWeapon'
     KDamageImpulse=1000.000000
     KDeathVel=100.000000

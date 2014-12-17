@@ -46,8 +46,8 @@ function PostBeginPlay()
     CurrentPriority = InitialPriority;
 
     //Setup textures
-    NoDeployTexture = Texture'DH_MDV_Tex.MobileTele_Deny'; //Setup the deny texture reference
-    DeployTexture = Texture'DH_MDV_Tex.MobileTele_Allow'; //Setup the allow texture reference
+    NoDeployTexture = texture'DH_MDV_Tex.MobileTele_Deny'; //Setup the deny texture reference
+    DeployTexture = texture'DH_MDV_Tex.MobileTele_Allow'; //Setup the allow texture reference
 
     //Start the class timer that checks to see what state we need to be in!
     SetTimer(1, true);
@@ -267,6 +267,6 @@ defaultproperties
     bStatic=false
     bHidden=false
     bAlwaysRelevant=true
-    Texture=Texture'DH_MDV_Tex.TeleMDV.MobileTele_Deny'
+    Texture=texture'DH_MDV_Tex.TeleMDV.MobileTele_Deny'
     DrawScale=0.330000
 }

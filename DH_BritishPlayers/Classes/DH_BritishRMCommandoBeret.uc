@@ -14,6 +14,6 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'dhgear_anm.Brit_Beret'
-    Skins(0)=Texture'DHBritishCharactersTex.Headgear.Brit_Commando_beret'
-    Skins(1)=Texture'DHBritishCharactersTex.Headgear.RMCommando_Badge'
+    Skins(0)=texture'DHBritishCharactersTex.Headgear.Brit_Commando_beret'
+    Skins(1)=texture'DHBritishCharactersTex.Headgear.RMCommando_Badge'
 }

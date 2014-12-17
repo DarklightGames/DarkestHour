@@ -9,7 +9,7 @@ defaultproperties
 {
     MaxAmmo=9
     InitialAmount=8
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.garand_ammo'
+    IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.garand_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
     ItemName="M1 Garand ammo clip"
 }

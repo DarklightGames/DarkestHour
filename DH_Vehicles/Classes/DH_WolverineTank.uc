@@ -44,9 +44,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=228.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="placeholder_int"
@@ -94,8 +94,8 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.000000,Z=40.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn',WeaponBone="Turret_placement")
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest'
     DamagedEffectOffset=(X=-126.000000,Y=20.000000,Z=105.000000)
     VehicleTeam=1
@@ -104,7 +104,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
     VehicleHudOccupantsX(0)=0.430000
     VehicleHudOccupantsX(2)=0.000000
     VehicleHudOccupantsY(0)=0.320000
@@ -192,9 +192,9 @@ defaultproperties
     HealthMax=500.000000
     Health=500
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
+    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

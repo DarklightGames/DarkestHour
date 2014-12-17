@@ -28,7 +28,7 @@ defaultproperties
     VehicleTeam=1
     BeginningIdleAnim=
     InitialPositionIndex=0
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
+    VehicleHudImage=texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
     VehicleHudOccupantsX(0)=0.000000
     VehicleHudOccupantsX(1)=0.470000
     VehicleHudOccupantsX(2)=0.000000
@@ -56,7 +56,7 @@ defaultproperties
     HealthMax=101.000000
     Health=101
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'
-    Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder_ext'
+    Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder_ext'
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.000000
         KInertiaTensor(3)=3.000000

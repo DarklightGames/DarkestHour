@@ -8,15 +8,15 @@ class DH_JagdpanzerIVCannonPawn extends DH_AssaultGunCannonPawn
 
 defaultproperties
 {
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     OverlayCenterSize=0.555000
     PeriscopePositionIndex=1
-    DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    CannonScopeOverlay=Texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
+    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
     WeaponFov=14.400000
     bHasAltFire=false
     CameraBone="Turret"

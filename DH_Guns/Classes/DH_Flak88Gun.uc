@@ -29,7 +29,7 @@ defaultproperties
     DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
     BeginningIdleAnim=
     InitialPositionIndex=0
-    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.flak88_body'
+    VehicleHudImage=texture'DH_Artillery_Tex.ATGun_Hud.flak88_body'
     VehicleHudOccupantsX(0)=0.000000
     VehicleHudOccupantsX(1)=0.540000
     VehicleHudOccupantsX(2)=0.000000
@@ -57,7 +57,7 @@ defaultproperties
     HealthMax=100.000000
     Health=100
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_body'
-    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
+    Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88'
     CollisionRadius=60.000000
     CollisionHeight=175.000000
     Begin Object Class=KarmaParamsRBFull Name=KParams0

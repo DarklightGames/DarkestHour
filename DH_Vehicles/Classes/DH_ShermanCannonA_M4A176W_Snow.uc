@@ -7,6 +7,6 @@ class DH_ShermanCannonA_M4A176W_Snow extends DH_ShermanCannonA_M4A176W;
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
-    Skins(1)=Texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
+    Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
+    Skins(1)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
 }

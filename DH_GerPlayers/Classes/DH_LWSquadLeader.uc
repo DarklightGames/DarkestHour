@@ -21,13 +21,13 @@ defaultproperties
     Article="a "
     PluralName="Squad Leaders"
     InfoText="Gruppenführer||The Gruppenführer is the leader of the squad - an NCO by rank.  His job is to see to the completion of the squad's objectives by directing his men in combat and ensuring the LMG's firepower is put to good use.  Equipped for close quarters combat, the Gruppenführer is better off directing the squad's firepower at longer ranges than engaging himself.||* The Gruppenführer counts one and a half times when taking and holding objectives."
-    MenuImage=Texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
+    MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WL_1"
     Models(1)="WL_2"
     Models(2)="WL_3"
     Models(3)="WL_4"
     bIsLeader=true
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
+    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',Amount=9,AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)

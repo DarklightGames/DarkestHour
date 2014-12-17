@@ -52,7 +52,7 @@ defaultproperties
     End Object
     t_Footer=DHBrowser_Footer'DH_Interface.DHServerBrowser.FooterPanel'
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=Texture'DH_GUI_Tex.Menu.MultiMenuBack'
+        Image=texture'DH_GUI_Tex.Menu.MultiMenuBack'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0

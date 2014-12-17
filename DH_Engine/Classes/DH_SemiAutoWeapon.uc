@@ -39,7 +39,10 @@ simulated function AnimEnd(int channel)
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
+    {
         FireMode[Mode].bInstantStop = true;
+    }
+
     if (Instigator.IsLocallyControlled() && !FireMode[Mode].bFireOnRelease)
     {
         if (!IsAnimating(0))
@@ -50,8 +53,11 @@ simulated event StopFire(int Mode)
 
     FireMode[Mode].bIsFiring = false;
     FireMode[Mode].StopFiring();
+
     if (!FireMode[Mode].bFireOnRelease)
+    {
         ZeroFlashCount(Mode);
+    }
 }
 
 defaultproperties

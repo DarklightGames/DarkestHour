@@ -217,10 +217,10 @@ defaultproperties
     FrontRightAngle=41.000000
     RearRightAngle=139.000000
     RearLeftAngle=221.000000
-    ReloadSoundOne=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01'
-    ReloadSoundTwo=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02'
-    ReloadSoundThree=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03'
-    ReloadSoundFour=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04'
+    ReloadSoundOne=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01'
+    ReloadSoundTwo=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02'
+    ReloadSoundThree=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03'
+    ReloadSoundFour=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04'
     CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
     CannonFireSound(1)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire02'
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
@@ -231,7 +231,7 @@ defaultproperties
     RangeSettings(3)=1200
     RangeSettings(4)=1600
     AddedPitch=26
-    ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
+    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=6
     DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
     mTracerInterval=0.600000
@@ -240,7 +240,7 @@ defaultproperties
     MinCommanderHitHeight=40.5;
     VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=12.000000,Y=4.000000,Z=-3.000000))
     VehHitpoints(1)=(PointRadius=12.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=12.000000,Y=4.000000,Z=-20.000000))
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
@@ -259,7 +259,7 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
     AltFireSoundScaling=3.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
@@ -287,8 +287,8 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
+    Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
     SoundVolume=100
     SoundRadius=300.000000
 }

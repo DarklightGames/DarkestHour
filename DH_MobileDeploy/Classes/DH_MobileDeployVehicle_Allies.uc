@@ -108,5 +108,5 @@ defaultproperties
     bMustBeSL=true
     PointValue=3.000000
     bNeverReset=true
-    Skins(0)=Texture'DH_MDV_Tex.AlliedMDV.M3A1Halftrack_body_ext'
+    Skins(0)=texture'DH_MDV_Tex.AlliedMDV.M3A1Halftrack_body_ext'
 }

@@ -9,17 +9,17 @@ defaultproperties
 {
     OverlayCenterSize=0.833330
     UnbuttonedPositionIndex=1
-    DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    CannonScopeOverlay=Texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     bLockCameraDuringTransition=true
     BinocPositionIndex=2
     WeaponFov=12.000000
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
+    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
+    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
     DriverPositions(0)=(ViewLocation=(X=25.000000,Y=-25.000000,Z=5.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=2731,ViewPitchDownLimit=64171,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000,bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext',ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)

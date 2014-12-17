@@ -25,9 +25,9 @@ defaultproperties
 {
     bTrailerSameRotation=true
     Physics=PHYS_Trailer
-    Texture=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
+    Texture=texture'Effects_Tex.Weapons.Russ_Flare_Final'
     DrawScale=0.010000
-    Skins(0)=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
+    Skins(0)=texture'Effects_Tex.Weapons.Russ_Flare_Final'
     Style=STY_Additive
     Mass=13.000000
 }

@@ -29,5 +29,5 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    Skins(3)=Texture'VegetationSMT.WildBushesFall.WildBush_A_FallB'
+    Skins(3)=texture'VegetationSMT.WildBushesFall.WildBush_A_FallB'
 }

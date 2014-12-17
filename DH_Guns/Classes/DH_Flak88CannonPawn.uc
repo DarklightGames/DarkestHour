@@ -100,19 +100,19 @@ defaultproperties
 {
     OverlayCenterSize=0.961000
     OverlayCorrectionX=-3
-    CannonScopeOverlay=Texture'DH_VehicleOptics_tex.Artillery.Flak36_sight_background'
+    CannonScopeOverlay=texture'DH_VehicleOptics_tex.Artillery.Flak36_sight_background'
     BinocPositionIndex=2
     WeaponFov=18.000000
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
+    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell'
+    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
     DriverPositions(0)=(ViewLocation=(X=70.000000,Y=20.000000,Z=5.000000),ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=15474,ViewPitchDownLimit=64990,ViewPositiveYawLimit=3000,ViewNegativeYawLimit=-3000,bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_Flak88Cannon'
     CameraBone="Gun"
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-15.000000,Z=-5.000000)
     DriveAnim="Vt3485_driver_idle_close"

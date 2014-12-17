@@ -436,7 +436,7 @@ function Fire(optional float F)
 defaultproperties
 {
     OverlayCenterSize=1.000000
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
     HudName="Gunner"
     bMustBeTankCrew=false
     FireImpulse=(X=-1000.000000)

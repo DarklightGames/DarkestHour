@@ -358,7 +358,7 @@ defaultproperties
     End Object
     l_EquipTitle=GUILabel'DH_Interface.DHDeploymentMenu.EquipmentWeaponTitle'
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=Texture'DH_GUI_Tex.Menu.roleselect'
+        Image=texture'DH_GUI_Tex.Menu.roleselect'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -368,7 +368,7 @@ defaultproperties
     End Object
     bg_Background=BackgroundImage'DH_Interface.DHDeploymentMenu.PageBackground'
     Begin Object Class=BackgroundImage Name=PageBackground2
-        Image=Texture'DH_GUI_Tex.Menu.midgamemenu'
+        Image=texture'DH_GUI_Tex.Menu.midgamemenu'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -490,7 +490,7 @@ defaultproperties
     End Object
     lb_Roles=ROGUIListBoxPlus'DH_Interface.DHDeploymentMenu.Roles'
     Begin Object Class=GUIImage Name=PlayerImage
-        Image=Texture'InterfaceArt_tex.Menu.empty'
+        Image=texture'InterfaceArt_tex.Menu.empty'
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
         WinTop=0.120000
@@ -556,7 +556,7 @@ defaultproperties
     lb_AvailableWeapons(0)=ROGUIListBoxPlus'DH_Interface.DHDeploymentMenu.WeaponListBox'
     lb_AvailableWeapons(1)=ROGUIListBoxPlus'DH_Interface.DHDeploymentMenu.WeaponListBox'
     Begin Object Class=GUIGFXButton Name=EquipButton0
-        Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
+        Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
@@ -569,7 +569,7 @@ defaultproperties
     End Object
     b_Equipment(0)=GUIGFXButton'DH_Interface.DHDeploymentMenu.EquipButton0'
     Begin Object Class=GUIGFXButton Name=EquipButton1
-        Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
+        Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
@@ -583,7 +583,7 @@ defaultproperties
     End Object
     b_Equipment(1)=GUIGFXButton'DH_Interface.DHDeploymentMenu.EquipButton1'
     Begin Object Class=GUIGFXButton Name=EquipButton2
-        Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
+        Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
@@ -597,7 +597,7 @@ defaultproperties
     End Object
     b_Equipment(2)=GUIGFXButton'DH_Interface.DHDeploymentMenu.EquipButton2'
     Begin Object Class=GUIGFXButton Name=EquipButton3
-        Graphic=Texture'InterfaceArt_tex.HUD.satchel_ammo'
+        Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"

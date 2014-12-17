@@ -273,16 +273,16 @@ defaultproperties
 {
     OverlayCenterSize=0.555000
     PeriscopePositionIndex=1
-    DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    CannonScopeOverlay=Texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
+    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
     WeaponFov=14.400000
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
+    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
+    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
     DriverPositions(0)=(ViewLocation=(X=-50.000000,Y=-29.200001,Z=34.400002),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_turret',ViewPitchUpLimit=2185,ViewPitchDownLimit=64444,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-910,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(Z=10.000000),ViewFOV=7.200000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_turret',TransitionUpAnim="com_open",DriverTransitionAnim="VStug3_com_close",ViewPitchUpLimit=1200,ViewPitchDownLimit=64500,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true)
     DriverPositions(2)=(ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_turret',TransitionDownAnim="com_close",DriverTransitionAnim="VStug3_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
@@ -290,8 +290,8 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_HetzerCannon'
     bHasAltFire=false
     CameraBone="Turret"
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     MinRotateThreshold=0.500000
     MaxRotateThreshold=3.000000
     bPCRelativeFPRotation=true

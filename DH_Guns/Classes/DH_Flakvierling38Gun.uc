@@ -34,7 +34,7 @@ defaultproperties
     DamagedEffectHealthSmokeFactor=0.000000
     DamagedEffectHealthMediumSmokeFactor=0.000000
     DamagedEffectHealthHeavySmokeFactor=0.000000
-    VehicleHudImage=Texture'DH_Flakvierling38_tex.flak.flakv38_base'
+    VehicleHudImage=texture'DH_Flakvierling38_tex.flak.flakv38_base'
     VehicleHudOccupantsX(0)=0.000000
     VehicleHudOccupantsX(1)=0.000000
     VehiclePositionString="using a Flakvierling 38"

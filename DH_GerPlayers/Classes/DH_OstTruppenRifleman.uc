@@ -24,7 +24,7 @@ defaultproperties
     Article="a "
     PluralName="Riflemen"
     InfoText="Schütze Osttruppe||The Osttruppen were formed by foreign 'volunteers' - mainly POWs from the Eastern Front.They were not considered to be reliable troops, their job was to buy time until a counter attack could be mounted."
-    MenuImage=Texture'InterfaceArt_tex.SelectMenus.Schutze'
+    MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="OT_1"
     Models(1)="OT_2"
     Models(2)="OT_3"

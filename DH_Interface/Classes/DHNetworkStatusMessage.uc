@@ -43,7 +43,7 @@ defaultproperties
 {
     bIgnoreEsc=true
     bRequire640x480=false
-    OpenSound=Sound'ROMenuSounds.Generic.msfxEdit'
+    OpenSound=sound'ROMenuSounds.Generic.msfxEdit'
     Begin Object Class=GUIButton Name=NetStatBackground
         StyleName="SquareBar"
         WinTop=0.375000

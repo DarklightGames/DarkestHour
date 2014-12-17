@@ -144,8 +144,8 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
 defaultproperties
 {
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
     OverlayCenterSize=0.650000
-    DestroyedScopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    DestroyedScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
+    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
 }

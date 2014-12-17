@@ -180,5 +180,5 @@ defaultproperties
     PanelHint(3)="Configure your keyboard controls..."
     PanelHint(5)="Customize your HUD..."
     PanelHint(6)="how did you get this?"
-    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
+    Background=texture'DH_GUI_Tex.Menu.Setupmenu'
 }

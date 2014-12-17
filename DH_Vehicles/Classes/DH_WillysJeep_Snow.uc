@@ -22,7 +22,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
-    HighDetailOverlay=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
+    Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
+    HighDetailOverlay=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep_Snow'
     bUseHighDetailOverlayIndex=true
 }

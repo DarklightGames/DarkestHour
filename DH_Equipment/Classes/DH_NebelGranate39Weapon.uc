@@ -13,7 +13,7 @@ defaultproperties
     PickupClass=class'DH_Equipment.DH_NebelGranate39Pickup'
     AttachmentClass=class'DH_Equipment.DH_NebelGranate39Attachment'
     ItemName="Nebelhandgranate 39"
-    Skins(2)=Texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
+    Skins(2)=texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
     HighDetailOverlay=none
     bUseHighDetailOverlayIndex=false
 }

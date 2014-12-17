@@ -193,7 +193,7 @@ defaultproperties
     WA_ReloadEmpty="reloadempty_p38"
     WA_ProneReload="prone_reloadhalf_p38"
     WA_ProneReloadEmpty="prone_reloadempty_p38"
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.p38'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.p38'
     MenuDescription="Semi-automatic pistol designed to replace the Luger. Used an 8-round box mag. Effective to about 60 metres."
     bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.p38'

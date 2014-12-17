@@ -19,10 +19,10 @@ defaultproperties
     FrontRightAngle=42.000000
     RearRightAngle=138.000000
     RearLeftAngle=222.000000
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundFour=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
+    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
@@ -52,7 +52,7 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     AddedPitch=50
-    ReloadSound=Sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
+    ReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
     NumAltMags=6
     DummyTracerClass=class'DH_Vehicles.DH_BesaVehicleClientTracer'
     mTracerInterval=0.460000
@@ -61,7 +61,7 @@ defaultproperties
     MinCommanderHitHeight=44.5;
     VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=12.000000))
     VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-11.000000))
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
@@ -80,7 +80,7 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
     AltFireSoundScaling=3.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     AltFireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
@@ -108,9 +108,9 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShellHE'
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell_6pdr_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(1)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    Skins(2)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
+    Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
+    Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
     SoundVolume=130
     SoundRadius=300.000000
 }

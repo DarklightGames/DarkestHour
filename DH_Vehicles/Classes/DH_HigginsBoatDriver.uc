@@ -145,7 +145,7 @@ function int LimitPawnPitch(int pitch)
 
 defaultproperties
 {
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     bLimitYaw=true
     bLimitPitch=true
     HudName="Engineer"

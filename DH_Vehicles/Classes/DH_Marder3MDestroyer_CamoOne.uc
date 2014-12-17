@@ -28,6 +28,6 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MCannonPawn_CamoOne')
-    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_camo1'
-    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_camo1'
+    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_camo1'
+    Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_camo1'
 }

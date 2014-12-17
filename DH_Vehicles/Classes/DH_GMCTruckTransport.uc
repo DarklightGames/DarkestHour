@@ -168,8 +168,8 @@ defaultproperties
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerFour',WeaponBone="passenger_l_5")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_GMCTruckPassengerSeven',WeaponBone="passenger_r_5")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
@@ -185,7 +185,7 @@ defaultproperties
     BeginningIdleAnim=
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.000000)
     InitialPositionIndex=0
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
     VehicleHudOccupantsX(0)=0.450000
     VehicleHudOccupantsX(1)=0.550000
     VehicleHudOccupantsX(2)=0.450000
@@ -288,7 +288,7 @@ defaultproperties
     HealthMax=150.000000
     Health=150
     Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'
-    Skins(0)=Texture'DH_Allied_MilitarySM.American.GMC'
+    Skins(0)=texture'DH_Allied_MilitarySM.American.GMC'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

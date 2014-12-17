@@ -48,9 +48,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=110.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
@@ -100,8 +100,8 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-160.000000,Y=65.000000,Z=-10.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatCannonPawn',WeaponBone="Turret_placement")
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_dest'
     DamagedEffectOffset=(X=-140.000000,Y=0.000000,Z=35.000000)
     VehicleTeam=1
@@ -110,7 +110,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.M18_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M18_body'
     VehicleHudOccupantsX(0)=0.430000
     VehicleHudOccupantsX(2)=0.000000
     VehicleHudOccupantsY(0)=0.320000
@@ -197,12 +197,12 @@ defaultproperties
     HealthMax=500.000000
     Health=500
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext'
-    Skins(2)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
-    Skins(3)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
-    Skins(4)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
-    Skins(5)=Texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int'
+    Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext'
+    Skins(2)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
+    Skins(3)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
+    Skins(4)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
+    Skins(5)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

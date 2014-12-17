@@ -23,10 +23,10 @@ defaultproperties
     GunIdleAnim="deploy_idle_GrW42"
     GunFiringAnim="deploy_fire_GrW42"
     WeaponClass=class'DH_Mortars.DH_Kz8cmGrW42Weapon'
-    HUDMortarTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42Side'
-    HUDHighExplosiveTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
-    HUDSmokeTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'
-    HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcG'
+    HUDMortarTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42Side'
+    HUDHighExplosiveTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
+    HUDSmokeTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'
+    HUDArcTexture=texture'DH_Mortars_tex.HUD.ArcG'
     DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_turret',bDrawOverlays=true,bExposed=true)
     bMustBeTankCrew=false
     GunClass=class'DH_Mortars.DH_Kz8cmGrW42VehicleWeapon'

@@ -187,7 +187,7 @@ defaultproperties
     WA_Idle="idle_panzerschreck"
     WA_Fire="idle_panzerschreck"
     WA_Reload="reloadS_panzerschreck"
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
     MenuDescription="RPzB.54 Panzerschreck 'Tank Terror': German recoiless anti-tank weapon patterned after the American 'Bazooka'. Fires a 8.8cm rocket-assisted HEAT warhead up to 700 meters, but officially recommended engagement ranges were 150-250 meters. Armor penetration: 175mm of effective armor. Sights are calibrated at 100, 150, and 200 meters."
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Panzerschreck_3rd'

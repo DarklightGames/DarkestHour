@@ -177,12 +177,12 @@ function bool EncroachingOn(Actor Other)
 
 defaultproperties
 {
-    RampDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
-    RampUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
+    RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
+    RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     RampSoundVolume=180.000000
     RampDownIdleAnim="Ramp_Idle"
     DriverCameraBoneName="Camera_driver"
-    WashSound=Sound'DH_AlliedVehicleSounds.higgins.wash01'
+    WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
     WashSoundBoneL="Wash_L"
     WashSoundBoneR="Wash_R"
     EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
@@ -236,9 +236,9 @@ defaultproperties
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFour',WeaponBone="Master1z00")
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerFive',WeaponBone="Master1z00")
     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerSix',WeaponBone="Master1z00")
-    IdleSound=Sound'DH_AlliedVehicleSounds.HigginsIdle01'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
+    IdleSound=sound'DH_AlliedVehicleSounds.HigginsIdle01'
+    StartUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
+    ShutDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_destroyed'
     DamagedEffectOffset=(X=-170.000000,Y=20.000000,Z=50.000000)
     VehicleTeam=1
@@ -246,7 +246,7 @@ defaultproperties
     BeginningIdleAnim="Higgins-Idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Drop",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.000000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
     VehicleHudOccupantsX(0)=0.430000
     VehicleHudOccupantsX(1)=0.570000
     VehicleHudOccupantsX(2)=0.430000
@@ -322,8 +322,8 @@ defaultproperties
     HealthMax=800.000000
     Health=800
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
-    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
-    DestroyedVehicleTexture=Texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
+    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
+    DestroyedVehicleTexture=texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
     CollisionRadius=100.000000
     CollisionHeight=60.000000
     Begin Object Class=KarmaParamsRBFull Name=KParams0

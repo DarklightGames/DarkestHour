@@ -23,8 +23,8 @@ defaultproperties
     GunIdleAnim="idle_M2Mortar"
     GunFiringAnim="fire_M2Mortar"
     WeaponClass=class'DH_Mortars.DH_M2MortarWeapon'
-    HUDMortarTexture=Texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2Side'
-    HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcA'
+    HUDMortarTexture=texture'DH_Mortars_tex.60mmMortarM2.60mmMortarM2Side'
+    HUDArcTexture=texture'DH_Mortars_tex.HUD.ArcA'
     DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Mortars_3rd.M2_Mortar_turret',ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bDrawOverlays=true,bExposed=true)
     bMustBeTankCrew=false
     GunClass=class'DH_Mortars.DH_M2MortarVehicleWeapon'

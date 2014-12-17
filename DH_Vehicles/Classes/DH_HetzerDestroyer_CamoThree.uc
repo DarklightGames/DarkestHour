@@ -31,5 +31,5 @@ defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerCannonPawn_CamoThree')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerMountedMGPawn_CamoThree')
-    Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body_camo3'
+    Skins(0)=texture'DH_Hetzer_tex_V1.hetzer_body_camo3'
 }

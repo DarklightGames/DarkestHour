@@ -22,10 +22,10 @@ defaultproperties
     FrontRightAngle=29.000000
     RearRightAngle=151.000000
     RearLeftAngle=209.000000
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundFour=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
+    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
@@ -50,7 +50,7 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-    ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
+    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=10
     DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer'
     mTracerInterval=0.350000
@@ -59,7 +59,7 @@ defaultproperties
     //   MaxDriverHitAngle=2.7 // Matt: deprecated (was used in BelowDriverAngle function, now deprecated, & variable replaced by MinCommanderHitHeight used in re-worked HitDriverArea)
     MinCommanderHitHeight=37.0
     VehHitpoints(0)=(PointRadius=14.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=4.000000,Z=-14.000000))
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
@@ -78,7 +78,7 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireSoundScaling=3.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
@@ -106,7 +106,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
+    Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
     SoundVolume=130
     SoundRadius=200.000000
 }

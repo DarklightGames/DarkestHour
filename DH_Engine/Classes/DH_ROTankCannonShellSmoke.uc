@@ -77,7 +77,7 @@ defaultproperties
     MaxSpeed=500.000000
     Damage=75.000000
     DamageRadius=50.000000
-    AmbientSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    AmbientSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     LifeSpan=12.000000
     AmbientGlow=50
     SoundVolume=175

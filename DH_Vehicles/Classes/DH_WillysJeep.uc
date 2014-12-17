@@ -142,7 +142,7 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     MaxPitchSpeed=250.000000
-    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
     EngineHealthMax=25
     WheelSoftness=0.025000
@@ -192,8 +192,8 @@ defaultproperties
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerTwo',WeaponBone="Passenger3")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerThree',WeaponBone="Passenger4")
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Jeep.jeep_engine_loop03'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
+    StartUpSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
+    ShutDownSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Jeep.WillysJeep_dest1'
     DisintegrationHealth=-10000.000000
     DestructionLinearMomentum=(Min=50.000000,Max=175.000000)
@@ -205,7 +205,7 @@ defaultproperties
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.000000)
     InitialPositionIndex=0
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
     VehicleHudOccupantsX(0)=0.440000
     VehicleHudOccupantsX(1)=0.570000
     VehicleHudOccupantsX(2)=0.410000
@@ -291,7 +291,7 @@ defaultproperties
     HealthMax=125.000000
     Health=125
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
+    Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
     CollisionRadius=175.000000
     CollisionHeight=40.000000
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -312,5 +312,5 @@ defaultproperties
         KImpactThreshold=700.000000
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_WillysJeep.KParams0'
-    HighDetailOverlay=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
+    HighDetailOverlay=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
 }

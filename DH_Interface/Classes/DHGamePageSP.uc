@@ -134,7 +134,7 @@ defaultproperties
     End Object
     t_Footer=DHGameFooterSP'DH_Interface.DHGamePageSP.SPFooter'
     Begin Object Class=GUIImage Name=BkChar
-        Image=Texture'DH_GUI_Tex.Menu.menuBackground'
+        Image=texture'DH_GUI_Tex.Menu.menuBackground'
         ImageStyle=ISTY_Scaled
         X1=0
         Y1=0

@@ -163,7 +163,7 @@ defaultproperties
     PA_DodgeAnims(3)="jumpR_mid_nade"
     WA_Idle="idle_binocs"
     WA_Fire="idle_binocs"
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.Binocs'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.Binocs'
     MenuDescription="Used to spot enemy movements and mark artillery targets."
     bRapidFire=false
     LightType=LT_none

@@ -8,7 +8,7 @@ class DH_MortarDamageType extends ROWeaponDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.artkill'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.artkill'
     TankDamageModifier=0.125000
     APCDamageModifier=0.500000
     VehicleDamageModifier=1.000000

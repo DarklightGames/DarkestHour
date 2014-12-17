@@ -8,5 +8,5 @@ class DH_BritishParaHelmet1 extends DH_Headgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.BritParaHelmet1'
-    Skins(0)=Texture'DHBritishCharactersTex.Headgear.BritParaHelmet1'
+    Skins(0)=texture'DHBritishCharactersTex.Headgear.BritParaHelmet1'
 }

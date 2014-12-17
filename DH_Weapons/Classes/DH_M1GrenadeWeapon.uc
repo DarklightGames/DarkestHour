@@ -12,7 +12,7 @@ defaultproperties
     PreFireHoldAnim="pre_fire_idle"
     bHasReleaseLever=true
     FuzeLength=4.000000
-    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.000000
     LeverReleaseRadius=200.000000
     CrawlForwardAnim="crawlF"

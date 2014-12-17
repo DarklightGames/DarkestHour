@@ -31,7 +31,7 @@ defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2341CannonPawn_Snow')
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234.234_destsnow'
-    Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_body_snow'
-    Skins(1)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_wheels_snow'
-    Skins(2)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_extras_snow'
+    Skins(0)=texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_body_snow'
+    Skins(1)=texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_wheels_snow'
+    Skins(2)=texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_extras_snow'
 }

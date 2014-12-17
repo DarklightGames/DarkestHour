@@ -377,5 +377,5 @@ final simulated static function int ReformatLists(GUIController MyController, GU
 
 defaultproperties
 {
-    HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay'
+    HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay'
 }

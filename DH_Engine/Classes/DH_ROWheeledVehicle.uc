@@ -858,9 +858,9 @@ defaultproperties
     ObjectCollisionResistance=1.000000
     EngineHealthMax=30
     bEngineOff=true
-    VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
-    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-    DamagedStartUpSound=Sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
+    VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
+    DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    DamagedStartUpSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
     PointValue=1.000000
     DriverTraceDist=4500.000000
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'

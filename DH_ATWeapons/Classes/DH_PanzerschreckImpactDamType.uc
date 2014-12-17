@@ -8,7 +8,7 @@ class DH_PanzerschreckImpactDamType extends RORocketImpactDamage
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.schreckkill'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.schreckkill'
     WeaponClass=class'DH_ATWeapons.DH_PanzerschreckWeapon'
     DeathString="%o was killed by %k's Panzerschreck."
     FemaleSuicide="%o was careless with her Panzerschreck."

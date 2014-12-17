@@ -54,9 +54,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=78.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="body"
@@ -98,8 +98,8 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Cromwell6PdrCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellMountedMGPawn',WeaponBone="Mg_attachment")
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
     DamagedEffectScale=0.900000
     DamagedEffectOffset=(X=-130.000000,Y=20.000000,Z=72.000000)
@@ -109,7 +109,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchDownLimit=65535,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_idle_close",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true,ViewFOV=90.000000)
     InitialPositionIndex=0
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
     VehicleHudOccupantsX(0)=0.560000
     VehicleHudOccupantsX(1)=0.520000
     VehicleHudOccupantsX(2)=0.460000
@@ -197,12 +197,12 @@ defaultproperties
     HealthMax=525.000000
     Health=525
     Mesh=SkeletalMesh'DH_Cromwell_anm.cromwell_body6pdr_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_armor_ext'
-    Skins(2)=Texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
-    Skins(3)=Texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
-    Skins(4)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    Skins(5)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
+    Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_armor_ext'
+    Skins(2)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
+    Skins(3)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
+    Skins(4)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
+    Skins(5)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

@@ -54,5 +54,5 @@ defaultproperties
     AboutToLose="Last objective -- we have almost lost the battle!"
     iconID=12
     altIconID=13
-    iconTexture=Texture'DH_GUI_Tex.GUI.criticalmessages_icons'
+    iconTexture=texture'DH_GUI_Tex.GUI.criticalmessages_icons'
 }

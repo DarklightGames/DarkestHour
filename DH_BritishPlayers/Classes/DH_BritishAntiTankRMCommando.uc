@@ -29,14 +29,14 @@ defaultproperties
     Article="a "
     PluralName="Tank Hunters"
     InfoText="The tank hunter is tasked with locating and destroying or disabling enemy vehicles.  Armed with close-range anti-tank weaponry, he must often get dangerously close to his target in order to assure a hit.  His weaponry can also be effective against enemy fortifications."
-    MenuImage=Texture'DHBritishCharactersTex.Icons.Brit_AT'
+    MenuImage=texture'DHBritishCharactersTex.Icons.Brit_AT'
     Models(0)="RMC1"
     Models(1)="RMC2"
     Models(2)="RMC3"
     Models(3)="RMC4"
     Models(4)="RMC5"
     Models(5)="RMC6"
-    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
+    SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=1)
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)

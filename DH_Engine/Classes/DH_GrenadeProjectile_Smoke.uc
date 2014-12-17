@@ -95,10 +95,10 @@ defaultproperties
     Damage=0.000000
     DamageRadius=0.000000
     ExplodeDirtEffectClass=Class'ROEffects.GrenadeSmokeEffect'
-    ExplosionSound(0)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    ExplosionSound(1)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    ExplosionSound(2)=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    ExplosionSound(0)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    ExplosionSound(1)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    ExplosionSound(2)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    SmokeSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SoundVolume=255
     SoundRadius=200.000000
 }

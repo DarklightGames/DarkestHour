@@ -88,7 +88,7 @@ defaultproperties
     bIsAssaultGun=true
     bSpecialExiting=true
     MaxCriticalSpeed=730.000000
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=6.000000
     URightArmorFactor=2.000000
     ULeftArmorFactor=2.000000
@@ -102,9 +102,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=450.000000
     TreadVelocityScale=110.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="body"
@@ -147,8 +147,8 @@ defaultproperties
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerPassengerOne',WeaponBone="body")
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerPassengerTwo',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_Hetzer_stc_V1.hetzer_dest_generic'
     DamagedEffectScale=0.900000
     DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
@@ -156,7 +156,7 @@ defaultproperties
     BeginningIdleAnim="Overlay_Idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewFOV=80.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2730,ViewPitchDownLimit=61900,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=80.000000)
-    VehicleHudImage=Texture'DH_Hetzer_tex_V1.Hetzer_HUDoverlay'
+    VehicleHudImage=texture'DH_Hetzer_tex_V1.Hetzer_HUDoverlay'
     VehicleHudOccupantsX(0)=0.450000
     VehicleHudOccupantsX(1)=0.510000
     VehicleHudOccupantsX(2)=0.450000
@@ -236,12 +236,12 @@ defaultproperties
     HealthMax=500.000000
     Health=500
     Mesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_body_ext'
-    Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.Stug3_treads'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Stug3_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(4)=Texture'DH_Hetzer_tex_V1.hetzer_int'
-    Skins(5)=Texture'DH_Hetzer_tex_V1.Hetzer_driver_glass'
+    Skins(0)=texture'DH_Hetzer_tex_V1.hetzer_body'
+    Skins(1)=texture'axis_vehicles_tex.Treads.Stug3_treads'
+    Skins(2)=texture'axis_vehicles_tex.Treads.Stug3_treads'
+    Skins(3)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    Skins(4)=texture'DH_Hetzer_tex_V1.hetzer_int'
+    Skins(5)=texture'DH_Hetzer_tex_V1.Hetzer_driver_glass'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

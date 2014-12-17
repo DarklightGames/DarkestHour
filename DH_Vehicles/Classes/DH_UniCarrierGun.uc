@@ -18,7 +18,7 @@ defaultproperties
     ReloadLength=7.000000
     DummyTracerClass=class'DH_Vehicles.DH_BrenVehicleClientTracer'
     mTracerInterval=0.600000
-    hudAltAmmoIcon=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
+    hudAltAmmoIcon=texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
     YawBone="Gun_protection"
     PitchBone="Gun_protection"
     RotationsPerSecond=0.500000

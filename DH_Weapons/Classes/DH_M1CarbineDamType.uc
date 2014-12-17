@@ -8,7 +8,7 @@ class DH_M1CarbineDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_M1CarbineWeapon'
     KDamageImpulse=2250.000000
 }

@@ -49,10 +49,10 @@ defaultproperties
     FrontRightAngle=40.000000
     RearRightAngle=140.000000
     RearLeftAngle=220.000000
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundFour=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
+    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
@@ -87,7 +87,7 @@ defaultproperties
     RangeSettings(28)=3600
     RangeSettings(29)=3800
     RangeSettings(30)=4000
-    ReloadSound=Sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
+    ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=8
     DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
     mTracerInterval=0.495867
@@ -96,7 +96,7 @@ defaultproperties
     MinCommanderHitHeight=60.0
     VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-3.000000,Z=12.000000))
     VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-3.000000,Z=-11.000000))
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
@@ -115,7 +115,7 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AltFireSoundScaling=3.000000
-    RotateSound=Sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
+    RotateSound=sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
@@ -141,7 +141,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
     Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_ext'
-    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
+    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
     SoundVolume=120
     SoundRadius=300.000000
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'

@@ -18,7 +18,7 @@ defaultproperties
     scopePitch=-10
     scopeYaw=40
     scopeYawHigh=35
-    TexturedScopeTexture=Texture'DH_Weapon_overlays.Scopes.Ger_sniperscope_overlay'
+    TexturedScopeTexture=texture'DH_Weapon_overlays.Scopes.Ger_sniperscope_overlay'
     IronIdleAnim="Scope_Idle"
     IronBringUp="Scope_In"
     IronPutDown="Scope_Out"

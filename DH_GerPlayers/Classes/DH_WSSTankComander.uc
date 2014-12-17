@@ -24,13 +24,13 @@ defaultproperties
     Article="a "
     PluralName="Tank Commanders"
     InfoText="The tank commander is primarily tasked with the operation of the main gun of the tank as well as to direct the rest of the operating crew. From his usual turret position, he is often the only crew member with an all-round view. As a commander, he is expected to lead a complete platoon of tanks as well as direct his own."
-    MenuImage=Texture'DHGermanCharactersTex.Icons.WSS_TankCom'
+    MenuImage=texture'DHGermanCharactersTex.Icons.WSS_TankCom'
     Models(0)="SSP_1"
     Models(1)="SSP_2"
     Models(2)="SSP_3"
     Models(3)="SSP_4"
     Models(4)="SSP_5"
-    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')

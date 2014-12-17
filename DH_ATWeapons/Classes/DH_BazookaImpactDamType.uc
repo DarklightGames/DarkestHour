@@ -8,7 +8,7 @@ class DH_BazookaImpactDamType extends RORocketImpactDamage
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.zookakill'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.zookakill'
     WeaponClass=class'DH_ATWeapons.DH_BazookaWeapon'
     DeathString="%o was killed by %k's Bazooka."
     FemaleSuicide="%o was careless with her Bazooka."

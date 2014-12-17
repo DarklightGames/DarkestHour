@@ -99,14 +99,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 defaultproperties
 {
     OverlayCenterSize=0.972000
-    DestroyedScopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
-    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    CannonScopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
+    PoweredRotateSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
     WeaponFov=14.400000
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
+    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
+    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
     DriverPositions(0)=(ViewLocation=(X=18.000000,Y=20.000000,Z=7.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',ViewPitchUpLimit=5461,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(Z=10.000000),ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     DriverPositions(2)=(ViewLocation=(Z=4.000000),ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A176W_anm.shermanM4A1w_turret_extA',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)

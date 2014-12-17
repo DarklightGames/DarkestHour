@@ -86,21 +86,21 @@ defaultproperties
     Begin Object Class=DHButtonFont Name=fntDHButtonFont
     End Object
     FontStack(14)=fntDHButtonFont
-    MouseCursors(0)=Texture'DH_GUI_Tex.Menu.DHPointer'
-    MouseCursors(1)=Texture'InterfaceArt_tex.Cursors.ResizeAll'
-    MouseCursors(2)=Texture'InterfaceArt_tex.Cursors.ResizeSWNE'
-    MouseCursors(3)=Texture'InterfaceArt_tex.Cursors.Resize'
-    MouseCursors(4)=Texture'InterfaceArt_tex.Cursors.ResizeNWSE'
-    MouseCursors(5)=Texture'InterfaceArt_tex.Cursors.ResizeHorz'
-    MouseCursors(6)=Texture'DH_GUI_Tex.Menu.DHPointer'
-    ImageList(0)=Texture'InterfaceArt_tex.Menu.checkBoxBall_b'
-    ImageList(1)=Texture'InterfaceArt_tex.Menu.AltComboTickBlurry'
-    ImageList(2)=Texture'InterfaceArt_tex.Menu.LeftMark'
-    ImageList(3)=Texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(4)=Texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(5)=Texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(6)=Texture'InterfaceArt_tex.Menu.UpMark'
-    ImageList(7)=Texture'InterfaceArt_tex.Menu.DownMark'
+    MouseCursors(0)=texture'DH_GUI_Tex.Menu.DHPointer'
+    MouseCursors(1)=texture'InterfaceArt_tex.Cursors.ResizeAll'
+    MouseCursors(2)=texture'InterfaceArt_tex.Cursors.ResizeSWNE'
+    MouseCursors(3)=texture'InterfaceArt_tex.Cursors.Resize'
+    MouseCursors(4)=texture'InterfaceArt_tex.Cursors.ResizeNWSE'
+    MouseCursors(5)=texture'InterfaceArt_tex.Cursors.ResizeHorz'
+    MouseCursors(6)=texture'DH_GUI_Tex.Menu.DHPointer'
+    ImageList(0)=texture'InterfaceArt_tex.Menu.checkBoxBall_b'
+    ImageList(1)=texture'InterfaceArt_tex.Menu.AltComboTickBlurry'
+    ImageList(2)=texture'InterfaceArt_tex.Menu.LeftMark'
+    ImageList(3)=texture'InterfaceArt_tex.Menu.RightMark'
+    ImageList(4)=texture'InterfaceArt_tex.Menu.RightMark'
+    ImageList(5)=texture'InterfaceArt_tex.Menu.RightMark'
+    ImageList(6)=texture'InterfaceArt_tex.Menu.UpMark'
+    ImageList(7)=texture'InterfaceArt_tex.Menu.DownMark'
     DefaultStyleNames(0)="ROInterface.ROSTY2CloseButton"
     DefaultStyleNames(1)="ROInterface.ROSTY_RoundScaledButton"
     DefaultStyleNames(2)="ROInterface.ROSTY2SquareButton"
@@ -171,5 +171,5 @@ defaultproperties
     MainMenuOptions(2)="DH_Interface.DHGamePageSP"
     MainMenuOptions(3)="DH_Interface.DHSettingsPage"
     MainMenuOptions(4)="DH_Interface.DHQuitPage"
-    LCDLogo=Texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
+    LCDLogo=texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
 }

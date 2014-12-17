@@ -43,9 +43,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=110.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="Turret_placement"
@@ -94,8 +94,8 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_DDay',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn',WeaponBone="Mg_placement")
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
-    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
-    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
+    StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
+    ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.DDay_Sherman_Dest'
     DamagedEffectScale=0.900000
     DamagedEffectOffset=(X=-107.000000,Y=0.000000,Z=94.000000)
@@ -105,7 +105,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'
     VehicleHudOccupantsX(0)=0.430000
     VehicleHudOccupantsX(2)=0.560000
     VehicleHudOccupantsX(3)=0.375
@@ -198,12 +198,12 @@ defaultproperties
     HealthMax=525.000000
     Health=525
     Mesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_scoop_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
-    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
-    Skins(3)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_scoop_ext'
-    Skins(4)=Texture'DH_VehiclesUS_tex.Treads.Sherman_treads'
-    Skins(5)=Texture'DH_VehiclesUS_tex.Treads.Sherman_treads'
+    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
+    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
+    Skins(3)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_scoop_ext'
+    Skins(4)=texture'DH_VehiclesUS_tex.Treads.Sherman_treads'
+    Skins(5)=texture'DH_VehiclesUS_tex.Treads.Sherman_treads'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

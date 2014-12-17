@@ -86,7 +86,7 @@ simulated function UpdateScopeMode()
 
             if (ScopeScriptedTexture == none)
             {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
             }
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
@@ -97,7 +97,7 @@ simulated function UpdateScopeMode()
             {
                 // Construct the Combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = Texture'ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.Material1 = texture'ScopeShaders.Zoomblur.Xhair';
                 ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
                 ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
@@ -128,7 +128,7 @@ simulated function UpdateScopeMode()
 
             if (ScopeScriptedTexture == none)
             {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
             }
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
@@ -139,7 +139,7 @@ simulated function UpdateScopeMode()
             {
                 // Construct the Combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = Texture'ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.Material1 = texture'ScopeShaders.Zoomblur.Xhair';
                 ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
                 ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;

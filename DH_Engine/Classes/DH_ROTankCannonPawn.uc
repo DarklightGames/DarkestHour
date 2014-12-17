@@ -721,18 +721,18 @@ defaultproperties
     GunsightPositions=1
     GunsightOpticsName="ScopeNameHere"
     UnbuttonedPositionIndex=2
-    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    ManualPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    ManualPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     ManualMinRotateThreshold=0.250000
     ManualMaxRotateThreshold=2.500000
     PoweredMinRotateThreshold=0.150000
     PoweredMaxRotateThreshold=1.750000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     MaxRotateThreshold=1.500000
     bDesiredBehindView=false
     PeriscopePositionIndex=-1
-    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }

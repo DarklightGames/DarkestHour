@@ -7,7 +7,7 @@ class DH_Pak43CannonShellDamageHE extends ROTankShellExplosionDamage;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
     TankDamageModifier=0.080000
     APCDamageModifier=0.500000
     VehicleDamageModifier=1.500000

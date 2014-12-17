@@ -371,7 +371,7 @@ defaultproperties
 {
     UnbuttonedPositionIndex=1
     OverlayCenterSize=0.700000
-    MGOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
+    MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.850000
     WeaponFov=41.000000
     DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

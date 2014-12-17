@@ -8,7 +8,7 @@ class DH_STG44DamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_STG44Weapon'
     KDamageImpulse=1500.000000
     KDeathVel=110.000000

@@ -13,5 +13,5 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_HelmetNC'
-    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.LW_HG2'
+    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.LW_HG2'
 }

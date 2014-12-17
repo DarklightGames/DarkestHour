@@ -51,10 +51,10 @@ defaultproperties
     FrontRightAngle=35.000000
     RearRightAngle=145.000000
     RearLeftAngle=215.000000
-    ReloadSoundOne=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
-    ReloadSoundTwo=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
-    ReloadSoundThree=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
-    ReloadSoundFour=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04'
+    ReloadSoundOne=sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
+    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
+    ReloadSoundThree=sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
+    ReloadSoundFour=sound'Vehicle_reloads.Reloads.SU_76_Reload_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
@@ -84,7 +84,7 @@ defaultproperties
     FireInterval=6.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
     ShakeRotMag=(Z=50.000000)
@@ -103,9 +103,9 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHVAP'
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
-    Skins(2)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
+    Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
+    Skins(2)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
     SoundVolume=130
     SoundRadius=300.000000
 }

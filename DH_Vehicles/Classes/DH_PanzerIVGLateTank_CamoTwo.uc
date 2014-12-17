@@ -24,5 +24,5 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVGLateCannonPawn_CamoTwo')
-    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_body_camo2'
+    Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_body_camo2'
 }

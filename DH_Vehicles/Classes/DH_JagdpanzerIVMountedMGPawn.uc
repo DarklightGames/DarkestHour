@@ -8,7 +8,7 @@ class DH_JagdpanzerIVMountedMGPawn extends DH_ROMountedTankMGPawn;
 defaultproperties
 {
     OverlayCenterSize=0.500000
-    MGOverlay=Texture'DH_VehicleOptics_tex.Common.MG_sight'
+    MGOverlay=texture'DH_VehicleOptics_tex.Common.MG_sight'
     WeaponFov=72.000000
     GunClass=class'DH_Vehicles.DH_JagdpanzerIVMountedMG'
     bHasAltFire=false

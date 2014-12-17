@@ -8,6 +8,6 @@ class DH_HetzerFactory_CamoOne_Bushes extends DH_HetzerFactory;
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_HetzerDestroyer_CamoOne_Bushes'
-    Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body_camo1'
-    Skins(3)=Texture'VegetationSMT.WildBushes.WildBush_A'
+    Skins(0)=texture'DH_Hetzer_tex_V1.hetzer_body_camo1'
+    Skins(3)=texture'VegetationSMT.WildBushes.WildBush_A'
 }

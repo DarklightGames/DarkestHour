@@ -8,7 +8,7 @@ class DH_PanzerFaustImpactDamType extends RORocketImpactDamage
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt2_tex.deathicons.faustkill'
+    HUDIcon=texture'InterfaceArt2_tex.deathicons.faustkill'
     WeaponClass=class'DH_ATWeapons.DH_PanzerFaustWeapon'
     DeathString="%o was killed by %k's Panzerfaust."
     FemaleSuicide="%o was careless with her Panzerfaust."

@@ -45,10 +45,10 @@ singular static function bool DHDebugMode()
 
 defaultproperties
 {
-    Texture=Texture'DHEngine_Tex.LevelInfo'
+    Texture=texture'DHEngine_Tex.LevelInfo'
     SmokeBrightnessOverride=255
-    AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
-    AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
+    AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
+    AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
     bDHDebugMode=true // Matt: TEMP during development to aid testing - remove before release !
 }

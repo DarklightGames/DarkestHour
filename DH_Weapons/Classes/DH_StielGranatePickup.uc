@@ -21,7 +21,7 @@ defaultproperties
     MaxDesireability=0.780000
     InventoryType=class'DH_Weapons.DH_StielGranateWeapon'
     PickupMessage="You got the Stielhandgranate 39/43."
-    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate'

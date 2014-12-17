@@ -334,5 +334,5 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'  // Matt: was primary
     TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'   // Matt: was secondary
     Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
-    Skins(0)=Texture'DH_Flakvierling38_tex.flak.FlakVeirling'
+    Skins(0)=texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }

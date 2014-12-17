@@ -56,7 +56,7 @@ defaultproperties
     IronSightDisplayFOV=40.000000
     ZoomInTime=0.400000
     ZoomOutTime=0.200000
-    Handtex=Texture'Weapons1st_tex.Arms.hands_gergloves'
+    Handtex=texture'Weapons1st_tex.Arms.hands_gergloves'
     FireModeClass(0)=class'DH_Weapons.DH_MG42Fire'
     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
     IdleAnim="Rest_Idle"

@@ -42,9 +42,9 @@ defaultproperties
     PointValue=2.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=215.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="placeholder_int"
@@ -92,8 +92,8 @@ defaultproperties
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartPassengerTwo',WeaponBone="body")
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartPassengerThree',WeaponBone="body")
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.T60.t60_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.T60.t60_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.M5_Stuart_dest1'
     DamagedEffectOffset=(X=-78.500000,Y=20.000000,Z=100.000000)
     VehicleTeam=1
@@ -102,7 +102,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
     VehicleHudOccupantsX(0)=0.430000
     VehicleHudOccupantsX(3)=0.350000
     VehicleHudOccupantsX(4)=0.500000
@@ -194,10 +194,10 @@ defaultproperties
     HealthMax=375.000000
     Health=375
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_ext'
-    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
-    Skins(1)=Texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
-    Skins(2)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
-    Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
+    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
+    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
+    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
+    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
     SoundPitch=32
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000

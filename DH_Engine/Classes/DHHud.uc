@@ -46,46 +46,46 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_GUI_Tex.GUI.AlliedStar');
     Level.AddPrecacheMaterial(Material'DH_GUI_Tex.GUI.GerCross');
 
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_head');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_torso');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Pelvis');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Lupperleg');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Rupperleg');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Lupperarm');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Rupperarm');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Llowerleg');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Rlowerleg');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Llowerarm');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Rlowerarm');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Lhand');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Rhand');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot');
-    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_head');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_torso');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Pelvis');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Lupperleg');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Rupperleg');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Lupperarm');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Rupperarm');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Llowerleg');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Rlowerleg');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Llowerarm');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Rlowerarm');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Lhand');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Rhand');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot');
 
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_head');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_torso');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Pelvis');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Lupperleg');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Rupperleg');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Lupperarm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Rupperarm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Llowerleg');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Rlowerleg');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Llowerarm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Rlowerarm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Lhand');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Rhand');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Lfoot');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Player_hits.ger_hit_Rfoot');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_head');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_torso');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Pelvis');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Lupperleg');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Rupperleg');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Lupperarm');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Rupperarm');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Llowerleg');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Rlowerleg');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Llowerarm');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Rlowerarm');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Lhand');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Rhand');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Lfoot');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Player_hits.ger_hit_Rfoot');
 
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.HUD.MGDeploy');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.HUD.Compass2_main');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.HUD.MGDeploy');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.HUD.Compass2_main');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.HUD.TexRotator0');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.OverheadMap.overheadmap_background');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.HUD.VUMeter');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Cursors.Pointer');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.OverheadMap.overheadmap_background');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.HUD.VUMeter');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Cursors.Pointer');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.HUD.Needle_rot');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Menu.SectionHeader_captionbar');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Menu.SectionHeader_captionbar');
 
     Level.AddPrecacheMaterial(FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final');
     Level.AddPrecacheMaterial(Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
@@ -107,43 +107,43 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.stance_crouch');
     Level.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.stance_prone');
 
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.throttle_background2');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.throttle_background2_bottom');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.throttle_background');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.throttle_main');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.throttle_lever');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.Ger_RPM');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.Rus_RPM');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.Ger_Speedometer');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.Tank_Hud.Rus_Speedometer');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.throttle_background2');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.throttle_background2_bottom');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.throttle_background');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.throttle_main');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.throttle_lever');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.Ger_RPM');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.Rus_RPM');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.Ger_Speedometer');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.Tank_Hud.Rus_Speedometer');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.Tank_Hud.Ger_needle_rot');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.Tank_Hud.Rus_needle_rot');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.Tank_Hud.Ger_needle_rpm_rot');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.Tank_Hud.Rus_needle_rpm_rot');
 
     // Damage icons
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.artkill');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.satchel');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.Strike');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.Generic');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b792mm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.buttsmack');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.knife');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b762mm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.rusgrenade');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.deathicons.sniperkill');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b9mm');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.germgrenade');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.deathicons.faustkill');
-    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.mine');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.backblastkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.piatkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.schreckkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.zookakill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.canisterkill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.ATGunKill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.VehicleFireKill');
-    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.artkill');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.satchel');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.Strike');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.Generic');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.b792mm');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.buttsmack');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.knife');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.b762mm');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.rusgrenade');
+    Level.AddPrecacheMaterial(texture'InterfaceArt2_tex.deathicons.sniperkill');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.b9mm');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.germgrenade');
+    Level.AddPrecacheMaterial(texture'InterfaceArt2_tex.deathicons.faustkill');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.mine');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.backblastkill');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.piatkill');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.schreckkill');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.zookakill');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.canisterkill');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.ATGunKill');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.VehicleFireKill');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
 }
 
 // This is potentially called from 5 different functions, as GameReplicationInfo isn't replicating until _after_ PostNetBeginPlay()
@@ -2609,9 +2609,9 @@ simulated function UpdateHud()
         return;
 
     if (W.ItemName == "Scoped Enfield No.4")
-        AmmoIcon.WidgetTexture = Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Sniper_ammo';
+        AmmoIcon.WidgetTexture = texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Sniper_ammo';
     else if (W.ItemName == "Scoped Kar98k Rifle")
-        AmmoIcon.WidgetTexture = Texture'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo';
+        AmmoIcon.WidgetTexture = texture'DH_InterfaceArt_tex.weapon_icons.kar98Sniper_ammo';
     else
         AmmoIcon.WidgetTexture = AmmoClass.default.IconMaterial;
 
@@ -3161,12 +3161,12 @@ defaultproperties
 {
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.20,DrawPivot=DP_LowerLeft,PosX=0.25,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
-    MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.800000,DrawPivot=DP_LowerMiddle,PosX=0.550000,PosY=0.980000,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    CanCutWireIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.800000,DrawPivot=DP_LowerMiddle,PosX=0.550000,PosY=0.980000,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    VoiceIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Communication.Voice',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=63),TextureScale=0.500000,DrawPivot=DP_MiddleMiddle,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    MapIconMortarTarget=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=64),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(R=255,A=255),Tints[1]=(R=255,A=255))
-    MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.050000,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapIconCarriedRadio=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanMantleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.800000,DrawPivot=DP_LowerMiddle,PosX=0.550000,PosY=0.980000,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanCutWireIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.800000,DrawPivot=DP_LowerMiddle,PosX=0.550000,PosY=0.980000,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    VoiceIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Communication.Voice',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=63),TextureScale=0.500000,DrawPivot=DP_MiddleMiddle,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapIconMortarTarget=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X2=63,Y2=64),TextureScale=0.050000,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(R=255,A=255),Tints[1]=(R=255,A=255))
+    MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.050000,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     LegendCarriedArtilleryRadioText="Artillery Radioman"
     NeedReloadText="Needs reloading"
     CanReloadText="Press %THROWMGAMMO% to assist reload"
@@ -3178,13 +3178,13 @@ defaultproperties
     LegendArtilleryRadioText="Artillery Radio"
     SideColors(0)=(B=80,G=80,R=200)
     SideColors(1)=(B=75,G=150,R=80)
-    ResupplyZoneNormalPlayerIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    ResupplyZoneNormalVehicleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    ResupplyZoneNormalPlayerIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    ResupplyZoneNormalVehicleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
     ResupplyZoneResupplyingPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
     ResupplyZoneResupplyingVehicleIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash')
-    NationHealthFigures(1)=Texture'DH_GUI_Tex.GUI.US_player'
-    NationHealthFiguresBackground(1)=Texture'DH_GUI_Tex.GUI.US_player_background'
-    NationHealthFiguresStamina(1)=Texture'DH_GUI_Tex.GUI.US_player_Stamina'
+    NationHealthFigures(1)=texture'DH_GUI_Tex.GUI.US_player'
+    NationHealthFiguresBackground(1)=texture'DH_GUI_Tex.GUI.US_player_background'
+    NationHealthFiguresStamina(1)=texture'DH_GUI_Tex.GUI.US_player_Stamina'
     NationHealthFiguresStaminaCritical(1)=FinalBlend'DH_GUI_Tex.GUI.US_player_Stamina_critical'
     PlayerArrowTexture=FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final'
     ObituaryLifeSpan=8.500000
@@ -3192,32 +3192,32 @@ defaultproperties
     MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_fast_flash'
     MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_alt_flashing'
     MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_icons_alt_fast_flash'
-    MapBackground=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_background')
+    MapBackground=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_background')
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.PlayerIcon_final',Tints[0]=(G=110))
-    MapIconTeam(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconTeam(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconRally(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconRally(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconMGResupplyRequest(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconMGResupplyRequest(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    locationHitAlliesImages(0)=Texture'DH_GUI_Tex.Player_hits.US_hit_Head'
-    locationHitAlliesImages(1)=Texture'DH_GUI_Tex.Player_hits.US_hit_torso'
-    locationHitAlliesImages(2)=Texture'DH_GUI_Tex.Player_hits.US_hit_pelvis'
-    locationHitAlliesImages(3)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperLeg'
-    locationHitAlliesImages(4)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperLeg'
-    locationHitAlliesImages(5)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperArm'
-    locationHitAlliesImages(6)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperArm'
-    locationHitAlliesImages(7)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerLeg'
-    locationHitAlliesImages(8)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerLeg'
-    locationHitAlliesImages(9)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerArm'
-    locationHitAlliesImages(10)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerArm'
-    locationHitAlliesImages(11)=Texture'DH_GUI_Tex.Player_hits.US_hit_LHand'
-    locationHitAlliesImages(12)=Texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
-    locationHitAlliesImages(13)=Texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
-    locationHitAlliesImages(14)=Texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
-    MouseInterfaceIcon=(WidgetTexture=Texture'DH_GUI_Tex.Menu.DHPointer')
-    CaptureBarTeamIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
-    CaptureBarTeamIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
+    MapIconTeam(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconTeam(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconRally(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconRally(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconMGResupplyRequest(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconMGResupplyRequest(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    locationHitAlliesImages(0)=texture'DH_GUI_Tex.Player_hits.US_hit_Head'
+    locationHitAlliesImages(1)=texture'DH_GUI_Tex.Player_hits.US_hit_torso'
+    locationHitAlliesImages(2)=texture'DH_GUI_Tex.Player_hits.US_hit_pelvis'
+    locationHitAlliesImages(3)=texture'DH_GUI_Tex.Player_hits.US_hit_LupperLeg'
+    locationHitAlliesImages(4)=texture'DH_GUI_Tex.Player_hits.US_hit_RupperLeg'
+    locationHitAlliesImages(5)=texture'DH_GUI_Tex.Player_hits.US_hit_LupperArm'
+    locationHitAlliesImages(6)=texture'DH_GUI_Tex.Player_hits.US_hit_RupperArm'
+    locationHitAlliesImages(7)=texture'DH_GUI_Tex.Player_hits.US_hit_LlowerLeg'
+    locationHitAlliesImages(8)=texture'DH_GUI_Tex.Player_hits.US_hit_RlowerLeg'
+    locationHitAlliesImages(9)=texture'DH_GUI_Tex.Player_hits.US_hit_LlowerArm'
+    locationHitAlliesImages(10)=texture'DH_GUI_Tex.Player_hits.US_hit_RlowerArm'
+    locationHitAlliesImages(11)=texture'DH_GUI_Tex.Player_hits.US_hit_LHand'
+    locationHitAlliesImages(12)=texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
+    locationHitAlliesImages(13)=texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
+    locationHitAlliesImages(14)=texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
+    MouseInterfaceIcon=(WidgetTexture=texture'DH_GUI_Tex.Menu.DHPointer')
+    CaptureBarTeamIcons(0)=texture'DH_GUI_Tex.GUI.GerCross'
+    CaptureBarTeamIcons(1)=texture'DH_GUI_Tex.GUI.AlliedStar'
     CaptureBarTeamColors(0)=(B=30,G=43,R=213)
     CaptureBarTeamColors(1)=(B=35,G=150,R=40)
     VOICE_ICON_DIST_MAX = 2624.672119

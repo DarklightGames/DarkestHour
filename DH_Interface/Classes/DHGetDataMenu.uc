@@ -48,7 +48,7 @@ defaultproperties
     End Object
     l_Text=GUILabel'DH_Interface.DHGetDataMenu.DialogText'
     Begin Object Class=FloatingImage Name=MessageWindowFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay1'
+        Image=texture'DH_GUI_Tex.Menu.DHDisplay1'
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"

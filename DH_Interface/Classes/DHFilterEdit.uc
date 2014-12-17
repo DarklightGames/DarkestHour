@@ -494,7 +494,7 @@ defaultproperties
     t_WindowTitle=DHGUIHeader'DH_Interface.DHFilterEdit.TitleBar'
     WindowName="Edit Filter Rules..."
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal

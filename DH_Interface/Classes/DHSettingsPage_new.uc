@@ -53,5 +53,5 @@ defaultproperties
     PanelCaption(3)="Controls"
     PanelCaption(5)="Hud"
     PanelCaption(6)="none"
-    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
+    Background=texture'DH_GUI_Tex.Menu.Setupmenu'
 }

@@ -8,7 +8,7 @@ class DH_StielGranateDamType extends DHGrenadeDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.germgrenade'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.germgrenade'
     WeaponClass=class'DH_Weapons.DH_StielGranateWeapon'
     DeathString="%o was blown up by %k's %w."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'

@@ -182,7 +182,7 @@ defaultproperties
     WA_ReloadEmpty="reload_mg34"
     WA_ProneReload="prone_reload_mg34"
     WA_ProneReloadEmpty="prone_reload_mg34"
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg34'
+    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mg34'
     MenuDescription="Pre-war German light machine-gun. Using a 75 round drum magazine, it can fire almost 900 rounds per minute.  Due to the tendency for overheating when used in a sustained fire mode, the operator is equipped with a replacement barrel. Maximum effective range (on bipod): 700-800 metres."
     Mesh=SkeletalMesh'Weapons3rd_anm.mg34'
 }

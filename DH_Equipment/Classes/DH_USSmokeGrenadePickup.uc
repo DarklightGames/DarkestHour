@@ -12,7 +12,7 @@ defaultproperties
     MaxDesireability=0.780000
     InventoryType=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
     PickupMessage="You got the US M15 Smoke Grenade."
-    PickupSound=Sound'Inf_Weapons_Foley.Misc.ammopickup'
+    PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.USSmokeGrenade'

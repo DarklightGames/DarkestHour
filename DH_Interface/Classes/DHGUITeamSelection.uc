@@ -71,7 +71,7 @@ function SelectTeamSuccessfull()
 defaultproperties
 {
     Begin Object Class=BackgroundImage Name=PageBackground2
-        Image=Texture'DH_GUI_Tex.Menu.TeamselectB'
+        Image=texture'DH_GUI_Tex.Menu.TeamselectB'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -81,7 +81,7 @@ defaultproperties
     End Object
     bg_Background2=BackgroundImage'DH_Interface.DHGUITeamSelection.PageBackground2'
     Begin Object Class=BackgroundImage Name=PageBackground3
-        Image=Texture'DH_GUI_Tex.Menu.TeamselectC'
+        Image=texture'DH_GUI_Tex.Menu.TeamselectC'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -177,7 +177,7 @@ defaultproperties
     End Object
     b_AutoSelect=DHGUIButton'DH_Interface.DHGUITeamSelection.AutoSelect'
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=Texture'DH_GUI_Tex.Menu.Teamselect'
+        Image=texture'DH_GUI_Tex.Menu.Teamselect'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0

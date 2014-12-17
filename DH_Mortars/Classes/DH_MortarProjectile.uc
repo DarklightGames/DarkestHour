@@ -382,7 +382,7 @@ simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
 
 defaultproperties
 {
-    DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
+    DescendingSound=sound'DH_WeaponSounds.Mortars.Descent01'
     DudChance=0.010000
     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
     HitSnowEmitterClass=class'ROEffects.TankAPHitSnowEffect'

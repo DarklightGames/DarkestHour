@@ -24,6 +24,6 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen.Kubelwagen_ss_dest'
-    Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb'
-    HighDetailOverlay=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb'
+    Skins(1)=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb'
+    HighDetailOverlay=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_dunkelgelb'
 }

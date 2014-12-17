@@ -142,8 +142,8 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     MaxPitchSpeed=250.000000
-    EngineSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
-    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    EngineSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
+    RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
     EngineSoundBone="Engine"
     EngineHealthMax=25
@@ -194,9 +194,9 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerOne',WeaponBone="body")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerTwo',WeaponBone="body")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_KubelwagenPassengerThree',WeaponBone="body")
-    IdleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
-    StartUpSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
-    ShutDownSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
+    IdleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
+    StartUpSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
+    ShutDownSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen.Kubelwagen_wh_dest'
     DisintegrationHealth=-10000.000000
     DestructionLinearMomentum=(Min=50.000000,Max=175.000000)
@@ -207,7 +207,7 @@ defaultproperties
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_int',ViewPitchUpLimit=8000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.000000)
     InitialPositionIndex=0
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.kubelwagen_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.kubelwagen_body'
     VehicleHudOccupantsX(0)=0.460000
     VehicleHudOccupantsX(1)=0.540000
     VehicleHudOccupantsX(2)=0.450000
@@ -289,7 +289,7 @@ defaultproperties
     Health=125
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
     Skins(0)=FinalBlend'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB'
-    Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
+    Skins(1)=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
     CollisionRadius=175.000000
     CollisionHeight=40.000000
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -310,7 +310,7 @@ defaultproperties
         KImpactThreshold=700.000000
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_KubelwagenCar_WH.KParams0'
-    HighDetailOverlay=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
+    HighDetailOverlay=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 }

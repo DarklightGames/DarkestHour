@@ -128,9 +128,9 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-    CannonScopeOverlay=Texture'DH_Flakvierling38_tex.flak.flakv38_sight'
-    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
-    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
+    CannonScopeOverlay=texture'DH_Flakvierling38_tex.flak.flakv38_sight'
+    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
+    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
     DriverPositions(0)=(ViewLocation=(X=30.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionUpAnim="optic_out",DriverTransitionAnim="Vt3485_driver_idle_close",bDrawOverlays=true,bExposed=true)
     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionUpAnim="lookover_up",TransitionDownAnim="optic_in",DriverTransitionAnim="Vt3485_driver_idle_close",bExposed=true)
     DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionDownAnim="lookover_down",DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
@@ -138,9 +138,9 @@ defaultproperties
     bMustBeTankCrew=true
     GunClass=class'DH_Guns.DH_Flakvierling38Cannon'
     CameraBone="Camera_com"
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     DriveAnim="Vt3485_driver_idle_close"
     ExitPositions(0)=(X=-150.000000,Y=0.000000,Z=0.000000)
     ExitPositions(1)=(X=-100.000000,Y=0.000000,Z=0.000000)

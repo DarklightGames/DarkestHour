@@ -266,7 +266,7 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=10.000000,Y=-5.000000,Z=23.000000))
     VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=10.000000,Y=-5.000000,Z=1.000000))
     bIsMountedTankMG=true
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_pitch"
     PitchBone="mg_pitch"
     PitchUpLimit=10000
@@ -307,8 +307,8 @@ defaultproperties
     InitialPrimaryAmmo=75
     CullDistance=8000.000000
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
-    Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
+    Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
     bCollideActors=true
     bBlockActors=true
     bProjTarget=true

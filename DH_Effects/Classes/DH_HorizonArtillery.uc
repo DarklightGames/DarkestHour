@@ -27,7 +27,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.750000)
         StartSizeRange=(X=(Max=150.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.BulletHits.glowfinal'
+        Texture=texture'Effects_Tex.BulletHits.glowfinal'
         LifetimeRange=(Min=0.250000,Max=0.350000)
     End Object
     Emitters(0)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter0'
@@ -53,7 +53,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.000000,Max=50.000000),Y=(Min=50.000000,Max=50.000000),Z=(Min=50.000000,Max=50.000000))
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=texture'Effects_Tex.explosions.radialexplosion_1frame'
         LifetimeRange=(Min=0.250000,Max=0.250000)
     End Object
     Emitters(1)=SpriteEmitter'DH_Effects.DH_HorizonArtillery.SpriteEmitter1'
@@ -75,7 +75,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=3.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.200000)
@@ -102,7 +102,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=10.000000,Max=10.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.200000,Max=0.200000)
@@ -129,7 +129,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=2.000000)
         StartSizeRange=(X=(Min=5.000000,Max=5.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.100000,Max=0.200000)

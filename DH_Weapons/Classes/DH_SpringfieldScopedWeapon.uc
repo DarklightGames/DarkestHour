@@ -26,7 +26,7 @@ simulated function UpdateScopeMode()
 
             if (ScopeScriptedTexture == none)
             {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
             }
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
@@ -37,7 +37,7 @@ simulated function UpdateScopeMode()
             {
                 // Construct the Combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = Texture'DH_ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.Material1 = texture'DH_ScopeShaders.Zoomblur.Xhair';
                 ScriptedScopeCombiner.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
                 ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
@@ -68,7 +68,7 @@ simulated function UpdateScopeMode()
 
             if (ScopeScriptedTexture == none)
             {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
             }
 
             ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
@@ -79,7 +79,7 @@ simulated function UpdateScopeMode()
             {
                 // Construct the Combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = Texture'DH_ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.Material1 = texture'DH_ScopeShaders.Zoomblur.Xhair';
                 ScriptedScopeCombiner.FallbackMaterial = Shader'DH_ScopeShaders.Zoomblur.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
                 ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
@@ -119,7 +119,7 @@ defaultproperties
     scopeYaw=25
     scopePitchHigh=20
     scopeYawHigh=40
-    TexturedScopeTexture=Texture'DH_Weapon_tex.AlliedSmallArms.Springfield_Scope_Overlay'
+    TexturedScopeTexture=texture'DH_Weapon_tex.AlliedSmallArms.Springfield_Scope_Overlay'
     IronIdleAnim="Scope_Idle"
     IronBringUp="Scope_In"
     IronPutDown="Scope_Out"

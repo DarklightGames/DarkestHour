@@ -142,7 +142,7 @@ defaultproperties
     PA_DodgeAnims(3)="jumpR_mid_nade"
     WA_Idle="idle_binocs"
     WA_Fire="idle_binocs"
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
+    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
     MenuDescription="WIRE CUTTERS DESCRIPTION PLACEHOLDER"
     bRapidFire=false
     LightType=LT_None

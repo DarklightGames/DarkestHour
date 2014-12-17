@@ -46,9 +46,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=450.000000
     TreadVelocityScale=300.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="body"
@@ -92,8 +92,8 @@ defaultproperties
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MMountedMGPawn',WeaponBone="Mg34_placment")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MPassengerOne',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Marder3.Marder3M_dest'
     DamagedEffectOffset=(X=10.000000,Y=0.000000,Z=30.000000)
     SteeringScaleFactor=0.750000
@@ -101,7 +101,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_slit_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="driver_slit_open",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
     VehicleHudOccupantsX(0)=0.550000
     VehicleHudOccupantsX(1)=0.450000
     VehicleHudOccupantsX(2)=0.550000
@@ -195,11 +195,11 @@ defaultproperties
     HealthMax=400.000000
     Health=400
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
-    Skins(2)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(4)=Texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
+    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
+    Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
+    Skins(2)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
+    Skins(3)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
+    Skins(4)=texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
     SoundRadius=800.000000
     TransientSoundRadius=1500.000000
     CollisionRadius=175.000000

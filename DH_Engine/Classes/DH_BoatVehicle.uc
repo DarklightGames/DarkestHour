@@ -378,7 +378,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 
 defaultproperties
 {
-    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     //   MaxPitchSpeed=600.000000 // deprecated
     //   BoatFloatTraceDistance=10000.000000 // deprecated
     PointValue=1.000000

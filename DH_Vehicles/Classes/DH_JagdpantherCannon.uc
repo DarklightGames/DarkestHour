@@ -23,10 +23,10 @@ defaultproperties
     FrontRightAngle=25.000000
     RearRightAngle=155.000000
     RearLeftAngle=205.000000
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
-    ReloadSoundFour=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
+    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
@@ -77,7 +77,7 @@ defaultproperties
     FireInterval=8.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     ShakeRotMag=(Z=50.000000)
@@ -99,9 +99,9 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
     Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
+    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
+    Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
     SoundVolume=130
     SoundRadius=300.000000
 }

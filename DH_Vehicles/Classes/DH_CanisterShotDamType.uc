@@ -8,7 +8,7 @@ class DH_CanisterShotDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.canisterkill'
     DeathString="%o was filled with holes by %k's canister shot."
     KDamageImpulse=2250.000000
 }

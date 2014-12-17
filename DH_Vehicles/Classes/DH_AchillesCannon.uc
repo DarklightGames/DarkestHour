@@ -23,10 +23,10 @@ defaultproperties
     FrontRightAngle=28.000000
     RearRightAngle=152.000000
     RearLeftAngle=208.000000
-    ReloadSoundOne=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
-    ReloadSoundTwo=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
-    ReloadSoundThree=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
-    ReloadSoundFour=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04'
+    ReloadSoundOne=sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
+    ReloadSoundTwo=sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
+    ReloadSoundThree=sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
+    ReloadSoundFour=sound'Vehicle_reloads.Reloads.SU_76_Reload_04'
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
@@ -66,7 +66,7 @@ defaultproperties
     FireInterval=6.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
     ShakeRotMag=(Z=50.000000)

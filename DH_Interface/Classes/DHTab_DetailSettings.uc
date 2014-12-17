@@ -135,7 +135,7 @@ defaultproperties
     End Object
     sb_Section3=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection3'
     Begin Object Class=GUIImage Name=GammaBar
-        Image=Texture'DH_GUI_Tex.Menu.DHGammaSet'
+        Image=texture'DH_GUI_Tex.Menu.DHGammaSet'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Normal
         OnChange=DHTab_DetailSettings.InternalOnChange

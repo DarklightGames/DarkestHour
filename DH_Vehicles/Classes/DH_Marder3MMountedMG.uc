@@ -218,7 +218,7 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(X=10.000000,Z=-10.000000))
     VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(X=10.000000,Z=-30.000000))
     bIsMountedTankMG=true
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
     PitchBone="mg_pitch"
     PitchUpLimit=10000

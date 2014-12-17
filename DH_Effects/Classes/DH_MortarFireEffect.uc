@@ -25,7 +25,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=0.750000,RelativeSize=0.500000)
         StartSizeRange=(X=(Max=60.000000))
         InitialParticlesPerSecond=5000.000000
-        Texture=Texture'Effects_Tex.BulletHits.glowfinal'
+        Texture=texture'Effects_Tex.BulletHits.glowfinal'
         LifetimeRange=(Min=0.250000,Max=0.350000)
     End Object
     Emitters(0)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter21'
@@ -50,7 +50,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=0.500000)
         InitialParticlesPerSecond=30.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=texture'Effects_Tex.explosions.radialexplosion_1frame'
         LifetimeRange=(Min=0.250000,Max=0.250000)
     End Object
     Emitters(1)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter31'
@@ -76,7 +76,7 @@ defaultproperties
         StartSizeRange=(X=(Min=32.000000,Max=64.000000),Y=(Min=32.000000,Max=64.000000),Z=(Min=32.000000,Max=64.000000))
         InitialParticlesPerSecond=62500.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=texture'Effects_Tex.explosions.DSmoke_2'
         LifetimeRange=(Min=1.000000,Max=3.000000)
         StartVelocityRange=(X=(Min=32.000000,Max=320.000000))
         VelocityLossRange=(X=(Max=5.000000),Y=(Max=5.000000),Z=(Max=5.000000))

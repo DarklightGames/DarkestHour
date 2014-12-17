@@ -13,9 +13,9 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellHE'
     SecondarySpread=0.004800
     TertiarySpread=0.001250
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'
@@ -56,7 +56,7 @@ defaultproperties
     FireInterval=3.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     ShakeRotMag=(Z=110.000000)
@@ -78,9 +78,9 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
     Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_turret'
-    Skins(0)=Texture'DH_Artillery_Tex.57mmGun.57mmGun'
-    Skins(1)=Texture'DH_Artillery_Tex.17pounder.17Pounder_ext'
-    Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
+    Skins(0)=texture'DH_Artillery_Tex.57mmGun.57mmGun'
+    Skins(1)=texture'DH_Artillery_Tex.17pounder.17Pounder_ext'
+    Skins(2)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
     SoundVolume=130
     SoundRadius=200.000000
 }

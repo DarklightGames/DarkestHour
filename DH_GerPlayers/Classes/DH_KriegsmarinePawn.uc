@@ -7,5 +7,5 @@ class DH_KriegsmarinePawn extends DH_Pawn;
 
 defaultproperties
 {
-    Skins(0)=Texture'DHGermanCharactersTex.Kriegsmarine.WK_1'
+    Skins(0)=texture'DHGermanCharactersTex.Kriegsmarine.WK_1'
 }

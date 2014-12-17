@@ -8,7 +8,7 @@ class DH_P08LugerDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.b9mm'
     WeaponClass=class'DH_Weapons.DH_P08LugerWeapon'
     KDamageImpulse=750.000000
     KDeathVel=100.000000

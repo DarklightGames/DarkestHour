@@ -57,7 +57,7 @@ simulated function PostBeginPlay()
     if (VehicleWeapon(Owner) != none)
     {
         SetCollisionSize(Owner.CollisionRadius, Owner.CollisionHeight);
-        Skins[0] = Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
+        Skins[0] = texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
     }
     else
     {

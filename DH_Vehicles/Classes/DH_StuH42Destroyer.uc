@@ -282,9 +282,9 @@ defaultproperties
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=146.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L08'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R08'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R08'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble01'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
@@ -337,8 +337,8 @@ defaultproperties
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerThree',WeaponBone="passenger_03")
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GPassengerFour',WeaponBone="passenger_04x")
     IdleSound=SoundGroup'Vehicle_Engines.STUGiii.stugiii_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.StuH.Stuh_dest'
     DamagedEffectScale=0.900000
     DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
@@ -346,7 +346,7 @@ defaultproperties
     BeginningIdleAnim="driver_hatch_idle_open"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=12000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,ViewFOV=90.000000)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
     VehicleHudOccupantsX(0)=0.440000
     VehicleHudOccupantsX(1)=0.440000
     VehicleHudOccupantsX(2)=0.590000
@@ -443,11 +443,11 @@ defaultproperties
     HealthMax=525.000000
     Health=525
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.stug3g_armor_camo1'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(4)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
+    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.stug3g_armor_camo1'
+    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
+    Skins(3)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
+    Skins(4)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
     SoundRadius=800.000000
     TransientSoundRadius=1200.000000
     CollisionRadius=175.000000

@@ -14,5 +14,5 @@ defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'dhgear_anm.USWinterWoolly_hat'
-    Skins(0)=Texture'DHUSCharactersTex.Gear.Woolcap'
+    Skins(0)=texture'DHUSCharactersTex.Gear.Woolcap'
 }

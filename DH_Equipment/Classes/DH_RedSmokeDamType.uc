@@ -8,7 +8,7 @@ class DH_RedSmokeDamType extends DHGrenadeDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'InterfaceArt_tex.deathicons.germgrenade'
+    HUDIcon=texture'InterfaceArt_tex.deathicons.germgrenade'
     WeaponClass=class'DH_Equipment.DH_RedSmokeWeapon'
     DeathString="%o was burned up by %k's %w."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'

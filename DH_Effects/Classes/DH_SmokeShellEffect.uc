@@ -29,7 +29,7 @@ defaultproperties
         StartSizeRange=(Z=(Min=75.000000,Max=75.000000))
         InitialParticlesPerSecond=4.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=texture'Effects_Tex.Smoke.grenadesmoke'
         LifetimeRange=(Min=3.000000)
         StartVelocityRange=(X=(Min=-50.000000,Max=50.000000),Y=(Min=-50.000000,Max=50.000000),Z=(Min=15.000000,Max=50.000000))
         VelocityLossRange=(X=(Min=0.200000,Max=0.200000),Y=(Min=0.200000,Max=0.200000),Z=(Min=0.200000,Max=0.200000))
@@ -60,7 +60,7 @@ defaultproperties
         StartSizeRange=(X=(Min=600.000000,Max=800.000000),Y=(Min=600.000000,Max=800.000000),Z=(Min=400.000000,Max=500.000000))
         InitialParticlesPerSecond=10.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=texture'Effects_Tex.Smoke.grenadesmoke'
         LifetimeRange=(Min=45.000000,Max=50.000000)
         InitialDelayRange=(Min=2.000000,Max=2.000000)
         StartVelocityRange=(Z=(Min=2.000000,Max=5.000000))
@@ -91,7 +91,7 @@ defaultproperties
         StartSizeRange=(X=(Min=600.000000,Max=800.000000),Y=(Min=600.000000,Max=800.000000),Z=(Min=400.000000,Max=500.000000))
         InitialParticlesPerSecond=10.000000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=texture'Effects_Tex.Smoke.grenadesmoke'
         LifetimeRange=(Min=55.000000,Max=60.000000)
         InitialDelayRange=(Min=2.000000,Max=2.000000)
         StartVelocityRange=(Z=(Min=2.000000,Max=5.000000))
@@ -121,7 +121,7 @@ defaultproperties
         StartSizeRange=(Z=(Min=75.000000))
         InitialParticlesPerSecond=1.500000
         DrawStyle=PTDS_AlphaBlend
-        Texture=Texture'Effects_Tex.Smoke.grenadesmoke_fill'
+        Texture=texture'Effects_Tex.Smoke.grenadesmoke_fill'
         SecondsBeforeInactive=0.000000
         LifetimeRange=(Min=8.000000,Max=9.000000)
         InitialDelayRange=(Min=0.750000,Max=0.750000)

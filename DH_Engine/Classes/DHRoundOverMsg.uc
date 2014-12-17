@@ -110,6 +110,6 @@ defaultproperties
 {
     //WinMusic variables are now defined in DH_LevelInfo with new default that uses groups
     //These are still defined as a backup in case some idiot uses ROLevelInfo
-    AxisWinsSound=Sound'DH_win.German.DH_German_Win_Theme'
-    AlliesWinsSound=Sound'DH_win.Allies.DH_Allies_Win_Theme'
+    AxisWinsSound=sound'DH_win.German.DH_German_Win_Theme'
+    AlliesWinsSound=sound'DH_win.Allies.DH_Allies_Win_Theme'
 }

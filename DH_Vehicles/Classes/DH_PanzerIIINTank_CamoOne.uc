@@ -31,5 +31,5 @@ defaultproperties
 {
     bHasAddedSideArmor=true
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIINCannonPawn_CamoOne')
-    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
+    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_armor_camo1'
 }

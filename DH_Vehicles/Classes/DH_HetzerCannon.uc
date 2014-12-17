@@ -66,10 +66,10 @@ defaultproperties
     FrontRightAngle=67.000000
     RearRightAngle=113.000000
     RearLeftAngle=247.000000
-    ReloadSoundOne=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
-    ReloadSoundTwo=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
-    ReloadSoundThree=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
-    ReloadSoundFour=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
+    ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
+    ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
+    ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
+    ReloadSoundFour=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
@@ -103,7 +103,7 @@ defaultproperties
     MinCommanderHitHeight=15.0;
     VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=24.799999))
     VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=-8.000000,Z=2.400000))
-    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     YawStartConstraint=-2000.000000
     YawEndConstraint=3000.000000
@@ -114,7 +114,7 @@ defaultproperties
     RotationsPerSecond=0.025000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
     ShakeRotMag=(Z=50.000000)
@@ -136,7 +136,7 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
     Mesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_turret'
-    Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body'
+    Skins(0)=texture'DH_Hetzer_tex_V1.hetzer_body'
     SoundVolume=130
     SoundRadius=200.000000
 }

@@ -40,7 +40,7 @@ simulated event PostBeginPlay()
 
     // Allocate a new scripted texture from the pool
     // and have it call us for updates.
-    ScriptTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'ScriptedTexture'));
+    ScriptTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
     ScriptTexture.SetSize(ProjTexture.MaterialUSize(), ProjTexture.MaterialVSize());
     ScriptTexture.Client = self;
 

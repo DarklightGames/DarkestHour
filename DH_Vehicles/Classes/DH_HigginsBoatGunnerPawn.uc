@@ -200,7 +200,7 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 
 defaultproperties
 {
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     BinocsPositionIndex=2
     FirstPersonGunShakeScale=0.750000
     WeaponFov=60.000000

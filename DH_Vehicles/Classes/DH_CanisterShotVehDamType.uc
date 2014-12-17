@@ -8,7 +8,7 @@ class DH_CanisterShotVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
+    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.canisterkill'
     VehicleDamageModifier=0.100000
     DeathString="%o's vehicle was filled with holes by %k's canister shot."
 }

@@ -51,9 +51,9 @@ defaultproperties
     PointValue=5.000000
     MaxPitchSpeed=50.000000
     TreadVelocityScale=100.000000
-    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L08'
-    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R08'
-    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
+    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R08'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundBone="driver_attachment"
@@ -101,8 +101,8 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerMountedMGPawn',WeaponBone="Mg_placement")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Jagdtiger.Jagdtiger_dest'
     DamagedEffectScale=1.250000
     DamagedEffectOffset=(X=-135.000000,Y=20.000000,Z=20.000000)
@@ -111,7 +111,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
-    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.JT_body'
+    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.JT_body'
     VehicleHudOccupantsX(0)=0.450000
     VehicleHudOccupantsX(1)=0.540000
     VehicleHudOccupantsX(2)=0.560000
@@ -200,11 +200,11 @@ defaultproperties
     HealthMax=700.000000
     Health=700
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.JagdTiger_body_ext'
-    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
-    Skins(1)=Texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
-    Skins(4)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
+    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
+    Skins(1)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
+    Skins(4)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
     SoundPitch=32
     SoundRadius=5000.000000
     TransientSoundRadius=10000.000000
@@ -229,7 +229,7 @@ defaultproperties
         KImpactThreshold=700.000000
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdtigerTank.KParams0'
-    HighDetailOverlay=Texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
+    HighDetailOverlay=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)

@@ -31,7 +31,7 @@ defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerCannonPawn_SnowTwo')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerMountedMGPawn_SnowTwo')
-    Skins(0)=Texture'DH_Hetzer_tex_V1.hetzer_body_snow2'
-    Skins(1)=Texture'axis_vehicles_tex.Treads.Stug3_treadsnow'
-    Skins(2)=Texture'axis_vehicles_tex.Treads.Stug3_treadsnow'
+    Skins(0)=texture'DH_Hetzer_tex_V1.hetzer_body_snow2'
+    Skins(1)=texture'axis_vehicles_tex.Treads.Stug3_treadsnow'
+    Skins(2)=texture'axis_vehicles_tex.Treads.Stug3_treadsnow'
 }
