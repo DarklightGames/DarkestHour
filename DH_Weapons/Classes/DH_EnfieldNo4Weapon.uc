@@ -183,57 +183,70 @@ function bool FillAmmo()
 }
 
 // Overriden to handle special No.4 magazine functionality
-function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
+function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
 {
     local bool bJustSpawnedAmmo;
-    local int addAmount, InitialAmount, i;
+    local int AddAmount, InitialAmount, i;
+    local DHWeaponPickup DHWP;
 
-    if (FireMode[m] != none && FireMode[m].AmmoClass != none)
+    if (FireMode[M] != none && FireMode[M].AmmoClass != none)
     {
-        Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
+        Ammo[M] = Ammunition(Instigator.FindInventoryType(FireMode[M].AmmoClass));
+
         bJustSpawnedAmmo = false;
 
-        if (FireMode[m].AmmoClass == none || (m != 0 && FireMode[m].AmmoClass == FireMode[0].AmmoClass))
+        if (FireMode[M].AmmoClass == none || (M != 0 && FireMode[M].AmmoClass == FireMode[0].AmmoClass))
         {
             return;
         }
 
-        InitialAmount = FireMode[m].AmmoClass.default.InitialAmount;
+        InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
 
         if (bJustSpawned && WP == none)
         {
             PrimaryAmmoArray.Length = InitialNumPrimaryMags;
 
-            for(i = 0; i < PrimaryAmmoArray.Length; i++)
+            for(i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
 
             CurrentMagIndex = 0;
-            CurrentMagCount = PrimaryAmmoArray.Length - 1;
-
-            // HACK: Because the G41 uses two mags, the initial amount needs to be two mags
             PrimaryAmmoArray[CurrentMagIndex] = 10;
             InitialAmount = InitialAmount * 2;
         }
 
         if (WP != none)
         {
-            InitialAmount = WP.AmmoAmount[m];
-            PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
+            InitialAmount = WP.AmmoAmount[M];
+
+            DHWP = DHWeaponPickup(WP);
+
+            if (DHWP != none)
+            {
+                for (i = 0; i < DHWP.AmmoMags.Length; ++i)
+                {
+                    PrimaryAmmoArray[i] = DHWP.AmmoMags[i];
+                }
+
+                CurrentMagIndex = DHWP.LoadedMagazineIndex;
+            }
         }
 
-        if (Ammo[m] != none)
+        CurrentMagCount = PrimaryAmmoArray.Length - 1;
+
+        if (Ammo[M] != none)
         {
-            addamount = InitialAmount + Ammo[m].AmmoAmount;
-            Ammo[m].Destroy();
+            AddAmount = InitialAmount + Ammo[M].AmmoAmount;
+
+            Ammo[M].Destroy();
         }
         else
         {
-            addAmount = InitialAmount;
+            AddAmount = InitialAmount;
         }
 
-        AddAmmo(addAmount,m);
+        AddAmmo(AddAmount, M);
     }
 }
 
