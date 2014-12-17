@@ -11,5 +11,5 @@ defaultproperties
     BallisticCoefficient=0.515000
     Speed=46772.000000
     Damage=115.000000
-    MyDamageType=class'DH_Vehicles.DH_MG42DamType_Tank'
+    MyDamageType=class'DH_Weapons.DH_MG42DamType'
 }
