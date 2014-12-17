@@ -5,7 +5,8 @@
 
 class DH_PIATRocket extends DH_RocketProj;
 
-simulated function PostBeginPlay()
+/*
+simulated function PostBeginPlay() // Matt: removed as unnecessary - SmokeTrail & Corona are only spawned in the Super if bHasTracer, which is false for PIAT
 {
     super.PostBeginPlay();
 
@@ -19,6 +20,7 @@ simulated function PostBeginPlay()
         Corona.Destroyed();
     }
 }
+*/
 
 defaultproperties
 {

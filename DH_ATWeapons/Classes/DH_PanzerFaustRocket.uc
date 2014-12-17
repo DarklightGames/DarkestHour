@@ -7,7 +7,8 @@ class DH_PanzerFaustRocket extends DH_RocketProj;
 
 #exec OBJ LOAD FILE=..\Staticmeshes\DH_Military_Axis.usx
 
-simulated function PostBeginPlay()
+/*
+simulated function PostBeginPlay() // Matt: removed as unnecessary - SmokeTrail & Corona are only spawned in the Super if bHasTracer, which is false for faust
 {
     super.PostBeginPlay();
 
@@ -21,6 +22,7 @@ simulated function PostBeginPlay()
         Corona.Destroyed();
     }
 }
+*/
 
 defaultproperties
 {
