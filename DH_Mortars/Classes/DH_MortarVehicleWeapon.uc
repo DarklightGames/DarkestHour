@@ -170,7 +170,7 @@ state ProjectileFireMode
     {
         if (bDebugCalibrate)
         {
-            for (Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
+            for(Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
                 SpawnProjectile(PendingProjectileClass, false);
         }
         else

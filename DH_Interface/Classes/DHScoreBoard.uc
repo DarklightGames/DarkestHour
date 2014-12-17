@@ -97,7 +97,7 @@ simulated function UpdateScoreBoard (Canvas C)
     for (i = 0; i < 4; i++)
         AvgPing[i] = 0;
 
-    for (i = 0; i < GRI.PRIArray.Length; i++)
+    for(i = 0; i < GRI.PRIArray.Length; i++)
     {
         PRI = ROPlayerReplicationInfo(GRI.PRIArray[i]);
         if (PRI != none)
@@ -108,7 +108,7 @@ simulated function UpdateScoreBoard (Canvas C)
             {
                 if (PRI.Team != none)
                 {
-                    switch (PRI.Team.TeamIndex)
+                    switch(PRI.Team.TeamIndex)
                     {
                         case 0:
                             GermanPRI[GECount++] = PRI;
@@ -169,8 +169,8 @@ simulated function UpdateScoreBoard (Canvas C)
 
     if (bAlphaSortScoreBoard)
     {
-        for (i = 0; i < GECount-1; i++)
-            for (j=i+1; j<GECount; j++)
+        for(i=0; i<GECount-1; i++)
+            for(j=i+1; j<GECount; j++)
                 if (GermanPRI[i].PlayerName > GermanPRI[j].PlayerName)
                 {
                     PRI = GermanPRI[i];
@@ -178,8 +178,8 @@ simulated function UpdateScoreBoard (Canvas C)
                     GermanPRI[j] = PRI;
                 }
 
-        for (i = 0; i < RUCount-1; i++)
-            for (j=i+1; j<RUCount; j++)
+        for(i=0; i<RUCount-1; i++)
+            for(j=i+1; j<RUCount; j++)
                 if (RussianPRI[i].PlayerName > RussianPRI[j].PlayerName)
                 {
                     PRI = RussianPRI[i];
@@ -248,7 +248,7 @@ simulated function UpdateScoreBoard (Canvas C)
     DrawCell(C,ScoreText,1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
     DrawCell(C,PingText,1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
     Y += cellHeight;
-    for (i = 0; i < GECount; i++)
+    for(i = 0; i < GECount; i++)
     {
         //If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
         if (i >= CurMaxPerSide - 1 && PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && !bOwnerDrawn)
@@ -416,7 +416,7 @@ simulated function UpdateScoreBoard (Canvas C)
     DrawCell(C,ScoreText,1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
     DrawCell(C,PingText,1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
     Y += cellHeight;
-    for (i = 0; i < RUCount; i++)
+    for(i = 0; i < RUCount; i++)
     {
         //If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
         if (i >= CurMaxPerSide - 1 && PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && !bOwnerDrawn)
@@ -565,7 +565,7 @@ simulated function UpdateScoreBoard (Canvas C)
     C.TextSize("Text",XL,YL);
     cellHeight = YL + (YL * 0.05);
     S = SpectatorTeamName $ " & " $ UnassignedTeamName $ " (" $ UnassignedCount $ ") : ";
-    for (i = 0; i < UnassignedCount; i++)
+    for(i = 0; i < UnassignedCount; i++)
     {
         C.TextSize(S $ "," $ UnassignedPRI[i].PlayerName,XL,YL);
         if (CalcX(1,C) + XL > C.ClipX)

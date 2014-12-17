@@ -63,7 +63,7 @@ simulated function DrawHUD(Canvas Canvas)
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //Log("PanzerTurret PlayerController was none, returning");
+        //log("PanzerTurret PlayerController was none, returning");
         return;
     }
     else if (!PC.bBehindView)
@@ -214,7 +214,7 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
 
-    for (i = 0; i < ExitPositions.Length; i++)
+    for(i=0; i<ExitPositions.Length; i++)
     {
         if (bRelativeExitPos)
         {
@@ -370,7 +370,7 @@ exec function DebugExit()
     GetAxes(VehicleBase.Rotation, X,Y,Z);
 
     ClearStayingDebugLines();
-    for (i = 0; i < ExitPositions.Length; i++)
+    for(i=0; i < ExitPositions.Length; i++)
     {
         if (bRelativeExitPos)
         {
@@ -401,7 +401,7 @@ simulated function DrawDebugCylinder(vector Base,vector X, vector Y,vector Z, FL
     AngleDelta = 2.0f * PI / NumSides;
     LastVertex = Base + X * Radius;
 
-    for (SideIndex = 0;SideIndex < NumSides;SideIndex++)
+    for(SideIndex = 0;SideIndex < NumSides;SideIndex++)
     {
         Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1)) + Y * Sin(AngleDelta * (SideIndex + 1))) * Radius;
 
@@ -425,7 +425,7 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 
 function Fire(optional float F)
 {
-    if (IsInState('ViewTransition'))
+    if(IsInState('ViewTransition'))
     {
         return;
     }

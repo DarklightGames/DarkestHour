@@ -25,7 +25,7 @@ event InitGame(string Options, out string Error)
 {
     super.InitGame(Options, Error);
 
-    if (bIgnore32PlayerLimit)
+    if( bIgnore32PlayerLimit )
     {
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
@@ -326,7 +326,7 @@ function CheckResupplyVolumes()
     // Activate any vehicle factories that are actived based on spawn areas
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    for (i = 0; i < arraycount(DHResupplyAreas); i++)
+    for(i = 0; i < arraycount(DHResupplyAreas); i++)
     {
         if (DHResupplyAreas[i] == none)
         {
@@ -674,7 +674,7 @@ function Bot SpawnBot(optional string botName)
         NewBot.FavoriteWeapon=class<ROWeapon>(RI.PrimaryWeapons[0].Item);
 
         // Tweak the bots abilities and characteristics based on thier role
-        switch (RI.PrimaryWeaponType)
+        switch(RI.PrimaryWeaponType)
         {
             case WT_SMG:
                 NewBot.CombatStyle = 1 - (FRand() * 0.2);
@@ -913,7 +913,7 @@ function int ReduceDamage(int Damage, pawn injured, pawn instigatedBy, vector Hi
         return 0;
     }
     else
-        return super.ReduceDamage(Damage, injured, instigatedBy, HitLocation, Momentum, DamageType);
+        Return super.ReduceDamage(Damage, injured, instigatedBy, HitLocation, Momentum, DamageType);
 }
 
 // Stop the game from automatically trimming longer names
@@ -966,7 +966,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
         }
     }
 
-    for (APlayer=Level.ControllerList; APlayer!=none; APlayer=APlayer.nextController)
+    for(APlayer=Level.ControllerList; APlayer!=none; APlayer=APlayer.nextController)
         if (APlayer.bIsPlayer && (APlayer.PlayerReplicationInfo.playername~=S))
         {
             if (Other.IsA('PlayerController'))
@@ -986,7 +986,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
                     S = MaleBackupNames[MaleBackupNameOffset%32];
                     MaleBackupNameOffset++;
                 }
-                for (P=Level.ControllerList; P!=none; P=P.nextController)
+                for(P=Level.ControllerList; P!=none; P=P.nextController)
                     if (P.bIsPlayer && (P.PlayerReplicationInfo.playername~=S))
                     {
                         S = NamePrefixes[NameNumber%10]$S$NameSuffixes[NameNumber%10];
@@ -1408,11 +1408,11 @@ function bool RoleExists(byte TeamID, DH_RoleInfo RI)
     local int i;
 
     if (TeamID == 0)
-        for (i = 0; i < arraycount(DHAxisRoles); i++)
+        for(i = 0; i < arraycount(DHAxisRoles); i++)
             if (DHAxisRoles[i] == RI)
                 return true;
     if (TeamID == 1)
-        for (i = 0; i < arraycount(DHAlliesRoles); i++)
+        for(i = 0; i < arraycount(DHAlliesRoles); i++)
             if (DHAlliesRoles[i] == RI)
                 return true;
 
@@ -1593,7 +1593,7 @@ function ResetMortarTargets()
         return;
 
     //Clear mortar allied targets.
-    for (k = 0; k < arraycount(GRI.AlliedMortarTargets); k++)
+    for(k = 0; k < arraycount(GRI.AlliedMortarTargets); k++)
     {
         GRI.AlliedMortarTargets[k].Location = vect(0, 0, 0);
         GRI.AlliedMortarTargets[k].HitLocation = vect(0, 0, 0);
@@ -1602,7 +1602,7 @@ function ResetMortarTargets()
     }
 
     //Clear mortar german targets.
-    for (k = 0; k < arraycount(GRI.GermanMortarTargets); k++)
+    for(k = 0; k < arraycount(GRI.GermanMortarTargets); k++)
     {
         GRI.GermanMortarTargets[k].Location = vect(0, 0, 0);
         GRI.GermanMortarTargets[k].HitLocation = vect(0, 0, 0);
@@ -1849,8 +1849,8 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
 defaultproperties
 {
     //Default settings based on common used server settings in DH
-    bIgnore32PlayerLimit=true //Allows more than 32 players
-    bVACSecured=true
+    bIgnore32PlayerLimit=True //Allows more than 32 players
+    bVACSecured=True
 
     FFDamageLimit=0 //This stops the FF damage system from kicking based on FF damage
     FFKillLimit=4 //New default of 4 unforgiven FF kills before punishment

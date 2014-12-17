@@ -121,12 +121,12 @@ simulated function Tick(float DeltaTime)
         LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-        for (i = 0; i < LeftWheelBones.Length; i++)
+        for(i=0; i<LeftWheelBones.Length; i++)
         {
               SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
-        for (i = 0; i < RightWheelBones.Length; i++)
+        for(i=0; i<RightWheelBones.Length; i++)
         {
               SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }

@@ -34,7 +34,7 @@ function bool InternalOnClick(GUIComponent Sender)
 
 event HandleParameters(string Param1, string Param2)
 {
-    //Log("IN DHNETWORKSTATUSMESSAGE");
+    //log("IN DHNETWORKSTATUSMESSAGE");
     GUILabel(Controls[2]).Caption = Param1$"|"$Param2;
     PlayerOwner().ClearProgressMessages();
 }

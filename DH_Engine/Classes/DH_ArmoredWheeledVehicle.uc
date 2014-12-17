@@ -259,7 +259,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    for (i = 0; i < VehHitpoints.Length; i++)
+    for(i = 0; i < VehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 

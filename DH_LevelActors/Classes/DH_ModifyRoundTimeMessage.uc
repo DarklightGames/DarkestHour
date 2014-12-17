@@ -22,7 +22,7 @@ static function string GetString(
 
     CreateTimeString(TimeString, DH_ModifyRoundTime(OptionalObject).Seconds);
 
-    switch (int(DH_ModifyRoundTime(OptionalObject).RoundTimeOperator))
+    switch(int(DH_ModifyRoundTime(OptionalObject).RoundTimeOperator))
     {
         case 0:
             return "Round time has been increased by" @ TimeString $ ".";

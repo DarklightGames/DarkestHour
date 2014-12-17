@@ -98,7 +98,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
                 --InsertIndex;
             }
 
-            if (RemovedIndex != InsertIndex)
+            if ( RemovedIndex != InsertIndex )
             {
                 MyArray.Insert(InsertIndex, 1);
                 MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
@@ -710,6 +710,7 @@ function ServerToggleDebugExits()
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
         class'DH_ROTankCannonPawn'.default.bDebugExitPositions = !class'DH_ROTankCannonPawn'.default.bDebugExitPositions;
+
         Log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
     }
 }

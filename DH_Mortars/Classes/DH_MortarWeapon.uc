@@ -244,7 +244,7 @@ simulated function bool CanDeploy()
 
     //-----------------------
     //Now check all around us
-    for (TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
+    for(TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
     {
         //----------------------------------
         //Trace outwards along the X/Y plane

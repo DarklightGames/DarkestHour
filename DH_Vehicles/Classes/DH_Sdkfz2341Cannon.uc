@@ -405,12 +405,12 @@ simulated event FlashMuzzleFlash(bool bWasAltFire) // Matt: removed as only chan
         return;
 
     if (FlashEmitter != none)
-        FlashEmitter.Trigger(self, Instigator);
+        FlashEmitter.Trigger(Self, Instigator);
 
     if ((EffectEmitterClass != none) && EffectIsRelevant(Location, false))
         EffectEmitter = spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
 
-//  if (CannonDustEmitterClass != none) && EffectIsRelevant(Location, false)) // Matt: note removing this was the only change, but can be achieved by simply setting CannonDustEmitterClass=none
+//  if ( (CannonDustEmitterClass != None) && EffectIsRelevant(Location,false) ) // Matt: note removing this was the only change, but can be achieved by simply setting CannonDustEmitterClass=none
 //      CannonDustEmitter = spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
 
     OwningPawn = ROVehicleWeaponPawn(Instigator);

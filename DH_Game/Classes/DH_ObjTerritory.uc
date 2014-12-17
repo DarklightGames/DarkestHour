@@ -137,7 +137,7 @@ function PostBeginPlay()
 
 function Reset()
 {
-    super.Reset();
+    Super.Reset();
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
@@ -406,7 +406,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     DHGame = DarkesthourGame(Level.Game);
     VM = DHGame.SpawnManager;
 
-    //I think we need some type of check here if DHGame == none and/or VM Theel Debug
+    //I think we need some type of check here if DHGame == None and/or VM Theel Debug
 
     CurrentCapProgress = 0.0;
     bAlliesContesting = false; //set to false as the objective was captured
@@ -552,7 +552,7 @@ function Timer()
     local ROPlayerReplicationInfo PRI;
     local DH_RoleInfo RI;
 
-    if ((ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay')) || (!bActive && !bUsePostCaptureOperations))
+    if((ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay')) || (!bActive && !bUsePostCaptureOperations))
     {
         return;
     }
@@ -642,7 +642,7 @@ function Timer()
 
             if (bDisableWhenAlliesClearObj)
             {
-                //Log("DEBUG Disable Objective Because Allies Cleared It");
+                //log("DEBUG Disable Objective Because Allies Cleared It");
                 bActive = false;
                 SetTimer(0.0, false);
                 DisableCapBarsForThisObj();
@@ -681,7 +681,7 @@ function Timer()
 
             if (bDisableWhenAxisClearObj)
             {
-                //Log("DEBUG Disable Objective Because Axis Cleared It");
+                //log("DEBUG Disable Objective Because Axis Cleared It");
                 bActive = false;
                 SetTimer(0.0, false);
                 DisableCapBarsForThisObj();
@@ -920,7 +920,7 @@ function DisableCapBarsForThisObj()
         ROVeh = ROVehicle(apawn);
         VehWepPawn = ROVehicleWeaponPawn(apawn);
 
-        if (P != none)
+        if ( P != none )
         {
             //Log("P.CurrentCapArea & 0x0F: " $ (P.CurrentCapArea & 0x0F) @ "ObjNum: " $ ObjNum);
             if ((P.CurrentCapArea & 0x0F) == ObjNum)
@@ -928,14 +928,14 @@ function DisableCapBarsForThisObj()
         }
 
         // Disable the capture bar for rovehicles
-        if (P == none && ROVeh != none)
+        if (  P == none && ROVeh != none )
         {
             if ((ROVeh.CurrentCapArea & 0x0F) == ObjNum)
                 ROVeh.CurrentCapArea = 255;
         }
 
         // Disable the capture bar for rovehiclepawns
-        if (P == none && ROVeh == none && VehWepPawn != none)
+        if (  P == none && ROVeh == none && VehWepPawn != none)
         {
             if ((VehWepPawn.CurrentCapArea & 0x0F) == ObjNum)
                 VehWepPawn.CurrentCapArea = 255;

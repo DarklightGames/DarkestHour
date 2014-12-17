@@ -63,12 +63,12 @@ simulated state ViewTransition
 
          if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
          {
-             //Log("HandleTransition Player Transition Up!");
+             //log("HandleTransition Player Transition Up!");
              PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
          }
          else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
          {
-             //Log("HandleTransition Player Transition Down!");
+             //log("HandleTransition Player Transition Down!");
              PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
          }
 

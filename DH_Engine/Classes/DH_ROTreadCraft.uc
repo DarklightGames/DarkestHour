@@ -156,7 +156,7 @@ var     float           URearArmorSlope;
 var     float           GunMantletArmorFactor;
 var     float           GunMantletSlope;
 
-var     float           DHArmorSlopeTable[16]; // Matt: deprecated // TEMP reinstated
+//var   float           DHArmorSlopeTable[16]; // Matt: deprecated
 
 var     float           PointValue; // Used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
 
@@ -220,7 +220,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
                 --InsertIndex;
             }
 
-            if (RemovedIndex != InsertIndex)
+            if ( RemovedIndex != InsertIndex )
             {
                 MyArray.Insert(InsertIndex, 1);
                 MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
@@ -587,13 +587,13 @@ simulated function StopEmitters()
 
     if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {
-        for (i = 0; i < Dust.Length; i++)
+        for(i = 0; i < Dust.Length; i++)
             if (Dust[i] != none)
                 Dust[i].Kill();
 
         Dust.Length = 0;
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for(i = 0; i < ExhaustPipes.Length; i++)
             if (ExhaustPipes[i].ExhaustEffect != none)
                 ExhaustPipes[i].ExhaustEffect.Kill();
     }
@@ -610,7 +610,7 @@ simulated function StartEmitters()
     {
         Dust.length = Wheels.length;
 
-        for (i = 0; i < Wheels.Length; i++)
+        for(i = 0; i<Wheels.Length; i++)
         {
             if (Dust[i] != none)
                 Dust[i].Destroy();
@@ -629,7 +629,7 @@ simulated function StartEmitters()
             Dust[i].SetDirtColor(Level.DustColor);
         }
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for(i = 0; i<ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
                 ExhaustPipes[i].ExhaustEffect.Destroy();
@@ -855,20 +855,20 @@ simulated state ViewTransition
                  LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
          }
 
-         //Log("HandleTransition!");
+         //log("HandleTransition!");
 
          if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
          {
              SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim, 1.0), false);
 
-             //Log("HandleTransition Player Transition Up!");
+             //log("HandleTransition Player Transition Up!");
                  PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
          }
          else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
          {
              SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim, 1.0), false);
 
-             //Log("HandleTransition Player Transition Down!");
+             //log("HandleTransition Player Transition Down!");
                  PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
          }
 
@@ -1164,12 +1164,12 @@ simulated function Tick(float DeltaTime)
         LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-        for (i = 0; i < LeftWheelBones.Length; i++)
+        for(i = 0; i<LeftWheelBones.Length; i++)
         {
               SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
-        for (i = 0; i < RightWheelBones.Length; i++)
+        for(i = 0; i<RightWheelBones.Length; i++)
         {
               SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
@@ -1435,7 +1435,6 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
     if (bAssaultWeaponHit) // big fat HACK to defeat Stug/JP bug
     {
-        Log("TreadCraft.DHShouldPenetrate: bAssaultWeaponHit = true, so returning CheckPenetration based on GunMantletArmorFactor"); // TEMP
         bAssaultWeaponHit = false;
 
         return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
@@ -1715,10 +1714,7 @@ simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, fl
     // Calculate the SlopeMultiplier & EffectiveArmor, to give us the PenetrationRatio
     OverMatchFactor = ArmorFactor / P.default.ShellDiameter;
     SlopeMultiplier = GetArmorSlopeMultiplier(P, CompoundAngleDegrees, OverMatchFactor);
-    if (P.default.RoundType == RT_APC) Log("SlopeMultiplier =" @ SlopeMultiplier @ "OLD SlopeMultiplier =" @ GetOldSlopeMultiplier(CompoundAngleDegrees, OverMatchFactor)); // TEMP
-    else Log("SlopeMultiplier =" @ SlopeMultiplier);
     EffectiveArmor = ArmorFactor * SlopeMultiplier;
-
     PenetrationRatio = PenetrationNumber / EffectiveArmor;
 
     // Penetration debugging
@@ -1842,50 +1838,6 @@ simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectil
     }
 
     return 1.0; // fail-safe neutral return value
-}
-
-simulated function float GetOldSlopeMultiplier(float CompoundAngleDegrees, float OverMatchFactor) // TEMP
-{
-    local float SlopeMultiplier;
-
-    // After Bird & Livingston
-    DHArmorSlopeTable[0]= 1.01   * (OverMatchFactor ** 0.0225); // 10
-    DHArmorSlopeTable[1]= 1.03   * (OverMatchFactor ** 0.0327); // 15
-    DHArmorSlopeTable[2]= 1.10   * (OverMatchFactor ** 0.0454); // 20
-    DHArmorSlopeTable[3]= 1.17   * (OverMatchFactor ** 0.0549); // 25
-    DHArmorSlopeTable[4]= 1.27   * (OverMatchFactor ** 0.0655); // 30
-    DHArmorSlopeTable[5]= 1.39   * (OverMatchFactor ** 0.0993); // 35
-    DHArmorSlopeTable[6]= 1.54   * (OverMatchFactor ** 0.1388); // 40
-    DHArmorSlopeTable[7]= 1.72   * (OverMatchFactor ** 0.1655); // 45
-    DHArmorSlopeTable[8]= 1.94   * (OverMatchFactor ** 0.2035); // 50
-    DHArmorSlopeTable[9]= 2.12   * (OverMatchFactor ** 0.2427); // 55
-    DHArmorSlopeTable[10]= 2.56  * (OverMatchFactor ** 0.2450); // 60
-    DHArmorSlopeTable[11]= 3.20  * (OverMatchFactor ** 0.3354); // 65
-    DHArmorSlopeTable[12]= 3.98  * (OverMatchFactor ** 0.3478); // 70
-    DHArmorSlopeTable[13]= 5.17  * (OverMatchFactor ** 0.3831); // 75
-    DHArmorSlopeTable[14]= 8.09  * (OverMatchFactor ** 0.4131); // 80
-    DHArmorSlopeTable[15]= 11.32 * (OverMatchFactor ** 0.4550); // 85
-
-    // SlopeMultiplier calcs - using linear interpolation
-    if      (CompoundAngleDegrees < 10.0)  SlopeMultiplier = (DHArmorSlopeTable[0]  + (10.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[0] -  DHArmorSlopeTable[1])  / 10.0);
-    else if (CompoundAngleDegrees < 15.0)  SlopeMultiplier = (DHArmorSlopeTable[1]  + (15.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[0] -  DHArmorSlopeTable[1])  / 5.0);
-    else if (CompoundAngleDegrees < 20.0)  SlopeMultiplier = (DHArmorSlopeTable[2]  + (20.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[1] -  DHArmorSlopeTable[2])  / 5.0);
-    else if (CompoundAngleDegrees < 25.0)  SlopeMultiplier = (DHArmorSlopeTable[3]  + (25.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[2] -  DHArmorSlopeTable[3])  / 5.0);
-    else if (CompoundAngleDegrees < 30.0)  SlopeMultiplier = (DHArmorSlopeTable[4]  + (30.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[3] -  DHArmorSlopeTable[4])  / 5.0);
-    else if (CompoundAngleDegrees < 35.0)  SlopeMultiplier = (DHArmorSlopeTable[5]  + (35.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[4] -  DHArmorSlopeTable[5])  / 5.0);
-    else if (CompoundAngleDegrees < 40.0)  SlopeMultiplier = (DHArmorSlopeTable[6]  + (40.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[5] -  DHArmorSlopeTable[6])  / 5.0);
-    else if (CompoundAngleDegrees < 45.0)  SlopeMultiplier = (DHArmorSlopeTable[7]  + (45.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[6] -  DHArmorSlopeTable[7])  / 5.0);
-    else if (CompoundAngleDegrees < 50.0)  SlopeMultiplier = (DHArmorSlopeTable[8]  + (50.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[7] -  DHArmorSlopeTable[8])  / 5.0);
-    else if (CompoundAngleDegrees < 55.0)  SlopeMultiplier = (DHArmorSlopeTable[9]  + (55.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[8] -  DHArmorSlopeTable[9])  / 5.0);
-    else if (CompoundAngleDegrees < 60.0)  SlopeMultiplier = (DHArmorSlopeTable[10] + (60.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[9] -  DHArmorSlopeTable[10]) / 5.0);
-    else if (CompoundAngleDegrees < 65.0)  SlopeMultiplier = (DHArmorSlopeTable[11] + (65.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[10] - DHArmorSlopeTable[11]) / 5.0);
-    else if (CompoundAngleDegrees < 70.0)  SlopeMultiplier = (DHArmorSlopeTable[12] + (70.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[11] - DHArmorSlopeTable[12]) / 5.0);
-    else if (CompoundAngleDegrees < 75.0)  SlopeMultiplier = (DHArmorSlopeTable[13] + (75.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[12] - DHArmorSlopeTable[13]) / 5.0);
-    else if (CompoundAngleDegrees < 80.0)  SlopeMultiplier = (DHArmorSlopeTable[14] + (80.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[13] - DHArmorSlopeTable[14]) / 5.0);
-    else if (CompoundAngleDegrees < 85.0)  SlopeMultiplier = (DHArmorSlopeTable[15] + (85.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[14] - DHArmorSlopeTable[15]) / 5.0);
-    else                                   SlopeMultiplier =  DHArmorSlopeTable[15];
-
-    return SlopeMultiplier;
 }
 
 // Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
@@ -2060,14 +2012,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
     }
 
-    for (i = 0; i < VehHitpoints.Length; i++)
+    for(i=0; i<VehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
             // Damage for large weapons
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            if (    class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {
@@ -2124,7 +2076,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             }
         }
     }
-    for (i = 0; i < NewVehHitpoints.Length; i++)
+    for(i=0; i<NewVehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 
@@ -2248,7 +2200,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
        HitAngle = 360 + (HitAngle* -1);
     }
 
-    if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit) //Left side hit
+    if ((HitAngle >= FrontRightAngle && Hitangle < RearRightAngle) && !bWasTurretHit) //Left side hit
     {
         HitDir = Hitlocation - Location;
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
@@ -2268,7 +2220,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             }
         }
     }
-    else if ((HitAngle >= RearLeftAngle && HitAngle < FrontLeftAngle) && !bWasTurretHit)  //Right side hit
+    else if ((HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle) && !bWasTurretHit)  //Right side hit
     {
 
        HitDir = Hitlocation - Location;
@@ -2370,9 +2322,9 @@ function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector 
         if (bDebuggingText && Role == ROLE_Authority)
             Level.Game.Broadcast(self, "Engine is Dead");
 
-        bDisableThrottle = true;
-        bEngineOff = true;
-        bEngineDead = true;
+        bDisableThrottle=true;
+        bEngineOff=true;
+        bEngineDead=true;
         DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
 
         TurnDamping = 0.0;
@@ -2384,7 +2336,6 @@ function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector 
         SoundVolume=255;
         SoundRadius=600;
     }
-
 }
 
 // Matt: modified so will pass radius damage on to each VehicleWeaponPawn, as originally lack of vehicle driver caused early exit
@@ -2470,12 +2421,12 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < Weapons.Length; i++)
+        for(i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
                 Weapons[i].Destroy();
         }
-        for (i = 0; i < WeaponPawns.Length; i++)
+        for(i=0;i<WeaponPawns.Length;i++)
             WeaponPawns[i].Destroy();
     }
     Weapons.Length = 0;
@@ -2486,14 +2437,14 @@ simulated event DestroyAppearance()
     {
         bNoTeamBeacon = true;
 
-        for (i = 0; i < HeadlightCorona.Length; i++)
+        for(i=0;i<HeadlightCorona.Length;i++)
             HeadlightCorona[i].Destroy();
         HeadlightCorona.Length = 0;
 
         if (HeadlightProjector != none)
             HeadlightProjector.Destroy();
 
-        for (i = 0; i < Dust.Length; i++)
+        for(i=0; i<Dust.Length; i++)
         {
             if (Dust[i] != none)
                 Dust[i].Kill();
@@ -2501,7 +2452,7 @@ simulated event DestroyAppearance()
 
         Dust.Length = 0;
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for(i=0; i<ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {
@@ -2651,138 +2602,6 @@ simulated function int NumPassengers()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
-// Matt: modified to switch to external mesh & default FOV for behind view
-simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
-{
-    local int i;
-
-    Log(Tag @ " POVChanged called: bBehindViewChanged =" @ bBehindViewChanged @ " bBehindView =" @ PC.bBehindView @ " DPI =" @ DriverPositionIndex @ " bMultiPosition =" @ bMultiPosition); // TEMP
-    if (PC.bBehindView)
-    {
-        if (bBehindViewChanged)
-        {
-            if (bPCRelativeFPRotation)
-            {
-                PC.SetRotation(rotator(vector(PC.Rotation) >> Rotation));
-            }
-
-            for (i = 0; i < DriverPositions.Length; i++)
-            {
-                DriverPositions[i].PositionMesh = default.Mesh;
-                DriverPositions[i].ViewFOV = PC.DefaultFOV;
-            }
-
-            bDontUsePositionMesh = true;
-
-            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none) // TEST added to see if prevents bug - can't see why
-            {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-            }
-
-            PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-
-            bLimitYaw = false;
-            bLimitPitch = false;
-        }
-
-        bOwnerNoSee = false;
-
-        if (Driver != none)
-        {
-            Driver.bOwnerNoSee = !bDrawDriverInTP;
-        }
-
-        if (PC == Controller) // no overlays for spectators
-        {
-            ActivateOverlay(false);
-        }
-    }
-    else
-    {
-        if (bPCRelativeFPRotation)
-        {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation));
-        }
-
-        if (bBehindViewChanged)
-        {
-            for (i = 0; i < DriverPositions.Length; i++)
-            {
-                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
-                DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
-            }
-
-            bDontUsePositionMesh = default.bDontUsePositionMesh;
-
-            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none) // TEST added to see if prevents bug - can't see why
-            {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-            }
-
-            PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-
-            bLimitYaw = default.bLimitYaw;
-            bLimitPitch = default.bLimitPitch;
-        }
-
-        bOwnerNoSee = !bDrawMeshInFP;
-
-        if (Driver != none)
-        {
-            Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
-        }
-
-        if (bDriving && PC == Controller) // no overlays for spectators
-        {
-            ActivateOverlay(true);
-        }
-    }
-}
-
-// Matt: toggles between external & internal meshes (mostly useful with behind view if want to see internal mesh)
-exec function ToggleMesh()
-{
-    local int i;
-
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bMultiPosition)
-    {
-        if (Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
-        {
-            for (i = 0; i < DriverPositions.Length; i++)
-            {
-                DriverPositions[i].PositionMesh = default.Mesh;
-            }
-        }
-        else
-        {
-            for (i = 0; i < DriverPositions.Length; i++)
-            {
-                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
-            }
-        }
-
-        LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-    }
-}
-
-// Matt: DH version but keeping it just to view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
-exec function ToggleViewLimit()
-{
-    if (class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
-    {
-        if (bLimitYaw == default.bLimitYaw && bLimitPitch == default.bLimitPitch)
-        {
-            bLimitYaw = false;
-            bLimitPitch = false;
-        }
-        else
-        {
-            bLimitYaw = default.bLimitYaw;
-            bLimitPitch = default.bLimitPitch;
-        }
-    }
-}
-
 // Matt: allows debugging exit positions to be toggled for all DH_ROTreadCrafts
 exec function ToggleDebugExits()
 {
@@ -2824,7 +2643,7 @@ simulated function DrawHUD(Canvas Canvas)
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //Log("PanzerTurret PlayerController was none, returning");
+        //log("PanzerTurret PlayerController was none, returning");
         return;
     }
     else if (!PC.bBehindView)
@@ -2869,10 +2688,6 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
 defaultproperties
 {
-    bDebuggingText=true // TEMP
-    bPenetrationText=true // TEMP
-    bDrawPenetration=true // TEMP
-
     bEnterringUnlocks=false
     bAllowRiders=true
     UnbuttonedPositionIndex=2

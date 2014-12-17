@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_VehicleWeaponCollisionMeshActor extends StaticMeshActor; // TEST, was Actor;
+class DH_VehicleWeaponCollisionMeshActor extends Actor;
 
 /**
 Matt, Nov 2014: this actor is a way of getting a collision static mesh to work on a VehicleWeapon (generally a turret, but maybe an exposed MG or a gun shield)
@@ -52,7 +52,6 @@ When modelling a new VW col mesh, e.g. a tank turret:
 // Modified to copy VehicleWeapon's collision size & to turn this static mesh invisible (using alpha texture)
 simulated function PostBeginPlay()
 {
-    Log(Tag @ "PostBP: ColMesh.RelLoc =" @ RelativeLocation @ " VW.Loc =" @ Owner.Location @ " CM.Loc =" @ Location); 
     super.PostBeginPlay();
 
     if (VehicleWeapon(Owner) != none)
@@ -67,18 +66,6 @@ simulated function PostBeginPlay()
     }
 }
 
-simulated function BaseChange() // TEMP
-{
-    Log(Tag @ "BaseChange: ColMesh.RelLoc =" @ RelativeLocation @ " VW.Loc =" @ Owner.Location @ " CM.Loc =" @ Location @ " Base =" @ Base.Tag); 
-    super.BaseChange();
-}
-
-simulated function Attach(Actor Other) // TEMP
-{
-//    Log(Tag @ "Attach: ColMesh.RelLoc =" @ RelativeLocation @ " VW.Loc =" @ Owner.Location @ " CM.Loc =" @ Location); 
-    super.Attach(Other);
-}
-
 // Col mesh actor should never take damage, so just in case we'll call TakeDamage on the owning VehicleWeapon, which would have otherwise have received the call
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
@@ -87,24 +74,9 @@ function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector
 
 defaultproperties
 {
-//    DrawType=DT_Mesh // TEST removed & added defs below from StaticMeshActor
+    DrawType=DT_Mesh
     bCollideActors=true
     bBlockActors=true
     bIgnoreEncroachers=true
     RemoteRole=ROLE_None
-
-    DrawType=DT_StaticMesh
-    bEdShouldSnap=false // true
-    bStatic=false // true
-    bStaticLighting=false // true
-    bShadowCast=false // true
-//    bCollideActors=true
-//    bBlockActors=true
-    bBlockKarma=false // true
-    bWorldGeometry=false // true
-    CollisionHeight=1.0
-    CollisionRadius=1.0
-    bAcceptsProjectors=false // true
-    bExactProjectileCollision=true // non-zero extent projectiles should shrink to zero when hitting this actor // this is native & specific to a StaticMeshActor
-    bUseDynamicLights=false // true    
 }

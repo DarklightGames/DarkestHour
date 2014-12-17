@@ -25,7 +25,7 @@ function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    for (i = 0; i < TeleportersToModify.Length; i++)
+    for(i=0; i<TeleportersToModify.Length; i++)
     {
         foreach AllActors(class'Teleporter', Tele, TeleportersToModify[i])
         {
@@ -47,25 +47,25 @@ event Trigger(Actor Other, Pawn EventInstigator)
             return; //Leave script randomly failed
     }
     // RandomPercentToFail was not higher than randomnum
-    switch (HowToModify)
+    switch(HowToModify)
     {
         case HTM_Activate: //Because SpawnCount goes up, to add reinforcements you must subtract from SpawnCount
-            for (i = 0; i < TeleReferences.Length; i++){
+            for(i=0;i<TeleReferences.Length;i++){
                 TeleReferences[i].bEnabled = true;
             }
         break;
         case HTM_Deactivate:
-            for (i = 0; i < TeleReferences.Length; i++){
+            for(i=0;i<TeleReferences.Length;i++){
                 TeleReferences[i].bEnabled = false;
             }
         break;
         case HTM_Toggle:
-            for (i = 0; i < TeleReferences.Length; i++){
+            for(i=0;i<TeleReferences.Length;i++){
                 TeleReferences[i].bEnabled = !TeleReferences[i].bEnabled;
             }
         break;
         case HTM_Set:
-            for (i = 0; i < TeleReferences.Length; i++){
+            for(i=0;i<TeleReferences.Length;i++){
                 TeleReferences[i].URL = NewURL;
             }
         break;

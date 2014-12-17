@@ -226,12 +226,12 @@ simulated function Tick(float DeltaTime)
         LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-        for (i = 0; i < LeftWheelBones.Length; i++)
+        for(i=0; i<LeftWheelBones.Length; i++)
         {
               SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
-        for (i = 0; i < RightWheelBones.Length; i++)
+        for(i=0; i<RightWheelBones.Length; i++)
         {
               SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
@@ -308,14 +308,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
        }
     }
 
-    for (i = 0; i < VehHitpoints.Length; i++)
+    for(i=0; i<VehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
             // Damage for large weapons
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            if (    class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {

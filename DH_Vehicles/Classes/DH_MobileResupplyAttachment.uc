@@ -46,7 +46,7 @@ function ProcessActorLeave()
     if (ResupplyActors.Length == 0)
         return;
 
-    for (i = 0; i < ResupplyActors.Length; i++)
+    for(i = 0; i < ResupplyActors.Length; i++)
     {
         if (ResupplyActors[i] == none)
             continue;
@@ -203,7 +203,7 @@ event Destroyed()
 
     super.Destroyed();
 
-    for (i = 0; i < ResupplyActors.Length; i++)
+    for(i = 0; i < ResupplyActors.Length; i++)
     {
         if (ResupplyActors[i] == none)
             continue;

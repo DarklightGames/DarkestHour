@@ -21,7 +21,7 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    switch (Switch)
+    switch(Switch)
     {
         case 0:
             return default.TargetInvalid;
@@ -51,7 +51,7 @@ static function int getIconID(
     optional Object OptionalObject
     )
 {
-    switch (Switch)
+    switch(Switch)
     {
         case 0: //TargetInvalid
             return 11;

@@ -43,16 +43,16 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
     super.InternalOnLoadINI(Sender, s);
 
-    switch (Sender)
+    switch(Sender)
     {
         case co_PurgeCacheDays:
             s = PlayerOwner().ConsoleCommand("get Core.System PurgeCacheDays", false);
 
             PurgeCacheDays = int(s);
 
-            for (i = 0; i < arraycount(PurgeCacheDaysValues); ++i)
+            for(i = 0; i < arraycount(PurgeCacheDaysValues); ++i)
             {
-                if (PurgeCacheDays == PurgeCacheDaysValues[i])
+                if(PurgeCacheDays == PurgeCacheDaysValues[i])
                 {
                     PurgeCacheDaysIndex = i;
 

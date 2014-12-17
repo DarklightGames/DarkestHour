@@ -175,7 +175,7 @@ function bool ResupplyAmmo()
 
     InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
-    for (i = NumMagsToResupply; i > 0; --i)
+    for(i = NumMagsToResupply; i > 0; --i)
     {
         if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
         {

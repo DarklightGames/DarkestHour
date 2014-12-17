@@ -63,7 +63,7 @@ state RangedAttack
 
         if (Target == none)
         {
-            Log(GetHumanReadableName() @ "no target in ranged attack");
+            log(GetHumanReadableName() @ "no target in ranged attack");
         }
 
         if (ROVehicle(Pawn) != none)
@@ -83,7 +83,7 @@ state RangedAttack
 
         if (V != none)
         {
-            for (i = 0; i < V.WeaponPawns.Length; i++)
+            for(i = 0; i < V.WeaponPawns.Length; i++)
             {
                 if (V.WeaponPawns[i] == none)
                 {

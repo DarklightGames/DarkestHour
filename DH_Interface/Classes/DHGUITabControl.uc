@@ -12,7 +12,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
         local GUITabPanel  NewTabPanel;
         local int i;
 
-        for (i = 0; i < TabStack.Length; i++)
+        for (i=0;i<TabStack.Length;i++)
         {
                 if (TabStack[i].Caption ~= InCaption)
                 {
@@ -48,8 +48,8 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
                             return none;
                         }
 
-                        NewTabButton.InitComponent(Controller, self);
-                        NewTabButton.Opened(self);
+                        NewTabButton.InitComponent(Controller, Self);
+                        NewTabButton.Opened(Self);
                         NewTabPanel.MyButton = NewTabButton;
                         if (!bDrawTabAbove)
                         {
@@ -110,8 +110,8 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
                     return none;
                             }
 
-                            NewTabButton.InitComponent(Controller, self);
-                            NewTabButton.Opened(self);
+                            NewTabButton.InitComponent(Controller, Self);
+                            NewTabButton.Opened(Self);
                             NewTabPanel.MyButton = NewTabButton;
                     }
 

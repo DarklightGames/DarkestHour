@@ -190,14 +190,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     if (bLogPenetration)
         Log("VehHitpoints and HitPointDamage start, damage = "$Damage);
 
-    for (i = 0; i < VehHitpoints.Length; i++)
+    for(i=0; i<VehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
             // Damage for large weapons
-            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            if (    class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {
@@ -222,7 +222,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             HitPointDamage *= VehHitpoints[i].DamageMultiplier;
             HitPointDamage *= VehicleDamageMod;
 
-            //Log("We hit "$GetEnum(enum'EPawnHitPointType',VehHitpoints[i].HitPointType));
+            //log("We hit "$GetEnum(enum'EPawnHitPointType',VehHitpoints[i].HitPointType));
 
             if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {

@@ -42,7 +42,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     ROGame = ROTeamGame(Level.Game); //Get Game Info
 
     //Check the array for the state to check for
-    for (i = 0; i < ObjectivesToCheck.Length; i++)
+    for(i=0;i<ObjectivesToCheck.Length;i++)
     {
         if (ROGame.Objectives[ObjectivesToCheck[i]].ObjState != StateToCheckFor)
         {
@@ -60,7 +60,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
         TriggerEvent(EventToTrigger, self, none); //Triggers the event
 
     //Go ahead and status change the objectives you want to change
-    for (i = 0; i < ObjectivesToModify.Length; i++)
+    for(i=0;i<ObjectivesToModify.Length;i++)
     {
         ROGame.Objectives[ObjectivesToModify[i]].SetActive(bStatusToModifyTo);
     }

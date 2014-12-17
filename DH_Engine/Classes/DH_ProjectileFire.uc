@@ -59,7 +59,7 @@ function DoFireEffect()
     Instigator.MakeNoise(1.0);
     Weapon.GetViewAxes(X,Y,Z);
 
-    //Log("Projectile Firing, location of muzzle is "$Weapon.GetBoneCoords('Muzzle').Origin);
+    //log("Projectile Firing, location of muzzle is "$Weapon.GetBoneCoords('Muzzle').Origin);
     //if (ROProjectileWeapon(Instigator.weapon) != none)
     //  Log("MuzzleCoords location = "$ROProjectileWeapon(Instigator.weapon).GetMuzzleCoords().Origin);
     // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
@@ -109,7 +109,7 @@ function DoFireEffect()
         Aim = rotator(MuzzlePosition.XAxis);
     }
 
-    //Log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
+    //log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
     //PlayerController(Instigator.Controller).ClientMessage("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
 
 //    Instigator.ClearStayingDebugLines();
@@ -250,7 +250,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
         // This is a bit of a hack, but it prevents bots from killing other players in most instances
         if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
         {
-            //Log(Instigator$"'s shot would hit "$Other$" who is on the same team");
+            //log(Instigator$"'s shot would hit "$Other$" who is on the same team");
             return none;
         }
 

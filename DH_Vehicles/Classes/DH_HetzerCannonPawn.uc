@@ -27,7 +27,7 @@ simulated function PostBeginPlay() // Matt: modified to lower the commander's ex
 function ServerChangeDriverPosition(byte F)
 {
     // Matt: if trying to switch to vehicle position 4 or 5, which are the rider positions, and player is buttoned up or in the process of buttoning/ubuttoning
-    if (F > 3 && (DriverPositionIndex < UnbuttonedPositionIndex || IsInState('ViewTransition')))
+    if( F > 3 && (DriverPositionIndex < UnbuttonedPositionIndex || IsInState('ViewTransition')) )
     {
         Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You Must Unbutton the Hatch to Exit"
         return;
@@ -41,7 +41,7 @@ function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
 
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
+    if( !bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')) )
     {
         Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You Must Unbutton the Hatch to Exit"
         return false;
@@ -56,7 +56,7 @@ function bool KDriverLeave(bool bForceLeave)
         DH_ROTreadCraft(GetVehicleBase()).MaybeDestroyVehicle();
 
         // Matt: added to play idle animation on the server to stop the collision box glitch on the roof
-        if (bSuperDriverLeave && Gun.HasAnim(Gun.BeginningIdleAnim))
+        if( bSuperDriverLeave && Gun.HasAnim(Gun.BeginningIdleAnim))
             Gun.PlayAnim(Gun.BeginningIdleAnim);
 
         return bSuperDriverLeave;
@@ -68,39 +68,39 @@ function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
     {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
+        if ( DriverPositionIndex < (DriverPositions.Length - 1) )
         {
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if( Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer )
             {
                 NextViewPoint();
             }
 
-            if (Level.NetMode == NM_DedicatedServer)
+            if( Level.NetMode == NM_DedicatedServer )
             {
                 // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-                if (DriverPositionIndex == UnbuttonedPositionIndex)
+                if( DriverPositionIndex == UnbuttonedPositionIndex )
                     GoToState('ViewTransition');
             }
         }
     }
     else
     {
-        if (DriverPositionIndex > 0)
+        if ( DriverPositionIndex > 0 )
         {
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            if( Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer )
             {
                 NextViewPoint();
             }
 
-            if (Level.NetMode == NM_DedicatedServer) // Matt: added this section to run the state 'ViewTransition' on the server when buttoning up
+            if( Level.NetMode == NM_DedicatedServer ) // Matt: added this section to run the state 'ViewTransition' on the server when buttoning up
             {
-                if (LastPositionIndex == UnbuttonedPositionIndex)
+                if( LastPositionIndex == UnbuttonedPositionIndex )
                     GoToState('ViewTransition');
             }
         }
@@ -114,13 +114,13 @@ simulated state ViewTransition
     {
         StoredVehicleRotation = VehicleBase.Rotation;
 
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if( Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer )
         {
-            if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+            if( DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
         }
 
-        if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
+        if(Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
             && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
         {
             Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
@@ -131,20 +131,20 @@ simulated state ViewTransition
 //      FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation; // Matt: moved this to 'if' section below so FPCamPos isn't set yet
 
         // Matt: included periscope position in the exception (was != 0) so FOV isn't set yet if we're moving to the peri position (we do it after the transition anim finishes)
-        if (DriverPositionIndex > PeriscopePositionIndex)
+        if( DriverPositionIndex > PeriscopePositionIndex )
         {
             // Matt: moved this here so that FPCamPos isn't set now if we're transitioning down to the periscope position (instead we do it after the transition anim finishes)
             FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
 
-            if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                PlayerController(Controller).SetFOV(WeaponFOV);
+            if( DriverPositions[DriverPositionIndex].bDrawOverlays )
+                PlayerController(Controller).SetFOV( WeaponFOV );
             else
                 PlayerController(Controller).DesiredFOV = WeaponFOV;
         }
 
-        if (LastPositionIndex < DriverPositionIndex)
+        if( LastPositionIndex < DriverPositionIndex)
         {
-            if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
+            if( Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim) )
             {
                 Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
                 SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
@@ -152,7 +152,7 @@ simulated state ViewTransition
             else
                 GotoState('');
         }
-        else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
+        else if ( Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim) )
         {
             Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
             SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
@@ -165,18 +165,18 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        if (PlayerController(Controller) != none)
+        if( PlayerController(Controller) != none )
         {
-            PlayerController(Controller).SetFOV(WeaponFOV); // Matt: was SetFOV(DriverPositions[DriverPositionIndex].ViewFOV) but WeaponFOV has already been set to that so this is simpler
+            PlayerController(Controller).SetFOV( WeaponFOV ); // Matt: was SetFOV( DriverPositions[DriverPositionIndex].ViewFOV ) but WeaponFOV has already been set to that so this is simpler
 
-            if (DriverPositionIndex <= PeriscopePositionIndex) // Matt: added so ViewLocation is set only after the transition animation completes, if we're moving to the periscope position
+            if( DriverPositionIndex <= PeriscopePositionIndex ) // Matt: added so ViewLocation is set only after the transition animation completes, if we're moving to the periscope position
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
         }
     }
 }
 
 // Matt: redefined in StuH with one modified line that is crucial to camera positioning on the periscope position (would remove this if a proper periscope animamtion was made)
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation )
 {
     local vector x, y, z;
     local vector VehicleZ, CamViewOffsetWorld;
@@ -191,7 +191,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
     WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
 
-    if (ROPlayer(Controller) != none)
+    if( ROPlayer(Controller) != none )
     {
         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
@@ -224,19 +224,19 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     else
         CameraRotation = PC.Rotation;
 
-    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
+    if( IsInState('ViewTransition') && bLockCameraDuringTransition )
     {
-        CameraRotation = Gun.GetBoneRotation('Camera_com');
+        CameraRotation = Gun.GetBoneRotation( 'Camera_com' );
     }
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
-    if (CameraBone != '' && Gun != none)
+    if(CameraBone != '' && Gun != none)
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
         // Matt: not important but for consistency I've replaced DPI = 0 with DPI < GunsightPositions, as per original DH_ROTankCannonPawn
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
+        if( DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
         {
             CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
@@ -246,7 +246,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
             CameraLocation = Gun.GetBoneCoords('Camera_com').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
 
-        if (bFPNoZFromCameraPitch)
+        if(bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
@@ -257,7 +257,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     {
         CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
 
-        if (bFPNoZFromCameraPitch)
+        if(bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0, 0, 1) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;

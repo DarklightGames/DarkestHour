@@ -264,7 +264,7 @@ function SetHitLocation(vector HitLocation)
     {
         //----------------------------------------------------------------------
         // Find the closest mortar target.
-        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
+        for(i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Location == vect(0, 0, 0))
                 continue;
@@ -293,7 +293,7 @@ function SetHitLocation(vector HitLocation)
     {
         //----------------------------------------------------------------------
         // Find the closest mortar target.
-        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); I++)
+        for(i = 0; i < arraycount(GRI.AlliedMortarTargets); I++)
         {
             if (GRI.AlliedMortarTargets[i].Location == vect(0, 0, 0))
                 continue;
@@ -338,7 +338,7 @@ simulated function DoHitEffects(vector HitLocation, vector HitNormal)
 
 simulated function GetHitEmitterClass(out class<Emitter> HitEmitterClass, ESurfaceTypes SurfaceType)
 {
-    switch (SurfaceType)
+    switch(SurfaceType)
     {
         case EST_Ice:
             HitEmitterClass = HitSnowEmitterClass;
@@ -363,7 +363,7 @@ simulated function GetHitEmitterClass(out class<Emitter> HitEmitterClass, ESurfa
 
 simulated function GetHitSound(out sound HitSound, ESurfaceTypes SurfaceType)
 {
-    switch (SurfaceType)
+    switch(SurfaceType)
     {
         case EST_Rock:
             HitSound = HitRockSound;

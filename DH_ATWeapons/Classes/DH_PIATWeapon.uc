@@ -98,7 +98,7 @@ simulated function PlayIdle()
 
     if (bUsingSights)
     {
-        switch (RangeIndex)
+        switch(RangeIndex)
         {
             case 0:
                 Anim = IronIdleAnimOne;
@@ -222,7 +222,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
         if (bJustSpawned && AP == none)
         {
             PrimaryAmmoArray.Length = MaxNumPrimaryMags;
-            for (i = 0; i < PrimaryAmmoArray.Length; i++)
+            for(i=0; i<PrimaryAmmoArray.Length; i++)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
@@ -230,7 +230,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
             CurrentMagCount = PrimaryAmmoArray.Length - 1;
         }
 
-        if (AP != none)
+        if ((AP != none) )
         {
             InitialAmount = AP.AmmoAmount;
             PrimaryAmmoArray[PrimaryAmmoArray.Length] = InitialAmount;
@@ -264,7 +264,7 @@ function SelfDestroy()
 {
     local int m;
 
-    for (m = 0; m < NUM_FIRE_MODES; m++)
+    for(m = 0; m < NUM_FIRE_MODES; m++)
     {
         if (FireMode[m].bIsFiring)
             StopFire(m);
@@ -384,7 +384,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
         }
         else
         {
-            //Log("didnt Destroyed the fp ammoround");
+            //log("didnt Destroyed the fp ammoround");
             if (RocketAttachment == none)
             {
                 RocketLoc = GetBoneCoords('Warhead').Origin;
@@ -444,7 +444,7 @@ function bool HandlePickupQuery(Pickup Item)
     if (bNoAmmoInstances)
     {
         // handle ammo pickups
-        for (i = 0; i < 2; i++)
+        for (i=0; i<2; i++)
         {
             if ((item.inventorytype == AmmoClass[i]) && (AmmoClass[i] != none))
             {
@@ -453,7 +453,7 @@ function bool HandlePickupQuery(Pickup Item)
                     // Handle multi mag ammo type pickups
                     if (ROMultiMagAmmoPickup(Item) != none)
                     {
-                        for (j=0; j<ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
+                        for(j=0; j<ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
                         {
                             if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
                             {
@@ -521,7 +521,7 @@ function bool ResupplyAmmo()
 
     InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
-    for (i=NumMagsToResupply; i>0; i--)
+    for(i=NumMagsToResupply; i>0; i--)
     {
         if (!bIsLoaded && PrimaryAmmoArray.Length < MaxNumPrimaryMags)
         {

@@ -31,10 +31,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int i;
 
-    switch (HowToModify)
+    switch(HowToModify)
     {
         case SMT_Activate:
-            for (i = 0; i < SpawnReference.Length; i++)
+            for(i = 0; i < SpawnReference.Length; i++)
             {
                 SpawnReference[i].bEnabled = true; //Activates the Spawn
             }

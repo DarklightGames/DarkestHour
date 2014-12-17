@@ -64,7 +64,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
     RemoveComponent(cb_Translocator);
     sb_Options.ManageComponent(cb_Mutators);
 
-    for (i = 0; i < 3; i++)
+    for (i=0;i<3;i++)
     {
         cb_Stats.AddItem(ComboOpts[i]);
         cb_WeaponStay.AddItem(ComboOpts[i]);
@@ -80,7 +80,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
     sb_Mutators.ManageComponent(lb_Mutators);
 
     class'CacheManager'.static.GetMutatorList(MutRecords);
-    for (i = 0; i < MutRecords.Length; i++)
+    for (i=0;i<MutRecords.Length;i++)
     {
         cb = moComboBox(li_Mutators.AddItem("DH_Interface.DHmoCombobox",,MutREcords[i].FriendlyName));
         cb.AddItem(ComboOpts[0]);
@@ -111,7 +111,7 @@ event HandleParameters(string Param1, string Param2)
     //Get the custom filter
 
     Rules = FLP.FM.GetFilterRules(FilterIndex);
-    for (i = 0; i < Rules.Length; i++)
+    for (i=0;i<Rules.Length;i++)
     {
         FilterItem = Rules[i].FilterItem;
         if (FilterItem.Key~="currentplayers" && FilterItem.Value=="0" && FilterItem.QueryType==QT_GreaterThan)
@@ -174,7 +174,7 @@ function SetMutator(string ClassName, int index)
     local int i,j;
     local string s;
     local moComboBox box;
-    for (i = 0; i < MutRecords.Length; i++)
+    for (i=0;i<MutRecords.Length;i++)
     {
         j = Instr(MutRecords[i].ClassName,".");
         s = mid(MutRecords[i].ClassName,j+1);
@@ -263,7 +263,7 @@ function bool OkClick(GUIComponent Server)
 
     else if (cb_Mutators.GetIndex()==2)
     {
-        for (i = 0; i < li_Mutators.ItemCount; i++)
+        for (i=0;i<li_Mutators.ItemCount;i++)
         {
             CB = moComboBox(li_Mutators.GetItem(i));
             if (cb.GetIndex() == 1)
@@ -287,7 +287,7 @@ function string FindMutClassFromFriendly(string friendly)
     local int i,p;
     local string cls;
 
-    for (i = 0; i < MutRecords.Length; i++)
+    for (i=0;i<MutRecords.Length;i++)
         if (MutRecords[i].FriendlyName ~= Friendly)
         {
             cls = MutRecords[i].ClassName;

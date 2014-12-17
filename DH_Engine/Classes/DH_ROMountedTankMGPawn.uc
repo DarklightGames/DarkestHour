@@ -51,7 +51,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
                 --InsertIndex;
             }
 
-            if (RemovedIndex != InsertIndex)
+            if ( RemovedIndex != InsertIndex )
             {
                 MyArray.Insert(InsertIndex, 1);
                 MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
@@ -147,7 +147,7 @@ simulated function DrawHUD(Canvas Canvas)
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //Log("PanzerTurret PlayerController was none, returning");
+        //log("PanzerTurret PlayerController was none, returning");
         return;
     }
     else if (!PC.bBehindView)
@@ -198,7 +198,7 @@ simulated function DrawHUD(Canvas Canvas)
 
 function Fire(optional float F)
 {
-    if (IsInState('ViewTransition'))
+    if(IsInState('ViewTransition'))
     {
         return;
     }

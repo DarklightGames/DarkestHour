@@ -32,7 +32,7 @@ function PostBeginPlay()
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     //Modify MDVTeleRef based on HowToModify
-    switch (HowToModify)
+    switch(HowToModify)
     {
         case MDVT_Increment:
             MDVTeleRef.IncrementPriorityUp();

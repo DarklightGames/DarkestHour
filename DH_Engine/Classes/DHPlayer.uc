@@ -39,9 +39,6 @@ replication
         ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
         ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
 
-    reliable if (Role < ROLE_Authority) // Matt: TEMP to log collision meshes
-        ServerLogColMesh;
-
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
 
@@ -204,7 +201,7 @@ exec function DeploymentMenu(optional int Tab)
 
 exec function VehicleSay(string Msg)
 {
-    if (Msg == "")
+    if(Msg == "")
     {
         return;
     }
@@ -345,7 +342,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         if (Pawn != none && Pawn.Physics != PHYS_Flying)
         {
             // Ensure we are not setting the pawn to a rotation beyond its desired
-            if (Pawn.DesiredRotation.Roll < 65535 &&
+            if (    Pawn.DesiredRotation.Roll < 65535 &&
                 (ViewRotation.Roll < Pawn.DesiredRotation.Roll || ViewRotation.Roll > 0))
                 ViewRotation.Roll = 0;
             else if (Pawn.DesiredRotation.Roll > 0 &&
@@ -722,7 +719,7 @@ function ServerSaveMortarTarget()
     //a mortar target in the last 30 seconds.
     if (TeamIndex == 0) //Axis
     {
-        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
+        for(i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Controller == self &&
             GRI.GermanMortarTargets[i].Time != 0 &&
@@ -738,7 +735,7 @@ function ServerSaveMortarTarget()
         //----------------------------------------------------------------------
         //Go through the roles and find a mortar operator role that has someone
         //on it.
-        for (i = 0; i < arraycount(GRI.DHAxisRoles); i++)
+        for(i = 0; i < arraycount(GRI.DHAxisRoles); i++)
             if (GRI.DHAxisRoles[i]!= none && GRI.DHAxisRoles[i].bCanUseMortars && GRI.DHAxisRoleCount[i] > 0)
             {
                 //--------------------------------------------------------------
@@ -749,7 +746,7 @@ function ServerSaveMortarTarget()
     }
     else
     {
-        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
+        for(i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
         {
             if (GRI.AlliedMortarTargets[i].Controller == self &&
             GRI.AlliedMortarTargets[i].Time != 0 &&
@@ -760,7 +757,7 @@ function ServerSaveMortarTarget()
             }
         }
 
-        for (i = 0; i < arraycount(GRI.DHAlliesRoles); i++)
+        for(i = 0; i < arraycount(GRI.DHAlliesRoles); i++)
             if (GRI.DHAlliesRoles[i] != none && GRI.DHAlliesRoles[i].bCanUseMortars && GRI.DHAlliesRoleCount[i] > 0)
             {
                 bMortarsAvailable = true;
@@ -782,7 +779,7 @@ function ServerSaveMortarTarget()
 
     if (TeamIndex == 0) //Axis
     {
-        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
+        for(i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self)
             {
@@ -799,7 +796,7 @@ function ServerSaveMortarTarget()
     }
     else    //Allies
     {
-        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
+        for(i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
         {
             if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self)
             {
@@ -1251,15 +1248,15 @@ state PlayerSwimming
 {
 ignores SeePlayer, HearNoise, Bump;
 
-    function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
+    function bool NotifyPhysicsVolumeChange( PhysicsVolume NewVolume )
     {
         local Actor HitActor;
         local vector HitLocation, HitNormal, checkpoint;
 
-        if (!NewVolume.bWaterVolume)
+        if ( !NewVolume.bWaterVolume )
         {
             Pawn.SetPhysics(PHYS_Falling);
-            if (Pawn.Velocity.Z > 0)
+            if ( Pawn.Velocity.Z > 0 )
             {
                 if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) //check for waterjump
                 {
@@ -1267,7 +1264,7 @@ ignores SeePlayer, HearNoise, Bump;
                     //Pawn.velocity.Z = FMax(Pawn.JumpZ,420) + 2 * Pawn.CollisionRadius; //set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
-                else if (Pawn.Velocity.Z > 160 || !Pawn.TouchingWaterVolume())
+                else if ( (Pawn.Velocity.Z > 160) || !Pawn.TouchingWaterVolume() )
                     GotoState(Pawn.LandMovementState);
                 else //check if in deep water
                 {
@@ -1463,7 +1460,7 @@ function HitThis(ROArtilleryTrigger RAT)
 
     DHG = DarkestHourGame(Level.Game);
 
-    if (DHG == none)
+    if(DHG == none)
     {
         return;
     }
@@ -1489,7 +1486,7 @@ function HitThis(ROArtilleryTrigger RAT)
 
         DHAT = DHArtilleryTrigger(RAT);
 
-        if (DHAT != none && DHAT.Carrier != none)
+        if(DHAT != none && DHAT.Carrier != none)
         {
             DHG.ScoreRadioUsed(DHAT.Carrier.Controller);
         }
@@ -1611,7 +1608,7 @@ simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
 
     foreach AllActors(class'ROTreadCraft', V)
     {
-        if (TreadVelocityScale == -1)
+        if(TreadVelocityScale == -1)
         {
             V.TreadVelocityScale = V.default.TreadVelocityScale;
         }
@@ -1650,7 +1647,7 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
 
     foreach AllActors(class'ROTreadCraft', V)
     {
-        if (WheelRotationScale == -1)
+        if(WheelRotationScale == -1)
         {
             V.WheelRotationScale = V.default.WheelRotationScale;
         }
@@ -1758,25 +1755,6 @@ function ServerDoLog(string LogMessage)
         Log(PlayerReplicationInfo.PlayerName @ ":" @ LogMessage);
     }
 }
-
-// Matt: TEMP to log collision meshes //////////////////////////////////////
-exec function LogColMesh()
-{
-    ProcessLogColMesh();
-    if (Role < ROLE_Authority) ServerLogColMesh();
-}
-function ServerLogColMesh()
-{
-    ProcessLogColMesh();
-}
-simulated function ProcessLogColMesh()
-{
-    local DH_VehicleWeaponCollisionMeshActor CM;
-    foreach DynamicActors(class'DH_VehicleWeaponCollisionMeshActor', CM)
-        Log("CM =" @ CM.Tag @ " Location =" @ CM.Location @ "VW.Loc =" @ CM.Owner.Location @ " RelOff =" @ CM.RelativeLocation @ " bColAct =" @ 
-            CM.bCollideActors @ " bColWor =" @ CM.bCollideWorld @ " bBlockAct =" @ CM.bBlockActors @ " bHidden =" @ CM.bHidden @ " Base =" @ CM.Base.Tag);
-}
-////////////////////////////////////////////////////
 
 defaultproperties
 {

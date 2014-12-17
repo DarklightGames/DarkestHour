@@ -17,8 +17,8 @@ replication
 simulated function string GetOnDestroyCriticalMessage()
 {
     local string s;
-    //Log("GetOnDestroyCriticalMessage called.");
-    //Log("Looking at localize info for " $ SavedName $ ", " $ string(class) $ ", " $ string(level.outer));
+    //log("GetOnDestroyCriticalMessage called.");
+    //log("Looking at localize info for " $ SavedName $ ", " $ string(class) $ ", " $ string(level.outer));
     s = Localize(string(SavedName), "OnDestroyCriticalMessage", string(level.outer));
     if (s != "")
         return s;
@@ -56,7 +56,7 @@ function bool ShouldTakeDamage(class<DamageType> damageType)
 {
     local int i;
 
-    for (i = 0; i < TypesCanDamage.Length; i++)
+    for(i=0; i<TypesCanDamage.Length; i++)
     {
 
         if (damageType==TypesCanDamage[i] || ClassIsChildOf(damageType, TypesCanDamage[i]))
@@ -84,7 +84,7 @@ function BroadcastCriticalMessage(Pawn instigatedBy)
             }
             else
             {
-                //Log("no valid PRI!!");
+                //log("no valid PRI!!");
                 PRI = none;
             }
 
@@ -162,8 +162,8 @@ auto state Working
 
         Health -= Damage;
         Level.Game.Broadcast(self, "Dummy:"$SensorName$", DamageTaken: "$Damage$" points");
-        Log("Dummy = "$SensorName);
-        Log("DamageTaken = "$Damage);
+        log ("Dummy = "$SensorName);
+        log ("DamageTaken = "$Damage);
         if (Health <= 0)
         {
             TriggerEvent(DestroyedEvent, self, instigatedBy);

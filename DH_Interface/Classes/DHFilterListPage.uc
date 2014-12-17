@@ -54,7 +54,7 @@ function bool CreateClick(GUIComponent Sender)
     local moCheckbox cb;
 
     cnt = 0;
-    for (i = 0; i < li_Filters.ItemCount; i++)
+    for (i=0;i<li_Filters.ItemCount;i++)
     {
         cb = moCheckbox(li_Filters.GetItem(i));
         if (inStr(cb.Caption,"New Filter")>=0)

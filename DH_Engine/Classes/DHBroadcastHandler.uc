@@ -103,7 +103,7 @@ event AllowBroadcastLocalized(Actor Sender, class<LocalMessage> Message,
             //Only show these messages to people involved with the mortars.
             if (P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
             {
-                switch (Switch)
+                switch(Switch)
                 {
                     case 2:
                         BroadcastLocalized(Sender, P, Message, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);

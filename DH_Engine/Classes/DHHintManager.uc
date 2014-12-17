@@ -76,7 +76,7 @@ function QueueHint(byte HintIndex, bool bForceNext)
     if (bUsedUpHints[HintIndex] == 1)
         return;
 
-    for (i = 0; i < QueuedHintIndices.Length; i++)
+    for(i = 0; i < QueuedHintIndices.Length; i++)
         if (QueuedHintIndices[i] == HintIndex)
             return;
 

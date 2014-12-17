@@ -30,22 +30,22 @@ var     enum    EMGReloadState
 replication
 {
     // Variables the server should send to the client
-    reliable if (bNetDirty && Role == ROLE_Authority)
+    reliable if( bNetDirty && Role == ROLE_Authority )
         bClientCanFireMG;
 
     // Functions the server calls on the client side.
-    reliable if (Role == ROLE_Authority)
+    reliable if( Role == ROLE_Authority )
         ClientSetReloadState;
 
     // Functions the client calls on the server side:
-    reliable if (Role < ROLE_Authority)
+    reliable if ( Role < ROLE_Authority )
         ServerManualReload;
 }
 
 // Matt: modified to add 'dry fire' effects if MG isn't loaded
 simulated function bool ReadyToFire(bool bAltFire)
 {
-    if ((MGReloadState != MG_ReadyToFire || !bClientCanFireMG) && !bAltFire)
+    if( (MGReloadState != MG_ReadyToFire || !bClientCanFireMG) && !bAltFire )
     {
         ShakeView(false); // Matt: added to jolt when trying to fire empty
         PlaySound(NoAmmoSound, SLOT_None,1.5,, 25,, true); // Matt: added to play click sound when trying to fire empty
@@ -72,7 +72,7 @@ function HandleReload()
 // Matt: called by ROManualReload from the MG Pawn - sets MGReloadState to MG_Empty, which starts a 4 part reload (tank cannon functionality)
 function ServerManualReload()
 {
-    if (NumMags > 0 && (MGReloadState == MG_Waiting || MGReloadState == MG_ReadyToFire))
+    if( NumMags > 0 && ( MGReloadState == MG_Waiting || MGReloadState == MG_ReadyToFire ) )
     {
         ClientSetReloadState(MG_Empty);
         NetUpdateTime = Level.TimeSeconds - 1;
@@ -82,7 +82,7 @@ function ServerManualReload()
 }
 
 // Matt: part of 4 part reload functionality, based on tank cannon
-simulated function ClientSetReloadState(EMGReloadState NewState)
+simulated function ClientSetReloadState( EMGReloadState NewState )
 {
     MGReloadState = NewState;
     SetTimer(0.01, false);
@@ -96,10 +96,10 @@ simulated function Timer()
     MGP = DH_HetzerMountedMGPawn(Owner);
 
     // Matt: pause reload if there is the MG has no Controller or if buttoned up or in the process of buttoning or unbuttoning
-    if (MGP == none || MGP.Controller == none || MGP.DriverPositionIndex < MGP.UnbuttonedPositionIndex || MGP.IsInState('ViewTransition'))
+    if ( MGP == none || MGP.Controller == none || MGP.DriverPositionIndex < MGP.UnbuttonedPositionIndex || MGP.IsInState('ViewTransition') )
         SetTimer(0.05, true);
 
-    else if (MGReloadState == MG_Empty)
+    else if ( MGReloadState == MG_Empty )
     {
         if (Role == ROLE_Authority)
             PlayOwnedSound(MGReloadSoundOne, SLOT_Misc, 2,, 150,, false); // Matt: doubled the default volume
@@ -110,7 +110,7 @@ simulated function Timer()
         SetTimer(GetSoundDuration(MGReloadSoundOne), false);
     }
 
-    else if (MGReloadState == MG_ReloadedPart1)
+    else if ( MGReloadState == MG_ReloadedPart1 )
     {
         if (Role == ROLE_Authority)
             PlayOwnedSound(MGReloadSoundTwo, SLOT_Misc, 2,, 150,, false);
@@ -121,7 +121,7 @@ simulated function Timer()
         SetTimer(GetSoundDuration(MGReloadSoundTwo), false);
     }
 
-    else if (MGReloadState == MG_ReloadedPart2)
+    else if ( MGReloadState == MG_ReloadedPart2 )
     {
         if (Role == ROLE_Authority)
             PlayOwnedSound(MGReloadSoundThree, SLOT_Misc, 2,, 150,, false);
@@ -132,7 +132,7 @@ simulated function Timer()
         SetTimer(GetSoundDuration(MGReloadSoundThree), false);
    }
 
-   else if (MGReloadState == MG_ReloadedPart3)
+   else if ( MGReloadState == MG_ReloadedPart3 )
    {
         if (Role == ROLE_Authority)
             PlayOwnedSound(MGReloadSoundFour, SLOT_Misc, 2,, 150,, false);
@@ -143,9 +143,9 @@ simulated function Timer()
         SetTimer(GetSoundDuration(MGReloadSoundFour), false);
     }
 
-    else if (MGReloadState == MG_ReloadedPart4)
+    else if ( MGReloadState == MG_ReloadedPart4 )
     {
-        if (Role == ROLE_Authority)
+        if(Role == ROLE_Authority)
         {
             bClientCanFireMG = true;
             NumMags--;

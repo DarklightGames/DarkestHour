@@ -44,7 +44,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
         if (RandomPercent <= RandomNum)
             return; //Leave script as it randomly failed
     }
-    switch (HowToModify)
+    switch(HowToModify)
     {
         case DSM_Destroy: //Destroys the reference DSM if it's not already
             if (!DSMReference.bDamaged)

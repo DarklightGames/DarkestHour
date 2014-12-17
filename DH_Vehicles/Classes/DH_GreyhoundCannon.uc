@@ -70,7 +70,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
    if (bGunFireDebug)
         {
-                Log(self$" SpawnProjectile start, WepFireRot "$WeaponFireRotation);
+                log(self$" SpawnProjectile start, WepFireRot "$WeaponFireRotation);
                 Log("FireRot "$FireRot);
                 Log("ProjectileClass "$ProjClass);
         }
@@ -133,7 +133,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
     }
 
-    //Log("WeaponFireRotation = "$WeaponFireRotation);
+    //log("WeaponFireRotation = "$WeaponFireRotation);
 
     if (P != none)
     {

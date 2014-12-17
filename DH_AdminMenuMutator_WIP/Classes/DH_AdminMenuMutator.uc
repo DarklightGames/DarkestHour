@@ -92,7 +92,7 @@ function SetInitialVariables()
         SaveMinefields();
 
         // Look for the realism match mutator - if it's there we just set a flag
-        for (Mut = Level.Game.BaseMutator; Mut != none; Mut = Mut.NextMutator)
+        for (Mut = Level.Game.BaseMutator; Mut != None; Mut = Mut.NextMutator)
         {
             if (Mut.IsA('MutRealismMatch'))
             {
@@ -1072,7 +1072,7 @@ singular function GiveChute(Controller PlayerToDrop)
 
     RI = ROPlayerReplicationInfo(PlayerToDrop.PlayerReplicationInfo).RoleInfo;
     
-    if (RI != none)
+    if (RI != None)
     {
         for (i = RI.GivenItems.Length -1; i >= 0; i--)
         {

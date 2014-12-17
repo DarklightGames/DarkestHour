@@ -93,7 +93,7 @@ defaultproperties
     mTracerInterval=0.495867
     bUsesTracers=true
     bAltFireTracersOnly=true
-    MinCommanderHitHeight=60.0 // TEST with new col mesh (which will model cupola)
+    MinCommanderHitHeight=60.0
     VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-3.000000,Z=12.000000))
     VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-3.000000,Z=-11.000000))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
@@ -140,9 +140,8 @@ defaultproperties
     InitialAltAmmo=150
     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
+    Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
-    Mesh=SkeletalMesh'DH_Tiger_anm_WIP.Tiger1_turret_ext_new'  // Matt: was 'axis_tiger1_anm.Tiger1_turret_ext'
-    CollisionMeshActorClass=class'DH_TigerTurretCollisionMesh' // Matt: added
     SoundVolume=120
     SoundRadius=300.000000
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
