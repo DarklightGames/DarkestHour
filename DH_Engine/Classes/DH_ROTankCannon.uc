@@ -50,7 +50,7 @@ var   float RightArmorSlope;
 var   float LeftArmorSlope;
 var   float RearArmorSlope;
 
-//var float DHArmorSlopeTable[16]; // Matt: deprecated
+var   float DHArmorSlopeTable[16]; // Matt: deprecated // TEMP reinstated
 
 var() float FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
@@ -70,6 +70,8 @@ var   bool  bDriverDebugging;
 // Debugging and calibration stuff
 var   config bool bGunFireDebug;
 var() config bool bGunsightSettingMode;
+
+var int TickCount; // TEMP
 
 replication
 {
@@ -103,18 +105,30 @@ simulated function PostNetBeginPlay()
             bBlockNonZeroExtentTraces = false;
             bBlockZeroExtentTraces = false;
 
+            bForceSkelUpdate = true; // TEST for static mesh method only // Matt: necessary to make server "update skeleton & attached actor positions even if not rendered" (otherwise col mesh doesn't move with turret)
+
             // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the turret
             CollisionMeshActor.bHardAttach = true;
             AttachToBone(CollisionMeshActor, YawBone);
 
             // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the turret
             CollisionMeshActor.SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
+            Log("Can.PostNetBP spawned ColMesh: RelLoc =" @ CollisionMeshActor.RelativeLocation @ " VW.Loc =" @ Location @ " CM.Loc =" @ CollisionMeshActor.Location); // TEMP
         }
     }
 }
 
+// col mesh actor attaches to VehicleWeapon's yaw bone, so this offset re-aligns it with VehicleWeapon's origin
 simulated function Tick(float DeltaTime)
 {
+    super.Tick(DeltaTime);
+
+    if (TickCount < 6) // TEMP
+    {
+        TickCount++;
+        if (CollisionMeshActor != none) Log("Can.Tick: ColMesh.RelLoc =" @ CollisionMeshActor.RelativeLocation @ " VW.Loc =" @ Location @ " CM.Loc =" @ CollisionMeshActor.Location @ " Base =" @ CollisionMeshActor.Base.Tag); // TEMP
+    }
+
     if (bOnFire && TurretHatchFireEffect == none)
     {
         // Lets randomise the fire start times to desync them with the driver and engine ones
@@ -167,7 +181,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     if (bIsAssaultGun)
     {
         DH_ROTreadCraft(Base).bAssaultWeaponHit = true;
-
+        Log("Can.DHShouldPenetrate: bIsAssaultGun = true, so setting VehicleBase.bAssaultWeaponHit = true & exiting function"); // TEMP
         return false;
     }
 
@@ -453,6 +467,8 @@ simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, fl
     // Calculate the SlopeMultiplier & EffectiveArmor, to give us the PenetrationRatio
     OverMatchFactor = ArmorFactor / P.default.ShellDiameter;
     SlopeMultiplier = GetArmorSlopeMultiplier(P, CompoundAngleDegrees, OverMatchFactor);
+    if (P.default.RoundType == RT_APC) Log("SlopeMultiplier =" @ SlopeMultiplier @ "OLD SlopeMultiplier =" @ GetOldSlopeMultiplier(CompoundAngleDegrees, OverMatchFactor)); // TEMP
+    else Log("SlopeMultiplier =" @ SlopeMultiplier);
     EffectiveArmor = ArmorFactor * SlopeMultiplier;
     PenetrationRatio = PenetrationNumber / EffectiveArmor;
 
@@ -577,6 +593,50 @@ simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectil
     }
 
     return 1.0; // fail-safe neutral return value
+}
+
+simulated function float GetOldSlopeMultiplier(float CompoundAngleDegrees, float OverMatchFactor) // TEMP
+{
+    local float SlopeMultiplier;
+
+    // After Bird & Livingston
+    DHArmorSlopeTable[0]= 1.01   * (OverMatchFactor ** 0.0225); // 10
+    DHArmorSlopeTable[1]= 1.03   * (OverMatchFactor ** 0.0327); // 15
+    DHArmorSlopeTable[2]= 1.10   * (OverMatchFactor ** 0.0454); // 20
+    DHArmorSlopeTable[3]= 1.17   * (OverMatchFactor ** 0.0549); // 25
+    DHArmorSlopeTable[4]= 1.27   * (OverMatchFactor ** 0.0655); // 30
+    DHArmorSlopeTable[5]= 1.39   * (OverMatchFactor ** 0.0993); // 35
+    DHArmorSlopeTable[6]= 1.54   * (OverMatchFactor ** 0.1388); // 40
+    DHArmorSlopeTable[7]= 1.72   * (OverMatchFactor ** 0.1655); // 45
+    DHArmorSlopeTable[8]= 1.94   * (OverMatchFactor ** 0.2035); // 50
+    DHArmorSlopeTable[9]= 2.12   * (OverMatchFactor ** 0.2427); // 55
+    DHArmorSlopeTable[10]= 2.56  * (OverMatchFactor ** 0.2450); // 60
+    DHArmorSlopeTable[11]= 3.20  * (OverMatchFactor ** 0.3354); // 65
+    DHArmorSlopeTable[12]= 3.98  * (OverMatchFactor ** 0.3478); // 70
+    DHArmorSlopeTable[13]= 5.17  * (OverMatchFactor ** 0.3831); // 75
+    DHArmorSlopeTable[14]= 8.09  * (OverMatchFactor ** 0.4131); // 80
+    DHArmorSlopeTable[15]= 11.32 * (OverMatchFactor ** 0.4550); // 85
+
+    // SlopeMultiplier calcs - using linear interpolation
+    if      (CompoundAngleDegrees < 10.0)  SlopeMultiplier = (DHArmorSlopeTable[0]  + (10.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[0] -  DHArmorSlopeTable[1])  / 10.0);
+    else if (CompoundAngleDegrees < 15.0)  SlopeMultiplier = (DHArmorSlopeTable[1]  + (15.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[0] -  DHArmorSlopeTable[1])  / 5.0);
+    else if (CompoundAngleDegrees < 20.0)  SlopeMultiplier = (DHArmorSlopeTable[2]  + (20.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[1] -  DHArmorSlopeTable[2])  / 5.0);
+    else if (CompoundAngleDegrees < 25.0)  SlopeMultiplier = (DHArmorSlopeTable[3]  + (25.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[2] -  DHArmorSlopeTable[3])  / 5.0);
+    else if (CompoundAngleDegrees < 30.0)  SlopeMultiplier = (DHArmorSlopeTable[4]  + (30.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[3] -  DHArmorSlopeTable[4])  / 5.0);
+    else if (CompoundAngleDegrees < 35.0)  SlopeMultiplier = (DHArmorSlopeTable[5]  + (35.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[4] -  DHArmorSlopeTable[5])  / 5.0);
+    else if (CompoundAngleDegrees < 40.0)  SlopeMultiplier = (DHArmorSlopeTable[6]  + (40.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[5] -  DHArmorSlopeTable[6])  / 5.0);
+    else if (CompoundAngleDegrees < 45.0)  SlopeMultiplier = (DHArmorSlopeTable[7]  + (45.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[6] -  DHArmorSlopeTable[7])  / 5.0);
+    else if (CompoundAngleDegrees < 50.0)  SlopeMultiplier = (DHArmorSlopeTable[8]  + (50.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[7] -  DHArmorSlopeTable[8])  / 5.0);
+    else if (CompoundAngleDegrees < 55.0)  SlopeMultiplier = (DHArmorSlopeTable[9]  + (55.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[8] -  DHArmorSlopeTable[9])  / 5.0);
+    else if (CompoundAngleDegrees < 60.0)  SlopeMultiplier = (DHArmorSlopeTable[10] + (60.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[9] -  DHArmorSlopeTable[10]) / 5.0);
+    else if (CompoundAngleDegrees < 65.0)  SlopeMultiplier = (DHArmorSlopeTable[11] + (65.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[10] - DHArmorSlopeTable[11]) / 5.0);
+    else if (CompoundAngleDegrees < 70.0)  SlopeMultiplier = (DHArmorSlopeTable[12] + (70.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[11] - DHArmorSlopeTable[12]) / 5.0);
+    else if (CompoundAngleDegrees < 75.0)  SlopeMultiplier = (DHArmorSlopeTable[13] + (75.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[12] - DHArmorSlopeTable[13]) / 5.0);
+    else if (CompoundAngleDegrees < 80.0)  SlopeMultiplier = (DHArmorSlopeTable[14] + (80.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[13] - DHArmorSlopeTable[14]) / 5.0);
+    else if (CompoundAngleDegrees < 85.0)  SlopeMultiplier = (DHArmorSlopeTable[15] + (85.0 - CompoundAngleDegrees) * (DHArmorSlopeTable[14] - DHArmorSlopeTable[15]) / 5.0);
+    else                                   SlopeMultiplier =  DHArmorSlopeTable[15];
+
+    return SlopeMultiplier;
 }
 
 // Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
@@ -1003,7 +1063,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     {
         ProjectileClass = PendingProjectileClass;
     }
-    //log("WeaponFireRotation = "$WeaponFireRotation);
+    //Log("WeaponFireRotation = "$WeaponFireRotation);
 
     if (P != none)
     {
@@ -1049,7 +1109,7 @@ function CeaseFire(Controller C, bool bWasAltFire)
 
 simulated function bool HasAmmo(int Mode)
 {
-    switch(Mode)
+    switch (Mode)
     {
         case 0:
             return (MainAmmoChargeExtra[0] > 0);
@@ -1074,7 +1134,7 @@ simulated function bool ReadyToFire(bool bAltFire)
 {
     local int Mode;
 
-    if (    bAltFire)
+    if (bAltFire)
         Mode = 3;
     else if (ProjectileClass == PrimaryProjectileClass)
         Mode = 0;
@@ -1111,7 +1171,7 @@ simulated function bool ConsumeAmmo(int Mode)
     if (!HasAmmo(Mode))
         return false;
 
-    switch(Mode)
+    switch (Mode)
     {
         case 0:
             MainAmmoChargeExtra[0]--;
@@ -1165,7 +1225,7 @@ simulated function Timer()
 {
    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
    {
-      //log(" Returning because there is no controller");
+      //Log(" Returning because there is no controller");
       SetTimer(0.05, true);
    }
    else if (CannonReloadState == CR_Empty)
@@ -1271,7 +1331,7 @@ simulated function bool BelowDriverAngle(vector Loc, vector Ray)
 
     C = GetBoneCoords(VehHitpoints[0].PointBone);
     HeadLoc = C.Origin + (VehHitpoints[0].PointHeight * VehHitpoints[0].PointScale * C.XAxis);
-    HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> rotator(C.Xaxis));
+    HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> Rotator(C.Xaxis));
 
     HitDir = Loc - HeadLoc;
 
@@ -1405,7 +1465,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
         t = 0.0;
     }
 
-    Distance = Sqrt(Diff dot Diff);
+    Distance = Sqrt(Diff Dot Diff);
 
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
 }
@@ -1488,14 +1548,14 @@ simulated function int LimitYaw(int yaw)
 
     P = DH_ROTankCannonPawn(Owner);
 
-    if(!bLimitYaw)
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
-    if(P != none)
+    if (P != none)
     {
-        if(P.DriverPositionIndex >= P.PeriscopePositionIndex)
+        if (P.DriverPositionIndex >= P.PeriscopePositionIndex)
         {
             return yaw;
         }
@@ -1553,6 +1613,12 @@ simulated function Destroyed() // Matt: added
 
 defaultproperties
 {
+//    bDriverDebugging=true // TEMP
+    bDebuggingText=true // TEMP
+    bPenetrationText=true // TEMP
+    bDrawPenetration=true // TEMP
+//    bCannonShellDebugging=true // TEMP
+
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true
     ManualRotationsPerSecond=0.011111

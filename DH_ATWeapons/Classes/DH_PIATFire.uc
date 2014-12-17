@@ -56,7 +56,7 @@ function PlayFiring()
         {
             if (Weapon.bUsingSights)
             {
-                switch(DH_PIATWeapon(Weapon).RangeIndex)
+                switch (DH_PIATWeapon(Weapon).RangeIndex)
                 {
                     case 0:
                         Anim = FireIronAnimOne;

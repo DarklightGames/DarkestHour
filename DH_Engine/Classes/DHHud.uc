@@ -254,7 +254,7 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
     local Class<LocalMessage> MessageClassType;
     local Class<DHLocalMessage> DHMessageClassType;
 
-    switch(MsgType)
+    switch (MsgType)
     {
         case 'Say':
             Msg = PRI.PlayerName$": "$Msg;
@@ -297,7 +297,7 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
     if (bMessageBeep && MessageClass.default.bBeep)
         PlayerOwner.PlayBeepSound();
 
-    for(i=0; i<ConsoleMessageCount; i++)
+    for (i = 0; i < ConsoleMessageCount; i++)
     {
         if (TextMessages[i].Text == "")
             break;
@@ -305,14 +305,14 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 
     if (i == ConsoleMessageCount)
     {
-        for(i=0; i<ConsoleMessageCount-1; i++)
+        for (i = 0; i < ConsoleMessageCount-1; i++)
             TextMessages[i] = TextMessages[i+1];
     }
 
     if (!bSetColour)
     {
        SetAlliedColour();
-       //log("Running SAC from AddDHTextMessage");
+       //Log("Running SAC from AddDHTextMessage");
     }
 
     TextMessages[i].Text = M;
@@ -344,7 +344,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     if (!bSetColour)
     {
        SetAlliedColour();
-       //log("Running SAC from AddDeathMessage");
+       //Log("Running SAC from AddDeathMessage");
     }
 
     if (Killer != none && Killer != Victim)
@@ -545,7 +545,7 @@ simulated function DrawHudPassC(Canvas C)
             // Show Mantling icon if an object can be climbed
             DrawSpriteWidget(C, CanMantleIcon);
         }
-        else if(DH_Pawn(PawnOwner).bCanCutWire)
+        else if (DH_Pawn(PawnOwner).bCanCutWire)
         {
             DrawSpriteWidget(C, CanCutWireIcon);
         }
@@ -1402,7 +1402,7 @@ function DrawPlayerNames(Canvas C)
     if (!bSetColour)
     {
        SetAlliedColour();
-       //log("Running SAC from DrawPlayerNames");
+       //Log("Running SAC from DrawPlayerNames");
     }
 
     ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0, 0, 1);
@@ -2170,7 +2170,7 @@ simulated function DrawObjectives(Canvas C)
             //Draw all mortar targets on the map.
             if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
             {
-                for(i = 0; i < arraycount(DHGRI.GermanMortarTargets); i++)
+                for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); i++)
                 {
                     if (DHGRI.GermanMortarTargets[i].Location != vect(0, 0, 0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
                         DrawIconOnMap(C, subCoords, MapIconMortarTarget, myMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
@@ -2232,7 +2232,7 @@ simulated function DrawObjectives(Canvas C)
 
             //------------------------------------------------------------------
             //Draw all mortar targets on the map.
-            for(i = 0; i < arraycount(DHGRI.AlliedMortarTargets); i++)
+            for (i = 0; i < arraycount(DHGRI.AlliedMortarTargets); i++)
             {
                 if (DHGRI.AlliedMortarTargets[i].Location != vect(0, 0, 0) && DHGRI.AlliedMortarTargets[i].bCancelled == 0)
                     DrawIconOnMap(C, subCoords, MapIconMortarTarget, myMapScale, DHGRI.AlliedMortarTargets[i].Location, MapCenter);
@@ -2625,7 +2625,7 @@ simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
     local ROVehicle ROV;
     local DHGameReplicationInfo GRI;
 
-    if(bShowVoiceIcon == false)
+    if (bShowVoiceIcon == false)
     {
         return;
     }
@@ -2634,7 +2634,7 @@ simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
 
     foreach RadiusActors(class'DH_Pawn', DHP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)   //100 feet
     {
-        if(DHP.Health <= 0 || DHP.PlayerReplicationInfo != PRI)
+        if (DHP.Health <= 0 || DHP.PlayerReplicationInfo != PRI)
         {
             continue;
         }
@@ -2646,7 +2646,7 @@ simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
 
     foreach RadiusActors(class'ROVehicle', ROV, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
     {
-        if( ROV.Driver == none || ROV.PlayerReplicationInfo != PRI)
+        if (ROV.Driver == none || ROV.PlayerReplicationInfo != PRI)
         {
             continue;
         }
@@ -2658,7 +2658,7 @@ simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
 
     foreach RadiusActors(class'ROVehicleWeaponPawn', ROVWP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location)
     {
-        if(ROVWP.Driver == none || ROVWP.PlayerReplicationInfo != PRI)
+        if (ROVWP.Driver == none || ROVWP.PlayerReplicationInfo != PRI)
         {
             continue;
         }
@@ -2826,7 +2826,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     if (!bSetColour)
     {
        SetAlliedColour();
-       //log("Running SAC from DrawCaptureBar");
+       //Log("Running SAC from DrawCaptureBar");
     }
 
     bDrawingCaptureBar = false;

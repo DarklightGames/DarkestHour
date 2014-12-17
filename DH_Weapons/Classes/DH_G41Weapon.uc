@@ -155,7 +155,7 @@ function bool FillAmmo()
 
     PrimaryAmmoArray.Length = MaxNumPrimaryMags;
 
-    for(i = 0; i < PrimaryAmmoArray.Length; i++)
+    for (i = 0; i < PrimaryAmmoArray.Length; i++)
     {
         PrimaryAmmoArray[i] = InitialAmount;
     }
@@ -194,7 +194,7 @@ function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
         {
             PrimaryAmmoArray.Length = InitialNumPrimaryMags;
 
-            for(i = 0; i < PrimaryAmmoArray.Length; ++i)
+            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }

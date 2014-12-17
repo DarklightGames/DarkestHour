@@ -22,7 +22,7 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     //Factories are dynamic so use dynamic actor list
-    for(i=0; i<FactoryToModify.Length; i++)
+    for (i = 0; i < FactoryToModify.Length; i++)
     {
         foreach DynamicActors(class'ROVehicleFactory', ROVF, FactoryToModify[i])
         {
@@ -42,10 +42,10 @@ event Trigger(Actor Other, Pawn EventInstigator)
         if (RandomPercent <= RandomNum)
             return; //Leave script as it randomly failed
     }
-    switch(HowToModify)
+    switch (HowToModify)
     {
         case SMT_Activate:
-            for(i=0; i<FactoryReference.Length; i++)
+            for (i = 0; i < FactoryReference.Length; i++)
             {
                 FactoryReference[i].Activate(FactoryReference[i].TeamNum); //Activates the factory
                 if (bChangeUseSpawnArea)
@@ -53,7 +53,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
             }
         break;
         case SMT_Deactivate:
-            for(i=0; i<FactoryReference.Length; i++)
+            for (i = 0; i < FactoryReference.Length; i++)
             {
                 FactoryReference[i].Deactivate(); //Deactivates the factory
 
@@ -66,7 +66,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
             }
         break;
         case SMT_Toggle: //Check factory status and toggle it
-            for(i=0; i<FactoryReference.Length; i++)
+            for (i = 0; i < FactoryReference.Length; i++)
             {
                 if (!FactoryReference[i].bFactoryActive)
                 {

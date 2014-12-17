@@ -33,9 +33,9 @@ function DoTrace(vector Start, rotator Dir)
 
     if (Other == none || VSizeSquared(Start - HitLocation) > GetTraceRangeSquared())
     {
-        for(i = 0; i < 4; i++)
+        for (i = 0; i < 4; i++)
         {
-            switch(i)
+            switch (i)
             {
                 // Lower Left
                 case 0:

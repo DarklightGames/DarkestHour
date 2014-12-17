@@ -57,7 +57,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
                 --InsertIndex;
             }
 
-            if ( RemovedIndex != InsertIndex )
+            if (RemovedIndex != InsertIndex)
             {
                 MyArray.Insert(InsertIndex, 1);
                 MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
@@ -70,12 +70,12 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
 // Modified to set bTearOff to true on a server, which stops this rider pawn being replicated to clients (until entered, when we unset bTearOff)
 simulated function PostBeginPlay()
 {
-	super.PostBeginPlay();
+    super.PostBeginPlay();
 
-	if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
-	{
-		bTearOff = true;
-	}
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+    {
+        bTearOff = true;
+    }
 }
 
 // Overridden to stop the game playing silly buggers with exit positions while moving and breaking my damage code
@@ -241,7 +241,7 @@ function bool TryToDrive(Pawn P)
                 return VehicleBase.TryToDrive(P);
             }
 
-            DenyEntry( P, 1 );
+            DenyEntry(P, 1);
 
             return false;
         }

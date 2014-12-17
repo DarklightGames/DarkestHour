@@ -18,7 +18,7 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    switch(Switch)
+    switch (Switch)
     {
         case 0:
             return default.NoProneFire;

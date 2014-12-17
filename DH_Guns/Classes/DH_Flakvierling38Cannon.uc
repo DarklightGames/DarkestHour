@@ -51,7 +51,7 @@ state ProjectileFireMode
         SpawnProjectile(ProjectileClass, false);
 
         // Swap animation index
-        if(FireAnimationIndex == 0)
+        if (FireAnimationIndex == 0)
         {
             FireAnimationIndex = 1;
         }
@@ -243,24 +243,24 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
     {
         if (FlashEmitters[0] != none) // Matt: added these ifs to prevent "accessed none" errors on server (& general good practice)
         {
-            FlashEmitters[0].Trigger(Self, Instigator);
+            FlashEmitters[0].Trigger(self, Instigator);
         }
 
         if (FlashEmitters[3] != none)
         {
-            FlashEmitters[3].Trigger(Self, Instigator);
+            FlashEmitters[3].Trigger(self, Instigator);
         }
     }
     else
     {
         if (FlashEmitters[1] != none)
         {
-            FlashEmitters[1].Trigger(Self, Instigator);
+            FlashEmitters[1].Trigger(self, Instigator);
         }
 
         if (FlashEmitters[2] != none)
         {
-            FlashEmitters[2].Trigger(Self, Instigator);
+            FlashEmitters[2].Trigger(self, Instigator);
         }
     }
 
@@ -277,7 +277,7 @@ simulated function InitEffects()
         return;
     }
 
-    for(i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         if (FlashEmitterClass != none && FlashEmitters[i] == none)
         {

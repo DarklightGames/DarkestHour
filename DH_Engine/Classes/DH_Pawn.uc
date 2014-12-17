@@ -179,7 +179,7 @@ simulated function bool HasMortarInInventory()
         return false;
     }
 
-    for(I = Inventory; I != none; I = I.Inventory)
+    for (I = Inventory; I != none; I = I.Inventory)
     {
         if (I.Name == 'DH_Kz8cmGrW42Weapon' || I.Name == 'DH_M2MortarWeapon')
         {
@@ -481,7 +481,7 @@ simulated function ProcessHitFX()
         {
             GibPerterbation = HitFX[SimHitFxTicker].damtype.default.GibPerterbation;
 
-            switch(HitFX[SimHitFxTicker].bone)
+            switch (HitFX[SimHitFxTicker].bone)
             {
                 case 'obliterate':
                     break;
@@ -554,7 +554,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         return;
     }
 
-    for(i = 0; i < PointsHit.Length; i++)
+    for (i = 0; i < PointsHit.Length; i++)
     {
         // If someone else has killed this player , return
         if (bDeleteMe || Health <= 0)
@@ -1620,7 +1620,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         {
             if (N.bReceivePlayerToucherDiedNotify)
             {
-                N.PlayerToucherDied(Self);
+                N.PlayerToucherDied(self);
             }
         }
     }
@@ -1901,7 +1901,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            for(i = 0; i < 3; i++)
+            for (i = 0; i < 3; i++)
             {
                 S = string(RI.Grenades[i].Item);
 
@@ -1964,7 +1964,7 @@ function AddDefaultInventory()
                 }
             }
 
-            for(i = 0; i < 3; i++)
+            for (i = 0; i < 3; i++)
             {
                 S = string(RI.Grenades[i].Item);
 
@@ -2626,7 +2626,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         StartLoc.Z = MantleEndPoint.Z - 1;
         EndLoc = StartLoc + X * 30;
 
-        for(i = 0; i < 5; i++)
+        for (i = 0; i < 5; i++)
         {
             if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
             {
@@ -3297,7 +3297,7 @@ event UpdateEyeHeight(float DeltaTime)
         EyeHeight = FMin(EyeHeight * (1 - 1.5*smooth), MaxEyeHeight);
         LandBob += 0.03 * (OldEyeHeight - EyeHeight);
 
-        if ((EyeHeight < 0.25 * BaseEyeHeight + 1) || (LandBob > 3) )
+        if ((EyeHeight < 0.25 * BaseEyeHeight + 1) || LandBob > 3)
         {
             bLandRecovery = true;
             EyeHeight = 0.25 * BaseEyeHeight + 1;
@@ -3550,7 +3550,7 @@ simulated function StartBurnFX()
     if (FlameFX == none)
     {
         FlameFX = Spawn(FlameEffect);
-        FlameFX.SetBase(Self);
+        FlameFX.SetBase(self);
         FlameFX.Emitters[0].SkeletalMeshActor = self;
         FlameFX.Emitters[0].UseSkeletalLocationAs = PTSU_SpawnOffset;
         FlameFX.Emitters[1].SkeletalMeshActor = self;

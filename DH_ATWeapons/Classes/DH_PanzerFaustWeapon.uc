@@ -70,7 +70,7 @@ simulated function PlayIdle()
 
     if (bUsingSights)
     {
-        switch(RangeIndex)
+        switch (RangeIndex)
         {
             case 0:
                 Anim = IronIdleAnimOne;
@@ -174,7 +174,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
         {
             PrimaryAmmoArray.Length = MaxNumPrimaryMags;
 
-            for(i = 0; i < PrimaryAmmoArray.Length; i++)
+            for (i = 0; i < PrimaryAmmoArray.Length; i++)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
@@ -447,7 +447,7 @@ function SelfDestroy()
 {
     local int m;
 
-    for(m = 0; m < NUM_FIRE_MODES; m++)
+    for (m = 0; m < NUM_FIRE_MODES; m++)
     {
         if (FireMode[m].bIsFiring)
         {
@@ -586,7 +586,7 @@ simulated state AutoLoweringWeapon
                 ClientState = WS_Hidden;
                 Instigator.ChangedWeapon();
 
-                for(Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
                 {
                     FireMode[Mode].DestroyEffects();
                 }

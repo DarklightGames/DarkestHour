@@ -261,7 +261,7 @@ function UpdateSpawnPoints()
 
         for (i = 0; i < 32; ++i)
         {
-            if(!DHGRI.IsSpawnPointActive(i) || DHGRI.GetSpawnPointTeamIndex(i) != C.GetTeamNum())
+            if (!DHGRI.IsSpawnPointActive(i) || DHGRI.GetSpawnPointTeamIndex(i) != C.GetTeamNum())
             {
                 continue;
             }

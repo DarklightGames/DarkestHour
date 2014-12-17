@@ -9,7 +9,7 @@ var()   ROSideIndex     NewDefendingSide;
 
 event Trigger(Actor Other, Pawn EventInstigator)
 {
-    switch(NewDefendingSide)
+    switch (NewDefendingSide)
     {
         //Change Defending Side To none
         case NEUTRAL:

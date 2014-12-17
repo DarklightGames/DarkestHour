@@ -183,7 +183,7 @@ simulated function SetImage()
 
     //We are going to check to see if the level is officially supported
     //If so set the proper background (loadingscreen) and call the function to add the logo indicating official map
-    switch(Map)
+    switch (Map)
     {
         case "bois jacques" :
             str = Backgrounds[1];

@@ -99,7 +99,7 @@ function PlayFiring()
         {
             if (Weapon.bUsingSights)
             {
-                switch(DH_PanzerFaustWeapon(Weapon).RangeIndex)
+                switch (DH_PanzerFaustWeapon(Weapon).RangeIndex)
                 {
                     case 0:
                         Anim = FireIronAnimOne;

@@ -23,11 +23,11 @@ event ConnectFailure(string FailCode,string URL)
 
     Log("Connect Failure: "@FailCode$"["$Error$"] ("$URL$")",'Debug');
 
-    if(FailCode == "NEEDPW")
+    if (FailCode == "NEEDPW")
     {
-        for(Index = 0;Index < SavedPasswords.Length;Index++)
+        for (Index = 0;Index < SavedPasswords.Length;Index++)
         {
-            if(SavedPasswords[Index].Server == Server)
+            if (SavedPasswords[Index].Server == Server)
             {
                 ViewportOwner.Actor.ClearProgressMessages();
                 ViewportOwner.Actor.ClientTravel(URL$"?password="$SavedPasswords[Index].Password,TRAVEL_Absolute, false);
@@ -36,16 +36,16 @@ event ConnectFailure(string FailCode,string URL)
         }
 
         LastConnectedServer = Server;
-        if ( ViewportOwner.GUIController.OpenMenu(NeedPasswordMenuClass, URL, FailCode) )
+        if (ViewportOwner.GUIController.OpenMenu(NeedPasswordMenuClass, URL, FailCode))
             return;
     }
-    else if(FailCode == "WRONGPW")
+    else if (FailCode == "WRONGPW")
     {
         ViewportOwner.Actor.ClearProgressMessages();
 
-        for(Index = 0;Index < SavedPasswords.Length;Index++)
+        for (Index = 0;Index < SavedPasswords.Length;Index++)
         {
-            if(SavedPasswords[Index].Server == Server)
+            if (SavedPasswords[Index].Server == Server)
             {
                 SavedPasswords.Remove(Index,1);
                 SaveConfig();
@@ -53,69 +53,69 @@ event ConnectFailure(string FailCode,string URL)
         }
 
         LastConnectedServer = Server;
-        if ( ViewportOwner.GUIController.OpenMenu(NeedPasswordMenuClass, URL, FailCode) )
+        if (ViewportOwner.GUIController.OpenMenu(NeedPasswordMenuClass, URL, FailCode))
             return;
     }
-    else if(FailCode == "NEEDSTATS")
+    else if (FailCode == "NEEDSTATS")
     {
         ViewportOwner.Actor.ClearProgressMessages();
-        if ( ViewportOwner.GUIController.OpenMenu(StatsPromptMenuClass, "", FailCode) )
+        if (ViewportOwner.GUIController.OpenMenu(StatsPromptMenuClass, "", FailCode))
         {
             GUIController(ViewportOwner.GUIController).ActivePage.OnReopen = OnStatsConfigured;
             return;
         }
     }
-    else if ( FailCode == "LOCALBAN" )
+    else if (FailCode == "LOCALBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
         ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed","Engine"),class'AccessControl'.default.IPBanned);
         return;
     }
 
-    else if ( FailCode == "SESSIONBAN" )
+    else if (FailCode == "SESSIONBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
         ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed","Engine"),class'AccessControl'.default.SessionBanned);
         return;
     }
 
-    else if ( FailCode == "SERVERFULL" )
+    else if (FailCode == "SERVERFULL")
     {
         ViewportOwner.Actor.ClearProgressMessages();
         ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,ServerFullMsg);
         return;
     }
 
-    else if ( FailCode == "CHALLENGE" )
+    else if (FailCode == "CHALLENGE")
     {
         ViewportOwner.Actor.ClearProgressMessages();
         ViewportOwner.Actor.ClientNetworkMessage("FC_Challege","");
         return;
     }
     // _RO_
-    else if ( FailCode == "STEAMLOGGEDINELSEWHERE" )
+    else if (FailCode == "STEAMLOGGEDINELSEWHERE")
     {
         ViewportOwner.Actor.ClearProgressMessages();
 
         LastConnectedServer = Server;
 
-        if ( ViewportOwner.GUIController.OpenMenu(SteamLoginMenuClass, URL, FailCode) )
+        if (ViewportOwner.GUIController.OpenMenu(SteamLoginMenuClass, URL, FailCode))
             return;
     }
-    else if ( FailCode == "STEAMVACBANNED" )
+    else if (FailCode == "STEAMVACBANNED")
     {
         ViewportOwner.Actor.ClearProgressMessages();
         ViewportOwner.Actor.ClientNetworkMessage("ST_VACBan","");
         return;
     }
-    else if ( FailCode == "STEAMVALIDATIONSTALLED")
+    else if (FailCode == "STEAMVALIDATIONSTALLED")
     {
         // Lame hack for a Steam problem. Take this out when Valve fixes the SteamValidationStalled bug
-        if( SteamLoginRetryCount < 5 )
+        if (SteamLoginRetryCount < 5)
         {
             SteamLoginRetryCount++;
 
-            ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute, false);
+            ViewportOwner.Actor.ClientTravel(URL,TRAVEL_Absolute, false);
             ViewportOwner.GUIController.CloseAll(false, true);
             return;
         }
@@ -127,13 +127,13 @@ event ConnectFailure(string FailCode,string URL)
             return;
         }
     }
-    else if ( FailCode == "STEAMAUTH" /*|| FailCode == "STEAMVALIDATIONSTALLED"*/)
+    else if (FailCode == "STEAMAUTH" /*|| FailCode == "STEAMVALIDATIONSTALLED"*/)
     {
-        if( SteamLoginRetryCount < 5 )
+        if (SteamLoginRetryCount < 5)
         {
             SteamLoginRetryCount++;
 
-            ViewportOwner.Actor.ClientTravel( URL,TRAVEL_Absolute, false);
+            ViewportOwner.Actor.ClientTravel(URL,TRAVEL_Absolute, false);
             ViewportOwner.GUIController.CloseAll(false, true);
             return;
         }

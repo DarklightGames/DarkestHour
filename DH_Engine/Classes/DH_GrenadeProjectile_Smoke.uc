@@ -12,7 +12,7 @@ var Emitter SmokeEmitter;
 var sound   SmokeSound;
 
 // Modified to handle destruction of actor after set time
-simulated function Tick(float DeltaTime)
+simulated function Tick(float DeltaTime) // Matt: couldn't a simple Timer be used? TEST
 {
     super.Tick(DeltaTime);
 
@@ -54,7 +54,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     if (Level.NetMode != NM_DedicatedServer)
     {
         SmokeEmitter = Spawn(ExplodeDirtEffectClass, self,, Location, rotator(vect(0, 0, 1)));
-        SmokeEmitter.SetBase(Self);
+        SmokeEmitter.SetBase(self);
     }
 }
 
@@ -94,7 +94,7 @@ defaultproperties
     DestroyTimer=30.000000
     Damage=0.000000
     DamageRadius=0.000000
-    ExplodeDirtEffectClass=Class'ROEffects.GrenadeSmokeEffect'
+    ExplodeDirtEffectClass=class'ROEffects.GrenadeSmokeEffect'
     ExplosionSound(0)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     ExplosionSound(1)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     ExplosionSound(2)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'

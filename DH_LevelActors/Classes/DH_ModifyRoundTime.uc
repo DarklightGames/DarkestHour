@@ -28,7 +28,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     GameInstance = ROTeamGame(Level.Game);
     GameReplicationInfoInstance = ROGameReplicationInfo(GameInstance.GameReplicationInfo);
 
-    switch(RoundTimeOperator)
+    switch (RoundTimeOperator)
     {
         //Add X seconds to the round time.
         case RTO_Add:

@@ -39,7 +39,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
         if (RandomPercent <= RandomNum)
             return; //Leave script as it randomly failed
     }
-    switch(HowToModify)
+    switch (HowToModify)
     {
         case SMT_Activate:
             //Level.Game.Broadcast(self, "Activated Minefield");

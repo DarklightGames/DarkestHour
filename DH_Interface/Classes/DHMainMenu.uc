@@ -233,7 +233,7 @@ event Opened(GUIComponent Sender)
     //sb_ShowVersion.SetVisibility(true);
 
     if (bDebugging)
-        log(Name$".Opened()   Sender:"$Sender,'Debug');
+        Log(Name$".Opened()   Sender:"$Sender,'Debug');
 
      if (Sender != none && PlayerOwner().Level.IsPendingConnection())
             PlayerOwner().ConsoleCommand("CANCEL");
@@ -248,7 +248,7 @@ function LoadMenuLevel()
 event bool NotifyLevelChange()
 {
     if (bDebugging)
-        log(Name@"NotifyLevelChange  PendingConnection:"$PlayerOwner().Level.IsPendingConnection());
+        Log(Name@"NotifyLevelChange  PendingConnection:"$PlayerOwner().Level.IsPendingConnection());
         return PlayerOwner().Level.IsPendingConnection();
 }
 
@@ -313,11 +313,11 @@ protected function ROBufferedTCPLink CreateNewLink()
 
     if (LinkClassName != "")
     {
-        NewLinkClass = class<ROBufferedTCPLink>(DynamicLoadObject( LinkClassName, class'class'));
+        NewLinkClass = class<ROBufferedTCPLink>(DynamicLoadObject(LinkClassName, class'class'));
     }
     if (NewLinkClass != none)
     {
-        NewLink = PlayerOwner().Spawn( NewLinkClass );
+        NewLink = PlayerOwner().Spawn(NewLinkClass);
     }
 
     NewLink.ResetBuffer();
