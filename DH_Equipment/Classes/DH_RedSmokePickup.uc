@@ -3,20 +3,15 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_RedSmokePickup extends ROOneShotWeaponPickup
+class DH_RedSmokePickup extends DHOneShotWeaponPickup
    notplaceable;
 
 defaultproperties
 {
-    TouchMessage="Pick Up: M16 Red Smoke Grenade"
-    MaxDesireability=0.780000
     InventoryType=class'DH_Equipment.DH_RedSmokeWeapon'
-    PickupMessage="You got the M16 Red Smoke Grenade."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.USRedSmokeGrenade'
     PrePivot=(Z=3.000000)
-    AmbientGlow=0
     CollisionRadius=15.000000
     CollisionHeight=3.000000
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_NebelGranate39Pickup extends ROOneShotWeaponPickup
+class DH_NebelGranate39Pickup extends DHOneShotWeaponPickup
    notplaceable;
 
 static function StaticPrecache(LevelInfo L)
@@ -17,15 +17,10 @@ static function StaticPrecache(LevelInfo L)
 
 defaultproperties
 {
-    TouchMessage="Pick Up: Nebelhandgranate 39"
-    MaxDesireability=0.780000
     InventoryType=class'DH_Equipment.DH_NebelGranate39Weapon'
-    PickupMessage="You got the Nebelhandgranate 39."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.gersmokenade'
     PrePivot=(Z=3.000000)
-    AmbientGlow=0
     CollisionRadius=15.000000
     CollisionHeight=3.000000
 }
