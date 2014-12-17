@@ -51,6 +51,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_ColtM1911Attachment'
-    ItemName="Colt M1911 Pistol"
+    ItemName="Colt M1911"
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
 }

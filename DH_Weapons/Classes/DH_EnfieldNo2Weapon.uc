@@ -51,6 +51,6 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo2Pickup'
     BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo2Attachment'
-    ItemName="Enfield No2 Revolver"
+    ItemName="Enfield No.2"
     Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
 }

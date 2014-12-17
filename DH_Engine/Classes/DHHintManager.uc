@@ -168,7 +168,7 @@ defaultproperties
     Hints(2)=(Title="Parachutes",Text="You can guide your parachute's trajectory with your movement keys.")
     Hints(3)=(Title="Coloured Smoke Grenades",Text="Coloured smoke grenades are used to communicate on the battlefield with your teammates.  Be sure to tell your teammates what the coloured smoke indicates.")
     Hints(4)=(Title="M1 Garand",Text="Firing the last round of an en bloc clip makes a distinctive audible ping indicating that your rifle is out of ammunition.  Be careful, the enemy may take advantage of this.")
-    Hints(5)=(Title="Lee Enfield No. 4",Text="The Lee Enfield No. 4 can hold two 5-rd stripper clips.  After you have fired 5 rounds, you may reload the rifle.  If you fire all your rounds, you will reload with two stripper clips at once.")
+    Hints(5)=(Title="Lee Enfield No.4",Text="The Lee Enfield No.4 can hold two 5-rd stripper clips.  After you have fired 5 rounds, you may reload the rifle.  If you fire all your rounds, you will reload with two stripper clips at once.")
     Hints(6)=(Title="Mortars",Text="While you are holding a mortar you cannot change weapons, sprint, prone or mantle.  To deploy your mortar, crouch on flat ground and press %DEPLOY%.")
     Hints(7)=(Title="Mortar Operation",Text="To adjust the traverse of your mortar, hold the A or D keys.  To increase the elevation, press the S key.  To decrease the elevation, press the W key.  To select the next round type, press the %SwitchFireMode% key.  To fire a round, press the %Fire% key.")
     Hints(8)=(Title="Mortar Targets",Text="A mortar observer can mark targets that become visible on your map.  When a round lands near a target marker, the location of the impact will be marked your map.  Use these markers to zero in on your target.")
