@@ -54,26 +54,6 @@ function KDriverEnter(Pawn P)
     }
 }
 
-simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
-{
-   return true;
-}
-
-simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
-{
-    return true;
-}
-
-simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
-{
-    return true;
-}
-
-simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bIsHEATRound)
-{
-    return true;
-}
-
 // DriverLeft() called by KDriverLeave()
 function DriverLeft()
 {
