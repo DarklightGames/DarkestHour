@@ -291,6 +291,12 @@ simulated function InitEffects()
     }
 }
 
+// Matt: added from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon, which will run armor checks
+simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+{
+   return true;
+}
+
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
     return false; // there aren't any angles that are below the driver angle for an AT Gun cannon
