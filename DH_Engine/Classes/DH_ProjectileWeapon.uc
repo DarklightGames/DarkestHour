@@ -512,7 +512,7 @@ simulated function bool StartFire(int Mode)
 {
     local int Alt;
 
-    if (AmmoAmount(0) <= 0 || bBarrelFailed)
+    if (!FireMode[Mode].bMeleeMode && AmmoAmount(0) <= 0 || bBarrelFailed)
     {
         return false;
     }
