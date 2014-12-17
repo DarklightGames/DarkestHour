@@ -291,23 +291,6 @@ simulated function InitEffects()
     }
 }
 
-// Matt: added these functions from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon:
-simulated function bool DHShouldPenetrateAPC(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, float ShellDiameter, optional class<DamageType> DamageType, optional bool bShatterProne)
-{
-   return true;
-}
-simulated function bool DHShouldPenetrateHVAP(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
-{
-    return true;
-}
-simulated function bool DHShouldPenetrateAPDS(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bShatterProne)
-{
-    return true;
-}
-simulated function bool DHShouldPenetrateHEAT(vector HitLocation, vector HitRotation, float PenetrationNumber, out float InAngle, optional class<DamageType> DamageType, optional bool bIsHEATRound)
-{
-    return true;
-}
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
     return false; // there aren't any angles that are below the driver angle for an AT Gun cannon
