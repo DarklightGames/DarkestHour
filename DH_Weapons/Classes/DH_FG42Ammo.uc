@@ -11,5 +11,4 @@ defaultproperties
     InitialAmount=20
     IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.FG42_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
-    ItemName="Fallschirmjägergewehr 42 Magazine"
 }

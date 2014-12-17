@@ -160,7 +160,6 @@ defaultproperties
     InventoryType=class'DH_ATWeapons.DH_PanzerFaustWeapon'
     PickupMessage="You got the Panzerfaust 60."
     PickupSound=sound'Inf_Weapons_Foley.Misc.WeaponPickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
     PrePivot=(Z=3.000000)

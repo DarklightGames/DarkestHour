@@ -13,7 +13,6 @@ defaultproperties
     InventoryType=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
     PickupMessage="You got the US M15 Smoke Grenade."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.USSmokeGrenade'
     PrePivot=(Z=3.000000)

@@ -8,12 +8,7 @@ class DH_M1GarandPickup extends DHWeaponPickup
 
 defaultproperties
 {
-    TouchMessage="Pick Up: M1 Garand"
-    MaxDesireability=0.780000
     InventoryType=class'DH_Weapons.DH_M1GarandWeapon'
-    PickupMessage="You got the M1 Garand."
-    PickupForce="AssaultRiflePickup"
-    DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1_Garand'
     PrePivot=(Z=3.000000)
     CollisionRadius=25.000000

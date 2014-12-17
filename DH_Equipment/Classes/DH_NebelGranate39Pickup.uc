@@ -22,7 +22,6 @@ defaultproperties
     InventoryType=class'DH_Equipment.DH_NebelGranate39Weapon'
     PickupMessage="You got the Nebelhandgranate 39."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.gersmokenade'
     PrePivot=(Z=3.000000)

@@ -13,7 +13,6 @@ defaultproperties
     InventoryType=class'DH_Equipment.DH_RedSmokeWeapon'
     PickupMessage="You got the M16 Red Smoke Grenade."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.USRedSmokeGrenade'
     PrePivot=(Z=3.000000)

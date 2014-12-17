@@ -7,7 +7,6 @@ class DH_SachelChargeAmmo extends ROAmmunition;
 
 defaultproperties
 {
-    ItemName="Satchel Charge"
     IconMaterial=Material'InterfaceArt_tex.HUD.satchel_ammo'
     IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
     MaxAmmo=1

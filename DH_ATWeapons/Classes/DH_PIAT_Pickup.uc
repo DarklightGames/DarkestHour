@@ -149,8 +149,6 @@ defaultproperties
     MaxDesireability=0.780000
     InventoryType=class'DH_ATWeapons.DH_PIATAmmo'
     PickupMessage="You got the PIAT."
-    PickupSound=sound'Inf_Weapons_Foley.Misc.WeaponPickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.PIAT'
     PrePivot=(Z=3.000000)

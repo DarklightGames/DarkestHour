@@ -22,7 +22,6 @@ defaultproperties
     InventoryType=class'DH_Weapons.DH_StielGranateWeapon'
     PickupMessage="You got the Stielhandgranate 39/43."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate'
     PrePivot=(Z=3.000000)

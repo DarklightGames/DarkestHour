@@ -13,7 +13,6 @@ defaultproperties
     InventoryType=class'DH_Weapons.DH_M1GrenadeWeapon'
     PickupMessage="You got the Mk II Grenade."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.M1_Grenade'
     PrePivot=(Z=3.000000)

@@ -183,7 +183,6 @@ defaultproperties
     InventoryType=class'DH_Weapons.DH_SachelChargeAmmo'
     PickupMessage="You got a 10lb satchel."
     PickupSound=sound'Inf_Weapons_Foley.Misc.WeaponPickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel'
     PrePivot=(Z=3.000000)

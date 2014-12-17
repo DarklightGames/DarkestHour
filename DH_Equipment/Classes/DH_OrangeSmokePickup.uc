@@ -13,7 +13,6 @@ defaultproperties
     InventoryType=class'DH_Equipment.DH_OrangeSmokeWeapon'
     PickupMessage="You got the RauchSichtzeichen Orange 160."
     PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
-    PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GerOrangeSmokeGrenade'
     PrePivot=(Z=3.000000)
