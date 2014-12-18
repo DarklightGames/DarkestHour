@@ -41,5 +41,5 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 defaultproperties
 {
-    AttachmentClass=class'DH_Equipment.DH_GerMortarBinocularsAttachment'
+    AttachmentClass=class'DH_Equipment.DH_BinocularsAttachment'
 }

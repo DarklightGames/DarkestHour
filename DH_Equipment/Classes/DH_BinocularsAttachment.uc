@@ -3,14 +3,17 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_USArtyBinocularsAttachment extends DHWeaponAttachment;
+class DH_BinocularsAttachment extends DHWeaponAttachment;
 
 simulated event ThirdPersonEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (ROPawn(Instigator) == none)
+        {
             return;
+        }
+
         if (FlashCount == 0)
         {
             ROPawn(Instigator).StopFiring();
@@ -164,9 +167,9 @@ defaultproperties
     WA_Idle="idle_binocs"
     WA_Fire="idle_binocs"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.Binocs'
-    MenuDescription="Used to spot enemy movements and mark artillery targets."
+    MenuDescription="Used to spot enemy movements and mark targets."
     bRapidFire=false
-    LightType=LT_none
-    LightEffect=LE_none
+    LightType=LT_None
+    LightEffect=LE_None
     Mesh=SkeletalMesh'Weapons3rd_anm.Binocs_ger'
 }
