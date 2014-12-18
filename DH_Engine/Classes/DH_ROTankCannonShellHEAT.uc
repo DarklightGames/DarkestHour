@@ -5,29 +5,23 @@
 
 class DH_ROTankCannonShellHEAT extends DH_ROTankCannonShell;
 
-var sound               ExplosionSound[3];        // sound of this shell exploding
+// Penetration:
+var bool  bInHitWall;
+var float MaxWall;                    // maximum wall penetration
+var float WScale;                     // penetration depth scale factor to take into account; weapon scale
+var float Hardness;                   // wall hardness, calculated in CheckWall for surface type
+var float PenetrationDamage;          // damage done by shell penetrating wall
+var float PenetrationDamageRadius;    // damage radius for shell penetrating wall
+var float EnergyFactor;               // for calculating penetration of projectile
+var float PeneExploWallOut;           // distance out from the wall to spawn penetration explosion
+var bool  bDidPenetrationExplosionFX; // already did the penetration explosion effects
+var bool  bHitWorldObject;            // flags that shell has hit a world object & should run a world penetration check (Matt: reversing original bHitWorldObject, as this way seems more logical)
 
-// Penetration
-var bool bInHitWall;
+var globalconfig float PenetrationScale; // global penetration depth scale factor
+var globalconfig float DistortionScale;  // global distortion scale factor
 
-var float MaxWall;      // Maximum wall penetration
-var float WScale;       // Penetration depth scale factor to take into account; weapon scale
-var float Hardness;     // wall hardness, calculated in CheckWall for surface type
-var float PenetrationDamage;    // Damage done by rocket penetrating wall
-var float PenetrationDamageRadius;        // Damage radius for rocket penetrating wall
-var float EnergyFactor;        // For calculating penetration of projectile
-var float PeneExploWallOut;   // Distance out from the wall to spawn penetration explosion
 
-var globalconfig float  PenetrationScale;   // global Penetration depth scale factor
-var globalconfig float  DistortionScale;    // global Distortion scale factor
-//var globalconfig bool     bDebugMode;         // If true, give our detailed report in log.
-//var globalconfig bool     bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
-
-var bool bDidPenetrationExplosionFX; // Already did the penetration explosion effects
-
-var         bool                bNoWorldPen;   // Rocket has hit something other than the world and should be destroyed without running world penetration check
-
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function DELETEExplode(vector HitLocation, vector HitNormal)
 {
     local vector TraceHitLocation, TraceHitNormal;
     local Material HitMaterial;
@@ -129,7 +123,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     bDidExplosionFX = true;
 
-    if (bNoWorldPen)
+    if (!bHitWorldObject)
     {
         if (Level.NetMode == NM_DedicatedServer)
         {
@@ -144,7 +138,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 }
 
-simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
+simulated function DELETEPenetrationExplode(vector HitLocation, vector HitNormal)
 {
     local vector TraceHitLocation, TraceHitNormal;
     local Material HitMaterial;
@@ -237,7 +231,7 @@ simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
     if (bCollided)
         return;
 
-    PenetrationBlowUp(HitLocation);
+//    PenetrationBlowUp(HitLocation);
 
     // Save the hit info for when the shell is destroyed
     SavedHitLocation = HitLocation;
@@ -261,14 +255,8 @@ simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
     }
 }
 
-function PenetrationBlowUp(vector HitLocation)
-{
-    HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-    MakeNoise(1.0);
-}
-
 // HEAT rounds only deflect when they strike at angles, but for simplicity's sake, lets just detonate them with no damage instead
-simulated function FailToPenetrate(vector HitLocation)
+simulated function DELETEFailToPenetrate(vector HitLocation)
 {
     local vector TraceHitLocation, HitNormal;
 
@@ -277,7 +265,7 @@ simulated function FailToPenetrate(vector HitLocation)
 }
 
 // Matt: re-worked, with commentary below
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function DELETEProcessTouch(Actor Other, vector HitLocation)
 {
     local ROVehicle       HitVehicle;
     local ROVehicleWeapon HitVehicleWeapon;
@@ -354,7 +342,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 Level.Game.Broadcast(self, "HEAT failed to penetrate turret!");
             }
 
-            FailToPenetrate(HitLocation); // no deflection for HEAT, just detonate without damage
+//            FailToPenetrate(HitLocation); // no deflection for HEAT, just detonate without damage
 
             // Don't update the position any more and don't move the projectile any more
             bUpdateSimulatedPosition = false;
@@ -458,197 +446,181 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     }
 }
 
-// Overridden to handle world and object penetration
-simulated singular function HitWall(vector HitNormal, actor Wall)
+// Modified to handle world and object penetration
+simulated singular function HitWall(vector HitNormal, Actor Wall)
 {
-    local float tmpMaxWall;
-    local vector TmpHitLocation, TmpHitNormal, X,Y,Z, LastLoc;
-    local float xH; //,EnergyFactor;
-    //local rotator distortion;
-    local Actor tmpHit;
+    local vector SavedVelocity, X, Y, Z, TempHitLocation, TempHitNormal;
+    local float  xH, TempMaxWall;
+    local Actor  TraceHitActor;
 
-    local vector SavedVelocity;
-//  local PlayerController PC;
-
-    local float HitAngle;
-
-    // Check to prevent recursive calls and to make sure we actually hit something
-    if (bInHitWall || (Wall.Base != none && Wall.Base == instigator))
+    // Check to prevent recursive calls
+    if (bInHitWall)
+    {
         return;
-
-    LastLoc = Location;
-    HitAngle = 1.57;
+    }
 
     // Have we hit a world item we can penetrate?
-    if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
-       bNoWorldPen = true;
+    if ((Wall.bStatic || Wall.bWorldGeometry) && RODestroyableStaticMesh(Wall) == none && Mover(Wall) == none)
+    {
+        bHitWorldObject = true;
+    }
+
+    // From here is the standard function from DH_ROAntiVehicleProjectile
+    if ((Wall.Base != none && Wall.Base == Instigator) || SavedHitActor == Wall || Wall.bDeleteMe)
+    {
+        return;
+    }
 
     if (bDebuggingText && Role == ROLE_Authority)
     {
-        if (!bIsAlliedShell)
-        {
-            Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/60.352)$"m, ImpactVel: "$VSize(Velocity) / 60.352$" m/s"); //, flight time = "$FlightTime$"s");
-        }
-        else
-        {
-            Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/66.002)$"yards, ImpactVel: "$VSize(Velocity) / 18.395$" fps"); //, flight time = "$FlightTime$"s");
-        }
+        DebugShotDistanceAndSpeed();
     }
 
+    // We hit an armored vehicle hull but failed to penetrate
     if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
-
-        if (bDebuggingText && Role == ROLE_Authority)
-        {
-            Level.Game.Broadcast(self, "Hull Ricochet!");
-        }
-
-        if (ShouldDrawDebugLines())
-        {
-            DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
-        }
-
-        // Don't save hitting this actor since we deflected
-        SavedHitActor = none;
-        // Don't update the position any more
-        bUpdateSimulatedPosition = false;
-
-        //Deflect(HitNormal, Wall);
-        Explode(Location + ExploWallOut * HitNormal, HitNormal);
-
-        if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
-            ROBot(Instigator.Controller).NotifyIneffectiveAttack(ROVehicle(Wall));
+        FailToPenetrateArmor(Location, HitNormal, Wall);
 
         return;
     }
-
-    if ((SavedHitActor == Wall) || (Wall.bDeleteMe))
-        return;
-
-    // Don't update the position any more and don't move the projectile any more.
-    bUpdateSimulatedPosition = false;
-    SetPhysics(PHYS_None);
-    SetDrawType(DT_None);
 
     SavedHitActor = Pawn(Wall);
 
-    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
-
     if (Role == ROLE_Authority)
     {
-        if (bNoWorldPen)  // Using this value as we've already done this check earlier on
+//      if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+        if (!bHitWorldObject) // using this instead of above, as as we've already done this check earlier on
         {
-            if (Instigator == none || Instigator.Controller == none)
-                Wall.SetDelayedDamageInstigatorController(InstigatorController);
-
-            if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            if (SavedHitActor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 if (ShouldDrawDebugLines())
                 {
                     DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
                 }
 
-                Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
+                if (Instigator == none || Instigator.Controller == none)
+                {
+                    Wall.SetDelayedDamageInstigatorController(InstigatorController);
+                }
+
+                Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
             }
 
             if (DamageRadius > 0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
+            {
                 Vehicle(Wall).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, Location);
+            }
+
             HurtWall = Wall;
         }
-        else
+        else if (bBotNotifyIneffective && Instigator != none && ROBot(Instigator.Controller) != none)
         {
-            if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
-                ROBot(Instigator.Controller).NotifyIneffectiveAttack();
+            ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
-        MakeNoise(1.0);
     }
-    Explode(Location + ExploWallOut * HitNormal, HitNormal);
 
-    HurtWall = none;
-    //log(" Shell flew "$(VSize(LaunchLocation - Location)/60.352)$" meters total");
+    Explode(Location + ExploWallOut * HitNormal, HitNormal);
+    // End of the standard function from DH_ROAntiVehicleProjectile // Matt: TEST - should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
 
     bInHitWall = true;
 
-    //if (bDebugMode) Log("HitWall - Starting Penetration Check");
-
-    GetAxes(Rotation,X,Y,Z);
-
-    // Do the Max Wall Calculations
-    CheckWall(HitNormal,X);
-    xH = 1/Hardness;
-    //EnergyFactor = 1000;         // EnergyFactor = (0.001*Vsize(Velocity))**2;
+    // Do the MaxWall calculations
+    GetAxes(Rotation, X, Y, Z);
+    CheckWall(HitNormal, X);
+    xH = 1.0 / Hardness;
     MaxWall = EnergyFactor * xH * PenetrationScale * WScale;
 
-    //if (bDebugMode) Log("INFO - Velocity:"@Vsize(Velocity)@Velocity@" N "@Normal(Velocity)@" NRG Factor"@EnergyFactor@" MaxWall:"@MaxWall);
-
-    // due to MaxWall getting into very high ranges we need to make shorter trace checks till we reach the full MaxWall value
-    if (MaxWall > 16)
+    // Due to MaxWall getting into very high ranges we need to make shorter trace checks till we reach the full MaxWall value
+    if (MaxWall > 16.0)
     {
         do
         {
-            if ((tmpMaxWall + 16) <= MaxWall)
-                tmpMaxWall += 16;
-            else
-                tmpMaxWall = MaxWall;
-            tmpHit = Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * tmpMaxWall, false);
-
-            //if (bDebugMode) Log("in do-while - tmpMaxWall:"@tmpMaxWall@" tmpHit:"@tmpHit);
-
-            // due to StaticMeshs resulting in a hit even with the trace starting right inside of them (terrain and BSP 'space' would return none)
-            if ((tmpHit != none) && !SetLocation(TmpHitLocation + (vect(0.5,0,0) * X)))
-                tmpHit = none;
-
-        } until ((tmpHit != none) || (tmpMaxWall >= MaxWall));
-    }
-    else
-    {
-        tmpHit = Trace(TmpHitLocation,TmpHitNormal,Location,Location + X * MaxWall, false);
-    }
-
-    if (tmpHit != none)
-    {
-        if (SetLocation(TmpHitLocation + (vect(0.5,0,0) * X)))
-        {
-            PenetrationExplode(TmpHitLocation + PeneExploWallOut * TmpHitNormal, TmpHitNormal);
-
-            bInHitWall = false;
-
-            if (MaxWall < 1.0)
+            if ((TempMaxWall + 16.0) <= MaxWall)
             {
-                if (Level.NetMode == NM_DedicatedServer) {
-                    bCollided = true;
-                    SetCollision(false, false);
-                }
-                else {
-                    Destroy();
-                }
-            }
-        }
-        else
-        {
-            if (Level.NetMode == NM_DedicatedServer)
-            {
-                bCollided = true;
-                SetCollision(false, false);
+                TempMaxWall += 16.0;
             }
             else
             {
-                Destroy();
+                TempMaxWall = MaxWall;
             }
+
+            TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (X * TempMaxWall), false);
+
+            // Due to static meshes resulting in a hit even with the trace starting right inside of them (terrain and BSP 'space' would return none)
+            if (TraceHitActor != none && !SetLocation(TempHitLocation + (vect(0.5,0.0,0.0) * X)))
+            {
+                TraceHitActor = none;
+            }
+
         }
+        until (TraceHitActor != none || TempMaxWall >= MaxWall);
     }
     else
     {
-        if (Level.NetMode == NM_DedicatedServer)
+        TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + X * MaxWall, false);
+    }
+
+    if (TraceHitActor != none && SetLocation(TempHitLocation + (vect(0.5,0.0,0.0) * X)))
+    {
+        WorldPenetrationExplode(TempHitLocation + PeneExploWallOut * TempHitNormal, TempHitNormal);
+
+        bInHitWall = false;
+
+        if (MaxWall >= 1.0)
         {
-            bCollided = true;
-            SetCollision(false, false);
-        }
-        else
-        {
-            Destroy();
+            return;
         }
     }
+
+    HandleDestruction();
+}
+
+// Modified to handle shell destruction only if we didn't hit & penetrate a world object (if we did then we leave it to WorldPenetrationExplode)
+simulated function Explode(vector HitLocation, vector HitNormal)
+{
+    if (!bHitWorldObject)
+    {
+        super.Explode(HitLocation, HitNormal);
+    }
+    // This is the same as the Super, except we don't call HandleDestruction
+    else if (!bCollided)
+    {
+        if (!bDidExplosionFX)
+        {
+            SpawnExplosionEffects(HitLocation, HitNormal);
+            bDidExplosionFX = true;
+        }
+
+        if (bDebugBallistics)
+        {
+            HandleShellDebug(HitLocation);
+        }
+
+        BlowUp(HitLocation);
+    }
+}
+
+// Alternative version of Explode if we have penetrated a world object (renamed from original PenetrationExplode, which misleadingly implied it related to vehicle penetration)
+simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
+{
+    if (!bCollided)
+    {
+        if (!bDidPenetrationExplosionFX)
+        {
+            SpawnExplosionEffects(HitLocation, HitNormal, PeneExploWallOut); // passing PeneExploWallOut allows SpawnExplosionEffects to correctly adjust the explosion decal position
+            bDidPenetrationExplosionFX = true;
+        }
+
+        super(DH_ROAntiVehicleProjectile).Explode(HitLocation, HitNormal);
+    }
+}
+
+// Modified to always play an explosion sound for HEAT
+simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+{
+    super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
+
+    PlaySound(ExplosionSound[Rand(4)], , 5.5 * TransientSoundVolume);
 }
 
 simulated function CheckWall(vector HitNormal, vector X)
@@ -823,23 +795,20 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-//-----------------------------------------------------------------------------
-// PhysicsVolumeChange - Blow up HE rounds when they hit water
-//-----------------------------------------------------------------------------
-simulated function PhysicsVolumeChange(PhysicsVolume Volume)
-{
-    if (Volume.bWaterVolume)
-    {
-        Explode(Location, vector(Rotation * -1));
-    }
-}
-
 defaultproperties
 {
     RoundType=RT_HEAT
+    bExplodesOnArmor=true
+    bExplodesOnHittingWater=true
+    bAlwaysDoShakeEffect=true
     ExplosionSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
     ExplosionSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
+    ExplosionSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
+    DirtHitSound=none // so don't play in SpawnExplosionEffects, as will be drowned out by ExplosionSound
+    RockHitSound=none
+    WoodHitSound=none
+    WaterHitSound=none
     WScale=1.000000
     PenetrationDamage=250.000000
     PenetrationDamageRadius=500.000000
@@ -847,6 +816,7 @@ defaultproperties
     PeneExploWallOut=75.000000
     PenetrationScale=0.080000
     DistortionScale=0.400000
+//  bIsHEATRound=true // deprecated
     ShakeRotMag=(Y=0.000000)
     ShakeRotRate=(Z=2500.000000)
     BlurTime=6.000000

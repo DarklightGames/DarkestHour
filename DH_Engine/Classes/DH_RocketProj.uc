@@ -3,102 +3,81 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_RocketProj extends DH_ROAntiVehicleProjectile
-    config(DH_Penetration)
-    abstract; // Matt: added
+// Matt: originally extended DH_ROAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that
+class DH_RocketProj extends DH_ROTankCannonShellHEAT
+//  config(DH_Penetration)
+    abstract;
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
 
-var bool             bHitWater;
-var PanzerfaustTrail SmokeTrail;      // Smoke trail emitter
-var sound            ExplodeSound[3]; // sound of this rocket exploding
+var PanzerfaustTrail SmokeTrail;         // smoke trail emitter
+var() float          StraightFlightTime; // how long the rocket has propellant and flies straight
+var   float          TotalFlightTime;    // how long the rocket has been in flight
+var   bool           bOutOfPropellant;   // rocket is out of propellant
 
-// Physics
-var() float  StraightFlightTime; // How long the rocket has propellant and flies straight
-var   float  TotalFlightTime;    // How long the rocket has been in flight
-var   bool   bOutOfPropellant;   // Rocket is out of propellant
-// Physics debugging
-var   vector OuttaPropLocation;
+// Matt: removed as no longer used anywhere:
+// var bool   bHitWater;
+// var vector OuttaPropLocation;      // physics debugging
+// var globalconfig bool  bDebugMode; // if true, give our detailed report in log
 
-// Penetration
-var bool  bInHitWall;
-var float MaxWall;                 // Maximum wall penetration
-var float WScale;                  // Penetration depth scale factor to take into account; weapon scale
-var float Hardness;                // wall hardness, calculated in CheckWall for surface type
-var float PenetrationDamage;       // Damage done by rocket penetrating wall
-var float PenetrationDamageRadius; // Damage radius for rocket penetrating wall
-var float EnergyFactor;            // For calculating penetration of projectile
-var float PeneExploWallOut;        // Distance out from the wall to spawn penetration explosion
-
-var globalconfig float PenetrationScale;   // global Penetration depth scale factor
-var globalconfig float DistortionScale;    // global Distortion scale factor
-var globalconfig bool  bDebugMode;         // If true, give our detailed report in log.
-var globalconfig bool  bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
-
-var bool bDidPenetrationExplosionFX; // Already did the penetration explosion effects
-var bool bNoWorldPen;                // Rocket has hit something other than the world and should be destroyed without running world penetration check
+var sound ExplodeSound[4]; // DELETE
 
 replication
 {
-    reliable if (bNetDirty && Role == ROLE_Authority)
+    reliable if (bNetDirty && Role==ROLE_Authority)
         bOutOfPropellant;
 }
 
+
+// Modified to spawn a rocket smoke trail
 simulated function PostBeginPlay()
 {
-    if (bDebugROBallistics)
-    {
-        bDebugBallistics = true;
-    }
-
     if (Level.NetMode != NM_DedicatedServer && bHasTracer)
     {
         SmokeTrail = Spawn(class'PanzerfaustTrail', self);
         SmokeTrail.SetBase(self);
 
-        Corona = Spawn(TracerEffect,self);
+        Corona = Spawn(TracerEffect, self);
     }
 
-    Velocity = Speed * vector(Rotation);
+//  Velocity = Speed * vector(Rotation); // Matt: removed as already done in Super in ROBallisticProjectile
 
     if (PhysicsVolume.bWaterVolume)
     {
-        bHitWater = true;
         Velocity = 0.6 * Velocity;
     }
 
-    super.PostBeginPlay();
+    super(DH_ROAntiVehicleProjectile).PostBeginPlay();
 }
 
+// Modified to drop lighting if low detail or not required
 simulated function PostNetBeginPlay()
 {
     local PlayerController PC;
 
     super.PostNetBeginPlay();
 
-    if (Level.NetMode == NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        return;
-    }
-
-    if (Level.bDropDetail || Level.DetailMode == DM_Low)
-    {
-        bDynamicLight = false;
-        LightType = LT_None;
-    }
-    else
-    {
-        PC = Level.GetLocalPlayerController();
-
-        if (Instigator != none && PC == Instigator.Controller)
-        {
-            return;
-        }
-
-        if (PC == none || PC.ViewTarget == none || VSize(PC.ViewTarget.Location - Location) > 3000)
+        if (Level.bDropDetail || Level.DetailMode == DM_Low)
         {
             bDynamicLight = false;
             LightType = LT_None;
+        }
+        else
+        {
+            PC = Level.GetLocalPlayerController();
+
+            if (Instigator != none && PC == Instigator.Controller)
+            {
+                return;
+            }
+
+            if (PC == none || PC.ViewTarget == none || VSize(PC.ViewTarget.Location - Location) > 3000.0)
+            {
+                bDynamicLight = false;
+                LightType = LT_None;
+            }
         }
     }
 }
@@ -118,10 +97,10 @@ simulated function Tick(float DeltaTime)
         }
         else
         {
-            OuttaPropLocation = Location;
+//          OuttaPropLocation = Location; // Matt: deprecated
             bOutOfPropellant = true;
 
-            //cut off the rocket engine effects when outta propellant
+            // cut off the rocket engine effects when outta propellant
             if (SmokeTrail != none)
             {
                 SmokeTrail.HandleOwnerDestroyed();
@@ -140,18 +119,7 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-simulated function Landed(vector HitNormal)
-{
-    Explode(Location,HitNormal);
-}
-
-function BlowUp(vector HitLocation)
-{
-    HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-    MakeNoise(1.0);
-}
-
-simulated function Explode(vector HitLocation, vector HitNormal)
+simulated function DELETEExplode(vector HitLocation, vector HitNormal)
 {
     local vector TraceHitLocation, TraceHitNormal;
     local Material HitMaterial;
@@ -260,7 +228,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     if (Corona != none)
         Corona.Destroy();
 
-    if (bNoWorldPen)
+    if (!bHitWorldObject)
     {
         if (Level.NetMode == NM_DedicatedServer)
         {
@@ -275,127 +243,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 }
 
-simulated function PenetrationExplode(vector HitLocation, vector HitNormal)
-{
-    local vector TraceHitLocation, TraceHitNormal;
-    local Material HitMaterial;
-    local ESurfaceTypes ST;
-    local bool bShowDecal, bSnowDecal;
-    local vector ActualHitLocation; // Point of impact before adjustment for explosion centre
-
-    ActualHitLocation = HitLocation - PeneExploWallOut * HitNormal;
-
-    if (!bDidPenetrationExplosionFX)
-    {
-        if (SavedHitActor == none)
-        {
-           Trace(TraceHitLocation, TraceHitNormal, Location + vector(Rotation) * 16, Location, false,, HitMaterial);
-        }
-
-        ST = EST_Default;
-
-        if (HitMaterial != none)
-        {
-            ST = ESurfaceTypes(HitMaterial.SurfaceType);
-        }
-
-        if (EffectIsRelevant(Location, false))
-        {
-            if (!PhysicsVolume.bWaterVolume)
-            {
-                switch(ST)
-                {
-                    case EST_Snow:
-                    case EST_Ice:
-                        Spawn(ShellHitSnowEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-                        PlaySound(ExplodeSound[Rand(3)],,2.5*TransientSoundVolume);
-                        bShowDecal = true;
-                        bSnowDecal = true;
-                        break;
-                    case EST_Rock:
-                    case EST_Gravel:
-                    case EST_Concrete:
-                        Spawn(ShellHitRockEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-                        PlaySound(ExplodeSound[Rand(3)],,2.5*TransientSoundVolume);
-                        bShowDecal = true;
-                        break;
-                    case EST_Wood:
-                    case EST_HollowWood:
-                        Spawn(ShellHitWoodEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-                        PlaySound(ExplodeSound[Rand(3)],,2.5*TransientSoundVolume);
-                        bShowDecal = true;
-                        break;
-                    case EST_Water:
-                        Spawn(ShellHitWaterEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-                        PlaySound(WaterHitSound,,5.5*TransientSoundVolume);
-                        bShowDecal = false;
-                        break;
-                    default:
-                        Spawn(ShellHitDirtEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
-                        PlaySound(ExplodeSound[Rand(3)],,2.5*TransientSoundVolume);
-                        bShowDecal = true;
-                        break;
-                }
-
-                if (bShowDecal && Level.NetMode != NM_DedicatedServer)
-                {
-                    if (bSnowDecal && ExplosionDecalSnow != none)
-                    {
-                        Spawn(ExplosionDecalSnow,self,,ActualHitLocation, rotator(-HitNormal));
-                    }
-                    else if (ExplosionDecal != none)
-                    {
-                        Spawn(ExplosionDecal,self,,ActualHitLocation, rotator(-HitNormal));
-                    }
-                }
-            }
-        }
-    }
-
-    if (bCollided)
-        return;
-
-    PenetrationBlowUp(HitLocation);
-
-    // Save the hit info for when the rocket is destroyed
-    SavedHitLocation = HitLocation;
-    SavedHitNormal = HitNormal;
-    AmbientSound=none;
-
-    bDidPenetrationExplosionFX = true;
-
-    if (Corona != none)
-        Corona.Destroy();
-
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        bCollided = true;
-        SetCollision(false, false);
-    }
-    else
-    {
-        bCollided = true;
-        Destroy();
-    }
-}
-
-function PenetrationBlowUp(vector HitLocation)
-{
-    HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-    MakeNoise(1.0);
-}
-
-// HEAT rounds only deflect when they strike at angles, but for simplicity's sake, lets just detonate them with no damage instead
-simulated function FailToPenetrate(vector HitLocation)
-{
-    local vector TraceHitLocation, HitNormal;
-
-    Trace(TraceHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50, HitLocation - Normal(Velocity) * 50, true);
-    Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
-}
-
 // Matt: re-worked, with commentary below
-simulated function ProcessTouch(Actor Other, vector HitLocation)
+simulated function DELETEProcessTouch(Actor Other, vector HitLocation)
 {
     local ROVehicle       HitVehicle;
     local ROVehicleWeapon HitVehicleWeapon;
@@ -468,7 +317,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 Level.Game.Broadcast(self, "Rocket HEAT failed to penetrate turret!");
             }
 
-            FailToPenetrate(HitLocation); // no deflection for HEAT, just detonate without damage
+//            FailToPenetrate(HitLocation); // no deflection for HEAT, just detonate without damage
 
             // Don't update the position any more and don't move the projectile any more
             bUpdateSimulatedPosition = false;
@@ -576,7 +425,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 }
 
 // Overridden to handle world and object penetration
-simulated singular function HitWall(vector HitNormal, actor Wall)
+simulated singular function DELETEHitWall(vector HitNormal, actor Wall)
 {
     local float tmpMaxWall;
     local vector TmpHitLocation, TmpHitNormal, X, Y, Z, LastLoc;
@@ -597,7 +446,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     // Have we hit a world item we can penetrate?
     if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
     {
-        bNoWorldPen = true;
+//        bNoWorldPen = true;
     }
 
     if (bDebuggingText && Role == ROLE_Authority)
@@ -656,7 +505,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
 
     if (Role == ROLE_Authority)
     {
-        if (bNoWorldPen)  // Using this value as we've already done this check earlier on
+        if (!bHitWorldObject)  // Using this value as we've already done this check earlier on
         {
             if (Instigator == none || Instigator.Controller == none)
             {
@@ -737,7 +586,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     {
         if (SetLocation(TmpHitLocation + (vect(0.5, 0, 0) * X)))
         {
-            PenetrationExplode(TmpHitLocation + PeneExploWallOut * TmpHitNormal, TmpHitNormal);
+//            PenetrationExplode(TmpHitLocation + PeneExploWallOut * TmpHitNormal, TmpHitNormal);
 
             bInHitWall = false;
 
@@ -781,7 +630,7 @@ simulated singular function HitWall(vector HitNormal, actor Wall)
     }
 }
 
-simulated function CheckWall(vector HitNormal, vector X)
+simulated function DELETECheckWall(vector HitNormal, vector X)
 {
     local Material HitMaterial;
     local ESurfaceTypes HitSurfaceType;
@@ -857,15 +706,10 @@ simulated function CheckWall(vector HitNormal, vector X)
             break;
     }
 
-    if (bDebugMode)
-    {
-        Log("Hit Surface type:"@HitSurfaceType@"with hardness of"@Hardness);
-    }
-
     return;
 }
 
-simulated function Destroyed()
+simulated function DELETEDestroyed()
 {
     local vector TraceHitLocation, TraceHitNormal;
     local Material HitMaterial;
@@ -974,26 +818,18 @@ simulated function Destroyed()
 
 defaultproperties
 {
-    RoundType=RT_HEAT
-    ExplodeSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    ExplodeSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    ExplodeSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    bExplodesOnHittingBody=true
+    bExplodesOnHittingWater=false
+    ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
+    ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
     StraightFlightTime=0.200000
-    WScale=1.000000
-    PenetrationDamage=250.000000
     PenetrationDamageRadius=250.000000
-    EnergyFactor=1000.000000
-    PeneExploWallOut=75.000000
-    PenetrationScale=0.080000
-    DistortionScale=0.400000
-    bHasTracer=true
     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
-    BlurTime=6.000000
     PenetrationMag=250.000000
     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
     ImpactDamage=675
     VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
     ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
     ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
     ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
@@ -1003,7 +839,6 @@ defaultproperties
     BallisticCoefficient=0.050000
     Damage=300.000000
     DamageRadius=250.000000
-    MomentumTransfer=10000.000000
     ExplosionDecal=class'ROEffects.RocketMarkDirt'
     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
     LightType=LT_Steady
@@ -1011,16 +846,21 @@ defaultproperties
     LightHue=28
     LightBrightness=255.000000
     LightRadius=5.000000
-    DrawType=DT_StaticMesh
     CullDistance=7500.000000
     bDynamicLight=true
-    bNetTemporary=false
-    bUpdateSimulatedPosition=true
     LifeSpan=15.000000
-    AmbientGlow=96
-    FluidSurfaceShootStrengthMod=10.000000
-    bFixedRotationDir=true
-    ForceType=FT_Constant
-    ForceRadius=100.000000
-    ForceScale=5.000000
+
+//  Override unwanted defaults now inherited from DH_ROTankCannonShellHEAT & DH_ROTankCannonShell:
+    ShakeRotMag=(Y=50.0,Z=200.0)
+    ShakeRotRate=(Y=500.0,Z=1500.0)
+    BlurEffectScalar=1.9
+    VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
+    ShellDeflectEffectClass=none
+    MyDamageType=class'DamageType'
+    SoundRadius=64.0
+    AmbientVolumeScale=1.0
+    SpeedFudgeScale=1.0
+    InitialAccelerationTime=0.1
+    Speed=0.0
+    MaxSpeed=2000.0
 }

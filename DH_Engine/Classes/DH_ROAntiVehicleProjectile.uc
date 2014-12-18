@@ -4,7 +4,8 @@
 //==============================================================================
 
 class DH_ROAntiVehicleProjectile extends ROAntiVehicleProjectile
-      abstract;
+    config(DH_Penetration) // Matt: added (like DH_Bullet) so bDebugBallistics can be set easily in a config file
+    abstract;
 
 enum ERoundType
 {
@@ -18,80 +19,129 @@ enum ERoundType
     RT_APBC,
 };
 
-var     ERoundType  RoundType;                      // Matt: added to identify round type, making it easier to write more generic functionality & avoid code repetition
-var     float       DHPenetrationTable[11];
+var   ERoundType     RoundType;               // Matt: added to identify round type, making it easier to write more generic functionality & avoid code repetition
+var   float          DHPenetrationTable[11];
+var   float          ShellDiameter;           // to assist in T/d calculations
+//var bool           bIsHEATRound;            // triggers different penetration calcs for HEAT projectiles // Matt: removed as unnecessary, as we now have RoundType=RT_HEAT
+var   bool           bIsAlliedShell;          // just for debugging stuff, maybe later for shell shatter
+var   bool           bShatterProne;           // assists with shatter gap calculations
+var   bool           bExplodesOnArmor;        // shell explodes on vehicle armor if it fails to penetrate
+var   bool           bExplodesOnHittingBody;  // shell explodes on hitting a human body (otherwise punches through & continues in flight)
+var   bool           bExplodesOnHittingWater; // shell explodes on hitting a WaterVolume
+var   bool           bBotNotifyIneffective;   // notify bot of an ineffective attack on target
+var   bool           bFailedToPenetrateArmor; // flags that we hit an armored vehicle & failed to penetrate it, which makes SpawnExplosionEffects handle it differently
+var   bool           bDidWaterHitFX;          // already did the water hit effects after hitting a water volume
 
-var     float       ShellDiameter;                  // to assist in T/d calculations
+var() class<Emitter> ShellShatterEffectClass; // effect for this shell shattering against a vehicle
+var   sound          ShatterVehicleHitSound;  // sound of this shell shattering on the vehicle
+var   sound          ShatterSound[4];         // sound of the round exploding
 
-//var   bool        bIsHEATRound;                   // Triggers different penetration calcs for HEAT projectiles (generally rockets) // Matt: removed as unnecessary, as we now have RoundType=RT_HEAT
-var     bool        bIsAlliedShell;                 // just for debugging stuff, maybe later for shell shatter
-var     bool        bShatterProne;                  // assists with shatter gap calculations
+var   Effects        Corona;           // shell tracer
+var   bool           bHasTracer;       // will be disabled for HE shells, and any others with no tracers
+var   class<Effects> TracerEffect;
 
-var()   class<Emitter>  ShellShatterEffectClass;    // Effect for this shell shattering against a vehicle
-var     sound           ShatterVehicleHitSound;     // sound of this shell shattering on the vehicle
-var     sound           ShatterSound[4];            // sound of the round exploding
-
-var     Effects     Corona;     // Shell tracer
-var     bool        bHasTracer; // will be disabled for HE shells, and any others with no tracers
-var class<Effects>  TracerEffect;
-
-// camera shakes //
-var()       vector              ShakeRotMag;                // how far to rot view
-var()       vector              ShakeRotRate;               // how fast to rot view
-var()       float               ShakeRotTime;               // how much time to rot the instigator's view
-var()       vector              ShakeOffsetMag;             // max view offset vertically
-var()       vector              ShakeOffsetRate;            // how fast to offset view vertically
-var()       float               ShakeOffsetTime;            // how much time to offset view
-var         float               BlurTime;                   // How long blur effect should last for this shell
-var         float               BlurEffectScalar;
-var         float               PenetrationMag;             //different for AP and HE shells and can be set by caliber too
+// Camera shakes
+var() vector         ShakeRotMag;      // how far to rot view
+var() vector         ShakeRotRate;     // how fast to rot view
+var() float          ShakeRotTime;     // how much time to rot the instigator's view
+var() vector         ShakeOffsetMag;   // max view offset vertically
+var() vector         ShakeOffsetRate;  // how fast to offset view vertically
+var() float          ShakeOffsetTime;  // how much time to offset view
+var   float          BlurTime;         // how long blur effect should last for this shell
+var   float          BlurEffectScalar;
+var   float          PenetrationMag;   // different for AP and HE shells and can be set by caliber too
 
 // Debugging code - set to false on release
-var     bool    bDebuggingText;
+var              bool  bDebuggingText;
+var globalconfig bool  bDebugROBallistics; // sets bDebugBallistics to true for getting the arrow pointers // Matt: added from DH_Bullet so bDebugBallistics can be set in a config file
 
-//Borrowed from AB: Just using a standard linear interpolation equation here
+
+// Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here, & also to add bDebugROBallistics
+simulated function PostBeginPlay()
+{
+    LaunchLocation = Location;
+    Velocity = vector(Rotation) * Speed;
+    BCInverse = 1.0 / BallisticCoefficient;
+
+    if (Role == ROLE_Authority && Instigator != none && Instigator.HeadVolume.bWaterVolume)
+    {
+        Velocity *= 0.5;
+    }
+
+    if (bDebugROBallistics)
+    {
+        bDebugBallistics = true;
+    }
+}
+
+// Modified to move bDebugBallistics stuff here from PostBeginPlay
+simulated function PostNetBeginPlay()
+{
+    local Actor  TraceHitActor;
+    local vector HitNormal;
+
+    super.PostNetBeginPlay();
+
+    if (bDebugBallistics)
+    {
+        FlightTime = 0.0;
+        OrigLoc = Location;
+
+        if (Instigator != none)
+        {
+            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + ((Instigator.CollisionRadius + 5.0) * vector(Rotation)), true);
+        }
+        else
+        {
+            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), Location + (5.0 * vector(Rotation)), true);
+        }
+
+        if (ROBulletWhipAttachment(TraceHitActor) != none)
+        {
+            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355.0 * vector(Rotation), TraceHitLoc + 5.0 * vector(Rotation), true);
+        }
+
+        Log("Shell debug tracing: TraceHitActor =" @ TraceHitActor);
+    }    
+}
+
+// Borrowed from AB: Just using a standard linear interpolation equation here
 simulated function float GetPenetration(vector Distance)
 {
     local float MeterDistance;
     local float PenetrationNumber;
 
-    MeterDistance = VSize(Distance)/60.352;
+    MeterDistance = VSize(Distance) / 60.352;
 
-    //Distance debugging
-    //log(self$" traveled "$MeterDistance$" meters for penetration calculations");
-    //Level.Game.Broadcast(self, self$" traveled "$MeterDistance$" meters for penetration calculations");
-
-    if      (MeterDistance < 100)  PenetrationNumber = (DHPenetrationTable[0] + (100 - MeterDistance) * (DHPenetrationTable[0]-DHPenetrationTable[1]) / 100);
-    else if (MeterDistance < 250)   PenetrationNumber = (DHPenetrationTable[1] + (250 - MeterDistance) * (DHPenetrationTable[0]-DHPenetrationTable[1]) / 150);
-    else if (MeterDistance < 500)   PenetrationNumber = (DHPenetrationTable[2] + (500 - MeterDistance) * (DHPenetrationTable[1]-DHPenetrationTable[2]) / 250);
-    else if (MeterDistance < 750)   PenetrationNumber = (DHPenetrationTable[3] + (750 - MeterDistance) * (DHPenetrationTable[2]-DHPenetrationTable[3]) / 250);
-    else if (MeterDistance < 1000)  PenetrationNumber = (DHPenetrationTable[4] + (1000 - MeterDistance) * (DHPenetrationTable[3]-DHPenetrationTable[4]) / 250);
-    else if (MeterDistance < 1250)  PenetrationNumber = (DHPenetrationTable[5] + (1250 - MeterDistance) * (DHPenetrationTable[4]-DHPenetrationTable[5]) / 250);
-    else if (MeterDistance < 1500)  PenetrationNumber = (DHPenetrationTable[6] + (1500 - MeterDistance) * (DHPenetrationTable[5]-DHPenetrationTable[6]) / 250);
-    else if (MeterDistance < 1750)  PenetrationNumber = (DHPenetrationTable[7] + (1750 - MeterDistance) * (DHPenetrationTable[6]-DHPenetrationTable[7]) / 250);
-    else if (MeterDistance < 2000)  PenetrationNumber = (DHPenetrationTable[8] + (2000 - MeterDistance) * (DHPenetrationTable[7]-DHPenetrationTable[8]) / 250);
-    else if (MeterDistance < 2500)  PenetrationNumber = (DHPenetrationTable[9] + (2500 - MeterDistance) * (DHPenetrationTable[8]-DHPenetrationTable[9]) / 500);
-    else if (MeterDistance < 3000)  PenetrationNumber = (DHPenetrationTable[10] + (3000 - MeterDistance) * (DHPenetrationTable[9]-DHPenetrationTable[10]) / 500);
-    else PenetrationNumber = DHPenetrationTable[10];
+    if      (MeterDistance < 100)   PenetrationNumber = (DHPenetrationTable[0] +  (100.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
+    else if (MeterDistance < 250)   PenetrationNumber = (DHPenetrationTable[1] +  (250.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
+    else if (MeterDistance < 500)   PenetrationNumber = (DHPenetrationTable[2] +  (500.0  - MeterDistance) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0);
+    else if (MeterDistance < 750)   PenetrationNumber = (DHPenetrationTable[3] +  (750.0  - MeterDistance) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0);
+    else if (MeterDistance < 1000)  PenetrationNumber = (DHPenetrationTable[4] +  (1000.0 - MeterDistance) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0);
+    else if (MeterDistance < 1250)  PenetrationNumber = (DHPenetrationTable[5] +  (1250.0 - MeterDistance) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0);
+    else if (MeterDistance < 1500)  PenetrationNumber = (DHPenetrationTable[6] +  (1500.0 - MeterDistance) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0);
+    else if (MeterDistance < 1750)  PenetrationNumber = (DHPenetrationTable[7] +  (1750.0 - MeterDistance) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0);
+    else if (MeterDistance < 2000)  PenetrationNumber = (DHPenetrationTable[8] +  (2000.0 - MeterDistance) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0);
+    else if (MeterDistance < 2500)  PenetrationNumber = (DHPenetrationTable[9] +  (2500.0 - MeterDistance) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0);
+    else if (MeterDistance < 3000)  PenetrationNumber = (DHPenetrationTable[10] + (3000.0 - MeterDistance) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0);
+    else                            PenetrationNumber =  DHPenetrationTable[10];
 
     if (NumDeflections > 0)
     {
-        PenetrationNumber = PenetrationNumber * 0.04;  //just for now, until pen is based on velocity
+        PenetrationNumber = PenetrationNumber * 0.04;  // just for now, until pen is based on velocity
     }
 
     return PenetrationNumber;
-
 }
 
-//DH CODE: Returns (T/d) for APC/APCBC shells
+// Returns (T/d) for APC/APCBC, AP or APBC shells
 simulated function float GetOverMatch (float ArmorFactor, float ShellDiameter)
 {
     local float OverMatchFactor;
 
-    OverMatchFactor = (ArmorFactor / ShellDiameter);
+    OverMatchFactor = ArmorFactor / ShellDiameter;
 
     return OverMatchFactor;
-
 }
 
 // Matt: modified to handle new VehicleWeapon collision mesh actor
@@ -103,7 +153,6 @@ simulated singular function Touch(Actor Other)
     if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
     {
         Other = Other.Owner;
-        log(Tag @ "Touch event: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Other.Tag); // TEMP
     }
 
 //  super.Touch(Other); // doesn't work as this function & Super are singular functions, so have to re-state Super from Projectile here
@@ -114,7 +163,7 @@ simulated singular function Touch(Actor Other)
 
         if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
         {
-            ProcessTouch(Other,Location);
+            ProcessTouch(Other, Location);
             LastTouched = none;
         }
         else
@@ -140,11 +189,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local ROVehicle       HitVehicle;
     local ROVehicleWeapon HitVehicleWeapon;
-    local vector          TempHitLocation, HitNormal, SavedVelocity;
+    local vector          TempHitLocation, HitNormal;
     local array<int>      HitPoints;
-    local float           TouchAngle; // dummy variable passed to DHShouldPenetrate function (does not need a value setting)
-
-    if (bDebuggingText) Log("AP.ProcessTouch called: Other =" @ Other.Tag @ " SavedTouchActor =" @ SavedTouchActor @ " SavedHitActor =" @ SavedHitActor); // TEMP
 
     if (Other == none || SavedTouchActor == Other || Other.bDeleteMe || Other.IsA('ROBulletWhipAttachment') ||
         Other == Instigator || Other.Base == Instigator || Other.Owner == Instigator || (Other.IsA('Projectile') && !Other.bProjTarget))
@@ -167,122 +213,74 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
+                    DrawStayingDebugLine(HitLocation, HitLocation - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                if (bDebuggingText) Log("AP.ProcessTouch: hit driver, authority should damage him & shell continue"); // TEMP
                 if (Role == ROLE_Authority && VehicleWeaponPawn(HitVehicleWeapon.Owner) != none && VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver != none)
                 {
-                    VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                    VehicleWeaponPawn(HitVehicleWeapon.Owner).Driver.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // Matt: changed from Location to HitLocation
                 }
 
-                Velocity *= 0.8; // hitting the Driver's body doesn't cause shell to explode, but we'll slow it down a bit
+                // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on, as it only hit Driver's collision box & not actual VehicleWeapon
+                if (!bExplodesOnHittingBody)
+                {
+                    Velocity *= 0.8; 
+
+                    return;
+                }
             }
+            // Else this isn't a real hit - we must have hit Driver's collision box but not actually the Driver
             else
             {
-                if (bDebuggingText) Log("AP.ProcessTouch: hit driver area but not driver, shell should continue"); // TEMP
-                SavedTouchActor = none; // this isn't a real hit so we shouldn't save hitting this actor
-            }
+                SavedTouchActor = none; // not a real hit so shouldn't save hitting this actor
 
-            return; // exit so shell carries on, as it only hit Driver's collision box not actual VehicleWeapon (even if we hit the Driver, his body won't stop shell)
+                return;
+            }
         }
 
         SavedHitActor = HitVehicle;
 
+        Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable vehicle HitNormal, e.g. for a deflection
+        
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            if (bIsAlliedShell)
-            {
-                Level.Game.Broadcast(self, "Dist:" @ VSize(LaunchLocation - Location) / 66.002 @ "yards, ImpactVel:" @ VSize(Velocity) / 18.395 @ "fps");
-            }
-            else
-            {
-                Level.Game.Broadcast(self, "Dist:" @ VSize(LaunchLocation - Location) / 60.352 @ "m, ImpactVel:" @ VSize(Velocity) / 60.352 @ "m/s");
-            }
+            DebugShotDistanceAndSpeed();
         }
-
-        // We hit a tank cannon (turret) but failed to penetrate
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
-        {
-            if (ShouldDrawDebugLines())
-            {
-                DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 0, 255, 0);
-            }
-
-            // Round deflects off the turret
-            if (!bShatterProne || !DH_ROTankCannon(HitVehicleWeapon).bRoundShattered)
-            {
-                if (bDebuggingText && Role == ROLE_Authority)
-                {
-                    Level.Game.Broadcast(self, "Turret ricochet!");
-                }
-
-                SavedHitActor = none; // don't save hitting this actor since we deflected
-                bUpdateSimulatedPosition = false; // don't replicate the position any more
-
-                DoShakeEffect();
-                DeflectWithoutNormal(HitVehicleWeapon, HitLocation);
-
-                if (Instigator != none && ROBot(Instigator.Controller) != none)
-                {
-                    ROBot(Instigator.Controller).NotifyIneffectiveAttack(HitVehicle);
-                }
-            }
-            // Round shatters on turret
-            else
-            {
-                if (bDebuggingText && Role == ROLE_Authority)
-                {
-                    Level.Game.Broadcast(self, "Round shattered on turret");
-                }
-
-                ShatterExplode(HitLocation + ExploWallOut * Normal(-Velocity), Normal(-Velocity));
-
-                // Don't update the position any more and don't move the projectile any more
-                bUpdateSimulatedPosition = false;
-                SetPhysics(PHYS_None);
-                SetDrawType(DT_None);
-
-                HurtWall = none;
-            }
-
-            return;
-        }
-
-        // Don't update the position any more and don't move the projectile any more
-        bUpdateSimulatedPosition = false;
-        SavedVelocity = Velocity; // PHYS_None zeroes Velocity, so we have to save it
-        SetPhysics(PHYS_None);
-        SetDrawType(DT_None);
 
         if (ShouldDrawDebugLines())
         {
-            DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
+            DrawStayingDebugLine(HitLocation, HitLocation - (Normal(Velocity) * 500.0), 255, 0, 0);
         }
 
-        if (Role == ROLE_Authority)
+        // We hit a tank cannon (turret) but failed to penetrate its armor
+        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
-            // Matt: removed as SetDDI is irrelevant to VehWeapon (empty function) & for Vehicle we'll let the VehWeapon call SetDDI on the Vehicle only if it's calling TakeDamage on it
-//          if (ShellImpactDamage.default.bDelayedDamage && Instigator == none || Instigator.Controller == none)
-//          {
-//              HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
-//              HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
-//          }
-
-            HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
-
-            if (DamageRadius > 0 && HitVehicle.Health > 0)
+            FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
+        }
+        // Otherwise we penetrated a VehicleWeapon
+        else
+        {
+            if (Role == ROLE_Authority)
             {
-                HitVehicle.DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, HitLocation);
+                // Matt: removed as SetDDI is irrelevant to VehWeapon (empty function) & for Vehicle we'll let VehWeapon call SetDDI on Vehicle only if it's calling TakeDamage on it
+//              if (ShellImpactDamage.default.bDelayedDamage && Instigator == none || Instigator.Controller == none)
+//              {
+//                  HitVehicleWeapon.SetDelayedDamageInstigatorController(InstigatorController);
+//                  HitVehicle.SetDelayedDamageInstigatorController(InstigatorController);
+//              }
+
+                HitVehicleWeapon.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // Matt: changed from Location to HitLocation
+
+                if (DamageRadius > 0 && HitVehicle.Health > 0)
+                {
+                    HitVehicle.DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, HitLocation);
+                }
+
+                HurtWall = HitVehicle;
             }
 
-            HurtWall = HitVehicle;
+            Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
         }
-
-        Explode(HitLocation + ExploWallOut * Normal(-SavedVelocity), Normal(-SavedVelocity));
-        HurtWall = none;
-
-        return;
     }
     // We hit something other than a VehicleWeapon
     else
@@ -295,239 +293,357 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)
             {
-                if (bDebuggingText) Log("AP.ProcessTouch: successful HitPointTrace on ROPawn, authority calling ProcessLocationalDamage on it"); // TEMP
                 if (Role == ROLE_Authority)
                 {
-                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints);
+                    ROPawn(Other).ProcessLocationalDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage, HitPoints); // Matt: changed from Location to HitLocation
                 }
 
-                Velocity *= 0.8; // hitting a body doesn't cause shell to explode, but we'll slow it down a bit
-            }
-            else if (bDebuggingText) Log("AP.ProcessTouch: unsuccessful HitPointTrace on ROPawn, doing nothing"); // TEMP
+                // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on
+                if (!bExplodesOnHittingBody)
+                {
+                    Velocity *= 0.8;
 
-            return; // exit without exploding, so shell continues on its flight
+                    return;
+                }
+
+                HurtWall = Other; // Matt: added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
+            }
         }
         // We hit some other kind of pawn or a destroyable mesh
         else if (Other.IsA('RODestroyableStaticMesh') || Other.IsA('Pawn'))
         {
             if (Role == ROLE_Authority)
             {
-                Other.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Normal(Velocity), ShellImpactDamage); // Matt: changed from Location to HitLocation
             }
 
             // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so it won't make a shell explode
             if (Other.IsA('RODestroyableStaticMesh') && RODestroyableStaticMesh(Other).bWontStopBullets)
             {
-                if (bDebuggingText) Log("AP.ProcessTouch: exiting as hit destroyable SM but it doesn't stop bullets"); // TEMP
                 return;
             }
-            else if (bDebuggingText && Other.IsA('RODestroyableStaticMesh')) Log("AP.ProcessTouch: exploding on destroyable SM"); // TEMP
-            else if (bDebuggingText) Log("AP.ProcessTouch: exploding on Pawn" @ Other.Tag @ "that is not an ROPawn"); // TEMP
+
+            HurtWall = Other; // Matt: added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
         }
         // Otherwise we hit something we aren't going to damage
-        else if (Role == ROLE_Authority && Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
+        else if (bBotNotifyIneffective && Role == ROLE_Authority && Instigator != none && ROBot(Instigator.Controller) != none)
         {
-            if (bDebuggingText) Log("AP.ProcessTouch: exploding on Actor" @ Other.Tag @ "that is not a Pawn or destroyable SM???"); // TEMP
             ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
 
-        // Don't update the position any more and don't move the projectile any more
-        bUpdateSimulatedPosition = false;
-        SetPhysics(PHYS_None);
-        SetDrawType(DT_None);
-
         Explode(HitLocation, vect(0.0,0.0,1.0));
-        HurtWall = none;
     }
 }
 
-simulated singular function HitWall(vector HitNormal, actor Wall)
+simulated singular function HitWall(vector HitNormal, Actor Wall)
 {
-    local vector SavedVelocity;
-//  local PlayerController PC;
-
-    local float HitAngle;
-
-    HitAngle=1.57;
-
-    if (Wall.Base != none && Wall.Base == instigator)
+    if ((Wall.Base != none && Wall.Base == Instigator) || SavedHitActor == Wall || Wall.bDeleteMe)
+    {
         return;
-
-    SavedVelocity = Velocity;
+    }
 
     if (bDebuggingText && Role == ROLE_Authority)
     {
-        if (!bIsAlliedShell)
-        {
-          Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/60.352)$"m, ImpactVel: "$VSize(Velocity) / 60.352$" m/s");
-        }
-        else
-        {
-          Level.Game.Broadcast(self, "Dist: "$(VSize(LaunchLocation-Location)/66.002)$"yards, ImpactVel: "$VSize(Velocity) / 18.395$" fps");
-        }
+        DebugShotDistanceAndSpeed();
     }
 
+    // We hit an armored vehicle hull but failed to penetrate
     if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
+        FailToPenetrateArmor(Location, HitNormal, Wall);
 
-        if (bDebuggingText && Role == ROLE_Authority)
-        {
-            Level.Game.Broadcast(self, "Hull Ricochet!");
-        }
-
-        if (ShouldDrawDebugLines())
-        {
-            DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
-        }
-
-        if (!bShatterProne || !DH_ROTreadCraft(Wall).bRoundShattered)
-        {
-
-            // Don't save hitting this actor since we deflected
-            SavedHitActor = none;
-            // Don't update the position any more
-            bUpdateSimulatedPosition = false;
-
-            DoShakeEffect();
-            Deflect(HitNormal, Wall);
-
-            if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
-               ROBot(Instigator.Controller).NotifyIneffectiveAttack(ROVehicle(Wall));
-
-            return;
-        }
-        else
-        {
-            if (Role == ROLE_Authority)
-            {
-                MakeNoise(1.0);
-            }
-
-            ShatterExplode(Location + ExploWallOut * HitNormal, HitNormal);
-
-            // Don't update the position any more and don't move the projectile any more.
-            bUpdateSimulatedPosition = false;
-            SetPhysics(PHYS_None);
-            SetDrawType(DT_None);
-
-            HurtWall = none;
-            return;
-        }
-    }
-
-    if ((SavedHitActor == Wall) || (Wall.bDeleteMe))
         return;
-
-    // Don't update the position any more and don't move the projectile any more.
-    bUpdateSimulatedPosition = false;
-    SetPhysics(PHYS_None);
-    SetDrawType(DT_None);
+    }
 
     SavedHitActor = Pawn(Wall);
 
-    super(ROBallisticProjectile).HitWall(HitNormal, Wall);
+//  super(ROBallisticProjectile).HitWall(HitNormal, Wall); // Matt: removed as just duplicates shell debugging
 
     if (Role == ROLE_Authority)
     {
         if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
         {
-            if (Instigator == none || Instigator.Controller == none)
-                Wall.SetDelayedDamageInstigatorController(InstigatorController);
-
-            if (savedhitactor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            if (SavedHitActor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 if (ShouldDrawDebugLines())
                 {
-                    DrawStayingDebugLine(Location, Location - (Normal(SavedVelocity) * 500.0), 255, 0, 0);
+                    DrawStayingDebugLine(Location, Location - (Normal(Velocity) * 500.0), 255, 0, 0);
                 }
 
-                Wall.TakeDamage(ImpactDamage, instigator, Location, MomentumTransfer * Normal(SavedVelocity), ShellImpactDamage);
+                if (Instigator == none || Instigator.Controller == none)
+                {
+                    Wall.SetDelayedDamageInstigatorController(InstigatorController);
+                }
+
+                Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
             if (DamageRadius > 0 && Vehicle(Wall) != none && Vehicle(Wall).Health > 0)
+            {
                 Vehicle(Wall).DriverRadiusDamage(Damage, DamageRadius, InstigatorController, MyDamageType, MomentumTransfer, Location);
+            }
+
             HurtWall = Wall;
         }
-        else
+        else if (bBotNotifyIneffective && Instigator != none && ROBot(Instigator.Controller) != none)
         {
-            if (Instigator != none && Instigator.Controller != none && ROBot(Instigator.Controller) != none)
-                ROBot(Instigator.Controller).NotifyIneffectiveAttack();
+            ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
-        MakeNoise(1.0);
     }
 
     Explode(Location + ExploWallOut * HitNormal, HitNormal);
-
-    HurtWall = none;
-
 }
 
-simulated function DoShakeEffect()
+simulated function Explode(vector HitLocation, vector HitNormal)
 {
-    local PlayerController PC;
-    local float Dist, Scale;
-
-    //viewshake
-    if (Level.NetMode != NM_DedicatedServer)
+    if (!bCollided)
     {
-        PC = Level.GetLocalPlayerController();
-        if (PC != none && PC.ViewTarget != none)
-        {
-            Dist = VSize(Location - PC.ViewTarget.Location);
+        // Save the hit info for when the shell is destroyed
+        SavedHitLocation = HitLocation;
+        SavedHitNormal = HitNormal;
 
-            if (Dist < PenetrationMag * 3.0 && ShellDiameter > 2.0)
-            {
-                scale = (PenetrationMag * 3.0  - Dist) / (PenetrationMag * 3.0);
-                scale *= BlurEffectScalar;
-
-                PC.ShakeView(ShakeRotMag*Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag*Scale, ShakeOffsetRate, ShakeOffsetTime);
-
-                if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
-                {
-                    scale = scale - (scale * 0.35 - ((scale * 0.35) * ROPawn(PC.Pawn).GetExposureTo(Location + 50 * -Normal(PhysicsVolume.Gravity))));
-                }
-                ROPlayer(PC).AddBlur(BlurTime*scale, FMin(1.0,scale));
-            }
-        }
+        BlowUp(HitLocation);
+        HandleDestruction();
     }
 }
 
-// AP shell shatter for when it hit a tank but didn't penetrate
+// Modified to add most common explosion features into this function - removes code repetition & makes it easier to subclass Explode
+function BlowUp(vector HitLocation)
+{
+    AmbientSound = none;
+
+    // Don't update the position any more and don't move the projectile any more
+    bUpdateSimulatedPosition = false;
+    SetPhysics(PHYS_None);
+    SetDrawType(DT_None);
+
+    if (Corona != none)
+    {
+        Corona.Destroy();
+    }
+}
+
+// New function to consolidate code now standardised between ProcessTouch & HitWall, and allowing it to be easily sub-classed without re-stating those long functions
+// Although this has actually been written as a generic function that should handle all or most situations
+simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Actor HitActor)
+{
+    local bool bExploded, bShattered;
+
+    // Round explodes on vehicle armor
+    if (bExplodesOnArmor)
+    {
+        if (bDebuggingText && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "Shell failed to penetrate vehicle armor & exploded");
+        }
+
+        bFailedToPenetrateArmor = true;  // flag that may make SpawnExplosionEffects do different effects
+        Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
+        bFailedToPenetrateArmor = false; // reset
+        bExploded = true;
+    }
+    // Round may shatter on vehicle armor
+    else if (bShatterProne)
+    {
+        if (DH_ROTankCannon(HitActor) != none)
+        {
+            if (DH_ROTankCannon(HitActor).bRoundShattered)
+            {
+                bShattered = true;
+                DH_ROTankCannon(HitActor).bRoundShattered = false; // reset for next hit
+            }
+        }
+        else if (DH_ROTreadCraft(HitActor) != none && DH_ROTreadCraft(HitActor).bRoundShattered)
+        {
+            bShattered = true;
+            DH_ROTreadCraft(HitActor).bRoundShattered = false; // reset for next hit 
+        }
+
+        if (bShattered)
+        {
+            ShatterExplode(HitLocation + ExploWallOut * HitNormal, HitNormal);
+        }
+    }
+
+    // Round deflects off vehicle armor
+    if (!bExploded && !bShattered)
+    {
+        DHDeflect(HitLocation, HitNormal, HitActor);
+    }
+
+    // If bot fired this round, notify it of ineffective attack on vehicle
+    if (Instigator != none && ROBot(Instigator.Controller) != none)
+    {
+        if (Pawn(HitActor) == none && HitActor != none && Pawn(HitActor.Base) != none)
+        {
+            HitActor = HitActor.Base;
+        }
+
+        ROBot(Instigator.Controller).NotifyIneffectiveAttack(Pawn(HitActor));
+    }
+}
+
+// Matt: modified version to include passed HitLocation, to give correct placement of deflection effect (shell's Location has moved on by the time the effect spawns))
+simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
+{
+    local vector VNorm;
+
+    if (bDebuggingText && Role == ROLE_Authority)
+    {
+        Level.Game.Broadcast(self, "Round ricocheted off vehicle armor");
+    }
+
+    SavedHitActor = none; // don't save hitting this actor since we deflected
+
+    // Don't let this thing constantly deflect
+    if (NumDeflections > 5)
+    {
+        Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
+
+        return;
+    }
+
+    NumDeflections++;
+
+    if (bDebugBallistics)
+    {
+        HandleShellDebug(HitLocation);
+    }
+
+    // Once we have bounced, just fall to the ground
+    SetPhysics(PHYS_Falling);
+    bTrueBallistics = false;
+    Acceleration = PhysicsVolume.Gravity;
+    bUpdateSimulatedPosition = false; // don't replicate the position any more, just let the client simulate movement after deflection (it's no longer critical)
+
+    // Reflect off hit surface, with damping
+    VNorm = (Velocity dot HitNormal) * HitNormal;
+    Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
+    Speed = VSize(Velocity);
+
+    // Play the deflection effects
+    AmbientSound = none;
+    DoShakeEffect();
+    
+    if (Level.NetMode != NM_DedicatedServer && NumDeflections < 2)
+    {
+        if (EffectIsRelevant(HitLocation, false))
+        {
+            Spawn(ShellDeflectEffectClass, , , HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+        }
+
+        PlaySound(VehicleDeflectSound, , 5.5 * TransientSoundVolume);
+    }
+}
+
+// Shell shatter for when it hit a tank but didn't penetrate
 simulated function ShatterExplode(vector HitLocation, vector HitNormal)
 {
-    if (bCollided)
-        return;
+    if (bDebuggingText && Role == ROLE_Authority)
+    {
+        Level.Game.Broadcast(self, "Round shattered on vehicle armor");
+    }
 
     DoShakeEffect();
 
     if (!bDidExplosionFX)
     {
-        PlaySound(ShatterVehicleHitSound,,5.5*TransientSoundVolume);
+        PlaySound(ShatterVehicleHitSound, , 5.5 * TransientSoundVolume);
+
         if (EffectIsRelevant(Location, false))
         {
-            Spawn(ShellShatterEffectClass,,,HitLocation + HitNormal*16,rotator(HitNormal));
+            Spawn(ShellShatterEffectClass, , , HitLocation + HitNormal * 16.0, rotator(HitNormal));
         }
 
-        PlaySound(ShatterSound[Rand(4)],,5.5*TransientSoundVolume);
-
-        bDidExplosionFX=true;
+        PlaySound(ShatterSound[Rand(4)], , 5.5 * TransientSoundVolume);
     }
 
-    if (Corona != none)
-        Corona.Destroy();
+    super(DH_ROAntiVehicleProjectile).Explode(HitLocation, HitNormal);
+}
 
-    // Save the hit info for when the shell is destroyed
-    SavedHitLocation = HitLocation;
-    SavedHitNormal = HitNormal;
-    AmbientSound=none;
+simulated function DoShakeEffect()
+{
+    local PlayerController PC;
+    local float            Distance, Scale;
 
-    BlowUp(HitLocation);
+    if (Level.NetMode != NM_DedicatedServer && ShellDiameter > 2.0) // Matt: moved ShellDiameter check up here, as nothing will happen if it's smaller
+    {
+        PC = Level.GetLocalPlayerController();
 
-    // Give the projectile a little time to play the hit effect client side before destroying the projectile
+        if (PC != none && PC.ViewTarget != none)
+        {
+            Distance = VSize(Location - PC.ViewTarget.Location);
+
+            if (Distance < PenetrationMag * 3.0/* && ShellDiameter > 2.0*/)
+            {
+                Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
+                Scale *= BlurEffectScalar;
+
+                PC.ShakeView(ShakeRotMag * Scale, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+
+                if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
+                {
+                    Scale = Scale - (Scale * 0.35 - ((Scale * 0.35) * ROPawn(PC.Pawn).GetExposureTo(Location + 50.0 * -Normal(PhysicsVolume.Gravity))));
+                }
+
+                ROPlayer(PC).AddBlur(BlurTime * Scale, FMin(1.0, Scale));
+            }
+        }
+    }
+}
+
+// Modified to blow up certain rounds (e.g. HE or HEAT) when they hit water
+simulated function PhysicsVolumeChange(PhysicsVolume Volume)
+{
+    if (Volume.bWaterVolume)
+    {
+        if (Level.Netmode != NM_DedicatedServer)
+        {
+            CheckForSplash(Location);
+        }
+
+        if (bExplodesOnHittingWater)
+        {
+            Explode(Location, vector(Rotation * -1.0));
+            bDidWaterHitFX = false; // reset so doesn't prevent future explosion effects
+        }
+        else
+        {
+            Velocity *= 0.5;
+        }
+    }
+}
+
+// Modified to add bDidWaterHitFX as a flag to prevent SpawnExplosionEffects from playing normal explosion effects when we hit a water volume
+simulated function CheckForSplash(vector SplashLocation)
+{
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
+
+    if (!Level.bDropDetail && Level.DetailMode != DM_Low && ShellHitWaterEffectClass != none && !Instigator.PhysicsVolume.bWaterVolume)
+    {
+        bTraceWater = true;
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - vect(0.0,0.0,50.0), SplashLocation + vect(0.0,0.0,15.0), true);
+        bTraceWater = false;
+
+        if (FluidSurfaceInfo(HitActor) != none || (PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume))
+        {
+            bDidWaterHitFX = true;
+            Spawn(ShellHitWaterEffectClass, , , HitLocation, rot(16384,0,0));
+            PlaySound(WaterHitSound, , 5.5 * TransientSoundVolume);
+        }
+    }
+}
+
+// New function to separate this out, allowing easier subclassing of Explode function & avoid some other code repetition
+simulated function HandleDestruction()
+{
+    bCollided = true;
+
     if (Level.NetMode == NM_DedicatedServer)
     {
-        bCollided = true;
         SetCollision(false, false);
+        bCollideWorld = false; // Matt: added to prevent continuing calls to HitWall on server, while shell persists
     }
     else
     {
@@ -535,7 +651,14 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
     }
 }
 
-// Matt: added to easily avoid drawing debug lines on a dedicated server or if this isn't the first hit
+simulated function Destroyed()
+{
+    if (Corona != none)
+    {
+        Corona.Destroy();
+    }
+}
+
 simulated function bool ShouldDrawDebugLines()
 {
     if (DrawDebugLines && FirstHit && Level.NetMode != NM_DedicatedServer)
@@ -546,9 +669,35 @@ simulated function bool ShouldDrawDebugLines()
     }
 }
 
+function DebugShotDistanceAndSpeed()
+{
+    if (bIsAlliedShell)
+    {
+        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.186) @ "yards, impact speed:" @ VSize(Velocity) / 18.395 @ "fps"); // Matt: corrected conversion factor for yards from 66.002
+    }
+    else
+    {
+        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 60.352) $ "m, impact speed:" @ VSize(Velocity) / 60.352 @ "m/s");
+    }
+}
+
+// Matt: based on HandleShellDebug from cannon class, but may as well do it here as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
+// Modified to avoid confusing "bullet drop" text and to add shell drop in both cm and inches (accurately converted)
+simulated function HandleShellDebug(vector RealHitLocation)
+{
+    local float ShellDropUnits;
+
+    if (NumDeflections < 1) // don't debug if it's just a deflected shell
+    {
+        ShellDropUnits = TraceHitLoc.Z - RealHitLocation.Z;
+        Log("Shell drop =" @ ShellDropUnits / 60.352 * 100.0 @ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches" @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z);
+    }
+}
+
 defaultproperties
 {
     RoundType=RT_APC
+    bBotNotifyIneffective=true
     bIsAlliedShell=true
     ShellShatterEffectClass=class'DH_Effects.DH_TankAPShellShatter'
     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
