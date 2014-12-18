@@ -23,7 +23,7 @@ defaultproperties
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon',Amount=1)
-    GivenItems(0)="DH_Equipment.DH_GerBinocularsItem"
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineCap'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

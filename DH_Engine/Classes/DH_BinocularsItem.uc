@@ -129,6 +129,76 @@ simulated state LoweringWeapon
     }
 }
 
+simulated function Fire(float F)
+{
+    local DH_Pawn P;
+    local DH_RoleInfo RI;
+
+    if (Instigator == none ||
+        !Instigator.IsLocallyControlled() ||
+        Instigator.Controller == none ||
+        AIController(Instigator.Controller) != none ||
+        !bUsingSights)
+    {
+       return;
+    }
+
+
+    P = DH_Pawn(Instigator);
+
+    if (P == none || P.GetRoleInfo() == none)
+    {
+        return;
+    }
+
+    if (P.GetRoleInfo().bIsMortarObserver)
+    {
+        DHPlayer(Instigator.Controller).ServerSaveMortarTarget();
+    }
+    else if (P.GetRoleInfo().bIsArtilleryOfficer)
+    {
+        DHPlayer(Instigator.Controller).ServerSaveArtilleryPosition();
+    }
+}
+
+simulated function AltFire(float F)
+{
+    local DH_Pawn P;
+    local DH_RoleInfo RI;
+
+    if (Instigator == none || !Instigator.IsLocallyControlled())
+    {
+        return;
+    }
+
+    P = DH_Pawn(Instigator);
+
+    if (P == none || P.GetRoleInfo() == none || !P.GetRoleInfo().bIsMortarObserver)
+    {
+        return;
+    }
+
+    DHPlayer(Instigator.Controller).ServerCancelMortarTarget();
+}
+
+simulated function BringUp(optional Weapon PrevWeapon)
+{
+    local DHPlayer P;
+
+    super.BringUp(PrevWeapon);
+
+    if (Instigator.IsLocallyControlled())
+    {
+        P = DHPlayer(Instigator.Controller);
+
+        if (P != none)
+        {
+            P.QueueHint(11, true);
+        }
+    }
+}
+
 defaultproperties
 {
+    AttachmentClass=class'DH_Engine.DH_BinocularsAttachment'
 }

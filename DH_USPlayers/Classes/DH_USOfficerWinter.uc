@@ -32,7 +32,7 @@ defaultproperties
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-    GivenItems(0)="DH_Equipment.DH_USArtyBinocularsItem"
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanWinterWoolHat'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stOfficer'
     PrimaryWeaponType=WT_SMG

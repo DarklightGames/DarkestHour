@@ -20,7 +20,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=3)
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_ThompsonWeapon',Amount=3)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
-    GivenItems(0)="DH_Equipment.DH_USBinocularsItem"
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTankerHat'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

@@ -30,7 +30,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
     GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"
-    GivenItems(1)="DH_Equipment.DH_USBinocularsItem"
+    GivenItems(1)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stEMb'
     PrimaryWeaponType=WT_SemiAuto

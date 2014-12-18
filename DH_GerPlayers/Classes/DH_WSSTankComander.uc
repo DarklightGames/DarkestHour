@@ -37,7 +37,7 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_C96Weapon',Amount=2,AssociatedAttachment=class'DH_Weapons.DH_C96AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-    GivenItems(0)="DH_Equipment.DH_GerBinocularsItem"
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_WSSTankerCrushercap'
     Headgear(1)=class'DH_GerPlayers.DH_SSCap'
     PrimaryWeaponType=WT_SMG

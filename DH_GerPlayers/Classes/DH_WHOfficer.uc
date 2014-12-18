@@ -30,7 +30,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-    GivenItems(0)="DH_Equipment.DH_GerArtyBinocularsItem"
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_HeerOfficercap'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCrushercap'
     PrimaryWeaponType=WT_SMG

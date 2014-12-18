@@ -20,7 +20,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',Amount=3)
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',Amount=3)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-    GivenItems(0)="DH_Equipment.DH_USBinocularsItem"
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_USPlayers.DH_USTankerHat'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

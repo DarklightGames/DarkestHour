@@ -37,7 +37,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-    GivenItems(0)="DH_Equipment.DH_GerBinocularsItem"
+    GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'ROInventory.ROGermanHat'
     Headgear(1)=class'DH_GerPlayers.DH_HeerArtilleryCrushercap'
     RolePawnClass="DH_GerPlayers.DH_WH_TankerPawn"
