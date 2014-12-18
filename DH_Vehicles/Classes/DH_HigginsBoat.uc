@@ -84,14 +84,14 @@ simulated state ViewTransition
 
          if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
          {
-             //log("HandleTransition Player Transition Up!");
+             //Log("HandleTransition Player Transition Up!");
              PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
              //ADDED RAMP UP sound HERE
              PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume/255.0,, 150,, false);
          }
          else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
          {
-             //log("HandleTransition Player Transition Down!");
+             //Log("HandleTransition Player Transition Down!");
              PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
              //ADDED RAMP DOWN sound HERE
              PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume/255.0,, 150,, false);

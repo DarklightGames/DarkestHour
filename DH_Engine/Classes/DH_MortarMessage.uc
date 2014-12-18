@@ -23,7 +23,7 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    switch(Switch)
+    switch (Switch)
     {
         case 1:
             return default.MustCrouch;

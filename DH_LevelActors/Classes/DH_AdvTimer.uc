@@ -72,7 +72,7 @@ state Timing
                     Level.Game.Broadcast(self, EndMessage, MessageType);
                 else
                 {
-                    for(C=Level.ControllerList;C!=none;C=C.NextController)
+                    for (C = Level.ControllerList; C != none; C = C.NextController)
                     {
                         PC = PlayerController(C);
                         if (PC != none && PC.GetTeamNum() == EndMessageTeam)
@@ -107,7 +107,7 @@ state Timing
                     Level.Game.Broadcast(self, MinutesLeft $ ":" $ SecondsLeft @ Message, MessageType);
                 else
                 {
-                    for(C=Level.ControllerList;C!=none;C=C.NextController)
+                    for (C = Level.ControllerList; C != none; C = C.NextController)
                     {
                         PC = PlayerController(C);
                         if (PC != none && PC.GetTeamNum() == MessageTeam)

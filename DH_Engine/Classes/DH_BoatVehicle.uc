@@ -57,7 +57,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
                 --InsertIndex;
             }
 
-            if ( RemovedIndex != InsertIndex )
+            if (RemovedIndex != InsertIndex)
             {
                 MyArray.Insert(InsertIndex, 1);
                 MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
@@ -289,12 +289,12 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for(i=0;i<Weapons.Length;i++)
+        for (i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
                 Weapons[i].Destroy();
         }
-        for(i=0;i<WeaponPawns.Length;i++)
+        for (i = 0; i < WeaponPawns.Length; i++)
             WeaponPawns[i].Destroy();
     }
 
@@ -306,14 +306,14 @@ simulated event DestroyAppearance()
     {
         bNoTeamBeacon = true;
 
-        for(i=0;i<HeadlightCorona.Length;i++)
+        for (i = 0; i < HeadlightCorona.Length; i++)
             HeadlightCorona[i].Destroy();
         HeadlightCorona.Length = 0;
 
         if (HeadlightProjector != none)
             HeadlightProjector.Destroy();
 
-        for(i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {

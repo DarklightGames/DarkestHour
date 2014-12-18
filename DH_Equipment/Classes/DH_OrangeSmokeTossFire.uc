@@ -52,7 +52,7 @@ function DoFireEffect()
 
     Aim = AdjustAim(StartProj, AimError);
 
-    //log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
+    //Log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
     //PlayerController(Instigator.Controller).ClientMessage("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
 
 //    Instigator.ClearStayingDebugLines();

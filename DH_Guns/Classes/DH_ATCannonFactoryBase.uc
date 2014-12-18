@@ -46,7 +46,7 @@ function EvaluateRandom()
     local int TotalActive;
     local float RandFactor;
 
-    //log(self$" Evaluate Random");
+    //Log(self$" Evaluate Random");
 
     if (bRandomEvaluated || !bUseRandomizer)
         return;
@@ -95,17 +95,17 @@ function EvaluateRandom()
        RandFactor = Min(MaxToSpawn,GunFactories.Length)/Float(GunFactories.Length);
     }
 
-    //log(self$" MaxToSpawn = "$MaxToSpawn$" RandFactor = "$RandFactor);
+    //Log(self$" MaxToSpawn = "$MaxToSpawn$" RandFactor = "$RandFactor);
 
     // Loop through all the the factories found for this group tag and calculate
     // whether or not they should be activated.
     for (i = 0; i < GunFactories.Length; i++)
     {
-        //log(self$" total active = "$TotalActive$" i = "$i);
+        //Log(self$" total active = "$TotalActive$" i = "$i);
 
         if (TotalActive >= MaxToSpawn && MaxToSpawn > 0)
         {
-            //log(self$" Hit the MaxToSpawn");
+            //Log(self$" Hit the MaxToSpawn");
             break;
         }
 
@@ -113,7 +113,7 @@ function EvaluateRandom()
         {
            ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
            TotalActive++;
-           //log(self$" Adding an AT Gun because we're down to the last ones");
+           //Log(self$" Adding an AT Gun because we're down to the last ones");
            continue;
         }
 
@@ -123,7 +123,7 @@ function EvaluateRandom()
             {
                ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
                TotalActive++;
-               //log(self$" Randomly adding ATGun "$i);
+               //Log(self$" Randomly adding ATGun "$i);
                continue;
             }
         }
@@ -131,12 +131,12 @@ function EvaluateRandom()
         {
            ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
            TotalActive++;
-           //log(self$" Spawning every ATGun since the limit was set to zero");
+           //Log(self$" Spawning every ATGun since the limit was set to zero");
            continue;
         }
     }
 
-    //log(self$" Final total active = "$TotalActive);
+    //Log(self$" Final total active = "$TotalActive);
 
     bRandomEvaluated = true;
 
@@ -243,19 +243,19 @@ simulated function Reset()
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 
-    //log("Reset got called for "$self);
+    //Log("Reset got called for "$self);
     if (!bUsesSpawnAreas && !bUseRandomizer)
     {
-         //log(self$" spawning vehicle because of reset");
+         //Log(self$" spawning vehicle because of reset");
          SpawnVehicle();
          TotalSpawnedVehicles=0;
          Activate(TeamNum);
     }
     else if (bUseRandomizer)
     {
-         if (bMasterFactory )
+         if (bMasterFactory)
          {
-             //log(self$" Resetting mastergun on round end");
+             //Log(self$" Resetting mastergun on round end");
              TotalSpawnedVehicles=0;
              Deactivate();
              bRandomEvaluated = false;
@@ -263,7 +263,7 @@ simulated function Reset()
          }
          else if (!bRandomEvaluated)
          {
-             //log(self$" Resetting regular gun");
+             //Log(self$" Resetting regular gun");
              TotalSpawnedVehicles=0;
              Deactivate();
              EvaluateRandom();

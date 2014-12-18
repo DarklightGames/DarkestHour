@@ -220,7 +220,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
                 --InsertIndex;
             }
 
-            if ( RemovedIndex != InsertIndex )
+            if (RemovedIndex != InsertIndex)
             {
                 MyArray.Insert(InsertIndex, 1);
                 MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
@@ -587,13 +587,13 @@ simulated function StopEmitters()
 
     if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {
-        for(i = 0; i < Dust.Length; i++)
+        for (i = 0; i < Dust.Length; i++)
             if (Dust[i] != none)
                 Dust[i].Kill();
 
         Dust.Length = 0;
 
-        for(i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
             if (ExhaustPipes[i].ExhaustEffect != none)
                 ExhaustPipes[i].ExhaustEffect.Kill();
     }
@@ -610,7 +610,7 @@ simulated function StartEmitters()
     {
         Dust.length = Wheels.length;
 
-        for(i = 0; i<Wheels.Length; i++)
+        for (i = 0; i < Wheels.Length; i++)
         {
             if (Dust[i] != none)
                 Dust[i].Destroy();
@@ -629,7 +629,7 @@ simulated function StartEmitters()
             Dust[i].SetDirtColor(Level.DustColor);
         }
 
-        for(i = 0; i<ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
                 ExhaustPipes[i].ExhaustEffect.Destroy();
@@ -855,20 +855,20 @@ simulated state ViewTransition
                  LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
          }
 
-         //log("HandleTransition!");
+         //Log("HandleTransition!");
 
          if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
          {
              SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim, 1.0), false);
 
-             //log("HandleTransition Player Transition Up!");
+             //Log("HandleTransition Player Transition Up!");
                  PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
          }
          else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
          {
              SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim, 1.0), false);
 
-             //log("HandleTransition Player Transition Down!");
+             //Log("HandleTransition Player Transition Down!");
                  PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
          }
 
@@ -1164,12 +1164,12 @@ simulated function Tick(float DeltaTime)
         LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-        for(i = 0; i<LeftWheelBones.Length; i++)
+        for (i = 0; i < LeftWheelBones.Length; i++)
         {
               SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
-        for(i = 0; i<RightWheelBones.Length; i++)
+        for (i = 0; i < RightWheelBones.Length; i++)
         {
               SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
@@ -1435,6 +1435,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
     if (bAssaultWeaponHit) // big fat HACK to defeat Stug/JP bug
     {
+
         bAssaultWeaponHit = false;
 
         return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
@@ -2012,14 +2013,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
     }
 
-    for(i=0; i<VehHitpoints.Length; i++)
+    for (i = 0; i < VehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
             // Damage for large weapons
-            if (    class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
+            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {
@@ -2076,7 +2077,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             }
         }
     }
-    for(i=0; i<NewVehHitpoints.Length; i++)
+    for (i = 0; i < NewVehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 
@@ -2200,7 +2201,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
        HitAngle = 360 + (HitAngle* -1);
     }
 
-    if ((HitAngle >= FrontRightAngle && Hitangle < RearRightAngle) && !bWasTurretHit) //Left side hit
+    if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit) //Left side hit
     {
         HitDir = Hitlocation - Location;
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
@@ -2220,7 +2221,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             }
         }
     }
-    else if ((HitAngle >= RearLeftAngle && Hitangle < FrontLeftAngle) && !bWasTurretHit)  //Right side hit
+    else if ((HitAngle >= RearLeftAngle && HitAngle < FrontLeftAngle) && !bWasTurretHit)  //Right side hit
     {
 
        HitDir = Hitlocation - Location;
@@ -2322,9 +2323,9 @@ function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector 
         if (bDebuggingText && Role == ROLE_Authority)
             Level.Game.Broadcast(self, "Engine is Dead");
 
-        bDisableThrottle=true;
-        bEngineOff=true;
-        bEngineDead=true;
+        bDisableThrottle = true;
+        bEngineOff = true;
+        bEngineDead = true;
         DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
 
         TurnDamping = 0.0;
@@ -2421,12 +2422,12 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for(i = 0; i < Weapons.Length; i++)
+        for (i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
                 Weapons[i].Destroy();
         }
-        for(i=0;i<WeaponPawns.Length;i++)
+        for (i = 0; i < WeaponPawns.Length; i++)
             WeaponPawns[i].Destroy();
     }
     Weapons.Length = 0;
@@ -2437,14 +2438,14 @@ simulated event DestroyAppearance()
     {
         bNoTeamBeacon = true;
 
-        for(i=0;i<HeadlightCorona.Length;i++)
+        for (i = 0; i < HeadlightCorona.Length; i++)
             HeadlightCorona[i].Destroy();
         HeadlightCorona.Length = 0;
 
         if (HeadlightProjector != none)
             HeadlightProjector.Destroy();
 
-        for(i=0; i<Dust.Length; i++)
+        for (i = 0; i < Dust.Length; i++)
         {
             if (Dust[i] != none)
                 Dust[i].Kill();
@@ -2452,7 +2453,7 @@ simulated event DestroyAppearance()
 
         Dust.Length = 0;
 
-        for(i=0; i<ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {
@@ -2643,7 +2644,7 @@ simulated function DrawHUD(Canvas Canvas)
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //log("PanzerTurret PlayerController was none, returning");
+        //Log("PanzerTurret PlayerController was none, returning");
         return;
     }
     else if (!PC.bBehindView)

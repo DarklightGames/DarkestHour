@@ -115,6 +115,8 @@ simulated function PostNetBeginPlay()
 
 simulated function Tick(float DeltaTime)
 {
+    super.Tick(DeltaTime);
+
     if (bOnFire && TurretHatchFireEffect == none)
     {
         // Lets randomise the fire start times to desync them with the driver and engine ones
@@ -1003,7 +1005,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     {
         ProjectileClass = PendingProjectileClass;
     }
-    //log("WeaponFireRotation = "$WeaponFireRotation);
+    //Log("WeaponFireRotation = "$WeaponFireRotation);
 
     if (P != none)
     {
@@ -1049,7 +1051,7 @@ function CeaseFire(Controller C, bool bWasAltFire)
 
 simulated function bool HasAmmo(int Mode)
 {
-    switch(Mode)
+    switch (Mode)
     {
         case 0:
             return (MainAmmoChargeExtra[0] > 0);
@@ -1074,7 +1076,7 @@ simulated function bool ReadyToFire(bool bAltFire)
 {
     local int Mode;
 
-    if (    bAltFire)
+    if (bAltFire)
         Mode = 3;
     else if (ProjectileClass == PrimaryProjectileClass)
         Mode = 0;
@@ -1111,7 +1113,7 @@ simulated function bool ConsumeAmmo(int Mode)
     if (!HasAmmo(Mode))
         return false;
 
-    switch(Mode)
+    switch (Mode)
     {
         case 0:
             MainAmmoChargeExtra[0]--;
@@ -1165,7 +1167,7 @@ simulated function Timer()
 {
    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
    {
-      //log(" Returning because there is no controller");
+      //Log(" Returning because there is no controller");
       SetTimer(0.05, true);
    }
    else if (CannonReloadState == CR_Empty)
@@ -1271,7 +1273,7 @@ simulated function bool BelowDriverAngle(vector Loc, vector Ray)
 
     C = GetBoneCoords(VehHitpoints[0].PointBone);
     HeadLoc = C.Origin + (VehHitpoints[0].PointHeight * VehHitpoints[0].PointScale * C.XAxis);
-    HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> rotator(C.Xaxis));
+    HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> Rotator(C.Xaxis));
 
     HitDir = Loc - HeadLoc;
 
@@ -1405,7 +1407,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
         t = 0.0;
     }
 
-    Distance = Sqrt(Diff dot Diff);
+    Distance = Sqrt(Diff Dot Diff);
 
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
 }
@@ -1488,14 +1490,14 @@ simulated function int LimitYaw(int yaw)
 
     P = DH_ROTankCannonPawn(Owner);
 
-    if(!bLimitYaw)
+    if (!bLimitYaw)
     {
         return yaw;
     }
 
-    if(P != none)
+    if (P != none)
     {
-        if(P.DriverPositionIndex >= P.PeriscopePositionIndex)
+        if (P.DriverPositionIndex >= P.PeriscopePositionIndex)
         {
             return yaw;
         }

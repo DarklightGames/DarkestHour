@@ -65,7 +65,7 @@ simulated function SetText()
     GC = GUIController(Level.GetLocalPlayerController().Player.GUIController);
 
     //This draws the loading prefix + mapname "Deploying to... LEVEL"
-    if (GC!=none)
+    if (GC != none)
     {
         GC.LCDCls();
         GC.LCDDrawTile(GC.LCDLogo,0,0,64,43,0,0,64,43);
@@ -183,7 +183,7 @@ simulated function SetImage()
 
     //We are going to check to see if the level is officially supported
     //If so set the proper background (loadingscreen) and call the function to add the logo indicating official map
-    switch(Map)
+    switch (Map)
     {
         case "bois jacques" :
             str = Backgrounds[1];

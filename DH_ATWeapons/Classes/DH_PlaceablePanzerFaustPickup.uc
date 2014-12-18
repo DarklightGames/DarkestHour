@@ -68,7 +68,7 @@ auto state Pickup
         // check if Other has a primary weapon
         if (user != none && user.Inventory != none)
         {
-            for (Inv=user.Inventory; Inv!=none; Inv=Inv.Inventory)
+            for (Inv = user.Inventory; Inv != none; Inv = Inv.Inventory)
             {
                 if (Inv != none && Weapon(Inv) != none)
                 {

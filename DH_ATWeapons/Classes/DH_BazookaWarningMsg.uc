@@ -19,7 +19,7 @@ static function string GetString(
     )
 
 {
-    switch(Switch)
+    switch (Switch)
     {
         case 0:
             return default.NoProneFire;

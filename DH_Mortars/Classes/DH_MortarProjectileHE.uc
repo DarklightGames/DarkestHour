@@ -30,7 +30,7 @@ var float               BlurEffectScalar;
 
 simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterClass, ESurfaceTypes SurfaceType)
 {
-    switch(SurfaceType)
+    switch (SurfaceType)
     {
         case EST_Ice:
             ExplosionEmitterClass = SnowExplosionEmitterClass;
@@ -49,7 +49,7 @@ simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterC
 
 simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes SurfaceType)
 {
-    switch(SurfaceType)
+    switch (SurfaceType)
     {
         case EST_Ice:
             ExplosionSound = SnowExplosionSounds[Rand(SnowExplosionSounds.Length)];
@@ -68,7 +68,7 @@ simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes Sur
 
 simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalClass, ESurfaceTypes SurfaceType)
 {
-    switch(SurfaceType)
+    switch (SurfaceType)
     {
         case EST_Ice:
             ExplosionDecalClass = ExplosionDecalSnow;
@@ -343,7 +343,7 @@ simulated function GetClosestMortarTargetController(out Controller C)
 
     if (DamageInstigator.GetTeamNum() == 0)
     {
-        for(i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].bCancelled != 0)
                 continue;
@@ -364,7 +364,7 @@ simulated function GetClosestMortarTargetController(out Controller C)
     }
     else
     {
-        for(i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
         {
             if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].bCancelled != 0)
                 continue;

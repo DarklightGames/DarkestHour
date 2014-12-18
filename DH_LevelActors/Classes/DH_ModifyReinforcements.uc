@@ -60,7 +60,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
         }
         else
         {
-            for(C=Level.ControllerList;C!=none;C=C.NextController)
+            for (C = Level.ControllerList; C != none; C = C.NextController)
             {
                 P = PlayerController(C);
                 if (P != none && P.GetTeamNum() == TeamToModify)
@@ -82,7 +82,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
             //SendReinforcementMessage(i, 1);
     }
 
-    switch(HowToModify)
+    switch (HowToModify)
     {
         case NMT_Add: //Because SpawnCount goes up, to add reinforcements you must subtract from SpawnCount
             if (TeamToModify == NEUTRAL){
@@ -126,7 +126,7 @@ function int AddRespawnsRandomly()
     local   ROTeamGame                  ROGame;
 
     //Construct the local Dead PC list
-    for(C=Level.ControllerList; C!=none; C=C.NextController)
+    for (C = Level.ControllerList; C != none; C = C.NextController)
     {
         if (!C.bIsPlayer || C.Pawn != none || C.PlayerReplicationInfo == none || C.PlayerReplicationInfo.Team == none || C.PlayerReplicationInfo.Team.TeamIndex != TeamToModify)
             continue;
@@ -140,7 +140,7 @@ function int AddRespawnsRandomly()
     ROGame = ROTeamGame(Level.Game);
 
     //Go through the local proper PC dead list and respawn them
-    for(i=0; i<lDeadPCList.Length; i++)
+    for (i = 0; i < lDeadPCList.Length; i++)
     {
         RandomNum = rand(lDeadPCList.Length);
         ROGame.RestartPlayer(lDeadPCList[randomnum]);

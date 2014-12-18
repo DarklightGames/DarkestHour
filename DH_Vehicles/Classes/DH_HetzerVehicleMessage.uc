@@ -11,22 +11,22 @@ var(Messages) localized string CannotFireMGUnbuttoned;
 var(Messages) localized string MGBlockingHatch;
 
 static function string GetString(
-	optional int Switch,
-	optional PlayerReplicationInfo RelatedPRI_1,
-	optional PlayerReplicationInfo RelatedPRI_2,
-	optional Object OptionalObject
-	)
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
 {
-	switch (Switch)
-	{
+    switch (Switch)
+    {
         case 0:
-             return default.CannotExit;
+            return default.CannotExit;
         case 1:
-             return default.UnbuttonToReloadMG;			 
+            return default.UnbuttonToReloadMG;
         case 2:
-             return default.CannotFireMGUnbuttoned;
+            return default.CannotFireMGUnbuttoned;
         case 3:
-             return default.MGBlockingHatch;
+            return default.MGBlockingHatch;
     }
 }
 

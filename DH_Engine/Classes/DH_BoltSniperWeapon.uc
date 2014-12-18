@@ -156,7 +156,7 @@ simulated state Reloading
                 ReloadState = RS_ReloadLooped;
                 PlayReload();
             }
-            else if (anim == SingleReloadAnim )
+            else if (anim == SingleReloadAnim)
             {
                 if (NumRoundsToLoad == 0 || bInterruptReload)
                 {

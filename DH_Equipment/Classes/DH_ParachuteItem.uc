@@ -94,7 +94,7 @@ simulated state RaisingWeapon
 
             if (Instigator.IsLocallyControlled())
             {
-                if (Mesh!=none && HasAnim(SelectAnim))
+                if (Mesh != none && HasAnim(SelectAnim))
                 {
                     PlayAnim(SelectAnim, SelectAnimRate, 0.0);
                 }

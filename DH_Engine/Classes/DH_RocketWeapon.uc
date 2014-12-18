@@ -656,7 +656,7 @@ function bool HandlePickupQuery(Pickup Item)
                     // Handle multi mag ammo type pickups
                     if (ROMultiMagAmmoPickup(Item) != none)
                     {
-                        for(j = 0; j < ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
+                        for (j = 0; j < ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
                         {
                             if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
                             {
@@ -760,7 +760,7 @@ function bool ResupplyAmmo()
 
     if (CurrentMagCount < MaxNumPrimaryMags - 1 && AmmoAmount(0) == 0)
     {
-        for(i = NumMagsToResupply; i > 0; i--)
+        for (i = NumMagsToResupply; i > 0; i--)
         {
             if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
             {

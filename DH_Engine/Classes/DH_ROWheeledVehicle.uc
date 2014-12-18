@@ -102,7 +102,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
                 --InsertIndex;
             }
 
-            if ( RemovedIndex != InsertIndex )
+            if (RemovedIndex != InsertIndex)
             {
                 MyArray.Insert(InsertIndex, 1);
                 MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
@@ -284,7 +284,7 @@ simulated function Tick(float dt)
         // MergeTODO: Put this stuff back in
 
         // Update dust kicked up by wheels.
-        for(i=0; i<Dust.Length; i++)
+        for (i = 0; i < Dust.Length; i++)
            Dust[i].UpdateDust(Wheels[i], DustSlipRate, DustSlipThresh);
 
         // Unpack the replicated throttle byte
@@ -301,7 +301,7 @@ simulated function Tick(float dt)
             ThrottlePosition = (ThrottleRep - 101)/100;
         }
 
-        for(i=0; i<ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {
@@ -312,11 +312,11 @@ simulated function Tick(float dt)
         /*
         if (bMakeBrakeLights)
         {
-            for(i=0; i<2; i++)
+            for (i = 0; i < 2; i++)
                 if (BrakeLight[i] != none)
                     BrakeLight[i].bCorona = true;
 
-            for(i=0; i<2; i++)
+            for (i = 0; i < 2; i++)
                 if (BrakeLight[i] != none)
                     BrakeLight[i].UpdateBrakelightState(OutputBrake, Gear);
         }  */
@@ -375,13 +375,13 @@ simulated function StopEmitters()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for(i = 0; i < Dust.Length; i++)
+        for (i = 0; i < Dust.Length; i++)
             if (Dust[i] != none)
                 Dust[i].Kill();
 
         Dust.Length = 0;
 
-        for(i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
             if (ExhaustPipes[i].ExhaustEffect != none)
                 ExhaustPipes[i].ExhaustEffect.Kill();
     }
@@ -398,7 +398,7 @@ simulated function StartEmitters()
     {
         Dust.length = Wheels.length;
 
-        for(i=0; i<Wheels.Length; i++)
+        for (i = 0; i < Wheels.Length; i++)
         {
             if (Dust[i] != none)
                 Dust[i].Destroy();
@@ -417,7 +417,7 @@ simulated function StartEmitters()
             Dust[i].SetDirtColor(Level.DustColor);
         }
 
-        for(i=0; i<ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
                 ExhaustPipes[i].ExhaustEffect.Destroy();
@@ -759,12 +759,12 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for(i=0;i<Weapons.Length;i++)
+        for (i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
                 Weapons[i].Destroy();
         }
-        for(i=0;i<WeaponPawns.Length;i++)
+        for (i = 0; i < WeaponPawns.Length; i++)
             WeaponPawns[i].Destroy();
     }
     Weapons.Length = 0;
@@ -775,14 +775,14 @@ simulated event DestroyAppearance()
     {
         bNoTeamBeacon = true;
 
-        for(i=0;i<HeadlightCorona.Length;i++)
+        for (i = 0; i < HeadlightCorona.Length; i++)
             HeadlightCorona[i].Destroy();
         HeadlightCorona.Length = 0;
 
         if (HeadlightProjector != none)
             HeadlightProjector.Destroy();
 
-        for(i=0; i<Dust.Length; i++)
+        for (i = 0; i < Dust.Length; i++)
         {
             if (Dust[i] != none)
                 Dust[i].Kill();
@@ -790,7 +790,7 @@ simulated event DestroyAppearance()
 
         Dust.Length = 0;
 
-        for(i=0; i<ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {

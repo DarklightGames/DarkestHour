@@ -16,7 +16,7 @@ function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, floa
 
     if (bIsSelected || (bIsPending && !bIsDrop))
     {
-        if (SelectedStyle!=none)
+        if (SelectedStyle != none)
         {
             if (SelectedStyle.Images[MenuState] != none)
                 SelectedStyle.Draw(C,MenuState, X, Y, XL, YL);

@@ -25,12 +25,12 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
     ROGame = ROTeamGame(Level.Game); //Get Game Info
 
-    switch(HowToRandom)
+    switch (HowToRandom)
     {
         case TR_NoRandom:
-            for(i=0;i<ObjectivesNumsToModify.Length;i++)
+            for (i = 0; i < ObjectivesNumsToModify.Length; i++)
             {
-                switch(HowToModify)
+                switch (HowToModify)
                 {
                     case SMT_Activate:
                         ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(true);
@@ -46,12 +46,12 @@ event Trigger(Actor Other, Pawn EventInstigator)
             }
         break;
         case TR_Percentage:
-            for(i=0;i<ObjectivesNumsToModify.Length;i++)
+            for (i = 0; i < ObjectivesNumsToModify.Length; i++)
             {
                 RandomNum = Rand(101);  //Gets a random # between 0 & 100
                 if (RandomPercent >= RandomNum)
                 {
-                    switch(HowToModify)
+                    switch (HowToModify)
                     {
                         case SMT_Activate:
                             ROGame.Objectives[ObjectivesNumsToModify[i]].SetActive(true);
@@ -71,13 +71,13 @@ event Trigger(Actor Other, Pawn EventInstigator)
         break;
         case TR_MaxToModify:
             TempObjNumsModify = ObjectivesNumsToModify; //Setup a temp array = to ObjectiveNumsToModify
-            for(i=0;i<MaxNumToModify;i++)
+            for (i = 0; i < MaxNumToModify; i++)
             {
                 if (TempObjNumsModify.Length <= 0) //Check to make sure we don't do more times than needed
                     break; //break out of the for loop because we won't be changing anymore
 
                 RandomNum = Rand(TempObjNumsModify.Length); //Select an element in the array to modify
-                switch(HowToModify)
+                switch (HowToModify)
                 {
                     case SMT_Activate:
                         ROGame.Objectives[TempObjNumsModify[RandomNum]].SetActive(true);

@@ -10,6 +10,6 @@ class DH_NebelGranate39Projectile extends DH_GrenadeProjectile_Smoke;
 defaultproperties
 {
     bIsStickGrenade=true
-    MyDamageType=Class'DH_Equipment.DH_NebelGranate39DamType'
+    MyDamageType=class'DH_Equipment.DH_NebelGranate39DamType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.gersmokenade_throw'
 }

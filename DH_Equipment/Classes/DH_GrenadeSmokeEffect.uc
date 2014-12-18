@@ -14,7 +14,7 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     //Lets change the smoke color if it's not set to default in DH_LevelInfo
-    if( DarkestHourGame(Level.Game).DHSharedInfo.SmokeBrightnessOverride != 255 )
+    if (DarkestHourGame(Level.Game).DHSharedInfo.SmokeBrightnessOverride != 255)
     {
         //Set the brightness value to the override in the level
         SmokeBrightnessValue = DarkestHourGame(Level.Game).DHSharedInfo.SmokeBrightnessOverride;

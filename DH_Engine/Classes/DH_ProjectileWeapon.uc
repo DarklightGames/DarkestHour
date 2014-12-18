@@ -120,7 +120,7 @@ exec function LogAmmo()
         return;
     }
 
-    for(i = 0; i < PrimaryAmmoArray.Length; i++)
+    for (i = 0; i < PrimaryAmmoArray.Length; i++)
     {
         if (i == CurrentMagIndex)
         {
@@ -2069,7 +2069,7 @@ function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
         {
             PrimaryAmmoArray.Length = InitialNumPrimaryMags;
 
-            for(i = 0; i < PrimaryAmmoArray.Length; ++i)
+            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
@@ -2529,7 +2529,7 @@ function GiveBarrels(optional Pickup Pickup)
     if (Pickup == none)
     {
         // give the barrels to the players
-        for(i = 0; i < InitialBarrels; ++i)
+        for (i = 0; i < InitialBarrels; ++i)
         {
             tempBarrel = Spawn(BarrelClass, self);
 
@@ -2589,7 +2589,7 @@ simulated function Destroyed()
     super.Destroyed();
 
     // remove and destroy the barrels in the Barrels array
-    for(i = 0; i < Barrels.Length; ++i)
+    for (i = 0; i < Barrels.Length; ++i)
     {
         if (Barrels[i] != none)
         {

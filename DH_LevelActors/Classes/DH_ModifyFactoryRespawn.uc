@@ -21,7 +21,7 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     //Factories are dynamic so use dynamic actor list
-    for(i=0; i<FactoryToModify.Length; i++)
+    for (i = 0; i < FactoryToModify.Length; i++)
     {
         foreach DynamicActors(class'ROVehicleFactory', ROVF, FactoryToModify[i])
         {
@@ -45,22 +45,22 @@ event Trigger(Actor Other, Pawn EventInstigator)
     //Get num to modify by
     ModifyActual = RandRange(MinModifyNum, MaxModifyNum);
 
-    switch(HowToModifyRespawnLimit)
+    switch (HowToModifyRespawnLimit)
     {
         case NMT_Add:
-            for(i=0; i<FactoryReference.Length; i++)
+            for (i = 0; i < FactoryReference.Length; i++)
             {
                 FactoryReference[i].VehicleRespawnLimit += ModifyActual; //Add the ammount
             }
         break;
         case NMT_Subtract:
-            for(i=0; i<FactoryReference.Length; i++)
+            for (i = 0; i < FactoryReference.Length; i++)
             {
                 FactoryReference[i].VehicleRespawnLimit -= ModifyActual; //Subtract the ammount
             }
         break;
         case NMT_Set: //Check factory status and toggle it
-            for(i=0; i<FactoryReference.Length; i++)
+            for (i = 0; i < FactoryReference.Length; i++)
             {
                 FactoryReference[i].VehicleRespawnLimit = ModifyActual; //Set the ammount
             }

@@ -29,7 +29,7 @@ simulated function DrawHUD(Canvas Canvas)
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //log("PanzerTurret PlayerController was none, returning");
+        //Log("PanzerTurret PlayerController was none, returning");
         return;
     }
     else if (!PC.bBehindView)

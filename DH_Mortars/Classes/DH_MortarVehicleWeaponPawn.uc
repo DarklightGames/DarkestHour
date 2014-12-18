@@ -90,7 +90,7 @@ simulated function PostNetReceive()
 {
     if (CurrentDriverAnimation != OldDriverAnimation)
     {
-        switch(CurrentDriverAnimation)
+        switch (CurrentDriverAnimation)
         {
         case IdleAnimIndex:
             Gun.LoopAnim(GunIdleAnim);
