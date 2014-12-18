@@ -198,125 +198,83 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     PlaySound(ExplosionSound[Rand(4)], , 5.5 * TransientSoundVolume);
 }
 
+// Sets Hardness based on the surface type hit
 simulated function CheckWall(vector HitNormal, vector X)
 {
-    local Material HitMaterial;
+    local Material      HitMaterial;
     local ESurfaceTypes HitSurfaceType;
-    local vector cTmpHitLocation, cTmpHitNormal;
+    local vector        TempHitLocation, TempHitNormal;
 
-    Trace(cTmpHitLocation, cTmpHitNormal, Location, Location + X*16, false,, HitMaterial);
+    Trace(TempHitLocation, TempHitNormal, Location, Location + X * 16.0, false, , HitMaterial);
 
     if (HitMaterial != none)
+    {
         HitSurfaceType = ESurfaceTypes(HitMaterial.SurfaceType);
+    }
     else
+    {
         HitSurfaceType = EST_Default;
+    }
 
     switch (HitSurfaceType)
     {
-        case EST_Default :
+        case EST_Default:
             Hardness = 0.7;
             break;
-        case EST_Rock :
+        case EST_Rock:
             Hardness = 2.5;
             break;
-        case EST_Metal :
+        case EST_Metal:
             Hardness = 4.0;
             break;
-        case EST_Wood :
+        case EST_Wood:
             Hardness = 0.5;
             break;
-        case EST_Plant :
+        case EST_Plant:
             Hardness = 0.1;
             break;
-        case EST_Flesh :
+        case EST_Flesh:
             Hardness = 0.2;
             break;
-        case EST_Ice :
+        case EST_Ice:
             Hardness = 0.8;
             break;
-        case EST_Snow :
+        case EST_Snow:
             Hardness = 0.1;
             break;
-        case EST_Water :
+        case EST_Water:
             Hardness = 0.1;
             break;
-        case EST_Glass :
+        case EST_Glass:
             Hardness = 0.3;
             break;
-        case EST_Gravel :
+        case EST_Gravel:
             Hardness = 0.4;
             break;
-        case EST_Concrete :
+        case EST_Concrete:
             Hardness = 2.0;
             break;
-        case EST_HollowWood :
+        case EST_HollowWood:
             Hardness = 0.3;
             break;
-        case EST_MetalArmor :
+        case EST_MetalArmor:
             Hardness = 10.0;
             break;
-        case EST_Paper :
+        case EST_Paper:
             Hardness = 0.2;
             break;
-        case EST_Cloth :
+        case EST_Cloth:
             Hardness = 0.3;
             break;
-        case EST_Rubber :
+        case EST_Rubber:
             Hardness = 0.2;
             break;
-        case EST_Poop :
+        case EST_Poop:
             Hardness = 0.1;
             break;
         default:
             Hardness = 0.5;
             break;
-    }
-
-    return;
-}
-
-simulated function DELETEDestroyed()
-{
-    local vector TraceHitLocation, TraceHitNormal;
-    local Material HitMaterial;
-    local ESurfaceTypes ST;
-    local bool bShowDecal, bSnowDecal;
-
-    if (SavedHitActor == none)
-    {
-       Trace(TraceHitLocation, TraceHitNormal, Location + vector(Rotation) * 16, Location, false,, HitMaterial);
-    }
-
-    DoShakeEffect();
-
-    if (!bDidExplosionFX)
-    {
-        if (HitMaterial == none)
-            ST = EST_Default;
-        else
-            ST = ESurfaceTypes(HitMaterial.SurfaceType);
-
-        if (SavedHitActor != none)
-        {
-
-            PlaySound(VehicleHitSound,,5.5*TransientSoundVolume);
-            PlaySound(ExplosionSound[Rand(3)],,2.5*TransientSoundVolume);
-            if (EffectIsRelevant(Location, false))
-            {
-                Spawn(ShellHitVehicleEffectClass,,,SavedHitLocation + SavedHitNormal*16,rotator(SavedHitNormal));
-                if ((ExplosionDecal != none) && (Level.NetMode != NM_DedicatedServer))
-                    Spawn(ExplosionDecal,self,,Location, rotator(-SavedHitNormal));
-            }
-        }
-        else
-        {
-            if (EffectIsRelevant(Location, false))
-            {
-                if (!PhysicsVolume.bWaterVolume)
-                {
-                }
-            }
-        }
     }
 }
 
