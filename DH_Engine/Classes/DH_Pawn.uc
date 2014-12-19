@@ -350,14 +350,7 @@ simulated function HelmetShotOff(rotator Rotation)
 
 function name GetWeaponBoneFor(Inventory I)
 {
-    if (I.IsA('DH_GrenadeWeapon') || I.IsA('DH_PistolWeapon') || I.IsA('ROSatchelChargeWeapon'))
-    {
-        return 'weapon_rhand';//'righthand';
-    }
-    else if (I.IsA('Weapon'))
-    {
-        return 'weapon_rhand';//'FlagHand';
-    }
+    return 'weapon_rhand';
 }
 
 static function name StaticGetWeaponBoneFor(class<Inventory> I)
