@@ -3614,85 +3614,39 @@ function BurningDropWeaps()
 function DropWeaponInventory(vector TossVel)
 {
     local Inventory Inv;
-    local Weapon invWeapon;
+    local Weapon W;
     local vector X,Y,Z;
-    local int count, i;
-    local array<class> DroppedClasses;
-    local bool bAlreadyUsedClass;
+    local int i;
+    local array<Inventory> InventoryList;
 
-    GetAxes(Rotation,X,Y,Z);
-    count = 0;
+    GetAxes(Rotation, X, Y, Z);
+
     Inv = Inventory;
 
-    // consider doing a check on count to make sure it doesn't get too high
-    // and force Unreal to crash with a run away loop
-    while(Inv != none && count < 15)// 500
+    while (Inv != none)
     {
-        count++;
+        InventoryList[InventoryList.Length] = Inv;
 
-        if (Inv.IsA('Weapon'))
+        Inv = Inv.Inventory;
+    }
+
+    Level.Game.Broadcast(self, InventoryList.Length);
+
+    for (i = 0; i < InventoryList.Length; ++i)
+    {
+        W = Weapon(InventoryList[i]);
+
+        if (W != none && W.bCanThrow)
         {
-            invWeapon = Weapon(Inv);
-
-            if (invWeapon != none && invWeapon.bCanThrow)
+            if (W.IsA('BinocularsItem'))    //TODO: this is shit, need a way to define something as being droppable but not on death
             {
-                for (i = 0; i < DroppedClasses.Length; i++)
-                {
-                    if (invWeapon.Class == DroppedClasses[i])
-                    {
-                        bAlreadyUsedClass = true;
-                        break;
-                    }
-                }
-
-                if (!bAlreadyUsedClass)
-                {
-                    // because the weapon is destroyed from inventory need to start over again
-                    // and search through the inventory from the beginning.
-                    DroppedClasses[DroppedClasses.Length] = invWeapon.Class;
-                    invWeapon.DropFrom(Location + 0.8 * CollisionRadius * X - 0.5 * CollisionRadius * Y);
-                    Inv = Inventory;
-                }
-                else
-                {
-                    Inv = Inv.Inventory;
-                }
-            }
-            else if (invWeapon != none && invWeapon.IsA('BinocularsItem'))
-            {
-                for (i = 0; i < DroppedClasses.Length; i++)
-                {
-                    if (invWeapon.Class == DroppedClasses[i])
-                    {
-                        bAlreadyUsedClass = true;
-                        break;
-                    }
-                }
-
-                if (!bAlreadyUsedClass)
-                {
-                    // because the weapon is destroyed from inventory need to start over again
-                    // and search through the inventory from the beginning.
-                    DroppedClasses[DroppedClasses.Length] = invWeapon.Class;
-                    invWeapon.Destroy();
-                    Inv = Inventory;
-                }
-                else
-                {
-                    Inv = Inv.Inventory;
-                }
+                W.Destroy();
             }
             else
             {
-                Inv = Inv.Inventory;
+                W.DropFrom(Location + (0.8 * CollisionRadius * X) - (0.5 * CollisionRadius * Y));
             }
         }
-        else
-        {
-            Inv = Inv.Inventory;
-        }
-
-        bAlreadyUsedClass = false;
     }
 }
 

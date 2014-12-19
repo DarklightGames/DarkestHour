@@ -132,32 +132,39 @@ simulated state LoweringWeapon
 simulated function Fire(float F)
 {
     local DH_Pawn P;
+    local DHPlayer C;
     local DH_RoleInfo RI;
 
     if (Instigator == none ||
         !Instigator.IsLocallyControlled() ||
         Instigator.Controller == none ||
-        AIController(Instigator.Controller) != none ||
         !bUsingSights)
     {
        return;
     }
 
-
     P = DH_Pawn(Instigator);
+    C = DHPlayer(Instigator.Controller);
 
-    if (P == none || P.GetRoleInfo() == none)
+    if (P == none || C == none)
     {
         return;
     }
 
-    if (P.GetRoleInfo().bIsMortarObserver)
+    RI = P.GetRoleInfo();
+
+    if (RI == none)
     {
-        DHPlayer(Instigator.Controller).ServerSaveMortarTarget();
+        return;
     }
-    else if (P.GetRoleInfo().bIsArtilleryOfficer)
+
+    if (RI.bIsMortarObserver)
     {
-        DHPlayer(Instigator.Controller).ServerSaveArtilleryPosition();
+        C.ServerSaveMortarTarget();
+    }
+    else if (RI.bIsArtilleryOfficer)
+    {
+        C.ServerSaveArtilleryPosition();
     }
 }
 
@@ -173,32 +180,41 @@ simulated function AltFire(float F)
 
     P = DH_Pawn(Instigator);
 
-    if (P == none || P.GetRoleInfo() == none || !P.GetRoleInfo().bIsMortarObserver)
+    if (P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver)
     {
-        return;
+        DHPlayer(Instigator.Controller).ServerCancelMortarTarget();
     }
-
-    DHPlayer(Instigator.Controller).ServerCancelMortarTarget();
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DHPlayer P;
+    local DH_Pawn P;
+    local DHPlayer C;
 
     super.BringUp(PrevWeapon);
 
-    if (Instigator.IsLocallyControlled())
+    if (Instigator == none || !Instigator.IsLocallyControlled())
     {
-        P = DHPlayer(Instigator.Controller);
-
-        if (P != none)
-        {
-            P.QueueHint(11, true);
-        }
+        return;
     }
+
+    P = DH_Pawn(Instigator);
+    C = DHPlayer(Instigator.Controller);
+
+    if (C != none && P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver)
+    {
+        C.QueueHint(11, true);
+    }
+}
+
+simulated function bool CanThrow()
+{
+    return true;
 }
 
 defaultproperties
 {
     AttachmentClass=class'DH_Engine.DH_BinocularsAttachment'
+    bCanThrow=true
+    PickupClass=class'DH_Engine.DH_BinocularsPickup'
 }
