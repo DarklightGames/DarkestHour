@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHMG250Rd792x57Ammo extends ROAmmunition;
+class DH_MG42Ammo extends ROAmmunition;
 
 defaultproperties
 {

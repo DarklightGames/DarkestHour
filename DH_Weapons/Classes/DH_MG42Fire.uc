@@ -32,7 +32,7 @@ defaultproperties
     FireEndAnim="Shoot_End"
     TweenTime=0.000000
     FireRate=0.050000
-    AmmoClass=class'DH_Weapons.DHMG250Rd792x57Ammo'
+    AmmoClass=class'DH_Weapons.DH_MG42Ammo'
     ShakeRotMag=(X=25.000000,Y=25.000000,Z=25.000000)
     ShakeRotRate=(X=5000.000000,Y=5000.000000,Z=5000.000000)
     ShakeRotTime=1.750000
