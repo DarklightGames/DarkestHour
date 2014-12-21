@@ -9,6 +9,8 @@ class DH_SatchelCharge10lb10sWeapon extends DH_SatchelChargeMantleWeapon;
 
 defaultproperties
 {
+    bCanThrow=false //cannot be dropped
+    FuzeLength=15.0 //was 10
     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     FireModeClass(1)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'

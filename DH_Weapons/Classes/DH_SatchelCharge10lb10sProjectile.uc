@@ -19,12 +19,6 @@ simulated function PostBeginPlay()
         {
             Velocity = 0.25 * Velocity;
         }
-
-        // Broadcast warning message to teammates
-        if (Instigator != none && Instigator.Controller != none && Instigator.Controller.PlayerReplicationInfo != none && Instigator.Controller.PlayerReplicationInfo.Team != none)
-        {
-            ROTeamGame(Level.Game).BroadcastLocalizedMessage(class'RODemolitionChargePlacedMsg', Instigator.Controller.PlayerReplicationInfo.Team.TeamIndex);
-        }
     }
 
     if (Instigator != none)
@@ -95,10 +89,10 @@ simulated function Timer()
 
 defaultproperties
 {
-    FuzeLengthTimer=10.0
+    FuzeLengthTimer=15.0
     Speed=300.0
-    Damage=600.000000
-    DamageRadius=725.000000
+    Damage=550.000000 //was 600 in 5.1
+    DamageRadius=500.000000 //was 725.0 in 5.1
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
     ExplosionSound(0)=sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=sound'Inf_Weapons.satchel.satchel_explode02'
