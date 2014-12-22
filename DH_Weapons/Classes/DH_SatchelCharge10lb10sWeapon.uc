@@ -15,7 +15,8 @@ defaultproperties
     DisplayFOV=70
     BobDamping=1.6
     PlayerViewOffset=(X=10,Y=5,Z=0)
-    FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
+    bCanThrow=false //cannot be dropped
+    FuzeLength=15.0 //was 10    FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     FireModeClass(1)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     FuzeLength=10.0
     bCanRestDeploy=false

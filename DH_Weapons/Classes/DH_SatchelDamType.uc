@@ -29,7 +29,10 @@ static function string SuicideMessage(PlayerReplicationInfo Victim)
 
 defaultproperties
 {
-    TankDamageModifier=0.800000
+    TankDamageModifier=0.4000 //was 0.8
+    APCDamageModifier=0.75000
+    VehicleDamageModifier=1.000000
+    TreadDamageModifier=0.800000
     WeaponClass=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     DeathString="%o was blown up by %k's %w."
     MaleSuicide="%o was careless with his own %w."
