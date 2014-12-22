@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_StielGranateWeapon extends DH_GrenadeWeapon;
+class DH_StielGranateWeapon extends DHExplosiveWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Granate_1st.ukx
 

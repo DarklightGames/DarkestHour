@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHWireCuttersItem extends ROWeapon;
+class DHWireCuttersItem extends DHWeapon;
 
 var name        CutAnim;
 var DHObstacle  ObstacleBeingCut;

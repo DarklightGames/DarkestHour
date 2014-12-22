@@ -3,12 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_RedSmokeWeapon extends DH_GrenadeWeapon;
-
-simulated function bool CanThrow()
-{
-    return false;
-}
+class DH_RedSmokeWeapon extends DHExplosiveWeapon;
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
@@ -19,7 +14,9 @@ simulated function BringUp(optional Weapon PrevWeapon)
     DHP = DHPlayer(Instigator.Controller);
 
     if (DHP != none)
+    {
         DHP.QueueHint(3, false);
+    }
 }
 
 defaultproperties
@@ -38,7 +35,6 @@ defaultproperties
     PutDownAnimRate=1.000000
     AIRating=0.400000
     CurrentRating=0.400000
-    bCanThrow=false
     DisplayFOV=70.000000
     InventoryGroup=8
     PickupClass=class'DH_Equipment.DH_RedSmokePickup'

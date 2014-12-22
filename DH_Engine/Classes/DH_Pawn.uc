@@ -342,7 +342,7 @@ simulated function HelmetShotOff(rotator Rotation)
 
     HeadGear.Destroy();
 
-    Hat.Velocity = Velocity + vector(Rotation) * (Hat.MaxSpeed + (Hat.MaxSpeed/2) * FRand());
+    Hat.Velocity = Velocity + vector(Rotation) * (Hat.MaxSpeed + (Hat.MaxSpeed / 2) * FRand());
     Hat.LifeSpan = Hat.LifeSpan + 2 * FRand() - 1;
 
     bHatShotOff = true;
@@ -3103,15 +3103,10 @@ simulated function MantleLowerWeapon()
         DHWeapon(Weapon).bIsMantling = true;
         DHWeapon(Weapon).GoToState('StartMantle');
     }
-    else if (DH_GrenadeWeapon(Weapon) != none)
+    else if (DHExplosiveWeapon(Weapon) != none)
     {
-        DH_GrenadeWeapon(Weapon).bIsMantling = true;
-        DH_GrenadeWeapon(Weapon).GoToState('StartMantle');
-    }
-    else if (DH_SatchelChargeMantleWeapon(Weapon) != none)
-    {
-        DH_SatchelChargeMantleWeapon(Weapon).bIsMantling = true;
-        DH_SatchelChargeMantleWeapon(Weapon).GoToState('StartMantle');
+        DHExplosiveWeapon(Weapon).bIsMantling = true;
+        DHExplosiveWeapon(Weapon).GoToState('StartMantle');
     }
     else if (DH_BinocularsItem(Weapon) != none)
     {
@@ -3126,13 +3121,9 @@ simulated function MantleRaiseWeapon()
     {
         DHWeapon(Weapon).bIsMantling = false;
     }
-    else if (DH_GrenadeWeapon(Weapon) != none)
+    else if (DHExplosiveWeapon(Weapon) != none)
     {
-        DH_GrenadeWeapon(Weapon).bIsMantling = false;
-    }
-    else if (DH_SatchelChargeMantleWeapon(Weapon) != none)
-    {
-        DH_SatchelChargeMantleWeapon(Weapon).bIsMantling = false;
+        DHExplosiveWeapon(Weapon).bIsMantling = false;
     }
     else if (DH_BinocularsItem(Weapon) != none)
     {
@@ -3417,9 +3408,13 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
                 if (pitch > PronePitchUpLimit && pitch < PronePitchDownLimit)
                 {
                     if (pitch - PronePitchUpLimit < PronePitchDownLimit - pitch)
+                    {
                         pitch = PronePitchUpLimit;
+                    }
                     else
+                    {
                         pitch = PronePitchDownLimit;
+                    }
                 }
             }
         }

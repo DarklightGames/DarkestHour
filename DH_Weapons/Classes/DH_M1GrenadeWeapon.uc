@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_M1GrenadeWeapon extends DH_GrenadeWeapon;
+class DH_M1GrenadeWeapon extends DHExplosiveWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M1Grenade_1st.ukx
 
