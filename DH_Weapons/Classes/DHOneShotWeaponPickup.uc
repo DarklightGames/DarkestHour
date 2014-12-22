@@ -13,7 +13,7 @@ static function string GetLocalString(
     optional PlayerReplicationInfo RelatedPRI_2
     )
 {
-    switch(Switch)
+    switch (Switch)
     {
         case 0:
             return Repl(default.PickupMessage, "%w", default.InventoryType.default.ItemName);
