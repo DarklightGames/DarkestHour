@@ -5,7 +5,6 @@
 
 // Matt: originally extended DH_ROAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that
 class DH_RocketProj extends DH_ROTankCannonShellHEAT
-//  config(DH_Penetration)
     abstract;
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
@@ -117,6 +116,14 @@ simulated function Tick(float DeltaTime)
     }
 }
 
+// Modified as there are only 3 sounds for a rocket explosion
+simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+{
+    super(DH_ROTankCannonShell).SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
+
+    PlaySound(ExplosionSound[Rand(3)], , 2.5 * TransientSoundVolume);
+}
+
 defaultproperties
 {
     bExplodesOnHittingBody=true
@@ -124,6 +131,7 @@ defaultproperties
     ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    
     StraightFlightTime=0.200000
     PenetrationDamageRadius=250.000000
     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
@@ -158,10 +166,16 @@ defaultproperties
     VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
     ShellDeflectEffectClass=none
     MyDamageType=class'DamageType'
+    AmbientSound=none
+    SoundVolume=0
     SoundRadius=64.0
     AmbientVolumeScale=1.0
+    TransientSoundVolume=0.3
+    TransientSoundRadius=300.0 
     SpeedFudgeScale=1.0
     InitialAccelerationTime=0.1
     Speed=0.0
     MaxSpeed=2000.0
+    RotationRate=(Roll=0)
+    DesiredRotation=(Roll=0)
 }

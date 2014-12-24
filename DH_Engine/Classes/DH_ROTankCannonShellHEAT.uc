@@ -195,7 +195,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 {
     super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
 
-    PlaySound(ExplosionSound[Rand(4)], , 5.5 * TransientSoundVolume);
+    PlaySound(ExplosionSound[Rand(4)], , 2.5 * TransientSoundVolume);
 }
 
 // Sets Hardness based on the surface type hit
