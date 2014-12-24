@@ -108,6 +108,7 @@ def main():
 		print "no packages to compile"
 		return
 
+	# delete packages marked for compiling
 	for package in packages_to_compile:
 		package_path = os.path.join(mod_sys_dir, package)
 
@@ -118,9 +119,11 @@ def main():
 				print "error: failed to delete file " + package + " (do you have the game or editor running?)"
 				sys.exit(1)
 
+	# run ucc make
 	proc = subprocess.Popen([os.path.join(ro_sys_dir, "ucc"), "make", "-mod=" + mod])
 	proc.communicate()
 
+	# move compiled packages to mod directory
 	for root, dirs, files in os.walk(ro_sys_dir):
 		for file in files:
 			if file in packages_to_compile:
