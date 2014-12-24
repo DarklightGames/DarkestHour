@@ -10,5 +10,4 @@ defaultproperties
     MaxAmmo=1
     InitialAmount=1
     IconMaterial=texture'InterfaceArt_tex.HUD.panzerfaust_ammo'
-    ItemName="Panzerfaust 60"
 }

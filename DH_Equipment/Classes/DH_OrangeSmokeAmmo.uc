@@ -10,5 +10,4 @@ defaultproperties
     MaxAmmo=1
     InitialAmount=1
     IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.OrangeSmoke_ammo'
-    ItemName="RauchSichtzeichen Orange 160"
 }

@@ -10,5 +10,4 @@ defaultproperties
     MaxAmmo=1
     InitialAmount=1
     IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.RedSmoke_ammo'
-    ItemName="M16 Red Smoke Grenade"
 }
