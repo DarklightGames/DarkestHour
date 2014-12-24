@@ -14,7 +14,7 @@ var(DH_ProjectileFire) int  AddedPitch;                 // Additional pitch to a
 var             bool        bUsePreLaunchTrace;         // Use the pre-projectile spawn trace to see if anything close is hit before launching projectile. Saves CPU and Net usuage
 var             float       PreLaunchTraceDistance;     // How long of a pre launch trace to use. Shorter for SMGs and pistols, longer for rifles and MGs.
 
-var             float       SnapTraceDistance;          // Essentially the distance before which no supersonic crack is heard from a bullet
+// var          float       SnapTraceDistance;          // Essentially the distance before which no supersonic crack is heard from a bullet // Matt: removed as not being used anywhere
 
 // Tracer stuff
 var()           bool        bUsesTracers;               // true if the weapon uses tracers in it's ammo loadout
@@ -238,7 +238,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
     {
         ProjectileDir = vector(Dir);
         End = Start + PreLaunchTraceDistance * ProjectileDir;
-        SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir;
+//      SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir; // Matt: removed as not being used
 
         // Lets avoid all that casting
         WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
@@ -421,7 +421,7 @@ defaultproperties
     ProjPerFire=1
     bUsePreLaunchTrace=true
     PreLaunchTraceDistance=2624.000000
-    SnapTraceDistance=1200.000000
+//  SnapTraceDistance=1200.000000 // deprecated
     CrouchSpreadModifier=0.850000
     ProneSpreadModifier=0.700000
     BipodDeployedSpreadModifier=0.500000

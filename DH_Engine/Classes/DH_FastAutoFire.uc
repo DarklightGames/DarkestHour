@@ -333,12 +333,12 @@ state FireLoop
 * =================================================================================== */
 function Projectile SpawnProjectile(vector Start, Rotator Dir)
 {
-    local Projectile spawnedprojectile;
-    local vector ProjectileDir, End, HitLocation, HitNormal, SnapTraceEnd;
-    local Actor Other;
-    local ROPawn HitPawn;
+    local Projectile         SpawnedProjectile;
+    local vector             ProjectileDir, End, HitLocation, HitNormal;
+    local Actor              Other;
+    local ROPawn             HitPawn;
     local DHWeaponAttachment WeapAttach;
-    local array<int>    HitPoints;
+    local array<int>         HitPoints;
 
      // do any additional pitch changes before launching the projectile
     Dir.Pitch += AddedPitch;
@@ -348,7 +348,7 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
     {
         ProjectileDir = vector(Dir);
         End = Start + PreLaunchTraceDistance * ProjectileDir;
-        SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir;
+//      SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir; // Matt: removed as not being used
 
         // Lets avoid all that casting
         WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
