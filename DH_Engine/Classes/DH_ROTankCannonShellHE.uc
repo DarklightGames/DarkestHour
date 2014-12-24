@@ -9,7 +9,7 @@ class DH_ROTankCannonShellHE extends DH_ROTankCannonShell;
 // Modified to to add different effects if didn't penetrate armor, to add an explosion sound and to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
 {
-    local vector  Start, Direction, TraceHitLocation, TraceHitNormal;
+    local vector  Start, Direction;
     local float   DamageScale, Distance;
     local ROPawn  Victims;
 

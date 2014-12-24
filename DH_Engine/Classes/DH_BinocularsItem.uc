@@ -171,7 +171,6 @@ simulated function Fire(float F)
 simulated function AltFire(float F)
 {
     local DH_Pawn P;
-    local DH_RoleInfo RI;
 
     if (Instigator == none || !Instigator.IsLocallyControlled())
     {
