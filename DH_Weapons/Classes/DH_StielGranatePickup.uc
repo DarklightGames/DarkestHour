@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_StielGranatePickup extends DHOneShotWeaponPickup
-   notplaceable;
+class DH_StielGranatePickup extends DHOneShotWeaponPickup;
 
 static function StaticPrecache(LevelInfo L)
 {
@@ -18,9 +17,5 @@ static function StaticPrecache(LevelInfo L)
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_StielGranateWeapon'
-    PickupSound=sound'Inf_Weapons_Foley.Misc.ammopickup'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate'
-    PrePivot=(Z=3.000000)
-    CollisionRadius=15.000000
-    CollisionHeight=3.000000
 }
