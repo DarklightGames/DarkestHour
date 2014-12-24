@@ -42,7 +42,7 @@ simulated function CycleRange()
         RangeIndex=0;
     }
 
-    ROProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+    DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
     if (Instigator.IsLocallyControlled())
     {
@@ -60,7 +60,7 @@ function ServerSetRange(int NewIndex)
 {
     RangeIndex = NewIndex;
 
-    ROProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+    DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 }
 
 // Ovveriden to play the panzerfaust animations for different ranges
