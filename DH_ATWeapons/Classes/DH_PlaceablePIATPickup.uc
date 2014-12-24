@@ -8,7 +8,6 @@ class DH_PlaceablePIATPickup extends DH_PlaceableWeaponPickup;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_WeaponPickups.usx
 
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'DH_WeaponPickups.Weapons.PIAT');

@@ -8,7 +8,6 @@ class DH_PlaceableWeaponPickup extends ROPlaceableAmmoPickup
 
 var() class<Inventory> WeaponType;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.Panzerfaust');
@@ -24,7 +23,7 @@ auto state Pickup
     {
         local Inventory Copy;
         local inventory Inv;
-        local bool      bHasWeapon;
+        local bool bHasWeapon;
 
         if (User == none)
         {
@@ -94,7 +93,7 @@ function Inventory SpawnWeaponCopy(Pawn Other)
     }
     else
     {
-        Copy = Other.Spawn(WeaponType, Other, , , rot(0,0,0));
+        Copy = Other.Spawn(WeaponType, Other,,, rot(0, 0, 0));
     }
 
     Copy.GiveTo(Other, self);

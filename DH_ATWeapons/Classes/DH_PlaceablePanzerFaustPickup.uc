@@ -5,7 +5,6 @@
 
 class DH_PlaceablePanzerFaustPickup extends DH_PlaceableWeaponPickup;
 
-
 static function StaticPrecache(LevelInfo L)
 {
     L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.Panzerfaust');
