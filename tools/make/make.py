@@ -37,12 +37,11 @@ def main():
 	#parse options
 	argparser = argparse.ArgumentParser()
 	argparser.add_argument('-mod', required=True)
+	argparser.add_argument('-dumpint', required=False, action='store_true')
 	args = argparser.parse_args()
 
-	mod = args.mod
-
 	#mod directory
-	mod_dir = os.path.join(ro_dir, mod)
+	mod_dir = os.path.join(ro_dir, args.mod)
 
 	if not os.path.isdir(mod_dir):
 		print "error: could not resolve mod directory"
@@ -56,7 +55,7 @@ def main():
 		sys.exit(1)
 
 	#mod config path
-	config_path = os.path.join(mod_sys_dir, mod + ".ini")
+	config_path = os.path.join(mod_sys_dir, args.mod + ".ini")
 	
 	if not os.path.isfile(config_path):
 		print "error: could not resove mod config file"
@@ -120,7 +119,7 @@ def main():
 				sys.exit(1)
 
 	# run ucc make
-	proc = subprocess.Popen([os.path.join(ro_sys_dir, "ucc"), "make", "-mod=" + mod])
+	proc = subprocess.Popen([os.path.join(ro_sys_dir, "ucc"), "make", "-mod=" + args.mod])
 	proc.communicate()
 
 	# move compiled packages to mod directory
@@ -129,6 +128,19 @@ def main():
 			if file in packages_to_compile:
 				shutil.copy(os.path.join(root, file), mod_sys_dir)
 				os.remove(os.path.join(root, file))
+
+	# run dumpint on compiled packages
+	if args.dumpint:
+		for package in packages_to_compile:
+			proc = subprocess.Popen(["ucc", "dumpint", package, "-mod=" + args.mod])
+			proc.communicate()
+
+		# move localization files to mod directory
+		for root, dirs, files in os.walk(ro_sys_dir):
+			for file in files:
+				if file.replace('.int', '.u') in packages_to_compile:
+					shutil.copy(os.path.join(root, file), mod_sys_dir)
+					os.remove(os.path.join(root, file))
 
 if __name__ == "__main__":
    main()
