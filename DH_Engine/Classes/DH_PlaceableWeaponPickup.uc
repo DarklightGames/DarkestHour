@@ -122,7 +122,7 @@ defaultproperties
     AmmoAmount=1
     bAmmoPickupIsWeapon=true
     PickupMessage="You got the %w"
-    TouchMessage="Pick up: %w"
+    TouchMessage="Pick Up: %w"
     PickupSound=Sound'Inf_Weapons_Foley.WeaponPickup'
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
