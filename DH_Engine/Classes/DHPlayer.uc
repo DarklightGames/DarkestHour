@@ -1435,6 +1435,27 @@ simulated function QueueHint(byte HintIndex, bool bForceNext)
         DHHintManager.QueueHint(HintIndex, bForceNext);
 }
 
+// Modified to avoid "accessed none" errors
+function bool CanRestartPlayer()
+{
+    if ((PlayerReplicationInfo != none && PlayerReplicationInfo.bOnlySpectator) || !bCanRespawn)
+    {
+        return false;
+    }
+    else if (!HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// Modified to avoid "accessed none" errors
+function bool HasSelectedTeam()
+{
+    return PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex < 2;
+}
+
 function BecomeSpectator()
 {
     if (Pawn != none)

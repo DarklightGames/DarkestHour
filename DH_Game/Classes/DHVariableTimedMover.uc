@@ -5,90 +5,102 @@
 
 class DHVariableTimedMover extends Mover;
 
-var() bool bActAsClientMover;
-var() array<float> KeyMoveTime;
-var array<float> KeyMoveSpeed;
+var() bool          bActAsClientMover;
+var() array<float>  KeyMoveTime;
+var   array<float>  KeyMoveSpeed;
+
 
 function PostBeginPlay()
 {
     local int n;
 
-    for (n = 0; n < KeyMoveTime.length; n++)
+    for (n = 0; n < KeyMoveTime.Length; n++)
     {
         KeyMoveSpeed[n] = KeyMoveTime[n] * MoveTime;
     }
 
-    KeyMoveSpeed[KeyMoveTime.length] = 0; // This is to prevent OutofBounds errors on the array
+    KeyMoveSpeed[KeyMoveTime.Length] = 0.0; // this is to prevent OutOfBounds errors on the array
 
     super.PostBeginPlay();
 
-    MoveTime = KeyMoveSpeed[ KeyNum ];
+    MoveTime = KeyMoveSpeed[KeyNum];
 
     if (bActAsClientMover && Level.NetMode == NM_DedicatedServer)
     {
-        SetTimer(0, false);
+        SetTimer(0.0, false);
         SetPhysics(PHYS_None);
         GotoState('ServerIdle');
     }
 }
 
-simulated event KeyFrameReached()
+// Matt: removed "simulated" as PostBeginPlay isn't called on net client, so nothing gets set & we get "array out of bounds" log errors - looks like this function isn't meant to run on clients
+event KeyFrameReached()
 {
-MoveTime = KeyMoveSpeed[ KeyNum ];
-super.KeyFrameReached();
+    if (KeyNum < KeyMoveSpeed.Length)
+    {
+        MoveTime = KeyMoveSpeed[KeyNum];
+    }
+
+    super.KeyFrameReached();
 }
 
 function DoOpen()
 {
-MoveTime = KeyMoveSpeed[ KeyNum ];
-super.DoOpen();
+    MoveTime = KeyMoveSpeed[KeyNum];
+
+    super.DoOpen();
 }
 
 function DoClose()
 {
-MoveTime = KeyMoveSpeed[ KeyNum ];
-super.DoClose();
+    MoveTime = KeyMoveSpeed[KeyNum];
+
+    super.DoClose();
 }
 
 state ServerIdle
 {
-// Do nothing on the Server
+    // Do nothing on the Server
 }
 
 state() LoopMove
 {
-event KeyFrameReached()
-{
-MoveTime = KeyMoveSpeed[ KeyNum ];
-super.KeyFrameReached();
-}
+    event KeyFrameReached()
+    {
+        MoveTime = KeyMoveSpeed[KeyNum];
+
+        super.KeyFrameReached();
+    }
 }
 
 state() ConstantLoop
 {
-event KeyFrameReached()
-{
-MoveTime = KeyMoveSpeed[ KeyNum ];
-super.KeyFrameReached();
-}
+    event KeyFrameReached()
+    {
+        MoveTime = KeyMoveSpeed[KeyNum];
+
+        super.KeyFrameReached();
+    }
 }
 
 state() LeadInOutLooper
 {
-event KeyFrameReached()
-{
-MoveTime = KeyMoveSpeed[ KeyNum ];
-super.KeyFrameReached();
-}
+    event KeyFrameReached()
+    {
+        MoveTime = KeyMoveSpeed[KeyNum];
+
+        super.KeyFrameReached();
+    }
 }
 
 state LeadInOutLooping
 {
-event KeyFrameReached()
-{
-MoveTime = KeyMoveSpeed[ KeyNum ];
-super.KeyFrameReached();
-}
+    event KeyFrameReached()
+    {
+        MoveTime = KeyMoveSpeed[KeyNum];
+
+        super.KeyFrameReached();
+    }
 }
 
 defaultproperties
