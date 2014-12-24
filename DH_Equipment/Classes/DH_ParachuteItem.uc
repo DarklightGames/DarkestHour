@@ -29,19 +29,28 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     GotoState('Hidden');
 
     if (Level.NetMode == NM_DedicatedServer || !Instigator.IsHumanControlled())
+    {
         return;
+    }
 
     if (Instigator.Weapon == self || Instigator.PendingWeapon == self) // this weapon was switched to while waiting for replication, switch to it now
     {
         if (Instigator.PendingWeapon != none)
+        {
             Instigator.ChangedWeapon();
+        }
         else
+        {
             BringUp();
+        }
+
         return;
     }
 
     if (Instigator.PendingWeapon != none && Instigator.PendingWeapon.bForceSwitch)
+    {
         return;
+    }
 
     if (Instigator.Weapon == none)
     {
@@ -51,7 +60,10 @@ simulated function ClientWeaponSet(bool bPossiblySwitch)
     else if (bPossiblySwitch && !Instigator.Weapon.IsFiring())
     {
         if (PlayerController(Instigator.Controller) != none && PlayerController(Instigator.Controller).bNeverSwitchOnPickup)
+        {
             return;
+        }
+
         if (Instigator.PendingWeapon != none)
         {
             if (RateSelf() > Instigator.PendingWeapon.RateSelf())
@@ -77,8 +89,6 @@ simulated state RaisingWeapon
 
     simulated function BeginState()
     {
-        local DHPlayer player;
-
         // If player is falling, this resets stamina to full (stam removed when chute deploys in ParachuteStaticLine)
         if (Instigator.Physics == PHYS_Falling)
         {
@@ -88,7 +98,7 @@ simulated state RaisingWeapon
 
         if (ClientState == WS_Hidden)
         {
-            PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
+            PlayOwnedSound(SelectSound, SLOT_Interact, , , , , false);
 
             ClientPlayForceFeedback(SelectForce);
 
@@ -106,11 +116,9 @@ simulated state RaisingWeapon
         SetTimer(GetAnimDuration(SelectAnim, SelectAnimRate), false);
 
         // Hint check
-        player = DHPlayer(Instigator.Controller);
-
-        if (player != none)
+        if (DHPlayer(Instigator.Controller) != none)
         {
-            player.QueueHint(2, true);
+            DHPlayer(Instigator.Controller).QueueHint(2, true);
         }
     }
 
@@ -165,6 +173,7 @@ simulated state LoweringWeapon
             {
                 ClientState = WS_Hidden;
                 Instigator.ChangedWeapon();
+
                 if (Instigator.Weapon == self)
                 {
                     PlayIdle();
@@ -179,13 +188,13 @@ simulated state LoweringWeapon
         }
     }
 }
-
 //******************************************************************************
+
 // Overwritten to prevent 1st person arms & chute changing pitch rotation
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local rotator RollMod;
-    local rotator YawMod;
+    local rotator  RollMod;
+    local rotator  YawMod;
     local ROPlayer Playa;
 
     if (Instigator == none)
@@ -203,7 +212,7 @@ simulated event RenderOverlays(Canvas Canvas)
     SetRotation(YawMod);
 
     bDrawingFirstPerson = true;
-    Canvas.DrawActor(self, false, false, 90);   //DisplayFOV);
+    Canvas.DrawActor(self, false, false, 90.0);   //DisplayFOV);
     bDrawingFirstPerson = false;
 }
 
@@ -240,27 +249,27 @@ simulated function bool WeaponCanSwitch()
     return Instigator.Physics != PHYS_Falling;
 }
 
+// Sprinting interrupts the parachute un/deploy animation, so disallow it
 simulated function bool WeaponAllowSprint()
 {
-    // Sprinting interrupts the parachute un/deploy animation, so disallow it
     return false;
 }
 
+// Don't fire parachute
 simulated event ClientStartFire(int Mode)
 {
-    // Don't fire parachute
     return;
 }
 
+// Don't fire parachute
 simulated event StopFire(int Mode)
 {
-    // Don't fire parachute
     return;
 }
 
+// Can't reload parachute
 simulated exec function ROManualReload()
 {
-    // Can't reload parachute
     return;
 }
 

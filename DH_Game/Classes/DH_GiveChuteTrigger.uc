@@ -5,48 +5,58 @@
 
 class DH_GiveChuteTrigger extends Trigger;
 
-function Touch(actor Other)
+function Touch(Actor Other)
 {
-    local int i;
-    local Pawn EventInstigator;
+    local int  i;
 
     if (IsRelevant(Other))
     {
         Other = FindInstigator(Other);
 
-        if (ReTriggerDelay > 0)
+        if (ReTriggerDelay > 0.0)
         {
             if (Level.TimeSeconds - TriggerTime < ReTriggerDelay)
+            {
                 return;
+            }
+
             TriggerTime = Level.TimeSeconds;
         }
-        // Broadcast the Trigger message to all matching actors.
+
+        // Broadcast the Trigger message to all matching actors
         TriggerEvent(Event, self, Other.Instigator);
 
-        if ((Pawn(Other) != none) && (Pawn(Other).Controller != none))
+        if (Pawn(Other) != none && Pawn(Other).Controller != none)
         {
             for (i = 0; i < 4; i++)
+            {
                 if (Pawn(Other).Controller.GoalList[i] == self)
                 {
                     Pawn(Other).Controller.GoalList[i] = none;
                     break;
                 }
+            }
         }
 
-        if ((Message != "") && (Other.Instigator != none))
-            // Send a string message to the toucher.
+        // Send a string message to the toucher
+        if (Message != "" && Other.Instigator != none)
+        {
             Other.Instigator.ClientMessage(Message);
+        }
 
         if (bTriggerOnceOnly)
-            // Ignore future touches.
-            SetCollision(false);
-        else if (RepeatTriggerTime > 0)
+        {
+            SetCollision(false); // ignore future touches
+        }
+        else if (RepeatTriggerTime > 0.0)
+        {
             SetTimer(RepeatTriggerTime, false);
+        }
 
-        EventInstigator = Other.Instigator;
-
-        //DHPlayer(EventInstigator.Controller).ClientMessage("Trigger activated");
-        DH_Pawn(EventInstigator).GiveChute();
+        if (DH_Pawn(Other.Instigator) != none)
+        {
+            DH_Pawn(Other.Instigator).GiveChute();
+        }
     }
 }
 

@@ -1007,7 +1007,6 @@ function int GetTeamIndexFromName(out string TeamName)
 /////////////////////////////////////  PARADROP FUNCTIONS  /////////////////////////////////////////////////////////////////////////////////////////////
 
 // Generic function that actually actions a player paradrop - called as required from other functions that are called directly from Mutate (e.g. ParaDropPlayer & ParaDropAll)
-// Calls modified GiveChute function from this mutator that works for bots & fixes most "accessed none" log errors from the original function when any player lands
 function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, optional string PlayerName)
 {
     local  Pawn  PlayerPawn;
@@ -1019,7 +1018,7 @@ function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, opti
 
     PlayerPawn = PlayerToDrop.Pawn;
 
-    if (PlayerPawn != none && (PlayerPawn.IsA('ROPawn') || PlayerPawn.IsA('Vehicle')))
+    if (PlayerPawn != none && (PlayerPawn.IsA('DH_Pawn') || PlayerPawn.IsA('Vehicle')))
     {
         // If player is in a vehicle we switch PlayerPawn to the actual vehicle so we drop that
         if (PlayerPawn.IsA('Vehicle'))
@@ -1033,7 +1032,7 @@ function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, opti
         }
         else
         {
-            GiveChute(PlayerToDrop);
+            DH_Pawn(PlayerPawn).GiveChute();
         }
 
         PlayerPawn.SetLocation(ParaDropVector + RandRange(10,20) * 60 * vector(RotRand()));
@@ -1054,50 +1053,6 @@ function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, opti
     {
         ErrorMessageToSelf(9, PlayerName); // player is not active
     }    
-}
-
-// Modified version of function from DH_Pawn to properly handle giving parachutes to bots without errors
-// The modified ParachuteStaticLine class also fixes several errors that logged "accessed none" whenever a player lands
-singular function GiveChute(Controller PlayerToDrop)
-{
-    local  RORoleInfo  RI;
-    local  string      ItemString;
-    local  bool        bHasPSL, bHasPI;
-    local  int         i;
-
-    if (PlayerToDrop == none || PlayerToDrop.Pawn == none || PlayerToDrop.PlayerReplicationInfo == none)
-    {
-        return;
-    }
-
-    RI = ROPlayerReplicationInfo(PlayerToDrop.PlayerReplicationInfo).RoleInfo;
-    
-    if (RI != none)
-    {
-        for (i = RI.GivenItems.Length -1; i >= 0; i--)
-        {
-            ItemString = RI.GivenItems[i];
-
-            if (ItemString == "DH_AdminMenuMutator_WIP.DH_AdminMenu_ParachuteStaticLine" || ItemString == "DH_Equipment.DH_ParachuteStaticLine")
-            {
-                bHasPSL = true;
-            }
-            else if (ItemString == "DH_Equipment.DH_ParachuteItem")
-            {
-                bHasPI = true;
-            }
-        }
-    }
-
-    if (!bHasPSL)
-    {
-        PlayerToDrop.Pawn.GiveWeapon("DH_AdminMenuMutator_WIP.DH_AdminMenu_ParachuteStaticLine"); // gives modified parachute static line to fix errors
-    }
-
-    if (!bHasPI)
-    {
-        PlayerToDrop.Pawn.GiveWeapon("DH_Equipment.DH_ParachuteItem");
-    }
 }
 
 // Checks for a grid reference that may have been included from a certain point

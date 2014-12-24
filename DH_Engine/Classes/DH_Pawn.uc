@@ -1787,15 +1787,15 @@ simulated event Destroyed()
 // Called by DH_GiveChuteTrigger, adds parachute items to player's inventory
 singular function GiveChute()
 {
-    local int i;
-    local string ItemString;
-    local DHPlayer P;
     local RORoleInfo RI;
-    local bool bHasPSL, bHasPI;
+    local int        i;
+    local string     ItemString;
+    local bool       bHasPSL, bHasPI;
 
-    P = DHPlayer(Controller);
-
-    RI = P.GetRoleInfo();
+    if (DHPlayer(Controller) != none)
+    {
+        RI = DHPlayer(Controller).GetRoleInfo();
+    }
 
     // Make sure player doesn't already have a parachute
     if (RI != none)
@@ -1824,7 +1824,6 @@ singular function GiveChute()
     {
         GiveWeapon("DH_Equipment.DH_ParachuteItem");
     }
-
 }
 
 // Destroys carried radio triggers and removes them from the minimap
@@ -1995,6 +1994,129 @@ function AddDefaultInventory()
     {
         bRecievedInitialLoadout = true;
         Controller.ClientSwitchToBestWeapon();
+    }
+}
+
+// Modified to prevent "accessed none" errors on parachute landing
+state PutWeaponAway
+{
+    simulated function BeginState()
+    {
+        local name Anim;
+
+        bPreventWeaponFire = true;
+
+        // Put the weapon down on the server as well as the client
+        if (Level.NetMode == NM_DedicatedServer && Weapon != none)
+        {
+            Weapon.PutDown();
+        }
+
+        // Select the proper animation to play based on what the player is holding
+        // Weapon could be none because it might have been destroyed before getting here (nades, faust, etc)
+        if (Weapon != none)
+        {
+            if (Weapon.IsA('ROExplosiveWeapon') || Weapon.IsA('BinocularsItem'))
+            {
+                if (bIsCrawling)
+                {
+                    Anim = 'prone_putaway_nade';
+                }
+                else
+                {
+                    Anim = 'stand_putaway_nade';
+                }
+            }
+            else if (Weapon.IsA('ROBoltActionWeapon') || Weapon.IsA('ROAutoWeapon') || Weapon.IsA('ROSemiAutoWeapon'))
+            {
+                if (bIsCrawling)
+                {
+                    Anim = 'prone_putaway_kar';
+                }
+                else
+                {
+                    Anim = 'stand_putaway_kar';
+                }
+            }
+            else if (Weapon.IsA('ROPistolWeapon'))
+            {
+                if (bIsCrawling)
+                {
+                    Anim = 'prone_putaway_pistol';
+                }
+                else
+                {
+                    Anim = 'stand_putaway_pistol';
+                }
+            }
+            else
+            {
+                // Default in case there is no anim
+                if (bIsCrawling)
+                {
+                    Anim = 'prone_putaway_kar';
+                }
+                else
+                {
+                    Anim = 'stand_putaway_kar';
+                }
+            }
+        }
+        else
+        {
+            // TODO: Need a put away empty anim
+            if (bIsCrawling)
+            {
+                Anim = 'prone_putaway_kar';
+            }
+            else
+            {
+                Anim = 'stand_putaway_kar';
+            }
+        }
+
+        // Handle the inventory side of swapping the weapon, not the visual side
+        SwapWeapon = Weapon;
+
+        if (Weapon != none)
+        {
+            Weapon.GotoState('Hidden');
+            
+            if (Weapon != none) // Matt: added this 'if' to prevent "accessed none" errors, as Weapon can become 'none' during GoToState above, e.g. when parachute landing
+            {
+                Weapon.NetUpdateFrequency = 2.0;
+            }
+        }
+
+        Weapon = PendingWeapon;
+
+        if (Controller != none)
+        {
+            Controller.ChangedWeapon();
+        }
+
+        PendingWeapon = none;
+
+        if (Weapon != none)
+        {
+            Weapon.NetUpdateFrequency = 100.0;
+            Weapon.AttachToPawnHidden(self);
+            Weapon.BringUp(SwapWeapon);
+        }
+
+        if (ROExplosiveWeapon(Weapon) == none)
+        {
+            bPreventWeaponFire = false;
+        }
+
+        if (Inventory != none)
+        {
+            Inventory.OwnerEvent('ChangedWeapon'); // tell inventory that weapon changed (in case any effect was being applied)
+        }
+
+        SetTimer(GetAnimDuration(Anim, 1.0) + 0.1, false);
+
+        SetAnimAction(Anim);
     }
 }
 
