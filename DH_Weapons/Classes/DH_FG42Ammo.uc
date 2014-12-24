@@ -3,12 +3,11 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_FG42Ammo extends ROAmmunition;
+class DH_FG42Ammo extends DH_Ammunition;
 
 defaultproperties
 {
     MaxAmmo=21
     InitialAmount=20
     IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.FG42_ammo'
-    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 }

@@ -3,12 +3,11 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_StenMkIIAmmo extends ROAmmunition;
+class DH_StenMkIIAmmo extends DH_Ammunition;
 
 defaultproperties
 {
     MaxAmmo=33
     InitialAmount=32
     IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.Sten_ammo'
-    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 }

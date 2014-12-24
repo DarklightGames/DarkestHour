@@ -3,12 +3,11 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_M1CarbineAmmo extends ROAmmunition;
+class DH_M1CarbineAmmo extends DH_Ammunition;
 
 defaultproperties
 {
     MaxAmmo=16
     InitialAmount=15
     IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.Carbine_ammo'
-    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 }

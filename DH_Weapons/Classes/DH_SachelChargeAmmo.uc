@@ -3,12 +3,11 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_SachelChargeAmmo extends ROAmmunition;
+class DH_SachelChargeAmmo extends DH_Ammunition;
 
 defaultproperties
 {
-    IconMaterial=Material'InterfaceArt_tex.HUD.satchel_ammo'
-    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
     MaxAmmo=1
     InitialAmount=1
+    IconMaterial=Material'InterfaceArt_tex.HUD.satchel_ammo'
 }

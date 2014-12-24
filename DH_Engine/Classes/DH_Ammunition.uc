@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_M1GrenadeAmmo extends DH_Ammunition;
+class DH_Ammunition extends ROAmmunition
+    abstract;
 
 defaultproperties
 {
-    MaxAmmo=2
-    InitialAmount=2
-    IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.M1Grenade_ammo'
+    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 }
