@@ -121,7 +121,6 @@ defaultproperties
     AmbientGlow=0
     PickupMessage="You got the %w"
     TouchMessage="Pick up: %w"
-    PickupForce="AssaultRiflePickup"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0

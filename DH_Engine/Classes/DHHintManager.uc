@@ -6,7 +6,6 @@
 class DHHintManager extends Info
     config(User);
 
-// Data structures
 struct HintInfo
 {
     var() localized string      Title;
