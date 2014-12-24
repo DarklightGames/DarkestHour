@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_USSmokeGrenadeAttachment extends DH_StielGranateAttachment;
+class DH_USSmokeGrenadeAttachment extends DH_GrenadeAttachment;
 
 defaultproperties
 {
