@@ -29,4 +29,7 @@ static function string SuicideMessage(PlayerReplicationInfo Victim)
 
 defaultproperties
 {
+    DeathString="%o was blown up by %k's %w."
+    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
+    DeathOverlayTime=999.0
 }

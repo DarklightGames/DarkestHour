@@ -8,9 +8,7 @@ class DH_USSmokeGrenadeDamType extends DHGrenadeDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.germgrenade'
+    HUDIcon=texture'DH_InterfaceArt_tex.weapon_icons.usgrenade'
     WeaponClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
     DeathString="%o was burned up by %k's %w."
-    DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
-    DeathOverlayTime=999.000000
 }
