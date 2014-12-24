@@ -1342,7 +1342,7 @@ Begin:
     Sleep(0.2);
     bInvulnerableBody = false;
 
-    if (!Level.Game.bGameEnded)
+    if (Role == ROLE_Authority && !Level.Game.bGameEnded)
     {
         PlayDyingSound();
     }
