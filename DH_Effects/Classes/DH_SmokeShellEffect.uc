@@ -139,7 +139,7 @@ defaultproperties
     bNoDelete=false
     bNetTemporary=true
     RemoteRole=ROLE_SimulatedProxy
-    LifeSpan=160.000000
+    LifeSpan=65.0
     Style=STY_Masked
     bHardAttach=true
     bDirectional=true

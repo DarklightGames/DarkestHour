@@ -189,5 +189,5 @@ defaultproperties
     RemoteRole=ROLE_SimulatedProxy
     bNetTemporary=true
     bHardAttach=true
-    LifeSpan=80
+    LifeSpan=65.0
 }
