@@ -11,6 +11,22 @@ var class<Emitter> ExplodeDirtEffectClass;
 var class<Emitter> ExplodeSnowEffectClass;
 var class<Emitter> ExplodeMidAirEffectClass;
 
+
+// Modified to optimise
+simulated function Tick(float DeltaTime)
+{
+    if (!bAlreadyExploded)
+    {
+        FuzeLengthTimer -= DeltaTime;
+
+        if (FuzeLengthTimer <= 0.0)
+        {
+            bAlreadyExploded = true;
+            Explode(Location, vect(0.0,0.0,1.0));
+        }
+    }
+}
+
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
 simulated function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)
@@ -196,6 +212,17 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local vector        VNorm;
     local ESurfaceTypes ST;
 
+    // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll break it instead of bouncing off it
+    if (RODestroyableStaticMesh(Wall) != none && RODestroyableStaticMesh(Wall).bWontStopBullets)
+    {
+        if (Role == ROLE_Authority)
+        {
+            Wall.TakeDamage(1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DamageType');
+        }
+
+        return;
+    }
+
     GetHitSurfaceType(ST, HitNormal);
     GetDampenAndSoundValue(ST);
 
@@ -259,18 +286,21 @@ simulated singular function Touch(Actor Other)
     }
 }
 
-// Matt: modified to call HitWall for other types of actor (not just ROBulletWhipAttachment), so grenades etc bounce off things like turrrets // TEST
+// Matt: modified to call HitWall for all hit actors, so grenades etc bounce off things like turrets or other players
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
+    local vector TempHitLocation, HitNormal;
+
     if (Other == Instigator || Other.Base == Instigator)
     {
         return;
     }
 
-//  if (ROBulletWhipAttachment(Other) != none) // removed
-//  {
-        HitWall(Normal(HitLocation - Other.Location), Other);
-//  }
+    if (ROBulletWhipAttachment(Other) == none)
+    {
+        Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable HitNormal for a deflection
+        HitWall(HitNormal, Other);
+    }
 }
 
 simulated function Explode(vector HitLocation, vector HitNormal)

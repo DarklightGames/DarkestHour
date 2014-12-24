@@ -8,6 +8,7 @@ class DH_GrenadeProjectile extends DH_ThrowableExplosiveProjectile // incorporat
 
 var bool bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end
 
+
 // Modified from ROGrenadeProjectile to handle different grenade spin for stick grenades
 simulated function PostBeginPlay()
 {
@@ -37,20 +38,31 @@ simulated function PostBeginPlay()
     Acceleration = 0.5 * PhysicsVolume.Gravity;
 }
 
-// Modified from ROGrenadeProjectile to alter ImpactSound speed threshold & volume
+// Modified to alter ImpactSound speed threshold & volume
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local vector        VNorm;
     local ESurfaceTypes ST;
-
-    GetHitSurfaceType(ST, HitNormal);
-    GetDampenAndSoundValue(ST);
 
     // Return here, this was causing the famous "Nade bug"
     if (ROCollisionAttachment(Wall) != none)
     {
         return;
     }
+
+    // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll break it instead of bouncing off it
+    if (RODestroyableStaticMesh(Wall) != none && RODestroyableStaticMesh(Wall).bWontStopBullets)
+    {
+        if (Role == ROLE_Authority)
+        {
+            Wall.TakeDamage(1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DamageType');
+        }
+
+        return;
+    }
+
+    GetHitSurfaceType(ST, HitNormal);
+    GetDampenAndSoundValue(ST);
 
     Bounces--;
 
