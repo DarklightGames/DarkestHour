@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHWeaponAttachment extends ROWeaponAttachment;
+class DHWeaponAttachment extends ROWeaponAttachment
+    abstract;
 
 var()   name                    PA_AssistedReloadAnim;
 var()   name                    PA_MortarDeployAnim;

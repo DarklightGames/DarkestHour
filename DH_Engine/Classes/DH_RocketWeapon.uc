@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_RocketWeapon extends DH_SemiAutoWeapon;
+class DH_RocketWeapon extends DH_SemiAutoWeapon
+    abstract;
 
 var()   int                     Ranges[3];                      // The angle to launch the projectile at different ranges
 var     int                     RangeIndex;                     // Current range setting
-var     name                    IronIdleAnims[3];               // Iron idle animation for range setting one
+var     name                    IronIdleAnims[3];               // Iron idle animation for different range settings
 var     name                    AssistedMagEmptyReloadAnim;     // 1st person animation for assisted empty reload
 var     name                    AssistedMagPartialReloadAnim;   // 1st person animation for assisted partial reload
 var     int                     NumMagsToResupply;              // Number of ammo mags to add when this weapon has been resupplied
@@ -17,9 +18,11 @@ replication
 {
     reliable if (Role < ROLE_Authority)
         ServerSetRange;
+
     reliable if (Role == ROLE_Authority)
         ClientDoAssistedReload;
 }
+
 
 // Overridden to counteract mappers giving out more ammo than the weapon code can handle
 simulated function PostBeginPlay()
@@ -148,8 +151,7 @@ simulated state RaisingWeapon
 
             if (Instigator.IsLocallyControlled())
             {
-                // Determines if bayonet capable weapon should come up with
-                // bayonet on or off
+                // Determines if bayonet capable weapon should come up with bayonet on or off
                 if (bHasBayonet)
                 {
                     if (bBayonetMounted)
@@ -520,8 +522,7 @@ function PerformReload()
     {
         if (bPlusOneLoading)
         {
-            // If there's only one bullet left (the one in the chamber), discard
-            // the clip
+            // If there's only one bullet left (the one in the chamber), discard the clip
             if (CurrentMagLoad == 1)
             {
                 PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
@@ -646,7 +647,7 @@ function bool HandlePickupQuery(Pickup Item)
 
     if (bNoAmmoInstances)
     {
-        // handle ammo pickups
+        // Handle ammo pickups
         for (i = 0; i < 2; i++)
         {
             if (item.inventorytype == AmmoClass[i] && AmmoClass[i] != none)
@@ -683,7 +684,7 @@ function bool HandlePickupQuery(Pickup Item)
                     return true;
                 }
 
-                // if we added mags, update the mag count and force a net update
+                // If we added mags, update the mag count and force a net update
                 if (bAddedMags)
                 {
                     CurrentMagCount = PrimaryAmmoArray.Length - 1;
