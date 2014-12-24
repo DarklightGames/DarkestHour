@@ -3,15 +3,14 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_BesaVehicleClientTracer extends DH_ClientTracer;
+class DH_BesaVehicleTracerBullet extends DH_BesaVehicleBullet;
 
 defaultproperties
 {
-    mTracerClass=class'DH_Effects.DH_AmericanRedTracer' // Matt: changed from DH_30CalVehicleRedTracer as vehicle version was identical (that class now deprecated)
+    bIsTracerBullet=true
+    TracerEffectClass=class'DH_Effects.DH_AmericanRedTracer' // Matt: changed from DH_30CalVehicleRedTracer as vehicle version was identical (that class now deprecated)
     StaticMesh=StaticMesh'DH_Tracers.US_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.US_Tracer_Ball' // Matt: changed from 'US_TracerVehicle_Ball' as no reason for vehicle to differ & standard tracer ball matches size of German ball
-    Speed=49670.000000
-    SpeedFudgeScale=0.500000
-    BallisticCoefficient=0.410000
+    SpeedFudgeScale=0.5
     LightHue=0
 }

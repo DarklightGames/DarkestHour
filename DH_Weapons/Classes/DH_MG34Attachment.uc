@@ -7,8 +7,8 @@ class DH_MG34Attachment extends DHMGWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_Weapons.DH_MG34Bullet_C'
-    ClientTracerClass=class'DH_Weapons.DH_MG34ClientTracer'
+    ClientProjectileClass=class'DH_MG34Bullet' // was 'DH_Weapons.DH_MG34Bullet_C'
+    ClientTracerClass=class'DH_MG34TracerBullet' // was 'DH_Weapons.DH_MG34ClientTracer'
     bUsesTracers=true
     TracerFrequency=7
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'

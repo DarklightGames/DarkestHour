@@ -3,15 +3,14 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_BrenClientTracer extends DH_ClientTracer;
+class DH_BrenTracerBullet extends DH_BrenBullet;
 
 defaultproperties
 {
-    mTracerClass=class'DH_Effects.DH_AmericanRedTracer'
+    bIsTracerBullet=true
+    TracerEffectClass=class'DH_Effects.DH_AmericanRedTracer'
     StaticMesh=StaticMesh'DH_Tracers.US_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.US_Tracer_Ball' // Matt: changed from 'US_TracerVehicle_Ball' as this isn't a vehicle MG
-    Speed=44117.000000
-    SpeedFudgeScale=0.750000
-    BallisticCoefficient=0.390000
+    SpeedFudgeScale=0.75
     LightHue=0
 }

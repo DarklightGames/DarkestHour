@@ -7,8 +7,8 @@ class DH_30calAttachment extends DHMGWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_Weapons.DH_30calBullet_C'
-    ClientTracerClass=class'DH_Weapons.DH_30CalClientTracer'
+    ClientProjectileClass=class'DH_30calBullet' // was 'DH_Weapons.DH_30calBullet_C'
+    ClientTracerClass=class'DH_30calTracerBullet' // was 'DH_Weapons.DH_30CalClientTracer'
     bUsesTracers=true
     TracerFrequency=5
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'

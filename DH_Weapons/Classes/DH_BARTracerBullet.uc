@@ -3,15 +3,14 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_30CalClientTracer extends DH_ClientTracer;
+class DH_BARTracerBullet extends DH_BARBullet;
 
 defaultproperties
 {
-    mTracerClass=class'DH_Effects.DH_AmericanRedTracer'
+    bIsTracerBullet=true
+    TracerEffectClass=class'DH_Effects.DH_AmericanRedTracer'
     StaticMesh=StaticMesh'DH_Tracers.US_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.US_Tracer_Ball'
-    Speed=51299.000000
-    SpeedFudgeScale=0.750000
-    BallisticCoefficient=0.410000
+    SpeedFudgeScale=0.9
     LightHue=0
 }

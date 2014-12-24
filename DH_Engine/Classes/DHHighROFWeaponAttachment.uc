@@ -28,8 +28,8 @@ var     bool            bUnReplicatedShot;     // we have a shot we haven't repl
 var     byte            DualShotCount;         // when this byte is incremented the DualShotInfo will be replicated.
 var     byte            SavedDualShotCount;    // the last DualShot Count
 
-var() class<DH_ClientBullet> ClientProjectileClass; // class for the netclient only projectile for this weapon // Matt: was class ROClientBullet
-var() class<DH_ClientTracer> ClientTracerClass;     // class for the netclient only tracer for this weapon     // Matt: was class ROClientBullet
+var() class<Projectile> ClientProjectileClass; // class for the netclient only projectile for this weapon // Matt: was class ROClientBullet
+var() class<Projectile> ClientTracerClass;     // class for the netclient only tracer for this weapon     // Matt: was class ROClientBullet
 
 // Tracer stuff
 var()   bool            bUsesTracers;          // true if the weapon uses tracers in it's ammo loadout

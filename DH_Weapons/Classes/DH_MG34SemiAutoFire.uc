@@ -12,7 +12,8 @@ defaultproperties
     FAProjSpawnOffset=(X=-20.000000)
     bUsesTracers=true
     TracerFrequency=6
-    DummyTracerClass=class'DH_Weapons.DH_MG34ClientTracer'
+//  DummyTracerClass=class'DH_Weapons.DH_MG34ClientTracer' // deprecated
+    TracerProjectileClass=class'DH_MG34TracerBullet'
     FireIronAnim="Shoot_Loop"
     FireIronLoopAnim="Bipod_shoot_single"
     FireIronEndAnim="Bipod_Shoot_End"

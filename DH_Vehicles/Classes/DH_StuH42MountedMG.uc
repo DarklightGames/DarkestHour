@@ -5,6 +5,9 @@
 
 class DH_StuH42MountedMG extends ROVehicleWeapon;
 
+var()   class<Projectile> TracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
+var()   int               TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
+
 var()   sound ReloadSound; // sound of this MG reloading
 var     bool  bReloading;  // This MG is currently reloading
 var     int   NumMags;     // Number of mags carried for this MG;
@@ -220,6 +223,29 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return false;
 }
 
+// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot // TEST
+state ProjectileFireMode
+{
+	function Fire(Controller C)
+	{
+        // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
+        if (bUsesTracers && ((InitialPrimaryAmmo - MainAmmoCharge[0] - 1) % TracerFrequency == 0.0))
+        {
+            SpawnProjectile(TracerProjectileClass, false);
+        }
+        else
+        {
+            SpawnProjectile(ProjectileClass, false);
+        }
+    }
+}
+
+// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode) // TEST
+simulated function FlashMuzzleFlash(bool bWasAltFire)
+{
+	super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
+}
+
 // Fill the ammo up to the initial ammount
 function bool GiveInitialAmmo()
 {
@@ -251,8 +277,10 @@ defaultproperties
     FireEffectOffset=(Z=5.000000)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     VehicleBurningDamType=class'DH_VehicleBurningDamType'
-    DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
-    mTracerInterval=0.495867
+//  DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer' // deprecated
+    TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
+    TracerFrequency=7
+//  mTracerInterval=0.495867 // deprecated
     bUsesTracers=true
     VehHitpoints(0)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(Z=-16.000000))
     bIsMountedTankMG=true

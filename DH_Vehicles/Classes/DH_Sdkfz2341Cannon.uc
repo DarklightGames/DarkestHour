@@ -795,8 +795,10 @@ defaultproperties
     RangeSettings(12)=1200
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=12
-    DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer'
-    mTracerInterval=0.350000
+//  DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer' // deprecated
+    AltTracerProjectileClass=class'DH_MG42VehicleTracerBullet'
+    AltFireTracerFrequency=7
+//  mTracerInterval=0.350000 // deprecated
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=21.0

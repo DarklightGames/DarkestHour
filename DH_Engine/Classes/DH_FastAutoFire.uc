@@ -20,8 +20,8 @@ var     sound                   AmbientFireSound;       // How loud to play the 
 var     byte                    AmbientFireVolume;      // The ambient fire sound
 
 // High ROF system
-var()   class<DH_ServerBullet>  ServerProjectileClass;      // class for the server only projectile for this weapon // Matt: was class ROServerBullet
 var     float                   PackingThresholdTime;   // If the shots are closer than this amount, the dual shot will be used
+//var() class<DH_Bullet>        ServerProjectileClass;  // class for the server only projectile for this weapon // Matt: was class ROServerBullet // now deprecated (see SpawnProjectile function)
 
 
 // Overridden to support packing two shots together to save net bandwidth
@@ -369,7 +369,8 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
             {
                 if (Other.IsA('ROVehicle'))
                 {
-                    Other.TakeDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyVehicleDamage);
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                        class<ROBullet>(ProjectileClass).default.MyVehicleDamage);
                 }
                 else
                 {
@@ -379,12 +380,14 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
                     {
                         if (!HitPawn.bDeleteMe)
                         {
-                            HitPawn.ProcessLocationalDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyDamageType,HitPoints);
+                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                                class<ROBullet>(ProjectileClass).default.MyDamageType, HitPoints);
                         }
                     }
                     else
                     {
-                        Other.TakeDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ServerProjectileClass.default.MyDamageType);
+                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                            class<ROBullet>(ProjectileClass).default.MyDamageType);
                     }
                 }
             }
@@ -392,7 +395,8 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
             {
                 if (RODestroyableStaticMesh(Other) != none)
                 {
-                    Other.TakeDamage(ServerProjectileClass.default.Damage, Instigator, HitLocation, ServerProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ServerProjectileClass.default.MyDamageType);
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                        class<ROBullet>(ProjectileClass).default.MyDamageType);
 
                     if (RODestroyableStaticMesh(Other).bWontStopBullets)
                     {
@@ -409,17 +413,17 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
         }
     }
 
-    if (ServerProjectileClass != none)
+    if (ProjectileClass != none)
     {
-        spawnedprojectile = Spawn(ServerProjectileClass,,, Start, Dir);
+        SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir);
+
+        if (DH_Bullet(SpawnedProjectile) != none) // Matt: added to disable bullet replication, so actor won't be replicated to clients (the only difference in server bullet)
+        {
+            DH_Bullet(SpawnedProjectile).SetAsServerBullet();
+        }
     }
 
-    if (spawnedprojectile == none)
-    {
-        return none;
-    }
-
-    return spawnedprojectile;
+    return SpawnedProjectile;
 }
 
 defaultproperties

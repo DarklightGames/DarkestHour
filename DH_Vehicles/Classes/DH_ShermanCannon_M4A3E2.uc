@@ -29,7 +29,7 @@ simulated function UpdateTracer()
             SpawnDir.Pitch += AddedPitch;
         }
 
-        Spawn(DummyTracerClass,,, WeaponFireLocation, SpawnDir);
+        Spawn(AltTracerProjectileClass, , , WeaponFireLocation, SpawnDir);
 
         mLastTracerTime = Level.TimeSeconds;
     }
@@ -95,8 +95,10 @@ defaultproperties
     AddedPitch=68
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=5
-    DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer'
-    mTracerInterval=0.600000
+//  DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer' // deprecated
+    AltTracerProjectileClass=class'DH_30CalVehicleTracerBullet'
+    AltFireTracerFrequency=5
+//  mTracerInterval=0.600000 // deprecated
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=57.0;

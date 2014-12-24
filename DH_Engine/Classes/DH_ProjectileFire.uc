@@ -20,7 +20,8 @@ var             float       PreLaunchTraceDistance;     // How long of a pre lau
 var()           bool        bUsesTracers;               // true if the weapon uses tracers in it's ammo loadout
 var()           int         TracerFrequency;            // how often a tracer is loaded in.  Assume to be 1 in valueof(TracerFrequency)
 var             byte        NextTracerCounter;
-var class<DH_ClientTracer>  DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: was class ROClientTracer
+//var class<DH_ClientTracer>DummyTracerClass;           // class for the dummy offline only tracer for this weapon (does no damage) // Matt: was class ROClientTracer // now replaced by TracerProjectileClass
+var     class<Projectile>   TracerProjectileClass;      // class for the tracer bullet for this weapon (now a real bullet that does damage, as well as tracer effects)
 
 // Weapon spread/innaccuracy variables
 var             float       AppliedSpread;              // spread applied to the projectile
@@ -311,10 +312,10 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
         }
     }
 
-    if (ProjectileClass != none)
-        spawnedprojectile = Spawn(ProjectileClass,,, Start, Dir);
+//  if (ProjectileClass != none)
+//      SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir); // Matt: replaced by below
 
-    if (Level.NetMode == NM_Standalone && bUsesTracers && DummyTracerClass != none)
+    if (Level.NetMode == NM_Standalone && bUsesTracers && TracerProjectileClass != none)
     {
         NextTracerCounter++;
 
@@ -332,15 +333,23 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                     }
                 }
 
-                Spawn(DummyTracerClass,,, Start, Dir);
-                NextTracerCounter = 0;          // reset for next tracer spawn
+                SpawnedProjectile = Spawn(TracerProjectileClass, , , Start, Dir);
+
+                if (SpawnedProjectile != none)
+                {
+                    bSpawnedTracer = true;
+                }
+
+                NextTracerCounter = 0; // reset for next tracer spawn
         }
     }
 
-    if (spawnedprojectile == none)
-        return none;
+    if (!bSpawnedTracer && ProjectileClass != none) // Matt: added so we spawn bullet OR tracer, not both
+    {
+        SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir);        
+    }
 
-    return spawnedprojectile;
+    return SpawnedProjectile;
 }
 
 function PlayFiring()

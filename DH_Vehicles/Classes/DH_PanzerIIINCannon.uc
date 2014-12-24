@@ -251,8 +251,10 @@ defaultproperties
     RangeSettings(25)=3000
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=5
-    DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
-    mTracerInterval=0.495867
+//  DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer' // deprecated
+    AltTracerProjectileClass=class'DH_MG34VehicleTracerBullet'
+    AltFireTracerFrequency=7
+//  mTracerInterval=0.495867 // deprecated
     bUsesTracers=true
     bAltFireTracersOnly=true
 //  MaxDriverHitAngle=2.8 // Matt: deprecated (was used in BelowDriverAngle function, now deprecated, & variable replaced by MinCommanderHitHeight used in re-worked HitDriverArea)

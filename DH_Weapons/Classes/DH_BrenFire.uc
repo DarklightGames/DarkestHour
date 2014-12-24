@@ -102,7 +102,8 @@ defaultproperties
     PreLaunchTraceDistance=2624.000000
     bUsesTracers=true
     TracerFrequency=5
-    DummyTracerClass=class'DH_Weapons.DH_BARClientTracer'
+//  DummyTracerClass=class'DH_Weapons.DH_BARClientTracer' // deprecated
+    TracerProjectileClass=class'DH_BrenTracerBullet'
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"

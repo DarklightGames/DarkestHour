@@ -58,8 +58,10 @@ defaultproperties
     RangeSettings(25)=3000
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=4
-    DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer'
-    mTracerInterval=0.495867
+//  DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer' // deprecated
+    AltTracerProjectileClass=class'DH_MG34VehicleTracerBullet'
+    AltFireTracerFrequency=7
+//  mTracerInterval=0.495867 // deprecated
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=30.0 // note there is no other collision box (e.g. mantlet) so every hit on the stug cannon is actually a hit on commander's collision box

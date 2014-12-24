@@ -7,7 +7,7 @@ class DH_C96Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {
-    ClientProjectileClass=class'DH_Weapons.DH_C96Bullet_C'
+    ClientProjectileClass=class'DH_C96Bullet' // was 'DH_Weapons.DH_C96Bullet_C'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'

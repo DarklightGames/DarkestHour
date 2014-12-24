@@ -12,12 +12,13 @@ defaultproperties
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AmbientFireVolume=255
     PackingThresholdTime=0.120000
-    ServerProjectileClass=class'DH_Weapons.DH_MG42Bullet_S'
+//  ServerProjectileClass=class'DH_Weapons.DH_MG42Bullet_S' // deprecated
     ProjSpawnOffset=(X=25.000000)
     FAProjSpawnOffset=(X=-145.000000,Y=-15.000000,Z=-15.000000)
     bUsesTracers=true
     TracerFrequency=7
-    DummyTracerClass=class'DH_Weapons.DH_MG42ClientTracer'
+//  DummyTracerClass=class'DH_Weapons.DH_MG42ClientTracer' // deprecated
+    TracerProjectileClass=class'DH_MG42TracerBullet'
     FireIronAnim="Shoot_Loop"
     FireIronLoopAnim="Shoot_Loop"
     FireIronEndAnim="Shoot_End"

@@ -12,6 +12,8 @@ class DH_ROTankCannon extends ROTankCannon
 var   int               MainAmmoChargeExtra[3];
 var() int               InitialTertiaryAmmo;
 var() class<Projectile> TertiaryProjectileClass;
+var() class<Projectile> AltTracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
+var() int               AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
 
 // Shot dispersion can be customized by round type
 var() float SecondarySpread;
@@ -1022,6 +1024,32 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return false;
 }
 
+// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
+state ProjectileFireMode
+{
+    function AltFire(Controller C)
+    {
+        if (AltFireProjectileClass == none)
+        {
+            Fire(C);
+        }
+        else
+        {
+            // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
+            if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % AltFireTracerFrequency == 0.0))
+            {
+                mLastTracerTime = Level.TimeSeconds;
+
+                SpawnProjectile(AltTracerProjectileClass, true);
+            }
+            else
+            {
+                SpawnProjectile(AltFireProjectileClass, true);
+            }
+        }
+    }
+}
+
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile        P;
@@ -1134,6 +1162,70 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     }
 
     return P;
+}
+
+// Matt: modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
+simulated function FlashMuzzleFlash(bool bWasAltFire)
+{
+    local ROVehicleWeaponPawn OwningPawn;
+
+    if (Role == ROLE_Authority)
+    {
+        if (bWasAltFire)
+        {
+            FiringMode = 1;
+        }
+        else
+        {
+            FiringMode = 0;
+        }
+
+        FlashCount++;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+    }
+    else
+    {
+        CalcWeaponFire(bWasAltFire);
+    }
+
+//  if (!bAltFireTracersOnly && bUsesTracers && !bWasAltFire)
+//  {
+//      UpdateTracer();
+//  }
+
+    if (bWasAltFire)
+    {
+        return;
+    }
+
+    if (FlashEmitter != none)
+    {
+        FlashEmitter.Trigger(self, Instigator);
+    }
+
+    if (EffectEmitterClass != none && EffectIsRelevant(Location, false))
+    {
+        EffectEmitter = Spawn(EffectEmitterClass, self, , WeaponFireLocation, WeaponFireRotation);
+    }
+
+    if (CannonDustEmitterClass != none && EffectIsRelevant(Location, false))
+    {
+        CannonDustEmitter = Spawn(CannonDustEmitterClass, self, , Base.Location, Base.Rotation);
+    }
+
+    OwningPawn = ROVehicleWeaponPawn(Instigator);
+
+    if (OwningPawn != none && OwningPawn.DriverPositions[OwningPawn.DriverPositionIndex].bExposed)
+    {
+        if (HasAnim(TankShootOpenAnim))
+        {       
+            PlayAnim(TankShootOpenAnim);
+        }
+    }
+    else if (HasAnim(TankShootClosedAnim))
+    {
+        PlayAnim(TankShootClosedAnim);
+    }
 }
 
 function CeaseFire(Controller C, bool bWasAltFire)

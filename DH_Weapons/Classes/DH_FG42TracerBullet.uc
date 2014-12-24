@@ -3,15 +3,14 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_MG34VehicleClientTracer extends DH_ClientTracer;
+class DH_FG42TracerBullet extends DH_FG42Bullet;
 
 defaultproperties
 {
-    mTracerClass=class'DH_Effects.DH_GermanYellowOrangeTracer' // Matt: changed from DH_GermanVehicleMGTracer as vehicle version was identical (that class now deprecated)
+    bIsTracerBullet=true
+    TracerEffectClass=class'DH_Effects.DH_GermanYellowOrangeTracer'
     StaticMesh=StaticMesh'DH_Tracers.Ger_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.Ger_Tracer_Ball'
-    Speed=47678.000000
-    SpeedFudgeScale=0.750000
-    BallisticCoefficient=0.515000
+    SpeedFudgeScale=0.9
     LightHue=30
 }
