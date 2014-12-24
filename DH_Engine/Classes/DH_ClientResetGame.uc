@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
         {
             if (A.Role == ROLE_Authority && A.LifeSpan != 0.0)
             {
-//              log("DH_ClientResetGame.PostBeginPlay: destroying" @ A.Tag @ " LifeSpan =" @ A.LifeSpan);
+                Log("DH_ClientResetGame.PostBeginPlay: destroying" @ A.Tag @ " LifeSpan =" @ A.LifeSpan); // Matt: TEMP - delete before release
                 A.Destroy();
             }
         }
