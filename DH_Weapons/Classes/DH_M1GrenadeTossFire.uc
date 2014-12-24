@@ -3,27 +3,19 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_M1GrenadeTossFire extends ROThrownExplosiveFire;
+class DH_M1GrenadeTossFire extends DH_GrenadeFire;
 
 defaultproperties
 {
-    minimumThrowSpeed=100.000000
-    maximumThrowSpeed=500.000000
-    speedFromHoldingPerSec=800.000000
-    ProjSpawnOffset=(X=25.000000)
-    AddedPitch=0
-    bUsePreLaunchTrace=false
-    bWaitForRelease=true
-    PreFireAnim="Pre_Fire"
-    FireAnim="Toss"
-    TweenTime=0.010000
-    FireForce="RocketLauncherFire"
-    FireRate=50.000000
     AmmoClass=class'DH_Weapons.DH_M1GrenadeAmmo'
     ProjectileClass=class'DH_Weapons.DH_M1GrenadeProjectile'
-    BotRefireRate=0.500000
-    WarnTargetPct=0.900000
-    aimerror=200.000000
-    Spread=75.000000
-    SpreadStyle=SS_Random
+
+    AddedFuseTime=0.0           // undoing DH_GrenadeFire
+    bPullAnimCompensation=false // undoing DH_GrenadeFire
+    MinimumThrowSpeed=100.0
+    MaximumThrowSpeed=500.0
+    SpeedFromHoldingPerSec=800.0
+    AddedPitch=0
+    PreFireAnim="Pre_Fire"
+    FireAnim="Toss"
 }
