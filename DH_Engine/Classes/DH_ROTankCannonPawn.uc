@@ -678,6 +678,171 @@ function float GetAltAmmoReloadState()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
+// Matt: modified to switch to external mesh & default FOV for behind view
+simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
+{
+    local int i;
+
+    if (PC.bBehindView)
+    {
+        if (bBehindViewChanged)
+        {
+            if (bPCRelativeFPRotation)
+            {
+                PC.SetRotation(rotator(vector(PC.Rotation) >> Rotation));
+            }
+
+            if (bMultiPosition)
+            {
+                for (i = 0; i < DriverPositions.Length; i++)
+                {
+                    DriverPositions[i].PositionMesh = Gun.default.Mesh;
+                    DriverPositions[i].ViewFOV = PC.DefaultFOV;
+                    DriverPositions[i].ViewPitchUpLimit = 65535;
+                    DriverPositions[i].ViewPitchDownLimit = 1;
+                }
+
+                if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) 
+                    && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+                {
+                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                }
+
+                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            }
+            else
+            {
+                PC.SetFOV(PC.DefaultFOV);
+                Gun.PitchUpLimit = 65535;
+                Gun.PitchDownLimit = 1;
+            }
+
+            Gun.bLimitYaw = false;
+        }
+
+        bOwnerNoSee = false;
+
+        if (Driver != none)
+        {
+            Driver.bOwnerNoSee = !bDrawDriverInTP;
+        }
+
+        if (PC == Controller) // no overlays for spectators
+        {
+            ActivateOverlay(false);
+        }
+    }
+    else
+    {
+        if (bPCRelativeFPRotation)
+        {
+            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation));
+        }
+
+        if (bBehindViewChanged)
+        {
+            if (bMultiPosition)
+            {
+                for (i = 0; i < DriverPositions.Length; i++)
+                {
+                    DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
+                    DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
+                    DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
+                    DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;            
+                }
+
+                if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) 
+                    && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
+                {
+                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                }
+
+                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+            }
+            else
+            {
+                PC.SetFOV(WeaponFOV);
+                Gun.PitchUpLimit = Gun.default.PitchUpLimit;
+                Gun.PitchDownLimit = Gun.default.PitchDownLimit;
+            }
+
+            Gun.bLimitYaw = Gun.default.bLimitYaw;
+        }
+
+        bOwnerNoSee = !bDrawMeshInFP;
+
+        if (Driver != none)
+        {
+            Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
+        }
+
+        if (bDriving && PC == Controller) // no overlays for spectators
+        {
+            ActivateOverlay(true);
+        }
+    }
+}
+
+// Matt: toggles between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+exec function ToggleMesh()
+{
+    local int i;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bMultiPosition)
+    {
+        if (Gun.Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
+        {
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].PositionMesh = Gun.default.Mesh;
+            }
+        }
+        else
+        {
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
+            }
+        }
+
+        Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+    }
+}
+
+// Matt: DH version but keeping it just to view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
+exec function ToggleViewLimit()
+{
+    local int i;
+
+    if (class'DH_LevelInfo'.static.DHDebugMode() && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    {
+        if (Gun.bLimitYaw == Gun.default.bLimitYaw && Gun.PitchUpLimit == Gun.default.PitchUpLimit && Gun.PitchDownLimit == Gun.default.PitchDownLimit)
+        {
+            Gun.bLimitYaw = false;
+            Gun.PitchUpLimit = 65535;
+            Gun.PitchDownLimit = 1;
+
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].ViewPitchUpLimit = 65535;
+                DriverPositions[i].ViewPitchDownLimit = 1;            
+            }
+        }
+        else 
+        {
+            Gun.bLimitYaw = Gun.default.bLimitYaw;
+            Gun.PitchUpLimit = Gun.default.PitchUpLimit;
+            Gun.PitchDownLimit = Gun.default.PitchDownLimit;
+
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
+                DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;            
+            }
+        }
+    }
+}
 // Matt: allows 'Driver' (commander) debugging to be toggled for all cannon pawns
 exec function ToggleDriverDebug()
 {

@@ -2603,6 +2603,137 @@ simulated function int NumPassengers()
 simulated function GrowHUD();
 simulated function ShrinkHUD();
 
+// Matt: modified to switch to external mesh & default FOV for behind view
+simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
+{
+    local int i;
+
+    if (PC.bBehindView)
+    {
+        if (bBehindViewChanged)
+        {
+            if (bPCRelativeFPRotation)
+            {
+                PC.SetRotation(rotator(vector(PC.Rotation) >> Rotation));
+            }
+
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].PositionMesh = default.Mesh;
+                DriverPositions[i].ViewFOV = PC.DefaultFOV;
+            }
+
+            bDontUsePositionMesh = true;
+
+            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            {
+                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+            }
+
+            PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+
+            bLimitYaw = false;
+            bLimitPitch = false;
+        }
+
+        bOwnerNoSee = false;
+
+        if (Driver != none)
+        {
+            Driver.bOwnerNoSee = !bDrawDriverInTP;
+        }
+
+        if (PC == Controller) // no overlays for spectators
+        {
+            ActivateOverlay(false);
+        }
+    }
+    else
+    {
+        if (bPCRelativeFPRotation)
+        {
+            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation));
+        }
+
+        if (bBehindViewChanged)
+        {
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
+                DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
+            }
+
+            bDontUsePositionMesh = default.bDontUsePositionMesh;
+
+            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            {
+                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+            }
+
+            PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+
+            bLimitYaw = default.bLimitYaw;
+            bLimitPitch = default.bLimitPitch;
+        }
+
+        bOwnerNoSee = !bDrawMeshInFP;
+
+        if (Driver != none)
+        {
+            Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
+        }
+
+        if (bDriving && PC == Controller) // no overlays for spectators
+        {
+            ActivateOverlay(true);
+        }
+    }
+}
+
+// Matt: toggles between external & internal meshes (mostly useful with behind view if want to see internal mesh)
+exec function ToggleMesh()
+{
+    local int i;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bMultiPosition)
+    {
+        if (Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
+        {
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].PositionMesh = default.Mesh;
+            }
+        }
+        else
+        {
+            for (i = 0; i < DriverPositions.Length; i++)
+            {
+                DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
+            }
+        }
+
+        LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+    }
+}
+
+// Matt: DH version but keeping it just to view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
+exec function ToggleViewLimit()
+{
+    if (class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    {
+        if (bLimitYaw == default.bLimitYaw && bLimitPitch == default.bLimitPitch)
+        {
+            bLimitYaw = false;
+            bLimitPitch = false;
+        }
+        else
+        {
+            bLimitYaw = default.bLimitYaw;
+            bLimitPitch = default.bLimitPitch;
+        }
+    }
+}
+
 // Matt: allows debugging exit positions to be toggled for all DH_ROTreadCrafts
 exec function ToggleDebugExits()
 {
