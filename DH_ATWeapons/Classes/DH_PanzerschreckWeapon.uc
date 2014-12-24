@@ -15,7 +15,7 @@ defaultproperties
     FireModeClass(1)=class'DH_ATWeapons.DH_PanzerschreckMeleeFire'
     PickupClass=class'DH_ATWeapons.DH_PanzerschreckPickup'
     AttachmentClass=class'DH_ATWeapons.DH_PanzerschreckAttachment'
-    ItemName="Panzerschreck"
+    ItemName="Raketenpanzerbüchse 54"
     Mesh=SkeletalMesh'DH_Panzerschreck_1st.Panzerschreck'
     FillAmmoMagCount=1
     WarningMessageClass=class'DH_ATWeapons.DH_PanzerschreckWarningMsg'
