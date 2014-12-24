@@ -196,7 +196,7 @@ defaultproperties
     WA_Reload="ReloadS_Bazooka"
     WA_ProneReload="ReloadS_Bazooka"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
-    MenuDescription="M1A1 Anti-Tank Rocket Launcher: Man portable anti-tank weapon used by the United States after July 1943. Fires a 6.0cm rocket-assisted HEAT projectile up to 350 yards, although most effective at ranges under 200 yards. Armor penetration: 90mm to 100mm of effective armor. Sights are calibrated at 100, 200, and 300 yards."
+    MenuDescription="Man portable anti-tank weapon used by the United States after July 1943. Fires a 6.0cm rocket-assisted HEAT projectile up to 350 yards, although most effective at ranges under 200 yards. Armor penetration: 90mm to 100mm of effective armor. Sights are calibrated at 100, 200, and 300 yards."
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bazooka_3rd'
 }

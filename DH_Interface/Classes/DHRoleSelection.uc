@@ -150,7 +150,7 @@ function UpdateRoleEquipment()
                     b_Equipment[count].Graphic = WeaponAttach.default.menuImage;
                     b_Equipment[count].bVisible = true;
                 }
-                equipmentDescriptions[count] = WeaponAttach.default.menuDescription;
+                equipmentDescriptions[count] = desiredRole.Grenades[i].Item.default.ItemName $ "||" $ WeaponAttach.default.menuDescription;
                 l_EquipmentDescription.bVisible = true;
             }
             count++;
@@ -186,13 +186,14 @@ function UpdateRoleEquipment()
 
                 if (!bHideItem)
                 {
-                if (WeaponAttach.default.menuImage != none)
-                {
-                    b_Equipment[count].Graphic = WeaponAttach.default.menuImage;
-                    b_Equipment[count].bVisible = true;
-                }
-                equipmentDescriptions[count] = WeaponAttach.default.menuDescription;
-                l_EquipmentDescription.bVisible = true;
+                    if (WeaponAttach.default.menuImage != none)
+                    {
+                        b_Equipment[count].Graphic = WeaponAttach.default.menuImage;
+                        b_Equipment[count].bVisible = true;
+                    }
+
+                    equipmentDescriptions[count] = w.default.ItemName $ "||" $ WeaponAttach.default.menuDescription;
+                    l_EquipmentDescription.bVisible = true;
                 }
 
                 if (temp != -1)

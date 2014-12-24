@@ -133,7 +133,6 @@ defaultproperties
     PA_LandAnims(2)="chute_undeploy"
     PA_LandAnims(3)="chute_undeploy"
     MenuImage=texture'DH_Sundries_Tex.Parachute.ParachuteIcon'
-    MenuDescription="Parachute. A handy thing to have when you're jumping out of an aeroplane!"
     CullDistance=12000.000000
     AttachmentBone="HIP"
     Mesh=SkeletalMesh'DH_Parachute_anm.Parachute3rd'

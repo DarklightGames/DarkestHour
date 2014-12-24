@@ -10,6 +10,6 @@ defaultproperties
     WA_Idle="Idle"
     WA_Fire="Idle"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.OrangeSmoke'
-    MenuDescription="RauchSichtzeichen Orange 160||Used to communicate on the battlefield with teammates."
+    MenuDescription="Used to communicate on the battlefield with teammates."
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.OrangeSmokeGrenade_3rd'
 }

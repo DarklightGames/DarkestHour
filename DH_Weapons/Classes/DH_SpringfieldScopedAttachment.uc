@@ -162,7 +162,7 @@ defaultproperties
     WA_PostReload="Close_springfield"
     WA_WorkBolt="bolt_springfield"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Springfield_icon'
-    MenuDescription="M1903 Springfield: Reliable pre-war 30-06 American bolt-action rifle converted for marksman's role. Mounted with a 4x scope, the rifle is effective to 600 metres."
+    MenuDescription="Reliable pre-war 30-06 American bolt-action rifle converted for marksman's role. Mounted with a 4x scope, the rifle is effective to 600 metres."
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Springfield_3rd'
 }

@@ -167,6 +167,6 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_stg44"
     WA_ProneReloadEmpty="prone_reloadempty_stg44"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.stg44'
-    MenuDescription="Sturmgewehr 44: The world's first assault rifle. Prized and reliable, firing the 7.92x33 Kurz cartridge from a detachable 30-round box magazine. Accurate in single-shot mode up to 500 metres. Rate of fire: 550 rounds per minute in automatic mode."
+    MenuDescription="The world's first assault rifle. Prized and reliable, firing the 7.92x33 Kurz cartridge from a detachable 30-round box magazine. Accurate in single-shot mode up to 500 metres. Rate of fire: 550 rounds per minute in automatic mode."
     Mesh=SkeletalMesh'Weapons3rd_anm.stg44'
 }
