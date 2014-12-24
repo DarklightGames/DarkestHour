@@ -34,6 +34,12 @@ simulated function Timer()
     }
 }
 
+// Modified so in single player this effect is removed if the ResetGame option is used (note this won't work on a net client as Reset is only called on the server)
+simulated function Reset()
+{
+    Destroy();
+}
+
 defaultproperties
 {
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
