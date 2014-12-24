@@ -8,8 +8,8 @@ class DHWeaponPickup extends ROWeaponPickup
 
 //Barrel
 var     float       Temperature, Temperature2;
-var     float       BarrelCoolingRate;
-var     bool        bBarrelFailed, bHasSpareBarrel;
+var     float       LevelCTemp, BarrelCoolingRate;
+var     bool        bHasBarrel, bBarrelFailed, bHasSpareBarrel;
 var     int         RemainingBarrel;
 
 //Ammo
@@ -29,6 +29,9 @@ function InitDroppedPickupFor(Inventory Inv)
     {
         if (W.Barrels.Length > 0 && W.BarrelIndex >= 0 && W.BarrelIndex < W.Barrels.Length)
         {
+            bHasBarrel = true;
+
+            LevelCTemp = W.Barrels[W.BarrelIndex].LevelCTemp;
             Temperature = W.Barrels[W.BarrelIndex].Temperature;
             BarrelCoolingRate = W.Barrels[W.BarrelIndex].BarrelCoolingRate;
             bBarrelFailed = W.Barrels[W.BarrelIndex].bBarrelFailed;
@@ -49,6 +52,10 @@ function InitDroppedPickupFor(Inventory Inv)
                 bHasSpareBarrel = true;
             }
         }
+        else
+        {
+            bHasBarrel = false;
+        }
 
         for (i = 0; i < W.PrimaryAmmoArray.Length; ++i)
         {
@@ -57,20 +64,21 @@ function InitDroppedPickupFor(Inventory Inv)
     }
 }
 
-function Tick(float dt)
+// Matt: modified (with a couple of extra class variables) so this only happens if weapon has a barrel to cool & also to stop it reducing barrel temperature below the level temperature
+function Tick(float DeltaTime)
 {
-    // make sure it's run on the server
-    if (Role < ROLE_Authority)
+    if (bHasBarrel && Role == ROLE_Authority)
     {
-        return;
-    }
+        // continue to lower the barrel temp
+        if (Temperature > LevelCTemp)
+        {
+            Temperature = FMax(Temperature + (DeltaTime * BarrelCoolingRate), LevelCTemp);
+        }
 
-    // continue to lower the barrel temp
-    Temperature -= dt * BarrelCoolingRate;
-
-    if (bHasSpareBarrel)
-    {
-        Temperature2 -= dt * BarrelCoolingRate;
+        if (bHasSpareBarrel && Temperature2 > LevelCTemp)
+        {
+            Temperature2 = FMax(Temperature2 + (DeltaTime * BarrelCoolingRate), LevelCTemp);
+        }
     }
 }
 
