@@ -37,6 +37,7 @@ def main():
 	#parse options
 	argparser = argparse.ArgumentParser()
 	argparser.add_argument('-mod', required=True)
+	argparser.add_argument('-clean', required=False, action='store_true')
 	argparser.add_argument('-dumpint', required=False, action='store_true')
 	args = argparser.parse_args()
 
@@ -74,6 +75,10 @@ def main():
 
 		if os.path.isfile(ro_sys_package_path):
 			#compiled file exists in root system folder
+			continue
+
+		if args.clean:
+			packages_to_compile.append(package + ".u")
 			continue
 
 		mod_sys_package_path = os.path.join(mod_sys_dir, package + ".u")
