@@ -7,30 +7,31 @@ class DH_RedSmokeEffect extends Emitter;
 
 simulated function PostBeginPlay()
 {
-    SetTimer(20, false);
+    SetTimer(20.0, false);
 }
 
 simulated function Timer()
 {
-    //Level.Game.Broadcast(self,"Timer ticking");
-    Emitters[0].StartVelocityRange.X.Min += 1;
+    Emitters[0].StartVelocityRange.X.Min += 1.0;
     Emitters[0].StartVelocityRange.X.Max -= 0.5;
-    Emitters[0].StartVelocityRange.Y.Min += 1;
-    Emitters[0].StartVelocityRange.Y.Max -= 1;
+    Emitters[0].StartVelocityRange.Y.Min += 1.0;
+    Emitters[0].StartVelocityRange.Y.Max -= 1.0;
     Emitters[0].StartVelocityRange.Z.Min -= 3.5;
-    Emitters[0].StartVelocityRange.Z.Max -= 5;
+    Emitters[0].StartVelocityRange.Z.Max -= 5.0;
     Emitters[0].StartSizeRange.X.Min -= 2.5;
     Emitters[0].StartSizeRange.X.Max -= 2.5;
     Emitters[0].StartSizeRange.Y.Min -= 2.5;
     Emitters[0].StartSizeRange.Y.Max -= 2.5;
     Emitters[0].StartSizeRange.Z.Min -= 2.5;
     Emitters[0].StartSizeRange.Z.Max -= 2.5;
-    Emitters[0].LifetimeRange.Min -= 1;
-    Emitters[0].LifetimeRange.Max -= 1;
-    Emitters[0].FadeOutStartTime -= 1;
+    Emitters[0].LifetimeRange.Min -= 1.0;
+    Emitters[0].LifetimeRange.Max -= 1.0;
+    Emitters[0].FadeOutStartTime -= 1.0;
 
-    if (Emitters[0].StartVelocityRange.X.Min < 0)
-        SetTimer(1, false);
+    if (Emitters[0].StartVelocityRange.X.Min < 0.0)
+    {
+        SetTimer(1.0, false);
+    }
 }
 
 defaultproperties

@@ -8,9 +8,9 @@ class DH_ROTankCannon extends ROTankCannon
 
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
-// Variables for up to three ammo types
-var   int   MainAmmoChargeExtra[3];
-var() int   InitialTertiaryAmmo;
+// Variables for up to three ammo types, plus new MG tracer
+var   int               MainAmmoChargeExtra[3];
+var() int               InitialTertiaryAmmo;
 var() class<Projectile> TertiaryProjectileClass;
 
 // Shot dispersion can be customized by round type
@@ -730,21 +730,33 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 // Returns the name of the various round types as well as a 0-based int
 // specifying which type is the active one
-simulated function int GetRoundsDescription(out array<string> descriptions)
+simulated function int GetRoundsDescription(out array<string> Descriptions)
 {
     local int i;
-    descriptions.length = 0;
+
+    Descriptions.Length = 0;
+    
     for (i = 0; i < ProjectileDescriptions.length; i++)
-        descriptions[i] = ProjectileDescriptions[i];
+    {
+        Descriptions[i] = ProjectileDescriptions[i];
+    }
 
     if (ProjectileClass == PrimaryProjectileClass)
+    {
         return 0;
+    }
     else if (ProjectileClass == SecondaryProjectileClass)
+    {
         return 1;
+    }
     else if (ProjectileClass == TertiaryProjectileClass)
+    {
         return 2;
+    }
     else
+    {
         return 3;
+    }
 }
 
 // Returns a 0-based int specifying which round type is the pending round
@@ -753,26 +765,41 @@ simulated function int GetPendingRoundIndex()
     if (PendingProjectileClass != none)
     {
         if (PendingProjectileClass == PrimaryProjectileClass)
+        {
             return 0;
+        }
         else if (PendingProjectileClass == SecondaryProjectileClass)
+        {
             return 1;
+        }
         else if (PendingProjectileClass == TertiaryProjectileClass)
+        {
             return 2;
+        }
         else
+        {
             return 3;
+        }
     }
     else
     {
         if (ProjectileClass == PrimaryProjectileClass)
+        {
             return 0;
+        }
         else if (ProjectileClass == SecondaryProjectileClass)
+        {
             return 1;
+        }
         else if (ProjectileClass == TertiaryProjectileClass)
+        {
             return 2;
+        }
         else
+        {
             return 3;
+        }
     }
-
 }
 
 function ToggleRoundType()
@@ -780,89 +807,115 @@ function ToggleRoundType()
     if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
     {
         if (!HasAmmo(1) && !HasAmmo(2))
+        {
             return;
+        }
 
         if (HasAmmo(1))
+        {
             PendingProjectileClass = SecondaryProjectileClass;
+        }
         else if (HasAmmo(2))
+        {
             PendingProjectileClass = TertiaryProjectileClass;
-
+        }
     }
     else if (PendingProjectileClass == SecondaryProjectileClass)
     {
         if (!HasAmmo(0) && !HasAmmo(2))
+        {
             return;
+        }
 
         if (HasAmmo(2))
+        {
             PendingProjectileClass = TertiaryProjectileClass;
+        }
         else if (HasAmmo(0))
+        {
             PendingProjectileClass = PrimaryProjectileClass;
+        }
     }
     else if (PendingProjectileClass == TertiaryProjectileClass)
     {
         if (!HasAmmo(0) && !HasAmmo(1))
+        {
             return;
+        }
 
         if (HasAmmo(0))
+        {
             PendingProjectileClass = PrimaryProjectileClass;
+        }
         else if (HasAmmo(1))
+        {
             PendingProjectileClass = SecondaryProjectileClass;
+        }
     }
 }
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
+    local float s;
 
-        local float s;
+    if (Role != ROLE_Authority || bForceCenterAim)
+    {
+        return false;
+    }
 
-        if (Role != ROLE_Authority || bForceCenterAim)
-                return false;
+    s = FRand();
 
-        s = FRand();
+    if ((!bAltFire && CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || (bAltFire && FireCountdown <= 0.0))
+    {
+        CalcWeaponFire(bAltFire);
 
-        if ((!bAltFire && CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || (bAltFire && FireCountdown <= 0))
+        if (bCorrectAim)
         {
-                CalcWeaponFire(bAltFire);
-                if (bCorrectAim)
-                        WeaponFireRotation = AdjustAim(bAltFire);
-                if (bAltFire)
-                {
-                      if (AltFireSpread > 0)
-                            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
-                }
-                else if (SecondarySpread > 0 && bUsesSecondarySpread && ProjectileClass == SecondaryProjectileClass)
-                {
-                      if (s < 0.60)
-                      {
-                           WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*SecondarySpread);
-                           WeaponFireRotation += rot(1,6,0);        //correction to the aim point and to center the spread pattern
-                      }
-                      else
-                      {
-                           WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*0.0015);
-                           WeaponFireRotation += rot(1,6,0);        //correction to the aim point and to center the spread pattern
-                      }
-                }
-                else if (TertiarySpread > 0 && bUsesTertiarySpread && ProjectileClass == TertiaryProjectileClass)
-                {
-                      WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*TertiarySpread);
-                      WeaponFireRotation += rot(1,6,0);        //correction to the aim point and to center the spread pattern
-                }
-                else if (Spread > 0)
-                {
-                      WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*Spread);
-                      WeaponFireRotation += rot(1,6,0);        //correction to the aim point and to center the spread pattern
-                }
+            WeaponFireRotation = AdjustAim(bAltFire);
+        }
 
-        DualFireOffset *= -1;
+        if (bAltFire)
+        {
+            if (AltFireSpread > 0.0)
+            {
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * AltFireSpread);
+            }
+        }
+        else if (SecondarySpread > 0.0 && bUsesSecondarySpread && ProjectileClass == SecondaryProjectileClass)
+        {
+            if (s < 0.6)
+            {
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * SecondarySpread);
+                WeaponFireRotation += rot(1,6,0); // correction to the aim point and to center the spread pattern
+            }
+            else
+            {
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * 0.0015);
+                WeaponFireRotation += rot(1,6,0); //correction to the aim point and to center the spread pattern
+            }
+        }
+        else if (TertiarySpread > 0 && bUsesTertiarySpread && ProjectileClass == TertiaryProjectileClass)
+        {
+              WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * TertiarySpread);
+              WeaponFireRotation += rot(1,6,0); //correction to the aim point and to center the spread pattern
+        }
+        else if (Spread > 0.0)
+        {
+              WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
+              WeaponFireRotation += rot(1,6,0); //correction to the aim point and to center the spread pattern
+        }
+
+        DualFireOffset *= -1.0;
 
         Instigator.MakeNoise(1.0);
+
         if (bAltFire)
         {
             if (!ConsumeAmmo(3))
             {
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
                 HandleReload();
+
                 return false;
             }
 
@@ -870,11 +923,12 @@ event bool AttemptFire(Controller C, bool bAltFire)
             AltFire(C);
 
             if (AltAmmoCharge < 1)
+            {
                 HandleReload();
+            }
         }
         else
         {
-            //FireCountdown = FireInterval;
             if (bMultipleRoundTypes)
             {
                 if (ProjectileClass == PrimaryProjectileClass)
@@ -882,14 +936,19 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     if (!ConsumeAmmo(0))
                     {
                         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+
                         return false;
                     }
                     else if (!HasAmmo(0))
                     {
                         if (HasAmmo(1))
+                        {
                             PendingProjectileClass = SecondaryProjectileClass;
+                        }
                         else if (HasAmmo(2))
+                        {
                             PendingProjectileClass = TertiaryProjectileClass;
+                        }
                     }
                 }
                 else if (ProjectileClass == SecondaryProjectileClass)
@@ -897,14 +956,19 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     if (!ConsumeAmmo(1))
                     {
                         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+
                         return false;
                     }
                     else if (!HasAmmo(1))
                     {
                         if (HasAmmo(0))
+                        {
                             PendingProjectileClass = PrimaryProjectileClass;
+                        }
                         else if (HasAmmo(2))
+                        {
                             PendingProjectileClass = TertiaryProjectileClass;
+                        }
                     }
                 }
                 else if (ProjectileClass == TertiaryProjectileClass)
@@ -912,25 +976,30 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     if (!ConsumeAmmo(2))
                     {
                         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+
                         return false;
                     }
                     else if (!HasAmmo(2))
                     {
                         if (HasAmmo(0))
+                        {
                             PendingProjectileClass = PrimaryProjectileClass;
+                        }
                         else if (HasAmmo(1))
+                        {
                             PendingProjectileClass = SecondaryProjectileClass;
+                        }
                     }
                 }
             }
             else if (!ConsumeAmmo(0))
             {
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+
                 return false;
             }
 
-            if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none &&
-                ROPlayer(Instigator.Controller).bManualTankShellReloading == true)
+            if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
             {
                 CannonReloadState = CR_Waiting;
             }
@@ -941,8 +1010,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
             }
 
             bClientCanFireCannon = false;
+
             Fire(C);
         }
+
         AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
         return true;
@@ -953,10 +1024,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
-    local Projectile P;
+    local Projectile        P;
     local VehicleWeaponPawn WeaponPawn;
-    local vector StartLocation, HitLocation, HitNormal, Extent;
-    local rotator FireRot;
+    local vector            StartLocation, HitLocation, HitNormal, Extent;
+    local rotator           FireRot;
 
     FireRot = WeaponFireRotation;
 
@@ -967,50 +1038,70 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     }
 
     if (!bAltFire)
+    {
         FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    }
 
     if (bCannonShellDebugging)
-        Log("GetPitchForRange for "$CurrentRangeIndex$" = "$ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+    {
+        Log("GetPitchForRange for" @ CurrentRangeIndex @ "=" @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+    }
 
     if (bDoOffsetTrace)
     {
-        Extent = ProjClass.default.CollisionRadius * vect(1,1,0);
+        Extent = ProjClass.default.CollisionRadius * vect(1.0,1.0,0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
+
         WeaponPawn = VehicleWeaponPawn(Owner);
+
         if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
         {
-            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
-            StartLocation = HitLocation;
+            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, 
+                WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
+            {
+                StartLocation = HitLocation;
+            }
+            else
+            {
+                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
+            }
+        }
         else
-            StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
+        {
+            if (!Owner.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (Owner.CollisionRadius * 1.5), Extent))
+            {
+                StartLocation = HitLocation;
+            }
+            else
+            {
+                StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
+            }
+        }
     }
     else
     {
-        if (!Owner.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, WeaponFireLocation + vector(WeaponFireRotation) * (Owner.CollisionRadius * 1.5), Extent))
-            StartLocation = HitLocation;
-        else
-            StartLocation = WeaponFireLocation + vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1);
-    }
-    }
-    else
         StartLocation = WeaponFireLocation;
+    }
 
     if (bCannonShellDebugging)
-        Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355 * vector(WeaponFireRotation), WeaponFireLocation, false);
+    {
+        Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
+    }
 
-    P = spawn(ProjClass, none,, StartLocation, FireRot); //self
+    P = spawn(ProjClass, none, , StartLocation, FireRot); 
 
-   //swap to the next round type after firing
+    // Swap to the next round type after firing
     if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
     {
         ProjectileClass = PendingProjectileClass;
     }
-    //Log("WeaponFireRotation = "$WeaponFireRotation);
 
     if (P != none)
     {
         if (bInheritVelocity)
+        {
             P.Velocity = Instigator.Velocity;
+        }
 
         FlashMuzzleFlash(bAltFire);
 
@@ -1025,15 +1116,19 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
                 AmbientSoundScaling = AltFireSoundScaling;
             }
             else
-                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
+            {
+                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0, , AltFireSoundRadius, , false);
+            }
         }
         else
         {
             if (bAmbientFireSound)
+            {
                 AmbientSound = FireSoundClass;
+            }
             else
             {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0,, FireSoundRadius,, false);
+                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0, , FireSoundRadius, , false);
             }
         }
     }
@@ -1046,7 +1141,9 @@ function CeaseFire(Controller C, bool bWasAltFire)
     super(ROVehicleWeapon).CeaseFire(C, bWasAltFire);
 
     if (bWasAltFire && !HasAmmo(3))
+    {
         HandleReload();
+    }
 }
 
 simulated function bool HasAmmo(int Mode)
@@ -1077,16 +1174,26 @@ simulated function bool ReadyToFire(bool bAltFire)
     local int Mode;
 
     if (bAltFire)
+    {
         Mode = 3;
+    }
     else if (ProjectileClass == PrimaryProjectileClass)
+    {
         Mode = 0;
+    }
     else if (ProjectileClass == SecondaryProjectileClass)
+    {
         Mode = 1;
+    }
     else if (ProjectileClass == TertiaryProjectileClass)
+    {
         Mode = 2;
+    }
 
     if (HasAmmo(Mode))
+    {
         return true;
+    }
 
     return false;
 }
@@ -1096,11 +1203,17 @@ simulated function int PrimaryAmmoCount()
     if (bMultipleRoundTypes)
     {
         if (ProjectileClass == PrimaryProjectileClass)
+        {
             return MainAmmoChargeExtra[0];
+        }
         else if (ProjectileClass == SecondaryProjectileClass)
+        {
             return MainAmmoChargeExtra[1];
+        }
         else if (ProjectileClass == TertiaryProjectileClass)
+        {
             return MainAmmoChargeExtra[2];
+        }
     }
     else
     {
@@ -1165,67 +1278,67 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
 
 simulated function Timer()
 {
-   if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
-   {
-      //Log(" Returning because there is no controller");
-      SetTimer(0.05, true);
-   }
-   else if (CannonReloadState == CR_Empty)
-   {
-         if (Role == ROLE_Authority)
-         {
-              PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         else
-         {
-              PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         CannonReloadState = CR_ReloadedPart1;
-         GetSoundDuration(ReloadSoundThree) + GetSoundDuration(ReloadSoundFour);
-         SetTimer(GetSoundDuration(ReloadSoundOne), false);
-   }
-   else if (CannonReloadState == CR_ReloadedPart1)
-   {
-         if (Role == ROLE_Authority)
-         {
-              PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         else
-         {
-              PlaySound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
+    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
+    {
+        SetTimer(0.05, true);
+    }
+    else if (CannonReloadState == CR_Empty)
+    {
+        if (Role == ROLE_Authority)
+        {
+            PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
+        else
+        {
+            PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
 
-         CannonReloadState = CR_ReloadedPart2;
-         GetSoundDuration(ReloadSoundFour);
-         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
-   }
-   else if (CannonReloadState == CR_ReloadedPart2)
-   {
-         if (Role == ROLE_Authority)
-         {
-              PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         else
-         {
-              PlaySound(ReloadSoundThree, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
+        CannonReloadState = CR_ReloadedPart1;
+        GetSoundDuration(ReloadSoundThree) + GetSoundDuration(ReloadSoundFour);
+        SetTimer(GetSoundDuration(ReloadSoundOne), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart1)
+    {
+        if (Role == ROLE_Authority)
+        {
+            PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
+        else
+        {
+            PlaySound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
 
-         CannonReloadState = CR_ReloadedPart3;
-         SetTimer(GetSoundDuration(ReloadSoundThree), false);
-   }
-   else if (CannonReloadState == CR_ReloadedPart3)
-   {
-         if (Role == ROLE_Authority)
-         {
-              PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         else
-         {
-              PlaySound(ReloadSoundFour, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
+        CannonReloadState = CR_ReloadedPart2;
+        GetSoundDuration(ReloadSoundFour);
+        SetTimer(GetSoundDuration(ReloadSoundTwo), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart2)
+    {
+        if (Role == ROLE_Authority)
+        {
+            PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
+        else
+        {
+            PlaySound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
 
-         CannonReloadState = CR_ReloadedPart4;
-         SetTimer(GetSoundDuration(ReloadSoundFour), false);
+        CannonReloadState = CR_ReloadedPart3;
+        SetTimer(GetSoundDuration(ReloadSoundThree), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart3)
+    {
+        if (Role == ROLE_Authority)
+        {
+            PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
+        else
+        {
+            PlaySound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+        }
+
+        CannonReloadState = CR_ReloadedPart4;
+        SetTimer(GetSoundDuration(ReloadSoundFour), false);
    }
    else if (CannonReloadState == CR_ReloadedPart4)
    {
@@ -1233,6 +1346,7 @@ simulated function Timer()
         {
             bClientCanFireCannon = true;
         }
+
         CannonReloadState = CR_ReadyToFire;
         SetTimer(0.0, false);
    }
@@ -1244,9 +1358,12 @@ simulated function ShakeView(bool bWasAltFire)
     local PlayerController P;
 
     if (Instigator == none)
+    {
         return;
+    }
 
     P = PlayerController(Instigator.Controller);
+
     if (P != none)
     {
         if (bWasAltFire)
@@ -1415,16 +1532,18 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
 simulated function UpdatePrecacheStaticMeshes()
 {
     if (TertiaryProjectileClass != none)
+    {
         Level.AddPrecacheStaticMesh(TertiaryProjectileClass.default.StaticMesh);
+    }
+
     super.UpdatePrecacheStaticMeshes();
 }
 
 // ARMORED BEASTS CODE: Functions extended for easy tuning of gunsights in PRACTICE mode
-// bGunsightSettingMode has to be enabled and gun not loaded
-// then the range control buttons change sight adjustment up and down
+// bGunsightSettingMode has to be enabled and gun not loaded, then the range control buttons change sight adjustment up and down
 function IncrementRange()
 {
-    if (bGunsightSettingMode && (CannonReloadState != CR_ReadyToFire))
+    if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
     {
         IncreaseAddedPitch();
         GiveInitialAmmo();
@@ -1437,7 +1556,7 @@ function IncrementRange()
 
 function DecrementRange()
 {
-    if (bGunsightSettingMode && (CannonReloadState != CR_ReadyToFire))
+    if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
     {
         DecreaseAddedPitch();
         GiveInitialAmmo();
@@ -1448,32 +1567,35 @@ function DecrementRange()
     }
 }
 
-// functions making AddedPitch (gunsight correction) adjustment and display:
-
+// Functions making AddedPitch (gunsight correction) adjustment and display:
 function IncreaseAddedPitch()
 {
     local int MechanicalRangesValue, Correction;
 
-    AddedPitch += 2;    //AddedPitch ++;
+    AddedPitch += 2;
 
     MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    Correction = AddedPitch-Default.AddedPitch;
+    Correction = AddedPitch - default.AddedPitch;
 
-    if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-        ROPlayer(Instigator.Controller).ClientMessage("Sight old value ="$MechanicalRangesValue$"        new value = "$MechanicalRangesValue+Correction$"        correction = "$Correction);
+    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
+    }
 }
 
 function DecreaseAddedPitch()
 {
     local int MechanicalRangesValue, Correction;
 
-    AddedPitch -= 2;    //AddedPitch --;
+    AddedPitch -= 2;
 
     MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    Correction = AddedPitch-Default.AddedPitch;
+    Correction = AddedPitch - default.AddedPitch;
 
-    if (Instigator != none && Instigator.Controller != none && ROPlayer(Instigator.Controller) != none)
-        ROPlayer(Instigator.Controller).ClientMessage("Sight old value ="$MechanicalRangesValue$"        new value = "$MechanicalRangesValue+Correction$"        correction = "$Correction);
+    if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        ROPlayer(Instigator.Controller).ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue+Correction @ "       correction =" @ Correction);
+    }
 }
 
 simulated function DestroyEffects()
@@ -1481,7 +1603,9 @@ simulated function DestroyEffects()
     super.DestroyEffects();
 
     if (TurretHatchFireEffect != none)
+    {
         TurretHatchFireEffect.Destroy();
+    }
 }
 
 simulated function int LimitYaw(int yaw)

@@ -23,14 +23,18 @@ state FireLoop
 
         if (ROWeapon(Weapon).UsingAutoFire())
         {
-            NextFireTime = Level.TimeSeconds - 0.1; //fire now!
+            NextFireTime = Level.TimeSeconds - 0.1; // fire now!
 
             RPW = DH_ProjectileWeapon(Weapon);
 
             if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
-                weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
+            {
+                Weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
+            }
             else
+            {
                 Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
+            }
 
             PlayAmbientSound(AmbientFireSound);
         }
@@ -40,7 +44,7 @@ state FireLoop
     {
         if (!ROWeapon(Weapon).UsingAutoFire())
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume, , , , false);
         }
     }
 
@@ -80,7 +84,7 @@ state FireLoop
                     }
                 }
 
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume, , , , false);
 
                 ClientPlayForceFeedback(FireForce);
 
@@ -110,12 +114,14 @@ state FireLoop
         {
             Weapon.AnimStopLooping();
             PlayAmbientSound(none);
-            Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,,AmbientFireSoundRadius);
+            Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume, , AmbientFireSoundRadius);
             Weapon.StopFire(ThisModeNum);
 
             //If we are not switching weapons, go to the idle state
             if (!Weapon.IsInState('LoweringWeapon'))
+            {
                 ROWeapon(Weapon).GotoState('Idle');
+            }
         }
     }
 
@@ -134,7 +140,7 @@ state FireLoop
                 HiROFWeaponAttachment.DualShotCount = 255;
             }
 
-            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
+            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1.0;
         }
 
         GotoState('');

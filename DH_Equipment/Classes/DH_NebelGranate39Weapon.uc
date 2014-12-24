@@ -9,11 +9,10 @@ defaultproperties
 {
     FireModeClass(0)=class'DH_Equipment.DH_NebelGranate39Fire'
     FireModeClass(1)=class'DH_Equipment.DH_NebelGranate39TossFire'
-    InventoryGroup=7
     PickupClass=class'DH_Equipment.DH_NebelGranate39Pickup'
     AttachmentClass=class'DH_Equipment.DH_NebelGranate39Attachment'
     ItemName="Nebelhandgranate 39"
+    Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
     Skins(2)=texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
-    HighDetailOverlay=none
-    bUseHighDetailOverlayIndex=false
+    InventoryGroup=7
 }

@@ -9,7 +9,7 @@ class DH_GrenadeSmokeEffect extends Emitter;
 simulated function PostBeginPlay()
 {
     local color NewSmokeColor;
-    local byte SmokeBrightnessValue;
+    local byte  SmokeBrightnessValue;
 
     super.PostBeginPlay();
 

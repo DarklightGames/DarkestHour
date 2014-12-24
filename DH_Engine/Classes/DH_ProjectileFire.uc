@@ -40,30 +40,26 @@ var             float       BlurTimeIronsight;
 var             float       BlurScale;
 var             float       BlurScaleIronsight;
 
+
 function float MaxRange()
 {
-    return 25000; // about 300 meters
+    return 25000.0; // about 300 meters
 }
 
 function DoFireEffect()
 {
-    local vector StartProj, StartTrace, X,Y,Z;
+    local vector  StartProj, StartTrace, X,Y,Z;
     local Rotator R, Aim;
-    local vector HitLocation, HitNormal;
-    local Actor Other;
-    local int projectileID;
-    local int SpawnCount;
-    local float theta;
-    local coords MuzzlePosition;
+    local vector  HitLocation, HitNormal;
+    local Actor   Other;
+    local int     ProjectileID;
+    local int     SpawnCount;
+    local float   theta;
+    local coords  MuzzlePosition;
 
     Instigator.MakeNoise(1.0);
-    Weapon.GetViewAxes(X,Y,Z);
+    Weapon.GetViewAxes(X, Y, Z);
 
-    //Log("Projectile Firing, location of muzzle is "$Weapon.GetBoneCoords('Muzzle').Origin);
-    //if (ROProjectileWeapon(Instigator.weapon) != none)
-    //  Log("MuzzleCoords location = "$ROProjectileWeapon(Instigator.weapon).GetMuzzleCoords().Origin);
-    // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
-    // Temp commented out until we add the free-aim system in
     if (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed)
     {
         StartTrace = Instigator.Location + Instigator.EyePosition();
@@ -71,6 +67,7 @@ function DoFireEffect()
 
         // check if projectile would spawn through a wall and adjust start location accordingly
         Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
+
         if (Other != none)
         {
             StartProj = HitLocation;
@@ -85,44 +82,32 @@ function DoFireEffect()
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
-
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
-
-        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
 
-        // Instead of just checking walls, lets check all actors. That way we won't have rounds
-        // spawning on the other side of players and missing them altogether - Ramm 10/14/04
+        // Instead of just checking walls, lets check all actors - that way we won't have rounds spawning on the other side of players & missing them altogether - Ramm 10/14/04
         if (Other != none)
         {
             StartProj = HitLocation;
         }
     }
+
     Aim = AdjustAim(StartProj, AimError);
 
-    // for free-aim, just use where the muzzlebone is pointing
-    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.Weapon.bUsesFreeAim
-        && Instigator.IsHumanControlled())
+    // For free-aim, just use where the muzzlebone is pointing
+    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.Weapon.bUsesFreeAim && Instigator.IsHumanControlled())
     {
         Aim = rotator(MuzzlePosition.XAxis);
     }
 
-    //Log("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
-    //PlayerController(Instigator.Controller).ClientMessage("Weapon fire Aim = "$Aim$" Startproj = "$Startproj);
-
-//    Instigator.ClearStayingDebugLines();
-//    Instigator.DrawStayingDebugLine(StartProj, StartProj+65535* MuzzlePosition.XAxis, 0,0,255);
-//    Instigator.DrawStayingDebugLine(StartProj, StartProj+65535* vector(Aim), 0,255,0);
-
-    SpawnCount = Max(1, ProjPerFire * int(Load));
+    SpawnCount = Max(1, ProjPerFire * Int(Load));
 
     CalcSpreadModifiers();
 
-    if ((DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged)
+    if (DH_MGBase(Owner) != none && DH_MGBase(Owner).bBarrelDamaged)
     {
-        AppliedSpread = 4 * Spread;
+        AppliedSpread = 4.0 * Spread;
     }
     else
     {
@@ -132,25 +117,30 @@ function DoFireEffect()
     switch (SpreadStyle)
     {
         case SS_Random:
+
             X = vector(Aim);
-            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ProjectileID++)
             {
-                R.Yaw = AppliedSpread * ((FRand()-0.5)/1.5);
-                R.Pitch = AppliedSpread * (FRand()-0.5);
-                R.Roll = AppliedSpread * (FRand()-0.5);
+                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
+                R.Pitch = AppliedSpread * (FRand() - 0.5);
+                R.Roll = AppliedSpread * (FRand() - 0.5);
                 SpawnProjectile(StartProj, rotator(X >> R));
             }
+
             break;
 
         case SS_Line:
-            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ProjectileID++)
             {
-                theta = AppliedSpread*PI/32768*(projectileID - float(SpawnCount-1)/2.0);
+                theta = AppliedSpread * PI / 32768.0 * (ProjectileID - Float(SpawnCount - 1) / 2.0);
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
                 SpawnProjectile(StartProj, rotator(X >> Aim));
             }
+
             break;
 
         default:
@@ -160,23 +150,25 @@ function DoFireEffect()
 
 function CalcSpreadModifiers()
 {
-    local float MovementPctModifier;
-    local float PlayerSpeed;
+    local float  MovementPctModifier;
+    local float  PlayerSpeed;
     local ROPawn ROP;
 
     ROP = ROPawn(Instigator);
 
     if (ROP == none)
+    {
         return;
+    }
 
     PlayerSpeed = VSize(ROP.Velocity);
 
-    /* Calc spread based on movement speed */
+    // Calc spread based on movement speed
     MovementPctModifier = PlayerSpeed / ROP.default.GroundSpeed;
     Spread = default.Spread + default.Spread * MovementPctModifier;
 
-    /* Reduce the spread if player is crouched and not moving */
-    if (ROP.bIsCrouched && PlayerSpeed == 0)
+    // Reduce the spread if player is crouched and not moving
+    if (ROP.bIsCrouched && PlayerSpeed == 0.0)
     {
         Spread *= CrouchSpreadModifier;
     }
@@ -193,7 +185,7 @@ function CalcSpreadModifiers()
     // Make the spread crazy if your jumping
     if (Instigator.Physics == PHYS_Falling)
     {
-        Spread *= 500;
+        Spread *= 500.0;
     }
 
     if (!Instigator.Weapon.bUsingSights  && !Instigator.bBipodDeployed)
@@ -223,12 +215,13 @@ function CalcSpreadModifiers()
 * =================================================================================== */
 function projectile SpawnProjectile(vector Start, Rotator Dir)
 {
-    local Projectile spawnedprojectile;
-    local vector ProjectileDir, End, HitLocation, HitNormal, SnapTraceEnd;
-    local Actor Other;
-    local ROPawn HitPawn;
+    local Projectile         SpawnedProjectile;
+    local vector             ProjectileDir, End, HitLocation, HitNormal;
+    local Actor              Other;
+    local ROPawn             HitPawn;
     local DHWeaponAttachment WeapAttach;
-    local array<int>    HitPoints;
+    local array<int>         HitPoints;
+    local bool               bSpawnedTracer;
 
      // do any additional pitch changes before launching the projectile
     Dir.Pitch += AddedPitch;
@@ -241,16 +234,14 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 //      SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir; // Matt: removed as not being used
 
         // Lets avoid all that casting
-        WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
+        WeapAttach = DHWeaponAttachment(Weapon.ThirdPersonActor);
 
         // Do precision hit point pre-launch trace to see if we hit a player or something else
-        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound triggering
+        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start, , 0);  // WhizType was 1, set to 0 to prevent sound triggering
 
-        //Instigator.DrawStayingDebugLine(Start, End, 255,0,0);
         // This is a bit of a hack, but it prevents bots from killing other players in most instances
         if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
         {
-            //Log(Instigator$"'s shot would hit "$Other$" who is on the same team");
             return none;
         }
 
@@ -259,8 +250,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
             if (!Other.bWorldGeometry)
             {
                 // Update hit effect except for pawns (blood) other than vehicles.
-                if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') &&
-                 !Other.IsA('ROVehicleWeapon')))
+                if (Other.IsA('Vehicle') || (!Other.IsA('Pawn') && !Other.IsA('HitScanBlockingVolume') && !Other.IsA('ROVehicleWeapon')))
                 {
                     WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
                 }
@@ -272,7 +262,8 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
                 if (Other.IsA('ROVehicle'))
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),class<DH_Bullet>(ProjectileClass).default.MyVehicleDamage);
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                        ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), class<DH_Bullet>(ProjectileClass).default.MyVehicleDamage);
                 }
                 else
                 {
@@ -281,11 +272,15 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                     if (HitPawn != none)
                     {
                         if (!HitPawn.bDeleteMe)
-                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType,HitPoints);
+                        {
+                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                                ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType,HitPoints);
+                        }
                     }
                     else
                     {
-                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
+                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                            ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
                     }
                 }
             }
@@ -293,12 +288,14 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
             {
                 if (WeapAttach != none)
                 {
-                    WeapAttach.UpdateHit(Other,HitLocation,HitNormal);
+                    WeapAttach.UpdateHit(Other,HitLocation, HitNormal);
                 }
 
                 if (RODestroyableStaticMesh(Other) != none)
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer*Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                        ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
+
                     if (RODestroyableStaticMesh(Other).bWontStopBullets)
                     {
                         Other = none;
@@ -309,7 +306,9 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
         // Return because we already hit something
         if (Other != none)
+        {
             return none;
+        }
     }
 
     if (ProjectileClass != none)
@@ -324,7 +323,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                 // If the person is looking at themselves in third person, spawn the tracer from the tip of the 3rd person weapon
                 if (WeapAttach != none && !Instigator.IsFirstPerson())
                 {
-                    Other = WeapAttach.Trace(HitLocation, HitNormal, Start + vector(Dir) * 65525, Start, true);
+                    Other = WeapAttach.Trace(HitLocation, HitNormal, Start + vector(Dir) * 65525.0, Start, true);
 
                     if (Other != none)
                     {
@@ -380,7 +379,9 @@ function PlayFiring()
     }
 
     if (FireSounds.Length > 0)
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+    {
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume, , , , false);
+    }
 
     ClientPlayForceFeedback(FireForce);
 

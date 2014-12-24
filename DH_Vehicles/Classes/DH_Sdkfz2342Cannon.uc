@@ -56,7 +56,7 @@ defaultproperties
     mTracerInterval=0.350000
     bUsesTracers=true
     bAltFireTracersOnly=true
-    //   MaxDriverHitAngle=2.7 // Matt: deprecated (was used in BelowDriverAngle function, now deprecated, & variable replaced by MinCommanderHitHeight used in re-worked HitDriverArea)
+//  MaxDriverHitAngle=2.7 // Matt: deprecated (was used in BelowDriverAngle function, now deprecated, & variable replaced by MinCommanderHitHeight used in re-worked HitDriverArea)
     MinCommanderHitHeight=37.0
     VehHitpoints(0)=(PointRadius=14.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=4.000000,Z=-14.000000))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'

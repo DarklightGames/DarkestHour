@@ -142,7 +142,7 @@ simulated function Tick(float DeltaTime)
     super.Tick(DeltaTime);
 
     // Lets keep the effects client side, the server has enough to deal with
-    if (level.NetMode != NM_DEDICATEDSERVER)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         if (bOnFire && !bBurnFXOn)
         {
@@ -150,12 +150,16 @@ simulated function Tick(float DeltaTime)
             StartBurnFX();
         }
         else if (!bOnFire && bBurnFXOn)
+        {
             EndBurnFX();
+        }
     }
 
-    //Forces us to equip a mortar if we have one on us.
+    // Forces us to equip a mortar if we have one on us.
     if (Level.NetMode != NM_DedicatedServer && HasMortarInInventory() && Weapon.Name != 'DH_Kz8cmGrW42Weapon' && Weapon.Name != 'DH_M2MortarWeapon')
-        SwitchWeapon(9);    //Mortars are inventory group 9, deal with it.
+    {
+        SwitchWeapon(9); // mortars are inventory group 9, deal with it
+    }
 
     // Would prefer to do this in a Timer but too many states hijack timer and reset it on us
     // I don't want to have to override over a dozen functions just to do damage every half second
@@ -1340,7 +1344,7 @@ Begin:
 
     if (!Level.Game.bGameEnded)
     {
-       PlayDyingSound();
+        PlayDyingSound();
     }
 }
 
@@ -1470,18 +1474,14 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
             class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring &&
             ROPlayer(Controller) != none)
         {
-            // Get the approximate direction
-            // that the hit went into the body
+            // Get the approximate direction that the hit went into the body
             Direction = self.Location - HitLocation;
-            // No up-down jarring effects since
-            // I dont have the barrel valocity
+
+            // No up-down jarring effects since I don't have the barrel velocity
             Direction.Z = 0.0f;
             Direction = Normal(Direction);
 
-            // We need to rotate the jarring direction
-            // in screen space so basically the
-            // exact opposite of the player's pawn's
-            // rotation.
+            // We need to rotate the jarring direction in screen space so basically the exact opposite of the player's pawn's rotation
             InvRotation.Yaw = -Rotation.Yaw;
             InvRotation.Roll = -Rotation.Roll;
             InvRotation.Pitch = -Rotation.Pitch;
@@ -1559,8 +1559,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     if (!bShouldGib && DrivenVehicle == none)
     {
-        //Drop inventory if player is not in a vehicle and is not about to be
-        //completely obliterated
+        //Drop inventory if player is not in a vehicle and is not about to be completely obliterated
         DropWeaponInventory(TossVel);
     }
 

@@ -16,15 +16,14 @@ var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specif
 var DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
 
 // Stuff for fire effects - Ch!cKeN
-var()   name                                    FireAttachBone;
-var()   vector                                  FireEffectOffset;
-var     class<VehicleDamagedEffect>             FireEffectClass;
-var     VehicleDamagedEffect                    HullMGFireEffect;
-var     bool                                    bOnFire;   // Set by Treadcraft base to notify when to start fire effects
-var     float                                   BurnTime;
-
-var     class<DamageType>   VehicleBurningDamType;
-var     float               PlayerFireDamagePerSec;
+var()   name                        FireAttachBone;
+var()   vector                      FireEffectOffset;
+var     class<VehicleDamagedEffect> FireEffectClass;
+var     VehicleDamagedEffect        HullMGFireEffect;
+var     bool                        bOnFire; // set by Treadcraft base to notify when to start fire effects
+var     float                       BurnTime;
+var     class<DamageType>           VehicleBurningDamType;
+var     float                       PlayerFireDamagePerSec;
 
 replication
 {
@@ -98,10 +97,10 @@ simulated function DestroyEffects()
 // Returns true if this weapon is ready to fire
 simulated function bool ReadyToFire(bool bAltFire)
 {
-    //Log("bReloading = "$bReloading);
-
     if (bReloading)
+    {
         return false;
+    }
 
     return super.ReadyToFire(bAltFire);
 }
@@ -111,7 +110,9 @@ function CeaseFire(Controller C, bool bWasAltFire)
     super.CeaseFire(C, bWasAltFire);
 
     if (!bReloading && !HasAmmo(0))
+    {
         HandleReload();
+    }
 }
 
 function HandleReload()
@@ -128,48 +129,55 @@ function HandleReload()
 
 simulated function Timer()
 {
-   if (bReloading)
-   {
-        if (Role == ROLE_Authority)
-        {
-            bReloading = false;
-            MainAmmoCharge[0] = InitialPrimaryAmmo;
-            NetUpdateTime = Level.TimeSeconds - 1;
-        }
-   }
+    if (bReloading && Role == ROLE_Authority)
+    {
+        bReloading = false;
+        MainAmmoCharge[0] = InitialPrimaryAmmo;
+        NetUpdateTime = Level.TimeSeconds - 1;
+    }
 }
 
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     if (Role != ROLE_Authority || bForceCenterAim)
+    {
         return false;
+    }
 
-    if (FireCountdown <= 0)
+    if (FireCountdown <= 0.0)
     {
         CalcWeaponFire(bAltFire);
+        
         if (bCorrectAim)
+        {
             WeaponFireRotation = AdjustAim(bAltFire);
+        }
 
         if (bAltFire)
         {
-            if (AltFireSpread > 0)
-                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
+            if (AltFireSpread > 0.0)
+            {
+                WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * AltFireSpread);
+            }
         }
-        else if (Spread > 0)
+        else if (Spread > 0.0)
         {
-            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*Spread);
+            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
         }
 
-        DualFireOffset *= -1;
+        DualFireOffset *= -1.0;
 
         Instigator.MakeNoise(1.0);
+
         if (bAltFire)
         {
             if (!ConsumeAmmo(2))
             {
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+
                 return false;
             }
+
             FireCountdown = AltFireInterval;
             AltFire(C);
         }
@@ -182,6 +190,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     if (!ConsumeAmmo(0))
                     {
                         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+
                         return false;
                     }
                 }
@@ -190,6 +199,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     if (!ConsumeAmmo(1))
                     {
                         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+
                         return false;
                     }
                 }
@@ -198,12 +208,14 @@ event bool AttemptFire(Controller C, bool bAltFire)
             {
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
                 HandleReload();
+
                 return false;
             }
 
             FireCountdown = FireInterval;
             Fire(C);
         }
+
         AimLockReleaseTime = Level.TimeSeconds + FireCountdown * FireIntervalAimLock;
 
         return true;

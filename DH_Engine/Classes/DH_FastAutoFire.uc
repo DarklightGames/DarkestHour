@@ -6,41 +6,42 @@
 class DH_FastAutoFire extends DH_AutomaticFire;
 
 // internal class vars
-var     float                   LastCalcTime;               // Internal var used to calculate when to replicate the dual shots
-var DHHighROFWeaponAttachment   HiROFWeaponAttachment;      // A high ROF WA that this class will use to pack fire info
+var     float                   LastCalcTime;           // Internal var used to calculate when to replicate the dual shots
+var DHHighROFWeaponAttachment   HiROFWeaponAttachment;  // A high ROF WA that this class will use to pack fire info
 
 // Animation
-var     float                   LoopFireAnimRate;           // The rate to play the looped fire animation when hipped
-var     float                   IronLoopFireAnimRate;       // The rate to play the looped fire animation when deployed or in iron sights
+var     float                   LoopFireAnimRate;       // The rate to play the looped fire animation when hipped
+var     float                   IronLoopFireAnimRate;   // The rate to play the looped fire animation when deployed or in iron sights
 
 // sound
-var     sound                   FireEndSound;               // The sound to play at the end of the ambient fire sound
-var     float                   AmbientFireSoundRadius;     // The sound radius for the ambient fire sound
-var     sound                   AmbientFireSound;           // How loud to play the looping ambient fire sound
-var     byte                    AmbientFireVolume;          // The ambient fire sound
+var     sound                   FireEndSound;           // The sound to play at the end of the ambient fire sound
+var     float                   AmbientFireSoundRadius; // The sound radius for the ambient fire sound
+var     sound                   AmbientFireSound;       // How loud to play the looping ambient fire sound
+var     byte                    AmbientFireVolume;      // The ambient fire sound
 
 // High ROF system
-var     float                   PackingThresholdTime;       // If the shots are closer than this amount, the dual shot will be used
 var()   class<DH_ServerBullet>  ServerProjectileClass;      // class for the server only projectile for this weapon // Matt: was class ROServerBullet
+var     float                   PackingThresholdTime;   // If the shots are closer than this amount, the dual shot will be used
 
-// overriden to support packing two shots together to save net bandwidth
+
+// Overridden to support packing two shots together to save net bandwidth
 function DoFireEffect()
 {
-    local vector StartProj, StartTrace, X,Y,Z;
+    local vector  StartProj, StartTrace, X,Y,Z;
     local Rotator R, Aim;
-    local vector HitLocation, HitNormal;
-    local Actor Other;
-    local int projectileID;
-    local int SpawnCount;
-    local float theta;
-    local coords MuzzlePosition;
+    local vector  HitLocation, HitNormal;
+    local Actor   Other;
+    local int     ProjectileID;
+    local int     SpawnCount;
+    local float   theta;
+    local coords  MuzzlePosition;
 
     Instigator.MakeNoise(1.0);
 
-    Weapon.GetViewAxes(X,Y,Z);
+    Weapon.GetViewAxes(X, Y, Z);
 
     // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
-    if (Instigator.weapon.bUsingSights || Instigator.bBipodDeployed)
+    if (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed)
     {
         StartTrace = Instigator.Location + Instigator.EyePosition();
         StartProj = StartTrace + X * ProjSpawnOffset.X;
@@ -66,8 +67,7 @@ function DoFireEffect()
 
         Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
 
-        // Instead of just checking walls, lets check all actors. That way we won't have rounds
-        // spawning on the other side of players and missing them altogether - Ramm 10/14/04
+        // Instead of just checking walls, lets check all actors - that way we won't have rounds spawning on the other side of players & missing them altogether - Ramm 10/14/04
         if (Other != none)
         {
             StartProj = HitLocation;
@@ -77,18 +77,18 @@ function DoFireEffect()
     Aim = AdjustAim(StartProj, AimError);
 
     // For free-aim, just use where the muzzlebone is pointing
-    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.weapon.bUsesFreeAim && Instigator.IsHumanControlled())
+    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.Weapon.bUsesFreeAim && Instigator.IsHumanControlled())
     {
         Aim = rotator(MuzzlePosition.XAxis);
     }
 
-    SpawnCount = Max(1, ProjPerFire * int(Load));
+    SpawnCount = Max(1, ProjPerFire * Int(Load));
 
     CalcSpreadModifiers();
 
     if (DH_MGBase(Owner) != none && DH_MGBase(Owner).bBarrelDamaged)
     {
-        AppliedSpread = 4 * Spread;
+        AppliedSpread = 4.0 * Spread;
     }
     else
     {
@@ -98,9 +98,10 @@ function DoFireEffect()
     switch (SpreadStyle)
     {
         case SS_Random:
+
             X = vector(Aim);
 
-            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ProjectileID++)
             {
                 R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
                 R.Pitch = AppliedSpread * (FRand() - 0.5);
@@ -108,17 +109,22 @@ function DoFireEffect()
 
                 HandleProjectileSpawning(StartProj, rotator(X >> R));
             }
+
             break;
+
         case SS_Line:
-            for (projectileID = 0; projectileID < SpawnCount; projectileID++)
+
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ProjectileID++)
             {
-                theta = AppliedSpread * PI / 32768 * (projectileID - float(SpawnCount - 1) / 2.0);
+                theta = AppliedSpread * PI / 32768.0 * (ProjectileID - Float(SpawnCount - 1) / 2.0);
                 X.X = Cos(theta);
                 X.Y = Sin(theta);
                 X.Z = 0.0;
                 HandleProjectileSpawning(StartProj, rotator(X >> Aim));
             }
+
             break;
+
         default:
             HandleProjectileSpawning(StartProj, Aim);
     }
@@ -129,9 +135,9 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
 {
     if (Level.NetMode == NM_Standalone)
     {
-       super(DH_ProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
+        super(DH_ProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
 
-       return;
+        return;
     }
 
     if (HiROFWeaponAttachment == none)
@@ -143,7 +149,7 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
 
     if (Level.NetMode == NM_Standalone)
     {
-       return;
+        return;
     }
     else if ((Level.TimeSeconds - LastCalcTime) > PackingThresholdTime)
     {
@@ -254,7 +260,7 @@ state FireLoop
     {
         local DH_ProjectileWeapon RPW;
 
-        NextFireTime = Level.TimeSeconds - 0.1; //fire now!
+        NextFireTime = Level.TimeSeconds - 0.1; // fire now!
 
         RPW = DH_ProjectileWeapon(Weapon);
 
@@ -270,7 +276,7 @@ state FireLoop
         PlayAmbientSound(AmbientFireSound);
     }
 
-    // Overriden because we play an anbient fire sound
+    // Overridden because we play an ambient fire sound
     function PlayFiring() { }
     function ServerPlayFiring() { }
 
@@ -314,9 +320,10 @@ state FireLoop
         super(WeaponFire).ModeTick(dt);
 
         // WeaponTODO: See how to properly reimplement this
-        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
+        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed)) // stopped firing, magazine empty or barrel overheat
         {
             GotoState('');
+
             return;
         }
     }
@@ -340,7 +347,7 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
     local DHWeaponAttachment WeapAttach;
     local array<int>         HitPoints;
 
-     // do any additional pitch changes before launching the projectile
+    // Do any additional pitch changes before launching the projectile
     Dir.Pitch += AddedPitch;
 
     // Perform prelaunch trace
@@ -354,7 +361,7 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
         WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
 
         // Do precision hit point pre-launch trace to see if we hit a player or something else
-        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound trigger
+        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start, , 0);  // WhizType was 1, set to 0 to prevent sound trigger
 
         if (Other != none && Other != Instigator && Other.Base != Instigator)
         {

@@ -21,32 +21,32 @@ struct DualShotInfo
 };
 
 // Internal shot replication and tracking vars
-var     DualShotInfo    SavedDualShot;              // Last dualshot info recieved on the client
-var     ShotInfo        LastShot;                   // Last single shotinfo saved server side
-var     bool            bFirstShot;                 // flags whether this is the first or second shot
-var     bool            bUnReplicatedShot;          // We have a shot we haven't replicated the info for yet
-var     byte            DualShotCount;              // When this byte is incremented the DualShotInfo will be replicated.
-var     byte            SavedDualShotCount;         // The last DualShot Count
+var     DualShotInfo    SavedDualShot;         // last dualshot info recieved on the client
+var     ShotInfo        LastShot;              // last single shotinfo saved server side
+var     bool            bFirstShot;            // flags whether this is the first or second shot
+var     bool            bUnReplicatedShot;     // we have a shot we haven't replicated the info for yet
+var     byte            DualShotCount;         // when this byte is incremented the DualShotInfo will be replicated.
+var     byte            SavedDualShotCount;    // the last DualShot Count
 
 var() class<DH_ClientBullet> ClientProjectileClass; // class for the netclient only projectile for this weapon // Matt: was class ROClientBullet
 var() class<DH_ClientTracer> ClientTracerClass;     // class for the netclient only tracer for this weapon     // Matt: was class ROClientBullet
 
 // Tracer stuff
-var()   bool            bUsesTracers;           // true if the weapon uses tracers in it's ammo loadout
-var()   int             TracerFrequency;        // how often a tracer is loaded in.  Assume to be 1 in valueof(TracerFrequency)
-var     byte            NextTracerCounter;      // when this equals TracerFrequency, spawn a tracer
+var()   bool            bUsesTracers;          // true if the weapon uses tracers in it's ammo loadout
+var()   int             TracerFrequency;       // how often a tracer is loaded in.  Assume to be 1 in valueof(TracerFrequency)
+var     byte            NextTracerCounter;     // when this equals TracerFrequency, spawn a tracer
 
 replication
 {
     // Bullet whiz var - Server to client
-    reliable if (bNetDirty && (Role == ROLE_Authority))
+    reliable if (bNetDirty && Role == ROLE_Authority)
         SavedDualShot, DualShotCount;
 }
 
+
 simulated function Int2Rot(int N, out rotator R)
 {
-    //-------------------------
-    // Unpack rotation integer.
+    // Unpack rotation integer:
     // 0x0 - Pitch (16-bit signed integer)
     // 0xF - Yaw (16-bit signed integer)
     R.Pitch = (N >> 16) & 0xFFFF;
@@ -55,8 +55,7 @@ simulated function Int2Rot(int N, out rotator R)
 
 simulated function Rot2Int(rotator R, out int N)
 {
-    //-----------------------------------------------------
-    // Pack pitch and yaw components into a 32-bit integer.
+    // Pack pitch and yaw components into a 32-bit integer:
     // 0x0 - Pitch (16-bit signed integer)
     // 0xF - Yaw (16-bit signed integer)
     N = ((R.Pitch << 16) & 0XFFFF0000) | (R.Yaw & 0xFFFF);
@@ -70,9 +69,13 @@ simulated function PostNetReceive()
         if (Level.NetMode == NM_Client)
         {
             if (DualShotCount < 254)
+            {
                 SpawnClientRounds(false);
+            }
             else
+            {
                 SpawnClientRounds(true);
+            }
         }
 
         SavedDualShotCount = DualShotCount;
@@ -94,7 +97,8 @@ simulated function bool ShouldSpawnTracer()
     }
     else if (ClientTracerClass != none)
     {
-        NextTracerCounter = 0;          // reset for next tracer spawn
+        NextTracerCounter = 0; // reset for next tracer spawn
+
         return true;
     }
 
@@ -104,10 +108,10 @@ simulated function bool ShouldSpawnTracer()
 // Handles unpacking and spawning the correct client side hit effect rounds
 simulated function SpawnClientRounds(bool bFirstRoundOnly)
 {
-    local vector Start, HitLocation, TestHitLocation, HitNormal;
+    local vector  Start, HitLocation, TestHitLocation, HitNormal;
     local rotator ProjectileDir;
     local rotator R;
-    local Actor Other;
+    local Actor   Other;
 
     // First shot, or single shot
     if (ShouldSpawnTracer())
@@ -123,14 +127,14 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
         // Spawn the tracer from the tip of the third person weapon
         else
         {
-            Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start, true);
+            Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525.0, Start, true);
 
             if (Other != none)
             {
                 Other = none;
 
                 // Make sure tracer wouldn't spawn inside of something
-                Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin, true);
+                Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15.0, GetBoneCoords(MuzzleBoneName).Origin, true);
 
                 if (Other == none)
                 {
@@ -144,13 +148,13 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
             }
         }
 
-        Spawn(ClientTracerClass,,, Start, ProjectileDir);
+        Spawn(ClientTracerClass, , , Start, ProjectileDir);
     }
     else
     {
         Int2Rot(SavedDualShot.FirstShot.ShotRotation, R);
 
-        Spawn(ClientProjectileClass,,, SavedDualShot.FirstShot.ShotLocation, R);
+        Spawn(ClientProjectileClass, , , SavedDualShot.FirstShot.ShotLocation, R);
     }
 
     // Second shot
@@ -168,14 +172,14 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
             // Spawn the tracer from the tip of the third person weapon
             else
             {
-                Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525, Start, true);
+                Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525.0, Start, true);
 
                 if (Other != none)
                 {
                     Other = none;
 
                     // Make sure tracer wouldn't spawn inside of something
-                    Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15, GetBoneCoords(MuzzleBoneName).Origin, true);
+                    Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15.0, GetBoneCoords(MuzzleBoneName).Origin, true);
 
                     if (Other == none)
                     {
@@ -189,13 +193,13 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
                 }
             }
 
-            Spawn(ClientTracerClass,,, Start, ProjectileDir);
+            Spawn(ClientTracerClass, , , Start, ProjectileDir);
         }
         else
         {
             Int2Rot(SavedDualShot.Secondshot.ShotRotation, R);
 
-            Spawn(ClientProjectileClass,,, SavedDualShot.Secondshot.ShotLocation, R);
+            Spawn(ClientProjectileClass, , , SavedDualShot.Secondshot.ShotLocation, R);
         }
     }
 
