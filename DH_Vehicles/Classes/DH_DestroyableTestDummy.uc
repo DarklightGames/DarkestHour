@@ -3,7 +3,9 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_DestroyableTestDummy extends RODestroyableStaticMeshBase;
+// Matt: originally extended RODestroyableStaticMeshBase, but lots of classes look for a RODestroyableStaticMesh, which is a subclass of RODSMBase & so won't be found
+// Makes no difference in function, as RODSM is just an empty class that extends RODSMBase, so does exactly the same thing
+class DH_DestroyableTestDummy extends RODestroyableStaticMesh;
 
 var()         name          SensorName;
 
