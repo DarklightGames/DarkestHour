@@ -1533,9 +1533,9 @@ state RoundInPlay
     }
 }
 
-// Matt: modified to replace ROArtillerySpawner with DH_ArtillerySpawner
 state ResetGameCountdown
 {
+    // Matt: modified to replace ROArtillerySpawner with DH_ArtillerySpawner
     function BeginState()
     {
         local DH_ArtillerySpawner AS;
@@ -1552,6 +1552,28 @@ state ResetGameCountdown
         }
 
         Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 10);
+    }
+
+    // Matt: modified to spawn a DH_ClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
+	function Timer()
+	{
+		global.Timer();
+
+		if (ElapsedTime > RoundStartTime - 1.0) // the -1.0 gets rid of "The game will restart in 0 seconds"
+		{
+            if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+            {
+                Spawn(class'DH_ClientResetGame');
+            }
+
+		    Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
+		    ResetScores();
+			GotoState('RoundInPlay');
+		}
+		else
+		{
+            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', RoundStartTime - ElapsedTime);
+        }
     }
 }
 
