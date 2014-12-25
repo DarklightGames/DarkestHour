@@ -6,7 +6,7 @@
 class DH_SpringfieldScopedWeapon extends DH_BoltSniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Springfield_1st.ukx
-#exec OBJ LOAD FILE=..\textures\DH_Scopeshaders.utx
+#exec OBJ LOAD FILE=..\Textures\DH_Scopeshaders.utx
 
 // Handles initializing and swithing between different scope modes
 simulated function UpdateScopeMode()

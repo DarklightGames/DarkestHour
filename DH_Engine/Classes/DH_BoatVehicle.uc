@@ -5,7 +5,7 @@
 
 class DH_BoatVehicle extends ROWheeledVehicle;
 
-#exec OBJ LOAD FILE=..\textures\InterfaceArt_tex.utx
+#exec OBJ LOAD FILE=..\Textures\InterfaceArt_tex.utx
 
 var()       name            DriverCameraBoneName;
 var         vector          CameraBoneLocation;

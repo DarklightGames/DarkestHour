@@ -5,7 +5,7 @@
 
 class DH_JagdtigerTank_Snow extends DH_JagdtigerTank;
 
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex3.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 
 static function StaticPrecache(LevelInfo L)
 {

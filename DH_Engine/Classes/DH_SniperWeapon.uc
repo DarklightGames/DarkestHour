@@ -7,7 +7,7 @@ class DH_SniperWeapon extends DH_ProjectileWeapon
     abstract;
 
 #exec OBJ LOAD FILE=Weapons1st_tex.utx
-#exec OBJ LOAD FILE=..\textures\ScopeShaders.utx
+#exec OBJ LOAD FILE=..\Textures\ScopeShaders.utx
 #exec OBJ LOAD FILE=InterfaceArt_tex.utx
 
 var()       int         lenseMaterialID;        // used since material id's seem to change alot

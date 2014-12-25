@@ -6,7 +6,7 @@
 class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
     abstract;
 
-#exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
 var()   float   OverlayCenterScale;
 var()   float   OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width

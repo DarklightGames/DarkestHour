@@ -5,7 +5,7 @@
 
 class DH_PanzerIIILTank_Camo extends DH_PanzerIIILTank;
 
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
 static function StaticPrecache(LevelInfo L)
 {
