@@ -8,5 +8,4 @@ class DH_GreyhoundCannonPawn_British extends DH_GreyhoundCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_GreyhoundCannon_British'
-    VehicleNameString="Greyhound Armoured Car Cannon"
 }

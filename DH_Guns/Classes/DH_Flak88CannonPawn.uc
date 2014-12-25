@@ -133,7 +133,6 @@ defaultproperties
     ExitPositions(14)=(X=-60.000000,Z=20.000000)
     ExitPositions(15)=(Z=5.000000)
     EntryRadius=325.000000
-    VehicleNameString="FlaK 36 Gun"
     bKeepDriverAuxCollision=true
     SoundVolume=100
 }

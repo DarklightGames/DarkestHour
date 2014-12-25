@@ -318,7 +318,6 @@ defaultproperties
     TPCamDistance=300.000000
     TPCamLookat=(X=-25.000000,Z=0.000000)
     TPCamWorldOffset=(Z=120.000000)
-    VehicleNameString="Sdkfz 234/2 Armored Car cannon"
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

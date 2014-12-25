@@ -12,5 +12,4 @@ defaultproperties
     DrivePos=(X=2.000000,Y=0.000000,Z=1.000000)
     DriveAnim="VHalftrack_Rider1_idle"
     FPCamViewOffset=(X=2.000000,Z=-2.000000)
-    VehicleNameString="M3A1 Halftrack passenger"
 }

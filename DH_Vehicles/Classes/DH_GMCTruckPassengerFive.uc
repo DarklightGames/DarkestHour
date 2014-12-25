@@ -12,5 +12,4 @@ defaultproperties
     DrivePos=(X=8.000000,Y=0.000000,Z=5.000000)
     DriveAnim="VHalftrack_Rider5_idle"
     FPCamViewOffset=(X=8.000000,Z=-4.000000)
-    VehicleNameString="GMC Truck passenger"
 }

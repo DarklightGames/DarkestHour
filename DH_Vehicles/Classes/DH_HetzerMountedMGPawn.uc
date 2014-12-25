@@ -14,7 +14,7 @@ simulated function PostBeginPlay() // Matt: modified to lower the loader's exit 
     local vector Loc;
 
     super.PostBeginPlay();
-    
+
     Offset.Z += 150; // Matt: this was 220 but the exit was a long way above the roof
     Loc = GetBoneCoords('loader_player').ZAxis;
 
@@ -51,12 +51,12 @@ simulated exec function ROManualReload()
 function KDriverEnter(Pawn P)
 {
     local rotator NewRotation;
-    
+
     super(VehicleWeaponPawn).KDriverEnter(P);
 
     NewRotation = Gun.CurrentAim;
     NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
-    SetRotation(NewRotation);    
+    SetRotation(NewRotation);
 
     if (Gun != none && DH_HetzerMountedMG(gun) != none)
         DH_HetzerMountedMG(gun).ClientSetReloadState(DH_HetzerMountedMG(gun).MGReloadState);
@@ -93,7 +93,7 @@ function ServerChangeDriverPosition(byte F)
 function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
-    
+
     if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
     {
         Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You Must Unbutton the Hatch to Exit"
@@ -103,7 +103,7 @@ function bool KDriverLeave(bool bForceLeave)
     DriverPositionIndex=0;
     bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
     ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-        
+
     if (bSuperDriverLeave && Gun.HasAnim(Gun.BeginningIdleAnim)) // Matt: added to play idle animation on the server to stop the collision box glitch on the roof
         Gun.PlayAnim(Gun.BeginningIdleAnim);
 
@@ -157,7 +157,7 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-            
+
             if (Level.NetMode == NM_DedicatedServer) // Matt: added this section to run the state 'ViewTransition' on the server when buttoning up
             {
                 if (LastPositionIndex == UnbuttonedPositionIndex)
@@ -247,7 +247,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         else
         {
 //            CameraLocation = Gun.GetBoneCoords('loader_cam').Origin; // Matt: replaced by the extended line below, which makes use of a ViewLocation camera adjutment in DriverPosition 1
-            CameraLocation = Gun.GetBoneCoords('loader_cam').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;    
+            CameraLocation = Gun.GetBoneCoords('loader_cam').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
 
         if (bFPNoZFromCameraPitch)
@@ -366,6 +366,5 @@ defaultproperties
     TPCamDistance=300.000000
     TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
     TPCamWorldOffset=(Z=120.000000)
-    VehicleNameString="Hetzer remote MG"
     HUDOverlayFOV=45.000000
 }

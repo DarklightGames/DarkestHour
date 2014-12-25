@@ -38,7 +38,6 @@ defaultproperties
     FPCamPos=(X=50.000000,Y=-30.000000,Z=11.000000)
     TPCamDistance=300.000000
     TPCamLookat=(X=-25.000000,Z=0.000000)
-    VehicleNameString="Panzer VI Ausf.E Cannon"
     PitchUpLimit=6000
     PitchDownLimit=64000
 }

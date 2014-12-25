@@ -36,7 +36,6 @@ defaultproperties
     TPCamDistance=300.000000
     TPCamLookat=(X=-25.000000,Z=0.000000)
     TPCamWorldOffset=(Z=120.000000)
-    VehicleNameString="Jagdpanzer V Cannon"
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

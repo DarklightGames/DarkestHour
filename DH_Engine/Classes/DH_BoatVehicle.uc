@@ -407,7 +407,6 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     CenterSpringForce="SpringONSSRV"
     VehiclePositionString="in a Boat"
-    VehicleNameString="Boat"
     StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
     MaxDesireability=0.100000
     ObjectiveGetOutDist=1500.000000

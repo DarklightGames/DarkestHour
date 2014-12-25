@@ -196,7 +196,6 @@ defaultproperties
     TPCamDistance=300.000000
     TPCamLookat=(X=-25.000000,Z=0.000000)
     TPCamWorldOffset=(Z=120.000000)
-    VehicleNameString="Sdkfz-251 Gun"
     HUDOverlayClass=class'ROVehicles.ROVehMG34Overlay'
     HUDOverlayFOV=45.000000
     PitchUpLimit=4000

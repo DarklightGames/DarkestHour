@@ -12,5 +12,4 @@ defaultproperties
     DriverHudName="Coxswain"
     bAllowViewChange=false
     bDesiredBehindView=false
-    VehicleNameString="Higgins Boat passenger"
 }

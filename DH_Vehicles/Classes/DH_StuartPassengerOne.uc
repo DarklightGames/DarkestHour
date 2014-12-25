@@ -15,5 +15,4 @@ defaultproperties
     EntryRadius=375.000000
     FPCamViewOffset=(X=0.000000,Z=0.000000)
     TPCamDistance=200.000000
-    VehicleNameString="M5 Stuart passenger"
 }

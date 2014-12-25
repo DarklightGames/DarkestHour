@@ -9,6 +9,5 @@ class DH_Marder3MPassenger extends DH_ROPassengerPawn
 defaultproperties
 {
     CameraBone="body"
-    VehicleNameString="Marder III Ausf. M passenger"
 }
 

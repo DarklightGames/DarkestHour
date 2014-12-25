@@ -13,5 +13,4 @@ defaultproperties
     DriveAnim="VHalftrack_Rider6_idle"
     EntryRadius=200.000000
     FPCamViewOffset=(X=0.000000,Z=0.000000)
-    VehicleNameString="VW Type 82 passenger"
 }

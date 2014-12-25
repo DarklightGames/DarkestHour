@@ -12,5 +12,4 @@ defaultproperties
     DrivePos=(X=-1.000000,Y=0.000000,Z=-4.000000)
     DriveAnim="VHalftrack_Rider1_idle"
     FPCamViewOffset=(X=1.000000,Z=-4.000000)
-    VehicleNameString="Opel Blitz passenger"
 }

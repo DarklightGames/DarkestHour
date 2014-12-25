@@ -161,6 +161,5 @@ defaultproperties
     TPCamDistance=2048.000000
     TPCamLookat=(X=25.000000)
     TPCamWorldOffset=(Z=0.000000)
-    VehicleNameString="Flakvierling 38"
     bKeepDriverAuxCollision=true
 }

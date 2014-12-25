@@ -9,6 +9,5 @@ class DH_JagdpanzerIVPassenger extends DH_ROPassengerPawn
 defaultproperties
 {
     CameraBone="body"
-    VehicleNameString="Jagdpanzer IV passenger"
 }
 

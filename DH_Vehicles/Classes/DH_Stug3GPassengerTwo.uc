@@ -14,5 +14,4 @@ defaultproperties
     DriveAnim="VUC_rider1_idle"
     EntryRadius=375.000000
     FPCamViewOffset=(X=0.000000,Z=0.000000)
-    VehicleNameString="StuG III Ausf.G passenger"
 }

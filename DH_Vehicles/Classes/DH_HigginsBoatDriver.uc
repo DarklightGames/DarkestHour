@@ -156,6 +156,5 @@ defaultproperties
     DrivePos=(X=0.000000,Y=0.000000,Z=-15.000000)
     DriveAnim="stand_idlehip_satchel"
     EntryRadius=350.000000
-    VehicleNameString="Higgins Boat"
     HUDOverlayFOV=90.000000
 }
