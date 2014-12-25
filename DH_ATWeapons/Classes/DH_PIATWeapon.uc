@@ -22,7 +22,6 @@ replication
         ServerSetRange;
 }
 
-
 function bool IsATWeapon()
 {
     return true;
@@ -221,6 +220,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
     if (FireMode[m] != none && FireMode[m].AmmoClass != none)
     {
         Ammo[m] = Ammunition(Instigator.FindInventoryType(FireMode[m].AmmoClass));
+
         bJustSpawnedAmmo = false;
 
         if (FireMode[m].AmmoClass == none || (m != 0 && FireMode[m].AmmoClass == FireMode[0].AmmoClass))
@@ -535,7 +535,7 @@ function bool HandlePickupQuery(Pickup Item)
     {
         return false;
     }
-    
+
     return Inventory.HandlePickupQuery(Item);
 }
 

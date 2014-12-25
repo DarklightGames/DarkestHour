@@ -15,18 +15,17 @@ static function string GetString(
     optional PlayerReplicationInfo RelatedPRI_2,
     optional Object OptionalObject
     )
-
 {
     switch (Switch)
     {
-            case 0:
-                return default.NoHipFire;
-            case 1:
-                return default.NeedSupport;
-            case 2:
-                return default.ReloadWarning;
-            default:
-                return default.NeedSupport;
+        case 0:
+            return default.NoHipFire;
+        case 1:
+            return default.NeedSupport;
+        case 2:
+            return default.ReloadWarning;
+        default:
+            return default.NeedSupport;
     }
 }
 
