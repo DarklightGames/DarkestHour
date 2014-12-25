@@ -14,6 +14,5 @@ defaultproperties
     DriveAnim="VHalftrack_Rider3_idle"
     EntryRadius=375.000000
     FPCamViewOffset=(X=0.000000,Z=0.000000)
-    VehiclePositionString="riding a M5 Stuart"
     VehicleNameString="M5 Stuart passenger"
 }

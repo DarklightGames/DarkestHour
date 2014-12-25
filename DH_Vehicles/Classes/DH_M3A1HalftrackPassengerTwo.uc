@@ -13,6 +13,5 @@ defaultproperties
     DriveAnim="VHalftrack_Rider2_idle"
     EntryRadius=225.000000
     FPCamViewOffset=(X=2.000000,Z=-2.000000)
-    VehiclePositionString="in a M3A1 Halftrack"
     VehicleNameString="M3A1 Halftrack passenger"
 }

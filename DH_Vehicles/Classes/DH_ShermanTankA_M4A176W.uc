@@ -195,7 +195,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a M4A1(76)W Sherman"
     VehicleNameString="M4A1(76)W Sherman"
     MaxDesireability=1.900000
     FlagBone="Mg_placement"

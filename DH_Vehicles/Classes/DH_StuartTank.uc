@@ -184,7 +184,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in an M5 Stuart"
     VehicleNameString="M5 Stuart"
     MaxDesireability=1.900000
     HUDOverlayOffset=(X=5.000000)

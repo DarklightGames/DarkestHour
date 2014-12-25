@@ -228,7 +228,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=50.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in an M3A1 Halftrack"
     VehicleNameString="M3A1 Halftrack"
     MaxDesireability=1.500000
     HUDOverlayOffset=(X=-1.500000)

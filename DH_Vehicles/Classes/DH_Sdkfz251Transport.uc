@@ -221,7 +221,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=50.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a SdKfz-251"
     VehicleNameString="SdKfz-251 Halftrack"
     MaxDesireability=1.200000
     HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'

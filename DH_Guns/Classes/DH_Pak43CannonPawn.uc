@@ -25,7 +25,6 @@ defaultproperties
     DrivePos=(Y=-5.000000,Z=-85.000000)
     DriveAnim="crouch_idlehold_bayo"
     EntryRadius=200.000000
-    VehiclePositionString="Using a Pak43/41 Gun"
     VehicleNameString="Pak43/41 AT-Gun"
     bKeepDriverAuxCollision=true
     SoundVolume=130

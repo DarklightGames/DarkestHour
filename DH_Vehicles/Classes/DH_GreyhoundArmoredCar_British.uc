@@ -29,7 +29,6 @@ defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn_British')
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.M8_Destroyed_Brit'
-    VehiclePositionString="in an Greyhound Armoured Car"
     VehicleNameString="Greyhound Armoured Car"
     Skins(0)=texture'DH_VehiclesUK_tex2.ext_vehicles.Greyhound_body_brit'
     Skins(1)=texture'DH_VehiclesUK_tex2.ext_vehicles.Greyhound_turret_brit'

@@ -33,6 +33,5 @@ defaultproperties
     URightArmorSlope=30.000000
     ULeftArmorSlope=30.000000
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherGCannonPawn')
-    VehiclePositionString="in a Panzer V Ausf.G"
     VehicleNameString="Panzer V Ausf.G"
 }

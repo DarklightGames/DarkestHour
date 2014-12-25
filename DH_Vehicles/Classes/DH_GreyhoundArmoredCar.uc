@@ -150,7 +150,6 @@ defaultproperties
     EntryRadius=375.000000
     FPCamPos=(X=42.000000,Y=-18.000000,Z=33.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a M8 Armored Car"
     VehicleNameString="M8 Armored Car"
     MaxDesireability=0.100000
     HUDOverlayOffset=(X=2.000000)

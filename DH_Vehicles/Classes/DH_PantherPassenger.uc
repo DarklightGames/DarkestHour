@@ -8,7 +8,6 @@ class DH_PantherPassenger extends DH_ROPassengerPawn
 
 defaultproperties
 {
-    VehiclePositionString="riding on a Panther"
     VehicleNameString="Panther passenger"
     CameraBone="body"
 }

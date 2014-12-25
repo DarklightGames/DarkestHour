@@ -172,7 +172,6 @@ defaultproperties
     TPCamDistance=600.000000
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
-    VehiclePositionString="in a Panzer VI Ausf.E"
     VehicleNameString="Panzer VI Ausf.E"
     MaxDesireability=1.900000
     FlagBone="Mg_placement"

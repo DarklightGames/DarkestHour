@@ -37,7 +37,6 @@ defaultproperties
     VehicleHudImage=texture'DH_Flakvierling38_tex.flak.flakv38_base'
     VehicleHudOccupantsX(0)=0.000000
     VehicleHudOccupantsX(1)=0.000000
-    VehiclePositionString="using a Flakvierling 38"
     VehicleNameString="Flakvierling 38"
     Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_base'
 }

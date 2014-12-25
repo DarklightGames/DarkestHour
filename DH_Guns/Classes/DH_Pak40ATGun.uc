@@ -46,7 +46,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="Using a Pak40 AT-Gun"
     VehicleNameString="Pak40 AT-Gun"
     HUDOverlayFOV=90.000000
     PitchUpLimit=5000

@@ -431,7 +431,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a StuH42 Ausf.G"
     VehicleNameString="StuH42 Ausf.G"
     MaxDesireability=1.900000
     FlagBone="Mg_placement"

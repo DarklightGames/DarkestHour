@@ -314,7 +314,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=100.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a Higgins Boat"
     VehicleNameString="Higgins Boat"
     MaxDesireability=1.900000
     GroundSpeed=80.000000

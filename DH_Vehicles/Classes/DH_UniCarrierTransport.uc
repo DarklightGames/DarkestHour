@@ -255,7 +255,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=50.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a Mk.I Bren Carrier"
     VehicleNameString="Mk.I Bren Carrier"
     MaxDesireability=0.100000
     HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'

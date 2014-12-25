@@ -202,7 +202,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a Panzer IV Ausf.J"
     VehicleNameString="Panzer IV Ausf.J"
     MaxDesireability=1.800000
     FlagBone="Mg_placement"

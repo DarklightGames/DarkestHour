@@ -390,7 +390,6 @@ defaultproperties
     TPCamDistance=300.000000
     TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
     TPCamWorldOffset=(Z=120.000000)
-    VehiclePositionString="on a StuH42 Ausf.G MG34"
     VehicleNameString="StuH42 Ausf.G MG34"
     HUDOverlayFOV=45.000000
     PitchUpLimit=6000

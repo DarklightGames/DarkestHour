@@ -281,7 +281,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a Willys Jeep MB"
     VehicleNameString="Willys Jeep MB"
     HUDOverlayOffset=(X=2.000000)
     HUDOverlayFOV=90.000000

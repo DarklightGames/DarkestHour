@@ -15,6 +15,5 @@ defaultproperties
     EntryRadius=375.000000
     FPCamViewOffset=(X=0.000000,Z=0.000000)
     TPCamDistance=200.000000
-    VehiclePositionString="riding on a Sherman Mk.VC"
     VehicleNameString="Sherman Mk.VC Sherman passenger"
 }

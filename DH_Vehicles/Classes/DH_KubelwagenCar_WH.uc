@@ -277,7 +277,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a Volkswagen Type 82"
     VehicleNameString="Volkswagen Type 82"
     MaxDesireability=1.900000
     HUDOverlayOffset=(X=2.000000)

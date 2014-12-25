@@ -205,7 +205,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a Jagdpanzer IV/70(V)"
     VehicleNameString="Jagdpanzer IV/70(V)"
     MaxDesireability=1.900000
     FlagBone="Mg_placement"

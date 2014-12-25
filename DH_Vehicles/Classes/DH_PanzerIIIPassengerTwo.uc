@@ -16,6 +16,5 @@ defaultproperties
     FPCamPos=(X=-120.000000,Y=-30.000000,Z=85.000000)
     FPCamViewOffset=(X=0.000000,Z=0.000000)
     TPCamDistance=200.000000
-    VehiclePositionString="riding on a Panzer III"
     VehicleNameString="Panzer III passenger"
 }

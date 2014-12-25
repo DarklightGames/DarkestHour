@@ -15,6 +15,5 @@ defaultproperties
     EntryRadius=225.000000
     FPCamViewOffset=(X=0.000000,Z=0.000000)
     TPCamLookat=(X=-27.000000)
-    VehiclePositionString="in a Willys Jeep MB"
     VehicleNameString="Willys Jeep MB passenger"
 }

@@ -35,7 +35,6 @@ defaultproperties
     DrivePos=(X=5.000000,Y=-2.000000,Z=5.000000)
     DriveAnim="VBA64_driver_idle_close"
     FPCamViewOffset=(X=2.000000,Z=-2.000000)
-    VehiclePositionString="in a M8 Armored Car"
     VehicleNameString="M8 Armored Car passenger"
     bKeepDriverAuxCollision=false
 }

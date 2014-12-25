@@ -8,6 +8,5 @@ class DH_PantherMountedMGPawn extends DH_JagdpantherMountedMGPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_PantherMountedMG'
-    VehiclePositionString="in a Panzer V Mounted MG"
     VehicleNameString="Panzer V Mounted MG"
 }

@@ -155,7 +155,6 @@ defaultproperties
     ExitPositions(14)=(X=-60.000000,Z=20.000000)
     ExitPositions(15)=(Z=5.000000)
     EntryRadius=200.000000
-    VehiclePositionString="Using a 17 Pounder AT-Gun"
     VehicleNameString="17 Pounder AT-Gun"
     bKeepDriverAuxCollision=true
     SoundVolume=130

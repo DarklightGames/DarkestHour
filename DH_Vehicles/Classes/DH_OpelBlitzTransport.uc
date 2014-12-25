@@ -256,7 +256,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=50.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in an Opel Blitz"
     VehicleNameString="Opel Blitz"
     MaxDesireability=0.120000
     FlagBone="Mg_placement"

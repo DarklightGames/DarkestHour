@@ -178,7 +178,6 @@ defaultproperties
     TPCamDistance=50.000000
     TPCamLookat=(X=-25.000000,Z=0.000000)
     TPCamWorldOffset=(Z=120.000000)
-    VehiclePositionString="in a Mk.I Bren Carrier Gun Position"
     VehicleNameString="Mk.I Bren Carrier Gun"
     HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
     HUDOverlayOffset=(X=-6.000000)

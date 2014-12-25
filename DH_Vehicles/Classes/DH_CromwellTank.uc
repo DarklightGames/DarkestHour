@@ -198,7 +198,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a Cromwell Mk.IV"
     VehicleNameString="Cromwell Mk.IV"
     MaxDesireability=1.900000
     FlagBone="Mg_placement"

@@ -49,7 +49,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="Using a FlaK 36 Gun"
     VehicleNameString="FlaK 36 Gun"
     HUDOverlayFOV=90.000000
     PitchUpLimit=5000

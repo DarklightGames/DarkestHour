@@ -366,7 +366,6 @@ defaultproperties
     TPCamDistance=300.000000
     TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
     TPCamWorldOffset=(Z=120.000000)
-    VehiclePositionString="on a Hetzer remote MG"
     VehicleNameString="Hetzer remote MG"
     HUDOverlayFOV=45.000000
 }

@@ -277,7 +277,6 @@ defaultproperties
     TPCamLookat=(X=0.000000,Z=0.000000)
     TPCamWorldOffset=(Z=50.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a GMC 2.5 Ton Truck"
     VehicleNameString="GMC 2.5 Ton Truck"
     MaxDesireability=0.120000
     FlagBone="Mg_placement"

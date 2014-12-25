@@ -185,7 +185,6 @@ defaultproperties
     TPCamLookat=(X=-50.000000)
     TPCamWorldOffset=(Z=250.000000)
     DriverDamageMult=1.000000
-    VehiclePositionString="in a M18 Hellcat"
     VehicleNameString="M18 Hellcat"
     MaxDesireability=1.900000
     FlagBone="Mg_placement"

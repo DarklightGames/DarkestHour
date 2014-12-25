@@ -275,7 +275,6 @@ defaultproperties
     bMultiPosition=false
     TouchMessage="Use the "
     VehicleMass=5.000000
-    VehiclePositionString="using an AT-Gun"
     VehicleNameString="AT-Gun"
     RanOverDamageType=none
     CrushedDamageType=none
