@@ -108,7 +108,6 @@ defaultproperties
     ExitSoundName=""
     EntrySoundName=""
     EntryActor="DH_BulletSplashEffect"
-    LocationName="under water"
     bDistanceFog=true
     DistanceFogColor=(R=0,G=0,B=0,A=0)
     DistanceFogStart=0.0

@@ -32,5 +32,4 @@ defaultproperties
     bWaterVolume=true
     KExtraLinearDamping=2.500000
     KExtraAngularDamping=0.400000
-    LocationName="at sea"
 }
