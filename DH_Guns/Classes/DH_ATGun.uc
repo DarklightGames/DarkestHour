@@ -6,7 +6,7 @@
 class DH_ATGun extends DH_ROTreadCraft
     abstract;
 
-#exec OBJ LOAD FILE=..\textures\DH_Artillery_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
 var  DH_ATCannonFactoryBase   DHParentFactory;

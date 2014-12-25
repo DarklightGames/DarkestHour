@@ -6,7 +6,7 @@
 class DH_StuartTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Stuart_anm.ukx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
 static function StaticPrecache(LevelInfo L)
 {

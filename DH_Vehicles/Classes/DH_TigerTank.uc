@@ -6,8 +6,8 @@
 class DH_TigerTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\axis_tiger1_anm.ukx
-#exec OBJ LOAD FILE=..\textures\axis_vehicles_tex.utx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex.utx
+#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx
 
 static function StaticPrecache(LevelInfo L)
 {

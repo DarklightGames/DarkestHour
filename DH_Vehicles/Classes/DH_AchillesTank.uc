@@ -5,8 +5,8 @@
 
 class DH_AchillesTank extends DH_ROTreadCraft;
 
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUK_tex.utx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\Animations\DH_Wolverine_anm.ukx
 
 static function StaticPrecache(LevelInfo L)

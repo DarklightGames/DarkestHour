@@ -7,8 +7,8 @@ class DH_JagdtigerTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Jagdtiger_anm.ukx
 #exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex2.utx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesGE_tex3.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc2.usx
 
 static function StaticPrecache(LevelInfo L)

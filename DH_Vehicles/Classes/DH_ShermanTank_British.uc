@@ -5,7 +5,7 @@
 
 class DH_ShermanTank_British extends DH_ShermanTank;
 
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUK_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 
 static function StaticPrecache(LevelInfo L)
 {

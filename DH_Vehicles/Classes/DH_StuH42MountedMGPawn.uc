@@ -5,7 +5,7 @@
 
 class DH_StuH42MountedMGPawn extends DH_ROMountedTankMGPawn;
 
-#exec OBJ LOAD FILE=..\textures\DH_VehicleOptics_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
 var     int             InitialPositionIndex; // Initial Gunner Position
 var     int             UnbuttonedPositionIndex; // Lowest pos number where player is unbuttoned

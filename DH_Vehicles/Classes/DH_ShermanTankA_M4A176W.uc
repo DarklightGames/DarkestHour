@@ -6,7 +6,7 @@
 class DH_ShermanTankA_M4A176W extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A176W_anm.ukx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc2.usx
 
 static function StaticPrecache(LevelInfo L)

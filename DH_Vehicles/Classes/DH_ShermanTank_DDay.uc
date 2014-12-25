@@ -6,7 +6,7 @@
 class DH_ShermanTank_DDay extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sherman_anm.ukx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
 static function StaticPrecache(LevelInfo L)

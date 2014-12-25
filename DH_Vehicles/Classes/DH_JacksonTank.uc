@@ -6,7 +6,7 @@
 class DH_JacksonTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Jackson_anm.ukx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex4.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex4.utx
 
 static function StaticPrecache(LevelInfo L)
 {

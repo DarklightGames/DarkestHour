@@ -6,7 +6,7 @@
 class DH_HellcatTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Hellcat_anm.ukx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex5.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex5.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3
 
 static function StaticPrecache(LevelInfo L)

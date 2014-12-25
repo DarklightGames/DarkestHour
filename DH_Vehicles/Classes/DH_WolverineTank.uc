@@ -6,8 +6,8 @@
 class DH_WolverineTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Wolverine_anm.ukx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex.utx
-#exec OBJ LOAD FILE=..\textures\DH_VehiclesUS_tex2.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
 
 static function StaticPrecache(LevelInfo L)
 {

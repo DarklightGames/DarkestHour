@@ -7,8 +7,8 @@ class DH_PanzerIVGLateTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\axis_panzer4F2_anm.ukx
 #exec OBJ LOAD FILE=..\Animations\axis_panzer4H_anm.ukx
-#exec OBJ LOAD FILE=..\textures\axis_vehicles_tex.utx
-#exec OBJ LOAD FILE=..\textures\axis_vehicles_tex2.utx
+#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
+#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex2.utx
 
 static function StaticPrecache(LevelInfo L)
 {
