@@ -5,18 +5,10 @@
 
 class DH_12thSSFireteamLeader extends DH_12thSS;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     MyName="Fireteam Leader"
-    AltName="Rottenführer"
+    AltName="RottenfÃ¼hrer"
     Article="a "
     PluralName="Fireteam Leaders"
     InfoText="The fireteam leader is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."

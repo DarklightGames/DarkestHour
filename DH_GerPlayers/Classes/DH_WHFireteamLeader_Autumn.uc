@@ -5,14 +5,6 @@
 
 class DH_WHFireteamLeader_Autumn extends DH_HeerAutumn;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     MyName="Fireteam Leader"

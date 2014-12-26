@@ -5,21 +5,13 @@
 
 class DH_USRifleman82nd extends DH_US_82nd_Airborne;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     MyName="Rifleman"
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
-    InfoText="The rifleman is the basic soldier of the battlefield that is tasked with the important role of capturing and holding objectives, as well as the defense of key positions. Armed with the standard-issue battle rifle, the rifleman’s efficiency is determined by his ability to work as a member of a larger unit."
+    InfoText="The rifleman is the basic soldier of the battlefield that is tasked with the important role of capturing and holding objectives, as well as the defense of key positions. Armed with the standard-issue battle rifle, the riflemanâ€™s efficiency is determined by his ability to work as a member of a larger unit."
     MenuImage=texture'DHUSCharactersTex.Icons.ABRifleman'
     Models(0)="US_82AB1"
     Models(1)="US_82AB2"

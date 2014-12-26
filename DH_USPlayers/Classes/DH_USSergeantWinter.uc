@@ -34,8 +34,11 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
     Grenades(1)=(Item=class'DH_Equipment.DH_RedSmokeWeapon',Amount=1)
+    HeadgearProbabilities(0)=0.2
     Headgear(0)=class'DH_USPlayers.DH_AmericanWinterWoolHat'
+    HeadgearProbabilities(1)=0.4
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
+    HeadgearProbabilities(2)=0.4
     Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

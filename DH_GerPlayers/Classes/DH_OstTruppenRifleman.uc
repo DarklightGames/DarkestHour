@@ -5,25 +5,13 @@
 
 class DH_OstTruppenRifleman extends DH_OstTruppen;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     MyName="Osttruppe Rifleman"
-    AltName="Schütze Osttruppe"
+    AltName="SchÃ¼tze Osttruppe"
     Article="a "
     PluralName="Riflemen"
-    InfoText="Schütze Osttruppe||The Osttruppen were formed by foreign 'volunteers' - mainly POWs from the Eastern Front.They were not considered to be reliable troops, their job was to buy time until a counter attack could be mounted."
+    InfoText="SchÃ¼tze Osttruppe||The Osttruppen were formed by foreign 'volunteers' - mainly POWs from the Eastern Front.They were not considered to be reliable troops, their job was to buy time until a counter attack could be mounted."
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="OT_1"
     Models(1)="OT_2"

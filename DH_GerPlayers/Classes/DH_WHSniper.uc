@@ -5,18 +5,10 @@
 
 class DH_WHSniper extends DH_Heer;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     MyName="Sniper"
-    AltName="Scharfschütze"
+    AltName="ScharfschÃ¼tze"
     Article="a "
     PluralName="Snipers"
     InfoText="The sniper is tasked with the specialized goal of eliminating key hostile units and shaking enemy morale through careful marksmanship and fieldcraft.  Through patient observation, the sniper is also capable of providing valuable reconnaissance which can have a significant impact on the outcome of the battle."

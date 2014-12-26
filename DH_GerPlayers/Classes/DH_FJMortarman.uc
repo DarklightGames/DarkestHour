@@ -5,30 +5,12 @@
 
 class DH_FJMortarman extends DH_FJ;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    local int RandNum;
-    RandNum = Rand(3);
-
-    switch (RandNum)
-    {
-        case 0:
-             return Headgear[0];
-        case 1:
-             return Headgear[1];
-        case 2:
-             return Headgear[2];
-        default:
-             return Headgear[0];
-    }
-}
-
 defaultproperties
 {
     bCanUseMortars=true
     bCarriesMortarAmmo=false
     MyName="Mortar Operator"
-    AltName="Werferschütze"
+    AltName="WerferschÃ¼tze"
     Article="a "
     PluralName="Mortar Operators"
     InfoText="The mortar operator is tasked with providing indirect fire on distant targets using his medium mortar.  The mortar operator should work closely with a mortar observer to accurately bombard targets out of visual range.||* Targets marked by a mortar observer will appear on your situation map.|* Rounds that land near the marked target will appear on your situation map."

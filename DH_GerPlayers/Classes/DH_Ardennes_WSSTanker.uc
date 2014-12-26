@@ -5,18 +5,6 @@
 
 class DH_Ardennes_WSSTanker extends DH_WaffenSSTankCrew;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     MyName="Tank Crewman"

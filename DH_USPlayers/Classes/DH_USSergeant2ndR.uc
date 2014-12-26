@@ -5,18 +5,6 @@
 
 class DH_USSergeant2ndR extends DH_US_2ndRangersBattalion;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     bIsSquadLeader=true

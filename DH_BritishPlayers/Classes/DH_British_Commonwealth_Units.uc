@@ -8,6 +8,9 @@ class DH_British_Commonwealth_Units extends DH_RoleInfo
 
 defaultproperties
 {
+    HeadgearProbabilities(0)=0.1
+    HeadgearProbabilities(1)=0.1
+    HeadgearProbabilities(2)=0.8
     VoiceType="DH_BritishPlayers.DHBritishVoice"
     AltVoiceType="DH_BritishPlayers.DHBritishVoice"
     DetachedArmClass=class'ROEffects.SeveredArmSovTunic'

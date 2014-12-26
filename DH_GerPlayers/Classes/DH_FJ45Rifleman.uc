@@ -5,28 +5,10 @@
 
 class DH_FJ45Rifleman extends DH_FJ_1945;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    local int RandNum;
-    RandNum = Rand(3);
-
-    switch (RandNum)
-    {
-        case 0:
-             return Headgear[0];
-        case 1:
-             return Headgear[1];
-        case 2:
-             return Headgear[2];
-        default:
-             return Headgear[0];
-    }
-}
-
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="Schütze"
+    AltName="SchÃ¼tze"
     Article="a "
     PluralName="Riflemen"
     InfoText="The rifleman is the basic soldier of the battlefield that is tasked with the important role of capturing and holding objectives, as well as the defense of key positions. Armed with the standard-issue battle rifle, the rifleman's efficiency is determined by his ability to work as a member of a larger unit."

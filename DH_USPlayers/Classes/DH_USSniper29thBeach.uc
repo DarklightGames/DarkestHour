@@ -5,14 +5,6 @@
 
 class DH_USSniper29thBeach extends DH_US_29th_Infantry;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     MyName="Sniper"

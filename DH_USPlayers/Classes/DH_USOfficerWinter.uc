@@ -5,18 +5,6 @@
 
 class DH_USOfficerWinter extends DH_US_Winter_Infantry;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.4)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     bIsArtilleryOfficer=true
