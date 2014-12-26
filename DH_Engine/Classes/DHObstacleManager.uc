@@ -32,11 +32,6 @@ simulated function PostBeginPlay()
 
             Obstacles[Obstacles.Length] = Obstacle;
 
-            if (FRand() < Obstacle.SpawnClearedChance)
-            {
-                SetCleared(Obstacle, true);
-            }
-
             Obstacle.RemoteRole = ROLE_SimulatedProxy;
         }
     }
