@@ -81,6 +81,14 @@ simulated function PostNetBeginPlay()
         foreach AllActors(class'DHObstacleManager', OM)
         {
             OM.Obstacles[Index] = self;
+
+            // If this obstacle gets replicated *after* the obstacle manager,
+            // we need to query the manager to get the state otherwise the state
+            // never gets set correctly!
+            if (OM.IsClearedInBitfield(Index))
+            {
+                SetCleared(true);
+            }
         }
 
         L.X = UP.LocationX;

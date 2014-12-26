@@ -71,10 +71,15 @@ function DebugObstacles(optional int Option)
                 SetCleared(Obstacles[i], FRand() >= 0.5);
             }
             break;
-        case 3:
+        case 4: // Reset obstacles as though a new round has started
+            Reset();
+            break;
+        case 3: // Print out the amount number of obstacles
             Level.Game.Broadcast(self, "Obstacle Count:" @ Obstacles.Length);
             break;
     }
+
+    Level.Game.Broadcast(self, "DebugObstacles" @ Option);
 }
 
 function ClearObstacle(int Index)
@@ -85,6 +90,16 @@ function ClearObstacle(int Index)
     }
 
     SetCleared(Obstacles[Index], true);
+}
+
+simulated function bool IsClearedInBitfield(int Index)
+{
+    local int ByteIndex;
+    local byte Mask;
+
+    GetBitfieldIndexAndMask(Index, ByteIndex, Mask);
+
+    return (Bitfield[ByteIndex] & Mask) == Mask;
 }
 
 simulated function GetBitfieldIndexAndMask(int Index, out int ByteIndex, out byte Mask)
@@ -144,15 +159,27 @@ simulated event PostNetReceive()
 simulated function Reset()
 {
     local int i;
+    local DHObstacle Obstacle;
 
     super.Reset();
 
+    if (bDebug)
+    {
+        Level.Game.Broadcast(self, "DHObstacleManager::Reset");
+    }
+
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < arraycount(Bitfield); ++i)
+        for (i = 0; i < Obstacles.Length; ++i)
         {
-            Bitfield[i] = 0;
-            //TODO: not right, needs to run a full re-calc on cleared status
+            Obstacle = Obstacles[i];
+
+            SetCleared(Obstacle, false);
+
+            if (FRand() < Obstacle.SpawnClearedChance)
+            {
+                SetCleared(Obstacle, true);
+            }
         }
     }
 }
@@ -191,4 +218,3 @@ defaultproperties
     bSkipActorPropertyReplication=true
     bNetNotify=true
 }
-
