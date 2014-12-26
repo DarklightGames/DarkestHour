@@ -26,8 +26,8 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
-    Headgear(0)=class'DH_GerPlayers.DH_WSSOfficercap'
-    Headgear(1)=class'DH_GerPlayers.DH_WSSCrushercap'
+    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
+    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     Limit=1

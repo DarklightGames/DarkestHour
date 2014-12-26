@@ -26,8 +26,8 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
     Grenades(2)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon',Amount=1)
-    Headgear(0)=class'DH_GerPlayers.DH_HeerCamoCap'
-    Headgear(1)=class'ROInventory.ROGermanHat'
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     Limit=2

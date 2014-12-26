@@ -9,10 +9,10 @@ defaultproperties
 {
     bIsArtilleryOfficer=true
     MyName="Officer"
-    AltName="Zugführer"
+    AltName="ZugfÃ¼hrer"
     Article="a "
     PluralName="Officers"
-    InfoText="Zugführer - Difficulty: Very Advanced||The Zugführer is the Platoon leader. Although equipped for close quarters combat, the Zugführer is better off directing his squads to their objectives than engaging the enemy himself.||* The Zugführer counts one and a half times when taking and holding objectives."
+    InfoText="ZugfÃ¼hrer - Difficulty: Very Advanced||The ZugfÃ¼hrer is the Platoon leader. Although equipped for close quarters combat, the ZugfÃ¼hrer is better off directing his squads to their objectives than engaging the enemy himself.||* The ZugfÃ¼hrer counts one and a half times when taking and holding objectives."
     MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WK_1"
     Models(1)="WK_2"
@@ -25,7 +25,7 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon',Amount=1)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
-    Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineCap'
+    Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineHelmet'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     Limit=1
