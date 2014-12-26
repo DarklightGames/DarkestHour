@@ -5,18 +5,6 @@
 
 class DH_WHMortarObserver_Snow extends DH_HeerSnow;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     bIsMortarObserver=true

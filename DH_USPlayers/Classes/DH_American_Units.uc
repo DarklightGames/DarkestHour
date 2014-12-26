@@ -8,6 +8,8 @@ class DH_American_Units extends DH_RoleInfo
 
 defaultproperties
 {
+    HeadgearProbabilities(0)=0.2
+    HeadgearProbabilities(1)=0.8
     VoiceType="DH_USPlayers.DHUSVoice"
     AltVoiceType="DH_USPlayers.DHUSVoice"
     DetachedArmClass=class'ROEffects.SeveredArmSovTunic'

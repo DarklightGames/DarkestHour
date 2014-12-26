@@ -5,18 +5,6 @@
 
 class DH_USCorporalWinter extends DH_US_Winter_Infantry;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     MyName="Corporal"

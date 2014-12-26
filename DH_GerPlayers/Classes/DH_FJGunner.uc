@@ -5,28 +5,10 @@
 
 class DH_FJGunner extends DH_FJ;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    local int RandNum;
-    RandNum = Rand(11);
-
-    switch (RandNum)
-    {
-        case 0:
-             return Headgear[0];
-        case 1:
-             return Headgear[1];
-        case 2:
-             return Headgear[2];
-        default:
-             return Headgear[0];
-    }
-}
-
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
+    AltName="MaschinengewehrschÃ¼tze"
     Article="a "
     PluralName="Machine-Gunners"
     InfoText="The machine-gunner is tasked with the tactical employment of the light machine gun to provide direct fire support to his squad, and in many cases being its primary source of mid- and long-range firepower. Due to the light machine gun's high rate of fire, an adequate supply of ammunition is needed to maintain a constant rate of fire, provided largely by his accompanying units."

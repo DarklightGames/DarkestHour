@@ -5,28 +5,10 @@
 
 class DH_FJ45Assault extends DH_FJ_1945;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    local int RandNum;
-    RandNum = Rand(3);
-
-    switch (RandNum)
-    {
-        case 0:
-             return Headgear[0];
-        case 1:
-             return Headgear[1];
-        case 2:
-             return Headgear[2];
-        default:
-             return Headgear[0];
-    }
-}
-
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Stoﬂtruppe"
+    AltName="Sto√ütruppe"
     Article="an "
     PluralName="Assault Troopers"
     InfoText="The assault trooper is a specialized infantry class who is tasked with closing with the enemy and eliminating him from difficult positions such as houses and fortifications.  The assault trooper is generally better armed than most infantrymen."

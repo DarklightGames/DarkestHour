@@ -5,19 +5,11 @@
 
 class DH_WSSSquadLeader_Autumn extends DH_WaffenSSAutumn;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     bIsSquadLeader=true
     MyName="Squad Leader"
-    AltName="Unterscharführer"
+    AltName="UnterscharfÃ¼hrer"
     Article="a "
     PluralName="Squad Leaders"
     InfoText="The squad leader is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the squad leader's presence is an excellent force multiplier to the units under his command."
@@ -37,8 +29,8 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
     Grenades(2)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon',Amount=1)
-    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
-    Headgear(1)=class'DH_GerPlayers.DH_WSSCrushercap'
+    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
+    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
     PrimaryWeaponType=WT_SemiAuto
     bEnhancedAutomaticControl=true
     Limit=1

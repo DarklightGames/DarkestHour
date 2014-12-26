@@ -5,20 +5,12 @@
 
 class DH_WHMortarman_Autumn extends DH_HeerAutumn;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     bCanUseMortars=true
     bCarriesMortarAmmo=false
     MyName="Mortar Operator"
-    AltName="Werferschütze"
+    AltName="WerferschÃ¼tze"
     Article="a "
     PluralName="Mortar Operators"
     InfoText="The mortar operator is tasked with providing indirect fire on distant targets using his medium mortar.  The mortar operator should work closely with a mortar observer to accurately bombard targets out of visual range.||* Targets marked by a mortar observer will appear on your situation map.|* Rounds that land near the marked target will appear on your situation map."

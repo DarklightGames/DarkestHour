@@ -5,22 +5,14 @@
 
 class DH_LWSquadLeader extends DH_LuftwaffeFlak;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     bIsSquadLeader=true
     MyName="Squad Leader"
-    AltName="Gruppenführer"
+    AltName="GruppenfÃ¼hrer"
     Article="a "
     PluralName="Squad Leaders"
-    InfoText="Gruppenführer||The Gruppenführer is the leader of the squad - an NCO by rank.  His job is to see to the completion of the squad's objectives by directing his men in combat and ensuring the LMG's firepower is put to good use.  Equipped for close quarters combat, the Gruppenführer is better off directing the squad's firepower at longer ranges than engaging himself.||* The Gruppenführer counts one and a half times when taking and holding objectives."
+    InfoText="GruppenfÃ¼hrer||The GruppenfÃ¼hrer is the leader of the squad - an NCO by rank.  His job is to see to the completion of the squad's objectives by directing his men in combat and ensuring the LMG's firepower is put to good use.  Equipped for close quarters combat, the GruppenfÃ¼hrer is better off directing the squad's firepower at longer ranges than engaging himself.||* The GruppenfÃ¼hrer counts one and a half times when taking and holding objectives."
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
     Models(0)="WL_1"
     Models(1)="WL_2"

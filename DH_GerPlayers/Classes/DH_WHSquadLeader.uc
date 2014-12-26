@@ -5,14 +5,6 @@
 
 class DH_WHSquadLeader extends DH_Heer;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     bIsSquadLeader=true
@@ -35,7 +27,7 @@ defaultproperties
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
     Grenades(2)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon',Amount=1)
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
-    Headgear(1)=class'ROInventory.ROGermanHat'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     Limit=2

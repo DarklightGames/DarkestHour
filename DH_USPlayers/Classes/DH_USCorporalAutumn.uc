@@ -5,18 +5,6 @@
 
 class DH_USCorporalAutumn extends DH_US_Autumn_Infantry;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     MyName="Corporal"

@@ -5,14 +5,6 @@
 
 class DH_12thSSOfficer extends DH_12thSS;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     bIsArtilleryOfficer=true

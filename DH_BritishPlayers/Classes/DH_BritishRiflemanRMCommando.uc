@@ -5,28 +5,13 @@
 
 class DH_BritishRiflemanRMCommando extends DH_RoyalMarineCommandos;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        if (FRand() < 0.5)
-            return Headgear[2];
-        else
-            return Headgear[1];
-    }
-    else
-    {
-        return Headgear[0];
-    }
-}
-
 defaultproperties
 {
     MyName="Rifleman"
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
-    InfoText="The rifleman is the basic soldier of the battlefield that is tasked with the important role of capturing and holding objectives, as well as the defense of key positions. Armed with the standard-issue battle rifle, the rifleman’s efficiency is determined by his ability to work as a member of a larger unit."
+    InfoText="The rifleman is the basic soldier of the battlefield that is tasked with the important role of capturing and holding objectives, as well as the defense of key positions. Armed with the standard-issue battle rifle, the riflemanâ€™s efficiency is determined by his ability to work as a member of a larger unit."
     MenuImage=texture'DHBritishCharactersTex.Icons.Brit_Rifleman'
     Models(0)="RMC1"
     Models(1)="RMC2"

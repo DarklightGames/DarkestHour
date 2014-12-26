@@ -5,25 +5,13 @@
 
 class DH_WHArtilleryGunner extends DH_Heer;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     MyName="Artillery Gunner"
-    AltName="Artillerie Schütze"
+    AltName="Artillerie SchÃ¼tze"
     Article="a "
     PluralName="Artillery Gunners"
-    InfoText="Artillerie Schütze||The artillery gunner is a specialized role, requiring specialized training. ||Only artillery crew can use artillery"
+    InfoText="Artillerie SchÃ¼tze||The artillery gunner is a specialized role, requiring specialized training. ||Only artillery crew can use artillery"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WHA_1"
     Models(1)="WHA_2"

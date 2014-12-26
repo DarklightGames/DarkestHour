@@ -5,18 +5,10 @@
 
 class DH_WSSFireteamLeader extends DH_WaffenSS;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     MyName="Fireteam Leader"
-    AltName="Rottenführer"
+    AltName="RottenfÃ¼hrer"
     Article="a "
     PluralName="Fireteam Leaders"
     InfoText="The fireteam leader is the NCO tasked to coordinate his team's movement in accordance with the squad's objectives. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
@@ -33,8 +25,8 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
-    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetNoCover'
+    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
+    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true
     Limit=1

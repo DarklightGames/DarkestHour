@@ -5,25 +5,13 @@
 
 class DH_WHSPComander extends DH_HeerTankCrew;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     MyName="Assault Gun Commander"
-    AltName="Stugführer"
+    AltName="StugfÃ¼hrer"
     Article="a "
     PluralName="Assault Gun Commanders"
-    InfoText="Stugführer||The Stugführer is the assault gun commander, either an NCO or officer. His primary task was to spot targets for the gunner, as well as to direct the rest of the crew. He might, as a platoon commander, be required to lead a complete platoon of assault guns, as well as direct his own."
+    InfoText="StugfÃ¼hrer||The StugfÃ¼hrer is the assault gun commander, either an NCO or officer. His primary task was to spot targets for the gunner, as well as to direct the rest of the crew. He might, as a platoon commander, be required to lead a complete platoon of assault guns, as well as direct his own."
     MenuImage=texture'DHGermanCharactersTex.Icons.IconSPCom'
     Models(0)="WHSP_1"
     Models(1)="WHSP_2"

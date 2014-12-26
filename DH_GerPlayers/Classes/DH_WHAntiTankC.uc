@@ -5,24 +5,12 @@
 
 class DH_WHAntiTankC extends DH_HeerCamo;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     bIsATGunner=true
     bCarriesATAmmo=false
     MyName="Tank Hunter"
-    AltName="Panzerjäger"
+    AltName="PanzerjÃ¤ger"
     Article="a "
     PluralName="Tank Hunters"
     InfoText="The tank hunter is tasked with locating and destroying or disabling enemy vehicles.  Armed with close-range anti-tank weaponry, he must often get dangerously close to his target in order to assure a hit.  His weaponry can also be effective against enemy fortifications."

@@ -5,24 +5,6 @@
 
 class DH_FJ45CombatEngineer extends DH_FJ_1945;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    local int RandNum;
-    RandNum = Rand(3);
-
-    switch (RandNum)
-    {
-        case 0:
-             return Headgear[0];
-        case 1:
-             return Headgear[1];
-        case 2:
-             return Headgear[2];
-        default:
-             return Headgear[0];
-    }
-}
-
 defaultproperties
 {
     MyName="Combat Engineer"

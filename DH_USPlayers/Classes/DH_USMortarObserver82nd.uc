@@ -5,14 +5,6 @@
 
 class DH_USMortarObserver82nd extends DH_US_82nd_Airborne;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-        return Headgear[0];
-    else
-        return Headgear[1];
-}
-
 defaultproperties
 {
     bIsMortarObserver=true

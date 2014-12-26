@@ -5,14 +5,6 @@
 
 class DH_BritishSergeant extends DH_British_Infantry;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.5)
-        return Headgear[1];
-    else
-        return Headgear[0];
-}
-
 defaultproperties
 {
     bIsSquadLeader=true
@@ -33,7 +25,9 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
     Grenades(2)=(Item=class'DH_Equipment.DH_RedSmokeWeapon',Amount=1)
+    HeadgearProbabilities(0)=0.5
     Headgear(0)=class'DH_BritishPlayers.DH_BritishInfantryBeretHampshires'
+    HeadgearProbabilities(1)=0.5
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

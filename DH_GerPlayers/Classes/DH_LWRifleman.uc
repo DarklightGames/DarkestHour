@@ -5,25 +5,13 @@
 
 class DH_LWRifleman extends DH_LuftwaffeFlak;
 
-function class<ROHeadgear> GetHeadgear()
-{
-    if (FRand() < 0.2)
-    {
-        return Headgear[0];
-    }
-    else
-    {
-        return Headgear[1];
-    }
-}
-
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="Schütze"
+    AltName="SchÃ¼tze"
     Article="a "
     PluralName="Riflemen"
-    InfoText="Schütze||The Schütze is the main-stay of the German infantry platoon.  He is tasked with the vital role of taking and holding ground.  Using his standard issue rifle, he can effectively engage the enemy at moderate to long range."
+    InfoText="SchÃ¼tze||The SchÃ¼tze is the main-stay of the German infantry platoon.  He is tasked with the vital role of taking and holding ground.  Using his standard issue rifle, he can effectively engage the enemy at moderate to long range."
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'
     Models(0)="WL_1"
     Models(1)="WL_2"
