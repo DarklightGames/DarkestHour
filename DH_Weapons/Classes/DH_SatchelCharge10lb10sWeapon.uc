@@ -7,6 +7,20 @@ class DH_SatchelCharge10lb10sWeapon extends DHExplosiveWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Common_Satchel_1st.ukx
 
+simulated state RaisingWeapon
+{
+    simulated function EndState()
+    {
+        local ROPlayer player;
+
+        super.EndState();
+
+        player = ROPlayer(Instigator.Controller);
+        if (player != none)
+            player.CheckForHint(7);
+    }
+}
+
 defaultproperties
 {
     ItemName="10lb Satchel Charge"
@@ -16,7 +30,8 @@ defaultproperties
     BobDamping=1.6
     PlayerViewOffset=(X=10,Y=5,Z=0)
     bCanThrow=false //cannot be dropped
-    FuzeLength=15.0 //was 10    FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
+    FuzeLength=15.0 //was 10
+    FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     FireModeClass(1)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     bCanRestDeploy=false
     bHasReleaseLever=false
