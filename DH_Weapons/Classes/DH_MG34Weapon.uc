@@ -47,7 +47,7 @@ defaultproperties
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
     bPlusOneLoading=true
-    PlayerIronsightFOV=80.000000
+    PlayerIronsightFOV=90.000000
     SprintStartAnim="Rest_Sprint_Start"
     SprintLoopAnim="Rest_Sprint_Middle"
     SprintEndAnim="Rest_Sprint_End"
