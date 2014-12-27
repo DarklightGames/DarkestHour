@@ -69,7 +69,7 @@ defaultproperties
     scopePitch=-10
     scopeYaw=40
     scopeYawHigh=35
-    TexturedScopeTexture=texture'DH_Weapon_overlays.Scopes.Ger_sniperscope_overlay'
+    TexturedScopeTexture=texture'DH_Weapon_tex.AxisSmallArms.Ger_sniperscope_overlay'
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
     IronIdleAnim="Scope_Idle"

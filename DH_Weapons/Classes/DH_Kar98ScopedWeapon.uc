@@ -9,16 +9,24 @@ class DH_Kar98ScopedWeapon extends DH_BoltSniperWeapon;
 
 defaultproperties
 {
+    //Correction of textured scope sights
+    OverlayCorrectionX=-5.0
+    OverlayCorrectionY=10.0
+
     PreReloadAnim="Single_Open"
     SingleReloadAnim="Single_Insert"
     PostReloadAnim="Single_Close"
     lenseMaterialID=5
+
     scopePortalFOVHigh=13.000000
     scopePortalFOV=7.000000
+
     scopePitch=-10
     scopeYaw=40
     scopeYawHigh=35
-    TexturedScopeTexture=texture'DH_Weapon_overlays.Scopes.Ger_sniperscope_overlay'
+
+    TexturedScopeTexture=texture'DH_Weapon_tex.AxisSmallArms.Ger_sniperscope_overlay'
+
     IronIdleAnim="Scope_Idle"
     IronBringUp="Scope_In"
     IronPutDown="Scope_Out"

@@ -15,7 +15,7 @@ static function StaticPrecache(LevelInfo L)
     L.AddPrecacheMaterial(Material'Weapons1st_tex.Bullets.kar98k_stripper_s');
     L.AddPrecacheMaterial(Material'Weapons1st_tex.SniperScopes.g43_scope_s');
     L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.G43_ammo');
-    L.AddPrecacheMaterial(Material'Weapon_overlays.Scopes.Ger_sniperscope_overlay');
+    //L.AddPrecacheMaterial(Material'DH_Weapon_tex.AxisSmallArms.Ger_sniperscope_overlay');
 }
 
 defaultproperties
