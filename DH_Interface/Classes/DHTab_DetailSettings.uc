@@ -5,8 +5,38 @@
 
 class DHTab_DetailSettings extends ROTab_DetailSettings;
 
+//Overrided to remove extra options for scope detail
+function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Ar)
+{
+    local int i;
+
+    Ar.Remove(0, Ar.Length);
+    if (Combo == None)
+        return;
+
+    switch (Combo)
+    {
+        case co_GlobalDetails:
+            for (i = 0; i < ArrayCount(DetailOptions); i++)
+            {
+                Ar.Length = Ar.Length + 1;
+                Ar[i].Item = DetailOptions[i];
+            }
+            break;
+
+        case co_ScopeDetail:
+            Ar.Length = Ar.Length + 1;
+            Ar[i].Item = ScopeLevels[0];
+            break;
+    }
+
+    if (Ar.length == 0)
+        GetComboOptions(Combo, Ar);
+}
+
 defaultproperties
 {
+    ScopeLevels(0)="Textured"
     DisplayModes(0)=(Width=1280,Height=720)
     DisplayModes(1)=(Width=1024,Height=768)
     DisplayModes(2)=(Width=1280,Height=768)
@@ -45,7 +75,7 @@ defaultproperties
         Caption="Scope Detail"
         OnCreateComponent=ScopeDetail.InternalOnCreateComponent
         IniOption="@Internal"
-        IniDefault="Model (Low)"
+        IniDefault="Textured"
         WinTop=0.063021
         WinLeft=0.550000
         WinWidth=0.400000

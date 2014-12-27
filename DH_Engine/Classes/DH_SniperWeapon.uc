@@ -73,98 +73,11 @@ simulated function UpdateScopeMode()
     if (Level.NetMode != NM_DedicatedServer &&
         Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
-        if (ScopeDetail == RO_ModelScope)
-        {
-            scopePortalFOV = default.scopePortalFOV;
-            IronSightDisplayFOV = default.IronSightDisplayFOV;
-            bPlayerFOVZooms = false;
+        IronSightDisplayFOV = default.IronSightDisplayFOV;
+        PlayerViewOffset.X = default.PlayerViewOffset.X;
+        bPlayerFOVZooms = true;
 
-            if (bUsingSights)
-            {
-                PlayerViewOffset = XoffsetScoped;
-            }
-
-            if (ScopeScriptedTexture == none)
-            {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
-            }
-
-            ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(512,512);
-            ScopeScriptedTexture.Client = self;
-
-            if (ScriptedScopeCombiner == none)
-            {
-                // Construct the Combiner
-                ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = texture'ScopeShaders.Zoomblur.Xhair';
-                ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
-                ScriptedScopeCombiner.CombineOperation = CO_Multiply;
-                ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
-                ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
-            }
-
-            if (ScopeScriptedShader == none)
-            {
-                // Construct the scope shader
-                ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
-                ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
-                ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
-                ScopeScriptedShader.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
-            }
-
-            bInitializedScope = true;
-        }
-        else if (ScopeDetail == RO_ModelScopeHigh)
-        {
-            scopePortalFOV = scopePortalFOVHigh;
-            IronSightDisplayFOV = default.IronSightDisplayFOVHigh;
-            bPlayerFOVZooms = false;
-
-            if (bUsingSights)
-            {
-                PlayerViewOffset = XoffsetHighDetail;
-            }
-
-            if (ScopeScriptedTexture == none)
-            {
-                ScopeScriptedTexture = ScriptedTexture(Level.ObjectPool.AllocateObject(class'Scriptedtexture'));
-            }
-
-            ScopeScriptedTexture.FallBackMaterial = ScriptedTextureFallback;
-            ScopeScriptedTexture.SetSize(1024, 1024);
-            ScopeScriptedTexture.Client = self;
-
-            if (ScriptedScopeCombiner == none)
-            {
-                // Construct the Combiner
-                ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = texture'ScopeShaders.Zoomblur.Xhair';
-                ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
-                ScriptedScopeCombiner.CombineOperation = CO_Multiply;
-                ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
-                ScriptedScopeCombiner.Material2 = ScopeScriptedTexture;
-            }
-
-            if (ScopeScriptedShader == none)
-            {
-                // Construct the scope shader
-                ScopeScriptedShader = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
-                ScopeScriptedShader.Diffuse = ScriptedScopeCombiner;
-                ScopeScriptedShader.SelfIllumination = ScriptedScopeCombiner;
-                ScopeScriptedShader.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
-            }
-
-            bInitializedScope = true;
-        }
-        else if (ScopeDetail == RO_TextureScope)
-        {
-            IronSightDisplayFOV = default.IronSightDisplayFOV;
-            PlayerViewOffset.X = default.PlayerViewOffset.X;
-            bPlayerFOVZooms = true;
-
-            bInitializedScope = true;
-        }
+        bInitializedScope = true;
     }
 }
 
@@ -252,24 +165,7 @@ simulated event RenderOverlays(Canvas Canvas)
         }
     }
 
-    if (bUsingSights && Playa != none && (ScopeDetail == RO_ModelScope || ScopeDetail == RO_ModelScopeHigh))
-    {
-        if (ShouldDrawPortal() && ScopeScriptedTexture != none)
-        {
-            Skins[LenseMaterialID] = ScopeScriptedShader;
-            ScopeScriptedTexture.Client = self;   // Need this because this can get corrupted - Ramm
-            ScopeScriptedTexture.Revision = (ScopeScriptedTexture.Revision +1);
-        }
-
-        bDrawingFirstPerson = true;
-
-        Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
-
-        bDrawingFirstPerson = false;
-    }
-    // Added "bInIronViewCheck here. Hopefully it prevents us getting the scope overlay when not zoomed.
-    // Its a bit of a band-aid solution, but it will work til we get to the root of the problem - Ramm 08/12/04
-    else if (ScopeDetail == RO_TextureScope && bPlayerViewIsZoomed && bUsingSights)
+    if (bPlayerViewIsZoomed && bUsingSights)
     {
         Skins[LenseMaterialID] = ScriptedTextureFallback;
 
@@ -330,21 +226,8 @@ simulated state IronSightZoomIn
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
-            if (ScopeDetail == RO_ModelScopeHigh)
-            {
-                TargetDisplayFOV = default.IronSightDisplayFOVHigh;
-                TargetPVO = default.XoffsetHighDetail;
-            }
-            else if (ScopeDetail == RO_ModelScope)
-            {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
-                TargetPVO = default.XoffsetScoped;
-            }
-            else
-            {
-                TargetDisplayFOV = default.IronSightDisplayFOV;
-                TargetPVO = default.PlayerViewOffset;
-            }
+            TargetDisplayFOV = default.IronSightDisplayFOV;
+            TargetPVO = default.PlayerViewOffset;
 
             DisplayFOV = TargetDisplayFOV;
             PlayerViewOffset = TargetPVO;
