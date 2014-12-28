@@ -2085,9 +2085,7 @@ state PutWeaponAway
     }
 }
 
-//-----------------------------------------------------------------------------
-// TakeFallingDamage - Increased damage once over safe fall threshold
-//-----------------------------------------------------------------------------
+// Increased damage once over safe fall threshold
 // Hacked in code to hurt players who are moving too fast in any direction when they land
 function TakeFallingDamage()
 {
@@ -2101,17 +2099,17 @@ function TakeFallingDamage()
         {
             MakeNoise(1.0);
 
-            if (Velocity.Z < -1 * MaxFallSpeed)
+            if (Velocity.Z < -1.0 * MaxFallSpeed)
             {
                 EffectiveSpeed = Velocity.Z;
 
                 if (TouchingWaterVolume())
                 {
-                    EffectiveSpeed = FMin(0, EffectiveSpeed + 100);
+                    EffectiveSpeed = FMin(0.0, EffectiveSpeed + 100.0);
                 }
                 if (EffectiveSpeed < -1 * MaxFallSpeed)
                 {
-                    TakeDamage(-100 * (1.5 * EffectiveSpeed + MaxFallSpeed) / MaxFallSpeed, none, Location, vect(0, 0, 0), class'Fell');
+                    TakeDamage(-100 * (1.5 * EffectiveSpeed + MaxFallSpeed) / MaxFallSpeed, none, Location, vect(0.0, 0.0, 0.0), class'Fell');
                     // Damaged the legs
                     UpdateDamageList(254);
                 }
@@ -2120,7 +2118,7 @@ function TakeFallingDamage()
 
         if (Controller != none)
         {
-            Shake = FMin(1, -1 * Velocity.Z / MaxFallSpeed);
+            Shake = FMin(1.0, -1.0 * Velocity.Z / MaxFallSpeed);
             Controller.DamageShake(Shake);
         }
     }
@@ -2134,21 +2132,20 @@ function TakeFallingDamage()
             {
                 if (TouchingWaterVolume())
                 {
-                    TotalSpeed = FMin(0, TotalSpeed + 100);
+                    TotalSpeed = FMin(0.0, TotalSpeed + 100.0);
                 }
 
                 if (TotalSpeed > MinHurtSpeed)
                 {
-                    TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0, 0, 0), class'DH_ExitMovingVehicleDamType');
-                    // Damaged the legs
-                    UpdateDamageList(254);
+                    TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0.0, 0.0, 0.0), class'DH_ExitMovingVehicleDamType');
+                    UpdateDamageList(254); // damaged the legs
                 }
             }
         }
 
         if (Controller != none)
         {
-            Shake = FMin(1, TotalSpeed / MinHurtSpeed);
+            Shake = FMin(1.0, TotalSpeed / MinHurtSpeed);
             Controller.DamageShake(Shake);
         }
     }
@@ -2228,20 +2225,18 @@ function HandleMortarUnflinch()
     SetAnimAction('MortarUnflinch');
 }
 
-//-----------------------------------------------------------------------------
-// PlayMantle - Mantle anims
-//-----------------------------------------------------------------------------
+// Mantle anims
 simulated function PlayMantle()
 {
     local name Anim;
     local float AnimTimer;
 
     bPhysicsAnimUpdate = false;
-    LockRootMotion(1); // Lock the rendering of the root bone to where it is (it will still translate for calculation purposes)
+    LockRootMotion(1); // lock the rendering of the root bone to where it is (it will still translate for calculation purposes)
 
     if (IsLocallyControlled())
     {
-        PlayOwnedSound(MantleSound, SLOT_Interact, 1.0,, 10);
+        PlayOwnedSound(MantleSound, SLOT_Interact, 1.0,, 10.0);
     }
 
     Anim = SetMantleAnim();
@@ -2270,13 +2265,13 @@ simulated function PlayMantle()
     {
         if (Role == ROLE_Authority)
         {
-            ClientMessage("SERVER Playing anim: " @ Anim);
-            Log("SERVER Playing anim: " @ Anim);
+            ClientMessage("SERVER playing anim:" @ Anim);
+            Log("SERVER playing anim:" @ Anim);
         }
         else
         {
-            ClientMessage("CLIENT Playing anim: " @ Anim);
-            Log("CLIENT Playing anim: " @ Anim);
+            ClientMessage("CLIENT playing anim:" @ Anim);
+            Log("CLIENT playing anim:" @ Anim);
         }
     }
 }
@@ -2353,12 +2348,8 @@ simulated function ResetRootBone()
     }
 }
 
-//-----------------------------------------------------------------------------
-// SetAnimAction - Checks WeaponState (new enum for added anim capabilities) instead of FiringState
-//-----------------------------------------------------------------------------
-// Overridden to add AT assisted reload animations
-// And again for Mantling animations
-// And again for mortar animations
+// Checks WeaponState (new enum for added anim capabilities) instead of FiringState
+// Overridden to add AT assisted reload animations & again for mantling animations & again for mortar animations
 simulated event SetAnimAction(name NewAction)
 {
     local name UsedAction;
@@ -2366,8 +2357,7 @@ simulated event SetAnimAction(name NewAction)
     if (!bWaitForAnim)
     {
         // Since you can't call SetAnimAction for the same action twice in a row (it won't get replicated)
-        // For animations that need to happen twice in a row (such as working the bolt of a rifle)
-        // we alternate animaction names for these actions so they replicate properly
+        // For animations that need to happen twice in a row (such as working the bolt of a rifle) we alternate animaction names for these actions so they replicate properly
         if (Level.Netmode == NM_Client)
         {
             UsedAction = GetAnimActionName(NewAction);
@@ -2387,16 +2377,16 @@ simulated event SetAnimAction(name NewAction)
         // Weapon switching actions
         if (IsDrawAnim(UsedAction))
         {
-            AnimBlendParams(1,1.0 , 0.0, 0.2, SpineBone1);
-            AnimBlendParams(1,1.0, 0.0, 0.2, SpineBone2);
+            AnimBlendParams(1, 1.0 , 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
             PlayUpperBodyAnim(UsedAction, 1.0, 0.0);
         }
         else if (IsPutAwayAnim(UsedAction))
         {
-            AnimBlendParams(1,1.0 , 0.0, 0.2, SpineBone1);
-            AnimBlendParams(1,1.0, 0.0, 0.2, SpineBone2);
+            AnimBlendParams(1, 1.0 , 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
             WeaponState = GS_IgnoreAnimend;
-            PlayUpperBodyAnim(UsedAction, 1.0, 0.1, GetAnimDuration(AnimAction, 1.0) * 2);
+            PlayUpperBodyAnim(UsedAction, 1.0, 0.1, GetAnimDuration(AnimAction, 1.0) * 2.0);
 
         }
         else if (UsedAction == 'ClearAnims')
@@ -2530,7 +2520,7 @@ simulated event SetAnimAction(name NewAction)
                 if (WeaponState == GS_none || WeaponState == GS_Ready)
                 {
                     AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
-                    PlayAnim(UsedAction,, 0.1, 1);
+                    PlayAnim(UsedAction,, 0.1, 1.0);
                     WeaponState = GS_Ready;
                 }
             }
@@ -2556,7 +2546,7 @@ simulated event SetAnimAction(name NewAction)
             if (WeaponState == GS_None || WeaponState == GS_Ready)
             {
                 AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
-                PlayAnim(UsedAction,, 0.1, 1);
+                PlayAnim(UsedAction,, 0.1, 1.0);
                 WeaponState = GS_Ready;
             }
         }
@@ -2566,6 +2556,7 @@ simulated event SetAnimAction(name NewAction)
 //------------------------
 // Mantling Functions
 //------------------------
+
 simulated function HUDCheckMantle()
 {
     // Only run this on the client, otherwise we'll bring servers to their knees
@@ -2579,15 +2570,15 @@ simulated function HUDCheckMantle()
 simulated function bool CanMantle(optional bool bActualMantle, optional bool bForceTest)
 {
     local DHWeapon DHW;
-    local vector Extent, HitLoc, HitNorm, StartLoc, EndLoc, X, Y, Z;
-    local int i;
+    local vector   Extent, HitLoc, HitNorm, StartLoc, EndLoc, X, Y, Z;
+    local int      i;
     local DHPlayer Player;
 
     DHW = DHWeapon(Weapon);
 
-    if (bOnFire || !bForceTest && (Velocity != vect(0, 0, 0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') || (Level.TimeSeconds + 1 < NextJumpTime) || Stamina < 2
-     || bIsMantling || Physics != PHYS_Walking || bBipodDeployed || (Weapon != none && (Weapon.bUsingSights || !Weapon.IsInState('Idle') ||
-     (DHW != none && !DHW.WeaponAllowMantle())))))
+    if (bOnFire || !bForceTest && (Velocity != vect(0.0, 0.0, 0.0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') || 
+        (Level.TimeSeconds + 1.0 < NextJumpTime) || Stamina < 2.0 || bIsMantling || Physics != PHYS_Walking || bBipodDeployed || 
+        (Weapon != none && (Weapon.bUsingSights || !Weapon.IsInState('Idle') || (DHW != none && !DHW.WeaponAllowMantle())))))
     {
         return false;
     }
@@ -2600,19 +2591,18 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
     // The extent size and trace height are set to detect anything above MAXSTEPHEIGHT (35uu) and below shoulder height (94uu)
     // A player's "location" is 57.45 uu above "ground"
-
     Extent.X = CollisionRadius;
     Extent.Y = CollisionRadius;
-    Extent.Z = 28; // Half the height of the actual trace
+    Extent.Z = 28.0; // half the height of the actual trace
 
     GetAxes(Rotation,X,Y,Z);
 
     StartLoc = Location;
-    StartLoc.Z += 5; // Necessary to make the bottom of the extent just clip the MINFLOORZ height and the top hit shoulder height
-    EndLoc = StartLoc + X * 15;
+    StartLoc.Z += 5.0; // necessary to make the bottom of the extent just clip the MINFLOORZ height and the top hit shoulder height
+    EndLoc = StartLoc + X * 15.0;
 
     // This is the initial trace to see if there's anything in front of the pawn
-    if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) == none) // * 50
+    if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) == none) // * 50.0
     {
         return false;
     }
@@ -2627,18 +2617,18 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     Extent.Z = 0.5;
 
     StartLoc.Z = Location.Z + 31.1; // ~89 uu above ground, roughly shoulder height - 0.55 higher than max climb height
-    EndLoc = StartLoc + X * 30;
+    EndLoc = StartLoc + X * 30.0;
 
     if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
     {
-        //Spawn(class'DH_DebugTracer',self,,HitLoc,Rotator(HitNorm));
+        //Spawn(class'DH_DebugTracer', self,, HitLoc, Rotator(HitNorm));
         //ClientMessage("Object is too high to mantle");
         return false;
     }
 
-    EndLoc += X * 7; // Brings us to a total of 60uu out from our starting location, which is how far our animations go
+    EndLoc += X * 7; // brings us to a total of 60uu out from our starting location, which is how far our animations go
     StartLoc = EndLoc;
-    EndLoc.Z = Location.Z - 22; // 36 uu above ground, which is just above MAXSTEPHEIGHT - NOTE: testing shows that you can actually step higher than MAXSTEPHEIGHT... Nevermind, this is staying as-is
+    EndLoc.Z = Location.Z - 22; // 36 uu above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
 
     // Trace downward to find the top of the object - coming from above to prevent false positives from uneven surfaces
     if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) == none)
@@ -2659,17 +2649,16 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
     StartLoc = HitLoc;
     EndLoc = StartLoc;
-    EndLoc.Z += CollisionHeight * 2;
+    EndLoc.Z += CollisionHeight * 2.0;
 
     // Trace back up to ensure that there's enough room to stand on the object
     if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
     {
         //ClientMessage("Upward trace was obstructed - we can't stand!");
-
         EndLoc = StartLoc;
-        EndLoc.Z += CrouchHeight * 2;
+        EndLoc.Z += CrouchHeight * 2.0;
 
-        // if we can't stand, see if there's room to crouch on it instead
+        // If we can't stand, see if there's room to crouch on it instead
         if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
         {
             //ClientMessage("Upward trace was obstructed - we can't fit by crouching!");
@@ -2683,11 +2672,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         bCrouchMantle = false;
     }
 
-    // -----
-    // Calculations for the actual mantle action
-    // Only run when server initiates an actual mantle
-    // -----
-
+    // Calculations for the actual mantle action - only run when server initiates an actual mantle
     if (bActualMantle)
     {
         if (bMantleDebug && IsLocallyControlled())
@@ -2697,14 +2682,14 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         }
 
         // Stop any movement before the climb to prevent any overshoot
-        Velocity = vect(0, 0, 0);
-        Acceleration = vect(0, 0, 0);
+        Velocity = vect(0.0, 0.0, 0.0);
+        Acceleration = vect(0.0, 0.0, 0.0);
 
         // Our original downward trace isn't accurate enough, so lets find the ACTUAL top of the object
         Extent.Z = 0.5;
         StartLoc = Location;
-        StartLoc.Z = MantleEndPoint.Z - 1;
-        EndLoc = StartLoc + X * 30;
+        StartLoc.Z = MantleEndPoint.Z - 1.0;
+        EndLoc = StartLoc + X * 30.0;
 
         for (i = 0; i < 5; i++)
         {
@@ -2714,12 +2699,12 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
             }
             else
             {
-                StartLoc.Z -= 1;
-                EndLoc.Z -= 1;
+                StartLoc.Z -= 1.0;
+                EndLoc.Z -= 1.0;
             }
         }
 
-        MantleHeight = (HitLoc.Z + 58) - Location.Z;
+        MantleHeight = (HitLoc.Z + 58.0) - Location.Z;
 
         if (bMantleDebug)
         {
@@ -2737,7 +2722,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
         bIsMantling = true;
         StartMantleTime = Level.TimeSeconds;
-        bCanMantle = false; // Removes icon while mantling
+        bCanMantle = false; // removes icon while mantling
         MantleYaw = Rotation.Yaw;
 
         if (IsLocallyControlled())
@@ -2749,7 +2734,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
         if (Role == ROLE_Authority)
         {
-            if ((Level.Game != none) && (Level.Game.GameDifficulty > 2))
+            if ((Level.Game != none) && (Level.Game.GameDifficulty > 2.0))
             {
                 MakeNoise(0.1 * Level.Game.GameDifficulty);
             }
@@ -2786,7 +2771,7 @@ function PreMantle()
     bCollideWorld = false;
     WeaponAttachment.SetDrawType(DT_None);
     AirSpeed = default.GroundSpeed;
-    AccelRate = 50000;
+    AccelRate = 50000.0;
 
     if (Role < ROLE_Authority)
     {
@@ -2809,7 +2794,7 @@ function DoMantle(float DeltaTime)
     RootDelta = GetRootLocationDelta();
 
     // This prevents us from starting the anim on other clients until the movement has started replicating, to maintain anim sync
-    if (Role == ROLE_Authority && !bMantleAnimRun && Physics == PHYS_Flying && Velocity != vect(0, 0, 0))
+    if (Role == ROLE_Authority && !bMantleAnimRun && Physics == PHYS_Flying && Velocity != vect(0.0, 0.0, 0.0))
     {
         HandleMantle();
         bMantleAnimRun = true;
@@ -2822,21 +2807,21 @@ function DoMantle(float DeltaTime)
 
     if (IsLocallyControlled() && Physics == PHYS_Flying)
     {
-        if (RootDelta == vect(0, 0, 0))
+        if (RootDelta == vect(0.0, 0.0, 0.0))
         {
-            NewAcceleration = vect(0, 0, 0);
+            NewAcceleration = vect(0.0, 0.0, 0.0);
         }
         else
         {
             FinalVelocity = RootDelta / DeltaTime;
             DeltaVelocity = FinalVelocity - Velocity;
             NewAcceleration = DeltaVelocity / DeltaTime;
-            NewAcceleration -= Acceleration; // The engine seems to treat new acceleration values as cumulative, not absolute, so this anticipates that
+            NewAcceleration -= Acceleration; // the engine seems to treat new acceleration values as cumulative, not absolute, so this anticipates that
         }
 
-        if (NewAcceleration.Z > 0 && (MantleHeight >= 80 || bCrouchMantle))
+        if (NewAcceleration.Z > 0.0 && (MantleHeight >= 80.0 || bCrouchMantle))
         {
-            NewAcceleration.Z += 500; // Try to compensate for the slight errors caused by varying DeltaTime
+            NewAcceleration.Z += 500.0; // try to compensate for the slight errors caused by varying DeltaTime
         }
     }
 }
@@ -2860,10 +2845,10 @@ function PostMantle()
 
     if (!bCancelledMantle)
     {
-        Velocity = vect(0, 0, 0);
+        Velocity = vect(0.0, 0.0, 0.0);
     }
 
-    NewAcceleration = vect(0, 0, 0);
+    NewAcceleration = vect(0.0, 0.0, 0.0);
     AccelRate = default.AccelRate;
     Airspeed = default.AirSpeed;
     ClientForceStaminaUpdate(Stamina);
@@ -2895,23 +2880,23 @@ function TestMantleSuccess()
 {
     if (bCrouchMantle)
     {
-        MantleEndPoint += CrouchHeight * vect(0, 0, 1);
+        MantleEndPoint += CrouchHeight * vect(0.0, 0.0, 1.0);
     }
     else
     {
-        MantleEndPoint += CollisionHeight * vect(0, 0, 1);
+        MantleEndPoint += CollisionHeight * vect(0.0, 0.0, 1.0);
     }
 
-    if (Location.Z < MantleEndPoint.Z - 10 || Location.Z > MantleEndPoint.Z + 15 || VSize(Location - MantleEndPoint) > CollisionRadius * 2.5)
+    if (Location.Z < MantleEndPoint.Z - 10.0 || Location.Z > MantleEndPoint.Z + 15.0 || VSize(Location - MantleEndPoint) > CollisionRadius * 2.5)
     {
         if (bMantleDebug)
         {
-            if (Location.Z < MantleEndPoint.Z - 10)
+            if (Location.Z < MantleEndPoint.Z - 10.0)
             {
                 ClientMessage("We've finished too low");
                 Log("We've finished too low");
             }
-            else if (Location.Z > MantleEndPoint.Z + 15)
+            else if (Location.Z > MantleEndPoint.Z + 15.0)
             {
                 ClientMessage("We've finished too high");
                 Log("We've finished too high");
@@ -2924,36 +2909,36 @@ function TestMantleSuccess()
         }
 
         SetLocation(MantleEndPoint);
-        Velocity = vect(0, 0, 0);
-        NewAcceleration = vect(0, 0, 0);
+        Velocity = vect(0.0, 0.0, 0.0);
+        NewAcceleration = vect(0.0, 0.0, 0.0);
     }
 }
 
 simulated function CancelMantle()
 {
-    local vector tmpVel;
+    local vector TempVel;
 
     SetTimer(0.0, false);
 
     // Make sure our feet haven't clipped through the ground, else we'll fall through the world
-    if (!FastTrace((Location - (vect(0, 0, 1) * CollisionHeight)),Location))
+    if (!FastTrace((Location - (vect(0.0, 0.0, 1.0) * CollisionHeight)),Location))
     {
-        MoveSmooth(vect(0,0,20));
+        MoveSmooth(vect(0.0, 0.0, 20.0));
     }
 
     // To prevent people from falling through scenery, give them a shove backwards
     if (bCrouchMantle)
     {
-        tmpVel = Normal(vector(Rotation)) * -150;
+        TempVel = Normal(vector(Rotation)) * -150.0;
     }
     else
     {
-        tmpVel = Normal(vector(Rotation)) * -100;
+        TempVel = Normal(vector(Rotation)) * -100.0;
     }
 
-    tmpVel.Z = 150;
+    TempVel.Z = 150.0;
 
-    Velocity = tmpVel;
+    Velocity = TempVel;
     SetPhysics(PHYS_Falling);
     bCancelledMantle = true;
 
@@ -2988,51 +2973,51 @@ simulated function name SetMantleAnim()
 
     if (bCrouchMantle)
     {
-        if (MantleHeight > 84)
+        if (MantleHeight > 84.0)
         {
             MantleAnim = MantleAnim_88C;
         }
-        else if (MantleHeight > 80)
+        else if (MantleHeight > 80.0)
         {
             MantleAnim = MantleAnim_84C;
         }
-        else if (MantleHeight > 76)
+        else if (MantleHeight > 76.0)
         {
             MantleAnim = MantleAnim_80C;
         }
-        else if (MantleHeight > 72)
+        else if (MantleHeight > 72.0)
         {
             MantleAnim = MantleAnim_76C;
         }
-        else if (MantleHeight > 68)
+        else if (MantleHeight > 68.0)
         {
             MantleAnim = MantleAnim_72C;
         }
-        else if (MantleHeight > 64)
+        else if (MantleHeight > 64.0)
         {
             MantleAnim = MantleAnim_68C;
         }
-        else if (MantleHeight > 60)
+        else if (MantleHeight > 60.0)
         {
             MantleAnim = MantleAnim_64C;
         }
-        else if (MantleHeight > 56)
+        else if (MantleHeight > 56.0)
         {
             MantleAnim = MantleAnim_60C;
         }
-        else if (MantleHeight > 52)
+        else if (MantleHeight > 52.0)
         {
             MantleAnim = MantleAnim_56C;
         }
-        else if (MantleHeight > 48)
+        else if (MantleHeight > 48.0)
         {
             MantleAnim = MantleAnim_52C;
         }
-        else if (MantleHeight > 44)
+        else if (MantleHeight > 44.0)
         {
             MantleAnim = MantleAnim_48C;
         }
-        else if (MantleHeight > 40)
+        else if (MantleHeight > 40.0)
         {
             MantleAnim = MantleAnim_44C;
         }
@@ -3043,51 +3028,51 @@ simulated function name SetMantleAnim()
     }
     else
     {
-        if (MantleHeight > 84)
+        if (MantleHeight > 84.0)
         {
             MantleAnim = MantleAnim_88S;
         }
-        else if (MantleHeight > 80)
+        else if (MantleHeight > 80.0)
         {
             MantleAnim = MantleAnim_84S;
         }
-        else if (MantleHeight > 76)
+        else if (MantleHeight > 76.0)
         {
             MantleAnim = MantleAnim_80S;
         }
-        else if (MantleHeight > 72)
+        else if (MantleHeight > 72.0)
         {
             MantleAnim = MantleAnim_76S;
         }
-        else if (MantleHeight > 68)
+        else if (MantleHeight > 68.0)
         {
             MantleAnim = MantleAnim_72S;
         }
-        else if (MantleHeight > 64)
+        else if (MantleHeight > 64.0)
         {
             MantleAnim = MantleAnim_68S;
         }
-        else if (MantleHeight > 60)
+        else if (MantleHeight > 60.0)
         {
             MantleAnim = MantleAnim_64S;
         }
-        else if (MantleHeight > 56)
+        else if (MantleHeight > 56.0)
         {
             MantleAnim = MantleAnim_60S;
         }
-        else if (MantleHeight > 52)
+        else if (MantleHeight > 52.0)
         {
             MantleAnim = MantleAnim_56S;
         }
-        else if (MantleHeight > 48)
+        else if (MantleHeight > 48.0)
         {
             MantleAnim = MantleAnim_52S;
         }
-        else if (MantleHeight > 44)
+        else if (MantleHeight > 44.0)
         {
             MantleAnim = MantleAnim_48S;
         }
-        else if (MantleHeight > 40)
+        else if (MantleHeight > 40.0)
         {
             MantleAnim = MantleAnim_44S;
         }
@@ -3223,7 +3208,7 @@ simulated function CrouchMantleAdjust()
     local float HeightAdjust;
 
     HeightAdjust = default.CollisionHeight - CrouchHeight;
-    SetLocation(Location + (HeightAdjust * vect(0, 0, 1)));
+    SetLocation(Location + (HeightAdjust * vect(0.0, 0.0, 1.0)));
 }
 
 simulated function DoMantleCrouch()
@@ -3237,10 +3222,9 @@ simulated function DoMantleCrouch()
 // Added a pre-mantle bob
 event UpdateEyeHeight(float DeltaTime)
 {
-    local float smooth, MaxEyeHeight;
-    local float OldEyeHeight;
-    local Actor HitActor;
-    local vector HitLocation,HitNormal;
+    local float  Smooth, MaxEyeHeight, OldEyeHeight;
+    local Actor  HitActor;
+    local vector HitLocation, HitNormal;
 
     if (Controller == none)
     {
@@ -3248,34 +3232,34 @@ event UpdateEyeHeight(float DeltaTime)
         return;
     }
 
-    // start DH
+    // START DH
 
     // Lower eye height here to hide crouch transition at end of mantle
     if (bSetMantleEyeHeight)
     {
         if (bCrouchMantle)
         {
-            smooth = FMin(0.65, 10.0 * DeltaTime);
-            EyeHeight = EyeHeight * (1 - 0.1 * smooth);
+            Smooth = FMin(0.65, 10.0 * DeltaTime);
+            EyeHeight = EyeHeight * (1 - 0.1 * Smooth);
 
-            if (EyeHeight < CrouchEyeHeightMod * CrouchHeight + 1)
+            if (EyeHeight < CrouchEyeHeightMod * CrouchHeight + 1.0)
             {
                 BaseEyeHeight = CrouchEyeHeightMod * CrouchHeight;
                 bSetMantleEyeHeight = false;
 
-                // sneak these in here, just to prevent a second bob if we start climbing just as we land
+                // Sneak these in here, just to prevent a second bob if we start climbing just as we land
                 bJustLanded = false;
                 bLandRecovery = false;
             }
         }
         else if (bEndMantleBob)
         {
-            smooth = FMin(0.9, 10.0 * DeltaTime);
+            Smooth = FMin(0.9, 10.0 * DeltaTime);
             OldEyeHeight = EyeHeight;
-            EyeHeight = FMin(EyeHeight * (1 - 0.6 * smooth) + BaseEyeHeight * 0.6 * smooth, BaseEyeHeight);
-            LandBob *= (1 - smooth);
+            EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
+            LandBob *= (1 - Smooth);
 
-            if (EyeHeight >= BaseEyeHeight - 1)
+            if (EyeHeight >= BaseEyeHeight - 1.0)
             {
                 bSetMantleEyeHeight = false;
                 bEndMantleBob = false;
@@ -3288,15 +3272,15 @@ event UpdateEyeHeight(float DeltaTime)
         }
         else
         {
-            smooth = FMin(0.65, 10.0 * DeltaTime);
+            Smooth = FMin(0.65, 10.0 * DeltaTime);
             OldEyeHeight = EyeHeight;
-            EyeHeight = EyeHeight * (1 - 0.1 * smooth);
+            EyeHeight = EyeHeight * (1.0 - 0.1 * Smooth);
             LandBob += 0.03 * (OldEyeHeight - EyeHeight);
 
-            if (EyeHeight < (0.5 * default.BaseEyeHeight + 1) || LandBob > 3)
+            if (EyeHeight < (0.5 * default.BaseEyeHeight + 1.0) || LandBob > 3.0)
             {
                 bEndMantleBob = true;
-                EyeHeight = 0.5 * BaseEyeHeight + 1;
+                EyeHeight = 0.5 * BaseEyeHeight + 1.0;
             }
         }
 
@@ -3312,7 +3296,7 @@ event UpdateEyeHeight(float DeltaTime)
         return;
     }
 
-    HitActor = Trace(HitLocation, HitNormal, Location + (CollisionHeight + MAXSTEPHEIGHT + 14) * vect(0, 0, 1), Location + CollisionHeight * vect(0, 0, 1), true);
+    HitActor = Trace(HitLocation, HitNormal, Location + (CollisionHeight + MAXSTEPHEIGHT + 14.0) * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0), true);
 
     if (HitActor == none)
     {
@@ -3320,41 +3304,39 @@ event UpdateEyeHeight(float DeltaTime)
     }
     else
     {
-        MaxEyeHeight = HitLocation.Z - Location.Z - 14;
+        MaxEyeHeight = HitLocation.Z - Location.Z - 14.0;
     }
 
-    if (Abs(Location.Z - OldZ) > 15)
+    if (Abs(Location.Z - OldZ) > 15.0)
     {
         bJustLanded = false;
         bLandRecovery = false;
     }
 
-    // smooth up/down stairs
+    // Smooth up/down stairs
     if (!bJustLanded)
     {
-        smooth = FMin(0.9, 10.0 * DeltaTime / Level.TimeDilation);
-        LandBob *= (1 - smooth);
+        Smooth = FMin(0.9, 10.0 * DeltaTime / Level.TimeDilation);
+        LandBob *= (1.0 - Smooth);
 
         if (Controller.WantsSmoothedView())
         {
             OldEyeHeight = EyeHeight;
-            EyeHeight = FClamp((EyeHeight - Location.Z + OldZ) * (1 - smooth) + BaseEyeHeight * smooth,
-                                -0.5 * CollisionHeight,
-                                MaxEyeHeight);
+            EyeHeight = FClamp((EyeHeight - Location.Z + OldZ) * (1.0 - Smooth) + BaseEyeHeight * Smooth, -0.5 * CollisionHeight, MaxEyeHeight);
         }
         else
         {
-            EyeHeight = FMin(EyeHeight * (1 - smooth) + BaseEyeHeight * smooth, MaxEyeHeight);
+            EyeHeight = FMin(EyeHeight * (1.0 - Smooth) + BaseEyeHeight * Smooth, MaxEyeHeight);
         }
     }
     else if (bLandRecovery)
     {
-        smooth = FMin(0.9, 10.0 * DeltaTime);
+        Smooth = FMin(0.9, 10.0 * DeltaTime);
         OldEyeHeight = EyeHeight;
-        EyeHeight = FMin(EyeHeight * (1 - 0.6 * smooth) + BaseEyeHeight * 0.6 * smooth, BaseEyeHeight);
-        LandBob *= (1 - smooth);
+        EyeHeight = FMin(EyeHeight * (1.0 - 0.6 * Smooth) + BaseEyeHeight * 0.6 * Smooth, BaseEyeHeight);
+        LandBob *= (1.0 - Smooth);
 
-        if (EyeHeight >= BaseEyeHeight - 1)
+        if (EyeHeight >= BaseEyeHeight - 1.0)
         {
             bJustLanded = false;
             bLandRecovery = false;
@@ -3363,41 +3345,40 @@ event UpdateEyeHeight(float DeltaTime)
     }
     else
     {
-        smooth = FMin(0.65, 10.0 * DeltaTime);
+        Smooth = FMin(0.65, 10.0 * DeltaTime);
         OldEyeHeight = EyeHeight;
-        EyeHeight = FMin(EyeHeight * (1 - 1.5*smooth), MaxEyeHeight);
+        EyeHeight = FMin(EyeHeight * (1.0 - 1.5*Smooth), MaxEyeHeight);
         LandBob += 0.03 * (OldEyeHeight - EyeHeight);
 
-        if ((EyeHeight < 0.25 * BaseEyeHeight + 1) || LandBob > 3)
+        if ((EyeHeight < 0.25 * BaseEyeHeight + 1.0) || LandBob > 3.0)
         {
             bLandRecovery = true;
-            EyeHeight = 0.25 * BaseEyeHeight + 1;
+            EyeHeight = 0.25 * BaseEyeHeight + 1.0;
         }
     }
 
     Controller.AdjustView(DeltaTime);
 }
 
-// LimitYaw - limits player's yaw or turning amount
-function LimitYaw(out int yaw)
+// LimitYaw - limits player's Yaw or turning amount
+function LimitYaw(out int Yaw)
 {
-    local int MaxBipodYaw;
-    local int MinBipodYaw;
+    local int MaxBipodYaw, MinBipodYaw;
 
     if (bBipodDeployed)
     {
         MaxBipodYaw = InitialDeployedRotation.Yaw + DeployedPositiveYawLimit;
         MinBipodYaw = InitialDeployedRotation.Yaw + DeployedNegativeYawLimit;
 
-        yaw = FClamp(yaw, MinBipodYaw, MaxBipodYaw);
+        Yaw = FClamp(Yaw, MinBipodYaw, MaxBipodYaw);
     }
     else if (bIsMantling)
     {
-        yaw = MantleYaw;
+        Yaw = MantleYaw;
     }
     else if (bLockViewRotation)
     {
-        yaw = LockViewRotation.Yaw;
+        Yaw = LockViewRotation.Yaw;
     }
 }
 
@@ -3433,7 +3414,7 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
             MinBipodPitch = PitchDownLimit;
         }
 
-        // handles areas where newPitchUpLimit is less than newPitchDownLimit
+        // Handles areas where newPitchUpLimit is less than newPitchDownLimit
         if (Pitch > MaxBipodPitch && Pitch < MinBipodPitch)
         {
             if ((Pitch - MaxBipodPitch) < (MinBipodPitch - Pitch))
@@ -3445,62 +3426,61 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
                 Pitch = MinBipodPitch;
             }
         }
-        // following 2 if's handle when newPitchUpLimit is greater than newPitchDownLimit
+        // Following 2 ifs, handle when newPitchUpLimit is greater than newPitchDownLimit
         else if (Pitch > MaxBipodPitch && MaxBipodPitch > MinBipodPitch)
         {
-            pitch = MaxBipodPitch;
+            Pitch = MaxBipodPitch;
         }
         else if (Pitch < MinBipodPitch && MaxBipodPitch > MinBipodPitch)
         {
-            pitch = MinBipodPitch;
+            Pitch = MinBipodPitch;
         }
     }
     else
     {
         if (bIsCrawling)
         {
-            // Smoothly rotate the player to the pitch limit when you start crawling.
-            // This prevents the jarring "pop" when the pitch limit kicks in to
-            // prevent you from looking through your arms
+            // Smoothly rotate the player to the pitch limit when you start crawling
+            // This prevents the jarring "pop" when the pitch limit kicks in to prevent you from looking through your arms
             if (Weapon != none && Weapon.IsCrawling())
             {
-                if (pitch > CrawlingPitchUpLimit && pitch < CrawlingPitchDownLimit)
+                if (Pitch > CrawlingPitchUpLimit && Pitch < CrawlingPitchDownLimit)
                 {
-                    if (pitch - CrawlingPitchUpLimit < CrawlingPitchDownLimit - pitch)
+                    if (Pitch - CrawlingPitchUpLimit < CrawlingPitchDownLimit - Pitch)
                     {
                         if (Level.TimeSeconds - Weapon.LastStartCrawlingTime < 0.15)
                         {
-                            pitch -= CrawlPitchTweenRate * DeltaTime;
+                            Pitch -= CrawlPitchTweenRate * DeltaTime;
                         }
                         else
                         {
-                            pitch = CrawlingPitchUpLimit;
+                            Pitch = CrawlingPitchUpLimit;
                         }
                     }
                     else
                     {
                         if (Level.TimeSeconds - Weapon.LastStartCrawlingTime < 0.15)
                         {
-                            pitch += CrawlPitchTweenRate * DeltaTime;
+                            Pitch += CrawlPitchTweenRate * DeltaTime;
                         }
                         else
                         {
-                            pitch = CrawlingPitchDownLimit;
+                            Pitch = CrawlingPitchDownLimit;
                         }
                     }
                 }
             }
             else
             {
-                if (pitch > PronePitchUpLimit && pitch < PronePitchDownLimit)
+                if (Pitch > PronePitchUpLimit && Pitch < PronePitchDownLimit)
                 {
-                    if (pitch - PronePitchUpLimit < PronePitchDownLimit - pitch)
+                    if (Pitch - PronePitchUpLimit < PronePitchDownLimit - Pitch)
                     {
-                        pitch = PronePitchUpLimit;
+                        Pitch = PronePitchUpLimit;
                     }
                     else
                     {
-                        pitch = PronePitchDownLimit;
+                        Pitch = PronePitchDownLimit;
                     }
                 }
             }
@@ -3508,11 +3488,11 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
         else if (bIsMantling)
         {
             // As above, but for mantling
-            if (pitch != 0)
+            if (Pitch != 0)
             {
-                if (pitch > 100 && pitch < 65435)
+                if (Pitch > 100 && Pitch < 65435)
                 {
-                    if (pitch < 65435 - pitch) //65536
+                    if (Pitch < 65435 - Pitch) // 65536
                     {
                         if (Level.TimeSeconds - StartMantleTime < 0.15)
                         {
@@ -3562,14 +3542,14 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
     return Pitch;
 }
 
-// Returns true if the player can switch the prone state. Only valid on the client
+// Returns true if the player can switch the prone state - only valid on the client
 simulated function bool CanProneTransition()
 {
     //TODO: Remove PHYS_Falling.
     return (Physics == PHYS_Walking || Physics == PHYS_Falling) && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange());
 }
 
-// Returns true if the player can switch the crouch state.
+// Returns true if the player can switch the crouch state
 simulated function bool CanCrouchTransition()
 {
     if (IsTransitioningToProne() || bIsMantling)
@@ -3587,13 +3567,11 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (TraceWall(16384, 64) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanRight = false;
-        return;
     }
-
-    if (!bLeanLeft)
+    else if (!bLeanLeft)
     {
         bLeanRight = true;
     }
@@ -3601,13 +3579,11 @@ simulated function LeanRight()
 
 simulated function LeanLeft()
 {
-    if (TraceWall(-16384, 64) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanLeft = false;
-        return;
     }
-
-    if (!bLeanRight)
+    else if (!bLeanRight)
     {
         bLeanLeft = true;
     }
@@ -3615,9 +3591,10 @@ simulated function LeanLeft()
 
 //------------------------------
 //
-// Functions for Burning Players+
+// Functions for Burning Players
 //
 //------------------------------
+
 simulated function StartBurnFX()
 {
     local int i;
@@ -3634,12 +3611,12 @@ simulated function StartBurnFX()
         FlameFX.Emitters[2].UseSkeletalLocationAs = PTSU_SpawnOffset;
     }
 
-    SetOverlayMaterial(BurningOverlayMaterial, 999.000000, true);
-    HeadGear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.000000, true);
+    SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
+    HeadGear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
 
     for (i = 0; i < AmmoPouches.Length; i++)
     {
-        AmmoPouches[i].SetOverlayMaterial(BurningOverlayMaterial, 999.000000, true);
+        AmmoPouches[i].SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
     }
 
     bBurnFXOn = true;
@@ -3654,11 +3631,11 @@ simulated function EndBurnFX()
         FlameFX.Kill();
     }
 
-    SetOverlayMaterial(CharredOverlayMaterial, 999.000000, true);
+    SetOverlayMaterial(CharredOverlayMaterial, 999.0, true);
 
     for (i = 0; i < AmmoPouches.Length; i++)
     {
-        AmmoPouches[i].SetOverlayMaterial(CharredOverlayMaterial, 999.000000, true);
+        AmmoPouches[i].SetOverlayMaterial(CharredOverlayMaterial, 999.0, true);
     }
 
     bBurnFXOn = false;
@@ -3678,7 +3655,7 @@ function BurningDropWeaps()
 
         Weapon.HolderDied();
         TossVel = vector(GetViewRotation());
-        TossVel = TossVel * ((Velocity dot TossVel) + 50) + vect(0, 0, 200);
+        TossVel = TossVel * ((Velocity dot TossVel) + 50.0) + vect(0.0, 0.0, 200.0);
         TossWeapon(TossVel);
     }
 
@@ -3689,9 +3666,9 @@ function BurningDropWeaps()
 function DropWeaponInventory(vector TossVel)
 {
     local Inventory Inv;
-    local Weapon W;
-    local vector X,Y,Z;
-    local int i;
+    local Weapon    W;
+    local vector    X,Y,Z;
+    local int       i;
     local array<Inventory> InventoryList;
 
     GetAxes(Rotation, X, Y, Z);
@@ -3713,7 +3690,7 @@ function DropWeaponInventory(vector TossVel)
 
         if (W != none && W.bCanThrow)
         {
-            if (W.IsA('BinocularsItem'))    //TODO: this is shit, need a way to define something as being droppable but not on death
+            if (W.IsA('BinocularsItem')) //TODO: this is shit, need a way to define something as being droppable but not on death
             {
                 W.Destroy();
             }
@@ -3736,7 +3713,7 @@ function bool ResupplyMortarAmmunition()
         return false;
     }
 
-    if (GetTeamNum() == 0)  //Axis
+    if (GetTeamNum() == 0) // axis
     {
         MortarHEAmmo = Clamp(MortarHEAmmo + 4, 0, 16);
         MortarSmokeAmmo = Clamp(MortarSmokeAmmo + 1, 0, 4);
@@ -3748,7 +3725,7 @@ function bool ResupplyMortarAmmunition()
 
         return true;
     }
-    else if (GetTeamNum() == 1) //Allies
+    else if (GetTeamNum() == 1) // allies
     {
         MortarHEAmmo = Clamp(MortarHEAmmo + 6, 0, 24);
         MortarSmokeAmmo = Clamp(MortarSmokeAmmo + 1, 0, 4);
