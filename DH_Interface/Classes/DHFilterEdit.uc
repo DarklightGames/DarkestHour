@@ -162,7 +162,7 @@ event HandleParameters(string Param1, string Param2)
         {
             cb_Mutators.MyComboBox.SetIndex(2);
             if (FilterITem.QueryType==QT_Equals)
-                SetMutator(FilterItem.Value,1);
+                SetMutator(FilterItem.Value, 1);
             else if (FilterItem.QueryType==QT_NotEquals)
                 SetMutator(FilterItem.Value,2);
         }

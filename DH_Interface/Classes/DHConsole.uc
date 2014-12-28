@@ -47,7 +47,7 @@ event ConnectFailure(string FailCode,string URL)
         {
             if (SavedPasswords[Index].Server == Server)
             {
-                SavedPasswords.Remove(Index,1);
+                SavedPasswords.Remove(Index, 1);
                 SaveConfig();
             }
         }

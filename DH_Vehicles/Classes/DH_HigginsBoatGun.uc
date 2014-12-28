@@ -8,9 +8,9 @@ class DH_HigginsBoatGun extends ROVehicleWeapon;
 var()   class<Projectile> TracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
 var()   int               TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
 
-var     bool  bReloading;  // This MG is currently reloading
-var     int   NumMags;     // Number of mags carried for this MG;
-var()   float ReloadLength;// Length of the reload animation. Sorry for the literal, but the Hud Overlay isn't spawned on the server.
+var     bool  bReloading;   // This MG is currently reloading
+var     int   NumMags;      // Number of mags carried for this MG;
+var()   float ReloadLength; // Length of the reload animation. Sorry for the literal, but the Hud Overlay isn't spawned on the server.
 
 replication
 {

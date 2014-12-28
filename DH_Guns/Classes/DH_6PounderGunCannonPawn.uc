@@ -64,7 +64,7 @@ simulated function DrawHUD(Canvas Canvas)
                     Canvas.Style = ERenderStyle.STY_Normal;
 
                     SavedColor = Canvas.DrawColor;
-                    WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255,175);
+                    WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255, 175);
                     Canvas.DrawColor = WhiteColor;
                     MapX = RangePositionX * Canvas.ClipX;
                     MapY = RangePositionY * Canvas.ClipY;

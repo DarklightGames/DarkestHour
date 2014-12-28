@@ -90,9 +90,9 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     if (VehicleBase == none)
     {

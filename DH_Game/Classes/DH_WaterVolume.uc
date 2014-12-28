@@ -58,13 +58,13 @@ simulated event Touch(Actor Other)
 
             //Leaving charred looks dumb and anyone with that much burn degree wouldn't be able to fight
             //So I remove charred and turn off all overlay materials
-            P.SetOverlayMaterial(none, 0.0f, true);
-            P.HeadGear.SetOverlayMaterial(none, 0.0f, true);
+            P.SetOverlayMaterial(none, 0.0, true);
+            P.HeadGear.SetOverlayMaterial(none, 0.0, true);
 
             //Gotta do it to ammo pouches as well
             for (i = 0; i < P.AmmoPouches.Length; i++)
             {
-                P.AmmoPouches[i].SetOverlayMaterial(none, 0.0f, true);
+                P.AmmoPouches[i].SetOverlayMaterial(none, 0.0, true);
             }
         }
     }

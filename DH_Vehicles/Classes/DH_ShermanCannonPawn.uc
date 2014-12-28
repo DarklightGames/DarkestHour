@@ -75,7 +75,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -86,7 +86,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> Rotation;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }

@@ -136,15 +136,15 @@ simulated function Fire(float F)
     if (Instigator == none ||
         Instigator.Controller == none ||
         Instigator.IsProneTransitioning() ||
-        Instigator.Velocity != vect(0, 0 ,0))
+        Instigator.Velocity != vect(0.0, 0.0, 0.0))
     {
         return;
     }
 
     TraceStart = Instigator.Location;
-    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * 100.0; //TODO: adjust this value
+    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * 100.0; // TODO: adjust this value
 
-    foreach TraceActors(class'DHObstacle', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1, 1, 1))
+    foreach TraceActors(class'DHObstacle', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
         if (O != none && !O.IsCleared() && O.bCanBeClearedWithWireCutters)
         {

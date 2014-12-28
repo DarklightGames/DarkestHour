@@ -165,7 +165,7 @@ simulated state ViewTransition
                 Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
         }
 
-         // bDrawDriverinTP=true;//Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+        //bDrawDriverinTP=true; //Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
         if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
             && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
@@ -273,7 +273,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -284,7 +284,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> Rotation;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }

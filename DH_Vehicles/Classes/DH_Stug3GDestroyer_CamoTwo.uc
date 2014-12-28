@@ -197,7 +197,7 @@ simulated function Tick(float DeltaTime)
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=vect(0, 0, 0);
+        velocity=vect(0.0, 0.0, 0.0);
         Throttle=0;
         ThrottleAmount=0;
         bWantsToThrottle = false;

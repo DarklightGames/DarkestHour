@@ -91,7 +91,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
                     break;
                 }
                 //Remove the element in the array so we don't select it again
-                TempObjNumsModify.Remove(RandomNum,1);
+                TempObjNumsModify.Remove(RandomNum, 1);
             }
         break;
     }

@@ -54,7 +54,7 @@ function Timer()
 
     if (SpawnCounter <= BatterySize)
     {
-        AimVec = vect(0.0,0.0,0.0);
+        AimVec = vect(0.0, 0.0, 0.0);
         AimVec.X += Rand(SpreadAmount);
 
         if (FRand() > 0.5)

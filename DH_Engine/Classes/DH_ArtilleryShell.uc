@@ -22,7 +22,7 @@ simulated singular function Touch(Actor Other)
     {
         LastTouched = Other;
 
-        if (Velocity == vect(0,0,0) || Other.IsA('Mover'))
+        if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
         {
             ProcessTouch(Other,Location);
             LastTouched = none;

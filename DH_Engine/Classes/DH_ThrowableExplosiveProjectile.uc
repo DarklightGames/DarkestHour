@@ -22,7 +22,7 @@ simulated function Tick(float DeltaTime)
         if (FuzeLengthTimer <= 0.0)
         {
             bAlreadyExploded = true;
-            Explode(Location, vect(0.0,0.0,1.0));
+            Explode(Location, vect(0.0, 0.0, 1.0));
         }
     }
 }
@@ -263,7 +263,7 @@ simulated singular function Touch(Actor Other)
     {
         LastTouched = Other;
 
-        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
         {
             ProcessTouch(Other,Location);
             LastTouched = none;
@@ -319,7 +319,7 @@ simulated function Destroyed()
 
     PlaySound(ExplosionSound[Rand(3)], , 5.0, false, ExplosionSoundRadius, 1.0, true);
 
-    Start = Location + 32.0 * vect(0.0,0.0,1.0);
+    Start = Location + 32.0 * vect(0.0, 0.0, 1.0);
 
     if (ShrapnelCount > 0 && Role == ROLE_Authority)
     {
@@ -336,22 +336,22 @@ simulated function Destroyed()
         // If the projectile is still moving we'll need to spawn a different explosion effect
         if (Physics == PHYS_Falling)
         {
-            Spawn(ExplodeMidAirEffectClass, , , Start, rotator(vect(0.0,0.0,1.0)));
+            Spawn(ExplodeMidAirEffectClass, , , Start, rotator(vect(0.0, 0.0, 1.0)));
         }
         // If the projectile has stopped and is on the ground we'll spawn a ground explosion effect and spawn some dirt flying out
         else if (Physics == PHYS_None)
         {
-            GetHitSurfaceType(ST, vect(0.0,0.0,1.0));
+            GetHitSurfaceType(ST, vect(0.0, 0.0, 1.0));
 
             if (ST == EST_Snow || ST == EST_Ice)
             {
-                Spawn(ExplodeSnowEffectClass, , , Start, rotator(vect(0.0,0.0,1.0)));
-                Spawn(ExplosionDecalSnow, self, , Location, rotator(-vect(0.0,0.0,1.0)));
+                Spawn(ExplodeSnowEffectClass, , , Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecalSnow, self, , Location, rotator(-vect(0.0, 0.0, 1.0)));
             }
             else
             {
-                Spawn(ExplodeDirtEffectClass, , , Start, rotator(vect(0.0,0.0,1.0)));
-                Spawn(ExplosionDecal, self, , Location, rotator(-vect(0.0,0.0,1.0)));
+                Spawn(ExplodeDirtEffectClass, , , Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecal, self, , Location, rotator(-vect(0.0, 0.0, 1.0)));
             }
         }
     }

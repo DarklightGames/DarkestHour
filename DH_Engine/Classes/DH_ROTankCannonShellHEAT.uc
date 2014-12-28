@@ -122,7 +122,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
             TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (X * TempMaxWall), false);
 
             // Due to static meshes resulting in a hit even with the trace starting right inside of them (terrain and BSP 'space' would return none)
-            if (TraceHitActor != none && !SetLocation(TempHitLocation + (vect(0.5,0.0,0.0) * X)))
+            if (TraceHitActor != none && !SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * X)))
             {
                 TraceHitActor = none;
             }
@@ -135,7 +135,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
         TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + X * MaxWall, false);
     }
 
-    if (TraceHitActor != none && SetLocation(TempHitLocation + (vect(0.5,0.0,0.0) * X)))
+    if (TraceHitActor != none && SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * X)))
     {
         WorldPenetrationExplode(TempHitLocation + PeneExploWallOut * TempHitNormal, TempHitNormal);
 

@@ -93,7 +93,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     if (bDoOffsetTrace)
     {
-        Extent = ProjClass.default.CollisionRadius * vect(1.0,1.0,0.0);
+        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
         WeaponPawn = VehicleWeaponPawn(Owner);
 

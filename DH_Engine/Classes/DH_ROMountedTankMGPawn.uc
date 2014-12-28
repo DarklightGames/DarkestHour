@@ -84,9 +84,9 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     if (VehicleBase == none)
     {
@@ -160,10 +160,10 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.Style = ERenderStyle.STY_Alpha;
 
         // Draw reticle
-        ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
+        ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
         OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1 - OverlayCenterScale) * float(MGOverlay.USize) / 2;
-        OverlayCenterTexSize =  float(MGOverlay.USize) * OverlayCenterScale;
+        OverlayCenterTexStart = (1 - OverlayCenterScale) * Float(MGOverlay.USize) / 2;
+        OverlayCenterTexSize =  Float(MGOverlay.USize) * OverlayCenterScale;
 
         Canvas.SetPos(0, 0);
         Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);

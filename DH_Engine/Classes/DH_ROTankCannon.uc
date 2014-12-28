@@ -888,23 +888,23 @@ event bool AttemptFire(Controller C, bool bAltFire)
             if (s < 0.6)
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * SecondarySpread);
-                WeaponFireRotation += rot(1,6,0); // correction to the aim point and to center the spread pattern
+                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
             }
             else
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * 0.0015);
-                WeaponFireRotation += rot(1,6,0); //correction to the aim point and to center the spread pattern
+                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
             }
         }
         else if (TertiarySpread > 0 && bUsesTertiarySpread && ProjectileClass == TertiaryProjectileClass)
         {
               WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * TertiarySpread);
-              WeaponFireRotation += rot(1,6,0); //correction to the aim point and to center the spread pattern
+              WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
         }
         else if (Spread > 0.0)
         {
               WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
-              WeaponFireRotation += rot(1,6,0); //correction to the aim point and to center the spread pattern
+              WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
         }
 
         DualFireOffset *= -1.0;
@@ -1077,7 +1077,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     if (bDoOffsetTrace)
     {
-        Extent = ProjClass.default.CollisionRadius * vect(1.0,1.0,0.0);
+        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
 
         WeaponPawn = VehicleWeaponPawn(Owner);

@@ -165,9 +165,9 @@ function PostBeginPlay()
     for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); k++)
     {
         DHGRI.AlliedRallyPoints[k].OfficerPRI = none;
-        DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0, 0, 0);
+        DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0.0, 0.0, 0.0);
         DHGRI.AxisRallyPoints[k].OfficerPRI = none;
-        DHGRI.AxisRallyPoints[k].RallyPointLocation = vect(0, 0, 0);
+        DHGRI.AxisRallyPoints[k].RallyPointLocation = vect(0.0, 0.0, 0.0);
     }
 
     // Clear help requests array
@@ -280,12 +280,12 @@ function PostBeginPlay()
     //Scale the Reinforcement limits based on the server's capacity
     if (MaxPlayersOverride != 0 && MaxPlayersOverride < MaxPlayers)
     {
-        MaxPlayerRatio = MaxPlayersOverride / 32.0f;
+        MaxPlayerRatio = MaxPlayersOverride / 32.0;
     }
     else
     {
         MaxPlayersOverride = 0;
-        MaxPlayerRatio = MaxPlayers / 32.0f;
+        MaxPlayerRatio = MaxPlayers / 32.0;
     }
     LevelInfo.Allies.SpawnLimit *= MaxPlayerRatio;
     LevelInfo.Axis.SpawnLimit *= MaxPlayerRatio;
@@ -946,7 +946,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
     if (Other.PlayerReplicationInfo.playername~=S)
         return;
 
-    S = Left(S,32);
+    S = Left(S, 32);
     //ReplaceText(S, " ", "_");
     ReplaceText(S, "\"", "");
 
@@ -1043,7 +1043,7 @@ function AddRole(RORoleInfo NewRole)
     {
         if (AlliesRoleIndex >= arraycount(DHAlliesRoles))
         {
-            warn(NewRole @ "ignored when adding Allied roles to the map, exceeded limit");
+            Warn(NewRole @ "ignored when adding Allied roles to the map, exceeded limit");
             return;
         }
 
@@ -1055,7 +1055,7 @@ function AddRole(RORoleInfo NewRole)
     {
         if (AxisRoleIndex >= arraycount(DHAxisRoles))
         {
-            warn(NewRole @ "ignored when adding Axis roles to the map, exceeded limit");
+            Warn(NewRole @ "ignored when adding Axis roles to the map, exceeded limit");
             return;
         }
 
@@ -1616,8 +1616,8 @@ function ResetMortarTargets()
     //Clear mortar allied targets.
     for (k = 0; k < arraycount(GRI.AlliedMortarTargets); k++)
     {
-        GRI.AlliedMortarTargets[k].Location = vect(0, 0, 0);
-        GRI.AlliedMortarTargets[k].HitLocation = vect(0, 0, 0);
+        GRI.AlliedMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
+        GRI.AlliedMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
         GRI.AlliedMortarTargets[k].Controller = none;
         GRI.AlliedMortarTargets[k].Time = 0;
     }
@@ -1625,8 +1625,8 @@ function ResetMortarTargets()
     //Clear mortar german targets.
     for (k = 0; k < arraycount(GRI.GermanMortarTargets); k++)
     {
-        GRI.GermanMortarTargets[k].Location = vect(0, 0, 0);
-        GRI.GermanMortarTargets[k].HitLocation = vect(0, 0, 0);
+        GRI.GermanMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
+        GRI.GermanMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
         GRI.GermanMortarTargets[k].Controller = none;
         GRI.GermanMortarTargets[k].Time = 0;
     }
@@ -1656,7 +1656,7 @@ function RestartPlayer(Controller C)
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
 
         //If the Allies have used up 85% of their reinforcements, send them a reinforcements low message
-        if (SpawnCount[ALLIES_TEAM_INDEX] == int(LevelInfo.Allies.SpawnLimit * 0.85))
+        if (SpawnCount[ALLIES_TEAM_INDEX] == Int(LevelInfo.Allies.SpawnLimit * 0.85))
         {
             SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
         }
@@ -1666,7 +1666,7 @@ function RestartPlayer(Controller C)
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
 
         //If Axis has used up 85% of their reinforcements, send them a reinforcements low message
-        if (SpawnCount[AXIS_TEAM_INDEX] == int(LevelInfo.Axis.SpawnLimit * 0.85))
+        if (SpawnCount[AXIS_TEAM_INDEX] == Int(LevelInfo.Axis.SpawnLimit * 0.85))
         {
             SendReinforcementMessage(AXIS_TEAM_INDEX, 0);
         }

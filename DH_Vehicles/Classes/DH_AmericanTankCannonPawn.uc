@@ -68,7 +68,7 @@ simulated function DrawHUD(Canvas Canvas)
                 OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
                 OverlayCenterTexStart = (1 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2;
                 OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
-                Canvas.SetPos(0,0);
+                Canvas.SetPos(0.0, 0.0);
                 Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
                 if (Gun != none && Gun.ProjectileClass != none)
@@ -126,7 +126,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
     local float ScreenRatio;
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0,0);
+    Canvas.SetPos(0.0, 0.0);
     Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 

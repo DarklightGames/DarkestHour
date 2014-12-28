@@ -95,7 +95,7 @@ simulated function BlowUp(vector HitLocation)
     GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
     GetExplosionSound(ExplosionSound, HitSurfaceType);
     Spawn(ExplosionEmitterClass, self,, HitLocation);
-    Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0, 0, -1)));
+    Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
     PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248, 1.0, true);
     DoShakeEffect();
 }
@@ -104,7 +104,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
     //Explode in water.
     if (NewVolume.bWaterVolume)
-        Explode(Location, vect(0, 0, 1));
+        Explode(Location, vect(0.0, 0.0, 1.0));
 }
 
 simulated function Explode(vector HitLocation, vector HitNormal)

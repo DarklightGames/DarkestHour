@@ -97,7 +97,7 @@ simulated function DrawHUD(Canvas Canvas)
                     Canvas.Style = ERenderStyle.STY_Normal;
 
                     SavedColor = Canvas.DrawColor;
-                    WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255,175);
+                    WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255, 175);
                     Canvas.DrawColor = WhiteColor;
 
                     MapX = RangePositionX * Canvas.ClipX;
@@ -210,9 +210,9 @@ function bool PlaceExitingDriver()
     local int i;
     local vector tryPlace, Extent, ZOffset;
 
-    Extent = Driver.default.CollisionRadius * vect(1,1,0);
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0,0,0.5);
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     for (i = 0; i < ExitPositions.Length; i++)
     {
@@ -384,24 +384,24 @@ exec function DebugExit()
         else
             tryPlace = ExitPositions[i];
 
-       DrawStayingDebugLine(VehicleBase.Location, tryPlace, 0,255,0);
+       DrawStayingDebugLine(VehicleBase.Location, tryPlace, 0, 255, 0);
 
-       DrawDebugCylinder(tryPlace,X,Y,Z,class'ROEngine.ROPawn'.default.CollisionRadius,class'ROEngine.ROPawn'.default.CollisionHeight,10,0, 255, 0);
+       DrawDebugCylinder(tryPlace, X, Y, Z, class'ROEngine.ROPawn'.default.CollisionRadius, class'ROEngine.ROPawn'.default.CollisionHeight, 10, 0, 255, 0);
 
     }
 }
 
 // Draws a debugging cylinder out of wireframe lines
-simulated function DrawDebugCylinder(vector Base,vector X, vector Y,vector Z, FLOAT Radius,float HalfHeight,int NumSides, byte R, byte G, byte B)
+simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, FLOAT Radius,float HalfHeight,int NumSides, byte R, byte G, byte B)
 {
     local float AngleDelta;
     local vector LastVertex, Vertex;
     local int SideIndex;
 
-    AngleDelta = 2.0f * PI / NumSides;
+    AngleDelta = 2.0 * PI / NumSides;
     LastVertex = Base + X * Radius;
 
-    for (SideIndex = 0;SideIndex < NumSides;SideIndex++)
+    for (SideIndex = 0; SideIndex < NumSides; SideIndex++)
     {
         Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1)) + Y * Sin(AngleDelta * (SideIndex + 1))) * Radius;
 
@@ -419,7 +419,7 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
     local float ScreenRatio;
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0,0);
+    Canvas.SetPos(0.0, 0.0);
     Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 

@@ -176,7 +176,7 @@ simulated function Tick(float DeltaTime)
 
     if (bEngineDead || bEngineOff)
     {
-        velocity = vect(0, 0, 0);
+        velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0;
         ThrottleAmount = 0;
         bWantsToThrottle = false;
@@ -332,7 +332,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Driver killed");
                 }
 
-                Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
+                Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
         }
         else
@@ -346,7 +346,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Commander killed");
                     }
 
-                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
+                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                 }
 
                 if (FRand() < Damage / 1000)

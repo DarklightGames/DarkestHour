@@ -116,9 +116,9 @@ simulated function vector ColourMap (vector rgb)
   local vector hls;
   local float r,g,b,h,l,s;
 
-  rgb.x= Fclamp(rgb.x,0,1);
-  rgb.y= Fclamp(rgb.y,0,1);
-  rgb.z= Fclamp(rgb.z,0,1);
+  rgb.x= Fclamp(rgb.x, 0, 1);
+  rgb.y= Fclamp(rgb.y, 0, 1);
+  rgb.z= Fclamp(rgb.z, 0, 1);
 
   r=rgb.x;
   g=rgb.y;

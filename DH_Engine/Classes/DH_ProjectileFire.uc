@@ -85,7 +85,7 @@ function DoFireEffect()
 
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
+        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true); // was false to only trace worldgeometry
 
         // Instead of just checking walls, lets check all actors - that way we won't have rounds spawning on the other side of players & missing them altogether - Ramm 10/14/04
         if (Other != none)
@@ -275,13 +275,13 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                         if (!HitPawn.bDeleteMe)
                         {
                             HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
-                                ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType,HitPoints);
+                                ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType, HitPoints);
                         }
                     }
                     else
                     {
                         Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
-                            ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),ProjectileClass.default.MyDamageType);
+                            ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
                     }
                 }
             }
@@ -289,7 +289,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
             {
                 if (WeapAttach != none)
                 {
-                    WeapAttach.UpdateHit(Other,HitLocation, HitNormal);
+                    WeapAttach.UpdateHit(Other, HitLocation, HitNormal);
                 }
 
                 if (RODestroyableStaticMesh(Other) != none)

@@ -16,7 +16,7 @@ class DH_AdminMenuMutator extends Mutator;
 
 const  BOTH_TEAMS_INDEX = 99;           // an index no. representing that an action is to be performed on both teams (adding to RO's ALLIES_TEAM_INDEX & AXIS_TEAM_INDEX)
 const  ERROR_INDEX = -1;                // an index number representing an error return, e.g. could not find a match
-const  NULL_VECTOR = vect(0.0,0.0,0.0); // just saves having lots of NullVector local variables
+const  NULL_VECTOR = vect(0.0, 0.0, 0.0); // just saves having lots of NullVector local variables
 
 struct  Minefield
 {
@@ -1035,7 +1035,7 @@ function ParaDropThisPlayer(Controller PlayerToDrop, vector ParaDropVector, opti
             DH_Pawn(PlayerPawn).GiveChute();
         }
 
-        PlayerPawn.SetLocation(ParaDropVector + RandRange(10,20) * 60 * vector(RotRand()));
+        PlayerPawn.SetLocation(ParaDropVector + RandRange(10.0, 20.0) * 60.0 * vector(RotRand()));
 
         if (PlayerPawn.IsA('Vehicle')) // if we dropped a vehicle, we must now reset it's normal physics, otherwise it just hangs in the sky !
         {

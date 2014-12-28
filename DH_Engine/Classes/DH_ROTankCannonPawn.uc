@@ -120,9 +120,9 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     if (VehicleBase == none)
     {
@@ -226,19 +226,19 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
           Level.Game.Broadcast(self, "Gun & Turret disabled");
         }
 
-        super.HandleTurretRotation(DeltaTime,0,0);
+        super.HandleTurretRotation(DeltaTime, 0, 0);
     }
     else if (!bTurretRingDamaged && bGunPivotDamaged)
     {
         if (bDebuggingText && Role == ROLE_Authority)
           Level.Game.Broadcast(self, "Gun disabled");
-       super.HandleTurretRotation(DeltaTime,YawChange,0);
+       super.HandleTurretRotation(DeltaTime,YawChange, 0);
     }
     else if (bTurretRingDamaged && !bGunPivotDamaged)
     {
        if (bDebuggingText && Role == ROLE_Authority)
           Level.Game.Broadcast(self, "Turret disabled");
-       super.HandleTurretRotation(DeltaTime,0,PitchChange);
+       super.HandleTurretRotation(DeltaTime, 0, PitchChange);
     }
     else if (!bTurretRingDamaged && !bGunPivotDamaged)
      super.HandleTurretRotation(DeltaTime,YawChange,PitchChange);
@@ -316,7 +316,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -327,7 +327,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> Rotation;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -342,9 +342,9 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0,0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
+    Canvas.SetPos(0.0, 0.0);
+    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Recalls that optics are still non-functioning when players jump in and out

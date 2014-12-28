@@ -427,7 +427,7 @@ simulated function bool AllowReload()
 {
     if (!Instigator.bBipodDeployed && Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
     {
-        class'ROBipodWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller),1);
+        class'ROBipodWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller), 1);
     }
 
     if (IsFiring() || IsBusy() || !Instigator.bBipodDeployed)

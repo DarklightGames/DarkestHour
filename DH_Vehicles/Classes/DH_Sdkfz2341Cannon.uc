@@ -77,7 +77,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             if (FireSpread > 0)
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * FireSpread);
-                WeaponFireRotation += rot(1,6,0); // correction to the aim point and to center the spread pattern // Matt: added back from DHROTC
+                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern // Matt: added back from DHROTC
             }
         }
 
@@ -182,7 +182,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     if (bDoOffsetTrace)
     {
-        Extent = ProjClass.default.CollisionRadius * vect(1.0,1.0,0.0);
+        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
         WeaponPawn = VehicleWeaponPawn(Owner);
 

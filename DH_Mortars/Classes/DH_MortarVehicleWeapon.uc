@@ -96,7 +96,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     R = Rotation - CurrentAim;
     R.Pitch = 0;
     DebugForward = vector(R);
-    DebugRight = vect(0, 0, 1) cross DebugForward;
+    DebugRight = vect(0.0, 0.0, 1.0) cross DebugForward;
 
     if (!bDebugNoSpread)
     {

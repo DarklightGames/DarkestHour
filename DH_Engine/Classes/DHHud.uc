@@ -1954,7 +1954,7 @@ simulated function DrawObjectives(Canvas C)
     // Draw coordinates text on sides of the map
     for (i = 0; i < 9; i++)
     {
-        MapCoordTextXWidget.PosX = (float(i) + 0.5) / 9.0;
+        MapCoordTextXWidget.PosX = (Float(i) + 0.5) / 9.0;
         MapCoordTextXWidget.Text = MapCoordTextX[i];
         DrawTextWidgetClipped(C, MapCoordTextXWidget, SubCoords);
 
@@ -2048,7 +2048,7 @@ simulated function DrawObjectives(Canvas C)
             // Vehicle
             else if (VehicleWeaponPawn(V) == none && V.Controller != none)
             {
-                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, Left(Bot(V.Controller).Squad.GetOrders(),1) @ V.NumPassengers());
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, Left(Bot(V.Controller).Squad.GetOrders(), 1) @ V.NumPassengers());
             }
         }
 
@@ -2060,7 +2060,7 @@ simulated function DrawObjectives(Canvas C)
                 Widget = MapIconTeam[P.GetTeamNum()];
                 Widget.TextureScale = 0.025f;
 
-                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, P.Pawn.Location, MapCenter, Left(Bot(P).Squad.GetOrders(),1));
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, P.Pawn.Location, MapCenter, Left(Bot(P).Squad.GetOrders(), 1));
             }
         }
     }

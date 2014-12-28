@@ -29,7 +29,7 @@ function PostBeginPlay()
     {
         foreach AllActors(class'Teleporter', Tele, TeleportersToModify[i])
         {
-            TeleReferences.Insert(0,1); //Adds a new spot at index for the attached tele
+            TeleReferences.Insert(0, 1); //Adds a new spot at index for the attached tele
             TeleReferences[0] = Tele; //Sets the attached tele in the reference array
             break;
         }

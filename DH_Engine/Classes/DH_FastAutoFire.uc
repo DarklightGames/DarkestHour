@@ -65,7 +65,7 @@ function DoFireEffect()
 
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
+        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true); // was false to only trace worldgeometry
 
         // Instead of just checking walls, lets check all actors - that way we won't have rounds spawning on the other side of players & missing them altogether - Ramm 10/14/04
         if (Other != none)

@@ -2398,7 +2398,7 @@ function PerformBarrelChange()
     {
         Barrels[BarrelIndex].Destroy();
 
-        Barrels.Remove(BarrelIndex,1);
+        Barrels.Remove(BarrelIndex, 1);
 
         RemainingBarrels = byte(Barrels.Length);
     }

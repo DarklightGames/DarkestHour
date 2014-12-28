@@ -77,17 +77,17 @@ simulated function UpdateScoreBoard (Canvas C)
     Padding = 0.025 * C.SizeX;
 
     C.Style = 5;
-    C.SetDrawColor(0,0,0,128);
-    C.SetPos(0.0,0.0);
+    C.SetDrawColor(0, 0, 0, 128);
+    C.SetPos(0.0, 0.0);
     C.DrawRect(texture'WhiteSquaretexture',C.ClipX,C.ClipY);
 
-    C.SetPos(0.0,CalcY(0.5,C));
-    C.SetDrawColor(255,255,255,255);
-    C.DrawTile(HeaderImage,C.ClipX,CalcY(1,C),0.0,0.0,2048.0,64.0);
+    C.SetPos(0.0, CalcY(0.5, C));
+    C.SetDrawColor(255, 255, 255, 255);
+    C.DrawTile(HeaderImage, C.ClipX, CalcY(1, C), 0.0, 0.0, 2048.0, 64.0);
 
-    C.SetDrawColor(0,0,0,255);
+    C.SetDrawColor(0, 0, 0, 255);
     C.Font = Class<DHHud>(HudClass).static.GetLargeMenuFont(C);
-    C.DrawTextJustified(TitleText,1,0.0,0.0,C.ClipX,CalcY(2,C));
+    C.DrawTextJustified(TitleText, 1, 0.0, 0.0, C.ClipX, CalcY(2, C));
     C.DrawColor = HudClass.default.WhiteColor;
     C.Font = Class<DHHud>(HudClass).static.GetSmallerMenuFont(C);
 
@@ -218,35 +218,35 @@ simulated function UpdateScoreBoard (Canvas C)
     Y = CalcY(2,C);
     Y += cellHeight;
     TeamColor = TeamColors[0];
-    DrawCell(C,TeamNameAxis$" - "$ROGameReplicationInfo(GRI).UnitName[0],0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+    DrawCell(C,TeamNameAxis$" - "$ROGameReplicationInfo(GRI).UnitName[0], 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
 
     Y += cellHeight;
 
     if (PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
-        DrawCell(C,ReinforcementsText $ " : " $ string(DHGameReplicationInfo(GRI).DHSpawnCount[0]),0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,ReinforcementsText $ " : " $ string(DHGameReplicationInfo(GRI).DHSpawnCount[0]), 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
 
     if (GRI.RoundLimit != 0)
-        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[0].Score))$"/"$string(GRI.RoundLimit),0,CalcX(BaseGermanX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[0].Score))$"/"$string(GRI.RoundLimit), 0,CalcX(BaseGermanX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     else
-        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[0].Score)),0,CalcX(BaseGermanX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[0].Score)), 0,CalcX(BaseGermanX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
 
     Y += cellHeight;
     if (bRequiredObjectives)
     {
-        DrawCell(C,RequiredObjHeldText $ " : " $ string(AxisReqObjCount),0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
-        DrawCell(C,SecondaryObjHeldText $ " : " $ string(Axis2ndObjCount),0,CalcX(BaseGermanX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,RequiredObjHeldText $ " : " $ string(AxisReqObjCount), 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,SecondaryObjHeldText $ " : " $ string(Axis2ndObjCount), 0,CalcX(BaseGermanX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     }
     else
     {
-        DrawCell(C,ObjectivesHeldText $ " : " $ string(AxisReqObjCount),0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,ObjectivesHeldText $ " : " $ string(AxisReqObjCount), 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     }
 
     Y += cellHeight;
-    DrawCell(C,PlayerText $ " (" $ GECount $ ")",0,X,Y,CalcX(7,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,PlayerText $ " (" $ GECount $ ")", 0,X,Y,CalcX(7,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
 
-    DrawCell(C,RoleText,0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,ScoreText,1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,PingText,1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,RoleText, 0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,ScoreText, 1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,PingText, 1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
     Y += cellHeight;
     for (i = 0; i < GECount; i++)
     {
@@ -294,17 +294,17 @@ simulated function UpdateScoreBoard (Canvas C)
                     if ((XL/C.ClipX) > 0.21)
                     {
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-                        DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                        DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
                     }
                     else
                     {
-                        DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                        DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                     }
                 }
                 else
                 {
-                    DrawCell(C,GermanPRI[i].PlayerName,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+                    DrawCell(C,GermanPRI[i].PlayerName, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
                 }
             }
             else
@@ -316,17 +316,17 @@ simulated function UpdateScoreBoard (Canvas C)
                     if ((XL/C.ClipX) > 0.22)
                     {
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-                        DrawCell(C,GermanPRI[i].PlayerName$AdminWaitingText,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
+                        DrawCell(C,GermanPRI[i].PlayerName$AdminWaitingText, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
                     }
                     else
                     {
-                        DrawCell(C,GermanPRI[i].PlayerName$AdminWaitingText,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
+                        DrawCell(C,GermanPRI[i].PlayerName$AdminWaitingText, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
                     }
                 }
                 else
                 {
-                    DrawCell(C,GermanPRI[i].PlayerName$WaitingText,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
+                    DrawCell(C,GermanPRI[i].PlayerName$WaitingText, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
                 }
             }
         }
@@ -339,17 +339,17 @@ simulated function UpdateScoreBoard (Canvas C)
                 if ((XL/C.ClipX) > 0.21)
                 {
                     //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-                    DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                    DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                     //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
                 }
                 else
                 {
-                    DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                    DrawCell(C,GermanPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                 }
             }
             else
             {
-                DrawCell(C,GermanPRI[i].PlayerName,0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+                DrawCell(C,GermanPRI[i].PlayerName, 0,CalcX(BaseGermanX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
             }
         }
 
@@ -358,18 +358,18 @@ simulated function UpdateScoreBoard (Canvas C)
         if ((XL/C.ClipX) > 0.13)
         {
             //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-            DrawCell(C,RoleName,0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+            DrawCell(C,RoleName, 0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
             //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
         }
         else
         {
-            DrawCell(C,RoleName,0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+            DrawCell(C,RoleName, 0,CalcX(BaseGermanX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
         }
 
         AxisTotalScore += GermanPRI[i].Score;
 
-        DrawCell(C,string(int(GermanPRI[i].Score)),1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
-        DrawCell(C,string(4 * GermanPRI[i].Ping),1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+        DrawCell(C,string(int(GermanPRI[i].Score)), 1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+        DrawCell(C,string(4 * GermanPRI[i].Ping), 1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
         Y += cellHeight;
         if (Y + cellHeight > C.ClipY)
             break;
@@ -377,9 +377,9 @@ simulated function UpdateScoreBoard (Canvas C)
 
     Y += cellHeight;
 
-    DrawCell(C,TotalsText$" : ",0,CalcX(BaseGermanX,C),Y,CalcX(11,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,string(AxisTotalScore),1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,string(AvgPing[0]),1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,TotalsText$" : ", 0,CalcX(BaseGermanX,C),Y,CalcX(11,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,string(AxisTotalScore), 1,CalcX(BaseGermanX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,string(AvgPing[0]), 1,CalcX(BaseGermanX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
 
     LeftY = Y;
 
@@ -388,33 +388,33 @@ simulated function UpdateScoreBoard (Canvas C)
     Y = CalcY(2,C);
     TeamColor = TeamColors[1];
     Y += cellHeight;
-    DrawCell(C,TeamNameAllies$" - "$ROGameReplicationInfo(GRI).UnitName[1],0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+    DrawCell(C,TeamNameAllies$" - "$ROGameReplicationInfo(GRI).UnitName[1], 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     Y += cellHeight;
 
     if (PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
-        DrawCell(C,ReinforcementsText $ " : " $ string(DHGameReplicationInfo(GRI).DHSpawnCount[1]),0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,ReinforcementsText $ " : " $ string(DHGameReplicationInfo(GRI).DHSpawnCount[1]), 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
 
     if (GRI.RoundLimit != 0)
-        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[1].Score))$"/"$string(GRI.RoundLimit),0,CalcX(BaseRussianX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[1].Score))$"/"$string(GRI.RoundLimit), 0,CalcX(BaseRussianX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     else
-        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[1].Score)),0,CalcX(BaseRussianX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,RoundsWonText $ " : " $ string(int(GRI.Teams[1].Score)), 0,CalcX(BaseRussianX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     Y += cellHeight;
 
     if (bRequiredObjectives)
     {
-        DrawCell(C,RequiredObjHeldText $ " : " $ string(AlliesReqObjCount),0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
-        DrawCell(C,SecondaryObjHeldText $ " : " $ string(Allies2ndObjCount),0,CalcX(BaseRussianX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,RequiredObjHeldText $ " : " $ string(AlliesReqObjCount), 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,SecondaryObjHeldText $ " : " $ string(Allies2ndObjCount), 0,CalcX(BaseRussianX + 7,C),Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     }
     else
     {
-        DrawCell(C,ObjectivesHeldText $ " : " $ string(AlliesReqObjCount),0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
+        DrawCell(C,ObjectivesHeldText $ " : " $ string(AlliesReqObjCount), 0,X,Y,CalcX(13.5,C),cellHeight, false,TeamColor);
     }
     Y += cellHeight;
 
-    DrawCell(C,PlayerText $ " (" $ RUCount $ ")",0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,RoleText,0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,ScoreText,1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,PingText,1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,PlayerText $ " (" $ RUCount $ ")", 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,RoleText, 0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,ScoreText, 1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,PingText, 1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
     Y += cellHeight;
     for (i = 0; i < RUCount; i++)
     {
@@ -462,17 +462,17 @@ simulated function UpdateScoreBoard (Canvas C)
                     if ((XL/C.ClipX) > 0.21)
                     {
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-                        DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                        DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
                     }
                     else
                     {
-                        DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                        DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                     }
                 }
                 else
                 {
-                    DrawCell(C,RussianPRI[i].PlayerName,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+                    DrawCell(C,RussianPRI[i].PlayerName, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
                 }
             }
             else
@@ -484,17 +484,17 @@ simulated function UpdateScoreBoard (Canvas C)
                     if ((XL/C.ClipX) > 0.22)
                     {
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-                        DrawCell(C,RussianPRI[i].PlayerName$AdminWaitingText,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
+                        DrawCell(C,RussianPRI[i].PlayerName$AdminWaitingText, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
                         //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
                     }
                     else
                     {
-                        DrawCell(C,RussianPRI[i].PlayerName$AdminWaitingText,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
+                        DrawCell(C,RussianPRI[i].PlayerName$AdminWaitingText, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
                     }
                 }
                 else
                 {
-                    DrawCell(C,RussianPRI[i].PlayerName$WaitingText,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
+                    DrawCell(C,RussianPRI[i].PlayerName$WaitingText, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HUDClass.default.GrayColor,HighLightColor);
                 }
             }
         }
@@ -507,17 +507,17 @@ simulated function UpdateScoreBoard (Canvas C)
                 if ((XL/C.ClipX) > 0.21)
                 {
                     //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-                    DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                    DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                     //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
                 }
                 else
                 {
-                    DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
+                    DrawCell(C,RussianPRI[i].PlayerName$" "$AdminText, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,HudClass.default.WhiteColor,HighLightColor);
                 }
             }
             else
             {
-                DrawCell(C,RussianPRI[i].PlayerName,0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+                DrawCell(C,RussianPRI[i].PlayerName, 0,CalcX(BaseRussianX,C),Y,CalcX(7,C),cellHeight,bHighLight,TeamColor,HighLightColor);
             }
         }
 
@@ -526,18 +526,18 @@ simulated function UpdateScoreBoard (Canvas C)
         if ((XL/C.ClipX) > 0.13)
         {
             //C.Font = Class<ROHud>(HudClass).static.GetSmallerMenuFont(C);
-            DrawCell(C,RoleName,0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+            DrawCell(C,RoleName, 0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
             //C.Font = Class<ROHud>(HudClass).static.GetSmallMenuFont(C);
         }
         else
         {
-            DrawCell(C,RoleName,0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+            DrawCell(C,RoleName, 0,CalcX(BaseRussianX + 7,C),Y,CalcX(4.0,C),cellHeight,bHighLight,TeamColor,HighLightColor);
         }
 
         AlliesTotalScore += RussianPRI[i].Score;
 
-        DrawCell(C,string(int(RussianPRI[i].Score)),1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
-        DrawCell(C,string(4 * RussianPRI[i].Ping),1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+        DrawCell(C,string(int(RussianPRI[i].Score)), 1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
+        DrawCell(C,string(4 * RussianPRI[i].Ping), 1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight,bHighLight,TeamColor,HighLightColor);
         Y += cellHeight;
         if (Y + cellHeight > C.ClipY)
             break;
@@ -545,9 +545,9 @@ simulated function UpdateScoreBoard (Canvas C)
 
     Y += cellHeight;
 
-    DrawCell(C,TotalsText$" : ",0,CalcX(BaseRussianX,C),Y,CalcX(11,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,string(AlliesTotalScore),1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
-    DrawCell(C,string(AvgPing[1]),1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,TotalsText$" : ", 0,CalcX(BaseRussianX,C),Y,CalcX(11,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,string(AlliesTotalScore), 1,CalcX(BaseRussianX + 11.0,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
+    DrawCell(C,string(AvgPing[1]), 1,CalcX(BaseRussianX + 12.5,C),Y,CalcX(1.5,C),cellHeight, true,HudClass.default.WhiteColor,TeamColor);
 
     RightY = Y;
 
@@ -556,7 +556,7 @@ simulated function UpdateScoreBoard (Canvas C)
     else
         Y = LeftY;
 
-    Y += cellHeight + 3;//Add some extra spacing above the spectators
+    Y += cellHeight + 3; //Add some extra spacing above the spectators
 
     if (Y + cellHeight > C.ClipY)
         return;
@@ -570,7 +570,7 @@ simulated function UpdateScoreBoard (Canvas C)
         C.TextSize(S $ "," $ UnassignedPRI[i].PlayerName,XL,YL);
         if (CalcX(1,C) + XL > C.ClipX)
         {
-            DrawCell(C,S,0,CalcX(BaseGermanX,C),Y,CalcX(29,C),cellHeight, false,HudClass.default.WhiteColor);
+            DrawCell(C,S, 0,CalcX(BaseGermanX,C),Y,CalcX(29,C),cellHeight, false,HudClass.default.WhiteColor);
             S = "";
             Y = Y + cellHeight;
             if (Y + cellHeight > C.ClipY)
@@ -582,7 +582,7 @@ simulated function UpdateScoreBoard (Canvas C)
         else
         {
             S = S $ UnassignedPRI[i].PlayerName;
-            DrawCell(C,S,0,CalcX(BaseGermanX,C),Y,CalcX(29,C),cellHeight, false,HudClass.default.WhiteColor);
+            DrawCell(C,S, 0,CalcX(BaseGermanX,C),Y,CalcX(29,C),cellHeight, false,HudClass.default.WhiteColor);
         }
     }
 }

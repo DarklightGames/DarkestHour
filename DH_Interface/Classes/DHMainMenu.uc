@@ -47,7 +47,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     local int xl,yl,y;
     super.InitComponent(MyController, MyOwner);
     Controller.LCDCls();
-    Controller.LCDDrawTile(Controller.LCDLogo,0,0,50,43,0,0,50,43);
+    Controller.LCDDrawTile(Controller.LCDLogo, 0, 0, 50, 43, 0, 0, 50, 43);
     y = 0;
     Controller.LCDStrLen("Darkest Hour",Controller.LCDMedFont,xl,yl);
     Controller.LCDDrawText("Darkest Hour",(100-(XL/2)),y,Controller.LCDMedFont);
@@ -268,7 +268,7 @@ event Timer()
                  command = getRequest$myLink.CRLF$"Host: "$newsIPAddr$myLink.CRLF$myLink.CRLF;
                  myLink.SendCommand(command);
                  pageWait = true;
-                 myLink.WaitForCount(1,20,1); // 20 sec timeout
+                 myLink.WaitForCount(1,20, 1); // 20 sec timeout
                  sendGet = false;
             }
             else if (bAttemptQuickPlay)

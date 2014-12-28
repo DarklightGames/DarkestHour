@@ -164,23 +164,22 @@ function DoFireEffect()
     }
     else
     {
-        MuzzlePosition = Weapon.GetMuzzleCoords();//Weapon.GetBoneCoords('Muzzle');
+        MuzzlePosition = Weapon.GetMuzzleCoords(); //Weapon.GetBoneCoords('Muzzle');
 
         // Get the muzzle position and scale it down 5 times (since the model is scaled up 5 times in the editor)
         StartTrace = MuzzlePosition.Origin - Weapon.Location;
         StartTrace = StartTrace * 0.2;
         StartTrace = Weapon.Location + StartTrace;
 
-        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartTrace,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartTrace, rotator(MuzzlePosition.XAxis));
 
         StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
 
-        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartProj,rotator(MuzzlePosition.XAxis));
+        //Spawn(class'ROEngine.RODebugTracer',Instigator,,StartProj, rotator(MuzzlePosition.XAxis));
 
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);// was false to only trace worldgeometry
+        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true); // was false to only trace worldgeometry
 
-        // Instead of just checking walls, lets check all actors. That way we won't have rounds
-        // spawning on the other side of players and missing them altogether - Ramm 10/14/04
+        // Instead of just checking walls, lets check all actors - that way we won't have rounds spawning on the other side of players & missing them altogether - Ramm 10/14/04
         if (Other != none)
         {
             StartProj = HitLocation;

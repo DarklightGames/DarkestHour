@@ -25,7 +25,7 @@ function PostBeginPlay()
     {
         foreach DynamicActors(class'ROVehicleFactory', ROVF, FactoryToModify[i])
         {
-            FactoryReference.Insert(0,1); //Adds a new spot at index for the attached factory
+            FactoryReference.Insert(0, 1); //Adds a new spot at index for the attached factory
             FactoryReference[0] = ROVF; //Sets the attached factory in the reference array
         }
     }

@@ -136,8 +136,8 @@ simulated function ServerDeployEnd()
 
     P = DH_Pawn(Instigator);
 
-    TraceStart = P.Location + vect(0, 0, 1) * P.CollisionHeight;
-    TraceEnd = TraceStart + vect(0, 0, -128);
+    TraceStart = P.Location + vect(0.0, 0.0, 1.0) * P.CollisionHeight;
+    TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);
 
     SpawnRotation = P.Rotation;
     SpawnRotation.Pitch = 0;
@@ -205,7 +205,7 @@ simulated function bool CanDeploy()
 
     //---------------------------
     //Check that we're not moving
-    if (P.Velocity != vect(0, 0, 0))
+    if (P.Velocity != vect(0.0, 0.0, 0.0))
     {
         Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 3);
         return false;
@@ -222,7 +222,7 @@ simulated function bool CanDeploy()
     //-------------------------------------------------------
     //Trace straight downwards and see what we're standing on
     TraceStart = P.Location;
-    TraceEnd = TraceStart - vect(0, 0, 128);
+    TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
 
     HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true,, Material);
 
@@ -236,7 +236,7 @@ simulated function bool CanDeploy()
 
     //------------------------------------------------------------------
     //Check that the surface angle is less than our deploy angle maximum
-    if (Acos(HitNormal dot vect(0, 0, 1)) > DeployAngleMaximum)
+    if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
     {
         Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
         return false;
@@ -263,9 +263,9 @@ simulated function bool CanDeploy()
         }
 
         //-----------------------------------------------------------
-        //Now trace downards from the end point of our previous trace
+        //Now trace downwards from the end point of our previous trace
         TraceStart = TraceEnd;
-        TraceEnd = TraceStart - (vect(0, 0, 128));
+        TraceEnd = TraceStart - (vect(0.0, 0.0, 128.0));
 
         HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
 
@@ -280,7 +280,7 @@ simulated function bool CanDeploy()
         }
         //------------------------------------------------------------------
         //Check that the surface angle is less than our deploy angle maximum
-        if (Acos(HitNormal dot vect(0, 0, 1)) > DeployAngleMaximum)
+        if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
         {
             //------------------------------
             //Cannot deploy on this surface.

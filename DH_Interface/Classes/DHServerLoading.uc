@@ -68,9 +68,9 @@ simulated function SetText()
     if (GC != none)
     {
         GC.LCDCls();
-        GC.LCDDrawTile(GC.LCDLogo,0,0,64,43,0,0,64,43);
-        GC.LCDDrawText(loadingMapPrefix,55,10,GC.LCDMedFont);
-        GC.LCDDrawText(StripMap(Map),55,26,GC.LCDTinyFont);
+        GC.LCDDrawTile(GC.LCDLogo, 0, 0, 64, 43, 0, 0, 64, 43);
+        GC.LCDDrawText(loadingMapPrefix, 55, 10, GC.LCDMedFont);
+        GC.LCDDrawText(StripMap(Map), 55, 26, GC.LCDTinyFont);
         GC.LCDRePaint();
     }
 

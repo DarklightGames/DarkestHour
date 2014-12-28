@@ -160,7 +160,7 @@ function DoTrace(vector Start, rotator Dir)
                 Other.TakeDamage(Damage, Instigator, HitLocation, MomentumTransfer * X, ThisDamageType);
             }
 
-            HitNormal = vect(0, 0, 0);
+            HitNormal = vect(0.0, 0.0, 0.0);
         }
         else
         {

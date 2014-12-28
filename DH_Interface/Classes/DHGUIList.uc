@@ -23,14 +23,14 @@ function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, floa
             else
             {
                 C.SetPos(X, Y);
-                C.DrawTile(Controller.DefaultPens[0], XL, YL,0,0,32,32);
+                C.DrawTile(Controller.DefaultPens[0], XL, YL, 0, 0, 32, 32);
             }
         }
         else
         {
             C.SetPos(X, Y);
             if (SelectedImage == none)
-                C.DrawTile(Controller.DefaultPens[0], XL, YL,0,0,32,32);
+                C.DrawTile(Controller.DefaultPens[0], XL, YL, 0, 0, 32, 32);
             else
             {
                 C.SetDrawColor(SelectedBKColor.R, SelectedBKColor.G, SelectedBKColor.B, SelectedBKColor.A);
@@ -44,7 +44,7 @@ function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, floa
         if (OutlineStyle.Images[MenuState] != none)
         {
             if (bIsDrop)
-                OutlineStyle.Draw(C, MenuState, X+1, Y+1, XL - 2, YL-2);
+                OutlineStyle.Draw(C, MenuState, X + 1, Y + 1, XL - 2, YL - 2);
             else
             {
                 OutlineStyle.Draw(C, MenuState, X, Y, XL, YL);

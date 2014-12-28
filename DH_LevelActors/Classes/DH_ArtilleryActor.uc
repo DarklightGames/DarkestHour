@@ -97,7 +97,7 @@ state Activated
                 RandomNum = Rand(ArtyReferences.Length);
 
                 //Randomize the location offset
-                FallOffset = vect(0.0,0.0,0.0);
+                FallOffset = vect(0.0, 0.0, 0.0);
                 FallOffset.X += Rand(ArtyReferences[RandomNum].XWidth);
 
                 if (Frand() > 0.5)
@@ -117,7 +117,7 @@ state Activated
             else
             {
                 //Randomize the location offset
-                FallOffset = vect(0.0,0.0,0.0);
+                FallOffset = vect(0.0, 0.0, 0.0);
                 FallOffset.X += Rand(XWidth);
 
                 if (Frand() > 0.5)

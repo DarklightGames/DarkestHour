@@ -174,7 +174,7 @@ simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLoca
 
     BarrelBoneCoords = GetBoneCoords(BarrelBones[Index]);
 
-    CurrentFireOffset = (WeaponFireOffset * vect(1, 0, 0)) + (DualFireOffset * vect(0, 1, 0));
+    CurrentFireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) + (DualFireOffset * vect(0.0, 1.0, 0.0));
 
     BarrelRotation = rotator(vector(CurrentAim) >> Rotation);
     BarrelLocation = BarrelBoneCoords.Origin + (CurrentFireOffset >> BarrelRotation);
@@ -192,11 +192,11 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
     if (bWasAltFire)
     {
-        CurrentFireOffset = AltFireOffset + (WeaponFireOffset * vect(1, 0, 0));
+        CurrentFireOffset = AltFireOffset + (WeaponFireOffset * vect(1.0, 0.0, 0.0));
     }
     else
     {
-        CurrentFireOffset = (WeaponFireOffset * vect(1, 0, 0)) + (DualFireOffset * vect(0, 1, 0));
+        CurrentFireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) + (DualFireOffset * vect(0.0, 1.0, 0.0));
     }
 
     // Calculate rotation of the gun
@@ -286,7 +286,7 @@ simulated function InitEffects()
 
             AttachToBone(FlashEmitters[i], BarrelBones[i]);
 
-            FlashEmitters[i].SetRelativeLocation(WeaponFireOffset * vect(1,0,0));
+            FlashEmitters[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
         }
     }
 }

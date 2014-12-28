@@ -86,7 +86,7 @@ simulated singular function Touch(Actor Other)
     {
         LastTouched = Other;
 
-        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
         {
             ProcessTouch(Other,Location);
             LastTouched = none;
@@ -231,7 +231,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             if (!bHasDeflected)
             {
                 // If bullet collides immediately after launch, it has no location (or so it would appear, go figure) - let's check against the firer's location instead
-                if (OrigLoc == vect(0.0,0.0,0.0))
+                if (OrigLoc == vect(0.0, 0.0, 0.0))
                 {
                     OrigLoc = Instigator.Location;
                 }

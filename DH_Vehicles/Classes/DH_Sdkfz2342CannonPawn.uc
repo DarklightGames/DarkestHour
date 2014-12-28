@@ -107,7 +107,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> WeaponAimRot;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -118,7 +118,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
         if (bFPNoZFromCameraPitch)
         {
-            VehicleZ = vect(0, 0, 1) >> Rotation;
+            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -214,7 +214,7 @@ simulated function DrawHUD(Canvas Canvas)
                     {
                        Canvas.Style = ERenderStyle.STY_Normal;
                        SavedColor = Canvas.DrawColor;
-                       WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255,175);
+                       WhiteColor =  class'Canvas'.Static.MakeColor(255,255,255, 175);
                        Canvas.DrawColor = WhiteColor;
                        MapX = RangePositionX * Canvas.ClipX;
                        MapY = RangePositionY * Canvas.ClipY;
@@ -275,7 +275,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
     local float ScreenRatio;
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0,0);
+    Canvas.SetPos(0.0, 0.0);
     Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 

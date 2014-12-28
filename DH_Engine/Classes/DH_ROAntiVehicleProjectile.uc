@@ -161,7 +161,7 @@ simulated singular function Touch(Actor Other)
     {
         LastTouched = Other;
 
-        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
         {
             ProcessTouch(Other, Location);
             LastTouched = none;
@@ -331,7 +331,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             ROBot(Instigator.Controller).NotifyIneffectiveAttack();
         }
 
-        Explode(HitLocation, vect(0.0,0.0,1.0));
+        Explode(HitLocation, vect(0.0, 0.0, 1.0));
     }
 }
 
@@ -623,13 +623,13 @@ simulated function CheckForSplash(vector SplashLocation)
     if (!Level.bDropDetail && Level.DetailMode != DM_Low && ShellHitWaterEffectClass != none && !Instigator.PhysicsVolume.bWaterVolume)
     {
         bTraceWater = true;
-        HitActor = Trace(HitLocation, HitNormal, SplashLocation - vect(0.0,0.0,50.0), SplashLocation + vect(0.0,0.0,15.0), true);
+        HitActor = Trace(HitLocation, HitNormal, SplashLocation - vect(0.0, 0.0, 50.0), SplashLocation + vect(0.0, 0.0, 15.0), true);
         bTraceWater = false;
 
         if (FluidSurfaceInfo(HitActor) != none || (PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume))
         {
             bDidWaterHitFX = true;
-            Spawn(ShellHitWaterEffectClass, , , HitLocation, rot(16384,0,0));
+            Spawn(ShellHitWaterEffectClass, , , HitLocation, rot(16384, 0, 0));
             PlaySound(WaterHitSound, , 5.5 * TransientSoundVolume);
         }
     }

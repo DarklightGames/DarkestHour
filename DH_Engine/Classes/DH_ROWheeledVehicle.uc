@@ -337,7 +337,7 @@ simulated function Tick(float dt)
 
     if (bEngineDead || bEngineOff)
     {
-        velocity=vect(0, 0, 0);
+        velocity=vect(0.0, 0.0, 0.0);
         Throttle=0;
         ThrottleAmount=0;
         bDisableThrottle=true;
@@ -405,7 +405,7 @@ simulated function StartEmitters()
 
             // Create wheel dust emitters.
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
-            Dust[i] = spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0,0,-1) * Wheels[i].WheelRadius) >> Rotation));
+            Dust[i] = spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
 
             if (Level.bDropDetail || Level.DetailMode == DM_Low)
             {
@@ -518,9 +518,9 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     ExitPositionPairs.Length = ExitPositions.Length;
 
@@ -581,13 +581,13 @@ event TakeImpactDamage(float AccelMag)
 
     if (Vehicle(ImpactInfo.Other) != none)
     {
-        Damage = int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier()); // Matt: moved under this 'if' to avoid "accessed none" errors
+        Damage = Int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier()); // Matt: moved under this 'if' to avoid "accessed none" errors
 
-        TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0, 0, 0), class'DH_VehicleCollisionDamType');
+        TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
     }
     else
     {
-        TakeDamage(int(AccelMag * ImpactDamageModifier()) / ObjectCollisionResistance, self, ImpactInfo.Pos, vect(0.0,0.0,0.0), class'DH_VehicleCollisionDamType');
+        TakeDamage(Int(AccelMag * ImpactDamageModifier()) / ObjectCollisionResistance, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
     }
 
     // FIXME - scale sound volume to damage amount
@@ -637,7 +637,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0, 0, 0));
+        KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
@@ -645,12 +645,12 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 // Handle the engine damage
 function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
-    local int actualDamage;
+    local int ActualDamage;
 
     if (EngineHealth > 0)
     {
-        actualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
-        EngineHealth -= actualDamage;
+        ActualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
+        EngineHealth -= ActualDamage;
     }
 
     //Heavy damage to engine slows vehicle way down...
@@ -705,7 +705,7 @@ event CheckReset()
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
                 return;
             }
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0, 0, 1), Location + CollisionHeight * vect(0, 0, 1)))
+            else if (FastTrace(P.Location + P.CollisionHeight * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0)))
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Initiating FastTrace Reset Check...");

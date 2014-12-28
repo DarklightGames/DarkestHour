@@ -241,9 +241,9 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     ExitPositionPairs.Length = ExitPositions.Length;
 
@@ -617,7 +617,7 @@ simulated function StartEmitters()
 
             // Create wheel dust emitters.
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
-            Dust[i] = spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0,0,-1) * Wheels[i].WheelRadius) >> Rotation));
+            Dust[i] = spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
 
             if (Level.bDropDetail || Level.DetailMode == DM_Low)
             {
@@ -817,7 +817,7 @@ event CheckReset()
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
                 return;
             }
-            else if (FastTrace(P.Location + P.CollisionHeight * vect(0, 0, 1), Location + CollisionHeight * vect(0, 0, 1)))
+            else if (FastTrace(P.Location + P.CollisionHeight * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0)))
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Initiating FastTrace Reset Check...");
@@ -1245,7 +1245,7 @@ simulated function Tick(float DeltaTime)
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=vect(0, 0, 0);
+        velocity=vect(0.0, 0.0, 0.0);
         Throttle=0;
         ThrottleAmount=0;
         bWantsToThrottle = false;
@@ -1286,7 +1286,7 @@ event TakeFireDamage(float DeltaTime)
                 DelayedDamageInstigatorController = none;
             }
 
-            DamageEngine(EngineFireDamagePerSec, WhoSetEngineOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
+            DamageEngine(EngineFireDamagePerSec, WhoSetEngineOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
             EngineBurnTime = Level.TimeSeconds;
         }
 
@@ -1302,7 +1302,7 @@ event TakeFireDamage(float DeltaTime)
 
             if (FRand() < EngineToHullFireChance)  // - was 2%
             {
-                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType); // This will set bOnFire the first time it runs
+                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType); // This will set bOnFire the first time it runs
             }
             FireCheckTime = Level.TimeSeconds;
         }
@@ -1342,23 +1342,23 @@ event TakeFireDamage(float DeltaTime)
 
         if (Driver != none) //afflict the driver
         {
-            Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
+            Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
         }
         else if (WeaponPawns[0] != none && WeaponPawns[0].Driver != none && bTurretFireTriggered == true) //afflict the commander
         {
-            WeaponPawns[0].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
+            WeaponPawns[0].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
         }
         else if (WeaponPawns[1] != none && WeaponPawns[1].Driver != none && bHullMGFireTriggered == true) //afflict the hull gunner
         {
-            WeaponPawns[1].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0, 0, 0), VehicleBurningDamType);
+            WeaponPawns[1].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
         }
 
         if (FRand() < FireDetonationChance) // Chance of cooking off ammo/igniting fuel before health runs out
         {
-            TakeDamage(Health, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
+            TakeDamage(Health, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
         }
         else
-            TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0, 0, 0), vect(0, 0, 0), VehicleBurningDamType);
+            TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
 
         BurnTime = Level.TimeSeconds;
     }
@@ -1469,19 +1469,19 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
         ClearStayingDebugLines();
         AimRot = Rotation;
         AimRot.Yaw += (FrontLeftAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot),0, 255, 0);
+        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 255, 0);
 
         AimRot = Rotation;
         AimRot.Yaw += (FrontRightAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot),255, 255, 0);
+        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 255, 255, 0);
 
         AimRot = Rotation;
         AimRot.Yaw += (RearRightAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot),0, 0, 255);
+        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 0, 255);
 
         AimRot = Rotation;
         AimRot.Yaw += (RearLeftAngle / 360.0) * 65536;
-        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot),0, 0, 0);
+        DrawStayingDebugLine(Location, Location + 2000.0 * vector(AimRot), 0, 0, 0);
     }
 
     // Frontal hit
@@ -2063,7 +2063,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                     {
                        if (bDebuggingText)
                        Level.Game.Broadcast(self, "Ammo Hit Effective");
-                       Damage *= Health;//VehHitpoints[i].DamageMultiplier;
+                       Damage *= Health; //VehHitpoints[i].DamageMultiplier;
                        break;
                     }
                     else  //either detonate above - or - set the sucker on fire!
@@ -2119,14 +2119,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Driver killed");
-                Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
+                Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
 
             if (bRearHit == false && WeaponPawns[1] != none && WeaponPawns[1].Driver != none && FRand() < Damage/GunnerKillChance)
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Hull Gunner killed");
-                WeaponPawns[1].Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
+                WeaponPawns[1].Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
         }
         else
@@ -2137,7 +2137,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     Level.Game.Broadcast(self, "Commander killed");
-                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0, 0, 0), DamageType);
+                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                 }
 
                 if (FRand() < Damage/OpticsDamageChance)
@@ -2287,17 +2287,17 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 // Handle the Engine Damage
 function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
-    local int actualDamage;
+    local int ActualDamage;
 
     if (DamageType != VehicleBurningDamType)
-        actualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
+        ActualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
     else
-        actualDamage = Damage;
+        ActualDamage = Damage;
 
-    EngineHealth -= actualDamage;
+    EngineHealth -= ActualDamage;
 
     //This indicates chances for an Engine fire breaking out
-    if (DamageType != VehicleBurningDamType && !bEngineOnFire && actualDamage > 0 && EngineHealth > 0 && Health > 0)
+    if (DamageType != VehicleBurningDamType && !bEngineOnFire && ActualDamage > 0 && EngineHealth > 0 && Health > 0)
     {
         if ((bWasHEATRound && FRand() < EngineFireHEATChance) || FRand() < EngineFireChance)
         {
@@ -2517,7 +2517,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0, 0, 0));
+        KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
@@ -2811,9 +2811,9 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0,0);
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
+    ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
+    Canvas.SetPos(0.0, 0.0);
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties

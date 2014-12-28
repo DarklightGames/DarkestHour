@@ -132,7 +132,7 @@ function int AddRespawnsRandomly()
             continue;
 
         if (ROPlayer(C) != none && ROPlayer(C).CanRestartPlayer())
-            lDeadPCList.Insert(0,1); //Adds a new spot at index for the lDeadPCList
+            lDeadPCList.Insert(0, 1); //Adds a new spot at index for the lDeadPCList
             lDeadPCList[0] = C; //Sets the Player Controller in the lDeadPCList
             //RestartPlayer(P);
     }

@@ -60,7 +60,7 @@ function bool FillAmmo()
 
     // HACK: Because the No4 uses two mags, the initial amount needs to be two mags
     PrimaryAmmoArray[CurrentMagIndex] = 10;
-    AddAmmo(InitialAmount * 2,0);
+    AddAmmo(InitialAmount * 2, 0);
     CalculateBulletCount();
 
     return true;

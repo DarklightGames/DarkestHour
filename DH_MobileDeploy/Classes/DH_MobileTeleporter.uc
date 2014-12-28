@@ -37,7 +37,7 @@ function PostBeginPlay()
     {
         foreach DynamicActors(class'ROVehicleFactory', ROFactory, MDVFactoryPriority[i])
         {
-            MDVFactoryReferences.Insert(0,1); //Adds a new spot at index for the attached factory
+            MDVFactoryReferences.Insert(0, 1); //Adds a new spot at index for the attached factory
             MDVFactoryReferences[0] = ROFactory; //Sets the attached factory in the reference array
         }
     }

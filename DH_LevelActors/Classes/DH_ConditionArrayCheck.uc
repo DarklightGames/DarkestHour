@@ -24,7 +24,7 @@ function PostBeginPlay()
     {
         foreach AllActors(class'TriggeredCondition', TC, ConditionsToCheck[i])
         {
-            ConditionReferenceArray.Insert(0,1); //Adds a new spot at index for the conditionref
+            ConditionReferenceArray.Insert(0, 1); //Adds a new spot at index for the conditionref
             ConditionReferenceArray[0] = TC; //Sets the conditionref in the reference array
             break;
         }

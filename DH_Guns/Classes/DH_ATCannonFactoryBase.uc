@@ -272,7 +272,7 @@ simulated function Reset()
     else
     {
          TotalSpawnedVehicles=0;
-         Deactivate();//bFactoryActive = false;
+         Deactivate(); //bFactoryActive = false;
     }
 }
 

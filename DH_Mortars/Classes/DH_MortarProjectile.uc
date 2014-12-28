@@ -72,7 +72,7 @@ simulated function GetDescendingSoundPitch(out float Pitch, vector SoundLocation
 
     if (P != none)
     {
-        CameraLocation = P.Location + (P.BaseEyeHeight * vect(0, 0, 1));
+        CameraLocation = P.Location + (P.BaseEyeHeight * vect(0.0, 0.0, 1.0));
         ClampedDistance = Clamp(VSize(SoundLocation - CameraLocation), 0, 5249.0);
         Pitch += (((5249.0 - ClampedDistance) / 5249.0) * 0.5);
     }
@@ -83,7 +83,7 @@ simulated function GetHitSurfaceType(out ESurfaceTypes SurfaceType)
     local vector HitLocation, HitNormal;
     local Material M;
 
-    Trace(HitLocation, HitNormal, Location + vect(0, 0, -16), Location + vect(0, 0, 16), false,, M);
+    Trace(HitLocation, HitNormal, Location + vect(0.0, 0.0, -16.0), Location + vect(0.0, 0.0, 16.0), false,, M);
 
     if (M == none)
         SurfaceType = EST_Default;
@@ -95,7 +95,7 @@ simulated function PostBeginPlay()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (Location != vect(0, 0, 0))
+        if (Location != vect(0.0, 0.0, 0.0))
             Spawn(class'DH_Effects.DH_MortarFireEffect',, , Location, Rotation);
 
         Enable('Tick');
@@ -147,7 +147,7 @@ simulated singular function Touch(Actor Other)
     {
         LastTouched = Other;
 
-        if (Velocity == vect(0.0,0.0,0.0) || Other.IsA('Mover'))
+        if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover'))
         {
             ProcessTouch(Other,Location);
             LastTouched = none;
@@ -195,7 +195,7 @@ simulated function bool ShouldPlayDescendingSound(out vector OutHitLocation)
 {
     local vector HitLocation, HitNormal, TraceEnd, Halfvector;
 
-    Halfvector = Normal(Normal(Velocity) + vect(0, 0, -1));
+    Halfvector = Normal(Normal(Velocity) + vect(0.0, 0.0, -1.0));
     TraceEnd = Location + (Halfvector * (VSize(Velocity) * (GetSoundDuration(DescendingSound) + 0.50)));
 
     if (Trace(HitLocation, HitNormal, TraceEnd, Location, true) != none)
@@ -266,7 +266,7 @@ function SetHitLocation(vector HitLocation)
         // Find the closest mortar target.
         for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
-            if (GRI.GermanMortarTargets[i].Location == vect(0, 0, 0))
+            if (GRI.GermanMortarTargets[i].Location == vect(0.0, 0.0, 0.0))
                 continue;
 
             MortarTargetDistance = VSize(GRI.GermanMortarTargets[i].Location - HitLocation);
@@ -283,7 +283,7 @@ function SetHitLocation(vector HitLocation)
         // targets were close enough.
         if (ClosestMortarTargetIndex == 255)
         {
-            C.MortarHitLocation = vect(0, 0, 0);
+            C.MortarHitLocation = vect(0.0, 0.0, 0.0);
             return;
         }
 
@@ -295,7 +295,7 @@ function SetHitLocation(vector HitLocation)
         // Find the closest mortar target.
         for (i = 0; i < arraycount(GRI.AlliedMortarTargets); I++)
         {
-            if (GRI.AlliedMortarTargets[i].Location == vect(0, 0, 0))
+            if (GRI.AlliedMortarTargets[i].Location == vect(0.0, 0.0, 0.0))
                 continue;
 
             MortarTargetDistance = VSize(GRI.AlliedMortarTargets[i].Location - HitLocation);
@@ -312,7 +312,7 @@ function SetHitLocation(vector HitLocation)
         // targets were close enough.
         if (ClosestMortarTargetIndex == 255)
         {
-            C.MortarHitLocation = vect(0, 0, 0);
+            C.MortarHitLocation = vect(0.0, 0.0, 0.0);
             return;
         }
 

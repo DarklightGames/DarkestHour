@@ -133,8 +133,8 @@ simulated event RenderTexture(ScriptedTexture Tex)
 {
     assert(Tex == ProjTexture);
 
-    Tex.DrawTile(0,0,Tex.USize,Tex.VSize,0,0,Tex.USize,Tex.VSize,none,CurrentColor);
-    Tex.DrawTile(0,0,Tex.USize,Tex.VSize,0,0,Tex.USize,Tex.VSize,MaskTexture,CurrentTint);
+    Tex.DrawTile(0, 0, Tex.USize, Tex.VSize, 0, 0, Tex.USize, Tex.VSize, none, CurrentColor);
+    Tex.DrawTile(0, 0, Tex.USize, Tex.VSize, 0, 0, Tex.USize, Tex.VSize, MaskTexture, CurrentTint);
 }
 
 simulated function Tick(float DeltaTime)

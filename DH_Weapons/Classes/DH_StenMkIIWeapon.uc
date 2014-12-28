@@ -7,8 +7,8 @@ class DH_StenMkIIWeapon extends DH_AutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sten_1st.ukx
 
-var   name     SelectFireAnim;  // Animation for selecting the firing mode
-var   name     SelectFireIronAnim;// Animation for selecting the firing mode in ironsights
+var   name     SelectFireAnim;     // Animation for selecting the firing mode
+var   name     SelectFireIronAnim; // Animation for selecting the firing mode in ironsights
 
 replication
 {

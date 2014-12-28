@@ -51,7 +51,7 @@ function Execute()
 
 function ApplyURL(string URL)
 {
-    if (URL == "" || Left(URL,1) == ":")
+    if (URL == "" || Left(URL, 1) == ":")
         return;
 
     PlayerOwner().ClientTravel(URL, TRAVEL_Absolute, false);

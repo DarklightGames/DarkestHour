@@ -12,11 +12,11 @@ enum EOwningTeam
     OWNER_Neutral,
 };
 
-var()   EOwningTeam     Team;           //Team this volume resupplies
-var()   float           UpdateTime;     //How often this thing needs to do it's business
-var()   bool            bUsesSpawnAreas;// Activated/Deactivated based on a spawn area associated with a tag
+var()   EOwningTeam     Team;            //Team this volume resupplies
+var()   float           UpdateTime;      //How often this thing needs to do it's business
+var()   bool            bUsesSpawnAreas; // Activated/Deactivated based on a spawn area associated with a tag
 
-var     bool            bActive;        // Whether this ammo resupply volume is active
+var     bool            bActive;         // Whether this ammo resupply volume is active
 
 enum EResupplyType
 {

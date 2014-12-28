@@ -117,7 +117,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
         }
         else
         {
-            RecoilRotator = rot(0,0,0);
+            RecoilRotator = rot(0, 0, 0);
         }
 
         return NewRotation;
@@ -139,7 +139,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     }
     else
     {
-        RecoilRotator = rot(0,0,0);
+        RecoilRotator = rot(0, 0, 0);
     }
 
     // Do the pitch and yaw limitation
@@ -171,7 +171,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 
     WeaponBufferRotation.Pitch = PitchAdjust;
 
-    //RecoilRotator = rot(0,0,0);
+    //RecoilRotator = rot(0, 0, 0);
 
     return NewPlayerRotation;
 }
@@ -213,7 +213,7 @@ exec function VehicleSay(string Msg)
 function ChangeName(coerce string S)
 {
     if (Len(S) > 32)
-        S = left(S,32);
+        S = left(S, 32);
 //    ReplaceText(S, " ", "_");
     ReplaceText(S, "\"", "");
     DarkestHourGame(Level.Game).ChangeName(self, S, true);
@@ -528,11 +528,11 @@ function ServerSaveArtilleryPosition()
     }
 
     //StartTrace = Pawn.Location + Pawn.EyePosition();
-    HitActor = Trace(HitLocation,HitNormal,StartTrace + TraceDist * vector(AimRot),StartTrace, true,, HitMaterial);
+    HitActor = Trace(HitLocation, HitNormal, StartTrace + TraceDist * vector(AimRot), StartTrace, true,, HitMaterial);
 
-    RVT = Spawn(class'ROVolumeTest',self,,HitLocation);
+    RVT = Spawn(class'ROVolumeTest', self,, HitLocation);
 
-    if ((RVT != none && RVT.IsInNoArtyVolume()) || HitActor == none || HitNormal == vect(0, 0, -1))
+    if ((RVT != none && RVT.IsInNoArtyVolume()) || HitActor == none || HitNormal == vect(0.0, 0.0, -1.0))
     {
         ReceiveLocalizedMessage(class'ROArtilleryMsg', 5);
         RVT.Destroy();
@@ -784,7 +784,7 @@ function ServerSaveMortarTarget()
             if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self)
             {
                 GRI.GermanMortarTargets[i].Controller = self;
-                GRI.GermanMortarTargets[i].HitLocation = vect(0, 0, 0);
+                GRI.GermanMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.GermanMortarTargets[i].Location = HitLocation;
                 GRI.GermanMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.GermanMortarTargets[i].bCancelled = 0;
@@ -801,7 +801,7 @@ function ServerSaveMortarTarget()
             if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self)
             {
                 GRI.AlliedMortarTargets[i].Controller = self;
-                GRI.AlliedMortarTargets[i].HitLocation = vect(0, 0, 0);
+                GRI.AlliedMortarTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
                 GRI.AlliedMortarTargets[i].Location = HitLocation;
                 GRI.AlliedMortarTargets[i].Time = Level.TimeSeconds;
                 GRI.AlliedMortarTargets[i].bCancelled = 0;
@@ -988,7 +988,7 @@ state PlayerWalking
 
         if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire)
         {
-            NewAccel = vect(0, 0, 0);
+            NewAccel = vect(0.0, 0.0, 0.0);
         }
 
         GroundPitch = 0;
@@ -997,14 +997,14 @@ state PlayerWalking
         if (Pawn.Physics == PHYS_Walking)
         {
             // Take the bipod weapon out of deployed if the player tries to move
-            if (Pawn.bBipodDeployed && NewAccel != vect(0, 0, 0))
+            if (Pawn.bBipodDeployed && NewAccel != vect(0.0, 0.0, 0.0))
             {
                 ROBipodWeapon(Pawn.Weapon).ForceUndeploy();
             }
 
             // tell pawn about any direction changes to give it a chance to play appropriate animation
             //if walking, look up/down stairs - unless player is rotating view
-             if (bLook == 0 && ((Pawn.Acceleration != vect(0, 0, 0) && bSnapToLevel) || !bKeyboardLook))
+             if (bLook == 0 && ((Pawn.Acceleration != vect(0.0, 0.0, 0.0) && bSnapToLevel) || !bKeyboardLook))
             {
                 if (bLookUpStairs || bSnapToLevel)
                 {
@@ -1071,8 +1071,8 @@ state Mantling
     {
         if (bDidMantle && Role < ROLE_Authority)
         {
-            if (Pawn.Velocity != vect(0, 0, 0))
-                Pawn.Velocity = vect(0, 0, 0);
+            if (Pawn.Velocity != vect(0.0, 0.0, 0.0))
+                Pawn.Velocity = vect(0.0, 0.0, 0.0);
         }
 
         super.PlayerTick(DeltaTime);
@@ -1167,7 +1167,7 @@ state Mantling
         if (!bDidMantle && DHP.bIsMantling)
             NewAccel = DHP.NewAcceleration;
         else
-            NewAccel = vect(0, 0, 0);
+            NewAccel = vect(0.0, 0.0, 0.0);
 
         // Update rotation.
         SetRotation(ViewRotation);
@@ -1264,7 +1264,7 @@ ignores SeePlayer, HearNoise, Bump;
                 if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) //check for waterjump
                 {
                     //Below is the only line this function changes/comments out
-                    //Pawn.velocity.Z = FMax(Pawn.JumpZ,420) + 2 * Pawn.CollisionRadius; //set here so physics uses this for remainder of tick
+                    //Pawn.velocity.Z = FMax(Pawn.JumpZ, 420) + 2 * Pawn.CollisionRadius; //set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
                 else if (Pawn.Velocity.Z > 160 || !Pawn.TouchingWaterVolume())
@@ -1418,7 +1418,7 @@ simulated function UpdateHintManagement(bool bUseHints)
         {
             DHHintManager = spawn(class'DHHintManager', self);
             if (DHHintManager == none)
-                warn("Unable to spawn hint manager");
+                Warn("Unable to spawn hint manager");
         }
         else if (!bUseHints && DHHintManager != none)
         {
@@ -1523,11 +1523,11 @@ function HitThis(ROArtilleryTrigger RAT)
     {
         if (PawnTeam ==  0)
         {
-            RAT.PlaySound(RAT.GermanDenySound, SLOT_None, 3.0, false, 100,1.0, true);
+            RAT.PlaySound(RAT.GermanDenySound, SLOT_None, 3.0, false, 100, 1.0, true);
         }
         else
         {
-            RAT.PlaySound(RAT.RussianDenySound, SLOT_None, 3.0, false, 100,1.0, true);
+            RAT.PlaySound(RAT.RussianDenySound, SLOT_None, 3.0, false, 100, 1.0, true);
         }
 
         TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + ROTeamGame(Level.Game).LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
@@ -1651,7 +1651,7 @@ simulated exec function DebugTreadVelocityScaleIncrement()
 
     foreach AllActors(class'ROTreadCraft', V)
     {
-        V.TreadVelocityScale += 1.0f;
+        V.TreadVelocityScale += 1.0;
     }
 }
 
@@ -1661,7 +1661,7 @@ simulated exec function DebugTreadVelocityScaleDecrement()
 
     foreach AllActors(class'ROTreadCraft', V)
     {
-        V.TreadVelocityScale -= 1.0f;
+        V.TreadVelocityScale -= 1.0;
     }
 }
 
@@ -1693,7 +1693,7 @@ function ServerLeaveBody()
 {
     Pawn.UnPossessed();
     Pawn.SetPhysics(PHYS_None);
-    Pawn.Velocity = vect(0, 0, 0);
+    Pawn.Velocity = vect(0.0, 0.0, 0.0);
     Pawn = none;
 }
 

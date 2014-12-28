@@ -78,9 +78,9 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    Extent = Driver.default.CollisionRadius * vect(1, 1, 0);
+    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
     Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0, 0, 0.5);
+    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
     ExitPositionPairs.Length = ExitPositions.Length;
 
@@ -234,7 +234,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (bFPNoZFromCameraPitch)
     {
-        VehicleZ = vect(0, 0, 1) >> Rotation;
+        VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
         CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
         CameraLocation -= CamViewOffsetZAmount * VehicleZ;
     }
@@ -371,7 +371,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
         NetUpdateTime = Level.TimeSeconds - 1;
-        KAddImpulse(LinearImpulse, vect(0, 0, 0));
+        KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
         KAddAngularImpulse(AngularImpulse);
     }
 }

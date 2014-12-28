@@ -62,7 +62,7 @@ function UsedBy(Pawn user)
         return;
     }
 
-    if (DHPC != none && DHPC.SavedArtilleryCoords == vect(0, 0, 0))
+    if (DHPC != none && DHPC.SavedArtilleryCoords == vect(0.0, 0.0, 0.0))
     {
         DHPC.ReceiveLocalizedMessage(class'ROArtilleryMsg', 4);
 

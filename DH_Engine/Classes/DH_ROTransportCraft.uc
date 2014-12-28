@@ -348,7 +348,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Ammo Hit Effective");
-                Damage *= Health;//VehHitpoints[i].DamageMultiplier;
+                Damage *= Health; //VehHitpoints[i].DamageMultiplier;
                 break;
             }
         }
