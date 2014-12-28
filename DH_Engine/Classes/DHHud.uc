@@ -3196,56 +3196,71 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
     // Don't render if we're not in a capture zone
     if (CurrentCapArea == 15 && CurrentCapRequiredCappers == 15)
+    {
         return;
+    }
 
     // Get GRI
     GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
     if (GRI == none)
-        return; // Can't draw without a gri!
+    {
+        return; // Can't draw without a GRI!
+    }
 
     // Get current team
     if (PawnOwner.PlayerReplicationInfo != none && PawnOwner.PlayerReplicationInfo.Team != none)
-        team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
+    {
+        Team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
+    }
     else
-        team = 0;
+    {
+        Team = 0;
+    }
 
-    // Get current cap progress on a 0-1 scale for each team
+    // Get cap progress on a 0-1 scale for each team
     if (CurrentCapProgress == 0)
     {
         if (GRI.Objectives[CurrentCapArea].ObjState == NEUTRAL_TEAM_INDEX)
         {
-            allies_progress = 0;
-            axis_progress = 0;
+            AlliesProgress = 0.0;
+            AxisProgress = 0.0;
         }
         else if (GRI.Objectives[CurrentCapArea].ObjState == AXIS_TEAM_INDEX)
         {
-            allies_progress = 0;
-            axis_progress = 1;
+            AlliesProgress = 0.0;
+            AxisProgress = 1.0;
         }
         else
         {
-            allies_progress = 1;
-            axis_progress = 0;
+            AlliesProgress = 1.0;
+            AxisProgress = 0.0;
         }
     }
     else if (CurrentCapProgress > 100)
     {
-        allies_progress = float(CurrentCapProgress - 100) / 100.0;
+        AlliesProgress = Float(CurrentCapProgress - 100) / 100.0;
+
         if (GRI.Objectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
-            axis_progress = 1 - allies_progress;
+        {
+            AxisProgress = 1.0 - AlliesProgress;
+        }
     }
     else
     {
-        axis_progress = float(CurrentCapProgress) / 100.0;
+        AxisProgress = Float(CurrentCapProgress) / 100.0;
+
         if (GRI.Objectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
-            allies_progress = 1 - axis_progress;
+        {
+            AlliesProgress = 1.0 - AxisProgress;
+        }
     }
 
     // Assign those progress to defender or attacker, depending on current team
-    if (team == AXIS_TEAM_INDEX)
+    if (Team == AXIS_TEAM_INDEX)
     {
-        attackers_progress = axis_progress;
-        defenders_progress = allies_progress;
+        AttackersProgress = AxisProgress;
+        DefendersProgress = AlliesProgress;
         CaptureBarAttacker.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
         CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
         CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
@@ -3255,17 +3270,24 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
         // Figure ratios
         if (CurrentCapAlliesCappers == 0)
-            attackers_ratio = 1;
+        {
+            AttackersRatio = 1.0;
+        }
         else if (CurrentCapAxisCappers == 0)
-            attackers_ratio = 0;
+        {
+            AttackersRatio = 0.0;
+        }
         else
-            attackers_ratio = float(CurrentCapAxisCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
-        defenders_ratio = 1 - attackers_ratio;
+        {
+            AttackersRatio = Float(CurrentCapAxisCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
+        }
+
+        DefendersRatio = 1.0 - AttackersRatio;
     }
     else
     {
-        attackers_progress = allies_progress;
-        defenders_progress = axis_progress;
+        AttackersProgress = AlliesProgress;
+        DefendersProgress = AxisProgress;
         CaptureBarAttacker.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
         CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
         CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
@@ -3275,12 +3297,19 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
         // Figure ratios
         if (CurrentCapAxisCappers == 0)
-            attackers_ratio = 1;
+        {
+            AttackersRatio = 1.0;
+        }
         else if (CurrentCapAlliesCappers == 0)
-            attackers_ratio = 0;
+        {
+            AttackersRatio = 0.0;
+        }
         else
-            attackers_ratio = float(CurrentCapAlliesCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
-        defenders_ratio = 1 - attackers_ratio;
+        {
+            AttackersRatio = Float(CurrentCapAlliesCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
+        }
+
+        DefendersRatio = 1.0 - AttackersRatio;
     }
 
     // Draw capture bar at 50% faded if we're at a stalemate
@@ -3290,19 +3319,19 @@ simulated function DrawCaptureBar(Canvas Canvas)
         CaptureBarDefender.Tints[TeamIndex].A /= 2;
     }
 
-    // Convert attacker/defender progress to widget scale
-    // (bar goes from 53 to 203, total width of texture is 256)
-    CaptureBarAttacker.Scale = 150.0 / 256.0 * attackers_progress + 53.0 / 256.0;
-    CaptureBarDefender.Scale = 150.0 / 256.0 * defenders_progress + 53.0 / 256.0;
+    // Convert attacker/defender progress to widget scale (bar goes from 53 to 203, total width of texture is 256)
+    CaptureBarAttacker.Scale = 150.0 / 256.0 * AttackersProgress + 53.0 / 256.0;
+    CaptureBarDefender.Scale = 150.0 / 256.0 * DefendersProgress + 53.0 / 256.0;
 
-    // Convert attacker/defender ratios to widget scale
-    // (bar goes from 63 to 193, total width of texture is 256)
-    CaptureBarAttackerRatio.Scale = 130.0 / 256.0 * attackers_ratio + 63.0 / 256.0;
-    CaptureBarDefenderRatio.Scale = 130.0 / 256.0 * defenders_ratio + 63.0 / 256.0;
+    // Convert attacker/defender ratios to widget scale (bar goes from 63 to 193, total width of texture is 256)
+    CaptureBarAttackerRatio.Scale = 130.0 / 256.0 * AttackersRatio + 63.0 / 256.0;
+    CaptureBarDefenderRatio.Scale = 130.0 / 256.0 * DefendersRatio + 63.0 / 256.0;
 
     // Check which icon to show on right side
-    if (attackers_progress ~= 1.0)
+    if (AttackersProgress ~= 1.0)
+    {
         CaptureBarIcons[1].WidgetTexture = CaptureBarIcons[0].WidgetTexture;
+    }
 
     // Draw everything.
     DrawSpriteWidget(Canvas, CaptureBarBackground);
@@ -3316,20 +3345,20 @@ simulated function DrawCaptureBar(Canvas Canvas)
     DrawSpriteWidget(Canvas, CaptureBarIcons[0]);
 
     // Only draw right icon if objective is capped already
-    if (!(defenders_progress ~= 0.0) || (attackers_progress ~= 1.0))
+    if (!(DefendersProgress ~= 0.0) || (AttackersProgress ~= 1.0))
+    {
         DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
+    }
 
     // Draw the objective name
-    Y_pos = Canvas.ClipY * CaptureBarBackground.PosY
-        - (CaptureBarBackground.TextureCoords.Y2 + 1 + 4)
-            * CaptureBarBackground.TextureScale * HudScale * ResScaleY;
+    YPos = Canvas.ClipY * CaptureBarBackground.PosY - (CaptureBarBackground.TextureCoords.Y2 + 1.0 + 4.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY;
     s = GRI.Objectives[CurrentCapArea].ObjName;
 
-    // Add a display for the number of cappers in vs. the amount needed to capture.
+    // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
     {
-        //Displayed when the cap is neutral, the other team completely owns the cap, or there are enemy capturers.
-        if (team == 0 && (GRI.Objectives[CurrentCapArea].ObjState == 2 || axis_progress != 1.0 || CurrentCapAlliesCappers != 0))
+        // Displayed when the cap is neutral, the other team completely owns the cap, or there are enemy capturers
+        if (Team == 0 && (GRI.Objectives[CurrentCapArea].ObjState == 2 || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
         {
             if (CurrentCapAxisCappers < CurrentCapRequiredCappers)
             {
@@ -3339,7 +3368,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
             s @= "(" $ CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
         }
-        else if (team == 1 && (GRI.Objectives[CurrentCapArea].ObjState == 2 || allies_progress != 1.0 || CurrentCapAxisCappers != 0))
+        else if (Team == 1 && (GRI.Objectives[CurrentCapArea].ObjState == 2 || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
         {
             if (CurrentCapAlliesCappers < CurrentCapRequiredCappers)
             {
@@ -3354,7 +3383,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     Canvas.Font = GetConsoleFont(Canvas);
     Canvas.TextSize(s, XL, YL);
     Canvas.DrawColor = WhiteColor;
-    Canvas.SetPos(Canvas.ClipX * CaptureBarBackground.PosX - XL / 2.0, Y_pos - YL);
+    Canvas.SetPos(Canvas.ClipX * CaptureBarBackground.PosX - XL / 2.0, YPos - YL);
     Canvas.DrawText(s);
 
     // Add signal so that vehicle passenger list knows to shift text up
@@ -3362,26 +3391,28 @@ simulated function DrawCaptureBar(Canvas Canvas)
 }
 
 // Modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
-simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplicationInfo GRI, int current_obj)
+simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicationInfo GRI, int CurrentObj)
 {
-    local  int    i, count;
-    local  float  new_y;
+    local  int    i, Count;
+    local  float  NewY;
 
     // Do not update label coords if it's disabled in the objective
-    if (GRI.Objectives[current_obj].bDoNotUseLabelShiftingOnSituationMap)
+    if (GRI.Objectives[CurrentObj].bDoNotUseLabelShiftingOnSituationMap)
     {
-        GRI.Objectives[current_obj].LabelCoords = label_coords;
+        GRI.Objectives[CurrentObj].LabelCoords = LabelCoords;
+
         return;
     }
 
-    if (current_obj == 0)
+    if (CurrentObj == 0)
     {
         // Set label position to be same as tested position
-        GRI.Objectives[0].LabelCoords = label_coords;
+        GRI.Objectives[0].LabelCoords = LabelCoords;
+
         return;
     }
 
-    for (i = 0; i < current_obj; i++)
+    for (i = 0; i < CurrentObj; i++)
     {
         if (GRI.Objectives[i] == none) // Matt: added to avoid spamming "accessed none" errors
         {
@@ -3389,22 +3420,22 @@ simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplica
         }
 
         // Check if there's overlap in the X axis
-        if (!(label_coords.X2 <= GRI.Objectives[i].LabelCoords.X1 || label_coords.X1 >= GRI.Objectives[i].LabelCoords.X2))
+        if (!(LabelCoords.X2 <= GRI.Objectives[i].LabelCoords.X1 || LabelCoords.X1 >= GRI.Objectives[i].LabelCoords.X2))
         {
             // There's overlap! Check if there's overlap in the Y axis.
-            if (!(label_coords.Y2 <= GRI.Objectives[i].LabelCoords.Y1 || label_coords.Y1 >= GRI.Objectives[i].LabelCoords.Y2))
+            if (!(LabelCoords.Y2 <= GRI.Objectives[i].LabelCoords.Y1 || LabelCoords.Y1 >= GRI.Objectives[i].LabelCoords.Y2))
             {
                 // There's overlap on both axis: the label overlaps. Update the position of the label.
-                new_y = GRI.Objectives[i].LabelCoords.Y2 - (label_coords.Y2 - label_coords.Y1) * 0.00;
-                label_coords.Y2 = new_y + label_coords.Y2 - label_coords.Y1;
-                label_coords.Y1 = new_y;
+                NewY = GRI.Objectives[i].LabelCoords.Y2 - (LabelCoords.Y2 - LabelCoords.Y1) * 0.0;
+                LabelCoords.Y2 = NewY + LabelCoords.Y2 - LabelCoords.Y1;
+                LabelCoords.Y1 = NewY;
 
-                i = -1; // this is to force rechecking of all possible overlaps to ensure that no other label overlaps with this
+                i = -1; // this is to force re-checking of all possible overlaps to ensure that no other label overlaps with this
 
                 // Safety
-                count++;
+                Count++;
 
-                if (count > current_obj * 5)
+                if (Count > CurrentObj * 5)
                 {
                     break;
                 }
@@ -3414,7 +3445,7 @@ simulated function UpdateMapIconLabelCoords(FloatBox label_coords, ROGameReplica
     }
 
     // Set new label position
-    GRI.Objectives[current_obj].LabelCoords = label_coords;
+    GRI.Objectives[CurrentObj].LabelCoords = LabelCoords;
 }
 
 // Matt: modified so if player is in a vehicle, the keybinds to GrowHUD & ShrinkHUD will call same named functions in the vehicle classes
