@@ -1152,7 +1152,6 @@ function ServerZoomOut(bool bAnimateTransition)
 
 simulated function PlayerViewZoom(bool ZoomDirection)
 {
-    // currently, this instantly zooms the weapon into the new fov
     if (ZoomDirection)
     {
         bPlayerViewIsZoomed = true;
@@ -1164,7 +1163,6 @@ simulated function PlayerViewZoom(bool ZoomDirection)
 
         if (Instigator.Controller != none)
         {
-            PlayerController(Instigator.Controller).DefaultFOV = 72;
             PlayerController(Instigator.Controller).ResetFOV();
         }
     }
