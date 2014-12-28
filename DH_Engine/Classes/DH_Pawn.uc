@@ -3745,12 +3745,12 @@ function bool ResupplyMortarAmmunition()
 
 function FillMortarAmmunition()
 {
-    if (GetTeamNum() == 0)  //Axis
+    if (GetTeamNum() == 0) // axis
     {
         MortarHEAmmo = 16;
         MortarSmokeAmmo = 4;
     }
-    else
+    else // allies
     {
         MortarHEAmmo = 24;
         MortarSmokeAmmo = 4;
@@ -3763,11 +3763,11 @@ function CheckIfMortarCanBeResupplied()
 {
     bMortarCanBeResupplied = false;
 
-    if (GetTeamNum() == 0 && MortarHEAmmo < 16 || MortarSmokeAmmo < 4)  //Axis
+    if (GetTeamNum() == 0 && MortarHEAmmo < 16 || MortarSmokeAmmo < 4) // axis
     {
         bMortarCanBeResupplied = true;
     }
-    else if (GetTeamNum() == 1 && MortarHEAmmo < 24 || MortarSmokeAmmo < 4) //Allies
+    else if (GetTeamNum() == 1 && MortarHEAmmo < 24 || MortarSmokeAmmo < 4) // allies
     {
         bMortarCanBeResupplied = true;
     }
@@ -3784,7 +3784,7 @@ simulated function bool CanUseMortars()
 
 simulated function DH_RoleInfo GetRoleInfo()
 {
-    local DH_RoleInfo RI;
+    local DH_RoleInfo             RI;
     local DHPlayerReplicationInfo PRI;
 
     if (PlayerReplicationInfo == none)
@@ -3811,7 +3811,7 @@ simulated function bool AllowSprint()
         return false;
     }
 
-    if (!bIsCrawling && ((Weapon == none || Weapon.WeaponAllowSprint()) && Acceleration != vect(0, 0, 0)))
+    if (!bIsCrawling && ((Weapon == none || Weapon.WeaponAllowSprint()) && Acceleration != vect(0.0, 0.0, 0.0)))
     {
         return true;
     }
@@ -3826,7 +3826,7 @@ function SetWalking(bool bNewIsWalking)
         return;
     }
 
-    if (bNewIsWalking != bIsWalking)    //Fixed bug where players could sprint backwards are ridiculous speeds.
+    if (bNewIsWalking != bIsWalking) // fixed bug where players could sprint backwards are ridiculous speeds
     {
         bIsWalking = bNewIsWalking;
     }
@@ -3850,7 +3850,7 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
 
 defaultproperties
 {
-    MinHurtSpeed=475.000000
+    MinHurtSpeed=475.0
     DHSoundGroupClass=class'DH_Engine.DH_PawnSoundGroup'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
@@ -3888,7 +3888,7 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
     FireDamage=10
     FireDamageClass=class'DH_Engine.DH_BurningDamType'
-    Stamina=25.000000
+    Stamina=25.0
     DeployedPitchUpLimit=7300
     DeployedPitchDownLimit=-7300
     ControllerClass=class'DH_Engine.DHBot'
