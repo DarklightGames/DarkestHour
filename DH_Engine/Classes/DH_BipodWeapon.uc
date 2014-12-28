@@ -26,15 +26,18 @@ replication
 
 simulated state Idle
 {
-    // This is to stop players from using crouch while deployed, as that allows an exploit
-    // where a player can see and shoot over obstacles whilst being invisible to their targets.
+    // This is to stop players from using crouch while deployed, as that allows exploit where player can see & shoot over obstacles whilst being invisible to their targets
     // Players can still use crouch to undeploy instantly while proned however - PsYcH0_CH!cKeN
     simulated function bool WeaponAllowCrouchChange()
     {
         if (Instigator.bBipodDeployed && !Instigator.bIsCrawling)
+        {
             return false;
+        }
         else
+        {
             return true;
+        }
     }
 }
 
@@ -42,12 +45,14 @@ simulated function Fire(float F)
 {
     if (Instigator != none)
     {
-       if (!(bUsingSights || Instigator.bBipodDeployed)
-            && Instigator.Controller != none
-            && PlayerController(Instigator.Controller) != none)
-          class'ROBipodWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller),0);
-       else
-           super.Fire(F);
+        if (!(bUsingSights || Instigator.bBipodDeployed) && Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
+        {
+            class'ROBipodWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller), 0);
+        }
+        else
+        {
+            super.Fire(F);
+        }
     }
     else
     {
@@ -79,21 +84,27 @@ simulated function NotifyOwnerJumped()
 simulated exec function Deploy()
 {
     if (IsBusy())
+    {
         return;
+    }
 
     if (Instigator.bBipodDeployed)
     {
         BipodDeploy(false);
 
         if (Role < ROLE_Authority)
+        {
             ServerBipodDeploy(false);
+        }
     }
     else if (Instigator.bCanBipodDeploy)
     {
         BipodDeploy(true);
 
         if (Role < ROLE_Authority)
+        {
             ServerBipodDeploy(true);
+        }
     }
 }
 
@@ -101,14 +112,18 @@ simulated exec function Deploy()
 simulated function ForceUndeploy()
 {
     if (IsBusy())
+    {
         return;
+    }
 
     if (Instigator.bBipodDeployed)
     {
         BipodDeploy(false);
 
         if (Role < ROLE_Authority)
+        {
             ServerBipodDeploy(false);
+        }
     }
 }
 
@@ -130,7 +145,9 @@ simulated function BipodDeploy(bool bNewDeployedStatus)
 function ServerBipodDeploy(bool bNewDeployedStatus)
 {
     if (Instigator.bCanBipodDeploy)
+    {
         BipodDeploy(bNewDeployedStatus);
+    }
 }
 
 simulated state DeployingBipod extends Busy
@@ -150,15 +167,18 @@ simulated state DeployingBipod extends Busy
         return false;
     }
 
-    // This is to stop players from using crouch while deployed, as that allows an exploit
-    // where a player can see and shoot over obstacles whilst being invisible to their targets.
+    // This is to stop players from using crouch while deployed, as that allows exploit where player can see & shoot over obstacles whilst being invisible to their targets
     // Players can still use crouch to undeploy instantly while proned however - PsYcH0_CH!cKeN
     simulated function bool WeaponAllowCrouchChange()
     {
         if (Instigator.bBipodDeployed && !Instigator.bIsCrawling)
+        {
             return false;
+        }
         else
+        {
             return true;
+        }
     }
 
     simulated function Timer()
@@ -192,16 +212,20 @@ simulated state DeployingBipod extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        {
             SetTimer(AnimTimer - (AnimTimer * 0.1), false);
+        }
         else
+        {
             SetTimer(AnimTimer, false);
+        }
 
         SetPlayerFOV(PlayerDeployFOV);
     }
 
     simulated function EndState()
     {
-        local float TargetDisplayFOV;
+        local float  TargetDisplayFOV;
         local vector TargetPVO;
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -231,9 +255,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
     }
 
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -268,7 +296,7 @@ simulated state UndeployingBipod extends Busy
 
     simulated function BeginState()
     {
-        local name Anim;
+        local name  Anim;
         local float AnimTimer;
 
         if (AmmoAmount(0) < 1 && HasAnim(BipodDeployToIdleEmpty))
@@ -288,9 +316,13 @@ simulated state UndeployingBipod extends Busy
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
         if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        {
             SetTimer(AnimTimer - (AnimTimer * 0.1), false);
+        }
         else
+        {
             SetTimer(AnimTimer, false);
+        }
 
         ResetPlayerFOV();
     }
@@ -298,7 +330,9 @@ simulated state UndeployingBipod extends Busy
     simulated function EndState()
     {
         if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+        {
             NotifyCrawlMoving();
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -333,26 +367,25 @@ simulated function PlayIdle()
 //=============================================================================
 // Rendering
 //=============================================================================
-// Don't need to do the special rendering for bipod weapons since they won't
-// really sway while deployed
+// Don't need to do the special rendering for bipod weapons since they won't really sway while deployed
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local int m;
-    local rotator RollMod;
+    local int      m;
+    local rotator  RollMod;
     local ROPlayer Playa;
-    //For lean - Justin
-    local ROPawn rpawn;
-    local int leanangle;
+    local ROPawn   RPawn;
+    local int      LeanAngle;
 
     if (Instigator == none)
+    {
         return;
+    }
 
     // Lets avoid having to do multiple casts every tick - Ramm
     Playa = ROPlayer(Instigator.Controller);
 
-    // draw muzzleflashes/smoke for all fire modes so idle state won't
-    // cause emitters to just disappear
-    Canvas.DrawActor(none, false, true); // amb: Clear the z-buffer here
+    // Draw muzzleflashes/smoke for all fire modes so idle state won't cause emitters to just disappear
+    Canvas.DrawActor(none, false, true);
 
     for (m = 0; m < NUM_FIRE_MODES; m++)
     {
@@ -362,17 +395,18 @@ simulated event RenderOverlays(Canvas Canvas)
         }
     }
 
-    //Adjust weapon position for lean
-    rpawn = ROPawn(Instigator);
-    if (rpawn != none && rpawn.LeanAmount != 0)
+    // Adjust weapon position for lean
+    RPawn = ROPawn(Instigator);
+
+    if (RPawn != none && RPawn.LeanAmount != 0.0)
     {
-        leanangle += rpawn.LeanAmount;
+        LeanAngle += RPawn.LeanAmount;
     }
 
     SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
 
     RollMod = Instigator.GetViewRotation();
-    RollMod.Roll += leanangle;
+    RollMod.Roll += LeanAngle;
 
     if (IsCrawling())
     {
@@ -391,17 +425,21 @@ simulated event RenderOverlays(Canvas Canvas)
 //=============================================================================
 simulated function bool AllowReload()
 {
-    if (!Instigator.bBipodDeployed
-        && Instigator.Controller != none
-        && PlayerController(Instigator.Controller) != none)
-          class'ROBipodWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller),1);
+    if (!Instigator.bBipodDeployed && Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
+    {
+        class'ROBipodWarningMsg'.Static.ClientReceive(PlayerController(Instigator.Controller),1);
+    }
 
     if (IsFiring() || IsBusy() || !Instigator.bBipodDeployed)
+    {
         return false;
+    }
 
     // Can't reload if we don't have a mag to put in
     if (CurrentMagCount < 1)
+    {
         return false;
+    }
 
     return true;
 }
@@ -410,7 +448,9 @@ simulated function bool AllowReload()
 simulated function bool ReadyToFire(int Mode)
 {
     if (!bUsingSights && !Instigator.bBipodDeployed)
+    {
         return false;
+    }
 
     return super.ReadyToFire(Mode);
 }
@@ -426,6 +466,7 @@ simulated state Reloading
     {
         return false;
     }
+
 // Take the player out of zoom and then zoom them back in
 Begin:
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -450,9 +491,8 @@ Begin:
     }
 }
 
-// Client gets sent to this state when the client has requested an action
-// that needs verified by the server. Once the server verifies they
-// can start the action, the server will take the client out of this state
+// Client gets sent to this state when the client has requested an action that needs verified by the server
+// Once the server verifies they can start the action, the server will take the client out of this state
 simulated state PendingAction
 {
     simulated function bool WeaponAllowProneChange()
@@ -476,9 +516,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -486,6 +530,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
         }
     }
@@ -502,9 +547,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -512,6 +561,7 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
         }
     }
@@ -523,7 +573,7 @@ Begin:
 
 defaultproperties
 {
-    PlayerDeployFOV=60.000000
+    PlayerDeployFOV=60.0
     Priority=10
     bCanBipodDeploy=true
 }

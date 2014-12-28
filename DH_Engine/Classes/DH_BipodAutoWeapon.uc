@@ -22,8 +22,7 @@ replication
 
 simulated state Idle
 {
-    // This is to stop players from using crouch while deployed, as that allows an exploit
-    // where a player can see and shoot over obstacles whilst being invisible to their targets.
+    // This is to stop players from using crouch while deployed, as that allows exploit where player can see & shoot over obstacles whilst being invisible to their targets
     // Players can still use crouch to undeploy instantly while proned however - PsYcH0_CH!cKeN
     simulated function bool WeaponAllowCrouchChange()
     {
@@ -37,7 +36,6 @@ simulated state Idle
 }
 
 // Overridden to prevent melee attacks while deployed - PsYcH0_Ch!cKeN
-//// client only ////
 simulated event ClientStartFire(int Mode)
 {
     if (Pawn(Owner).Controller.IsInState('GameEnded') || Pawn(Owner).Controller.IsInState('RoundEnded'))
@@ -63,8 +61,7 @@ simulated event ClientStartFire(int Mode)
     }
 }
 
-// This is to stop players from using crouch while deployed, as that allows an exploit
-// where a player can see and shoot over obstacles whilst being invisible to their targets.
+// This is to stop players from using crouch while deployed, as that allows exploit where player can see & shoot over obstacles whilst being invisible to their targets
 // Players can still use crouch to undeploy instantly while proned however
 simulated function bool WeaponAllowCrouchChange()
 {
@@ -78,22 +75,22 @@ simulated function bool WeaponAllowCrouchChange()
 
 simulated function AnimEnd(int channel)
 {
-    local name anim;
-    local float frame, rate;
+    local name  Anim;
+    local float Frame, Rate;
 
-    GetAnimParams(0, anim, frame, rate);
+    GetAnimParams(0, Anim, Frame, Rate);
 
     if (ClientState == WS_ReadyToFire)
     {
-        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
+        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         {
             PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, FastTweenTime);
         }
-        else if (anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
+        else if (Anim == DH_ProjectileFire(FireMode[0]).FireIronAnim && (!FireMode[0].bIsFiring || !UsingAutoFire()))
         {
             PlayIdle();
         }
-        else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (Anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
@@ -129,10 +126,7 @@ simulated event StopFire(int Mode)
     }
 }
 
-//=============================================================================
-// overridden to make ironsights key undeploy bipod instead, if bipod deployed
-//=============================================================================
-
+// Overridden to make ironsights key undeploy bipod instead, if bipod deployed
 simulated function ROIronSights()
 {
     if (!Instigator.bBipodDeployed)
@@ -145,7 +139,7 @@ simulated function ROIronSights()
     }
 }
 
-// returns true if this weapon should use free-aim in this particular state
+// Returns true if this weapon should use free-aim in this particular state
 simulated function bool ShouldUseFreeAim()
 {
     if (FireMode[1].bMeleeMode && FireMode[1].IsFiring())
@@ -236,7 +230,6 @@ function ServerRequestReload()
     }
     else
     {
-        // if we can't reload
         ClientCancelReload();
     }
 }
@@ -357,7 +350,7 @@ Begin:
 
 simulated function PlayReload()
 {
-    local name Anim;
+    local name  Anim;
     local float AnimTimer;
 
     if (AmmoAmount(0) > 0)
@@ -421,9 +414,7 @@ simulated state Reloading
     }
 }
 
-// Following functions borrowed and modified from ROBipodDeploy to allow
-// normal bipod behaviour on a regular auto weapon - PsYcH0_Ch!cKeN
-
+// Following functions borrowed and modified from ROBipodDeploy to allow normal bipod behaviour on a regular auto weapon - PsYcH0_Ch!cKeN
 simulated exec function Deploy()
 {
     if (IsBusy())
@@ -510,8 +501,7 @@ simulated state DeployingBipod extends Busy
         return false;
     }
 
-    // This is to stop players from using crouch while deployed, as that allows an exploit
-    // where a player can see and shoot over obstacles whilst being invisible to their targets.
+    // This is to stop players from using crouch while deployed, as that allows exploit where player can see & shoot over obstacles whilst being invisible to their targets
     // Players can still use crouch to undeploy instantly while proned however - PsYcH0_CH!cKeN
     simulated function bool WeaponAllowCrouchChange()
     {
@@ -532,7 +522,7 @@ simulated state DeployingBipod extends Busy
 
     simulated function BeginState()
     {
-        local name Anim;
+        local name  Anim;
         local float AnimTimer;
 
         if (bUsingSights)
@@ -569,7 +559,7 @@ simulated state DeployingBipod extends Busy
 
     simulated function EndState()
     {
-        local float TargetDisplayFOV;
+        local float  TargetDisplayFOV;
         local vector TargetPVO;
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -643,7 +633,7 @@ simulated state UndeployingBipod extends Busy
 
     simulated function BeginState()
     {
-        local name Anim;
+        local name  Anim;
         local float AnimTimer;
 
         if (AmmoAmount(0) < 1 && HasAnim(BipodDeployToIdleEmpty))
@@ -711,18 +701,18 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=35.000000
-    ZoomInTime=0.400000
-    ZoomOutTime=0.100000
+    IronSightDisplayFOV=35.0
+    ZoomInTime=0.4
+    ZoomOutTime=0.1
     SelectAnim="Draw"
     PutDownAnim="putaway"
-    SelectAnimRate=1.000000
-    PutDownAnimRate=1.000000
-    AIRating=0.700000
-    CurrentRating=0.700000
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    AIRating=0.7
+    CurrentRating=0.7
     bSniping=true
-    DisplayFOV=70.000000
+    DisplayFOV=70.0
     bCanRestDeploy=true
     bCanBipodDeploy=true
-    BobDamping=1.600000
+    BobDamping=1.6
 }

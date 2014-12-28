@@ -10,12 +10,12 @@ class DH_SniperWeapon extends DH_ProjectileWeapon
 #exec OBJ LOAD FILE=..\Textures\ScopeShaders.utx
 #exec OBJ LOAD FILE=InterfaceArt_tex.utx
 
-var()       int         lenseMaterialID;        // used since material id's seem to change alot
+var()       int         lenseMaterialID;        // Used since material id's seem to change alot
 
 var()       float       scopePortalFOVHigh;     // The FOV to zoom the scope portal by.
 var()       float       scopePortalFOV;         // The FOV to zoom the scope portal by.
 
-// Not sure if these pitch vars are still needed now that we use Scripted Textures. We'll keep for now in case they are. - Ramm 08/14/04
+// Not sure if these pitch vars are still needed now that we use Scripted Textures. We'll keep for now in case they are - Ramm 08/14/04
 var()       int         scopePitch;             // Tweaks the pitch of the scope firing angle
 var()       int         scopeYaw;               // Tweaks the yaw of the scope firing angle
 var()       int         scopePitchHigh;         // Tweaks the pitch of the scope firing angle high detail scope
@@ -31,21 +31,21 @@ var   Combiner  ScriptedScopeCombiner;
 
 var   texture   TexturedScopeTexture;
 var() float     OverlayCenterScale;
-var() float     OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var() float     OverlayCenterSize;      // Size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var() float     OverlayCorrectionX;
 var() float     OverlayCorrectionY;
 var   bool      bInitializedScope;      // Set to true when the scope has been initialized
 
+
 // Helper function for the scope system. The scope system checks here to see when it should draw the portal.
-// If you want to limit any times the portal should/shouldn't be drawn, add them here.
-// Ramm 10/27/03
+// If you want to limit any times the portal should/shouldn't be drawn, add them here. Ramm 10/27/03
 simulated function bool ShouldDrawPortal()
 {
-    local name thisAnim;
-    local float animframe;
-    local float animrate;
+    local name  ThisAnim;
+    local float AnimFrame;
+    local float AnimRate;
 
-    GetAnimParams(0, thisAnim, animframe, animrate);
+    GetAnimParams(0, ThisAnim, AnimFrame, AnimRate);
 
     if (bUsingSights && (IsInState('Idle') || IsInState('PostFiring')) && thisAnim != 'scope_shoot_last')
     {
@@ -67,11 +67,10 @@ simulated function PostBeginPlay()
     UpdateScopeMode();
 }
 
-// Handles initializing and swithing between different scope modes
+// Handles initializing and switching between different scope modes
 simulated function UpdateScopeMode()
 {
-    if (Level.NetMode != NM_DedicatedServer &&
-        Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
         IronSightDisplayFOV = default.IronSightDisplayFOV;
         PlayerViewOffset.X = default.PlayerViewOffset.X;
@@ -83,16 +82,14 @@ simulated function UpdateScopeMode()
 
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local int m;
-    local rotator RollMod;
+    local int      m;
+    local rotator  RollMod;
     local ROPlayer Playa;
-    //For lean - Justin
-    local ROPawn rpawn;
-    local int leanangle;
-    // Drawpos actor
-    local rotator RotOffset;
-    local float scale;
-    local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
+    local ROPawn   RPawn;
+    local int      LeanAngle;
+    local rotator  RotOffset;
+//  local float    Scale; // Matt: removed as unused
+    local float    ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
     if (Instigator == none)
     {
@@ -106,9 +103,8 @@ simulated event RenderOverlays(Canvas Canvas)
         UpdateScopeMode();
     }
 
-    // draw muzzleflashes/smoke for all fire modes so idle state won't
-    // cause emitters to just disappear
-    Canvas.DrawActor(none, false, true); // amb: Clear the z-buffer here
+    // Draw muzzleflashes/smoke for all fire modes so idle state won't cause emitters to just disappear
+    Canvas.DrawActor(none, false, true);
 
     for (m = 0; m < NUM_FIRE_MODES; m++)
     {
@@ -118,15 +114,12 @@ simulated event RenderOverlays(Canvas Canvas)
         }
     }
 
-    // these seem to set the current position and rotation of the weapon
-    // in relation to the player
+    // Adjust weapon position for lean
+    RPawn = ROPawn(Instigator);
 
-    //Adjust weapon position for lean
-    rpawn = ROPawn(Instigator);
-
-    if (rpawn != none && rpawn.LeanAmount != 0)
+    if (RPawn != none && RPawn.LeanAmount != 0.0)
     {
-        leanangle += rpawn.LeanAmount;
+        LeanAngle += RPawn.LeanAmount;
     }
 
     SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
@@ -145,7 +138,7 @@ simulated event RenderOverlays(Canvas Canvas)
             RotOffset.Yaw -= Playa.WeaponBufferRotation.Yaw;
         }
 
-        RollMod.Roll += leanangle;
+        RollMod.Roll += LeanAngle;
 
         if (IsCrawling())
         {
@@ -156,7 +149,7 @@ simulated event RenderOverlays(Canvas Canvas)
     else
     {
         RollMod = Instigator.GetViewRotation();
-        RollMod.Roll += leanangle;
+        RollMod.Roll += LeanAngle;
 
         if (IsCrawling())
         {
@@ -176,15 +169,15 @@ simulated event RenderOverlays(Canvas Canvas)
 
         Canvas.DrawColor.A = 255;
         Canvas.Style = ERenderStyle.STY_Alpha;
-        scale = Canvas.SizeY / 1200.0;
+//      Scale = Canvas.SizeY / 1200.0; // Matt: removed as unused
 
          // Draw the reticle
         ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
         OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1 - OverlayCenterScale) * float(TexturedScopeTexture.USize) / 2;
+        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(TexturedScopeTexture.USize) / 2.0;
         OverlayCenterTexSize =  float(TexturedScopeTexture.USize) * OverlayCenterScale;
-        Canvas.SetPos(0, 0);
-        Canvas.DrawTile(TexturedScopeTexture , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+        Canvas.SetPos(0.0, 0.0);
+        Canvas.DrawTile(TexturedScopeTexture , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
     }
     else
@@ -200,15 +193,15 @@ simulated event RenderOverlays(Canvas Canvas)
 simulated event RenderTexture(ScriptedTexture Tex)
 {
     local rotator RollMod;
-    local ROPawn Rpawn;
+    local ROPawn  Rpawn;
 
     RollMod = Instigator.GetViewRotation();
     Rpawn = ROPawn(Instigator);
 
     // Subtract roll from view while leaning - Ramm
-    if (Rpawn != none && rpawn.LeanAmount != 0)
+    if (Rpawn != none && RPawn.LeanAmount != 0.0)
     {
-        RollMod.Roll += rpawn.LeanAmount;
+        RollMod.Roll += RPawn.LeanAmount;
     }
 
     if (Owner != none && Instigator != none && Tex != none && Tex.Client != none)
@@ -221,7 +214,7 @@ simulated state IronSightZoomIn
 {
     simulated function EndState()
     {
-        local float TargetDisplayFOV;
+        local float  TargetDisplayFOV;
         local vector TargetPVO;
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -313,9 +306,9 @@ simulated function PreTravelCleanUp()
 defaultproperties
 {
     ScriptedTextureFallback=Shader'Weapons1st_tex.Zoomscope.LensShader'
-    OverlayCenterSize=0.700000
+    OverlayCenterSize=0.7
     bIsSniper=true
-    FreeAimRotationSpeed=6.000000
+    FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
 }
 

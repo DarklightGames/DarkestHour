@@ -101,7 +101,7 @@ replication
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         bHasATAmmo, bHasMGAmmo, bHasMortarAmmo;
 
-    reliable if (bNetDirty && !bNetOwner && (Role == ROLE_Authority))
+    reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
         bWeaponCanBeReloaded, bWeaponNeedsReload, bWeaponIsMG, bWeaponIsAT;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -971,16 +971,8 @@ function bool ResupplyMortarVehicleWeapon(DH_MortarVehicle V)
 // Handle assisted reload
 function LoadWeapon(Pawn Gunner)
 {
-    local bool bReloadSuccessful;
-
-    bReloadSuccessful = false;
-
+    // Can reload the other player (AssistedReload returns true if was successful)
     if (ROWeapon(Gunner.Weapon) != none && DHWeapon(Gunner.Weapon).AssistedReload())
-    {
-        bReloadSuccessful = true;
-    }
-
-    if (bReloadSuccessful)
     {
         if (DarkestHourGame(Level.Game) != none && Controller != none && Gunner.Controller != none)
         {
@@ -1000,7 +992,7 @@ function LoadWeapon(Pawn Gunner)
             DarkestHourGame(Level.Game).ScoreATReload(Controller, Gunner.Controller);
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10);
+        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
     }
     else
     {

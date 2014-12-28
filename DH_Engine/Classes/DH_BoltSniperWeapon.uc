@@ -10,12 +10,12 @@ var         name        PreReloadAnim;          // anim for opening the bolt
 var         name        SingleReloadAnim;       // anim inserting single bullets
 var         name        PostReloadAnim;         // anim for closing the bolt
 
-var         int         NumRoundsToLoad;        // Set by ClientDoReload to know how many rounds to put in the gun
-var         int         CurrentBulletCount;     // Number of spare bullets, used for HUD display rather than total clips
+var         int         NumRoundsToLoad;        // set by ClientDoReload to know how many rounds to put in the gun
+var         int         CurrentBulletCount;     // number of spare bullets, used for HUD display rather than total clips
 
-var         bool        bInterruptReload;       // Stop reload part way through?
+var         bool        bInterruptReload;       // stop reload part way through?
 
-var         Material    AmmoIcon;               // Icon to use instead of regular ammo one
+var         Material    AmmoIcon;               // icon to use instead of regular ammo one
 
 enum EReloadState
 {
@@ -29,12 +29,13 @@ var     EReloadState            ReloadState;
 
 replication
 {
-    reliable if (bNetDirty && bNetOwner && (Role == ROLE_Authority))
+    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         CurrentBulletCount;
 
     reliable if (Role < ROLE_Authority)
         ServerSetInterruptReload;
 }
+
 
 // We want to display actual number of bullets, rather than number of clips
 simulated function int GetHudAmmoCount()
@@ -44,14 +45,14 @@ simulated function int GetHudAmmoCount()
 
 function CalculateBulletCount()
 {
-    local int i, tempCount;
+    local int i, TempCount;
 
     for (i = 1; i < PrimaryAmmoArray.length; i++)
     {
-        tempCount = tempCount + PrimaryAmmoArray[i];
+        TempCount = TempCount + PrimaryAmmoArray[i];
     }
 
-    CurrentBulletCount = tempCount;
+    CurrentBulletCount = TempCount;
 }
 
 // Overridden because we don't want to allow reloading unless the weapon is out of
@@ -68,7 +69,9 @@ simulated function bool AllowReload()
 simulated exec function ROManualReload()
 {
     if (!AllowReload())
+    {
         return;
+    }
 
     if (Level.Netmode == NM_Client && !IsBusy())
     {
@@ -81,6 +84,7 @@ simulated exec function ROManualReload()
 function ServerRequestReload()
 {
     local int ReloadAmount;
+
     if (AllowReload())
     {
         ReloadAmount = GetRoundsToLoad();
@@ -95,7 +99,6 @@ function ServerRequestReload()
     }
     else
     {
-        // if we can't reload
         ClientCancelReload();
     }
 }
@@ -106,7 +109,9 @@ simulated function ClientDoReload(optional int NumRounds)
     GotoState('Reloading');
 }
 
-function ServerSetInterruptReload(){}
+function ServerSetInterruptReload()
+{
+}
 
 simulated state Reloading
 {
@@ -143,20 +148,20 @@ simulated state Reloading
     // Overridden to support playing proper anims after bolting
     simulated function AnimEnd(int channel)
     {
-        local name anim;
-        local float frame, rate;
+        local name  Anim;
+        local float Frame, Rate;
 
-        GetAnimParams(0, anim, frame, rate);
+        GetAnimParams(0, Anim, Frame, Rate);
 
-        if (Instigator.IsLocallyControlled() && (anim == PreReloadAnim || anim == SingleReloadAnim))
+        if (Instigator.IsLocallyControlled() && (Anim == PreReloadAnim || Anim == SingleReloadAnim))
         {
-            if (anim == PreReloadAnim)
+            if (Anim == PreReloadAnim)
             {
                 SetTimer(0.0, false);
                 ReloadState = RS_ReloadLooped;
                 PlayReload();
             }
-            else if (anim == SingleReloadAnim)
+            else if (Anim == SingleReloadAnim)
             {
                 if (NumRoundsToLoad == 0 || bInterruptReload)
                 {
@@ -193,13 +198,16 @@ simulated state Reloading
 
     simulated function Timer()
     {
-
         if (ReloadState == RS_PostReload)
         {
             if (Instigator.bIsCrawling && VSizeSquared(Instigator.Velocity) > 1.0)
+            {
                 GotoState('StartCrawling');
+            }
             else
+            {
                 GotoState('Idle');
+            }
         }
         else if (ReloadState == RS_PreReload)
         {
@@ -267,9 +275,13 @@ Begin:
     if (bUsingSights)
     {
         if (Role == ROLE_Authority)
+        {
             ServerZoomOut(false);
+        }
         else
+        {
             ZoomOut(false);
+        }
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
@@ -277,12 +289,12 @@ Begin:
             {
                 PlayerViewZoom(false);
             }
+
             SmoothZoom(false);
         }
     }
 
-    // Sometimes the client will get switched out of ironsight mode before getting to
-    // the reload function. This should catch that.
+    // Sometimes the client will get switched out of ironsight mode before getting to the reload function - this should catch that
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
         if (DisplayFOV != default.DisplayFOV)
@@ -345,15 +357,18 @@ function int GetRoundsToLoad()
     AmountNeeded = AmmoClass[0].default.InitialAmount - CurrentMagLoad;
 
     if (AmountNeeded > CurrentBulletCount)
+    {
         AmountToAdd = CurrentBulletCount;
+    }
     else
+    {
         AmountToAdd = AmountNeeded;
+    }
 
     return AmountToAdd;
 }
 
-// Does the actual ammo swapping
-// Loads one bullet each time through
+// Does the actual ammo swapping - loads one bullet each time through
 function LoadBullet()
 {
     if (PrimaryAmmoArray[CurrentMagIndex + 1] == 1)
@@ -386,7 +401,9 @@ simulated function Fire(float F)
     super.Fire(F);
 
     if (IsBusy() || !bWaitingToBolt)
+    {
         return;
+    }
 
     WorkBolt();
 }
@@ -395,13 +412,16 @@ simulated function Fire(float F)
 simulated function WorkBolt()
 {
     if (!bWaitingToBolt || AmmoAmount(0) < 1)
+    {
         return;
+    }
 
     GotoState('WorkingBolt');
 
     if (Role < ROLE_Authority)
+    {
         ServerWorkBolt();
-
+    }
 }
 
 // Server side function called to work the bolt on the server
@@ -410,7 +430,7 @@ function ServerWorkBolt()
     WorkBolt();
 }
 
-//State where the bolt is being worked
+// State where the bolt is being worked
 simulated state WorkingBolt extends Busy
 {
     simulated function bool ReadyToFire(int Mode)
@@ -436,31 +456,31 @@ simulated state WorkingBolt extends Busy
     // Overridden to support playing proper anims after bolting
     simulated function AnimEnd(int channel)
     {
-        local name anim;
-        local float frame, rate;
+        local name  Anim;
+        local float Frame, Rate;
 
-        GetAnimParams(0, anim, frame, rate);
+        GetAnimParams(0, Anim, Frame, Rate);
 
-        if (Instigator.IsLocallyControlled() && (anim == BoltIronAnim || anim == BoltHipAnim))
+        if (Instigator.IsLocallyControlled() && (Anim == BoltIronAnim || Anim == BoltHipAnim))
         {
             bWaitingToBolt = false;
         }
 
         super.AnimEnd(channel);
+
         GotoState('Idle');
     }
 
     simulated function BeginState()
     {
-        local name Anim;
+        local name  Anim;
         local float BoltWaitTime;
 
         if (bUsingSights)
         {
-            if (Instigator.IsLocallyControlled())
+            if (bPlayerFOVZooms && Instigator.IsLocallyControlled())
             {
-                if (bPlayerFOVZooms)
-                    PlayerViewZoom(false);
+                PlayerViewZoom(false);
             }
 
             Anim = BoltIronAnim;
@@ -490,9 +510,8 @@ simulated state WorkingBolt extends Busy
         else
         {
             // Let the server set the bWaitingToBolt to false a little sooner than the client
-            // Since the client can't attempt to fire until he is done bolting, this will
-            // help alleviate situations where the client finishes bolting before the
-            // server registers the bolting as finished
+            // Since the client can't attempt to fire until he is done bolting, this will help alleviate situations 
+            // where the client finishes bolting before the server registers the bolting as finished
             BoltWaitTime = BoltWaitTime - (BoltWaitTime * 0.1);
             SetTimer(BoltWaitTime, false);
         }
@@ -500,14 +519,13 @@ simulated state WorkingBolt extends Busy
 
     simulated function EndState()
     {
-        if (bUsingSights && Instigator.IsLocallyControlled())
+        if (bUsingSights && bPlayerFOVZooms && Instigator.IsLocallyControlled())
         {
-            if (bPlayerFOVZooms)
-                PlayerViewZoom(true);
+            PlayerViewZoom(true);
         }
 
         bWaitingToBolt = false;
-        FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; //fire now!
+        FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // fire now!
     }
 }
 
@@ -552,7 +570,8 @@ simulated state PostFiring
 
     simulated function BeginState()
     {
-        bWaitingToBolt=true;
+        bWaitingToBolt = true;
+
         if (bUsingSights)
         {
             SetTimer(GetAnimDuration(DH_ProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
@@ -569,6 +588,7 @@ function bool FillAmmo()
     local bool Temp;
 
     Temp = super.FillAmmo();
+
     CalculateBulletCount();
 
     return Temp;
@@ -577,6 +597,7 @@ function bool FillAmmo()
 function GiveAmmo(int m, WeaponPickup WP, bool bJustSpawned)
 {
     super.GiveAmmo(m, WP, bJustSpawned);
+
     CalculateBulletCount();
 }
 
@@ -585,6 +606,7 @@ function bool HandlePickupQuery(Pickup Item)
     local bool Temp;
 
     Temp = super.HandlePickupQuery(Item);
+
     CalculateBulletCount();
 
     return Temp;

@@ -9,7 +9,7 @@ var DH_RoleInfo     DHRoleInfo;
 
 replication
 {
-    reliable if (bNetDirty && (Role == ROLE_Authority))
+    reliable if (bNetDirty && Role == ROLE_Authority)
         DHRoleInfo;
 }
 

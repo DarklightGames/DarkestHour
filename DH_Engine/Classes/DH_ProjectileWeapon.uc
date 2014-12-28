@@ -45,7 +45,7 @@ var()       name        PutDownEmptyAnim;           // Animation for putting awa
 var()       name        BoltHipAnim;                // Animation for crawling forward
 var()       name        BoltIronAnim;               // Animation for crawling backward
 var()       name        PostFireIronIdleAnim;       // Animation for crawling forward
-var()       name        PostFireIdleAnim;          // Animation for crawling backward
+var()       name        PostFireIdleAnim;           // Animation for crawling backward
 
 // Ammo/Magazines
 var         array<int>  PrimaryAmmoArray;           // The array of magazines and thier ammo amounts this weapon has
@@ -55,7 +55,6 @@ var         int         InitialNumPrimaryMags;      // The number of mags the so
 var         int         CurrentMagIndex;            // The index of the magazine currently in use
 var         bool        bUsesMagazines;             // This weapon uses magazines, not single bullets, etc
 var         bool        bPlusOneLoading;            // Can have an extra round in the chamber when you reload before empty
-
 var         int         FillAmmoMagCount;
 
 // Barrels
@@ -65,7 +64,7 @@ var     bool                bBarrelDamaged;         // barrel is close to failur
 var     bool                bBarrelFailed;          // barrel overheated and can't be used
 var     bool                bCanFireFromHip;        // If true this weapon has a hip firing mode
 
-var     byte                BarrelIndex;           // barrel being used
+var     byte                BarrelIndex;            // barrel being used
 var     byte                RemainingBarrels;       // number of barrels still left, INCLUDES the active barrel
 var     byte                InitialBarrels;         // barrels initially given
 
@@ -138,14 +137,12 @@ exec function LogAmmo()
 
 simulated event RenderOverlays(Canvas Canvas)
 {
-    local int i;
-    local rotator RollMod;
+    local int      i;
+    local rotator  RollMod;
     local ROPlayer Playa;
-    //For lean - Justin
-    local ROPawn rpawn;
-    local int leanangle;
-    // Drawpos actor
-    local rotator RotOffset;
+    local ROPawn   RPawn;
+    local int      LeanAngle;
+    local rotator  RotOffset;
 
     if (Instigator == none)
     {
@@ -161,9 +158,8 @@ simulated event RenderOverlays(Canvas Canvas)
         return;
     }
 
-    // draw muzzleflashes/smoke for all fire modes so idle state won't
-    // cause emitters to just disappear
-    Canvas.DrawActor(none, false, true); // amb: Clear the z-buffer here
+    // Draw muzzleflashes/smoke for all fire modes so idle state won't cause emitters to just disappear
+    Canvas.DrawActor(none, false, true);
 
     for (i = 0; i < NUM_FIRE_MODES; i++)
     {
@@ -173,15 +169,12 @@ simulated event RenderOverlays(Canvas Canvas)
         }
     }
 
-    // these seem to set the current position and rotation of the weapon
-    // in relation to the player
+    // Adjust weapon position for lean
+    RPawn = ROPawn(Instigator);
 
-    //Adjust weapon position for lean
-    rpawn = ROPawn(Instigator);
-
-    if (rpawn != none && rpawn.LeanAmount != 0)
+    if (RPawn != none && RPawn.LeanAmount != 0)
     {
-        leanangle += rpawn.LeanAmount;
+        LeanAngle += RPawn.LeanAmount;
     }
 
     SetLocation(Instigator.Location + Instigator.CalcDrawOffset(self));
@@ -200,7 +193,7 @@ simulated event RenderOverlays(Canvas Canvas)
             RotOffset.Yaw -= Playa.WeaponBufferRotation.Yaw;
         }
 
-        RollMod.Roll += leanangle;
+        RollMod.Roll += LeanAngle;
 
         if (IsCrawling())
         {
@@ -211,7 +204,7 @@ simulated event RenderOverlays(Canvas Canvas)
     else
     {
         RollMod = Instigator.GetViewRotation();
-        RollMod.Roll += leanangle;
+        RollMod.Roll += LeanAngle;
 
         if (IsCrawling())
         {
@@ -220,10 +213,9 @@ simulated event RenderOverlays(Canvas Canvas)
         }
     }
 
-    // use the special actor drawing when in ironsights to avoid the ironsight "jitter"
-    // TODO: This messes up the lighting, and texture environment map shader when using
-    // ironsights. Maybe use a texrotator to simulate the texture environment map, or
-    // just find a way to fix the problems.
+    // Use the special actor drawing when in ironsights to avoid the ironsight "jitter"
+    // TODO: This messes up the lighting, and texture environment map shader when using ironsights
+    // Maybe use a texrotator to simulate the texture environment map, or just find a way to fix the problems
     if (bUsingSights && Playa != none)
     {
         bDrawingFirstPerson = true;
@@ -326,8 +318,7 @@ simulated state RaisingWeapon
         local int i;
         local name Anim;
 
-        // If we have quickly raised our sights right after putting the weapon away,
-        // take us out of ironsight mode
+        // If we have quickly raised our sights right after putting the weapon away, take us out of ironsight mode
         if (bUsingSights)
         {
             ZoomOut(false);
@@ -362,7 +353,7 @@ simulated state RaisingWeapon
 
             if (Instigator.IsLocallyControlled())
             {
-                // determines if bayonet capable weapon should come up with bayonet on or off
+                // Determines if bayonet capable weapon should come up with bayonet on or off
                 if (bHasBayonet)
                 {
                     if (bBayonetMounted)
@@ -411,15 +402,15 @@ simulated state LoweringWeapon
         return false;
     }
 
-    // dont allow the bayo to be attached while lowering the weapon
+    // Don't allow the bayo to be attached while lowering the weapon
     simulated exec function Deploy()
     {
     }
 
     simulated function BeginState()
     {
-        local int i;
         local name Anim;
+        local int  i;
 
         if (AmmoAmount(0) < 1 && HasAnim(PutDownEmptyAnim))
         {
@@ -2178,10 +2169,7 @@ function bool HandlePickupQuery(Pickup Item)
     }
 
     // Drop current weapon and pickup the one on the ground
-    if (Instigator.Weapon != none &&
-        Instigator.Weapon.InventoryGroup == InventoryGroup &&
-        Item.InventoryType.default.InventoryGroup == InventoryGroup &&
-        Instigator.CanThrowWeapon())
+    if (Instigator.Weapon != none && Instigator.Weapon.InventoryGroup == InventoryGroup && Item.InventoryType.default.InventoryGroup == InventoryGroup && Instigator.CanThrowWeapon())
     {
         ROPlayer(Instigator.Controller).ThrowWeapon();
 
@@ -2240,8 +2228,8 @@ function DropFrom(vector StartLocation)
     {
         Pickup.InitDroppedPickupFor(self);
         Pickup.Velocity = Velocity;
-        Pickup.Velocity.X += RandRange(-100, 100);
-        Pickup.Velocity.Y += RandRange(-100, 100);
+        Pickup.Velocity.X += RandRange(-100.0, 100.0);
+        Pickup.Velocity.Y += RandRange(-100.0, 100.0);
 
         if (Instigator.Health > 0)
         {

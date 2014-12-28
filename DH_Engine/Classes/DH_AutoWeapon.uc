@@ -56,13 +56,13 @@ simulated function NotifyOwnerJumped()
     super.NotifyOwnerJumped();
 }
 
-// tells bot whether to charge or back off while using this weapon
+// Tells bot whether to charge or back off while using this weapon
 function float SuggestAttackStyle()
 {
     return 0.5;
 }
 
-// tells bot whether to charge or back off while defending against this weapon
+// Tells bot whether to charge or back off while defending against this weapon
 function float SuggestDefenseStyle()
 {
     return -0.4;
@@ -70,24 +70,24 @@ function float SuggestDefenseStyle()
 
 function float MaxRange()
 {
-    return 1000; // about 150 meters
+    return 1000.0; // about 150 meters
 }
 
-// Ovveridden to prevent auto weapons from playing fireend anims while looping
+// Overridden to prevent auto weapons from playing fireend anims while looping
 simulated function AnimEnd(int channel)
 {
-    local name anim;
-    local float frame, rate;
+    local name  Anim;
+    local float Frame, Rate;
 
-    GetAnimParams(0, anim, frame, rate);
+    GetAnimParams(0, Anim, Frame, Rate);
 
     if (ClientState == WS_ReadyToFire)
     {
-        if (anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
+        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
         {
             PlayAnim(FireMode[0].FireEndAnim, FireMode[0].FireEndAnimRate, 0.0);
         }
-        else if (anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        else if (Anim== FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
         {
             PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
         }
