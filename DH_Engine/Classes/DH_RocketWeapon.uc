@@ -147,7 +147,6 @@ simulated state RaisingWeapon
         {
             PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
 
-            ClientPlayForceFeedback(SelectForce);
 
             if (Instigator.IsLocallyControlled())
             {

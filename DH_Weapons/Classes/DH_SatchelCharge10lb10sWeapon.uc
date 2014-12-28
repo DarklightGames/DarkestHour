@@ -49,6 +49,5 @@ defaultproperties
     AIRating=+0.4
     CurrentRating=0.4
     bSniping=false // So bots will use this weapon to take long range shots
-    SelectForce="SwitchToAssaultRifle"
     InventoryGroup=6
 }
