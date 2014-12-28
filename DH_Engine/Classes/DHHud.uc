@@ -957,49 +957,49 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleEngine.WidgetTexture = VehicleEngineDamagedTexture;
         }
 
-        VehicleEngine.PosX = vehicle.VehicleHudEngineX;
-        VehicleEngine.PosY = vehicle.VehicleHudEngineY;
-        DrawSpriteWidgetClipped(Canvas, VehicleEngine, coords, true);
+        VehicleEngine.PosX = Vehicle.VehicleHudEngineX;
+        VehicleEngine.PosY = Vehicle.VehicleHudEngineY;
+        DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
     }
 
     // Draw treaded vehicle specific stuff
-    threadCraft = ROTreadCraft(vehicle);
+    TreadCraft = ROTreadCraft(Vehicle);
 
-    if (threadCraft != none)
+    if (TreadCraft != none)
     {
         // Update turret references
-        if (threadCraft.CannonTurret == none)
+        if (TreadCraft.CannonTurret == none)
         {
-            threadCraft.UpdateTurretReferences();
+            TreadCraft.UpdateTurretReferences();
         }
 
         // Draw threads (if needed)
-        if (threadCraft.bLeftTrackDamaged)
+        if (TreadCraft.bLeftTrackDamaged)
         {
-            VehicleThreads[0].TextureScale = threadCraft.VehicleHudThreadsScale;
-            VehicleThreads[0].PosX = threadCraft.VehicleHudThreadsPosX[0];
-            VehicleThreads[0].PosY = threadCraft.VehicleHudThreadsPosY;
-            DrawSpriteWidgetClipped(Canvas, VehicleThreads[0], coords, true, XL, YL, false, true);
+            VehicleThreads[0].TextureScale = TreadCraft.VehicleHudThreadsScale;
+            VehicleThreads[0].PosX = TreadCraft.VehicleHudThreadsPosX[0];
+            VehicleThreads[0].PosY = TreadCraft.VehicleHudThreadsPosY;
+            DrawSpriteWidgetClipped(Canvas, VehicleThreads[0], Coords, true, XL, YL, false, true);
         }
 
-        if (threadCraft.bRightTrackDamaged)
+        if (TreadCraft.bRightTrackDamaged)
         {
-            VehicleThreads[1].TextureScale = threadCraft.VehicleHudThreadsScale;
-            VehicleThreads[1].PosX = threadCraft.VehicleHudThreadsPosX[1];
-            VehicleThreads[1].PosY = threadCraft.VehicleHudThreadsPosY;
-            DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], coords, true, XL, YL, false, true);
+            VehicleThreads[1].TextureScale = TreadCraft.VehicleHudThreadsScale;
+            VehicleThreads[1].PosX = TreadCraft.VehicleHudThreadsPosX[1];
+            VehicleThreads[1].PosY = TreadCraft.VehicleHudThreadsPosY;
+            DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
         }
 
         // Update & draw look turret (if needed)
-        if (passenger != none && passenger.IsA('ROTankCannonPawn'))
+        if (Passenger != none && Passenger.IsA('ROTankCannonPawn'))
         {
-            threadCraft.VehicleHudTurretLook.Rotation.Yaw = vehicle.Rotation.Yaw - passenger.CustomAim.Yaw;
-            widget.WidgetTexture = threadCraft.VehicleHudTurretLook;
-            widget.Tints[0].A /= 2;
-            widget.Tints[1].A /= 2;
-            DrawSpriteWidgetClipped(Canvas, widget, coords, true);
-            widget.Tints[0] = vehicleColor;
-            widget.Tints[1] = vehicleColor;
+            TreadCraft.VehicleHudTurretLook.Rotation.Yaw = Vehicle.Rotation.Yaw - Passenger.CustomAim.Yaw;
+            Widget.WidgetTexture = TreadCraft.VehicleHudTurretLook;
+            Widget.Tints[0].A /= 2;
+            Widget.Tints[1].A /= 2;
+            DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+            Widget.Tints[0] = VehicleColor;
+            Widget.Tints[1] = VehicleColor;
 
             // Draw ammo count since we're a gunner
             if (bShowWeaponInfo)
@@ -1008,34 +1008,34 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupantsText.PosX = VehicleOccupantsTextOffset;
 
                 // Draw icon
-                VehicleAmmoIcon.WidgetTexture = passenger.AmmoShellTexture;
+                VehicleAmmoIcon.WidgetTexture = Passenger.AmmoShellTexture;
                 DrawSpriteWidget(Canvas, VehicleAmmoIcon);
 
                 // Draw reload state icon (if needed)
-                VehicleAmmoReloadIcon.WidgetTexture = passenger.AmmoShellReloadTexture;
-                VehicleAmmoReloadIcon.Scale = passenger.getAmmoReloadState();
+                VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
+                VehicleAmmoReloadIcon.Scale = Passenger.getAmmoReloadState();
                 DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
 
                 // Draw ammo count
-                if (Passenger != none && passenger.Gun != none)
+                if (Passenger != none && Passenger.Gun != none)
                 {
-                    VehicleAmmoAmount.Value = passenger.Gun.PrimaryAmmoCount();
+                    VehicleAmmoAmount.Value = Passenger.Gun.PrimaryAmmoCount();
                 }
 
                 DrawNumericWidget(Canvas, VehicleAmmoAmount, Digits);
 
                 // Draw ammo type
-                cannon = ROTankCannon(passenger.Gun);
+                Cannon = ROTankCannon(Passenger.Gun);
 
-                if (cannon != none && cannon.bMultipleRoundTypes)
+                if (Cannon != none && Cannon.bMultipleRoundTypes)
                 {
                     // Get ammo types
-                    current = cannon.GetRoundsDescription(lines);
-                    pending = cannon.GetPendingRoundIndex();
+                    Current = Cannon.GetRoundsDescription(Lines);
+                    Pending = Cannon.GetPendingRoundIndex();
 
-                    VehicleAmmoTypeText.OffsetY = default.VehicleAmmoTypeText.OffsetY * myScale;
+                    VehicleAmmoTypeText.OffsetY = default.VehicleAmmoTypeText.OffsetY * MyScale;
 
-                    if (myScale < 0.85)
+                    if (MyScale < 0.85)
                     {
                         Canvas.Font = GetConsoleFont(Canvas);
                     }
@@ -1044,20 +1044,20 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         Canvas.Font = GetSmallMenuFont(Canvas);
                     }
 
-                    i = (current + 1) % lines.length;
+                    i = (Current + 1) % Lines.length;
 
                     while (true)
                     {
-                        if (i == pending)
+                        if (i == Pending)
                         {
-                            VehicleAmmoTypeText.text = lines[i] $ "<-";
+                            VehicleAmmoTypeText.Text = Lines[i] $ "<-";
                         }
                         else
                         {
-                            VehicleAmmoTypeText.text = lines[i];
+                            VehicleAmmoTypeText.Text = Lines[i];
                         }
 
-                        if (i == current)
+                        if (i == Current)
                         {
                             VehicleAmmoTypeText.Tints[TeamIndex].A = 255;
                         }
@@ -1066,105 +1066,105 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                             VehicleAmmoTypeText.Tints[TeamIndex].A = 128;
                         }
 
-                        DrawTextWidgetClipped(Canvas, VehicleAmmoTypeText, coords2, XL, YL, Y_one);
+                        DrawTextWidgetClipped(Canvas, VehicleAmmoTypeText, Coords2, XL, YL, Y_one);
                         VehicleAmmoTypeText.OffsetY -= YL;
 
-                        i = (i + 1) % lines.length;
+                        i = (i + 1) % Lines.length;
 
-                        if (i == (current + 1) % lines.length)
+                        if (i == (Current + 1) % Lines.length)
                         {
                             break;
                         }
                     }
                 }
 
-                if (cannon != none)
+                if (Cannon != none)
                 {
                     // Draw coaxial gun ammo info if needed
-                    if (cannon.AltFireProjectileClass != none)
+                    if (Cannon.AltFireProjectileClass != none)
                     {
                         // Draw coaxial gun ammo icon
-                        VehicleAltAmmoIcon.WidgetTexture = cannon.hudAltAmmoIcon;
+                        VehicleAltAmmoIcon.WidgetTexture = Cannon.hudAltAmmoIcon;
                         DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
                         // Draw coaxial gun reload state icon (if needed) // Matt: to show reload progress in red, like a tank cannon reload
-                        if (DH_ROTankCannonPawn(passenger) != none)
+                        if (DH_ROTankCannonPawn(Passenger) != none)
                         {
-                            ProportionOfReloadRemaining = DH_ROTankCannonPawn(passenger).GetAltAmmoReloadState();
+                            ProportionOfReloadRemaining = DH_ROTankCannonPawn(Passenger).GetAltAmmoReloadState();
 
                             if (ProportionOfReloadRemaining > 0.0)
                             {
-                                VehicleAltAmmoReloadIcon.WidgetTexture = DH_ROTankCannonPawn(passenger).AltAmmoReloadTexture;
+                                VehicleAltAmmoReloadIcon.WidgetTexture = DH_ROTankCannonPawn(Passenger).AltAmmoReloadTexture;
                                 VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                                 DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
                             }
                         }
 
-                        // Draw coaxial gun ammo ammount
-                        VehicleAltAmmoAmount.Value = cannon.getNumMags();
+                        // Draw coaxial gun ammo amount
+                        VehicleAltAmmoAmount.Value = Cannon.getNumMags();
                         DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
 
-                        // Shift occupants list position to accomodate coaxial gun ammo info
-                        modifiedVehicleOccupantsTextYOffset = VehicleAltAmmoOccupantsTextOffset * myScale;
+                        // Shift occupants list position to accommodate coaxial gun ammo info
+                        ModifiedVehicleOccupantsTextYOffset = VehicleAltAmmoOccupantsTextOffset * MyScale;
                     }
                 }
             }
         }
 
         // Update & draw turret
-        if (threadCraft.CannonTurret != none)
+        if (TreadCraft.CannonTurret != none)
         {
-            myRot = rotator(vector(threadCraft.CannonTurret.CurrentAim) >> threadCraft.CannonTurret.Rotation);
-            threadCraft.VehicleHudTurret.Rotation.Yaw = vehicle.Rotation.Yaw - myRot.Yaw;
-            widget.WidgetTexture = threadCraft.VehicleHudTurret;
-            DrawSpriteWidgetClipped(Canvas, widget, coords, true);
+            MyRot = rotator(vector(TreadCraft.CannonTurret.CurrentAim) >> TreadCraft.CannonTurret.Rotation);
+            TreadCraft.VehicleHudTurret.Rotation.Yaw = Vehicle.Rotation.Yaw - MyRot.Yaw;
+            Widget.WidgetTexture = TreadCraft.VehicleHudTurret;
+            DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
         }
     }
 
     // Draw MG ammo info (if needed)
-    if (bShowWeaponInfo && passenger != none && passenger.bIsMountedTankMG)
+    if (bShowWeaponInfo && Passenger != none && Passenger.bIsMountedTankMG)
     {
-        weapon = ROVehicleWeapon(passenger.Gun);
+        VehWeapon = ROVehicleWeapon(Passenger.Gun);
 
-        if (weapon != none)
+        if (VehWeapon != none)
         {
             // Offset vehicle passenger names
             VehicleOccupantsText.PosX = VehicleOccupantsTextOffset;
 
             // Draw ammo icon
-            VehicleMGAmmoIcon.WidgetTexture = weapon.hudAltAmmoIcon;
+            VehicleMGAmmoIcon.WidgetTexture = VehWeapon.hudAltAmmoIcon;
             DrawSpriteWidget(Canvas, VehicleMGAmmoIcon);
 
             // Draw reload state icon (if needed) // Matt: to show reload progress in red, like a tank cannon reload
-            if (DH_ROMountedTankMGPawn(passenger) != none)
+            if (DH_ROMountedTankMGPawn(Passenger) != none)
             {
-                ProportionOfReloadRemaining = passenger.GetAmmoReloadState();
+                ProportionOfReloadRemaining = Passenger.GetAmmoReloadState();
 
                 if (ProportionOfReloadRemaining > 0.0)
                 {
-                    VehicleMGAmmoReloadIcon.WidgetTexture = DH_ROMountedTankMGPawn(passenger).VehicleMGReloadTexture;
+                    VehicleMGAmmoReloadIcon.WidgetTexture = DH_ROMountedTankMGPawn(Passenger).VehicleMGReloadTexture;
                     VehicleMGAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                     DrawSpriteWidget(Canvas, VehicleMGAmmoReloadIcon);
                 }
             }
 
             // Draw ammo count
-            VehicleMGAmmoAmount.Value = weapon.getNumMags();
+            VehicleMGAmmoAmount.Value = VehWeapon.getNumMags();
             DrawNumericWidget(Canvas, VehicleMGAmmoAmount, Digits);
         }
     }
 
     // Draw rpm/speed/throttle gauges if we're the driver
-    if (passenger == none)
+    if (Passenger == none)
     {
-        wheeled_vehicle = ROWheeledVehicle(vehicle);
+        WheeledVehicle = ROWheeledVehicle(Vehicle);
 
-        if (wheeled_vehicle != none)
+        if (WheeledVehicle != none)
         {
             // Get team index
-            if (vehicle.Controller != none && vehicle.Controller.PlayerReplicationInfo != none && vehicle.Controller.PlayerReplicationInfo.Team != none)
+            if (Vehicle.Controller != none && Vehicle.Controller.PlayerReplicationInfo != none && Vehicle.Controller.PlayerReplicationInfo.Team != none)
             {
-                if (vehicle.Controller.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+                if (Vehicle.Controller.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
                     i = AXIS_TEAM_INDEX;
                 }
@@ -1183,11 +1183,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleRPMIndicator.WidgetTexture = VehicleRPMTextures[i];
 
             // Draw backgrounds
-            DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, coords, true, XL, YL, false, true);
-            DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, coords, true, XL, YL, false, true);
+            DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, Coords, true, XL, YL, false, true);
+            DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
 
             // Get speed value & update rotator
-            f = (((VSize(wheeled_vehicle.Velocity) * 3600.0) / 60.35) / 1000.0);
+            f = ((VSize(WheeledVehicle.Velocity) * 3600.0) / 60.35) / 1000.0;
             f *= VehicleSpeedScale[i];
             f += VehicleSpeedZeroPosition[i];
 
@@ -1210,7 +1210,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             TexRotator(VehicleSpeedNeedlesTextures[i]).Rotation.Yaw = VehicleLastSpeedRotation;
 
             // Get RPM value & update rotator
-            f = wheeled_vehicle.EngineRPM / 100.0;
+            f = WheeledVehicle.EngineRPM / 100.0;
             f *= VehicleRPMScale[i];
             f += VehicleRPMZeroPosition[i];
 
@@ -1240,70 +1240,70 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleRPMIndicator.WidgetTexture = VehicleRPMNeedlesTextures[i];
 
             // Draw needles
-            DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, coords, true, XL, YL, false, true);
-            DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, coords, true, XL, YL, false, true);
+            DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, Coords, true, XL, YL, false, true);
+            DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
 
             // Check if we should draw throttle
-            if (ROPlayer(vehicle.Controller) != none &&
-                ((ROPlayer(vehicle.Controller).bInterpolatedTankThrottle && threadCraft != none) || (ROPlayer(vehicle.Controller).bInterpolatedVehicleThrottle && threadCraft == none)))
+            if (ROPlayer(Vehicle.Controller) != none &&
+                ((ROPlayer(Vehicle.Controller).bInterpolatedTankThrottle && TreadCraft != none) || (ROPlayer(Vehicle.Controller).bInterpolatedVehicleThrottle && TreadCraft == none)))
             {
                 // Draw throttle background
-                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBackground, coords, true, XL, YL, false, true);
+                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBackground, Coords, true, XL, YL, false, true);
 
                 // Save YL for use later
                 Y_one = YL;
 
                 // Check which throttle variable we should use
-                if (PlayerOwner != vehicle.Controller)
+                if (PlayerOwner != Vehicle.Controller)
                 {
                     // Is spectator
-                    if (wheeled_vehicle.ThrottleRep <= 100)
+                    if (WheeledVehicle.ThrottleRep <= 100)
                     {
-                        f = (wheeled_vehicle.ThrottleRep * -1.0) / 100.0;
+                        f = (WheeledVehicle.ThrottleRep * -1.0) / 100.0;
                     }
                     else
                     {
-                        f = float(wheeled_vehicle.ThrottleRep - 101) / 100.0;
+                        f = Float(WheeledVehicle.ThrottleRep - 101) / 100.0;
                     }
                 }
                 else
                 {
-                    f = wheeled_vehicle.Throttle;
+                    f = WheeledVehicle.Throttle;
                 }
 
                 // Figure which part to draw (top or bottom) depending if throttle is positive or negative, update the scale value and draw the widget
-                if (f ~= 0)
+                if (f ~= 0.0)
                 {
                 }
-                else if (f > 0)
+                else if (f > 0.9)
                 {
                     VehicleThrottleIndicatorTop.Scale = VehicleThrottleTopZeroPosition + f * (VehicleThrottleTopMaxPosition - VehicleThrottleTopZeroPosition);
-                    DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorTop, coords, true, XL, YL, false, true);
+                    DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorTop, Coords, true, XL, YL, false, true);
                 }
                 else
                 {
                     VehicleThrottleIndicatorBottom.Scale = VehicleThrottleBottomZeroPosition - f * (VehicleThrottleBottomMaxPosition - VehicleThrottleBottomZeroPosition);
-                    DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBottom, coords, true, XL, YL, false, true);
+                    DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorBottom, Coords, true, XL, YL, false, true);
                 }
 
                 // Draw throttle foreground
-                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorForeground, coords, true, XL, YL, false, true);
+                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorForeground, Coords, true, XL, YL, false, true);
 
                 // Draw the lever thingy
-                if (f ~= 0)
+                if (f ~= 0.0)
                 {
                     VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * VehicleThrottleTopZeroPosition;
                 }
-                else if (f > 0)
+                else if (f > 0.0)
                 {
-                    VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * VehicleThrottleIndicatorTop.scale;
+                    VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * VehicleThrottleIndicatorTop.Scale;
                 }
                 else
                 {
-                    VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * (1 - VehicleThrottleIndicatorBottom.Scale);
+                    VehicleThrottleIndicatorLever.OffsetY = default.VehicleThrottleIndicatorLever.OffsetY - Y_one * (1.0 - VehicleThrottleIndicatorBottom.Scale);
                 }
 
-                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorLever, coords, true, XL, YL, true, true);
+                DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorLever, Coords, true, XL, YL, true, true);
 
                 // Shift passengers list farther to the right
                 VehicleOccupantsText.PosX = VehicleGaugesOccupantsTextOffset;
@@ -1320,9 +1320,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Draw occupant dots
-    for (i = 0; i < vehicle.VehicleHudOccupantsX.Length; i++)
+    for (i = 0; i < Vehicle.VehicleHudOccupantsX.length; i++)
     {
-        if (vehicle.VehicleHudOccupantsX[i] ~= 0)
+        if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
         {
             continue;
         }
@@ -1330,11 +1330,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         if (i == 0)
         {
             // Draw driver
-            if (passenger == none) // we're the driver
+            if (Passenger == none) // we're the driver
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
             }
-            else if (vehicle.Driver != none)
+            else if (Vehicle.Driver != none)
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsOccupiedColor;
             }
@@ -1343,29 +1343,29 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
             }
 
-            VehicleOccupants.PosX = vehicle.VehicleHudOccupantsX[0];
-            VehicleOccupants.PosY = vehicle.VehicleHudOccupantsY[0];
-            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, coords, true);
+            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[0];
+            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
+            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
         }
         else
         {
-            if (i - 1 >= vehicle.WeaponPawns.Length)
+            if (i - 1 >= Vehicle.WeaponPawns.length)
             {
-                // Matt: added to replace lines above - if we're already beyond WeaponPawns.Length, there's no point continuing with the for loop
+                // Matt: added to replace lines above - if we're already beyond WeaponPawns.length, there's no point continuing with the for loop
                 break;
             }
             // Matt: added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
-            else if (vehicle.WeaponPawns[i - 1] == none)
+            else if (Vehicle.WeaponPawns[i - 1] == none)
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
             }
-            else if (vehicle.WeaponPawns[i - 1] == passenger && passenger != none)
+            else if (Vehicle.WeaponPawns[i - 1] == Passenger && Passenger != none)
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
             }
-            else if (vehicle.WeaponPawns[i - 1].PlayerReplicationInfo != none)
+            else if (Vehicle.WeaponPawns[i - 1].PlayerReplicationInfo != none)
             {
-                if (passenger != none && passenger.PlayerReplicationInfo != none && vehicle.WeaponPawns[i - 1].PlayerReplicationInfo == passenger.PlayerReplicationInfo)
+                if (Passenger != none && Passenger.PlayerReplicationInfo != none && Vehicle.WeaponPawns[i - 1].PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
                 {
                     VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
                 }
@@ -1379,10 +1379,10 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
             }
 
-            VehicleOccupants.PosX = vehicle.VehicleHudOccupantsX[i];
-            VehicleOccupants.PosY = vehicle.VehicleHudOccupantsY[i];
+            VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
+            VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
 
-            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, coords, true);
+            DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
         }
     }
 
@@ -1391,166 +1391,171 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     //////////////////////////////////////
 
     // Get self's PRI
-    if (passenger != none)
+    if (Passenger != none)
     {
-        PRI = passenger.PlayerReplicationInfo;
+        PRI = Passenger.PlayerReplicationInfo;
     }
     else
     {
-        PRI = vehicle.PlayerReplicationInfo;
+        PRI = Vehicle.PlayerReplicationInfo;
     }
 
     // Clear lines array
-    lines.length = 0;
+    Lines.length = 0;
 
     // Shift text up some more if we're the driver and we're displaying capture bar
-    if (bDrawingCaptureBar && vehicle.PlayerReplicationInfo == PRI)
+    if (bDrawingCaptureBar && Vehicle.PlayerReplicationInfo == PRI)
     {
-        modifiedVehicleOccupantsTextYOffset -= 0.12 * Canvas.SizeY * myScale;
+        ModifiedVehicleOccupantsTextYOffset -= 0.12 * Canvas.SizeY * MyScale;
     }
 
     // Driver's name
-    if (vehicle.PlayerReplicationInfo != none && vehicle.PlayerReplicationInfo != PRI) // don't draw our own name!
+    if (Vehicle.PlayerReplicationInfo != none && Vehicle.PlayerReplicationInfo != PRI) // don't draw our own name!
     {
-        lines[lines.length] = class'ROVehicleWeaponPawn'.default.DriverHudName $ ": " $ vehicle.PlayerReplicationInfo.PlayerName;
+        Lines[Lines.length] = class'ROVehicleWeaponPawn'.default.DriverHudName $ ": " $ Vehicle.PlayerReplicationInfo.PlayerName;
     }
 
     // Passengers' names
-    for (i = 0; i < vehicle.WeaponPawns.Length; i++)
+    for (i = 0; i < Vehicle.WeaponPawns.length; i++)
     {
-        wpawn = ROVehicleWeaponPawn(vehicle.WeaponPawns[i]);
+        WeaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
 
-        if (wpawn != none && wpawn.PlayerReplicationInfo != none && wpawn.PlayerReplicationInfo != PRI) // don't draw our own name!
+        if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none && WeaponPawn.PlayerReplicationInfo != PRI) // don't draw our own name!
         {
-            lines[lines.length] = wpawn.HudName $ ": " $ wpawn.PlayerReplicationInfo.PlayerName;
+            Lines[Lines.length] = WeaponPawn.HudName $ ": " $ WeaponPawn.PlayerReplicationInfo.PlayerName;
         }
     }
 
     // Draw the lines
-    if (lines.Length > 0)
+    if (Lines.length > 0)
     {
-        VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * myScale;
-        VehicleOccupantsText.OffsetY += modifiedVehicleOccupantsTextYOffset;
+        VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * MyScale;
+        VehicleOccupantsText.OffsetY += ModifiedVehicleOccupantsTextYOffset;
         Canvas.Font = GetSmallMenuFont(Canvas);
 
-        for (i = lines.Length - 1; i >= 0 ; i--)
+        for (i = Lines.length - 1; i >= 0 ; i--)
         {
-            VehicleOccupantsText.text = lines[i];
-            DrawTextWidgetClipped(Canvas, VehicleOccupantsText, coords2, XL, YL, Y_one);
+            VehicleOccupantsText.Text = Lines[i];
+            DrawTextWidgetClipped(Canvas, VehicleOccupantsText, Coords2, XL, YL, Y_one);
             VehicleOccupantsText.OffsetY -= YL;
         }
     }
 }
 
-//-----------------------------------------------------------------------------
-// DrawPlayerNames - Draws identify info for friendlies
+// Draws identify info for friendlies
 // Overridden to handle AT reload messages
-//-----------------------------------------------------------------------------
-
 function DrawPlayerNames(Canvas C)
 {
-    local Actor HitActor;
-    local vector HitLocation, HitNormal, ViewPos;
-    local vector ScreenPos, Loc, X, Y, Z, Dir;
-    local float strX, strY;
-    local string display;
-    local float distance;
-    local bool bIsAVehicle;
-    //Added for mortar resupplying.
-    local DH_MortarVehicle V;
-
-    local DH_Pawn MyDHP, OtherDHP;
+    local Actor            HitActor;
+    local vector           HitLocation, HitNormal, ViewPos, ScreenPos, Loc, X, Y, Z, Dir;
+    local float            StrX, StrY, Distance;
+    local string           Display;
+    local bool             bIsAVehicle;
+    local DH_Pawn          MyDHP, OtherDHP;
+    local DH_MortarVehicle Mortar;
 
     if (PawnOwner == none || PawnOwner.Controller == none)
+    {
         return;
+    }
 
     if (!bSetColour)
     {
-       SetAlliedColour();
-       //Log("Running SAC from DrawPlayerNames");
+        SetAlliedColour();
     }
 
-    ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0, 0, 1);
-    HitActor = Trace(HitLocation,HitNormal,ViewPos + 1600 * vector(PawnOwner.Controller.Rotation),ViewPos, true);
+    ViewPos = PawnOwner.Location + PawnOwner.BaseEyeHeight * vect(0.0, 0.0, 1.0);
+    HitActor = Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true);
 
-    //CHECK FOR MORTAR, Basnett 2011
+    // CHECK FOR MORTAR - Basnett 2011
     if (HitActor != none && DH_Pawn(PawnOwner) != none && DH_MortarVehicle(HitActor) != none)
     {
         MyDHP = DH_Pawn(PawnOwner);
 
-        V = DH_MortarVehicle(HitActor);
+        Mortar = DH_MortarVehicle(HitActor);
 
-        if (V != none && V.VehicleTeam == MyDHP.GetTeamNum())
+        if (Mortar != none && Mortar.VehicleTeam == MyDHP.GetTeamNum())
         {
-            NamedPlayer = V;
+            NamedPlayer = Mortar;
 
             // Draw player name
             C.Font = GetPlayerNameFont(C);
             Loc = NamedPlayer.Location;
-            Loc.Z += NamedPlayer.CollisionHeight + 8;
+            Loc.Z += NamedPlayer.CollisionHeight + 8.0;
             ScreenPos = C.WorldToScreen(Loc);
 
-            if (V.PlayerReplicationInfo != none)
+            if (Mortar.PlayerReplicationInfo != none)
             {
-                C.DrawColor = GetTeamColour(V.PlayerReplicationInfo.Team.TeamIndex);
-                C.TextSize(V.PlayerReplicationInfo.PlayerName, strX, strY);
-                C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 2.0);
-                display = V.PlayerReplicationInfo.PlayerName;
-                C.DrawTextClipped(display);
+                C.DrawColor = GetTeamColour(Mortar.PlayerReplicationInfo.Team.TeamIndex);
+                C.TextSize(Mortar.PlayerReplicationInfo.PlayerName, StrX, StrY);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
+                Display = Mortar.PlayerReplicationInfo.PlayerName;
+                C.DrawTextClipped(Display);
             }
 
-            //Someone's on it, let's check their ammunition.
-            //Also, are we capable of reloading?
-            if (MyDHP != none && MyDHP.bHasMortarAmmo && V.bCanBeResupplied)
+            // Someone's on it - let's check their ammunition
+            // Also, are we capable of reloading?
+            if (MyDHP != none && MyDHP.bHasMortarAmmo && Mortar.bCanBeResupplied)
             {
-                distance = VSizeSquared(Loc - PawnOwner.Location);
+                Distance = VSizeSquared(Loc - PawnOwner.Location);
 
                 if (MyDHP != none)
                 {
                     if (MyDHP.bCanMGResupply)
+                    {
                         MyDHP.bCanMGResupply = false;
+                    }
+
                     if (MyDHP.bCanATReload)
+                    {
                         MyDHP.bCanATReload = false;
+                    }
+
                     if (MyDHP.bCanMortarResupply)
+                    {
                         MyDHP.bCanMortarResupply = false;
+                    }
                 }
 
-                if (distance < 14400.0) // 2 Meters
+                if (Distance < 14400.0) // 2 meters
                 {
                     MyDHP.bCanMortarResupply = true;
-                    display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
+                    Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                 }
                 else
                 {
                     if (MyDHP.bCanMortarResupply)
+                    {
                         MyDHP.bCanMortarResupply = false;
+                    }
 
-                       display = NeedAmmoText;
+                    Display = NeedAmmoText;
                 }
 
                 // Draw text under player's name (need ammo or press x to resupply)
                 C.DrawColor = WhiteColor;
-                C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.0);
-                C.DrawTextClipped(display);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
+                C.DrawTextClipped(Display);
             }
         }
 
         return;
     }
 
-    if ((Pawn(HitActor) != none) && (Pawn(HitActor).PlayerReplicationInfo != none)
-        && ((PawnOwner.PlayerReplicationInfo.Team == none) || (PawnOwner.PlayerReplicationInfo.Team == Pawn(HitActor).PlayerReplicationInfo.Team)))
+    if (Pawn(HitActor) != none && Pawn(HitActor).PlayerReplicationInfo != none && 
+        (PawnOwner.PlayerReplicationInfo.Team == none || PawnOwner.PlayerReplicationInfo.Team == Pawn(HitActor).PlayerReplicationInfo.Team))
     {
-        if ((NamedPlayer != HitActor) || (Level.TimeSeconds - NameTime > 0.5))
+        if (NamedPlayer != HitActor || Level.TimeSeconds - NameTime > 0.5)
         {
-            //PlayerOwner.ReceiveLocalizedMessage(class'ROPlayerNameMessage',0,Pawn(HitActor).PlayerReplicationInfo);
             NameTime = Level.TimeSeconds;
         }
 
         NamedPlayer = Pawn(HitActor);
     }
     else
+    {
         NamedPlayer = none;
+    }
 
     if (NamedPlayer != none && NamedPlayer.PlayerReplicationInfo != none && Level.TimeSeconds - NameTime < 1.0)
     {
@@ -1559,9 +1564,13 @@ function DrawPlayerNames(Canvas C)
 
         // Quick check simply to stop error log spam
         if (OtherDHP != none)
+        {
             bIsAVehicle = false;
+        }
         else
+        {
             bIsAVehicle = true;
+        }
 
         GetAxes(PlayerOwner.Rotation, X, Y, Z);
         Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
@@ -1571,127 +1580,152 @@ function DrawPlayerNames(Canvas C)
             C.DrawColor = GetTeamColour(NamedPlayer.PlayerReplicationInfo.Team.TeamIndex);
             C.Font = GetPlayerNameFont(C);
 
-            //------------------------------------------------------------------
-            //Mortar resupply
+            // Mortar resupply
             if (MyDHP != none && OtherDHP != none && MyDHP.bHasMortarAmmo && OtherDHP.bMortarCanBeResupplied)
             {
                 // Draw player name
                 Loc = NamedPlayer.Location;
-                Loc.Z += NamedPlayer.CollisionHeight + 8;
+                Loc.Z += NamedPlayer.CollisionHeight + 8.0;
                 ScreenPos = C.WorldToScreen(Loc);
-                C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, strX, strY);
-                C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 2.0);
-                display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                C.DrawTextClipped(display);
-                distance = VSizeSquared(Loc - PawnOwner.Location);
+                C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
+                Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
+                C.DrawTextClipped(Display);
+                Distance = VSizeSquared(Loc - PawnOwner.Location);
 
                 if (MyDHP != none)
                 {
                     if (MyDHP.bCanMGResupply)
+                    {
                         MyDHP.bCanMGResupply = false;
+                    }
+
                     if (MyDHP.bCanATReload)
+                    {
                         MyDHP.bCanATReload = false;
+                    }
+
                     if (MyDHP.bCanMortarResupply)
+                    {
                         MyDHP.bCanMortarResupply = false;
+                    }
                 }
 
-                if (distance < 14400.0) // 2 Meters
+                if (Distance < 14400.0) // 2 meters
                 {
                     MyDHP.bCanMortarResupply = true;
-                    display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
+                    Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                 }
                 else
                 {
                     if (MyDHP.bCanMortarResupply)
+                    {
                         MyDHP.bCanMortarResupply = false;
+                    }
 
-                       display = NeedAmmoText;
+                    Display = NeedAmmoText;
                 }
 
                 // Draw text under player's name (need ammo or press x to resupply)
                 C.DrawColor = WhiteColor;
-                C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.0);
-                C.DrawTextClipped(display);
+                C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
+                C.DrawTextClipped(Display);
             }
             else if (bIsAVehicle || !OtherDHP.bWeaponCanBeReloaded)
             {
-                if (MyDHP != none && !NamedPlayer.IsA('Vehicle') && MyDHP.bHasMGAmmo
-                    && OtherDHP.bWeaponCanBeResupplied && OtherDHP.bWeaponNeedsResupply)
+                // MG resupply
+                if (MyDHP != none && !NamedPlayer.IsA('Vehicle') && MyDHP.bHasMGAmmo && OtherDHP.bWeaponCanBeResupplied && OtherDHP.bWeaponNeedsResupply)
                 {
                     // Draw player name
                     Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8;
+                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
                     ScreenPos = C.WorldToScreen(Loc);
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, strX, strY);
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 2.0);
-                    display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(display);
+                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
+                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
+                    C.DrawTextClipped(Display);
 
-                    distance = VSizeSquared(Loc - PawnOwner.Location);
+                    Distance = VSizeSquared(Loc - PawnOwner.Location);
 
-                    if (MyDHP!= none)
+                    if (MyDHP != none)
                     {
                         if (MyDHP.bCanATResupply)
+                        {
                             MyDHP.bCanATResupply = false;
+                        }
+
                         if (MyDHP.bCanATReload)
+                        {
                             MyDHP.bCanATReload = false;
+                        }
                     }
 
-                    if (distance < 14400.0) // 2 Meters
+                    if (Distance < 14400.0) // 2 meters
                     {
                         MyDHP.bCanMGResupply = true;
-                        display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
+                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                     }
                     else
                     {
                         if (MyDHP.bCanMGResupply)
+                        {
                             MyDHP.bCanMGResupply = false;
-                        display = NeedAmmoText;
+                            Display = NeedAmmoText;
+                        }
                     }
 
                     // Draw text under player's name (need ammo or press x to resupply)
                     C.DrawColor = WhiteColor;
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.0);
-                    C.DrawTextClipped(display);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
+                    C.DrawTextClipped(Display);
                 }
                 else
                 {
-                    if (MyDHP!= none)
+                    if (MyDHP != none)
                     {
                         if (MyDHP.bCanMGResupply)
+                        {
                             MyDHP.bCanMGResupply = false;
+                        }
+
                         if (MyDHP.bCanATResupply)
+                        {
                             MyDHP.bCanATResupply = false;
+                        }
+
                         if (MyDHP.bCanATReload)
+                        {
                             MyDHP.bCanATReload = false;
+                        }
                     }
 
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, strX, strY);
+                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
                     Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8;
+                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
                     ScreenPos = C.WorldToScreen(Loc);
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 0.5);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
 
-                    display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(display);
+                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
+                    C.DrawTextClipped(Display);
                 }
             }
+            // AT weapon assisted reload
             else if (OtherDHP != none && OtherDHP.bWeaponCanBeReloaded)
             {
-                if (MyDHP!= none && !NamedPlayer.IsA('Vehicle') && OtherDHP.bWeaponNeedsReload)
+                if (MyDHP != none && !NamedPlayer.IsA('Vehicle') && OtherDHP.bWeaponNeedsReload)
                 {
                     // Draw player name
                     Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8;
+                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
                     ScreenPos = C.WorldToScreen(Loc);
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, strX, strY);
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 2.0);
-                    display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(display);
+                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
+                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
+                    C.DrawTextClipped(Display);
 
-                    distance = VSizeSquared(Loc - PawnOwner.Location);
+                    Distance = VSizeSquared(Loc - PawnOwner.Location);
 
-                    if (MyDHP!= none)
+                    if (MyDHP != none)
                     {
                         if (MyDHP.bCanMGResupply)
                             MyDHP.bCanMGResupply = false;
