@@ -29,9 +29,9 @@ var(Sounds) class<DH_PawnSoundGroup> DHSoundGroupClass;
 
 // Radioman
 var ROArtilleryTrigger  CarriedRadioTrigger; // For storing the trigger on a radioman each spawn, for the purpose of deleting it on death
-var int                 GRIRadioPos;   // For storing radioman's specific radio arty trigger position in ROGRI.AlliedRadios array
+var int                 GRIRadioPos;         // For storing radioman's specific radio arty trigger position in ROGRI.AlliedRadios array
 
-var float           TeleSpawnProtEnds;  // Is set when a player teleports for "spawn" protection in selectable spawn maps
+var float           TeleSpawnProtEnds;       // Is set when a player teleports for "spawn" protection in selectable spawn maps
 
 var() array<sound>  HelmetHitSounds;
 var() array<sound>  PlayerHitSounds;
@@ -46,23 +46,19 @@ var bool        bCrouchMantle;         // Whether a climb ends in a crouch or no
 var bool        bMantleAnimRun;        // Has the anim been started on the server/remote clients yet?
 var bool        bCancelledMantle;      // Whether a mantle has ended naturally or been aborted
 var bool        bMantleDebug;          // Show debug output while mantling
-var float       MantleHeight;       // How high we're climbing
-var float       StartMantleTime;    // Used for smoothing out pitch at mantle start
-var int         MantleYaw;          // for locking rotation during climb
+var float       MantleHeight;          // How high we're climbing
+var float       StartMantleTime;       // Used for smoothing out pitch at mantle start
+var int         MantleYaw;             // for locking rotation during climb
 var vector      RootLocation;
 var vector      RootDelta;
-var vector      NewAcceleration;  // Acceleration which is checked by PlayerMove in the Mantling state within DHPlayer
-var bool        bEndMantleBob;    // Initiates the pre mantle head bob up motion
+var vector      NewAcceleration;       // Acceleration which is checked by PlayerMove in the Mantling state within DHPlayer
+var bool        bEndMantleBob;         // Initiates the pre mantle head bob up motion
 
-var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C,
-                                MantleAnim_56C, MantleAnim_60C, MantleAnim_64C, MantleAnim_68C,
-                                MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C,
-                                MantleAnim_88C;
+var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C, 
+                                MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
-var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S,
-                                MantleAnim_56S, MantleAnim_60S, MantleAnim_64S, MantleAnim_68S,
-                                MantleAnim_72S, MantleAnim_76S, MantleAnim_80S, MantleAnim_84S,
-                                MantleAnim_88S;
+var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S, MantleAnim_56S, MantleAnim_60S, MantleAnim_64S, 
+                                MantleAnim_68S, MantleAnim_72S, MantleAnim_76S, MantleAnim_80S, MantleAnim_84S, MantleAnim_88S;
 
 var             sound           MantleSound;
 
@@ -108,6 +104,7 @@ replication
         bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
 }
 
+
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -133,7 +130,7 @@ simulated function PostBeginPlay()
     }
 
     SavedAuxCollision = AuxCollisionCylinder.bCollideActors;
-    LastResupplyTime = Level.TimeSeconds - 1;
+    LastResupplyTime = Level.TimeSeconds - 1.0;
     bTouchingResupply = false;
 }
 
@@ -146,7 +143,7 @@ simulated function Tick(float DeltaTime)
     {
         if (bOnFire && !bBurnFXOn)
         {
-            BurningDropWeaps(); // If you're on fire, the last thing you'll be doing is continuing to fight!
+            BurningDropWeaps(); // if you're on fire, the last thing you'll be doing is continuing to fight!
             StartBurnFX();
         }
         else if (!bOnFire && bBurnFXOn)
@@ -163,9 +160,9 @@ simulated function Tick(float DeltaTime)
 
     // Would prefer to do this in a Timer but too many states hijack timer and reset it on us
     // I don't want to have to override over a dozen functions just to do damage every half second
-    if (bOnFire && (Level.TimeSeconds - LastBurnTime > 1) && Health > 0)
+    if (bOnFire && (Level.TimeSeconds - LastBurnTime > 1.0) && Health > 0)
     {
-        TakeDamage(FireDamage, FireStarter, Location, vect(0, 0, 0), FireDamageClass);
+        TakeDamage(FireDamage, FireStarter, Location, vect(0.0, 0.0, 0.0), FireDamageClass);
 
         if (Weapon != none)
         {
@@ -194,9 +191,7 @@ simulated function bool HasMortarInInventory()
     return false;
 }
 
-//-----------------------------------------------------------------------------
-// PossessedBy - Figure out what dummy attachments are needed
-//-----------------------------------------------------------------------------
+// PossessedBy - figure out what dummy attachments are needed
 function PossessedBy(Controller C)
 {
     local array<class<ROAmmoPouch> > AmmoClasses;
@@ -235,8 +230,7 @@ function PossessedBy(Controller C)
         HeadgearClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.GetHeadgear();
         ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.GetAmmoPouches(AmmoClasses, Prim, Sec, Gren);
 
-        if (ROPlayerReplicationInfo(PlayerReplicationInfo) != none &&
-            ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo != none)
+        if (ROPlayerReplicationInfo(PlayerReplicationInfo) != none && ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo != none)
         {
             DetachedArmClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.static.GetArmClass();
             DetachedLegClass = ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo.static.GetLegClass();
@@ -251,8 +245,7 @@ function PossessedBy(Controller C)
             AmmoPouchClasses[i] = AmmoClasses[i];
         }
 
-        // These don't need to exist on dedicated servers at the moment, though they might if the ammo
-        // holding functionality of the pouch is put in - Erik
+        // These don't need to exist on dedicated servers at the moment, though they might if the ammo holding functionality of the pouch is put in - Erik
         if (Level.NetMode != NM_DedicatedServer)
         {
             if (HeadgearClass != none && Headgear == none && !bHatShotOff)
@@ -271,15 +264,15 @@ function PossessedBy(Controller C)
             }
         }
 
-        //We just check if we've already been possessed once.  If not, we run this.
+        // We just check if we've already been possessed once - if not, we run this
         if (!bHasBeenPossessed)
         {
             DHRI = GetRoleInfo();
 
-            //We've now been possessed
+            // We've now been possessed
             bHasBeenPossessed = true;
 
-            //Give resupply ammunition.
+            // Give resupply ammunition.
             if (DHRI.bCarriesATAmmo)
             {
                 bHasATAmmo = true;
@@ -293,25 +286,25 @@ function PossessedBy(Controller C)
                 bHasMortarAmmo = true;
             }
 
-            //Give default mortar ammunition.
+            // Give default mortar ammunition.
             if (DHRI.bCanUseMortars)
             {
-                if (C.GetTeamNum() == 0)    //Axis
+                if (C.GetTeamNum() == 0) // axis
                 {
-                    MortarHEAmmo=16;
-                    MortarSmokeAmmo=4;
+                    MortarHEAmmo = 16;
+                    MortarSmokeAmmo = 4;
                 }
-                else    //Allies
+                else // allies
                 {
-                    MortarHEAmmo=24;
-                    MortarSmokeAmmo=4;
+                    MortarHEAmmo = 24;
+                    MortarSmokeAmmo = 4;
                 }
             }
         }
     }
 
     // Send the info to the client now to make sure RoleInfo is replicated quickly
-    NetUpdateTime = Level.TimeSeconds - 1;
+    NetUpdateTime = Level.TimeSeconds - 1.0;
 
     // Slip this in here
     if (Controller != none && DHPlayer(Controller) != none)
@@ -341,13 +334,13 @@ simulated function HelmetShotOff(rotator Rotation)
 
     if (bOnFire)
     {
-        Hat.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.000000, true);
+        Hat.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
     }
 
     HeadGear.Destroy();
 
-    Hat.Velocity = Velocity + vector(Rotation) * (Hat.MaxSpeed + (Hat.MaxSpeed / 2) * FRand());
-    Hat.LifeSpan = Hat.LifeSpan + 2 * FRand() - 1;
+    Hat.Velocity = Velocity + vector(Rotation) * (Hat.MaxSpeed + (Hat.MaxSpeed / 2.0) * FRand());
+    Hat.LifeSpan = Hat.LifeSpan + 2.0 * FRand() - 1.0;
 
     bHatShotOff = true;
 }
@@ -369,7 +362,7 @@ function bool TeleSpawnProtected()
 
 function DeactivateSpawnProtection()
 {
-    TeleSpawnProtEnds = -10000;
+    TeleSpawnProtEnds = -10000.0;
 
     super.DeactivateSpawnProtection();
 }
@@ -384,11 +377,11 @@ event PawnWhizzed(vector WhizLocation, int WhizType)
         mWhizSoundLocation = WhizLocation;
 
         SpawnWhizCount++;
-        // Spawn the whiz sound for local non network players
 
+        // Spawn the whiz sound for local non network players
         HandleSnapSound(WhizType);
 
-        NetUpdateTime = Level.TimeSeconds - 1;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
 
@@ -401,11 +394,11 @@ simulated event HandleSnapSound(int WhizType)
     {
         if (WhizType == 1)
         {
-            Spawn(class'DH_BulletSnap',,, mWhizSoundLocation);    // Supersonic rounds
+            Spawn(class'DH_BulletSnap',,, mWhizSoundLocation); // supersonic rounds
         }
         else
         {
-            Spawn(class'DH_BulletWhiz',,, mWhizSoundLocation);     // Subsonic rounds
+            Spawn(class'DH_BulletWhiz',,, mWhizSoundLocation); // subsonic rounds
         }
 
         // Anything above WhizType of 2 is a friendly bullet at very close range, so don't suppress
@@ -422,20 +415,18 @@ simulated event HandleWhizSound()
 {
 }
 
-//-----------------------------------------------------------------------------
-// ProcessHitFX
 // Added bullet impact sounds for helmets and players
-//-----------------------------------------------------------------------------
- // MergeTODO: Replace this with realistic gibbing
+// MergeTODO: Replace this with realistic gibbing
 simulated function ProcessHitFX()
 {
-    local Coords boneCoords;
-    local int j;
-    local float GibPerterbation;
+    local Coords BoneCoords;
+    local int    j;
+    local float  GibPerterbation;
 
     if (Level.NetMode == NM_DedicatedServer)
     {
         SimHitFxTicker = HitFxTicker;
+
         return;
     }
 
@@ -446,6 +437,7 @@ simulated function ProcessHitFX()
         if (j > 30)
         {
             SimHitFxTicker = HitFxTicker;
+
             return;
         }
 
@@ -454,19 +446,20 @@ simulated function ProcessHitFX()
             continue;
         }
 
-        if (HitFX[SimHitFxTicker].bone == 'obliterate' && !class'GameInfo'.static.UseLowGore())
+        if (HitFX[SimHitFxTicker].Bone == 'obliterate' && !class'GameInfo'.static.UseLowGore())
         {
-            SpawnGibs(HitFX[SimHitFxTicker].rotDir, 0);
+            SpawnGibs(HitFX[SimHitFxTicker].rotDir, 0.0);
             bGibbed = true;
             Destroy();
+
             return;
         }
 
-        boneCoords = GetBoneCoords(HitFX[SimHitFxTicker].bone);
+        BoneCoords = GetBoneCoords(HitFX[SimHitFxTicker].Bone);
 
         if (!Level.bDropDetail && !class'GameInfo'.static.NoBlood())
         {
-            AttachEffect(BleedingEmitterClass, HitFX[SimHitFxTicker].bone, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
+            AttachEffect(BleedingEmitterClass, HitFX[SimHitFxTicker].Bone, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
         }
 
         if (class'GameInfo'.static.UseLowGore())
@@ -478,54 +471,59 @@ simulated function ProcessHitFX()
         {
             GibPerterbation = HitFX[SimHitFxTicker].damtype.default.GibPerterbation;
 
-            switch (HitFX[SimHitFxTicker].bone)
+            switch (HitFX[SimHitFxTicker].Bone)
             {
                 case 'obliterate':
                     break;
+
                 case 'lthigh':
                 case 'lupperthigh':
                     if (!bLeftLegGibbed)
                     {
-                        SpawnGiblet(DetachedLegClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
+                        SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
                         bLeftLegGibbed=true;
                     }
                     break;
+
                 case 'rthigh':
                 case 'rupperthigh':
                     if (!bRightLegGibbed)
                     {
-                        SpawnGiblet(DetachedLegClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
+                        SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
                         bRightLegGibbed=true;
                     }
                     break;
+
                 case 'lfarm':
                 case 'lupperarm':
                     if (!bLeftArmGibbed)
                     {
-                        SpawnGiblet(DetachedArmClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
+                        SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
                         bLeftArmGibbed=true;
                     }
                     break;
+
                 case 'rfarm':
                 case 'rupperarm':
                     if (!bRightArmGibbed)
                     {
-                        SpawnGiblet(DetachedArmClass, boneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
+                        SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
                         bRightArmGibbed=true;
                     }
                     break;
+
                 case 'head':
                     HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
                     break;
             }
 
-            if (HitFX[SimHitFXTicker].bone != 'Spine' && HitFX[SimHitFXTicker].bone != 'UpperSpine')
+            if (HitFX[SimHitFXTicker].Bone != 'Spine' && HitFX[SimHitFXTicker].Bone != 'UpperSpine')
             {
-                HideBone(HitFX[SimHitFxTicker].bone);
+                HideBone(HitFX[SimHitFxTicker].Bone);
             }
         }
 
-        if (HitFX[SimHitFXTicker].bone == 'head' && Headgear != none)
+        if (HitFX[SimHitFXTicker].Bone == 'head' && Headgear != none)
         {
             if (DH_Headgear(HeadGear).bIsHelmet)
             {
@@ -539,11 +537,11 @@ simulated function ProcessHitFX()
 
 function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocation, vector Momentum, class<DamageType> DamageType, array<int> PointsHit)
 {
-    local int actualDamage, originalDamage, cumulativeDamage, totalDamage, i;
-    local int HighestDamagePoint, HighestDamageAmount;
+    local int    ActualDamage, OriginalDamage, CumulativeDamage, TotalDamage, i;
+    local int    HighestDamagePoint, HighestDamageAmount;
     local vector HitDirection;
 
-    originalDamage = damage;
+    OriginalDamage = damage;
 
     // If someone else has killed this player , return
     if (bDeleteMe || PointsHit.Length < 1 || Health <= 0)
@@ -559,25 +557,25 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             return;
         }
 
-        actualDamage = originalDamage;
-        actualDamage *= Hitpoints[PointsHit[i]].DamageMultiplier;
-        totalDamage += actualDamage;
-        actualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
-        cumulativeDamage += actualDamage;
+        ActualDamage = OriginalDamage;
+        ActualDamage *= Hitpoints[PointsHit[i]].DamageMultiplier;
+        TotalDamage += ActualDamage;
+        ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+        CumulativeDamage += ActualDamage;
 
-        if (actualDamage > HighestDamageAmount)
+        if (ActualDamage > HighestDamageAmount)
         {
-            HighestDamageAmount = actualDamage;
+            HighestDamageAmount = ActualDamage;
             HighestDamagePoint = PointsHit[i];
         }
 
         if (Hitpoints[PointsHit[i]].HitPointType == PHP_Leg || Hitpoints[PointsHit[i]].HitPointType == PHP_Foot)
         {
-            //If we've been shot in the foot or the leg, we have a chance to 'fall' and drop our weapon.
+            // If we've been shot in the foot or the leg, we have a chance to 'fall' and drop our weapon.
             if (ActualDamage > 0 && DHPlayer(Controller) != none && !bIsCrawling && bIsSprinting)
             {
-                //Zero stamina and fall to the ground if shot in the leg or foot
-                Stamina = 0;
+                // Zero stamina and fall to the ground if shot in the leg or foot
+                Stamina = 0.0;
                 ClientForceStaminaUpdate(Stamina);
                 DHPlayer(Controller).ClientProne();
             }
@@ -595,18 +593,18 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             if (DHPlayer(Controller) != none && DarkestHourGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
                 HitDirection = Location - HitLocation;
-                HitDirection.Z = 0.0f;
+                HitDirection.Z = 0.0;
                 HitDirection = normal(HitDirection);
 
-                DHPlayer(Controller).PlayerJarred(HitDirection, 15.0f);
+                DHPlayer(Controller).PlayerJarred(HitDirection, 15.0);
             }
         }
         else if (Hitpoints[PointsHit[i]].HitPointType == PHP_Torso)
         {
             if (DHPlayer(Controller) != none && DarkestHourGame(Level.Game).FriendlyFireScale > 0.0 && !InGodMode())
             {
-                //Lose half your stamina if you're shot in the chest. -Basnett
-                Stamina = 0;
+                // Lose half your stamina if you're shot in the chest - Basnett
+                Stamina = 0.0;
                 StaminaRecoveryRate /= 2;
                 ClientForceStaminaUpdate(Stamina);
             }
@@ -616,18 +614,18 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         UpdateDamageList(PointsHit[i] - 1);
 
         // Lets exit out if one of the shots killed the player
-        if (cumulativeDamage >=  Health)
+        if (CumulativeDamage >=  Health)
         {
             if (DamageType.default.HumanObliterationThreshhold != 1000001) // Shitty way of identifying Melee damage classes using existing DamageType parent
             {
                 PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
             }
 
-            TakeDamage(totalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
+            TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
         }
     }
 
-    if (totalDamage > 0)
+    if (TotalDamage > 0)
     {
         // If someone else has killed this player , return
         if (bDeleteMe || Health <= 0)
@@ -640,24 +638,22 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
             PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
         }
 
-        TakeDamage(totalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
+        TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
     }
 }
 
-//-----------------------------------------------------------------------------
-// TakeDamage - Handle locational damage
-//-----------------------------------------------------------------------------
-// MergeTODO: This function needs some work
+// Handle locational damage
+// MergeTODO: this function needs some work
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local int actualDamage;
+    local int        ActualDamage;
     local Controller Killer;
 
-    if (damagetype == none)
+    if (DamageType == none)
     {
         if (InstigatedBy != none)
         {
-            warn("No damagetype for damage by "$instigatedby$" with weapon "$InstigatedBy.Weapon);
+            Warn("No DamageType for damage by" @ Instigatedby @ "with weapon" @ InstigatedBy.Weapon);
         }
 
         DamageType = class'DamageType';
@@ -706,7 +702,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         if (!bIsCrawling && !bIsCrouched && DHPlayer(Controller) != none)
         {
-            Stamina = 0;
+            Stamina = 0.0;
             ClientForceStaminaUpdate(Stamina);
             DHPlayer(Controller).ClientProne();
         }
@@ -746,16 +742,16 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    Health -= actualDamage;
+    Health -= ActualDamage;
 
-    if (HitLocation == vect(0, 0, 0))
+    if (HitLocation == vect(0.0, 0.0, 0.0))
     {
         HitLocation = Location;
     }
 
     LastHitIndex = HitIndex;
 
-    PlayHit(actualDamage,InstigatedBy, hitLocation, DamageType, Momentum, HitIndex);
+    PlayHit(ActualDamage,InstigatedBy, hitLocation, DamageType, Momentum, HitIndex);
 
     if (Health <= 0)
     {
@@ -766,7 +762,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             DH_PlayerFlame(FlameFX).PlayerDied();
         }
 
-        // pawn died
+        // Pawn died
         if (DamageType.default.bCausedByWorld && (InstigatedBy == none || InstigatedBy == self) && LastHitBy != none)
         {
             Killer = LastHitBy;
@@ -794,7 +790,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         if (Controller != none)
         {
-            Controller.NotifyTakeHit(InstigatedBy, HitLocation, actualDamage, DamageType, Momentum);
+            Controller.NotifyTakeHit(InstigatedBy, HitLocation, ActualDamage, DamageType, Momentum);
         }
 
         if (InstigatedBy != none && InstigatedBy != self)
@@ -849,9 +845,7 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
             {
                 DHPlayer(Gunner.Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 2, Controller.PlayerReplicationInfo);
 
-                if (Gunner.Controller != none &&
-                    Gunner.Controller.PlayerReplicationInfo != none &&
-                    DarkestHourGame(Level.Game).GameReplicationInfo != none)
+                if (Gunner.Controller != none && Gunner.Controller.PlayerReplicationInfo != none && DarkestHourGame(Level.Game).GameReplicationInfo != none)
                 {
                     ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RemoveMGResupplyRequestFor(Gunner.Controller.PlayerReplicationInfo);
                 }
@@ -881,7 +875,7 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
             }
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10);
+        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
     }
 }
 
@@ -911,7 +905,7 @@ function TossMortarAmmo(DH_Pawn P)
             DarkestHourGame(Level.Game).ScoreMortarResupply(Controller, P.Controller);
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10);
+        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
     }
 }
 
@@ -943,7 +937,7 @@ function TossMortarVehicleAmmo(DH_MortarVehicle V)
             DarkestHourGame(Level.Game).ScoreMortarResupply(Controller, V.WeaponPawns[0].Controller);
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10);
+        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
     }
 }
 
@@ -1004,9 +998,7 @@ function LoadWeapon(Pawn Gunner)
     }
 }
 
-//-----------------------------------------------------------------------------
-// SetWeaponAttachment - Update anims to match attachment
-//-----------------------------------------------------------------------------
+// Update anims to match attachment
 simulated function SetWeaponAttachment(ROWeaponAttachment NewAtt)
 {
     WeaponAttachment = NewAtt;
@@ -1038,7 +1030,7 @@ function HandleStamina(float DeltaTime)
     // Prone
     if (bIsCrawling)
     {
-        if (Stamina < default.Stamina && Acceleration == vect(0, 0, 0))
+        if (Stamina < default.Stamina && Acceleration == vect(0.0, 0.0, 0.0))
         {
             Stamina = FMin(default.Stamina, Stamina + (DeltaTime * ProneStaminaRecoveryRate));
         }
@@ -1066,13 +1058,13 @@ function HandleStamina(float DeltaTime)
         {
             if (bIsMantling)
             {
-                if ((Physics == PHYS_RootMotion || Physics == PHYS_Flying) && Stamina > 0)
+                if ((Physics == PHYS_RootMotion || Physics == PHYS_Flying) && Stamina > 0.0)
                 {
                     Stamina = FMax(0.0, Stamina - DeltaTime * 1.5);
                 }
-                else if (Stamina < 0)
+                else if (Stamina < 0.0)
                 {
-                    Stamina = 0;
+                    Stamina = 0.0;
                 }
             }
             else
@@ -1102,7 +1094,7 @@ function HandleStamina(float DeltaTime)
         bCanStartSprint = Stamina > 2.0;
     }
 
-    if (Stamina == 0.0 || Acceleration == vect(0, 0, 0))
+    if (Stamina == 0.0 || Acceleration == vect(0.0, 0.0, 0.0))
     {
         SetSprinting(false);
     }
@@ -1145,14 +1137,10 @@ state Dying
 {
     simulated function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
-        local vector SelfToHit, SelfToInstigator, CrossPlaneNormal;
-        local float W;
-        local float YawDir;
-        local vector HitNormal, shotDir;
-        local vector PushLinVel, PushAngVel;
-        local name HitBone;
-        local float HitBoneDist;
-        local int MaxCorpseYawRate;
+        local vector SelfToHit, SelfToInstigator, CrossPlaneNormal, HitNormal, ShotDir, PushLinVel, PushAngVel;
+        local float  W, YawDir, HitBoneDist;
+        local int    MaxCorpseYawRate;
+        local name   HitBone;
 
         if (DamageType == none)
         {
@@ -1168,31 +1156,28 @@ state Dying
             }
 
             // Throw the body if its a rocket explosion or shock combo
-            if (DamageType.Name == 'ROSMineDamType' ||
-                DamageType.Name == 'DH_StielGranateDamType' ||
-                DamageType.Name == 'ROMineDamType' ||
-                DamageType.Name == 'DH_M1GrenadeDamType')
+            if (DamageType.Name == 'ROSMineDamType' || DamageType.Name == 'DH_StielGranateDamType' || DamageType.Name == 'ROMineDamType' || DamageType.Name == 'DH_M1GrenadeDamType')
             {
-                shotDir = Normal(Momentum);
-                PushLinVel = (RagDeathVel * shotDir) +  vect(0, 0, 250);
-                PushAngVel = Normal(shotDir cross vect(0, 0, 1)) * -18000;
+                ShotDir = Normal(Momentum);
+                PushLinVel = (RagDeathVel * ShotDir) +  vect(0.0, 0.0, 250.0);
+                PushAngVel = Normal(ShotDir cross vect(0.0, 0.0, 1.0)) * -18000.0;
                 KSetSkelVel(PushLinVel, PushAngVel);
             }
             else if (DamageType.default.bRagdollBullet)
             {
-                if (Momentum == vect(0, 0, 0))
+                if (Momentum == vect(0.0, 0.0, 0.0))
                 {
                     Momentum = HitLocation - InstigatedBy.Location;
                 }
 
                 if (FRand() < 0.65)
                 {
-                    if (Velocity.Z <= 0)
+                    if (Velocity.Z <= 0.0)
                     {
-                        PushLinVel = vect(0, 0, 40);
+                        PushLinVel = vect(0.0, 0.0, 40.0);
                     }
 
-                    PushAngVel = Normal(Normal(Momentum) cross vect(0, 0, 1)) * -8000 ;
+                    PushAngVel = Normal(Normal(Momentum) cross vect(0.0, 0.0, 1.0)) * -8000.0;
                     PushAngVel.X *= 0.5;
                     PushAngVel.Y *= 0.5;
                     PushAngVel.Z *= 4;
@@ -1203,7 +1188,7 @@ state Dying
                 PushLinVel = RagShootStrength*Normal(Momentum);
                 KAddImpulse(PushLinVel, HitLocation);
 
-                if (LifeSpan > 0 && LifeSpan < (DeResTime + 2))
+                if (LifeSpan > 0.0 && LifeSpan < (DeResTime + 2.0))
                 {
                     LifeSpan += 0.2;
                 }
@@ -1243,7 +1228,7 @@ state Dying
                     SelfToInstigator = InstigatedBy.Location - Location;
                     SelfToHit = HitLocation - Location;
 
-                    CrossPlaneNormal = Normal(SelfToInstigator cross vect(0, 0, 1));
+                    CrossPlaneNormal = Normal(SelfToInstigator cross vect(0.0, 0.0, 1.0));
                     W = CrossPlaneNormal dot Location;
 
                     if (HitLocation dot CrossPlaneNormal < W)
@@ -1257,7 +1242,7 @@ state Dying
                 }
             }
 
-            if (VSize(Momentum) < 10)
+            if (VSizeSquared(Momentum) < 100.0) // Matt: was (VSize(Momentum) < 10.0) but it's more efficient to use VSizeSquared < 100
             {
                 Momentum = - Normal(SelfToInstigator) * Damage * 1000.0;
                 Momentum.Z = Abs(Momentum.Z);
@@ -1280,15 +1265,15 @@ state Dying
             bRotateToDesired = false;
 
             Health -= Damage;
-            CalcHitLoc(HitLocation, vect(0, 0, 0), HitBone, HitBoneDist);
+            CalcHitLoc(HitLocation, vect(0.0, 0.0, 0.0), HitBone, HitBoneDist);
 
             if (InstigatedBy != none)
             {
-                HitNormal = Normal(Normal(InstigatedBy.Location - HitLocation) + VRand() * 0.2 + vect(0, 0, 2.8));
+                HitNormal = Normal(Normal(InstigatedBy.Location - HitLocation) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
             }
             else
             {
-                HitNormal = Normal(vect(0, 0, 1) + VRand() * 0.2 + vect(0, 0, 2.8));
+                HitNormal = Normal(vect(0.0, 0.0, 1.0) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
             }
 
             DoDamageFX(HitBone, Damage, DamageType, rotator(HitNormal));
@@ -1309,11 +1294,11 @@ state Dying
         {
             if (OverlayMaterial != DeadBurningOverlayMaterial)
             {
-                SetOverlayMaterial(DeadBurningOverlayMaterial, 999.000000, true);
+                SetOverlayMaterial(DeadBurningOverlayMaterial, 999.0, true);
 
                 for (i = 0; i < AmmoPouches.Length; i++)
                 {
-                    AmmoPouches[i].SetOverlayMaterial(DeadBurningOverlayMaterial, 999.000000, true);
+                    AmmoPouches[i].SetOverlayMaterial(DeadBurningOverlayMaterial, 999.0, true);
                 }
             }
 
@@ -1343,13 +1328,13 @@ Begin:
 // Prevented damage overlay from overriding burning overlay
 function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<DamageType> DamageType, vector Momentum, optional int HitIndex)
 {
-    local vector HitNormal;
-    local name HitBone;
-    local float HitBoneDist;
-    local PlayerController PC;
-    local bool bShowEffects, bRecentHit;
+    local PlayerController     PC;
     local ProjectileBloodSplat BloodHit;
+    local vector  HitNormal;
+    local name    HitBone;
+    local float   HitBoneDist;
     local rotator SplatRot;
+    local bool    bShowEffects, bRecentHit;
 
     bRecentHit = Level.TimeSeconds - LastPainTime < 0.2;
 
@@ -1362,10 +1347,8 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
     }
 
     PC = PlayerController(Controller);
-    bShowEffects = Level.NetMode != NM_Standalone ||
-                   (Level.TimeSeconds - LastRenderTime) < 2.5 ||
-                   (InstigatedBy != none && PlayerController(InstigatedBy.Controller) != none) ||
-                   PC != none;
+
+    bShowEffects = Level.NetMode != NM_Standalone || (Level.TimeSeconds - LastRenderTime) < 2.5 || (InstigatedBy != none && PlayerController(InstigatedBy.Controller) != none) || PC != none;
 
     if (!bShowEffects)
     {
@@ -1375,13 +1358,13 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
     if (DamageType.default.bLocationalHit)
     {
         HitBone = GetHitBoneFromIndex(HitIndex);
-        HitBoneDist = 0.0f;
+        HitBoneDist = 0.0;
     }
     else
     {
         HitLocation = Location;
         HitBone = 'none';
-        HitBoneDist = 0.0f;
+        HitBoneDist = 0.0;
     }
 
     if (DamageType.default.bAlwaysSevers && DamageType.default.bSpecial)
@@ -1391,18 +1374,18 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 
     if (InstigatedBy != none)
     {
-        HitNormal = Normal(Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0, 0, 2.8));
+        HitNormal = Normal(Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
     }
     else
     {
-        HitNormal = Normal(vect(0, 0, 1) + VRand() * 0.2 + vect(0, 0, 2.8));
+        HitNormal = Normal(vect(0.0, 0.0, 1.0) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
     }
 
     if (DamageType.default.bCausesBlood && (!bRecentHit || (bRecentHit && (FRand() > 0.8))))
     {
         if (!class'GameInfo'.static.NoBlood())
         {
-            if (Momentum != vect(0, 0, 0))
+            if (Momentum != vect(0.0, 0.0, 0.0))
             {
                 SplatRot = rotator(Normal(Momentum));
             }
@@ -1433,9 +1416,9 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 // Overridden for our limited burning screams group
 function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageType)
 {
-    local vector Direction;
+    local vector  Direction;
     local rotator InvRotation;
-    local float JarScale;
+    local float   JarScale;
 
     if (Level.TimeSeconds - LastPainSound < MinTimeBetweenPainSounds)
     {
@@ -1458,19 +1441,15 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
         return;
     }
 
-    // for standalone and client
-    // Cooney
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (class<ROWeaponDamageType>(DamageType) != none &&
-            class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring &&
-            ROPlayer(Controller) != none)
+        if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring && ROPlayer(Controller) != none)
         {
             // Get the approximate direction that the hit went into the body
             Direction = self.Location - HitLocation;
 
             // No up-down jarring effects since I don't have the barrel velocity
-            Direction.Z = 0.0f;
+            Direction.Z = 0.0;
             Direction = Normal(Direction);
 
             // We need to rotate the jarring direction in screen space so basically the exact opposite of the player's pawn's rotation
@@ -1479,27 +1458,24 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
             InvRotation.Pitch = -Rotation.Pitch;
             Direction = Direction >> InvRotation;
 
-            JarScale = FMin(0.1f + (Damage / 50.0f), 1.0);
+            JarScale = FMin(0.1 + (Damage / 50.0), 1.0);
 
             ROPlayer(Controller).PlayerJarred(Direction, JarScale);
        }
     }
 
-    PlayOwnedSound(DHSoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3 * TransientSoundVolume,, 200);
+    PlayOwnedSound(DHSoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, 200.0);
 }
 
-//-----------------------------------------------------------------------------
-// Died - A few minor additions
+// A few minor additions
 // DH added removal of radioman arty triggers on death - PsYcH0_Ch!cKeN
-//-----------------------------------------------------------------------------
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
-    local vector TossVel;
-    local Trigger T;
+    local vector          TossVel, HitDirection;
+    local Trigger         T;
     local NavigationPoint N;
-    local float DamageBeyondZero;
-    local vector HitDirection;
-    local bool bShouldGib;
+    local float           DamageBeyondZero;
+    local bool            bShouldGib;
 
     if (bDeleteMe || Level.bLevelChange || Level.Game == none)
     {
@@ -1510,17 +1486,17 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         Killer = LastHitBy;
     }
-    else if (bOnFire) // Person who starts the fire always gets the credit
+    else if (bOnFire) // person who starts the fire always gets the credit
     {
         Killer = FireStarter.Controller;
         DamageType = FireDamageClass;
     }
 
-    // mutator hook to prevent deaths
+    // Mutator hook to prevent deaths
     // WARNING - don't prevent bot suicides - they suicide when really needed
     if (Level.Game.PreventDeath(self, Killer, DamageType, HitLocation))
     {
-        Health = Max(Health, 1); //mutator should set this higher
+        Health = Max(Health, 1); // mutator should set this higher
 
         return;
     }
@@ -1531,7 +1507,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         ResetRootBone();
     }
 
-    // Turn off the auxilary collision when the player dies
+    // Turn off the auxiliary collision when the player dies
     if (AuxCollisionCylinder != none)
     {
         AuxCollisionCylinder.SetCollision(false, false, false);
@@ -1551,7 +1527,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     if (!bShouldGib && DrivenVehicle == none)
     {
-        //Drop inventory if player is not in a vehicle and is not about to be completely obliterated
+        // Drop inventory if player is not in a vehicle and is not about to be completely obliterated
         DropWeaponInventory(TossVel);
     }
 
@@ -1589,7 +1565,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         TriggerEvent(Event, self, none);
     }
 
-    // make sure to untrigger any triggers requiring player touch
+    // Make sure to untrigger any triggers requiring player touch
     if (IsPlayerPawn() || WasPlayerPawn())
     {
         PhysicsVolume.PlayerPawnDiedInVolume(self);
@@ -1599,7 +1575,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
             T.PlayerToucherDied(self);
         }
 
-        // event for HoldObjectives
+        // Event for HoldObjectives
         foreach TouchingActors(class'NavigationPoint', N)
         {
             if (N.bReceivePlayerToucherDiedNotify)
@@ -1609,7 +1585,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         }
     }
 
-    // remove powerup effects, etc.
+    // Remove powerup effects, etc.
     RemovePowerups();
 
     Velocity.Z *= 1.3;
@@ -1624,10 +1600,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring)
     {
         HitDirection = Location - HitLocation;
-        HitDirection.Z = 0.0f;
+        HitDirection.Z = 0.0;
         HitDirection = normal(HitDirection);
 
-        DHPlayer(Controller).PlayerJarred(HitDirection, 3.0f);
+        DHPlayer(Controller).PlayerJarred(HitDirection, 3.0);
     }
 
     if (DamageType != none && DamageType.default.bAlwaysGibs && !class'GameInfo'.static.UseLowGore())
@@ -1695,7 +1671,7 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
         }
     }
 
-    // stop shooting
+    // Stop shooting
     AnimBlendParams(1, 0.0);
     LifeSpan = RagdollLifeSpan;
 
@@ -1733,7 +1709,7 @@ simulated function DeadExplosionKarma(class<DamageType> DamageType, vector Momen
         PushLinVel = (RagDeathVel * ShotDir);
         PushLinVel.Z += RagDeathUpKick * (RagShootStrength * DamageType.default.KDeadLinZVelScale);
 
-        PushAngVel = Normal(ShotDir cross vect(0, 0, 1)) * -18000;
+        PushAngVel = Normal(ShotDir cross vect(0.0, 0.0, 1.0)) * -18000.0;
         PushAngVel *= RagShootStrength * DamageType.default.KDeadAngVelScale;
         PushLinVel *= Strength;
         PushAngVel *= Strength;
@@ -1845,10 +1821,8 @@ function DestroyRadioTrigger()
     CarriedRadioTrigger.Destroy();
 }
 
-//-----------------------------------------------------------------------------
-// AddDefaultInventory - Add inventory based on role and weapons choices
-//-----------------------------------------------------------------------------
-// MergeTODO: This doesn't seem too bad, except we need to turn nades back on for bots at some point
+// Add inventory based on role and weapons choices
+// MergeTODO: this doesn't seem too bad, except we need to turn nades back on for bots at some point
 function AddDefaultInventory()
 {
     local int i;
