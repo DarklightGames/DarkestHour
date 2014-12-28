@@ -6,7 +6,7 @@
 class DH_AutomaticFire extends DH_ProjectileFire
     abstract;
 
-// Overriden to make the player stop firing when they switch to from ironsights
+// Overridden to make the player stop firing when they switch to from ironsights
 simulated function bool AllowFire()
 {
     if (Weapon.IsInState('IronSightZoomIn') ||

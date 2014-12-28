@@ -675,10 +675,8 @@ function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector 
     }
 }
 
-//Vehicle has been in the middle of nowhere with no driver for a while, so consider resetting it
-//  called after ResetTime has passed since driver left
-// Overriden so we can control the time it takes for the vehicle to disappear - Ramm
-//
+// Vehicle has been in the middle of nowhere with no driver for a while, so consider resetting it called after ResetTime has passed since driver left
+// Overridden so we can control the time it takes for the vehicle to disappear - Ramm
 event CheckReset()
 {
     local Pawn P;

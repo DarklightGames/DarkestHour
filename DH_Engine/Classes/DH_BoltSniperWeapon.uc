@@ -54,7 +54,7 @@ function CalculateBulletCount()
     CurrentBulletCount = tempCount;
 }
 
-// Overriden because we don't want to allow reloading unless the weapon is out of
+// Overridden because we don't want to allow reloading unless the weapon is out of
 simulated function bool AllowReload()
 {
     if (ReloadState != RS_none || AmmoMaxed(0))
@@ -140,7 +140,7 @@ simulated state Reloading
         bInterruptReload = true;
     }
 
-    // Overriden to support playing proper anims after bolting
+    // Overridden to support playing proper anims after bolting
     simulated function AnimEnd(int channel)
     {
         local name anim;
@@ -433,7 +433,7 @@ simulated state WorkingBolt extends Busy
         GotoState('Idle');
     }
 
-    // Overriden to support playing proper anims after bolting
+    // Overridden to support playing proper anims after bolting
     simulated function AnimEnd(int channel)
     {
         local name anim;

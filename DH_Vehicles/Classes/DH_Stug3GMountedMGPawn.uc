@@ -59,7 +59,7 @@ simulated function bool PointOfView()
     return false;
 }
 
-// Overriden to handle mesh swapping when entering the vehicle
+// Overridden to handle mesh swapping when entering the vehicle
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     Gotostate('EnteringVehicle');

@@ -318,7 +318,7 @@ state Hidden
     simulated function bool AllowReload() {return false;}
 }
 
-// Overriden to support projectile weapon specific functionality
+// Overridden to support projectile weapon specific functionality
 simulated state RaisingWeapon
 {
     simulated function BeginState()
@@ -398,7 +398,7 @@ simulated state RaisingWeapon
     }
 }
 
-// Overriden to support empty put away anims
+// Overridden to support empty put away anims
 simulated state LoweringWeapon
 {
     // Don't zoom in when we're lowering the weapon
@@ -506,7 +506,7 @@ Begin:
     }
 }
 
-// Overriden to support taking you out of iron sights when using melee attacks
+// Overridden to support taking you out of iron sights when using melee attacks
 //// client & server ////
 simulated function bool StartFire(int Mode)
 {
@@ -742,7 +742,7 @@ simulated function PlayStartCrawl()
     }
 }
 
-// Overriden to support empty crawling anims
+// Overridden to support empty crawling anims
 simulated state Crawling
 {
     simulated function PlayIdle()
@@ -2572,7 +2572,7 @@ function GiveBarrels(optional Pickup Pickup)
     RemainingBarrels = byte(Barrels.Length);
 }
 
-// Overriden to set additional RO Variables when a weapon is given to the player
+// Overridden to set additional RO Variables when a weapon is given to the player
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
     super.GiveTo(Other,Pickup);
@@ -2604,7 +2604,7 @@ simulated function Destroyed()
     Barrels.Remove(0, Barrels.Length);
 }
 
-// Overriden to support notifying the barrels that we have fired
+// Overridden to support notifying the barrels that we have fired
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     local float SoundModifier;

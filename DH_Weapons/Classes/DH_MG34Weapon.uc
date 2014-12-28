@@ -7,7 +7,7 @@ class DH_MG34Weapon extends DH_MGbase;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx
 
-// Overriden to prevent the exploit of freezing your animations after firing
+// Overridden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)

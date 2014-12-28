@@ -18,7 +18,7 @@ simulated function bool AllowReload()
     return super.AllowReload();
 }
 
-// Overriden to handle special G41 magazine functionality
+// Overridden to handle special G41 magazine functionality
 simulated function PlayReload()
 {
     local name Anim;
@@ -50,7 +50,7 @@ simulated function PlayReload()
     }
 }
 
-// Overriden to handle special G41 magazine functionality
+// Overridden to handle special G41 magazine functionality
 function PerformReload()
 {
     local int CurrentMagLoad;
@@ -141,7 +141,7 @@ function PerformReload()
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
 }
 
-// Overriden to handle special G41 magazine functionality
+// Overridden to handle special G41 magazine functionality
 function bool FillAmmo()
 {
     local int InitialAmount, i;
@@ -170,7 +170,7 @@ function bool FillAmmo()
     return true;
 }
 
-// Overriden to handle special G41 magazine functionality
+// Overridden to handle special G41 magazine functionality
 function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
 {
     local bool bJustSpawnedAmmo;

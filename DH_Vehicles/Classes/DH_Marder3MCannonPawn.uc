@@ -5,7 +5,7 @@
 
 class DH_Marder3MCannonPawn extends DH_AssaultGunCannonPawn;
 
-// Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
+// Overridden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)

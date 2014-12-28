@@ -50,7 +50,7 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-// Overriden to handle the special driver animations for this vehicle
+// Overridden to handle the special driver animations for this vehicle
 simulated state ViewTransition
 {
     simulated function HandleTransition()

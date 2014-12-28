@@ -34,7 +34,7 @@ simulated function bool IsDisabled()
     return true; //for now just return true.
 }
 
-// Overriden to bypass attaching as a driver and go straight to the gun.
+// Overridden to bypass attaching as a driver and go straight to the gun.
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     //Make sure there is a least one WeaponPawn.
@@ -44,7 +44,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
-// Overriden to bypass attaching as a driver and go straight to the gun.
+// Overridden to bypass attaching as a driver and go straight to the gun.
 function KDriverEnter(Pawn P)
 {
     //Make sure there is a least one WeaponPawn.

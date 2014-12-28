@@ -406,7 +406,7 @@ simulated function bool AllowReload()
     return true;
 }
 
-// Overriden to support bipod weapon firing functionality
+// Overridden to support bipod weapon firing functionality
 simulated function bool ReadyToFire(int Mode)
 {
     if (!bUsingSights && !Instigator.bBipodDeployed)

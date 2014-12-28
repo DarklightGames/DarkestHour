@@ -68,9 +68,8 @@ function bool IsMGWeapon()
     return true;
 }
 
-// Implemented in various states to show whether the weapon is busy performing
-// some action that normally shouldn't be interuppted. Overriden because we
-// have no melee attack
+// Implemented in various states to show whether the weapon is busy performing some action that normally shouldn't be interrupted
+// Overridden because we have no melee attack
 simulated function bool IsBusy()
 {
     return false;
@@ -163,7 +162,7 @@ simulated function bool PutDown()
     return super.PutDown();
 }
 
-// Overriden to set additional RO Variables when a weapon is given to the player
+// Overridden to set additional RO Variables when a weapon is given to the player
 function GiveTo(Pawn Other, optional Pickup Pickup)
 {
     super.GiveTo(Other,Pickup);
@@ -233,7 +232,7 @@ simulated function bool ShouldUseFreeAim()
     return bUsesFreeAim && bUsingSights;
 }
 
-// Overriden to support using ironsight mode as hipped mode for the MGs
+// Overridden to support using ironsight mode as hipped mode for the MGs
 simulated state IronSightZoomIn
 {
     simulated function bool ShouldUseFreeAim()
@@ -248,7 +247,7 @@ simulated state IronSightZoomIn
 Begin:
 }
 
-// Overriden to support using ironsight mode as hipped mode for the MGs
+// Overridden to support using ironsight mode as hipped mode for the MGs
 simulated state IronSightZoomOut
 {
     simulated function EndState()
@@ -262,7 +261,7 @@ simulated state IronSightZoomOut
 Begin:
 }
 
-// Overriden to support using ironsight mode as hipped mode for the MGs
+// Overridden to support using ironsight mode as hipped mode for the MGs
 simulated state TweenDown
 {
 Begin:

@@ -205,7 +205,7 @@ simulated function PostNetReceive()
     }
 }
 
-// Overriden for locking the player to the camerabone
+// Overridden for locking the player to the camerabone
 //altered slightly to allow change of camera bone name - Fennich
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {

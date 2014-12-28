@@ -5,7 +5,7 @@
 
 class DHGUIList extends ROGuiListPlus;
 
-//NOTE: Overriden to eliminate the need for selected items to only be highlighted if the list is in focus
+//NOTE: Overridden to eliminate the need for selected items to only be highlighted if the list is in focus
 function InternalOnDrawItem(Canvas C, int Item, float X, float Y, float XL, float YL, bool bIsSelected, bool bIsPending)
 {
     local string Text;

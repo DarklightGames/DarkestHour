@@ -270,8 +270,7 @@ function PostBeginPlay()
         o++;
     }
 
-    //Added for our overriden DHSpawnArea class.  Saves me having to
-    //check in subsequent functions repeatedly.  Just lay 'em all out here once.
+    // Added for our overridden DHSpawnArea class - saves me having to check in subsequent functions repeatedly, just lay 'em all out here once
     foreach AllActors(class'DHSpawnArea', DHSA)
     {
         if (DHSA.bMortarmanSpawnArea)

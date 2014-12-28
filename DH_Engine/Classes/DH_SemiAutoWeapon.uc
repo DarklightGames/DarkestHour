@@ -6,7 +6,7 @@
 class DH_SemiAutoWeapon extends DH_ProjectileWeapon
     abstract;
 
-// Overriden to prevent the exploit of freezing your animations after firing
+// Overridden to prevent the exploit of freezing your animations after firing
 simulated function AnimEnd(int channel)
 {
     local name anim;
@@ -35,7 +35,7 @@ simulated function AnimEnd(int channel)
     }
 }
 
-// Overriden to prevent the exploit of freezing your animations after firing
+// Overridden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)

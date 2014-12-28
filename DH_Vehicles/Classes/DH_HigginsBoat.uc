@@ -29,7 +29,7 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-// Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
+// Overridden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)

@@ -109,7 +109,7 @@ simulated function AnimEnd(int channel)
     }
 }
 
-// Overriden to handle the stop firing anims especially for the STG
+// Overridden to handle the stop firing anims especially for the STG
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)

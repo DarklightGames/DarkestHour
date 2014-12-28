@@ -8,7 +8,7 @@ class DH_MGSingleFire extends DH_ProjectileFire
 
 var()       float           PctHipMGPenalty;    // The amount of recoil to add when the player firing an MG from the hip
 
-// Overriden to support our hip firing mode
+// Overridden to support our hip firing mode
 function PlayFireEnd()
 {
     local DH_ProjectileWeapon RPW;
@@ -104,7 +104,7 @@ simulated function HandleRecoil()
     }
 }
 
-// overriden to support ironsight mode being hipped mode for MGs
+// Overridden to support ironsight mode being hipped mode for MGs
 function DoFireEffect()
 {
     local vector StartProj, StartTrace, X,Y,Z;

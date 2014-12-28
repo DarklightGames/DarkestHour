@@ -129,7 +129,7 @@ function Possess(Pawn aPawn)
     }
 }
 
-// Overriden to allow for setting the correct DH-specific pawn class
+// Overridden to allow for setting the correct DH-specific pawn class
 function SetPawnClass(string inClass, string inCharacter)
 {
     local class<DH_Pawn> pClass;

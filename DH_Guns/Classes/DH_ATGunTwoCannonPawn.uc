@@ -151,7 +151,7 @@ simulated function DrawHUD(Canvas Canvas)
         ActivateOverlay(false);
 }
 
-// Overriden because the animation needs to play on the server for this vehicle for the commanders hit detection
+// Overridden because the animation needs to play on the server for this vehicle for the commanders hit detection
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -204,7 +204,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
     super.ClientKDriverLeave(PC);
 }
 
-// Overriden to handle vehicle exiting better for fixed AT Cannons
+// Overridden to handle vehicle exiting better for fixed AT Cannons
 function bool PlaceExitingDriver()
 {
     local int i;

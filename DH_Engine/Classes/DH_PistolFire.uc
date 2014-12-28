@@ -64,7 +64,7 @@ function PlayFiring()
     FireCount++;
 }
 
-// Overriden to keep better track of ammo client side for pistol animations
+// Overridden to keep better track of ammo client side for pistol animations
 event ModeDoFire()
 {
     if (!AllowFire())

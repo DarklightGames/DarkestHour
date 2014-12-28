@@ -386,7 +386,7 @@ Begin:
     GotoState('');
 }
 
-// Overriden to handle mesh swapping when entering the vehicle
+// Overridden to handle mesh swapping when entering the vehicle
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);

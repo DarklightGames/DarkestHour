@@ -1444,7 +1444,7 @@ simulated function Timer()
    }
 }
 
-//overriden: to remove shake from co-ax MG's
+// Overridden to remove shake from co-ax MG's
 simulated function ShakeView(bool bWasAltFire)
 {
     local PlayerController P;

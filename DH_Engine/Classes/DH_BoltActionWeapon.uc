@@ -6,7 +6,7 @@
 class DH_BoltActionWeapon extends DH_ProjectileWeapon
     abstract;
 
-// Overriden because we don't want to allow reloading unless the weapon is out of
+// Overridden because we don't want to allow reloading unless the weapon is out of
 // ammo
 simulated function bool AllowReload()
 {
@@ -74,7 +74,7 @@ simulated state WorkingBolt extends Busy
             GotoState('Idle');
     }
 
-    // Overriden to support playing proper anims after bolting
+    // Overridden to support playing proper anims after bolting
     simulated function AnimEnd(int channel)
     {
         local name anim;

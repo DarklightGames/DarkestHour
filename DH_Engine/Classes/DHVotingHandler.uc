@@ -5,7 +5,7 @@
 
 class DHVotingHandler extends XVoting.xVotingHandler;
 
-//NOTE: overriden to fix vote 'duplication' bug
+//NOTE: overridden to fix vote 'duplication' bug
 function PlayerExit(Controller Exiting)
 {
     local int i, x, ExitingPlayerIndex;

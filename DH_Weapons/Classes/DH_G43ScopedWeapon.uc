@@ -7,7 +7,7 @@ class DH_G43ScopedWeapon extends DH_SniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_G43_1st.ukx
 
-// Overriden to prevent the exploit of freezing your animations after firing
+// Overridden to prevent the exploit of freezing your animations after firing
 simulated function AnimEnd(int channel)
 {
     local name anim;
@@ -36,7 +36,7 @@ simulated function AnimEnd(int channel)
     }
 }
 
-// Overriden to prevent the exploit of freezing your animations after firing
+// Overridden to prevent the exploit of freezing your animations after firing
 simulated event StopFire(int Mode)
 {
     if (FireMode[Mode].bIsFiring)
