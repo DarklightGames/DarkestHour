@@ -38,7 +38,7 @@ defaultproperties
     IronSightDisplayFOVHigh=43.000000
     ZoomInTime=0.400000
     ZoomOutTime=0.400000
-    PlayerFOVZoom=32.000000
+    PlayerFOVZoom=36.000000 //2.5x magnification
     XoffsetHighDetail=(X=-2.000000)
     FireModeClass(0)=class'DH_Weapons.DH_SpringfieldScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_SpringfieldScopedMeleeFire'

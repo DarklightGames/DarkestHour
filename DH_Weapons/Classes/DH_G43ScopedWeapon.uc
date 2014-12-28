@@ -86,7 +86,7 @@ defaultproperties
     IronSightDisplayFOVHigh=25.000000
     ZoomInTime=0.400000
     ZoomOutTime=0.200000
-    PlayerFOVZoom=20.000000
+    PlayerFOVZoom=22.500000
     FireModeClass(0)=class'DH_Weapons.DH_G43ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
     SelectAnim="Draw"
