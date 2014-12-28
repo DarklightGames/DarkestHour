@@ -23,7 +23,7 @@ function CausePainTo(Actor Other)
         if (Region.Zone.bSoftKillZ && Other.Physics != PHYS_Walking)
             return;
         Other.TakeDamage(int(DamagePerSec * depth), none, Location, vect(0, 0, 0), DamageType);
-        if (P.Health <= 20)
+        if (P != none && P.Health <= 20)
             Other.TakeDamage(int(FireDamageAmount * depth), none, Location, vect(0, 0, 0), FireDamageType);
 
         if (P != none && P.Controller != none)
