@@ -1733,226 +1733,261 @@ function DrawPlayerNames(Canvas C)
                             MyDHP.bCanATResupply = false;
                     }
 
-                    if (distance < 14400.0) // 2 Meters
+                    if (Distance < 14400.0) // 2 meters
                     {
                         MyDHP.bCanATReload = true;
-                        display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
+                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
                     }
                     else
                     {
                         if (MyDHP.bCanATReload)
+                        {
                             MyDHP.bCanATReload = false;
-                        display = NeedReloadText;
+                        }
+
+                        Display = NeedReloadText;
                     }
 
-                    // Draw text under player's name (need ammo or press x to resupply)
+                    // Draw text under player's name (need reload or press x to reload)
                     C.DrawColor = WhiteColor;
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.0);
-                    C.DrawTextClipped(display);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
+                    C.DrawTextClipped(Display);
                 }
-                else if (MyDHP!= none && OtherDHP != none && !NamedPlayer.IsA('Vehicle') && MyDHP.bHasATAmmo
-                    && OtherDHP.bWeaponCanBeResupplied && OtherDHP.bWeaponNeedsResupply)
+                // AT weapon resupply
+                else if (MyDHP != none && OtherDHP != none && !NamedPlayer.IsA('Vehicle') && MyDHP.bHasATAmmo && OtherDHP.bWeaponCanBeResupplied && OtherDHP.bWeaponNeedsResupply)
                 {
                     // Draw player name
                     Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8;
+                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
                     ScreenPos = C.WorldToScreen(Loc);
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, strX, strY);
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 2.0);
-                    display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(display);
+                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 2.0);
+                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
+                    C.DrawTextClipped(Display);
 
-                    distance = VSizeSquared(Loc - PawnOwner.Location);
+                    Distance = VSizeSquared(Loc - PawnOwner.Location);
 
-                    if (MyDHP!= none)
+                    if (MyDHP != none)
                     {
                         if (MyDHP.bCanMGResupply)
+                        {
                             MyDHP.bCanMGResupply = false;
+                        }
+
                         if (MyDHP.bCanATReload)
+                        {
                             MyDHP.bCanATReload = false;
+                        }
                     }
 
-                    if (distance < 14400.0) // 2 Meters
+                    if (Distance < 14400.0) // 2 meters
                     {
                         MyDHP.bCanATResupply = true;
-                        display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
+                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                     }
                     else
                     {
                         if (MyDHP.bCanATResupply)
+                        {
                             MyDHP.bCanATResupply = false;
-                        display = NeedAmmoText;
+                        }
+
+                        Display = NeedAmmoText;
                     }
 
                     // Draw text under player's name (need ammo or press x to resupply)
                     C.DrawColor = WhiteColor;
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 1.0);
-                    C.DrawTextClipped(display);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 1.0);
+                    C.DrawTextClipped(Display);
                 }
+                // No resupply or assisted reload - just draw player name
                 else
                 {
-                    if (MyDHP!= none)
+                    // Draw player name
+                    if (MyDHP != none)
                     {
                         if (MyDHP.bCanMGResupply)
+                        {
                             MyDHP.bCanMGResupply = false;
+                        }
+
                         if (MyDHP.bCanATResupply)
+                        {
                             MyDHP.bCanATResupply = false;
+                        }
+
                         if (MyDHP.bCanATReload)
+                        {
                             MyDHP.bCanATReload = false;
+                        }
                     }
 
-                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, strX, strY);
+                    C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
                     Loc = NamedPlayer.Location;
-                    Loc.Z += NamedPlayer.CollisionHeight + 8;
+                    Loc.Z += NamedPlayer.CollisionHeight + 8.0;
                     ScreenPos = C.WorldToScreen(Loc);
-                    C.SetPos(ScreenPos.X - strX * 0.5, ScreenPos.Y - strY * 0.5);
+                    C.SetPos(ScreenPos.X - StrX * 0.5, ScreenPos.Y - StrY * 0.5);
 
-                    display = NamedPlayer.PlayerReplicationInfo.PlayerName;
-                    C.DrawTextClipped(display);
+                    Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
+                    C.DrawTextClipped(Display);
                 }
             }
         }
     }
 }
 
-//-----------------------------------------------------------------------------
-// DrawObjectives - Renders the objectives on the HUD similar to the scoreboard
-//-----------------------------------------------------------------------------
-
+// Renders the objectives on the HUD similar to the scoreboard
 simulated function DrawObjectives(Canvas C)
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo   DHGRI;
     local DHPlayerReplicationInfo PRI;
-    local int i, OwnerTeam, objCount, SecondaryObjCount;
-    local AbsoluteCoordsInfo MapCoords, subCoords;
-    local bool bShowRally, bShowArtillery, bShowResupply, bShowArtyCoords,
-        bShowNeutralObj, bShowMGResupplyRequest, bShowHelpRequest, bShowAttackDefendRequest,
-        bShowArtyStrike, bShowDestroyableItems, bShowDestroyedItems, bShowVehicleResupply,
-        bHasSecondaryObjectives;
-    local float myMapScale, XL, YL, YL_one, time;
-    local vector temp, MapCenter;
-    local SpriteWidget  widget;
-    local Actor A;
-    local DHPlayer player;
-    local Controller P;
+    local AbsoluteCoordsInfo      MapCoords, SubCoords;
+    local SpriteWidget  Widget;
+    local Actor         A;
+    local DHPlayer      Player;
+    local Controller    P;
+    local int           i, OwnerTeam, ObjCount, SecondaryObjCount;
+    local bool          bShowRally, bShowArtillery, bShowResupply, bShowArtyCoords, bShowNeutralObj, bShowMGResupplyRequest, bShowHelpRequest, bShowAttackDefendRequest;
+    local bool          bShowArtyStrike, bShowDestroyableItems, bShowDestroyedItems, bShowVehicleResupply, bHasSecondaryObjectives;
+    local float         MyMapScale, XL, YL, YL_one, Time;
+    local vector        Temp, MapCenter;
     // PSYONIX: DEBUG
-    local Vehicle V;
-    local float pawnRotation;
-    local ROVehicleWeaponPawn myVehicleWeaponPawn;
-    local float X, Y, strX, strY;
-    local string S;
+    local ROVehicleWeaponPawn WeaponPawn;
+    local Vehicle       V;
+    local float         PawnRotation, X, Y, StrX, StrY;
+    local string        s;
     // Net debug
-    local Actor NetActor;
-    local Pawn NetPawn;
-    local int Pos;
+    local Actor         NetActor;
+    local Pawn          NetPawn;
+    local int           Pos;
     // AT Gun
-    local bool bShowATGun;
-    local DH_Pawn DHP;
-    local DH_RoleInfo RI;
+    local bool          bShowATGun;
+    local DH_Pawn       DHP;
+    local DH_RoleInfo   RI;
 
     if (PlayerOwner.Pawn != none)
+    {
         DHP = DH_Pawn(PlayerOwner.Pawn);
+    }
 
-    // Get DHGRI
     DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
     if (DHGRI == none)
+    {
         return;
+    }
 
     // Update time
     if (DHGRI != none)
     {
         if (!DHGRI.bMatchHasBegun)
+        {
             CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
+        }
         else
+        {
             CurrentTime = FMax(0.0, DHGRI.RoundStartTime + DHGRI.RoundDuration - DHGRI.ElapsedTime);
+        }
     }
 
     // Get player
-    player = DHPlayer(PlayerOwner);
+    Player = DHPlayer(PlayerOwner);
 
     // Get PRI
     PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
 
     // Get Role info
     if (PRI.RoleInfo != none)
+    {
         RI = DH_RoleInfo(PRI.RoleInfo);
+    }
 
-    // Get player team -- if none, we won't draw team-specific information on the map
+    // Get player team - if none, we won't draw team-specific information on the map
     if (PlayerOwner != none)
+    {
         OwnerTeam = PlayerOwner.GetTeamNum();
+    }
     else
+    {
         OwnerTeam = 255;
+    }
 
-    // Set map coords based on resolution
-    // We want to keep a 4:3 aspect ratio for the map
-    MapCoords.height = C.ClipY * 0.9;
+    // Set map coords based on resolution - we want to keep a 4:3 aspect ratio for the map
+    MapCoords.Height = C.ClipY * 0.9;
     MapCoords.PosY = C.ClipY * 0.05;
-    MapCoords.width = MapCoords.height * 4 / 3;
-    MapCoords.PosX = (C.ClipX - MapCoords.width) / 2;
+    MapCoords.Width = MapCoords.Height * 4.0 / 3.0;
+    MapCoords.PosX = (C.ClipX - MapCoords.Width) / 2.0;
 
     // Calculate map offset (for animation)
     if (bAnimateMapIn)
     {
         AnimateMapCurrentPosition -= (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
-        if (AnimateMapCurrentPosition <= 0)
+
+        if (AnimateMapCurrentPosition <= 0.0)
         {
-            AnimateMapCurrentPosition = 0;
+            AnimateMapCurrentPosition = 0.0;
             bAnimateMapIn = false;
         }
     }
     else if (bAnimateMapOut)
     {
         AnimateMapCurrentPosition += (Level.TimeSeconds - hudLastRenderTime) / AnimateMapSpeed;
+
         if (AnimateMapCurrentPosition >= default.AnimateMapCurrentPosition)
         {
             AnimateMapCurrentPosition = default.AnimateMapCurrentPosition;
             bAnimateMapOut = false;
         }
     }
+
     MapCoords.PosX += C.ClipX * AnimateMapCurrentPosition;
 
     // Draw map background
     DrawSpriteWidgetClipped(C, MapBackground, MapCoords, true);
 
     // Calculate absolute coordinates of level map
-    GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, subCoords);
+    GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, SubCoords);
 
     // Save coordinates for use in menu page
-    MapLevelImageCoordinates = subCoords;
+    MapLevelImageCoordinates = SubCoords;
 
     // Draw coordinates text on sides of the map
     for (i = 0; i < 9; i++)
     {
-        MapCoordTextXWidget.PosX = (float(i) + 0.5) / 9;
-        MapCoordTextXWidget.text = MapCoordTextX[i];
-        DrawTextWidgetClipped(C, MapCoordTextXWidget, subCoords);
+        MapCoordTextXWidget.PosX = (float(i) + 0.5) / 9.0;
+        MapCoordTextXWidget.Text = MapCoordTextX[i];
+        DrawTextWidgetClipped(C, MapCoordTextXWidget, SubCoords);
 
         MapCoordTextYWidget.PosY = MapCoordTextXWidget.PosX;
-        MapCoordTextYWidget.text = MapCoordTextY[i];
-        DrawTextWidgetClipped(C, MapCoordTextYWidget, subCoords);
+        MapCoordTextYWidget.Text = MapCoordTextY[i];
+        DrawTextWidgetClipped(C, MapCoordTextYWidget, SubCoords);
     }
 
     // Draw level map
     MapLevelImage.WidgetTexture = DHGRI.MapImage;
-    if (MapLevelImage.WidgetTexture != none)    // Remove this once all maps have overhead
-        DrawSpriteWidgetClipped(C, MapLevelImage, subCoords, true);
+
+    if (MapLevelImage.WidgetTexture != none) // remove this once all maps have overhead
+    {
+        DrawSpriteWidgetClipped(C, MapLevelImage, SubCoords, true);
+    }
 
     // Calculate level map constants
-    temp = DHGRI.SouthWestBounds - DHGRI.NorthEastBounds;
-    MapCenter =  temp/2 + DHGRI.NorthEastBounds;
-    myMapScale = abs(temp.x);
-    if (myMapScale ~= 0)
-        myMapScale = 1; // just so we never get divisions by 0
+    Temp = DHGRI.SouthWestBounds - DHGRI.NorthEastBounds;
+    MapCenter =  Temp / 2.0  + DHGRI.NorthEastBounds;
+    MyMapScale = Abs(Temp.x);
+
+    if (MyMapScale ~= 0.0)
+    {
+        MyMapScale = 1.0; // just so we never get divisions by 0
+    }
 
     // Set the font to be used to draw objective text
     C.Font = GetSmallMenuFont(C);
 
     // Draw resupply areas
-    for (i = 0; i < arraycount(DHGRI.ResupplyAreas); i++)
+    for (i = 0; i < ArrayCount(DHGRI.ResupplyAreas); i++)
     {
-        if (!DHGRI.ResupplyAreas[i].bActive ||
-            (DHGRI.ResupplyAreas[i].Team != OwnerTeam && DHGRI.ResupplyAreas[i].Team != NEUTRAL_TEAM_INDEX))
+        if (!DHGRI.ResupplyAreas[i].bActive || (DHGRI.ResupplyAreas[i].Team != OwnerTeam && DHGRI.ResupplyAreas[i].Team != NEUTRAL_TEAM_INDEX))
         {
             continue;
         }
@@ -1961,29 +1996,29 @@ simulated function DrawObjectives(Canvas C)
         {
             // Tank resupply icon
             bShowVehicleResupply = true;
-            DrawIconOnMap(C, subCoords, MapIconVehicleResupply, myMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
+            DrawIconOnMap(C, SubCoords, MapIconVehicleResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
         }
         else
         {
             // Player resupply icon
             bShowResupply = true;
-            DrawIconOnMap(C, subCoords, MapIconResupply, myMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
+            DrawIconOnMap(C, SubCoords, MapIconResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
         }
     }
 
-    // Draw AT-Guns
-    for (i = 0; i < arraycount(DHGRI.ATCannons); i++)
+    // Draw AT guns
+    for (i = 0; i < ArrayCount(DHGRI.ATCannons); i++)
     {
-        if (DHGRI.ATCannons[i].ATCannonLocation != vect(0, 0, 0) && DHGRI.ATCannons[i].Team == PlayerOwner.GetTeamNum())
+        if (DHGRI.ATCannons[i].ATCannonLocation != vect(0.0, 0.0, 0.0) && DHGRI.ATCannons[i].Team == PlayerOwner.GetTeamNum())
         {
-            if (DHGRI.ATCannons[i].ATCannonLocation.Z > 0)  // ATCannon is active is the Z location is greater than 0
+            if (DHGRI.ATCannons[i].ATCannonLocation.Z > 0.0) // ATCannon is active is the Z location is greater than 0
             {
                 bShowATGun = true;
 
-                // AT-Gun icon
+                // AT gGun icon
                 MapIconATGun.Tints[0] = WhiteColor;
                 MapIconATGun.Tints[1] = WhiteColor;
-                DrawIconOnMap(C, subCoords, MapIconATGun, myMapScale, DHGRI.ATCannons[i].ATCannonLocation, MapCenter);
+                DrawIconOnMap(C, SubCoords, MapIconATGun, MyMapScale, DHGRI.ATCannons[i].ATCannonLocation, MapCenter);
             }
         }
     }
@@ -1991,30 +2026,41 @@ simulated function DrawObjectives(Canvas C)
     if (Level.NetMode == NM_Standalone && bShowDebugInfoOnMap)
     {
         // PSYONIX: DEBUG - Show all vehicles on map who have no driver
-        foreach DynamicActors(class'Vehicle',V)
+        foreach DynamicActors(class'Vehicle', V)
         {
-                widget = MapIconRally[V.GetTeamNum()];
-                widget.TextureScale = 0.04f;
-                if (V.health <= 0)
-                    widget.RenderStyle = STY_Translucent;
-                else
-                    widget.RenderStyle = STY_Normal;
-                // Empty Vehicle
-                if (Bot(V.Controller) == none && (ROWheeledVehicle(V) != none && V.NumPassengers() == 0))
-                    DrawDebugIconOnMap(C, subCoords, widget, myMapScale, V.Location, MapCenter, "");
-                // Vehicle
-                else if (VehicleWeaponPawn(V) == none && V.Controller != none)
-                    DrawDebugIconOnMap(C, subCoords, widget, myMapScale, V.Location, MapCenter, Left(Bot(V.Controller).Squad.GetOrders(),1)$" "$V.NumPassengers());
+            Widget = MapIconRally[V.GetTeamNum()];
+            Widget.TextureScale = 0.04f;
+
+            if (V.Health <= 0)
+            {
+                Widget.RenderStyle = STY_Translucent;
+            }
+            else
+            {
+                Widget.RenderStyle = STY_Normal;
+            }
+
+            // Empty vehicle
+            if (Bot(V.Controller) == none && ROWheeledVehicle(V) != none && V.NumPassengers() == 0)
+            {
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, "");
+            }
+            // Vehicle
+            else if (VehicleWeaponPawn(V) == none && V.Controller != none)
+            {
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, Left(Bot(V.Controller).Squad.GetOrders(),1) @ V.NumPassengers());
+            }
         }
+
         // PSYONIX: DEBUG - Show all players on map and indicate orders
         for (P = Level.ControllerList; P != none; P = P.NextController)
         {
-            if (Bot(P) != none && P.Pawn != none && ROVehicle(P.Pawn) == none)
+            if (Bot(P) != none && ROVehicle(P.Pawn) == none)
             {
-                widget = MapIconTeam[P.GetTeamNum()];
-                widget.TextureScale = 0.025f;
+                Widget = MapIconTeam[P.GetTeamNum()];
+                Widget.TextureScale = 0.025f;
 
-                DrawDebugIconOnMap(C, subCoords, widget, myMapScale, P.Pawn.Location, MapCenter, Left(Bot(P).Squad.GetOrders(),1));
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, P.Pawn.Location, MapCenter, Left(Bot(P).Squad.GetOrders(),1));
             }
         }
     }
@@ -2023,117 +2069,119 @@ simulated function DrawObjectives(Canvas C)
     {
         if (NetDebugMode == ND_All)
         {
-            foreach DynamicActors(class'Actor',NetActor)
+            foreach DynamicActors(class'Actor', NetActor)
             {
                 if (!NetActor.bStatic && !NetActor.bNoDelete)
                 {
-                    widget = MapIconNeutral;
-                    widget.TextureScale = 0.04f;
-                    widget.RenderStyle = STY_Normal;
-                    DrawDebugIconOnMap(C, subCoords, widget, myMapScale, NetActor.Location, MapCenter, "");
+                    Widget = MapIconNeutral;
+                    Widget.TextureScale = 0.04f;
+                    Widget.RenderStyle = STY_Normal;
+                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetActor.Location, MapCenter, "");
                 }
             }
         }
         else if (NetDebugMode == ND_VehiclesOnly)
         {
             // PSYONIX: DEBUG - Show all vehicles on map who have no driver
-            foreach DynamicActors(class'Vehicle',V)
+            foreach DynamicActors(class'Vehicle', V)
             {
-                widget = MapIconRally[V.GetTeamNum()];
-                widget.TextureScale = 0.04f;
-                widget.RenderStyle = STY_Normal;
+                Widget = MapIconRally[V.GetTeamNum()];
+                Widget.TextureScale = 0.04f;
+                Widget.RenderStyle = STY_Normal;
 
                 if (ROWheeledVehicle(V) != none)
-                    DrawDebugIconOnMap(C, subCoords, widget, myMapScale, V.Location, MapCenter, "");
+                {
+                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, V.Location, MapCenter, "");
+                }
             }
         }
         else if (NetDebugMode == ND_PlayersOnly)
         {
             foreach DynamicActors(class'DH_Pawn', DHP)
             {
-                widget = MapIconTeam[DHP.GetTeamNum()];
-                widget.TextureScale = 0.04f;
-                widget.RenderStyle = STY_Normal;
+                Widget = MapIconTeam[DHP.GetTeamNum()];
+                Widget.TextureScale = 0.04f;
+                Widget.RenderStyle = STY_Normal;
 
-                DrawDebugIconOnMap(C, subCoords, widget, myMapScale, DHP.Location, MapCenter, "");
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, DHP.Location, MapCenter, "");
             }
         }
         else if (NetDebugMode == ND_PawnsOnly)
         {
-            foreach DynamicActors(class'Pawn',NetPawn)
+            foreach DynamicActors(class'Pawn', NetPawn)
             {
                 if (Vehicle(NetPawn) != none)
                 {
-                    widget = MapIconRally[V.GetTeamNum()];
+                    Widget = MapIconRally[V.GetTeamNum()];
                 }
                 else if (ROPawn(NetPawn) != none)
                 {
-                    widget = MapIconTeam[NetPawn.GetTeamNum()];
+                    Widget = MapIconTeam[NetPawn.GetTeamNum()];
                 }
                 else
                 {
-                    widget = MapIconNeutral;
+                    Widget = MapIconNeutral;
                 }
 
-                widget.TextureScale = 0.04f;
-                widget.RenderStyle = STY_Normal;
+                Widget.TextureScale = 0.04f;
+                Widget.RenderStyle = STY_Normal;
 
-                DrawDebugIconOnMap(C, subCoords, widget, myMapScale, NetPawn.Location, MapCenter, "");
+                DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetPawn.Location, MapCenter, "");
             }
         }
         if (NetDebugMode == ND_AllWithText)
         {
-            foreach DynamicActors(class'Actor',NetActor)
+            foreach DynamicActors(class'Actor', NetActor)
             {
                 if (!NetActor.bStatic && !NetActor.bNoDelete)
                 {
-                    widget = MapIconNeutral;
-                    widget.TextureScale = 0.04f;
-                    widget.RenderStyle = STY_Normal;
+                    Widget = MapIconNeutral;
+                    Widget.TextureScale = 0.04f;
+                    Widget.RenderStyle = STY_Normal;
 
-                    S = ""$NetActor;
+                    s = ""$NetActor;
 
                     // Remove the package name, if it exists
-                    Pos = InStr(S, ".");
+                    Pos = InStr(s, ".");
 
                     if (Pos != -1)
-                        S = Mid(S, Pos + 1);
+                    {
+                        s = Mid(s, Pos + 1);
+                    }
 
-                    DrawDebugIconOnMap(C, subCoords, widget, myMapScale, NetActor.Location, MapCenter, S);
+                    DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, NetActor.Location, MapCenter, s);
                 }
             }
         }
     }
 
-    if (player != none)
+    if (Player != none)
     {
         // Draw the marked arty strike
-        temp = player.SavedArtilleryCoords;
+        Temp = Player.SavedArtilleryCoords;
 
-        if (temp != vect(0, 0, 0))
+        if (Temp != vect(0.0, 0.0, 0.0))
         {
             bShowArtyCoords = true;
-            widget = MapIconArtyStrike;
-            widget.Tints[0].A = 125; widget.Tints[1].A = 125;
-            DrawIconOnMap(C, subCoords, widget, myMapScale, temp, MapCenter);
+            Widget = MapIconArtyStrike;
+            Widget.Tints[0].A = 125;
+            Widget.Tints[1].A = 125;
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, Temp, MapCenter);
         }
 
         // Draw the destroyable/destroyed targets
-        if (player.Destroyables.length != 0)
+        if (Player.Destroyables.length != 0)
         {
-            for (i = 0; i < player.Destroyables.length; i++)
+            for (i = 0; i < Player.Destroyables.length; i++)
             {
-                //if (player.Destroyables[i].GetStateName() == 'Broken')
-                if (player.Destroyables[i].bHidden || player.Destroyables[i].bDamaged)
+                if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
                 {
-                    DrawIconOnMap(C, subCoords, MapIconDestroyedItem, myMapScale,
-                        player.Destroyables[i].Location, MapCenter);
+                    DrawIconOnMap(C, SubCoords, MapIconDestroyedItem, MyMapScale, Player.Destroyables[i].Location, MapCenter);
                     bShowDestroyedItems = true;
                 }
                 else
                 {
-                    DrawIconOnMap(C, subCoords, MapIconDestroyableItem, myMapScale,
-                        player.Destroyables[i].Location, MapCenter);
+                    DrawIconOnMap(C, SubCoords, MapIconDestroyableItem, MyMapScale, Player.Destroyables[i].Location, MapCenter);
                     bShowDestroyableItems = true;
                 }
             }
@@ -2143,58 +2191,57 @@ simulated function DrawObjectives(Canvas C)
     if (OwnerTeam != 255)
     {
         // Draw the in-progress arty strikes
-        if (OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX)
-           if (DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0, 0, 0))
-           {
-               DrawIconOnMap(C, subCoords, MapIconArtyStrike, myMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
-               bShowArtyStrike = true;
-           }
+        if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
+        {
+            DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
+            bShowArtyStrike = true;
+        }
 
         // Draw the rally points
-        for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); i++)
+        for (i = 0; i < ArrayCount(DHGRI.AxisRallyPoints); i++)
         {
             if (OwnerTeam == AXIS_TEAM_INDEX)
-                temp = DHGRI.AxisRallyPoints[i].RallyPointLocation;
+            {
+                Temp = DHGRI.AxisRallyPoints[i].RallyPointLocation;
+            }
             else if (OwnerTeam == ALLIES_TEAM_INDEX)
-                temp = DHGRI.AlliedRallyPoints[i].RallyPointLocation;
+            {
+                Temp = DHGRI.AlliedRallyPoints[i].RallyPointLocation;
+            }
 
             // Draw the marked rally point
-            if (temp != vect(0, 0, 0))
+            if (Temp != vect(0.0, 0.0, 0.0))
             {
                 bShowRally = true;
-                DrawIconOnMap(C, subCoords, MapIconRally[OwnerTeam], myMapScale, temp, MapCenter);
+                DrawIconOnMap(C, SubCoords, MapIconRally[OwnerTeam], MyMapScale, Temp, MapCenter);
             }
         }
 
         // Draw Artillery Radio Icons
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AxisRadios); i++)
+            for (i = 0; i < ArrayCount(DHGRI.AxisRadios); i++)
             {
-                if (DHGRI.AxisRadios[i] == none ||
-                    (DHGRI.AxisRadios[i].IsA('DHArtilleryTrigger') &&
-                    !DHArtilleryTrigger(DHGRI.AxisRadios[i]).bShouldShowOnSituationMap))
+                if (DHGRI.AxisRadios[i] == none || (DHGRI.AxisRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AxisRadios[i]).bShouldShowOnSituationMap))
                 {
                     continue;
                 }
 
                 bShowArtillery = true;
-                DrawIconOnMap(C, subCoords, MapIconRadio, myMapScale, DHGRI.AxisRadios[i].Location, MapCenter);
+                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AxisRadios[i].Location, MapCenter);
             }
         }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AlliedRadios); i++)
+            for (i = 0; i < ArrayCount(DHGRI.AlliedRadios); i++)
             {
-                if (DHGRI.AlliedRadios[i] == none ||
-                    (DHGRI.AlliedRadios[i].IsA('DHArtilleryTrigger') &&
-                    !DHArtilleryTrigger(DHGRI.AlliedRadios[i]).bShouldShowOnSituationMap))
+                if (DHGRI.AlliedRadios[i] == none || (DHGRI.AlliedRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AlliedRadios[i]).bShouldShowOnSituationMap))
                 {
                     continue;
                 }
 
                 bShowArtillery = true;
-                DrawIconOnMap(C, subCoords, MapIconRadio, myMapScale, DHGRI.AlliedRadios[i].Location, MapCenter);
+                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AlliedRadios[i].Location, MapCenter);
             }
         }
 
@@ -2203,24 +2250,28 @@ simulated function DrawObjectives(Canvas C)
         {
             if (OwnerTeam == AXIS_TEAM_INDEX)
             {
-                for (i = 0; i < arraycount(DHGRI.CarriedAxisRadios); i++)
+                for (i = 0; i < ArrayCount(DHGRI.CarriedAxisRadios); i++)
                 {
                     if (DHGRI.CarriedAxisRadios[i] == none)
+                    {
                         continue;
+                    }
 
                     bShowArtillery = true;
-                    DrawIconOnMap(C, subCoords, MapIconCarriedRadio, myMapScale, DHGRI.CarriedAxisRadios[i].Location, MapCenter);
+                    DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAxisRadios[i].Location, MapCenter);
                 }
             }
             else if (OwnerTeam == ALLIES_TEAM_INDEX)
             {
-                for (i = 0; i < arraycount(DHGRI.CarriedAlliedRadios); i++)
+                for (i = 0; i < ArrayCount(DHGRI.CarriedAlliedRadios); i++)
                 {
                     if (DHGRI.CarriedAlliedRadios[i] == none)
+                    {
                         continue;
+                    }
 
                     bShowArtillery = true;
-                    DrawIconOnMap(C, subCoords, MapIconCarriedRadio, myMapScale, DHGRI.CarriedAlliedRadios[i].Location, MapCenter);
+                    DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAlliedRadios[i].Location, MapCenter);
                 }
             }
         }
@@ -2228,104 +2279,108 @@ simulated function DrawObjectives(Canvas C)
         // Draw help requests
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); i++)
+            for (i = 0; i < ArrayCount(DHGRI.AxisHelpRequests); i++)
             {
                 if (DHGRI.AxisHelpRequests[i].requestType == 255)
+                {
                     continue;
+                }
 
                 switch (DHGRI.AxisHelpRequests[i].requestType)
                 {
                     case 0: // help request at objective
                         bShowHelpRequest = true;
-                        widget = MapIconHelpRequest;
-                        widget.Tints[0].A = 125; widget.Tints[1].A = 125;
-                        DrawIconOnMap(C, subCoords, widget, myMapScale,
-                            DHGRI.Objectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        Widget = MapIconHelpRequest;
+                        Widget.Tints[0].A = 125; 
+                        Widget.Tints[1].A = 125;
+                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 1: // attack request
                     case 2: // defend request
                         bShowAttackDefendRequest = true;
-                        DrawIconOnMap(C, subCoords, MapIconAttackDefendRequest, myMapScale,
-                            DHGRI.Objectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.Objectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 3: // mg resupply requests
                         bShowMGResupplyRequest = true;
-                        DrawIconOnMap(C, subCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], myMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
                         break;
 
                     case 4: // help request at coords
                         bShowHelpRequest = true;
-                        DrawIconOnMap(C, subCoords, MapIconHelpRequest, myMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
                         break;
 
                     default:
-                        Log("Unknown requestType found in AxisHelpRequests[i]: " $ DHGRI.AxisHelpRequests[i].requestType);
+                        Log("Unknown requestType found in AxisHelpRequests[" $ i $ "]:" @ DHGRI.AxisHelpRequests[i].requestType);
                 }
             }
 
-            //------------------------------------------------------------------
-            //Draw all mortar targets on the map.
+            // Draw all mortar targets on the map
             if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
             {
-                for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); i++)
+                for (i = 0; i < ArrayCount(DHGRI.GermanMortarTargets); i++)
                 {
-                    if (DHGRI.GermanMortarTargets[i].Location != vect(0, 0, 0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
-                        DrawIconOnMap(C, subCoords, MapIconMortarTarget, myMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                    if (DHGRI.GermanMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
+                    {
+                        DrawIconOnMap(C, SubCoords, MapIconMortarTarget, MyMapScale, DHGRI.GermanMortarTargets[i].Location, MapCenter);
+                    }
                 }
             }
 
-            //------------------------------------------------------------------
-            //Draw hit location for mortar observer's confirmed hits on his own target.
-            if (RI != none && RI.bIsMortarObserver && player != none && player.MortarTargetIndex != 255)
+            // Draw hit location for mortar observer's confirmed hits on his own target
+            if (RI != none && RI.bIsMortarObserver && Player != none && Player.MortarTargetIndex != 255)
             {
-                if (DHGRI.GermanMortarTargets[player.MortarTargetIndex].HitLocation != vect(0, 0, 0) && DHGRI.GermanMortarTargets[player.MortarTargetIndex].bCancelled == 0)
-                    DrawIconOnMap(C, subCoords, MapIconMortarHit, myMapScale, DHGRI.GermanMortarTargets[player.MortarTargetIndex].HitLocation, MapCenter);
+                if (DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[Player.MortarTargetIndex].bCancelled == 0)
+                {
+                    DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanMortarTargets[Player.MortarTargetIndex].HitLocation, MapCenter);
+                }
             }
 
-            //------------------------------------------------------------------
-            //Draw hit location for mortar operator if he has a valid hit location.
-            if (RI != none && RI.bCanUseMortars && player != none && player.MortarHitLocation != vect(0, 0, 0))
-                DrawIconOnMap(C, subCoords, MapIconMortarHit, myMapScale, player.MortarHitLocation, MapCenter);
-
+            // Draw hit location for mortar operator if he has a valid hit location
+            if (RI != none && RI.bCanUseMortars && Player != none && Player.MortarHitLocation != vect(0.0, 0.0, 0.0))
+            {
+                DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, Player.MortarHitLocation, MapCenter);
+            }
         }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); i++)
+            for (i = 0; i < ArrayCount(DHGRI.AlliedHelpRequests); i++)
             {
                 if (DHGRI.AlliedHelpRequests[i].requestType == 255)
+                {
                     continue;
+                }
 
                 switch (DHGRI.AlliedHelpRequests[i].requestType)
                 {
                     case 0: // help request at objective
                         bShowHelpRequest = true;
-                        widget = MapIconHelpRequest;
-                        widget.Tints[0].A = 125; widget.Tints[1].A = 125;
-                        DrawIconOnMap(C, subCoords, widget, myMapScale,
-                            DHGRI.Objectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
+                        Widget = MapIconHelpRequest;
+                        Widget.Tints[0].A = 125;
+                        Widget.Tints[1].A = 125;
+                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 1: // attack request
                     case 2: // defend request
                         bShowAttackDefendRequest = true;
-                        DrawIconOnMap(C, subCoords, MapIconAttackDefendRequest, myMapScale,
-                            DHGRI.Objectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.Objectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
 
                     case 3: // mg resupply requests
                         bShowMGResupplyRequest = true;
-                        DrawIconOnMap(C, subCoords, MapIconMGResupplyRequest[ALLIES_TEAM_INDEX], myMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
                         break;
 
                     case 4: // help request at coords
                         bShowHelpRequest = true;
-                        DrawIconOnMap(C, subCoords, MapIconHelpRequest, myMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
+                        DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
                         break;
 
                     default:
-                        Log("Unknown requestType found in AlliedHelpRequests[i]: " $ DHGRI.AlliedHelpRequests[i].requestType);
+                        Log("Unknown requestType found in AlliedHelpRequests[" $ i $ "]:" @ DHGRI.AlliedHelpRequests[i].requestType);
                 }
             }
 
