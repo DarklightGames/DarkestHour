@@ -19,6 +19,8 @@ var     DH_RoleInfo                 DHAlliesRoles[16];
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 
+var     array<String>               FFViolationIDs; //Array of ROIDs that have been kicked once this session
+var()   config bool                 bSessionKickOnSecondFFViolation;
 
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
@@ -1554,23 +1556,23 @@ state ResetGameCountdown
     }
 
     // Matt: modified to spawn a DH_ClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
-	function Timer()
-	{
-		global.Timer();
+    function Timer()
+    {
+        global.Timer();
 
-		if (ElapsedTime > RoundStartTime - 1.0) // the -1.0 gets rid of "The game will restart in 0 seconds"
-		{
+        if (ElapsedTime > RoundStartTime - 1.0) // the -1.0 gets rid of "The game will restart in 0 seconds"
+        {
             if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
             {
                 Spawn(class'DH_ClientResetGame');
             }
 
-		    Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
-		    ResetScores();
-			GotoState('RoundInPlay');
-		}
-		else
-		{
+            Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
+            ResetScores();
+            GotoState('RoundInPlay');
+        }
+        else
+        {
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', RoundStartTime - ElapsedTime);
         }
     }
@@ -1867,12 +1869,63 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
     return true;
 }
 
+//Overridden to support one normal kick, then session kick for FF violation
+function HandleFFViolation(PlayerController Offender)
+{
+    local bool bSuccess;
+    local string OffenderID;
+    local int i;
+
+    if (FFPunishment == FFP_None || Level.NetMode == NM_Standalone)
+    {
+        return;
+    }
+
+    OffenderID = Offender.GetPlayerIDHash();
+
+    BroadcastLocalizedMessage(GameMessageClass, 14, Offender.PlayerReplicationInfo);
+    log("Kicking"@Offender.GetHumanReadableName()@"due to a friendly fire violation.");
+
+    //The player has been kicked once and needs to be session kicked
+    if (FFPunishment == FFP_Kick && bSessionKickOnSecondFFViolation)
+    {
+        for (i=0;i<FFViolationIDs.Length;i++)
+        {
+            //Theel Debug
+            Level.Game.Broadcast(self, "FFViolationID"$i$":"@FFViolationIDs[i], 'Say');
+
+            if (FFViolationIDs[i] == OffenderID)
+            {
+                //AccessControl.BanPlayer(Offender, true); //Session kick
+                //Theel Debug
+                Level.Game.Broadcast(self, "This Offender Would Be Session Kicked:"@OffenderID, 'Say');
+                return; //Need to stop here because the player has been session kicked
+            }
+        }
+        //The player hasn't yet been punished, but is being kicked now so lets add him to FFViolationIDs
+        FFViolationIDs.Insert(0, 1);
+        FFViolationIDs[0] = OffenderID;
+    }
+
+    if (FFPunishment == FFP_Kick)
+        Level.Game.Broadcast(self, "This Offender Would Be Kicked:"@OffenderID, 'Say');
+        //bSuccess = KickPlayer(Offender);
+    else if (FFPunishment == FFP_SessionBan)
+        bSuccess = AccessControl.BanPlayer(Offender, true);
+    else
+        bSuccess = AccessControl.BanPlayer(Offender);
+
+    if (!bSuccess)
+        log("Unable to remove"@Offender.GetHumanReadableName()@"from the server.");
+}
+
 defaultproperties
 {
     //Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true //Allows more than 32 players
     bVACSecured=true
 
+    bSessionKickOnSecondFFViolation=true
     FFDamageLimit=0 //This stops the FF damage system from kicking based on FF damage
     FFKillLimit=4 //New default of 4 unforgiven FF kills before punishment
     FFArtyScale=0.5 //Makes it so arty FF kills count as .5
