@@ -1780,6 +1780,11 @@ function ServerDoLog(string LogMessage)
     }
 }
 
+exec function CommunicationMenu()
+{
+    ClientReplaceMenu("ROInterface.ROCommunicationPage");
+}
+
 defaultproperties
 {
     FlinchRotMag=(X=100.000000,Z=100.000000)
