@@ -956,6 +956,12 @@ function ServerToggleDebugExits()
     }
 }
 
+// Overridden to eliminate "Waiting for Additional Crewmembers" message
+function bool CheckForCrew()
+{
+    return true;
+}
+
 defaultproperties
 {
     ObjectCollisionResistance=1.000000

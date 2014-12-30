@@ -376,6 +376,12 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     }
 }
 
+// Overridden to eliminate "Waiting for Additional Crewmembers" message
+function bool CheckForCrew()
+{
+    return true;
+}
+
 defaultproperties
 {
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'

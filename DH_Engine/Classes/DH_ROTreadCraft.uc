@@ -2816,6 +2816,12 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
     Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
+// Overridden to eliminate "Waiting for Additional Crewmembers" message
+function bool CheckForCrew()
+{
+    return true;
+}
+
 defaultproperties
 {
     bEnterringUnlocks=false
