@@ -137,7 +137,7 @@ function bool ButtonClick(GUIComponent Sender)
             bAttemptQuickPlay = true;
             if (quickplayip != "")
             {
-                PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
+                PlayerOwner().ClientTravel(quickplayip, TRAVEL_Absolute, false);
                 Controller.CloseAll(false, true);
             }
             break;
@@ -259,6 +259,8 @@ event Timer()
     local string page;
     local string command;
 
+    Log("IsConnected?:"@myLink.IsConnected());
+
     if (myLink != none)
     {
         if (myLink.ServerIpAddr.Port != 0 && myLink.IsConnected())
@@ -268,7 +270,7 @@ event Timer()
                  command = getRequest$myLink.CRLF$"Host: "$newsIPAddr$myLink.CRLF$myLink.CRLF;
                  myLink.SendCommand(command);
                  pageWait = true;
-                 myLink.WaitForCount(1,20, 1); // 20 sec timeout
+                 myLink.WaitForCount(1,20,1); // 20 sec timeout
                  sendGet = false;
             }
             else if (bAttemptQuickPlay)
@@ -295,7 +297,12 @@ event Timer()
 
             if (bAttemptQuickPlay)
             {
-                PlayerOwner().ClientTravel("66.150.214.65", TRAVEL_Absolute, false);
+                Log(" ");
+                Log(" ");
+                Log("IP:"@quickplayip);
+                Log(" ");
+                Log(" ");
+                PlayerOwner().ClientTravel(quickplayip, TRAVEL_Absolute, false);
                 Controller.CloseAll(false, true);
             }
         }
