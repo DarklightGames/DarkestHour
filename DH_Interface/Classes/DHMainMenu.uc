@@ -5,42 +5,42 @@
 
 class DHMainMenu extends UT2K4GUIPage;
 
-var automated       FloatingImage       i_background;
-var automated       GUISectionBackground    sb_MainMenu;
-var automated       GUIButton       b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
-var automated       GUISectionBackground    sb_HelpMenu;
-var automated       GUIButton           b_Credits, b_Manual, b_Demos, b_Website, b_Back;
-var automated       GUISectionBackground           sb_ShowVersion;
-var automated       GUILabel        l_Version;
-var bool            AllowClose;
-var localized string    ManualURL;
-var string          WebsiteURL;
-var localized string SteamMustBeRunningText;
-var localized string SinglePlayerDisabledText;
-var() config string     MenuSong;
+var()   config string           MenuSong;
 
-//Quick Play Variables
-var ROBufferedTCPLink myLink;
+var automated       FloatingImage                   i_background;
+var automated       GUISectionBackground            sb_MainMenu;
+var automated       GUIButton                       b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
+var automated       GUISectionBackground            sb_HelpMenu;
+var automated       GUIButton                       b_Credits, b_Manual, b_Demos, b_Website, b_Back;
+var automated       GUISectionBackground            sb_ShowVersion;
+var automated       GUILabel                        l_Version;
 
-var string waitString;
-var string quickplayip;
-var string LinkClassName;
-var string getRequest;
-var string getResponse;
-var string newsIPAddr;
+var     ROBufferedTCPLink       myLink;
 
-var int     myRetryCount;
-var int     myRetryMax;
+var     string                  waitString;
+var     string                  quickplayip;
+var     string                  LinkClassName;
+var     string                  getRequest;
+var     string                  getResponse;
+var     string                  newsIPAddr;
+var     string                  VersionString;
+var     string                  WebsiteURL;
 
-var float   ReReadyPause;
+var     localized string        ManualURL;
+var     localized string        SteamMustBeRunningText;
+var     localized string        SinglePlayerDisabledText;
 
-var bool bAttemptQuickPlay;
-var bool sendGet;
-var bool pageWait;
+var     int                     myRetryCount;
+var     int                     myRetryMax;
 
-//Other
-var localized string VersionString;
-var globalconfig bool AcceptedEULA;
+var     float                   ReReadyPause;
+
+var     bool                    AllowClose;
+var     bool                    bAttemptQuickPlay;
+var     bool                    sendGet;
+var     bool                    pageWait;
+
+
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -79,8 +79,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function InternalOnOpen()
 {
-        Log("MainMenu: starting music "$MenuSong);
-        PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
+    Log("MainMenu: starting music "$MenuSong);
+    PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
 }
 
 function OnClose(optional bool bCanceled)
@@ -89,18 +89,18 @@ function OnClose(optional bool bCanceled)
 
 function ShowSubMenu(int menu_id)
 {
-        switch (menu_id)
-        {
-                case 0:
-                        sb_MainMenu.SetVisibility(true);
-                        sb_HelpMenu.SetVisibility(false);
-                        break;
+    switch (menu_id)
+    {
+        case 0:
+            sb_MainMenu.SetVisibility(true);
+            sb_HelpMenu.SetVisibility(false);
+            break;
 
-                case 1:
-                        sb_MainMenu.SetVisibility(false);
-                        sb_HelpMenu.SetVisibility(true);
-                        break;
-        }
+        case 1:
+            sb_MainMenu.SetVisibility(false);
+            sb_HelpMenu.SetVisibility(true);
+            break;
+    }
 }
 
 function bool MyKeyEvent(out byte Key,out byte State,float delta)
@@ -229,27 +229,31 @@ function bool ButtonClick(GUIComponent Sender)
 
 event Opened(GUIComponent Sender)
 {
-    //l_Version.Caption = VersionString;
-    //sb_ShowVersion.SetVisibility(true);
+    l_Version.Caption $= VersionString;
+    sb_ShowVersion.SetVisibility(true);
 
     if (bDebugging)
+    {
         Log(Name$".Opened()   Sender:"$Sender,'Debug');
+    }
 
-     if (Sender != none && PlayerOwner().Level.IsPendingConnection())
-            PlayerOwner().ConsoleCommand("CANCEL");
-         ShowSubMenu(0);
-         super.Opened(Sender);
-}
+    if (Sender != none && PlayerOwner().Level.IsPendingConnection())
+    {
+        PlayerOwner().ConsoleCommand("CANCEL");
+    }
 
-function LoadMenuLevel()
-{
+    ShowSubMenu(0);
+    super.Opened(Sender);
 }
 
 event bool NotifyLevelChange()
 {
     if (bDebugging)
+    {
         Log(Name@"NotifyLevelChange  PendingConnection:"$PlayerOwner().Level.IsPendingConnection());
-        return PlayerOwner().Level.IsPendingConnection();
+    }
+
+    return PlayerOwner().Level.IsPendingConnection();
 }
 
 //Quick Play Button Functions
@@ -322,6 +326,7 @@ protected function ROBufferedTCPLink CreateNewLink()
     {
         NewLinkClass = class<ROBufferedTCPLink>(DynamicLoadObject(LinkClassName, class'class'));
     }
+
     if (NewLinkClass != none)
     {
         NewLink = PlayerOwner().Spawn(NewLinkClass);
@@ -338,6 +343,7 @@ function GetQuickPlayIP()
     {
         myLink = CreateNewLink();
     }
+
     if (myLink != none)
     {
         myLink.ServerIpAddr.Port = 0;
@@ -579,8 +585,8 @@ defaultproperties
     End Object
     b_Back=GUIButton'DH_Interface.DHMainMenu.BackButton'
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
-        WinTop=0.010000
-        WinLeft=0.010000
+        WinTop=0.97
+        WinLeft=0.01000
         WinWidth=0.230000
         WinHeight=0.050000
         OnPreDraw=sbSection3.InternalPreDraw
@@ -588,20 +594,21 @@ defaultproperties
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
     Begin Object Class=GUILabel Name=VersionNum
         StyleName="DHSmallText"
-        WinTop=0.020000
-        WinLeft=0.020000
+        Caption="Version: "
+        WinTop=0.00000
+        WinLeft=0.00000
         WinWidth=0.202128
         WinHeight=0.040000
         RenderWeight=20.700001
     End Object
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
+
     ManualURL="http://www.darkesthourgame.com"
     WebsiteURL="http://www.darkesthourgame.com"
     SteamMustBeRunningText="Steam must be running and you must have an active internet connection to play multiplayer"
     SinglePlayerDisabledText="Practice mode is only available in the full version."
     MenuSong="DH_Menu_Music"
-    VersionString="DH Version: Beta 3.0"
-    AcceptedEULA=true
+    VersionString="6.0"
     BackgroundColor=(B=0,G=0,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
     OnOpen=DHMainMenu.InternalOnOpen
