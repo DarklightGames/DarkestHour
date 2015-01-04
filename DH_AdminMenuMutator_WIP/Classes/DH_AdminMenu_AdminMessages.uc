@@ -32,6 +32,7 @@ var(Messages)  localized  string  ConfirmDisablePlayerIcon;
 var(Messages)  localized  string  ConfirmEnablePlayerIcon;
 var(Messages)  localized  string  ConfirmKillAll;
 var(Messages)  localized  string  EnterGameSpeed;
+var(Messages)  localized  string  EnterTimeRemaining;
 var(Messages)  localized  string  DestroyActorInSights;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -85,6 +86,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 23:
             return default.EnterGameSpeed;
         case 24:
+            return default.EnterTimeRemaining;
+        case 25:
             return default.DestroyActorInSights;
 
         default: // just in case something goes wrong we'll return a blank string
@@ -96,7 +99,7 @@ defaultproperties
 {
     bFadeMessage=true
     FontSize=-1
-    Lifetime=5
+    LifeTime=5
     DrawColor=(R=214,G=28,B=36,A=255)
     PosY=0.85
 
@@ -123,6 +126,7 @@ defaultproperties
     ConfirmEnablePlayerIcon="Press enter to confirm you want to RE-ENABLE the player location icon on the map"
     ConfirmKillAll="Press enter to confirm you want to KILL ALL players"
     EnterGameSpeed="Please specify the new game speed multiplier (1 is normal)"
+    EnterTimeRemaining="Please specify the new round time remaining (in minutes)"
     DestroyActorInSights="Press enter to confirm you want to DESTROY the actor in your sights"
     
 }

@@ -8,12 +8,16 @@
 //=============================================================================================================
 class DH_AdminMenu_Replicator extends Actor;
 
-var  array<string>  MenuArray;             // the standard local menu interactions to be created
-var  string         PrivateMessage;        // stores any private message from an admin to a player, which can then be accessed by the message class
-var  bool           bHasInteraction;       // a clientside fail-safe to make sure we don't create more than 1 grid overlay interaction
-var  bool           bSavedHideCapProgress; // clientside record of last received value of bHideCapProgress so PostNetReceive can tell if it's changed
-var  bool           bSavedHidePlayerIcon;  // clientside record of last received value of bHidePlayerIcon so PostNetReceive can tell if it's changed
-var  config  bool   bClientDebug;          // clientside config flag to log various events, which can be set in the local player's own DarkestHour.ini file
+var  array<string>  MenuArray;        // the standard local menu interactions to be created
+var  string         PrivateMessage;   // stores any private message from an admin to a player, which can then be accessed by the message class
+var  bool           bHasInteraction;  // client fail-safe to make sure we don't create more than 1 grid overlay interaction
+var  config  bool   bClientDebug;     // client config flag to log various events, which can be set in the local player's own DarkestHour.ini file
+var  float          NewElapsedTime;   // set if mutator modifies the round time remaining, allowing it to be replicated & used to update GRI.ElapsedTime on clients
+
+// Client records of last received values, so PostNetReceive can tell if they've changed
+var  bool           bSavedHideCapProgress;
+var  bool           bSavedHidePlayerIcon;
+var  float          SavedNewElapsedTime;
 
 // Copies of same-named variables from the mutator itself, replicated to clients so they know what the server allows them to do & know the state of certain things:
 var  bool           bBypassAdminLogin, bParaDropPlayerAllowed, bShowRealismMenu, bRealismMutPresent, bMinesDisabled, bHideCapProgress, bHidePlayerIcon;
@@ -21,45 +25,64 @@ var  sound          WarningSound;
 
 replication
 {
-    // Variables the server should send to the client (but only initially & will not change during play)
+    // Variables server sends to clients (but only initially & will not change during play)
     reliable if (bNetInitial && Role == ROLE_Authority)
         bBypassAdminLogin, bParaDropPlayerAllowed, bShowRealismMenu, bRealismMutPresent, WarningSound;
 
-    // Variables the server should send to the client (& may change during play)        
+    // Variables server sends to clients (& may change during play)        
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bMinesDisabled, bHideCapProgress, bHidePlayerIcon;
+        bMinesDisabled, bHideCapProgress, bHidePlayerIcon, NewElapsedTime;
         
     // Functions the server can call on the owning client
     reliable if (Role == ROLE_Authority)
         ClientPrivateMessage;
 }
 
-// Serverside, copies variables from the mutator, which will then get replicated to each clientside version of this helper actor
-function PostBeginPlay()
+// On the server this copies variables from the mutator, which will then get replicated to each client version of this helper actor
+// On a client it resets the LifeTime of each message class back to defaults, in case GameSpeed was altered last round
+simulated function PostBeginPlay()
 {
     local  DH_AdminMenuMutator  AMMutator;
 
     super.PostBeginPlay();
 
-    AMMutator = DH_AdminMenuMutator(Owner);
-
-    bBypassAdminLogin      = AMMutator.bBypassAdminLogin;
-    bParaDropPlayerAllowed = AMMutator.bParaDropPlayerAllowed;
-    bShowRealismMenu       = AMMutator.bShowRealismMenu;
-    bRealismMutPresent     = AMMutator.bRealismMutPresent;
-    bMinesDisabled         = AMMutator.bMinesDisabled;
-    bHidePlayerIcon        = AMMutator.bHidePlayerIcon;
-    bHideCapProgress       = AMMutator.bHideCapProgress;
-    WarningSound           = AMMutator.WarningSound;
-
-    if (AMMutator != none && AMMutator.bDebug)
+    if (Role == ROLE_Authority)
     {
-        Log("DH_AdminMenu_Replicator: bBypassAdminLogin =" @ bBypassAdminLogin @ " bParaDropPlayerAllowed =" @ bParaDropPlayerAllowed @ " bShowRealismMenu =" @ 
-            bShowRealismMenu @ " bRealismMutPresent =" @ bRealismMutPresent @ " bMinesDisabled =" @ bMinesDisabled @ " WarningSound =" @ WarningSound);
+        AMMutator = DH_AdminMenuMutator(Owner);
+
+        bBypassAdminLogin      = AMMutator.bBypassAdminLogin;
+        bParaDropPlayerAllowed = AMMutator.bParaDropPlayerAllowed;
+        bShowRealismMenu       = AMMutator.bShowRealismMenu;
+        bRealismMutPresent     = AMMutator.bRealismMutPresent;
+        bMinesDisabled         = AMMutator.bMinesDisabled;
+        bHidePlayerIcon        = AMMutator.bHidePlayerIcon;
+        bHideCapProgress       = AMMutator.bHideCapProgress;
+        WarningSound           = AMMutator.WarningSound;
+
+        if (AMMutator != none && AMMutator.bDebug)
+        {
+            Log("DH_AdminMenu_Replicator: bBypassAdminLogin =" @ bBypassAdminLogin @ " bParaDropPlayerAllowed =" @ bParaDropPlayerAllowed @ " bShowRealismMenu =" @ 
+                bShowRealismMenu @ " bRealismMutPresent =" @ bRealismMutPresent @ " bMinesDisabled =" @ bMinesDisabled @ " WarningSound =" @ WarningSound);
+        }
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetMessageClassLifeTimes(1.0);
     }
 }
 
-// Clientside, this waits until the local PlayerController has been replicated & then creates the local menu interactions
+// Used to adjust default LifeTime in message classes to take account of the GameSpeed, so messages stay on screen for the same time even if GameSpeed is changed
+static function SetMessageClassLifeTimes(float GameSpeed)
+{
+    class'DH_AdminMenu_NotifyMessages'.default.LifeTime = Int(Round(8.0 * GameSpeed));
+    class'DH_AdminMenu_WarningMessage'.default.LifeTime = Int(Round(9.0 * GameSpeed));
+    class'DH_AdminMenu_PrivateMessage'.default.LifeTime = Int(Round(9.0 * GameSpeed));
+    class'DH_AdminMenu_AdminMessages'.default.LifeTime  = Int(Round(5.0 * GameSpeed));
+    class'DH_AdminMenu_ErrorMessages'.default.LifeTime  = Int(Round(3.0 * GameSpeed));
+}
+
+// On clients this waits until the local PlayerController has been replicated & then creates the local menu interactions
 simulated function Tick(float DeltaTime)
 {
     local  PlayerController  PC;
@@ -74,20 +97,17 @@ simulated function Tick(float DeltaTime)
 
     if (PC != none && PC.GameReplicationInfo != none)
     {
-        CreateLocalMenus();
+        CreateLocalMenus(PC);
     }
 }
 
 // Clientside function to create the local menu interactions for each player
-simulated function CreateLocalMenus()
+simulated function CreateLocalMenus(PlayerController PC)
 {
-    local  PlayerController       PC;
     local  DH_AdminMenu_MenuBase  NewInteraction;
     local  int                    i;
 
-    PC = Level.GetLocalPlayerController();
-
-    if (PC == none) // note that if somehow this has been called on a dedicated server, PC will be none & we will exit
+    if (PC == none)
     {
         return;
     }
@@ -145,7 +165,7 @@ simulated function RemoveMenu(string MenuPartName)
     }
 }
 
-// Serverside function called from the mutator to give a p message to a player - it passes the info to the relevant client using a replicated client function
+// Serverside function called from the mutator to give a message to a player - it passes the info to the relevant client using a replicated client function
 function ServerPrivateMessage(PlayerController Receiver, PlayerController Admin, string Message, optional bool bIsAdminWarning)
 {
     if (Receiver != none && Admin != none && Message != "")
@@ -222,19 +242,32 @@ function ServerTogglePlayerIcon(bool bHide)
 }
 
 // Native clientside event, triggered whenever a replicated variable is received
-// We use it to check if bHidePlayerIcon or bHideCapProgress have changed & then toggle their functionality on the grid overlay interaction
+// We use it to check if bHidePlayerIcon, bHideCapProgress or NewElapsedTime have changed & call their functionality on each client
 simulated function PostNetReceive()
 {
+    local  PlayerController  PC;
+
     if (bHideCapProgress != bSavedHideCapProgress)
     {
-        bSavedHideCapProgress = bHideCapProgress; // save current bHideCapProgress so PostNetReceive can tell if it changes in future
+        bSavedHideCapProgress = bHideCapProgress;
         ClientToggleCapProgress();
     }
 
     if (bHidePlayerIcon != bSavedHidePlayerIcon)
     {
-        bSavedHidePlayerIcon = bHidePlayerIcon; // save current bHidePlayerIcon so PostNetReceive can tell if it changes in future
+        bSavedHidePlayerIcon = bHidePlayerIcon;
         ClientTogglePlayerIcon();
+    }
+
+    if (NewElapsedTime != SavedNewElapsedTime)
+    {
+        SavedNewElapsedTime = NewElapsedTime;
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none && PC.GameReplicationInfo != none)
+        {
+            PC.GameReplicationInfo.ElapsedTime = NewElapsedTime;
+        }
     }
 }
 

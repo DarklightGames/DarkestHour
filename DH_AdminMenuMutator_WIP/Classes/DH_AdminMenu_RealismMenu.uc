@@ -93,9 +93,14 @@ exec function SetGameSpeed()
     BuildMutateCommand("SetGameSpeed ", 23);
 }
 
+exec function SetRoundMinutesRemaining()
+{
+    BuildMutateCommand("SetRoundMinutesRemaining ", 24);
+}
+
 exec function DestroyActorInSights()
 {
-    BuildMutateCommand("DestroyActorInSights", 24);
+    BuildMutateCommand("DestroyActorInSights", 25);
 }
 
 // Checks if our mutator's Replicator actor has flagged that the realism match mutator is present on the server - gives a message & logout if it is not
@@ -127,14 +132,15 @@ defaultproperties
     MenuText(7)="ParaDrop all allies at grid"
     MenuText(8)="ParaDrop all axis at grid"
     MenuText(9)="ParaDrop all players at grid"
-    
+
     MenuText(11)="Toggle minefields off/on"
     MenuText(12)="Toggle cap progress bar off/on"
     MenuText(13)="Toggle player location icon off/on"
     MenuText(14)="Kill all players / end round"
     MenuText(15)="Set new game speed"
-    MenuText(16)="Destroy actor in your sights"
-    
+    MenuText(16)="Set new remaining round time (minutes)"
+    MenuText(17)="Destroy actor in your sights"
+
     MenuCommand(1)="*EnableRealismMatch"
     MenuCommand(2)="*DisableRealismMatch"
     MenuCommand(3)="*ForceRealismMatchLive"
@@ -150,5 +156,6 @@ defaultproperties
     MenuCommand(13)="*TogglePlayerIcon"
     MenuCommand(14)="*KillAllPlayers"
     MenuCommand(15)="*SetGameSpeed"
-    MenuCommand(16)="*DestroyActorInSights"
+    MenuCommand(16)="*SetRoundMinutesRemaining"
+    MenuCommand(17)="*DestroyActorInSights"
 }

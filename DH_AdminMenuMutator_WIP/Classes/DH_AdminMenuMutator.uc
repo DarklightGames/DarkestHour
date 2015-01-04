@@ -244,6 +244,11 @@ function Mutate(string MutateString, PlayerController Sender)
             {
                 SetGameSpeed(Float(Words[2]));
             }
+            // Set new time remaining (RM only)
+            else if (MutateOption ~= "SetRoundMinutesRemaining")
+            {
+                SetRoundMinutesRemaining(Float(Words[2]));
+            }
             // Destroy actor that is currently in player's sights (e.g. destroy immobile tank blocking spawn exit)
             else if (MutateOption ~= "DestroyActorInSights")
             {
@@ -781,6 +786,19 @@ function SetGameSpeed(float NewSpeed)
     }
 }
 
+function SetRoundMinutesRemaining(float NewMinutesRemaining)
+{
+    if (NewMinutesRemaining > 0.0)
+    {
+        ROTG.ElapsedTime = ROTG.RoundStartTime + ROTG.RoundDuration - Int(NewMinutesRemaining * 60.0);
+        ROGameReplicationInfo(Level.Game.GameReplicationInfo).ElapsedTime = ROTG.ElapsedTime; // copies to GRI on server
+        Replicator.NewElapsedTime = ROTG.ElapsedTime;                                         // Replicator copies to GRI on clients
+
+        BroadcastMessageToAll(11);
+        Log("DH_AdminMenu: admin" @ GetAdminName() @ "set remaining round time to" @ class'ROHud'.static.GetTimeString(NewMinutesRemaining * 60.0));
+    }
+}
+
 function DestroyActorInSights()
 {
     local  int        TraceDistance; 
@@ -1235,45 +1253,46 @@ function vector GetCurrentDropLocation(Controller PlayerToDrop)
 // Note this is from ROHud but that is not accessible serverside, so we need the same function here
 function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
 {
-    local ROGameReplicationInfo  GRI;
-    local float                  SwapX, SwapY;
-    local int                    OverheadOffset;
+    local  int    OverheadOffset;
+    local  float  SwapX, SwapY;
 
-    GRI = ROGameReplicationInfo(Level.Game.GameReplicationInfo);
-    OverheadOffset = GRI.OverheadOffset;
-
-    if (bInvert)
+    if (ROGameReplicationInfo(Level.Game.GameReplicationInfo) != none)
     {
-        if (OverheadOffset == 90)
+        OverheadOffset = ROGameReplicationInfo(Level.Game.GameReplicationInfo).OverheadOffset;
+
+        if (bInvert)
         {
-            OverheadOffset = 270;
+            if (OverheadOffset == 90)
+            {
+                OverheadOffset = 270;
+            }
+            else if (OverheadOffset == 270)
+            {
+                OverheadOffset = 90;
+            }
+        }
+
+        if (OverheadOffset  == 90)
+        {
+            SwapX = HudLoc.Y * -1.0;
+            SwapY = HudLoc.X ;
+            HudLoc.X = SwapX;
+            HudLoc.Y = SwapY;
+        }
+        else if (OverheadOffset == 180)
+        {
+            SwapX = HudLoc.X * -1.0;
+            SwapY = HudLoc.Y * -1.0;
+            HudLoc.X = SwapX;
+            HudLoc.Y = SwapY;
         }
         else if (OverheadOffset == 270)
         {
-            OverheadOffset = 90;
+            SwapX = HudLoc.Y;
+            SwapY = HudLoc.X * -1.0;
+            HudLoc.X = SwapX;
+            HudLoc.Y = SwapY;
         }
-    }
-
-    if (OverheadOffset  == 90)
-    {
-        SwapX = HudLoc.Y * -1.0;
-        SwapY = HudLoc.X ;
-        HudLoc.X = SwapX;
-        HudLoc.Y = SwapY;
-    }
-    else if (OverheadOffset == 180)
-    {
-        SwapX = HudLoc.X * -1.0;
-        SwapY = HudLoc.Y * -1.0;
-        HudLoc.X = SwapX;
-        HudLoc.Y = SwapY;
-    }
-    else if (OverheadOffset == 270)
-    {
-        SwapX = HudLoc.Y;
-        SwapY = HudLoc.X * -1.0;
-        HudLoc.X = SwapX;
-        HudLoc.Y = SwapY;
     }
 
     return HudLoc;
