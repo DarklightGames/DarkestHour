@@ -4,68 +4,69 @@
 //==============================================================================
 
 class DH_ATGunCannon extends DH_ROTankCannon
-      config(xGunsightDebugging)
+    config(xGunsightDebugging)
     abstract;
 
 simulated function Timer()
 {
-   if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
-   {
-      //Log(" Returning because there is no controller");
-      SetTimer(0.05, true);
-   }
-   else if (CannonReloadState == CR_Empty)
-   {
-         if (Role == ROLE_Authority)
-         {
-              PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         else
-         {
-              PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         CannonReloadState = CR_ReloadedPart1;
-         GetSoundDuration(ReloadSoundTwo) + GetSoundDuration(ReloadSoundThree);
-         SetTimer(GetSoundDuration(ReloadSoundOne), false);
-   }
-   else if (CannonReloadState == CR_ReloadedPart1)
-   {
-         if (Role == ROLE_Authority)
-         {
-              PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         else
-         {
-              PlaySound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
+    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
+    {
+        SetTimer(0.05, true);
+    }
+    else if (CannonReloadState == CR_Empty)
+    {
+        if (Role == ROLE_Authority)
+        {
+            PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        }
+        else
+        {
+            PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        }
 
-         CannonReloadState = CR_ReloadedPart2;
-         GetSoundDuration(ReloadSoundThree);
-         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
-   }
-   else if (CannonReloadState == CR_ReloadedPart2)
-   {
-         if (Role == ROLE_Authority)
-         {
-              PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
-         else
-         {
-              PlaySound(ReloadSoundThree, SLOT_Misc, FireSoundVolume/255.0,, 150,, false);
-         }
+        CannonReloadState = CR_ReloadedPart1;
+        GetSoundDuration(ReloadSoundTwo) + GetSoundDuration(ReloadSoundThree);
+        SetTimer(GetSoundDuration(ReloadSoundOne), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart1)
+    {
+        if (Role == ROLE_Authority)
+        {
+            PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        }
+        else
+        {
+            PlaySound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        }
 
-         CannonReloadState = CR_ReloadedPart3;
-         SetTimer(GetSoundDuration(ReloadSoundThree), false);
-   }
-   else if (CannonReloadState == CR_ReloadedPart3)
-   {
+        CannonReloadState = CR_ReloadedPart2;
+        GetSoundDuration(ReloadSoundThree);
+        SetTimer(GetSoundDuration(ReloadSoundTwo), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart2)
+    {
+        if (Role == ROLE_Authority)
+        {
+            PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        }
+        else
+        {
+            PlaySound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
+        }
+
+        CannonReloadState = CR_ReloadedPart3;
+        SetTimer(GetSoundDuration(ReloadSoundThree), false);
+    }
+    else if (CannonReloadState == CR_ReloadedPart3)
+    {
         if (Role == ROLE_Authority)
         {
             bClientCanFireCannon = true;
         }
+
         CannonReloadState = CR_ReadyToFire;
         SetTimer(0.0, false);
-   }
+    }
 }
 
 // Matt: added to replace deprecated 'should penetrate' functions below
@@ -149,12 +150,12 @@ simulated function int LimitYaw(int yaw)
 
 defaultproperties
 {
-    FrontArmorFactor=1.000000
-    RightArmorFactor=0.800000
-    LeftArmorFactor=0.800000
-    RearArmorFactor=1.000000
-    FrontLeftAngle=332.000000
-    FrontRightAngle=28.000000
-    RearRightAngle=162.000000
-    RearLeftAngle=198.000000
+    FrontArmorFactor=1.0
+    RightArmorFactor=0.8
+    LeftArmorFactor=0.8
+    RearArmorFactor=1.0
+    FrontLeftAngle=332.0
+    FrontRightAngle=28.0
+    RearRightAngle=162.0
+    RearLeftAngle=198.0
 }

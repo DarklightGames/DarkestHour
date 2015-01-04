@@ -25,31 +25,25 @@ simulated event PostBeginPlay()
     }
 }
 
-//=============================================================================
+//===========================================================================================================================================================
 // EvaluateRandom
 //
-// This function is called on the very first AT Cannon factory that the game
-// finds during the very first Reset() at the beginning of gameplay if
-// bUseRandomizer is set to true. Whichever factory is found first becomes a
-// sort of "Master" factory for all randomization functions. The master will
-// then handle activating any other AT Gun factories. At the end of each
-// round, the master will reset all the other AT Gun factories, and then
-// select a new set of randomly activated AT Gun factories. Each Grouptag
-// will have its own master factory.
-//=============================================================================
+// If bUseRandomizer is set to true, this is called on the 1st AT Cannon factory that the game finds during very 1st Reset() at beginning of gameplay.
+// Whichever factory is found 1st becomes a "master" factory for all randomization functions. The master then handles activating any other AT Gun factories.
+// At the end of each round, the master will reset all the other AT Gun factories & then select a new set of randomly activated AT Gun factories.
+// Each GroupTag will have its own master factory.
+//===========================================================================================================================================================
 function EvaluateRandom()
 {
     local array<DH_ATCannonFactoryBase> GunFactories;
-    local int i;
-    local DH_ATCannonFactoryBase GunFactory;
-    local int MaxToSpawn;
-    local int TotalActive;
+    local DH_ATCannonFactoryBase        GunFactory;
+    local int   MaxToSpawn, TotalActive, i;
     local float RandFactor;
 
-    //Log(self$" Evaluate Random");
-
     if (bRandomEvaluated || !bUseRandomizer)
+    {
         return;
+    }
 
     bMasterFactory = true;
 
@@ -57,17 +51,17 @@ function EvaluateRandom()
 
     if (MaxRandomFactoriesActive > 0)
     {
-         MaxToSpawn = MaxRandomFactoriesActive;
+        MaxToSpawn = MaxRandomFactoriesActive;
     }
 
-    // Build an Array of all of the AT Gun factories with matching group tags
+    // Build an array of all of the AT Gun factories with matching group tags
     foreach DynamicActors(class'DH_ATCannonFactoryBase', GunFactory)
     {
         // Must have a group tag set
         if (GunFactory.GroupTag == "" && GunFactory.bUseRandomizer)
         {
-          Log("Error - GroupTag not set");
-          continue;
+            Log("Error - GroupTag not set");
+            continue;
         }
 
         if (GunFactory.GroupTag != "" && GunFactory.GroupTag == GroupTag)
@@ -88,24 +82,17 @@ function EvaluateRandom()
         }
     }
 
-    // Calculate the random activation percentage based on how many cannons the mapper
-    // wants to spawn and how many total cannons there are in the array.
+    // Calculate the random activation percentage based on how many cannons the mapper wants to spawn & how many total cannons there are in the array
     if (MaxToSpawn > 0)
     {
        RandFactor = Min(MaxToSpawn,GunFactories.Length)/Float(GunFactories.Length);
     }
 
-    //Log(self$" MaxToSpawn = "$MaxToSpawn$" RandFactor = "$RandFactor);
-
-    // Loop through all the the factories found for this group tag and calculate
-    // whether or not they should be activated.
+    // Loop through all the the factories found for this group tag & calculate whether or not they should be activated
     for (i = 0; i < GunFactories.Length; i++)
     {
-        //Log(self$" total active = "$TotalActive$" i = "$i);
-
         if (TotalActive >= MaxToSpawn && MaxToSpawn > 0)
         {
-            //Log(self$" Hit the MaxToSpawn");
             break;
         }
 
@@ -113,7 +100,6 @@ function EvaluateRandom()
         {
            ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
            TotalActive++;
-           //Log(self$" Adding an AT Gun because we're down to the last ones");
            continue;
         }
 
@@ -123,7 +109,6 @@ function EvaluateRandom()
             {
                ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
                TotalActive++;
-               //Log(self$" Randomly adding ATGun "$i);
                continue;
             }
         }
@@ -131,39 +116,38 @@ function EvaluateRandom()
         {
            ActivatedIndexes[ActivatedIndexes.Length] = GunFactories[i].GunIndex;
            TotalActive++;
-           //Log(self$" Spawning every ATGun since the limit was set to zero");
            continue;
         }
     }
 
-    //Log(self$" Final total active = "$TotalActive);
-
     bRandomEvaluated = true;
 
     if (!bUsesSpawnAreas)
+    {
         ProcessRandomActivation();
+    }
 }
 
-// Activates the stored randomly chosen AT Guns. Had to separate this out due to
-// needed to delay activation if bUsesSpawnAreas was true.
+// Activates the stored randomly chosen AT Guns - had to separate this out due to needed to delay activation if bUsesSpawnAreas was true
 function ProcessRandomActivation()
 {
-    local int i,j;
     local array<DH_ATCannonFactoryBase> GunFactories;
-    local DH_ATCannonFactoryBase GunFactory;
-    local int TempTeam;
+    local DH_ATCannonFactoryBase        GunFactory;
+    local int TempTeam, i, j;
 
     if (!bMasterFactory)
+    {
         return;
+    }
 
-    // Build an Array of all of the AT Gun factories with matching group tags
+    // Build an array of all of the AT Gun factories with matching group tags
     foreach DynamicActors(class'DH_ATCannonFactoryBase', GunFactory)
     {
         // Must have a group tag set
         if (GunFactory.GroupTag == "")
         {
-          Log("Error - GroupTag not set");
-          continue;
+            Log("Error - GroupTag not set");
+            continue;
         }
 
         if (GunFactory.GroupTag != "" && GunFactory.GroupTag == GroupTag)
@@ -229,13 +213,11 @@ function Deactivate()
 
     if (Role == ROLE_Authority && LastSpawnedVehicle != none && LastSpawnedVehicle.Health <= 0)
     {
-       ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
+        ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 }
 
-// Need to handle Reset differently for this actor. If we are using the randomizer,
-// only the MasterFactory is reset here, and all other factories are reset by
-// the master factory.
+// Need to handle Reset differently for this actor - if we are using the randomizer, only MasterFactory is reset here & and all other factories are reset by master factory
 simulated function Reset()
 {
     if (Role == ROLE_Authority)
@@ -243,44 +225,40 @@ simulated function Reset()
         ROGameReplicationInfo(Level.Game.GameReplicationInfo).SetATCannonActiveStatus(GunIndex, false);
     }
 
-    //Log("Reset got called for "$self);
     if (!bUsesSpawnAreas && !bUseRandomizer)
     {
-         //Log(self$" spawning vehicle because of reset");
-         SpawnVehicle();
-         TotalSpawnedVehicles=0;
-         Activate(TeamNum);
+        SpawnVehicle();
+        TotalSpawnedVehicles = 0;
+        Activate(TeamNum);
     }
     else if (bUseRandomizer)
     {
-         if (bMasterFactory)
-         {
-             //Log(self$" Resetting mastergun on round end");
-             TotalSpawnedVehicles=0;
-             Deactivate();
-             bRandomEvaluated = false;
-             EvaluateRandom();
-         }
-         else if (!bRandomEvaluated)
-         {
-             //Log(self$" Resetting regular gun");
-             TotalSpawnedVehicles=0;
-             Deactivate();
-             EvaluateRandom();
-         }
+        if (bMasterFactory)
+        {
+            TotalSpawnedVehicles = 0;
+            Deactivate();
+            bRandomEvaluated = false;
+            EvaluateRandom();
+        }
+        else if (!bRandomEvaluated)
+        {
+            TotalSpawnedVehicles = 0;
+            Deactivate();
+            EvaluateRandom();
+        }
     }
     else
     {
-         TotalSpawnedVehicles=0;
-         Deactivate(); //bFactoryActive = false;
+        TotalSpawnedVehicles=0;
+        Deactivate();
     }
 }
 
-// Used by the randomizer to reset non-Master factories
+// Used by the randomizer to reset non-master factories
 simulated function SpecialReset()
 {
-     TotalSpawnedVehicles=0;
-     Deactivate();
+    TotalSpawnedVehicles = 0;
+    Deactivate();
 }
 
 event VehicleDestroyed(Vehicle V)

@@ -9,12 +9,7 @@ var(Messages) localized string GunManned;
 var(Messages) localized string CannotUse;
 var(Messages) localized string NoExit;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
@@ -31,7 +26,6 @@ static function string GetString(
         default:
              return default.NoExit;
     }
-
 }
 
 defaultproperties
