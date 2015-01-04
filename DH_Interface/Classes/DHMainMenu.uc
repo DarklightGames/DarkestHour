@@ -41,7 +41,6 @@ var     bool                    sendGet;
 var     bool                    pageWait;
 
 
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int xl,yl,y;
@@ -79,6 +78,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function InternalOnOpen()
 {
+    Log("");
+    Log("");
+    Log("");
+    Log("");
     Log("MainMenu: starting music "$MenuSong);
     PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
 }
@@ -263,10 +266,10 @@ event Timer()
     local string page;
     local string command;
 
-    Log("IsConnected?:"@myLink.IsConnected());
-
     if (myLink != none)
     {
+        //Log("IsConnected?:"@myLink.IsConnected());
+
         if (myLink.ServerIpAddr.Port != 0 && myLink.IsConnected())
         {
             if (sendGet)
