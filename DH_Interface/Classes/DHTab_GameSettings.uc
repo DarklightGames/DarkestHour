@@ -71,11 +71,11 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 defaultproperties
 {
     PurgeCacheDaysValues(0)=0
-    PurgeCacheDaysValues(1)=7
-    PurgeCacheDaysValues(2)=30
+    PurgeCacheDaysValues(1)=30
+    PurgeCacheDaysValues(2)=365
     PurgeCacheDaysText(0)="Never"
-    PurgeCacheDaysText(1)="Weekly"
-    PurgeCacheDaysText(2)="Monthly"
+    PurgeCacheDaysText(1)="Monthly"
+    PurgeCacheDaysText(2)="Yearly"
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Gameplay"
         WinTop=0.050000
