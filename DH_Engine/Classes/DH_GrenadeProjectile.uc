@@ -90,12 +90,13 @@ function BlowUp(vector HitLocation)
     local DH_Pawn DHP;
 
     // Check for any players so close that they must be on top of the grenade
-    foreach RadiusActors(class'DH_Pawn', DHP, 5)
+    foreach RadiusActors(class'DH_Pawn', DHP, 5.0)
     {
         // Make sure player is actually lying on the grenade, not just standing over it
         if (DHP.bIsCrawling)
         {
             DamageRadius *= 0.25; // shrink the radius so that no-one but the proned player is touched
+            break;
         }
     }
 
@@ -113,7 +114,7 @@ defaultproperties
     Speed=1100.0 // Matt: changed from 1000 as all but M1 grenade use 1100
     MyDamageType=class'ROGrenadeDamType'
     ExplodeDirtEffectClass=class'GrenadeExplosion'
-    ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // Matt: added instead of using same as ExplodeDirtEffectClass. as there is an RO snow effect available
+    ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // Matt: added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
     ExplodeMidAirEffectClass=class'GrenadeExplosion_midair'
     CollisionHeight=2.0
     CollisionRadius=4.0

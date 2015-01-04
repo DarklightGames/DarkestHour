@@ -157,7 +157,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     {
         super.Explode(HitLocation, HitNormal);
     }
-    // This is the same as the Super, except we don't call HandleDestruction
+    // This is the same as the Super, except we don't call HandleDestruction yet
     else if (!bCollided)
     {
         if (!bDidExplosionFX)
@@ -292,25 +292,25 @@ defaultproperties
     RockHitSound=none
     WoodHitSound=none
     WaterHitSound=none
-    WScale=1.000000
-    PenetrationDamage=250.000000
-    PenetrationDamageRadius=500.000000
-    EnergyFactor=1000.000000
-    PeneExploWallOut=75.000000
-    PenetrationScale=0.080000
-    DistortionScale=0.400000
+    WScale=1.0
+    PenetrationDamage=250.0
+    PenetrationDamageRadius=500.0
+    EnergyFactor=1000.0
+    PeneExploWallOut=75.0
+    PenetrationScale=0.08
+    DistortionScale=0.4
 //  bIsHEATRound=true // deprecated
-    ShakeRotMag=(Y=0.000000)
-    ShakeRotRate=(Z=2500.000000)
-    BlurTime=6.000000
-    BlurEffectScalar=2.100000
+    ShakeRotMag=(Y=0.0)
+    ShakeRotRate=(Z=2500.0)
+    BlurTime=6.0
+    BlurEffectScalar=2.1
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
     ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
-    DamageRadius=300.000000
+    DamageRadius=300.0
     MyDamageType=class'DH_HEATCannonShellDamage'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-    LifeSpan=10.000000
     SoundRadius=1000.000000
+    LifeSpan=10.0
 }

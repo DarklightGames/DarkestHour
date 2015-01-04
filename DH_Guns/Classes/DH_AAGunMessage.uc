@@ -9,12 +9,7 @@ var(Messages) localized string GunManned;
 var(Messages) localized string CannotUse;
 var(Messages) localized string NoExit;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
@@ -23,13 +18,13 @@ static function string GetString(
         case 1:
             return default.VehicleIsEnemy;
         case 2:
-             return default.CannotEnter;
+            return default.CannotEnter;
         case 3:
-             return default.GunManned;
+            return default.GunManned;
         case 4:
-             return default.CannotUse;
+            return default.CannotUse;
         default:
-             return default.NoExit;
+            return default.NoExit;
     }
 }
 

@@ -243,9 +243,8 @@ simulated function Tick(float DeltaTime)
 
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
 //              for Tanks, we'll probably want to prevent bullets from doing damage too
-function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-
     local int i;
     local float VehicleDamageMod;
     local int HitPointDamage;
@@ -256,22 +255,22 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
     }
 
     // Quick fix for the thing giving itself impact damage
-    if (instigatedBy == self)
+    if (InstigatedBy == self)
         return;
 
     // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to thier team :))
     if (!bDriverAlreadyEntered)
     {
         if (InstigatedBy != none)
-            InstigatorController = instigatedBy.Controller;
+            InstigatorController = InstigatedBy.Controller;
 
         if (InstigatorController == none)
         {
@@ -320,7 +319,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {
                     //Level.Game.Broadcast(self, "Hit Driver"); //re-comment when fixed
-                    Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
                 }
             }
             // Damage for small (non penetrating) arms
@@ -329,7 +328,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
                 {
                     //Level.Game.Broadcast(self, "Hit Driver");  //re-comment when fixed
-                    Driver.TakeDamage(150, instigatedBy, Hitlocation, Momentum, damageType); //just kill the bloody driver - it's a headshot!
+                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, damageType); //just kill the bloody driver - it's a headshot!
                 }
             }
         }
@@ -342,7 +341,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Engine Hit Effective");
-                DamageEngine(HitPointDamage, instigatedBy, Hitlocation, Momentum, damageType);
+                DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, damageType);
             }
             else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
@@ -359,7 +358,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
 
     if (Health >= 0 && Health <= HealthMax/3)
     {

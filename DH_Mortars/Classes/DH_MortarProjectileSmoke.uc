@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_MortarProjectileSmoke extends DH_MortarProjectile
-abstract;
+    abstract;
 
 //Sounds
 var sound SmokeLoopSound;
@@ -48,5 +48,5 @@ defaultproperties
     SmokeSoundDuration=30.000000
     SmokeEmitterClass=class'ROEffects.GrenadeSmokeEffect'
     SoundVolume=255
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

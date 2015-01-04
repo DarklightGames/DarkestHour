@@ -253,7 +253,7 @@ function PossessedBy(Controller C)
                 Headgear = Spawn(HeadgearClass, self);
             }
 
-            for (i = 0; i < arraycount(AmmoPouchClasses); i++)
+            for (i = 0; i < ArrayCount(AmmoPouchClasses); i++)
             {
                 if (AmmoPouchClasses[i] == none)
                 {
@@ -430,7 +430,7 @@ simulated function ProcessHitFX()
         return;
     }
 
-    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % arraycount(HitFX))
+    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % ArrayCount(HitFX))
     {
         j++;
 
@@ -2228,28 +2228,31 @@ function HandleMortarUnflinch()
 // Mantle anims
 simulated function PlayMantle()
 {
-    local name Anim;
+    local name  Anim;
     local float AnimTimer;
+    local bool  bLocallyControlled;
 
     bPhysicsAnimUpdate = false;
     LockRootMotion(1); // lock the rendering of the root bone to where it is (it will still translate for calculation purposes)
+    bLocallyControlled = IsLocallyControlled();
 
-    if (IsLocallyControlled())
+    // Matt: was PlayOwnedSound but that's only relevant to server & this plays on client - same below & in PlayEndMantle
+    if (bLocallyControlled)
     {
-        PlayOwnedSound(MantleSound, SLOT_Interact, 1.0,, 10.0);
+        PlaySound(MantleSound, SLOT_Interact, 1.0,, 10.0);
     }
 
     Anim = SetMantleAnim();
     AnimTimer = GetAnimDuration(Anim, 1.0) + 0.1;
 
-    if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !IsLocallyControlled()))
+    if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !bLocallyControlled))
     {
         SetTimer(AnimTimer, false);
     }
     else
     {
         // Instigator gets a slightly longer blend time to allow other clients to better sync animation with movement
-        if (Role < ROLE_Authority && IsLocallyControlled())
+        if (Role < ROLE_Authority && bLocallyControlled)
         {
             SetTimer(AnimTimer + 0.05, false);
             PlayAnim(Anim, 1.0, 0.15, 0);
@@ -2298,7 +2301,7 @@ simulated function PlayEndMantle()
 
             if (IsLocallyControlled())
             {
-                PlayOwnedSound(StandToCrouchSound, SLOT_Misc, 1.0,, 10);
+                PlaySound(StandToCrouchSound, SLOT_Misc, 1.0,, 10);
             }
         }
     }
@@ -2322,7 +2325,7 @@ simulated function PlayEndMantle()
 
             if (IsLocallyControlled())
             {
-                PlayOwnedSound(StandToCrouchSound, SLOT_Misc, 1.0,, 10);
+                PlaySound(StandToCrouchSound, SLOT_Misc, 1.0,, 10);
             }
         }
     }

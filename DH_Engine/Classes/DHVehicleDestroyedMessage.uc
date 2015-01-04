@@ -5,12 +5,7 @@
 
 class DHVehicleDestroyedMessage extends DHLocalMessage;
 
-static function string AssembleString(
-    HUD myHUD,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional string MessageString
-    )
+static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
     return MessageString;
 }

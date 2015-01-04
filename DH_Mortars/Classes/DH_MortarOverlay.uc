@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_MortarOverlay extends VehicleHUDOverlay
-abstract;
+    abstract;
 
 defaultproperties
 {

@@ -4,28 +4,28 @@
 //==============================================================================
 
 class DH_MortarProjectileHE extends DH_MortarProjectile
-abstract;
+    abstract;
 
-//Sounds
+// Sounds
 var array<sound> GroundExplosionSounds;
 var array<sound> WaterExplosionSounds;
 var array<sound> AirExplosionSounds;
 var array<sound> SnowExplosionSounds;
 
-//Emitter classes
+// Emitter classes
 var class<Emitter> AirExplosionEmitterClass;
 var class<Emitter> GroundExplosionEmitterClass;
 var class<Emitter> SnowExplosionEmitterClass;
 var class<Emitter> WaterExplosionEmitterClass;
 
-//Camera shaking
-var vector              ShakeRotMag;                // how far to rot view
-var vector              ShakeRotRate;               // how fast to rot view
-var float               ShakeRotTime;               // how much time to rot the instigator's view
-var vector              ShakeOffsetMag;             // max view offset vertically
-var vector              ShakeOffsetRate;            // how fast to offset view vertically
-var float               ShakeOffsetTime;            // how much time to offset view
-var float               BlurTime;                   // How long blur effect should last for this shell
+// Camera shaking
+var vector              ShakeRotMag;      // how far to rot view
+var vector              ShakeRotRate;     // how fast to rot view
+var float               ShakeRotTime;     // how much time to rot the instigator's view
+var vector              ShakeOffsetMag;   // max view offset vertically
+var vector              ShakeOffsetRate;  // how fast to offset view vertically
+var float               ShakeOffsetTime;  // how much time to offset view
+var float               BlurTime;         // How long blur effect should last for this shell
 var float               BlurEffectScalar;
 
 simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterClass, ESurfaceTypes SurfaceType)
@@ -35,12 +35,15 @@ simulated function GetExplosionEmitterClass(out class<Emitter> ExplosionEmitterC
         case EST_Ice:
             ExplosionEmitterClass = SnowExplosionEmitterClass;
             return;
+
         case EST_Snow:
             ExplosionEmitterClass = SnowExplosionEmitterClass;
             return;
+
         case EST_Water:
             ExplosionEmitterClass = WaterExplosionEmitterClass;
             return;
+
         default:
             ExplosionEmitterClass = GroundExplosionEmitterClass;
             return;
@@ -54,12 +57,15 @@ simulated function GetExplosionSound(out sound ExplosionSound, ESurfaceTypes Sur
         case EST_Ice:
             ExplosionSound = SnowExplosionSounds[Rand(SnowExplosionSounds.Length)];
             return;
+
         case EST_Snow:
             ExplosionSound = SnowExplosionSounds[Rand(SnowExplosionSounds.Length)];
             return;
+
         case EST_Water:
             ExplosionSound = WaterExplosionSounds[Rand(WaterExplosionSounds.Length)];
             return;
+
         default:
             ExplosionSound = GroundExplosionSounds[Rand(GroundExplosionSounds.Length)];
             return;
@@ -73,9 +79,11 @@ simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalCla
         case EST_Ice:
             ExplosionDecalClass = ExplosionDecalSnow;
             return;
+
         case EST_Snow:
             ExplosionDecalClass = ExplosionDecalSnow;
             return;
+
         default:
             ExplosionDecalClass = ExplosionDecal;
             return;
@@ -84,10 +92,10 @@ simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalCla
 
 simulated function BlowUp(vector HitLocation)
 {
-    local ESurfaceTypes HitSurfaceType;
-    local class<Emitter> ExplosionEmitterClass;
+    local ESurfaceTypes    HitSurfaceType;
+    local class<Emitter>   ExplosionEmitterClass;
     local class<Projector> ExplosionDecalClass;
-    local sound ExplosionSound;
+    local sound            ExplosionSound;
 
     MakeNoise(1.0);
     GetHitSurfaceType(HitSurfaceType);
@@ -96,27 +104,28 @@ simulated function BlowUp(vector HitLocation)
     GetExplosionSound(ExplosionSound, HitSurfaceType);
     Spawn(ExplosionEmitterClass, self,, HitLocation);
     Spawn(ExplosionDecalClass, self,, HitLocation, rotator(vect(0.0, 0.0, -1.0)));
-    PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248, 1.0, true);
+    PlaySound(ExplosionSound,, 6.0 * TransientSoundVolume, false, 5248.0, 1.0, true);
     DoShakeEffect();
 }
 
+// Explode in water
 simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 {
-    //Explode in water.
     if (NewVolume.bWaterVolume)
+    {
         Explode(Location, vect(0.0, 0.0, 1.0));
+    }
 }
 
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local ROVolumeTest VT;
 
-    VT = Spawn(class'ROVolumeTest',, , HitLocation);
+    VT = Spawn(class'ROVolumeTest',,, HitLocation);
 
     if (VT.IsInNoArtyVolume())
     {
         bDud = true;
-        VT.Destroy();
     }
 
     VT.Destroy();
@@ -125,6 +134,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     {
         DoHitEffects(HitLocation, HitNormal);
         Destroy();
+
         return;
     }
 
@@ -191,7 +201,6 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
-            Log(Tag @ "HurtRadius: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
         }
 
         // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
@@ -303,7 +312,6 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
-            Log(Tag @ "HurtRadius part II: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
         }
 
         dir = Victims.Location - HitLocation;
@@ -330,23 +338,27 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 simulated function GetClosestMortarTargetController(out Controller C)
 {
     local DHGameReplicationInfo GRI;
-    local float Distance, ClosestDistance;
+    local float  Distance, ClosestDistance;
     local int i, ClosestIndex;
 
     ClosestIndex = 255;
-    ClosestDistance = 5250; //100 meters.
+    ClosestDistance = 5250.0; // 100 meters
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (GRI == none)
+    {
         return;
+    }
 
     if (DamageInstigator.GetTeamNum() == 0)
     {
-        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
+        for (i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].bCancelled != 0)
+            {
                 continue;
+            }
 
             Distance = VSize(Location - GRI.GermanMortarTargets[i].Location);
 
@@ -358,16 +370,20 @@ simulated function GetClosestMortarTargetController(out Controller C)
         }
 
         if (ClosestIndex == 255)
+        {
             return;
+        }
 
         C = GRI.GermanMortarTargets[ClosestIndex].Controller;
     }
     else
     {
-        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
+        for (i = 0; i < ArrayCount(GRI.AlliedMortarTargets); i++)
         {
             if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].bCancelled != 0)
+            {
                 continue;
+            }
 
             Distance = VSize(Location - GRI.AlliedMortarTargets[i].Location);
 
@@ -379,7 +395,9 @@ simulated function GetClosestMortarTargetController(out Controller C)
         }
 
         if (ClosestIndex == 255)
+        {
             return;
+        }
 
         C = GRI.AlliedMortarTargets[ClosestIndex].Controller;
     }
@@ -388,7 +406,9 @@ simulated function GetClosestMortarTargetController(out Controller C)
 simulated function Destroyed()
 {
     if (!bDud && Role == ROLE_Authority)
+    {
         DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, Location);
+    }
 
     super.Destroyed();
 }

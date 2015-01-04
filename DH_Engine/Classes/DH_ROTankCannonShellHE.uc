@@ -65,11 +65,11 @@ defaultproperties
     ExplosionSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
     ExplosionSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
     bHasTracer=false
-    ShakeRotMag=(Y=0.000000)
-    ShakeRotRate=(Z=2500.000000)
-    BlurTime=6.000000
-    BlurEffectScalar=2.200000
-    PenetrationMag=300.000000
+    ShakeRotMag=(Y=0.0)
+    ShakeRotRate=(Z=2500.0)
+    BlurTime=6.0
+    BlurEffectScalar=2.2
+    PenetrationMag=300.0
     VehicleDeflectSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
     ShellHitVehicleEffectClass=class'ROEffects.TankHEHitPenetrate'
     ShellDeflectEffectClass=class'ROEffects.TankHEHitDeflect'
@@ -82,10 +82,10 @@ defaultproperties
     RockHitSound=none
     WoodHitSound=none
     WaterHitSound=none
-    DamageRadius=300.000000
+    DamageRadius=300.0
     MyDamageType=class'DH_HECannonShellDamage'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-    LifeSpan=10.000000
     SoundRadius=1000.000000
+    LifeSpan=10.0
 }

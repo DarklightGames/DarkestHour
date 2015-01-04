@@ -1006,7 +1006,7 @@ simulated function PostBeginPlay()
     {
         RandomNumber = RAND(100);
 
-        for (i = 0; i < arraycount(SchurzenTypes); i++)
+        for (i = 0; i < ArrayCount(SchurzenTypes); i++)
         {
             CumulativeChance += SchurzenTypes[i].PercentChance;
 
@@ -1029,7 +1029,7 @@ simulated function PostNetBeginPlay()
     }
 
     // Only spawn schurzen if a valid attachment class has been selected
-    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
+    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < ArrayCount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
     {
         Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
 
@@ -1949,7 +1949,7 @@ simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, flo
 
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
 //              for Tanks, we'll probably want to prevent bullets from doing damage too
-function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
 
     local vector LocDir, HitDir;
@@ -1965,22 +1965,22 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
     }
 
     // Quick fix for the thing giving itself impact damage
-    if (instigatedBy == self && DamageType != VehicleBurningDamType)
+    if (InstigatedBy == self && DamageType != VehicleBurningDamType)
         return;
 
     // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to thier team :))
     if (!bDriverAlreadyEntered)
     {
         if (InstigatedBy != none)
-            InstigatorController = instigatedBy.Controller;
+            InstigatorController = InstigatedBy.Controller;
 
         if (InstigatorController == none)
         {
@@ -2023,7 +2023,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {
                     //Level.Game.Broadcast(self, "Hit Driver"); //re-comment when fixed
-                    Driver.TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
                 }
             }
             // Damage for small (non penetrating) arms
@@ -2032,7 +2032,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
                 {
                     //Level.Game.Broadcast(self, "Hit Driver");  //re-comment when fixed
-                    Driver.TakeDamage(150, instigatedBy, Hitlocation, Momentum, damageType); //just kill the bloody driver
+                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, damageType); //just kill the bloody driver
                 }
             }
         }
@@ -2051,7 +2051,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     Level.Game.Broadcast(self, "Engine Hit Effective");
-                    DamageEngine(HitPointDamage, instigatedBy, Hitlocation, Momentum, damageType);
+                    DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, damageType);
                     Damage *= 0.55; //hitting the engine shouldn't blow up the tank automatically!
                 }
             }
@@ -2119,14 +2119,14 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Driver killed");
-                Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
 
             if (bRearHit == false && WeaponPawns[1] != none && WeaponPawns[1].Driver != none && FRand() < Damage/GunnerKillChance)
             {
                 if (bDebuggingText)
                 Level.Game.Broadcast(self, "Hull Gunner killed");
-                WeaponPawns[1].Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                WeaponPawns[1].Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
         }
         else
@@ -2137,7 +2137,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     Level.Game.Broadcast(self, "Commander killed");
-                    WeaponPawns[0].Driver.TakeDamage(150, instigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                    WeaponPawns[0].Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                 }
 
                 if (FRand() < Damage/OpticsDamageChance)
@@ -2248,7 +2248,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
+    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
 
     //This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
     if (!bOnFire && Damage > 0 && Health > 0 && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.50) && bProjectilePenetrated == true)
@@ -2262,7 +2262,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                 Enable('Tick');
 
             bOnFire = true;
-            WhoSetOnFire = instigatedBy.Controller;
+            WhoSetOnFire = InstigatedBy.Controller;
             DelayedDamageInstigatorController = WhoSetOnFire;
             FireStarterTeam = WhoSetOnFire.GetTeamNum();
         }
@@ -2285,12 +2285,12 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 }
 
 // Handle the Engine Damage
-function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
     local int ActualDamage;
 
     if (DamageType != VehicleBurningDamType)
-        ActualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
+        ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
     else
         ActualDamage = Damage;
 
@@ -2305,7 +2305,7 @@ function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector 
               Level.Game.Broadcast(self, "Engine on Fire");
 
             bEngineOnFire = true;
-            WhoSetEngineOnFire = instigatedBy.Controller;
+            WhoSetEngineOnFire = InstigatedBy.Controller;
             DelayedDamageInstigatorController = WhoSetEngineOnFire;
             FireStarterTeam = WhoSetEngineOnFire.GetTeamNum();
         }

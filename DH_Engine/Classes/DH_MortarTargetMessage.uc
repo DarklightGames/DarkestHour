@@ -14,12 +14,7 @@ var localized string CannotCancelTargetYet;
 var localized string TooManyMortarTargets;
 var localized string NoTargetToCancel;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
@@ -44,24 +39,19 @@ static function string GetString(
     }
 }
 
-static function int getIconID(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function int getIconID(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
-        case 0: //TargetInvalid
+        case 0:     // TargetInvalid
             return 11;
-        case 1: //NoMortarOperators
+        case 1:     // NoMortarOperators
             return 11;
-        case 2: //TargetMarked
+        case 2:     // TargetMarked
             return 3;
-        //case 3:   //TargetCancelled
-            //return 3;
-        case 4: //CannotMarkTargetYet
+//      case 3:     //TargetCancelled
+//          return 3;
+        case 4:     // CannotMarkTargetYet
             return 11;
         default:
             return super.getIconID(Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);

@@ -7,12 +7,10 @@ class DH_GiveChuteTrigger extends Trigger;
 
 function Touch(Actor Other)
 {
-    local int  i;
+    local int i;
 
     if (IsRelevant(Other))
     {
-        Other = FindInstigator(Other);
-
         if (ReTriggerDelay > 0.0)
         {
             if (Level.TimeSeconds - TriggerTime < ReTriggerDelay)
@@ -22,6 +20,8 @@ function Touch(Actor Other)
 
             TriggerTime = Level.TimeSeconds;
         }
+
+        Other = FindInstigator(Other);
 
         // Broadcast the Trigger message to all matching actors
         TriggerEvent(Event, self, Other.Instigator);

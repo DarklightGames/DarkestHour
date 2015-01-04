@@ -146,11 +146,13 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     local ESurfaceTypes SurfType;
     local bool          bShowDecal, bSnowDecal;
 
+    // Do a shake effect if projectile always does or if hit a vehicle
     if (bAlwaysDoShakeEffect || SavedHitActor != none)
     {
         DoShakeEffect();
     }
 
+    // Hit a vehicle - do hit effects
     if (SavedHitActor != none)
     {
         PlaySound(VehicleHitSound, , 5.5 * TransientSoundVolume);
@@ -161,6 +163,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
             bShowDecal = true;
         }
     }
+    // Hit something else - get material type & do effects
     else if (!PhysicsVolume.bWaterVolume && !bDidWaterHitFX && EffectIsRelevant(HitLocation, false))
     {
         Trace(TraceHitLocation, TraceHitNormal, HitLocation + vector(Rotation) * 16.0, HitLocation, false, , HitMaterial);
@@ -213,6 +216,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
         }
     }
 
+    // Spawn explosion decal
     if (bShowDecal && Level.NetMode != NM_DedicatedServer)
     {
         // Adjust decal position to reverse any offset already applied to passed HitLocation to spawn explosion effects away from hit surface (e.g. PeneExploWall adjustment in HEAT shell)
@@ -260,14 +264,14 @@ defaultproperties
     ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
     ShellHitWaterEffectClass=class'ROEffects.TankAPHitWaterEffect'
-    AmbientVolumeScale=5.000000
-    SpeedFudgeScale=0.500000
-    InitialAccelerationTime=0.200000
-    Speed=500.000000
-    MaxSpeed=22000.000000
-    Damage=100.000000
-    DamageRadius=5.000000
-    MomentumTransfer=10000.000000
+    AmbientVolumeScale=5.0
+    SpeedFudgeScale=0.5
+    InitialAccelerationTime=0.2
+    Speed=500.0
+    MaxSpeed=22000.0
+    Damage=100.0
+    DamageRadius=5.0
+    MomentumTransfer=10000.0
     MyDamageType=class'DH_TankShellAPExplosionDamage'
     ExplosionDecal=class'ROEffects.TankAPMarkDirt'
     ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
@@ -276,18 +280,18 @@ defaultproperties
     bNetTemporary=false
     bUpdateSimulatedPosition=true
     AmbientSound=sound'Vehicle_Weapons.Misc.projectile_whistle01'
-    LifeSpan=7.500000
+    LifeSpan=7.5
     AmbientGlow=96
-    FluidSurfaceShootStrengthMod=10.000000
+    FluidSurfaceShootStrengthMod=10.0
     SoundVolume=255
-    SoundRadius=700.000000
-    TransientSoundVolume=1.000000
-    TransientSoundRadius=1000.000000
+    SoundRadius=700.0
+    TransientSoundVolume=1.0
+    TransientSoundRadius=1000.0
     bUseCollisionStaticMesh=true
     bFixedRotationDir=true
     RotationRate=(Roll=50000)
     DesiredRotation=(Roll=30000)
     ForceType=FT_Constant
-    ForceRadius=100.000000
-    ForceScale=5.000000
+    ForceRadius=100.0
+    ForceScale=5.0
 }

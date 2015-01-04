@@ -7,8 +7,13 @@ class DHWeapon extends ROWeapon
     abstract;
 
 var bool    bIsMantling;
-
 var float   PlayerIronsightFOV;
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bIsMantling;
+}
 
 function bool AssistedReload()
 {
@@ -28,12 +33,6 @@ function bool IsMGWeapon()
 simulated function bool IsMortarWeapon()
 {
     return false;
-}
-
-replication
-{
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bIsMantling;
 }
 
 simulated function bool WeaponAllowMantle()
@@ -130,6 +129,6 @@ simulated state StartMantle extends Busy
 
 defaultproperties
 {
-    PlayerIronsightFOV=60.000000
+    PlayerIronsightFOV=60.0
     ScopeDetail=RO_TextureScope
 }

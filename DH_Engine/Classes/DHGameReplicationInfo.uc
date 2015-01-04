@@ -80,7 +80,7 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
         return -1;
     }
 
-    for (i = 0 ; i < arraycount(DHAxisRoles); ++i)
+    for (i = 0 ; i < ArrayCount(DHAxisRoles); ++i)
     {
         switch (TeamNum)
         {

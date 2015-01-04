@@ -6,19 +6,15 @@
 class DH_ModifyRoundTimeMessage extends ROCriticalMessage
     notplaceable;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
-    local   string              TimeString;
+    local string TimeString;
 
-    // If for whatever reason there's no DH_RoundTimeModifier object passed in
-    // we'll just dump the generic message.
+    // If for whatever reason there's no DH_RoundTimeModifier object passed, we'll just dump the generic message
     if (OptionalObject == none || DH_ModifyRoundTime(OptionalObject) == none)
+    {
         return "Round time has been modified.";
+    }
 
     CreateTimeString(TimeString, DH_ModifyRoundTime(OptionalObject).Seconds);
 
@@ -35,25 +31,22 @@ static function string GetString(
     }
 }
 
-static simulated function ClientReceive(
-    PlayerController P,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject)
+static simulated function ClientReceive(PlayerController P, optional int Switch, 
+    optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     super.ClientReceive(P, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
 
     if (OptionalObject == none || DH_ModifyRoundTime(OptionalObject) == none || !DH_ModifyRoundTime(OptionalObject).bPlaySound)
+    {
         return;
+    }
 
     P.PlayAnnouncement(DH_ModifyRoundTime(OptionalObject).Sound, 1, true);
 }
 
 static function CreateTimeString(out string TimeString, int Seconds)
 {
-    local   int                 Hours;
-    local   int                 Minutes;
+    local int Hours, Minutes;
 
     if (Seconds >= 3600)
     {
@@ -61,7 +54,6 @@ static function CreateTimeString(out string TimeString, int Seconds)
         Seconds = Seconds % 3600;
     }
 
-    //Minutes
     if (Seconds >= 60)
     {
         Minutes = Seconds / 60;
@@ -73,7 +65,9 @@ static function CreateTimeString(out string TimeString, int Seconds)
         TimeString @= Hours @ "hour";
 
         if (Hours > 1)
+        {
             TimeString $= "s";
+        }
     }
 
     if (Minutes > 0)
@@ -81,7 +75,9 @@ static function CreateTimeString(out string TimeString, int Seconds)
         TimeString @= Minutes @ "minute";
 
         if (Minutes > 1)
+        {
             TimeString $= "s";
+        }
     }
 
     if (Seconds > 0)
@@ -89,7 +85,9 @@ static function CreateTimeString(out string TimeString, int Seconds)
         TimeString @= Seconds @ "second";
 
         if (Seconds > 1)
+        {
             TimeString $= "s";
+        }
     }
 
     Trim(TimeString);
@@ -98,13 +96,17 @@ static function CreateTimeString(out string TimeString, int Seconds)
 static final function LeftTrim(out string S)
 {
     while(Left(S, 1) == " ")
+    {
         S = Right(S, Len(S) - 1);
+    }
 }
 
 static final function RightTrim(out string S)
 {
     while(Right(S, 1) == " ")
+    {
         S = Left(S, Len(S) - 1);
+    }
 }
 
 static final function Trim(out string S)

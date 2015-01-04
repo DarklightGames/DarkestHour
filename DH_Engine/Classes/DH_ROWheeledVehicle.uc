@@ -643,13 +643,13 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 }
 
 // Handle the engine damage
-function DamageEngine(int Damage, Pawn instigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
     local int ActualDamage;
 
     if (EngineHealth > 0)
     {
-        ActualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
+        ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
         EngineHealth -= ActualDamage;
     }
 

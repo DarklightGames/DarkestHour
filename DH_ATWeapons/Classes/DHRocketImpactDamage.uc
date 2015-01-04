@@ -33,5 +33,5 @@ defaultproperties
     FemaleSuicide="%o was careless with her %w."
     MaleSuicide="%o was careless with his %w."
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
-    DeathOverlayTime=999.000000
+    DeathOverlayTime=999.0
 }

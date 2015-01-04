@@ -8,12 +8,7 @@ class DHLastObjectiveMsg extends ROCriticalMessage;
 var(Messages) localized string AboutToWin;
 var(Messages) localized string AboutToLose;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
@@ -24,16 +19,12 @@ static function string GetString(
         case 3: // allies about to win (player is therefore axis)
             return default.AboutToWin;
         default:
-            return "INVALID MESSAGE TYPE: " $ switch;
+            return "INVALID MESSAGE TYPE:" @ Switch;
     }
 
 }
 
-static function int getIconID(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject)
+static function int getIconID(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {

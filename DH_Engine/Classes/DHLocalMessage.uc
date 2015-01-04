@@ -13,12 +13,7 @@ var()   color       CanadianColour;
 var localized   string  MessagePrefix;
 var localized   string  SpecPrefix;
 
-static function string AssembleString(
-    HUD myHUD,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional string MessageString
-    )
+static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
     return MessageString;
 }
@@ -31,6 +26,6 @@ static function Color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 defaultproperties
 {
     bIsSpecial=false
-    Lifetime=8
-    PosY=0.700000
+    LifeTime=8
+    PosY=0.7
 }

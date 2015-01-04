@@ -131,14 +131,11 @@ simulated state LoweringWeapon
 
 simulated function Fire(float F)
 {
-    local DH_Pawn P;
-    local DHPlayer C;
+    local DH_Pawn     P;
+    local DHPlayer    C;
     local DH_RoleInfo RI;
 
-    if (Instigator == none ||
-        !Instigator.IsLocallyControlled() ||
-        Instigator.Controller == none ||
-        !bUsingSights)
+    if (Instigator == none || !Instigator.IsLocallyControlled() || Instigator.Controller == none || !bUsingSights)
     {
        return;
     }
@@ -187,7 +184,7 @@ simulated function AltFire(float F)
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DH_Pawn P;
+    local DH_Pawn  P;
     local DHPlayer C;
 
     super.BringUp(PrevWeapon);

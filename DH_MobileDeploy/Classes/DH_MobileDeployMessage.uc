@@ -11,12 +11,7 @@ var(Messages) localized string IsInCapture;
 var(Messages) localized string EnemyNear;
 var(Messages) localized string MustBeSquadLeader;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
@@ -44,6 +39,6 @@ defaultproperties
     MustBeSquadLeader="You must be a Squad Leader to drive this mobile deploy vehicle."
     bFadeMessage=true
     DrawColor=(B=36,G=28,R=214)
-    PosY=0.750000
+    PosY=0.75
     FontSize=2
 }

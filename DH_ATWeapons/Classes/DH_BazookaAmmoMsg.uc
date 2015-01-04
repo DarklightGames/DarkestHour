@@ -7,12 +7,7 @@ class DH_BazookaAmmoMsg extends LocalMessage;
 
 var(Messages) localized string RocketLoaded;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
@@ -28,8 +23,8 @@ defaultproperties
     RocketLoaded="Rocket Loaded"
     bIsUnique=true
     bIsConsoleMessage=false
-    Lifetime=2
-    PosX=0.280000
-    PosY=0.930000
+    LifeTime=2
+    PosX=0.28
+    PosY=0.93
     FontSize=-2
 }

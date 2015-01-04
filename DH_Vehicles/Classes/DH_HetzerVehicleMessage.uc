@@ -10,12 +10,7 @@ var(Messages) localized string UnbuttonToReloadMG;
 var(Messages) localized string CannotFireMGUnbuttoned;
 var(Messages) localized string MGBlockingHatch;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
