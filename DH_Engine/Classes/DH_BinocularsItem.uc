@@ -18,13 +18,17 @@ simulated function PlayerViewZoom(bool ZoomDirection)
     if (ZoomDirection)
     {
         bPlayerViewIsZoomed = true;
-        PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
+
+        if (Instigator != none && PlayerController(Instigator.Controller) != none)
+        {
+            PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
+        }
     }
     else
     {
         bPlayerViewIsZoomed = false;
 
-        if (Instigator.Controller != none)
+        if (Instigator != none && PlayerController(Instigator.Controller) != none)
         {
             PlayerController(Instigator.Controller).ResetFOV();
         }
@@ -56,7 +60,7 @@ simulated state StartMantle extends Busy
             {
                 for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
                 {
-                    if (FireMode[Mode].bIsFiring)
+                    if (FireMode[Mode] != none && FireMode[Mode].bIsFiring)
                     {
                         ClientStopFire(Mode);
                     }
@@ -79,8 +83,11 @@ simulated state StartMantle extends Busy
 
         for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
         {
-            FireMode[Mode].bServerDelayStartFire = false;
-            FireMode[Mode].bServerDelayStopFire = false;
+            if (FireMode[Mode] != none)
+            {
+                FireMode[Mode].bServerDelayStartFire = false;
+                FireMode[Mode].bServerDelayStopFire = false;
+            }
         }
     }
 
@@ -201,6 +208,90 @@ simulated function BringUp(optional Weapon PrevWeapon)
     {
         C.QueueHint(11, true);
     }
+}
+
+// Matt: added here to fix "accessed none" error, now that binocs can be dropped
+// Binocs don't have any FireModes, so better to remove that block of code instead of adding FireMode != none
+function DropFrom(vector StartLocation)
+{
+    local ROMultiMagAmmoPickup AmmoPickup;
+    local Pickup  Pickup, TempPickup;
+    local int     DropMagCount, i;
+    local rotator R;
+
+    if (!bCanThrow )
+    {
+        return;
+    }
+
+    if (Instigator != none && bUsingSights)
+    {
+        bUsingSights = false;
+        ROPawn(Instigator).SetIronSightAnims(false);
+    }
+
+    ClientWeaponThrown();
+
+    if (Instigator != none)
+    {
+        DetachFromPawn(Instigator);
+    }
+
+    Pickup = Spawn(PickupClass,,, StartLocation);
+
+    if (Pickup != none)
+    {
+        Pickup.InitDroppedPickupFor(self);
+        Pickup.Velocity = Velocity;
+
+        if (Instigator.Health > 0)
+        {
+            WeaponPickup(Pickup).bThrown = true;
+        }
+    }
+
+    // Handle multi mag ammo type pickups
+    if (class<ROMultiMagAmmoPickup>(AmmoPickupClass(0)) != none && CurrentMagCount > 0)
+    {
+        R.Yaw = Rand(65536);
+        TempPickup = spawn(AmmoPickupClass(0),,, StartLocation, R);
+        AmmoPickup = ROMultiMagAmmoPickup(TempPickup);
+
+        if (AmmoPickup == none)
+        {
+            return;
+        }
+
+        AmmoPickup.InitDroppedPickupFor(self);
+
+        AmmoPickup.Velocity.X = Float(Rand(200));
+        AmmoPickup.Velocity.Y = Float(Rand(200));
+        AmmoPickup.Velocity.Z = Float(Rand(100));
+
+        AmmoPickup.AmmoMags.Length = CurrentMagCount;
+
+        for (i = 0; i < PrimaryAmmoArray.Length; i++ )
+        {
+            if (i != CurrentMagIndex)
+            {
+                AmmoPickup.AmmoMags[DropMagCount] = PrimaryAmmoArray[i];
+                DropMagCount++;
+            }
+        }
+    }
+    // Handle standard/old style ammo pickups
+    else
+    {
+        for (i = 0; i < PrimaryAmmoArray.Length; i++)
+        {
+            if (i != CurrentMagIndex)
+            {
+                DropAmmo(StartLocation, PrimaryAmmoArray[i]);
+            }
+        }
+    }
+
+    Destroy();
 }
 
 simulated function bool CanThrow()
