@@ -106,7 +106,7 @@ function ShowSubMenu(int menu_id)
     }
 }
 
-function bool MyKeyEvent(out byte Key,out byte State,float delta)
+function bool MyKeyEvent(out byte Key, out byte State, float delta)
 {
     if (Key == 0x1B && State == 1)
     {
@@ -114,13 +114,17 @@ function bool MyKeyEvent(out byte Key,out byte State,float delta)
         return true;
     }
     else
+    {
         return false;
+    }
 }
 
 function bool CanClose(optional bool bCanceled)
 {
     if (AllowClose)
+    {
         Controller.OpenMenu(Controller.GetQuitPage());
+    }
 
     return false;
 }
@@ -227,17 +231,19 @@ function bool ButtonClick(GUIComponent Sender)
             ShowSubMenu(0);
             break;
     }
+
     return true;
 }
 
 event Opened(GUIComponent Sender)
 {
     l_Version.Caption $= VersionString;
+
     sb_ShowVersion.SetVisibility(true);
 
     if (bDebugging)
     {
-        Log(Name$".Opened()   Sender:"$Sender,'Debug');
+        Log(Name $ ".Opened()   Sender:" $ Sender,'Debug');
     }
 
     if (Sender != none && PlayerOwner().Level.IsPendingConnection())
@@ -246,6 +252,7 @@ event Opened(GUIComponent Sender)
     }
 
     ShowSubMenu(0);
+
     super.Opened(Sender);
 }
 
@@ -253,13 +260,13 @@ event bool NotifyLevelChange()
 {
     if (bDebugging)
     {
-        Log(Name@"NotifyLevelChange  PendingConnection:"$PlayerOwner().Level.IsPendingConnection());
+        Log(Name @ "NotifyLevelChange  PendingConnection:" $ PlayerOwner().Level.IsPendingConnection());
     }
 
     return PlayerOwner().Level.IsPendingConnection();
 }
 
-//Quick Play Button Functions
+// Quick play button functions
 event Timer()
 {
     local string text;
@@ -274,30 +281,33 @@ event Timer()
         {
             if (sendGet)
             {
-                 command = getRequest$myLink.CRLF$"Host: "$newsIPAddr$myLink.CRLF$myLink.CRLF;
-                 myLink.SendCommand(command);
-                 pageWait = true;
-                 myLink.WaitForCount(1,20,1); // 20 sec timeout
-                 sendGet = false;
+                command = getRequest $ myLink.CRLF $ "Host: " $ newsIPAddr $ myLink.CRLF $ myLink.CRLF;
+                myLink.SendCommand(command);
+                pageWait = true;
+                myLink.WaitForCount(1, 20, 1); // 20 sec timeout
+                sendGet = false;
             }
             else if (bAttemptQuickPlay)
             {
-                 waitString = waitString$".";
-                 b_QuickPlay.Caption = waitString;
+                waitString = waitString$".";
+                b_QuickPlay.Caption = waitString;
             }
         }
+
         if (myLink.PeekChar() != 0)
         {
             pageWait = false;
             // data waiting
             page = "";
+
             while(myLink.ReadBufferedLine(text))
             {
-                page = page$text;
+                page = page $ text;
             }
+
             HTTPParse(page);
             waitString = page;
-            quickplayip = waitString; //Sets the quickplay ip for the quick play button
+            quickplayip = waitString; // sets the quickplay ip for the quick play button
             myLink.DestroyLink();
             myLink = none;
             KillTimer();
@@ -314,16 +324,19 @@ event Timer()
             }
         }
     }
+
     SetTimer(ReReadyPause, true);
 }
 
 protected function ROBufferedTCPLink CreateNewLink()
 {
     local class<ROBufferedTCPLink> NewLinkClass;
-    local ROBufferedTCPLink NewLink;
+    local ROBufferedTCPLink        NewLink;
 
     if (PlayerOwner() == none)
+    {
         return none;
+    }
 
     if (LinkClassName != "")
     {
@@ -358,16 +371,16 @@ function GetQuickPlayIP()
     }
     else
     {
-        waitString = waitString@"No Server Info Found";
+        waitString = waitString @ "No Server Info Found";
     }
 }
 
-//Used for parsing the string out of <BODY> </BODY>
-//Needed becasue the get request returns stuff other than the text in the file
+// Used for parsing the string out of <BODY> </BODY>
+// Needed becasue the get request returns stuff other than the text in the file
 function HTTPParse(out string page)
 {
     local string junk;
-    local int i;
+    local int    i;
 
     junk = page;
     Caps(junk);
@@ -375,8 +388,8 @@ function HTTPParse(out string page)
 
     if (i > -1)
     {
-         // remove all header from string
-         page = Right(page, len(page) - i - 6);
+        // remove all header from string
+        page = Right(page, len(page) - i - 6);
     }
 
     junk = page;
@@ -385,8 +398,8 @@ function HTTPParse(out string page)
 
     if (i > -1)
     {
-         // remove all footers from string
-         page = Left(page,i);
+        // remove all footers from string
+        page = Left(page,i);
     }
 
     page = Repl(page, "<br>", "|", false);
@@ -394,27 +407,29 @@ function HTTPParse(out string page)
 
 defaultproperties
 {
-    //IP Variables
-    waitString = "Join Test Server"
-    newsIPAddr = "darkesthourgame.com"
-    getRequest = "GET /quickplayip.php HTTP/1.1"
-    ReReadyPause=0.250000
+    // IP variables
+    waitString="Join Test Server"
+    newsIPAddr="darkesthourgame.com"
+    getRequest="GET /quickplayip.php HTTP/1.1"
+    ReReadyPause=0.25
     myRetryCount=0
     myRetryMax=40
     LinkClassName="ROInterface.ROBufferedTCPLink"
-    sendGet = true;
-    //Menu Variables
+    sendGet=true;
+
+    // Menu variables
     Begin Object Class=FloatingImage Name=FloatingBackground
         Image=texture'DH_GUI_Tex.Menu.MainBackGround'
         DropShadow=none
         ImageStyle=ISTY_Scaled
-        WinTop=0.000000
-        WinLeft=0.000000
-        WinWidth=1.000000
-        WinHeight=1.000000
+        WinTop=0.0
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=1.0
         RenderWeight=0.000003
     End Object
     i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
+
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
         WinTop=0.624000
         WinLeft=0.042188
@@ -423,6 +438,7 @@ defaultproperties
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
+
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
         Caption="Join Test Server"
@@ -436,6 +452,7 @@ defaultproperties
         OnKeyEvent=QuickPlayButton.InternalOnKeyEvent
     End Object
     b_QuickPlay=GUIButton'DH_Interface.DHMainMenu.QuickPlayButton'
+
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
         Caption="Multiplayer"
@@ -449,6 +466,7 @@ defaultproperties
         OnKeyEvent=ServerButton.InternalOnKeyEvent
     End Object
     b_MultiPlayer=GUIButton'DH_Interface.DHMainMenu.ServerButton'
+
     Begin Object Class=GUIButton Name=InstantActionButton
         CaptionAlign=TXTA_Left
         Caption="Practice"
@@ -462,6 +480,7 @@ defaultproperties
         OnKeyEvent=InstantActionButton.InternalOnKeyEvent
     End Object
     b_Practice=GUIButton'DH_Interface.DHMainMenu.InstantActionButton'
+
     Begin Object Class=GUIButton Name=SettingsButton
         CaptionAlign=TXTA_Left
         Caption="Configuration"
@@ -475,6 +494,7 @@ defaultproperties
         OnKeyEvent=SettingsButton.InternalOnKeyEvent
     End Object
     b_Settings=GUIButton'DH_Interface.DHMainMenu.SettingsButton'
+
     Begin Object Class=GUIButton Name=HelpButton
         CaptionAlign=TXTA_Left
         Caption="Help & Game Management"
@@ -488,6 +508,7 @@ defaultproperties
         OnKeyEvent=HelpButton.InternalOnKeyEvent
     End Object
     b_Help=GUIButton'DH_Interface.DHMainMenu.HelpButton'
+
     Begin Object Class=GUIButton Name=HostButton
         CaptionAlign=TXTA_Left
         Caption="Host Game"
@@ -501,6 +522,7 @@ defaultproperties
         OnKeyEvent=HostButton.InternalOnKeyEvent
     End Object
     b_Host=GUIButton'DH_Interface.DHMainMenu.HostButton'
+
     Begin Object Class=GUIButton Name=QuitButton
         CaptionAlign=TXTA_Left
         Caption="Exit"
@@ -514,6 +536,7 @@ defaultproperties
         OnKeyEvent=QuitButton.InternalOnKeyEvent
     End Object
     b_Quit=GUIButton'DH_Interface.DHMainMenu.QuitButton'
+
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection2
         WinTop=0.624000
         WinLeft=0.042188
@@ -522,6 +545,7 @@ defaultproperties
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
     sb_HelpMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection2'
+
     Begin Object Class=GUIButton Name=CreditsButton
         CaptionAlign=TXTA_Left
         Caption="Credits"
@@ -535,6 +559,7 @@ defaultproperties
         OnKeyEvent=CreditsButton.InternalOnKeyEvent
     End Object
     b_Credits=GUIButton'DH_Interface.DHMainMenu.CreditsButton'
+
     Begin Object Class=GUIButton Name=ManualButton
         CaptionAlign=TXTA_Left
         Caption="Manual"
@@ -548,6 +573,7 @@ defaultproperties
         OnKeyEvent=ManualButton.InternalOnKeyEvent
     End Object
     b_Manual=GUIButton'DH_Interface.DHMainMenu.ManualButton'
+
     Begin Object Class=GUIButton Name=DemosButton
         CaptionAlign=TXTA_Left
         Caption="Demo Management"
@@ -561,6 +587,7 @@ defaultproperties
         OnKeyEvent=DemosButton.InternalOnKeyEvent
     End Object
     b_Demos=GUIButton'DH_Interface.DHMainMenu.DemosButton'
+
     Begin Object Class=GUIButton Name=WebsiteButton
         CaptionAlign=TXTA_Left
         Caption="Visit Website"
@@ -574,6 +601,7 @@ defaultproperties
         OnKeyEvent=WebsiteButton.InternalOnKeyEvent
     End Object
     b_Website=GUIButton'DH_Interface.DHMainMenu.WebsiteButton'
+
     Begin Object Class=GUIButton Name=BackButton
         CaptionAlign=TXTA_Left
         Caption="Back"
@@ -587,6 +615,7 @@ defaultproperties
         OnKeyEvent=BackButton.InternalOnKeyEvent
     End Object
     b_Back=GUIButton'DH_Interface.DHMainMenu.BackButton'
+
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinTop=0.97
         WinLeft=0.01000
@@ -595,6 +624,7 @@ defaultproperties
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
+
     Begin Object Class=GUILabel Name=VersionNum
         StyleName="DHSmallText"
         Caption="Version: "
@@ -615,6 +645,6 @@ defaultproperties
     BackgroundColor=(B=0,G=0,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
     OnOpen=DHMainMenu.InternalOnOpen
-    WinTop=0.000000
+    WinTop=0.0
     WinHeight=1.000000
 }
