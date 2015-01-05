@@ -38,50 +38,15 @@ simulated function PostBeginPlay()
     Acceleration = 0.5 * PhysicsVolume.Gravity;
 }
 
-// Modified to alter ImpactSound speed threshold & volume
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local vector        VNorm;
-    local ESurfaceTypes ST;
-
-    // Return here, this was causing the famous "Nade bug"
+    // Return here, this was causing the famous "nade bug"
     if (ROCollisionAttachment(Wall) != none)
     {
         return;
     }
 
-    // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll break it instead of bouncing off it
-    if (RODestroyableStaticMesh(Wall) != none && RODestroyableStaticMesh(Wall).bWontStopBullets)
-    {
-        if (Role == ROLE_Authority)
-        {
-            Wall.TakeDamage(1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DamageType');
-        }
-
-        return;
-    }
-
-    GetHitSurfaceType(ST, HitNormal);
-    GetDampenAndSoundValue(ST);
-
-    Bounces--;
-
-    if (Bounces <= 0)
-    {
-        bBounce = false;
-    }
-    else
-    {
-        // Reflect off Wall with damping
-        VNorm = (Velocity dot HitNormal) * HitNormal;
-        Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
-        Speed = VSize(Velocity);
-    }
-
-    if (Level.NetMode != NM_DedicatedServer && Speed > 150 && ImpactSound != none)
-    {
-        PlaySound(ImpactSound, SLOT_Misc, 1.1); // increase volume of impact
-    }
+    super.HitWall(HitNormal, Wall);
 }
 
 // Modified from ROGrenadeProjectile to allow players to dive on grenades to save teammates

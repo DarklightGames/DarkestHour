@@ -207,20 +207,43 @@ simulated function Landed(vector HitNormal)
     }
 }
 
+// Matt: added handling if projectile hits a weak destroyable mesh (e.g. glass), so that it breaks the mesh & continues its flight, instead of bouncing off
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
+    local RODestroyableStaticMesh DestroMesh;
     local vector        VNorm;
     local ESurfaceTypes ST;
+    local int           i;
 
-    // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll break it instead of bouncing off it
-    if (RODestroyableStaticMesh(Wall) != none && RODestroyableStaticMesh(Wall).bWontStopBullets)
+    DestroMesh = RODestroyableStaticMesh(Wall);
+
+    // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll probably break it instead of bouncing off it
+    if (DestroMesh != none && DestroMesh.bWontStopBullets)
     {
+        // On a server (single player), we'll simply cause enough damage to break the mesh
         if (Role == ROLE_Authority)
         {
-            Wall.TakeDamage(1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DamageType');
+            DestroMesh.TakeDamage(DestroMesh.Health + 1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DHWeaponBashDamageType');
+            
+            // But it will only take damage if it's vulnerable to a weapon bash - so check if it's been reduced to zero Health & if so then we'll exit without deflecting
+            if (DestroMesh.Health < 0)
+            {
+                return;
+            }
         }
-
-        return;
+        // Problem is that a client needs to know right now whether or not the mesh will break, so it can decide whether or not to bounce off
+        // So as a workaround we'll loop through the meshes TypesCanDamage array & check if the server's weapon bash DamageType will have broken the mesh
+        else
+        {
+            for (i = 0; i < DestroMesh.TypesCanDamage.Length; i++)
+            {
+                // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
+                if (DestroMesh.TypesCanDamage[i] == class'DHWeaponBashDamageType' || ClassIsChildOf(class'DHWeaponBashDamageType', DestroMesh.TypesCanDamage[i]))
+                {
+                    return;
+                }
+            }
+        }
     }
 
     GetHitSurfaceType(ST, HitNormal);
@@ -240,9 +263,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         Speed = VSize(Velocity);
     }
 
-    if (Level.NetMode != NM_DedicatedServer && Speed > 250 && ImpactSound != none)
+    if (Level.NetMode != NM_DedicatedServer && Speed > 150 && ImpactSound != none)
     {
-        PlaySound(ImpactSound, SLOT_Misc);
+        PlaySound(ImpactSound, SLOT_Misc, 1.1);
     }
 }
 
@@ -317,7 +340,7 @@ simulated function Destroyed()
 
     WeaponLight();
 
-    PlaySound(ExplosionSound[Rand(3)], , 5.0, false, ExplosionSoundRadius, 1.0, true);
+    PlaySound(ExplosionSound[Rand(3)], , 5.0, , ExplosionSoundRadius, 1.0, true);
 
     Start = Location + 32.0 * vect(0.0, 0.0, 1.0);
 
