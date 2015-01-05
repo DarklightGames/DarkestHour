@@ -1145,13 +1145,17 @@ simulated function PlayerViewZoom(bool ZoomDirection)
     if (ZoomDirection)
     {
         bPlayerViewIsZoomed = true;
-        PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
+
+        if (Instigator != none && PlayerController(Instigator.Controller) != none)
+        {
+            PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
+        }
     }
     else
     {
         bPlayerViewIsZoomed = false;
 
-        if (Instigator.Controller != none)
+        if (Instigator != none && PlayerController(Instigator.Controller) != none)
         {
             PlayerController(Instigator.Controller).ResetFOV();
         }
