@@ -19,7 +19,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 0:
             return default.NotQualified;
         case 1:
-            eturn default.VehicleIsEnemy;
+            return default.VehicleIsEnemy;
         case 2:
             return default.CannotEnter;
         case 3:
