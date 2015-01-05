@@ -1026,7 +1026,15 @@ state PlayerWalking
             // Take the bipod weapon out of deployed if the player tries to move
             if (Pawn.bBipodDeployed && NewAccel != vect(0.0, 0.0, 0.0) && Pawn.Weapon != none)
             {
-                ROBipodWeapon(Pawn.Weapon).ForceUndeploy();
+//              ROBipodWeapon(Pawn.Weapon).ForceUndeploy(); // Matt: replaced by if/else below so it actually works with DH weapons
+                if (DH_BipodWeapon(Pawn.Weapon) != none)
+                {
+                    DH_BipodWeapon(Pawn.Weapon).ForceUndeploy();
+                }
+                else if (DH_BipodAutoWeapon(Pawn.Weapon) != none)
+                {
+                    DH_BipodAutoWeapon(Pawn.Weapon).ForceUndeploy();
+                }
             }
 
             // Tell pawn about any direction changes to give it a chance to play appropriate animation
