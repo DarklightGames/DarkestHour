@@ -1043,10 +1043,10 @@ state PlayerWalking
 
         Pawn.CheckBob(DeltaTime, Y);
 
-        // Update rotation.
+        // Update rotation
         SetRotation(ViewRotation);
         OldRotation = Rotation;
-        UpdateRotation(DeltaTime, 1);
+        UpdateRotation(DeltaTime, 1.0);
         bDoubleJump = false;
 
         if (bPressedJump && Pawn.CannotJumpNow())
@@ -1071,35 +1071,40 @@ state PlayerWalking
         bPressedJump = bSaveJump;
     }
 
-     function EndState()
-     {
+    function EndState()
+    {
         GroundPitch = 0;
+
         if (Pawn != none)
         {
-            if (bDuck==0)
+            if (bDuck == 0)
+            {
                 Pawn.ShouldCrouch(false);
+            }
 
             // Not sure if we need this or not - Ramm
-            if (bCrawl==0)
+            if (bCrawl == 0)
+            {
                 Pawn.ShouldProne(false);
+            }
         }
 
         if (Role < ROLE_Authority)
+        {
             bWaitingToMantle = false;
-     }
+        }
+    }
 }
 
 state Mantling
 {
-    //For reasons unknown, native prediction on the server insists on altering the client's velocity once
-    //its animation finishes. This forcibly resets that velocity just long enough for the
-    //server to catch up and end the state
+    // For reasons unknown, native prediction on the server insists on altering the client's velocity once its animation finishes
+    // This forcibly resets that velocity just long enough for the server to catch up and end the state
     event PlayerTick(float DeltaTime)
     {
-        if (bDidMantle && Role < ROLE_Authority)
+        if (bDidMantle && Role < ROLE_Authority && Pawn.Velocity != vect(0.0, 0.0, 0.0))
         {
-            if (Pawn.Velocity != vect(0.0, 0.0, 0.0))
-                Pawn.Velocity = vect(0.0, 0.0, 0.0);
+            Pawn.Velocity = vect(0.0, 0.0, 0.0);
         }
 
         super.PlayerTick(DeltaTime);
@@ -1117,7 +1122,6 @@ state Mantling
             if (!bDidCrouchCheck && DHP.bCrouchMantle)
             {
                 DHP.DoMantleCrouch();
-
                 bDidCrouchCheck = true;
                 SetTimer(0.15, false);
             }
@@ -1125,13 +1129,14 @@ state Mantling
             {
                 // Extremely important to not let the client exit the state before the server - BIG sync problems othewise
                 if (Role == ROLE_Authority)
+                {
                     GotoState('PlayerWalking');
+                }
             }
         }
         else
         {
-            // Wait for player to finish falling
-            // If they don't do so within a set period, assume something's gone wrong and abort
+            // Wait for player to finish falling - if they don't do so within a set period, assume something's gone wrong and abort
             if (MantleLoopCount < 6)
             {
                 SetTimer(0.1, false);
@@ -1143,9 +1148,12 @@ state Mantling
                 DHP.CancelMantle();
 
                 if (Role == ROLE_Authority)
+                {
                     GotoState('PlayerWalking');
+                }
 
                 bLockJump = true;
+
                 return;
             }
         }
@@ -1163,14 +1171,19 @@ state Mantling
             DHP.CancelMantle();
 
             if (Role == ROLE_Authority)
+            {
                 GotoState('PlayerWalking');
+            }
 
             bLockJump = true;
+
             return;
         }
 
         if (Pawn.Acceleration != NewAccel)
+        {
             Pawn.Acceleration = NewAccel;
+        }
 
         DHP.SetViewPitch(Rotation.Pitch);
 
@@ -1182,31 +1195,42 @@ state Mantling
 
     function PlayerMove(float DeltaTime)
     {
-        local vector NewAccel;
+        local vector          NewAccel;
         local eDoubleClickDir DoubleClickMove;
-        local rotator OldRotation, ViewRotation;
-        local DH_Pawn DHP;
+        local rotator         OldRotation, ViewRotation;
+        local DH_Pawn         DHP;
 
         DHP = DH_Pawn(Pawn);
 
         ViewRotation = Rotation;
 
         if (!bDidMantle && DHP.bIsMantling)
+        {
             NewAccel = DHP.NewAcceleration;
+        }
         else
+        {
             NewAccel = vect(0.0, 0.0, 0.0);
+        }
 
-        // Update rotation.
+        // Update rotation
         SetRotation(ViewRotation);
         OldRotation = Rotation;
-        UpdateRotation(DeltaTime, 1);
+        UpdateRotation(DeltaTime, 1.0);
+
         if (bSprint > 0)
+        {
             bSprint = 0;
+        }
 
         if (Role < ROLE_Authority) // then save this move and replicate it
+        {
             ReplicateMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
+        }
         else
+        {
             ProcessMove(DeltaTime, NewAccel, DoubleClickMove, OldRotation - Rotation);
+        }
 
         bPressedJump = false;
     }
@@ -1227,17 +1251,21 @@ state Mantling
             }
         }
 
-        // If the client has failed the mantle check conditions but the server has not,
-        // this should force it to bypass the start conditions and resync with the server
+        // If the client has failed the mantle check conditions but server has not, this should force it to bypass the start conditions & resync with the server
         if (Role < ROLE_Authority && !DH_Pawn(Pawn).bIsMantling)
+        {
             DH_Pawn(Pawn).CanMantle(true, true);
+        }
 
         bSprint = 0;
         DH_Pawn(Pawn).PreMantle();
+
         if (bLockJump)
+        {
             bLockJump = false;
+        }
+
         MantleLoopCount = 0;
-        //LastMantleUpdate = Level.TimeSeconds;
     }
 
     function EndState()
@@ -1261,7 +1289,9 @@ state Mantling
         bLockJump = false;
 
         if (DH_Pawn(Pawn).bIsMantling)
+        {
             DH_Pawn(Pawn).CancelMantle();
+        }
 
         if (bMantleDebug && Pawn.IsLocallyControlled())
         {
@@ -1271,38 +1301,42 @@ state Mantling
     }
 }
 
-// Removes the awkward "jump" out of water
-// This has not been tested to much capacity
-// 8/26/2014
+// Removes the awkward "jump" out of water - this has not been tested to much capacity (8/26/2014)
 state PlayerSwimming
 {
 ignores SeePlayer, HearNoise, Bump;
 
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
-        local Actor HitActor;
-        local vector HitLocation, HitNormal, checkpoint;
+        local Actor  HitActor;
+        local vector HitLocation, HitNormal, CheckPoint;
 
         if (!NewVolume.bWaterVolume)
         {
             Pawn.SetPhysics(PHYS_Falling);
-            if (Pawn.Velocity.Z > 0)
+
+            if (Pawn.Velocity.Z > 0.0)
             {
-                if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) //check for waterjump
+                if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) // check for water jump
                 {
-                    //Below is the only line this function changes/comments out
-                    //Pawn.velocity.Z = FMax(Pawn.JumpZ, 420) + 2 * Pawn.CollisionRadius; //set here so physics uses this for remainder of tick
+                    // Below is the only line this function changes/comments out
+                    // Pawn.velocity.Z = FMax(Pawn.JumpZ, 420.0) + 2.0 * Pawn.CollisionRadius; // set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
-                else if (Pawn.Velocity.Z > 160 || !Pawn.TouchingWaterVolume())
-                    GotoState(Pawn.LandMovementState);
-                else //check if in deep water
+                else if (Pawn.Velocity.Z > 160.0 || !Pawn.TouchingWaterVolume())
                 {
-                    checkpoint = Pawn.Location;
-                    checkpoint.Z -= (Pawn.CollisionHeight + 6.0);
-                    HitActor = Trace(HitLocation, HitNormal, checkpoint, Pawn.Location, false);
+                    GotoState(Pawn.LandMovementState);
+                }
+                else // check if in deep water
+                {
+                    CheckPoint = Pawn.Location;
+                    CheckPoint.Z -= (Pawn.CollisionHeight + 6.0);
+                    HitActor = Trace(HitLocation, HitNormal, CheckPoint, Pawn.Location, false);
+
                     if (HitActor != none)
+                    {
                         GotoState(Pawn.LandMovementState);
+                    }
                     else
                     {
                         Enable('Timer');
@@ -1316,6 +1350,7 @@ ignores SeePlayer, HearNoise, Bump;
             Disable('Timer');
             Pawn.SetPhysics(PHYS_Swimming);
         }
+
         return false;
     }
 }
@@ -1330,44 +1365,47 @@ simulated function ResetSwayAfterBolt()
     SwayTime = 0.0;
 }
 
-// called server-side by SendVoiceMessage()
-function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int objID, int requestType, optional vector requestLocation)
+// Called server-side by SendVoiceMessage()
+function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int RequestType, optional vector RequestLocation)
 {
-    local DHGameReplicationInfo GRI;
+    local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo DH_PRI;
-    local DH_RoleInfo RI;
+    local DH_RoleInfo             RI;
 
     DH_PRI = DHPlayerReplicationInfo(PRI);
     RI = DH_RoleInfo(DH_PRI.RoleInfo);
 
-    if (DH_PRI == none || DH_PRI.RoleInfo == none)
+    if (DH_PRI == none || RI == none)
+    {
         return;
+    }
 
     // Check if caller is a leader
     if (!RI.bIsSquadLeader)
     {
         // If not, check if we're a MG requesting ammo
         // Basnett, added mortar operators requesting resupply.
-        if (requestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars)) // && !DH_PRI.DHRoleInfo.bIsATGunner)
+        if (RequestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars)) // && !DH_PRI.DHRoleInfo.bIsATGunner)
+        {
             return;
+        }
     }
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
+
     if (GRI != none)
     {
-        GRI.AddHelpRequest(PRI, objID, requestType, requestLocation);
+        GRI.AddHelpRequest(PRI, ObjID, RequestType, RequestLocation);
 
         // Notify team members to check their map
         if (DH_PRI.Team != none)
+        {
             DarkestHourGame(Level.Game).NotifyPlayersOfMapInfoChange(DH_PRI.Team.TeamIndex, self);
+        }
     }
 }
 
-//-----------------------------------------------------------------------------
-// GetGrenadeWeapon
-// for signal smoke grenade handling
-//-----------------------------------------------------------------------------
-
+// For signal smoke grenade handling
 function string GetSecGrenadeWeapon()
 {
     local RORoleInfo RI;
@@ -1375,14 +1413,12 @@ function string GetSecGrenadeWeapon()
     RI = GetRoleInfo();
 
     if (RI == none || GrenadeWeapon + 1 < 1)
+    {
         return "";
+    }
 
     return string(RI.Grenades[GrenadeWeapon + 1].Item);
 }
-
-//-----------------------------------------------------------------------------
-// GetGrenadeAmmo
-//-----------------------------------------------------------------------------
 
 function int GetSecGrenadeAmmo()
 {
@@ -1391,36 +1427,40 @@ function int GetSecGrenadeAmmo()
     RI = GetRoleInfo();
 
     if (RI == none || GrenadeWeapon < 0 || RI.Grenades[GrenadeWeapon + 1].Item != none)
+    {
         return -1;
+    }
 
     return RI.Grenades[GrenadeWeapon + 1].Amount;
 }
 
-//Smooth field of view transition.
+// Smooth field of view transition.
 function AdjustView(float DeltaTime)
 {
     if (FOVAngle != DesiredFOV)
     {
-        FOVAngle -= (10.0 * DeltaTime * (FOVAngle - DesiredFOV));   //TODO: Arbitrary number.
+        FOVAngle -= (10.0 * DeltaTime * (FOVAngle - DesiredFOV)); //TODO: arbitrary number
 
         if (Abs(FOVAngle - DesiredFOV) <= 0.0625)
+        {
             FOVAngle = DesiredFOV;
+        }
     }
 
     if (bZooming)
     {
         ZoomLevel = FMin(ZoomLevel + DeltaTime, DesiredZoomLevel);
-        DesiredFOV = FClamp(90.0 - (ZoomLevel * 88.0), 1, 170);
+        DesiredFOV = FClamp(90.0 - (ZoomLevel * 88.0), 1.0, 170.0);
     }
 }
 
-//Server call to client to force prone.
+//Server call to client to force prone
 function ClientProne()
 {
     Prone();
 }
 
-//Server call to client to toggle duck.
+// Server call to client to toggle duck
 function ClientToggleDuck()
 {
     ToggleDuck();
@@ -1434,7 +1474,9 @@ function ClientConsoleCommand(string Command, bool bWriteToLog)
 simulated function NotifyHintRenderingDone()
 {
     if (DHHintManager != none)
+    {
         DHHintManager.NotifyHintRenderingDone();
+    }
 }
 
 simulated function UpdateHintManagement(bool bUseHints)
@@ -1444,8 +1486,11 @@ simulated function UpdateHintManagement(bool bUseHints)
         if (bUseHints && DHHintManager == none)
         {
             DHHintManager = spawn(class'DHHintManager', self);
+
             if (DHHintManager == none)
+            {
                 Warn("Unable to spawn hint manager");
+            }
         }
         else if (!bUseHints && DHHintManager != none)
         {
@@ -1453,16 +1498,19 @@ simulated function UpdateHintManagement(bool bUseHints)
             DHHintManager = none;
         }
 
-        if (!bUseHints)
-            if (DHHud(myHUD) != none)
-                DHHud(myHUD).bDrawHint = false;
+        if (!bUseHints && DHHud(myHUD) != none)
+        {
+            DHHud(myHUD).bDrawHint = false;
+        }
     }
 }
 
 simulated function QueueHint(byte HintIndex, bool bForceNext)
 {
     if (DHHintManager != none)
+    {
         DHHintManager.QueueHint(HintIndex, bForceNext);
+    }
 }
 
 // Modified to avoid "accessed none" errors
@@ -1498,11 +1546,10 @@ function BecomeSpectator()
 
 function HitThis(ROArtilleryTrigger RAT)
 {
-    local DarkestHourGame DHG;
+    local DarkestHourGame       DHG;
     local ROGameReplicationInfo GRI;
-    local int TimeTilNextStrike;
-    local int PawnTeam;
-    local DHArtilleryTrigger DHAT;
+    local DHArtilleryTrigger    DHAT;
+    local int TimeTilNextStrike, PawnTeam;
 
     if (RAT == none)
     {
@@ -1744,23 +1791,19 @@ function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
     if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= G.SpawnManager.GetSpawnPointCount()))
     {
         Error("Invalid spawn point index");
-
-        //Reset spawn point index to null
-        self.SpawnPointIndex = -1;
+        self.SpawnPointIndex = -1; // reset spawn point index to null
     }
 
     if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= G.SpawnManager.GetVehiclePoolCount()))
     {
         Error("Invalid vehicle pool index");
-
-        //Reset vehicle pool index to null
-        self.VehiclePoolIndex = -1;
+        self.VehiclePoolIndex = -1; // reset vehicle pool index to null
     }
 
     self.SpawnPointIndex = SpawnPointIndex;
     self.VehiclePoolIndex = VehiclePoolIndex;
 
-    bReadyToSpawn = true;   //TODO: do a more thorough check here
+    bReadyToSpawn = true; //TODO: do a more thorough check here
 }
 
 function ServerClearObstacle(int Index)
@@ -1814,17 +1857,17 @@ exec function CommunicationMenu()
 
 defaultproperties
 {
-    FlinchRotMag=(X=100.000000,Z=100.000000)
-    FlinchRotRate=(X=1000.000000,Z=1000.000000)
-    FlinchRotTime=1.000000
-    FlinchOffsetMag=(X=100.000000,Z=100.000000)
-    FlinchOffsetRate=(X=1000.000000,Z=1000.000000)
-    FlinchOffsetTime=1.000000
+    FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
+    FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)
+    FlinchRotTime=1.0
+    FlinchOffsetMag=(X=100.0,Y=0.0,Z=100.0)
+    FlinchOffsetRate=(X=1000.0,Y=0.0,Z=1000.0)
+    FlinchOffsetTime=1.0
     MortarTargetIndex=255
     ROMidGameMenuClass="DH_Interface.DHRoleSelection"
     GlobalDetailLevel=5
-    DesiredFOV=90.000000
-    DefaultFOV=90.000000
+    DesiredFOV=90.0
+    DefaultFOV=90.0
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     PawnClass=class'DH_Engine.DH_Pawn'
     SpawnPointIndex=-1
