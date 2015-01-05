@@ -9,29 +9,18 @@ class DH_M1GrenadeWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    PreFireHoldAnim="pre_fire_idle"
-    bHasReleaseLever=true
-    FuzeLength=4.000000
-    LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'
-    LeverReleaseVolume=1.000000
-    LeverReleaseRadius=200.000000
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
     FireModeClass(0)=class'DH_Weapons.DH_M1GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_M1GrenadeTossFire'
-    SelectAnim="Draw"
-    PutDownAnim="putaway"
-    SelectAnimRate=1.000000
-    PutDownAnimRate=1.000000
-    AIRating=0.400000
-    CurrentRating=0.400000
-    DisplayFOV=70.000000
     PickupClass=class'DH_Weapons.DH_M1GrenadePickup'
-    PlayerViewOffset=(X=15.000000,Y=15.000000)
-    BobDamping=1.600000
     AttachmentClass=class'DH_Weapons.DH_M1GrenadeAttachment'
     ItemName="Mk II Grenade"
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
+    PlayerViewOffset=(X=15.0,Y=15.0)
+//  PutDownAnim="putaway" // Matt: have renamed animation (in the animation file) to the standard "Put_away" used in all other grenades
+    FuzeLength=4.0
+    bHasReleaseLever=true
+    LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseVolume=1.0
+    LeverReleaseRadius=200.0
+    InventoryGroup=2
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_NebelGranate39Weapon extends DH_StielGranateWeapon;
+class DH_NebelGranate39Weapon extends DHExplosiveWeapon;
 
 defaultproperties
 {

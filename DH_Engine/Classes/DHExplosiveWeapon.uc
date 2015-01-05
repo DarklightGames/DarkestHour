@@ -83,5 +83,19 @@ function bool IsGrenade()
 
 defaultproperties
 {
-    InventoryGroup=2
+    PreFireHoldAnim="pre_fire_idle"
+    FuzeLength=5.0
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    SelectAnim="Draw"
+    PutDownAnim="Put_away"
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    AIRating=0.4
+    CurrentRating=0.4
+    DisplayFOV=70.0
+    PlayerViewOffset=(X=5.0,Y=5.0,Z=0.0)
+    BobDamping=1.6
 }

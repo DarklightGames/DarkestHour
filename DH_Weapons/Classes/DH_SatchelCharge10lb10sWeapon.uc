@@ -11,13 +11,12 @@ simulated state RaisingWeapon
 {
     simulated function EndState()
     {
-        local ROPlayer player;
-
         super.EndState();
 
-        player = ROPlayer(Instigator.Controller);
-        if (player != none)
-            player.CheckForHint(7);
+        if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+        {
+            ROPlayer(Instigator.Controller).CheckForHint(7);
+        }
     }
 }
 
@@ -25,29 +24,14 @@ defaultproperties
 {
     ItemName="10lb Satchel Charge"
     Mesh=mesh'Common_Satchel_1st.Sachel_Charge'
-    DrawScale=1.0
-    DisplayFOV=70
-    BobDamping=1.6
-    PlayerViewOffset=(X=10,Y=5,Z=0)
-    bCanThrow=false //cannot be dropped
-    FuzeLength=15.0 //was 10
+    PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
+    bCanThrow=false // cannot be dropped
+    FuzeLength=15.0 // was 10
     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     FireModeClass(1)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
-    bCanRestDeploy=false
-    bHasReleaseLever=false
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
-    SelectAnimRate=1.0
-    PutDownAnimRate=1.0
-    SelectAnim=Draw
-    PutDownAnim=Put_Away
-    CrawlForwardAnim=crawlF
-    CrawlBackwardAnim=crawlB
-    CrawlStartAnim=crawl_in
-    CrawlEndAnim=crawl_out
-    PreFireHoldAnim=Weapon_Down
-    AIRating=+0.4
-    CurrentRating=0.4
-    bSniping=false // So bots will use this weapon to take long range shots
+    PreFireHoldAnim="Weapon_Down"
+    bSniping=false // so bots will use this weapon to take long range shots
     InventoryGroup=6
 }
