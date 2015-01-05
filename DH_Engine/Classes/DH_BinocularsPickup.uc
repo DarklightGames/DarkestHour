@@ -9,7 +9,4 @@ defaultproperties
 {
     InventoryType=class'DH_Engine.DH_BinocularsItem'
     StaticMesh=staticmesh'DetailSM.Military.Binocs'
-    PrePivot=(Z=3.000000)
-    CollisionRadius=25.000000
-    CollisionHeight=3.000000
 }
