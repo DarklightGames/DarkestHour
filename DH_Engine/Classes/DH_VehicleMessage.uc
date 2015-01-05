@@ -12,44 +12,39 @@ var(Messages) localized string AssaultGunExit;
 var(Messages) localized string OverSpeed;
 var(Messages) localized string VehicleBurning;
 
-static function string GetString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject
-    )
+static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     switch (Switch)
     {
         case 0:
             return default.NotQualified;
         case 1:
-            return default.VehicleIsEnemy;
+            eturn default.VehicleIsEnemy;
         case 2:
-             return default.CannotEnter;
+            return default.CannotEnter;
         case 3:
-             return default.CannotRide;
+            return default.CannotRide;
         case 4:
-             return default.CannotExit;
+            return default.CannotExit;
         case 5:
-             return default.AssaultGunExit;
+            return default.AssaultGunExit;
         case 7:
-             return default.OverSpeed;
+            return default.OverSpeed;
         case 8:
-             return default.VehicleFull;
+            return default.VehicleFull;
         case 9:
-             return default.VehicleBurning;
+            return default.VehicleBurning;
         default:
-             return "";
+            return "";
     }
 }
 
 defaultproperties
 {
-    CannotRide="Cannot Ride This Vehicle"
-    VehicleFull="All Rider Positions are Occupied"
-    CannotExit="You Must Unbutton the Hatch to Exit"
-    AssaultGunExit="You Must Exit Through Commander's Hatch"
-    OverSpeed="Slow Down!"
-    Vehicleburning="Vehicle is on Fire!"
+    CannotRide="Cannot ride this vehicle"
+    VehicleFull="All rider positions are occupied"
+    CannotExit="You must unbutton the hatch to exit"
+    AssaultGunExit="You must exit through commander's hatch"
+    OverSpeed="Slow down!"
+    Vehicleburning="Vehicle is on fire!"
 }

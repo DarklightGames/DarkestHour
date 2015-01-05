@@ -7,13 +7,13 @@ class DHMainMenu extends UT2K4GUIPage;
 
 var()   config string           MenuSong;
 
-var automated       FloatingImage                   i_background;
-var automated       GUISectionBackground            sb_MainMenu;
-var automated       GUIButton                       b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
-var automated       GUISectionBackground            sb_HelpMenu;
-var automated       GUIButton                       b_Credits, b_Manual, b_Demos, b_Website, b_Back;
-var automated       GUISectionBackground            sb_ShowVersion;
-var automated       GUILabel                        l_Version;
+var automated       FloatingImage           i_background;
+var automated       GUISectionBackground    sb_MainMenu;
+var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
+var automated       GUISectionBackground    sb_HelpMenu;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back;
+var automated       GUISectionBackground    sb_ShowVersion;
+var automated       GUILabel                l_Version;
 
 var     ROBufferedTCPLink       myLink;
 
@@ -43,19 +43,21 @@ var     bool                    pageWait;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    local int xl,yl,y;
+    local int xl, yl, y;
+
     super.InitComponent(MyController, MyOwner);
+
     Controller.LCDCls();
     Controller.LCDDrawTile(Controller.LCDLogo, 0, 0, 50, 43, 0, 0, 50, 43);
     y = 0;
-    Controller.LCDStrLen("Darkest Hour",Controller.LCDMedFont,xl,yl);
-    Controller.LCDDrawText("Darkest Hour",(100-(XL/2)),y,Controller.LCDMedFont);
+    Controller.LCDStrLen("Darkest Hour", Controller.LCDMedFont, xl, yl);
+    Controller.LCDDrawText("Darkest Hour", (100 - (XL / 2)), y, Controller.LCDMedFont);
     y += 14;
-    Controller.LCDStrLen("Europe",Controller.LCDSmallFont,xl,yl);
-    Controller.LCDDrawText("Europe",(100-(XL/2)),y,Controller.LCDSmallFont);
+    Controller.LCDStrLen("Europe", Controller.LCDSmallFont, xl, yl);
+    Controller.LCDDrawText("Europe", (100 - (XL / 2)), y, Controller.LCDSmallFont);
     y += 14;
-    Controller.LCDStrLen("44-45",Controller.LCDLargeFont,xl,yl);
-    Controller.LCDDrawText("44-45",(100-(XL/2)),y,Controller.LCDLargeFont);
+    Controller.LCDStrLen("44-45", Controller.LCDLargeFont, xl, yl);
+    Controller.LCDDrawText("44-45",(100 - (XL / 2)), y, Controller.LCDLargeFont);
     Controller.LCDRepaint();
 
     sb_MainMenu.ManageComponent(b_QuickPlay);
@@ -72,7 +74,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_HelpMenu.ManageComponent(b_Back);
     sb_ShowVersion.ManageComponent(l_Version);
 
-    //Quick Play Init
+    // Quick Play Init
     GetQuickPlayIP();
 }
 
@@ -82,8 +84,8 @@ function InternalOnOpen()
     Log("");
     Log("");
     Log("");
-    Log("MainMenu: starting music "$MenuSong);
-    PlayerOwner().ClientSetInitialMusic(MenuSong,MTRAN_Segue);
+    Log("MainMenu: starting music" @ MenuSong);
+    PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
 }
 
 function OnClose(optional bool bCanceled)
@@ -111,6 +113,7 @@ function bool MyKeyEvent(out byte Key, out byte State, float delta)
     if (Key == 0x1B && State == 1)
     {
         AllowClose = true;
+
         return true;
     }
     else
@@ -141,6 +144,7 @@ function bool ButtonClick(GUIComponent Sender)
     switch (sender)
     {
         case b_QuickPlay:
+
             bAttemptQuickPlay = true;
             if (quickplayip != "")
             {
@@ -209,13 +213,13 @@ function bool ButtonClick(GUIComponent Sender)
 
         case b_Manual:
             Profile("Manual");
-            PlayerOwner().ConsoleCommand("start "@ManualURL);
+            PlayerOwner().ConsoleCommand("start " @ ManualURL);
             Profile("Manual");
             break;
 
         case b_Website:
             Profile("Website");
-            PlayerOwner().ConsoleCommand("start "@WebsiteURL);
+            PlayerOwner().ConsoleCommand("start " @ WebsiteURL);
             Profile("Website");
             break;
 
@@ -243,7 +247,7 @@ event Opened(GUIComponent Sender)
 
     if (bDebugging)
     {
-        Log(Name $ ".Opened()   Sender:" $ Sender,'Debug');
+        Log(Name $ ".Opened()   Sender:" $ Sender, 'Debug');
     }
 
     if (Sender != none && PlayerOwner().Level.IsPendingConnection())
@@ -269,19 +273,17 @@ event bool NotifyLevelChange()
 // Quick play button functions
 event Timer()
 {
-    local string text;
-    local string page;
-    local string command;
+    local string text, page, command;
 
     if (myLink != none)
     {
-        //Log("IsConnected?:"@myLink.IsConnected());
+        //Log("IsConnected?:" @ myLink.IsConnected());
 
         if (myLink.ServerIpAddr.Port != 0 && myLink.IsConnected())
         {
             if (sendGet)
             {
-                command = getRequest $ myLink.CRLF $ "Host: " $ newsIPAddr $ myLink.CRLF $ myLink.CRLF;
+                command = getRequest $ myLink.CRLF $ "Host:" @ newsIPAddr $ myLink.CRLF $ myLink.CRLF;
                 myLink.SendCommand(command);
                 pageWait = true;
                 myLink.WaitForCount(1, 20, 1); // 20 sec timeout
@@ -289,7 +291,7 @@ event Timer()
             }
             else if (bAttemptQuickPlay)
             {
-                waitString = waitString$".";
+                waitString = waitString $ ".";
                 b_QuickPlay.Caption = waitString;
             }
         }
@@ -316,7 +318,7 @@ event Timer()
             {
                 Log(" ");
                 Log(" ");
-                Log("IP:"@quickplayip);
+                Log("IP:" @ quickplayip);
                 Log(" ");
                 Log(" ");
                 PlayerOwner().ClientTravel(quickplayip, TRAVEL_Absolute, false);
@@ -365,7 +367,7 @@ function GetQuickPlayIP()
         myLink.ServerIpAddr.Port = 0;
 
         sendGet = true;
-        myLink.Resolve(newsIPAddr);  // NOTE: This is a non-blocking operation
+        myLink.Resolve(newsIPAddr); // NOTE: this is a non-blocking operation
 
         SetTimer(ReReadyPause, true);
     }
@@ -376,7 +378,7 @@ function GetQuickPlayIP()
 }
 
 // Used for parsing the string out of <BODY> </BODY>
-// Needed becasue the get request returns stuff other than the text in the file
+// Needed because the get request returns stuff other than the text in the file
 function HTTPParse(out string page)
 {
     local string junk;
@@ -431,9 +433,9 @@ defaultproperties
     i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        WinTop=0.624000
+        WinTop=0.624
         WinLeft=0.042188
-        WinWidth=0.485000
+        WinWidth=0.485
         WinHeight=0.281354
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
@@ -538,10 +540,10 @@ defaultproperties
     b_Quit=GUIButton'DH_Interface.DHMainMenu.QuitButton'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection2
-        WinTop=0.624000
+        WinTop=0.624
         WinLeft=0.042188
-        WinWidth=0.485000
-        WinHeight=0.235500
+        WinWidth=0.485
+        WinHeight=0.2355
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
     sb_HelpMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection2'
@@ -618,9 +620,9 @@ defaultproperties
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinTop=0.97
-        WinLeft=0.01000
-        WinWidth=0.230000
-        WinHeight=0.050000
+        WinLeft=0.01
+        WinWidth=0.23
+        WinHeight=0.05
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
@@ -628,10 +630,10 @@ defaultproperties
     Begin Object Class=GUILabel Name=VersionNum
         StyleName="DHSmallText"
         Caption="Version: "
-        WinTop=0.00000
-        WinLeft=0.00000
+        WinTop=0.0
+        WinLeft=0.0
         WinWidth=0.202128
-        WinHeight=0.040000
+        WinHeight=0.04
         RenderWeight=20.700001
     End Object
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
@@ -646,5 +648,5 @@ defaultproperties
     InactiveFadeColor=(B=0,G=0,R=0)
     OnOpen=DHMainMenu.InternalOnOpen
     WinTop=0.0
-    WinHeight=1.000000
+    WinHeight=1.0
 }

@@ -7,44 +7,44 @@ class DHServerLoading extends UT2K4ServerLoading;
 
 #EXEC OBJ LOAD FILE=DH_GUI_Tex.utx
 
-//Variables
-var localized string loadingMapPrefix; //"Deploying to..."
-var localized string loadingMapAuthorPrefix; //"Author:"
-var localized string vacSecuredText; //"NOTE: This server is VAC Secured. Cheating will result in a permanent ban."
-var localized string OfficialMapText; //"Official Map"
-var localized string CustomMapText; //"Community Map"
+// Variables
+var localized string loadingMapPrefix;       // "Deploying to..."
+var localized string loadingMapAuthorPrefix; // "Author:"
+var localized string vacSecuredText;         // "NOTE: This server is VAC Secured. Cheating will result in a permanent ban."
+var localized string OfficialMapText;        // "Official Map"
+var localized string CustomMapText;          // "Community Map"
 
-var Material vacIcon; //Server is VAC secured icon
-var Material OfficialMapIcon; //Icon for indicating the loading map is official
-var Material CustomMapIcon; //Icon for indicating the loading map is custom
+var Material vacIcon;         // Server is VAC secured icon
+var Material OfficialMapIcon; // Icon for indicating the loading map is official
+var Material CustomMapIcon;   // Icon for indicating the loading map is custom
 
-var CacheManager.MapRecord  LoadingMapRecord; //Record for loading map (to get author, extrainfo, etc)
+var CacheManager.MapRecord  LoadingMapRecord; // Record for loading map (to get author, extrainfo, etc)
 
-//Functions
+// Functions
 
 simulated event Init()
 {
-    //Gets the MapRecord and sets it so we can use it in other functions
+    // Gets the MapRecord and sets it so we can use it in other functions
     LoadingMapRecord = class'CacheManager'.static.getMapRecord(MapName);
 
-    //Calls the base background and text functions (should be after we get the mapRecord)
+    // Calls the base background and text functions (should be after we get the mapRecord)
     super.Init();
 
-    //Draws VAC icon if bVACSecured
+    // Draws VAC icon if bVACSecured
     SetVACInfo();
 }
 
 simulated function SetText()
 {
     local GUIController GC;
-    local DrawOpText HintOp;
-    local string Map;
+    local DrawOpText    HintOp;
+    local string        Map;
 
     Map = StripMap(MapName);
     Map = StripPrefix(Map);
     Map = AddSpaces(Map);
 
-    //This sets up the strings for Map Author
+    // This sets up the strings for Map Author
     if (LoadingMapRecord.Author == "")
     {
         DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ "Unspecified";
@@ -54,17 +54,17 @@ simulated function SetText()
         DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ LoadingMapRecord.Author;
     }
 
-    //Sets up actual text on the screen for the author
+    // Sets up actual text on the screen for the author
     //DrawOpText(Operations[8]).Text = loadingMapAuthorPrefix @ AuthorFinal;
 
-    //This sets up the strings "Deploying to..." MAPNAME
+    // This sets up the strings "Deploying to..." MAPNAME
     DrawOpText(Operations[2]).Text = loadingMapPrefix @ Map;
     DrawOpText(Operations[1]).Text = "";
 
-    //Get GUI Controller
+    // Get GUI Controller
     GC = GUIController(Level.GetLocalPlayerController().Player.GUIController);
 
-    //This draws the loading prefix + mapname "Deploying to... LEVEL"
+    // This draws the loading prefix + mapname "Deploying to... LEVEL"
     if (GC != none)
     {
         GC.LCDCls();
@@ -74,11 +74,11 @@ simulated function SetText()
         GC.LCDRePaint();
     }
 
-    //Return here if software rendering
+    // Return here if software rendering
     if (Level.IsSoftwareRendering())
         return;
 
-    //Hint stuff
+    // Hint stuff
     HintOp = DrawOpText(Operations[3]);
 
     if (HintOp == none)
@@ -89,7 +89,7 @@ simulated function SetText()
     HintOp.Text = "";
 }
 
-//Show the VAC secured icon
+// Show the VAC secured icon
 simulated function SetVACInfo()
 {
     if (bVACSecured)
@@ -99,7 +99,7 @@ simulated function SetVACInfo()
     }
 }
 
-//Show the Official or Custom icon and text
+// Show the Official or Custom icon and text
 simulated function SetMapConstitution(bool bOfficialMap)
 {
     if (bOfficialMap)
@@ -155,34 +155,39 @@ simulated function string AddSpaces(string s)
         return result;
     }
     else
+    {
         return temp;
+    }
 }
 
 simulated function string StripPrefix(string s)
 {
-        if ((Left(s, 3) == "DH-" || Left(s, 3) == "dh-") && len(s) > 3)
-            return Right(s, len(s) - 3);
-        else
-            return s;
+    if ((Left(s, 3) == "DH-" || Left(s, 3) == "dh-") && len(s) > 3)
+    {
+        return Right(s, len(s) - 3);
+    }
+    else
+    {
+        return s;
+    }
 }
 
 simulated function SetImage()
 {
-    local string str;
+    local string   str, Map;
     local material mat;
-    local string Map;
 
     Map = StripMap(MapName);
     Map = StripPrefix(Map);
     Map = AddSpaces(Map);
     Map = Lower(Map);
 
-    Log("DHServerLoading: Map name = " $Map);
-            mat = Material'MenuBlack';
-            DrawOpImage(Operations[0]).Image = mat;
+    Log("DHServerLoading: Map name =" @ Map);
+    mat = Material'MenuBlack';
+    DrawOpImage(Operations[0]).Image = mat;
 
-    //We are going to check to see if the level is officially supported
-    //If so set the proper background (loadingscreen) and call the function to add the logo indicating official map
+    // We are going to check to see if the level is officially supported
+    // If so set the proper background (loadingscreen) and call the function to add the logo indicating official map
     switch (Map)
     {
         case "bois jacques" :
@@ -271,36 +276,36 @@ simulated function SetImage()
             break;
     }
 
-    //Lets check if an official level was detected or not
+    // Lets check if an official level was detected or not
     if (str == "")
     {
-        //This level is custom, lets check if it has a custom loading screen set in ExtraInfo
+        // This level is custom, lets check if it has a custom loading screen set in ExtraInfo
         if (LoadingMapRecord.ExtraInfo != "")
         {
-            //Try to set the material up from ExtraInfo (if not entered correctly it'll fail)
+            // Try to set the material up from ExtraInfo (if not entered correctly it'll fail)
             mat = Material(DynamicLoadObject(MapName$LoadingMapRecord.ExtraInfo, class'Material'));
         }
-        //Check to see if mat failed to set properly
+        // Check to see if mat failed to set properly
         if (mat.Validated == false)
         {
-            //mat must have failed to create from ExtraInfo string
-            str = Backgrounds[0]; //use generic background for now
+            // mat must have failed to create from ExtraInfo string
+            str = Backgrounds[0];  //use generic background for now
             mat = DLOTexture(str); //set mat to use generic background
         }
 
-        //Set the custom map icon + text
+        // Set the custom map icon + text
         SetMapConstitution(false);
 
-        //Draw the background loading screen
+        // Draw the background loading screen
         DrawOpImage(Operations[0]).Image = mat;
     }
-    //Level is official
+    // Level is official
     else
     {
-        //Set the official map icon + text
+        // Set the official map icon + text
         SetMapConstitution(true);
 
-        //Actually set the material & draw
+        // Actually set the material & draw
         mat = DLOTexture(str);
         DrawOpImage(Operations[0]).Image = mat;
     }
@@ -311,10 +316,12 @@ static final function string Lower(coerce string Text)
     local int IndexChar;
 
     for (IndexChar = 0; IndexChar < Len(Text); IndexChar++)
-        if (Mid(Text, IndexChar, 1) >= "A" &&
-           Mid(Text, IndexChar, 1) <= "Z")
-
-    Text = Left(Text, IndexChar) $ Chr(Asc(Mid(Text, IndexChar, 1)) + 32) $ Mid(Text, IndexChar + 1);
+    {
+        if (Mid(Text, IndexChar, 1) >= "A" && Mid(Text, IndexChar, 1) <= "Z")
+        {
+            Text = Left(Text, IndexChar) $ Chr(Asc(Mid(Text, IndexChar, 1)) + 32) $ Mid(Text, IndexChar + 1);
+        }
+    }
 
     return Text;
 }
@@ -327,7 +334,8 @@ defaultproperties
     OfficialMapIcon=texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CustomMapText="Community Map"
     CustomMapIcon=texture'DH_GUI_Tex.Menu.CommunityMapLogo'
-    //The official backgrounds
+
+    // The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreens.LoadingScreenDHDefault"
     Backgrounds(1)="DH_GUI_Tex.LoadingScreens.LoadingScreenBoisJacques"
     Backgrounds(2)="DH_GUI_Tex.LoadingScreens.LoadingScreenBrecourt"
@@ -360,6 +368,7 @@ defaultproperties
     Operations(2)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpMapname'
     Operations(4)=DrawOpImage'ROInterface.ROServerLoading.OpVACImg'
     Operations(5)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpVACText'
+
     Begin Object class=DrawOpImage Name=OpConstitutionImg
         Top=0.015
         Lft=0.685
@@ -370,6 +379,7 @@ defaultproperties
         SubYL=128
     End Object
     Operations(6)=OpConstitutionImg
+
     Begin Object class=RODrawOpShadowedText Name=OpConstitutionText
         Top=0.02
         Lft=0.735
@@ -381,6 +391,7 @@ defaultproperties
         //bWrapText=true
     End Object
     Operations(7)=OpConstitutionText
+
     Begin Object class=RODrawOpShadowedText Name=OpMapAuthorText
         Top=0.02
         Lft=0.05

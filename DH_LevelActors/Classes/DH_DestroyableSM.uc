@@ -14,7 +14,7 @@ function Trigger(actor Other, pawn EventInstigator)
         MakeNoise(1.0);
     //if destroyed goto state working (basically repairs it)
     if (bDamaged)
-        Gotostate('Working');
+        GotoState('Working');
     else //it's not destroyed, lets destroy it
     {
         Health = 0;

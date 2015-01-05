@@ -28,7 +28,7 @@ simulated function bool PointOfView()
 
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    Gotostate('EnteringVehicle');
+    GotoState('EnteringVehicle');
 
     super.ClientKDriverEnter(PC);
 

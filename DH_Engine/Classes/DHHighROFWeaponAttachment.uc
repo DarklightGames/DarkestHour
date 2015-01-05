@@ -109,8 +109,7 @@ simulated function bool ShouldSpawnTracer()
 simulated function SpawnClientRounds(bool bFirstRoundOnly)
 {
     local vector  Start, HitLocation, TestHitLocation, HitNormal;
-    local rotator ProjectileDir;
-    local rotator R;
+    local rotator ProjectileDir, R;
     local Actor   Other;
 
     // First shot, or single shot

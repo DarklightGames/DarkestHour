@@ -34,9 +34,7 @@ var MortarTargetInfo    GermanMortarTargets[2];
 
 var int                 DHSpawnCount[2];
 
-//Vehicle pool and spawn point info is heavily fragmented due to the arbitrary
-//variable size limit (255 bytes) that exists in UnrealScript.
-
+// Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
 var class<ROVehicle>    VehiclePoolVehicleClasses[32];
 var byte                VehiclePoolIsActives[32];
 var float               VehiclePoolNextAvailableTimes[32];
@@ -44,17 +42,17 @@ var private byte        VehiclePoolActiveCounts[32];
 var byte                VehiclePoolSpawnsRemainings[32];
 var private byte        VehiclePoolMaxActives[32];
 
-var private const byte  SpawnPointFlag_IsActive;  //0x01
-var private const byte  SpawnPointFlag_TeamIndex; //0x02
-var private const byte  SpawnPointFlag_Type;      //0x04
+var private const byte  SpawnPointFlag_IsActive;  // 0x01
+var private const byte  SpawnPointFlag_TeamIndex; // 0x02
+var private const byte  SpawnPointFlag_Type;      // 0x04
 
 var private byte        SpawnPointFlags[32];
 var private float       SpawnPointXLocations[32];
 var private float       SpawnPointYLocations[32];
 var string              SpawnPointNames[32];
 
-var float               VehiclePoolsUpdateTime;         //The last time the vehicle pools were updated in a way that requires the client to re-populate its list
-var float               SpawnPointsUpdateTime;   //The last time the vehicle spawn points were updated in a way that requires the client to repopulate the list
+var float               VehiclePoolsUpdateTime;   // the last time the vehicle pools were updated in a way that requires the client to re-populate its list
+var float               SpawnPointsUpdateTime;    // the last time the vehicle spawn points were updated in a way that requires the client to repopulate the list
 
 replication
 {
@@ -85,16 +83,21 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
         switch (TeamNum)
         {
             case AXIS_TEAM_INDEX:
+
                 if (DHAxisRoles[i] != none && DHAxisRoles[i] == ROInf)
                 {
                     return i;
                 }
+
                 break;
+
             case ALLIES_TEAM_INDEX:
+
                 if (DHAlliesRoles[i] != none && DHAlliesRoles[i] == ROInf)
                 {
                     return i;
                 }
+
                 break;
         }
    }
@@ -142,9 +145,11 @@ function SetSpawnPointTeamIndex(byte SpawnPointIndex, byte TeamIndex)
         case AXIS_TEAM_INDEX:
             SpawnPointFlags[SpawnPointIndex] = SpawnPointFlags[SpawnPointIndex] & ~SpawnPointFlag_TeamIndex;
             break;
+
         case ALLIES_TEAM_INDEX:
             SpawnPointFlags[SpawnPointIndex] = SpawnPointFlags[SpawnPointIndex] | SpawnPointFlag_TeamIndex;
             break;
+
         default:
             Warn("Unhandled TeamIndex");
             break;

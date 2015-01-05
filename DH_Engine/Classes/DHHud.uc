@@ -258,7 +258,7 @@ simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name Ms
     switch (MsgType)
     {
         case 'Say':
-            Msg = PRI.PlayerName $ ": " $ Msg;
+            Msg = PRI.PlayerName $ ":" @ Msg;
             DHMessageClassType = class'DHSayMessage';
             break;
         case 'TeamSay':
@@ -1412,7 +1412,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     // Driver's name
     if (Vehicle.PlayerReplicationInfo != none && Vehicle.PlayerReplicationInfo != PRI) // don't draw our own name!
     {
-        Lines[Lines.length] = class'ROVehicleWeaponPawn'.default.DriverHudName $ ": " $ Vehicle.PlayerReplicationInfo.PlayerName;
+        Lines[Lines.length] = class'ROVehicleWeaponPawn'.default.DriverHudName $ ":" @ Vehicle.PlayerReplicationInfo.PlayerName;
     }
 
     // Passengers' names
@@ -1422,7 +1422,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
         if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none && WeaponPawn.PlayerReplicationInfo != PRI) // don't draw our own name!
         {
-            Lines[Lines.length] = WeaponPawn.HudName $ ": " $ WeaponPawn.PlayerReplicationInfo.PlayerName;
+            Lines[Lines.length] = WeaponPawn.HudName $ ":" @ WeaponPawn.PlayerReplicationInfo.PlayerName;
         }
     }
 
@@ -2139,7 +2139,7 @@ simulated function DrawObjectives(Canvas C)
                     Widget.TextureScale = 0.04f;
                     Widget.RenderStyle = STY_Normal;
 
-                    s = ""$NetActor;
+                    s = "" $ NetActor;
 
                     // Remove the package name, if it exists
                     Pos = InStr(s, ".");
@@ -2712,11 +2712,11 @@ simulated function DrawObjectives(Canvas C)
 
         if (DHGRI.Objectives[i].ObjState != OwnerTeam)
         {
-            MapObjectivesTexts.Text = ObjCount $ ". " $ DHGRI.Objectives[i].AttackerDescription;
+            MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].AttackerDescription;
         }
         else
         {
-            MapObjectivesTexts.Text = ObjCount $ ". " $ DHGRI.Objectives[i].DefenderDescription;
+            MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].DefenderDescription;
         }
 
         DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
@@ -2740,11 +2740,11 @@ simulated function DrawObjectives(Canvas C)
 
             if (DHGRI.Objectives[i].ObjState != OwnerTeam)
             {
-                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ ". " $ DHGRI.Objectives[i].AttackerDescription;
+                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.Objectives[i].AttackerDescription;
             }
             else
             {
-                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ ". " $ DHGRI.Objectives[i].DefenderDescription;
+                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.Objectives[i].DefenderDescription;
             }
 
             DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);

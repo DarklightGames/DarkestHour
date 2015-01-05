@@ -97,8 +97,7 @@ function ServerWorkBolt()
 {
 }
 
-// Play an idle animation on the server so that the weapon will be
-// in the right position for free-aim calculations (not the ref pose)
+// Play an idle animation on the server so that weapon will be in the right position for free-aim calculations (not the ref pose)
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -263,7 +262,7 @@ function coords GetMuzzleCoords()
     return GetBoneCoords('Muzzle');
 }
 
-// returns true if this weapon should use free-aim in this particular state
+// Returns true if this weapon should use free-aim in this particular state
 simulated function bool ShouldUseFreeAim()
 {
     if (FireMode[1].bMeleeMode && FireMode[1].IsFiring())
@@ -279,7 +278,7 @@ simulated function bool ShouldUseFreeAim()
     return false;
 }
 
-//choose between regular or alt-fire
+// Choose between regular or alt-fire
 function byte BestMode()
 {
     local AIController C;
@@ -496,8 +495,7 @@ Begin:
     }
 }
 
-// Overridden to support taking you out of iron sights when using melee attacks
-//// client & server ////
+// Overridden to support taking you out of iron sights when using melee attacks (client & server)
 simulated function bool StartFire(int Mode)
 {
     local int Alt;
@@ -643,6 +641,7 @@ simulated state StartCrawling
                 case 3:
                 case 4:
                 case 5:
+
                     if (AmmoAmount(0) < 1 && HasAnim(CrawlForwardEmptyAnim))
                     {
                         LoopAnim(CrawlForwardEmptyAnim, 1.0, 0.2);
@@ -653,7 +652,9 @@ simulated state StartCrawling
                     }
 
                     break;
+ 
                 default:
+
                     if (AmmoAmount(0) < 1 && HasAnim(CrawlBackwardEmptyAnim))
                     {
                         LoopAnim(CrawlBackwardEmptyAnim, 1.0, 0.2);
@@ -703,7 +704,7 @@ Begin:
 
 simulated function PlayStartCrawl()
 {
-    local name Anim;
+    local name  Anim;
     local float AnimTimer;
 
     if (AmmoAmount(0) < 1 && HasAnim(CrawlStartEmptyAnim))
@@ -805,14 +806,13 @@ simulated function PlayEndCrawl()
 // Bayonet attach/detach functionality
 //==============================================================================
 
-// Hide the bayonet. Also called by anim notifies to hide bayonet during the attach/detach transition
+// Hide the bayonet (also called by anim notifies to hide bayonet during the attach/detach transition)
 simulated function HideBayonet()
 {
-    // scale down bayonet bone
-    SetBoneScale(0, 0.001, BayonetBoneName);
+    SetBoneScale(0, 0.001, BayonetBoneName); // scale down bayonet bone
 }
 
-// Hide the bayonet. Also called by anim notifies to hide bayonet during the attach/detach transition
+// Hide the bayonet (also called by anim notifies to hide bayonet during the attach/detach transition)
 simulated function ShowBayonet()
 {
     SetBoneScale(0, 1.0, BayonetBoneName);
@@ -820,8 +820,7 @@ simulated function ShowBayonet()
 
 simulated exec function Deploy()
 {
-    if (IsBusy() || !bHasBayonet ||
-        (FireMode[1] != none && FireMode[1].bMeleeMode && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))))
+    if (IsBusy() || !bHasBayonet || (FireMode[1] != none && FireMode[1].bMeleeMode && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking'))))
     {
         return;
     }
@@ -915,8 +914,7 @@ simulated state AttachingBayonet extends Busy
 
         AnimTimer = GetAnimDuration(BayoAttachAnim, 1.0) + FastTweenTime;
 
-        if (Level.NetMode == NM_DedicatedServer ||
-            (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
         {
             SetTimer(AnimTimer - (AnimTimer * 0.1), false);
         }
@@ -1043,6 +1041,7 @@ Begin:
 //=============================================================================
 // Ironsight transition functionality
 //=============================================================================
+
 simulated function ROIronSights()
 {
     PerformZoom(!bUsingSights);
@@ -1062,7 +1061,7 @@ simulated function PerformZoom(bool bZoomStatus)
             return;
         }
 
-        //Don't allow them to go to iron sights during a melee attack
+        // Don't allow them to go to iron sights during a melee attack
         if (FireMode[1] != none && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking')))
         {
             return;
@@ -1088,13 +1087,13 @@ simulated function PerformZoom(bool bZoomStatus)
 
 simulated function ZoomIn(bool bAnimateTransition)
 {
-    //Make the player stop firing when they go to iron sights
+    // Make the player stop firing when they go to iron sights
     if (FireMode[0] != none && FireMode[0].bIsFiring)
     {
         FireMode[0].StopFiring();
     }
 
-    //Don't allow player to go to iron sights while in melee mode
+    // Don't allow player to go to iron sights while in melee mode
     if (FireMode[1] != none && (FireMode[1].bIsFiring || FireMode[1].IsInState('MeleeAttacking')))
     {
         return;
@@ -1186,7 +1185,7 @@ simulated state IronSightZoomIn extends Busy
 
     simulated function BeginState()
     {
-        local name Anim;
+        local name  Anim;
         local float AnimTimer;
 
         if (AmmoAmount(0) < 1 && HasAnim(IronBringUpEmpty))
@@ -1209,8 +1208,7 @@ simulated state IronSightZoomIn extends Busy
 
         AnimTimer = GetAnimDuration(Anim, IronSwitchAnimRate) + FastTweenTime;
 
-        if (Level.NetMode == NM_DedicatedServer ||
-            (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
+        if (Level.NetMode == NM_DedicatedServer || (Level.NetMode == NM_ListenServer && !Instigator.IsLocallyControlled()))
         {
             SetTimer(AnimTimer - (AnimTimer * 0.15), false);
         }
@@ -1224,7 +1222,7 @@ simulated state IronSightZoomIn extends Busy
 
     simulated function EndState()
     {
-        local float TargetDisplayFOV;
+        local float  TargetDisplayFOV;
         local vector TargetPVO;
 
         if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
@@ -1276,7 +1274,7 @@ simulated state IronSightZoomOut extends Busy
 
     simulated function BeginState()
     {
-        local name Anim;
+        local name  Anim;
         local float AnimTimer;
 
         if (AmmoAmount(0) < 1 && HasAnim(IronPutDownEmpty))
@@ -1420,8 +1418,7 @@ Begin:
             ZoomOut(false);
         }
 
-        if (Instigator.IsLocallyControlled() ||
-            (Instigator.DrivenVehicle != none && Instigator.DrivenVehicle.IsLocallyControlled()))
+        if (Instigator.IsLocallyControlled() || (Instigator.DrivenVehicle != none && Instigator.DrivenVehicle.IsLocallyControlled()))
         {
             PlayIdle();
 
@@ -1474,9 +1471,8 @@ simulated function PlayIdle()
     }
 }
 
-// Takes us out of zoom immediately. This is a non blocking state, and will not prevent
-// firing, reloading, etc. Use this when some non state changing action needs to
-// bring us out of iron sights immediately, without playing the idle animation
+// Takes us out of zoom immediately - this is a non blocking state, and will not prevent firing, reloading, etc
+// Use this when some non state changing action needs to bring us out of iron sights immediately, without playing the idle animation
 simulated state UnZoomImmediately extends Idle
 {
 Begin:
@@ -1510,13 +1506,13 @@ Begin:
 //=============================================================================
 // Sprinting
 //=============================================================================
+
 simulated state StartSprinting
 {
     simulated function PlayIdle()
     {
-        local float LoopSpeed;
-        local float Speed2d;
-        local name Anim;
+        local float LoopSpeed, Speed2d;
+        local name  Anim;
 
         if (Instigator.IsLocallyControlled())
         {
@@ -1608,7 +1604,7 @@ simulated state WeaponSprinting
     {
         local float LoopSpeed;
         local float Speed2d;
-        local name Anim;
+        local name  Anim;
 
         if (Instigator.IsLocallyControlled())
         {
@@ -1669,6 +1665,7 @@ simulated function PlayEndSprint()
 //=============================================================================
 // Reloading/Ammunition
 //=============================================================================
+
 simulated function OutOfAmmo()
 {
     if (!HasAmmo() && DHWeaponAttachment(ThirdPersonActor) != none)
@@ -1721,8 +1718,7 @@ function ServerRequestReload()
     }
     else
     {
-        // if we can't reload
-        ClientCancelReload();
+        ClientCancelReload(); // if we can't reload
     }
 }
 
@@ -1815,8 +1811,7 @@ Begin:
         }
     }
 
-    // Sometimes the client will get switched out of ironsight mode before getting to
-    // the reload function. This should catch that.
+    // Sometimes the client will get switched out of ironsight mode before getting to the reload function - this should catch that
     if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
         if (DisplayFOV != default.DisplayFOV)
@@ -1831,9 +1826,8 @@ Begin:
     }
 }
 
-// Client gets sent to this state when the client has requested an action
-// that needs verified by the server. Once the server verifies they
-// can start the action, the server will take the client out of this state
+// Client gets sent to this state when the client has requested an action that needs verified by the server
+// Once the server verifies they can start the action, the server will take the client out of this state
 simulated state PendingAction extends Busy
 {
     simulated function bool ReadyToFire(int Mode)
@@ -1873,7 +1867,7 @@ Begin:
 
 simulated function PlayReload()
 {
-    local name Anim;
+    local name  Anim;
     local float AnimTimer;
 
     if (AmmoAmount(0) > 0)
@@ -1905,7 +1899,7 @@ simulated function PlayReload()
 // Do the actual ammo swapping
 function PerformReload()
 {
-    local int CurrentMagLoad;
+    local int  CurrentMagLoad;
     local bool bDidPlusOneReload;
 
     CurrentMagLoad = AmmoAmount(0);
@@ -1923,7 +1917,7 @@ function PerformReload()
     {
         if (bPlusOneLoading)
         {
-            //If there's only one bullet left(the one in the chamber), discard the clip
+            // If there's only one bullet left(the one in the chamber), discard the clip
             if (CurrentMagLoad == 1)
             {
                 PrimaryAmmoArray.Remove(CurrentMagIndex, 1);
@@ -1995,7 +1989,7 @@ function PerformReload()
 
 function bool FillAmmo()
 {
-    local int i;
+    local int  i;
     local bool bDidFillAmmo;
 
     if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
@@ -2041,7 +2035,7 @@ function bool FillAmmo()
 function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
 {
     local bool bJustSpawnedAmmo;
-    local int AddAmount, InitialAmount, i;
+    local int  AddAmount, InitialAmount, i;
     local DHWeaponPickup DHWP;
 
     if (FireMode[M] != none && FireMode[M].AmmoClass != none)
@@ -2126,10 +2120,10 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
 
 function bool HandlePickupQuery(Pickup Item)
 {
-    local int i;
-    local WeaponPickup WP;
+    local int            i;
+    local WeaponPickup   WP;
     local DHWeaponPickup DHWP;
-    local array<int> LoadedMagazineIndices;
+    local array<int>     LoadedMagazineIndices;
 
     if (Class == Item.InventoryType)
     {
@@ -2196,7 +2190,7 @@ function bool HandlePickupQuery(Pickup Item)
 
 function DropFrom(vector StartLocation)
 {
-    local int i;
+    local int    i;
     local Pickup Pickup;
 
     if (!bCanThrow)
@@ -2255,10 +2249,7 @@ simulated function Fire(float F)
     super.Fire(F);
 }
 
-//------------------------------------------------------------------------------
-// ToggleBarrelSteam(RO) - Called when we need to toggle barrel steam on or off
-//  depending on the barrel temperature
-//------------------------------------------------------------------------------
+// Called when we need to toggle barrel steam on or off, depending on the barrel temperature
 simulated function ToggleBarrelSteam(bool newState)
 {
     bBarrelSteaming = newState;
@@ -2391,13 +2382,13 @@ simulated function PlayBarrelChange()
 
 function PerformBarrelChange()
 {
-    // we only have the 1 barrel in our weapon, don't do anything
+    // We only have the 1 barrel in our weapon, don't do anything
     if (RemainingBarrels == 1)
     {
         return;
     }
 
-    // if the barrel has failed, we're going to toss it, so remove it from the barrel array
+    // If the barrel has failed, we're going to toss it, so remove it from the barrel array
     if (Barrels[BarrelIndex].bBarrelFailed && Barrels[BarrelIndex] != none)
     {
         Barrels[BarrelIndex].Destroy();
@@ -2407,7 +2398,7 @@ function PerformBarrelChange()
         RemainingBarrels = byte(Barrels.Length);
     }
 
-    // we only have one barrel left now
+    // We only have one barrel left now
     if (RemainingBarrels == 1)
     {
         if ((BarrelIndex >= (Barrels.Length - 1)) || (Barrels.Length == 1))
@@ -2419,7 +2410,7 @@ function PerformBarrelChange()
             ++BarrelIndex;
         }
 
-        // put the new barrel in the use state for heat increments and steaming
+        // Put the new barrel in the use state for heat increments and steaming
         if (Barrels[BarrelIndex] != none)
         {
             Barrels[BarrelIndex].GotoState('BarrelInUse');
@@ -2427,11 +2418,9 @@ function PerformBarrelChange()
     }
     else
     {
-        // At this point, we have more than 1 barrel, and the one being replaced
-        // hasn't failed, so we'll switch the BarrelIndex tracker and also place
-        // the barrels in new states for whether they're on or off
-
-        // first place the current BarrelIndex in the BarrelOff state
+        // At this point, we have more than 1 barrel, & the one being replaced hasn't failed, 
+        // so we'll switch the BarrelIndex tracker & also place the barrels in new states for whether they're on or off
+        // First place the current BarrelIndex in the BarrelOff state
         Barrels[BarrelIndex].GotoState('BarrelOff');
 
         if ((BarrelIndex >= (Barrels.Length - 1)) || (Barrels.Length == 1))
@@ -2443,7 +2432,7 @@ function PerformBarrelChange()
             BarrelIndex++;
         }
 
-        // put the new barrel in the use state for heat increments and steaming
+        // Put the new barrel in the use state for heat increments and steaming
         if (Barrels[BarrelIndex] != none)
         {
             Barrels[BarrelIndex].GotoState('BarrelInUse');
@@ -2453,10 +2442,7 @@ function PerformBarrelChange()
     ResetBarrelProperties();
 }
 
-//------------------------------------------------------------------------------
-// ResetBarrelProperties(RO) - Called when we change barrels, this updates the
-//  weapon's barrel properties for the new barrel that's being swapped in
-//------------------------------------------------------------------------------
+// Called when we change barrels, this updates the weapon's barrel properties for the new barrel that's being swapped in
 function ResetBarrelProperties()
 {
     bBarrelFailed = Barrels[BarrelIndex].bBarrelFailed;
@@ -2484,9 +2470,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
     }
 }
 
-//------------------------------------------------------------------------------
-// SpawnBarrelSteamEmitter(RO) - spawns barrel steam emitter
-//------------------------------------------------------------------------------
+// Spawns barrel steam emitter
 simulated function SpawnBarrelSteamEmitter()
 {
     if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitterClass != none)
@@ -2500,14 +2484,11 @@ simulated function SpawnBarrelSteamEmitter()
     }
 }
 
-//------------------------------------------------------------------------------
-// GiveBarrels(RO) - Spawns barrels for MG's on Authority
-//------------------------------------------------------------------------------
+// Spawns barrels for MG's on Authority
 function GiveBarrels(optional Pickup Pickup)
 {
-    local int         i;
-    local DH_MGBarrel tempBarrel;
-    local DH_MGBarrel tempBarrel2;
+    local int            i;
+    local DH_MGBarrel    TempBarrel, TempBarrel2;
     local DHWeaponPickup P;
 
     if (BarrelClass == none || Role != ROLE_Authority)
@@ -2517,12 +2498,12 @@ function GiveBarrels(optional Pickup Pickup)
 
     if (Pickup == none)
     {
-        // give the barrels to the players
+        // Give the barrels to the players
         for (i = 0; i < InitialBarrels; ++i)
         {
-            tempBarrel = Spawn(BarrelClass, self);
+            TempBarrel = Spawn(BarrelClass, self);
 
-            Barrels[i] = tempBarrel;
+            Barrels[i] = TempBarrel;
 
             if (i == 0)
             {
@@ -2538,24 +2519,24 @@ function GiveBarrels(optional Pickup Pickup)
     {
         P = DHWeaponPickup(Pickup);
 
-        tempBarrel = Spawn(BarrelClass, self);
+        TempBarrel = Spawn(BarrelClass, self);
 
-        Barrels[0] = tempBarrel;
+        Barrels[0] = TempBarrel;
 
         Barrels[0].GotoState('BarrelInUse');
         Barrels[0].Temperature = P.Temperature;
         Barrels[0].bBarrelFailed = P.bBarrelFailed;
-        Barrels[0].UpdateBarrelStatus();        // update the barrel for the weapon we just picked up
+        Barrels[0].UpdateBarrelStatus(); // update the barrel for the weapon we just picked up
 
         if (P.bHasSpareBarrel)
         {
-             tempBarrel2 = Spawn(BarrelClass, self);
+            TempBarrel2 = Spawn(BarrelClass, self);
 
-             Barrels[1] = tempBarrel2;
-             Barrels[1].GotoState('BarrelOff');
+            Barrels[1] = TempBarrel2;
+            Barrels[1].GotoState('BarrelOff');
 
-             Barrels[1].Temperature = P.Temperature2;
-             Barrels[1].UpdateSpareBarrelStatus();
+            Barrels[1].Temperature = P.Temperature2;
+            Barrels[1].UpdateSpareBarrelStatus();
         }
     }
 
@@ -2577,7 +2558,7 @@ simulated function Destroyed()
 
     super.Destroyed();
 
-    // remove and destroy the barrels in the Barrels array
+    // Remove and destroy the barrels in the Barrels array
     for (i = 0; i < Barrels.Length; ++i)
     {
         if (Barrels[i] != none)
@@ -2586,7 +2567,7 @@ simulated function Destroyed()
         }
     }
 
-    // destroy the barrel steam emitter
+    // Destroy the barrel steam emitter
     if (ROBarrelSteamEmitter != none)
     {
         ROBarrelSteamEmitter.Destroy();
@@ -2598,7 +2579,7 @@ simulated function Destroyed()
 // Overridden to support notifying the barrels that we have fired
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
-    local float SoundModifier;
+    local float       SoundModifier;
     local DH_MGBarrel B;
 
     if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
@@ -2614,7 +2595,7 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
         {
             if (bBarrelDamaged)
             {
-                SoundModifier = FMax(52, 64 - ((B.Temperature - B.CriticalTemperature) / (B.FailureTemperature - B.CriticalTemperature) * 52));
+                SoundModifier = FMax(52.0, 64.0 - ((B.Temperature - B.CriticalTemperature) / (B.FailureTemperature - B.CriticalTemperature) * 52.0));
 
                 ROWeaponAttachment(ThirdPersonActor).SoundPitch = SoundModifier;
             }
@@ -2630,16 +2611,16 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
 
 defaultproperties
 {
-    IronSwitchAnimRate=1.000000
-    FastTweenTime=0.200000
+    IronSwitchAnimRate=1.0
+    FastTweenTime=0.2
     Priority=9
     bUsesFreeAim=true
     LightType=LT_Steady
     LightEffect=LE_NonIncidence
     LightHue=30
     LightSaturation=150
-    LightBrightness=255.000000
-    LightRadius=4.000000
+    LightBrightness=255.0
+    LightRadius=4.0
     LightPeriod=3
     FillAmmoMagCount=1
     ROBarrelSteamEmitterClass=class'ROEffects.ROMGSteam'

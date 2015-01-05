@@ -1140,7 +1140,7 @@ simulated function Tick(float DeltaTime)
         }
         UpdateMovementSound();
 
-        //Level.Game.Broadcast(self, "MySpeed: "$MySpeed);
+        //Level.Game.Broadcast(self, "MySpeed:" @ MySpeed);
 
         if (LeftTreadPanner != none)
         {
@@ -1736,7 +1736,7 @@ simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, fl
         // Check if the round should shatter on the armor
         if (P.default.bShatterProne)
         {
-            CheckIfRoundShatters(P, PenetrationRatio, OverMatchFactor);
+            bRoundShattered = CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
         }
 
         if (!bRoundShattered)
@@ -1905,24 +1905,22 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
 }
 
 // Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
-simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
+simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
 {
-    local bool bShattered;
-
     if (P.default.RoundType == RT_HVAP)
     {
         if (P.default.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
             if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.27)
             {
-                bShattered = true;
+                return true;
             }
         }
         else // smaller HVAP rounds
         {
             if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.34)
             {
-                bShattered = true;
+                return true;
             }
         }
     }
@@ -1930,7 +1928,7 @@ simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, flo
     {
         if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.20)
         {
-            bShattered = true;
+            return true;
         }
     }
     else if (P.default.RoundType == RT_HEAT) // no chance of shatter for HEAT round
@@ -1940,11 +1938,11 @@ simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, flo
     {
         if (OverMatchFactor > 0.8 && PenetrationRatio >= 1.06 && PenetrationRatio <= 1.19)
         {
-            bShattered = true;
+            return true;
         }
     }
 
-    bRoundShattered = bShattered; // now we set the replicated variable
+    return false;
 }
 
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
@@ -2042,7 +2040,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             HitPointDamage *= VehicleDamageMod;
 
             if (bLogPenetration)
-                Log(" We hit "$GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType)$" hitpoint.");
+                Log(" We hit" @ GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType) @ "hitpoint.");
 
             if (VehHitpoints[i].HitPointType == HP_Engine)
             {
@@ -2080,7 +2078,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         HitPointDamage=Damage;
 
         if (bLogPenetration)
-          Log(" We hit "$GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType)$" hitpoint.");
+          Log(" We hit" @ GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType) @ "hitpoint.");
 
         if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
         {

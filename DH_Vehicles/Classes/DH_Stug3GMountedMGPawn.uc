@@ -62,7 +62,7 @@ simulated function bool PointOfView()
 // Overridden to handle mesh swapping when entering the vehicle
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    Gotostate('EnteringVehicle');
+    GotoState('EnteringVehicle');
 
     super.ClientKDriverEnter(PC);
 
@@ -74,7 +74,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    Gotostate('LeavingVehicle');
+    GotoState('LeavingVehicle');
 
     super.ClientKDriverLeave(PC);
 }

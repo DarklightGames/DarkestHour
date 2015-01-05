@@ -300,7 +300,7 @@ function PostBeginPlay()
 
     LevelInfo.Allies.SpawnLimit *= MaxPlayerRatio;
     LevelInfo.Axis.SpawnLimit *= MaxPlayerRatio;
-    Log("MaxPlayerRatio = "$MaxPlayerRatio);
+    Log("MaxPlayerRatio =" @ MaxPlayerRatio);
 
     // Make sure MaxTeamDifference is an acceptable value
     if (MaxTeamDifference < 1)

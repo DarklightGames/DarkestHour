@@ -54,7 +54,7 @@ function bool InternalOnClick(GUIComponent Sender)
 
     if (bShowingConfigButtons)
     {
-        switch (sender)
+        switch (Sender)
         {
             case b_StartNewGame:
                 if (b_StartNewGame.bVisible)
@@ -95,7 +95,7 @@ function bool InternalOnClick(GUIComponent Sender)
     }
     else
     {
-        switch (sender)
+        switch (Sender)
         {
             case b_Equipment[0]:
                 l_EquipmentDescription.setContent(equipmentDescriptions[0]);
@@ -120,18 +120,17 @@ function bool InternalOnClick(GUIComponent Sender)
 
 function UpdateTeamCounts()
 {
-    l_numAxis.Caption = ""$getTeamCount(ALLIES_TEAM_INDEX);
-    l_numAllies.Caption = ""$getTeamCount(AXIS_TEAM_INDEX);
+    l_numAxis.Caption = "" $ getTeamCount(ALLIES_TEAM_INDEX);
+    l_numAllies.Caption = "" $ getTeamCount(AXIS_TEAM_INDEX);
 }
 
 // Overridden to force Bazooka/Panzerschreck/PIAT to inventory slot 4 along with Panzerfaust
-
 function UpdateRoleEquipment()
 {
-    local int count, i, temp;
     local class<ROWeaponAttachment> WeaponAttach;
-    local class<Weapon> w;
+    local class<Weapon>   w;
     local class<Powerups> pu;
+    local int  count, i, temp;
     local bool bHideItem;
 
     count = 0;
@@ -143,6 +142,7 @@ function UpdateRoleEquipment()
         if (desiredRole.Grenades[i].Item != none)
         {
             WeaponAttach = class<ROWeaponAttachment>(desiredRole.Grenades[i].Item.default.AttachmentClass);
+
             if (WeaponAttach != none)
             {
                 if (WeaponAttach.default.menuImage != none)
@@ -150,9 +150,11 @@ function UpdateRoleEquipment()
                     b_Equipment[count].Graphic = WeaponAttach.default.menuImage;
                     b_Equipment[count].bVisible = true;
                 }
+
                 equipmentDescriptions[count] = desiredRole.Grenades[i].Item.default.ItemName $ "||" $ WeaponAttach.default.menuDescription;
                 l_EquipmentDescription.bVisible = true;
             }
+ 
             count++;
         }
     }
@@ -165,20 +167,20 @@ function UpdateRoleEquipment()
             w = class<Weapon>(DynamicLoadObject(desiredRole.GivenItems[i], class'class'));
 
             if (w != none)
-               WeaponAttach = class<ROWeaponAttachment>(w.default.AttachmentClass);
+            {
+                WeaponAttach = class<ROWeaponAttachment>(w.default.AttachmentClass);
+            }
             else
             {
-               pu = class<Powerups>(DynamicLoadObject(desiredRole.GivenItems[i], class'class'));
-               WeaponAttach = class<ROWeaponAttachment>(pu.default.AttachmentClass);
+                pu = class<Powerups>(DynamicLoadObject(desiredRole.GivenItems[i], class'class'));
+                WeaponAttach = class<ROWeaponAttachment>(pu.default.AttachmentClass);
             }
 
             if (WeaponAttach != none)
             {
                 // Force AT weapon to go in slot #4
-                if (desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerFaustWeapon" ||
-                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_BazookaWeapon" ||
-                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerschreckWeapon" ||
-                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PIATWeapon")
+                if (desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerFaustWeapon" || desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_BazookaWeapon" || 
+                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerschreckWeapon" || desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PIATWeapon")
                 {
                     temp = count;
                     count = 3;
@@ -210,13 +212,19 @@ function UpdateRoleEquipment()
             }
 
             if (!bHideItem)
+            {
                 count++;
+            }
             else
+            {
                 bHideItem = false;
+            }
         }
 
         if (count > arraycount(b_Equipment))
+        {
             return;
+        }
     }
 }
 
@@ -238,35 +246,56 @@ function GetInitialValues()
             ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = -5;
         }
         else if (PRI.bOnlySpectator)
+        {
             currentTeam = -1;
+        }
         else if (PRI.Team != none)
+        {
             currentTeam = PRI.Team.TeamIndex;
+        }
         else
+        {
             currentTeam = -1;
+        }
 
         if (currentTeam != AXIS_TEAM_INDEX && currentTeam != ALLIES_TEAM_INDEX)
+        {
             currentTeam = -1;
+        }
     }
     else
+    {
         currentTeam = -1;
+    }
 
     // Get player's current/desired role
     if (currentTeam == -1)
+    {
         currentRole = none;
-
+    }
     else if (player.CurrentRole != player.DesiredRole)
     {
         if (currentTeam == AXIS_TEAM_INDEX)
+        {
             currentRole = DHGameReplicationInfo(GRI).DHAxisRoles[player.DesiredRole];
+        }
         else if (currentTeam == ALLIES_TEAM_INDEX)
+        {
             currentRole = DHGameReplicationInfo(GRI).DHAlliesRoles[player.DesiredRole];
+        }
         else
+        {
             currentRole = none;
+        }
     }
     else if (PRI.RoleInfo != none)
+    {
         currentRole = PRI.RoleInfo;
+    }
     else
+    {
         currentRole = none;
+    }
 
     // Get player's current name
     currentName = player.GetUrlOption("Name");
@@ -292,7 +321,7 @@ function GetInitialValues()
     desiredTeam = currentTeam;
     desiredRole = currentRole;
     desiredName = currentName;
-    desiredWeapons[0] = -5; // These values tell the AutoPickWeapon() function
+    desiredWeapons[0] = -5; // these values tell the AutoPickWeapon() function
     desiredWeapons[1] = -5; // to use the currentWeapon[] value instead
 }
 
@@ -307,24 +336,36 @@ function FillRoleList()
     ChangeDesiredRole(none);
 
     if (desiredTeam != AXIS_TEAM_INDEX && desiredTeam != ALLIES_TEAM_INDEX)
+    {
         return;
+    }
 
     DHGRI = DHGameReplicationInfo(GRI);
 
     for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
     {
         if (desiredTeam == AXIS_TEAM_INDEX)
+        {
             role = DHGRI.DHAxisRoles[i];
+        }
         else
+        {
             role = DHGRI.DHAlliesRoles[i];
+        }
 
         if (role == none)
+        {
             continue;
+        }
 
         if (ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).bUseNativeRoleNames)
+        {
             li_Roles.Add(role.default.AltName, role);
+        }
         else
+        {
             li_Roles.Add(role.default.MyName, role);
+        }
     }
 
     li_Roles.SortList();
@@ -340,17 +381,27 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
     if (team == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+        {
             if (DHGRI.DHAxisRoles[i] == role)
+            {
                 return i;
+            }
+        }
     }
     else if (team == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); i++)
+        {
             if (DHGRI.DHAlliesRoles[i] == role)
+            {
                 return i;
+            }
+        }
     }
     else
+    {
         return -1;
+    }
 }
 
 function bool checkIfRoleIsFull(RORoleInfo role, int team, optional out int roleLimit, optional out int roleCount, optional out int roleBotCount)
@@ -374,16 +425,14 @@ function bool checkIfRoleIsFull(RORoleInfo role, int team, optional out int role
     }
     else
     {
-        warn("Invalid team used when calling checkIfRoleIsFull(): " $ team);
+        warn("Invalid team used when calling checkIfRoleIsFull():" @ team);
+
         return false;
     }
 
     roleLimit = role.GetLimit(GRI.MaxPlayers);
 
-    return (roleCount == roleLimit) &&
-            (roleLimit != 0) &&
-            !(roleBotCount > 0) &&
-            (currentRole != role);
+    return (roleCount == roleLimit) && (roleLimit != 0) && !(roleBotCount > 0) && (currentRole != role);
 }
 
 function AutoPickRole()
@@ -411,20 +460,25 @@ function AutoPickRole()
             }
 
             if (role == none)
+            {
                 continue;
+            }
 
             if (role.GetLimit(GRI.MaxPlayers) == 0 || currentRoleCount < role.GetLimit(GRI.MaxPlayers))
             {
                 ChangeDesiredRole(role);
+
                 return;
             }
         }
 
-        // if they're all full.. well though noogies :)
-        warn("All roles are full!");
+        // If they're all full.. well though noogies :)
+        Warn("All roles are full!");
     }
     else
+    {
         ChangeDesiredRole(none);
+    }
 }
 
 defaultproperties
@@ -434,51 +488,56 @@ defaultproperties
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
         WinTop=0.223333
-        WinLeft=0.071250
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinLeft=0.07125
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_RolesTitle=GUILabel'DH_Interface.DHRoleSelection.RolesTitle'
+
     Begin Object Class=GUILabel Name=RoleDescTitle
         Caption="Role Description"
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
         WinTop=0.561666
-        WinLeft=0.316250
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinLeft=0.31625
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_RoleDescTitle=GUILabel'DH_Interface.DHRoleSelection.RoleDescTitle'
+
     Begin Object Class=GUILabel Name=PrimaryWeaponTitle
         Caption="Primary Weapon"
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
-        WinTop=0.035000
+        WinTop=0.035
         WinLeft=0.803751
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_PrimaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelection.PrimaryWeaponTitle'
+
     Begin Object Class=GUILabel Name=SecondaryWeaponTitle
         Caption="Sidearm"
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
         WinTop=0.343334
         WinLeft=0.802501
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_SecondaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelection.SecondaryWeaponTitle'
+
     Begin Object Class=GUILabel Name=EquipmentWeaponTitle
         Caption="Equipment"
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
         WinTop=0.640000
         WinLeft=0.806250
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_EquipTitle=GUILabel'DH_Interface.DHRoleSelection.EquipmentWeaponTitle'
+
     Begin Object Class=BackgroundImage Name=PageBackground
         Image=texture'DH_GUI_Tex.Menu.roleselect'
         ImageStyle=ISTY_Scaled
@@ -489,6 +548,7 @@ defaultproperties
         Y2=1023
     End Object
     bg_Background=BackgroundImage'DH_Interface.DHRoleSelection.PageBackground'
+
     Begin Object Class=BackgroundImage Name=PageBackground2
         Image=texture'DH_GUI_Tex.Menu.midgamemenu'
         ImageStyle=ISTY_Scaled
@@ -499,93 +559,102 @@ defaultproperties
         Y2=1023
     End Object
     bg_Background2=BackgroundImage'DH_Interface.DHRoleSelection.PageBackground2'
+
     Begin Object Class=DHGUIButton Name=DisconnectButton
         Caption="Disconnect"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.012000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.012
+        WinWidth=0.18
         TabOrder=1
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=DisconnectButton.InternalOnKeyEvent
     End Object
     b_Disconnect=DHGUIButton'DH_Interface.DHRoleSelection.DisconnectButton'
+
     Begin Object Class=DHGUIButton Name=MapButton
         Caption="Situation Map"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.220000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.22
+        WinWidth=0.18
         TabOrder=2
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=MapButton.InternalOnKeyEvent
     End Object
     b_Map=DHGUIButton'DH_Interface.DHRoleSelection.MapButton'
+
     Begin Object Class=DHGUIButton Name=ScoreButton
         Caption="Score"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.410000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.41
+        WinWidth=0.18
         TabOrder=3
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=ScoreButton.InternalOnKeyEvent
     End Object
     b_Score=DHGUIButton'DH_Interface.DHRoleSelection.ScoreButton'
+
     Begin Object Class=DHGUIButton Name=ConfigButton
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.600000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.6
+        WinWidth=0.18
         TabOrder=4
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=ConfigButton.InternalOnKeyEvent
     End Object
     b_Config=DHGUIButton'DH_Interface.DHRoleSelection.ConfigButton'
+
     Begin Object Class=DHGUIButton Name=ContinueButton
         Caption="Continue"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
+        WinTop=0.95875
         WinLeft=0.808000
-        WinWidth=0.180000
+        WinWidth=0.18
         TabOrder=5
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=ContinueButton.InternalOnKeyEvent
     End Object
     b_Continue=DHGUIButton'DH_Interface.DHRoleSelection.ContinueButton'
+
     Begin Object Class=DHGUIButton Name=JoinAxisButton
         Caption="Join Axis"
         StyleName="DHSmallTextButtonStyle"
-        WinHeight=0.037500
+        WinHeight=0.0375
         TabOrder=7
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=JoinAxisButton.InternalOnKeyEvent
     End Object
     b_JoinAxis=DHGUIButton'DH_Interface.DHRoleSelection.JoinAxisButton'
+
     Begin Object Class=DHGUIButton Name=JoinAlliesButton
         Caption="Join Allies"
         StyleName="DHSmallTextButtonStyle"
-        WinHeight=0.037500
+        WinHeight=0.0375
         TabOrder=6
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=JoinAlliesButton.InternalOnKeyEvent
     End Object
     b_JoinAllies=DHGUIButton'DH_Interface.DHRoleSelection.JoinAlliesButton'
+
     Begin Object Class=DHGUIButton Name=SpectateButton
         Caption="Spectate"
         StyleName="DHSmallTextButtonStyle"
         Hint="Observe the game as a non-playing spectator"
-        WinHeight=0.037500
+        WinHeight=0.0375
         TabOrder=8
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=SpectateButton.InternalOnKeyEvent
     End Object
     b_Spectate=DHGUIButton'DH_Interface.DHRoleSelection.SpectateButton'
+
     Begin Object Class=GUILabel Name=NumAxisLabel
         Caption="?"
         TextAlign=TXTA_Center
@@ -593,12 +662,14 @@ defaultproperties
     End Object
     l_numAxis=GUILabel'DH_Interface.DHRoleSelection.NumAxisLabel'
     l_numAllies=GUILabel'DH_Interface.DHRoleSelection.NumAxisLabel'
+
     Begin Object Class=GUILabel Name=NumFakeLabel
         Caption=" "
         TextAlign=TXTA_Center
         StyleName="DHSmallText"
     End Object
     l_numFake=GUILabel'DH_Interface.DHRoleSelection.NumFakeLabel'
+
     Begin Object Class=DHGuiListBox Name=Roles
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
@@ -606,39 +677,43 @@ defaultproperties
         bSorted=true
         OnCreateComponent=Roles.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinHeight=1.000000
+        WinHeight=1.0
         TabOrder=0
         OnChange=DHRoleSelection.InternalOnChange
     End Object
     lb_Roles=DHGuiListBox'DH_Interface.DHRoleSelection.Roles'
+
     Begin Object Class=GUIImage Name=PlayerImage
         Image=texture'InterfaceArt_tex.Menu.empty'
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        WinTop=0.120000
-        WinHeight=0.880000
+        WinTop=0.12
+        WinHeight=0.88
         OnDraw=DHRoleSelection.InternalOnDraw
     End Object
     i_PlayerImage=GUIImage'DH_Interface.DHRoleSelection.PlayerImage'
+
     Begin Object Class=DHGUIScrollTextBox Name=RoleDescriptionTextBox
         bNoTeletype=true
         OnCreateComponent=RoleDescriptionTextBox.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinHeight=1.000000
+        WinHeight=1.0
     End Object
     l_RoleDescription=DHGUIScrollTextBox'DH_Interface.DHRoleSelection.RoleDescriptionTextBox'
+
     Begin Object Class=GUILabel Name=PlayerNameLabel
         Caption="Name:"
         StyleName="DHLargeText"
         WinWidth=0.350000
-        WinHeight=0.100000
+        WinHeight=0.1
     End Object
     l_PlayerName=GUILabel'DH_Interface.DHRoleSelection.PlayerNameLabel'
+
     Begin Object Class=DHGUIEditBox Name=PlayerNameEditbox
         TextStr="(Player name)"
-        WinLeft=0.350000
-        WinWidth=0.650000
-        WinHeight=0.100000
+        WinLeft=0.35
+        WinWidth=0.65
+        WinHeight=0.1
         OnActivate=PlayerNameEditbox.InternalActivate
         OnDeActivate=PlayerNameEditbox.InternalDeactivate
         OnChange=DHRoleSelection.InternalOnChange
@@ -646,109 +721,119 @@ defaultproperties
         OnKeyEvent=PlayerNameEditbox.InternalOnKeyEvent
     End Object
     e_PlayerName=DHGUIEditBox'DH_Interface.DHRoleSelection.PlayerNameEditbox'
+
     Begin Object Class=GUIImage Name=WeaponImage
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        WinWidth=0.650000
-        WinHeight=0.500000
+        WinWidth=0.65
+        WinHeight=0.5
     End Object
     i_WeaponImages(0)=GUIImage'DH_Interface.DHRoleSelection.WeaponImage'
     i_WeaponImages(1)=GUIImage'DH_Interface.DHRoleSelection.WeaponImage'
+
     Begin Object Class=DHGUIScrollTextBox Name=WeaponDescription
         bNoTeletype=true
         OnCreateComponent=WeaponDescription.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinTop=0.550000
-        WinHeight=0.450000
+        WinTop=0.55
+        WinHeight=0.45
     End Object
     l_WeaponDescription(0)=DHGUIScrollTextBox'DH_Interface.DHRoleSelection.WeaponDescription'
     l_WeaponDescription(1)=DHGUIScrollTextBox'DH_Interface.DHRoleSelection.WeaponDescription'
+
     Begin Object Class=DHGuiListBox Name=WeaponListBox
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
         bVisibleWhenEmpty=true
         OnCreateComponent=WeaponListBox.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinLeft=0.700000
-        WinWidth=0.300000
-        WinHeight=0.500000
+        WinLeft=0.7
+        WinWidth=0.3
+        WinHeight=0.5
         TabOrder=0
         OnChange=DHRoleSelection.InternalOnChange
     End Object
     lb_AvailableWeapons(0)=DHGuiListBox'DH_Interface.DHRoleSelection.WeaponListBox'
     lb_AvailableWeapons(1)=DHGuiListBox'DH_Interface.DHRoleSelection.WeaponListBox'
+
     Begin Object Class=GUIGFXButton Name=EquipButton0
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
         WinWidth=0.200000
-        WinHeight=0.495000
+        WinHeight=0.495
         TabOrder=21
         bTabStop=true
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=EquipButton0.InternalOnKeyEvent
     End Object
     b_Equipment(0)=GUIGFXButton'DH_Interface.DHRoleSelection.EquipButton0'
+
     Begin Object Class=GUIGFXButton Name=EquipButton1
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.210000
-        WinWidth=0.200000
-        WinHeight=0.495000
+        WinLeft=0.21
+        WinWidth=0.2
+        WinHeight=0.495
         TabOrder=22
         bTabStop=true
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=EquipButton1.InternalOnKeyEvent
     End Object
     b_Equipment(1)=GUIGFXButton'DH_Interface.DHRoleSelection.EquipButton1'
+
     Begin Object Class=GUIGFXButton Name=EquipButton2
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.420000
-        WinWidth=0.200000
-        WinHeight=0.495000
+        WinLeft=0.42
+        WinWidth=0.2
+        WinHeight=0.495
         TabOrder=23
         bTabStop=true
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=EquipButton2.InternalOnKeyEvent
     End Object
     b_Equipment(2)=GUIGFXButton'DH_Interface.DHRoleSelection.EquipButton2'
+
     Begin Object Class=GUIGFXButton Name=EquipButton3
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinTop=0.505000
-        WinWidth=0.410000
-        WinHeight=0.495000
+        WinTop=0.505
+        WinWidth=0.41
+        WinHeight=0.495
         TabOrder=24
         bTabStop=true
         OnClick=DHRoleSelection.InternalOnClick
         OnKeyEvent=EquipButton3.InternalOnKeyEvent
     End Object
     b_Equipment(3)=GUIGFXButton'DH_Interface.DHRoleSelection.EquipButton3'
+
     Begin Object Class=DHGUIScrollTextBox Name=EquipDescTextBox
         bNoTeletype=true
         OnCreateComponent=EquipDescTextBox.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinLeft=0.440000
-        WinWidth=0.560000
-        WinHeight=1.000000
+        WinLeft=0.44
+        WinWidth=0.56
+        WinHeight=1.0
     End Object
     l_EquipmentDescription=DHGUIScrollTextBox'DH_Interface.DHRoleSelection.EquipDescTextBox'
+
     Begin Object Class=ROGUIContainerNoSkinAlt Name=ConfigButtonsContainer_inst
         WinTop=0.108333
-        WinLeft=0.060000
-        WinWidth=0.200000
-        WinHeight=0.600000
+        WinLeft=0.06
+        WinWidth=0.2
+        WinHeight=0.6
         OnPreDraw=ConfigButtonsContainer_inst.InternalPreDraw
     End Object
     ConfigButtonsContainer=ROGUIContainerNoSkinAlt'DH_Interface.DHRoleSelection.ConfigButtonsContainer_inst'
+
     Begin Object Class=DHGUIButton Name=StartNewGameButton
         Caption="Start New Game"
         StyleName="DHSmallTextButtonStyle"
@@ -757,6 +842,7 @@ defaultproperties
         OnKeyEvent=StartNewGameButton.InternalOnKeyEvent
     End Object
     b_StartNewGame=DHGUIButton'DH_Interface.DHRoleSelection.StartNewGameButton'
+
     Begin Object Class=DHGUIButton Name=ServerBrowserButton
         Caption="Server Browser"
         StyleName="DHSmallTextButtonStyle"
@@ -773,6 +859,7 @@ defaultproperties
         OnKeyEvent=FavoritesButton.InternalOnKeyEvent
     End Object
     b_AddFavorite=DHGUIButton'DH_Interface.DHRoleSelection.FavoritesButton'
+
     Begin Object Class=DHGUIButton Name=MapVotingButton
         Caption="Map Voting"
         StyleName="DHSmallTextButtonStyle"
@@ -781,6 +868,7 @@ defaultproperties
         OnKeyEvent=MapVotingButton.InternalOnKeyEvent
     End Object
     b_MapVoting=DHGUIButton'DH_Interface.DHRoleSelection.MapVotingButton'
+
     Begin Object Class=DHGUIButton Name=KickVotingButton
         Caption="Kick Voting"
         StyleName="DHSmallTextButtonStyle"
@@ -789,6 +877,7 @@ defaultproperties
         OnKeyEvent=KickVotingButton.InternalOnKeyEvent
     End Object
     b_KickVoting=DHGUIButton'DH_Interface.DHRoleSelection.KickVotingButton'
+
     Begin Object Class=DHGUIButton Name=CommunicationButton
         Caption="Communication"
         StyleName="DHSmallTextButtonStyle"
@@ -805,6 +894,7 @@ defaultproperties
         OnKeyEvent=ConfigurationButton.InternalOnKeyEvent
     End Object
     b_Configuration=DHGUIButton'DH_Interface.DHRoleSelection.ConfigurationButton'
+
     Begin Object Class=DHGUIButton Name=ExitROButton
         Caption="Exit Darkest Hour"
         StyleName="DHSmallTextButtonStyle"
@@ -813,6 +903,7 @@ defaultproperties
         OnKeyEvent=ExitROButton.InternalOnKeyEvent
     End Object
     b_ExitRO=DHGUIButton'DH_Interface.DHRoleSelection.ExitROButton'
+
     ConfigurationButtonText1="Options"
     ConfigurationButtonHint1="Show game and configuration options"
     Background=texture'DH_GUI_Tex.Menu.midgamemenu'

@@ -89,7 +89,7 @@ function HandleReload()
         ClientDoReload();
         NetUpdateTime = Level.TimeSeconds - 1;
 
-        //Log("Reloading duration = "$VehicleWeaponPawn(Owner).HUDOverlay.GetAnimDuration('Reload', 1.0));
+        //Log("Reloading duration =" @ VehicleWeaponPawn(Owner).HUDOverlay.GetAnimDuration('Reload', 1.0));
         //SetTimer(VehicleWeaponPawn(Owner).HUDOverlay.GetAnimDuration('reload', 1.0), false);
         SetTimer(ReloadLength, false);
     }

@@ -131,11 +131,10 @@ defaultproperties
     ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
-    
-    StraightFlightTime=0.200000
-    PenetrationDamageRadius=250.000000
+    StraightFlightTime=0.2
+    PenetrationDamageRadius=250.0
     TracerEffect=class'DH_Effects.DH_OrangeTankShellTracer'
-    PenetrationMag=250.000000
+    PenetrationMag=250.0
     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
     ImpactDamage=675
     VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
@@ -145,19 +144,19 @@ defaultproperties
     ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
     ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
-    BallisticCoefficient=0.050000
-    Damage=300.000000
-    DamageRadius=250.000000
+    BallisticCoefficient=0.05
+    Damage=300.0
+    DamageRadius=250.0
     ExplosionDecal=class'ROEffects.RocketMarkDirt'
     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
     LightType=LT_Steady
     LightEffect=LE_QuadraticNonIncidence
     LightHue=28
-    LightBrightness=255.000000
-    LightRadius=5.000000
-    CullDistance=7500.000000
+    LightBrightness=255.0
+    LightRadius=5.0
+    CullDistance=7500.0
     bDynamicLight=true
-    LifeSpan=15.000000
+    LifeSpan=15.0
 
 //  Override unwanted defaults now inherited from DH_ROTankCannonShellHEAT & DH_ROTankCannonShell:
     ShakeRotMag=(Y=50.0,Z=200.0)

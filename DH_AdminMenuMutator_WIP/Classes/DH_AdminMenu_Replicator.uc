@@ -145,7 +145,7 @@ simulated function CreateLocalMenus(PlayerController PC)
 
         for (i = 0; i < PC.Player.LocalInteractions.Length; i++)
         {
-            Log("DH_AdminMenu_Replicator: LocalInteractions["$i$"] =" @ PC.Player.LocalInteractions[i]);
+            Log("DH_AdminMenu_Replicator: LocalInteractions[" $ i $ "] =" @ PC.Player.LocalInteractions[i]);
         }
     }
 }

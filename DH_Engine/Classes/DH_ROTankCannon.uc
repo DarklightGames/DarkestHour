@@ -264,7 +264,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Front turret hit, base armor = "$FrontArmorFactor * 10.0 $ "mm");
+            Level.Game.Broadcast(self, "Front turret hit, base armor =" @ FrontArmorFactor * 10.0 $ "mm");
         }
 
         // Run a pre-check
@@ -480,7 +480,7 @@ simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, fl
         // Check if the round should shatter on the armor
         if (P.default.bShatterProne)
         {
-            CheckIfRoundShatters(P, PenetrationRatio, OverMatchFactor);
+            bRoundShattered = CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
         }
 
         if (!bRoundShattered)
@@ -649,10 +649,8 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
 }
 
 // Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
-simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
+simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
 {
-    local bool bShattered;
-
     if (P.default.RoundType == RT_HVAP)
     {
         // Matt: TEST - maybe this should include 88mm APCR, which is same as HVAP?
@@ -660,14 +658,14 @@ simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, flo
         {
             if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.27)
             {
-                bShattered = true;
+                return true;
             }
         }
         else // smaller HVAP rounds
         {
             if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.34)
             {
-                bShattered = true;
+                return true;
             }
         }
     }
@@ -675,7 +673,7 @@ simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, flo
     {
         if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.20)
         {
-            bShattered = true;
+            return true;
         }
     }
     else if (P.default.RoundType == RT_HEAT) // no chance of shatter for HEAT round
@@ -685,11 +683,11 @@ simulated function CheckIfRoundShatters(class<DH_ROAntiVehicleProjectile> P, flo
     {
         if (OverMatchFactor > 0.8 && PenetrationRatio >= 1.06 && PenetrationRatio <= 1.19)
         {
-            bShattered = true;
+            return true;
         }
     }
 
-    bRoundShattered = bShattered; // now we set the replicated variable
+    return false;
 }
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -1774,11 +1772,11 @@ defaultproperties
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true
     ManualRotationsPerSecond=0.011111
-    PoweredRotationsPerSecond=0.050000
+    PoweredRotationsPerSecond=0.05
     FireAttachBone="com_player"
-    FireEffectOffset=(Z=-20.000000)
+    FireEffectOffset=(Z=-20.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     bManualTurret=true
     CannonReloadState=CR_Waiting
-    AltFireSpread=0.002000
+    AltFireSpread=0.002
 }

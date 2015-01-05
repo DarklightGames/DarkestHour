@@ -6,21 +6,20 @@
 // Matt: originally extended ROProjectileFire, but this is the only DH weapon to do so - the minor changes in DH_ProjectileFire won't affect a faust, so changed to DH version for uniformity
 class DH_PanzerFaustFire extends DH_ProjectileFire;
 
-var     float                 ExhaustDamage;           // Damage caused by exhaust (back blast)
-var     float                 ExhaustDamageRadius;     // Radius for damage caused by exhaust
-var     float                 ExhaustMomentumTransfer; // Momentum from exhaust to inflict on players
-var     class<DamageType>     ExhaustDamageType;       // Damage type for exhaust
+var     float                 ExhaustDamage;           // damage caused by exhaust (back blast)
+var     float                 ExhaustDamageRadius;     // radius for damage caused by exhaust
+var     float                 ExhaustMomentumTransfer; // momentum from exhaust to inflict on players
+var     class<DamageType>     ExhaustDamageType;       // damage type for exhaust
 
-var     name        FireIronAnimOne;    // Iron Fire animation for range setting one
-var     name        FireIronAnimTwo;    // Iron Fire animation for range setting two
-var     name        FireIronAnimThree;  // Iron Fire animation for range setting three
+var     name        FireIronAnimOne;   // iron fire animation for range setting one
+var     name        FireIronAnimTwo;   // iron fire animation for range setting two
+var     name        FireIronAnimThree; // iron fire animation for range setting three
 
 
 event ModeDoFire()
 {
-    local vector  WeapLoc;
     local rotator WeapRot;
-    local vector  HitLoc, HitNorm, FlameDir, FlameReflectDir;
+    local vector  WeapLoc, HitLoc, HitNorm, FlameDir, FlameReflectDir;
     local float   FlameLen;
     local Actor   Other;
     local RODestroyableStaticMesh DestroMesh;
@@ -32,9 +31,9 @@ event ModeDoFire()
 
     super.ModeDoFire();
 
-    WeapLoc = Weapon.ThirdPersonActor.Location; // Get the location of the panzerfaust
-    WeapRot = Weapon.ThirdPersonActor.Rotation; // Get the rotation of the panzerfaust
-    FlameDir = vector(WeapRot); // Set direction of exhaust
+    WeapLoc = Weapon.ThirdPersonActor.Location; // get the location of the panzerfaust
+    WeapRot = Weapon.ThirdPersonActor.Rotation; // get the rotation of the panzerfaust
+    FlameDir = vector(WeapRot); // set direction of exhaust
 
     Other = Trace(HitLoc, HitNorm, WeapLoc - (FlameDir * 300.0), WeapLoc, false);
     DestroMesh = RODestroyableStaticMesh(Other);
@@ -43,7 +42,7 @@ event ModeDoFire()
     // Do not reflect off players or breakable objects like windows
     if (Other != none && DH_Pawn(Other) == none && DestroMesh == none)
     {
-        FlameLen = VSize(HitLoc - WeapLoc); // Exhaust stream length when it hit an object
+        FlameLen = VSize(HitLoc - WeapLoc); // exhaust stream length when it hit an object
         FlameReflectDir = 2.0 * (HitNorm * FlameDir) * HitNorm - FlameDir; // vector back towards firer from hit object
 
         if (FlameLen < 200.0)
@@ -133,15 +132,15 @@ function PlayFiring()
 
 defaultproperties
 {
-    ExhaustDamage=200.000000
-    ExhaustDamageRadius=50.000000
-    ExhaustMomentumTransfer=100.000000
+    ExhaustDamage=200.0
+    ExhaustDamageRadius=50.0
+    ExhaustMomentumTransfer=100.0
     ExhaustDamageType=class'DH_ATWeapons.DH_PanzerfaustExhaustDamType'
     FireIronAnimOne="shoot30"
     FireIronAnimTwo="shoot"
     FireIronAnimThree="shoot90"
-    ProjSpawnOffset=(X=25.000000)
-    FAProjSpawnOffset=(X=-25.000000)
+    ProjSpawnOffset=(X=25.0)
+    FAProjSpawnOffset=(X=-25.0)
     bUsePreLaunchTrace=false
     FireIronAnim="shoot"
     MuzzleBone="Warhead"
@@ -152,21 +151,21 @@ defaultproperties
     maxHorizontalRecoilAngle=600
     bWaitForRelease=true
     FireAnim="shoothip"
-    TweenTime=0.000000
+    TweenTime=0.0
     FireForce="RocketLauncherFire"
-    FireRate=2.600000
+    FireRate=2.6
     AmmoClass=class'DH_ATWeapons.DH_PanzerFaustAmmo'
-    ShakeRotMag=(X=50.000000,Y=50.000000,Z=500.000000)
-    ShakeRotRate=(X=12500.000000,Y=12500.000000,Z=7500.000000)
-    ShakeRotTime=6.000000
-    ShakeOffsetMag=(X=3.000000,Y=1.000000,Z=5.000000)
-    ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    ShakeOffsetTime=1.000000
+    ShakeRotMag=(X=50.0,Y=50.0,Z=500.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=7500.0)
+    ShakeRotTime=6.0
+    ShakeOffsetMag=(X=3.0,Y=1.0,Z=5.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
     ProjectileClass=class'DH_ATWeapons.DH_PanzerFaustRocket'
-    BotRefireRate=0.500000
-    WarnTargetPct=0.900000
+    BotRefireRate=0.5
+    WarnTargetPct=0.9
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=1200.000000
-    Spread=550.000000
+    AimError=1200.0
+    Spread=550.0
     SpreadStyle=SS_Random
 }
