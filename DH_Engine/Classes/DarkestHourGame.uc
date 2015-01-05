@@ -1289,16 +1289,20 @@ function UpdateRoleCounts()
 function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 {
     local RORoleInfo RI;
-    local ROPlayer Playa;
-    local ROBot MrRoboto;
+    local ROPlayer   Playa;
+    local ROBot      MrRoboto;
 
     if (aPlayer == none || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == none || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
+    {
         return;
+    }
 
     RI = GetRoleInfo(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i);
 
     if (RI == none)
+    {
         return;
+    }
 
     // Lets try and avoid 50 casts - Ramm
     Playa = ROPlayer(aPlayer);
@@ -1313,15 +1317,12 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     {
         Playa.DesiredRole = i;
 
-        //if (Playa.CurrentRole == i)
-        //  return;
-
         if (aPlayer.Pawn == none)
         {
             // Try and kick a bot out of this role if bots are occupying it
             if (RoleLimitReached(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i))
             {
-                 HumanWantsRole(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i);
+                HumanWantsRole(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i);
             }
 
             if (!RoleLimitReached(aPlayer.PlayerReplicationInfo.Team.TeamIndex, i))
@@ -1336,18 +1337,26 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     if (Playa.CurrentRole != -1)
                     {
                         if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+                        {
                             DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]--;
+                        }
                         else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+                        {
                             DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]--;
+                        }
                     }
 
                     Playa.CurrentRole = i;
 
                     // Increment the RoleCounter for the new role
                     if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+                    {
                         DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]++;
+                    }
                     else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+                    {
                         DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]++;
+                    }
 
                     ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
                     Playa.PrimaryWeapon = -1;
@@ -1374,7 +1383,9 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     else if (MrRoboto != none)
     {
         if (MrRoboto.CurrentRole == i)
+        {
             return;
+        }
 
         MrRoboto.DesiredRole = i;
 
@@ -1386,18 +1397,26 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                 if (MrRoboto.CurrentRole != -1)
                 {
                     if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+                    {
                         DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]--;
+                    }
                     else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+                    {
                         DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]--;
+                    }
                 }
 
                 MrRoboto.CurrentRole = i;
 
                 // Increment the RoleCounter for the new role
                 if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+                {
                     DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]++;
+                }
                 else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+                {
                     DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]++;
+                }
 
                 ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
                 SetCharacter(aPlayer);
@@ -1412,9 +1431,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
-    //Removes console spam whenever you kill an empty tank
+    // Removes console spam whenever you kill an empty tank
     if (Killed != none)
+    {
         super.Killed(Killer, Killed, KilledPawn, DamageType);
+    }
 }
 
 function bool RoleExists(byte TeamID, DH_RoleInfo RI)
@@ -1422,13 +1443,25 @@ function bool RoleExists(byte TeamID, DH_RoleInfo RI)
     local int i;
 
     if (TeamID == 0)
-        for (i = 0; i < arraycount(DHAxisRoles); i++)
+    {
+        for (i = 0; i < ArrayCount(DHAxisRoles); i++)
+        {
             if (DHAxisRoles[i] == RI)
+            {
                 return true;
-    if (TeamID == 1)
-        for (i = 0; i < arraycount(DHAlliesRoles); i++)
+            }
+        }
+    }
+    else if (TeamID == 1)
+    {
+        for (i = 0; i < ArrayCount(DHAlliesRoles); i++)
+        {
             if (DHAlliesRoles[i] == RI)
+            {
                 return true;
+            }
+        }
+    }
 
     return false;
 }
@@ -1448,8 +1481,8 @@ state RoundInPlay
     function EndRound(int Winner)
     {
         local string MapName;
-        local int i, j;
-        local bool bMatchOver, bRussianSquadLeader;
+        local int    i, j;
+        local bool   bMatchOver, bRussianSquadLeader;
 
         switch (Winner)
         {
@@ -1458,11 +1491,13 @@ state RoundInPlay
                 BroadcastLocalizedMessage(class'DHRoundOverMsg', 0,,, DHLevelInfo);
                 TeamScoreEvent(AXIS_TEAM_INDEX, 1, "team_victory");
                 break;
+
             case ALLIES_TEAM_INDEX:
                 Teams[ALLIES_TEAM_INDEX].Score += 1.0;
                 BroadcastLocalizedMessage(class'DHRoundOverMsg', 1,,, DHLevelInfo);
                 TeamScoreEvent(ALLIES_TEAM_INDEX, 1, "team_victory");
                 break;
+
             default:
                 BroadcastLocalizedMessage(class'RORoundOverMsg', 2);
                 break;
@@ -1474,9 +1509,13 @@ state RoundInPlay
         bMatchOver = true;
 
         if (RoundLimit != 0 && RoundCount >= RoundLimit)
+        {
             EndGame(none, "RoundLimit");
+        }
         else if (WinLimit != 0 && (Teams[AXIS_TEAM_INDEX].Score >= WinLimit || Teams[ALLIES_TEAM_INDEX].Score >= WinLimit))
+        {
             EndGame(none, "WinLimit");
+        }
         else
         {
             bMatchOver = false;
@@ -1486,22 +1525,27 @@ state RoundInPlay
         // Get the MapName out of the URL
         MapName = Level.GetLocalURL();
         i = InStr(MapName, "/");
+
         if (i < 0)
         {
             i = 0;
         }
+
         j = InStr(MapName, "?");
+
         if (j < 0)
         {
             j = Len(MapName);
         }
+
         if (Mid(MapName, j - 3, 3) ~= "rom")
         {
             j -= 5;
         }
+
         MapName = Mid(MapName, i + 1, j - i);
 
-        // Set the map as won in the Steam Stats of everyone on the Winning Team
+        // Set the map as won in the Steam Stats of everyone on the winning team
         for (i = 0; i < GameReplicationInfo.PRIArray.Length; i++)
         {
             if (ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements) != none)
@@ -1512,7 +1556,8 @@ state RoundInPlay
                     {
                         if (GameReplicationInfo.PRIArray[i].Team.TeamIndex == ALLIES_TEAM_INDEX && ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]) != none)
                         {
-                            bRussianSquadLeader = ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bIsLeader && !ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bCanBeTankCrew;
+                            bRussianSquadLeader = ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bIsLeader && 
+                                !ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bCanBeTankCrew;
                         }
                         else
                         {
@@ -1591,10 +1636,7 @@ state ResetGameCountdown
     }
 }
 
-//-----------------------------------------------------------------------------
-// RoundOver - Wait period before a new round begins
-//-----------------------------------------------------------------------------
-
+// Wait period before a new round begins
 // Matt: modified to replace ROArtillerySpawner with DH_ArtillerySpawner
 state RoundOver
 {
@@ -1606,7 +1648,7 @@ state RoundOver
         ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
         ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
 
-        // Destroy any artillery spawners so they don't keep calling airstrikes.
+        // Destroy any artillery spawners so they don't keep calling airstrikes
         foreach DynamicActors(class'DH_ArtillerySpawner', AS)
         {
             AS.Destroy();
@@ -1621,15 +1663,19 @@ function ResetMortarTargets()
     local DHGameReplicationInfo GRI;
 
     if (GameReplicationInfo == none)
+    {
         return;
+    }
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI == none)
+    {
         return;
+    }
 
-    //Clear mortar allied targets.
-    for (k = 0; k < arraycount(GRI.AlliedMortarTargets); k++)
+    // Clear mortar allied targets
+    for (k = 0; k < ArrayCount(GRI.AlliedMortarTargets); k++)
     {
         GRI.AlliedMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
         GRI.AlliedMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
@@ -1637,8 +1683,8 @@ function ResetMortarTargets()
         GRI.AlliedMortarTargets[k].Time = 0;
     }
 
-    //Clear mortar german targets.
-    for (k = 0; k < arraycount(GRI.GermanMortarTargets); k++)
+    // Clear mortar german targets
+    for (k = 0; k < ArrayCount(GRI.GermanMortarTargets); k++)
     {
         GRI.GermanMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
         GRI.GermanMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
@@ -1647,9 +1693,7 @@ function ResetMortarTargets()
     }
 }
 
-//------------------------------------------------------------------------------
-// Overridden so we show how many actual individual reinforcements we have.
-// Basnett - January 19th, 2010
+// Overridden so we show how many actual individual reinforcements we have - Basnett - January 19th, 2010
 function RestartPlayer(Controller C)
 {
     local DHPlayer DHC;
@@ -1670,7 +1714,7 @@ function RestartPlayer(Controller C)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
 
-        //If the Allies have used up 85% of their reinforcements, send them a reinforcements low message
+        // If the Allies have used up 85% of their reinforcements, send them a reinforcements low message
         if (SpawnCount[ALLIES_TEAM_INDEX] == Int(LevelInfo.Allies.SpawnLimit * 0.85))
         {
             SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
@@ -1680,7 +1724,7 @@ function RestartPlayer(Controller C)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
 
-        //If Axis has used up 85% of their reinforcements, send them a reinforcements low message
+        // If Axis has used up 85% of their reinforcements, send them a reinforcements low message
         if (SpawnCount[AXIS_TEAM_INDEX] == Int(LevelInfo.Axis.SpawnLimit * 0.85))
         {
             SendReinforcementMessage(AXIS_TEAM_INDEX, 0);
@@ -1696,8 +1740,7 @@ function RestartPlayer(Controller C)
     }
 }
 
-//This function add functionality so when you type "%r" in teamsay it'll output helpful debug info
-//for reporting bugs in MP (returns mapname & coordinates)
+// This function adds functionality so when you type "%r" in teamsay it'll output helpful debug info for reporting bugs in MP (returns mapname & coordinates)
 static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, string Cmd)
 {
     local string Str;
@@ -1708,10 +1751,10 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
         return Cmd;
     }
 
-    //Coordinates
+    // Coordinates
     if (cmd ~= "%r")
     {
-        //Get the level name string
+        // Get the level name string
         MapName = string(Who.Outer);
 
         if (MapName == "")
@@ -1719,7 +1762,7 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
             MapName = "Error No MapName";
         }
 
-        //Finish parsing the string
+        // Finish parsing the string
         Str = "Map:" @ MapName @ "Coord:" @ string(Who.Pawn.Location) @ "Report: ";
 
         return Str;
@@ -1728,7 +1771,7 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
     return super.ParseChatPercVar(BaseMutator, Who,Cmd);
 }
 
-//Debug function for winning a round (needs admin or local)
+// Debug function for winning a round (needs admin or local)
 exec function DebugWinGame(optional int TeamToWin)
 {
     EndRound(TeamToWin);
@@ -1738,7 +1781,7 @@ function DHRestartPlayer(Controller C)
 {
     local TeamInfo BotTeam, OtherTeam;
     local DHPlayer DHC;
-    local byte SpawnError;
+    local byte     SpawnError;
 
     DHC = DHPlayer(C);
 
@@ -1803,18 +1846,18 @@ function DHRestartPlayer(Controller C)
     }
 }
 
-//Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer
-function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
+// Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer
+function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 {
     local UnrealTeamInfo NewTeam;
-    local DHPlayer P;
+    local DHPlayer       P;
 
     if (bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun)
     {
-        return false;   // only allow team changes before match starts
+        return false; // only allow team changes before match starts
     }
 
-    if (CurrentGameProfile != none && !CurrentGameProfile.CanChangeTeam(Other, num))
+    if (CurrentGameProfile != none && !CurrentGameProfile.CanChangeTeam(Other, Num))
     {
         return false;
     }
@@ -1828,7 +1871,7 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
 
     NewTeam = Teams[PickTeam(num,Other)];
 
-    // check if already on this team
+    // Check if already on this team
     if (Other.PlayerReplicationInfo.Team == NewTeam)
     {
         return false;
@@ -1852,7 +1895,7 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
             P.GrenadeWeapon = -1;
             P.bWeaponsSelected = false;
 
-            //DARKEST HOUR
+            // DARKEST HOUR
             P.bReadyToSpawn = false;
             P.SpawnPointIndex = -1;
             P.VehiclePoolIndex = -1;
@@ -1872,7 +1915,7 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
 
         if (bNewTeam && PlayerController(Other) != none)
         {
-            GameEvent("TeamChange", "" $ num, Other.PlayerReplicationInfo);
+            GameEvent("TeamChange", "" $ Num, Other.PlayerReplicationInfo);
         }
     }
 
@@ -1885,9 +1928,9 @@ function bool ChangeTeam(Controller Other, int num, bool bNewTeam)
 //Overridden to support one normal kick, then session kick for FF violation
 function HandleFFViolation(PlayerController Offender)
 {
-    local bool bSuccess;
+    local bool   bSuccess;
     local string OffenderID;
-    local int i;
+    local int    i;
 
     if (FFPunishment == FFP_None || Level.NetMode == NM_Standalone)
     {
@@ -1897,64 +1940,72 @@ function HandleFFViolation(PlayerController Offender)
     OffenderID = Offender.GetPlayerIDHash();
 
     BroadcastLocalizedMessage(GameMessageClass, 14, Offender.PlayerReplicationInfo);
-    log("Kicking"@Offender.GetHumanReadableName()@"due to a friendly fire violation.");
+    log("Kicking" @ Offender.GetHumanReadableName() @ "due to a friendly fire violation.");
 
-    //The player has been kicked once and needs to be session kicked
+    // The player has been kicked once and needs to be session kicked
     if (FFPunishment == FFP_Kick && bSessionKickOnSecondFFViolation)
     {
-        for (i=0;i<FFViolationIDs.Length;i++)
+        for (i = 0; i < FFViolationIDs.Length; i++)
         {
             //Theel Debug
-            Level.Game.Broadcast(self, "FFViolationID"$i$":"@FFViolationIDs[i], 'Say');
+            Level.Game.Broadcast(self, "FFViolationID" $ i $ ":" @ FFViolationIDs[i], 'Say');
 
             if (FFViolationIDs[i] == OffenderID)
             {
                 //AccessControl.BanPlayer(Offender, true); //Session kick
                 //Theel Debug
-                Level.Game.Broadcast(self, "This Offender Would Be Session Kicked:"@OffenderID, 'Say');
-                return; //Need to stop here because the player has been session kicked
+                Level.Game.Broadcast(self, "This offender would be session kicked:" @ OffenderID, 'Say');
+                return; // need to stop here because the player has been session kicked
             }
         }
-        //The player hasn't yet been punished, but is being kicked now so lets add him to FFViolationIDs
+        // The player hasn't yet been punished, but is being kicked now so lets add him to FFViolationIDs
         FFViolationIDs.Insert(0, 1);
         FFViolationIDs[0] = OffenderID;
     }
 
     if (FFPunishment == FFP_Kick)
-        Level.Game.Broadcast(self, "This Offender Would Be Kicked:"@OffenderID, 'Say');
+    {
+        Level.Game.Broadcast(self, "This offender would be kicked:" @ OffenderID, 'Say');
         //bSuccess = KickPlayer(Offender);
+    }
     else if (FFPunishment == FFP_SessionBan)
+    {
         bSuccess = AccessControl.BanPlayer(Offender, true);
+    }
     else
+    {
         bSuccess = AccessControl.BanPlayer(Offender);
+    }
 
     if (!bSuccess)
-        log("Unable to remove"@Offender.GetHumanReadableName()@"from the server.");
+    {
+        log("Unable to remove" @ Offender.GetHumanReadableName() @ "from the server.");
+    }
 }
 
 defaultproperties
 {
-    //Default settings based on common used server settings in DH
-    bIgnore32PlayerLimit=true //Allows more than 32 players
+    // Default settings based on common used server settings in DH
+    bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
 
     bSessionKickOnSecondFFViolation=true
-    FFDamageLimit=0 //This stops the FF damage system from kicking based on FF damage
-    FFKillLimit=4 //New default of 4 unforgiven FF kills before punishment
-    FFArtyScale=0.5 //Makes it so arty FF kills count as .5
-    FFExplosivesScale=0.5 //Make it so other explosive FF kills count as .5
+    FFDamageLimit=0       // this stops the FF damage system from kicking based on FF damage
+    FFKillLimit=4         // new default of 4 unforgiven FF kills before punishment
+    FFArtyScale=0.5       // makes it so arty FF kills count as .5
+    FFExplosivesScale=0.5 // make it so other explosive FF kills count as .5
 
-    WinLimit=1 //1 round per map, server admins are able to customize win/rounds to the level in webadmin
+    WinLimit=1 // 1 round per map, server admins are able to customize win/rounds to the level in webadmin
     RoundLimit=1
 
     MaxTeamDifference=2
-    bAutoBalanceTeamsOnDeath=true //If teams become imbalanced it'll force the next player to die to the weaker team
+    bAutoBalanceTeamsOnDeath=true // if teams become imbalanced it'll force the next player to die to the weaker team
     MaxIdleTime=300
 
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
 
-    //Strings/Hints
+    // Strings/hints
     ROHints(1)="You can 'cook' an Allied Mk II grenade by pressing the opposite fire button while holding the grenade back."
     ROHints(13)="You cannot change the 30 Cal barrel, be careful not to overheat!"
     ROHints(17)="Once you've fired the Bazooka or Panzerschreck get to fresh cover FAST, as the smoke of your backblast will reveal your location. Return fire almost certainly follow!"
@@ -1998,7 +2049,7 @@ defaultproperties
     BeaconName="DH"
     GameName="DarkestHourGame"
 
-    //ClassReferences
+    // Class references
     LoginMenuClass="DH_Interface.DHPlayerSetupPage"
     DefaultPlayerClassName="DH_Engine.DH_Pawn"
     ScoreBoardType="DH_Interface.DHScoreBoard"
