@@ -10,9 +10,11 @@ var()   class<Projectile>   TracerProjectileClass; // Matt: replaces DummyTracer
 var()   int                 TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
  
 // Reload stuff
-var()   sound ReloadSound; // sound of this MG reloading
-var     bool  bReloading;  // This MG is currently reloading
-var     int   NumMags;     // Number of mags carried for this MG;
+var     bool  bReloading;      // this MG is currently reloading
+var()   sound ReloadSound;     // sound of this MG reloading
+var     float ReloadDuration;  // time duration of reload (set automatically)
+var     float ReloadStartTime; // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
+var     int   NumMags;         // number of mags carried for this MG;
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -32,8 +34,12 @@ replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire;
+
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         bReloading, NumMags;
+
+    reliable if (Role == ROLE_Authority) // function the server can call on an owning client
+        ClientSetReloadStartTime;
 }
 //==============================================================================
 
@@ -41,6 +47,8 @@ replication
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    ReloadDuration = GetSoundDuration(ReloadSound); // just so the client's MGPawn doesn't have to do this many times per second to display reload progress on the HUD
 
     if (CollisionMeshActorClass != none)
     {
@@ -125,9 +133,18 @@ function HandleReload()
         bReloading = true;
         NumMags--;
         NetUpdateTime = Level.TimeSeconds - 1;
+        ReloadStartTime = Level.TimeSeconds; // Matt: added so we can pass this to client (using next function call), so client can work out reload progress to display on HUD 
+        ClientSetReloadStartTime();
         SetTimer(GetSoundDuration(ReloadSound), false);
         PlaySound(ReloadSound, SLOT_None, 1.5,, 25,, true);
     }
+}
+
+// Matt: new server-to-client function passing the % of reload already done, so client can determine when reload started - used to show reload progress on HUD ammo icon
+// Only called once for owning player, either when reload starts or if player enters MG position that is in the process of reloading
+simulated function ClientSetReloadStartTime(optional byte PercentageDone) // replication optimised to a byte, instead of passing start time as float
+{
+    ReloadStartTime = Level.TimeSeconds - (Float(PercentageDone) / 100.0 * ReloadDuration);
 }
 
 simulated function Timer()

@@ -61,6 +61,23 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
     }
 }
 
+// Matt: modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
+function KDriverEnter(Pawn P)
+{
+    local DH_ROMountedTankMG MG;
+    local float PercentageOfReloadDone;
+
+    MG = DH_ROMountedTankMG(Gun);
+
+    if (MG != none && MG.bReloading)
+    {
+        PercentageOfReloadDone = Byte(100.0 * (Level.TimeSeconds - MG.ReloadStartTime) / MG.ReloadDuration);
+        MG.ClientSetReloadStartTime(PercentageOfReloadDone);
+    }
+
+    super.KDriverEnter(P);
+}
+
 // Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
 simulated function ClientKDriverLeave(PlayerController PC)
 {
@@ -231,7 +248,7 @@ function bool ResupplyAmmo()
 }
 
 // Matt: used by HUD to show coaxial MG reload progress, like the cannon reload
-function float GetAmmoReloadState() // TEMP partial demo, pending consolidation & rework of all MG classes - this only works in single player as variables aren't replicated to client
+function float GetAmmoReloadState()
 {
     local DH_ROMountedTankMG MG;
     local float ProportionOfReloadRemaining;
@@ -244,9 +261,9 @@ function float GetAmmoReloadState() // TEMP partial demo, pending consolidation 
         {
             return 0.0;
         }
-        else if (Role == ROLE_Authority && MG.bReloading && MG.TimerRate > 0.0)
+        else if (MG.bReloading)
         {
-            ProportionOfReloadRemaining = 1.0 - (MG.TimerCounter / MG.TimerRate);
+            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MG.ReloadStartTime) / MG.ReloadDuration);
 
             if (ProportionOfReloadRemaining >= 0.75)
             {
