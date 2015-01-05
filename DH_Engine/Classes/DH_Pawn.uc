@@ -350,11 +350,6 @@ function name GetWeaponBoneFor(Inventory I)
     return 'weapon_rhand';
 }
 
-static function name StaticGetWeaponBoneFor(class<Inventory> I)
-{
-    return super.StaticGetWeaponBoneFor(I);
-}
-
 function bool TeleSpawnProtected()
 {
     return TeleSpawnProtEnds > Level.TimeSeconds;
@@ -1319,7 +1314,7 @@ Begin:
     Sleep(0.2);
     bInvulnerableBody = false;
 
-    if (Role == ROLE_Authority && !Level.Game.bGameEnded)
+    if (Level.Game != none && !Level.Game.bGameEnded) // Matt: needs != none check to avoid "accessed none" error on a client (actor has been torn off so usual Role=authority check doesn't work)
     {
         PlayDyingSound();
     }
