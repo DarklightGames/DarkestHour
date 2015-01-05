@@ -7,13 +7,13 @@ class DH_M1GrenadeProjectile extends DH_GrenadeProjectile;
 
 defaultproperties
 {
-    FuzeLengthTimer=4.0
+    MyDamageType=class'DH_Weapons.DH_M1GrenadeDamType'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.M1Grenade_throw'
     ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.F1.f1_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.F1.f1_explode03'
     Damage=140.000000
     DamageRadius=785.000000
-    MyDamageType=class'DH_Weapons.DH_M1GrenadeDamType'
     Speed=1000.0
-    StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.M1Grenade_throw'
+    FuzeLengthTimer=4.0
 }

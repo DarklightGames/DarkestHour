@@ -7,12 +7,12 @@ class DH_StielGranateProjectile extends DH_GrenadeProjectile;
 
 defaultproperties
 {
-    bIsStickGrenade=true
+    MyDamageType=class'DH_Weapons.DH_StielGranateDamType'
+    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw'
     ExplosionSound(0)=SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode03'
-    Damage=180.000000
-    DamageRadius=639.000000
-    MyDamageType=class'DH_Weapons.DH_StielGranateDamType'
-    StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw'
+    Damage=180.0
+    DamageRadius=639.0
+    bIsStickGrenade=true
 }
