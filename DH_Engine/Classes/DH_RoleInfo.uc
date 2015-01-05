@@ -7,21 +7,23 @@ class DH_RoleInfo extends RORoleInfo
     placeable
     abstract;
 
-var     bool    bIsATGunner;            // Enable player to request AT resupply.
-var     bool    bCanUseMortars;         // Enable player to use mortars.
+var     bool    bIsATGunner;         // enable player to request AT resupply.
+var     bool    bCanUseMortars;      // enable player to use mortars.
 var     bool    bIsSquadLeader;
 var     bool    bIsMortarObserver;
 var     bool    bIsArtilleryOfficer;
 
-var()   bool    bCarriesATAmmo;         // Enable player to carry rocket anti-tank ammunition.
-var()   bool    bCarriesMortarAmmo;     // Enable player to carry mortar ammunition.
+var()   bool    bCarriesATAmmo;      // enable player to carry rocket anti-tank ammunition.
+var()   bool    bCarriesMortarAmmo;  // enable player to carry mortar ammunition.
 
 var array<float> HeadgearProbabilities;
 
 function PostBeginPlay()
 {
     if (DarkestHourGame(Level.Game) != none)
+    {
         DarkestHourGame(Level.Game).AddRole(self);
+    }
 
     HandlePrecache();
 }

@@ -20,23 +20,30 @@ simulated function string GetOnDestroyCriticalMessage()
 {
     local string s;
     //Log("GetOnDestroyCriticalMessage called.");
-    //Log("Looking at localize info for " $ SavedName $ ", " $ string(class) $ ", " $ string(level.outer));
+    //Log("Looking at localize info for" @ SavedName $ "," @ string(class) $ "," @ string(level.outer));
     s = Localize(string(SavedName), "OnDestroyCriticalMessage", string(level.outer));
+
     if (s != "")
+    {
         return s;
+    }
     else
+    {
         return default.OnDestroyCriticalMessage;
+    }
 }
 
 function Reset()
 {
     super.Reset();
-    Gotostate('Working');
+
+    GotoState('Working');
 }
 
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
     SavedStaticMesh = StaticMesh;
     SavedName = name;
     disable('tick');
@@ -45,7 +52,9 @@ simulated function PostBeginPlay()
 function Trigger(actor Other, pawn EventInstigator)
 {
     if (EventInstigator != none)
+    {
         MakeNoise(1.0);
+    }
 
     Health = 0;
     TriggerEvent(DestroyedEvent, self, EventInstigator);
@@ -60,7 +69,6 @@ function bool ShouldTakeDamage(class<DamageType> damageType)
 
     for (i = 0; i < TypesCanDamage.Length; i++)
     {
-
         if (damageType==TypesCanDamage[i] || ClassIsChildOf(damageType, TypesCanDamage[i]))
         {
             return true;
@@ -90,16 +98,14 @@ function BroadcastCriticalMessage(Pawn instigatedBy)
                 PRI = none;
             }
 
-            Level.game.BroadcastLocalizedMessage(class'RODestroyableSMDestroyedMsg',
-                                                OnDestroyBroadcastTarget, PRI,, self);
+            Level.game.BroadcastLocalizedMessage(class'RODestroyableSMDestroyedMsg', OnDestroyBroadcastTarget, PRI,, self);
         }
     }
 }
 
 function BreakApart(vector HitLocation, optional vector momentum)
 {
-    // if we are single player or on a listen server, just spawn the actor, otherwise
-    // bHidden will trigger the effect
+    // If we are single player or on a listen server, just spawn the actor, otherwise bHidden will trigger the effect
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (DestroyedEffect != none)
@@ -108,7 +114,7 @@ function BreakApart(vector HitLocation, optional vector momentum)
         }
     }
 
-    gotostate('Broken');
+    GotoState('Broken');
 }
 
 auto state Working
@@ -121,7 +127,7 @@ auto state Working
         NetUpdateTime = Level.TimeSeconds - 1;
         SetStaticMesh(SavedStaticMesh);
         SetCollision(true, true, true);
-        KSetBlockKarma(true);               // Update karma collision
+        KSetBlockKarma(true); // update karma collision
 
         bHidden = false;
         bDamaged = false;
@@ -133,39 +139,41 @@ auto state Working
     {
         super.EndState();
 
-        NetUpdateTime = Level.TimeSeconds - 1;
-
+        NetUpdateTime = Level.TimeSeconds - 1.0;
         DestroyedTime = Level.TimeSeconds;
 
         if (bUseDamagedMesh)
         {
             KSetBlockKarma(false);
-
             SetStaticMesh(DamagedMesh);
             SetCollision(true, true, true);
-            KSetBlockKarma(true);               // Update karma collision
-
+            KSetBlockKarma(true); // update karma collision
             bDamaged = true;
         }
         else
         {
-                bHidden = true;
-                SetCollision(false, false, false);
+            bHidden = true;
+            SetCollision(false, false, false);
         }
     }
 
     function TakeDamage(int Damage, Pawn instigatedBy, vector hitlocation,  vector momentum, class<DamageType> damageType, optional int HitIndex)
     {
         if (!ShouldTakeDamage(damageType))
+        {
             return;
+        }
 
         if (instigatedBy != none)
+        {
             MakeNoise(1.0);
+        }
 
         Health -= Damage;
-        Level.Game.Broadcast(self, "Dummy:"$SensorName$", DamageTaken: "$Damage$" points");
-        Log("Dummy = "$SensorName);
-        Log("DamageTaken = "$Damage);
+        Level.Game.Broadcast(self, "Dummy:" $ SensorName $ ", DamageTaken:" @ Damage @ "points");
+        Log("Dummy =" @ SensorName);
+        Log("DamageTaken =" @ Damage);
+
         if (Health <= 0)
         {
             TriggerEvent(DestroyedEvent, self, instigatedBy);
@@ -186,7 +194,9 @@ state Broken
 simulated function PostNetReceive()
 {
     if ((bHidden || bDamaged) && DestroyedEffect != none && Level.TimeSeconds - DestroyedTime < 1.5)
+    {
         Spawn(DestroyedEffect, Owner,, (Location + (DestroyedEffectOffset >> Rotation)));
+    }
 }
 
 defaultproperties

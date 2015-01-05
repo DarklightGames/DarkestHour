@@ -1140,7 +1140,7 @@ simulated function Tick(float DeltaTime)
         }
         UpdateMovementSound();
 
-        //Level.Game.Broadcast(self, "MySpeed: "$MySpeed);
+        //Level.Game.Broadcast(self, "MySpeed:" @ MySpeed);
 
         if (LeftTreadPanner != none)
         {
@@ -2042,7 +2042,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             HitPointDamage *= VehicleDamageMod;
 
             if (bLogPenetration)
-                Log(" We hit "$GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType)$" hitpoint.");
+                Log(" We hit" @ GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType) @ "hitpoint.");
 
             if (VehHitpoints[i].HitPointType == HP_Engine)
             {
@@ -2080,7 +2080,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         HitPointDamage=Damage;
 
         if (bLogPenetration)
-          Log(" We hit "$GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType)$" hitpoint.");
+          Log(" We hit" @ GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType) @ "hitpoint.");
 
         if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
         {

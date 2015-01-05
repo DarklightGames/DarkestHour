@@ -9,7 +9,7 @@ var()   name                    MineVolumeToModify;
 var     DH_MineVolume           MineVolumeReference;
 var()   bool                    UseRandomness;
 var()   int                     RandomPercent; // 100 for always succeed, 0 for always fail
-var() StatusModifyType          HowToModify;
+var()   StatusModifyType        HowToModify;
 
 function PostBeginPlay()
 {
@@ -18,9 +18,11 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     if (MineVolumeToModify == '')
-        return; //end script because volumename was not set
+    {
+        return; // end script because volumename was not set
+    }
 
-    //Volume are static so use the all actor list
+    // Volume are static so use the all actor list
     foreach AllActors(class'DH_MineVolume', ROMV, MineVolumeToModify)
     {
         MineVolumeReference = ROMV;
@@ -35,10 +37,14 @@ event Trigger(Actor Other, Pawn EventInstigator)
     //Level.Game.Broadcast(self, "ChangeMineVolumeStatus was triggered");
     if (UseRandomness)
     {
-        RandomNum = Rand(101);  //Gets a random # between 0 & 100
+        RandomNum = Rand(101); // gets a random # between 0 & 100
+
         if (RandomPercent <= RandomNum)
-            return; //Leave script as it randomly failed
+        {
+            return; // leave script as it randomly failed
+        }
     }
+
     switch (HowToModify)
     {
         case SMT_Activate:
@@ -55,7 +61,8 @@ event Trigger(Actor Other, Pawn EventInstigator)
         default:
         break;
     }
-    //Level.Game.Broadcast(self, "Minefield bActive variable is "$MineVolumeReference.bActive);
+
+    //Level.Game.Broadcast(self, "Minefield bActive variable is" @ MineVolumeReference.bActive);
 }
 
 defaultproperties

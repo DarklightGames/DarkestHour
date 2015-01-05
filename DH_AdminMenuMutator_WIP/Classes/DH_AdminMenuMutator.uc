@@ -122,7 +122,7 @@ function SaveMinefields()
 
             if (bDebug)
             {
-                Log("DH_AdminMenu: building array SavedMinefields["$i$"]: kill time =" @ SavedMinefields[i].MVKillTime $ ", warning interval =" @ SavedMinefields[i].MVWarnInterval);
+                Log("DH_AdminMenu: building array SavedMinefields[" $ i $ "]: kill time =" @ SavedMinefields[i].MVKillTime $ ", warning interval =" @ SavedMinefields[i].MVWarnInterval);
             }
         }
     }
@@ -649,7 +649,7 @@ function DisableMinefields() // doesn't actually disable them, but it makes thei
 
             if (bDebug)
             {
-                Log("DH_AdminMenu: MINES OFF: MineVolumes["$i$"] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
+                Log("DH_AdminMenu: MINES OFF: MineVolumes[" $ i $ "] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
             }
         }
 
@@ -691,7 +691,7 @@ function EnableMinefields()
 
             if (bDebug)
             {
-                Log("DH_AdminMenu: MINES ON: MineVolumes["$i$"] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
+                Log("DH_AdminMenu: MINES ON: MineVolumes[" $ i $ "] =" @ ROTG.MineVolumes[i] $ ",kill time =" @ ROTG.MineVolumes[i].KillTime $ ", warning interval =" @ ROTG.MineVolumes[i].WarnInterval);
             }
         }
 

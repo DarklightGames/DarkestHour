@@ -109,7 +109,7 @@ function byte BestMode()
 // Returns true if this weapon is ready to fire
 simulated function bool ReadyToFire(bool bAltFire)
 {
-    //Log("bReloading = "$bReloading);
+    //Log("bReloading =" @ bReloading);
 
     if (bReloading)
         return false;

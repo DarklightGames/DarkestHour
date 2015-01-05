@@ -49,7 +49,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 simulated function ResetPlayerFOV()
 {
-    if (Instigator != none && Instigator.Controller != none && PlayerController(Instigator.Controller) != none)
+    if (Instigator != none && PlayerController(Instigator.Controller) != none)
     {
         SetPlayerFOV(PlayerController(Instigator.Controller).DefaultFOV);
     }
@@ -57,12 +57,10 @@ simulated function ResetPlayerFOV()
 
 simulated function SetPlayerFOV(float PlayerFOV)
 {
-    if (Instigator == none || Instigator.Controller == none || PlayerController(Instigator.Controller) == none)
+    if (Instigator != none && PlayerController(Instigator.Controller) != none)
     {
-        return;
+        PlayerController(Instigator.Controller).DesiredFOV = PlayerFOV;
     }
-
-    PlayerController(Instigator.Controller).DesiredFOV = PlayerFOV;
 }
 
 simulated state StartMantle extends Busy

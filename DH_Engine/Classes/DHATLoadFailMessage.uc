@@ -14,5 +14,5 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
-    CantLoad="must be deployed to be reloaded"
+    CantLoad="Must be deployed to be reloaded"
 }

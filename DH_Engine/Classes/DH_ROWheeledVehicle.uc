@@ -191,7 +191,7 @@ function bool TryToDrive(Pawn P)
 
     if (bDebuggingText)
     {
-        P.ClientMessage("Vehicle Health: " $ Health $ ", EngineHealth: " $ EngineHealth);
+        P.ClientMessage("Vehicle Health:" @ Health $ ", EngineHealth:" @ EngineHealth);
     }
 
     //don't allow vehicle to be stolen when somebody is in a turret

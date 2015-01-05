@@ -8,9 +8,9 @@ class DH_ArtilleryActor extends DH_LevelActors;
 var()   int                         XWidth, YWidth, PercentToSucceed, CallIntervalMin, CallIntervalMax;
 var()   bool                        bAutoStart;
 var()   array<name>                 AttachedArtilleryTags;
-var()   int                         MaxRounds;      //0 = infinite
-var     int                         NumRoundsFired; //default to 0
-var     array<DH_ArtilleryActor>    ArtyReferences; //References of attached
+var()   int                         MaxRounds;      // 0 = infinite
+var     int                         NumRoundsFired; // default to 0
+var     array<DH_ArtilleryActor>    ArtyReferences; // references of attached
 
 function PostBeginPlay()
 {
@@ -23,8 +23,8 @@ function PostBeginPlay()
     {
         foreach AllActors(class'DH_ArtilleryActor', RAA, AttachedArtilleryTags[i])
         {
-            ArtyReferences.Insert(0, 1); //Adds a new spot at index for the attached arty
-            ArtyReferences[0] = RAA; //Sets the attached arty in the reference array
+            ArtyReferences.Insert(0, 1); // adds a new spot at index for the attached arty
+            ArtyReferences[0] = RAA;     // sets the attached arty in the reference array
             break;
         }
     }
@@ -35,7 +35,7 @@ function Reset()
     super.Reset();
 
     NumRoundsFired = 0;
-    GotoState('Initialize'); //Needed for reseting the state
+    GotoState('Initialize'); // needed for reseting the state
 }
 
 event Trigger(Actor Other, Pawn EventInstigator)
@@ -80,7 +80,7 @@ state Activated
         local int    RandomNum;
         local vector FallOffset;
 
-        RandomNum = Rand(100);  // gets a random # between 0 & 99
+        RandomNum = Rand(100); // gets a random # between 0 & 99
 
         if (RandomNum < PercentToSucceed)
         {
@@ -93,10 +93,10 @@ state Activated
 
             if (ArtyReferences.Length > 0)
             {
-                //Select the location to send the round
+                // Select the location to send the round
                 RandomNum = Rand(ArtyReferences.Length);
 
-                //Randomize the location offset
+                // Randomize the location offset
                 FallOffset = vect(0.0, 0.0, 0.0);
                 FallOffset.X += Rand(ArtyReferences[RandomNum].XWidth);
 
@@ -116,7 +116,7 @@ state Activated
             }
             else
             {
-                //Randomize the location offset
+                // Randomize the location offset
                 FallOffset = vect(0.0, 0.0, 0.0);
                 FallOffset.X += Rand(XWidth);
 
@@ -132,14 +132,14 @@ state Activated
                     FallOffset.Y *= -1.0;
                 }
 
-                //Spawn the artillery round with the random offset
+                // Spawn the artillery round with the random offset
                 Spawn(class'DH_ArtilleryShell', , , Location + FallOffset, rotator(PhysicsVolume.Gravity)); // Matt: was class ROArtilleryShell
             }
         }
 
         RandomNum = RandRange(CallIntervalMin, CallIntervalMax);
-        SetTimer(RandomNum, false); //Recall the timer with a new random Call interval
-        //Level.Game.Broadcast(self, "Randomvector: X:"$Randvector.X$" Y:"$Randvector.Y$" Z:"$Randvector.Z);
+        SetTimer(RandomNum, false); // Recall the timer with a new random Call interval
+        //Level.Game.Broadcast(self, "Randomvector: X:" $ Randvector.X @ "Y:" $ Randvector.Y @ "Z:" $ Randvector.Z);
     }
 }
 

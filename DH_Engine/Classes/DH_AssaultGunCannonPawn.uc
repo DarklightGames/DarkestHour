@@ -79,7 +79,7 @@ simulated function DrawHUD(Canvas Canvas)
                     MapY = RangePositionY * Canvas.ClipY;
                     Canvas.SetPos(MapX,MapY);
                     Canvas.Font = class'ROHUD'.Static.GetSmallMenuFont(Canvas);
-                    Canvas.StrLen(Gun.GetRange()$" "$RangeText, XL, YL);
+                    Canvas.StrLen(Gun.GetRange() @ RangeText, XL, YL);
                     Canvas.DrawTextJustified(Gun.GetRange()@ RangeText, 2.0, MapX, MapY, MapX + XL, MapY + YL);
                     Canvas.DrawColor = SavedColor;
                 }

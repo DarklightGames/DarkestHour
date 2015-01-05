@@ -100,11 +100,7 @@ function array<int> GetLoadedMagazineIndices()
     return Indices;
 }
 
-static function string GetLocalString(
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2
-    )
+static function string GetLocalString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2)
 {
     switch(Switch)
     {

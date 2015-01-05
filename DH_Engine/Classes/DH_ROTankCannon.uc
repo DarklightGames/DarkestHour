@@ -264,7 +264,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Front turret hit, base armor = "$FrontArmorFactor * 10.0 $ "mm");
+            Level.Game.Broadcast(self, "Front turret hit, base armor =" @ FrontArmorFactor * 10.0 $ "mm");
         }
 
         // Run a pre-check
@@ -1774,11 +1774,11 @@ defaultproperties
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true
     ManualRotationsPerSecond=0.011111
-    PoweredRotationsPerSecond=0.050000
+    PoweredRotationsPerSecond=0.05
     FireAttachBone="com_player"
-    FireEffectOffset=(Z=-20.000000)
+    FireEffectOffset=(Z=-20.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     bManualTurret=true
     CannonReloadState=CR_Waiting
-    AltFireSpread=0.002000
+    AltFireSpread=0.002
 }

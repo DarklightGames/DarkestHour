@@ -6,13 +6,13 @@
 class DHWeaponAttachment extends ROWeaponAttachment
     abstract;
 
-var()   name                    PA_AssistedReloadAnim;
-var()   name                    PA_MortarDeployAnim;
-var()   name                    WA_MortarDeployAnim;
+var()   name    PA_AssistedReloadAnim;
+var()   name    PA_MortarDeployAnim;
+var()   name    WA_MortarDeployAnim;
 
 simulated event ThirdPersonEffects()
 {
-    local PlayerController PC;
+    local PlayerController   PC;
     local ROVehicleHitEffect VehEffect;
 
     if (Level.NetMode == NM_DedicatedServer || ROPawn(Instigator) == none)
@@ -20,7 +20,7 @@ simulated event ThirdPersonEffects()
         return;
     }
 
-    // new Trace FX - Ramm
+    // New Trace FX - Ramm
     if (FiringMode == 0)
     {
         if (OldSpawnHitCount != SpawnHitCount)
@@ -29,7 +29,7 @@ simulated event ThirdPersonEffects()
             GetHitInfo();
             PC = Level.GetLocalPlayerController();
 
-            if ((Instigator != none && Instigator.Controller == PC) || VSize(PC.ViewTarget.Location - mHitLocation) < 4000)
+            if ((Instigator != none && Instigator.Controller == PC) || VSize(PC.ViewTarget.Location - mHitLocation) < 4000.0)
             {
                 if (mHitActor != none && (Vehicle(mHitActor) != none || ROVehicleWeapon(mHitActor) != none))
                 {
@@ -41,7 +41,7 @@ simulated event ThirdPersonEffects()
                 }
                 else if (mHitActor == none && GetVehicleHitInfo() != none)
                 {
-                    GetVehicleHitInfo(); // Isn't this redundant? - Possibly remove
+                    GetVehicleHitInfo(); // isn't this redundant? - possibly remove
 
                     if (Level.NetMode != NM_DedicatedServer)
                     {

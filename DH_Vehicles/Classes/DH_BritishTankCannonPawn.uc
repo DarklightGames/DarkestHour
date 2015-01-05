@@ -96,8 +96,8 @@ simulated function DrawHUD(Canvas Canvas)
                     MapY = RangePositionY * Canvas.ClipY;
                     Canvas.SetPos(MapX,MapY);
                     Canvas.Font = class'ROHUD'.Static.GetSmallMenuFont(Canvas);
-                    Canvas.StrLen(Gun.GetRange()$" "$RangeText, XL, YL);
-                    Canvas.DrawTextJustified(Gun.GetRange()$" "$RangeText, 2, MapX, MapY, MapX + XL, MapY+YL);
+                    Canvas.StrLen(Gun.GetRange() @ RangeText, XL, YL);
+                    Canvas.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY+YL);
                     Canvas.DrawColor = SavedColor;
                 }
             }
@@ -157,13 +157,13 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
 defaultproperties
 {
-    ScopeCenterScaleX=0.900000
-    ScopeCenterScaleY=0.900000
+    ScopeCenterScaleX=0.9
+    ScopeCenterScaleY=0.9
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    OverlayCenterSize=0.900000
+    OverlayCenterSize=0.9
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-    ScopePositionX=0.215000
-    ScopePositionY=0.500000
+    ScopePositionX=0.215
+    ScopePositionY=0.5
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     RangeText="Yards"
 }

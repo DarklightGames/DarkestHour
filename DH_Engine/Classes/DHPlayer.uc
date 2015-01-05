@@ -970,7 +970,7 @@ state PlayerWalking
 
         if (bDidMantle && Role < ROLE_Authority)
         {
-            ClientMessage("processmove Vel: "@Pawn.Velocity);
+            ClientMessage("processmove Vel:" @ Pawn.Velocity);
         }
     }
 

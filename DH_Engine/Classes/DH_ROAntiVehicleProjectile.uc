@@ -229,10 +229,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     return;
                 }
             }
-            // Else this isn't a real hit - we must have hit Driver's collision box but not actually the Driver
+            // This isn't a real hit - we must have hit Driver's collision box but not actually the Driver, so don't save hitting this actor & exit the function
             else
             {
-                SavedTouchActor = none; // not a real hit so shouldn't save hitting this actor
+                SavedTouchActor = none;
 
                 return;
             }
@@ -566,7 +566,7 @@ simulated function DoShakeEffect()
     local PlayerController PC;
     local float            Distance, Scale;
 
-    if (Level.NetMode != NM_DedicatedServer && ShellDiameter > 2.0) // Matt: moved ShellDiameter check up here, as nothing will happen if it's smaller
+    if (Level.NetMode != NM_DedicatedServer && ShellDiameter > 2.0)
     {
         PC = Level.GetLocalPlayerController();
 
@@ -574,7 +574,7 @@ simulated function DoShakeEffect()
         {
             Distance = VSize(Location - PC.ViewTarget.Location);
 
-            if (Distance < PenetrationMag * 3.0/* && ShellDiameter > 2.0*/)
+            if (Distance < PenetrationMag * 3.0)
             {
                 Scale = (PenetrationMag * 3.0 - Distance) / (PenetrationMag * 3.0);
                 Scale *= BlurEffectScalar;
@@ -705,13 +705,13 @@ defaultproperties
     ShatterSound(1)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode02'
     ShatterSound(2)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode03'
     ShatterSound(3)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
-    ShakeRotMag=(Y=50.000000,Z=200.000000)
-    ShakeRotRate=(Y=500.000000,Z=1500.000000)
-    ShakeRotTime=3.000000
-    ShakeOffsetMag=(Z=10.000000)
-    ShakeOffsetRate=(Z=200.000000)
-    ShakeOffsetTime=5.000000
-    BlurTime=3.000000
-    BlurEffectScalar=1.900000
-    PenetrationMag=100.000000
+    ShakeRotMag=(Y=50.0,Z=200.0)
+    ShakeRotRate=(Y=500.0,Z=1500.0)
+    ShakeRotTime=3.0
+    ShakeOffsetMag=(Z=10.0)
+    ShakeOffsetRate=(Z=200.0)
+    ShakeOffsetTime=5.0
+    BlurTime=3.0
+    BlurEffectScalar=1.9
+    PenetrationMag=100.0
 }
