@@ -32,16 +32,19 @@ var     float                       PlayerFireDamagePerSec;
 
 replication
 {
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire;
-
+    // Variables the server will replicate to the client that owns this actor
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         bReloading, NumMags;
 
-    reliable if (Role == ROLE_Authority) // function the server can call on an owning client
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bOnFire;
+
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
         ClientSetReloadStartTime;
 }
-//==============================================================================
+
 
 // Matt: modified to handle new collision static mesh actor, if one has been specified
 simulated function PostBeginPlay()
@@ -87,7 +90,7 @@ simulated function Tick(float DeltaTime)
                 HullMGFireEffect = Spawn(FireEffectClass);
                 AttachToBone(HullMGFireEffect, FireAttachBone);
                 HullMGFireEffect.SetRelativeLocation(FireEffectOffset);
-                HullMGFireEffect.UpdateDamagedEffect(true, 0, false, false);
+                HullMGFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
             }
 
             BurnTime = Level.TimeSeconds;

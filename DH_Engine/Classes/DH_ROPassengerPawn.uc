@@ -32,16 +32,18 @@ var bool bDebugExitPositions;
 
 replication
 {
+    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits; // Matt: added
+        ServerToggleDebugExits;
 }
+
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
 }
 
-//http://wiki.beyondunreal.com/Legacy:Insertion_Sort
+// http://wiki.beyondunreal.com/Legacy:Insertion_Sort
 static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
 {
     local int InsertIndex, RemovedIndex;
@@ -81,7 +83,7 @@ simulated function PostBeginPlay()
 // Overridden to stop the game playing silly buggers with exit positions while moving and breaking my damage code
 function bool PlaceExitingDriver()
 {
-    local int i;
+    local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
     local array<ExitPositionPair> ExitPositionPairs;
 
@@ -177,7 +179,7 @@ function bool KDriverLeave(bool bForceLeave)
 
         bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
-        OldVel.Z += 50;
+        OldVel.Z += 50.0;
         Instigator.Velocity = OldVel;
     }
     else
@@ -346,10 +348,10 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
-    WeaponFov=80.000000
+    WeaponFOV=80.0
     bSinglePositionExposed=true
     bAllowViewChange=false
     bDesiredBehindView=false
-    DriverDamageMult=1.000000
+    DriverDamageMult=1.0
     bKeepDriverAuxCollision=true
 }

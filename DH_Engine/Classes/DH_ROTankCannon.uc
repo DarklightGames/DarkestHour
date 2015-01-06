@@ -34,8 +34,8 @@ var   VehicleDamagedEffect        TurretHatchFireEffect;
 var   bool                        bOnFire; // set by Treadcraft base to notify when to start fire effects
 var   float                       BurnTime;
 
-// Armor Penetration stuff
-var   bool  bIsAssaultGun; //used to defeat the Stug/JP bug
+// Armor penetration stuff
+var   bool  bIsAssaultGun;         // used to defeat the Stug/JP bug
 //var bool  bWasHEATRound;         // Matt: removed as not used in this class (gets set in vehicle class)
 var   bool  bHasAddedSideArmor;
 //var bool  bProjectilePenetrated; // Matt: removed as not used in this class (gets set in vehicle class)
@@ -62,32 +62,35 @@ var   float MinCommanderHitHeight; // Matt: minimum height above which a project
 var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
 var DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
 
-//Debugging help
+// Debugging and calibration stuff
 var   bool  bDrawPenetration;
 var   bool  bDebuggingText;
 var   bool  bPenetrationText;
 var   bool  bLogPenetration;
 var   bool  bDriverDebugging;
 
-// Debugging and calibration stuff
 var   config bool bGunFireDebug;
 var() config bool bGunsightSettingMode;
 
 replication
 {
+    // Variables the server will replicate to the client that owns this actor
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
-        MainAmmoChargeExtra;
+        MainAmmoChargeExtra; // Matt: should be able to change to byte - check & implement later
 
+    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) below as "or bNetInitial adds nothing) - move later as part of class review & refactor
+    reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
+        bManualTurret;
+
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire;
 
+    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - move later as part of class review & refactor
     reliable if (Role == ROLE_Authority)
-        bRoundShattered; // Matt: removed bProjectilePenetrated as deprecated
-
-    reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
-        bManualTurret;
+        bRoundShattered;
 }
-//==============================================================================
+
 
 // Matt: modified to handle new collision static mesh actor, if one has been specified
 simulated function PostNetBeginPlay()
@@ -129,7 +132,7 @@ simulated function Tick(float DeltaTime)
                 TurretHatchFireEffect = Spawn(FireEffectClass);
                 AttachToBone(TurretHatchFireEffect, FireAttachBone);
                 TurretHatchFireEffect.SetRelativeLocation(FireEffectOffset);
-                TurretHatchFireEffect.UpdateDamagedEffect(true, 0, false, false);
+                TurretHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
             }
             BurnTime = Level.TimeSeconds;
         }
@@ -736,7 +739,7 @@ simulated function int GetRoundsDescription(out array<string> Descriptions)
 
     Descriptions.Length = 0;
     
-    for (i = 0; i < ProjectileDescriptions.length; i++)
+    for (i = 0; i < ProjectileDescriptions.Length; i++)
     {
         Descriptions[i] = ProjectileDescriptions[i];
     }
@@ -886,23 +889,23 @@ event bool AttemptFire(Controller C, bool bAltFire)
             if (s < 0.6)
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * SecondarySpread);
-                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
+                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern (same several times below)
             }
             else
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * 0.0015);
-                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
+                WeaponFireRotation += rot(1, 6, 0);
             }
         }
         else if (TertiarySpread > 0 && bUsesTertiarySpread && ProjectileClass == TertiaryProjectileClass)
         {
-              WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * TertiarySpread);
-              WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
+            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * TertiarySpread);
+            WeaponFireRotation += rot(1, 6, 0);
         }
         else if (Spread > 0.0)
         {
-              WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
-              WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
+            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * Spread);
+            WeaponFireRotation += rot(1, 6, 0);
         }
 
         DualFireOffset *= -1.0;
@@ -1114,7 +1117,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
     }
 
-    P = spawn(ProjClass, none, , StartLocation, FireRot); 
+    P = Spawn(ProjClass, none, , StartLocation, FireRot); 
 
     // Swap to the next round type after firing
     if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)

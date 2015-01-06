@@ -8,14 +8,6 @@ class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var()   float   OverlayCenterScale;
-var()   float   OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-
-var()   float   OverlayCorrectionX;
-var()   float   OverlayCorrectionY;
-
-var     texture VehicleMGReloadTexture; // used to show reload progress on the HUD, like a tank cannon reload
-
 struct ExitPositionPair
 {
     var int Index;
@@ -24,18 +16,27 @@ struct ExitPositionPair
 
 var bool bDebugExitPositions;
 
+var()   float   OverlayCenterScale;
+var()   float   OverlayCenterSize; // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float   OverlayCorrectionX;
+var()   float   OverlayCorrectionY;
+
+var     texture VehicleMGReloadTexture; // used to show reload progress on the HUD, like a tank cannon reload
+
 replication
 {
+    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits; // Matt: added
+        ServerToggleDebugExits;
 }
+
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
 }
 
-//http://wiki.beyondunreal.com/Legacy:Insertion_Sort
+// http://wiki.beyondunreal.com/Legacy:Insertion_Sort
 static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
 {
     local int InsertIndex, RemovedIndex;
@@ -92,7 +93,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 
 function bool PlaceExitingDriver()
 {
-    local int i;
+    local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
     local array<ExitPositionPair> ExitPositionPairs;
 
@@ -152,24 +153,22 @@ function bool PlaceExitingDriver()
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local vector CameraLocation;
-    local rotator CameraRotation;
-    local Actor ViewActor;
-    local float SavedOpacity;
-    local vector x, y, z;
-
-    local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
+    local Actor            ViewActor;
+    local vector           CameraLocation, x, y, z;
+    local rotator          CameraRotation;
+    local float            SavedOpacity, ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
     PC = PlayerController(Controller);
+
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //Log("PanzerTurret PlayerController was none, returning");
+
         return;
     }
     else if (!PC.bBehindView)
     {
-        // store old opacity and set to 1.0 for map overlay rendering
+        // Store old opacity and set to 1.0 for map overlay rendering
         SavedOpacity = Canvas.ColorModulate.W;
         Canvas.ColorModulate.W = 1.0;
 
@@ -185,11 +184,11 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.SetPos(0, 0);
         Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-        // reset HudOpacity to original value
+        // Reset HudOpacity to original value
         Canvas.ColorModulate.W = SavedOpacity;
     }
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
+    if (!PC.bBehindView && HUDOverlay != none)
     {
         if (!Level.IsSoftwareRendering())
         {
@@ -205,12 +204,15 @@ simulated function DrawHUD(Canvas Canvas)
         }
     }
     else
+    {
         ActivateOverlay(false);
+    }
 
-    if (PC != none)
-        // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+    // Draw tank, turret, ammo count, passenger list
+    if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+    {
+        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+    }
 }
 
 function Fire(optional float F)
@@ -479,6 +481,6 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
-    OverlayCenterSize=1.000000
+    OverlayCenterSize=1.0
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }

@@ -8,6 +8,12 @@ class DH_ROWheeledVehicle extends ROWheeledVehicle
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
+struct ExitPositionPair
+{
+    var int Index;
+    var float DistanceSquared;
+};
+
 enum ECarHitPointType
 {
     CHP_Normal,
@@ -18,75 +24,70 @@ enum ECarHitPointType
     CHP_Petrol,
 };
 
-var     ECarHitPointType                    CarHitPointType;
+var     ECarHitPointType    CarHitPointType;
 
 struct CarHitpoint
 {
-    var() float             PointRadius;        // Squared radius of the head of the pawn that is vulnerable to headshots
-    var() float             PointHeight;        // Distance from base of neck to center of head - used for headshot calculation
+    var() float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
+    var() float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
     var() float             PointScale;
-    var() name              PointBone;          // Bone to reference in offset
-    var() vector            PointOffset;        // Amount to offset the hitpoint from the bone
-    var() bool              bPenetrationPoint;  // This is a penetration point, open hatch, etc
-    var() float             DamageMultiplier;   // Amount to scale damage to the vehicle if this point is hit
-    var() ECarHitPointType  CarHitPointType;    // What type of hit point this is
+    var() name              PointBone;          // bone to reference in offset
+    var() vector            PointOffset;        // amount to offset the hitpoint from the bone
+    var() bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
+    var() float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
+    var() ECarHitPointType  CarHitPointType;    // what type of hit point this is
 };
 
-var()   array<CarHitpoint>      CarVehHitpoints;        // An array of possible small points that can be hit. Index zero is always the driver
+var()   array<CarHitpoint>  CarVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
 
-var()       float               ObjectCollisionResistance;
-
-var int EngineHealthMax;
+// General
+var     float       PointValue;             // used for scoring
+var     bool        bEmittersOn;
+var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
+var()   float       ObjectCollisionResistance;
+var     bool        bResupplyVehicle;
 
 // Engine stuff
-var     bool                bEngineDead;   //vehicle engine is damaged and cannot run or be restarted...ever
-var     bool                bEngineOff;    //vehicle engine is simply switched off
-var     float               IgnitionSwitchTime;
-var     bool                bResupplyVehicle;
+var     int         EngineHealthMax;
+var     bool        bEngineDead;        // vehicle engine is damaged and cannot run or be restarted ... ever
+var     bool        bEngineOff;         // vehicle engine is simply switched off
+var     float       IgnitionSwitchTime;
 
 // New sounds
-var    sound                VehicleBurningSound;
-var    sound                DestroyedBurningSound;
-var    sound                DamagedStartUpSound;
+var    sound        VehicleBurningSound;
+var    sound        DestroyedBurningSound;
+var    sound        DamagedStartUpSound;
 
-var     float       PointValue; // Used for scoring
-
-var     float       DriverTraceDist;
-
-//Debugging help
+// Debugging help
 var     bool        bDebuggingText;
-
-var     bool        bEmittersOn;
-
-struct ExitPositionPair
-{
-    var int Index;
-    var float DistanceSquared;
-};
-
-var bool bDebugExitPositions;
+var     bool        bDebugExitPositions;
 
 replication
 {
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        EngineHealthMax;
-
-    reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerToggleDebugExits; // Matt: added ServerToggleDebugExits
-
-    reliable if (Role == ROLE_Authority)
-        bResupplyVehicle;
-
+    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) below as "or bNetInitial adds nothing) - move later as part of class review & refactor
     reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
         bEngineDead, bEngineOff;
+
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        EngineHealthMax; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
+
+    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - do later as part of class review & refactor
+    reliable if (Role == ROLE_Authority)
+        bResupplyVehicle; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerStartEngine, ServerToggleDebugExits;
 }
+
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
     return A.DistanceSquared > B.DistanceSquared;
 }
 
-//http://wiki.beyondunreal.com/Legacy:Insertion_Sort
+// http://wiki.beyondunreal.com/Legacy:Insertion_Sort
 static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
 {
     local int InsertIndex, RemovedIndex;
@@ -116,42 +117,48 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    EngineHealth=EngineHealthMax;
+    EngineHealth = EngineHealthMax;
 
-    //Engine starting and stopping stuff
-    //bEngineOff=true;
+    // Engine starting and stopping stuff
+    //bEngineOff = true;
     //bEngineDead = false;
-    //bDisableThrottle=true;
+    //bDisableThrottle = true;
 }
 
 function KDriverEnter(Pawn P)
 {
-
-    DriverPositionIndex=InitialPositionIndex;
-    PreviousPositionIndex=InitialPositionIndex;
+    DriverPositionIndex = InitialPositionIndex;
+    PreviousPositionIndex = InitialPositionIndex;
 
     if (!p.IsHumanControlled())
-       bEngineOff = false;
-
-    //check to see if Engine is already on when entering
+    {
+        bEngineOff = false;
+    }
+    
+    // Check to see if engine is already on when entering
     if (bEngineOff)
     {
         if (IdleSound != none)
-        AmbientSound = none;
-
+        {
+            AmbientSound = none;
+        }
     }
     else if (bEngineDead)
     {
         if (IdleSound != none)
-        AmbientSound = VehicleBurningSound;
+        {
+            AmbientSound = VehicleBurningSound;
+        }
     }
     else
     {
         if (IdleSound != none)
-        AmbientSound = IdleSound;
+        {
+            AmbientSound = IdleSound;
+        }
     }
 
-    ResetTime = Level.TimeSeconds - 1;
+    ResetTime = Level.TimeSeconds - 1.0;
     Instigator = self;
 
     super(Vehicle).KDriverEnter(P);
@@ -166,12 +173,17 @@ function DriverLeft()
         Weapons[ActiveWeapon].AmbientSound = none;
     }
 
-    if (!bNeverReset && ParentFactory != none && (VSize(Location - ParentFactory.Location) > 5000.0 || !FastTrace(ParentFactory.Location, Location)))
+    // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
+    if (!bNeverReset && ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
     {
         if (bKeyVehicle)
-            ResetTime = Level.TimeSeconds + 15;
+        {
+            ResetTime = Level.TimeSeconds + 15.0;
+        }
         else
-        ResetTime = Level.TimeSeconds + 30;
+        {
+            ResetTime = Level.TimeSeconds + 30.0;
+        }
     }
 
     super(Vehicle).DriverLeft();
@@ -179,8 +191,8 @@ function DriverLeft()
 
 function bool TryToDrive(Pawn P)
 {
-    local int i;
     local DH_Pawn DHP;
+    local int     i;
 
     DHP = DH_Pawn(P);
 
@@ -194,10 +206,10 @@ function bool TryToDrive(Pawn P)
         P.ClientMessage("Vehicle Health:" @ Health $ ", EngineHealth:" @ EngineHealth);
     }
 
-    //don't allow vehicle to be stolen when somebody is in a turret
+    // Don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
-        for (i = 0; i < WeaponPawns.length; i++)
+        for (i = 0; i < WeaponPawns.Length; i++)
         {
             if (WeaponPawns[i].Driver != none)
             {
@@ -208,14 +220,8 @@ function bool TryToDrive(Pawn P)
         }
     }
 
-    //took out the crouch requirement to enter
-    if (bNonHumanControl ||
-        P.Controller == none ||
-        Driver != none ||
-        P.DrivenVehicle != none ||
-        !P.Controller.bIsPlayer ||
-        Health <= 0 ||
-        (P.Weapon != none && P.Weapon.IsInState('Reloading')))
+    // Took out the crouch requirement to enter
+    if (bNonHumanControl || P.Controller == none || Driver != none || P.DrivenVehicle != none || !P.Controller.bIsPlayer || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')))
     {
         return false;
     }
@@ -225,16 +231,14 @@ function bool TryToDrive(Pawn P)
         return false;
     }
 
-    // Check vehicle Locking....
+    // Check vehicle locking
     if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
     {
         DenyEntry(P, 1);
 
         return false;
     }
-    else if (bMustBeTankCommander &&
-             P.IsHumanControlled() &&
-             !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)
+    else if (bMustBeTankCommander && P.IsHumanControlled() && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)
     {
        DenyEntry(P, 0);
 
@@ -253,52 +257,50 @@ function bool TryToDrive(Pawn P)
     }
 }
 
-// Overridden to add steering wheel code that actually works - Ramm
-// MergeTODO: Move my steering code to the native and AXE epics steering code
 simulated function Tick(float dt)
 {
-    local int i;
-    local bool lostTraction;
+    local bool  LostTraction;
     local float ThrottlePosition;
+    local int   i;
 
     super.Tick(dt);
 
     // Pack the throttle setting into a byte to replicate it
     if (Role == ROLE_Authority)
     {
-        if (Throttle < 0)
+        if (Throttle < 0.0)
         {
-            ThrottleRep = (100 * Abs(Throttle));
+            ThrottleRep = (100.0 * Abs(Throttle));
         }
         else
         {
-            ThrottleRep = 101 + (100 * Throttle);
+            ThrottleRep = 101 + (100.0 * Throttle);
         }
     }
 
-    // Dont bother doing effects on dedicated server.
+    // Don't bother doing effects on dedicated server
     if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {
-        lostTraction = true;
+        LostTraction = true;
 
-        // MergeTODO: Put this stuff back in
-
-        // Update dust kicked up by wheels.
+        // Update dust kicked up by wheels
         for (i = 0; i < Dust.Length; i++)
-           Dust[i].UpdateDust(Wheels[i], DustSlipRate, DustSlipThresh);
+        {
+            Dust[i].UpdateDust(Wheels[i], DustSlipRate, DustSlipThresh);
+        }
 
         // Unpack the replicated throttle byte
         if (ThrottleRep < 101)
         {
-            ThrottlePosition = (ThrottleRep * 1.0)/100;
+            ThrottlePosition = Float(ThrottleRep) / 100.0;
         }
         else if (ThrottleRep == 101)
         {
-            ThrottlePosition = 0;
+            ThrottlePosition = 0.0;
         }
         else
         {
-            ThrottlePosition = (ThrottleRep - 101)/100;
+            ThrottlePosition = Float(ThrottleRep - 101) / 100.0;
         }
 
         for (i = 0; i < ExhaustPipes.Length; i++)
@@ -308,25 +310,12 @@ simulated function Tick(float dt)
                 ExhaustPipes[i].ExhaustEffect.UpdateExhaust(ThrottlePosition);
             }
         }
-
-        /*
-        if (bMakeBrakeLights)
-        {
-            for (i = 0; i < 2; i++)
-                if (BrakeLight[i] != none)
-                    BrakeLight[i].bCorona = true;
-
-            for (i = 0; i < 2; i++)
-                if (BrakeLight[i] != none)
-                    BrakeLight[i].UpdateBrakelightState(OutputBrake, Gear);
-        }  */
     }
 
     TurnDamping = default.TurnDamping;
 
-    // RO Functionality
     // Lets make the vehicle not slide when its parked
-    if (Abs(ForwardVel) < 50)
+    if (Abs(ForwardVel) < 50.0)
     {
         MinBrakeFriction = LowSpeedBrakeFriction;
     }
@@ -337,36 +326,45 @@ simulated function Tick(float dt)
 
     if (bEngineDead || bEngineOff)
     {
-        velocity=vect(0.0, 0.0, 0.0);
-        Throttle=0;
-        ThrottleAmount=0;
-        bDisableThrottle=true;
-        Steering=0;
+        velocity = vect(0.0, 0.0, 0.0);
+        Throttle = 0.0;
+        ThrottleAmount = 0.0;
+        bDisableThrottle = true;
+        Steering = 0.0;
     }
 
     if (Level.NetMode != NM_DedicatedServer)
+    {
         CheckEmitters();
+    }
 }
 
 simulated function CheckEmitters()
 {
     if (bEmittersOn && (bEngineDead || bEngineOff))
+    {
         StopEmitters();
+    }
     else if (!bEmittersOn && !bEngineDead && !bEngineOff)
+    {
         StartEmitters();
+    }
 }
-//overriding here because we don't want exhaust/dust to start up until engine starts
+
+// Overriding here because we don't want exhaust/dust to start up until engine starts
 simulated event DrivingStatusChanged()
 {
     super(Vehicle).DrivingStatusChanged();
 
-    //moved exhaust and dust spawning to StartEngineFunction
+    // Moved exhaust and dust spawning to StartEngineFunction
 }
 
 simulated function Fire(optional float F)
 {
     if (Level.NetMode != NM_DedicatedServer)
+    {
         ServerStartEngine();
+    }
 }
 
 simulated function StopEmitters()
@@ -376,14 +374,22 @@ simulated function StopEmitters()
     if (Level.NetMode != NM_DedicatedServer)
     {
         for (i = 0; i < Dust.Length; i++)
+        {
             if (Dust[i] != none)
+            {
                 Dust[i].Kill();
+            }
+        }
 
         Dust.Length = 0;
 
         for (i = 0; i < ExhaustPipes.Length; i++)
+        {
             if (ExhaustPipes[i].ExhaustEffect != none)
+            {
                 ExhaustPipes[i].ExhaustEffect.Kill();
+            }
+        }
     }
 
     bEmittersOn = false;
@@ -391,26 +397,28 @@ simulated function StopEmitters()
 
 simulated function StartEmitters()
 {
-    local int i;
+    local int    i;
     local coords WheelCoords;
 
     if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {
-        Dust.length = Wheels.length;
+        Dust.Length = Wheels.Length;
 
         for (i = 0; i < Wheels.Length; i++)
         {
             if (Dust[i] != none)
+            {
                 Dust[i].Destroy();
+            }
 
-            // Create wheel dust emitters.
+            // Create wheel dust emitters
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
-            Dust[i] = spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
+            Dust[i] = Spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
 
             if (Level.bDropDetail || Level.DetailMode == DM_Low)
             {
-                Dust[i].MaxSpritePPS=3;
-                Dust[i].MaxMeshPPS=3;
+                Dust[i].MaxSpritePPS = 3;
+                Dust[i].MaxMeshPPS = 3;
             }
 
             Dust[i].SetBase(self);
@@ -420,13 +428,19 @@ simulated function StartEmitters()
         for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
+            {
                 ExhaustPipes[i].ExhaustEffect.Destroy();
+            }
 
-            // Create exhaust emitters.
+            // Create exhaust emitters
             if (Level.bDropDetail || Level.DetailMode == DM_Low)
-                ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+            {
+                ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectLowClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+            }
             else
-                ExhaustPipes[i].ExhaustEffect = spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+            {
+                ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+            }
 
             ExhaustPipes[i].ExhaustEffect.SetBase(self);
         }
@@ -437,29 +451,32 @@ simulated function StartEmitters()
 
 function ServerStartEngine()
 {
-//  local Pawn P; // not used
-
-    if (!bEngineDead) //can't turn Engine on or off if its Dead
+    if (!bEngineDead) //can't turn Engine on or off if it's dead
     {
         if (!bEngineOff)
         {
-            if (Throttle != 0) //cannot turn off while moving
-            return;
+            if (Throttle != 0.0) // cannot turn off while moving
+            {
+                return;
+            }
 
-            //so that people can't spam the ignition switch
+            // So that people can't spam the ignition switch
             if (Level.TimeSeconds - IgnitionSwitchTime > 4.0)
             {
-
                 if (AmbientSound != none)
-                AmbientSound = none;
+                {
+                    AmbientSound = none;
+                }
 
                 if (ShutDownSound != none)
-                PlaySound(ShutDownSound, SLOT_None, 1.0,, 300.0);
+                {
+                    PlaySound(ShutDownSound, SLOT_None, 1.0,, 300.0);
+                }
 
-                Throttle=0;
-                ThrottleAmount=0;
-                bDisableThrottle=true;
-                bEngineOff=true;
+                Throttle = 0.0;
+                ThrottleAmount = 0.0;
+                bDisableThrottle = true;
+                bEngineOff = true;
 
                 TurnDamping = 0.0;
                 IgnitionSwitchTime = Level.TimeSeconds;
@@ -470,12 +487,16 @@ function ServerStartEngine()
             if (Level.TimeSeconds - IgnitionSwitchTime > 4.0)
             {
                 if (StartUpSound != none)
-                PlaySound(StartUpSound, SLOT_None, 1.0,, 300.0);
+                {
+                    PlaySound(StartUpSound, SLOT_None, 1.0,, 300.0);
+                }
 
                 if (IdleSound != none)
-                AmbientSound = IdleSound;
+                {
+                    AmbientSound = IdleSound;
+                }
 
-                Throttle=0;
+                Throttle = 0.0;
                 bDisableThrottle = false;
                 bEngineOff = false;
 
@@ -498,18 +519,20 @@ function bool KDriverLeave(bool bForceLeave)
 
         bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
-        OldVel.Z += 75;
+        OldVel.Z += 75.0;
         Instigator.AddVelocity(OldVel);
 
         return bSuperDriverLeave;
     }
     else
+    {
         super.KDriverLeave(bForceLeave);
+    }
 }
 
 function bool PlaceExitingDriver()
 {
-    local int i;
+    local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
     local array<ExitPositionPair> ExitPositionPairs;
 
@@ -565,7 +588,6 @@ event KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
 {
     if (Role == ROLE_Authority)
     {
-
         ImpactInfo.Other = Other;
         ImpactInfo.Pos = Pos;
         ImpactInfo.ImpactVel = ImpactVel;
@@ -581,7 +603,7 @@ event TakeImpactDamage(float AccelMag)
 
     if (Vehicle(ImpactInfo.Other) != none)
     {
-        Damage = Int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier()); // Matt: moved under this 'if' to avoid "accessed none" errors
+        Damage = Int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier());
 
         TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
     }
@@ -607,12 +629,10 @@ event TakeImpactDamage(float AccelMag)
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
     local vector LinearImpulse, AngularImpulse;
-    local float RandomExplModifier;
+    local float  RandomExplModifier;
 
     RandomExplModifier = FRand();
 
-    // Don't hurt us when we are destroying our own vehicle // why ?
-    // if (!bSpikedVehicle)
     if (bResupplyVehicle)
     {
         HurtRadius(ExplosionDamage, ExplosionRadius, ExplosionDamageType, ExplosionMomentum, Location);
@@ -622,7 +642,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
     }
 
-    AmbientSound = DestroyedBurningSound; // test
+    AmbientSound = DestroyedBurningSound;
     SoundVolume = 255.0;
     SoundRadius = 600.0;
 
@@ -631,12 +651,14 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         ExplosionCount++;
 
         if (Level.NetMode != NM_DedicatedServer)
+        {
             ClientVehicleExplosion(false);
+        }
 
         LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
-        NetUpdateTime = Level.TimeSeconds - 1;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
         KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
         KAddAngularImpulse(AngularImpulse);
     }
@@ -653,7 +675,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
         EngineHealth -= ActualDamage;
     }
 
-    //Heavy damage to engine slows vehicle way down...
+    // Heavy damage to engine slows vehicle way down
     if (EngineHealth <= (EngineHealthMax * 0.25) && EngineHealth > 0)
     {
         Throttle = FClamp(Throttle, -0.50, 0.50);
@@ -661,17 +683,19 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     else if (EngineHealth <= 0)
     {
         if (bDebuggingText)
-            Level.Game.Broadcast(self, "Vehicle Engine is Dead");
+        {
+            Level.Game.Broadcast(self, "Vehicle engine is dead");
+        }
 
-        bDisableThrottle=true;
-        bEngineDead=true;
+        bDisableThrottle = true;
+        bEngineDead = true;
 
-        IdleSound=VehicleBurningSound;
-        StartUpSound=none;
-        ShutDownSound=none;
-        AmbientSound=VehicleBurningSound;
-        SoundVolume=255;
-        SoundRadius=600;
+        IdleSound = VehicleBurningSound;
+        StartUpSound = none;
+        ShutDownSound = none;
+        AmbientSound = VehicleBurningSound;
+        SoundVolume = 255;
+        SoundRadius = 600;
     }
 }
 
@@ -684,48 +708,57 @@ event CheckReset()
     if (bKeyVehicle && IsVehicleEmpty())
     {
         Died(none, class'DamageType', Location);
+ 
         return;
     }
 
     if (!IsVehicleEmpty())
     {
         ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+
         return;
     }
 
-    foreach CollidingActors(class'Pawn', P, 4000.0) //was 4000.0
+    foreach CollidingActors(class'Pawn', P, 4000.0)
     {
-        if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum())  //traces only work on friendly players nearby
+        if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum()) // traces only work on friendly players nearby
         {
-            if (ROPawn(P) != none && (VSize(P.Location - Location) < DriverTraceDist)) //was 2000 - server problems?
+            if (ROPawn(P) != none && (VSizeSquared(P.Location - Location) < DriverTraceDistSquared)) // Matt: changed so compare squared values, as VSizeSquared is more efficient
             {
-               if (bDebuggingText)
-               Level.Game.Broadcast(self, "Initiating Collision Reset Check...");
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Initiating collision reset check");
+                }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+
                 return;
             }
             else if (FastTrace(P.Location + P.CollisionHeight * vect(0.0, 0.0, 1.0), Location + CollisionHeight * vect(0.0, 0.0, 1.0)))
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Initiating FastTrace Reset Check...");
+                {
+                    Level.Game.Broadcast(self, "Initiating FastTrace reset check");
+                }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
+
                 return;
             }
         }
     }
 
-    //if factory is active, we want it to spawn new vehicle NOW
+    // If factory is active, we want it to spawn new vehicle NOW
     if (ParentFactory != none)
     {
-
         if (bDebuggingText)
-        Level.Game.Broadcast(self, "Player not found.Respawn.");
+        {
+            Level.Game.Broadcast(self, "Player not found - respawn");
+        }
 
         ParentFactory.VehicleDestroyed(self);
         ParentFactory.Timer();
-        ParentFactory = none; //so doesn't call ParentFactory.VehicleDestroyed() again in Destroyed()
+        ParentFactory = none; // so doesn't call ParentFactory.VehicleDestroyed() again in Destroyed()
     }
 
     Destroy();
@@ -736,23 +769,25 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     super.Died(Killer, DamageType, HitLocation);
 
     if (Killer == none)
+    {
         return;
+    }
 
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
 simulated event DestroyAppearance()
 {
-    local int i;
+    local int         i;
     local KarmaParams KP;
 
     // For replication
     bDestroyAppearance = true;
 
     // Put brakes on
-    Throttle    = 0;
-    Steering    = 0;
-    Rise        = 0;
+    Throttle = 0.0;
+    Steering = 0.0;
+    Rise     = 0.0;
 
     // Destroy the weapons
     if (Role == ROLE_Authority)
@@ -760,11 +795,20 @@ simulated event DestroyAppearance()
         for (i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
+            {
                 Weapons[i].Destroy();
+            }
         }
+
         for (i = 0; i < WeaponPawns.Length; i++)
-            WeaponPawns[i].Destroy();
+        {
+            if (WeaponPawns[i] != none)
+            {
+                WeaponPawns[i].Destroy();
+            }
+        }
     }
+
     Weapons.Length = 0;
     WeaponPawns.Length = 0;
 
@@ -774,16 +818,23 @@ simulated event DestroyAppearance()
         bNoTeamBeacon = true;
 
         for (i = 0; i < HeadlightCorona.Length; i++)
+        {
             HeadlightCorona[i].Destroy();
+        }
+
         HeadlightCorona.Length = 0;
 
         if (HeadlightProjector != none)
+        {
             HeadlightProjector.Destroy();
+        }
 
         for (i = 0; i < Dust.Length; i++)
         {
             if (Dust[i] != none)
+            {
                 Dust[i].Kill();
+            }
         }
 
         Dust.Length = 0;
@@ -797,10 +848,13 @@ simulated event DestroyAppearance()
         }
     }
 
-    // Copy linear velocity from actor so it doesn't just stop.
+    // Copy linear velocity from actor so it doesn't just stop
     KP = KarmaParams(KParams);
+
     if (KP != none)
+    {
         KP.KStartLinVel = Velocity;
+    }
 
     if (DamagedEffect != none)
     {
@@ -814,8 +868,8 @@ simulated event DestroyAppearance()
     SetStaticMesh(DestroyedVehicleMesh);
     KSetBlockKarma(true);
     SetPhysics(PHYS_Karma);
-    Skins.length = 0;
-    NetPriority = 2;
+    Skins.Length = 0;
+    NetPriority = 2.0;
 }
 
 function ServerChangeDriverPosition(byte F)
@@ -964,32 +1018,32 @@ function bool CheckForCrew()
 
 defaultproperties
 {
-    ObjectCollisionResistance=1.000000
+    ObjectCollisionResistance=1.0
     EngineHealthMax=30
     bEngineOff=true
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     DamagedStartUpSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'
-    PointValue=1.000000
-    DriverTraceDist=4500.000000
+    PointValue=1.0
+    DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    ExplosionSoundRadius=1000.000000
-    ExplosionDamage=325.000000
-    ExplosionRadius=700.000000
-    DamagedEffectHealthSmokeFactor=0.750000
-    DamagedEffectHealthMediumSmokeFactor=0.500000
-    DamagedEffectHealthHeavySmokeFactor=0.250000
-    DamagedEffectHealthFireFactor=0.150000
-    ImpactDamageTicks=2.000000
-    ImpactDamageThreshold=20.000000
-    ImpactDamageMult=0.500000
-    IdleTimeBeforeReset=90.000000
-    VehicleSpikeTime=30.000000
+    ExplosionSoundRadius=1000.0
+    ExplosionDamage=325.0
+    ExplosionRadius=700.0
+    DamagedEffectHealthSmokeFactor=0.75
+    DamagedEffectHealthMediumSmokeFactor=0.50
+    DamagedEffectHealthHeavySmokeFactor=0.25
+    DamagedEffectHealthFireFactor=0.15
+    ImpactDamageTicks=2.0
+    ImpactDamageThreshold=20.0
+    ImpactDamageMult=0.5
+    IdleTimeBeforeReset=90.0
+    VehicleSpikeTime=30.0
     EngineHealth=30
-    ObjectiveGetOutDist=1500.000000
+    ObjectiveGetOutDist=1500.0
     bKeepDriverAuxCollision=true
-    HealthMax=175.000000
+    HealthMax=175.0
     Health=175
 }

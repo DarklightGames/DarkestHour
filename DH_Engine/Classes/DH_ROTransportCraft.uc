@@ -6,40 +6,41 @@
 class DH_ROTransportCraft extends DH_ROWheeledVehicle
     abstract;
 
-var()   float                 MaxPitchSpeed;
-var VariableTexPanner LeftTreadPanner, RightTreadPanner;
-var() float TreadVelocityScale;
+var()   float               MaxCriticalSpeed;
+var()   float               MaxPitchSpeed;
 
-// Sound attachment actor variables
-var()       sound               LeftTreadSound;    // Sound for the left tread squeaking
-var()       sound               RightTreadSound;   // Sound for the right tread squeaking
-var()       sound               RumbleSound;       // Interior rumble sound
-var         bool                bPlayTreadSound;
-var         float               TreadSoundVolume;
-var         ROSoundAttachment   LeftTreadSoundAttach;
-var         ROSoundAttachment   RightTreadSoundAttach;
-var         ROSoundAttachment   InteriorRumbleSoundAttach;
-var         float               MotionSoundVolume;
-var()       name                LeftTrackSoundBone;
-var()       name                RightTrackSoundBone;
-var()       name                RumbleSoundBone;
-
-var         int                 LeftTreadIndex;
-var         int                 RightTreadIndex;
-
-var()   float                 MaxCriticalSpeed;
+// Tread stuff
+var     int                 LeftTreadIndex;
+var     int                 RightTreadIndex;
+var     VariableTexPanner   LeftTreadPanner, RightTreadPanner;
+var()   float               TreadVelocityScale;
 
 // Wheel animation
-var()   array<name>     LeftWheelBones;     // for animation only - the bone names for the wheels on the left side
-var()   array<name>     RightWheelBones;    // for animation only - the bone names for the wheels on the right side
+var()   array<name>         LeftWheelBones;     // for animation only - the bone names for the wheels on the left side
+var()   array<name>         RightWheelBones;    // for animation only - the bone names for the wheels on the right side
+var     rotator             LeftWheelRot;       // keep track of the left wheels rotational speed for animation
+var     rotator             RightWheelRot;      // keep track of the right wheels rotational speed for animation
+var()   int                 WheelRotationScale;
 
-var     rotator         LeftWheelRot;       // Keep track of the left wheels rotational speed for animation
-var     rotator         RightWheelRot;      // Keep track of the right wheels rotational speed for animation
-var()   int             WheelRotationScale;
+// Sound attachment actor variables
+var()   sound               LeftTreadSound;    // sound for the left tread squeaking
+var()   sound               RightTreadSound;   // sound for the right tread squeaking
+var()   sound               RumbleSound;       // interior rumble sound
+var     bool                bPlayTreadSound;
+var     float               TreadSoundVolume;
+var     ROSoundAttachment   LeftTreadSoundAttach;
+var     ROSoundAttachment   RightTreadSoundAttach;
+var     ROSoundAttachment   InteriorRumbleSoundAttach;
+var     float               MotionSoundVolume;
+var()   name                LeftTrackSoundBone;
+var()   name                RightTrackSoundBone;
+var()   name                RumbleSoundBone;
+
 
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
@@ -47,7 +48,9 @@ simulated function SetupTreads()
         LeftTreadPanner.PanRate = 0.0;
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
+
     RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
+
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
@@ -97,17 +100,17 @@ simulated function UpdateMovementSound()
 {
     if (LeftTreadSoundAttach != none)
     {
-       LeftTreadSoundAttach.SoundVolume= MotionSoundVolume * 1.0;
+       LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 1.0;
     }
 
     if (RightTreadSoundAttach != none)
     {
-       RightTreadSoundAttach.SoundVolume= MotionSoundVolume * 1.0;
+       RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 1.0;
     }
 
     if (InteriorRumbleSoundAttach != none)
     {
-       InteriorRumbleSoundAttach.SoundVolume= MotionSoundVolume;
+       InteriorRumbleSoundAttach.SoundVolume = MotionSoundVolume;
     }
 }
 
@@ -118,13 +121,17 @@ simulated event DrivingStatusChanged()
     if (!bDriving)
     {
         if (LeftTreadPanner != none)
+        {
             LeftTreadPanner.PanRate = 0.0;
+        }
 
         if (RightTreadPanner != none)
+        {
             RightTreadPanner.PanRate = 0.0;
+        }
 
         // Not moving, so no motion sound
-        MotionSoundVolume=0.0;
+        MotionSoundVolume = 0.0;
         UpdateMovementSound();
     }
 }
@@ -134,11 +141,19 @@ simulated function Destroyed()
     DestroyTreads();
 
     if (LeftTreadSoundAttach != none)
+    {
         LeftTreadSoundAttach.Destroy();
+    }
+
     if (RightTreadSoundAttach != none)
+    {
         RightTreadSoundAttach.Destroy();
+    }
+
     if (InteriorRumbleSoundAttach != none)
+    {
         InteriorRumbleSoundAttach.Destroy();
+    }
 
     super.Destroyed();
 }
@@ -147,7 +162,7 @@ simulated function Destroyed()
 function DriverLeft()
 {
     // Not moving, so no motion sound
-    MotionSoundVolume=0.0;
+    MotionSoundVolume = 0.0;
     UpdateMovementSound();
 
     super.DriverLeft();
@@ -160,6 +175,7 @@ simulated function DestroyTreads()
         Level.ObjectPool.FreeObject(LeftTreadPanner);
         LeftTreadPanner = none;
     }
+
     if (RightTreadPanner != none)
     {
         Level.ObjectPool.FreeObject(RightTreadPanner);
@@ -169,38 +185,35 @@ simulated function DestroyTreads()
 
 simulated function Tick(float DeltaTime)
 {
-    local float LinTurnSpeed;
-    local float MotionSoundTemp;
     local KRigidBodyState BodyState;
-    local float MySpeed;
-    local int i;
+    local float           LinTurnSpeed, MotionSoundTemp, MySpeed;
+    local int             i;
 
     super.Tick(DeltaTime);
 
     // Only need these effects client side
     if (Level.Netmode != NM_DedicatedServer)
     {
-
-        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
-        // VSize() is very CPU intensive - Ramm
+        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once, as VSize() is very CPU intensive - Ramm
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity
-        MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
+        MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
+
         if (MySpeed > 0.1)
         {
-            MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
+            MotionSoundVolume = FClamp(MotionSoundTemp, 0.0, 255.0);
         }
         else
         {
-            MotionSoundVolume=0;
+            MotionSoundVolume = 0.0;
         }
+
         UpdateMovementSound();
 
-        if (MySpeed >= MaxCriticalSpeed && Controller != none)
+        if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
         {
-            if (Controller.IsA('ROPlayer'))
-                ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
+            ROPlayer(Controller).aForward = -32768.0; // forces player to pull back on throttle
         }
 
         KGetRigidBodyState(BodyState);
@@ -209,16 +222,24 @@ simulated function Tick(float DeltaTime)
         if (LeftTreadPanner != none)
         {
             LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity dot vector(Rotation) < 0)
-                LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
+
+            if (Velocity dot vector(Rotation) < 0.0)
+            {
+                LeftTreadPanner.PanRate = -1.0 * LeftTreadPanner.PanRate;
+            }
+
             LeftTreadPanner.PanRate += LinTurnSpeed;
         }
 
         if (RightTreadPanner != none)
         {
             RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity dot vector(Rotation) < 0)
-                RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
+
+            if (Velocity dot vector(Rotation) < 0.0)
+            {
+                RightTreadPanner.PanRate = -1.0 * RightTreadPanner.PanRate;
+            }
+
             RightTreadPanner.PanRate -= LinTurnSpeed;
         }
 
@@ -228,83 +249,77 @@ simulated function Tick(float DeltaTime)
 
         for (i = 0; i < LeftWheelBones.Length; i++)
         {
-              SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+            SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
         for (i = 0; i < RightWheelBones.Length; i++)
         {
-              SetBoneRotation(RightWheelBones[i], RightWheelRot);
+            SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
     }
 
     if (Level.NetMode != NM_DedicatedServer)
+    {
         CheckEmitters();
+    }
 }
 
-// TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
-//              for Tanks, we'll probably want to prevent bullets from doing damage too
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local int i;
-    local float VehicleDamageMod;
-    local int HitPointDamage;
-    local int InstigatorTeam;
-    local controller InstigatorController;
+    local Controller InstigatorController;
+    local float      VehicleDamageMod;
+    local int        HitPointDamage, InstigatorTeam, i;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
 
     // Quick fix for the thing giving itself impact damage
     if (InstigatedBy == self)
+    {
         return;
+    }
 
     // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to thier team :))
     if (!bDriverAlreadyEntered)
     {
         if (InstigatedBy != none)
-            InstigatorController = InstigatedBy.Controller;
-
-        if (InstigatorController == none)
         {
-            if (DamageType.default.bDelayedDamage)
-                InstigatorController = DelayedDamageInstigatorController;
+            InstigatorController = InstigatedBy.Controller;
+        }
+
+        if (InstigatorController == none && DamageType.default.bDelayedDamage)
+        {
+            InstigatorController = DelayedDamageInstigatorController;
         }
 
         if (InstigatorController != none)
         {
             InstigatorTeam = InstigatorController.GetTeamNum();
 
-            if ((GetTeamNum() != 255) && (InstigatorTeam != 255))
+            if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
-                if (GetTeamNum() == InstigatorTeam)
-                {
-                    return;
-                }
+                return;
             }
         }
     }
 
-    // Hacked in APC damage mod for halftracks and armored cars, but bullets/bayo/nades/bashing still shouldn't work...
-    if (DamageType != none)
+    // Hacked in APC damage mod for halftracks and armored cars, but bullets/bayo/nades/bashing still shouldn't work ...
+    if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.25)
     {
-       if (class<ROWeaponDamageType>(DamageType) != none &&
-       class<ROWeaponDamageType>(DamageType).default.APCDamageModifier >= 0.25)
-       {
-          VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
-       }
-       else if (class<ROVehicleDamageType>(DamageType) != none &&
-       class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.25)
-       {
-          VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
-       }
+        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+    }
+    else if (class<ROVehicleDamageType>(DamageType) != none && class<ROVehicleDamageType>(DamageType).default.APCDamageModifier >= 0.25)
+    {
+        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
     }
 
     for (i = 0; i < VehHitpoints.Length; i++)
@@ -318,8 +333,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {
-                    //Level.Game.Broadcast(self, "Hit Driver"); //re-comment when fixed
-                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
                 }
             }
             // Damage for small (non penetrating) arms
@@ -327,8 +341,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
                 {
-                    //Level.Game.Broadcast(self, "Hit Driver");  //re-comment when fixed
-                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, damageType); //just kill the bloody driver - it's a headshot!
+                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, DamageType);
                 }
             }
         }
@@ -340,14 +353,20 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             if (VehHitpoints[i].HitPointType == HP_Engine)
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Engine Hit Effective");
-                DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, damageType);
+                {
+                    Level.Game.Broadcast(self, "Engine hit effective");
+                }
+
+                DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
             }
             else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Ammo Hit Effective");
-                Damage *= Health; //VehHitpoints[i].DamageMultiplier;
+                {
+                    Level.Game.Broadcast(self, "Ammo hit effective");
+                }
+
+                Damage *= Health;
                 break;
             }
         }
@@ -358,28 +377,28 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 
-    if (Health >= 0 && Health <= HealthMax/3)
+    if (Health >= 0 && Health <= HealthMax / 3)
     {
-        bDisableThrottle=true;
-        bEngineDead=true;
-        DamagedEffectHealthFireFactor=1.0; //play fire effect
-        IdleSound=VehicleBurningSound;
-        StartUpSound=none;
-        ShutDownSound=none;
-        AmbientSound=VehicleBurningSound;
-        SoundVolume=255;
-        SoundRadius=600;
+        bDisableThrottle = true;
+        bEngineDead = true;
+        DamagedEffectHealthFireFactor = 1.0; // play fire effect
+        IdleSound = VehicleBurningSound;
+        StartUpSound = none;
+        ShutDownSound = none;
+        AmbientSound = VehicleBurningSound;
+        SoundVolume = 255;
+        SoundRadius = 600.0;
     }
 
 }
 
-//We want to disable APC if: engine is dead or vehicle takes big damage
-//This should give time for troops to bail out and escape before vehicle blows
+// We want to disable APC if: engine is dead or vehicle takes big damage
+// This should give time for troops to bail out and escape before vehicle blows
 simulated function bool IsDisabled()
 {
-    return ((EngineHealth <= 0) || (Health >= 0 && Health <= HealthMax/3));
+    return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
 }
 
 defaultproperties
@@ -387,11 +406,11 @@ defaultproperties
     bEnterringUnlocks=false
     LeftTreadIndex=1
     RightTreadIndex=2
-    MaxCriticalSpeed=800.000000
+    MaxCriticalSpeed=800.0
     WheelRotationScale=500
-    PointValue=2.000000
+    PointValue=2.0
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    VehicleSpikeTime=60.000000
+    VehicleSpikeTime=60.0
     bIsApc=true
     bKeepDriverAuxCollision=false
 }
