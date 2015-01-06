@@ -2600,16 +2600,26 @@ simulated event DestroyAppearance()
         bNoTeamBeacon = true;
 
         for (i = 0; i < HeadlightCorona.Length; i++)
-            HeadlightCorona[i].Destroy();
+        {
+            if (HeadlightCorona[i] != none)
+            {
+                HeadlightCorona[i].Destroy();
+            }
+        }
+
         HeadlightCorona.Length = 0;
 
         if (HeadlightProjector != none)
+        {
             HeadlightProjector.Destroy();
+        }
 
         for (i = 0; i < Dust.Length; i++)
         {
             if (Dust[i] != none)
+            {
                 Dust[i].Kill();
+            }
         }
 
         Dust.Length = 0;
@@ -2623,10 +2633,13 @@ simulated event DestroyAppearance()
         }
     }
 
-    // Copy linear velocity from actor so it doesn't just stop.
+    // Copy linear velocity from actor so it doesn't just stop
     KP = KarmaParams(KParams);
+
     if (KP != none)
+    {
         KP.KStartLinVel = Velocity;
+    }
 
     if (DamagedEffect != none)
     {
@@ -2645,8 +2658,8 @@ simulated event DestroyAppearance()
     SetStaticMesh(DestroyedVehicleMesh);
     KSetBlockKarma(true);
     SetPhysics(PHYS_Karma);
-    Skins.length = 0;
-    NetPriority = 2;
+    Skins.Length = 0;
+    NetPriority = 2.0;
 
     if (Schurzen != none)
     {
@@ -2657,15 +2670,14 @@ simulated event DestroyAppearance()
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
     local vector LinearImpulse, AngularImpulse;
-    local float RandomExplModifier;
+    local float  RandomExplModifier;
 
     RandomExplModifier = FRand();
 
     // Don't hurt us when we are destroying our own vehicle // borrowed from AB
-    // if (!bSpikedVehicle)
     HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
 
-    AmbientSound = DestroyedBurningSound; // test
+    AmbientSound = DestroyedBurningSound;
     SoundVolume = 255.0;
     SoundRadius = 600.0;
 
@@ -2674,12 +2686,14 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         ExplosionCount++;
 
         if (Level.NetMode != NM_DedicatedServer)
+        {
             ClientVehicleExplosion(false);
+        }
 
         LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
-        NetUpdateTime = Level.TimeSeconds - 1;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
         KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
         KAddAngularImpulse(AngularImpulse);
     }
@@ -2690,7 +2704,9 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     super.Died(Killer, DamageType, HitLocation);
 
     if (Killer == none)
+    {
         return;
+    }
 
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
@@ -2704,7 +2720,7 @@ function ServerChangeDriverPosition(byte F)
 
     if (F >= FirstPassengerWeaponPawnIndex && bMustBeUnbuttonedToBecomePassenger && DriverPositionIndex >= UnbuttonedPositionIndex)
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You must unbutton the hatch to exit."
+        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You must unbutton the hatch to exit"
 
         return;
     }
@@ -2748,7 +2764,7 @@ simulated function int NumPassengers()
         num = 1;
     }
 
-    for (i = 0; i < WeaponPawns.length; i++)
+    for (i = 0; i < WeaponPawns.Length; i++)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
         {
@@ -2916,19 +2932,19 @@ function ServerToggleDebugExits()
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local vector CameraLocation;
-    local rotator CameraRotation;
-    local Actor ViewActor;
-    local float SavedOpacity;   //to keep players from seeing outside the periscope overlay
+    local Actor            ViewActor;
+    local vector           CameraLocation;
+    local rotator          CameraRotation;
+    local float            SavedOpacity; // to keep players from seeing outside the periscope overlay
 
-    if (IsLocallyControlled() && ActiveWeapon < Weapons.length && Weapons[ActiveWeapon] != none && Weapons[ActiveWeapon].bShowAimCrosshair && Weapons[ActiveWeapon].bCorrectAim)
+    if (IsLocallyControlled() && ActiveWeapon < Weapons.Length && Weapons[ActiveWeapon] != none && Weapons[ActiveWeapon].bShowAimCrosshair && Weapons[ActiveWeapon].bCorrectAim)
     {
         Canvas.DrawColor = CrosshairColor;
         Canvas.DrawColor.A = 255;
         Canvas.Style = ERenderStyle.STY_Alpha;
 
-        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0+1, CrosshairY*2.0+1, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
+        Canvas.SetPos(Canvas.SizeX * 0.5 - CrosshairX, Canvas.SizeY * 0.5 - CrosshairY);
+        Canvas.DrawTile(CrosshairTexture, CrosshairX * 2.0 + 1.0, CrosshairY * 2.0 + 1.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
 
     PC = PlayerController(Controller);
@@ -2936,26 +2952,25 @@ simulated function DrawHUD(Canvas Canvas)
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //Log("PanzerTurret PlayerController was none, returning");
+
         return;
     }
     else if (!PC.bBehindView)
     {
+        SavedOpacity = Canvas.ColorModulate.W;
+        Canvas.ColorModulate.W = 1.0;
 
-       SavedOpacity = Canvas.ColorModulate.W;
-       Canvas.ColorModulate.W = 1.0;
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && HUDOverlay == none && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+        {
+            DrawPeriscopeOverlay(Canvas);
+        }
 
-       if (DriverPositions[DriverPositionIndex].bDrawOverlays && HUDOverlay == none && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
-       {
-           DrawPeriscopeOverlay(Canvas);
-       }
-        // reset HudOpacity to original value
-        Canvas.ColorModulate.W = SavedOpacity;
+        Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
         DrawVehicle(Canvas);
         DrawPassengers(Canvas);
     }
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none && DriverPositions[DriverPositionIndex].bDrawOverlays)
+    if (!PC.bBehindView && HUDOverlay != none && DriverPositions[DriverPositionIndex].bDrawOverlays)
     {
         if (!Level.IsSoftwareRendering())
         {
@@ -2963,11 +2978,13 @@ simulated function DrawHUD(Canvas Canvas)
             SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
             HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
             HUDOverlay.SetRotation(CameraRotation);
-            Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
+            Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
         }
     }
     else
-         ActivateOverlay(false);
+    {
+        ActivateOverlay(false);
+    }
 }
 
 simulated function DrawPeriscopeOverlay(Canvas Canvas)
@@ -2976,7 +2993,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
     ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
     Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 // Overridden to eliminate "Waiting for Additional Crewmembers" message
@@ -2993,27 +3010,27 @@ defaultproperties
     DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     LeftTreadIndex=1
     RightTreadIndex=2
-    MaxCriticalSpeed=700.000000
-    AmmoIgnitionProbability=0.750000
-    TreadDamageThreshold=0.500000
-    DriverKillChance=1150.000000
-    GunnerKillChance=1150.000000
-    CommanderKillChance=950.000000
-    OpticsDamageChance=3000.000000
-    GunDamageChance=1250.000000
-    TraverseDamageChance=2000.000000
-    TurretDetonationThreshold=1750.000000
+    MaxCriticalSpeed=700.0
+    AmmoIgnitionProbability=0.75
+    TreadDamageThreshold=0.50
+    DriverKillChance=1150.0
+    GunnerKillChance=1150.0
+    CommanderKillChance=950.0
+    OpticsDamageChance=3000.0
+    GunDamageChance=1250.0
+    TraverseDamageChance=2000.0
+    TurretDetonationThreshold=1750.0
     FireAttachBone="driver_player"
-    FireEffectOffset=(Z=-10.000000)
-    EngineFireChance=0.500000
-    EngineFireHEATChance=0.850000
-    HullFireChance=0.250000
-    HullFireHEATChance=0.500000
+    FireEffectOffset=(Z=-10.0)
+    EngineFireChance=0.50
+    EngineFireHEATChance=0.85
+    HullFireChance=0.25
+    HullFireHEATChance=0.50
     VehicleBurningDamType=class'DH_VehicleBurningDamType'
-    PlayerFireDamagePerSec=15.000000
+    PlayerFireDamagePerSec=15.0
     bFirstHit=true
-    FireDetonationChance=0.070000
-    EngineToHullFireChance=0.050000
+    FireDetonationChance=0.07
+    EngineToHullFireChance=0.05
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
     DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
@@ -3024,26 +3041,26 @@ defaultproperties
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     EngineHealthMax=300
     bEngineOff=true
-    DriverTraceDist=4500.000000
-    GunMantletArmorFactor=10.000000
-    GunMantletSlope=10.000000
-    WaitForCrewTime=7.000000
-    ChassisTorqueScale=0.900000
-    ChangeUpPoint=2050.000000
-    ChangeDownPoint=1100.000000
-    ViewShakeRadius=50.000000
-    ViewShakeOffsetMag=(X=0.000000,Z=0.000000)
-    ViewShakeOffsetFreq=0.000000
-    ExplosionSoundRadius=1000.000000
-    ExplosionDamage=575.000000
-    ExplosionRadius=900.000000
-    DamagedEffectHealthSmokeFactor=0.850000
-    DamagedEffectHealthMediumSmokeFactor=0.650000
-    DamagedEffectHealthHeavySmokeFactor=0.350000
-    DamagedEffectHealthFireFactor=0.000000
-    TimeTilDissapear=90.000000
-    IdleTimeBeforeReset=200.000000
-    VehicleSpikeTime=60.000000
+    DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
+    GunMantletArmorFactor=10.0
+    GunMantletSlope=10.0
+    WaitForCrewTime=7.0
+    ChassisTorqueScale=0.9
+    ChangeUpPoint=2050.0
+    ChangeDownPoint=1100.0
+    ViewShakeRadius=50.0
+    ViewShakeOffsetMag=(X=0.0,Z=0.0)
+    ViewShakeOffsetFreq=0.0
+    ExplosionSoundRadius=1000.0
+    ExplosionDamage=575.0
+    ExplosionRadius=900.0
+    DamagedEffectHealthSmokeFactor=0.85
+    DamagedEffectHealthMediumSmokeFactor=0.65
+    DamagedEffectHealthHeavySmokeFactor=0.35
+    DamagedEffectHealthFireFactor=0.0
+    TimeTilDissapear=90.0
+    IdleTimeBeforeReset=200.0
+    VehicleSpikeTime=60.0
     EngineHealth=300
     bMustBeUnbuttonedToBecomePassenger=true
     FirstPassengerWeaponPawnIndex=255
