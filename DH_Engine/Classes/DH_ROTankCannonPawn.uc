@@ -143,7 +143,8 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (class'DH_ROTankCannonPawn'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all cannon pawns
+    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all cannon pawns
+    if (class'DH_ROTankCannonPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {

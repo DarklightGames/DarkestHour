@@ -401,35 +401,35 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
 
         if (TempXL < Message.DY * 8.0) // only wrap if we have enough text
         {
-            MessageExtra.Lines.length = 1;
+            MessageExtra.Lines.Length = 1;
             MessageExtra.Lines[0] = Message.StringMessage;
         }
         else
         {
-            Lines.length = 0;
+            Lines.Length = 0;
             C.WrapStringToArray(Message.StringMessage, Lines, TempXL);
-            InitialNumLines = Lines.length;
+            InitialNumLines = Lines.Length;
             Message.DX = TempXL; // Matt: added to fix problem, so Message.DX is always set, even for the 1st pass
 
             for (i = 0; i < 20; i++)
             {
                 TempXL *= 0.8;
-                Lines.length = 0;
+                Lines.Length = 0;
                 C.WrapStringToArray(Message.StringMessage, Lines, TempXL);
 
-                if (Lines.length > InitialNumLines)
+                if (Lines.Length > InitialNumLines)
                 {
                     // If we're getting more than InitialNumLines Lines, it means we should use the previously calculated width
-                    Lines.length = 0;
+                    Lines.Length = 0;
                     C.WrapStringToArray(Message.StringMessage, Lines, Message.DX); // Matt: was sometimes going wrong here, as Message.DX hadn't been set before the 1st pass
 
                     // Save strings to message array + calculate resulting XL/YL
-                    MessageExtra.Lines.length = Lines.length;
+                    MessageExtra.Lines.Length = Lines.Length;
                     C.Font = Message.StringFont;
                     XL = 0;
                     YL = 0;
 
-                    for (j = 0; j < Lines.length; j++)
+                    for (j = 0; j < Lines.Length; j++)
                     {
                         MessageExtra.Lines[j] = Lines[j];
                         C.TextSize(Lines[j], TempXL, TempYL);
@@ -1044,7 +1044,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         Canvas.Font = GetSmallMenuFont(Canvas);
                     }
 
-                    i = (Current + 1) % Lines.length;
+                    i = (Current + 1) % Lines.Length;
 
                     while (true)
                     {
@@ -1069,9 +1069,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         DrawTextWidgetClipped(Canvas, VehicleAmmoTypeText, Coords2, XL, YL, Y_one);
                         VehicleAmmoTypeText.OffsetY -= YL;
 
-                        i = (i + 1) % Lines.length;
+                        i = (i + 1) % Lines.Length;
 
-                        if (i == (Current + 1) % Lines.length)
+                        if (i == (Current + 1) % Lines.Length)
                         {
                             break;
                         }
@@ -1320,7 +1320,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Draw occupant dots
-    for (i = 0; i < Vehicle.VehicleHudOccupantsX.length; i++)
+    for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; i++)
     {
         if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
         {
@@ -1349,9 +1349,9 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         }
         else
         {
-            if (i - 1 >= Vehicle.WeaponPawns.length)
+            if (i - 1 >= Vehicle.WeaponPawns.Length)
             {
-                // Matt: added to replace lines above - if we're already beyond WeaponPawns.length, there's no point continuing with the for loop
+                // Matt: added to replace lines above - if we're already beyond WeaponPawns.Length, there's no point continuing with the for loop
                 break;
             }
             // Matt: added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
@@ -1401,7 +1401,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Clear lines array
-    Lines.length = 0;
+    Lines.Length = 0;
 
     // Shift text up some more if we're the driver and we're displaying capture bar
     if (bDrawingCaptureBar && Vehicle.PlayerReplicationInfo == PRI)
@@ -1412,28 +1412,28 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     // Driver's name
     if (Vehicle.PlayerReplicationInfo != none && Vehicle.PlayerReplicationInfo != PRI) // don't draw our own name!
     {
-        Lines[Lines.length] = class'ROVehicleWeaponPawn'.default.DriverHudName $ ":" @ Vehicle.PlayerReplicationInfo.PlayerName;
+        Lines[Lines.Length] = class'ROVehicleWeaponPawn'.default.DriverHudName $ ":" @ Vehicle.PlayerReplicationInfo.PlayerName;
     }
 
     // Passengers' names
-    for (i = 0; i < Vehicle.WeaponPawns.length; i++)
+    for (i = 0; i < Vehicle.WeaponPawns.Length; i++)
     {
         WeaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
 
         if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none && WeaponPawn.PlayerReplicationInfo != PRI) // don't draw our own name!
         {
-            Lines[Lines.length] = WeaponPawn.HudName $ ":" @ WeaponPawn.PlayerReplicationInfo.PlayerName;
+            Lines[Lines.Length] = WeaponPawn.HudName $ ":" @ WeaponPawn.PlayerReplicationInfo.PlayerName;
         }
     }
 
     // Draw the lines
-    if (Lines.length > 0)
+    if (Lines.Length > 0)
     {
         VehicleOccupantsText.OffsetY = default.VehicleOccupantsText.OffsetY * MyScale;
         VehicleOccupantsText.OffsetY += ModifiedVehicleOccupantsTextYOffset;
         Canvas.Font = GetSmallMenuFont(Canvas);
 
-        for (i = Lines.length - 1; i >= 0 ; i--)
+        for (i = Lines.Length - 1; i >= 0 ; i--)
         {
             VehicleOccupantsText.Text = Lines[i];
             DrawTextWidgetClipped(Canvas, VehicleOccupantsText, Coords2, XL, YL, Y_one);
@@ -2170,9 +2170,9 @@ simulated function DrawObjectives(Canvas C)
         }
 
         // Draw the destroyable/destroyed targets
-        if (Player.Destroyables.length != 0)
+        if (Player.Destroyables.Length != 0)
         {
-            for (i = 0; i < Player.Destroyables.length; i++)
+            for (i = 0; i < Player.Destroyables.Length; i++)
             {
                 if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
                 {

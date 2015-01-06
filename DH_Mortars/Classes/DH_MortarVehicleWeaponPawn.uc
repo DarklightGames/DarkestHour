@@ -872,5 +872,5 @@ defaultproperties
     ExitPositions(4)=(Y=48.0)
     ExitPositions(5)=(Z=64.0)
     bKeepDriverAuxCollision=true
-    WeaponFov=90.0
+    WeaponFOV=90.0
 }

@@ -111,7 +111,8 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (class'DH_ROPassengerPawn'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all rider pawns
+    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all rider pawns
+    if (class'DH_ROPassengerPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {

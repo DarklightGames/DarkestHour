@@ -1493,7 +1493,7 @@ simulated function UpdateHintManagement(bool bUseHints)
     {
         if (bUseHints && DHHintManager == none)
         {
-            DHHintManager = spawn(class'DHHintManager', self);
+            DHHintManager = Spawn(class'DHHintManager', self);
 
             if (DHHintManager == none)
             {
