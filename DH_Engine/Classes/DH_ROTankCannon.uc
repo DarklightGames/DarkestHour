@@ -1377,14 +1377,15 @@ simulated function Timer()
     }
     else if (CannonReloadState == CR_Empty)
     {
-        if (Role == ROLE_Authority)
-        {
-            PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
-        else
-        {
-            PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
+        // Matt: simplified to call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do (same in other reload stages below)
+//      if (Role == ROLE_Authority)
+//      {
+            PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
+//      }
+//      else
+//      {
+//          PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
+//      }
 
         CannonReloadState = CR_ReloadedPart1;
         GetSoundDuration(ReloadSoundThree) + GetSoundDuration(ReloadSoundFour);
@@ -1392,44 +1393,20 @@ simulated function Timer()
     }
     else if (CannonReloadState == CR_ReloadedPart1)
     {
-        if (Role == ROLE_Authority)
-        {
-            PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
-        else
-        {
-            PlaySound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
-
+        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
         CannonReloadState = CR_ReloadedPart2;
         GetSoundDuration(ReloadSoundFour);
         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
     }
     else if (CannonReloadState == CR_ReloadedPart2)
     {
-        if (Role == ROLE_Authority)
-        {
-            PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
-        else
-        {
-            PlaySound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
-
+        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
         CannonReloadState = CR_ReloadedPart3;
         SetTimer(GetSoundDuration(ReloadSoundThree), false);
     }
     else if (CannonReloadState == CR_ReloadedPart3)
     {
-        if (Role == ROLE_Authority)
-        {
-            PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
-        else
-        {
-            PlaySound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-        }
-
+        PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
         CannonReloadState = CR_ReloadedPart4;
         SetTimer(GetSoundDuration(ReloadSoundFour), false);
    }
