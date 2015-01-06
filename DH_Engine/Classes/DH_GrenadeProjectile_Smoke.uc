@@ -6,24 +6,15 @@
 class DH_GrenadeProjectile_Smoke extends DH_GrenadeProjectile
     abstract;
 
-var float   DestroyTimer;
-var bool    bCalledDestroy;
-var Emitter SmokeEmitter;
-var sound   SmokeSound;
+var  class<Emitter> SmokeEmitterClass;
+var  sound          SmokeIgniteSound;
+var  sound          SmokeLoopSound;
+var  float          SmokeSoundDuration;
 
-// Modified to handle destruction of actor after set time
-simulated function Tick(float DeltaTime)
-{
-    super.Tick(DeltaTime);
-
-    DestroyTimer -= DeltaTime;
-
-    if (DestroyTimer <= 0.0 && !bCalledDestroy)
-    {
-        bCalledDestroy = true;
-        Destroy();
-    }
-}
+// Matt: removed as unnecessary:
+//var float   DestroyTimer;   
+//var bool    bCalledDestroy;
+//var Emitter SmokeEmitter;
 
 // Modified to remove 'Fear' stuff, as not an exploding grenade
 simulated function Landed(vector HitNormal)
@@ -39,23 +30,37 @@ simulated function Landed(vector HitNormal)
     }
 }
 
-// Modified to add smoke effects & remove actor destruction
+// Modified to add smoke effects & to remove actor destruction on client
+// Matt: actor is torn off & then destroyed on server, but persists for its LifeSpan on clients so grenade is still visible on ground & makes the smoke sound
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
+    local Emitter SmokeEmitter;
+        
     BlowUp(HitLocation);
 
-    if (Role == ROLE_Authority)
-    {
-        AmbientSound = SmokeSound;
-    }
-
-    PlaySound(ExplosionSound[Rand(3)], , 1.0, , 200);
+    bTearOff = true; // stops any further replication, but client copies of actor persist so we still see the grenade on the ground
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SmokeEmitter = Spawn(ExplodeDirtEffectClass, self,, Location, rotator(vect(0, 0, 1)));
-        SmokeEmitter.SetBase(self);
+        SmokeEmitter = Spawn(SmokeEmitterClass, self, , Location, rotator(vect(0.0, 0.0, 1.0)));
+        SmokeEmitter.SetBase(self); // base the emitter on the grenade so if it bursts in mid-air the smoke emission travels with the grenade
+        PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5, , 200.0);
+        AmbientSound = SmokeLoopSound;
+        SetTimer(SmokeSoundDuration, false);  // to switch off smoke sound when it stops discharging
+        LifeSpan = SmokeSoundDuration + 10.0; // this actor will persist as long as the smoke sound, then stay inert on ground for an extra 10 secs & then auto-destroy
     }
+    else
+    {
+        LifeSpan = 1.0; // on a server this actor will be automatically destroyed in 1 second, allowing time for bTearOff to replicate to clients
+    }
+
+    SetPhysics(PHYS_None);
+}
+
+// Switches off sound sound when grenade is no longer discharging smoke
+simulated function Timer()
+{
+    AmbientSound = none;
 }
 
 // Modified to remove everything relating to explosion & damage, as not an exploding grenade
@@ -67,38 +72,37 @@ function BlowUp(vector HitLocation)
     }
 }
 
-// Modified to destroy SmokeEmitter & also to remove everything relating to explosion, as not an exploding grenade
+// Function emptied out to remove everything relating to explosion, as not an exploding grenade
 simulated function Destroyed()
 {
-    if (SmokeEmitter != none)
-    {
-        SmokeEmitter.Kill();
-    }
 }
 
-// Modified to destroy SmokeEmitter
-function Reset()
+/*
+// Modified to handle destruction of actor after set time
+simulated function Tick(float DeltaTime) // Matt: removed as unnecessary
 {
-    if (SmokeEmitter != none)
-    {
-        SmokeEmitter.Destroy();
-    }
+    super.Tick(DeltaTime);
 
-    super.Reset();
+    DestroyTimer -= DeltaTime;
+
+    if (DestroyTimer <= 0.0 && !bCalledDestroy)
+    {
+        bCalledDestroy = true;
+        Destroy();
+    }
 }
+*/
 
 defaultproperties
 {
-    bAlwaysRelevant=true
-    LifeSpan=30.000000
-    DestroyTimer=30.000000
-    Damage=0.000000
-    DamageRadius=0.000000
-    ExplodeDirtEffectClass=class'ROEffects.GrenadeSmokeEffect'
-    ExplosionSound(0)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    ExplosionSound(1)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    ExplosionSound(2)=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
+//  DestroyTimer=30.0 // deprecated
+    Damage=0.0
+    DamageRadius=0.0
+    SmokeEmitterClass=class'ROEffects.GrenadeSmokeEffect'
+    SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeSoundDuration=33.0
     SoundVolume=255
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }
