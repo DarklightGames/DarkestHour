@@ -20,11 +20,10 @@ var() float           TracerPullback;
 var() float           DampenFactor;
 var() float           DampenFactorParallel;
 
-var globalconfig bool   bDebugMode;         // If true, give our detailed report in log.
-var globalconfig bool   bDebugROBallistics; // If true, set bDebugBallistics to true for getting the arrow pointers
+var globalconfig bool   bDebugMode;         // if true, give our detailed report in log.
+var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to true for getting the arrow pointers
 
 
-// Modified to handle tracer effect if this is a tracer bullet
 simulated function PostBeginPlay()
 {
     if (bDebugROBallistics)
@@ -35,22 +34,39 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     OrigLoc = Location;
+}
 
-    if (bIsTracerBullet)
+// Modified to handle tracer effect if this is a tracer bullet
+simulated function PostNetBeginPlay()
+{
+    if (bIsTracerBullet && Level.NetMode != NM_DedicatedServer)
     {
+        SetDrawType(DT_StaticMesh);
+//      SetRotation(rotator(Velocity)); // Matt: removed as simply setting bOrientToVelocity handles this natively
+        bOrientToVelocity = true;
+
         if (Level.bDropDetail)
         {
             bDynamicLight = false;
-            LightType = LT_None;
+//          LightType = LT_None; // is default anyway
         }
-
-        if (Level.NetMode != NM_DedicatedServer)
+        else
         {
-            TracerEffect = Spawn(TracerEffectClass, self, , (Location + Normal(Velocity) * TracerPullback));
-
-            SetRotation(rotator(Velocity));
+            bDynamicLight = true;
+            LightType = LT_Steady;
         }
+
+        LightBrightness = 90.0;
+        LightRadius = 10.0;
+        LightHue = 45;
+        LightSaturation = 128;
+        AmbientGlow = 254;
+        LightCone = 16;
+
+        TracerEffect = Spawn(TracerEffectClass, self, , (Location + Normal(Velocity) * TracerPullback));
     }
+
+    super.PostNetBeginPlay();
 }
 
 // Matt: called by DH_FastAutoFire's SpawnProjectile function to set this as a server bullet, meaning it won't be replicated as a separate client bullet will be spawned on client
@@ -60,15 +76,15 @@ function SetAsServerBullet()
     RemoteRole = ROLE_None;
 }
 
-// Matt: modified to keep tracer rotation matched to it's direction of travel - emptied function does nothing as we no longer use Tick to do delayed destruction on a server
+// Matt: emptied out - see comments below
 simulated function Tick(float DeltaTime)
 {
-    super.Tick(DeltaTime);
+//  super.Tick(DeltaTime); // ROBullet Super is not needed as delayed destruction on a server is handled far more efficiently by simply setting a short LifeSpan on a server
 
-    if (bIsTracerBullet && Level.NetMode != NM_DedicatedServer)
-    {
-        SetRotation(rotator(Velocity));
-    }
+//  if (bIsTracerBullet && Level.NetMode != NM_DedicatedServer)
+//  {
+//      SetRotation(rotator(Velocity)); // keep tracer rotation matched to it's direction // not needed as simply setting bOrientToVelocity handles this natively
+//  }
 }
 
 // Matt: modified to handle new VehicleWeapon collision mesh actor
@@ -226,7 +242,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             Log(">>> ProcessTouch ROBulletWhipAttachment ... ");
         }
 
-        if (!Other.Base.bDeleteMe)
+        if (Other.Base.bDeleteMe)
+        {
+            return;
+        }
+
+        if (Instigator != none)
         {
             if (!bHasDeflected)
             {
@@ -239,7 +260,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 BulletDistance = VSize(Location - OrigLoc) / 60.352; // calculate distance travelled by bullet in metres
 
                 // If it's FF at close range, we won't suppress, so send a different WT through
-                if (BulletDistance < 10.0 && Instigator != none && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none && 
+                if (BulletDistance < 10.0 && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none && 
                     DH_Pawn(Other.Base).Controller != none && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
                 {
                     WhizType = 3;
@@ -250,34 +271,31 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     WhizType = 2;
                 }
             }
+        }
 
-            Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , WhizType);
+        // Matt: was Instigator.HitPointTrace but makes no difference which actor it's called on & calling on Instigator could lead to "accessed none" errors
+        Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , WhizType);
 
-            if (!bHasDeflected)
+        if (!bHasDeflected)
+        {
+            if (bDebugMode)
             {
-                if (bDebugMode)
-                {
-                    Log(">>> ProcessTouch HitPointTrace ... " @ Other);
-                }
-
-                if (Other == none)
-                {
-                    WhizType = default.WhizType; // reset for the next collision
-
-                    return;
-                }
+                Log(">>> ProcessTouch HitPointTrace ... " @ Other);
             }
 
-            HitPawn = DH_Pawn(Other);
-
-            if (HitPawn == none)
+            if (Other == none)
             {
-                bHitWhipAttachment = true;
+                WhizType = default.WhizType; // reset for the next collision
+
+                return;
             }
         }
-        else
+
+        HitPawn = DH_Pawn(Other);
+
+        if (HitPawn == none)
         {
-            return;
+            bHitWhipAttachment = true;
         }
     }
 
@@ -516,25 +534,16 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    bNetNotify=true
     WhizType=1
     ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
     WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
 
-    // Tracer properties:
-    DrawType=DT_StaticMesh
+    // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0
     TracerPullback=150.0
     bBounce=true
     Bounces=2
     DampenFactor=0.1
     DampenFactorParallel=0.05
-    LightType=LT_Steady
-    LightBrightness=90.0
-    LightRadius=10.0
-    LightHue=45
-    LightSaturation=128
-    LightCone=16
-    bDynamicLight=true
-    bUnlit=true
-    AmbientGlow=254
 }
