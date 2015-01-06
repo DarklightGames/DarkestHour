@@ -97,7 +97,8 @@ simulated function BlowUp(vector HitLocation)
     local class<Projector> ExplosionDecalClass;
     local sound            ExplosionSound;
 
-    MakeNoise(1.0);
+    super.BlowUp(HitLocation);
+
     GetHitSurfaceType(HitSurfaceType);
     GetExplosionEmitterClass(ExplosionEmitterClass, HitSurfaceType);
     GetExplosionDecalClass(ExplosionDecalClass, HitSurfaceType);
@@ -137,8 +138,6 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         return;
     }
-
-    BlowUp(HitLocation);
 
     super.Explode(HitLocation, HitNormal);
 

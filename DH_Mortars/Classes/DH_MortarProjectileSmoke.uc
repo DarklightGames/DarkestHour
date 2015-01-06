@@ -16,12 +16,6 @@ var float SmokeSoundDuration;
 var class<Emitter> SmokeEmitterClass;
 var Emitter SmokeEmitter;
 
-function BlowUp(vector HitLocation)
-{
-    if (Role == ROLE_Authority)
-        MakeNoise(1.0);
-}
-
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     super.Explode(HitLocation, HitNormal);

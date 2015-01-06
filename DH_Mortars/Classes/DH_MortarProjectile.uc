@@ -218,6 +218,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         SetHitLocation(HitLocation);
     }
 
+    BlowUp(HitLocation);
+
     if (bDebug)
     {
         if (Level.NetMode != NM_DedicatedServer)
@@ -226,6 +228,14 @@ simulated function Explode(vector HitLocation, vector HitNormal)
         }
 
         Log((DebugForward dot (Location - OrigLoc) * UU2M) @ (DebugRight dot (Location - OrigLoc) * UU2M));
+    }
+}
+
+function BlowUp(vector HitLocation)
+{
+    if (Role == ROLE_Authority)
+    {
+        MakeNoise(1.0);
     }
 }
 
