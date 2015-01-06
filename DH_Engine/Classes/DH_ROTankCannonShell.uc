@@ -5,7 +5,8 @@
 
 class DH_ROTankCannonShell extends DH_ROAntiVehicleProjectile;
 
-var     sound               ExplosionSound[4];    // sound of the round exploding
+var     array<sound>        ExplosionSound;       // sound of the round exploding (array for random selection)
+var     float               ExplosionSoundVolume; // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)
 var     bool                bAlwaysDoShakeEffect; // this shell will always DoShakeEffect when it explodes, not just if hit vehicle armor
 //var   bool                bHitWater;            // Matt: removed as not used anywhere
 
@@ -50,7 +51,7 @@ simulated function PostBeginPlay()
     if (PhysicsVolume.bWaterVolume)
     {
 //      bHitWater = true; // Matt: deprecated
-        Velocity = 0.6 * Velocity;
+        Velocity *= 0.6;
     }
 
     if (Level.bDropDetail)
@@ -128,12 +129,15 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 }
 
-function BlowUp(vector HitLocation)
+simulated function BlowUp(vector HitLocation)
 {
-    HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
-    HurtWall = none; // reset after HurtRadius, which is the only thing that uses HurtWall
+    if (Role == ROLE_Authority)
+    {
+        HurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        HurtWall = none; // reset after HurtRadius, which is the only thing that uses HurtWall
 
-    MakeNoise(1.0);
+        MakeNoise(1.0);
+    }
 
     super.BlowUp(HitLocation);
 }
@@ -145,6 +149,12 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     local Material      HitMaterial;
     local ESurfaceTypes SurfType;
     local bool          bShowDecal, bSnowDecal;
+
+    // Play random explosion sound if this shell has any
+    if (ExplosionSound.Length > 0)
+    {
+        PlaySound(ExplosionSound[Rand(ExplosionSound.Length - 1)], , ExplosionSoundVolume * TransientSoundVolume);
+    }
 
     // Do a shake effect if projectile always does or if hit a vehicle
     if (bAlwaysDoShakeEffect || SavedHitActor != none)
@@ -287,6 +297,7 @@ defaultproperties
     SoundRadius=700.0
     TransientSoundVolume=1.0
     TransientSoundRadius=1000.0
+    ExplosionSoundVolume=1.0
     bUseCollisionStaticMesh=true
     bFixedRotationDir=true
     RotationRate=(Roll=50000)

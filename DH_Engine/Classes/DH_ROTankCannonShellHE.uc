@@ -6,7 +6,7 @@
 class DH_ROTankCannonShellHE extends DH_ROTankCannonShell;
 
 
-// Modified to to add different effects if didn't penetrate armor, to add an explosion sound and to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)
+// Modified to add different effects if didn't penetrate armor & to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
 {
     local vector  Start, Direction;
@@ -28,9 +28,6 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     {
         super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
     }
-
-    // Always play explosion sound for HE
-    PlaySound(ExplosionSound[Rand(4)], , 5.5 * TransientSoundVolume);
 
     // Move karma ragdolls around when this explodes
     if (Level.NetMode != NM_DedicatedServer)
@@ -86,6 +83,7 @@ defaultproperties
     MyDamageType=class'DH_HECannonShellDamage'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-    SoundRadius=1000.000000
     LifeSpan=10.0
+//  SoundRadius=1000.0 // Matt: removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
+    ExplosionSoundVolume=2.0
 }

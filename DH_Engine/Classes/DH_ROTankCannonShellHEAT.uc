@@ -190,14 +190,6 @@ simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
     }
 }
 
-// Modified to always play an explosion sound for HEAT
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
-{
-    super.SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
-
-    PlaySound(ExplosionSound[Rand(4)], , 2.5 * TransientSoundVolume);
-}
-
 // Sets Hardness based on the surface type hit
 simulated function CheckWall(vector HitNormal, vector X)
 {
@@ -311,6 +303,7 @@ defaultproperties
     MyDamageType=class'DH_HEATCannonShellDamage'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
-    SoundRadius=1000.000000
     LifeSpan=10.0
+//  SoundRadius=1000.0 // Matt: removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
+    ExplosionSoundVolume=1.5
 }

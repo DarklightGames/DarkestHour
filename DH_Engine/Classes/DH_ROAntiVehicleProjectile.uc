@@ -9,14 +9,14 @@ class DH_ROAntiVehicleProjectile extends ROAntiVehicleProjectile
 
 enum ERoundType
 {
-    RT_APC,
+    RT_APC,   // either APC (with just armor-piercing cap) or APCBC (with both armor-piercing cap & ballistic cap)
     RT_HE,
-    RT_HVAP,
+    RT_HVAP,  // HVAP in US parlance, known elsewhere as APCR (same thing)
     RT_APDS,
-    RT_HEAT,
+    RT_HEAT,  // includes infantry AT HEAT weapons (e.g. rockets & PIAT)
     RT_Smoke,
-    RT_AP,
-    RT_APBC,
+    RT_AP,    // basic armor-piercing round, without any cap
+    RT_APBC,  // with ballistic cap but not armor-piercing cap (used by Soviets)
 };
 
 var   ERoundType     RoundType;               // Matt: added to identify round type, making it easier to write more generic functionality & avoid code repetition
@@ -105,6 +105,11 @@ simulated function PostNetBeginPlay()
     }    
 }
 
+// Matt: emptied out to remove delayed destruction stuff from the Super in ROAntiVehicleProjectile - it's far cleaner just to set a short LifeSpan on a server
+simulated function Tick(float DeltaTime)
+{
+}
+
 // Borrowed from AB: Just using a standard linear interpolation equation here
 simulated function float GetPenetration(vector Distance)
 {
@@ -134,8 +139,9 @@ simulated function float GetPenetration(vector Distance)
     return PenetrationNumber;
 }
 
+/*
 // Returns (T/d) for APC/APCBC, AP or APBC shells
-simulated function float GetOverMatch (float ArmorFactor, float ShellDiameter)
+simulated function float GetOverMatch (float ArmorFactor, float ShellDiameter) // Matt: removed as never used in projectile classes
 {
     local float OverMatchFactor;
 
@@ -143,6 +149,7 @@ simulated function float GetOverMatch (float ArmorFactor, float ShellDiameter)
 
     return OverMatchFactor;
 }
+*/
 
 // Matt: modified to handle new VehicleWeapon collision mesh actor
 // If we hit a collision mesh actor (probably a turret, maybe an exposed vehicle MG), we switch the hit actor to be the real vehicle weapon & proceed as if we'd hit that actor instead
@@ -288,7 +295,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // We hit a soldier ... potentially - first we need to run a HitPointTrace to make sure we actually hit part of his body, not just his collision area
         if (Other.IsA('ROPawn'))
         {
-            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation,, 0);
+            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation, , 0);
 
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)
@@ -408,14 +415,19 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 }
 
 // Modified to add most common explosion features into this function - removes code repetition & makes it easier to subclass Explode
-function BlowUp(vector HitLocation)
+// Avoided setting replicated variables on a server, as clients are going to get this anyway & this actor is about to be destroyed, so it saves unnecessary replication
+simulated function BlowUp(vector HitLocation)
 {
-    AmbientSound = none;
+    bUpdateSimulatedPosition = false; // don't replicate the position any more
 
-    // Don't update the position any more and don't move the projectile any more
-    bUpdateSimulatedPosition = false;
-    SetPhysics(PHYS_None);
-    SetDrawType(DT_None);
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        AmbientSound = none;
+
+        // Don't move or draw the projectile any more
+        SetPhysics(PHYS_None);
+        SetDrawType(DT_None);
+    }
 
     if (Corona != none)
     {
@@ -483,7 +495,8 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
     }
 }
 
-// Matt: modified version to include passed HitLocation, to give correct placement of deflection effect (shell's Location has moved on by the time the effect spawns))
+// Matt: modified version to include passed HitLocation, to give correct placement of deflection effect (shell's Location has moved on by the time the effect spawns)
+// Also avoided setting replicated variables on a server, as clients are going to get this anyway
 simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 {
     local vector VNorm;
@@ -491,6 +504,12 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
     if (bDebuggingText && Role == ROLE_Authority)
     {
         Level.Game.Broadcast(self, "Round ricocheted off vehicle armor");
+    }
+
+    if (bDebugBallistics)
+    {
+        HandleShellDebug(HitLocation);
+        bDebugBallistics = false; // so we don't keep getting debug reports on subsequent deflections, only the 1st impact
     }
 
     SavedHitActor = none; // don't save hitting this actor since we deflected
@@ -505,13 +524,12 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
 
     NumDeflections++;
 
-    if (bDebugBallistics)
+    // Once we have bounced, just fall to the ground
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        HandleShellDebug(HitLocation);
+        SetPhysics(PHYS_Falling);
     }
 
-    // Once we have bounced, just fall to the ground
-    SetPhysics(PHYS_Falling);
     bTrueBallistics = false;
     Acceleration = PhysicsVolume.Gravity;
     bUpdateSimulatedPosition = false; // don't replicate the position any more, just let the client simulate movement after deflection (it's no longer critical)
@@ -522,17 +540,20 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
     Speed = VSize(Velocity);
 
     // Play the deflection effects
-    AmbientSound = none;
-    DoShakeEffect();
-    
-    if (Level.NetMode != NM_DedicatedServer && NumDeflections < 2)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        if (EffectIsRelevant(HitLocation, false))
-        {
-            Spawn(ShellDeflectEffectClass, , , HitLocation + (HitNormal * 16.0), rotator(HitNormal));
-        }
+        AmbientSound = none;
+        DoShakeEffect();
 
-        PlaySound(VehicleDeflectSound, , 5.5 * TransientSoundVolume);
+        if (NumDeflections < 2)
+        {
+            if (EffectIsRelevant(HitLocation, false))
+            {
+                Spawn(ShellDeflectEffectClass, , , HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+            }
+
+            PlaySound(VehicleDeflectSound, , 5.5 * TransientSoundVolume);
+        }
     }
 }
 
@@ -544,18 +565,21 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
         Level.Game.Broadcast(self, "Round shattered on vehicle armor");
     }
 
-    DoShakeEffect();
-
-    if (!bDidExplosionFX)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        PlaySound(ShatterVehicleHitSound, , 5.5 * TransientSoundVolume);
+        DoShakeEffect();
 
-        if (EffectIsRelevant(Location, false))
+        if (!bDidExplosionFX)
         {
-            Spawn(ShellShatterEffectClass, , , HitLocation + HitNormal * 16.0, rotator(HitNormal));
-        }
+            PlaySound(ShatterVehicleHitSound, , 5.5 * TransientSoundVolume);
 
-        PlaySound(ShatterSound[Rand(4)], , 5.5 * TransientSoundVolume);
+            if (EffectIsRelevant(Location, false))
+            {
+                Spawn(ShellShatterEffectClass, , , HitLocation + HitNormal * 16.0, rotator(HitNormal));
+            }
+
+            PlaySound(ShatterSound[Rand(4)], , 5.5 * TransientSoundVolume);
+        }
     }
 
     super(DH_ROAntiVehicleProjectile).Explode(HitLocation, HitNormal);
@@ -642,15 +666,16 @@ simulated function HandleDestruction()
 
     if (Level.NetMode == NM_DedicatedServer)
     {
+        LifeSpan = DestroyTime; // Matt: on a server, this actor will automatically be destroyed in a split second, allowing a buffer for the client to catch up
         SetCollision(false, false);
-        bCollideWorld = false; // Matt: added to prevent continuing calls to HitWall on server, while shell persists
+        bCollideWorld = false;  // Matt: added to prevent continuing calls to HitWall on server, while shell persists
     }
     else
     {
         Destroy();
     }
 }
-
+    
 simulated function Destroyed()
 {
     if (Corona != none)
