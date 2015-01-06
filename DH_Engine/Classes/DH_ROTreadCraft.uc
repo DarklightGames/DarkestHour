@@ -255,7 +255,8 @@ function bool PlaceExitingDriver()
 
     InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
 
-    if (class'DH_ROTreadCraft'.default.bDebugExitPositions) // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
+    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
+    if (class'DH_ROTreadCraft'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositionPairs.Length; ++i)
         {
@@ -1052,27 +1053,28 @@ function DenyEntry(Pawn P, int MessageNum)
 // Returns true if this tank is disabled
 simulated function bool IsDisabled()
 {
-    return ((EngineHealth <= 0) || (bLeftTrackDamaged && bRightTrackDamaged));        //((EngineHealth <= 0) || bEngineOnFire);
+    return ((EngineHealth <= 0) || (bLeftTrackDamaged && bRightTrackDamaged));
 }
 
 // Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
 {
-    local  byte RandomNumber, CumulativeChance, i;
+    local byte RandomNumber, CumulativeChance, i;
 
     super.PostBeginPlay();
 
-    //Engine starting and stopping stuff
+    // Engine starting and stopping stuff
     //bEngineOff = true;
     //bEngineDead = false;
     //bDisableThrottle = true;
     //bFirstHit = true;
 
-    EngineHealth=EngineHealthMax;
+    EngineHealth = EngineHealthMax;
 
     EngineFireDamagePerSec = EngineHealthMax * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
-    DamagedEffectFireDamagePerSec = HealthMax * 0.02; //~100 seconds from regular tank fire threshold to detontation from full health, damage is every 2 seconds, so double intended
+    DamagedEffectFireDamagePerSec = HealthMax * 0.02; // ~100 seconds from regular tank fire threshold to detonation from full health, damage is every 2 seconds, so double intended
 
+    // If vehicle has schurzen (tex != none is flag) then randomise model selection (different degrees of damage, or maybe none at all)
     if (Role == ROLE_Authority && SchurzenTexture != none)
     {
         RandomNumber = RAND(100);
@@ -1083,7 +1085,7 @@ simulated function PostBeginPlay()
 
             if (RandomNumber < CumulativeChance)
             {
-                SchurzenIndex = i;
+                SchurzenIndex = i; // set replicated variable so clients know which schurzen to spawn
                 break;
             }
         }
@@ -1116,11 +1118,9 @@ simulated function PostNetBeginPlay()
 
 simulated function Tick(float DeltaTime)
 {
-    //local PlayerController PC;
-    local float MotionSoundTemp;
     local KRigidBodyState BodyState;
-    local float MySpeed;
-    local int i;
+    local float MotionSoundTemp, MySpeed;
+    local int   i;
 
     KGetRigidBodyState(BodyState);
     LinTurnSpeed = 0.5 * BodyState.AngVel.Z;
@@ -1131,18 +1131,28 @@ simulated function Tick(float DeltaTime)
         if (bLeftTrackDamaged)
         {
             Throttle = FClamp(Throttle, -0.50, 0.50);
+
             if (Controller.IsA('ROPlayer'))
-                ROPlayer(Controller).aStrafe = -32768;
+            {
+                ROPlayer(Controller).aStrafe = -32768.0;
+            }
             else if (Controller.IsA('ROBot'))
-                Steering = 1;
+            {
+                Steering = 1.0;
+            }
         }
         else if (bRightTrackDamaged)
         {
             Throttle = FClamp(Throttle, -0.50, 0.50);
+
             if (Controller.IsA('ROPlayer'))
-                ROPlayer(Controller).aStrafe = 32768;
+            {
+                ROPlayer(Controller).aStrafe = 32768.0;
+            }
             else if (Controller.IsA('ROBot'))
-                Steering = -1;
+            {
+                Steering = -1.0;
+            }
         }
     }
 
@@ -1153,34 +1163,40 @@ simulated function Tick(float DeltaTime)
         {
             if (bWantsToThrottle)
             {
-                IntendedThrottle=1.0;
+                IntendedThrottle = 1.0;
             }
-            else if (IntendedThrottle > 0)
+            else if (IntendedThrottle > 0.0)
             {
                 IntendedThrottle -= (DeltaTime * 0.5);
             }
             else
             {
-                IntendedThrottle=0;
+                IntendedThrottle = 0.0;
             }
         }
         else
         {
             if (bLeftTrackDamaged)
             {
-                 if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                {
                     LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                 LeftTreadSoundAttach.SoundVolume = IntendedThrottle * 255;
+                }
+
+                LeftTreadSoundAttach.SoundVolume = IntendedThrottle * 255;
             }
 
             if (bRightTrackDamaged)
             {
-                 if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
+                {
                     RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                 RightTreadSoundAttach.SoundVolume = IntendedThrottle * 255;
+                }
+
+                RightTreadSoundAttach.SoundVolume = IntendedThrottle * 255;
             }
 
-            SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
+            SoundVolume = FMax(255.0 * 0.3, IntendedThrottle * 255.0);
 
             if (SoundVolume != default.SoundVolume)
             {
@@ -1188,44 +1204,54 @@ simulated function Tick(float DeltaTime)
             }
 
             if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
+            {
                 Skins[LeftTreadIndex]=DamagedTreadPanner;
+            }
 
             if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
+            {
                 Skins[RightTreadIndex]=DamagedTreadPanner;
-
+            }
         }
 
-        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
-        // VSize() is very CPU intensive - Ramm
+        // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once, as VSize() is very CPU intensive - Ramm
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity
-        MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
+        MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
+
         if (MySpeed > 0.1)
         {
-            MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
+            MotionSoundVolume = FClamp(MotionSoundTemp, 0.0, 255.0);
         }
         else
         {
-            MotionSoundVolume=0;
+            MotionSoundVolume = 0.0;
         }
-        UpdateMovementSound();
 
-        //Level.Game.Broadcast(self, "MySpeed:" @ MySpeed);
+        UpdateMovementSound();
 
         if (LeftTreadPanner != none)
         {
             LeftTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity dot vector(Rotation) < 0)
-                LeftTreadPanner.PanRate = -1 * LeftTreadPanner.PanRate;
+
+            if (Velocity dot vector(Rotation) < 0.0)
+            {
+                LeftTreadPanner.PanRate = -1.0 * LeftTreadPanner.PanRate;
+            }
+
             LeftTreadPanner.PanRate += LinTurnSpeed;
         }
 
         if (RightTreadPanner != none)
         {
             RightTreadPanner.PanRate = MySpeed / TreadVelocityScale;
-            if (Velocity dot vector(Rotation) < 0)
-                RightTreadPanner.PanRate = -1 * RightTreadPanner.PanRate;
+
+            if (Velocity dot vector(Rotation) < 0.0)
+            {
+                RightTreadPanner.PanRate = -1.0 * RightTreadPanner.PanRate;
+            }
+
             RightTreadPanner.PanRate -= LinTurnSpeed;
         }
 
@@ -1278,24 +1304,17 @@ simulated function Tick(float DeltaTime)
                     AttachToBone(DriverHatchFireEffect, FireAttachBone);
                     DriverHatchFireEffect.SetRelativeLocation(FireEffectOffset);
                     DriverHatchFireEffect.SetEffectScale(DamagedEffectScale);
-                    DriverHatchFireEffect.UpdateDamagedEffect(true, 0, false, false);
+                    DriverHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
                 }
+
                 DriverHatchBurnTime = Level.TimeSeconds;
             }
-            else if (!bTurretFireTriggered &&
-                     WeaponPawns.Length > 0 &&
-                     WeaponPawns[0] != none &&
-                     WeaponPawns[0].Gun != none &&
-                     WeaponPawns[0].Gun.IsA('DH_ROTankCannon'))
+            else if (!bTurretFireTriggered && WeaponPawns.Length > 0 && WeaponPawns[0] != none && DH_ROTankCannon(WeaponPawns[0].Gun) != none)
             {
                 DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
                 bTurretFireTriggered = true;
             }
-            else if (!bHullMGFireTriggered &&
-                     WeaponPawns.Length > 1 &&
-                     WeaponPawns[1] != none &&
-                     WeaponPawns[1].Gun != none &&
-                     WeaponPawns[1].Gun.IsA('DH_ROMountedTankMG'))
+            else if (!bHullMGFireTriggered && WeaponPawns.Length > 1 && WeaponPawns[1] != none && DH_ROMountedTankMG(WeaponPawns[1].Gun) != none)
             {
                 DH_ROMountedTankMG(WeaponPawns[1].Gun).bOnFire = true;
                 bHullMGFireTriggered = true;
@@ -1306,12 +1325,12 @@ simulated function Tick(float DeltaTime)
     }
     else if (EngineHealth <= 0 && Health > 0)
     {
-        if (DamagedEffectHealthFireFactor != 0)
+        if (DamagedEffectHealthFireFactor != 0.0)
         {
             DamagedEffectHealthFireFactor = 0.0;
             DamagedEffectHealthHeavySmokeFactor = 1.0;
-            DamagedEffect.UpdateDamagedEffect(false, 0, false, false); // reset fire effects
-            DamagedEffect.UpdateDamagedEffect(false, 0, false, true);  // set the tank to smoke instead of burn
+            DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // reset fire effects
+            DamagedEffect.UpdateDamagedEffect(false, 0.0, false, true);  // set the tank to smoke instead of burn
         }
     }
 
@@ -1319,12 +1338,12 @@ simulated function Tick(float DeltaTime)
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity=vect(0.0, 0.0, 0.0);
-        Throttle=0;
-        ThrottleAmount=0;
+        velocity = vect(0.0, 0.0, 0.0);
+        Throttle = 0.0;
+        ThrottleAmount = 0.0;
         bWantsToThrottle = false;
         bDisableThrottle = true;
-        Steering=0;
+        Steering = 0.0;
     }
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -1336,20 +1355,25 @@ simulated function Tick(float DeltaTime)
 simulated function CheckEmitters()
 {
     if (Level.NetMode == NM_DedicatedServer)
+    {
         return;
+    }
 
     if (bEmittersOn && (bEngineDead || bEngineOff))
+    {
         StopEmitters();
+    }
     else if (!bEmittersOn && !bEngineDead && !bEngineOff)
+    {
         StartEmitters();
+    }
 }
 
 // TakeFireDamage() called every tick when vehicle is burning
 event TakeFireDamage(float DeltaTime)
 {
-
     // Engine fire damage
-    if (Level.TimeSeconds - EngineBurnTime > 3)
+    if (Level.TimeSeconds - EngineBurnTime > 3.0)
     {
         if (bEngineOnFire && EngineHealth > 0)
         {
@@ -1370,20 +1394,21 @@ event TakeFireDamage(float DeltaTime)
             // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
             if (WhoSetOnFire.GetTeamNum() != FireStarterTeam)
             {
-                 WhoSetOnFire = none;
-                 DelayedDamageInstigatorController = none;
+                WhoSetOnFire = none;
+                DelayedDamageInstigatorController = none;
             }
 
-            if (FRand() < EngineToHullFireChance)  // - was 2%
+            if (FRand() < EngineToHullFireChance)
             {
-                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType); // This will set bOnFire the first time it runs
+                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType); // this will set bOnFire the first time it runs
             }
+
             FireCheckTime = Level.TimeSeconds;
         }
     }
 
     // Engine fire dies down 30 seconds after engine health hits zero
-    if (Level.TimeSeconds - EngineBurnTime > 30 && bEngineOnFire && !bOnFire)
+    if (Level.TimeSeconds - EngineBurnTime > 30.0 && bEngineOnFire && !bOnFire)
     {
         bEngineOnFire = false;
         bDisableThrottle = true;
@@ -1397,13 +1422,12 @@ event TakeFireDamage(float DeltaTime)
     }
 
     // Hull fire damage
-    if ((Level.TimeSeconds - BurnTime) > 2 && bOnFire)
+    if ((Level.TimeSeconds - BurnTime) > 2.0 && bOnFire)
     {
-        // Lets avoid having the tank blow up the instant it's hit (i.e. the first run through the function)
-        // as it gives the false impression that the hit itself was critical when it's not
-        if (BurnTime == 0)
+        // Lets avoid having the tank blow up the instant it's hit (i.e. the 1st run through the function) as it gives false impression that hit itself was critical when it's not
+        if (BurnTime == 0.0)
         {
-            BurnTime = Level.TimeSeconds + 3;
+            BurnTime = Level.TimeSeconds + 3.0;
             return;
         }
 
@@ -1455,48 +1479,53 @@ function DamageTrack(bool bLeftTrack)
 }
 
 // Check to see if something hit a certain Hitpoint
-function bool IsNewPointShot(vector loc, vector ray, float AdditionalScale, int index)
+function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
 {
     local coords C;
-    local vector HeadLoc, B, M, diff;
-    local float t, DotMM, Distance;
+    local vector HeadLoc, B, M, Diff;
+    local float  t, DotMM, Distance;
 
-    if (NewVehHitpoints[index].PointBone == '')
+    if (NewVehHitpoints[Index].PointBone == '')
+    {
         return false;
+    }
 
-    C = GetBoneCoords(NewVehHitpoints[index].PointBone);
+    C = GetBoneCoords(NewVehHitpoints[Index].PointBone);
 
-    HeadLoc = C.Origin + (NewVehHitpoints[index].PointHeight * NewVehHitpoints[index].PointScale * AdditionalScale * C.XAxis);
-
-    HeadLoc = HeadLoc + (NewVehHitpoints[index].PointOffset >> rotator(C.Xaxis));
+    HeadLoc = C.Origin + (NewVehHitpoints[Index].PointHeight * NewVehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
+    HeadLoc = HeadLoc + (NewVehHitpoints[Index].PointOffset >> rotator(C.Xaxis));
 
     // Express snipe trace line in terms of B + tM
-    B = loc;
-    M = ray * 150;
+    B = Loc;
+    M = Ray * 150.0;
 
-    // Find Point-Line Squared Distance
-    diff = HeadLoc - B;
-    t = M dot diff;
-    if (t > 0)
+    // Find point-line squared distance
+    Diff = HeadLoc - B;
+    t = M dot Diff;
+
+    if (t > 0.0)
     {
         DotMM = M dot M;
+
         if (t < DotMM)
         {
             t = t / DotMM;
-            diff = diff - (t * M);
+            Diff = Diff - (t * M);
         }
         else
         {
-            t = 1;
-            diff -= M;
+            t = 1.0;
+            Diff -= M;
         }
     }
     else
+    {
         t = 0;
+    }
 
-    Distance = Sqrt(diff dot diff);
+    Distance = Sqrt(Diff dot Diff);
 
-    return (Distance < (NewVehHitpoints[index].PointRadius * NewVehHitpoints[index].PointScale * AdditionalScale));
+    return (Distance < (NewVehHitpoints[Index].PointRadius * NewVehHitpoints[Index].PointScale * AdditionalScale));
 }
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
@@ -1509,7 +1538,6 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
     if (bAssaultWeaponHit) // big fat HACK to defeat Stug/JP bug
     {
-
         bAssaultWeaponHit = false;
 
         return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
@@ -2021,68 +2049,64 @@ simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, flo
     return false;
 }
 
-// TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
-//              for Tanks, we'll probably want to prevent bullets from doing damage too
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
+    local Controller InstigatorController;
+    local vector     LocDir, HitDir, X, Y, Z;
+    local float      HitAngle, Side, InAngle, VehicleDamageMod;
+    local int        HitPointDamage, InstigatorTeam, i;
 
-    local vector LocDir, HitDir;
-    local float HitAngle,Side, InAngle;
-    local vector X,Y,Z;
-    local int i;
-    local float VehicleDamageMod;
-    local int HitPointDamage;
-    local int InstigatorTeam;
-    local controller InstigatorController;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
 
     // Quick fix for the thing giving itself impact damage
     if (InstigatedBy == self && DamageType != VehicleBurningDamType)
+    {
         return;
+    }
 
-    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to thier team :))
+    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to their team :))
     if (!bDriverAlreadyEntered)
     {
         if (InstigatedBy != none)
-            InstigatorController = InstigatedBy.Controller;
-
-        if (InstigatorController == none)
         {
-            if (DamageType.default.bDelayedDamage)
-                InstigatorController = DelayedDamageInstigatorController;
+            InstigatorController = InstigatedBy.Controller;
+        }
+
+        if (InstigatorController == none && DamageType.default.bDelayedDamage)
+        {
+            InstigatorController = DelayedDamageInstigatorController;
         }
 
         if (InstigatorController != none)
         {
             InstigatorTeam = InstigatorController.GetTeamNum();
 
-            if ((GetTeamNum() != 255) && (InstigatorTeam != 255))
+            if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
-                if (GetTeamNum() == InstigatorTeam)
-                {
-                    return;
-                }
+                return;
             }
         }
     }
 
     // Modify the damage based on what it should do to the vehicle; overloaded here so tank cannot take any bullet/bash/bayo damage
-    if (DamageType != none)
+    if (class<ROWeaponDamageType>(DamageType) != none)
     {
-       if (class<ROWeaponDamageType>(DamageType) != none)
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
-       else if (class<ROVehicleDamageType>(DamageType) != none)
-            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
+        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
+    }
+    else if (class<ROVehicleDamageType>(DamageType) != none)
+    {
+        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
     }
 
     for (i = 0; i < VehHitpoints.Length; i++)
@@ -2096,8 +2120,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
                 {
-                    //Level.Game.Broadcast(self, "Hit Driver"); //re-comment when fixed
-                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
                 }
             }
             // Damage for small (non penetrating) arms
@@ -2105,8 +2128,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
                 {
-                    //Level.Game.Broadcast(self, "Hit Driver");  //re-comment when fixed
-                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, damageType); //just kill the bloody driver
+                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, DamageType);
                 }
             }
         }
@@ -2116,69 +2138,90 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             HitPointDamage *= VehicleDamageMod;
 
             if (bLogPenetration)
+            {
                 Log(" We hit" @ GetEnum(enum'EHitPointType',VehHitpoints[i].HitPointType) @ "hitpoint.");
+            }
 
             if (VehHitpoints[i].HitPointType == HP_Engine)
             {
-                //extra check here prevents splashing HE/HEAT from triggering engine fires
+                // Extra check here prevents splashing HE/HEAT from triggering engine fires
                 if (DamageType != none && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5) && bProjectilePenetrated == true)
                 {
                     if (bDebuggingText)
-                    Level.Game.Broadcast(self, "Engine Hit Effective");
-                    DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, damageType);
-                    Damage *= 0.55; //hitting the engine shouldn't blow up the tank automatically!
+                    {
+                        Level.Game.Broadcast(self, "Engine hit effective");
+                    }
+
+                    DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Damage *= 0.55; // hitting the engine shouldn't blow up the tank automatically!
                 }
             }
             else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
-                if (bProjectilePenetrated == true && bRearHit == false)  //extra check here prevents splashing HE/HEAT from triggering ammo detonation or fires; Engine hit will stop shell from passing through to cabin
+                // Extra check here prevents splashing HE/HEAT from triggering ammo detonation or fires; Engine hit will stop shell from passing through to cabin
+                if (bProjectilePenetrated == true && bRearHit == false)
                 {
-                    if (DamageType != none && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5) && FRand() <= AmmoIgnitionProbability || (bWasHEATRound && FRand() < 0.85))
+                    if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5 && 
+                        (FRand() <= AmmoIgnitionProbability || (bWasHEATRound && FRand() < 0.85)))
                     {
-                       if (bDebuggingText)
-                       Level.Game.Broadcast(self, "Ammo Hit Effective");
-                       Damage *= Health; //VehHitpoints[i].DamageMultiplier;
-                       break;
+                        if (bDebuggingText)
+                        {
+                            Level.Game.Broadcast(self, "Ammo hit effective");
+                        }
+
+                        Damage *= Health;
+                        break;
                     }
-                    else  //either detonate above - or - set the sucker on fire!
+                    else // either detonate above - or - set the sucker on fire!
                     {
                        HullFireChance=0.75;
-                       HullFireHEATChance=0.90; //
+                       HullFireHEATChance=0.90;
                     }
                 }
             }
         }
     }
+
     for (i = 0; i < NewVehHitpoints.Length; i++)
     {
         HitPointDamage=Damage;
 
         if (bLogPenetration)
-          Log(" We hit" @ GetEnum(enum'ENewHitPointType',NewVehHitpoints[i].NewHitPointType) @ "hitpoint.");
+        {
+            Log("We hit" @ GetEnum(enum'ENewHitPointType', NewVehHitpoints[i].NewHitPointType) @ "hitpoint");
+        }
 
         if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
         {
             HitPointDamage *= VehicleDamageMod;
 
-            if  (NewVehHitpoints[i].NewHitPointType == NHP_GunOptics) //can be useful for Stug and JP
+            if  (NewVehHitpoints[i].NewHitPointType == NHP_GunOptics) // can be useful for Stug and JP
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Optics Hit");
+                {
+                    Level.Game.Broadcast(self, "Optics hit");
+                }
+
                 DH_ROTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
             }
             else if (NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
             {
             }
-            else if (NewVehHitpoints[i].NewHitPointType == NHP_Traverse && bProjectilePenetrated == true) //useful for assault guns
+            else if (NewVehHitpoints[i].NewHitPointType == NHP_Traverse && bProjectilePenetrated == true) // useful for assault guns
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Turret ring hit");
+                {
+                    Level.Game.Broadcast(self, "Turret ring hit");
+                }
+
                 DH_ROTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
             }
-            else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch && bProjectilePenetrated == true) //useful for assault guns
+            else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch && bProjectilePenetrated == true) // useful for assault guns
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Gun pivot hit");
+                {
+                    Level.Game.Broadcast(self, "Gun pivot hit");
+                }
 
                 DH_ROTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
             }
@@ -2192,14 +2235,20 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             if (bRearHit == false && Driver != none && FRand() < Damage/DriverKillChance)
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Driver killed");
+                {
+                    Level.Game.Broadcast(self, "Driver killed");
+                }
+
                 Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
 
             if (bRearHit == false && WeaponPawns[1] != none && WeaponPawns[1].Driver != none && FRand() < Damage/GunnerKillChance)
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Hull Gunner killed");
+                {
+                    Level.Game.Broadcast(self, "Hull gunner killed");
+                }
+
                 WeaponPawns[1].Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
             }
         }
@@ -2210,14 +2259,20 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 if (WeaponPawns[0].Driver != none && FRand() < Damage/CommanderKillChance)
                 {
                     if (bDebuggingText)
-                    Level.Game.Broadcast(self, "Commander killed");
+                    {
+                        Level.Game.Broadcast(self, "Commander killed");
+                    }
+
                     WeaponPawns[0].Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                 }
 
                 if (FRand() < Damage/OpticsDamageChance)
                 {
                     if (bDebuggingText)
-                    Level.Game.Broadcast(self, "Optics Destroyed");
+                    {
+                        Level.Game.Broadcast(self, "Optics destroyed");
+                    }
+
                     DH_ROTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
                 }
 
@@ -2231,7 +2286,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 if (FRand() < Damage/TraverseDamageChance)
                 {
                     if (bDebuggingText)
-                    Level.Game.Broadcast(self, "Traverse Damaged");
+                    {
+                        Level.Game.Broadcast(self, "Traverse Damaged");
+                    }
+
                     DH_ROTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
                 }
             }
@@ -2239,101 +2297,118 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             if (FRand() < Damage/TurretDetonationThreshold)
             {
                 if (bDebuggingText)
-                Level.Game.Broadcast(self, "Turret Ammo Detonated");
+                {
+                    Level.Game.Broadcast(self, "Turret ammo detonated");
+                }
+
                 Damage *= Health;
             }
             else
             {
-                Damage *= 0.55; //0.35 in version 5.0
+                Damage *= 0.55;
             }
         }
 
         if (!bFirstHit)
         {
-            HullFireChance=0.75;
-            HullFireHEATChance=0.90; //
+            HullFireChance = 0.75;
+            HullFireHEATChance = 0.90;
         }
     }
 
-    //Tread damage calculations
+    // Tread damage calculations
     LocDir = vector(Rotation);
-    LocDir.Z = 0;
+    LocDir.Z = 0.0;
     HitDir =  Hitlocation - Location;
-    HitDir.Z = 0;
+    HitDir.Z = 0.0;
     HitAngle = Acos(Normal(LocDir) dot Normal(HitDir));
 
     // Convert the angle into degrees from radians
-    HitAngle*=57.2957795131;
+    HitAngle *= 57.2957795131;
 
-    GetAxes(Rotation,X,Y,Z);
+    GetAxes(Rotation, X, Y, Z);
     Side = Y dot HitDir;
 
-    if (side >= 0)
+    if (Side >= 0.0)
     {
-       HitAngle = 360 + (HitAngle* -1);
+       HitAngle = 360.0 - HitAngle;
     }
 
-    if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit) //Left side hit
+    // Left side hit
+    if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit) 
     {
         HitDir = Hitlocation - Location;
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (InAngle > TreadHitMinAngle)
         {
-            if (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-            class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
+            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
             {
-               if (!bDriving)
-                Enable('Tick');
+                if (!bDriving)
+                {
+                    Enable('Tick');
+                }
 
                 DamageTrack(true);
-                //ShowTreadDamage();
+
                 if (bDebugTreadText && Role == ROLE_Authority)
-                Level.Game.Broadcast(self, "Left track damaged");
+                {
+                    Level.Game.Broadcast(self, "Left track damaged");
+                }
             }
         }
     }
-    else if ((HitAngle >= RearLeftAngle && HitAngle < FrontLeftAngle) && !bWasTurretHit)  //Right side hit
+    //Right side hit
+    else if ((HitAngle >= RearLeftAngle && HitAngle < FrontLeftAngle) && !bWasTurretHit)
     {
-
-       HitDir = Hitlocation - Location;
-       InAngle= Acos(Normal(HitDir) dot Normal(Z));
+        HitDir = Hitlocation - Location;
+        InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (InAngle > TreadHitMinAngle)
         {
-            if (DamageType != none && class<ROWeaponDamageType>(DamageType) != none &&
-            class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
+            if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
             {
-               if (!bDriving)
-                Enable('Tick');
+                if (!bDriving)
+                {
+                    Enable('Tick');
+                }
 
                 DamageTrack(false);
-                //ShowTreadDamage();
+
                 if (bDebugTreadText && Role == ROLE_Authority)
-                Level.Game.Broadcast(self, "Right track damaged");
+                {
+                    Level.Game.Broadcast(self, "Right track damaged");
+                }
             }
         }
     }
 
     // If I allow randomised damage then things break once the hull catches fire
     if (DamageType != VehicleBurningDamType)
+    {
         Damage *= RandRange(0.75, 1.08);
+    }
 
-    // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
+    // Add in the vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, damageType);
+    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 
-    //This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
-    if (!bOnFire && Damage > 0 && Health > 0 && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.50) && bProjectilePenetrated == true)
+    // This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
+    if (!bOnFire && Damage > 0 && Health > 0 && class<ROWeaponDamageType>(DamageType) != none && 
+        class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.50 && bProjectilePenetrated == true)
     {
         if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
         {
             if (bDebuggingText)
-              Level.Game.Broadcast(self, "Vehicle on Fire");
+            {
+                Level.Game.Broadcast(self, "Vehicle on fire");
+            }
 
             if (!bDriving)
+            {
                 Enable('Tick');
+            }
 
             bOnFire = true;
             WhoSetOnFire = InstigatedBy.Controller;
@@ -2348,7 +2423,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    //reset everything
+    // Reset everything
     bWasHEATRound = false;
     bRearHit = false;
     bFirstHit = false;
@@ -2358,25 +2433,31 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     bWasTurretHit = false;
 }
 
-// Handle the Engine Damage
+// Handle the engine damage
 function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
     local int ActualDamage;
 
     if (DamageType != VehicleBurningDamType)
+    {
         ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+    }
     else
+    {
         ActualDamage = Damage;
+    }
 
     EngineHealth -= ActualDamage;
 
-    //This indicates chances for an Engine fire breaking out
+    // This indicates chances for an Engine fire breaking out
     if (DamageType != VehicleBurningDamType && !bEngineOnFire && ActualDamage > 0 && EngineHealth > 0 && Health > 0)
     {
         if ((bWasHEATRound && FRand() < EngineFireHEATChance) || FRand() < EngineFireChance)
         {
             if (bDebuggingText)
-              Level.Game.Broadcast(self, "Engine on Fire");
+            {
+                Level.Game.Broadcast(self, "Engine on fire");
+            }
 
             bEngineOnFire = true;
             WhoSetEngineOnFire = InstigatedBy.Controller;
@@ -2385,7 +2466,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
         }
     }
 
-    // If engine health drops below a certain level, slow the tank way down...
+    // If engine health drops below a certain level, slow the tank way down
     if (EngineHealth > 0 && EngineHealth <= (EngineHealthMax * 0.50))
     {
         Throttle = FClamp(Throttle, -0.50, 0.50);
@@ -2393,7 +2474,9 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     else if (EngineHealth <= 0)
     {
         if (bDebuggingText && Role == ROLE_Authority)
-            Level.Game.Broadcast(self, "Engine is Dead");
+        {
+            Level.Game.Broadcast(self, "Engine is dead");
+        }
 
         bDisableThrottle = true;
         bEngineOff = true;
@@ -2402,12 +2485,12 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
 
         TurnDamping = 0.0;
 
-        IdleSound=VehicleBurningSound;
-        StartUpSound=none;
-        ShutDownSound=none;
-        AmbientSound=VehicleBurningSound;
-        SoundVolume=255;
-        SoundRadius=600;
+        IdleSound = VehicleBurningSound;
+        StartUpSound = none;
+        ShutDownSound = none;
+        AmbientSound = VehicleBurningSound;
+        SoundVolume = 255;
+        SoundRadius = 600.0;
     }
 }
 
@@ -2444,8 +2527,7 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
     }
 }
 
-// Check to see if vehicle should destroy itself
-// Stops vehicle from premature detonation when on fire
+// Check to see if vehicle should destroy itself - stops vehicle from premature detonation when on fire
 function MaybeDestroyVehicle()
 {
     if (IsDisabled() && IsVehicleEmpty() && !bNeverReset && !bOnFire && !bEngineOnFire)
@@ -2454,8 +2536,9 @@ function MaybeDestroyVehicle()
         SetTimer(VehicleSpikeTime, false);
 
         if (bDebuggingText)
-        Level.Game.Broadcast(self, "Initiating SpikeTimer");
-
+        {
+            Level.Game.Broadcast(self, "Initiating vehicle SpikeTimer");
+        }
     }
 }
 
@@ -2480,16 +2563,16 @@ simulated function Destroyed()
 
 simulated event DestroyAppearance()
 {
-    local int i;
+    local int         i;
     local KarmaParams KP;
 
     // For replication
     bDestroyAppearance = true;
 
     // Put brakes on
-    Throttle    = 0;
-    Steering    = 0;
-    Rise        = 0;
+    Throttle = 0.0;
+    Steering = 0.0;
+    Rise     = 0.0;
 
     // Destroy the weapons
     if (Role == ROLE_Authority)
@@ -2497,11 +2580,17 @@ simulated event DestroyAppearance()
         for (i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i] != none)
+            {
                 Weapons[i].Destroy();
+            }
         }
+
         for (i = 0; i < WeaponPawns.Length; i++)
+        {
             WeaponPawns[i].Destroy();
+        }
     }
+
     Weapons.Length = 0;
     WeaponPawns.Length = 0;
 
