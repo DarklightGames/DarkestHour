@@ -22,6 +22,8 @@ var     DHObstacleManager           ObstacleManager;
 var     array<String>               FFViolationIDs; //Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 
+var     class<DHObstacleManager>    ObstacleManagerClass;
+
 // Overridden to make new clamp of MaxPlayers from 64 to 128
 event InitGame(string Options, out string Error)
 {
@@ -49,6 +51,7 @@ function PostBeginPlay()
     local SpectatorCam          ViewPoint;
     local float                 MaxPlayerRatio;
     local int                   i, j, k, m, n, o, p;
+    local DHObstacleInfo        DHOI;
 
     // Don't call the RO super because we already do everything for DH and don't want levels using ROLevelInfo
     super(TeamGame).PostBeginPlay();
@@ -104,8 +107,9 @@ function PostBeginPlay()
         }
     }
 
-    foreach AllActors(class'DHObstacleManager', ObstacleManager)
+    foreach AllActors(class'DHObstacleInfo', DHOI)
     {
+        ObstacleManager = Spawn(ObstacleManagerClass);
         break;
     }
 
@@ -349,7 +353,7 @@ function CheckResupplyVolumes()
         {
             if (DHResupplyAreas[i].Team == AXIS_TEAM_INDEX)
             {
-                if ((CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag) 
+                if ((CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                     || CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
                     DHGRI.ResupplyAreas[i].bActive = true;
@@ -364,7 +368,7 @@ function CheckResupplyVolumes()
 
             if (DHResupplyAreas[i].Team == ALLIES_TEAM_INDEX)
             {
-                if ((CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag) 
+                if ((CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                     || CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
                 {
                     DHGRI.ResupplyAreas[i].bActive = true;
@@ -979,7 +983,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 
                 break;
             }
-            
+
             S = NamePrefixes[NameNumber % 10] $ S $ NameSuffixes[NameNumber % 10];
             NameNumber++;
             break;
@@ -1195,7 +1199,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
             }
 
             // Temp hack to prevent bots from getting MG roles
-            if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG 
+            if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
                 || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
             {
                 Count++;
@@ -1556,7 +1560,7 @@ state RoundInPlay
                     {
                         if (GameReplicationInfo.PRIArray[i].Team.TeamIndex == ALLIES_TEAM_INDEX && ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]) != none)
                         {
-                            bRussianSquadLeader = ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bIsLeader && 
+                            bRussianSquadLeader = ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bIsLeader &&
                                 !ROPlayerReplicationInfo(GameReplicationInfo.PRIArray[i]).RoleInfo.bCanBeTankCrew;
                         }
                         else
@@ -2061,4 +2065,5 @@ defaultproperties
     VoiceReplicationInfoClass=class'DH_Engine.DHVoiceReplicationInfo'
     VotingHandlerType="DH_Engine.DHVotingHandler"
     DecoTextName="DH_Engine.DarkestHourGame"
+    ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
 }

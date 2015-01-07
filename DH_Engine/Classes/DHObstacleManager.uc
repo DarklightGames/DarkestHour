@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHObstacleManager extends Actor
-    placeable;
+class DHObstacleManager extends Actor;
 
 var array<DHObstacle>   Obstacles;
 var byte                Bitfield[128];
 var byte                SavedBitfield[128];
+var DHObstacleInfo      Info;
 
 var config bool bDebug;
 
@@ -21,14 +21,62 @@ replication
 simulated function PostBeginPlay()
 {
     local DHObstacle Obstacle;
+    local int i;
 
     super.PostBeginPlay();
+
+    Log("DHObstacleManager::PostBeginPlay");
+
+    foreach AllActors(class'DHObstacleInfo', Info)
+    {
+        break;
+    }
+
+    if (Info == none)
+    {
+        Error("DHObstacleInfo could not be found!");
+
+        return;
+    }
 
     if (Role == ROLE_Authority)
     {
         foreach AllActors(class'DHObstacle', Obstacle)
         {
             Obstacle.Index = Obstacles.Length;
+
+            for (i = 0; i < Info.Types.Length; ++i)
+            {
+                if (Obstacle.StaticMesh != Info.Types[i].IntactStaticMesh)
+                {
+                    continue;
+                }
+
+                Obstacle.TypeIndex = i;
+                Obstacle.IntactStaticMesh = Obstacle.StaticMesh;
+
+                if (Info.Types[i].ClearedStaticMeshes.Length > 0)
+                {
+                    Obstacle.ClearedStaticMesh = Info.Types[i].ClearedStaticMeshes[Obstacle.Index % Info.Types[i].ClearedStaticMeshes.Length];
+                }
+
+                //TODO: these are probably only relevant on the client
+                Obstacle.ClearSound = Info.Types[i].ClearSound;
+
+                if (Info.Types[i].ClearEmitterClasses.Length > 0)
+                {
+                    Obstacle.ClearEmitterClass = Info.Types[i].ClearEmitterClasses[Obstacle.Index % Info.Types[i].ClearEmitterClasses.Length];
+                }
+
+                break;
+            }
+
+            if (Obstacle.TypeIndex == 255)
+            {
+                Log("Obstacle with static mesh" @ Obstacle.StaticMesh @ "was unable to be matched to obstacle info!");
+
+                continue;
+            }
 
             Obstacles[Obstacles.Length] = Obstacle;
 
@@ -205,8 +253,6 @@ defaultproperties
 {
     bDebug=true
     bHidden=true
-    bStatic=true
-    bNoDelete=true
     bAlwaysRelevant=true
     RemoteRole=ROLE_SimulatedProxy
     bOnlyDirtyReplication=true

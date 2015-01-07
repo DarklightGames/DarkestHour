@@ -24,32 +24,27 @@ struct UncompressedPosition
     var float ScaleZ;
 };
 
+var     byte                    TypeIndex;
 var     int                     Index;
 var     UncompressedPosition    UP;
 var     StaticMesh              IntactStaticMesh;
+var     StaticMesh              ClearedStaticMesh;
+var     sound                   ClearSound;
+var     class<Emitter>          ClearEmitterClass;
+var     bool                    bCanBeClearedWithWirecutters;
+var     DHObstacleInfo          Info;
 
-var()   StaticMesh              ClearedStaticMesh;
-var()   sound                   ClearSound;
 var()   float                   SpawnClearedChance;
-var()   bool                    bCanBeClearedWithWireCutters;
-var()   class<Emitter>          ClearEmitter;
 
 replication
 {
     reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
-        Index, IntactStaticMesh, ClearedStaticMesh, UP;
+        TypeIndex, Index, UP;
 }
 
 simulated function bool IsCleared()
 {
     return IsInState('Cleared');
-}
-
-simulated function PreBeginPlay()
-{
-    super.PreBeginPlay();
-
-    IntactStaticMesh = StaticMesh;
 }
 
 function PostBeginPlay()
@@ -76,8 +71,28 @@ simulated function PostNetBeginPlay()
     local vector L, S;
     local rotator R;
 
-    if (Role != ROLE_Authority)
+    if (Role < ROLE_Authority)
     {
+        foreach AllActors(class'DHObstacleInfo', Info)
+        {
+            break;
+        }
+
+        IntactStaticMesh = Info.Types[TypeIndex].IntactStaticMesh;
+
+        if (Info.Types[TypeIndex].ClearedStaticMeshes.Length > 0)
+        {
+            ClearedStaticMesh = Info.Types[TypeIndex].ClearedStaticMeshes[Index % Info.Types[TypeIndex].ClearedStaticMeshes.Length];
+        }
+
+        bCanBeClearedWithWirecutters = Info.Types[TypeIndex].bCanBeClearedWithWireCutters;
+        ClearSound = Info.Types[TypeIndex].ClearSound;
+
+        if (Info.Types[TypeIndex].ClearEmitterClasses.Length > 0)
+        {
+            ClearEmitterClass = Info.Types[TypeIndex].ClearEmitterClasses[Index % Info.Types[TypeIndex].ClearEmitterClasses.Length];
+        }
+
         foreach AllActors(class'DHObstacleManager', OM)
         {
             OM.Obstacles[Index] = self;
@@ -127,8 +142,6 @@ auto simulated state Intact
     {
         local DarkestHourGame G;
 
-        Log(Other);
-
         if (Role == ROLE_Authority)
         {
             if (SVehicle(Other) != none)
@@ -159,9 +172,9 @@ simulated state Cleared
                 PlayOwnedSound(ClearSound, SLOT_None);
             }
 
-            if (ClearEmitter != none)
+            if (ClearEmitterClass != none)
             {
-                Spawn(ClearEmitter, none, '', Location, Rotation);
+                Spawn(ClearEmitterClass, none, '', Location, Rotation);
             }
         }
 
@@ -205,5 +218,6 @@ defaultproperties
     bCompressedPosition=false
     SpawnClearedChance=0.0
     bCanBeClearedWithWireCutters=true
+    TypeIndex=255
 }
 
