@@ -15,30 +15,32 @@ var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Webs
 var automated       GUISectionBackground    sb_ShowVersion;
 var automated       GUILabel                l_Version;
 
-var     ROBufferedTCPLink       myLink;
+var     ROBufferedTCPLink       MyLink;
 
-var     string                  waitString;
-var     string                  quickplayip;
+var     string                  QuickPlayIp;
 var     string                  LinkClassName;
-var     string                  getRequest;
-var     string                  getResponse;
-var     string                  newsIPAddr;
+var     string                  GetRequest;
+var     string                  GetResponse;
+var     string                  GetQuickPlayAddr;
 var     string                  VersionString;
 var     string                  WebsiteURL;
 
+var     localized string        WaitString;
+var     localized string        ConnectingString;
 var     localized string        ManualURL;
 var     localized string        SteamMustBeRunningText;
 var     localized string        SinglePlayerDisabledText;
 
-var     int                     myRetryCount;
-var     int                     myRetryMax;
+var     int                     ReclickCycleTime;
+var     int                     MyRetryMax;
 
+var     float                   TimeOutTime;
 var     float                   ReReadyPause;
 
-var     bool                    AllowClose;
+var     bool                    bAllowClose;
 var     bool                    bAttemptQuickPlay;
-var     bool                    sendGet;
-var     bool                    pageWait;
+var     bool                    bSendGet;
+var     bool                    bPageWait;
 
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -73,19 +75,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_HelpMenu.ManageComponent(b_Website);
     sb_HelpMenu.ManageComponent(b_Back);
     sb_ShowVersion.ManageComponent(l_Version);
-
-    // Quick Play Init
-    GetQuickPlayIP();
 }
 
 function InternalOnOpen()
 {
     Log("");
-    Log("");
-    Log("");
-    Log("");
-    Log("MainMenu: starting music" @ MenuSong);
+    Log("MainMenu: Starting");
+    Log("MainMenu: Starting music" @ MenuSong);
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
+    b_QuickPlay.Caption = WaitString;
 }
 
 function OnClose(optional bool bCanceled)
@@ -112,8 +110,7 @@ function bool MyKeyEvent(out byte Key, out byte State, float delta)
 {
     if (Key == 0x1B && State == 1)
     {
-        AllowClose = true;
-
+        bAllowClose = true;
         return true;
     }
     else
@@ -124,7 +121,7 @@ function bool MyKeyEvent(out byte Key, out byte State, float delta)
 
 function bool CanClose(optional bool bCanceled)
 {
-    if (AllowClose)
+    if (bAllowClose)
     {
         Controller.OpenMenu(Controller.GetQuitPage());
     }
@@ -144,13 +141,26 @@ function bool ButtonClick(GUIComponent Sender)
     switch (sender)
     {
         case b_QuickPlay:
-
-            bAttemptQuickPlay = true;
-            if (quickplayip != "")
+            if (ReclickCycleTime >= default.ReclickCycleTime)
             {
-                PlayerOwner().ClientTravel(quickplayip, TRAVEL_Absolute, false);
-                Controller.CloseAll(false, true);
+                //Handle reclick
+                ReclickCycleTime = 0;
+                WaitString = default.WaitString;
+
+                //Handle visual display
+                TimeOutTime = default.TimeOutTime;
+                b_QuickPlay.Caption = ConnectingString @ "(Timeout:" @ int(TimeOutTime) $ ")";
+
+                //Destroy and re-establish link
+                MyLink.DestroyLink();
+                if (MyLink != none)
+                {
+                    MyLink = none;
+                }
+                KillTimer();
+                GetQuickPlayIp();
             }
+            bAttemptQuickPlay = true;
             break;
 
         case b_Practice:
@@ -242,7 +252,6 @@ function bool ButtonClick(GUIComponent Sender)
 event Opened(GUIComponent Sender)
 {
     l_Version.Caption $= VersionString;
-
     sb_ShowVersion.SetVisibility(true);
 
     if (bDebugging)
@@ -256,7 +265,6 @@ event Opened(GUIComponent Sender)
     }
 
     ShowSubMenu(0);
-
     super.Opened(Sender);
 }
 
@@ -275,53 +283,65 @@ event Timer()
 {
     local string text, page, command;
 
-    if (myLink != none)
+    if (MyLink != none && bAttemptQuickPlay)
     {
-        //Log("IsConnected?:" @ myLink.IsConnected());
+        Log("Finding Quick Play IP:" @ MyLink.IsConnected()); // Theel Debug
 
-        if (myLink.ServerIpAddr.Port != 0 && myLink.IsConnected())
+        if (bAttemptQuickPlay)
         {
-            if (sendGet)
+            ++ReclickCycleTime;
+            TimeOutTime -= ReReadyPause;
+
+            if (TimeOutTime < 1.0)
             {
-                command = getRequest $ myLink.CRLF $ "Host:" @ newsIPAddr $ myLink.CRLF $ myLink.CRLF;
-                myLink.SendCommand(command);
-                pageWait = true;
-                myLink.WaitForCount(1, 20, 1); // 20 sec timeout
-                sendGet = false;
+                Log("Quick Play Timed Out");
+                bAttemptQuickPlay = false;
+                b_QuickPlay.Caption = default.WaitString;
+                ReclickCycleTime = default.ReclickCycleTime;
+                //Destroy link (let user try again or do something else)
+                MyLink.DestroyLink();
+                if (MyLink != none)
+                {
+                    MyLink = none;
+                }
+                KillTimer();
+                return;
             }
-            else if (bAttemptQuickPlay)
-            {
-                waitString = waitString $ ".";
-                b_QuickPlay.Caption = waitString;
-            }
+
+            //Handle visual display
+            b_QuickPlay.Caption = ConnectingString @ "(Timeout:" @ int(TimeOutTime) $ ")";
         }
 
-        if (myLink.PeekChar() != 0)
+        if (MyLink.ServerIpAddr.Port != 0 && MyLink.IsConnected() && bSendGet)
         {
-            pageWait = false;
+            command = GetRequest $ MyLink.CRLF $ "Host:" @ GetQuickPlayAddr $ MyLink.CRLF $ MyLink.CRLF;
+            MyLink.SendCommand(command);
+            bPageWait = true;
+            MyLink.WaitForCount(1, 20, 1); // 20 sec timeout
+            bSendGet = false;
+        }
+
+        if (MyLink.PeekChar() != 0)
+        {
+            bPageWait = false;
             // data waiting
             page = "";
 
-            while(myLink.ReadBufferedLine(text))
+            while(MyLink.ReadBufferedLine(text))
             {
                 page = page $ text;
             }
 
             HTTPParse(page);
-            waitString = page;
-            quickplayip = waitString; // sets the quickplay ip for the quick play button
-            myLink.DestroyLink();
-            myLink = none;
+            WaitString = page;
+            QuickPlayIp = WaitString; // sets the quickplay ip for the quick play button
+            MyLink.DestroyLink();
+            MyLink = none;
             KillTimer();
 
             if (bAttemptQuickPlay)
             {
-                Log(" ");
-                Log(" ");
-                Log("IP:" @ quickplayip);
-                Log(" ");
-                Log(" ");
-                PlayerOwner().ClientTravel(quickplayip, TRAVEL_Absolute, false);
+                PlayerOwner().ClientTravel(QuickPlayIp, TRAVEL_Absolute, false);
                 Controller.CloseAll(false, true);
             }
         }
@@ -355,69 +375,71 @@ protected function ROBufferedTCPLink CreateNewLink()
     return NewLink;
 }
 
-function GetQuickPlayIP()
+function GetQuickPlayIp()
 {
-    if (myLink == none)
+    if (MyLink == none)
     {
-        myLink = CreateNewLink();
+        MyLink = CreateNewLink();
     }
 
-    if (myLink != none)
+    if (MyLink != none)
     {
-        myLink.ServerIpAddr.Port = 0;
+        MyLink.ServerIpAddr.Port = 0;
 
-        sendGet = true;
-        myLink.Resolve(newsIPAddr); // NOTE: this is a non-blocking operation
+        bSendGet = true;
+        MyLink.Resolve(GetQuickPlayAddr); // NOTE: this is a non-blocking operation
 
         SetTimer(ReReadyPause, true);
     }
     else
     {
-        waitString = waitString @ "No Server Info Found";
+        WaitString = WaitString @ "No Server Info Found";
     }
 }
 
 // Used for parsing the string out of <BODY> </BODY>
 // Needed because the get request returns stuff other than the text in the file
-function HTTPParse(out string page)
+function HttpParse(out string Page)
 {
-    local string junk;
+    local string Junk;
     local int    i;
 
-    junk = page;
-    Caps(junk);
-    i = InStr(junk, "<BODY>");
+    Junk = Page;
+    Caps(Junk);
+    i = InStr(Junk, "<BODY>");
 
     if (i > -1)
     {
         // remove all header from string
-        page = Right(page, len(page) - i - 6);
+        Page = Right(page, len(page) - i - 6);
     }
 
-    junk = page;
-    Caps(junk);
-    i = InStr(junk, "</BODY>");
+    Junk = Page;
+    Caps(Junk);
+    i = InStr(Junk, "</BODY>");
 
     if (i > -1)
     {
         // remove all footers from string
-        page = Left(page,i);
+        Page = Left(Page,i);
     }
 
-    page = Repl(page, "<br>", "|", false);
+    Page = Repl(Page, "<br>", "|", false);
 }
 
 defaultproperties
 {
     // IP variables
-    waitString="Join Test Server"
-    newsIPAddr="darkesthourgame.com"
-    getRequest="GET /quickplayip.php HTTP/1.1"
+    WaitString="Join Test Server"
+    ConnectingString="Connecting - Press Esc to Cancel"
+    GetQuickPlayAddr="darkesthourgame.com"
+    GetRequest="GET /quickplayip.php HTTP/1.1" //CAREFUL! quickplayip.php needs to be lowercase
     ReReadyPause=0.25
-    myRetryCount=0
-    myRetryMax=40
+    TimeOutTime=30.0
+    ReclickCycleTime=15
+    MyRetryMax=40
     LinkClassName="ROInterface.ROBufferedTCPLink"
-    sendGet=true;
+    bSendGet=true;
 
     // Menu variables
     Begin Object Class=FloatingImage Name=FloatingBackground
@@ -646,7 +668,7 @@ defaultproperties
     VersionString="6.0"
     BackgroundColor=(B=0,G=0,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
-    OnOpen=DHMainMenu.InternalOnOpen
+    OnOpen=InternalOnOpen
     WinTop=0.0
     WinHeight=1.0
 }
