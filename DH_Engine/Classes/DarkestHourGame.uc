@@ -888,13 +888,18 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
 function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
 {
     // Check if the player has just used a select-a-spawn teleport and should be protected from damage
-    if (InstigatedBy != none && Injured != none && InstigatedBy != Injured && Injured.PlayerReplicationInfo != none && DH_Pawn(Injured).TeleSpawnProtected())
+    if (InstigatedBy != none &&
+        Injured != none &&
+        InstigatedBy != Injured &&
+        Injured.PlayerReplicationInfo != none &&
+        DH_Pawn(Injured) != none &&
+        DH_Pawn(Injured).TeleSpawnProtected())
     {
         return 0;
     }
     else
     {
-        return super.ReduceDamage(Damage, injured, InstigatedBy, HitLocation, Momentum, DamageType);
+        return super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 }
 
