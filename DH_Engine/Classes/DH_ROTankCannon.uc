@@ -1061,12 +1061,12 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         FireRot.Pitch += AddedPitch;
     }
 
-    if (!bAltFire)
+    if (!bAltFire && RangeSettings.Length > 0)
     {
         FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
     }
 
-    if (bCannonShellDebugging)
+    if (bCannonShellDebugging && RangeSettings.Length > 0)
     {
         Log("GetPitchForRange for" @ CurrentRangeIndex @ "=" @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
     }
@@ -1593,7 +1593,11 @@ function IncreaseAddedPitch()
 
     AddedPitch += 2;
 
-    MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    if (RangeSettings.Length > 0)
+    {
+        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    }
+
     Correction = AddedPitch - default.AddedPitch;
 
     if (Instigator != none && ROPlayer(Instigator.Controller) != none)
@@ -1608,7 +1612,11 @@ function DecreaseAddedPitch()
 
     AddedPitch -= 2;
 
-    MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    if (RangeSettings.Length > 0)
+    {
+        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+    }
+
     Correction = AddedPitch - default.AddedPitch;
 
     if (Instigator != none && ROPlayer(Instigator.Controller) != none)
