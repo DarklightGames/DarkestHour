@@ -28,8 +28,6 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    Log("DHObstacleManager::PostBeginPlay");
-
     foreach AllActors(class'DHObstacleInfo', Info)
     {
         break;
@@ -126,11 +124,11 @@ function DebugObstacles(optional int Option)
                 SetCleared(Obstacles[i], FRand() >= 0.5);
             }
             break;
-        case 4: // Reset obstacles as though a new round has started
-            Reset();
-            break;
         case 3: // Print out the amount number of obstacles
             Level.Game.Broadcast(self, "Obstacle Count:" @ Obstacles.Length);
+            break;
+        case 4: // Reset obstacles as though a new round has started
+            Reset();
             break;
     }
 
@@ -217,11 +215,6 @@ simulated function Reset()
     local DHObstacle Obstacle;
 
     super.Reset();
-
-    if (bDebug)
-    {
-        Level.Game.Broadcast(self, "DHObstacleManager::Reset");
-    }
 
     if (Role == ROLE_Authority)
     {
