@@ -5,9 +5,12 @@
 
 class DHObstacleManager extends Actor;
 
+const MAX_OBSTACLES = 1024;
+const BITFIELD_LENGTH = 128;
+
 var array<DHObstacle>   Obstacles;
-var byte                Bitfield[128];
-var byte                SavedBitfield[128];
+var byte                Bitfield[BITFIELD_LENGTH];
+var byte                SavedBitfield[BITFIELD_LENGTH];
 var DHObstacleInfo      Info;
 
 var config bool bDebug;
@@ -43,6 +46,15 @@ simulated function PostBeginPlay()
     {
         foreach AllActors(class'DHObstacle', Obstacle)
         {
+            if (Obstacles.Length >= MAX_OBSTACLES)
+            {
+                Warn(Obstacle @ " discarded, exceeds limit of manageable DHObstacle actors");
+
+                Obstacle.Destroy();
+
+                continue;
+            }
+
             Obstacle.Index = Obstacles.Length;
 
             for (i = 0; i < Info.Types.Length; ++i)

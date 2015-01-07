@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHObstacleInfo extends Info
+    hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Events,Display,Advanced,Sound)
     placeable;
 
 struct Type
