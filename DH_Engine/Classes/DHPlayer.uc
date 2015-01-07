@@ -1002,9 +1002,6 @@ state PlayerWalking
         {
             P.HUDCheckMantle();
             MantleCheckTimer = Level.TimeSeconds;
-
-            //Debug Theel
-            ClientMessage("FOV:"@FOVAngle);
         }
 
         GetAxes(Pawn.Rotation, X, Y, Z);
