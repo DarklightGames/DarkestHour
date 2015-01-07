@@ -169,10 +169,8 @@ defaultproperties
     NumMags=12
     FireAttachBone="gunner_int"
     FireEffectOffset=(Y=6.000000)
-//  DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-//  mTracerInterval=0.495867 // deprecated
     VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=12.500000,Y=6.000000,Z=43.000000))
     VehHitpoints(1)=(PointRadius=17.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=5.000000,Y=6.000000,Z=18.500000))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'

@@ -9,10 +9,8 @@ defaultproperties
 {
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=8
-//  DummyTracerClass=class'DH_Vehicles.DH_MG42VehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_MG42VehicleTracerBullet'
     TracerFrequency=7
-//  mTracerInterval=0.350000 // deprecated
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
     YawStartConstraint=0.000000

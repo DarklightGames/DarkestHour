@@ -238,10 +238,8 @@ defaultproperties
 {
     NumMags=8
     ReloadLength=6.590000
-//  DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
     TracerFrequency=5
-//  mTracerInterval=0.600000 // deprecated
     bUsesTracers=true
     VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=8.000000))
     VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=-13.000000))

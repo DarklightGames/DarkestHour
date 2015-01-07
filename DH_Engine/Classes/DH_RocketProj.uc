@@ -94,7 +94,6 @@ simulated function Tick(float DeltaTime)
         }
         else
         {
-//          OuttaPropLocation = Location; // Matt: deprecated
             bOutOfPropellant = true;
 
             // cut off the rocket engine effects when outta propellant

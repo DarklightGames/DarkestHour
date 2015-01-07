@@ -73,11 +73,9 @@ var     bool        bMustBeUnbuttonedToBecomePassenger;
 var     int         FirstPassengerWeaponPawnIndex;
 
 // Armor penetration
-//var   float       DHArmorSlopeTable[16]; // Matt: deprecated
 var     bool        bProjectilePenetrated; // shell has passed penetration test and has entered the hull or turret
 var     bool        bAssaultWeaponHit;     // used to defeat the Stug/JP bug
 var     bool        bIsAssaultGun;         // Matt: this appears unused in this class - check & deprecate later // TEST
-// var  bool        bWasShatterProne;      // Matt: deprecated
 var     bool        bRoundShattered;
 var     bool        bRearHit;
 
@@ -2428,7 +2426,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     bRearHit = false;
     bFirstHit = false;
     bProjectilePenetrated = false;
-//  bWasShatterProne = false; // deprecated
     bRoundShattered = false;
     bWasTurretHit = false;
 }

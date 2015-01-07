@@ -104,7 +104,6 @@ defaultproperties
     FAProjSpawnOffset=(X=-28.000000)
     PreLaunchTraceDistance=2624.000000
     TracerFrequency=5
-//  DummyTracerClass=class'DH_Weapons.DH_FG42ClientTracer' // deprecated
     TracerProjectileClass=class'DH_FG42TracerBullet'
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"

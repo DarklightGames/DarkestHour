@@ -232,7 +232,6 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
     {
         ProjectileDir = vector(Dir);
         End = Start + PreLaunchTraceDistance * ProjectileDir;
-//      SnapTraceEnd = Start + SnapTraceDistance * ProjectileDir; // Matt: removed as not being used
 
         // Lets avoid all that casting
         WeapAttach = DHWeaponAttachment(Weapon.ThirdPersonActor);
@@ -431,7 +430,6 @@ defaultproperties
     ProjPerFire=1
     bUsePreLaunchTrace=true
     PreLaunchTraceDistance=2624.000000
-//  SnapTraceDistance=1200.000000 // deprecated
     CrouchSpreadModifier=0.850000
     ProneSpreadModifier=0.700000
     BipodDeployedSpreadModifier=0.500000

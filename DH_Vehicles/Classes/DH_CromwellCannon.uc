@@ -48,10 +48,8 @@ defaultproperties
     RangeSettings(16)=3200
     ReloadSound=sound'Vehicle_reloads.Reloads.DT_ReloadHidden'
     NumAltMags=6
-//  DummyTracerClass=class'DH_Vehicles.DH_BesaVehicleClientTracer' // deprecated
     AltTracerProjectileClass=class'DH_BesaVehicleTracerBullet'
     AltFireTracerFrequency=5
-//  mTracerInterval=0.460000 // deprecated
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=44.5;

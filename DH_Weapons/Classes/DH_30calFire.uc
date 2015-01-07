@@ -12,12 +12,10 @@ defaultproperties
     AmbientFireSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
     AmbientFireVolume=255
     PackingThresholdTime=0.120000
-//  ServerProjectileClass=class'DH_Weapons.DH_30calBullet_S' // deprecated
     ProjSpawnOffset=(X=25.000000)
     FAProjSpawnOffset=(X=-145.000000,Y=-15.000000,Z=-15.000000)
     bUsesTracers=true
     TracerFrequency=5
-//  DummyTracerClass=class'DH_Weapons.DH_30CalClientTracer' // deprecated
     TracerProjectileClass=class'DH_30CalTracerBullet'
     FireIronAnim="Shoot_Loop"
     FireIronLoopAnim="Shoot_Loop"

@@ -166,7 +166,6 @@ defaultproperties
     AmbientFireSoundRadius=750.000000
     AmbientFireSound=SoundGroup'DH_WeaponSounds.c96.C96_FireLoop01'
     AmbientFireVolume=255
-//  ServerProjectileClass=class'DH_Weapons.DH_C96Bullet_S' // deprecated
     ProjSpawnOffset=(X=25.000000)
     FAProjSpawnOffset=(X=-20.000000)
     FireIronAnim="Iron_Shoot_Loop"

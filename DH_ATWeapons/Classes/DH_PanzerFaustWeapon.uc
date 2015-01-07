@@ -17,7 +17,6 @@ replication
         ServerSetRange;
 }
 
-
 // Overridden to support cycling the aiming ranges
 simulated exec function Deploy()
 {

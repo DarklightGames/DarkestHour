@@ -11,11 +11,6 @@ var  sound          SmokeIgniteSound;
 var  sound          SmokeLoopSound;
 var  float          SmokeSoundDuration;
 
-// Matt: removed as unnecessary:
-//var float   DestroyTimer;   
-//var bool    bCalledDestroy;
-//var Emitter SmokeEmitter;
-
 // Modified to remove 'Fear' stuff, as not an exploding grenade
 simulated function Landed(vector HitNormal)
 {
@@ -35,7 +30,7 @@ simulated function Landed(vector HitNormal)
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local Emitter SmokeEmitter;
-        
+
     BlowUp(HitLocation);
 
     bTearOff = true; // stops any further replication, but client copies of actor persist so we still see the grenade on the ground
@@ -77,26 +72,9 @@ simulated function Destroyed()
 {
 }
 
-/*
-// Modified to handle destruction of actor after set time
-simulated function Tick(float DeltaTime) // Matt: removed as unnecessary
-{
-    super.Tick(DeltaTime);
-
-    DestroyTimer -= DeltaTime;
-
-    if (DestroyTimer <= 0.0 && !bCalledDestroy)
-    {
-        bCalledDestroy = true;
-        Destroy();
-    }
-}
-*/
-
 defaultproperties
 {
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
-//  DestroyTimer=30.0 // deprecated
     Damage=0.0
     DamageRadius=0.0
     SmokeEmitterClass=class'ROEffects.GrenadeSmokeEffect'

@@ -34,10 +34,8 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 
 defaultproperties
 {
-//  DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-//  mTracerInterval=0.495867 // deprecated
     Spread=0.002000
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AmbientSoundScaling=5.000000

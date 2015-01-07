@@ -21,8 +21,6 @@ var     byte                    AmbientFireVolume;      // The ambient fire soun
 
 // High ROF system
 var     float                   PackingThresholdTime;   // If the shots are closer than this amount, the dual shot will be used
-//var() class<DH_Bullet>        ServerProjectileClass;  // class for the server only projectile for this weapon // Matt: was class ROServerBullet // now deprecated (see SpawnProjectile function)
-
 
 // Overridden to support packing two shots together to save net bandwidth
 function DoFireEffect()

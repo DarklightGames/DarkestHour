@@ -43,10 +43,8 @@ defaultproperties
 {
     NumMags=20
     ReloadLength=7.000000
-//  DummyTracerClass=class'DH_Vehicles.DH_BrenVehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_BrenVehicleTracerBullet'
     TracerFrequency=5
-//  mTracerInterval=0.600000 // deprecated
     hudAltAmmoIcon=texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
     YawBone="Gun_protection"
     PitchBone="Gun_protection"

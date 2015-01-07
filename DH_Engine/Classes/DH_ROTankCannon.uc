@@ -36,10 +36,7 @@ var   float                       BurnTime;
 
 // Armor penetration stuff
 var   bool  bIsAssaultGun;         // used to defeat the Stug/JP bug
-//var bool  bWasHEATRound;         // Matt: removed as not used in this class (gets set in vehicle class)
 var   bool  bHasAddedSideArmor;
-//var bool  bProjectilePenetrated; // Matt: removed as not used in this class (gets set in vehicle class)
-//var bool  bWasShatterProne;      // Matt: deprecated
 var   bool  bRoundShattered;
 
 var   float FrontArmorFactor;
@@ -51,8 +48,6 @@ var   float FrontArmorSlope;
 var   float RightArmorSlope;
 var   float LeftArmorSlope;
 var   float RearArmorSlope;
-
-//var float DHArmorSlopeTable[16]; // Matt: deprecated
 
 var() float FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
@@ -738,7 +733,7 @@ simulated function int GetRoundsDescription(out array<string> Descriptions)
     local int i;
 
     Descriptions.Length = 0;
-    
+
     for (i = 0; i < ProjectileDescriptions.Length; i++)
     {
         Descriptions[i] = ProjectileDescriptions[i];
@@ -1447,52 +1442,6 @@ simulated function ShakeView(bool bWasAltFire)
     }
 }
 
-/*
-// Matt: deprecated function, along with MaxDriverHitAngle variable - is now handled using new MinCommanderHitHeight variable in re-worked HitDriverArea function
-// Returns true if the bullet hits below the angle that would hit the commander
-simulated function bool BelowDriverAngle(vector Loc, vector Ray)
-{
-    local float  InAngle;
-    local vector X, Y, Z, HitDir, HeadLoc;
-    local coords C;
-
-    GetAxes(Rotation, X, Y, Z);
-
-    C = GetBoneCoords(VehHitpoints[0].PointBone);
-    HeadLoc = C.Origin + (VehHitpoints[0].PointHeight * VehHitpoints[0].PointScale * C.XAxis);
-    HeadLoc = HeadLoc + (VehHitpoints[0].PointOffset >> Rotator(C.Xaxis));
-
-    HitDir = Loc - HeadLoc;
-
-    InAngle= Acos(Normal(HitDir) dot Normal(C.ZAxis));
-
-    if (bDriverDebugging)
-    {
-        Log("InAngle =" @ InAngle @ "MaxDriverHitAngle =" @ MaxDriverHitAngle);
-
-        if (Role == ROLE_Authority)
-        {
-            Level.Game.Broadcast(self, "InAngle =" @ InAngle @ "MaxDriverHitAngle =" @ MaxDriverHitAngle);
-        }
-
-        ClearStayingDebugLines();
-        DrawStayingDebugLine(HeadLoc, (HeadLoc + (30.0 * Normal(C.ZAxis))), 255, 0, 0); // SLOW! Use for debugging only!
-        DrawStayingDebugLine(Loc, (Loc + (45.0 * Normal(Ray))), 0, 255, 0);             // SLOW! Use for debugging only!
-    }
-
-    if (InAngle > MaxDriverHitAngle)
-    {
-        if (bDriverDebugging && Role == ROLE_Authority)
-        {
-            Level.Game.Broadcast(self, "Hit angle is too low to hit commander");
-        }
-
-        return true;
-    }
-
-    return false;
-}
-*/
 // Matt: slightly different concept to work more accurately & simply with projectiles: think of this function as asking "did we hit the commander's collision box?"
 simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 {

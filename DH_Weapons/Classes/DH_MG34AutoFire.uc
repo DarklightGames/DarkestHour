@@ -13,12 +13,10 @@ defaultproperties
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AmbientFireVolume=255
     PackingThresholdTime=0.120000
-//  ServerProjectileClass=class'DH_Weapons.DH_MG34Bullet_S' // deprecated
     ProjSpawnOffset=(X=25.000000)
     FAProjSpawnOffset=(X=-20.000000)
     bUsesTracers=true
     TracerFrequency=7
-//  DummyTracerClass=class'DH_Weapons.DH_MG34ClientTracer' // deprecated
     TracerProjectileClass=class'DH_MG34TracerBullet'
     FireIronAnim="Shoot_Loop"
     FireIronLoopAnim="Bipod_Shoot_Loop"

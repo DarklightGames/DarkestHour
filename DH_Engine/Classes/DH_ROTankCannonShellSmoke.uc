@@ -92,7 +92,6 @@ defaultproperties
 {
     RoundType=RT_Smoke
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
-//  DestroyTimer=20.0 // deprecated
     SmokeEmitterClass=class'DH_Effects.DH_SmokeShellEffect'
     SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'

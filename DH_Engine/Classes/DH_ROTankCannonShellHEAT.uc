@@ -291,7 +291,6 @@ defaultproperties
     PeneExploWallOut=75.0
     PenetrationScale=0.08
     DistortionScale=0.4
-//  bIsHEATRound=true // deprecated
     ShakeRotMag=(Y=0.0)
     ShakeRotRate=(Z=2500.0)
     BlurTime=6.0

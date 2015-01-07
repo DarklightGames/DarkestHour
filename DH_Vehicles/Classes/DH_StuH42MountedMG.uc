@@ -277,10 +277,8 @@ defaultproperties
     FireEffectOffset=(Z=5.000000)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     VehicleBurningDamType=class'DH_VehicleBurningDamType'
-//  DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-//  mTracerInterval=0.495867 // deprecated
     bUsesTracers=true
     VehHitpoints(0)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(Z=-16.000000))
     bIsMountedTankMG=true

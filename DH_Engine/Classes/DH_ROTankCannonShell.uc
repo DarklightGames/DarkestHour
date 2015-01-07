@@ -50,7 +50,6 @@ simulated function PostBeginPlay()
 
     if (PhysicsVolume.bWaterVolume)
     {
-//      bHitWater = true; // Matt: deprecated
         Velocity *= 0.6;
     }
 

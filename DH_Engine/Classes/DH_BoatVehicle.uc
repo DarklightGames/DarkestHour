@@ -385,8 +385,6 @@ function bool CheckForCrew()
 defaultproperties
 {
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-    //   MaxPitchSpeed=600.000000 // deprecated
-    //   BoatFloatTraceDistance=10000.000000 // deprecated
     PointValue=1.000000
     ChangeUpPoint=1990.000000
     ChangeDownPoint=1000.000000

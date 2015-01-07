@@ -11,10 +11,8 @@ defaultproperties
     NumMags=6
     FireAttachBone="mg_yaw"
     FireEffectOffset=(X=5.000000)
-//  DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
     TracerFrequency=5
-//  mTracerInterval=0.600000 // deprecated
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
     YawStartConstraint=0.000000
