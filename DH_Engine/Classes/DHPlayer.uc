@@ -1860,6 +1860,11 @@ exec function CommunicationMenu()
     ClientReplaceMenu("ROInterface.ROCommunicationPage");
 }
 
+exec function DebugFOV()
+{
+    Level.Game.Broadcast(self, "FOV:" @ FovAngle);
+}
+
 defaultproperties
 {
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
