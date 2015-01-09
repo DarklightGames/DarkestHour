@@ -17,21 +17,23 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function SetBackground()
 {
-    local DH_LevelInfo levelinfo;
+    local DH_LevelInfo LI;
 
     // Find nationinfo
-    foreach PlayerOwner().AllActors(class'DH_LevelInfo', levelinfo)
-        break;
-
-    if (levelinfo != none)
+    foreach PlayerOwner().AllActors(class'DH_LevelInfo', LI)
     {
-         if (levelinfo.AlliedNation == NATION_Britain)
+        break;
+    }
+
+    if (LI != none)
+    {
+         if (LI.AlliedNation == NATION_Britain)
          {
               bg_Background.SetVisibility(false);
               bg_Background2.SetVisibility(true);
               bg_Background3.SetVisibility(false);
          }
-         else if (levelinfo.AlliedNation == NATION_Canada)
+         else if (LI.AlliedNation == NATION_Canada)
          {
               bg_Background.SetVisibility(false);
               bg_Background2.SetVisibility(false);
@@ -56,15 +58,16 @@ function SelectTeamSuccessfull()
 {
     if (selectedTeam != -1)
     {
-
         if (ROPlayer(PlayerOwner()) != none)
+        {
             ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
+        }
 
         Controller.OpenMenu("DH_Interface.DHRoleSelection");
     }
-    else
-//        class'ROGUIRoleSelection'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
+
     class'DHRoleSelection'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
+
     Controller.RemoveMenu(self);
 }
 

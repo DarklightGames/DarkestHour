@@ -16,29 +16,29 @@ function AddSystemMenu()
     b_ExitButton.OnClick = XButtonClicked;
     b_ExitButton.bNeverFocus=true;
     b_ExitButton.FocusInstead = t_WindowTitle;
-    b_ExitButton.RenderWeight=1;
+    b_ExitButton.RenderWeight = 1;
     b_ExitButton.bScaleToParent = false;
     b_ExitButton.OnPreDraw = SystemMenuPreDraw;
-    b_ExitButton.bStandardized=true;
-    b_ExitButton.StandardHeight=0.03;
+    b_ExitButton.bStandardized = true;
+    b_ExitButton.StandardHeight = 0.03;
     // Do not want OnClick() called from MousePressed()
     b_ExitButton.bRepeatClick = false;
 }
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-        super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
-        sb_MapList.ManageComponent(co_Maplist);
-        sb_MapList.ManageComponent(sb_container);
-        sb_container.ManageComponent(b_Delete);
-        sb_container.ManageComponent(b_Rename);
-        sb_container.ManageComponent(b_New);
+    sb_MapList.ManageComponent(co_Maplist);
+    sb_MapList.ManageComponent(sb_container);
+    sb_container.ManageComponent(b_Delete);
+    sb_container.ManageComponent(b_Rename);
+    sb_container.ManageComponent(b_New);
 }
 
 function bool ButtonPreDraw(Canvas C)
 {
-        return false;
+    return false;
 }
 
 defaultproperties
