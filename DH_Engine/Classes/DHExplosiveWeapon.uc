@@ -14,6 +14,61 @@ replication
         bIsMantling;
 }
 
+//Override to allow for grenades to drop with spread (so they aren't inside eachother)
+function DropFrom(vector StartLocation)
+{
+    local int m, i;
+    local Pickup Pickup;
+    local rotator R;
+
+    if (!bCanThrow )
+        return;
+
+    ClientWeaponThrown();
+
+    for (m = 0; m < NUM_FIRE_MODES; m++)
+    {
+        if (FireMode[m].bIsFiring)
+            StopFire(m);
+    }
+
+    if ( Instigator != None )
+    {
+        DetachFromPawn(Instigator);
+    }
+
+    // Destroy empty weapons without pickups if needed (panzerfaust, etc)
+    if( AmmoAmount(0) < 1 )
+    {
+        Destroy();
+    }
+    else
+    {
+        for ( i=0; i<AmmoAmount(0); i++ )
+        {
+            R.Yaw = rand(65536);
+            Pickup = Spawn(PickupClass,,, StartLocation,R);
+
+            if ( Pickup != None )
+            {
+                Pickup.InitDroppedPickupFor(self);
+                Pickup.Velocity = Velocity >> R;
+                Pickup.Velocity.X += RandRange(-100.0, 100.0);
+                Pickup.Velocity.Y += RandRange(-100.0, 100.0);
+
+                if (Instigator.Health > 0)
+                {
+                    WeaponPickup(Pickup).bThrown = true;
+                }
+
+                Pickup = none;
+            }
+        }
+
+        Destroy();
+    }
+}
+
 simulated state StartMantle extends Busy
 {
     simulated function Timer()
