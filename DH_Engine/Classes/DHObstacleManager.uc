@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHObstacleManager extends Actor;
+class DHObstacleManager extends Actor
+    notplaceable;
 
 const MAX_OBSTACLES = 1024;
 const BITFIELD_LENGTH = 128;
@@ -13,7 +14,7 @@ var byte                Bitfield[BITFIELD_LENGTH];
 var byte                SavedBitfield[BITFIELD_LENGTH];
 var DHObstacleInfo      Info;
 
-var config bool bDebug;
+var config bool         bDebug;
 
 replication
 {

@@ -33,5 +33,5 @@ defaultproperties
 {
     Texture=texture'DHEngine_Tex.LevelActor'
     bHidden=true
-    RemoteRole=ROLE_none
+    RemoteRole=ROLE_None
 }

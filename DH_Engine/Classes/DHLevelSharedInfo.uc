@@ -18,7 +18,7 @@ var() rangevector WindDirectionSpeed; //Used to make smoke grenades match other 
 defaultproperties
 {
     bHidden=true
-    //RemoteRole=ROLE_none
+    //RemoteRole=ROLE_None
     RemoteRole=ROLE_SimulatedProxy
     SmokeBrightnessOverride=255
     //AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'

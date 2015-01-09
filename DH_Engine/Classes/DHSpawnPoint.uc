@@ -63,7 +63,7 @@ defaultproperties
 {
     bHidden=true
     bStatic=true
-    RemoteRole=ROLE_none
+    RemoteRole=ROLE_None
     DrawScale=3.0
     SpawnPointName="UNNAMED SPAWN POINT!!!"
     SpawnProtectionTime=5.0

@@ -51,6 +51,6 @@ defaultproperties
     FluidFriction=+00004.000000
     KExtraLinearDamping=0.8
     KExtraAngularDamping=0.1
-    RemoteRole=ROLE_none
+    RemoteRole=ROLE_None
     bNoDelete=true
 }

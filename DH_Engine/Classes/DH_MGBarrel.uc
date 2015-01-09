@@ -258,6 +258,6 @@ defaultproperties
     DrawType=DT_none
     bHidden=true
     bReplicateMovement=false
-    RemoteRole=ROLE_none
+    RemoteRole=ROLE_None
     NetPriority=1.400000
 }
