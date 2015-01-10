@@ -9,14 +9,14 @@ defaultproperties
 {
     OverlayCenterSize=0.555000
     PeriscopePositionIndex=1
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bLockCameraDuringTransition=true
-    WeaponFov=14.400000
+    WeaponFOV=14.400000
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell_reload'
     DriverPositions(0)=(ViewLocation=(X=70.000000,Y=-23.000000,Z=15.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_int',ViewPitchUpLimit=2548,ViewPitchDownLimit=64079,ViewPositiveYawLimit=3000,ViewNegativeYawLimit=-3000,bDrawOverlays=true)

@@ -349,7 +349,7 @@ defaultproperties
     OverlayCenterSize=0.700000
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.850000
-    WeaponFov=41.000000
+    WeaponFOV=41.000000
     DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionUpAnim="loader_open",DriverTransitionAnim="VT60_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=5.000000,Z=8.000000),ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionDownAnim="loader_close",DriverTransitionAnim="VT60_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
     bMultiPosition=true

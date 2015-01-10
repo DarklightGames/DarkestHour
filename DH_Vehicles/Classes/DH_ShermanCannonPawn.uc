@@ -105,7 +105,7 @@ defaultproperties
     PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman_sight_background'
     bLockCameraDuringTransition=true
-    WeaponFov=24.000000
+    WeaponFOV=24.000000
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     DriverPositions(0)=(ViewLocation=(X=21.000000,Y=19.000000,Z=4.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_turret_int',TransitionUpAnim="Periscope_in",ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

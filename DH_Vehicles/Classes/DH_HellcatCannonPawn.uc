@@ -60,7 +60,7 @@ defaultproperties
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
     BinocPositionIndex=2
-    WeaponFov=14.400000
+    WeaponFOV=14.400000
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
     DriverPositions(0)=(ViewLocation=(X=25.000000,Y=-16.000000,Z=5.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

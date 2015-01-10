@@ -21,11 +21,11 @@ defaultproperties
     ScopePositionX=0.237000
     ScopePositionY=0.150000
     BinocPositionIndex=4
-    WeaponFov=28.799999
+    WeaponFOV=28.8
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
     DriverPositions(0)=(ViewLocation=(X=35.000000,Y=-31.000000,Z=3.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=3095,ViewPitchDownLimit=64353,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
-    DriverPositions(1)=(ViewLocation=(X=35.000000,Y=-31.000000,Z=3.000000),ViewFOV=28.799999,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=3095,ViewPitchDownLimit=64353,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    DriverPositions(1)=(ViewLocation=(X=35.000000,Y=-31.000000,Z=3.000000),ViewFOV=28.8,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=3095,ViewPitchDownLimit=64353,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VTiger_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
     DriverPositions(3)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VTiger_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
     DriverPositions(4)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'axis_tiger1_anm.Tiger1_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)

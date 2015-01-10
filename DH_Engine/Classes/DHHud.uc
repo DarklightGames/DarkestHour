@@ -1013,7 +1013,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
                 // Draw reload state icon (if needed)
                 VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
-                VehicleAmmoReloadIcon.Scale = Passenger.getAmmoReloadState();
+                VehicleAmmoReloadIcon.Scale = Passenger.GetAmmoReloadState();
                 DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
 
                 // Draw ammo count

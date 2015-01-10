@@ -15,45 +15,19 @@ simulated function Timer()
     }
     else if (CannonReloadState == CR_Empty)
     {
-        if (Role == ROLE_Authority)
-        {
-            PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        }
-        else
-        {
-            PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        }
-
+        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart1;
-        GetSoundDuration(ReloadSoundTwo) + GetSoundDuration(ReloadSoundThree);
         SetTimer(GetSoundDuration(ReloadSoundOne), false);
     }
     else if (CannonReloadState == CR_ReloadedPart1)
     {
-        if (Role == ROLE_Authority)
-        {
-            PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        }
-        else
-        {
-            PlaySound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        }
-
+        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart2;
-        GetSoundDuration(ReloadSoundThree);
         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
     }
     else if (CannonReloadState == CR_ReloadedPart2)
     {
-        if (Role == ROLE_Authority)
-        {
-            PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        }
-        else
-        {
-            PlaySound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-        }
-
+        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart3;
         SetTimer(GetSoundDuration(ReloadSoundThree), false);
     }

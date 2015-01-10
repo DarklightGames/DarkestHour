@@ -19,7 +19,7 @@ defaultproperties
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
     ScopePositionX=0.237000
     ScopePositionY=0.150000
-    WeaponFov=30.000000
+    WeaponFOV=30.000000
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
     DriverPositions(0)=(ViewLocation=(X=30.000000,Y=-22.000000,Z=1.500000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3L_turret_int',ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

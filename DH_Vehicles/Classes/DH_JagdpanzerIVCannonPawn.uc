@@ -11,13 +11,13 @@ defaultproperties
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     OverlayCenterSize=0.555000
     PeriscopePositionIndex=1
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
-    WeaponFov=14.400000
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
+    WeaponFOV=14.400000
     bHasAltFire=false
     CameraBone="Turret"
     MinRotateThreshold=0.500000

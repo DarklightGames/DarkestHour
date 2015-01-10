@@ -9,63 +9,56 @@ class DH_ROTankCannon extends ROTankCannon
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // Variables for up to three ammo types, plus new MG tracer
-var   int               MainAmmoChargeExtra[3];
-var() int               InitialTertiaryAmmo;
-var() class<Projectile> TertiaryProjectileClass;
-var() class<Projectile> AltTracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
-var() int               AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
+var     int               MainAmmoChargeExtra[3];
+var()   int               InitialTertiaryAmmo;
+var()   class<Projectile> TertiaryProjectileClass;
+var()   class<Projectile> AltTracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
+var()   int               AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
 
 // Shot dispersion can be customized by round type
-var() float SecondarySpread;
-var() bool  bUsesSecondarySpread;
-var() float TertiarySpread;
-var() bool  bUsesTertiarySpread;
+var()   float       SecondarySpread;
+var()   bool        bUsesSecondarySpread;
+var()   float       TertiarySpread;
+var()   bool        bUsesTertiarySpread;
 
-//Manual turret stuff
-var   float ManualRotationsPerSecond;
-var   float PoweredRotationsPerSecond;
-var   bool  bManualTurret;
+// Manual/powered turret stuff
+var()   float       ManualRotationsPerSecond;
+var()   float       PoweredRotationsPerSecond;
+var     bool        bManualTurret;
 
 // Stuff for fire effects - Ch!cKeN
-var() name                        FireAttachBone;
-var() vector                      FireEffectOffset;
-var   class<VehicleDamagedEffect> FireEffectClass;
-var   VehicleDamagedEffect        TurretHatchFireEffect;
-var   bool                        bOnFire; // set by Treadcraft base to notify when to start fire effects
-var   float                       BurnTime;
+var()   name                        FireAttachBone;
+var()   vector                      FireEffectOffset;
+var     class<VehicleDamagedEffect> FireEffectClass;
+var     VehicleDamagedEffect        TurretHatchFireEffect;
+var     bool                        bOnFire; // set by Treadcraft base to notify when to start fire effects
+var     float                       BurnTime;
 
 // Armor penetration stuff
-var   bool  bIsAssaultGun;         // used to defeat the Stug/JP bug
-var   bool  bHasAddedSideArmor;
-var   bool  bRoundShattered;
+var()   bool    bIsAssaultGun; // used to defeat the Stug/JP bug
+var()   bool    bHasAddedSideArmor;
+var     bool    bRoundShattered;
 
-var   float FrontArmorFactor;
-var   float RightArmorFactor;
-var   float LeftArmorFactor;
-var   float RearArmorFactor;
+var()   float   FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
+var()   float   FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
+var()   float   FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
-var   float FrontArmorSlope;
-var   float RightArmorSlope;
-var   float LeftArmorSlope;
-var   float RearArmorSlope;
-
-var() float FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
-
-var   float MinCommanderHitHeight; // Matt: minimum height above which a projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
+var()   float   MinCommanderHitHeight; // Matt: minimum height above which a projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 
 // Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
-var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
-var DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
+var()   class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
+var     DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
+
+
 
 // Debugging and calibration stuff
-var   bool  bDrawPenetration;
-var   bool  bDebuggingText;
-var   bool  bPenetrationText;
-var   bool  bLogPenetration;
-var   bool  bDriverDebugging;
-
-var   config bool bGunFireDebug;
-var() config bool bGunsightSettingMode;
+var     bool        bDrawPenetration;
+var     bool        bDebuggingText;
+var     bool        bPenetrationText;
+var     bool        bLogPenetration;
+var     bool        bDriverDebugging;
+var     config bool bGunFireDebug;
+var     config bool bGunsightSettingMode;
 
 replication
 {
@@ -718,11 +711,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 //      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 //  }
 
-    // Reset everything // Matt: removed these variables as none are used in this class (they get set in the vehicle class)
-//  bWasHEATRound = false;
-//  bProjectilePenetrated = false;
-//  bWasShatterProne = false;
-
     bRoundShattered = false;
 }
 
@@ -802,13 +790,8 @@ simulated function int GetPendingRoundIndex()
 
 function ToggleRoundType()
 {
-    if (PendingProjectileClass == PrimaryProjectileClass || PendingProjectileClass == none)
+    if (PendingProjectileClass == PrimaryProjectileClass)
     {
-        if (!HasAmmo(1) && !HasAmmo(2))
-        {
-            return;
-        }
-
         if (HasAmmo(1))
         {
             PendingProjectileClass = SecondaryProjectileClass;
@@ -820,11 +803,6 @@ function ToggleRoundType()
     }
     else if (PendingProjectileClass == SecondaryProjectileClass)
     {
-        if (!HasAmmo(0) && !HasAmmo(2))
-        {
-            return;
-        }
-
         if (HasAmmo(2))
         {
             PendingProjectileClass = TertiaryProjectileClass;
@@ -836,11 +814,6 @@ function ToggleRoundType()
     }
     else if (PendingProjectileClass == TertiaryProjectileClass)
     {
-        if (!HasAmmo(0) && !HasAmmo(1))
-        {
-            return;
-        }
-
         if (HasAmmo(0))
         {
             PendingProjectileClass = PrimaryProjectileClass;
@@ -848,6 +821,21 @@ function ToggleRoundType()
         else if (HasAmmo(1))
         {
             PendingProjectileClass = SecondaryProjectileClass;
+        }
+    }
+    else
+    {
+        if (HasAmmo(0))
+        {
+            PendingProjectileClass = PrimaryProjectileClass;
+        }
+        else if (HasAmmo(1))
+        {
+            PendingProjectileClass = SecondaryProjectileClass;
+        }
+        else if (HasAmmo(2))
+        {
+            PendingProjectileClass = TertiaryProjectileClass;
         }
     }
 }
@@ -1053,12 +1041,12 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     local vector            StartLocation, HitLocation, HitNormal, Extent;
     local rotator           FireRot;
 
+    // Calculate projectile's starting rotation
     FireRot = WeaponFireRotation;
 
-    // used only for Human players. Lets cannons with non centered aim points have a different aiming location
     if (Instigator != none && Instigator.IsHumanControlled())
     {
-        FireRot.Pitch += AddedPitch;
+        FireRot.Pitch += AddedPitch; // used only for human players - lets cannons with non-centered aim points have a different aiming location
     }
 
     if (!bAltFire && RangeSettings.Length > 0)
@@ -1071,11 +1059,11 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Log("GetPitchForRange for" @ CurrentRangeIndex @ "=" @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
     }
 
+    // Calculate projectile's starting location
     if (bDoOffsetTrace)
     {
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
-
         WeaponPawn = VehicleWeaponPawn(Owner);
 
         if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
@@ -1112,9 +1100,10 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
     }
 
+    // Now spawn the projectile
     P = Spawn(ProjClass, none, , StartLocation, FireRot); 
 
-    // Swap to the next round type after firing
+    // If pending round type is different, switch round type
     if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
     {
         ProjectileClass = PendingProjectileClass;
@@ -1373,24 +1362,14 @@ simulated function Timer()
     else if (CannonReloadState == CR_Empty)
     {
         // Matt: simplified to call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do (same in other reload stages below)
-//      if (Role == ROLE_Authority)
-//      {
-            PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
-//      }
-//      else
-//      {
-//          PlaySound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150, , false);
-//      }
-
+        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
         CannonReloadState = CR_ReloadedPart1;
-        GetSoundDuration(ReloadSoundThree) + GetSoundDuration(ReloadSoundFour);
         SetTimer(GetSoundDuration(ReloadSoundOne), false);
     }
     else if (CannonReloadState == CR_ReloadedPart1)
     {
         PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
         CannonReloadState = CR_ReloadedPart2;
-        GetSoundDuration(ReloadSoundFour);
         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
     }
     else if (CannonReloadState == CR_ReloadedPart2)
@@ -1404,9 +1383,9 @@ simulated function Timer()
         PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
         CannonReloadState = CR_ReloadedPart4;
         SetTimer(GetSoundDuration(ReloadSoundFour), false);
-   }
-   else if (CannonReloadState == CR_ReloadedPart4)
-   {
+    }
+    else if (CannonReloadState == CR_ReloadedPart4)
+    {
         if (Role == ROLE_Authority)
         {
             bClientCanFireCannon = true;
@@ -1414,7 +1393,7 @@ simulated function Timer()
 
         CannonReloadState = CR_ReadyToFire;
         SetTimer(0.0, false);
-   }
+    }
 }
 
 // Overridden to remove shake from co-ax MG's

@@ -9,15 +9,15 @@ defaultproperties
 {
     OverlayCenterSize=0.833330
     UnbuttonedPositionIndex=1
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bLockCameraDuringTransition=true
     BinocPositionIndex=2
-    WeaponFov=12.000000
+    WeaponFOV=12.000000
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
     DriverPositions(0)=(ViewLocation=(X=25.000000,Y=-25.000000,Z=5.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=2731,ViewPitchDownLimit=64171,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000,bDrawOverlays=true)

@@ -16,7 +16,7 @@ defaultproperties
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
     ScopePositionX=0.000000
     ScopePositionY=0.000000
-    WeaponFov=24.000000
+    WeaponFOV=24.000000
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
     DriverPositions(0)=(ViewLocation=(X=23.000000,Y=-20.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_Cromwell_anm.cromwell_6pdr_turret_int',TransitionUpAnim="Periscope_in",ViewPitchUpLimit=3641,ViewPitchDownLimit=64500,bDrawOverlays=true)

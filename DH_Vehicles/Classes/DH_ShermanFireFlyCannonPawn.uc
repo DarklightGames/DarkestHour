@@ -110,7 +110,7 @@ defaultproperties
     ScopePositionX=0.000000
     ScopePositionY=0.000000
     BinocPositionIndex=4
-    WeaponFov=24.000000
+    WeaponFOV=24.000000
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
     DriverPositions(0)=(ViewLocation=(X=21.000000,Y=14.000000,Z=6.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_turret_ext',ViewPitchUpLimit=4551,ViewPitchDownLimit=64625,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)

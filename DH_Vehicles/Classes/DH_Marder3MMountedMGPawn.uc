@@ -132,7 +132,7 @@ simulated function DrawHUD(Canvas Canvas)
 defaultproperties
 {
     FirstPersonGunShakeScale=2.000000
-    WeaponFov=60.000000
+    WeaponFOV=60.000000
     DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
     DriverPositions(1)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
     bMultiPosition=true

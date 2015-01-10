@@ -8,7 +8,7 @@ class DH_CromwellMountedMGPawn extends DH_ROMountedTankMGPawn;
 defaultproperties
 {
     MGOverlay=texture'DH_VehicleOptics_tex.Allied.BesaMG_sight'
-    WeaponFov=38.000000
+    WeaponFOV=38.000000
     GunClass=class'DH_Vehicles.DH_CromwellMountedMG'
     bHasAltFire=false
     CameraBone="mg_yaw"

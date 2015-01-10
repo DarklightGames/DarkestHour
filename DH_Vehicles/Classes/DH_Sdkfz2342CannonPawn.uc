@@ -296,7 +296,7 @@ defaultproperties
     ScopePositionX=0.237000
     ScopePositionY=0.150000
     bLockCameraDuringTransition=true
-    WeaponFov=30.000000
+    WeaponFOV=30.000000
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
     DriverPositions(0)=(ViewLocation=(X=30.000000,Y=-14.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext',ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
