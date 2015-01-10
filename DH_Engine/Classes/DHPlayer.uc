@@ -51,6 +51,35 @@ replication
 }
 //=========================================================================
 
+// Matt: modified to avoid "accessed none" error
+event ClientReset()
+{
+    local Actor A;
+
+    // Reset client special timed sounds on the client
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.IsA('ClientSpecialTimedSound') || A.IsA('KrivoiPlaneController'))
+        {
+            A.Reset();
+        }
+    }
+
+    bBehindView = false;
+    bFixedCamera = false;
+    SetViewTarget(self);
+    SetViewDistance();
+
+    if (PlayerReplicationInfo != none && PlayerReplicationInfo.bOnlySpectator) // added PRI != none
+    {
+        GotoState('Spectating');
+    }
+    else
+    {
+        GotoState('PlayerWaiting');
+    }
+}
+
 // Calculate free-aim and process recoil
 simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 {
