@@ -257,7 +257,7 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-// Modified to handle dual-magnification optics (look for "GunsightPositions")
+// Modified to handle dual-magnification optics (DPI < GunsightPositions), & to apply FPCamPos to all positions not just overlay positions
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z, VehicleZ, CamViewOffsetWorld;
@@ -320,7 +320,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         }
         else
         {
-            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
+            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
 
         if (bFPNoZFromCameraPitch)
