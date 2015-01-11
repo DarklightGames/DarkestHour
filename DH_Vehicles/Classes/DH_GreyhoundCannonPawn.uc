@@ -5,36 +5,6 @@
 
 class DH_GreyhoundCannonPawn extends DH_AmericanTankCannonPawn;
 
-function bool KDriverLeave(bool bForceLeave)
-{
-    local bool bSuperDriverLeave;
-
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
-        return false;
-    }
-    else
-    {
-        DriverPositionIndex=InitialPositionIndex;
-        bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
-
-        ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-        return bSuperDriverLeave;
-    }
-}
-
-function DriverDied()
-{
-    DriverPositionIndex=InitialPositionIndex;
-    super.DriverDied();
-    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-
-    // Kill the rotation sound if the driver dies but the vehicle doesnt
-    if (GetVehicleBase().Health > 0)
-        SetRotatingStatus(0);
-}
-
 defaultproperties
 {
     OverlayCenterSize=0.542000
@@ -46,7 +16,7 @@ defaultproperties
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Stuart_sight_background'
     BinocPositionIndex=2
-    WeaponFov=24.000000
+    WeaponFOV=24.000000
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell_reload'
     DriverPositions(0)=(ViewLocation=(X=25.000000,Y=-17.000000,Z=3.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=3641,ViewPitchDownLimit=63716,bDrawOverlays=true)

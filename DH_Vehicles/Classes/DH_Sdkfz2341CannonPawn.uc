@@ -5,19 +5,6 @@
 
 class DH_Sdkfz2341CannonPawn extends DH_GermanTankCannonPawn;
 
-/*
-function DriverDied()
-{
-    DriverPositionIndex=InitialPositionIndex;
-    super.DriverDied();
-    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-
-    // Kill the rotation sound if the driver dies but the vehicle doesnt
-    if (GetVehicleBase().Health > 0)
-        SetRotatingStatus(0);
-}
-*/
-
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
 function float GetAmmoReloadState()
 {

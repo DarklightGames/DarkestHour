@@ -7,36 +7,6 @@ class DH_Sdkfz2342CannonPawn extends DH_GermanTankCannonPawn;
 
 var   texture   PeriscopeOverlay;
 
-function bool KDriverLeave(bool bForceLeave)
-{
-    local bool bSuperDriverLeave;
-
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
-        return false;
-    }
-    else
-    {
-        DriverPositionIndex=InitialPositionIndex;
-        bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
-
-        ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-        return bSuperDriverLeave;
-    }
-}
-
-function DriverDied()
-{
-    DriverPositionIndex=InitialPositionIndex;
-    super.DriverDied();
-    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
-
-    // Kill the rotation sound if the driver dies but the vehicle doesnt
-    if (GetVehicleBase().Health > 0)
-        SetRotatingStatus(0);
-}
-
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector x, y, z;
