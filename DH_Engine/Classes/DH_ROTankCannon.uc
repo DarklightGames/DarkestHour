@@ -126,38 +126,25 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    if (bManualTurret)
+    if (DH_ROTankCannonPawn(Owner) != none)
     {
-        if (RotationsPerSecond != ManualRotationsPerSecond)
+        if (bManualTurret)
         {
             RotationsPerSecond = ManualRotationsPerSecond;
-            TurretPawn = DH_ROTankCannonPawn(Owner);
-
-            if (TurretPawn != none)
-            {
-                TurretPawn.RotateSound = TurretPawn.ManualRotateSound;
-                TurretPawn.PitchSound = TurretPawn.ManualPitchSound;
-                TurretPawn.RotateAndPitchSound = TurretPawn.ManualRotateAndPitchSound;
-                TurretPawn.MinRotateThreshold = TurretPawn.ManualMinRotateThreshold;
-                TurretPawn.MaxRotateThreshold = TurretPawn.ManualMaxRotateThreshold;
-            }
+            DH_ROTankCannonPawn(Owner).RotateSound = DH_ROTankCannonPawn(Owner).ManualRotateSound;
+            DH_ROTankCannonPawn(Owner).PitchSound = DH_ROTankCannonPawn(Owner).ManualPitchSound;
+            DH_ROTankCannonPawn(Owner).RotateAndPitchSound = DH_ROTankCannonPawn(Owner).ManualRotateAndPitchSound;
+            DH_ROTankCannonPawn(Owner).MinRotateThreshold = DH_ROTankCannonPawn(Owner).ManualMinRotateThreshold;
+            DH_ROTankCannonPawn(Owner).MaxRotateThreshold = DH_ROTankCannonPawn(Owner).ManualMaxRotateThreshold;
         }
-    }
-    else
-    {
-        if (RotationsPerSecond != PoweredRotationsPerSecond)
+        else
         {
             RotationsPerSecond = PoweredRotationsPerSecond;
-            TurretPawn = DH_ROTankCannonPawn(Owner);
-
-            if (TurretPawn != none)
-            {
-                TurretPawn.RotateSound = TurretPawn.PoweredRotateSound;
-                TurretPawn.PitchSound = TurretPawn.PoweredPitchSound;
-                TurretPawn.RotateAndPitchSound = TurretPawn.PoweredRotateAndPitchSound;
-                TurretPawn.MinRotateThreshold = TurretPawn.PoweredMinRotateThreshold;
-                TurretPawn.MaxRotateThreshold = TurretPawn.PoweredMaxRotateThreshold;
-            }
+            DH_ROTankCannonPawn(Owner).RotateSound = DH_ROTankCannonPawn(Owner).PoweredRotateSound;
+            DH_ROTankCannonPawn(Owner).PitchSound = DH_ROTankCannonPawn(Owner).PoweredPitchSound;
+            DH_ROTankCannonPawn(Owner).RotateAndPitchSound = DH_ROTankCannonPawn(Owner).PoweredRotateAndPitchSound;
+            DH_ROTankCannonPawn(Owner).MinRotateThreshold = DH_ROTankCannonPawn(Owner).PoweredMinRotateThreshold;
+            DH_ROTankCannonPawn(Owner).MaxRotateThreshold = DH_ROTankCannonPawn(Owner).PoweredMaxRotateThreshold;
         }
     }
 }
