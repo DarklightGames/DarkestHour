@@ -676,7 +676,6 @@ defaultproperties
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=5.000000
     AltFireOffset=(X=-54.000000,Y=-24.000000,Z=-3.000000)
-    RotationsPerSecond=0.040000
     ManualRotationsPerSecond=0.04
     PoweredRotationsPerSecond=0.04
     bAmbientAltFireSound=true

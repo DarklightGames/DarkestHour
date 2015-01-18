@@ -67,7 +67,6 @@ defaultproperties
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=30.000000
-    RotationsPerSecond=0.010000
     FireInterval=15.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000

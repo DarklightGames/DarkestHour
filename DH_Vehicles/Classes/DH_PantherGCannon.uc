@@ -8,5 +8,4 @@ class DH_PantherGCannon extends DH_PantherDCannon;
 defaultproperties
 {
     PoweredRotationsPerSecond=0.040000
-    RotationsPerSecond=0.011000
 }

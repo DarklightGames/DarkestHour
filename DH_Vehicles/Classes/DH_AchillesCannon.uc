@@ -11,6 +11,7 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
     SecondarySpread=0.006000
     TertiarySpread=0.001560
+    ManualRotationsPerSecond=0.011111
     PoweredRotationsPerSecond=0.011111
     FrontArmorFactor=5.000000
     RightArmorFactor=2.500000
@@ -62,7 +63,6 @@ defaultproperties
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=15.000000
-    RotationsPerSecond=0.011111
     FireInterval=6.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000

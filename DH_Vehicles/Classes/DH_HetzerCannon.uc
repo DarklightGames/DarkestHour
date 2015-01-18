@@ -70,7 +70,6 @@ defaultproperties
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=160.000000
-    RotationsPerSecond=0.025000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
     RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
