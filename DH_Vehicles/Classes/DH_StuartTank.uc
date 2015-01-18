@@ -32,7 +32,6 @@ defaultproperties
     MaxCriticalSpeed=1057.000000
     FireAttachBone="Player_Driver"
     HullFireChance=0.450000
-    EngineHealthMax=200
     UFrontArmorFactor=2.900000
     URightArmorFactor=2.900000
     ULeftArmorFactor=2.900000

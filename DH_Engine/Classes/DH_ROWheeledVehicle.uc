@@ -48,7 +48,6 @@ var()   float       ObjectCollisionResistance;
 var     bool        bResupplyVehicle;
 
 // Engine stuff
-var     int         EngineHealthMax;
 var     bool        bEngineDead;        // vehicle engine is damaged and cannot run or be restarted ... ever
 var     bool        bEngineOff;         // vehicle engine is simply switched off
 var     float       IgnitionSwitchTime;
@@ -70,11 +69,8 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        EngineHealthMax; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
-
-    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - do later as part of class review & refactor
-    reliable if (Role == ROLE_Authority)
         bResupplyVehicle; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
+//      EngineHealthMax  // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -111,18 +107,6 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
             }
         }
     }
-}
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    EngineHealth = EngineHealthMax;
-
-    // Engine starting and stopping stuff
-    //bEngineOff = true;
-    //bEngineDead = false;
-    //bDisableThrottle = true;
 }
 
 function KDriverEnter(Pawn P)
@@ -677,7 +661,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     }
 
     // Heavy damage to engine slows vehicle way down
-    if (EngineHealth <= (EngineHealthMax * 0.25) && EngineHealth > 0)
+    if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
     {
         Throttle = FClamp(Throttle, -0.50, 0.50);
     }
@@ -1020,7 +1004,6 @@ function bool CheckForCrew()
 defaultproperties
 {
     ObjectCollisionResistance=1.0
-    EngineHealthMax=30
     bEngineOff=true
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'

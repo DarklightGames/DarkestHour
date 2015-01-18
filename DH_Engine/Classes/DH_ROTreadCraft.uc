@@ -110,7 +110,6 @@ var     float       TraverseDamageChance;
 var     float       TurretDetonationThreshold; // chance that turret ammo will go up
 
 // Engine stuff
-var     int         EngineHealthMax;
 var     bool        bEngineDead; // tank engine is damaged and cannot run or be restarted...ever
 var     bool        bEngineOff;  // tank engine is simply switched off
 var     bool        bOldEngineOff;
@@ -184,7 +183,8 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        EngineHealthMax, UnbuttonedPositionIndex, // Matt: these 2 never change & don't need to be replicated - check later & possibly remove
+//      EngineHealthMax,         // Matt: removed as I have deprecated
+        UnbuttonedPositionIndex, // Matt: never changes & doesn't need to be replicated - check later & possibly remove
         bEngineOnFire, bOnFire;
 
     // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - do later as part of class review & refactor
@@ -1067,9 +1067,7 @@ simulated function PostBeginPlay()
     //bDisableThrottle = true;
     //bFirstHit = true;
 
-    EngineHealth = EngineHealthMax;
-
-    EngineFireDamagePerSec = EngineHealthMax * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
+    EngineFireDamagePerSec = default.EngineHealth * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
     DamagedEffectFireDamagePerSec = HealthMax * 0.02; // ~100 seconds from regular tank fire threshold to detonation from full health, damage is every 2 seconds, so double intended
 
     // If vehicle has schurzen (tex != none is flag) then randomise model selection (different degrees of damage, or maybe none at all)
@@ -2464,7 +2462,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     }
 
     // If engine health drops below a certain level, slow the tank way down
-    if (EngineHealth > 0 && EngineHealth <= (EngineHealthMax * 0.50))
+    if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.50))
     {
         Throttle = FClamp(Throttle, -0.50, 0.50);
     }
@@ -3036,7 +3034,6 @@ defaultproperties
     DamagedShutDownSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_stop_damaged'
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    EngineHealthMax=300
     bEngineOff=true
     DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
     GunMantletArmorFactor=10.0

@@ -33,7 +33,6 @@ defaultproperties
 {
     bMustBeTankCommander=true
     MaxCriticalSpeed=1077.000000
-    EngineHealthMax=100
     UFrontArmorFactor=1.600000
     URightArmorFactor=0.900000
     ULeftArmorFactor=0.900000

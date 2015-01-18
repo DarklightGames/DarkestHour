@@ -36,7 +36,6 @@ defaultproperties
 {
     bSpecialExiting=true
     MaxCriticalSpeed=1039.000000
-    EngineHealthMax=100
     UFrontArmorFactor=3.000000
     URightArmorFactor=0.800000
     ULeftArmorFactor=0.800000

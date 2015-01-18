@@ -118,7 +118,6 @@ defaultproperties
 {
     ResupplyAttachBone="supply"
     DecorationAttachBone="Deco"
-    EngineHealthMax=35
     bResupplyVehicle=true
     WheelSoftness=0.025000
     WheelPenScale=1.200000

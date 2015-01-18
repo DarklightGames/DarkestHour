@@ -146,7 +146,6 @@ defaultproperties
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
     EngineSoundBone="Engine"
-    EngineHealthMax=25
     WheelSoftness=0.025000
     WheelPenScale=0.850000
     WheelPenOffset=0.010000

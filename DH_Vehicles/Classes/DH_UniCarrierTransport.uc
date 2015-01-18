@@ -105,7 +105,6 @@ defaultproperties
     RightWheelBones(3)="Wheel_T_R_4"
     RightWheelBones(4)="Wheel_T_R_5"
     WheelRotationScale=1600
-    EngineHealthMax=125
     WheelSoftness=0.025000
     WheelPenScale=2.000000
     WheelPenOffset=0.010000

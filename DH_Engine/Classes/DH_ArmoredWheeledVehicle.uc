@@ -71,8 +71,6 @@ simulated function PostBeginPlay()
     bEngineDead = false;
     bDisableThrottle=true;
 
-    EngineHealth=EngineHealthMax;
-
     p = RandRange(0.15, 0.25);
     EngineFireDamagePerSec = EngineHealth * 0.09;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
     DamagedEffectFireDamagePerSec = HealthMax * 0.02; //~100 seconds from regular tank fire threshold to detontation from full health, damage is every 2 seconds, so double intended
