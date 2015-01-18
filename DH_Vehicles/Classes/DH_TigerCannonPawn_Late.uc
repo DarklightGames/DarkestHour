@@ -32,7 +32,6 @@ defaultproperties
     FireImpulse=(X=-110000.000000)
     GunClass=class'DH_Vehicles.DH_TigerCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
     DriveAnim="VTiger_com_idle_close"
     EntryRadius=130.000000
     FPCamPos=(X=50.000000,Y=-30.000000,Z=11.000000)

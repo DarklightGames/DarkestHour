@@ -200,8 +200,6 @@ defaultproperties
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     MinRotateThreshold=0.500000
     MaxRotateThreshold=3.000000
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=6.000000,Z=-35.000000)
     DriveAnim="VStug3_com_idle_close"
     EntryRadius=130.000000

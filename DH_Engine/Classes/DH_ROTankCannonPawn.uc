@@ -913,6 +913,8 @@ defaultproperties
     PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     MaxRotateThreshold=1.5
+    bPCRelativeFPRotation=true
+    bFPNoZFromCameraPitch=true
     bDesiredBehindView=false
     PeriscopePositionIndex=-1
     AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'

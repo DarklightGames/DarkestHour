@@ -26,8 +26,6 @@ defaultproperties
     FireImpulse=(X=-30000.000000)
     GunClass=class'DH_Vehicles.DH_GreyhoundCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=8.000000,Y=4.800000,Z=-5.750000)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.000000

@@ -188,8 +188,6 @@ defaultproperties
     CameraBone="Gun"
     MinRotateThreshold=0.500000
     MaxRotateThreshold=2.300000
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=4.000000,Z=-8.000000)
     DriveAnim="VPanzer3_com_idle_close"
     EntryRadius=130.000000

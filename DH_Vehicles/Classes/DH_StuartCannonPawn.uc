@@ -22,8 +22,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Stuart_anm.Stuart_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Vehicles.DH_StuartCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=8.000000,Y=4.800000,Z=-5.750000)
     DriveAnim="VT60_com_idle_close"
     EntryRadius=130.000000

@@ -25,8 +25,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Cromwell_anm.cromwell_6pdr_turret_int',ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Vehicles.DH_Cromwell6PdrCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(Z=-3.000000)
     DriveAnim="VT3485_com_idle_close"
     EntryRadius=130.000000

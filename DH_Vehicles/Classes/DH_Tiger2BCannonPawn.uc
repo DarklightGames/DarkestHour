@@ -32,8 +32,6 @@ defaultproperties
     FireImpulse=(X=-110000.000000)
     GunClass=class'DH_Vehicles.DH_Tiger2BCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(Z=5.000000)
     DriveAnim="VPanther_com_idle_close"
     EntryRadius=130.000000

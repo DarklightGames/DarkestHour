@@ -64,8 +64,6 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_Sdkfz2341Cannon'
     bHasFireImpulse=false
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=4.000000,Y=-2.000000)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.000000

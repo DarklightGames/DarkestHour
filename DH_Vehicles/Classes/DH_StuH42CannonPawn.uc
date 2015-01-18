@@ -29,8 +29,6 @@ defaultproperties
     CameraBone="Turret"
     MinRotateThreshold=0.500000
     MaxRotateThreshold=2.500000
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(Z=-6.000000)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.000000

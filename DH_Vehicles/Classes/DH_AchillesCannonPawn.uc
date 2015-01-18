@@ -73,8 +73,6 @@ defaultproperties
     FireImpulse=(X=-100000.000000)
     GunClass=class'DH_Vehicles.DH_AchillesCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=7.000000,Y=5.000000,Z=-6.000000)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.000000

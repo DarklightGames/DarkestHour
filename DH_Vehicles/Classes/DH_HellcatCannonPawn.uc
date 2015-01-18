@@ -70,8 +70,6 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_HellcatCannon'
     bHasAltFire=false
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(Z=10.000000)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.000000

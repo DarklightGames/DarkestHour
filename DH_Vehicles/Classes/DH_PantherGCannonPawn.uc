@@ -32,8 +32,6 @@ defaultproperties
     FireImpulse=(X=-100000.000000)
     GunClass=class'DH_Vehicles.DH_PantherGCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DriveAnim="VPanther_com_idle_close"
     EntryRadius=130.000000
     TPCamDistance=300.000000

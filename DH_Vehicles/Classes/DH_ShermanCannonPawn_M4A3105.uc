@@ -26,8 +26,6 @@ defaultproperties
     FireImpulse=(X=-110000.000000)
     GunClass=class'DH_Vehicles.DH_ShermanCannon_M4A3105'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=3.000000,Z=8.000000)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.000000

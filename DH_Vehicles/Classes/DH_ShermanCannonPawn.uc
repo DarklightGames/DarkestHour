@@ -23,8 +23,6 @@ defaultproperties
     DriverPositions(3)=(ViewLocation=(X=-5.000000,Z=14.000000),ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Vehicles.DH_ShermanCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=3.000000,Z=-5.000000)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.000000

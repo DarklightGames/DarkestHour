@@ -69,8 +69,6 @@ defaultproperties
     FireImpulse=(X=-100000.000000)
     GunClass=class'DH_Vehicles.DH_JacksonCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=20.000000,Z=10.000000)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.000000

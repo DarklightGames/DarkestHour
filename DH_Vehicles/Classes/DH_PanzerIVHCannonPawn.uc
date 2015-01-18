@@ -27,8 +27,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4H_turret_int',ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Vehicles.DH_PanzerIVHCannon'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DriveAnim="VTiger_com_idle_close"
     EntryRadius=130.000000
     FPCamPos=(X=50.000000,Y=-30.000000,Z=11.000000)
