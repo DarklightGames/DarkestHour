@@ -10,7 +10,7 @@ class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
 
 struct ExitPositionPair
 {
-    var int Index;
+    var int   Index;
     var float DistanceSquared;
 };
 
@@ -29,7 +29,6 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerToggleDebugExits;
 }
-
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {

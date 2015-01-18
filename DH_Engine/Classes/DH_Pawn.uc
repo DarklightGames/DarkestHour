@@ -94,16 +94,18 @@ var rotator             LockViewRotation;
 
 replication
 {
-    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         bHasATAmmo, bHasMGAmmo, bHasMortarAmmo;
 
+    // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
         bWeaponCanBeReloaded, bWeaponNeedsReload, bWeaponIsMG, bWeaponIsAT;
 
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
 }
-
 
 simulated function PostBeginPlay()
 {

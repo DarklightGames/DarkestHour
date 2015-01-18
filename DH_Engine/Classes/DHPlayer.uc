@@ -33,21 +33,22 @@ var DHHintManager DHHintManager;
 
 replication
 {
-    // client to server functions
-    reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
-        ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
-        ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
 
-    // server to client functions
-    reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand;
-
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsInStateMantling, MortarTargetIndex, MortarHitLocation;
 
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, 
+        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
+
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
+        ClientProne, ClientToggleDuck, ClientConsoleCommand;
 }
 //=========================================================================
 

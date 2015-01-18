@@ -17,7 +17,7 @@ simulated function UpdateMovementSound();          // removed due to no movement
 simulated function SetupTreads();                  // removed due to no need to setup treads
 simulated function DestroyTreads();                // removed due to no need to setup treads
 function DamageTrack(bool bLeftTrack);             // removed due to no need to damage treads
-event TakeFireDamage(float DeltaTime);             // removed due to no need for fire damage
+function TakeFireDamage(float DeltaTime);          // removed due to no need for fire damage
 //function bool ResupplyAmmo();                    // removed due to no need to resupply the gun
 function MaybeDestroyVehicle();                    // removed so we don't destroy the Gun if abandoned
 //function EnteredResupply();                      // removed due to no need to resupply the gun
@@ -160,7 +160,7 @@ function DenyEntry(Pawn P, int MessageNum)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local float VehicleDamageMod;
-    local int   HitPointDamage, i;
+    local int   i;
 
     // Fix for suicide death messages
     if (DamageType == class'Suicided')
@@ -189,13 +189,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (bLogPenetration)
     {
-        Log("VehHitpoints and HitPointDamage start, damage =" @ Damage);
+        Log("VehHitpoints start: Damage =" @ Damage);
     }
 
     for (i = 0; i < VehHitpoints.Length; i++)
     {
-        HitPointDamage=Damage;
-
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
             // Damage for large weapons
@@ -218,9 +216,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // An AT gun does not have an engine - we will however leave the ammo store because we need it to get around a collision issue with the gunner (player)
         else if (IsPointShot(Hitlocation,Momentum, 1.0, i))
         {
-            HitPointDamage *= VehHitpoints[i].DamageMultiplier;
-            HitPointDamage *= VehicleDamageMod;
-
             if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
                 Damage *= VehHitpoints[i].DamageMultiplier;

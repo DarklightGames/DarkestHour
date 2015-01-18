@@ -19,7 +19,8 @@ var name                    ElevationWheelBone;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
         FireAnimationIndex;
 }
 

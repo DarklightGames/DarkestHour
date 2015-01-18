@@ -10,7 +10,7 @@ class DHHighROFWeaponAttachment extends ROWeaponAttachment
 struct ShotInfo
 {
     var vector  ShotLocation;
-    var int ShotRotation;
+    var int     ShotRotation;
 };
 
 // This struct is used to pack two shot info's for replication
@@ -38,7 +38,7 @@ var     byte            NextTracerCounter;     // when this equals TracerFrequen
 
 replication
 {
-    // Bullet whiz var - Server to client
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SavedDualShot, DualShotCount;
 }

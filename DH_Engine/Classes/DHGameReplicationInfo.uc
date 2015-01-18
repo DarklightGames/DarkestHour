@@ -56,17 +56,15 @@ var float               SpawnPointsUpdateTime;    // the last time the vehicle s
 
 replication
 {
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        CarriedAlliedRadios, CarriedAxisRadios, AlliedNationID, DHAxisRoles,
-        DHAlliesRoles, DHAlliesRoleBotCount, DHAlliesRoleCount,
-        DHAxisRoleBotCount, DHAxisRoleCount, AlliedMortarTargets,
-        GermanMortarTargets, DHSpawnCount, VehiclePoolVehicleClasses,
-        VehiclePoolIsActives, VehiclePoolNextAvailableTimes,
-        VehiclePoolActiveCounts, VehiclePoolSpawnsRemainings,
-        VehiclePoolMaxActives, SpawnPointFlags,
-        SpawnPointXLocations, SpawnPointYLocations,
-        VehiclePoolsUpdateTime, SpawnPointsUpdateTime,
-        SpawnPointNames, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
+        DHSpawnCount, AlliedNationID, DHAxisRoles, DHAlliesRoles, 
+        DHAlliesRoleCount, DHAxisRoleCount, DHAlliesRoleBotCount, DHAxisRoleBotCount, 
+        CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets, 
+        VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts, 
+        VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime, 
+        SpawnPointFlags, SpawnPointXLocations, SpawnPointYLocations, SpawnPointsUpdateTime, SpawnPointNames, 
+        AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)

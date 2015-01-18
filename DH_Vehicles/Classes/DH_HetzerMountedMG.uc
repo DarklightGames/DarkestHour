@@ -29,15 +29,15 @@ var     enum    EMGReloadState
 
 replication
 {
-    // Variables the server should send to the client
-    reliable if (bNetDirty && Role == ROLE_Authority)
+    // Variables the server should send to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         bClientCanFireMG;
 
-    // Functions the server calls on the client side.
+    // Functions the server calls on the client side
     reliable if (Role == ROLE_Authority)
         ClientSetReloadState;
 
-    // Functions the client calls on the server side:
+    // Functions the client calls on the server side
     reliable if (Role < ROLE_Authority)
         ServerManualReload;
 }

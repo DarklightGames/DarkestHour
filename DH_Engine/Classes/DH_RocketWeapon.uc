@@ -16,13 +16,14 @@ var     class<LocalMessage>     WarningMessageClass;
 
 replication
 {
+    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetRange;
 
+    // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientDoAssistedReload;
 }
-
 
 // Overridden to counteract mappers giving out more ammo than the weapon code can handle
 simulated function PostBeginPlay()

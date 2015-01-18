@@ -157,8 +157,6 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     local vector  LocDir, HitDir, X, Y, Z;
     local rotator AimRot;
 
-    WeaponRotationDegrees = (CurrentAim.Yaw / 65536.0 * 360.0);
-
     if (bIsAssaultGun)
     {
         DH_ROTreadCraft(Base).bAssaultWeaponHit = true;
@@ -180,6 +178,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
         HitAngleDegrees = 360.0 - HitAngleDegrees;
     }
 
+    WeaponRotationDegrees = (CurrentAim.Yaw / 65536.0 * 360.0);
     HitAngleDegrees -= WeaponRotationDegrees;
 
     if (HitAngleDegrees < 0.0)
@@ -478,7 +477,7 @@ simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, fl
         {
             DH_ROTreadCraft(Base).bProjectilePenetrated = true;
             DH_ROTreadCraft(Base).bWasTurretHit = true;
-            DH_ROTreadCraft(Base).bWasHEATRound = (P.default.RoundType == RT_HEAT); // Matt: would be much better to flag bIsHeatRound in the DamageType, but would need new DH_WeaponDamageType class
+            DH_ROTreadCraft(Base).bWasHEATRound = (P.default.RoundType == RT_HEAT); // Matt: would be much better to flag bIsHeatRound in DamageType, but would need new DH_WeaponDamageType class
 
             return true;
         }
@@ -681,6 +680,9 @@ simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, flo
     return false;
 }
 
+// Matt: modified as projectiles now call TakeDamage on VehicleWeapons instead of directly on the vehicle base
+// Allows for different handling of external MG hits (e.g. gun shield wrecked) that won't damage actual vehicle, & can also be used in subclasses for any custom handling of cannon hits
+// Also modified as projectiles that hit the commander now call TakeDamage directly on him
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     // Fix for suicide death messages
@@ -694,7 +696,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
 
-    // Matt: shell's ProcessTouch now calls TD on VehicleWeapon instead of VehicleBase, but for tank cannon this is counted as hit on vehicle so we call TD on that
+    // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle so we call TD on that
     else if (VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).VehicleBase != none)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none) // added bDelayedDamage as otherwise this isn't relevant
@@ -705,17 +707,16 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         VehicleWeaponPawn(Owner).VehicleBase.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
     }
 
-    // Matt: removed as shell & bullet's ProcessTouch now call TakeDamage directly on Driver if he was hit
+    // Removed as projectile's ProcessTouch now call TD directly on Driver if he was hit
 //  if (HitDriver(Hitlocation, Momentum))
 //  {
 //      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 //  }
 
-    bRoundShattered = false;
+    bRoundShattered = false; // reset for next time
 }
 
-// Returns the name of the various round types as well as a 0-based int
-// specifying which type is the active one
+// Returns the name of the various round types as well as a zero-based int specifying which type is the active one
 simulated function int GetRoundsDescription(out array<string> Descriptions)
 {
     local int i;
@@ -745,7 +746,7 @@ simulated function int GetRoundsDescription(out array<string> Descriptions)
     }
 }
 
-// Returns a 0-based int specifying which round type is the pending round
+// Returns a zero-based int specifying which round type is the pending round
 simulated function int GetPendingRoundIndex()
 {
     if (PendingProjectileClass != none)

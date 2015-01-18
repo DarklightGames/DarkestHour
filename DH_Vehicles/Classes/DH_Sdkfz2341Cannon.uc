@@ -12,6 +12,7 @@ var     bool    bMixedMagFireAP; // flags that a mixed AP/HE mag is due to fire 
 
 replication
 {
+    // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NumMags, NumSecMags, NumTertMags;
 }

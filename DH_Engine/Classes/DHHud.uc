@@ -1101,7 +1101,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         }
 
                         // Draw coaxial gun ammo amount
-                        VehicleAltAmmoAmount.Value = Cannon.getNumMags();
+                        VehicleAltAmmoAmount.Value = Cannon.GetNumMags();
                         DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
 
                         // Shift occupants list position to accommodate coaxial gun ammo info
@@ -1149,7 +1149,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             }
 
             // Draw ammo count
-            VehicleMGAmmoAmount.Value = VehWeapon.getNumMags();
+            VehicleMGAmmoAmount.Value = VehWeapon.GetNumMags();
             DrawNumericWidget(Canvas, VehicleMGAmmoAmount, Digits);
         }
     }

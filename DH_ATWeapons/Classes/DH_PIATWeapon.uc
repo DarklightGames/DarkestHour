@@ -18,6 +18,7 @@ var     ROFPAmmoRound           RocketAttachment;      // the attached first per
 
 replication
 {
+    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetRange;
 }
