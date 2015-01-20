@@ -16,14 +16,6 @@ defaultproperties
     bIsAssaultGun=true
     GunMantletArmorFactor=5.000000
     GunMantletSlope=0.000000
-    FrontArmorFactor=5.000000
-    RightArmorFactor=3.000000
-    LeftArmorFactor=3.000000
-    RearArmorFactor=5.000000
-    FrontLeftAngle=293.000000
-    FrontRightAngle=67.000000
-    RearRightAngle=113.000000
-    RearLeftAngle=247.000000
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
