@@ -27,8 +27,8 @@ defaultproperties
     DriverPositions(4)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Vehicles.DH_Stug3GCannon'
     CameraBone="Turret"
-    MinRotateThreshold=0.500000
-    MaxRotateThreshold=2.500000
+    ManualMinRotateThreshold=0.500000
+    ManualMaxRotateThreshold=3.000000
     DrivePos=(Z=-6.000000)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.000000

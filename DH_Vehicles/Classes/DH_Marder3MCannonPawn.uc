@@ -71,8 +71,8 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_Marder3MCannon'
     bHasAltFire=false
     CameraBone="Gun"
-    MinRotateThreshold=0.500000
-    MaxRotateThreshold=3.000000
+    ManualMinRotateThreshold=0.500000
+    ManualMaxRotateThreshold=3.000000
     DrivePos=(X=-10.000000,Z=22.000000)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.000000

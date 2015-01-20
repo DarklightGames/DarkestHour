@@ -26,8 +26,8 @@ defaultproperties
     FireImpulse=(X=-110000.000000)
     GunClass=class'DH_Vehicles.DH_JagdtigerCannon'
     CameraBone="Turret_placement1"
-    MinRotateThreshold=0.500000
-    MaxRotateThreshold=3.000000
+    ManualMinRotateThreshold=0.500000
+    ManualMaxRotateThreshold=3.000000
     DrivePos=(Z=-6.000000)
     DriveAnim="VPanzer4_driver_idle_close"
     EntryRadius=130.000000

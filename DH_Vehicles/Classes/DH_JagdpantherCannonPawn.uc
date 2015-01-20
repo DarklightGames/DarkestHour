@@ -27,7 +27,8 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_JagdpantherCannon'
     bHasAltFire=false
     CameraBone="Turret_placement1"
-    MaxRotateThreshold=3.000000
+    ManualMinRotateThreshold=0.500000
+    ManualMaxRotateThreshold=3.000000
     DrivePos=(Z=-4.000000)
     DriveAnim="VStug3_com_idle_close"
     EntryRadius=130.000000
