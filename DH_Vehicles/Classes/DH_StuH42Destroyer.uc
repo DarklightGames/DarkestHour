@@ -266,7 +266,6 @@ defaultproperties
     NewVehHitpoints(0)=(PointRadius=5.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=22.000000,Y=-30.500000,Z=61.000000),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=15.000000,Y=5.000000,Z=35.000000),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=15.000000,Y=5.000000,Z=35.000000),NewHitPointType=NHP_GunPitch)
-    bIsAssaultGun=true
     UnbuttonedPositionIndex=1
     bSpecialExiting=true
     LeftTreadIndex=3
@@ -277,8 +276,6 @@ defaultproperties
     URearArmorFactor=5.000000
     UFrontArmorSlope=20.000000
     URearArmorSlope=10.000000
-    GunMantletArmorFactor=5.000000
-    GunMantletSlope=0.000000
     PointValue=3.000000
     MaxPitchSpeed=150.000000
     TreadVelocityScale=146.000000

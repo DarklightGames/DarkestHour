@@ -13,6 +13,8 @@ defaultproperties
     ManualRotationsPerSecond=0.025000
     PoweredRotationsPerSecond=0.025000
     bIsAssaultGun=true
+    GunMantletArmorFactor=8.000000
+    GunMantletSlope=40.000000
     FrontArmorFactor=8.000000
     RightArmorFactor=8.000000
     LeftArmorFactor=8.000000

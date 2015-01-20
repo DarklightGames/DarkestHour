@@ -74,8 +74,6 @@ var     int         FirstPassengerWeaponPawnIndex;
 
 // Armor penetration
 var     bool        bProjectilePenetrated; // shell has passed penetration test and has entered the hull or turret
-var     bool        bAssaultWeaponHit;     // used to defeat the Stug/JP bug
-var     bool        bIsAssaultGun;         // Matt: this appears unused in this class - check & deprecate later // TEST
 var     bool        bRoundShattered;
 var     bool        bRearHit;
 
@@ -89,8 +87,6 @@ var     float       URightArmorSlope;
 var     float       ULeftArmorSlope;
 var     float       URearArmorSlope;
 
-var     float       GunMantletArmorFactor; // used for assault gun mantlet hits
-var     float       GunMantletSlope;
 
 // Damage stuff
 var     float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
@@ -1531,13 +1527,6 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     local float   HitAngleDegrees, Side, InAngle, InAngleDegrees;
     local vector  LocDir, HitDir, X, Y, Z;
     local rotator AimRot;
-
-    if (bAssaultWeaponHit) // big fat HACK to defeat Stug/JP bug
-    {
-        bAssaultWeaponHit = false;
-
-        return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
-    }
 
     // Figure out which side we hit
     LocDir = vector(Rotation);
@@ -3036,8 +3025,6 @@ defaultproperties
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     bEngineOff=true
     DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
-    GunMantletArmorFactor=10.0
-    GunMantletSlope=10.0
     WaitForCrewTime=7.0
     ChassisTorqueScale=0.9
     ChangeUpPoint=2050.0

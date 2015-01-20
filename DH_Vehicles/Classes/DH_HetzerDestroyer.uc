@@ -85,7 +85,6 @@ defaultproperties
     NewVehHitpoints(0)=(PointRadius=3.200000,PointScale=1.000000,PointBone="body",PointOffset=(X=29.200001,Y=-9.040000,Z=58.000000),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=40.799999,Y=16.000000,Z=32.000000),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=40.799999,Y=16.000000,Z=32.000000),NewHitPointType=NHP_GunPitch)
-    bIsAssaultGun=true
     bSpecialExiting=true
     MaxCriticalSpeed=730.000000
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
@@ -97,8 +96,6 @@ defaultproperties
     URightArmorSlope=40.000000
     ULeftArmorSlope=40.000000
     URearArmorSlope=15.000000
-    GunMantletArmorFactor=6.000000
-    GunMantletSlope=40.000000
     PointValue=3.000000
     MaxPitchSpeed=450.000000
     TreadVelocityScale=110.000000

@@ -35,7 +35,7 @@ var     bool                        bOnFire; // set by Treadcraft base to notify
 var     float                       BurnTime;
 
 // Armor penetration stuff
-var()   bool    bIsAssaultGun; // used to defeat the Stug/JP bug
+var()   bool    bIsAssaultGun;
 var()   bool    bHasAddedSideArmor;
 var     bool    bRoundShattered;
 
@@ -44,6 +44,8 @@ var()   float   FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope
 var()   float   FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
 var()   float   MinCommanderHitHeight; // Matt: minimum height above which a projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
+var()   float   GunMantletArmorFactor; // used for assault gun mantlet hits
+var()   float   GunMantletSlope;
 
 // Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
 var()   class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -159,9 +161,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
     if (bIsAssaultGun)
     {
-        DH_ROTreadCraft(Base).bAssaultWeaponHit = true;
-
-        return false;
+        return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
     }
 
     // Figure out which side we hit
