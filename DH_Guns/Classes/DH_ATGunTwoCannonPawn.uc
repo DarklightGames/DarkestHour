@@ -164,7 +164,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -182,7 +182,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -377,7 +377,7 @@ exec function DebugExit()
     local int    i;
     local vector X, Y, Z, TryPlace, ZOffset;
 
-    if (Level.Netmode != NM_Standalone)
+    if (Level.NetMode != NM_Standalone)
     {
         return;
     }

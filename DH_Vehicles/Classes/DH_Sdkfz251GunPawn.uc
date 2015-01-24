@@ -134,7 +134,7 @@ simulated state ViewTransition
 {
     simulated function BeginState()
     {
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositionIndex > 0)
             {
@@ -147,7 +147,7 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositionIndex == 0)
             {

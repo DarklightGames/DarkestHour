@@ -621,7 +621,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume Volume)
 {
     if (Volume.bWaterVolume)
     {
-        if (Level.Netmode != NM_DedicatedServer)
+        if (Level.NetMode != NM_DedicatedServer)
         {
             CheckForSplash(Location);
         }

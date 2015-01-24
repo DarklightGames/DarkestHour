@@ -92,8 +92,8 @@ simulated function Tick(float DeltaTime)
     local float MySpeed;
 
     // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
 
+    if (Level.NetMode != NM_DedicatedServer)
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity

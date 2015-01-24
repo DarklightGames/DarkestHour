@@ -894,7 +894,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             bDontUsePositionMesh = true;
 
-            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
             {
                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }
@@ -934,7 +934,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             bDontUsePositionMesh = default.bDontUsePositionMesh;
 
-            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
             {
                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }

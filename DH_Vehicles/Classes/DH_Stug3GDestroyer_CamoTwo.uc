@@ -38,7 +38,7 @@ simulated function Tick(float DeltaTime)
     }
 
     // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         if (bDisableThrottle)
         {

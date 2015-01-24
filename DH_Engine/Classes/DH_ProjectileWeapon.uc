@@ -1694,7 +1694,7 @@ simulated exec function ROManualReload()
         return;
     }
 
-    if (Level.Netmode == NM_Client && !IsBusy())
+    if (Level.NetMode == NM_Client && !IsBusy())
     {
         GotoState('PendingAction');
     }
@@ -2280,7 +2280,7 @@ simulated exec function ROMGOperation()
         return;
     }
 
-    if (Level.Netmode == NM_Client)
+    if (Level.NetMode == NM_Client)
     {
         GotoState('ChangingBarrels');
     }

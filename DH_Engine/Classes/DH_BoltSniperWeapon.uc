@@ -73,7 +73,7 @@ simulated exec function ROManualReload()
         return;
     }
 
-    if (Level.Netmode == NM_Client && !IsBusy())
+    if (Level.NetMode == NM_Client && !IsBusy())
     {
         GotoState('PendingAction');
     }

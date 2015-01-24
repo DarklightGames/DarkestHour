@@ -320,7 +320,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = 1;
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) 
+                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) 
                     && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 {
                     Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
@@ -369,7 +369,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;            
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) 
+                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) 
                     && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 {
                     Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);

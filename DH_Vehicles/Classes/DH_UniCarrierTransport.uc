@@ -55,7 +55,7 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-         if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+         if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
          {
              if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
                  LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);

@@ -29,7 +29,7 @@ simulated state EnteringVehicle
     {
             //if (DriverPositions[0].PositionMesh != none)
             //  LinkMesh(DriverPositions[0].PositionMesh);
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone ||  Level.Netmode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone ||  Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
             {
@@ -113,7 +113,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -133,7 +133,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -147,7 +147,7 @@ simulated state ViewTransition
     {
         StoredVehicleRotation = VehicleBase.Rotation;
 
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);

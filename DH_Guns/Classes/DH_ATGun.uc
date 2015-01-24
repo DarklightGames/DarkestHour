@@ -67,7 +67,7 @@ simulated function Tick(float DeltaTime)
 {
     // Only need these effects client side
     // Reworked from the original code in ROTreadCraft to drop evaluations
-    if (Level.Netmode == NM_DedicatedServer && SoundVolume != default.SoundVolume)
+    if (Level.NetMode == NM_DedicatedServer && SoundVolume != default.SoundVolume)
     {
         SoundVolume = default.SoundVolume;
     }

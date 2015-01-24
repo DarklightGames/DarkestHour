@@ -1952,7 +1952,7 @@ function AddDefaultInventory()
         Inventory.OwnerEvent('LoadOut');
     }
 
-    if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer && IsLocallyControlled())
+    if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer && IsLocallyControlled())
     {
         bRecievedInitialLoadout = true;
         Controller.ClientSwitchToBestWeapon();
@@ -2358,7 +2358,7 @@ simulated event SetAnimAction(name NewAction)
     {
         // Since you can't call SetAnimAction for the same action twice in a row (it won't get replicated)
         // For animations that need to happen twice in a row (such as working the bolt of a rifle) we alternate animaction names for these actions so they replicate properly
-        if (Level.Netmode == NM_Client)
+        if (Level.NetMode == NM_Client)
         {
             UsedAction = GetAnimActionName(NewAction);
         }
