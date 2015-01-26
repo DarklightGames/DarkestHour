@@ -4,13 +4,16 @@
 //==============================================================================
 
 class DHLocationHint extends Info
-    hidecategories(Object,Collision,Lighting,LightColor,Karma,Force,Sound)
+    hidecategories(Sound)
+    showcategories(Movement,Collision)
     abstract;
 
 defaultproperties
 {
     bDirectional=true
-    bHidden=true
     bStatic=true
+    bCollideWhenPlacing=true
+    CollisionRadius=+00040.000000
+    CollisionHeight=+00043.000000
 }
 

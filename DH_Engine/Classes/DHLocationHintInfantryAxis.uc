@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHLocationHintInfantryAxis extends DHLocationHint;
+class DHLocationHintInfantryAxis extends DHLocationHint
+    placeable;
 
 defaultproperties
 {

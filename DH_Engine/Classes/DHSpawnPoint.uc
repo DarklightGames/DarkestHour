@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DHSpawnPoint extends Actor
-    hidecategories(Object,Collision,Lighting,LightColor,Karma,Force,Sound)
+    hidecategories(Lighting,LightColor,Karma,Force,Sound)
     placeable;
 
 enum ESpawnPointType
@@ -61,11 +61,16 @@ function Reset()
 
 defaultproperties
 {
+    bDirectional=true
     bHidden=true
+    bNoDelete=true
     bStatic=true
     RemoteRole=ROLE_None
-    DrawScale=3.0
+    DrawScale=1.5
     SpawnPointName="UNNAMED SPAWN POINT!!!"
     SpawnProtectionTime=5.0
     Method=ESPM_LocationHint
+    bCollideWhenPlacing=true
+    CollisionRadius=+00040.000000
+    CollisionHeight=+00043.000000
 }
