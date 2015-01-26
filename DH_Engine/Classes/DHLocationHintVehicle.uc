@@ -1,9 +1,8 @@
 //==============================================================================
-// Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
+// REMOVE THIS LATER
 //==============================================================================
 
-class DHLocationHintVehicle extends DHLocationHint
+class DHLocationHintVehicle extends Note
     placeable;
 
 defaultproperties

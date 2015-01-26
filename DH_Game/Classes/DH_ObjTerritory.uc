@@ -551,7 +551,7 @@ function Timer()
     local Pawn                    Pawn;
     local DH_Pawn                 P;
     local ROVehicle               ROVeh;
-    local ROVehicleWeaponPawn     VehWepPawn;    
+    local ROVehicleWeaponPawn     VehWepPawn;
     local float                   OldCapProgress, LeaderBonus[2], Rate[2];
     local int                     NumTotal[2], Num[2], NumForCheck[2], i;
     local byte                    CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
@@ -696,7 +696,7 @@ function Timer()
                 bActive = false;
                 SetTimer(0.0, false);
                 DisableCapBarsForThisObj();
- 
+
                 return;
             }
             else if (!bRecaptureable)
@@ -1006,6 +1006,7 @@ function DisableCapBarsForThisObj()
 
 defaultproperties
 {
+    Texture=Texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true
     bTankersCanCapture=true
     PlayersNeededToCapture=1

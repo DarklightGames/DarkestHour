@@ -212,6 +212,7 @@ defaultproperties
     bStatic=false
     bStaticLighting=true
     DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'DH_Obstacles_stc.Barbed.fence_farm01'
     bNetTemporary=true
     bAlwaysRelevant=true
     RemoteRole=ROLE_None

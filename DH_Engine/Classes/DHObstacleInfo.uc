@@ -20,5 +20,6 @@ var()   array<Type> Types;
 
 defaultproperties
 {
+    Texture=texture'DHEngine_Tex.ObstacleInfo'
     bStatic=true
 }

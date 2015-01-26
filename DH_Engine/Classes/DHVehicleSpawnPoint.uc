@@ -1,12 +1,9 @@
-//==============================================================================
-// Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
-//==============================================================================
+//-----------------------------------------------------------
+// Remove this class
+//-----------------------------------------------------------
+class DHVehicleSpawnPoint extends Note;
 
-class DHVehicleSpawnPoint extends DHSpawnPoint
-    placeable;
-
-defaultproperties
+DefaultProperties
 {
-    Texture=texture'DHEngine_Tex.Editor.tank'
+
 }
