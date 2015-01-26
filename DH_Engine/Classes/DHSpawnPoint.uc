@@ -63,7 +63,6 @@ defaultproperties
 {
     bDirectional=true
     bHidden=true
-    bNoDelete=true
     bStatic=true
     RemoteRole=ROLE_None
     DrawScale=1.5
