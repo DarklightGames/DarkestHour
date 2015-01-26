@@ -114,7 +114,7 @@ static function string GetLocalString(optional int Switch, optional PlayerReplic
 defaultproperties
 {
     DrawType=DT_StaticMesh
-    AmbientGlow=50
+    AmbientGlow=64
     PickupMessage="You got the %w"
     TouchMessage="Pick Up: %w"
     PrePivot=(X=0.0,Y=0.0,Z=3.0)
