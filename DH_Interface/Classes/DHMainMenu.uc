@@ -8,11 +8,9 @@ class DHMainMenu extends UT2K4GUIPage;
 var()   config string           MenuSong;
 
 var automated       FloatingImage           i_background;
-var automated       GUISectionBackground    sb_MainMenu;
-var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
-var automated       GUISectionBackground    sb_HelpMenu;
+var automated       GUIButton               b_FixConfig, b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
+var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion;
 var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back;
-var automated       GUISectionBackground    sb_ShowVersion;
 var automated       GUILabel                l_Version;
 
 var     ROBufferedTCPLink       MyLink;
@@ -28,6 +26,7 @@ var     string                  WebsiteURL;
 var     localized string        WaitString;
 var     localized string        ConnectingString;
 var     localized string        ManualURL;
+var     localized string        FixConfigURL;
 var     localized string        SteamMustBeRunningText;
 var     localized string        SinglePlayerDisabledText;
 
@@ -41,7 +40,6 @@ var     bool                    bAllowClose;
 var     bool                    bAttemptQuickPlay;
 var     bool                    bSendGet;
 var     bool                    bPageWait;
-
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -62,6 +60,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Controller.LCDDrawText("44-45",(100 - (XL / 2)), y, Controller.LCDLargeFont);
     Controller.LCDRepaint();
 
+    //Check if the console isn't matching the DH one
+    if (string(PlayerOwner().Player.Console) != "Package.DHConsole")
+    {
+        //Init fix config button above others
+        sb_MainMenu.ManageComponent(b_FixConfig);
+    }
     sb_MainMenu.ManageComponent(b_QuickPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
@@ -79,7 +83,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function InternalOnOpen()
 {
-    Log("");
+    Log("=====================================");
     Log("MainMenu: Starting");
     Log("MainMenu: Starting music" @ MenuSong);
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
@@ -140,6 +144,12 @@ function bool ButtonClick(GUIComponent Sender)
 
     switch (sender)
     {
+        case b_FixConfig:
+            Profile("FixConfig");
+            PlayerOwner().ConsoleCommand("start " @ FixConfigURL);
+            Profile("FixConfig");
+            break;
+
         case b_QuickPlay:
             if (ReclickCycleTime >= default.ReclickCycleTime)
             {
@@ -463,6 +473,20 @@ defaultproperties
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
 
+    Begin Object class=GUIButton Name=FixConfigButton
+        CaptionAlign=TXTA_Left
+        Caption="Fix Config (redirects to web)"
+        bAutoShrink=false
+        bUseCaptionHeight=true
+        FontScale=FNS_Large
+        StyleName="DHMenuTextButtonStyle"
+        TabOrder=0
+        bFocusOnWatch=true
+        OnClick=DHMainMenu.ButtonClick
+        OnKeyEvent=FixConfigButton.InternalOnKeyEvent
+    End Object
+    b_FixConfig=GUIButton'DH_Interface.DHMainMenu.FixConfigButton'
+
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
         Caption="Join Test Server"
@@ -660,6 +684,7 @@ defaultproperties
     End Object
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
 
+    FixConfigURL="http://www.darkesthourgame.com/fixconfig"
     ManualURL="http://www.darkesthourgame.com"
     WebsiteURL="http://www.darkesthourgame.com"
     SteamMustBeRunningText="Steam must be running and you must have an active internet connection to play multiplayer"
