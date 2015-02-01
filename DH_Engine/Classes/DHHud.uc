@@ -229,7 +229,7 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
     if (!FastTrace(P.Location, PlayerOwner.Pawn.Location))
     {
         Log("FastTrace from" @ P.Tag @ "to" @ PlayerOwner.Pawn.Tag @ "Failed");
- 
+
         return;
     }
 
@@ -1542,7 +1542,7 @@ function DrawPlayerNames(Canvas C)
         return;
     }
 
-    if (Pawn(HitActor) != none && Pawn(HitActor).PlayerReplicationInfo != none && 
+    if (Pawn(HitActor) != none && Pawn(HitActor).PlayerReplicationInfo != none &&
         (PawnOwner.PlayerReplicationInfo.Team == none || PawnOwner.PlayerReplicationInfo.Team == Pawn(HitActor).PlayerReplicationInfo.Team))
     {
         if (NamedPlayer != HitActor || Level.TimeSeconds - NameTime > 0.5)
@@ -2291,7 +2291,7 @@ simulated function DrawObjectives(Canvas C)
                     case 0: // help request at objective
                         bShowHelpRequest = true;
                         Widget = MapIconHelpRequest;
-                        Widget.Tints[0].A = 125; 
+                        Widget.Tints[0].A = 125;
                         Widget.Tints[1].A = 125;
                         DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
                         break;
@@ -2772,6 +2772,294 @@ simulated function DrawObjectives(Canvas C)
     C.SetPos(X - StrX / 2.0, Y);
     C.DrawTextClipped(s);
 }
+
+//Draws the deployment map, similiar to DrawObjectives, but doesn't use the odd RO system
+simulated function DrawDeployMap(Canvas C, float CenterPosX, float CenterPosY, float MapWidth, bool bShowDisabledObjectives)
+{
+    local DHGameReplicationInfo   DHGRI;
+    local AbsoluteCoordsInfo      MapCoords, SubCoords;
+    local float MyMapScale;
+
+    local float ObjectiveIconSize, DeployMapScale, OverviewMapWidth;
+    local vector HUDLocation, MapCenter;
+    local Actor A;
+    local ROObjective Obj; //DH_ObjTerritory DHObj
+    local int i;
+    local plane SavedModulation;
+
+    DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+    if (DHGRI == none)
+    {
+        return;
+    }
+
+    SavedModulation = C.ColorModulate;
+
+    C.ColorModulate.X = 1;
+    C.ColorModulate.Y = 1;
+    C.ColorModulate.Z = 1;
+    C.ColorModulate.W = 1;
+
+    // Make sure that the canvas style is alpha
+    C.Style = ERenderStyle.STY_Alpha;
+
+    OverviewMapWidth = MapWidth;
+
+    HUDLocation.X = MapWidth;
+    HUDLocation.Y = MapWidth;
+    HUDLocation.Z = 150.0;
+
+    //Draw the actual map
+    DrawMapImage( C, DHGRI.MapImage, CenterPosX, CenterPosY, 0.0, 0.0, HUDLocation );
+    /*
+    MapCenter.X = CenterPosX;
+    MapCenter.Y = CenterPosY;
+
+    MyMapScale = MapWidth;
+
+    MapCoords =
+    // Calculate absolute coordinates of level map
+    GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, subCoords);
+
+    // Draw objectives over map : Just show active so the map isn't cluttered?
+    for (i = 0; i < ArrayCount(DHGRI.Objectives); i++)
+    {
+        if (DHGRI.Objectives[i] == none || !DHGRI.Objectives[i].bActive)
+        {
+            continue;
+        }
+
+        // Set up icon info
+        if (DHGRI.Objectives[i].ObjState == OBJ_Axis)
+        {
+            Widget = MapIconTeam[AXIS_TEAM_INDEX];
+        }
+        else if (DHGRI.Objectives[i].ObjState == OBJ_Allies)
+        {
+            Widget = MapIconTeam[ALLIES_TEAM_INDEX];
+        }
+        else
+        {
+            bShowNeutralObj = true;
+            Widget = MapIconNeutral;
+        }
+        // We are not showing non-active objectives so just use the active icon color
+        Widget.Tints[0] = WhiteColor; Widget.Tints[1] = WhiteColor;
+
+        // Draw flashing icon if objective is disputed
+        if (DHGRI.Objectives[i].CompressedCapProgress != 0 && DHGRI.Objectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+        {
+            if (DHGRI.Objectives[i].CompressedCapProgress == 1 || DHGRI.Objectives[i].CompressedCapProgress == 2)
+            {
+                //Need to re-calc SubCoords, etc!
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 2, DHGRI.Objectives[i].ObjName, DHGRI, i);
+            }
+            else if (DHGRI.Objectives[i].CompressedCapProgress == 3 || DHGRI.Objectives[i].CompressedCapProgress == 4)
+            {
+                //Need to re-calc SubCoords, etc!
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 3, DHGRI.Objectives[i].ObjName, DHGRI, i);
+            }
+            else
+            {
+                //Need to re-calc SubCoords, etc!
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 1, DHGRI.Objectives[i].ObjName, DHGRI, i);
+            }
+        }
+        else
+        {
+            //Need to re-calc SubCoords, etc!
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 1, DHGRI.Objectives[i].ObjName, DHGRI, i);
+        }
+
+        // If the objective isn't completely captured, overlay a flashing icon from other team
+        if (DHGRI.Objectives[i].CompressedCapProgress != 0 && DHGRI.Objectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+        {
+            if (DHGRI.Objectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
+            {
+                Widget = MapIconDispute[ALLIES_TEAM_INDEX];
+            }
+            else
+            {
+                Widget = MapIconDispute[AXIS_TEAM_INDEX];
+            }
+
+            if (DHGRI.Objectives[i].CompressedCapProgress == 1 || DHGRI.Objectives[i].CompressedCapProgress == 2)
+            {
+                //Need to re-calc SubCoords, etc!
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 4);
+            }
+            else if (DHGRI.Objectives[i].CompressedCapProgress == 3 || DHGRI.Objectives[i].CompressedCapProgress == 4)
+            {
+                //Need to re-calc SubCoords, etc!
+                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.Objectives[i].Location, MapCenter, 5);
+            }
+        }
+    }
+
+    //Draw active deploy points (only team?)
+        //WAIT we might need to do this in DHDeploymentMapMenu as these will be useable buttons!
+        //Or maybe not, I'm not sure
+        //We should probably only render the player's team
+        //Might want to animate this as it will be a functional button!
+
+    */
+
+    C.ColorModulate = SavedModulation;
+}
+
+//Theel: I belive this function is complete and doesn't need anymore adjustment
+simulated static function DrawMapImage( Canvas C, Material Image, float MapX, float MapY, float PlayerX, float PlayerY, vector Dimensions )
+{
+    local float DeployMapScale, MapSize;
+    local byte  SavedAlpha;
+
+    if ( Image == None || C == None )
+        return;
+
+    MapSize = Image.MaterialUSize();
+    DeployMapScale = MapSize / (Dimensions.Y * 2);
+    SavedAlpha = C.DrawColor.A;
+    C.DrawColor = default.WhiteColor;
+    C.DrawColor.A = Dimensions.Z;
+    C.SetPos( MapX - Dimensions.X, MapY - Dimensions.X );
+    C.DrawTile( Image, Dimensions.X * 2.0, Dimensions.X * 2.0,
+               (PlayerX - Dimensions.Y) * DeployMapScale + MapSize / 2.0,
+               (PlayerY - Dimensions.Y) * DeployMapScale + MapSize / 2.0,
+               Dimensions.Y * 2 * DeployMapScale, Dimensions.Y * 2 * DeployMapScale );
+    C.DrawColor.A = SavedAlpha;
+}
+
+/*
+simulated function DrawRadarMap(Canvas C, float CenterPosX, float CenterPosY, float RadarWidth, bool bShowDisabledNodes)
+{
+    local float PawnIconSize, PlayerIconSize, CoreIconSize, MapScale, MapRadarWidth;
+    local vector HUDLocation;
+    local FinalBlend PlayerIcon;
+    local Actor A;
+    local ONSPowerCore CurCore;
+    local int i;
+    local plane SavedModulation;
+
+    SavedModulation = C.ColorModulate;
+
+    C.ColorModulate.X = 1;
+    C.ColorModulate.Y = 1;
+    C.ColorModulate.Z = 1;
+    C.ColorModulate.W = 1;
+
+    // Make sure that the canvas style is alpha
+    C.Style = ERenderStyle.STY_Alpha;
+
+    MapRadarWidth = RadarWidth;
+    if (PawnOwner != None)
+    {
+//      MapCenter.X = FClamp(PawnOwner.Location.X, -RadarMaxRange + RadarRange, RadarMaxRange - RadarRange);
+//      MapCenter.Y = FClamp(PawnOwner.Location.Y, -RadarMaxRange + RadarRange, RadarMaxRange - RadarRange);
+        MapCenter.X = 0.0;
+        MapCenter.Y = 0.0;
+    }
+    else
+        MapCenter = vect(0,0,0);
+
+    HUDLocation.X = RadarWidth;
+    HUDLocation.Y = RadarRange;
+    HUDLocation.Z = RadarTrans;
+
+    DrawMapImage( C, Level.RadarMapImage, CenterPosX, CenterPosY, MapCenter.X, MapCenter.Y, HUDLocation );
+
+    if (Node == None)
+        return;
+
+    CurCore = Node;
+    do
+    {
+        if ( CurCore.HasHealthBar() )
+            DrawHealthBar(C, CurCore, CurCore.Health, CurCore.DamageCapacity, HealthBarPosition);
+
+        CurCore = CurCore.NextCore;
+    } until ( CurCore == None || CurCore == Node );
+
+    CoreIconSize = IconScale * 16 * C.ClipX * HUDScale/1600;
+    PawnIconSize = CoreIconSize * 0.5;
+    PlayerIconSize = CoreIconSize * 1.5;
+    MapScale = MapRadarWidth/RadarRange;
+    C.Font = GetConsoleFont(C);
+
+    Node.UpdateHUDLocation( CenterPosX, CenterPosY, RadarWidth, RadarRange, MapCenter );
+    for ( i = 0; i < PowerLinks.Length; i++ )
+        PowerLinks[i].Render(C, ColorPercent, bShowDisabledNodes);
+
+    CurCore = Node;
+    do
+    {
+        if (!bShowDisabledNodes && (CurCore.CoreStage == 255 || CurCore.PowerLinks.Length == 0))    //hide unused powernodes
+        {
+            if (PlayerOwner==none || !PlayerOwner.bDemoOwner)
+            {
+                CurCore = CurCore.NextCore;
+                continue;
+            }
+        }
+
+        C.DrawColor = LinkColor[CurCore.DefenderTeamIndex];
+
+        // Draw appropriate icon to represent the current state of this node
+        if (CurCore.bUnderAttack || (CurCore.CoreStage == 0 && CurCore.bSevered))
+            DrawAttackIcon( C, CurCore, CurCore.HUDLocation, IconScale, HUDScale, ColorPercent );
+
+        if (CurCore.bFinalCore)
+            DrawCoreIcon( C, CurCore.HUDLocation, PowerCoreAttackable(CurCore), IconScale, HUDScale, ColorPercent );
+        else
+        {
+            DrawNodeIcon( C, CurCore.HUDLocation, PowerCoreAttackable(CurCore), CurCore.CoreStage, IconScale, HUDScale, ColorPercent );
+            DrawNodeLabel(C, CurCore.HUDLocation, IconScale, HUDScale, C.DrawColor, CurCore.NodeNum);
+        }
+
+        CurCore = CurCore.NextCore;
+
+    } until ( CurCore == None || CurCore == Node );
+
+    // Draw PlayerIcon
+    if (PawnOwner != None)
+        A = PawnOwner;
+    else if (PlayerOwner.IsInState('Spectating'))
+        A = PlayerOwner;
+    else if (PlayerOwner.Pawn != None)
+        A = PlayerOwner.Pawn;
+
+    if (A != None)
+    {
+        PlayerIcon = FinalBlend'CurrentPlayerIconFinal';
+        TexRotator(PlayerIcon.Material).Rotation.Yaw = -A.Rotation.Yaw - 16384;
+        HUDLocation = A.Location - MapCenter;
+        HUDLocation.Z = 0;
+        if (HUDLocation.X < (RadarRange * 0.95) && HUDLocation.Y < (RadarRange * 0.95))
+        {
+            C.SetPos( CenterPosX + HUDLocation.X * MapScale - PlayerIconSize * 0.5,
+                          CenterPosY + HUDLocation.Y * MapScale - PlayerIconSize * 0.5 );
+
+            C.DrawColor = C.MakeColor(40,255,40);
+            C.DrawTile(PlayerIcon, PlayerIconSize, PlayerIconSize, 0, 0, 64, 64);
+        }
+    }
+
+    // Draw Border
+    C.DrawColor = C.MakeColor(200,200,200);
+    C.SetPos(CenterPosX - RadarWidth, CenterPosY - RadarWidth);
+    C.DrawTile(BorderMat,
+               RadarWidth * 2.0,
+               RadarWidth * 2.0,
+               0,
+               0,
+               256,
+               256);
+
+    C.ColorModulate = SavedModulation;
+}
+*/
+
+
 
 simulated function DrawLocationHits(Canvas C, ROPawn P)
 {
