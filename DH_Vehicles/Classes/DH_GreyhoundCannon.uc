@@ -192,29 +192,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return P;
 }
 
-// American tanks must use the actual sight markings to aim!
-simulated function int GetRange()
-{
-    return RangeSettings[0];
-}
-
-// Disable clicking sound for range adjustment
-function IncrementRange()
-{
-    if (CurrentRangeIndex < RangeSettings.Length - 1)
-    {
-        CurrentRangeIndex++;
-    }
-}
-
-function DecrementRange()
-{
-    if (CurrentRangeIndex > 0)
-    {
-        CurrentRangeIndex --;
-    }
-}
-
 defaultproperties
 {
     CSpread=500
@@ -242,10 +219,6 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(2)="Canister"
-    RangeSettings(1)=400
-    RangeSettings(2)=800
-    RangeSettings(3)=1200
-    RangeSettings(4)=1600
     AddedPitch=26
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=6

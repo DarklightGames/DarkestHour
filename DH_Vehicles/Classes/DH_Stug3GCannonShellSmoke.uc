@@ -32,6 +32,7 @@ defaultproperties
     MechanicalRanges(23)=(Range=2600,RangeValue=648.000000)
     MechanicalRanges(24)=(Range=2800,RangeValue=708.000000)
     MechanicalRanges(25)=(Range=3000,RangeValue=768.000000)
+    bMechanicalAiming=true
     ShellDiameter=7.500000
     bIsAlliedShell=false
     //   ShellImpactDamage=class'DH_Vehicles.DH_Stug3GCannonShellDamageAP' // Matt: removed as inconsistent with other smoke shells, which inherit generic DH_TankShellImpactDamage

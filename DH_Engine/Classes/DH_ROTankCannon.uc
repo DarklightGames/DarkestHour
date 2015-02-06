@@ -1538,6 +1538,17 @@ simulated function UpdatePrecacheStaticMeshes()
     super.UpdatePrecacheStaticMeshes();
 }
 
+// Modified to return zero if there are no RangeSettings, e.g. for American cannons without adjustable sights
+simulated function int GetRange()
+{
+    if (CurrentRangeIndex < RangeSettings.Length)
+    {
+        return RangeSettings[CurrentRangeIndex];
+    }
+
+    return 0;
+}
+
 // ARMORED BEASTS CODE: Functions extended for easy tuning of gunsights in PRACTICE mode
 // bGunsightSettingMode has to be enabled and gun not loaded, then the range control buttons change sight adjustment up and down
 function IncrementRange()

@@ -7,16 +7,6 @@ class DH_JacksonCannonShell extends DH_ROTankCannonShell;
 
 defaultproperties
 {
-    MechanicalRanges(1)=(Range=400)
-    MechanicalRanges(2)=(Range=800)
-    MechanicalRanges(3)=(Range=1200)
-    MechanicalRanges(4)=(Range=1600)
-    MechanicalRanges(5)=(Range=2000)
-    MechanicalRanges(6)=(Range=2400)
-    MechanicalRanges(7)=(Range=2800)
-    MechanicalRanges(8)=(Range=3200)
-    MechanicalRanges(9)=(Range=4200)
-    bMechanicalAiming=true
     DHPenetrationTable(0)=16.900000
     DHPenetrationTable(1)=16.799999
     DHPenetrationTable(2)=16.400000

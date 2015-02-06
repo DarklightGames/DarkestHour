@@ -5,29 +5,6 @@
 
 class DH_ShermanCannon_M4A3E2 extends DH_ROTankCannon;
 
-// American tanks must use the actual sight markings to aim!
-simulated function int GetRange()
-{
-    return RangeSettings[0];
-}
-
-// Disable clicking sound for range adjustment
-function IncrementRange()
-{
-    if (CurrentRangeIndex < RangeSettings.Length - 1)
-    {
-        CurrentRangeIndex++;
-    }
-}
-
-function DecrementRange()
-{
-    if (CurrentRangeIndex > 0)
-    {
-        CurrentRangeIndex --;
-    }
-}
-
 defaultproperties
 {
     InitialTertiaryAmmo=5
@@ -53,15 +30,6 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(2)="Smoke"
-    RangeSettings(1)=400
-    RangeSettings(2)=800
-    RangeSettings(3)=1200
-    RangeSettings(4)=1600
-    RangeSettings(5)=2000
-    RangeSettings(6)=2400
-    RangeSettings(7)=2800
-    RangeSettings(8)=3200
-    RangeSettings(9)=4200
     AddedPitch=68
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumAltMags=5
