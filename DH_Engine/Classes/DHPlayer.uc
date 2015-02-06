@@ -1870,9 +1870,19 @@ exec function ShowDeployment()
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
-exec function ShowMidGame()
+exec function ShowTest()
 {
-    ClientReplaceMenu("GUI2k4.UT2K4PlayerLoginMenu");
+    ClientReplaceMenu("DH_Interface.DHTestGUI");
+}
+
+exec function ShowRO()
+{
+    ClientReplaceMenu("ROInterface.ROMainMenu");
+}
+
+exec function ShowRORole()
+{
+    ClientReplaceMenu("ROInterface.ROUT2K4TabPanel_RoleSelection");
 }
 
 defaultproperties

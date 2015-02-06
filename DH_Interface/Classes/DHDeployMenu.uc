@@ -32,8 +32,8 @@ function AddPanels()
 DefaultProperties
 {
     Panels(0)=(ClassName="GUI2K4.UT2K4Tab_PlayerLoginControls",Caption="Select Team",Hint="Select a team")
-    Panels(1)=(ClassName="GUI2K4.UT2K4Tab_ServerMOTD",Caption="Select Role",Hint="Select a role")
-    Panels(2)=(ClassName="GUI2K4.UT2K4Tab_MidGameRulesCombo",Caption="Select Equipment?",Hint="Select additional equipment")
+    Panels(1)=(ClassName="GUI2K4.UT2K4Tab_ServerMOTD",Caption="Select Role/Equipment",Hint="Select a role/equipment")
+    Panels(2)=(ClassName="GUI2K4.UT2K4Tab_MidGameRulesCombo",Caption="Select Squad",Hint="Form or join a squad")
     Panels(3)=(ClassName="GUI2K4.UT2K4Tab_MidGameVoiceChat",Caption="Select Vehicle",Hint="Select a vehicle to deploy with")
     Panels(4)=(ClassName="DH_Interface.DHDeploymentMapMenu",Caption="Deployment",Hint="Deploy to the battlefield")
 }

@@ -300,6 +300,8 @@ function bool DrawMap(Canvas C)
     //local ONSPowerCore Core; //WTF should this be?
     local DHHud HUD; //Used to be ONSHudOnslaught
     local float HS; //HudScale
+    local FloatBox MapBox; //var float X1, Y1, X2, Y2;
+
 
     /* Ignore this for now
     if ( PRI != None )
@@ -320,7 +322,22 @@ function bool DrawMap(Canvas C)
     //Gonna need to add something to DHHud that can handle our request here!
     //HUD.DrawObjectives(C); //THIS IS GONNA BUG THE FUCK OUT!
     //HUD.DrawDeployMap(C); //Time to code this function in the hud class!
-    HUD.DrawDeployMap(C, DeploymentMapCenterX, DeploymentMapCenterY, DeploymentMapRadius, false);
+    //HUD.DrawDeployMap(C, DeploymentMapCenterX, DeploymentMapCenterY, DeploymentMapRadius, false);
+    MapBox.X1 = 23.0;
+    MapBox.X2 = 28.0;
+    MapBox.Y1 = 4.5;
+    MapBox.Y2 = 28.0;
+    //MapLevelImage=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=511,Y2=511),
+
+    /*
+    //These might need repurposed to support 512x512 and 1024x1024!
+    DeploymentMapCenterX=0.650000
+    DeploymentMapCenterY=0.400000
+    DeploymentMapRadius=0.300000
+    */
+
+
+    HUD.DrawMap(C,,MapBox,true,true);
 
     //Used to be: Hud.DrawRadarMap(C, OnslaughtMapCenterX, OnslaughtMapCenterY, OnslaughtMapRadius, false);
 
