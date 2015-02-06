@@ -582,12 +582,19 @@ simulated function ClientKDriverEnter(PlayerController PC)
     DHPlayer(PC).QueueHint(40, true);
 }
 
-function Fire(optional float F)
+simulated function Fire(optional float F)
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
     {
         ServerStartEngine();
+        IgnitionSwitchTime = Level.TimeSeconds;
     }
+}
+
+// Matt: emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
+function AltFire(optional float F)
+{
 }
 
 simulated function StopEmitters()
@@ -739,6 +746,25 @@ function ServerStartEngine()
     }
 }
 
+// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+simulated function NextWeapon()
+{
+    if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex + 1;
+        ServerChangeViewPoint(true);
+    }
+}
+
+simulated function PrevWeapon()
+{
+    if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex -1;
+        ServerChangeViewPoint(false);
+    }
+}
+
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
 function ServerChangeViewPoint(bool bForward)
 {
@@ -799,6 +825,78 @@ function bool KDriverLeave(bool bForceLeave)
     {
         super.KDriverLeave(bForceLeave);
     }
+}
+
+// Modified to add clientside checks before sending the function call to the server
+simulated function SwitchWeapon(byte F)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    local bool                bMustBeTankerToSwitch;
+    local byte                ChosenWeaponPawnIndex;
+
+    log("SwitchWeapon called for" @ Tag @ " Pos =" @ F); // TEMP
+    ChosenWeaponPawnIndex = F - 2;
+
+    // Stop call to server if player has selected an invalid weapon position, or if player is moving between view points
+    // Note that if player presses 0 or 1, which are invalid choices for a vehicle driver, the byte index will end up as 254 or 255 & so will still fail this test (which is what we want)
+    if (ChosenWeaponPawnIndex >= PassengerWeapons.Length || IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
+    if (bAllowRiders && ChosenWeaponPawnIndex >= FirstPassengerWeaponPawnIndex && bMustBeUnbuttonedToBecomePassenger)
+    {
+        if (bSpecialExiting)
+        {
+            DenyEntry(Instigator, 5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
+            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
+            return;
+        }
+        else if (DriverPositionIndex < UnbuttonedPositionIndex)
+        {
+            DenyEntry(Instigator, 4); // must unbutton the hatch
+            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
+            return;
+        }
+    }
+
+    // Get weapon pawn
+    if (ChosenWeaponPawnIndex < WeaponPawns.Length)
+    {
+        WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[ChosenWeaponPawnIndex]);
+    }
+
+    if (WeaponPawn != none)
+    {
+        // Stop call to server as weapon position already has a human player
+        if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+        {
+            return;
+        }
+
+        if (WeaponPawn.bMustBeTankCrew)
+        {
+            bMustBeTankerToSwitch = true;
+        }
+    }
+    // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
+    // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
+    else if (class<ROPassengerPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
+    {
+        return;
+    }
+
+    // Stop call to server if player has selected a tank crew role but isn't a tanker
+    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+        ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    {
+        DenyEntry(Instigator, 0); // not qualified to operate vehicle
+
+        return;
+    }
+
+    ServerChangeDriverPosition(F);
 }
 
 // DriverLeft() called by KDriverLeave()

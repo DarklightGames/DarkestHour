@@ -1500,6 +1500,42 @@ function ClientToggleDuck()
     ToggleDuck();
 }
 
+// Matt: modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
+// Instead we let WVP's clientside IncrementRange() check that it's a valid operation before sending server call
+exec function LeanRight()
+{
+    if (ROPawn(Pawn) != none)
+    {
+        if (!Pawn.bBipodDeployed)
+        {
+            ROPawn(Pawn).LeanRight();
+        }
+
+        ServerLeanRight(true);
+    }
+    else if (VehicleWeaponPawn(Pawn) != none)
+    {
+        VehicleWeaponPawn(Pawn).IncrementRange();
+    }
+}
+
+exec function LeanLeft()
+{
+    if (ROPawn(Pawn) != none)
+    {
+        if (!Pawn.bBipodDeployed)
+        {
+            ROPawn(Pawn).LeanLeft();
+        }
+
+        ServerLeanLeft(true);
+    }
+    else if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).Gun != none)
+    {
+        VehicleWeaponPawn(Pawn).Gun.DecrementRange();
+    }
+}
+
 function ClientConsoleCommand(string Command, bool bWriteToLog)
 {
     ConsoleCommand(Command, bWriteToLog);

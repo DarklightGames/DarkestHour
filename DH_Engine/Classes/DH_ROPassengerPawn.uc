@@ -330,6 +330,15 @@ simulated function SwitchWeapon(byte F)
     }
 }
 
+// Matt: emptied out to prevent unnecessary replicated function calls to server
+function Fire(optional float F)
+{
+}
+
+function AltFire(optional float F)
+{
+}
+
 // Matt: allows debugging exit positions to be toggled for all rider pawns
 exec function ToggleDebugExits()
 {

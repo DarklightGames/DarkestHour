@@ -343,12 +343,20 @@ simulated event DrivingStatusChanged()
     // Moved exhaust and dust spawning to StartEngineFunction
 }
 
+// Modified to use fire button to start or stop engine
 simulated function Fire(optional float F)
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
     {
         ServerStartEngine();
+        IgnitionSwitchTime = Level.TimeSeconds;
     }
+}
+
+// Matt: emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
+function AltFire(optional float F)
+{
 }
 
 simulated function StopEmitters()
@@ -857,6 +865,25 @@ simulated event DestroyAppearance()
     NetPriority = 2.0;
 }
 
+
+// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+simulated function NextWeapon()
+{
+    if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex + 1;
+        ServerChangeViewPoint(true);
+    }
+}
+
+simulated function PrevWeapon()
+{
+    if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex -1;
+        ServerChangeViewPoint(false);
+    }
+}
 function ServerChangeDriverPosition(byte F)
 {
     if (IsInState('ViewTransition'))
@@ -865,6 +892,59 @@ function ServerChangeDriverPosition(byte F)
     }
 
     super.ServerChangeDriverPosition(F);
+}
+
+// Modified to add clientside checks before sending the function call to the server
+simulated function SwitchWeapon(byte F)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    local bool                bMustBeTankerToSwitch;
+    local byte                ChosenWeaponPawnIndex;
+
+    ChosenWeaponPawnIndex = F - 2;
+
+    // Stop call to server if player has selected an invalid weapon position
+    // Note that if player presses 0 or 1, which are invalid choices for a vehicle driver, the byte index will end up as 254 or 255 & so will still fail this check (which is what we want)
+    if (ChosenWeaponPawnIndex >= PassengerWeapons.Length)
+    {
+        return;
+    }
+
+    if (ChosenWeaponPawnIndex < WeaponPawns.Length)
+    {
+        WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[ChosenWeaponPawnIndex]);
+    }
+
+    if (WeaponPawn != none)
+    {
+        // Stop call to server as weapon position already has a human player
+        if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+        {
+            return;
+        }
+
+        if (WeaponPawn.bMustBeTankCrew)
+        {
+            bMustBeTankerToSwitch = true;
+        }
+    }
+    // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
+    // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
+    else if (class<ROPassengerPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
+    {
+        return;
+    }
+
+    // Stop call to server if player has selected a tank crew role but isn't a tanker
+    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+        ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    {
+        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+
+        return;
+    }
+
+    ServerChangeDriverPosition(F);
 }
 
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
