@@ -11,24 +11,12 @@ class DH_RocketProj extends DH_ROTankCannonShellHEAT
 
 var PanzerfaustTrail SmokeTrail;         // smoke trail emitter
 var() float          StraightFlightTime; // how long the rocket has propellant and flies straight
-var   float          TotalFlightTime;    // how long the rocket has been in flight
-var   bool           bOutOfPropellant;   // rocket is out of propellant
-
-// Matt: removed as no longer used anywhere:
-// var bool   bHitWater;
-// var vector OuttaPropLocation;      // physics debugging
-// var globalconfig bool  bDebugMode; // if true, give our detailed report in log
-
-replication
-{
-    reliable if (bNetDirty && Role==ROLE_Authority)
-        bOutOfPropellant;
-}
-
 
 // Modified to spawn a rocket smoke trail
 simulated function PostBeginPlay()
 {
+    SetPhysics(PHYS_Flying);
+
     if (Level.NetMode != NM_DedicatedServer && bHasTracer)
     {
         SmokeTrail = Spawn(class'PanzerfaustTrail', self);
@@ -45,6 +33,8 @@ simulated function PostBeginPlay()
     }
 
     super(DH_ROAntiVehicleProjectile).PostBeginPlay();
+    
+    SetTimer(StraightFlightTime, false); // Matt: added so we can cut off the rocket engine effects when out of propellant, instead of using Tick
 }
 
 // Modified to drop lighting if low detail or not required
@@ -79,12 +69,29 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Fixes broken RO class to make rockets work like rockets
-simulated function Tick(float DeltaTime)
+// Cut off the rocket engine effects when out of propellant (more efficient alternative to original use of Tick)
+simulated function Timer()
 {
-    SetPhysics(PHYS_Flying);
+    SetPhysics(PHYS_Projectile);
 
-    super.Tick(DeltaTime);
+    if (SmokeTrail != none)
+    {
+        SmokeTrail.HandleOwnerDestroyed();
+    }
+
+    if (Corona != none)
+    {
+        Corona.Destroy();
+    }
+}
+
+/*
+// Fixes broken RO class to make rockets work like rockets
+simulated function Tick(float DeltaTime) // Matt: removed as a timer can be used, which is more efficient (note if Tick was retained it could be much optimised, as below)
+{
+//  SetPhysics(PHYS_Flying); // Matt: removed as crazy to keep setting this every Tick, just to reset to PHYS_Projectile at end of every Tick once out of propellant (moved to PostBeginPlay)
+
+//  super.Tick(DeltaTime); // Matt: in shells generally, we now empty out the Super from ROAntiVehicleProjectile
 
     if (!bOutOfPropellant)
     {
@@ -95,8 +102,9 @@ simulated function Tick(float DeltaTime)
         else
         {
             bOutOfPropellant = true;
+            SetPhysics(PHYS_Projectile); // Matt: moved here as we only need to do this once
 
-            // cut off the rocket engine effects when outta propellant
+            // Cut off the rocket engine effects when out of propellant
             if (SmokeTrail != none)
             {
                 SmokeTrail.HandleOwnerDestroyed();
@@ -109,18 +117,31 @@ simulated function Tick(float DeltaTime)
         }
     }
 
-    if (bOutOfPropellant && Physics != PHYS_Projectile)
+//  if (bOutOfPropellant && Physics != PHYS_Projectile) // Matt: moved up, as we only need to do this once, when we run out of propellant - it's crazy to keep checking it every Tick
+//  {
+//      SetPhysics(PHYS_Projectile);
+//  }
+}
+*/
+
+simulated function BlowUp(vector HitLocation)
+{
+    super.BlowUp(HitLocation);
+
+    if (SmokeTrail != none)
     {
-        SetPhysics(PHYS_Projectile);
+        SmokeTrail.HandleOwnerDestroyed();
     }
 }
 
-// Modified as there are only 3 sounds for a rocket explosion
-simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
+simulated function Destroyed()
 {
-    super(DH_ROTankCannonShell).SpawnExplosionEffects(HitLocation, HitNormal, ActualLocationAdjustment);
+    super.Destroyed();
 
-    PlaySound(ExplosionSound[Rand(3)], , 2.5 * TransientSoundVolume);
+    if (SmokeTrail != none)
+    {
+        SmokeTrail.HandleOwnerDestroyed();
+    }
 }
 
 defaultproperties
@@ -156,6 +177,7 @@ defaultproperties
     CullDistance=7500.0
     bDynamicLight=true
     LifeSpan=15.0
+    ExplosionSoundVolume=5.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
 
 //  Override unwanted defaults now inherited from DH_ROTankCannonShellHEAT & DH_ROTankCannonShell:
     ShakeRotMag=(Y=50.0,Z=200.0)
@@ -165,15 +187,10 @@ defaultproperties
     ShellDeflectEffectClass=none
     MyDamageType=class'DamageType'
     AmbientSound=none
-    SoundVolume=0
-    SoundRadius=64.0
-    AmbientVolumeScale=1.0
     TransientSoundVolume=0.3
     TransientSoundRadius=300.0 
     SpeedFudgeScale=1.0
     InitialAccelerationTime=0.1
-    Speed=0.0
-    MaxSpeed=2000.0
     RotationRate=(Roll=0)
     DesiredRotation=(Roll=0)
 }

@@ -55,7 +55,7 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-         if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+         if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
          {
              if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
                  LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
@@ -105,7 +105,6 @@ defaultproperties
     RightWheelBones(3)="Wheel_T_R_4"
     RightWheelBones(4)="Wheel_T_R_5"
     WheelRotationScale=1600
-    EngineHealthMax=125
     WheelSoftness=0.025000
     WheelPenScale=2.000000
     WheelPenOffset=0.010000

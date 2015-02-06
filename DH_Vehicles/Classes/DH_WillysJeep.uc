@@ -92,7 +92,7 @@ simulated function Tick(float DeltaTime)
     local float MySpeed;
 
     // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
 
         MySpeed = VSize(Velocity);
 
@@ -144,7 +144,6 @@ defaultproperties
     MaxPitchSpeed=250.000000
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
-    EngineHealthMax=25
     WheelSoftness=0.025000
     WheelPenScale=1.200000
     WheelPenOffset=0.010000

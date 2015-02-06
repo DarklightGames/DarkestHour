@@ -31,7 +31,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    bIsAssaultGun=true
     LeftTreadIndex=3
     MaxCriticalSpeed=729.000000
     UFrontArmorFactor=1.000000
@@ -41,8 +40,6 @@ defaultproperties
     UFrontArmorSlope=30.000000
     URightArmorSlope=15.000000
     ULeftArmorSlope=15.000000
-    GunMantletArmorFactor=1.000000
-    GunMantletSlope=0.000000
     PointValue=3.000000
     MaxPitchSpeed=450.000000
     TreadVelocityScale=300.000000

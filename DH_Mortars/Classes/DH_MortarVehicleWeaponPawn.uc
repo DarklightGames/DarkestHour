@@ -77,10 +77,12 @@ var DigitSet Digits;
 
 replication
 {
-    reliable if (Role < ROLE_Authority) // client to server
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
         ServerUndeploy, ServerFire, SetCurrentAnimation;
 
-    reliable if (Role == ROLE_Authority) // server to client
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
         CurrentDriverAnimation, bCanUndeploy, ClientShakeView;
 }
 
@@ -137,7 +139,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
 
-    PC.SetFOV( WeaponFOV );
+    PC.SetFOV(WeaponFOV);
 
     // From here on is mortar specific - above is just re-stating the Supers, with 1 line removed
     GotoState('Idle');

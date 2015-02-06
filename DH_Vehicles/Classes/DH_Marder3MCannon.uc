@@ -11,17 +11,8 @@ defaultproperties
     ManualRotationsPerSecond=0.033000
     PoweredRotationsPerSecond=0.033000
     bIsAssaultGun=true
-    FrontArmorFactor=1.500000
-    RightArmorFactor=1.500000
-    LeftArmorFactor=1.500000
-    RearArmorFactor=1.500000
-    RightArmorSlope=16.000000
-    LeftArmorSlope=16.000000
-    RearArmorSlope=17.000000
-    FrontLeftAngle=330.000000
-    FrontRightAngle=30.000000
-    RearRightAngle=150.000000
-    RearLeftAngle=210.000000
+    GunMantletArmorFactor=1.000000
+    GunMantletSlope=0.000000
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
@@ -67,7 +58,6 @@ defaultproperties
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=20.000000
-    RotationsPerSecond=0.033000
     FireInterval=4.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000

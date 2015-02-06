@@ -5,47 +5,6 @@
 
 class DH_HetzerCannon extends DH_ROTankCannon;
 
-// Limit the left and right movement of the driver (Matt: this is in all DH assault gun type vehicles)
-simulated function int LimitYaw(int yaw)
-{
-    local int NewYaw;
-    local ROVehicleWeaponPawn PwningPawn;
-
-    PwningPawn = ROVehicleWeaponPawn(Owner);
-
-    if (!bLimitYaw)
-    {
-        return yaw;
-    }
-
-    NewYaw = yaw;
-
-    if (PwningPawn != none)
-    {
-        if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
-        {
-            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
-        }
-        else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
-        {
-            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
-        }
-    }
-    else
-    {
-        if (yaw > MaxPositiveYaw)
-        {
-            NewYaw = MaxPositiveYaw;
-        }
-        else if (yaw < MaxNegativeYaw)
-        {
-            NewYaw = MaxNegativeYaw;
-        }
-    }
-
-    return NewYaw;
-}
-
 defaultproperties
 {
     InitialTertiaryAmmo=5
@@ -54,18 +13,8 @@ defaultproperties
     ManualRotationsPerSecond=0.025000
     PoweredRotationsPerSecond=0.025000
     bIsAssaultGun=true
-    FrontArmorFactor=6.000000
-    RightArmorFactor=2.000000
-    LeftArmorFactor=2.000000
-    RearArmorFactor=2.000000
-    FrontArmorSlope=60.000000
-    RightArmorSlope=40.000000
-    LeftArmorSlope=40.000000
-    RearArmorSlope=60.000000
-    FrontLeftAngle=293.000000
-    FrontRightAngle=67.000000
-    RearRightAngle=113.000000
-    RearLeftAngle=247.000000
+    GunMantletArmorFactor=6.000000
+    GunMantletSlope=40.000000
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
@@ -111,7 +60,6 @@ defaultproperties
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=160.000000
-    RotationsPerSecond=0.025000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
     RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'

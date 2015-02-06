@@ -8,40 +8,39 @@ class DH_Flakvierling38Cannon extends DH_Sdkfz2341Cannon;
 #exec OBJ LOAD FILE=..\Animations\DH_Flakvierling38_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Flakvierling38_tex.utx
 
-var name                    BarrelBones[4];     // Bone names for each
-var byte                    BarrelBoneIndex;    // Bone index for each gun starting with the top 2
+var name                    BarrelBones[4];     // bone names for each
+var byte                    BarrelBoneIndex;    // bone index for each gun starting with the top 2
 var name                    FireAnimations[2];
 var byte                    FireAnimationIndex; // 0 - fire top guns, 1 - fire bottom guns
-var Emitter                 FlashEmitters[4];   // We will have a separate flash emitter for each barrel.
+var Emitter                 FlashEmitters[4];   // we will have a separate flash emitter for each barrel
 var name                    SightBone;
 var name                    TraverseWheelBone;
 var name                    ElevationWheelBone;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
         FireAnimationIndex;
 }
 
-simulated event Tick(float DeltaTime)
+simulated function Tick(float DeltaTime)
 {
     local rotator SightRotation;
     local rotator ElevationWheelRotation;
     local rotator TraverseWheelRotation;
 
-    //sight
+    // Sight
     SightRotation.Pitch = -CurrentAim.Pitch;
     SetBoneRotation(SightBone, SightRotation, 1);
 
-    //elevation wheel
+    // Elevation wheel
     ElevationWheelRotation.Roll = -CurrentAim.Pitch * 32;
     SetBoneRotation(ElevationWheelBone, ElevationWheelRotation, 1);
 
-    //traverse wheel
+    // Traverse wheel
     TraverseWheelRotation.Pitch = CurrentAim.Yaw * 32;
     SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
-
-    super.Tick(DeltaTime);
 }
 
 state ProjectileFireMode
@@ -68,12 +67,10 @@ state ProjectileFireMode
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
-    local int i;
+    local vector     BarrelLocation[2], StartLocation, HitLocation, HitNormal, Extent;
+    local rotator    BarrelRotation[2], FireRot;
     local Projectile P;
-    local vector StartLocation, HitLocation, HitNormal, Extent;
-    local rotator FireRot;
-    local vector BarrelLocation[2];
-    local rotator BarrelRotation[2];
+    local int        i;
 
     if (FireAnimationIndex == 0)
     {
@@ -88,7 +85,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     for (i = 0; i < 2; i++)
     {
-        if (ProjectileClass == PrimaryProjectileClass) // Matt: added
+        if (ProjectileClass == PrimaryProjectileClass)
         {
             if (bMixedMagFireAP)
             {
@@ -104,7 +101,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
         FireRot = BarrelRotation[i];
 
-        // used only for Human players. Lets cannons with non centered aim points have a different aiming location
         if (Instigator != none && Instigator.IsHumanControlled())
         {
             FireRot.Pitch += AddedPitch;
@@ -119,7 +115,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
         }
 
-        P = Spawn(ProjClass, none, , StartLocation, FireRot); //self
+        P = Spawn(ProjClass, none, , StartLocation, FireRot);
 
         if (P != none)
         {
@@ -188,7 +184,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     // Calculate fire offset in world space
     WeaponBoneCoords = GetBoneCoords(BarrelBones[BarrelBoneIndex++]);
 
-    BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 3); // Matt: changed from max of 4, as there are 4 BarrelBones so indexed from 0 to 3
+    BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 3);
 
     if (bWasAltFire)
     {
@@ -241,7 +237,7 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
 
     if (FireAnimationIndex == 0)
     {
-        if (FlashEmitters[0] != none) // Matt: added these ifs to prevent "accessed none" errors on server (& general good practice)
+        if (FlashEmitters[0] != none)
         {
             FlashEmitters[0].Trigger(self, Instigator);
         }
@@ -263,15 +259,12 @@ simulated event FlashMuzzleFlash(bool bWasAltFire)
             FlashEmitters[2].Trigger(self, Instigator);
         }
     }
-
-//  OwningPawn = ROVehicleWeaponPawn(Instigator); // Matt: this isn't doing anything?
 }
 
 simulated function InitEffects()
 {
     local int i;
 
-    // don't even spawn on server
     if (Level.NetMode == NM_DedicatedServer)
     {
         return;
@@ -313,26 +306,26 @@ defaultproperties
     SightBone="Object002"
     TraverseWheelBone="yaw_w"
     ElevationWheelBone="pitch_w"
-    NumMags=12    // Matt: was 16 AP
-    NumSecMags=4  // Matt: was 4
-    NumTertMags=4 // Matt: added
+    NumMags=12
+    NumSecMags=4
+    NumTertMags=4
     AddedPitch=50
-    WeaponFireOffset=64.000000
-    RotationsPerSecond=0.050000
-    ManualRotationsPerSecond=0.05  // Matt: added
-    PoweredRotationsPerSecond=0.05 // Matt: added
-    FireInterval=0.150000
+    WeaponFireOffset=64.0
+    RotationsPerSecond=0.05
+    ManualRotationsPerSecond=0.05
+    PoweredRotationsPerSecond=0.05
+    FireInterval=0.15
     FlashEmitterClass=class'DH_Guns.DH_Flakvierling38MuzzleFlash'
-    ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: changed, was 'DH_Guns.DH_Flakvierling38CannonShellAP'
+    ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed'
     AltFireProjectileClass=none
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=40
     InitialTertiaryAmmo=40
-    PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed' // Matt: added class & made primary
-    SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'  // Matt: was primary
-    TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'   // Matt: was secondary
+    PrimaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed'
+    SecondaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellAP'
+    TertiaryProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellHE'
     Mesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret'
     Skins(0)=texture'DH_Flakvierling38_tex.flak.FlakVeirling'
 }

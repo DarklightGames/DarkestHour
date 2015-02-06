@@ -33,23 +33,53 @@ var DHHintManager DHHintManager;
 
 replication
 {
-    // client to server functions
-    reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
-        ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
-        ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
 
-    // server to client functions
-    reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand;
-
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsInStateMantling, MortarTargetIndex, MortarHitLocation;
 
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, 
+        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
+
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
+        ClientProne, ClientToggleDuck, ClientConsoleCommand;
 }
 //=========================================================================
+
+// Matt: modified to avoid "accessed none" error
+event ClientReset()
+{
+    local Actor A;
+
+    // Reset client special timed sounds on the client
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.IsA('ClientSpecialTimedSound') || A.IsA('KrivoiPlaneController'))
+        {
+            A.Reset();
+        }
+    }
+
+    bBehindView = false;
+    bFixedCamera = false;
+    SetViewTarget(self);
+    SetViewDistance();
+
+    if (PlayerReplicationInfo != none && PlayerReplicationInfo.bOnlySpectator) // added PRI != none
+    {
+        GotoState('Spectating');
+    }
+    else
+    {
+        GotoState('PlayerWaiting');
+    }
+}
 
 // Calculate free-aim and process recoil
 simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)

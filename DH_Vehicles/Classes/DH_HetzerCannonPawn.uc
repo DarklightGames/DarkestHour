@@ -73,7 +73,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -93,7 +93,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -114,7 +114,7 @@ simulated state ViewTransition
     {
         StoredVehicleRotation = VehicleBase.Rotation;
 
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
@@ -175,112 +175,18 @@ simulated state ViewTransition
     }
 }
 
-// Matt: redefined in StuH with one modified line that is crucial to camera positioning on the periscope position (would remove this if a proper periscope animamtion was made)
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
-{
-    local vector x, y, z;
-    local vector VehicleZ, CamViewOffsetWorld;
-    local float CamViewOffsetZAmount;
-    local coords CamBoneCoords;
-    local rotator WeaponAimRot;
-    local quat AQuat, BQuat, CQuat;
-
-    GetAxes(CameraRotation, x, y, z);
-    ViewActor = self;
-
-    WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
-
-    if (ROPlayer(Controller) != none)
-    {
-        ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-        ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-    }
-
-    // This makes the camera stick to the cannon, but you have no control
-    if (DriverPositionIndex < GunsightPositions)
-    {
-        CameraRotation =  WeaponAimRot;
-        // Make the cannon view have no roll
-        CameraRotation.Roll = 0;
-    }
-    else if (bPCRelativeFPRotation)
-    {
-        //__________________________________________
-        // First, Rotate the headbob by the player
-        // controllers rotation (looking around) ---
-        AQuat = QuatFromRotator(PC.Rotation);
-        BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
-        CQuat = QuatProduct(AQuat,BQuat);
-        //__________________________________________
-        // Then, rotate that by the vehicles rotation
-        // to get the final rotation ---------------
-        AQuat = QuatFromRotator(GetVehicleBase().Rotation);
-        BQuat = QuatProduct(CQuat,AQuat);
-        //__________________________________________
-        // Make it back into a rotator!
-        CameraRotation = QuatToRotator(BQuat);
-    }
-    else
-        CameraRotation = PC.Rotation;
-
-    if (IsInState('ViewTransition') && bLockCameraDuringTransition)
-    {
-        CameraRotation = Gun.GetBoneRotation('Camera_com');
-    }
-
-    CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
-
-    if (CameraBone != '' && Gun != none)
-    {
-        CamBoneCoords = Gun.GetBoneCoords(CameraBone);
-
-        // Matt: not important but for consistency I've replaced DPI = 0 with DPI < GunsightPositions, as per original DH_ROTankCannonPawn
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition'))
-        {
-            CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
-        }
-        else
-        {
-//          CameraLocation = Gun.GetBoneCoords('Camera_com').Origin; // Matt: this is the default line from DH_ROTankCannonPawn, replaced by the extended line below, which makes use of the ViewLocation for the periscope position
-            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
-        }
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-    else
-    {
-        CameraLocation = GetCameraLocationStart() + (FPCamPos >> Rotation) + CamViewOffsetWorld;
-
-        if (bFPNoZFromCameraPitch)
-        {
-            VehicleZ = vect(0.0, 0.0, 1.0) >> Rotation;
-            CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
-            CameraLocation -= CamViewOffsetZAmount * VehicleZ;
-        }
-    }
-
-    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-    CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
-}
-
 defaultproperties
 {
     OverlayCenterSize=0.555000
     PeriscopePositionIndex=1
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
-    WeaponFov=14.400000
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
+    WeaponFOV=14.400000
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
     DriverPositions(0)=(ViewLocation=(X=-50.000000,Y=-29.200001,Z=34.400002),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_turret',ViewPitchUpLimit=2185,ViewPitchDownLimit=64444,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-910,bDrawOverlays=true)
@@ -292,10 +198,8 @@ defaultproperties
     CameraBone="Turret"
     RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    MinRotateThreshold=0.500000
-    MaxRotateThreshold=3.000000
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
+    ManualMinRotateThreshold=0.500000
+    ManualMaxRotateThreshold=3.000000
     DrivePos=(X=6.000000,Z=-35.000000)
     DriveAnim="VStug3_com_idle_close"
     EntryRadius=130.000000

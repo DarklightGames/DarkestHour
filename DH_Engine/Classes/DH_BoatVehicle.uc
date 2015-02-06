@@ -7,35 +7,34 @@ class DH_BoatVehicle extends ROWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Textures\InterfaceArt_tex.utx
 
-var()       name            DriverCameraBoneName;
-var         vector          CameraBoneLocation;
+var()   name                DriverCameraBoneName;
+var     vector              CameraBoneLocation;
 
-var()       sound                       WashSound;
-var()       name                        WashSoundBoneL;
-var         ROSoundAttachment           WashSoundAttachL;
-var()       name                        WashSoundBoneR;
-var         ROSoundAttachment           WashSoundAttachR;
+var()   sound               WashSound;
+var()   name                WashSoundBoneL;
+var     ROSoundAttachment   WashSoundAttachL;
+var()   name                WashSoundBoneR;
+var     ROSoundAttachment   WashSoundAttachR;
 
-var()       sound                       EngineSound;
-var()       name                        EngineSoundBone;
-var         ROSoundAttachment           EngineSoundAttach;
-var         float                       MotionSoundVolume;
+var()   sound               EngineSound;
+var()   name                EngineSoundBone;
+var     ROSoundAttachment   EngineSoundAttach;
+var     float               MotionSoundVolume;
 
-var         sound                       DestroyedBurningSound;
+var     sound               DestroyedBurningSound;
+var     Material            DestroyedVehicleTexture;
+var     name                DestAnimName;
+var     float               DestAnimRate;
 
-var     Material  DestroyedVehicleTexture; // Matt: added to remove literal reference to Higgins boat
-var     name      DestAnimName;
-var     float     DestAnimRate;
+var     float               PointValue;
 
-var     float     PointValue;
+var     bool                bDebugExitPositions;
 
 struct ExitPositionPair
 {
-    var int Index;
+    var int   Index;
     var float DistanceSquared;
 };
-
-var bool bDebugExitPositions;
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
@@ -69,7 +68,7 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
 
 function bool PlaceExitingDriver()
 {
-    local int i;
+    local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
     local array<ExitPositionPair> ExitPositionPairs;
 
@@ -124,53 +123,52 @@ function bool PlaceExitingDriver()
 // Overridden to play the correct idle animation for the vehicle
 simulated function PostBeginPlay()
 {
-
-    // RO functionality
     if (HasAnim(BeginningIdleAnim))
     {
         LoopAnim(BeginningIdleAnim);
     }
 
     SetTimer(1.0, false);
-    // End RO functionality
 
     super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-            if (WashSoundAttachL == none)
-            {
-                    WashSoundAttachL = Spawn(class'ROSoundAttachment');
-                    WashSoundAttachL.AmbientSound = WashSound;
-                    WashSoundAttachL.SoundVolume = 75;
-                    WashSoundAttachL.SoundRadius = 300;
-                    AttachToBone(WashSoundAttachL, WashSoundBoneL);
-            }
-            if (WashSoundAttachR == none)
-            {
-                    WashSoundAttachR = Spawn(class'ROSoundAttachment');
-                    WashSoundAttachR.AmbientSound = WashSound;
-                    WashSoundAttachR.SoundVolume = 75;
-                    WashSoundAttachR.SoundRadius = 300;
-                    AttachToBone(WashSoundAttachR, WashSoundBoneR);
-            }
-            if (EngineSoundAttach == none)
-            {
-                    EngineSoundAttach = Spawn(class'ROSoundAttachment');
-                    EngineSoundAttach.AmbientSound = EngineSound;
-                    EngineSoundAttach.SoundVolume = 150;
-                    EngineSoundAttach.SoundRadius = 1000;
-                    AttachToBone(EngineSoundAttach, EngineSoundBone);
-            }
+        if (WashSoundAttachL == none)
+        {
+            WashSoundAttachL = Spawn(class'ROSoundAttachment');
+            WashSoundAttachL.AmbientSound = WashSound;
+            WashSoundAttachL.SoundVolume = 75;
+            WashSoundAttachL.SoundRadius = 300.0;
+            AttachToBone(WashSoundAttachL, WashSoundBoneL);
+        }
+
+        if (WashSoundAttachR == none)
+        {
+            WashSoundAttachR = Spawn(class'ROSoundAttachment');
+            WashSoundAttachR.AmbientSound = WashSound;
+            WashSoundAttachR.SoundVolume = 75;
+            WashSoundAttachR.SoundRadius = 300.0;
+            AttachToBone(WashSoundAttachR, WashSoundBoneR);
+        }
+
+        if (EngineSoundAttach == none)
+        {
+            EngineSoundAttach = Spawn(class'ROSoundAttachment');
+            EngineSoundAttach.AmbientSound = EngineSound;
+            EngineSoundAttach.SoundVolume = 150;
+            EngineSoundAttach.SoundRadius = 1000.0;
+            AttachToBone(EngineSoundAttach, EngineSoundBone);
+        }
     }
 }
 
-// DriverLeft() called by KDriverLeave()
 function DriverLeft()
 {
     // Not moving, so no motion sound
-    MotionSoundVolume=0.0;
+    MotionSoundVolume = 0.0;
     UpdateMovementSound();
+
     super.DriverLeft();
 }
 
@@ -205,13 +203,12 @@ simulated function PostNetReceive()
     }
 }
 
-// Overridden for locking the player to the camerabone
-//altered slightly to allow change of camera bone name - Fennich
+// Overridden for locking the player to the camerabone // altered slightly to allow change of camera bone name - Fennich
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local quat CarQuat, LookQuat, ResultQuat;
+    local quat   CarQuat, LookQuat, ResultQuat;
     local vector VehicleZ, CamViewOffsetWorld, x, y, z;
-    local float CamViewOffsetZAmount;
+    local float  CamViewOffsetZAmount;
 
     GetAxes(PC.Rotation, x, y, z);
     ViewActor = self;
@@ -225,9 +222,11 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CameraRotation = QuatToRotator(ResultQuat);
     }
     else
+    {
         CameraRotation = PC.Rotation;
+    }
 
-    // Camera position is locked to car
+    // Camera position is locked to vehicle
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
     CameraBoneLocation = GetBoneCoords(DriverCameraBoneName).Origin;
     CameraLocation = CameraBoneLocation + (FPCamPos >> Rotation) + CamViewOffsetWorld;
@@ -246,11 +245,19 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 simulated function Destroyed()
 {
     if (EngineSoundAttach != none)
+    {
         EngineSoundAttach.Destroy();
+    }
+
     if (WashSoundAttachL != none)
+    {
         WashSoundAttachL.Destroy();
+    }
+
     if (WashSoundAttachR != none)
+    {
         WashSoundAttachR.Destroy();
+    }
 
     super.Destroyed();
 }
@@ -260,31 +267,33 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     super.Died(Killer, DamageType, HitLocation);
 
     if (Killer == none)
+    {
         return;
+    }
 
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
 simulated function UpdateMovementSound()
 {
-        if (EngineSoundAttach != none)
-        {
-             EngineSoundAttach.SoundVolume= MotionSoundVolume;
-        }
+    if (EngineSoundAttach != none)
+    {
+        EngineSoundAttach.SoundVolume = MotionSoundVolume;
+    }
 }
 
 simulated event DestroyAppearance()
 {
     local int i;
-    local KarmaParams KP;
+    local     KarmaParams KP;
 
     // For replication
     bDestroyAppearance = true;
 
     // Put brakes on
-    Throttle=0;
-    Steering=0;
-    Rise=0;
+    Throttle = 0.0;
+    Steering = 0.0;
+    Rise = 0.0;
 
     // Destroy the weapons
     if (Role == ROLE_Authority)
@@ -295,10 +304,15 @@ simulated event DestroyAppearance()
                 Weapons[i].Destroy();
         }
         for (i = 0; i < WeaponPawns.Length; i++)
-            WeaponPawns[i].Destroy();
+        {
+            if (WeaponPawns[i] != none)
+            {
+                WeaponPawns[i].Destroy();
+            }
+        }
     }
 
-    Weapons.Length = 0;
+//    Weapons.Length = 0;
     WeaponPawns.Length = 0;
 
     // Destroy the effects
@@ -307,11 +321,19 @@ simulated event DestroyAppearance()
         bNoTeamBeacon = true;
 
         for (i = 0; i < HeadlightCorona.Length; i++)
-            HeadlightCorona[i].Destroy();
+        {
+            if (HeadlightCorona[i] != none)
+            {
+                HeadlightCorona[i].Destroy();
+            }
+        }
+
         HeadlightCorona.Length = 0;
 
         if (HeadlightProjector != none)
+        {
             HeadlightProjector.Destroy();
+        }
 
         for (i = 0; i < ExhaustPipes.Length; i++)
         {
@@ -322,10 +344,13 @@ simulated event DestroyAppearance()
         }
     }
 
-    // Copy linear velocity from actor so it doesn't just stop.
+    // Copy linear velocity from actor so it doesn't just stop
     KP = KarmaParams(KParams);
+
     if (KP != none)
+    {
         KP.KStartLinVel = Velocity;
+    }
 
     if (DamagedEffect != none)
     {
@@ -348,35 +373,34 @@ simulated event DestroyAppearance()
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
     local vector LinearImpulse, AngularImpulse;
-    local float RandomExplModifier;
+    local float  RandomExplModifier;
 
     RandomExplModifier = FRand();
-
-    // Don't hurt us when we are destroying our own vehicle // why ?
-    // if (!bSpikedVehicle)
     HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
 
-    AmbientSound=DestroyedBurningSound; // test
-    SoundVolume=255.0;
-    SoundRadius=600.0;
+    AmbientSound = DestroyedBurningSound;
+    SoundVolume = 255;
+    SoundRadius = 600.0;
 
     if (!bDisintegrateVehicle)
     {
         ExplosionCount++;
 
         if (Level.NetMode != NM_DedicatedServer)
+        {
             ClientVehicleExplosion(false);
+        }
 
         LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
         AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
 
-        NetUpdateTime = Level.TimeSeconds - 1;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
         KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
         KAddAngularImpulse(AngularImpulse);
     }
 }
 
-// Overridden to eliminate "Waiting for Additional Crewmembers" message
+// Overridden to eliminate "Waiting for additional crewmembers" message
 function bool CheckForCrew()
 {
     return true;

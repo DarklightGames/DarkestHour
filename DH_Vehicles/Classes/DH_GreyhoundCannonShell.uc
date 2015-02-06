@@ -7,11 +7,6 @@ class DH_GreyhoundCannonShell extends DH_ROTankCannonShell;
 
 defaultproperties
 {
-    MechanicalRanges(1)=(Range=400)
-    MechanicalRanges(2)=(Range=800)
-    MechanicalRanges(3)=(Range=1200)
-    MechanicalRanges(4)=(Range=1600)
-    bMechanicalAiming=true
     DHPenetrationTable(0)=7.100000
     DHPenetrationTable(1)=6.700000
     DHPenetrationTable(2)=6.300000

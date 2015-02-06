@@ -15,7 +15,7 @@ defaultproperties
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.sherman105_sight_background'
     BinocPositionIndex=4
-    WeaponFov=24.000000
+    WeaponFOV=24.000000
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman105Shell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman105Shell_reload'
     DriverPositions(0)=(ViewLocation=(X=25.000000,Y=18.000000,Z=2.000000),ViewFOV=24.000000,PositionMesh=SkeletalMesh'DH_ShermanM4A3E2_anm.shermanM4A3105_turret_int',TransitionUpAnim="Periscope_in",ViewPitchUpLimit=4551,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
@@ -26,8 +26,6 @@ defaultproperties
     FireImpulse=(X=-110000.000000)
     GunClass=class'DH_Vehicles.DH_ShermanCannon_M4A3105'
     CameraBone="Gun"
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
     DrivePos=(X=3.000000,Z=8.000000)
     DriveAnim="stand_idlehip_binoc"
     EntryRadius=130.000000

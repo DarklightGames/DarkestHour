@@ -159,7 +159,7 @@ simulated function DrawHUD(Canvas Canvas)
 defaultproperties
 {
     FirstPersonGunShakeScale=1.500000
-    WeaponFov=60.000000
+    WeaponFOV=60.000000
     DriverPositions(0)=(ViewLocation=(X=10.000000),ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
     bMultiPosition=true

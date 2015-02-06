@@ -9,7 +9,4 @@ defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_PanzerIVJTank_SnowOne'
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow1'
-    Skins(3)=texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_armor_snow'
-    Skins(4)=texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'
-    Skins(5)=texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_wheels_snow'
 }

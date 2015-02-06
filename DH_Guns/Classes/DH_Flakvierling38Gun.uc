@@ -9,14 +9,6 @@ class DH_Flakvierling38Gun extends DH_ATGun;
 #exec OBJ LOAD FILE=..\Animations\DH_Flakvierling38_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Flakvierling38_tex.utx
 
-var int PrimaryMagazineCount;
-var int SecondaryMagazineCount;
-
-simulated function Destroyed()
-{
-    super(ROVehicle).Destroyed();
-}
-
 function DenyEntry(Pawn P, int MessageNum)
 {
     P.ReceiveLocalizedMessage(class'DH_AAGunMessage', MessageNum);

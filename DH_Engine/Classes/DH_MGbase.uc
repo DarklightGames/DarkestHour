@@ -17,7 +17,7 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    if (Level.Netmode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         SpawnAmmoBelt();
     }

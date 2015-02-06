@@ -534,7 +534,6 @@ simulated function Destroyed()
 
 defaultproperties
 {
-    bNetNotify=true
     WhizType=1
     ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
     WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'

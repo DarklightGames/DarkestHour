@@ -71,8 +71,6 @@ simulated function PostBeginPlay()
     bEngineDead = false;
     bDisableThrottle=true;
 
-    EngineHealth=EngineHealthMax;
-
     p = RandRange(0.15, 0.25);
     EngineFireDamagePerSec = EngineHealth * 0.09;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
     DamagedEffectFireDamagePerSec = HealthMax * 0.02; //~100 seconds from regular tank fire threshold to detontation from full health, damage is every 2 seconds, so double intended
@@ -113,7 +111,7 @@ simulated function Tick(float DeltaTime)
     local float MySpeed;
 
     // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
         // VSize() is very CPU intensive - Ramm

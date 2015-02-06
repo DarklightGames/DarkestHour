@@ -132,7 +132,7 @@ simulated state ViewTransition
 {
     simulated function BeginState()
     {
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositionIndex > 0)
             {
@@ -145,7 +145,7 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositionIndex == 0)
             {
@@ -177,7 +177,7 @@ function bool KDriverLeave(bool bForceLeave)
 defaultproperties
 {
     FirstPersonGunShakeScale=0.750000
-    WeaponFov=60.000000
+    WeaponFOV=60.000000
     DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
     bMultiPosition=true

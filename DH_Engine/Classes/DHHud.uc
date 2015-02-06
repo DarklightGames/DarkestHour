@@ -1013,7 +1013,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
                 // Draw reload state icon (if needed)
                 VehicleAmmoReloadIcon.WidgetTexture = Passenger.AmmoShellReloadTexture;
-                VehicleAmmoReloadIcon.Scale = Passenger.getAmmoReloadState();
+                VehicleAmmoReloadIcon.Scale = Passenger.GetAmmoReloadState();
                 DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
 
                 // Draw ammo count
@@ -1101,7 +1101,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         }
 
                         // Draw coaxial gun ammo amount
-                        VehicleAltAmmoAmount.Value = Cannon.getNumMags();
+                        VehicleAltAmmoAmount.Value = Cannon.GetNumMags();
                         DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
 
                         // Shift occupants list position to accommodate coaxial gun ammo info
@@ -1149,7 +1149,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             }
 
             // Draw ammo count
-            VehicleMGAmmoAmount.Value = VehWeapon.getNumMags();
+            VehicleMGAmmoAmount.Value = VehWeapon.GetNumMags();
             DrawNumericWidget(Canvas, VehicleMGAmmoAmount, Digits);
         }
     }
@@ -1275,7 +1275,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 if (f ~= 0.0)
                 {
                 }
-                else if (f > 0.9)
+                else if (f > 0.0)
                 {
                     VehicleThrottleIndicatorTop.Scale = VehicleThrottleTopZeroPosition + f * (VehicleThrottleTopMaxPosition - VehicleThrottleTopZeroPosition);
                     DrawSpriteWidgetClipped(Canvas, VehicleThrottleIndicatorTop, Coords, true, XL, YL, false, true);

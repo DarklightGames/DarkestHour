@@ -18,7 +18,7 @@ var         name        IronPutDown;                // anim for weapon being low
 var         name        BayoAttachAnim;             // anim for attaching the bayonet
 var         name        BayoDetachAnim;             // anim for detaching the bayonet
 var         name        BayonetBoneName;            // name for the bayonet bone, used in scaling the bayonet bone based on its attachment status
-var         bool        bHasBayonet;                // Whether or not this weapon has a bayonet
+var         bool        bHasBayonet;                // whether or not this weapon has a bayonet
 
 var         float       IronSwitchAnimRate;         // the rate to play the ironsight animation at
 
@@ -33,36 +33,36 @@ var         name        SprintStartEmptyAnim;       // anim that shows the begin
 var         name        SprintLoopEmptyAnim;        // anim that is looped for when player is sprinting with empty weapon
 var         name        SprintEndEmptyAnim;         // anim that shows the weapon returning to normal after sprinting with empty weapon
 
-var()       name        CrawlForwardEmptyAnim;      // Animation for crawling forward empty
-var()       name        CrawlBackwardEmptyAnim;     // Animation for crawling backward empty
-var()       name        CrawlStartEmptyAnim;        // Animation for starting to crawl empty
-var()       name        CrawlEndEmptyAnim;          // Animation for ending crawling empty
+var()       name        CrawlForwardEmptyAnim;      // animation for crawling forward empty
+var()       name        CrawlBackwardEmptyAnim;     // animation for crawling backward empty
+var()       name        CrawlStartEmptyAnim;        // animation for starting to crawl empty
+var()       name        CrawlEndEmptyAnim;          // animation for ending crawling empty
 
-var()       name        SelectEmptyAnim;            // Animation for drawing an empty weapon
-var()       name        PutDownEmptyAnim;           // Animation for putting away an empty weapon
+var()       name        SelectEmptyAnim;            // animation for drawing an empty weapon
+var()       name        PutDownEmptyAnim;           // animation for putting away an empty weapon
 
 // Manual bolting anims
-var()       name        BoltHipAnim;                // Animation for crawling forward
-var()       name        BoltIronAnim;               // Animation for crawling backward
-var()       name        PostFireIronIdleAnim;       // Animation for crawling forward
-var()       name        PostFireIdleAnim;           // Animation for crawling backward
+var()       name        BoltHipAnim;                // animation for crawling forward
+var()       name        BoltIronAnim;               // animation for crawling backward
+var()       name        PostFireIronIdleAnim;       // animation for crawling forward
+var()       name        PostFireIdleAnim;           // animation for crawling backward
 
 // Ammo/Magazines
-var         array<int>  PrimaryAmmoArray;           // The array of magazines and thier ammo amounts this weapon has
-var         int         CurrentMagCount;            // Current number of magazines, this should be replicated to the client
-var         int         MaxNumPrimaryMags;          // The maximum number of mags a solder can carry for this weapon, should move to the role info
-var         int         InitialNumPrimaryMags;      // The number of mags the soldier starts with, should move to the role info
-var         int         CurrentMagIndex;            // The index of the magazine currently in use
-var         bool        bUsesMagazines;             // This weapon uses magazines, not single bullets, etc
-var         bool        bPlusOneLoading;            // Can have an extra round in the chamber when you reload before empty
+var         array<int>  PrimaryAmmoArray;           // the array of magazines and thier ammo amounts this weapon has
+var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client // Matt: changed from int to byte for more efficient replication
+var         int         MaxNumPrimaryMags;          // the maximum number of mags a solder can carry for this weapon, should move to the role info
+var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
+var         int         CurrentMagIndex;            // the index of the magazine currently in use
+var         bool        bUsesMagazines;             // this weapon uses magazines, not single bullets, etc
+var         bool        bPlusOneLoading;            // can have an extra round in the chamber when you reload before empty
 var         int         FillAmmoMagCount;
 
 // Barrels
-var     bool                bTrackBarrelHeat;       // We should track barrel heat for this MG
+var     bool                bTrackBarrelHeat;       // we should track barrel heat for this MG
 var     bool                bBarrelSteaming;        // barrel is steaming
 var     bool                bBarrelDamaged;         // barrel is close to failure, accuracy is VERY BAD
 var     bool                bBarrelFailed;          // barrel overheated and can't be used
-var     bool                bCanFireFromHip;        // If true this weapon has a hip firing mode
+var     bool                bCanFireFromHip;        // if true this weapon has a hip firing mode
 
 var     byte                BarrelIndex;            // barrel being used
 var     byte                RemainingBarrels;       // number of barrels still left, INCLUDES the active barrel
@@ -82,14 +82,17 @@ var     float               PlayerDeployFOV;
 
 replication
 {
-    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         CurrentMagCount, RemainingBarrels, bBarrelSteaming, bBarrelDamaged, bBarrelFailed;
 
-    reliable if (Role == ROLE_Authority)
-        ClientDoReload, ClientCancelReload, ToggleBarrelSteam;
-
+    // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerRequestReload, ServerZoomIn, ServerZoomOut, ServerChangeBayoStatus, ServerWorkBolt, ServerSwitchBarrels;
+
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
+        ClientDoReload, ClientCancelReload, ToggleBarrelSteam;
 }
 
 // Implemented in subclasses
@@ -1691,7 +1694,7 @@ simulated exec function ROManualReload()
         return;
     }
 
-    if (Level.Netmode == NM_Client && !IsBusy())
+    if (Level.NetMode == NM_Client && !IsBusy())
     {
         GotoState('PendingAction');
     }
@@ -2250,13 +2253,13 @@ simulated function Fire(float F)
 }
 
 // Called when we need to toggle barrel steam on or off, depending on the barrel temperature
-simulated function ToggleBarrelSteam(bool newState)
+simulated function ToggleBarrelSteam(bool NewState)
 {
-    bBarrelSteaming = newState;
+    bBarrelSteaming = NewState;
 
     if (DHWeaponAttachment(ThirdPersonActor) != none)
     {
-        DHWeaponAttachment(ThirdPersonActor).bBarrelSteamActive = newState;
+        DHWeaponAttachment(ThirdPersonActor).bBarrelSteamActive = NewState;
     }
 
     if (Level.NetMode != NM_DedicatedServer && ROBarrelSteamEmitter != none)
@@ -2277,7 +2280,7 @@ simulated exec function ROMGOperation()
         return;
     }
 
-    if (Level.Netmode == NM_Client)
+    if (Level.NetMode == NM_Client)
     {
         GotoState('ChangingBarrels');
     }
