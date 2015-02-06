@@ -64,7 +64,6 @@ defaultproperties
     HeadgearProbabilities(6)=0.0
     HeadgearProbabilities(7)=0.0
     HeadgearProbabilities(8)=0.0
-    Texture=texture'DHEngine_Tex.RoleInfo'
     bCarriesATAmmo=true
     bCarriesMortarAmmo=true
     bCarriesMGAmmo=true

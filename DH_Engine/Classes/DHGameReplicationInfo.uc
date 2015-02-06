@@ -107,6 +107,22 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 // Vehicle Pool Functions
 //------------------------------------------------------------------------------
 
+simulated function DHSpawnPoint GetSpawnPointTest(int TeamInt)
+{
+    local DHSpawnPoint SP;
+
+    //Lets just do a nasty/debug check and get the Allies active spawn point
+    foreach AllActors(class'DHSpawnPoint', SP)
+    {
+        if (SP.bIsActive && SP.TeamIndex == TeamInt)
+        {
+            return SP;
+        }
+    }
+
+    return none;
+}
+
 simulated function bool IsSpawnPointActive(byte SpawnPointIndex)
 {
     return (SpawnPointFlags[SpawnPointIndex] & SpawnPointFlag_IsActive) == SpawnPointFlag_IsActive;
