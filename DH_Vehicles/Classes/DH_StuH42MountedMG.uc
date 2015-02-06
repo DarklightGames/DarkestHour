@@ -85,7 +85,7 @@ simulated function int LimitYaw(int yaw)
         return yaw;
     }
 
-    VehYaw = VehicleWeaponPawn(Owner).GetVehicleBase().Rotation.Yaw;
+    VehYaw = VehicleWeaponPawn(Owner).VehicleBase.Rotation.Yaw;
 
     NewYaw = yaw;
 

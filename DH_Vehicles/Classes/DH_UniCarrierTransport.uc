@@ -55,31 +55,34 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-         if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-         {
-             if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
-                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-         }
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+        {
+            if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+            {
+                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+            }
+        }
 
-         if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
-         {
-             //Log("HandleTransition Player Transition Up!");
-             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-         }
-         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
-         {
-             //Log("HandleTransition Player Transition Down!");
-             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-         }
+        if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+        {
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+        }
+        else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
+        {
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+        }
 
-         if (Driver != none && PreviousPositionIndex < DriverPositionIndex && DriverPositionIndex == InitialPositionIndex)
-         {
-             Driver.PlayAnim(DriveAnim);
-         }
-         else if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
-         {
-             Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-         }
+        if (Level.NetMode != NM_DedicatedServer && Driver != none)
+        {
+            if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex)
+            {
+                Driver.PlayAnim(DriveAnim);
+            }
+            else if (Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
+            {
+                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+            }
+        }
     }
 }
 

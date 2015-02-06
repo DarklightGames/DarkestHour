@@ -93,9 +93,9 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.ColorModulate.W = SavedOpacity;
 
         // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
         }
     }
 
@@ -135,7 +135,6 @@ defaultproperties
     DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionUpAnim="lookover_up",TransitionDownAnim="optic_in",DriverTransitionAnim="Vt3485_driver_idle_close",bExposed=true)
     DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',TransitionDownAnim="lookover_down",DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(3)=(ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
-    bMustBeTankCrew=true
     GunClass=class'DH_Guns.DH_Flakvierling38Cannon'
     CameraBone="Camera_com"
     RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'

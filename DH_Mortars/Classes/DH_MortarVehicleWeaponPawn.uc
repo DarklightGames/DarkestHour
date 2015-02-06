@@ -690,7 +690,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     ViewActor = self;
 
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
+    WeaponAimRot.Roll =  VehicleBase.Rotation.Roll;
 
     if (ROPlayer(Controller) != none)
     {
@@ -712,7 +712,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CQuat = QuatProduct(AQuat,BQuat);
 
         // Then, rotate that by the vehicles rotation to get the final rotation
-        AQuat = QuatFromRotator(GetVehicleBase().Rotation);
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
         BQuat = QuatProduct(CQuat,AQuat);
 
         // Make it back into a rotator!

@@ -50,7 +50,6 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
 }
-//=========================================================================
 
 // Matt: modified to avoid "accessed none" error
 event ClientReset()
@@ -411,7 +410,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             {
                 // No camera change if we're locking rotation
             }
-            else if (ROPwn!= none && ROPwn.bRestingWeapon)
+            else if (ROPwn != none && ROPwn.bRestingWeapon)
             {
                 ViewRotation.Yaw += 16.0 * DeltaTime * aTurn;
                 ViewRotation.Pitch += 16.0 * DeltaTime * aLookUp;
@@ -1489,7 +1488,7 @@ function AdjustView(float DeltaTime)
     }
 }
 
-//Server call to client to force prone
+// Server call to client to force prone
 function ClientProne()
 {
     Prone();

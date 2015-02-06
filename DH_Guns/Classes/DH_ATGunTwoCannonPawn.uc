@@ -121,9 +121,9 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.ColorModulate.W = SavedOpacity;
 
         // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
         {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
         }
     }
 
@@ -200,7 +200,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRot;
 
-    NewRot = GetVehicleBase().Rotation;
+    NewRot = VehicleBase.Rotation;
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 

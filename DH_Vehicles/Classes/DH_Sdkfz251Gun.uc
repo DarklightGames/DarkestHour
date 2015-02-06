@@ -9,7 +9,7 @@ var()   class<Projectile> TracerProjectileClass; // Matt: replaces DummyTracerCl
 var()   int               TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
 
 
-// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot // TEST
+// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
 state ProjectileFireMode
 {
 	function Fire(Controller C)
@@ -26,7 +26,7 @@ state ProjectileFireMode
     }
 }
 
-// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode) // TEST
+// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
 	super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);

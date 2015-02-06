@@ -12,13 +12,13 @@ function float GetAmmoReloadState()
     {
         switch (ROTankCannon(Gun).CannonReloadState)
         {
-            case CR_ReadyToFire:    return 0.00;
+            case CR_ReadyToFire:    return 0.0;
             case CR_Waiting:
             case CR_Empty:
-            case CR_ReloadedPart1:  return 1.00;
-            case CR_ReloadedPart2:  return 0.60;
-            case CR_ReloadedPart3:  return 0.50;
-            case CR_ReloadedPart4:  return 0.40;
+            case CR_ReloadedPart1:  return 1.0;
+            case CR_ReloadedPart2:  return 0.6;
+            case CR_ReloadedPart3:  return 0.5;
+            case CR_ReloadedPart4:  return 0.4;
         }
     }
 

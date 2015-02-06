@@ -270,7 +270,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     ViewActor = self;
 
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
+    WeaponAimRot.Roll =  VehicleBase.Rotation.Roll;
 
     if (ROPlayer(Controller) != none)
     {
@@ -292,7 +292,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CQuat = QuatProduct(AQuat,BQuat);
 
         // Then, rotate that by the vehicles rotation to get the final rotation
-        AQuat = QuatFromRotator(GetVehicleBase().Rotation);
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
         BQuat = QuatProduct(CQuat,AQuat);
 
         // Finally, make it back into a rotator
@@ -410,7 +410,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRot;
 
-    NewRot = GetVehicleBase().Rotation;
+    NewRot = VehicleBase.Rotation;
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
@@ -440,7 +440,7 @@ function bool KDriverLeave(bool bForceLeave)
 
         bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
-        ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+        VehicleBase.MaybeDestroyVehicle();
 
         return bSuperDriverLeave;
     }
@@ -453,10 +453,10 @@ function DriverDied()
 
     super.DriverDied();
 
-    DH_ROTreadCraft(GetVehicleBase()).MaybeDestroyVehicle();
+    VehicleBase.MaybeDestroyVehicle();
 
     // Kill the rotation sound if the driver dies but the vehicle doesn't
-    if (GetVehicleBase().Health > 0)
+    if (VehicleBase.Health > 0)
     {
         SetRotatingStatus(0);
     }
@@ -595,8 +595,8 @@ simulated state LeavingVehicle
         if (Gun != none)
         {
             // Save old mesh rotation
-            TurretYaw.Yaw = GetVehicleBase().Rotation.Yaw - CustomAim.Yaw;
-            TurretPitch.Pitch = GetVehicleBase().Rotation.Pitch - CustomAim.Pitch;
+            TurretYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
+            TurretPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
 
             Gun.LinkMesh(Gun.default.Mesh);
 

@@ -526,7 +526,7 @@ simulated function bool HasMagazines(int Mode)
 // Modified as this cannon uses magazines
 simulated function int PrimaryAmmoCount()
 {
-    if (ProjectileClass == PrimaryProjectileClass || bMultipleRoundTypes)
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
     {
         return NumMags;
     }

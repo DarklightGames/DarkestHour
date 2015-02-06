@@ -1685,7 +1685,7 @@ function bool ResupplyAmmo()
     return bDidResupply;
 }
 
-simulated function Destroyed() // Matt: added
+simulated function Destroyed()
 {
     if (CollisionMeshActor != none)
     {

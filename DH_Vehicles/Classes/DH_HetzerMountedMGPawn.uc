@@ -102,7 +102,7 @@ function bool KDriverLeave(bool bForceLeave)
 
     DriverPositionIndex=0;
     bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
-    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+    VehicleBase.MaybeDestroyVehicle();
 
     if (bSuperDriverLeave && Gun.HasAnim(Gun.BeginningIdleAnim)) // Matt: added to play idle animation on the server to stop the collision box glitch on the roof
         Gun.PlayAnim(Gun.BeginningIdleAnim);
@@ -225,7 +225,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         //__________________________________________
         // Then, rotate that by the vehicles rotation
         // to get the final rotation ---------------
-        AQuat = QuatFromRotator(GetVehicleBase().Rotation);
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
         BQuat = QuatProduct(CQuat,AQuat);
         //__________________________________________
         // Make it back into a rotator!
@@ -321,8 +321,8 @@ simulated function DrawHUD(Canvas Canvas)
 
     if (PC != none)
         // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
 }
 
 // Matt: modified so that the new functionality (from StuH) that moves the MG, only happens if the player is buttoned up

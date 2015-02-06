@@ -8,7 +8,6 @@ class DH_ROTankCannonShell extends DH_ROAntiVehicleProjectile;
 var     array<sound>        ExplosionSound;       // sound of the round exploding (array for random selection)
 var     float               ExplosionSoundVolume; // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)
 var     bool                bAlwaysDoShakeEffect; // this shell will always DoShakeEffect when it explodes, not just if hit vehicle armor
-//var   bool                bHitWater;            // Matt: removed as not used anywhere
 
 struct RangePoint
 {
@@ -16,11 +15,10 @@ struct RangePoint
     var() float             RangeValue;           // the adjustment value for this Range setting
 };
 
-var()   array<RangePoint>   MechanicalRanges;     // the Range setting values for tank cannons that do mechanical pitch adjustments for aiming
-var()   array<RangePoint>   OpticalRanges;        // the Range setting values for tank cannons that do optical sight adjustments for aiming
-var     bool                bMechanicalAiming;    // uses the Mechanical Range settings for this projectile
-var     bool                bOpticalAiming;       // uses the Optical Range settings for this projectile (usually Allied sights only)
-
+var()   bool                bMechanicalAiming;    // uses the mechanical range settings for this projectile
+var()   array<RangePoint>   MechanicalRanges;     // the range setting values for tank cannons that do mechanical pitch adjustments for aiming
+var()   bool                bOpticalAiming;       // uses the optical range settings for this projectile
+var()   array<RangePoint>   OpticalRanges;        // the range setting values for tank cannons that do optical sight adjustments for aiming
 
 simulated function PostBeginPlay()
 {
@@ -62,7 +60,7 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 }
 
-// For tank cannon aiming - returns the proper pitch adjustment to hit a target at a particular Range
+// For tank cannon aiming - returns the proper pitch adjustment to hit a target at a particular range
 simulated static function int GetPitchForRange(int Range)
 {
     local int i;
@@ -83,7 +81,7 @@ simulated static function int GetPitchForRange(int Range)
     return 0;
 }
 
-// For tank cannon aiming - returns the proper Y adjustment of the scope to hit a target at a particular Range
+// For tank cannon aiming - returns the proper Y adjustment of the scope to hit a target at a particular range
 simulated static function float GetYAdjustForRange(int Range)
 {
     local int i;
