@@ -8,10 +8,11 @@ class DHGUIVertScrollButton extends GUIScrollButtonBase;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     if (bIncreaseButton)
-        {
-        StyleName="DHGripButton";
+    {
+        StyleName = "DHGripButton";
         ImageIndex = 7;
-        }
+    }
+
     super.Initcomponent(MyController, MyOwner);
 }
 

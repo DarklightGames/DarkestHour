@@ -10,6 +10,7 @@ var(Option) string DHButtonStyleName;
 function InternalOnCreateComponent(GUIComponent NewComp, GUIComponent Sender)
 {
     super.InternalOnCreateComponent(NewComp, Sender);
+
     NewComp.StyleName = DHButtonStyleName;
 }
 

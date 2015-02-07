@@ -5,17 +5,17 @@
 
 class DHNetworkStatusMessage extends GUIPage;
 
-var     bool  bIgnoreEsc;
+var bool bIgnoreEsc;
 
-var     localized string LeaveMPButtonText;
-var     localized string LeaveSPButtonText;
+var localized string LeaveMPButtonText;
+var localized string LeaveSPButtonText;
 
-var     float ButtonWidth;
-var     float ButtonHeight;
-var     float ButtonHGap;
-var     float ButtonVGap;
-var     float BarHeight;
-var     float BarVPos;
+var float ButtonWidth;
+var float ButtonHeight;
+var float ButtonHGap;
+var float ButtonVGap;
+var float BarHeight;
+var float BarVPos;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -26,7 +26,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function bool InternalOnClick(GUIComponent Sender)
 {
-    if (Sender==Controls[1]) // OK
+    if (Sender == Controls[1])
     {
         Controller.OpenMenu("DH_Interface.DHServerBrowser");
     }
@@ -36,8 +36,8 @@ function bool InternalOnClick(GUIComponent Sender)
 
 event HandleParameters(string Param1, string Param2)
 {
-    //Log("IN DHNETWORKSTATUSMESSAGE");
     GUILabel(Controls[2]).Caption = Param1 $ "|" $ Param2;
+
     PlayerOwner().ClearProgressMessages();
 }
 

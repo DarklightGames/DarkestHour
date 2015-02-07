@@ -11,26 +11,30 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     local GUIStyles DrawStyle;
 
     if (VRI == none)
+    {
         return;
+    }
 
     // Draw the selection border
     if (bSelected)
     {
-        SelectedStyle.Draw(Canvas,MenuState, X, Y-2, W, H+2);
+        SelectedStyle.Draw(Canvas,MenuState, X, Y - 2, W, H + 2);
         DrawStyle = SelectedStyle;
     }
     else
+    {
         DrawStyle = Style;
+    }
 
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left,
-        VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, FontScale);
+
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, FontScale);
 
     GetCellLeftWidth(1, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left,
-        string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
+
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
 }
-//------------------------------------------------------------------------------------------------
+
 function string GetSortString(int i)
 {
     local string ColumnData[5];

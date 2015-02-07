@@ -473,7 +473,7 @@ function ServerSaveArtilleryPosition()
     }
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
-        
+
     // If a player tries to mark artillery on a level with no arty for their team, give them a message
     if (PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
     {

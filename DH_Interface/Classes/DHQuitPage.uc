@@ -6,7 +6,8 @@
 class DHQuitPage extends UT2K3GUIPage;
 
 function bool InternalOnClick(GUIComponent Sender)
-{   if (Sender==Controls[1])
+{
+    if (Sender == Controls[1])
     {
         PlayerOwner().ConsoleCommand("exit");
     }
