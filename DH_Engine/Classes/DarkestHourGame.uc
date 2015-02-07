@@ -6,7 +6,6 @@
 class DarkestHourGame extends ROTeamGame;
 
 var     DH_LevelInfo                DHLevelInfo;
-var     DHLevelSharedInfo           DHSharedInfo; //Debug Theel
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
 
@@ -39,7 +38,6 @@ event InitGame(string Options, out string Error)
 function PostBeginPlay()
 {
     local DHGameReplicationInfo DHGRI;
-    local DHLevelSharedInfo     DLSI;
     local DH_LevelInfo          DLI;
     local ROLevelInfo           LI;
     local ROMapBoundsNE         NE;
@@ -89,20 +87,6 @@ function PostBeginPlay()
         else
         {
             Log("DarkestHourGame: More than one DH_LevelInfo detected!");
-            break;
-        }
-    }
-
-    // Find and set the DHLevelSharedInfo * Debug Theel
-    foreach AllActors(class'DHLevelSharedInfo', DLSI)
-    {
-        if (DHSharedInfo == none)
-        {
-            DHSharedInfo = DLSI;
-        }
-        else
-        {
-            Log("DarkestHourGame: More than one DHLevelSharedInfo detected!");
             break;
         }
     }

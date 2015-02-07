@@ -14,8 +14,7 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     //Lets change the smoke color if it's not set to default in DH_LevelInfo
-    if (DarkestHourGame(Level.Game).DHSharedInfo.SmokeBrightnessOverride != 255)
-    {
+    /*
         //Set the brightness value to the override in the level
         SmokeBrightnessValue = DarkestHourGame(Level.Game).DHSharedInfo.SmokeBrightnessOverride;
 
@@ -34,7 +33,7 @@ simulated function PostBeginPlay()
         Emitters[2].ColorScale[1].color = NewSmokeColor;
         Emitters[3].ColorScale[0].Color = NewSmokeColor;
         Emitters[3].ColorScale[1].Color = NewSmokeColor;
-    }
+    */
 
     //Lets get the wind direction and speed and set the first sprite emitter accordingly
 }
