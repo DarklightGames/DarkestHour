@@ -298,11 +298,6 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < Weapons.Length; i++)
-        {
-            if (Weapons[i] != none)
-                Weapons[i].Destroy();
-        }
         for (i = 0; i < WeaponPawns.Length; i++)
         {
             if (WeaponPawns[i] != none)
@@ -312,29 +307,11 @@ simulated event DestroyAppearance()
         }
     }
 
-//    Weapons.Length = 0;
     WeaponPawns.Length = 0;
 
     // Destroy the effects
     if (Level.NetMode != NM_DedicatedServer)
     {
-        bNoTeamBeacon = true;
-
-        for (i = 0; i < HeadlightCorona.Length; i++)
-        {
-            if (HeadlightCorona[i] != none)
-            {
-                HeadlightCorona[i].Destroy();
-            }
-        }
-
-        HeadlightCorona.Length = 0;
-
-        if (HeadlightProjector != none)
-        {
-            HeadlightProjector.Destroy();
-        }
-
         for (i = 0; i < ExhaustPipes.Length; i++)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)

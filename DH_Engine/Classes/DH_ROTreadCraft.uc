@@ -507,26 +507,7 @@ function KDriverEnter(Pawn p)
 
     super(Vehicle).KDriverEnter(P);
 
-    if (Weapons.Length > 0)
-    {
-        Weapons[ActiveWeapon].bActive = true;
-    }
-
     Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
-
-    for (x = 0; x < Weapons.Length; x++)
-    {
-        if (Weapons[x] == none)
-        {
-            Weapons.Remove(x, 1);
-            x--;
-        }
-        else
-        {
-            Weapons[x].NetUpdateFrequency = 20.0;
-            ClientRegisterVehicleWeapon(Weapons[x], x);
-        }
-    }
 }
 
 // Overriding here because we don't want exhaust/dust to start up until engine starts
@@ -903,12 +884,6 @@ function DriverLeft()
 {
     MotionSoundVolume = 0.0;
     UpdateMovementSound();
-
-    if (ActiveWeapon < Weapons.Length)
-    {
-        Weapons[ActiveWeapon].bActive = false;
-        Weapons[ActiveWeapon].AmbientSound = none;
-    }
 
     // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
     if (!bNeverReset && ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
@@ -2658,43 +2633,17 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < Weapons.Length; i++)
-        {
-            if (Weapons[i] != none)
-            {
-                Weapons[i].Destroy();
-            }
-        }
-
         for (i = 0; i < WeaponPawns.Length; i++)
         {
             WeaponPawns[i].Destroy();
         }
     }
 
-    Weapons.Length = 0;
     WeaponPawns.Length = 0;
 
     // Destroy the effects
     if (Level.NetMode != NM_DedicatedServer)
     {
-        bNoTeamBeacon = true;
-
-        for (i = 0; i < HeadlightCorona.Length; i++)
-        {
-            if (HeadlightCorona[i] != none)
-            {
-                HeadlightCorona[i].Destroy();
-            }
-        }
-
-        HeadlightCorona.Length = 0;
-
-        if (HeadlightProjector != none)
-        {
-            HeadlightProjector.Destroy();
-        }
-
         for (i = 0; i < Dust.Length; i++)
         {
             if (Dust[i] != none)
@@ -3017,16 +2966,6 @@ simulated function DrawHUD(Canvas Canvas)
     local vector           CameraLocation;
     local rotator          CameraRotation;
     local float            SavedOpacity; // to keep players from seeing outside the periscope overlay
-
-    if (IsLocallyControlled() && ActiveWeapon < Weapons.Length && Weapons[ActiveWeapon] != none && Weapons[ActiveWeapon].bShowAimCrosshair && Weapons[ActiveWeapon].bCorrectAim)
-    {
-        Canvas.DrawColor = CrosshairColor;
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-
-        Canvas.SetPos(Canvas.SizeX * 0.5 - CrosshairX, Canvas.SizeY * 0.5 - CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX * 2.0 + 1.0, CrosshairY * 2.0 + 1.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-    }
 
     PC = PlayerController(Controller);
 

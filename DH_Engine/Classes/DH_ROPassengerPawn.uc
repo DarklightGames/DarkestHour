@@ -228,15 +228,8 @@ function Timer()
 
 function bool TryToDrive(Pawn P)
 {
-    if (VehicleBase != none)
+    if (VehicleBase != none && P != none)
     {
-        if (VehicleBase.NeedsFlip())
-        {
-            VehicleBase.Flip(vector(P.Rotation), 1);
-
-            return false;
-        }
-
         if (P.GetTeamNum() != VehicleBase.VehicleTeam)
         {
             if (VehicleBase.Driver == none)

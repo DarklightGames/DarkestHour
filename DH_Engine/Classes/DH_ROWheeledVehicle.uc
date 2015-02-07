@@ -151,12 +151,6 @@ function KDriverEnter(Pawn P)
 // DriverLeft() called by KDriverLeave()
 function DriverLeft()
 {
-    if (ActiveWeapon < Weapons.Length)
-    {
-        Weapons[ActiveWeapon].bActive = false;
-        Weapons[ActiveWeapon].AmbientSound = none;
-    }
-
     // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
     if (!bNeverReset && ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
     {
@@ -785,14 +779,6 @@ simulated event DestroyAppearance()
     // Destroy the weapons
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < Weapons.Length; i++)
-        {
-            if (Weapons[i] != none)
-            {
-                Weapons[i].Destroy();
-            }
-        }
-
         for (i = 0; i < WeaponPawns.Length; i++)
         {
             if (WeaponPawns[i] != none)
@@ -802,26 +788,11 @@ simulated event DestroyAppearance()
         }
     }
 
-    Weapons.Length = 0;
     WeaponPawns.Length = 0;
 
     // Destroy the effects
     if (Level.NetMode != NM_DedicatedServer)
     {
-        bNoTeamBeacon = true;
-
-        for (i = 0; i < HeadlightCorona.Length; i++)
-        {
-            HeadlightCorona[i].Destroy();
-        }
-
-        HeadlightCorona.Length = 0;
-
-        if (HeadlightProjector != none)
-        {
-            HeadlightProjector.Destroy();
-        }
-
         for (i = 0; i < Dust.Length; i++)
         {
             if (Dust[i] != none)
