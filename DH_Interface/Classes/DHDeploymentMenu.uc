@@ -239,6 +239,7 @@ function UpdateSpawnPoints()
     local int i;
     local DHPlayer C;
     local DHGameReplicationInfo DHGRI;
+    local array<DHSpawnPoint> SpawnPoints;
 
     C = DHPlayer(PlayerOwner());
 
@@ -259,13 +260,10 @@ function UpdateSpawnPoints()
         //the vehicle spawn points were modified in such a way that requires us to repopulate the list
         li_AvailableWeapons[0].Clear();
 
-        for (i = 0; i < 32; ++i)
-        {
-            if (!DHGRI.IsSpawnPointActive(i) || DHGRI.GetSpawnPointTeamIndex(i) != C.GetTeamNum())
-            {
-                continue;
-            }
+        SpawnPoints = DHGRI.GetActiveSpawnPointsForTeam(SpawnPoints, C.GetTeamNum());
 
+        for (i = 0; i < SpawnPoints.Length; ++i)
+        {
             //li_AvailableWeapons[0].Add(DHGRI.SpawnPointNames[i]);
             li_AvailableWeapons[0].SetExtraAtIndex(li_AvailableWeapons[0].ItemCount - 1, "" $ i);
         }

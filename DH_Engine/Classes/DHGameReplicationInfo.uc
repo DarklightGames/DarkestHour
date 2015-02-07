@@ -42,6 +42,7 @@ var private byte        VehiclePoolActiveCounts[32];
 var byte                VehiclePoolSpawnsRemainings[32];
 var private byte        VehiclePoolMaxActives[32];
 
+var DHSpawnPoint        SpawnPoints[32];
 var private byte        SpawnPointIsActives[32];
 
 var float               VehiclePoolsUpdateTime;   // the last time the vehicle pools were updated in a way that requires the client to re-populate its list
@@ -57,6 +58,24 @@ replication
         VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
         VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime,
         SpawnPointIsActives, SpawnPointsUpdateTime, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
+}
+
+simulated function PostBeginPlay()
+{
+    local int i;
+    local DHSpawnPoint SP;
+
+    foreach AllActors(class'DHSpawnPoint', SP)
+    {
+        if (i >= arraycount(SpawnPoints))
+        {
+            Warn("Number of DHSpawnPoints exceeds" @ arraycount(SpawnPoints) @ ", some spawn points will be ignored!");
+
+            break;
+        }
+
+        SpawnPoints[i++] = SP;
+    }
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
@@ -177,6 +196,24 @@ function SetVehiclePoolActiveCount(byte PoolIndex, byte ActiveCount)
 function bool IsVehiclePoolInfinite(byte PoolIndex)
 {
     return VehiclePoolMaxActives[PoolIndex] == 255;
+}
+
+function DHSpawnPoint GetSpawnPoint(byte Index)
+{
+    return SpawnPoints[Index];
+}
+
+function array<DHSpawnPoint> GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] != none && SpawnPoints[i].TeamIndex == TeamIndex && SpawnPointIsActives[i] != 0)
+        {
+            SpawnPoints_[SpawnPoints_.Length] = SpawnPoints[i];
+        }
+    }
 }
 
 defaultproperties
