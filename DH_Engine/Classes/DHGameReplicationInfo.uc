@@ -21,29 +21,37 @@ var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
 
-var DH_RoleInfo         DHAxisRoles[16];
-var DH_RoleInfo         DHAlliesRoles[16];
+const ROLES_MAX = 16;
 
-var byte                DHAlliesRoleBotCount[16];
-var byte                DHAlliesRoleCount[16];
-var byte                DHAxisRoleBotCount[16];
-var byte                DHAxisRoleCount[16];
+var DH_RoleInfo         DHAxisRoles[ROLES_MAX];
+var DH_RoleInfo         DHAlliesRoles[ROLES_MAX];
 
-var MortarTargetInfo    AlliedMortarTargets[2];
-var MortarTargetInfo    GermanMortarTargets[2];
+var byte                DHAlliesRoleBotCount[ROLES_MAX];
+var byte                DHAlliesRoleCount[ROLES_MAX];
+var byte                DHAxisRoleBotCount[ROLES_MAX];
+var byte                DHAxisRoleCount[ROLES_MAX];
+
+const MORTAR_TARGETS_MAX = 2;
+
+var MortarTargetInfo    AlliedMortarTargets[MORTAR_TARGETS_MAX];
+var MortarTargetInfo    GermanMortarTargets[MORTAR_TARGETS_MAX];
 
 var int                 DHSpawnCount[2];
 
 // Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
-var class<ROVehicle>    VehiclePoolVehicleClasses[32];
-var byte                VehiclePoolIsActives[32];
-var float               VehiclePoolNextAvailableTimes[32];
-var private byte        VehiclePoolActiveCounts[32];
-var byte                VehiclePoolSpawnsRemainings[32];
-var private byte        VehiclePoolMaxActives[32];
+const VEHICLE_POOLS_MAX = 32;
 
-var DHSpawnPoint        SpawnPoints[32];
-var private byte        SpawnPointIsActives[32];
+var class<ROVehicle>    VehiclePoolVehicleClasses[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolIsActives[VEHICLE_POOLS_MAX];
+var float               VehiclePoolNextAvailableTimes[VEHICLE_POOLS_MAX];
+var private byte        VehiclePoolActiveCounts[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolSpawnsRemainings[VEHICLE_POOLS_MAX];
+var private byte        VehiclePoolMaxActives[VEHICLE_POOLS_MAX];
+
+const SPAWN_POINTS_MAX = 64;
+
+var DHSpawnPoint        SpawnPoints[SPAWN_POINTS_MAX];
+var private byte        SpawnPointIsActives[SPAWN_POINTS_MAX];
 
 var float               VehiclePoolsUpdateTime;   // the last time the vehicle pools were updated in a way that requires the client to re-populate its list
 var float               SpawnPointsUpdateTime;    // the last time the vehicle spawn points were updated in a way that requires the client to repopulate the list
@@ -203,7 +211,7 @@ function DHSpawnPoint GetSpawnPoint(byte Index)
     return SpawnPoints[Index];
 }
 
-function array<DHSpawnPoint> GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
+function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
 {
     local int i;
 

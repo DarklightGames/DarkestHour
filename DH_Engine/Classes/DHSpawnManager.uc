@@ -59,7 +59,7 @@ var const byte SpawnPointType_Vehicles;
 
 var localized array<string> SpawnErrorStrings;
 
-const SpawnPointsMax = 32;
+const SpawnPointsMax = 64;
 const PoolsMax = 32;
 
 var(Vehicles) array<VehiclePool>        VehiclePools;
