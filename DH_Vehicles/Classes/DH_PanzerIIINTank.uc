@@ -212,6 +212,4 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.70
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

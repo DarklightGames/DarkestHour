@@ -237,6 +237,4 @@ defaultproperties
         KImpactThreshold=700.000000
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdpantherTank.KParams0'
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

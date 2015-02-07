@@ -240,6 +240,4 @@ defaultproperties
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

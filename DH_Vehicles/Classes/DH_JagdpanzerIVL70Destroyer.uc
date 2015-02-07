@@ -241,6 +241,4 @@ defaultproperties
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_JagdpanzerIVL70Destroyer.KParams0'
     HighDetailOverlayIndex=5
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
-    RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
 }

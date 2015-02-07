@@ -234,6 +234,6 @@ defaultproperties
         KImpactThreshold=700.000000
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_ShermanTank.KParams0'
-    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=-16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=-16384)
+    LeftTreadPanDirection=(Pitch=32768,Yaw=0,Roll=-16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
 }
