@@ -42,11 +42,7 @@ var private byte        VehiclePoolActiveCounts[32];
 var byte                VehiclePoolSpawnsRemainings[32];
 var private byte        VehiclePoolMaxActives[32];
 
-var private const byte  SpawnPointFlag_IsActive;  // 0x01
-var private const byte  SpawnPointFlag_TeamIndex; // 0x02
-var private const byte  SpawnPointFlag_Type;      // 0x04
-
-var private byte        SpawnPointFlags[32];
+var private byte        SpawnPointIsActives[32];
 
 var float               VehiclePoolsUpdateTime;   // the last time the vehicle pools were updated in a way that requires the client to re-populate its list
 var float               SpawnPointsUpdateTime;    // the last time the vehicle spawn points were updated in a way that requires the client to repopulate the list
@@ -60,7 +56,7 @@ replication
         CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets,
         VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
         VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime,
-        SpawnPointFlags, SpawnPointsUpdateTime, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
+        SpawnPointIsActives, SpawnPointsUpdateTime, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
@@ -121,52 +117,14 @@ simulated function DHSpawnPoint GetSpawnPointTest(int TeamInt)
 
 simulated function bool IsSpawnPointActive(byte SpawnPointIndex)
 {
-    return (SpawnPointFlags[SpawnPointIndex] & SpawnPointFlag_IsActive) == SpawnPointFlag_IsActive;
-}
-
-simulated function byte GetSpawnPointTeamIndex(byte SpawnPointIndex)
-{
-    return (SpawnPointFlags[SpawnPointIndex] & SpawnPointFlag_TeamIndex) >> 1;
-}
-
-simulated function byte GetSpawnPointType(byte SpawnPointIndex)
-{
-    return (SpawnPointFlags[SpawnPointIndex] & SpawnPointFlag_Type) >> 2;
+    return SpawnPointIsActives[SpawnPointIndex] != 0;
 }
 
 function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 {
-    if (bIsActive)
-    {
-        SpawnPointFlags[SpawnPointIndex] = SpawnPointFlags[SpawnPointIndex] | SpawnPointFlag_IsActive;
-    }
-    else
-    {
-        SpawnPointFlags[SpawnPointIndex] = SpawnPointFlags[SpawnPointIndex] & ~SpawnPointFlag_IsActive;
-    }
+    SpawnPointIsActives[SpawnPointIndex] = byte(bIsActive);
 
     SpawnPointsUpdateTime = Level.TimeSeconds;
-}
-
-function SetSpawnPointTeamIndex(byte SpawnPointIndex, byte TeamIndex)
-{
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            SpawnPointFlags[SpawnPointIndex] = SpawnPointFlags[SpawnPointIndex] & ~SpawnPointFlag_TeamIndex;
-            break;
-
-        case ALLIES_TEAM_INDEX:
-            SpawnPointFlags[SpawnPointIndex] = SpawnPointFlags[SpawnPointIndex] | SpawnPointFlag_TeamIndex;
-            break;
-
-        default:
-            Warn("Unhandled TeamIndex");
-            break;
-    }
-
-    Log("SpawnPointFlags[" $ SpawnPointIndex $ "] =" @ SpawnPointFlags[SpawnPointIndex]);
-    Log("GetSpawnPointTeamIndex(" $ SpawnPointIndex $ ")=" @ GetSpawnPointTeamIndex(SpawnPointIndex));
 }
 
 function SetSpawnPointType(byte SpawnPointIndex, byte Type)
@@ -223,9 +181,6 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
 
 defaultproperties
 {
-    SpawnPointFlag_IsActive=1
-    SpawnPointFlag_TeamIndex=2
-    SpawnPointFlag_Type=4
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
 }

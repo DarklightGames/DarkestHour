@@ -130,7 +130,6 @@ function Reset()
 function UpdateSpawnPointReplicationInfo(byte SpawnPointIndex)
 {
     GRI.SetSpawnPointIsActive(SpawnPointIndex, SpawnPoints[SpawnPointIndex].bIsActive);
-    GRI.SetSpawnPointTeamIndex(SpawnPointIndex, SpawnPoints[SpawnPointIndex].TeamIndex);
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)
