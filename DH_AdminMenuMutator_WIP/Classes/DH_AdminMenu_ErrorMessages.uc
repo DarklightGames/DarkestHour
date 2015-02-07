@@ -16,7 +16,7 @@ static function string AssembleMessage(byte MessageNumber, optional string Inser
     local string Text;
 
     // Exit if we don't have a message for the specified message number
-    if (MessageNumber >= ArrayCount(default.ErrorMessage) || default.ErrorMessage[MessageNumber] == "")
+    if (MessageNumber >= arraycount(default.ErrorMessage) || default.ErrorMessage[MessageNumber] == "")
     {
         return "";
     }

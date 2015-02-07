@@ -352,7 +352,7 @@ simulated function GetClosestMortarTargetController(out Controller C)
 
     if (DamageInstigator.GetTeamNum() == 0)
     {
-        for (i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].bCancelled != 0)
             {
@@ -377,7 +377,7 @@ simulated function GetClosestMortarTargetController(out Controller C)
     }
     else
     {
-        for (i = 0; i < ArrayCount(GRI.AlliedMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
         {
             if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].bCancelled != 0)
             {

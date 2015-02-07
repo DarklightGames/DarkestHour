@@ -255,7 +255,7 @@ function PossessedBy(Controller C)
                 Headgear = Spawn(HeadgearClass, self);
             }
 
-            for (i = 0; i < ArrayCount(AmmoPouchClasses); i++)
+            for (i = 0; i < arraycount(AmmoPouchClasses); i++)
             {
                 if (AmmoPouchClasses[i] == none)
                 {
@@ -427,7 +427,7 @@ simulated function ProcessHitFX()
         return;
     }
 
-    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % ArrayCount(HitFX))
+    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % arraycount(HitFX))
     {
         j++;
 

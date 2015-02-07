@@ -406,13 +406,13 @@ function UpdateWeaponsInfo()
     if (desiredRole != none)
     {
         // Update available primary weapons list
-        for (i = 0; i < ArrayCount(desiredRole.PrimaryWeapons); i++)
+        for (i = 0; i < arraycount(desiredRole.PrimaryWeapons); i++)
             if (desiredRole.PrimaryWeapons[i].item != none)
                 li_AvailableWeapons[0].Add(desiredRole.PrimaryWeapons[i].Item.default.ItemName,, string(i));
         //li_AvailableWeapons[0].SortList();
 
         // Update available secondary weapons list
-        for (i = 0; i < ArrayCount(desiredRole.SecondaryWeapons); i++)
+        for (i = 0; i < arraycount(desiredRole.SecondaryWeapons); i++)
             if (desiredRole.SecondaryWeapons[i].item != none)
                 li_AvailableWeapons[1].Add(desiredRole.SecondaryWeapons[i].Item.default.ItemName,, string(i));
         //li_AvailableWeapons[1].SortList();

@@ -282,7 +282,7 @@ function SetHitLocation(vector HitLocation)
     if (TeamIndex == 0)
     {
         // Find the closest mortar target
-        for (i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Location == vect(0.0, 0.0, 0.0))
             {
@@ -311,7 +311,7 @@ function SetHitLocation(vector HitLocation)
     else
     {
         // Find the closest mortar target
-        for (i = 0; i < ArrayCount(GRI.AlliedMortarTargets); I++)
+        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); I++)
         {
             if (GRI.AlliedMortarTargets[i].Location == vect(0.0, 0.0, 0.0))
             {
