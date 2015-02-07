@@ -154,10 +154,6 @@ function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
     SpawnPointsUpdateTime = Level.TimeSeconds;
 }
 
-function SetSpawnPointType(byte SpawnPointIndex, byte Type)
-{
-}
-
 //------------------------------------------------------------------------------
 // Vehicle Pool Functions
 //------------------------------------------------------------------------------
