@@ -13,53 +13,53 @@ struct ExitPositionPair
 };
 
 // Position stuff
-var     int     InitialPositionIndex;    // initial gunner position
-var     int     UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
-var()   int     PeriscopePositionIndex;
-var     int     GunsightPositions;       // number of gunsight positions, 1 for normal optics, 2 for dual-magnification optics
-var     name    GunsightOpticsName;
-
-// Display stuff
-var     bool    bShowRangeText;    // turn the range scale text on/off
-var()   bool    bShowCenter;       // AB
 var()   float   OverlayCenterScale;
-var()   float   OverlayCenterSize; // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-var()   float   OverlayCorrectionX;
-var()   float   OverlayCorrectionY;
-var     texture AltAmmoReloadTexture;    // used to show coaxial MG reload progress on the HUD, like the cannon reload
+var     int         InitialPositionIndex;    // initial commander position on entering
+var     int         UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
+var()   int         PeriscopePositionIndex;
+var     int         GunsightPositions;       // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
+
+// Gunsight overlay
+var     bool        bShowRangeText;       // show current range setting text
+var     TexRotator  ScopeCenterRotator;
+var()   float       ScopeCenterScale;
+var()   int         CenterRotationFactor;
+var()   float       OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float       OverlayCorrectionX;   // scope center correction in pixels, in case an overlay is off-center by pixel or two
+var()   float       OverlayCorrectionY;
+
+// Other HUD stuff
+var     texture     AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Damage modelling stuff
-var     texture DestroyedScopeOverlay;
-var     bool    bTurretRingDamaged;
-var     bool    bGunPivotDamaged;
-var     bool    bOpticsDamaged;
+var     bool        bTurretRingDamaged;
+var     bool        bGunPivotDamaged;
+var     bool        bOpticsDamaged;
+var     texture     DestroyedScopeOverlay;
 
-// Manual turret switching
-var     bool    bManualTraverseOnly;
-var     sound   ManualRotateSound;
-var     sound   ManualPitchSound;
-var     sound   ManualRotateAndPitchSound;
-var     sound   PoweredRotateSound;
-var     sound   PoweredPitchSound;
-var     sound   PoweredRotateAndPitchSound;
-var     float   ManualMinRotateThreshold;
-var     float   ManualMaxRotateThreshold;
-var     float   PoweredMinRotateThreshold;
-var     float   PoweredMaxRotateThreshold;
+// Manual & powered turret movement
+var     bool        bManualTraverseOnly; // TEST - not used - but can perhaps make use of in a different on/off system that doesn't use Tick
+var     sound       ManualRotateSound;
+var     sound       ManualPitchSound;
+var     sound       ManualRotateAndPitchSound;
+var     sound       PoweredRotateSound;
+var     sound       PoweredPitchSound;
+var     sound       PoweredRotateAndPitchSound;
+var     float       ManualMinRotateThreshold;
+var     float       ManualMaxRotateThreshold;
+var     float       PoweredMinRotateThreshold;
+var     float       PoweredMaxRotateThreshold;
 
-// NEW DH CODE: Illuminated Sights
-//var   texture NormalCannonScopeOverlay;
-//var   texture LitCannonScopeOverlay;
-//var   bool    bOpticsLit;
-//var   bool    bHasLightedOptics;
+// NEW DH CODE: Illuminated sights
+//var   texture     NormalCannonScopeOverlay;
+//var   texture     LitCannonScopeOverlay;
+//var   bool        bOpticsLit;
+//var   bool        bHasLightedOptics;
 
 // Debugging help
-var     bool    bDrawPenetration;
-var     bool    bDebuggingText;
-var     bool    bPenetrationText;
-var     bool    bLogPenetration;
-var     bool    bDebugExitPositions;
-var()   bool    bDebugSightMover; // AB
+var()   bool        bShowCenter;    // shows centering cross in tank sight for testing purposes
+var     bool        bDebuggingText; // on screen messages if damage prevents turret or gun from moving properly
+var     bool        bDebugExitPositions;
 
 replication
 {
@@ -79,7 +79,6 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientDamageCannonOverlay; // ClientLightOverlay
 }
-
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
@@ -210,7 +209,8 @@ function ServerToggleExtraRoundType()
     }
 }
 
-simulated function DamageCannonOverlay() // server side
+// New function to damage gunsight optics
+function DamageCannonOverlay()
 {
     ClientDamageCannonOverlay();
     bOpticsDamaged = true;
@@ -221,10 +221,14 @@ simulated function ClientDamageCannonOverlay()
     CannonScopeOverlay = DestroyedScopeOverlay;
 }
 
-// Override HandleTurretRotation to allow turret traverse seizure if turret ring is struck
+// Modified to allow turret traverse or elevation seizure if turret ring or pivot are damaged
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    if (bTurretRingDamaged && bGunPivotDamaged)
+    if (!bTurretRingDamaged && !bGunPivotDamaged)
+    {
+        super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
+    }
+    else if (bTurretRingDamaged && bGunPivotDamaged)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -251,13 +255,9 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
 
         super.HandleTurretRotation(DeltaTime, 0.0, PitchChange);
     }
-    else if (!bTurretRingDamaged && !bGunPivotDamaged)
-    {
-        super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
-    }
 }
 
-// AB CODE - modification allowing dual-magnification optics is here (look for "GunsightPositions")
+// Modified to handle dual-magnification optics (DPI < GunsightPositions), & to apply FPCamPos to all positions not just overlay positions
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z, VehicleZ, CamViewOffsetWorld;
@@ -270,7 +270,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     ViewActor = self;
 
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
+    WeaponAimRot.Roll =  VehicleBase.Rotation.Roll;
 
     if (ROPlayer(Controller) != none)
     {
@@ -292,7 +292,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CQuat = QuatProduct(AQuat,BQuat);
 
         // Then, rotate that by the vehicles rotation to get the final rotation
-        AQuat = QuatFromRotator(GetVehicleBase().Rotation);
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
         BQuat = QuatProduct(CQuat,AQuat);
 
         // Finally, make it back into a rotator
@@ -320,7 +320,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         }
         else
         {
-            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin;
+            CameraLocation = Gun.GetBoneCoords('Camera_com').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
 
         if (bFPNoZFromCameraPitch)
@@ -346,7 +346,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-// AB CODE
 simulated function DrawBinocsOverlay(Canvas Canvas)
 {
     local float ScreenRatio;
@@ -367,11 +366,12 @@ function KDriverEnter(Pawn P)
     }
 }
 
+// Modified to handle InitialPositionIndex instead of assuming start in position zero
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
     {
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone ||  Level.Netmode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone ||  Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
             {
@@ -396,7 +396,7 @@ Begin:
     GotoState('');
 }
 
-// Overridden to handle mesh swapping when entering the vehicle
+// Modified to handle InitialPositionIndex instead of assuming start in position zero
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
@@ -410,7 +410,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRot;
 
-    NewRot = GetVehicleBase().Rotation;
+    NewRot = VehicleBase.Rotation;
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
@@ -422,6 +422,7 @@ function ServerChangeDriverPos()
     DriverPositionIndex = InitialPositionIndex;
 }
 
+// Modified to prevent exit if not unbuttoned (& also to reset to InitialPositionIndex instead of zero)
 function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
@@ -434,29 +435,49 @@ function bool KDriverLeave(bool bForceLeave)
     }
     else
     {
-        DriverPositionIndex=InitialPositionIndex;
-        LastPositionIndex=InitialPositionIndex;
+        DriverPositionIndex = InitialPositionIndex;
+        LastPositionIndex = InitialPositionIndex;
 
         bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
-        DH_ROTreadCraft(GetVehicleBase()).MaybeDestroyVehicle();
+        VehicleBase.MaybeDestroyVehicle();
 
         return bSuperDriverLeave;
     }
 }
 
+// Modified to reset to InitialPositionIndex instead of zero
 function DriverDied()
 {
-    DriverPositionIndex=InitialPositionIndex;
+    DriverPositionIndex = InitialPositionIndex;
 
     super.DriverDied();
 
-    DH_ROTreadCraft(GetVehicleBase()).MaybeDestroyVehicle();
+    VehicleBase.MaybeDestroyVehicle();
 
     // Kill the rotation sound if the driver dies but the vehicle doesn't
-    if (GetVehicleBase().Health > 0)
+    if (VehicleBase.Health > 0)
     {
         SetRotatingStatus(0);
+    }
+}
+
+// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+simulated function NextWeapon()
+{
+    if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex + 1;
+        ServerChangeViewPoint(true);
+    }
+}
+
+simulated function PrevWeapon()
+{
+    if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex -1;
+        ServerChangeViewPoint(false);
     }
 }
 
@@ -470,7 +491,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -491,7 +512,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -505,7 +526,7 @@ simulated state ViewTransition
     {
         StoredVehicleRotation = VehicleBase.Rotation;
 
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
             {
@@ -583,6 +604,7 @@ Begin:
     Sleep(0.2);
 }
 
+// Modified so mesh rotation is matched in all net modes, not just standalone as in the RO original (not sure why they did that)
 simulated state LeavingVehicle
 {
     simulated function HandleExit()
@@ -592,8 +614,8 @@ simulated state LeavingVehicle
         if (Gun != none)
         {
             // Save old mesh rotation
-            TurretYaw.Yaw = GetVehicleBase().Rotation.Yaw - CustomAim.Yaw;
-            TurretPitch.Pitch = GetVehicleBase().Rotation.Pitch - CustomAim.Pitch;
+            TurretYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
+            TurretPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
 
             Gun.LinkMesh(Gun.default.Mesh);
 
@@ -609,6 +631,7 @@ simulated state LeavingVehicle
     }
 }
 
+// New function, checked by Fire() so we prevent firing while moving between view points or when on periscope or binoculars
 function bool CanFire()
 {
     return !IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex && ROPlayer(Controller) != none;
@@ -634,6 +657,96 @@ function AltFire(optional float F)
     super.AltFire(F);
 }
 
+// Modified to add clientside checks before sending the function call to the server
+simulated function SwitchWeapon(byte F)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    local DH_ROTreadCraft     TreadCraft;
+    local bool                bMustBeTankerToSwitch;
+    local byte                ChosenWeaponPawnIndex;
+//    log("SwitchWeapon called for" @ Tag @ " Pos =" @ F); // TEMP
+    // Stop call to server if we don't have a vehicle base, or if player is moving between view points
+    if (VehicleBase == none || IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    // Trying to switch to driver position
+    if (F == 1)
+    {
+        // Stop call to server as there is already a human driver
+        if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
+        {
+            return;
+        }
+
+        if (VehicleBase.bMustBeTankCommander)
+        {
+            bMustBeTankerToSwitch = true;
+        }
+    }
+    // Trying to switch to non-driver position
+    else
+    {
+        ChosenWeaponPawnIndex = F - 2;
+
+        // Stop call to server if player has selected an invalid weapon position or the current position
+        if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
+        {
+            return;
+        }
+
+        TreadCraft = DH_ROTreadCraft(VehicleBase);
+
+        // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
+        if (TreadCraft != none && ChosenWeaponPawnIndex >= TreadCraft.FirstPassengerWeaponPawnIndex && TreadCraft.bMustBeUnbuttonedToBecomePassenger && DriverPositionIndex < UnbuttonedPositionIndex)
+        {
+            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ TreadCraft.bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
+            DenyEntry(Instigator, 4); // must unbutton the hatch
+
+            return;
+        }
+
+        // Get weapon pawn
+        if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
+        {
+            WeaponPawn = ROVehicleWeaponPawn(VehicleBase.WeaponPawns[ChosenWeaponPawnIndex]);
+        }
+
+        if (WeaponPawn != none)
+        {
+            // Stop call to server as weapon position already has a human player
+            if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+            {
+                return;
+            }
+
+            if (WeaponPawn.bMustBeTankCrew)
+            {
+                bMustBeTankerToSwitch = true;
+            }
+        }
+        // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
+        // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
+        else if (class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
+        {
+            return;
+        }
+    }
+
+    // Stop call to server if player has selected a tank crew role but isn't a tanker
+    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+        ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    {
+        DenyEntry(Instigator, 0); // not qualified to operate vehicle
+
+        return;
+    }
+
+    ServerChangeDriverPosition(F);
+}
+
+// Modified to prevent moving to another vehicle position while moving between view points
 function ServerChangeDriverPosition(byte F)
 {
     if (IsInState('ViewTransition'))
@@ -644,13 +757,26 @@ function ServerChangeDriverPosition(byte F)
     super.ServerChangeDriverPosition(F);
 }
 
+// Matt: re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
+simulated function IncrementRange()
+{
+    if (Gun != none)
+    {
+        Gun.IncrementRange();
+    }
+}
+
+simulated function DecrementRange()
+{
+    if (Gun != none)
+    {
+        Gun.DecrementRange();
+    }
+}
+
 function bool ResupplyAmmo()
 {
-    local DH_ROTankCannon P;
-
-    P = DH_ROTankCannon(Gun);
-
-    if (P != none && P.ResupplyAmmo())
+    if (DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).ResupplyAmmo())
     {
         return true;
     }
@@ -719,7 +845,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = 1;
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) 
+                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) 
                     && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 {
                     Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
@@ -768,7 +894,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;            
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) 
+                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) 
                     && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 {
                     Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
@@ -900,7 +1026,6 @@ defaultproperties
 {
     bShowRangeText=true
     GunsightPositions=1
-    GunsightOpticsName="ScopeNameHere"
     UnbuttonedPositionIndex=2
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     ManualPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
@@ -913,6 +1038,8 @@ defaultproperties
     PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     MaxRotateThreshold=1.5
+    bPCRelativeFPRotation=true
+    bFPNoZFromCameraPitch=true
     bDesiredBehindView=false
     PeriscopePositionIndex=-1
     AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'

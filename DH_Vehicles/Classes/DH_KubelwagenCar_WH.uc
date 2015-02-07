@@ -92,8 +92,8 @@ simulated function Tick(float DeltaTime)
     local float MySpeed;
 
     // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
 
+    if (Level.NetMode != NM_DedicatedServer)
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity
@@ -146,7 +146,6 @@ defaultproperties
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
     EngineSoundBone="Engine"
-    EngineHealthMax=25
     WheelSoftness=0.025000
     WheelPenScale=0.850000
     WheelPenOffset=0.010000

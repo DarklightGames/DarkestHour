@@ -38,7 +38,7 @@ simulated function Tick(float DeltaTime)
     }
 
     // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         if (bDisableThrottle)
         {
@@ -260,8 +260,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    GunMantletArmorFactor=8.000000
-    GunMantletSlope=45.000000
     bHasAddedSideArmor=true
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn_CamoTwo')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_StuH42MountedMGPawn')

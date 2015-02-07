@@ -3,24 +3,21 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_Sdkfz2341Cannon extends DH_ROTankCannon; // Matt: originally extended ROTankCannon
+class DH_Sdkfz2341Cannon extends DH_ROTankCannon;
 
-var int  NumMags;
-var int  NumSecMags;
-var int  NumTertMags;     // Matt: added
-var bool bMixedMagFireAP; // Matt: added to flag that mixed AP/HE mag is due to fire an AP round
+var()   int     NumMags;
+var()   int     NumSecMags;
+var()   int     NumTertMags;
+var     bool    bMixedMagFireAP; // flags that a mixed AP/HE mag is due to fire an AP round
 
 replication
 {
-    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
-        NumMags, NumSecMags, NumTertMags; // Matt: added NumTertMags
-
-    // Functions the server calls on the client side.
-//  reliable if (Role == ROLE_Authority)
-//      ClientDoCannonReload; // Matt: replaced by existing ClientSetReloadState
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        NumMags, NumSecMags, NumTertMags;
 }
 
-// Matt: modified to add tertiary & significantly simplified/optimised
+// Modified as this is an auto-cannon firing from a magazine
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     local int   FireMode;
@@ -31,9 +28,10 @@ event bool AttemptFire(Controller C, bool bAltFire)
         return false;
     }
 
-//  if ((!bAltFire && CannonReloadState == CR_ReadyToFire && FireCountdown <= 0) || (bAltFire && FireCountdown <= 0))
-    if (FireCountdown <= 0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bAltFire)) // Matt: simplified but added bClientCanFireCannon for consistency
+    // Check that can fire (adds FireCountdown check on cannon fire, not just alt fire)
+    if (FireCountdown <= 0.0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bAltFire))
     {
+        // Set fire rotation, including any random spread (record FireMode to simplify things later)
         CalcWeaponFire(bAltFire);
 
         if (bCorrectAim)
@@ -43,7 +41,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
         if (bAltFire)
         {
-            if (AltFireSpread > 0)
+            if (AltFireSpread > 0.0)
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * AltFireSpread);
             }
@@ -55,20 +53,20 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 FireMode = 0;
                 FireSpread = Spread;
             }
-            else if (ProjectileClass == SecondaryProjectileClass) // Matt: added back from DHROTC, but optimised
+            else if (ProjectileClass == SecondaryProjectileClass)
             {
                 FireMode = 1;
                 
-                if (bUsesSecondarySpread && SecondarySpread > 0)
+                if (bUsesSecondarySpread && SecondarySpread > 0.0)
                 {
                     FireSpread = SecondarySpread;
                 }
             }
-            else if (ProjectileClass == TertiaryProjectileClass) // Matt: added back from DHROTC, but optimised
+            else if (ProjectileClass == TertiaryProjectileClass)
             {
                 FireMode = 2;
 
-                if (bUsesTertiarySpread && TertiarySpread > 0)
+                if (bUsesTertiarySpread && TertiarySpread > 0.0)
                 {
                     FireSpread = TertiarySpread;
                 }
@@ -77,7 +75,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             if (FireSpread > 0)
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * FireSpread);
-                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern // Matt: added back from DHROTC
+                WeaponFireRotation += rot(1, 6, 0); // correction to the aim point and to center the spread pattern
             }
         }
 
@@ -85,9 +83,11 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
         Instigator.MakeNoise(1.0);
 
+        // Alt fire is coaxial MG - check we have ammo & fire the MG
         if (bAltFire)
         {
-            if (!ConsumeAmmo(3)) // Matt: changed from 2 (MG mode)
+            // If MG is empty so we can't fire
+            if (!ConsumeAmmo(3))
             {
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
                 HandleReload();
@@ -95,17 +95,20 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 return false;
             }
 
-            FireCountdown = AltFireInterval;
             AltFire(C);
+            FireCountdown = AltFireInterval;
 
+            // If we just fired our last round, start a reload
             if (!HasAmmo(3))
             {
                 HandleReload();
             }
         }
+        // Cannon - check we have ammo & fire the current round
         else
         {
-            if (!ConsumeAmmo(FireMode)) // Matt: means the cannon is already empty so we can't fire
+            // If cannon is empty so we can't fire
+            if (!ConsumeAmmo(FireMode))
             {
                 VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
                 HandleCannonReload();
@@ -116,7 +119,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
             Fire(C);
             FireCountdown = FireInterval;
 
-            if (!HasAmmo(FireMode)) // Matt: means the cannon is now empty, after firing our last primary round
+            // If cannon is now empty, after firing our last round
+            if (!HasAmmo(FireMode))
             {
                 HandleCannonReload();
             }
@@ -155,6 +159,7 @@ state ProjectileFireMode
     }
 }
 
+// Modified to remove switch to PendingProjectileClass after firing, as this cannon uses a magazine
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile        P;
@@ -164,18 +169,18 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     FireRot = WeaponFireRotation;
 
-    // Used only for Human players - lets cannons with non-centered aim points have a different aiming location
+    // Used only for human players - lets cannons with non-centered aim points have a different aiming location
     if (Instigator != none && Instigator.IsHumanControlled())
     {
         FireRot.Pitch += AddedPitch;
     }
 
-    if (!bAltFire)
+    if (!bAltFire && RangeSettings.Length > 0)
     {
         FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
     }
 
-    if (bCannonShellDebugging)
+    if (bCannonShellDebugging && RangeSettings.Length > 0)
     {
         Log("GetPitchForRange for" @ CurrentRangeIndex @ "=" @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
     }
@@ -222,7 +227,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
     P = Spawn(ProjClass, none, , StartLocation, FireRot);
 
-    // Swap to the next round type after firing // Matt: no change from me; this is just noting what the original removed from the Super (the only change in this function)
+    // Swap to the next round type after firing // note this 'if' is removed & is the only change in this override
 //  if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
 //  {
 //      ProjectileClass = PendingProjectileClass;
@@ -260,7 +265,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             }
             else
             {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume/255.0, , FireSoundRadius,, false);
+                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0, , FireSoundRadius,, false);
             }
         }
     }
@@ -268,13 +273,12 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return P;
 }
 
-// Matt: modified slightly for consistency & simplification
+// Modified to add FireCountDown check to cannon fire mode, not just alt fire
 simulated function ClientStartFire(Controller C, bool bAltFire)
 {
     bIsAltFire = bAltFire;
 
-//  if ((!bIsAltFire && CannonReloadState == CR_ReadyToFire && FireCountDown <= 0) || (bIsAltFire && FireCountdown <= 0))
-    if (FireCountDown <= 0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bIsAltFire)) // Matt: simplified but added bClientCanFireCannon for consistency
+    if (FireCountDown <= 0.0 && ((CannonReloadState == CR_ReadyToFire && bClientCanFireCannon) || bIsAltFire))
     {
         if (bIsRepeatingFF)
         {
@@ -299,7 +303,8 @@ simulated event OwnerEffects()
     if (Role < ROLE_Authority && !ReadyToFire(bIsAltFire))
     {
         VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bIsAltFire);
-        return; // Matt: original 234/1 removes return, suggesting fire effects would happen if weapon can't fire - doesn't seem to matter either way but have reinstated as seems more logical
+
+        return; // Matt: originally removed in 234/1, suggesting fire effects would happen if weapon can't fire - doesn't seem to matter either way but have reinstated as seems more logical
     }
 
     if (!bIsRepeatingFF)
@@ -327,12 +332,12 @@ simulated event OwnerEffects()
         {
             FireCountdown = AltFireInterval;
         }
-        else // Matt: note original adds back this commented else, as it uses FireCountDown for auto fire interval
+        else // adds back this 'else' (commented out in Super), as we use FireCountDown for auto fire interval
         {
             FireCountdown = FireInterval;
         }
 /*
-        if (!bIsAltFire) // Matt: note original removes this 'if'
+        if (!bIsAltFire) // note this 'if' is removed in 234/1
         {
             if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller).bManualTankShellReloading)
             {
@@ -351,14 +356,9 @@ simulated event OwnerEffects()
 
         FlashMuzzleFlash(bIsAltFire);
 
-//      if (AmbientEffectEmitter != none && bIsAltFire) // Matt: moved under 'if' below to optimise
-//      {
-//         AmbientEffectEmitter.SetEmitterStatus(true);
-//      }
-
         if (bIsAltFire)
         {
-            if (AmbientEffectEmitter != none)
+            if (AmbientEffectEmitter != none) // moved under this 'if' to optimise
             {
                 AmbientEffectEmitter.SetEmitterStatus(true);
             }
@@ -380,52 +380,6 @@ simulated event OwnerEffects()
         }
     }
 }
-
-/*
-simulated event FlashMuzzleFlash(bool bWasAltFire) // Matt: removed as only change was to remove spawning CannonDustEmitter, but can be achieved simply by setting CannonDustEmitterClass=none
-{
-    local ROVehicleWeaponPawn OwningPawn;
-
-    if (Role == ROLE_Authority)
-    {
-        if (bWasAltFire)
-            FiringMode = 1;
-        else
-            FiringMode = 0;
-        FlashCount++;
-        NetUpdateTime = Level.TimeSeconds - 1;
-    }
-    else
-        CalcWeaponFire(bWasAltFire);
-
-    if (bUsesTracers && (!bWasAltFire && !bAltFireTracersOnly || bWasAltFire))
-        UpdateTracer();
-
-    if (bWasAltFire)
-        return;
-
-    if (FlashEmitter != none)
-        FlashEmitter.Trigger(self, Instigator);
-
-    if ((EffectEmitterClass != none) && EffectIsRelevant(Location, false))
-        EffectEmitter = spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
-
-//  if (CannonDustEmitterClass != none) && EffectIsRelevant(Location, false)) // Matt: note removing this was the only change, but can be achieved by simply setting CannonDustEmitterClass=none
-//      CannonDustEmitter = spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
-
-    OwningPawn = ROVehicleWeaponPawn(Instigator);
-
-    if (OwningPawn != none && OwningPawn.DriverPositions[OwningPawn.DriverPositionIndex].bExposed)
-    {
-        if (HasAnim(TankShootOpenAnim))
-            PlayAnim(TankShootOpenAnim);
-    }
-    else if (HasAnim(TankShootClosedAnim))
-    {
-        PlayAnim(TankShootClosedAnim);
-    }
-}
-*/
 
 // Matt: modified to handle our modified reload process for players who manually reload
 function ServerManualReload()
@@ -450,10 +404,9 @@ function HandleCannonReload(optional bool bIsManualReload)
     // Otherwise check ammo & proceed with reload if we have some
     else if (CannonReloadState != CR_Empty)
     {
-        // We don't have a spare mag for the pending round type
+        // If we don't have a spare mag for the pending round type, try to switch to another round type (but not if player reloads manually)
         if (!HasMagazines(GetPendingRoundIndex()))
         {
-            // Try to switch to another round type if that has a spare mag (but not if player reloads manually)
             if (!bIsManualReload)
             {
                 ToggleRoundType();
@@ -501,59 +454,7 @@ function HandleCannonReload(optional bool bIsManualReload)
     }
 }
 
-/*
-function HandlePrimaryCannonReload() // Matt: replaced by new, consolidated HandleCannonReload function
-{
-    if (NumMags > 0 && CannonReloadState != CR_Empty)
-    {
-        ClientDoCannonReload();
-        NumMags--;
-        MainAmmoCharge[0] = InitialPrimaryAmmo;
-        NetUpdateTime = Level.TimeSeconds - 1;
-
-        if (PendingProjectileClass == none)
-            PendingProjectileClass = PrimaryProjectileClass;
-
-        ProjectileClass = PendingProjectileClass;
-
-        CannonReloadState = CR_Empty;
-        SetTimer(0.01, false);
-    }
-}
-
-function HandleSecondaryCannonReload() // Matt: replaced by new, consolidated HandleCannonReload function
-{
-    if (NumSecMags > 0 && CannonReloadState != CR_Empty)
-    {
-        ClientDoCannonReload();
-        NumSecMags--;
-        MainAmmoCharge[1] = InitialSecondaryAmmo;
-        NetUpdateTime = Level.TimeSeconds - 1;
-
-        if (PendingProjectileClass == none)
-            PendingProjectileClass = SecondaryProjectileClass;
-
-        ProjectileClass = PendingProjectileClass;
-
-        CannonReloadState = CR_Empty;
-        SetTimer(0.01, false);
-    }
-}
-
-// Set the fire countdown client side
-simulated function ClientDoCannonReload() // Matt: this is a new function, specific to 20mm, but removed as we can use the existing ClientSetReloadState
-{
-    CannonReloadState = CR_Empty;
-    SetTimer(0.01, false);
-}
-
-simulated function Tick(float Delta) // Matt: removed as was having no effect originally, but now we actually want the DH_ROTankCannon turret fire effects
-{
-    super(ROVehicleWeapon).Tick(Delta);
-}
-*/
-
-// Matt: modified to include tertiary & also generally optimised
+// Modified as this cannon uses magazines
 function ToggleRoundType()
 {
     if (PendingProjectileClass == PrimaryProjectileClass)
@@ -606,41 +507,7 @@ function ToggleRoundType()
     }
 }
 
-// Matt: modified to include tertiary
-simulated function bool ReadyToFire(bool bAltFire)
-{
-    local  int  Mode;
-
-    if (bAltFire)
-    {
-        Mode = 3; // Matt: was 2
-    }
-    else if (CannonReloadState != CR_ReadyToFire || !bClientCanFireCannon) // Matt: have moved up here to optimise
-    {
-        return false;
-    }
-    else if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes) // Matt: added !bMultipleRoundTypes
-    {
-        Mode = 0;
-    }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        Mode = 1;
-    }
-    else if (ProjectileClass == TertiaryProjectileClass) // Matt: added
-    {
-        Mode = 2;
-    }
-
-    if (HasAmmo(Mode))
-    {
-        return true;
-    }
-
-    return false;
-}
-
-// Matt: modified to include tertiary
+// Modified as this cannon uses magazines
 simulated function bool HasMagazines(int Mode)
 {
     switch (Mode)
@@ -650,37 +517,30 @@ simulated function bool HasMagazines(int Mode)
         case 1:
             return NumSecMags > 0;
         case 2:
-            return NumTertMags > 0; // Matt: added
+            return NumTertMags > 0;
         default:
             return false;
     }
 }
 
-// Matt: modified to include tertiary
+// Modified as this cannon uses magazines
 simulated function int PrimaryAmmoCount()
 {
-    if (bMultipleRoundTypes)
-    {
-        if (ProjectileClass == PrimaryProjectileClass)
-        {
-            return NumMags;
-        }
-        else if (ProjectileClass == SecondaryProjectileClass)
-        {
-            return NumSecMags;
-        }
-        else if (ProjectileClass == TertiaryProjectileClass) // Matt: added
-        {
-            return NumTertMags;
-        }
-    }
-    else
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
     {
         return NumMags;
     }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        return NumSecMags;
+    }
+    else if (ProjectileClass == TertiaryProjectileClass)
+    {
+        return NumTertMags;
+    }
 }
 
-// Matt: modified to add all 3 mag types
+// Modified as this cannon uses magazines
 function bool GiveInitialAmmo()
 {
     if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo || 
@@ -702,7 +562,7 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-// Matt: modified to work all 3 mag types into new ammo resupply system
+// Modified to work all 3 mag types into new ammo resupply system
 function bool ResupplyAmmo()
 {
     local bool bDidResupply;
@@ -711,42 +571,49 @@ function bool ResupplyAmmo()
     {
         MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
         bMixedMagFireAP = default.bMixedMagFireAP;
+
         bDidResupply = true;
     }
 
     if (MainAmmoChargeExtra[1] < InitialSecondaryAmmo)
     {
         MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
+
         bDidResupply = true;
     }
 
     if (MainAmmoChargeExtra[2] < InitialTertiaryAmmo)
     {
         MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
+
         bDidResupply = true;
     }
 
     if (NumMags < default.NumMags)
     {
         ++NumMags;
+
         bDidResupply = true;
     }
 
     if (NumSecMags < default.NumSecMags)
     {
         ++NumSecMags;
+
         bDidResupply = true;
     }
 
     if (NumTertMags < default.NumTertMags)
     {
         ++NumTertMags;
+
         bDidResupply = true;
     }
 
     if (NumAltMags < default.NumAltMags)
     {
         ++NumAltMags;
+
         bDidResupply = true;
     }
 
@@ -810,7 +677,6 @@ defaultproperties
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=5.000000
     AltFireOffset=(X=-54.000000,Y=-24.000000,Z=-3.000000)
-    RotationsPerSecond=0.040000
     ManualRotationsPerSecond=0.04
     PoweredRotationsPerSecond=0.04
     bAmbientAltFireSound=true

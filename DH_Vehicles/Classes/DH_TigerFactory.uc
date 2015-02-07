@@ -10,4 +10,5 @@ defaultproperties
     RespawnTime=1.000000
     bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_TigerTank'
+    Mesh=SkeletalMesh'axis_tiger1_anm.Tiger1_body_ext'
 }

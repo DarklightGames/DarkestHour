@@ -6,19 +6,19 @@
 class DH_ATCannonFactoryBase extends DH_VehicleFactory
     abstract;
 
-var()   bool    bUseRandomizer;             // Whether or not to use the randomization system
-var     int     GunIndex;                   // The index of this gun in the GRI ATCannon array which allows it to appear on the situation map.
-var()   string  GroupTag;                   // A tag used by the randomizer to spawn at guns by groups
-var     bool    bRandomEvaluated;           // Whether or not this AT Gun Factory has been evaluated by the randomizer yet
-var     bool    bMasterFactory;             // This factory is the master gun factory
-var()   int     MaxRandomFactoriesActive;   // The maximum number of AT Gun Factories to have active at one time for a particular Group (based on the grouptag)
+var()   bool    bUseRandomizer;            // whether or not to use the randomization system
+var     int     GunIndex;                  // the index of this gun in the GRI ATCannon array which allows it to appear on the situation map.
+var()   string  GroupTag;                  // a tag used by the randomizer to spawn at guns by groups
+var     bool    bRandomEvaluated;          // whether or not this AT Gun Factory has been evaluated by the randomizer yet
+var     bool    bMasterFactory;            // this factory is the master gun factory
+var()   int     MaxRandomFactoriesActive;  // the maximum number of AT Gun Factories to have active at one time for a particular Group (based on the grouptag)
 var     array<int> ActivatedIndexes;
 
+// Add this AT gun to the GRI
 simulated event PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    // Add this AT Gun to the GRI
     if (Role == ROLE_Authority)
     {
         GunIndex = ROGameReplicationInfo(Level.Game.GameReplicationInfo).AddATCannon(Location, class<ROVehicle>(VehicleClass).default.VehicleTeam);
@@ -249,7 +249,7 @@ simulated function Reset()
     }
     else
     {
-        TotalSpawnedVehicles=0;
+        TotalSpawnedVehicles = 0;
         Deactivate();
     }
 }

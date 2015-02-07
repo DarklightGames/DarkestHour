@@ -339,7 +339,7 @@ function CheckResupplyVolumes()
     local DHGameReplicationInfo DHGRI;
     local int i;
 
-    // Activate any vehicle factories that are activated based on spawn areas
+    // Activate any resupply areas that are activated based on spawn areas
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
     for (i = 0; i < ArrayCount(DHResupplyAreas); i++)

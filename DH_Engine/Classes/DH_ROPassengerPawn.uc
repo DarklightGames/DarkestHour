@@ -19,7 +19,7 @@ That way the server closes the channel & destroys the clientside actor before bT
 And if a player re-enters the rider position during these 5 secs, we just change bTearOff back to false & it becomes net relevant again.
 A further complication is when a player exits a rider pawn, we need to introduce a very short delay before setting bTearOff on server, so a 0.5 sec timer is used.
 This is necessary to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to clients before shutting down all net traffic.
-Changes in other classes: slight modifications to functions NumPassengers in DH_ROTreadCraft & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
+Changes in other classes: slight modifications to functions NumPassengers in Vehicle classes & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
 */
 
 struct ExitPositionPair
@@ -148,7 +148,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRot;
 
-    NewRot = GetVehicleBase().Rotation;
+    NewRot = VehicleBase.Rotation;
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
@@ -321,12 +321,22 @@ simulated function SwitchWeapon(byte F)
         if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
             ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 0);
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+
             return;
         }
 
         ServerChangeDriverPosition(F);
     }
+}
+
+// Matt: emptied out to prevent unnecessary replicated function calls to server
+function Fire(optional float F)
+{
+}
+
+function AltFire(optional float F)
+{
 }
 
 // Matt: allows debugging exit positions to be toggled for all rider pawns

@@ -33,23 +33,52 @@ var DHHintManager DHHintManager;
 
 replication
 {
-    // client to server functions
-    reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo,
-        ServerSaveMortarTarget, ServerCancelMortarTarget, ServerLeaveBody,
-        ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
 
-    // server to client functions
-    reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand;
-
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsInStateMantling, MortarTargetIndex, MortarHitLocation;
 
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, 
+        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
+
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
+        ClientProne, ClientToggleDuck, ClientConsoleCommand;
 }
-//=========================================================================
+
+// Matt: modified to avoid "accessed none" error
+event ClientReset()
+{
+    local Actor A;
+
+    // Reset client special timed sounds on the client
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.IsA('ClientSpecialTimedSound') || A.IsA('KrivoiPlaneController'))
+        {
+            A.Reset();
+        }
+    }
+
+    bBehindView = false;
+    bFixedCamera = false;
+    SetViewTarget(self);
+    SetViewDistance();
+
+    if (PlayerReplicationInfo != none && PlayerReplicationInfo.bOnlySpectator) // added PRI != none
+    {
+        GotoState('Spectating');
+    }
+    else
+    {
+        GotoState('PlayerWaiting');
+    }
+}
 
 // Calculate free-aim and process recoil
 simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
@@ -381,7 +410,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             {
                 // No camera change if we're locking rotation
             }
-            else if (ROPwn!= none && ROPwn.bRestingWeapon)
+            else if (ROPwn != none && ROPwn.bRestingWeapon)
             {
                 ViewRotation.Yaw += 16.0 * DeltaTime * aTurn;
                 ViewRotation.Pitch += 16.0 * DeltaTime * aLookUp;
@@ -1459,7 +1488,7 @@ function AdjustView(float DeltaTime)
     }
 }
 
-//Server call to client to force prone
+// Server call to client to force prone
 function ClientProne()
 {
     Prone();
@@ -1469,6 +1498,42 @@ function ClientProne()
 function ClientToggleDuck()
 {
     ToggleDuck();
+}
+
+// Matt: modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
+// Instead we let WVP's clientside IncrementRange() check that it's a valid operation before sending server call
+exec function LeanRight()
+{
+    if (ROPawn(Pawn) != none)
+    {
+        if (!Pawn.bBipodDeployed)
+        {
+            ROPawn(Pawn).LeanRight();
+        }
+
+        ServerLeanRight(true);
+    }
+    else if (VehicleWeaponPawn(Pawn) != none)
+    {
+        VehicleWeaponPawn(Pawn).IncrementRange();
+    }
+}
+
+exec function LeanLeft()
+{
+    if (ROPawn(Pawn) != none)
+    {
+        if (!Pawn.bBipodDeployed)
+        {
+            ROPawn(Pawn).LeanLeft();
+        }
+
+        ServerLeanLeft(true);
+    }
+    else if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).Gun != none)
+    {
+        VehicleWeaponPawn(Pawn).Gun.DecrementRange();
+    }
 }
 
 function ClientConsoleCommand(string Command, bool bWriteToLog)
@@ -1863,6 +1928,16 @@ exec function CommunicationMenu()
 exec function DebugFOV()
 {
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
+}
+
+exec function ShowDeployment()
+{
+    ClientReplaceMenu("DH_Interface.DHDeployMenu");
+}
+
+exec function ShowMidGame()
+{
+    ClientReplaceMenu("GUI2k4.UT2K4PlayerLoginMenu");
 }
 
 defaultproperties

@@ -15,7 +15,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -37,7 +37,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -52,18 +52,17 @@ function ServerChangeViewPoint(bool bForward)
 
 defaultproperties
 {
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
     OverlayCenterSize=0.555000
     UnbuttonedPositionIndex=0
-    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bManualTraverseOnly=true
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bLockCameraDuringTransition=true
     BinocPositionIndex=2
-    WeaponFov=14.400000
+    WeaponFOV=14.400000
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
     DriverPositions(0)=(ViewLocation=(X=30.000000,Y=-26.000000,Z=1.000000),ViewFOV=14.400000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=2367,ViewPitchDownLimit=64625,ViewPositiveYawLimit=3822,ViewNegativeYawLimit=-3822,bDrawOverlays=true,bExposed=true)
@@ -72,10 +71,8 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_Marder3MCannon'
     bHasAltFire=false
     CameraBone="Gun"
-    MinRotateThreshold=0.500000
-    MaxRotateThreshold=3.000000
-    bPCRelativeFPRotation=true
-    bFPNoZFromCameraPitch=true
+    ManualMinRotateThreshold=0.500000
+    ManualMaxRotateThreshold=3.000000
     DrivePos=(X=-10.000000,Z=22.000000)
     DriveAnim="VSU76_com_idle_close"
     EntryRadius=130.000000

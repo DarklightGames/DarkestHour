@@ -94,16 +94,18 @@ var rotator             LockViewRotation;
 
 replication
 {
-    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         bHasATAmmo, bHasMGAmmo, bHasMortarAmmo;
 
+    // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (bNetDirty && !bNetOwner && Role == ROLE_Authority)
         bWeaponCanBeReloaded, bWeaponNeedsReload, bWeaponIsMG, bWeaponIsAT;
 
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
 }
-
 
 simulated function PostBeginPlay()
 {
@@ -1950,7 +1952,7 @@ function AddDefaultInventory()
         Inventory.OwnerEvent('LoadOut');
     }
 
-    if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer && IsLocallyControlled())
+    if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer && IsLocallyControlled())
     {
         bRecievedInitialLoadout = true;
         Controller.ClientSwitchToBestWeapon();
@@ -2356,7 +2358,7 @@ simulated event SetAnimAction(name NewAction)
     {
         // Since you can't call SetAnimAction for the same action twice in a row (it won't get replicated)
         // For animations that need to happen twice in a row (such as working the bolt of a rifle) we alternate animaction names for these actions so they replicate properly
-        if (Level.Netmode == NM_Client)
+        if (Level.NetMode == NM_Client)
         {
             UsedAction = GetAnimActionName(NewAction);
         }

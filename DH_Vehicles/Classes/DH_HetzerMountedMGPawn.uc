@@ -102,7 +102,7 @@ function bool KDriverLeave(bool bForceLeave)
 
     DriverPositionIndex=0;
     bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
-    ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+    VehicleBase.MaybeDestroyVehicle();
 
     if (bSuperDriverLeave && Gun.HasAnim(Gun.BeginningIdleAnim)) // Matt: added to play idle animation on the server to stop the collision box glitch on the roof
         Gun.PlayAnim(Gun.BeginningIdleAnim);
@@ -133,7 +133,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -153,7 +153,7 @@ function ServerChangeViewPoint(bool bForward)
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -225,7 +225,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         //__________________________________________
         // Then, rotate that by the vehicles rotation
         // to get the final rotation ---------------
-        AQuat = QuatFromRotator(GetVehicleBase().Rotation);
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
         BQuat = QuatProduct(CQuat,AQuat);
         //__________________________________________
         // Make it back into a rotator!
@@ -321,8 +321,8 @@ simulated function DrawHUD(Canvas Canvas)
 
     if (PC != none)
         // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
 }
 
 // Matt: modified so that the new functionality (from StuH) that moves the MG, only happens if the player is buttoned up
@@ -349,7 +349,7 @@ defaultproperties
     OverlayCenterSize=0.700000
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.850000
-    WeaponFov=41.000000
+    WeaponFOV=41.000000
     DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionUpAnim="loader_open",DriverTransitionAnim="VT60_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=5.000000,Z=8.000000),ViewFOV=80.000000,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionDownAnim="loader_close",DriverTransitionAnim="VT60_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
     bMultiPosition=true

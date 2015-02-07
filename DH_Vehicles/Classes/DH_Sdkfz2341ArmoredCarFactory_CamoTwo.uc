@@ -11,5 +11,4 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_camo2'
     Skins(1)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_wheels_camo2'
     Skins(2)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_camo2'
-    Skins(3)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories'
 }

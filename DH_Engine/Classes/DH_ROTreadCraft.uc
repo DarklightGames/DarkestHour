@@ -74,8 +74,6 @@ var     int         FirstPassengerWeaponPawnIndex;
 
 // Armor penetration
 var     bool        bProjectilePenetrated; // shell has passed penetration test and has entered the hull or turret
-var     bool        bAssaultWeaponHit;     // used to defeat the Stug/JP bug
-var     bool        bIsAssaultGun;         // Matt: this appears unused in this class - check & deprecate later // TEST
 var     bool        bRoundShattered;
 var     bool        bRearHit;
 
@@ -89,8 +87,6 @@ var     float       URightArmorSlope;
 var     float       ULeftArmorSlope;
 var     float       URearArmorSlope;
 
-var     float       GunMantletArmorFactor; // used for assault gun mantlet hits
-var     float       GunMantletSlope;
 
 // Damage stuff
 var     float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
@@ -110,7 +106,6 @@ var     float       TraverseDamageChance;
 var     float       TurretDetonationThreshold; // chance that turret ammo will go up
 
 // Engine stuff
-var     int         EngineHealthMax;
 var     bool        bEngineDead; // tank engine is damaged and cannot run or be restarted...ever
 var     bool        bEngineOff;  // tank engine is simply switched off
 var     bool        bOldEngineOff;
@@ -184,7 +179,8 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        EngineHealthMax, UnbuttonedPositionIndex, // Matt: these 2 never change & don't need to be replicated - check later & possibly remove
+//      EngineHealthMax,         // Matt: removed as I have deprecated
+        UnbuttonedPositionIndex, // Matt: never changes & doesn't need to be replicated - check later & possibly remove
         bEngineOnFire, bOnFire;
 
     // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - do later as part of class review & refactor
@@ -586,12 +582,19 @@ simulated function ClientKDriverEnter(PlayerController PC)
     DHPlayer(PC).QueueHint(40, true);
 }
 
-function Fire(optional float F)
+simulated function Fire(optional float F)
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
     {
         ServerStartEngine();
+        IgnitionSwitchTime = Level.TimeSeconds;
     }
+}
+
+// Matt: emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
+function AltFire(optional float F)
+{
 }
 
 simulated function StopEmitters()
@@ -743,6 +746,25 @@ function ServerStartEngine()
     }
 }
 
+// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+simulated function NextWeapon()
+{
+    if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex + 1;
+        ServerChangeViewPoint(true);
+    }
+}
+
+simulated function PrevWeapon()
+{
+    if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex -1;
+        ServerChangeViewPoint(false);
+    }
+}
+
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
 function ServerChangeViewPoint(bool bForward)
 {
@@ -753,7 +775,7 @@ function ServerChangeViewPoint(bool bForward)
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -773,7 +795,7 @@ function ServerChangeViewPoint(bool bForward)
             PreviousPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
 
-            if (Level.Netmode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
             }
@@ -803,6 +825,78 @@ function bool KDriverLeave(bool bForceLeave)
     {
         super.KDriverLeave(bForceLeave);
     }
+}
+
+// Modified to add clientside checks before sending the function call to the server
+simulated function SwitchWeapon(byte F)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    local bool                bMustBeTankerToSwitch;
+    local byte                ChosenWeaponPawnIndex;
+
+    log("SwitchWeapon called for" @ Tag @ " Pos =" @ F); // TEMP
+    ChosenWeaponPawnIndex = F - 2;
+
+    // Stop call to server if player has selected an invalid weapon position, or if player is moving between view points
+    // Note that if player presses 0 or 1, which are invalid choices for a vehicle driver, the byte index will end up as 254 or 255 & so will still fail this test (which is what we want)
+    if (ChosenWeaponPawnIndex >= PassengerWeapons.Length || IsInState('ViewTransition'))
+    {
+        return;
+    }
+
+    // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
+    if (bAllowRiders && ChosenWeaponPawnIndex >= FirstPassengerWeaponPawnIndex && bMustBeUnbuttonedToBecomePassenger)
+    {
+        if (bSpecialExiting)
+        {
+            DenyEntry(Instigator, 5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
+            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
+            return;
+        }
+        else if (DriverPositionIndex < UnbuttonedPositionIndex)
+        {
+            DenyEntry(Instigator, 4); // must unbutton the hatch
+            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
+            return;
+        }
+    }
+
+    // Get weapon pawn
+    if (ChosenWeaponPawnIndex < WeaponPawns.Length)
+    {
+        WeaponPawn = ROVehicleWeaponPawn(WeaponPawns[ChosenWeaponPawnIndex]);
+    }
+
+    if (WeaponPawn != none)
+    {
+        // Stop call to server as weapon position already has a human player
+        if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+        {
+            return;
+        }
+
+        if (WeaponPawn.bMustBeTankCrew)
+        {
+            bMustBeTankerToSwitch = true;
+        }
+    }
+    // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
+    // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
+    else if (class<ROPassengerPawn>(PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
+    {
+        return;
+    }
+
+    // Stop call to server if player has selected a tank crew role but isn't a tanker
+    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+        ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    {
+        DenyEntry(Instigator, 0); // not qualified to operate vehicle
+
+        return;
+    }
+
+    ServerChangeDriverPosition(F);
 }
 
 // DriverLeft() called by KDriverLeave()
@@ -902,7 +996,7 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
         {
             if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
             {
@@ -1067,9 +1161,7 @@ simulated function PostBeginPlay()
     //bDisableThrottle = true;
     //bFirstHit = true;
 
-    EngineHealth = EngineHealthMax;
-
-    EngineFireDamagePerSec = EngineHealthMax * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
+    EngineFireDamagePerSec = default.EngineHealth * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
     DamagedEffectFireDamagePerSec = HealthMax * 0.02; // ~100 seconds from regular tank fire threshold to detonation from full health, damage is every 2 seconds, so double intended
 
     // If vehicle has schurzen (tex != none is flag) then randomise model selection (different degrees of damage, or maybe none at all)
@@ -1155,7 +1247,7 @@ simulated function Tick(float DeltaTime)
     }
 
     // Only need these effects client side
-    if (Level.Netmode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         if (bDisableThrottle)
         {
@@ -1533,13 +1625,6 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     local float   HitAngleDegrees, Side, InAngle, InAngleDegrees;
     local vector  LocDir, HitDir, X, Y, Z;
     local rotator AimRot;
-
-    if (bAssaultWeaponHit) // big fat HACK to defeat Stug/JP bug
-    {
-        bAssaultWeaponHit = false;
-
-        return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
-    }
 
     // Figure out which side we hit
     LocDir = vector(Rotation);
@@ -2464,7 +2549,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     }
 
     // If engine health drops below a certain level, slow the tank way down
-    if (EngineHealth > 0 && EngineHealth <= (EngineHealthMax * 0.50))
+    if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.50))
     {
         Throttle = FClamp(Throttle, -0.50, 0.50);
     }
@@ -2799,7 +2884,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             bDontUsePositionMesh = true;
 
-            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
             {
                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }
@@ -2839,7 +2924,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             bDontUsePositionMesh = default.bDontUsePositionMesh;
 
-            if ((Role == ROLE_AutonomousProxy || Level.Netmode == NM_Standalone || Level.Netmode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
+            if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && DriverPositions[DriverPositionIndex].PositionMesh != none)
             {
                 LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }
@@ -3036,11 +3121,8 @@ defaultproperties
     DamagedShutDownSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_stop_damaged'
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    EngineHealthMax=300
     bEngineOff=true
     DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
-    GunMantletArmorFactor=10.0
-    GunMantletSlope=10.0
     WaitForCrewTime=7.0
     ChassisTorqueScale=0.9
     ChangeUpPoint=2050.0

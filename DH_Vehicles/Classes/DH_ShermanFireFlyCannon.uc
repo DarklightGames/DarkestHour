@@ -5,36 +5,6 @@
 
 class DH_ShermanFireFlyCannon extends DH_ROTankCannon;
 
-// Special tracer handling for this type of cannon
-simulated function UpdateTracer()
-{
-    local rotator SpawnDir;
-
-    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-        return;
-
-    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-    {
-        if (Instigator != none && Instigator.IsLocallyControlled())
-        {
-            SpawnDir = WeaponFireRotation;
-        }
-        else
-        {
-            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-        }
-
-        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
-        {
-            SpawnDir.Pitch += AddedPitch;
-        }
-
-        Spawn(AltTracerProjectileClass, , , WeaponFireLocation, SpawnDir);
-
-        mLastTracerTime = Level.TimeSeconds;
-    }
-}
-
 defaultproperties
 {
     InitialTertiaryAmmo=25
@@ -96,7 +66,6 @@ defaultproperties
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=205.000000
     AltFireOffset=(X=20.000000,Y=-17.000000,Z=-2.000000)
-    RotationsPerSecond=0.056000
     bAmbientAltFireSound=true
     FireInterval=7.000000
     AltFireInterval=0.120000

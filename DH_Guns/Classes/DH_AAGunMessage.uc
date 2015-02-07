@@ -32,7 +32,7 @@ defaultproperties
 {
     GunManned="The anti-aircraft gun is fully crewed"
     CannotUse="Cannot use this anti-aircraft gun"
-    NoExit="No exit location can be found for this anti-aircraft Gun"
-    NotQualified="You are not qualified to operate anti-aircraft Guns"
-    VehicleIsEnemy="Cannot use an enemy anti-aircraft Gun"
+    NoExit="No exit location can be found for this anti-aircraft gun"
+    NotQualified="You are not qualified to operate anti-aircraft guns"
+    VehicleIsEnemy="Cannot use an enemy anti-aircraft gun"
 }

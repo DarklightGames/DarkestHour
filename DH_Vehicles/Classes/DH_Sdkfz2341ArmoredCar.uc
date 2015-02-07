@@ -32,42 +32,10 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-/*
-simulated function UpdateTurretReferences() // Matt: removed as only re-states the Super - incorrectly now as Super has since been fixed
-{
-    local int i;
-
-    if (CannonTurret == none)
-    {
-        for (i = 0; i < WeaponPawns.length; i++)
-        {
-            if (WeaponPawns[i].Gun.IsA('ROTankCannon'))
-            {
-                CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
-                break;
-            }
-        }
-    }
-
-    if (HullMG == none)
-    {
-        for (i = 0; i < WeaponPawns.length; i++)
-        {
-            if (WeaponPawns[i].Gun.IsA('ROMountedTankMG'))
-            {
-                HullMG = WeaponPawns[i].Gun;
-                break;
-            }
-        }
-    }
-}
-*/
-
 defaultproperties
 {
     bSpecialExiting=true
     MaxCriticalSpeed=1039.000000
-    EngineHealthMax=100
     UFrontArmorFactor=3.000000
     URightArmorFactor=0.800000
     ULeftArmorFactor=0.800000

@@ -9,7 +9,7 @@ defaultproperties
 {
     OverlayCenterSize=0.500000
     MGOverlay=texture'DH_VehicleOptics_tex.Common.MG_sight'
-    WeaponFov=72.000000
+    WeaponFOV=72.000000
     GunClass=class'DH_Vehicles.DH_JagdpanzerIVMountedMG'
     bHasAltFire=false
     CameraBone="mg_yaw"

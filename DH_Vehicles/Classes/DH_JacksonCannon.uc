@@ -5,29 +5,6 @@
 
 class DH_JacksonCannon extends DH_ROTankCannon;
 
-// American tanks must use the actual sight markings to aim!
-simulated function int GetRange()
-{
-    return RangeSettings[0];
-}
-
-// Disable clicking sound for range adjustment
-function IncrementRange()
-{
-    if (CurrentRangeIndex < RangeSettings.Length - 1)
-    {
-        CurrentRangeIndex++;
-    }
-}
-
-function DecrementRange()
-{
-    if (CurrentRangeIndex > 0)
-    {
-        CurrentRangeIndex --;
-    }
-}
-
 defaultproperties
 {
     InitialTertiaryAmmo=10
@@ -57,15 +34,6 @@ defaultproperties
     ProjectileDescriptions(0)="APCBC"
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
-    RangeSettings(1)=400
-    RangeSettings(2)=800
-    RangeSettings(3)=1200
-    RangeSettings(4)=1600
-    RangeSettings(5)=2000
-    RangeSettings(6)=2400
-    RangeSettings(7)=2800
-    RangeSettings(8)=3200
-    RangeSettings(9)=4200
     AddedPitch=145
     MinCommanderHitHeight=50.0;
     VehHitpoints(0)=(PointRadius=10.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=20.000000,Z=-10.000000))
@@ -76,7 +44,6 @@ defaultproperties
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=240.000000
-    RotationsPerSecond=0.062500
     FireInterval=6.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000

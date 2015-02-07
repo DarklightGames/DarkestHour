@@ -9,6 +9,4 @@ defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_ShermanTank_DDay'
     Mesh=SkeletalMesh'DH_Sherman_anm.ShermanM4A1_scoop_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_scoop_ext'
 }

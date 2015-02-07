@@ -5,36 +5,6 @@
 
 class DH_Tiger2BCannon extends DH_ROTankCannon;
 
-// Special tracer handling for this type of cannon
-simulated function UpdateTracer()
-{
-    local rotator SpawnDir;
-
-    if (Level.NetMode == NM_DedicatedServer || !bUsesTracers)
-        return;
-
-    if (Level.TimeSeconds > mLastTracerTime + mTracerInterval)
-    {
-        if (Instigator != none && Instigator.IsLocallyControlled())
-        {
-            SpawnDir = WeaponFireRotation;
-        }
-        else
-        {
-            SpawnDir = GetBoneRotation(WeaponFireAttachmentBone);
-        }
-
-        if (Instigator != none && !Instigator.PlayerReplicationInfo.bBot)
-        {
-            SpawnDir.Pitch += AddedPitch;
-        }
-
-        Spawn(AltTracerProjectileClass, , , WeaponFireLocation, SpawnDir);
-
-        mLastTracerTime = Level.TimeSeconds;
-    }
-}
-
 defaultproperties
 {
     SecondarySpread=0.001520
@@ -109,7 +79,6 @@ defaultproperties
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=10.000000
     AltFireOffset=(X=-315.000000,Y=19.500000,Z=4.500000)
-    RotationsPerSecond=0.040000
     bAmbientAltFireSound=true
     FireInterval=9.000000
     AltFireInterval=0.070580

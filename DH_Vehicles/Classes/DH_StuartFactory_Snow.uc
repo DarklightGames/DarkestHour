@@ -9,7 +9,6 @@ defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_StuartTank_Snow'
     Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.M5_body_snow'
-    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
     Skins(2)=texture'DH_VehiclesUS_tex2.Treads.M5_treadsnow'
     Skins(3)=texture'DH_VehiclesUS_tex2.Treads.M5_treadsnow'
 }

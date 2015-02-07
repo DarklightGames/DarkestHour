@@ -11,6 +11,7 @@ var float   PlayerIronsightFOV;
 
 replication
 {
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsMantling;
 }

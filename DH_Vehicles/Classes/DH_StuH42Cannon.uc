@@ -14,14 +14,8 @@ defaultproperties
     ManualRotationsPerSecond=0.025000
     PoweredRotationsPerSecond=0.025000
     bIsAssaultGun=true
-    FrontArmorFactor=8.000000
-    RightArmorFactor=8.000000
-    LeftArmorFactor=8.000000
-    RearArmorFactor=8.000000
-    FrontLeftAngle=293.000000
-    FrontRightAngle=67.000000
-    RearRightAngle=113.000000
-    RearLeftAngle=247.000000
+    GunMantletArmorFactor=5.000000
+    GunMantletSlope=0.000000
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
@@ -76,7 +70,6 @@ defaultproperties
     GunnerAttachmentBone="com_attachment"
     WeaponFireOffset=-60.000000
     AltFireOffset=(X=-145.000000,Y=-9.000000,Z=14.000000)
-    RotationsPerSecond=0.025000
     bAmbientAltFireSound=true
     Spread=0.002750
     FireInterval=4.000000

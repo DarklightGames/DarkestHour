@@ -77,10 +77,12 @@ var DigitSet Digits;
 
 replication
 {
-    reliable if (Role < ROLE_Authority) // client to server
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
         ServerUndeploy, ServerFire, SetCurrentAnimation;
 
-    reliable if (Role == ROLE_Authority) // server to client
+    // Functions the server can call on the client that owns this actor
+    reliable if (Role == ROLE_Authority)
         CurrentDriverAnimation, bCanUndeploy, ClientShakeView;
 }
 
@@ -137,7 +139,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super(VehicleWeaponPawn).ClientKDriverEnter(PC);
 
-    PC.SetFOV( WeaponFOV );
+    PC.SetFOV(WeaponFOV);
 
     // From here on is mortar specific - above is just re-stating the Supers, with 1 line removed
     GotoState('Idle');
@@ -688,7 +690,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     ViewActor = self;
 
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll =  GetVehicleBase().Rotation.Roll;
+    WeaponAimRot.Roll =  VehicleBase.Rotation.Roll;
 
     if (ROPlayer(Controller) != none)
     {
@@ -710,7 +712,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         CQuat = QuatProduct(AQuat,BQuat);
 
         // Then, rotate that by the vehicles rotation to get the final rotation
-        AQuat = QuatFromRotator(GetVehicleBase().Rotation);
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
         BQuat = QuatProduct(CQuat,AQuat);
 
         // Make it back into a rotator!

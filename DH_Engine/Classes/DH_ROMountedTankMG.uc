@@ -10,11 +10,11 @@ var()   class<Projectile>   TracerProjectileClass; // Matt: replaces DummyTracer
 var()   int                 TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
  
 // Reload stuff
-var     bool  bReloading;      // this MG is currently reloading
-var()   sound ReloadSound;     // sound of this MG reloading
-var     float ReloadDuration;  // time duration of reload (set automatically)
-var     float ReloadStartTime; // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
-var     int   NumMags;         // number of mags carried for this MG;
+var     bool    bReloading;      // this MG is currently reloading
+var()   sound   ReloadSound;     // sound of this MG reloading
+var     float   ReloadDuration;  // time duration of reload (set automatically)
+var     float   ReloadStartTime; // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
+var     byte    NumMags;         // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -33,7 +33,7 @@ var     float                       PlayerFireDamagePerSec;
 replication
 {
     // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         bReloading, NumMags;
 
     // Variables the server will replicate to all clients
@@ -44,7 +44,6 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientSetReloadStartTime;
 }
-
 
 // Matt: modified to handle new collision static mesh actor, if one has been specified
 simulated function PostBeginPlay()
@@ -250,8 +249,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
 // Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
 state ProjectileFireMode
 {
-	function Fire(Controller C)
-	{
+    function Fire(Controller C)
+    {
         // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
         if (bUsesTracers && ((InitialPrimaryAmmo - MainAmmoCharge[0] - 1) % TracerFrequency == 0.0))
         {
@@ -267,7 +266,7 @@ state ProjectileFireMode
 // Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
-	super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
+    super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
 // Fill the ammo up to the initial ammount
@@ -323,7 +322,7 @@ function bool ResupplyAmmo()
     return bDidResupply;
 }
 
-simulated function int getNumMags()
+simulated function int GetNumMags()
 {
     return NumMags;
 }
@@ -416,7 +415,7 @@ simulated function Destroyed() // Matt: added
 defaultproperties
 {
     FireAttachBone="mg_pitch"
-    FireEffectOffset=(X=10.000000,Z=5.000000)
+    FireEffectOffset=(X=10.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     VehicleBurningDamType=class'DH_VehicleBurningDamType'
 }

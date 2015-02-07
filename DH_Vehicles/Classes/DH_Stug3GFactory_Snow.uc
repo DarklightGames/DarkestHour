@@ -10,6 +10,4 @@ defaultproperties
     VehicleClass=class'DH_Vehicles.DH_Stug3GDestroyer_Snow'
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
     Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'
-    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
 }
