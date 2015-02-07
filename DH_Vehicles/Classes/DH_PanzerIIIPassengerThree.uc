@@ -8,12 +8,9 @@ class DH_PanzerIIIPassengerThree extends DH_ROPassengerPawn;
 defaultproperties
 {
     PositionInArray=4
-    CameraBone="body"
-    DrivePos=(X=-125.000000,Y=30.000000,Z=50.000000)
+    DrivePos=(X=-125.0,Y=30.0,Z=50.0)
     DriveRot=(Pitch=3900,Yaw=32768)
     DriveAnim="VHalftrack_Rider5_idle"
-    EntryRadius=375.000000
-    FPCamPos=(X=-120.000000,Y=30.000000,Z=95.000000)
-    FPCamViewOffset=(X=0.000000,Z=0.000000)
-    TPCamDistance=200.000000
+    FPCamPos=(X=-120.0,Y=30.0,Z=95.0)
+    FPCamViewOffset=(X=0.0,Z=0.0)
 }

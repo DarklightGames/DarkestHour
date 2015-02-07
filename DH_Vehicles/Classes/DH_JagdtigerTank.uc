@@ -33,6 +33,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
+    bAllowRiders=false
     NewVehHitpoints(0)=(PointRadius=6.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=-37.000000,Z=98.000000),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=25.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Z=55.000000),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=25.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Z=55.000000),NewHitPointType=NHP_GunPitch)

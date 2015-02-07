@@ -8,10 +8,8 @@ class DH_HetzerPassengerOne extends DH_ROPassengerPawn;
 defaultproperties
 {
     PositionInArray=2
-    CameraBone="body"
-    DrivePos=(X=-70.000000,Y=-25.000000,Z=112.000000)
+    DrivePos=(X=-70.0,Y=-25.0,Z=112.0)
     DriveRot=(Pitch=3850)
     DriveAnim="crouch_idle_binoc"
-    EntryRadius=375.000000
-    FPCamViewOffset=(X=0.000000,Z=0.000000)
+    FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
 }

@@ -9,9 +9,8 @@ defaultproperties
 {
     PositionInArray=3
     CameraBone="passenger_02"
-    DrivePos=(X=-11.000000,Y=0.000000,Z=78.000000)
+    DrivePos=(X=-11.0,Y=0.0,Z=78.0)
     DriveRot=(Pitch=34600)
     DriveAnim="VUC_rider1_idle"
-    EntryRadius=375.000000
-    FPCamViewOffset=(X=0.000000,Z=0.000000)
+    FPCamViewOffset=(X=0.0,Z=0.0)
 }

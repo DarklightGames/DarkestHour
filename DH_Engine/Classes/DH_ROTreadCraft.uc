@@ -69,8 +69,8 @@ var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: ch
 var     int         UnbuttonedPositionIndex;
 var     bool        bSpecialExiting;
 var()   bool        bAllowRiders;
-var     bool        bMustBeUnbuttonedToBecomePassenger;
-var     int         FirstPassengerWeaponPawnIndex;
+var()   int         FirstRiderPositionIndex;
+var()   bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 
 // Armor penetration
 var     bool        bProjectilePenetrated; // shell has passed penetration test and has entered the hull or turret
@@ -834,7 +834,6 @@ simulated function SwitchWeapon(byte F)
     local bool                bMustBeTankerToSwitch;
     local byte                ChosenWeaponPawnIndex;
 
-    log("SwitchWeapon called for" @ Tag @ " Pos =" @ F); // TEMP
     ChosenWeaponPawnIndex = F - 2;
 
     // Stop call to server if player has selected an invalid weapon position, or if player is moving between view points
@@ -845,18 +844,18 @@ simulated function SwitchWeapon(byte F)
     }
 
     // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-    if (bAllowRiders && ChosenWeaponPawnIndex >= FirstPassengerWeaponPawnIndex && bMustBeUnbuttonedToBecomePassenger)
+    if (bAllowRiders && ChosenWeaponPawnIndex >= FirstRiderPositionIndex && bMustUnbuttonToSwitchToRider)
     {
         if (bSpecialExiting)
         {
-            DenyEntry(Instigator, 5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
-            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
+
             return;
         }
         else if (DriverPositionIndex < UnbuttonedPositionIndex)
         {
-            DenyEntry(Instigator, 4); // must unbutton the hatch
-            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+
             return;
         }
     }
@@ -891,7 +890,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        DenyEntry(Instigator, 0); // not qualified to operate vehicle
+        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
 
         return;
     }
@@ -1051,7 +1050,7 @@ Begin:
 
 function bool TryToDrive(Pawn P)
 {
-    local int x;
+    local int i;
 
     if (DH_Pawn(P).bOnFire)
     {
@@ -1068,9 +1067,9 @@ function bool TryToDrive(Pawn P)
     // Don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
-        for (x = 0; x < WeaponPawns.Length; x++)
+        for (i = 0; i < WeaponPawns.Length; i++)
         {
-            if (WeaponPawns[x].Driver != none)
+            if (WeaponPawns[i].Driver != none)
             {
                 DenyEntry(P, 2);
 
@@ -1107,13 +1106,13 @@ function bool TryToDrive(Pawn P)
             return false;
         }
 
-        // Cycle through the available passenger positions (check the class type to see if it is ROPassengerPawn) // Matt: refactor later for new FirstPassengerWeaponPawnIndex variable
-        for (x = 1; x < WeaponPawns.Length; x++) // skip over the turret
+        // Cycle through the available passenger positions
+        for (i = FirstRiderPositionIndex; i < WeaponPawns.Length; i++)
         {
-            // If riders are allowed, the WeaponPawn is free and it is a passenger pawn class then climb aboard
-            if (WeaponPawns[x].Driver == none && WeaponPawns[x].IsA('ROPassengerPawn'))
+            // If it's a passenger pawn & the position is free, then climb aboard
+            if (ROPassengerPawn(WeaponPawns[i]) != none && WeaponPawns[i].Driver == none)
             {
-                WeaponPawns[x].KDriverEnter(P);
+                WeaponPawns[i].KDriverEnter(P);
 
                 return true;
             }
@@ -2800,9 +2799,9 @@ function ServerChangeDriverPosition(byte F)
         return;
     }
 
-    if (F >= FirstPassengerWeaponPawnIndex && bMustBeUnbuttonedToBecomePassenger && DriverPositionIndex >= UnbuttonedPositionIndex)
+    if (bAllowRiders && (F - 2) >= FirstRiderPositionIndex && bMustUnbuttonToSwitchToRider && DriverPositionIndex < UnbuttonedPositionIndex)
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You must unbutton the hatch to exit"
+        ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You must unbutton the hatch to exit"
 
         return;
     }
@@ -3087,8 +3086,10 @@ function bool CheckForCrew()
 defaultproperties
 {
     bEnterringUnlocks=false
-    bAllowRiders=true
     UnbuttonedPositionIndex=2
+    bAllowRiders=true
+    FirstRiderPositionIndex=2
+    bMustUnbuttonToSwitchToRider=true
     DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     LeftTreadIndex=1
     RightTreadIndex=2
@@ -3141,8 +3142,6 @@ defaultproperties
     IdleTimeBeforeReset=200.0
     VehicleSpikeTime=60.0
     EngineHealth=300
-    bMustBeUnbuttonedToBecomePassenger=true
-    FirstPassengerWeaponPawnIndex=255
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
 }

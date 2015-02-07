@@ -9,9 +9,9 @@ defaultproperties
 {
     PositionInArray=2
     CameraBone="Passenger4"
-    DrivePos=(X=0.000000,Y=0.000000,Z=7.000000)
+    DrivePos=(X=0.0,Y=0.0,Z=7.0)
     DriveAnim="VHalftrack_Rider2_idle"
-    EntryRadius=225.000000
-    FPCamViewOffset=(X=0.000000,Z=0.000000)
-    TPCamLookat=(X=-27.000000)
+    EntryRadius=225.0
+    FPCamViewOffset=(X=0.0,Z=0.0)
+    TPCamLookat=(X=-27.0)
 }

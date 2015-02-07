@@ -8,10 +8,8 @@ class DH_StuartPassengerTwo extends DH_ROPassengerPawn;
 defaultproperties
 {
     PositionInArray=3
-    CameraBone="body"
-    DrivePos=(X=-108.000000,Y=0.000000,Z=57.000000)
+    DrivePos=(X=-108.0,Y=0.0,Z=57.0)
     DriveRot=(Pitch=3640,Yaw=32768)
     DriveAnim="VHalftrack_Rider2_idle"
-    EntryRadius=375.000000
-    FPCamViewOffset=(X=0.000000,Z=0.000000)
+    FPCamViewOffset=(X=0.0,Z=0.0)
 }

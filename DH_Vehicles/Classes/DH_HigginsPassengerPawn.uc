@@ -10,6 +10,5 @@ defaultproperties
     CameraBone="Master1z00"
     HudName="Passenger"
     DriverHudName="Coxswain"
-    bAllowViewChange=false
-    bDesiredBehindView=false
+    EntryRadius=350.0
 }

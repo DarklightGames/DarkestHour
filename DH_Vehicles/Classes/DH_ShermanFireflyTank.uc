@@ -33,6 +33,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
+    FirstRiderPositionIndex=1
     LeftTreadIndex=5
     RightTreadIndex=4
     MaxCriticalSpeed=693.000000

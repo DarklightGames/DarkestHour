@@ -33,6 +33,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
+    bAllowRiders=false
     LeftTreadIndex=3
     MaxCriticalSpeed=820.000000
     TreadDamageThreshold=0.750000

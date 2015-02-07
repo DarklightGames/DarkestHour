@@ -664,7 +664,7 @@ simulated function SwitchWeapon(byte F)
     local DH_ROTreadCraft     TreadCraft;
     local bool                bMustBeTankerToSwitch;
     local byte                ChosenWeaponPawnIndex;
-//    log("SwitchWeapon called for" @ Tag @ " Pos =" @ F); // TEMP
+
     // Stop call to server if we don't have a vehicle base, or if player is moving between view points
     if (VehicleBase == none || IsInState('ViewTransition'))
     {
@@ -699,10 +699,10 @@ simulated function SwitchWeapon(byte F)
         TreadCraft = DH_ROTreadCraft(VehicleBase);
 
         // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-        if (TreadCraft != none && ChosenWeaponPawnIndex >= TreadCraft.FirstPassengerWeaponPawnIndex && TreadCraft.bMustBeUnbuttonedToBecomePassenger && DriverPositionIndex < UnbuttonedPositionIndex)
+        if (TreadCraft != none && TreadCraft.bAllowRiders && ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && 
+            TreadCraft.bMustUnbuttonToSwitchToRider && DriverPositionIndex < UnbuttonedPositionIndex)
         {
-            log("SwitchWeapon LOCKING player in: ChosenWPIndex =" @ ChosenWeaponPawnIndex @ " bMustBeUnbuttoned =" @ TreadCraft.bMustBeUnbuttonedToBecomePassenger @ " DPI =" @ DriverPositionIndex @ " UPI =" @ UnbuttonedPositionIndex); // TEMP
-            DenyEntry(Instigator, 4); // must unbutton the hatch
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
 
             return;
         }
@@ -738,7 +738,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        DenyEntry(Instigator, 0); // not qualified to operate vehicle
+        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
 
         return;
     }
@@ -746,11 +746,22 @@ simulated function SwitchWeapon(byte F)
     ServerChangeDriverPosition(F);
 }
 
-// Modified to prevent moving to another vehicle position while moving between view points
+// Modified to prevent switch to other vehicle position while moving between view points & to prevent 'teleporting' outside to external rider position unless unbuttoned
 function ServerChangeDriverPosition(byte F)
 {
+    local DH_ROTreadCraft TreadCraft;
+
     if (IsInState('ViewTransition'))
     {
+        return;
+    }
+
+    TreadCraft = DH_ROTreadCraft(VehicleBase);
+
+    if (TreadCraft != none && TreadCraft.bAllowRiders && (F - 2) >= TreadCraft.FirstRiderPositionIndex && TreadCraft.bMustUnbuttonToSwitchToRider && DriverPositionIndex < UnbuttonedPositionIndex)
+    {
+        DenyEntry(Instigator, 4); // must unbutton the hatch
+
         return;
     }
 

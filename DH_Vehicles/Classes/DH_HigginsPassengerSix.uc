@@ -8,6 +8,6 @@ class DH_HigginsPassengerSix extends DH_HigginsPassengerPawn;
 defaultproperties
 {
     PositionInArray=6
-    DrivePos=(X=0.000000,Y=0.000000,Z=20.000000)
+    DrivePos=(X=0.0,Y=0.0,Z=20.0)
     DriveAnim="higgins_rider6_idle"
 }

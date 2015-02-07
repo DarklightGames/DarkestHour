@@ -9,9 +9,8 @@ defaultproperties
 {
     PositionInArray=5
     CameraBone="passenger_04x"
-    DrivePos=(X=0.000000,Y=0.000000,Z=57.000000)
+    DrivePos=(X=0.0,Y=0.0,Z=57.0)
     DriveRot=(Pitch=1800)
     DriveAnim="crouch_idle_binoc"
-    EntryRadius=375.000000
-    FPCamViewOffset=(X=0.000000,Z=0.000000)
+    FPCamViewOffset=(X=0.0,Z=0.0)
 }

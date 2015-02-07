@@ -108,6 +108,10 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=-20.000000,Z=109.592003),ExhaustRotation=(Pitch=22000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherMountedMGPawn',WeaponBone="Mg_attachment")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherPassengerOne',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherPassengerTwo',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherPassengerThree',WeaponBone="body")
+    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
     StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'

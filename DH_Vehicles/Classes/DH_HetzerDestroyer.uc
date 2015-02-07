@@ -143,7 +143,6 @@ defaultproperties
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerMountedMGPawn',WeaponBone="Mg_placement")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerPassengerOne',WeaponBone="body")
     PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_HetzerPassengerTwo',WeaponBone="body")
-    FirstPassengerWeaponPawnIndex=2
     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
     StartUpSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'

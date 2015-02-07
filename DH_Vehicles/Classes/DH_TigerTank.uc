@@ -31,6 +31,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
+    bAllowRiders=false
     MaxCriticalSpeed=693.000000
     TreadDamageThreshold=1.000000
     UFrontArmorFactor=10.800000

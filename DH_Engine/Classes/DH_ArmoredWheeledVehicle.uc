@@ -426,5 +426,6 @@ defaultproperties
 {
     bAllowRiders=true
     PointValue=2.000000
+    FirstRiderPositionIndex=1
     bSpecialTankTurning=false
 }

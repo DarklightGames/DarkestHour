@@ -35,6 +35,7 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     bSpecialExiting=true
+    bAllowRiders=false
     MaxCriticalSpeed=1039.000000
     UFrontArmorFactor=3.000000
     URightArmorFactor=0.800000

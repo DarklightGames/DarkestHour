@@ -32,6 +32,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
+    bAllowRiders=false
     MaxCriticalSpeed=693.000000
     TreadDamageThreshold=1.000000
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'

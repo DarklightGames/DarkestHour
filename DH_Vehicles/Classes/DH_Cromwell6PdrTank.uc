@@ -97,6 +97,10 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-175.000000,Y=-30.000000,Z=10.000000),ExhaustRotation=(Pitch=36000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Cromwell6PdrCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellMountedMGPawn',WeaponBone="Mg_attachment")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerOne',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerTwo',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerThree',WeaponBone="body")
+    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
     StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
     ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'

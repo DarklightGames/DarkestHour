@@ -363,6 +363,9 @@ defaultproperties
     bSinglePositionExposed=true
     bAllowViewChange=false
     bDesiredBehindView=false
-    DriverDamageMult=1.0
     bKeepDriverAuxCollision=true
+    DriverDamageMult=1.0
+    CameraBone="body"
+    TPCamDistance=200.0
+    EntryRadius=375.0
 }

@@ -32,6 +32,7 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     bMustBeTankCommander=true
+    bAllowRiders=false
     MaxCriticalSpeed=1077.000000
     UFrontArmorFactor=1.600000
     URightArmorFactor=0.900000
