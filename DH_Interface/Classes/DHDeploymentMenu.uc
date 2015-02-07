@@ -266,7 +266,7 @@ function UpdateSpawnPoints()
                 continue;
             }
 
-            li_AvailableWeapons[0].Add(DHGRI.SpawnPointNames[i]);
+            //li_AvailableWeapons[0].Add(DHGRI.SpawnPointNames[i]);
             li_AvailableWeapons[0].SetExtraAtIndex(li_AvailableWeapons[0].ItemCount - 1, "" $ i);
         }
 

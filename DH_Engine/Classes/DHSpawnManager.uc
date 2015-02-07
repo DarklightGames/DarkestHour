@@ -131,8 +131,6 @@ function UpdateSpawnPointReplicationInfo(byte SpawnPointIndex)
 {
     GRI.SetSpawnPointIsActive(SpawnPointIndex, SpawnPoints[SpawnPointIndex].bIsActive);
     GRI.SetSpawnPointTeamIndex(SpawnPointIndex, SpawnPoints[SpawnPointIndex].TeamIndex);
-    GRI.SetSpawnPointLocation(SpawnPointIndex, SpawnPoints[SpawnPointIndex].Location);
-    GRI.SpawnPointNames[SpawnPointIndex] = SpawnPoints[SpawnPointIndex].SpawnPointName;
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)

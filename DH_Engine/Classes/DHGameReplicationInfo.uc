@@ -47,9 +47,6 @@ var private const byte  SpawnPointFlag_TeamIndex; // 0x02
 var private const byte  SpawnPointFlag_Type;      // 0x04
 
 var private byte        SpawnPointFlags[32];
-var private float       SpawnPointXLocations[32];
-var private float       SpawnPointYLocations[32];
-var string              SpawnPointNames[32];
 
 var float               VehiclePoolsUpdateTime;   // the last time the vehicle pools were updated in a way that requires the client to re-populate its list
 var float               SpawnPointsUpdateTime;    // the last time the vehicle spawn points were updated in a way that requires the client to repopulate the list
@@ -58,13 +55,12 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        DHSpawnCount, AlliedNationID, DHAxisRoles, DHAlliesRoles, 
-        DHAlliesRoleCount, DHAxisRoleCount, DHAlliesRoleBotCount, DHAxisRoleBotCount, 
-        CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets, 
-        VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts, 
-        VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime, 
-        SpawnPointFlags, SpawnPointXLocations, SpawnPointYLocations, SpawnPointsUpdateTime, SpawnPointNames, 
-        AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
+        DHSpawnCount, AlliedNationID, DHAxisRoles, DHAlliesRoles,
+        DHAlliesRoleCount, DHAxisRoleCount, DHAlliesRoleBotCount, DHAxisRoleBotCount,
+        CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets,
+        VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
+        VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime,
+        SpawnPointFlags, SpawnPointsUpdateTime, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
 }
 
 simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
@@ -171,12 +167,6 @@ function SetSpawnPointTeamIndex(byte SpawnPointIndex, byte TeamIndex)
 
     Log("SpawnPointFlags[" $ SpawnPointIndex $ "] =" @ SpawnPointFlags[SpawnPointIndex]);
     Log("GetSpawnPointTeamIndex(" $ SpawnPointIndex $ ")=" @ GetSpawnPointTeamIndex(SpawnPointIndex));
-}
-
-function SetSpawnPointLocation(byte SpawnPointIndex, vector Location)
-{
-    SpawnPointXLocations[SpawnPointIndex] = Location.X;
-    SpawnPointXLocations[SpawnPointIndex] = Location.Y;
 }
 
 function SetSpawnPointType(byte SpawnPointIndex, byte Type)

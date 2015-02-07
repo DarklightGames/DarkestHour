@@ -43,7 +43,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget, 
+        ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
         ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
 
     // Functions the server can call on the client that owns this actor
@@ -1935,20 +1935,11 @@ exec function ShowDeployment()
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
-exec function ShowTest()
+exec function ShowDeploy()
 {
-    ClientReplaceMenu("DH_Interface.DHTestGUI");
+    ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
-exec function ShowRO()
-{
-    ClientReplaceMenu("ROInterface.ROMainMenu");
-}
-
-exec function ShowRORole()
-{
-    ClientReplaceMenu("ROInterface.ROUT2K4TabPanel_RoleSelection");
-}
 
 defaultproperties
 {

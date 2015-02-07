@@ -1,7 +1,7 @@
 //-----------------------------------------------------------
 //
 //-----------------------------------------------------------
-class DHRoleSelectPanel extends UT2K4TabPanel
+class DHRoleSelectPanel extends MidGamePanel
     config;
 
 // DELETE THIS:: well should I?
@@ -12,11 +12,9 @@ class DHRoleSelectPanel extends UT2K4TabPanel
 // Constants
 const NUM_ROLES = 10;
 
-
 // Containers
-var automated ROGUIProportionalContainer    MainContainer;
-
-var automated ROGUIProportionalContainer    RolesContainer,
+var automated ROGUIProportionalContainer    MainContainer,
+                                            RolesContainer,
                                             PrimaryWeaponContainer,
                                             SecondaryWeaponContainer,
                                             EquipContainer;
@@ -26,34 +24,15 @@ var automated GUILabel                      l_RolesTitle,
                                             l_SecondaryWeaponTitle,
                                             l_EquipTitle;
 
-
 var automated BackgroundImage               bg_Background;
-
-// Button bar
-var automated GUIButton                     b_Disconnect,
-                                            b_Map,
-                                            b_Score,
-                                            b_Config,
-                                            b_Continue;
-
-// Current units controls
-
-
-// Roles controls
-
-var ROGUIListPlus                           li_Roles;
-var automated GUIListBox                    lb_Roles;
-
-
-// Weapons (both primary and secondary) controls
+var automated GUIButton                     b_Continue;
 var automated GUIImage                      i_WeaponImages[2];
-var ROGUIListPlus                           li_AvailableWeapons[2];
+var automated GUIListBox                    lb_Roles;
 var automated GUIListBox                    lb_AvailableWeapons[2];
-
-// Equipment
 var automated GUIGFXButton                  b_Equipment[4];
 
-// Localized text
+var ROGUIListPlus                           li_Roles;
+var ROGUIListPlus                           li_AvailableWeapons[2];
 
 var localized string                        NoSelectedRoleText;
 var localized string                        RoleHasBotsText;
@@ -81,18 +60,12 @@ var localized string                        ConfigurationButtonHint1;
 var localized string                        ConfigurationButtonText2;
 var localized string                        ConfigurationButtonHint2;
 
-
-// Variables
 var ROGameReplicationInfo       GRI;
 var RORoleInfo                  currentRole, desiredRole;
 var int                         currentTeam, desiredTeam;
 var string                      currentName, desiredName;
 var int                         currentWeapons[2], desiredWeapons[2];
-
-var float                       SavedMainContainerPos, SavedConfigButtonsContainerPos;
-
-var float                       RoleSelectFooterButtonsWinTop,
-                                OptionsFooterButtonsWinTop;
+var float                       SavedMainContainerPos, SavedConfigButtonsContainerPos, RoleSelectFooterButtonsWinTop, OptionsFooterButtonsWinTop;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -848,24 +821,6 @@ function AttemptRoleApplication()
     player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
 }
 
-function CloseMenu()
-{
-    local ROPlayer player;
-
-    player = ROPlayer(PlayerOwner());
-    if (player != none)
-    {
-        if (player.bShowMapOnFirstSpawn && !player.bFirstObjectiveScreenDisplayed)
-        {
-            player.bFirstObjectiveScreenDisplayed = true;
-            if( ROHud(player.MyHUD) != none )
-                ROHud(player.MyHUD).ShowObjectives();
-        }
-    }
-    // Check if we should start fade-from-black effect on player
-    CheckNeedForFadeFromBlackEffect(PlayerOwner());
-}
-
 static function CheckNeedForFadeFromBlackEffect(PlayerController controller)
 {
 
@@ -885,40 +840,21 @@ function UpdateConfigButtonsVisibility()
 
     MainContainer.SetVisibility(true);
     bg_Background.SetVisibility(true);
-    b_Config.Caption = ConfigurationButtonText1;
-    b_Config.SetHint(ConfigurationButtonHint1);
     myWinTop = RoleSelectFooterButtonsWinTop;
 
     // To make sure items that should be hidden are hidden
     NotifyDesiredRoleUpdated();
 
-
-    b_Disconnect.WinTop = myWinTop;
-    b_Score.WinTop = myWinTop;
-    b_Map.WinTop = myWinTop;
-    b_Config.WinTop = myWinTop;
     b_Continue.WinTop = myWinTop;
 }
 
 function bool InternalOnClick(GUIComponent Sender)
 {
-    local ROPlayer player;
-
-    player = ROPlayer(PlayerOwner());
-
     switch (sender)
     {
-        case b_Score:
-            if (player != none && ROHud(player.myHUD) != none)
-                player.myHUD.bShowScoreBoard = !player.myHUD.bShowScoreBoard;
-            CloseMenu();
-            break;
-
-        case b_Map:
-            if (player != none && ROHud(player.myHUD) != none)
-                ROHud(player.myHUD).ShowObjectives();
-            CloseMenu();
-            break;
+        case b_Continue:
+            AttemptRoleApplication();
+        break;
     }
 
     return true;
@@ -951,7 +887,6 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float delta)
 {
     if (key == 0x1B)
     {
-        CloseMenu();
         return true;
     }
 
@@ -978,7 +913,6 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 if (ROPlayer(PlayerOwner()) != none)
                     ROPlayer(PlayerOwner()).PlayerReplicationInfo.bReadyToPlay = true;
 
-                CloseMenu();
                 return;
                 //break;
 
@@ -1151,57 +1085,6 @@ defaultproperties
     End Object
     MainContainer=MainContiner_inst
 
-    Begin Object Class=DHGUIButton Name=DisconnectButton
-        Caption="Disconnect"
-        bAutoShrink=false
-        StyleName="DHSmallTextButtonStyle"
-        WinTop=0.95875
-        WinLeft=0.012
-        WinWidth=0.18
-        TabOrder=1
-        OnClick=DHRoleSelectPanel.InternalOnClick
-        OnKeyEvent=DisconnectButton.InternalOnKeyEvent
-    End Object
-    b_Disconnect=DHGUIButton'DH_Interface.DHRoleSelectPanel.DisconnectButton'
-
-    Begin Object Class=DHGUIButton Name=MapButton
-        Caption="Situation Map"
-        bAutoShrink=false
-        StyleName="DHSmallTextButtonStyle"
-        WinTop=0.95875
-        WinLeft=0.22
-        WinWidth=0.18
-        TabOrder=2
-        OnClick=DHRoleSelectPanel.InternalOnClick
-        OnKeyEvent=MapButton.InternalOnKeyEvent
-    End Object
-    b_Map=DHGUIButton'DH_Interface.DHRoleSelectPanel.MapButton'
-
-    Begin Object Class=DHGUIButton Name=ScoreButton
-        Caption="Score"
-        bAutoShrink=false
-        StyleName="DHSmallTextButtonStyle"
-        WinTop=0.95875
-        WinLeft=0.41
-        WinWidth=0.18
-        TabOrder=3
-        OnClick=DHRoleSelectPanel.InternalOnClick
-        OnKeyEvent=ScoreButton.InternalOnKeyEvent
-    End Object
-    b_Score=DHGUIButton'DH_Interface.DHRoleSelectPanel.ScoreButton'
-
-    Begin Object Class=DHGUIButton Name=ConfigButton
-        bAutoShrink=false
-        StyleName="DHSmallTextButtonStyle"
-        WinTop=0.95875
-        WinLeft=0.6
-        WinWidth=0.18
-        TabOrder=4
-        OnClick=DHRoleSelectPanel.InternalOnClick
-        OnKeyEvent=ConfigButton.InternalOnKeyEvent
-    End Object
-    b_Config=DHGUIButton'DH_Interface.DHRoleSelectPanel.ConfigButton'
-
     Begin Object Class=DHGUIButton Name=ContinueButton
         Caption="Continue"
         bAutoShrink=false
@@ -1220,17 +1103,17 @@ defaultproperties
         TextAlign=TXTA_Left
         StyleName="DHLargeText"
         WinWidth=0.450806
-		WinHeight=0.042554
-		WinLeft=0.009531
-		WinTop=0.427909
+        WinHeight=0.042554
+        WinLeft=0.009531
+        WinTop=0.427909
     End Object
     l_PrimaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelectPanel.PrimaryWeaponTitle'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PrimaryWeaponContainer_inst
         WinWidth=0.975537
-		WinHeight=0.182460
-		WinLeft=0.023428
-		WinTop=0.517182
+        WinHeight=0.182460
+        WinLeft=0.023428
+        WinTop=0.517182
 
         ImageOffset(0)=10
         ImageOffset(1)=10
@@ -1244,17 +1127,17 @@ defaultproperties
         TextAlign=TXTA_Left
         StyleName="DHLargeText"
         WinWidth=0.457124
-		WinHeight=0.034503
-		WinLeft=0.013212
-		WinTop=0.637017
+        WinHeight=0.034503
+        WinLeft=0.013212
+        WinTop=0.637017
     End Object
     l_SecondaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelectPanel.SecondaryWeaponTitle'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SecondaryWeaponContainer_inst
         WinWidth=0.978091
-		WinHeight=0.131546
-		WinLeft=0.010659
-		WinTop=0.669514
+        WinHeight=0.131546
+        WinLeft=0.010659
+        WinTop=0.669514
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1267,17 +1150,17 @@ defaultproperties
         TextAlign=TXTA_Left
         StyleName="DHLargeText"
         WinWidth=0.343548
-		WinHeight=0.042554
-		WinLeft=0.042675
-		WinTop=0.795098
+        WinHeight=0.042554
+        WinLeft=0.042675
+        WinTop=0.795098
     End Object
     l_EquipTitle=GUILabel'DH_Interface.DHRoleSelectPanel.EquipmentWeaponTitle'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=EquipmentContainer_inst
         WinWidth=1.00
-		WinHeight=0.112097
-		WinLeft=0.0
-		WinTop=0.833621
+        WinHeight=0.112097
+        WinLeft=0.0
+        WinTop=0.833621
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1290,17 +1173,17 @@ defaultproperties
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
         WinWidth=0.392070
-		WinHeight=0.045108
-		WinLeft=0.280658
-		WinTop=0.007675
+        WinHeight=0.045108
+        WinLeft=0.280658
+        WinTop=0.007675
     End Object
     l_RolesTitle=GUILabel'DH_Interface.DHRoleSelectPanel.RolesTitle'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainer_inst
         WinWidth=0.976899
-		WinHeight=0.300269
-		WinLeft=0.017662
-		WinTop=0.050251
+        WinHeight=0.300269
+        WinLeft=0.017662
+        WinTop=0.050251
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1320,10 +1203,9 @@ defaultproperties
         TabOrder=0
         OnChange=DHRoleSelectPanel.InternalOnChange
         WinWidth=0.979453
-        WinHeight=1.0
-		//WinHeight=0.342819
-		WinLeft=0.012554
-		WinTop=0.051728
+        WinHeight=0.300269
+        WinLeft=0.012554
+        WinTop=0.051728
     End Object
     lb_Roles=DHGuiListBox'DH_Interface.DHRoleSelectPanel.Roles'
 
@@ -1357,11 +1239,11 @@ defaultproperties
     // Equipment controls
     Begin Object Class=GUIGFXButton Name=EquipButton0
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
-        Position=ICP_Scaled
+        Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.200000
-        WinHeight=0.495
+        WinWidth=0.2
+        WinHeight=0.3
         TabOrder=21
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1371,12 +1253,12 @@ defaultproperties
 
     Begin Object Class=GUIGFXButton Name=EquipButton1
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
-        Position=ICP_Scaled
+        Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.21
+        WinLeft=0.2
         WinWidth=0.2
-        WinHeight=0.495
+        WinHeight=0.3
         TabOrder=22
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1386,12 +1268,12 @@ defaultproperties
 
     Begin Object Class=GUIGFXButton Name=EquipButton2
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
-        Position=ICP_Scaled
+        Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.42
+        WinLeft=0.4
         WinWidth=0.2
-        WinHeight=0.495
+        WinHeight=0.3
         TabOrder=23
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1401,12 +1283,12 @@ defaultproperties
 
     Begin Object Class=GUIGFXButton Name=EquipButton3
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
-        Position=ICP_Scaled
+        Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinTop=0.505
-        WinWidth=0.41
-        WinHeight=0.495
+        WinTop=0.50
+        WinWidth=0.4
+        WinHeight=0.4
         TabOrder=24
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
