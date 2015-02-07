@@ -1169,7 +1169,7 @@ simulated function PostBeginPlay()
     {
         RandomNumber = RAND(100);
 
-        for (i = 0; i < ArrayCount(SchurzenTypes); i++)
+        for (i = 0; i < arraycount(SchurzenTypes); i++)
         {
             CumulativeChance += SchurzenTypes[i].PercentChance;
 
@@ -1192,7 +1192,7 @@ simulated function PostNetBeginPlay()
     }
 
     // Only spawn schurzen if a valid attachment class has been selected
-    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < ArrayCount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
+    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
     {
         Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
 

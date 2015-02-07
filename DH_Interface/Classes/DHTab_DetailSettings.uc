@@ -17,7 +17,7 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Ar)
     switch (Combo)
     {
         case co_GlobalDetails:
-            for (i = 0; i < ArrayCount(DetailOptions); i++)
+            for (i = 0; i < arraycount(DetailOptions); i++)
             {
                 Ar.Length = Ar.Length + 1;
                 Ar[i].Item = DetailOptions[i];
