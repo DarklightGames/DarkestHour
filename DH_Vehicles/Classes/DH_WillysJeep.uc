@@ -128,13 +128,11 @@ static function StaticPrecache(LevelInfo L)
     super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep');
-    //L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.kubelwagen_glass_FB');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep');
-    //Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB');
 
     super.UpdatePrecacheMaterials();
 }

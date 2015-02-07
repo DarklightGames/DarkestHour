@@ -1549,31 +1549,80 @@ simulated function int GetRange()
     return 0;
 }
 
-// ARMORED BEASTS CODE: Functions extended for easy tuning of gunsights in PRACTICE mode
-// bGunsightSettingMode has to be enabled and gun not loaded, then the range control buttons change sight adjustment up and down
-function IncrementRange()
+// ARMORED BEASTS CODE: functions extended for easy tuning of gunsights in development mode
+// Matt: modified to network optimise by clientside check before sending replicated function to server, & also playing click clientside, not replicating it back
+// These functions now get called on both client & server, but only progress to server if it's a valid action (see modified LeanLeft & LeanRight execs in DHPlayer)
+simulated function IncrementRange()
 {
+    // If bGunsightSettingMode is enabled & gun not loaded, then the range control buttons change sight adjustment up and down
     if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
     {
-        IncreaseAddedPitch();
-        GiveInitialAmmo();
+        if (Role == ROLE_Authority) // the server action from when this was a server only function
+        {
+            IncreaseAddedPitch();
+            GiveInitialAmmo();
+        }
+        else if (Instigator != none && ROPlayer(Instigator.Controller) != none) // net client just calls the server function
+        {
+            ROPlayer(Instigator.Controller).ServerLeanRight(true);
+        }
     }
-    else
+    // Normal range adjustment - 1st make sure it's a valid action
+    else if (CurrentRangeIndex < RangeSettings.Length - 1)
     {
-        super.IncrementRange();
+        if (Role == ROLE_Authority) // the server action from when this was a server only function
+        {
+            CurrentRangeIndex++;
+        }
+
+        if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller) != none)
+        {
+            if (Role < ROLE_Authority) // net client calls the server function, but only if we passed the valid action check
+            {
+                ROPlayer(Instigator.Controller).ServerLeanRight(true);
+            }
+
+            if (Instigator.IsLocallyControlled()) // play click sound only locally
+            {
+                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+            }
+        }
     }
 }
 
-function DecrementRange()
+simulated function DecrementRange()
 {
     if (bGunsightSettingMode && CannonReloadState != CR_ReadyToFire)
     {
-        DecreaseAddedPitch();
-        GiveInitialAmmo();
+        if (Role == ROLE_Authority)
+        {
+            DecreaseAddedPitch();
+            GiveInitialAmmo();
+        }
+        else if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+        {
+            ROPlayer(Instigator.Controller).ServerLeanLeft(true);
+        }
     }
-    else
+    else if (CurrentRangeIndex > 0)
     {
-        super.DecrementRange();
+        if (Role == ROLE_Authority)
+        {
+            CurrentRangeIndex--;
+        }
+
+        if (Instigator != none && ROPlayer(Instigator.Controller) != none && ROPlayer(Instigator.Controller) != none)
+        {
+            if (Role < ROLE_Authority)
+            {
+                ROPlayer(Instigator.Controller).ServerLeanLeft(true);
+            }
+
+            if (Instigator.IsLocallyControlled())
+            {
+                ROPlayer(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+            }
+        }
     }
 }
 
@@ -1685,7 +1734,7 @@ function bool ResupplyAmmo()
     return bDidResupply;
 }
 
-simulated function Destroyed() // Matt: added
+simulated function Destroyed()
 {
     if (CollisionMeshActor != none)
     {

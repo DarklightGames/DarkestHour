@@ -93,7 +93,7 @@ function bool KDriverLeave(bool bForceLeave)
         DriverPositionIndex=InitialPositionIndex;
         bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
-        ROVehicle(GetVehicleBase()).MaybeDestroyVehicle();
+        VehicleBase.MaybeDestroyVehicle();
         return bSuperDriverLeave;
     }
 }
@@ -354,8 +354,8 @@ simulated function DrawHUD(Canvas Canvas)
 
     if (PC != none)
         // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
 }
 
 defaultproperties

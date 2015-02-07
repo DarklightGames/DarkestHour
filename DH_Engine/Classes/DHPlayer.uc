@@ -50,7 +50,6 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand;
 }
-//=========================================================================
 
 // Matt: modified to avoid "accessed none" error
 event ClientReset()
@@ -411,7 +410,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             {
                 // No camera change if we're locking rotation
             }
-            else if (ROPwn!= none && ROPwn.bRestingWeapon)
+            else if (ROPwn != none && ROPwn.bRestingWeapon)
             {
                 ViewRotation.Yaw += 16.0 * DeltaTime * aTurn;
                 ViewRotation.Pitch += 16.0 * DeltaTime * aLookUp;
@@ -1489,7 +1488,7 @@ function AdjustView(float DeltaTime)
     }
 }
 
-//Server call to client to force prone
+// Server call to client to force prone
 function ClientProne()
 {
     Prone();
@@ -1499,6 +1498,42 @@ function ClientProne()
 function ClientToggleDuck()
 {
     ToggleDuck();
+}
+
+// Matt: modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
+// Instead we let WVP's clientside IncrementRange() check that it's a valid operation before sending server call
+exec function LeanRight()
+{
+    if (ROPawn(Pawn) != none)
+    {
+        if (!Pawn.bBipodDeployed)
+        {
+            ROPawn(Pawn).LeanRight();
+        }
+
+        ServerLeanRight(true);
+    }
+    else if (VehicleWeaponPawn(Pawn) != none)
+    {
+        VehicleWeaponPawn(Pawn).IncrementRange();
+    }
+}
+
+exec function LeanLeft()
+{
+    if (ROPawn(Pawn) != none)
+    {
+        if (!Pawn.bBipodDeployed)
+        {
+            ROPawn(Pawn).LeanLeft();
+        }
+
+        ServerLeanLeft(true);
+    }
+    else if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).Gun != none)
+    {
+        VehicleWeaponPawn(Pawn).Gun.DecrementRange();
+    }
 }
 
 function ClientConsoleCommand(string Command, bool bWriteToLog)

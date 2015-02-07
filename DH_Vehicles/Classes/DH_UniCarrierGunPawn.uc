@@ -22,7 +22,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRot;
 
-    NewRot = GetVehicleBase().Rotation;
+    NewRot = VehicleBase.Rotation;
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
@@ -152,8 +152,8 @@ simulated function DrawHUD(Canvas Canvas)
 
     if (PC != none)
         // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
 }
 
 defaultproperties

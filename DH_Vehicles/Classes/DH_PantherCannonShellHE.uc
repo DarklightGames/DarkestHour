@@ -32,33 +32,7 @@ defaultproperties
     MechanicalRanges(23)=(Range=2600,RangeValue=428.000000)
     MechanicalRanges(24)=(Range=2800,RangeValue=470.000000)
     MechanicalRanges(25)=(Range=3000,RangeValue=524.000000)
-    OpticalRanges(1)=(Range=100)
-    OpticalRanges(2)=(Range=200)
-    OpticalRanges(3)=(Range=300)
-    OpticalRanges(4)=(Range=400)
-    OpticalRanges(5)=(Range=500)
-    OpticalRanges(6)=(Range=600)
-    OpticalRanges(7)=(Range=700)
-    OpticalRanges(8)=(Range=800)
-    OpticalRanges(9)=(Range=900)
-    OpticalRanges(10)=(Range=1000)
-    OpticalRanges(11)=(Range=1100)
-    OpticalRanges(12)=(Range=1200)
-    OpticalRanges(13)=(Range=1300)
-    OpticalRanges(14)=(Range=1400)
-    OpticalRanges(15)=(Range=1500)
-    OpticalRanges(16)=(Range=1600)
-    OpticalRanges(17)=(Range=1700)
-    OpticalRanges(18)=(Range=1800)
-    OpticalRanges(19)=(Range=1900)
-    OpticalRanges(20)=(Range=2000)
-    OpticalRanges(21)=(Range=2200)
-    OpticalRanges(22)=(Range=2400)
-    OpticalRanges(23)=(Range=2600)
-    OpticalRanges(24)=(Range=2800)
-    OpticalRanges(25)=(Range=3000)
     bMechanicalAiming=true
-    bOpticalAiming=true
     DHPenetrationTable(0)=4.500000
     DHPenetrationTable(1)=4.200000
     DHPenetrationTable(2)=3.500000

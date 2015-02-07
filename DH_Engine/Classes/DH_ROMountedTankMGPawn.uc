@@ -83,7 +83,7 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRot;
 
-    NewRot = GetVehicleBase().Rotation;
+    NewRot = VehicleBase.Rotation;
     NewRot.Pitch = LimitPitch(NewRot.Pitch);
     SetRotation(NewRot);
 
@@ -209,9 +209,9 @@ simulated function DrawHUD(Canvas Canvas)
     }
 
     // Draw tank, turret, ammo count, passenger list
-    if (ROHud(PC.myHUD) != none && ROVehicle(GetVehicleBase()) != none)
+    if (ROHud(PC.myHUD) != none && VehicleBase != none)
     {
-        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, ROVehicle(GetVehicleBase()), self);
+        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
     }
 }
 
@@ -223,6 +223,101 @@ function Fire(optional float F)
     }
 
     super.Fire(F);
+}
+
+// Matt: emptied out as MG has no alt fire mode, so just ensures nothing happens
+function AltFire(optional float F)
+{
+}
+
+// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+simulated function NextWeapon()
+{
+    if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex + 1;
+        ServerChangeViewPoint(true);
+    }
+}
+
+simulated function PrevWeapon()
+{
+    if (DriverPositionIndex > 0 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
+    {
+        PendingPositionIndex = DriverPositionIndex -1;
+        ServerChangeViewPoint(false);
+    }
+}
+
+// Modified to add clientside checks before sending the function call to the server
+simulated function SwitchWeapon(byte F)
+{
+    local ROVehicleWeaponPawn WeaponPawn;
+    local bool                bMustBeTankerToSwitch;
+    local byte                ChosenWeaponPawnIndex;
+
+    if (VehicleBase != none && !IsInState('ViewTransition'))
+    {
+        if (F == 1)
+        {
+            // Stop call to server as driver position already has a human player
+            if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
+            {
+                return;
+            }
+
+            if (VehicleBase.bMustBeTankCommander)
+            {
+                bMustBeTankerToSwitch = true;
+            }
+        }
+        else
+        {
+            ChosenWeaponPawnIndex = F - 2;
+
+            // Stop call to server if player has selected an invalid weapon position or the current position
+            if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
+            {
+                return;
+            }
+
+            if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
+            {
+                WeaponPawn = ROVehicleWeaponPawn(VehicleBase.WeaponPawns[ChosenWeaponPawnIndex]);
+            }
+
+            if (WeaponPawn != none)
+            {
+                // Stop call to server as weapon position already has a human player
+                if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
+                {
+                    return;
+                }
+
+                if (WeaponPawn.bMustBeTankCrew)
+                {
+                    bMustBeTankerToSwitch = true;
+                }
+            }
+            // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
+            // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
+            else if (class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
+            {
+                return;
+            }
+        }
+
+        // Stop call to server if player has selected a tank crew role but isn't a tanker
+        if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+            ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+        {
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+
+            return;
+        }
+
+        ServerChangeDriverPosition(F);
+    }
 }
 
 function ServerChangeDriverPosition(byte F)

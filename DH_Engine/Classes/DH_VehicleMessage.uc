@@ -41,6 +41,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
+    NotQualified="Not qualified to operate this vehicle"
+    VehicleIsEnemy="Cannot use an enemy vehicle"
+    CannotEnter="Cannot enter this vehicle"
     CannotRide="Cannot ride this vehicle"
     VehicleFull="All rider positions are occupied"
     CannotExit="You must unbutton the hatch to exit"

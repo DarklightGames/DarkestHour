@@ -151,7 +151,7 @@ function bool TryToDrive(Pawn P)
     }
 }
 
-// Send a message on why they can't get in the vehicle
+// Modified to use a different AT cannon message class
 function DenyEntry(Pawn P, int MessageNum)
 {
     P.ReceiveLocalizedMessage(class'DH_ATCannonMessage', MessageNum);

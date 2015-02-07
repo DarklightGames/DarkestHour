@@ -53,7 +53,7 @@ function bool KDriverLeave(bool bForceLeave)
 
         bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
-        DH_ROTreadCraft(GetVehicleBase()).MaybeDestroyVehicle();
+        VehicleBase.MaybeDestroyVehicle();
 
         // Matt: added to play idle animation on the server to stop the collision box glitch on the roof
         if (bSuperDriverLeave && Gun.HasAnim(Gun.BeginningIdleAnim))

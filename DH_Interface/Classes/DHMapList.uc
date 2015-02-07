@@ -4,11 +4,11 @@
 //==============================================================================
 
 class DHMapList extends MapList
-        config;
+    config;
 
 function ClearMapsArray()
 {
-    Maps.Remove(0,Maps.Length);
+    Maps.Remove(0, Maps.Length);
 }
 
 function AddNewStringElement(string new_element_to_load, int index)

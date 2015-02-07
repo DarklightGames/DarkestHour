@@ -67,7 +67,9 @@ simulated function int LimitYaw(int yaw)
 simulated function bool ReadyToFire(bool bAltFire)
 {
     if (bReloading)
+    {
         return false;
+    }
 
     return super.ReadyToFire(bAltFire);
 }
@@ -77,7 +79,9 @@ function CeaseFire(Controller C, bool bWasAltFire)
     super.CeaseFire(C, bWasAltFire);
 
     if (!bReloading && !HasAmmo(0))
+    {
         HandleReload();
+    }
 }
 
 function HandleReload()
@@ -87,10 +91,7 @@ function HandleReload()
         bReloading = true;
         NumMags--;
         ClientDoReload();
-        NetUpdateTime = Level.TimeSeconds - 1;
-
-        //Log("Reloading duration =" @ VehicleWeaponPawn(Owner).HUDOverlay.GetAnimDuration('Reload', 1.0));
-        //SetTimer(VehicleWeaponPawn(Owner).HUDOverlay.GetAnimDuration('reload', 1.0), false);
+        NetUpdateTime = Level.TimeSeconds - 1.0;
         SetTimer(ReloadLength, false);
     }
 }
@@ -99,7 +100,9 @@ function HandleReload()
 simulated function ClientDoReload()
 {
     if (Owner != none && VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).HUDOverlay != none)
+    {
         VehicleWeaponPawn(Owner).HUDOverlay.PlayAnim('Reloads');
+    }
 }
 
 simulated function Timer()
@@ -110,7 +113,7 @@ simulated function Timer()
         {
             bReloading = false;
             MainAmmoCharge[0] = InitialPrimaryAmmo;
-            NetUpdateTime = Level.TimeSeconds - 1;
+            NetUpdateTime = Level.TimeSeconds - 1.0;
         }
    }
 }
@@ -120,7 +123,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     if (Role != ROLE_Authority || bForceCenterAim)
         return false;
 
-    if (FireCountdown <= 0)
+    if (FireCountdown <= 0.0)
     {
         CalcWeaponFire(bAltFire);
         if (bCorrectAim)
@@ -128,15 +131,15 @@ event bool AttemptFire(Controller C, bool bAltFire)
 
         if (bAltFire)
         {
-            if (AltFireSpread > 0)
+            if (AltFireSpread > 0.0)
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*AltFireSpread);
         }
-        else if (Spread > 0)
+        else if (Spread > 0.0)
         {
             WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand()*FRand()*Spread);
         }
 
-        DualFireOffset *= -1;
+        DualFireOffset *= -1.0;
 
         Instigator.MakeNoise(1.0);
         if (bAltFire)
@@ -188,7 +191,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return false;
 }
 
-// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot // TEST
+// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
 state ProjectileFireMode
 {
 	function Fire(Controller C)
@@ -205,7 +208,7 @@ state ProjectileFireMode
     }
 }
 
-// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode) // TEST
+// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
 	super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
