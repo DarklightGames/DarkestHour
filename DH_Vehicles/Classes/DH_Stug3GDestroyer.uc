@@ -182,8 +182,6 @@ simulated function Tick(float DeltaTime)
                 bHullMGFireTriggered = true;
             }
         }
-
-        TakeFireDamage(DeltaTime);
     }
     else if (EngineHealth <= 0 && Health > 0)
     {

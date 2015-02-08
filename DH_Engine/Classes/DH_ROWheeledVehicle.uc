@@ -125,6 +125,78 @@ simulated function PostBeginPlay()
     }
 }
 
+simulated function PostNetReceive()
+{
+    // Driver has changed position
+    if (DriverPositionIndex != SavedPositionIndex)
+    {
+        PreviousPositionIndex = SavedPositionIndex;
+        SavedPositionIndex = DriverPositionIndex;
+        NextViewPoint();
+    }
+}
+
+// New function to set up the engine properties
+simulated function SetEngine()
+{
+    if (bEngineOff)
+    {
+        TurnDamping = 0.0;
+
+        // If engine is dead then start a fire
+        if (EngineHealth <= 0)
+        {
+            DamagedEffectHealthFireFactor = 1.0; // play fire effect
+            DamagedEffectHealthSmokeFactor = 1.0;
+            DamagedEffectHealthMediumSmokeFactor = 1.0;
+            DamagedEffectHealthHeavySmokeFactor = 1.0;
+
+            AmbientSound = VehicleBurningSound;
+            SoundVolume = 255;
+            SoundRadius = 600.0;
+        }
+        else
+        {
+            AmbientSound = none;
+        }
+
+        if (bEmittersOn)
+        {
+            StopEmitters();
+        }
+    }
+    else
+    {
+        if (IdleSound != none)
+        {
+            AmbientSound = IdleSound;
+        }
+
+        if (!bEmittersOn)
+        {
+            StartEmitters();
+        }
+    }
+}
+
+function KDriverEnter(Pawn P)
+{
+    bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
+    DriverPositionIndex = InitialPositionIndex;
+    PreviousPositionIndex = InitialPositionIndex;
+    Instigator = self;
+    ResetTime = Level.TimeSeconds - 1.0;
+
+    if (bEngineOff && !P.IsHumanControlled()) // lets bots start vehicle
+    {
+        ServerStartEngine();
+    }
+
+    super(Vehicle).KDriverEnter(P); // need to skip over Super from ROVehicle
+
+    Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
+}
+/*
 function KDriverEnter(Pawn P)
 {
     bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
@@ -164,6 +236,7 @@ function KDriverEnter(Pawn P)
 
     super(Vehicle).KDriverEnter(P);
 }
+*/
 
 // DriverLeft() called by KDriverLeave()
 function DriverLeft()
@@ -469,6 +542,33 @@ simulated function StartEmitters()
     bEmittersOn = true;
 }
 
+// Server side function called to switch engine on/off
+function ServerStartEngine()
+{
+    // Engine can't be dead & vehicle can't be moving - also a time check so people can't spam the ignition switch
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && !bEngineDead)
+    {
+        IgnitionSwitchTime = Level.TimeSeconds;
+        bEngineOff = !bEngineOff;
+        SetEngine();
+
+        if (bEngineOff)
+        {
+            if (ShutDownSound != none)
+            {
+                PlaySound(ShutDownSound, SLOT_None, 1.0);
+            }
+        }
+        else
+        {
+            if (StartUpSound != none)
+            {
+                PlaySound(StartUpSound, SLOT_None, 1.0);
+            }
+        }
+    }
+}
+/*
 function ServerStartEngine()
 {
     if (!bEngineDead) //can't turn Engine on or off if it's dead
@@ -525,6 +625,7 @@ function ServerStartEngine()
         }
     }
 }
+*/
 
 // Overridden to give players the same momentum as their vehicle had when exiting
 // Adds a little height kick to allow for hacked in damage system
@@ -688,19 +789,18 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 // Handle the engine damage
 function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
-    local int ActualDamage;
-
     if (EngineHealth > 0)
     {
-        ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
-        EngineHealth -= ActualDamage;
+        Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+        EngineHealth -= Damage;
     }
 
-    // Heavy damage to engine slows vehicle way down
+    // Heavy damage to engine slows vehicle way down // Matt: won't have any effect setting this here - will move elsewhere later
     if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
     {
         Throttle = FClamp(Throttle, -0.50, 0.50);
     }
+    // Kill the engine if its health has now fallen to zero
     else if (EngineHealth <= 0)
     {
         if (bDebuggingText)
@@ -708,15 +808,9 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
             Level.Game.Broadcast(self, "Vehicle engine is dead");
         }
 
-        bDisableThrottle = true;
         bEngineDead = true;
-
-        IdleSound = VehicleBurningSound;
-        StartUpSound = none;
-        ShutDownSound = none;
-        AmbientSound = VehicleBurningSound;
-        SoundVolume = 255;
-        SoundRadius = 600;
+        bEngineOff = true;
+        SetEngine();
     }
 }
 

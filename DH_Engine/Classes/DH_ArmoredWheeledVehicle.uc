@@ -60,24 +60,6 @@ simulated function Destroyed()
     super(ROWheeledVehicle).Destroyed();       //Skip ROTreadCraft
 }
 
-simulated function PostBeginPlay()
-{
-    local float p;
-
-    super(ROWheeledVehicle).PostBeginPlay();
-
-    //Engine starting and stopping stuff
-    bEngineOff=true;
-    bEngineDead = false;
-    bDisableThrottle=true;
-
-    p = RandRange(0.15, 0.25);
-    EngineFireDamagePerSec = EngineHealth * 0.09;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
-    DamagedEffectFireDamagePerSec = HealthMax * 0.02; //~100 seconds from regular tank fire threshold to detontation from full health, damage is every 2 seconds, so double intended
-    PlayerFireDamagePerSec = p * 100.0; //flames inflict random amounts of low level damage to players every 2 seconds - hot! hot!
-
-}
-
 //overriding here because we don't want exhaust to work until
 //engine start/stop AND we don't need tread stuff from TreadCraft
  simulated event DrivingStatusChanged()
@@ -156,8 +138,6 @@ simulated function Tick(float DeltaTime)
                 bTurretFireTriggered = true;
             }
         }
-
-        TakeFireDamage(DeltaTime);
     }
     else if (EngineHealth <= 0 && Health > 0)
     {
@@ -386,21 +366,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     {
         if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
         {
-            if (bDebuggingText)
-            {
-                Level.Game.Broadcast(self, "Hull on Fire");
-            }
-
-            bOnFire = true;
-            WhoSetOnFire = instigatedBy.Controller;
-            DelayedDamageInstigatorController = WhoSetOnFire;
-            FireStarterTeam = WhoSetOnFire.GetTeamNum();
-        }
-        else if (DamageType == VehicleBurningDamType)
-        {
-            bOnFire = true;
-            WhoSetOnFire = WhoSetEngineOnFire;
-            FireStarterTeam = WhoSetOnFire.GetTeamNum();
+            StartHullFire(InstigatedBy);
         }
     }
 
@@ -411,7 +377,10 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     if (Health >= 0 && Health <= HealthMax / 3)
     {
         bDisableThrottle = true;
+        bEngineOff = true;
+        EngineHealth = 0;
         bEngineDead = true;
+        SetEngine();
         DamagedEffectHealthFireFactor = 1.0; //play fire effect
         IdleSound = VehicleBurningSound;
         StartUpSound = none;

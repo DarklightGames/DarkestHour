@@ -381,15 +381,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (Health >= 0 && Health <= HealthMax / 3)
     {
+        bEngineOff = true;
         bDisableThrottle = true;
         bEngineDead = true;
-        DamagedEffectHealthFireFactor = 1.0; // play fire effect
-        IdleSound = VehicleBurningSound;
-        StartUpSound = none;
-        ShutDownSound = none;
-        AmbientSound = VehicleBurningSound;
-        SoundVolume = 255;
-        SoundRadius = 600.0;
+        EngineHealth = 0;
+        SetEngine();
     }
 
 }

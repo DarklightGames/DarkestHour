@@ -61,6 +61,7 @@ var     Material            SchurzenTexture;  // the camo skin for the schurzen 
 // General
 var     float       PointValue; // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
 var     bool        bEmittersOn;
+var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
 var     float       MaxCriticalSpeed;
 var     float       WaitForCrewTime;
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
@@ -125,29 +126,28 @@ var     class<VehicleDamagedEffect> FireEffectClass;
 var     VehicleDamagedEffect        DriverHatchFireEffect;
 var()   name        FireAttachBone;
 var()   vector      FireEffectOffset;
-var()   float       FireDamage;
-var     float       EngineFireDamagePerSec;
+var()   float       HullFireChance;
+var()   float       HullFireHEATChance;
+var     bool        bOnFire; // the vehicle itself is on fire
+var     float       HullFireDamagePer2Secs;
+var     float       PlayerFireDamagePer2Secs;
+var     float       NextHullFireDamageTime;
 var     float       EngineFireChance;
 var     float       EngineFireHEATChance;
-var     float       HullFireChance;
-var     float       HullFireHEATChance;
-var     float       PlayerFireDamagePerSec;
-var     float       BurnTime;
-var     float       EngineBurnTime;
-var     float       FireCheckTime;
-//var() float       DamagedHealthFireFactor; // replaces DamagedEffectHealthFireFactor for calculating when a tank should catch fire from lack of health
-var()   bool        bFirstHit;
-var()   bool        bOnFire;       // hull is on fire
-var()   bool        bEngineOnFire; // engine is on fire
-var     bool        bWasHEATRound; // whether the round doing damage was a HEAT round or not
-var     Controller  WhoSetOnFire;
-var     Controller  WhoSetEngineOnFire;
-var     int         FireStarterTeam;
-var     bool        bTurretFireTriggered;  // to stop multiple calls to the TankCannon
+var     bool        bEngineOnFire;
+var     float       EngineFireDamagePer3Secs;
+var     float       NextEngineFireDamageTime;
+var     bool        bTurretFireTriggered;
 var     bool        bHullMGFireTriggered;
-var     float       DriverHatchBurnTime;
 var     float       FireDetonationChance;   // chance of a fire blowing a tank up, runs each time the fire does damage
 var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the tank, runs each time engine takes fire damage
+var     bool        bFirstHit;
+var     bool        bWasHEATRound;          // whether the round doing damage was a HEAT round or not
+var     Controller  WhoSetOnFire;
+var     int         HullFireStarterTeam;
+var     Controller  WhoSetEngineOnFire;
+var     int         EngineFireStarterTeam;
+var     float       DriverHatchBurnTime;
 
 // New sounds
 var     sound       VehicleBurningSound;
@@ -190,7 +190,8 @@ replication
         
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        TakeFireDamage, ServerStartEngine, ServerToggleDebugExits; // Matt: I suspect TakeFireDamage doesn't need to be replicated as called from Tick, which server gets anyway (in fact replication may be heinous!)
+        ServerStartEngine, ServerToggleDebugExits;
+//      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
 
 
@@ -471,6 +472,27 @@ function Vehicle FindEntryVehicle(Pawn P)
 
 function KDriverEnter(Pawn p)
 {
+    bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROTreadCraft
+    DriverPositionIndex = InitialPositionIndex;
+    PreviousPositionIndex = InitialPositionIndex;
+    Instigator = self;
+    ResetTime = Level.TimeSeconds - 1.0;
+
+    if (bEngineOff && !P.IsHumanControlled()) // lets bots start vehicle
+    {
+        ServerStartEngine();
+    }
+
+    ResetTime = Level.TimeSeconds - 1.0;
+    Instigator = self;
+
+    super(Vehicle).KDriverEnter(P);
+
+    Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
+}
+/*
+function KDriverEnter(Pawn p)
+{
     bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
     DriverPositionIndex = InitialPositionIndex;
     PreviousPositionIndex = InitialPositionIndex;
@@ -509,6 +531,7 @@ function KDriverEnter(Pawn p)
 
     Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
 }
+*/
 
 // Overriding here because we don't want exhaust/dust to start up until engine starts
 simulated event DrivingStatusChanged()
@@ -660,6 +683,33 @@ simulated function StartEmitters()
     bEmittersOn = true;
 }
 
+// Server side function called to switch engine on/off
+function ServerStartEngine()
+{
+    // Engine can't be dead & vehicle can't be moving - also a time check so people can't spam the ignition switch
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && !bEngineDead)
+    {
+        IgnitionSwitchTime = Level.TimeSeconds;
+        bEngineOff = !bEngineOff;
+        SetEngine();
+
+        if (bEngineOff)
+        {
+            if (ShutDownSound != none)
+            {
+                PlaySound(ShutDownSound, SLOT_None, 1.0);
+            }
+        }
+        else
+        {
+            if (StartUpSound != none)
+            {
+                PlaySound(StartUpSound, SLOT_None, 1.0);
+            }
+        }
+    }
+}
+/*
 // Server side function called to switch engine
 function ServerStartEngine()
 {
@@ -726,6 +776,7 @@ function ServerStartEngine()
         }
     }
 }
+*/
 
 // Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
@@ -997,21 +1048,13 @@ simulated state ViewTransition
         {
             if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
             {
-                if (Level.NetMode != NM_DedicatedServer || bDriverCollBoxMoves)
-                {
-                    PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-                }
-
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
                 ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim, 1.0);
             }
         }
         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
         {
-            if (Level.NetMode != NM_DedicatedServer || bDriverCollBoxMoves)
-            {
-                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-            }
-
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
             ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim, 1.0);
         }
     }
@@ -1151,8 +1194,9 @@ simulated function PostBeginPlay()
         PlayAnim(BeginningIdleAnim);
     }
 
-    EngineFireDamagePerSec = default.EngineHealth * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
-    DamagedEffectFireDamagePerSec = HealthMax * 0.02; // ~100 seconds from regular tank fire threshold to detonation from full health, damage is every 2 seconds, so double intended
+    // Set fire damage rates
+    HullFireDamagePer2Secs = HealthMax * 0.02;             // so approx 100 seconds from full vehicle health to detonation due to fire
+    EngineFireDamagePer3Secs = default.EngineHealth * 0.1; // so approx 30 seconds engine fire until engine destroyed
 
     // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
     if (Level.NetMode == NM_Standalone)
@@ -1227,6 +1271,17 @@ simulated function PostNetBeginPlay()
         }
     }
 
+}
+
+simulated function PostNetReceive()
+{
+    // Driver has changed position
+    if (DriverPositionIndex != SavedPositionIndex)
+    {
+        PreviousPositionIndex = SavedPositionIndex;
+        SavedPositionIndex = DriverPositionIndex;
+        NextViewPoint();
+    }
 }
 
 simulated function Tick(float DeltaTime)
@@ -1433,8 +1488,6 @@ simulated function Tick(float DeltaTime)
                 bHullMGFireTriggered = true;
             }
         }
-
-        TakeFireDamage(DeltaTime);
     }
     else if (EngineHealth <= 0 && Health > 0)
     {
@@ -1481,7 +1534,7 @@ simulated function CheckEmitters()
         StartEmitters();
     }
 }
-
+/*
 // TakeFireDamage() called every tick when vehicle is burning
 event TakeFireDamage(float DeltaTime)
 {
@@ -1574,6 +1627,224 @@ event TakeFireDamage(float DeltaTime)
         }
 
         BurnTime = Level.TimeSeconds;
+    }
+}
+*/
+// New function to handle hull fire damage
+function TakeFireDamage()
+{
+    local Pawn PawnWhoSetOnFire;
+    local int  i;
+
+    if (Role == ROLE_Authority)
+    {
+        if (WhoSetOnFire != none)
+        {
+            // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
+            if (WhoSetOnFire.GetTeamNum() != HullFireStarterTeam)
+            {
+                WhoSetOnFire = none;
+                DelayedDamageInstigatorController = none;
+            }
+            else
+            {
+                PawnWhoSetOnFire = WhoSetOnFire.Pawn;
+            }
+        }
+
+        // Burn the driver
+        if (Driver != none)
+        {
+            Driver.TakeDamage(PlayerFireDamagePer2Secs, PawnWhoSetOnFire, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
+        }
+
+        // Burn any other vehicle occupants
+        for (i = 0; i < WeaponPawns.Length; i++)
+        {
+            if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
+            {
+                WeaponPawns[i].Driver.TakeDamage(PlayerFireDamagePer2Secs, PawnWhoSetOnFire, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
+            }
+        }
+
+        // Chance of cooking off ammo/igniting fuel before health runs out
+        if (FRand() < FireDetonationChance)
+        {
+            TakeDamage(Health, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
+        }
+        // Otherwise the vehicle takes normal fire damage
+        else
+        {
+            TakeDamage(HullFireDamagePer2Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
+        }
+
+        // Set next hull damage due in another 2 seconds, unless vehicle is now dead
+        if (Health > 0)
+        {
+            NextHullFireDamageTime += 2.0;
+        }
+    }
+}
+
+// New function to handle engine fire damage
+function TakeEngineFireDamage()
+{
+    local Pawn PawnWhoSetOnFire;
+
+    if (Role == ROLE_Authority)
+    {
+        // Damage engine if not already dead
+        if (EngineHealth > 0)
+        {
+            if (WhoSetEngineOnFire != none)
+            {
+                // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
+                if (WhoSetEngineOnFire.GetTeamNum() != EngineFireStarterTeam)
+                {
+                    WhoSetEngineOnFire = none;
+                    DelayedDamageInstigatorController = none;
+                }
+                else
+                {
+                    PawnWhoSetOnFire = WhoSetEngineOnFire.Pawn;
+                }
+            }
+
+            DamageEngine(EngineFireDamagePer3Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);   
+
+            // Small chance each time of engine fire spreading & setting whole tank on fire
+            if (!bOnFire && FRand() < EngineToHullFireChance)
+            {
+                StartHullFire(PawnWhoSetOnFire);
+            }
+
+            // Engine not dead, so set next engine damage due in the normal 3 seconds
+            if (EngineHealth > 0)
+            {
+                NextEngineFireDamageTime += 3.0;
+            }
+            // Engine is dead, but use NextEngineFireDamageTime to set next timer so engine fire dies down 30 secs after engine health hits zero (unless hull has caught fire)
+            else if (!bOnFire)
+            {
+                NextEngineFireDamageTime += 30.0;
+            }
+        }
+        // Engine fire dies down 30 seconds after engine health hits zero, unless hull has caught fire
+        else if (!bOnFire)
+        {
+            bEngineOnFire = false;
+            SetEngine();
+        }
+    }
+}
+
+// New function to handle starting a hull fire
+function StartHullFire(Pawn InstigatedBy)
+{
+    if (bDebuggingText)
+    {
+        Level.Game.Broadcast(self, "Vehicle set on fire");
+    }
+
+    bOnFire = true;
+    SetEngine();
+
+    if (InstigatedBy != none)
+    {
+        WhoSetOnFire = InstigatedBy.Controller;
+        DelayedDamageInstigatorController = WhoSetOnFire;
+    }
+
+    if (WhoSetOnFire != none)
+    {
+        HullFireStarterTeam = WhoSetOnFire.GetTeamNum();
+    }
+
+    // Set the 1st hull damage due in 2 seconds
+    NextHullFireDamageTime = Level.TimeSeconds + 2.0;
+    SetNextTimer();
+}
+
+// New function to handle starting an engine fire
+function StartEngineFire(Pawn InstigatedBy)
+{
+    if (bDebuggingText)
+    {
+        Level.Game.Broadcast(self, "Engine set on fire");
+    }
+
+    bEngineOnFire = true;
+    SetEngine();
+
+    // Record which player is responsible for the delayed damage
+    if (InstigatedBy != none)
+    {
+        WhoSetEngineOnFire = InstigatedBy.Controller;
+        
+        if (WhoSetEngineOnFire != none)
+        {
+            EngineFireStarterTeam = WhoSetEngineOnFire.GetTeamNum();
+            
+            if (DelayedDamageInstigatorController == none) // don't override DDIC if already set, e.g. someone else may already have set hull on fire
+            {
+                DelayedDamageInstigatorController = WhoSetEngineOnFire;
+            }
+        }
+    }    
+
+    // Set fire damage due immediately & call Timer() directly (it handles damage & setting of next due Timer)
+    NextEngineFireDamageTime = Level.TimeSeconds;
+    Timer();
+}
+
+// New function to set up the engine properties
+simulated function SetEngine()
+{
+    bDisableThrottle = bEngineOff;
+    bWantsToThrottle = !bEngineOff;
+
+    if (bEngineOff)
+    {
+        TurnDamping = 0.0;
+
+        if (bOnFire || bEngineOnFire)
+        {
+            AmbientSound = VehicleBurningSound;
+            SoundVolume = 255;
+            SoundRadius = 600.0;
+        }
+        else if (EngineHealth <= 0)
+        {
+            AmbientSound = SmokingEngineSound;
+            SoundVolume = 40;
+            SoundRadius = 600.0;
+        }
+        else
+        {
+            AmbientSound = none;
+        }
+
+        if (bEmittersOn)
+        {
+            StopEmitters();
+        }
+    }
+    else
+    {
+        if (IdleSound != none)
+        {
+            AmbientSound = IdleSound;
+        }
+
+        if (!bEmittersOn)
+        {
+            StartEmitters();
+        }
+    }
+
+    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none && WeaponPawns[0].Gun != none && DH_ROTankCannon(WeaponPawns[0].Gun) != none)
+    {
+        DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = bEngineOff;
     }
 }
 
@@ -2506,26 +2777,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
         {
-            if (bDebuggingText)
-            {
-                Level.Game.Broadcast(self, "Vehicle on fire");
-            }
-
-            if (!bDriving)
-            {
-                Enable('Tick');
-            }
-
-            bOnFire = true;
-            WhoSetOnFire = InstigatedBy.Controller;
-            DelayedDamageInstigatorController = WhoSetOnFire;
-            FireStarterTeam = WhoSetOnFire.GetTeamNum();
-        }
-        else if (DamageType == VehicleBurningDamType)
-        {
-            bOnFire = true;
-            WhoSetOnFire = WhoSetEngineOnFire;
-            FireStarterTeam = WhoSetOnFire.GetTeamNum();
+            StartHullFire(InstigatedBy);
         }
     }
 
@@ -2538,6 +2790,46 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     bWasTurretHit = false;
 }
 
+function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
+{
+    // Apply new damage
+    if (EngineHealth > 0)
+    {
+        if (DamageType != VehicleBurningDamType)
+        {
+            Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+        }
+
+        EngineHealth -= Damage;
+    }
+
+    // If engine health drops below a certain level, slow the tank way down // Matt: won't have any effect setting this here - will move elsewhere later
+    if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.50))
+    {
+        Throttle = FClamp(Throttle, -0.50, 0.50);
+    }
+    // Kill the engine if its health has now fallen to zero
+    else if (EngineHealth <= 0)
+    {
+        if (bDebuggingText)
+        {
+            Level.Game.Broadcast(self, "Engine is dead");
+        }
+
+        bEngineDead = true;
+        bEngineOff = true;
+        SetEngine();
+    }
+    // Or if engine still alive, a random chance of engine fire breaking out
+    else if (DamageType != VehicleBurningDamType && !bEngineOnFire && Damage > 0 && Health > 0)
+    {
+        if ((!bWasHEATRound && FRand() < EngineFireChance) || (bWasHEATRound && FRand() < EngineFireHEATChance))
+        {
+            StartEngineFire(InstigatedBy);
+        }
+    }
+}
+/*
 // Handle the engine damage
 function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
@@ -2598,7 +2890,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
         SoundRadius = 600.0;
     }
 }
-
+*/
 // Matt: modified so will pass radius damage on to each VehicleWeaponPawn, as originally lack of vehicle driver caused early exit
 function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
@@ -2647,20 +2939,82 @@ function MaybeDestroyVehicle()
     }
 }
 
-// Matt: drops all RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as in DH we don't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
+// Matt: modified to use a system of interwoven timers instead of constantly checking for things in Tick() - fire damage, spiked vehicle timer
+// Drops all RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as in DH we don't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
 function Timer()
 {
-    // Check to see if we need to destroy a spiked, abandoned vehicle
-    if (bSpikedVehicle)
+    local float Now;
+
+    if (Health <= 0)
     {
-        if (IsVehicleEmpty() && !bOnFire)
+        return;
+    }
+
+    Now = Level.TimeSeconds;
+
+    if (Role == ROLE_Authority)
+    {
+        // Handle any hull fire damage due
+        if (bOnFire && Now >= NextHullFireDamageTime)
         {
-            KilledBy(self);
+            TakeFireDamage();
         }
-        else
+
+        // Handle any engine fire damage due
+        if (bEngineOnFire && Now >= NextEngineFireDamageTime)
         {
-            bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied or burning (just let the fire destroy it)
+            TakeEngineFireDamage();
         }
+
+        // Check to see if we need to destroy a spiked, abandoned vehicle
+        if (bSpikedVehicle && Now >= SpikeTime)
+        {
+            if (IsVehicleEmpty() && !bOnFire)
+            {
+                KilledBy(self);
+            }
+            else
+            {
+                bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied or burning (just let the fire destroy it)
+            }
+        }
+    }
+
+    SetNextTimer(Now);
+}
+
+// New function as we are using timers for different things in different net modes, so work out which one (if any) is due next
+function SetNextTimer(optional float Now)
+{
+    local float NextTimerTime;
+
+    if (Now == 0.0)
+    {
+        Now = Level.TimeSeconds;
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        if (bOnFire && NextHullFireDamageTime > Now)
+        {
+            NextTimerTime = NextHullFireDamageTime;
+        }
+
+        if (bEngineOnFire && NextEngineFireDamageTime > Now && (NextTimerTime == 0.0 || NextEngineFireDamageTime < NextTimerTime))
+        {
+            NextTimerTime = NextEngineFireDamageTime;
+        }
+
+        if (bSpikedVehicle && SpikeTime > Now && (NextTimerTime == 0.0 || SpikeTime < NextTimerTime))
+        {
+            NextTimerTime = SpikeTime;
+        }
+    }
+
+    // Finally set the next timer, if we need one
+    if (NextTimerTime > Now)
+    {
+        SetTimer(NextTimerTime - Now, false);
     }
 }
 
@@ -3115,7 +3469,7 @@ defaultproperties
     HullFireChance=0.25
     HullFireHEATChance=0.50
     VehicleBurningDamType=class'DH_VehicleBurningDamType'
-    PlayerFireDamagePerSec=15.0
+    PlayerFireDamagePer2Secs=15.0
     bFirstHit=true
     FireDetonationChance=0.07
     EngineToHullFireChance=0.05

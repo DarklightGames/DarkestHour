@@ -17,7 +17,7 @@ simulated function UpdateMovementSound();          // removed due to no movement
 simulated function SetupTreads();                  // removed due to no need to setup treads
 simulated function DestroyTreads();                // removed due to no need to setup treads
 function DamageTrack(bool bLeftTrack);             // removed due to no need to damage treads
-function TakeFireDamage(float DeltaTime);          // removed due to no need for fire damage
+function TakeFireDamage();                         // removed due to no need for fire damage
 //function bool ResupplyAmmo();                    // removed due to no need to resupply the gun
 function MaybeDestroyVehicle();                    // removed so we don't destroy the Gun if abandoned
 //function EnteredResupply();                      // removed due to no need to resupply the gun
