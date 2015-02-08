@@ -470,8 +470,7 @@ function Vehicle FindEntryVehicle(Pawn P)
 
 function KDriverEnter(Pawn p)
 {
-    local int x;
-
+    bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
     DriverPositionIndex = InitialPositionIndex;
     PreviousPositionIndex = InitialPositionIndex;
 
@@ -1122,21 +1121,25 @@ simulated function bool IsDisabled()
     return ((EngineHealth <= 0) || (bLeftTrackDamaged && bRightTrackDamaged));
 }
 
-// Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
 simulated function PostBeginPlay()
 {
     local byte RandomNumber, CumulativeChance, i;
 
-    super.PostBeginPlay();
+    super(ROVehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
-    // Engine starting and stopping stuff
-    //bEngineOff = true;
-    //bEngineDead = false;
-    //bDisableThrottle = true;
-    //bFirstHit = true;
+    if (HasAnim(BeginningIdleAnim))
+    {
+        PlayAnim(BeginningIdleAnim);
+    }
 
     EngineFireDamagePerSec = default.EngineHealth * 0.10;  // Damage is dealt every 3 seconds, so this value is triple the intended per second amount
     DamagedEffectFireDamagePerSec = HealthMax * 0.02; // ~100 seconds from regular tank fire threshold to detonation from full health, damage is every 2 seconds, so double intended
+
+    // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
+    if (Level.NetMode == NM_Standalone)
+    {
+        bDriverAlreadyEntered = true;
+    }
 
     // If vehicle has schurzen (tex != none is flag) then randomise model selection (different degrees of damage, or maybe none at all)
     if (Role == ROLE_Authority && SchurzenTexture != none)
@@ -1152,6 +1155,33 @@ simulated function PostBeginPlay()
                 SchurzenIndex = i; // set replicated variable so clients know which schurzen to spawn
                 break;
             }
+        }
+    }
+
+    // Clientside treads & sound attachments
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetupTreads();
+
+        if (RumbleSound != none && RumbleSoundBone != '' && InteriorRumbleSoundAttach == none)
+        {
+            InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
+            InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
+            AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
+        }
+
+        if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
+        {
+            LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
+            LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
+            AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
+        }
+
+        if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
+        {
+            RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
+            RightTreadSoundAttach.AmbientSound = RightTreadSound;
+            AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
         }
     }
 }
@@ -2594,6 +2624,23 @@ function MaybeDestroyVehicle()
         if (bDebuggingText)
         {
             Level.Game.Broadcast(self, "Initiating vehicle SpikeTimer");
+        }
+    }
+}
+
+// Matt: drops all RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as in DH we don't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
+function Timer()
+{
+    // Check to see if we need to destroy a spiked, abandoned vehicle
+    if (bSpikedVehicle)
+    {
+        if (IsVehicleEmpty() && !bOnFire)
+        {
+            KilledBy(self);
+        }
+        else
+        {
+            bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied or burning (just let the fire destroy it)
         }
     }
 }

@@ -109,8 +109,25 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
     }
 }
 
+simulated function PostBeginPlay()
+{
+    super(ROVehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
+
+    if (HasAnim(BeginningIdleAnim))
+	{
+	    PlayAnim(BeginningIdleAnim);
+	}
+
+    // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
+    if (Level.NetMode == NM_Standalone)
+    {
+        bDriverAlreadyEntered = true;
+    }
+}
+
 function KDriverEnter(Pawn P)
 {
+    bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
     DriverPositionIndex = InitialPositionIndex;
     PreviousPositionIndex = InitialPositionIndex;
 
@@ -326,6 +343,23 @@ simulated function CheckEmitters()
     else if (!bEmittersOn && !bEngineDead && !bEngineOff)
     {
         StartEmitters();
+    }
+}
+
+// Matt: drops all RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as in DH we don't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
+function Timer()
+{
+    // Check to see if we need to destroy a spiked, abandoned vehicle
+    if (bSpikedVehicle)
+    {
+        if (IsVehicleEmpty())
+        {
+            KilledBy(self);
+        }
+        else
+        {
+            bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied
+        }
     }
 }
 
