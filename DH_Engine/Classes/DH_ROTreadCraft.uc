@@ -68,6 +68,7 @@ var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: ch
 // Positions
 var     int         UnbuttonedPositionIndex;
 var     bool        bSpecialExiting;
+var     float       ViewTransitionDuration; // used to control the time we stay in state ViewTransition
 var()   bool        bAllowRiders;
 var()   int         FirstRiderPositionIndex;
 var()   bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
@@ -965,61 +966,79 @@ event CheckReset()
     Destroy();
 }
 
+// Modified to use Sleep to control exit from state (including dedicated server), to avoid unnecessary stuff on a server & to add possibility for FOV changes
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+            // Switch to mesh for new position as may be different
+            if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
-                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
+                {
+                    LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                }
+            }
+
+            // Play any transition animation for the driver
+            if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
+            {
+                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
             }
         }
 
-        if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+        // Play any transition animation for the vehicle itself
+        // On a dedicated server we only want to run this section to set a Sleep duration (or play button/unbutton anims if driver's collision box moves)
+        ViewTransitionDuration = 0.0;
+
+        if (PreviousPositionIndex < DriverPositionIndex)
         {
-            SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim, 1.0), false);
-            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+            if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+            {
+                if (Level.NetMode != NM_DedicatedServer || bDriverCollBoxMoves)
+                {
+                    PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+                }
+
+                ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionUpAnim, 1.0);
+            }
         }
         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
         {
-            SetTimer(GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim, 1.0), false);
-            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-        }
+            if (Level.NetMode != NM_DedicatedServer || bDriverCollBoxMoves)
+            {
+                PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+            }
 
-        if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
-        {
-            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+            ViewTransitionDuration = GetAnimDuration(DriverPositions[PreviousPositionIndex].TransitionDownAnim, 1.0);
         }
     }
 
-    simulated function Timer()
-    {
-        SetTimer(1.0, false);
-        GotoState('');
-    }
-
+    // Matt: emptied out so that Sleep is the sole means of exiting this state
     simulated function AnimEnd(int channel)
     {
-        if (IsLocallyControlled())
-        {
-            GotoState('');
-        }
+    }
+
+    // Matt: reverted to global Timer as Sleep is now the sole means of exiting this state
+    simulated function Timer()
+    {
+        global.Timer();
     }
 
     simulated function EndState()
     {
-        if (PlayerController(Controller) != none)
+        if (Level.NetMode != NM_DedicatedServer && PlayerController(Controller) != none)
         {
             PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            PlayerController(Controller).SetRotation(rot(0, 0, 0));
         }
     }
 
 Begin:
     HandleTransition();
-    Sleep(0.2);
+    Sleep(ViewTransitionDuration);
+    GotoState('');
 }
 
 function bool TryToDrive(Pawn P)
