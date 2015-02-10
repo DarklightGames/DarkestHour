@@ -2018,7 +2018,7 @@ simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, fl
         if (!bRoundShattered)
         {
             bProjectilePenetrated = true;
-            bWasTurretHit = true;
+            bWasTurretHit = false;
             bWasHEATRound = (P.default.RoundType == RT_HEAT);
 
             return true;
