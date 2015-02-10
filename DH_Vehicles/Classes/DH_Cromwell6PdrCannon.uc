@@ -79,7 +79,6 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
     AltFireSoundScaling=3.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     AltFireEndSound=SoundGroup'Inf_Weapons.dt.dt_fire_end'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'

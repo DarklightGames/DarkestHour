@@ -18,9 +18,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Pak40_anm.Pak40_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_Pak40Cannon'
     CameraBone="Turret"
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-20.000000,Z=-44.000000)
     DriveAnim="crouch_idlehold_bayo"

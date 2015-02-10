@@ -11,7 +11,6 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
     SecondarySpread=0.001200
     ManualRotationsPerSecond=0.025000
-    PoweredRotationsPerSecond=0.025000
     bIsAssaultGun=true
     GunMantletArmorFactor=8.000000
     GunMantletSlope=40.000000
@@ -64,7 +63,6 @@ defaultproperties
     FireInterval=7.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
     ShakeRotMag=(Z=50.000000)

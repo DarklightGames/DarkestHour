@@ -468,6 +468,9 @@ defaultproperties
     bPCRelativeFPRotation=true
     bDesiredBehindView=false
     DriveAnim="crouch_idle_binoc"
+    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     ExitPositions(0)=(X=-40.0,Y=-10.0,Z=50.0)
     ExitPositions(1)=(X=-40.0,Y=-10.0,Z=60.0)
     ExitPositions(2)=(X=-40.0,Y=25.0,Z=50.0)

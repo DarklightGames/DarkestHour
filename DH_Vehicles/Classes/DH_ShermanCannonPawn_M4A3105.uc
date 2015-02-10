@@ -10,9 +10,7 @@ defaultproperties
     OverlayCenterSize=0.542000
     UnbuttonedPositionIndex=3
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    bManualTraverseOnly=true
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.sherman105_sight_background'
     BinocPositionIndex=4
     WeaponFOV=24.000000

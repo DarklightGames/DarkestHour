@@ -118,9 +118,6 @@ simulated function Tick(float DeltaTime)
       bDisableThrottle=true;
       Steering=0;
     }
-
-    if (Level.NetMode != NM_DedicatedServer)
-        CheckEmitters();
 }
 
 static function StaticPrecache(LevelInfo L)

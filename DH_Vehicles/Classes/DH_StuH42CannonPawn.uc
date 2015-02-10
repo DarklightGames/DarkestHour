@@ -11,9 +11,8 @@ defaultproperties
     PeriscopePositionIndex=1
     UnbuttonedPositionIndex=3
     bManualTraverseOnly=true
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     BinocPositionIndex=4

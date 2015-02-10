@@ -9,7 +9,6 @@ defaultproperties
 {
     SecondarySpread=0.001300
     ManualRotationsPerSecond=0.040000
-    PoweredRotationsPerSecond=0.040000
     FrontArmorFactor=3.000000
     RightArmorFactor=1.000000
     LeftArmorFactor=1.000000
@@ -76,7 +75,6 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireSoundScaling=3.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'

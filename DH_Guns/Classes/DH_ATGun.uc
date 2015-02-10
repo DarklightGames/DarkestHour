@@ -12,22 +12,21 @@ class DH_ATGun extends DH_ROTreadCraft
 var  DH_ATCannonFactoryBase   DHParentFactory;
 var  ROVehicleFactory         ROParentFactory;
 
-// The following functions are empty functions:
-simulated function UpdateMovementSound();          // removed due to no movement sound needed
-simulated function SetupTreads();                  // removed due to no need to setup treads
-simulated function DestroyTreads();                // removed due to no need to setup treads
-function DamageTrack(bool bLeftTrack);             // removed due to no need to damage treads
-function TakeFireDamage();                         // removed due to no need for fire damage
-//function bool ResupplyAmmo();                    // removed due to no need to resupply the gun
-function MaybeDestroyVehicle();                    // removed so we don't destroy the Gun if abandoned
-//function EnteredResupply();                      // removed due to no need to resupply the gun
-//function LeftResupply();                         // removed due to no need to resupply the gun
-function Timer();                                  // keeps the throttle disabled.
-function Fire(optional float F);                   // don't need the fire stuff
-function ServerStartEngine();                      // don't need the engine stuff
-simulated function StartEngine();                  // don't need the engine stuff
-function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType); // removed due to no need to damage engine
-
+// The following functions are empty functions, as AT guns have no treads, engine, movement, fire (burning), resupply or self-destruct if empty:
+simulated function UpdateMovementSound();
+simulated function SetupTreads();
+simulated function DestroyTreads();
+function DamageTrack(bool bLeftTrack);
+function MaybeDestroyVehicle();
+function TakeFireDamage();
+function Timer();
+function Fire(optional float F);
+function ServerStartEngine();
+simulated function SetEngine();
+function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType);
+//function bool ResupplyAmmo();
+//function EnteredResupply();
+//function LeftResupply();
 
 // Returns true, an AT-Gun is always disabled (i.e. can not move)
 simulated function bool IsDisabled()

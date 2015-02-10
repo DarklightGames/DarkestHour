@@ -257,11 +257,6 @@ simulated function Tick(float DeltaTime)
             SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
     }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        CheckEmitters();
-    }
 }
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -379,15 +374,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 
+    // If vehicle health is very low, kill the engine (which will start a fire)
     if (Health >= 0 && Health <= HealthMax / 3)
     {
-        bEngineOff = true;
-        bDisableThrottle = true;
         bEngineDead = true;
         EngineHealth = 0;
+        bEngineOff = true;
         SetEngine();
     }
-
 }
 
 // We want to disable APC if: engine is dead or vehicle takes big damage

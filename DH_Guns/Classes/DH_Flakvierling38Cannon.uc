@@ -312,8 +312,6 @@ defaultproperties
     AddedPitch=50
     WeaponFireOffset=64.0
     RotationsPerSecond=0.05
-    ManualRotationsPerSecond=0.05
-    PoweredRotationsPerSecond=0.05
     FireInterval=0.15
     FlashEmitterClass=class'DH_Guns.DH_Flakvierling38MuzzleFlash'
     ProjectileClass=class'DH_Guns.DH_Flakvierling38CannonShellMixed'

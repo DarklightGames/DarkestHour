@@ -19,9 +19,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Flak88_anm.flak88_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=8000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_Flak88Cannon'
     CameraBone="Gun"
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-15.000000,Z=-5.000000)
     DriveAnim="Vt3485_driver_idle_close"

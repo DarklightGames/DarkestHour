@@ -182,8 +182,6 @@ defaultproperties
     bManualTraverseOnly=true
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     WeaponFOV=14.400000
@@ -196,8 +194,6 @@ defaultproperties
     GunClass=class'DH_Vehicles.DH_HetzerCannon'
     bHasAltFire=false
     CameraBone="Turret"
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     ManualMinRotateThreshold=0.500000
     ManualMaxRotateThreshold=3.000000
     DrivePos=(X=6.000000,Z=-35.000000)

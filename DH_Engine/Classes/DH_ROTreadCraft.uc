@@ -110,7 +110,7 @@ var     float       TurretDetonationThreshold; // chance that turret ammo will g
 // Engine stuff
 var     bool        bEngineDead; // tank engine is damaged and cannot run or be restarted...ever
 var     bool        bEngineOff;  // tank engine is simply switched off
-var     bool        bOldEngineOff;
+var     bool        bSavedEngineOff; // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;
 
 // Treads
@@ -193,7 +193,6 @@ replication
         ServerStartEngine, ServerToggleDebugExits;
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
-
 
 static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
 {
@@ -483,55 +482,10 @@ function KDriverEnter(Pawn p)
         ServerStartEngine();
     }
 
-    ResetTime = Level.TimeSeconds - 1.0;
-    Instigator = self;
-
-    super(Vehicle).KDriverEnter(P);
+    super(Vehicle).KDriverEnter(P); // need to skip over Super from ROVehicle
 
     Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
 }
-/*
-function KDriverEnter(Pawn p)
-{
-    bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
-    DriverPositionIndex = InitialPositionIndex;
-    PreviousPositionIndex = InitialPositionIndex;
-
-    // lets bots start vehicle
-    if (!p.IsHumanControlled())
-       bEngineOff = false;
-
-    //check to see if Engine is already on when entering
-    if (bEngineOff)
-    {
-        if (IdleSound != none)
-        {
-            AmbientSound = none;
-        }
-    }
-    else if (bEngineDead)
-    {
-        if (IdleSound != none)
-        {
-            AmbientSound = VehicleBurningSound;
-        }
-    }
-    else
-    {
-        if (IdleSound != none)
-        {
-            AmbientSound = IdleSound;
-        }
-    }
-
-    ResetTime = Level.TimeSeconds - 1.0;
-    Instigator = self;
-
-    super(Vehicle).KDriverEnter(P);
-
-    Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
-}
-*/
 
 // Overriding here because we don't want exhaust/dust to start up until engine starts
 simulated event DrivingStatusChanged()
@@ -709,74 +663,6 @@ function ServerStartEngine()
         }
     }
 }
-/*
-// Server side function called to switch engine
-function ServerStartEngine()
-{
-    if (bEngineDead)
-    {
-        return; // can't turn Engine on or off if it's dead
-    }
-
-    if (!bEngineOff)
-    {
-        // So that people can't spam the ignition switch and turn on/off while moving
-        if ((Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && Throttle == 0.0)
-        {
-            IgnitionSwitchTime = Level.TimeSeconds;
-
-            if (AmbientSound != none)
-            {
-                AmbientSound = none;
-            }
-
-            if (ShutDownSound != none)
-            {
-                PlaySound(ShutDownSound, SLOT_None, 1.0);
-            }
-
-            Throttle = 0.0;
-            ThrottleAmount = 0.0;
-            bDisableThrottle = true;
-            bWantsToThrottle = false;
-            bEngineOff = true;
-            TurnDamping = 0.0;
-
-            if (WeaponPawns[0] != none && DH_ROTankCannon(WeaponPawns[0].Gun) != none)
-            {
-                DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
-            }
-        }
-    }
-    else
-    {
-        if (Level.TimeSeconds - IgnitionSwitchTime > 4.0)
-        {
-            IgnitionSwitchTime = Level.TimeSeconds;
-
-            if (StartUpSound != none)
-            {
-                PlaySound(StartUpSound, SLOT_None, 1.0);
-            }
-
-            if (IdleSound != none)
-            {
-                AmbientSound = IdleSound;
-            }
-
-            Throttle = 0.0;
-            bDisableThrottle = false;
-            bWantsToThrottle = true;
-            bEngineOff = false;
-
-            if (WeaponPawns[0] != none && DH_ROTankCannon(WeaponPawns[0].Gun) != none)
-            {
-                DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = false;
-            }
-        }
-    }
-}
-*/
 
 // Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
@@ -1194,33 +1080,41 @@ simulated function PostBeginPlay()
         PlayAnim(BeginningIdleAnim);
     }
 
-    // Set fire damage rates
-    HullFireDamagePer2Secs = HealthMax * 0.02;             // so approx 100 seconds from full vehicle health to detonation due to fire
-    EngineFireDamagePer3Secs = default.EngineHealth * 0.1; // so approx 30 seconds engine fire until engine destroyed
-
-    // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
-    if (Level.NetMode == NM_Standalone)
+    if (Role == ROLE_Authority)
     {
-        bDriverAlreadyEntered = true;
-    }
+        // Set fire damage rates
+        HullFireDamagePer2Secs = HealthMax * 0.02;             // so approx 100 seconds from full vehicle health to detonation due to fire
+        EngineFireDamagePer3Secs = default.EngineHealth * 0.1; // so approx 30 seconds engine fire until engine destroyed
 
-    // If vehicle has schurzen (tex != none is flag) then randomise model selection (different degrees of damage, or maybe none at all)
-    if (Role == ROLE_Authority && SchurzenTexture != none)
-    {
-        RandomNumber = RAND(100);
-
-        for (i = 0; i < arraycount(SchurzenTypes); i++)
+        // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
+        if (Level.NetMode == NM_Standalone)
         {
-            CumulativeChance += SchurzenTypes[i].PercentChance;
+            bDriverAlreadyEntered = true;
+        }
 
-            if (RandomNumber < CumulativeChance)
+        // If vehicle has schurzen (tex != none is flag) then randomise model selection (different degrees of damage, or maybe none at all)
+        if (SchurzenTexture != none)
+        {
+            RandomNumber = RAND(100);
+
+            for (i = 0; i < arraycount(SchurzenTypes); i++)
             {
-                SchurzenIndex = i; // set replicated variable so clients know which schurzen to spawn
-                break;
+                CumulativeChance += SchurzenTypes[i].PercentChance;
+
+                if (RandomNumber < CumulativeChance)
+                {
+                    SchurzenIndex = i; // set replicated variable so clients know which schurzen to spawn
+                    break;
+                }
             }
         }
     }
-
+    else
+    {
+        // Guarantees that client's saved value will be opposite of real value, meaning PostNetReceive will always call SetEngine() when vehicle spawns
+        bSavedEngineOff = !bEngineOff;
+    }
+    
     // Clientside treads & sound attachments
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -1249,17 +1143,20 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to initialise engine-related properties & VehicleWeapon refs & to spawn any schurzen attachment (decorative only & not on a server)
 simulated function PostNetBeginPlay()
 {
-    super.PostNetBeginPlay();
+    super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
 
-    if (!bEngineOff)
+    // Initialise engine-related properties & VehicleWeapon refs (for net client we need to let PostNetReceive trigger this, as client won't yet have received VW actors)
+    if (Role == ROLE_Authority)
     {
-        bEngineOff = false;
+        UpdateTurretReferences();
+        SetEngine();
     }
 
     // Only spawn schurzen if a valid attachment class has been selected
-    if (Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none && SchurzenTexture != none)
+    if (SchurzenTexture != none && Level.NetMode != NM_DedicatedServer && SchurzenIndex < ArrayCount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none)
     {
         Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
 
@@ -1270,9 +1167,10 @@ simulated function PostNetBeginPlay()
             Schurzen.SetRelativeLocation(SchurzenOffset);
         }
     }
-
 }
 
+// Matt: modified to handle engine on/off (including manual/powered turret & dust/exhaust emitters)
+// Also to set references to VehicleWeapons as as soon as we have received those actors
 simulated function PostNetReceive()
 {
     // Driver has changed position
@@ -1281,6 +1179,20 @@ simulated function PostNetReceive()
         PreviousPositionIndex = SavedPositionIndex;
         SavedPositionIndex = DriverPositionIndex;
         NextViewPoint();
+    }
+
+    // Set references to VehicleWeapons as as soon as we have received those actors
+    if (CannonTurret == none && WeaponPawns.Length > 0 && WeaponPawns[0] != none && WeaponPawns[0].Gun != none && 
+        (WeaponPawns.Length < 2 || (WeaponPawns[1] != none && WeaponPawns[1].Gun != none)))
+    {
+        UpdateTurretReferences();
+    }
+
+    // Engine has been switched on or off
+    if (bEngineOff != bSavedEngineOff && CannonTurret != none && DH_ROTankCannonPawn(CannonTurret.Owner) != none)
+    {
+        bSavedEngineOff = bEngineOff;
+        SetEngine();
     }
 }
 
@@ -1504,132 +1416,15 @@ simulated function Tick(float DeltaTime)
 
     if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
-        velocity = vect(0.0, 0.0, 0.0);
+        Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0.0;
         ThrottleAmount = 0.0;
         bWantsToThrottle = false;
         bDisableThrottle = true;
         Steering = 0.0;
     }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        CheckEmitters();
-    }
 }
 
-simulated function CheckEmitters()
-{
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        return;
-    }
-
-    if (bEmittersOn && (bEngineDead || bEngineOff))
-    {
-        StopEmitters();
-    }
-    else if (!bEmittersOn && !bEngineDead && !bEngineOff)
-    {
-        StartEmitters();
-    }
-}
-/*
-// TakeFireDamage() called every tick when vehicle is burning
-event TakeFireDamage(float DeltaTime)
-{
-    // Engine fire damage
-    if (Level.TimeSeconds - EngineBurnTime > 3.0)
-    {
-        if (bEngineOnFire && EngineHealth > 0)
-        {
-            // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
-            if (WhoSetEngineOnFire.GetTeamNum() != FireStarterTeam)
-            {
-                WhoSetEngineOnFire = none;
-                DelayedDamageInstigatorController = none;
-            }
-
-            DamageEngine(EngineFireDamagePerSec, WhoSetEngineOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
-            EngineBurnTime = Level.TimeSeconds;
-        }
-
-        // Small chance of engine fire setting whole tank on fire, runs every time the fire does damage
-        if (Level.TimeSeconds - FireCheckTime > 3 && !bOnFire && bEngineOnFire)
-        {
-            // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
-            if (WhoSetOnFire.GetTeamNum() != FireStarterTeam)
-            {
-                WhoSetOnFire = none;
-                DelayedDamageInstigatorController = none;
-            }
-
-            if (FRand() < EngineToHullFireChance)
-            {
-                TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType); // this will set bOnFire the first time it runs
-            }
-
-            FireCheckTime = Level.TimeSeconds;
-        }
-    }
-
-    // Engine fire dies down 30 seconds after engine health hits zero
-    if (Level.TimeSeconds - EngineBurnTime > 30.0 && bEngineOnFire && !bOnFire)
-    {
-        bEngineOnFire = false;
-        bDisableThrottle = true;
-        bEngineDead = true;
-        DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
-
-        if (!bOnFire)
-        {
-            AmbientSound = SmokingEngineSound;
-        }
-    }
-
-    // Hull fire damage
-    if ((Level.TimeSeconds - BurnTime) > 2.0 && bOnFire)
-    {
-        // Lets avoid having the tank blow up the instant it's hit (i.e. the 1st run through the function) as it gives false impression that hit itself was critical when it's not
-        if (BurnTime == 0.0)
-        {
-            BurnTime = Level.TimeSeconds + 3.0;
-            return;
-        }
-
-        // If the instigator gets teamswapped before a burning tank dies, make sure they don't get friendly kills for it
-        if (WhoSetOnFire != none && WhoSetOnFire.GetTeamNum() != FireStarterTeam)
-        {
-            WhoSetOnFire = none;
-            DelayedDamageInstigatorController = none;
-        }
-
-        if (Driver != none) // afflict the driver
-        {
-            Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
-        }
-        else if (WeaponPawns[0] != none && WeaponPawns[0].Driver != none && bTurretFireTriggered == true) // afflict the commander
-        {
-            WeaponPawns[0].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
-        }
-        else if (WeaponPawns[1] != none && WeaponPawns[1].Driver != none && bHullMGFireTriggered == true) // afflict the hull gunner
-        {
-            WeaponPawns[1].Driver.TakeDamage(PlayerFireDamagePerSec, WhoSetOnFire.Pawn, Location, vect(0.0, 0.0, 0.0), VehicleBurningDamType);
-        }
-
-        if (FRand() < FireDetonationChance) // Chance of cooking off ammo/igniting fuel before health runs out
-        {
-            TakeDamage(Health, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
-        }
-        else
-        {
-            TakeDamage(DamagedEffectFireDamagePerSec, WhoSetOnFire.Pawn, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
-        }
-
-        BurnTime = Level.TimeSeconds;
-    }
-}
-*/
 // New function to handle hull fire damage
 function TakeFireDamage()
 {
@@ -1842,9 +1637,9 @@ simulated function SetEngine()
         }
     }
 
-    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none && WeaponPawns[0].Gun != none && DH_ROTankCannon(WeaponPawns[0].Gun) != none)
+    if (WeaponPawns.Length > 0 && DH_ROTankCannonPawn(WeaponPawns[0]) != none)
     {
-        DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = bEngineOff;
+        DH_ROTankCannonPawn(WeaponPawns[0]).SetManualTurret(bEngineOff);
     }
 }
 
@@ -2829,68 +2624,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
         }
     }
 }
-/*
-// Handle the engine damage
-function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
-{
-    local int ActualDamage;
 
-    if (DamageType != VehicleBurningDamType)
-    {
-        ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-    else
-    {
-        ActualDamage = Damage;
-    }
-
-    EngineHealth -= ActualDamage;
-
-    // This indicates chances for an Engine fire breaking out
-    if (DamageType != VehicleBurningDamType && !bEngineOnFire && ActualDamage > 0 && EngineHealth > 0 && Health > 0)
-    {
-        if ((bWasHEATRound && FRand() < EngineFireHEATChance) || FRand() < EngineFireChance)
-        {
-            if (bDebuggingText)
-            {
-                Level.Game.Broadcast(self, "Engine on fire");
-            }
-
-            bEngineOnFire = true;
-            WhoSetEngineOnFire = InstigatedBy.Controller;
-            DelayedDamageInstigatorController = WhoSetEngineOnFire;
-            FireStarterTeam = WhoSetEngineOnFire.GetTeamNum();
-        }
-    }
-
-    // If engine health drops below a certain level, slow the tank way down
-    if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.50))
-    {
-        Throttle = FClamp(Throttle, -0.50, 0.50);
-    }
-    else if (EngineHealth <= 0)
-    {
-        if (bDebuggingText && Role == ROLE_Authority)
-        {
-            Level.Game.Broadcast(self, "Engine is dead");
-        }
-
-        bDisableThrottle = true;
-        bEngineOff = true;
-        bEngineDead = true;
-        DH_ROTankCannon(WeaponPawns[0].Gun).bManualTurret = true;
-
-        TurnDamping = 0.0;
-
-        IdleSound = VehicleBurningSound;
-        StartUpSound = none;
-        ShutDownSound = none;
-        AmbientSound = VehicleBurningSound;
-        SoundVolume = 255;
-        SoundRadius = 600.0;
-    }
-}
-*/
 // Matt: modified so will pass radius damage on to each VehicleWeaponPawn, as originally lack of vehicle driver caused early exit
 function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {

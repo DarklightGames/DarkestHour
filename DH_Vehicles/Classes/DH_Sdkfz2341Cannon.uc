@@ -678,7 +678,6 @@ defaultproperties
     WeaponFireOffset=5.000000
     AltFireOffset=(X=-54.000000,Y=-24.000000,Z=-3.000000)
     ManualRotationsPerSecond=0.04
-    PoweredRotationsPerSecond=0.04
     bAmbientAltFireSound=true
     Spread=0.003000
     bUsesSecondarySpread=false
@@ -693,7 +692,6 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireSoundScaling=3.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     FireForce="Explosion05"
     bIsRepeatingFF=true // Matt: added, as strongly suspect this should be true, like a tank mounted MG

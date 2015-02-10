@@ -201,7 +201,6 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterGerman'
     SecondarySpread=0.003900
     ManualRotationsPerSecond=0.040000
-    PoweredRotationsPerSecond=0.040000
     FrontArmorFactor=5.700000
     RightArmorFactor=3.000000
     LeftArmorFactor=3.000000
@@ -277,7 +276,6 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AltFireSoundScaling=3.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'

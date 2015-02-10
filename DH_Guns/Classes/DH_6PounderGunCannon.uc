@@ -56,7 +56,6 @@ defaultproperties
     FireInterval=3.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     ShakeRotMag=(Z=110.000000)

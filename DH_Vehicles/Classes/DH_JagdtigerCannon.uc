@@ -9,7 +9,6 @@ defaultproperties
 {
     SecondarySpread=0.001290
     ManualRotationsPerSecond=0.010000
-    PoweredRotationsPerSecond=0.010000
     bIsAssaultGun=true
     GunMantletArmorFactor=10.000000
     GunMantletSlope=40.000000
@@ -60,7 +59,6 @@ defaultproperties
     FireInterval=15.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShell'
     ShakeRotMag=(Z=50.000000)

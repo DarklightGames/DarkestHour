@@ -57,7 +57,7 @@ defaultproperties
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
     PoweredRotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
     BinocPositionIndex=2
     WeaponFOV=14.400000

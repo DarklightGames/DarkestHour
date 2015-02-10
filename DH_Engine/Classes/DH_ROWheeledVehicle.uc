@@ -50,6 +50,7 @@ var     bool        bResupplyVehicle;
 // Engine stuff
 var     bool        bEngineDead;        // vehicle engine is damaged and cannot run or be restarted ... ever
 var     bool        bEngineOff;         // vehicle engine is simply switched off
+var     bool        bSavedEngineOff;    // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;
 
 // New sounds
@@ -123,8 +124,25 @@ simulated function PostBeginPlay()
     {
         bDriverAlreadyEntered = true;
     }
+    else if (Role < ROLE_Authority)
+    {
+        // Guarantees that clients' saved value will be opposite of real value, meaning PostNetReceive will always call SetEngine() when vehicle spawns
+        bSavedEngineOff = !bEngineOff;
+    }
 }
 
+// Modified to initialise engine-related properties (for net client we let PostNetReceive trigger this)
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (Role == ROLE_Authority)
+    {
+        SetEngine();
+    }
+}
+
+// Matt: modified to handle engine on/off (including dust/exhaust emitters), instead of constantly checking in Tick
 simulated function PostNetReceive()
 {
     // Driver has changed position
@@ -134,11 +152,20 @@ simulated function PostNetReceive()
         SavedPositionIndex = DriverPositionIndex;
         NextViewPoint();
     }
+
+    // Engine has been switched on or off
+    if (bEngineOff != bSavedEngineOff)
+    {
+        bSavedEngineOff = bEngineOff;
+        SetEngine();
+    }
 }
 
 // New function to set up the engine properties
 simulated function SetEngine()
 {
+    bDisableThrottle = bEngineOff;
+
     if (bEngineOff)
     {
         TurnDamping = 0.0;
@@ -196,47 +223,6 @@ function KDriverEnter(Pawn P)
 
     Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
 }
-/*
-function KDriverEnter(Pawn P)
-{
-    bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
-    DriverPositionIndex = InitialPositionIndex;
-    PreviousPositionIndex = InitialPositionIndex;
-
-    if (!p.IsHumanControlled())
-    {
-        bEngineOff = false;
-    }
-    
-    // Check to see if engine is already on when entering
-    if (bEngineOff)
-    {
-        if (IdleSound != none)
-        {
-            AmbientSound = none;
-        }
-    }
-    else if (bEngineDead)
-    {
-        if (IdleSound != none)
-        {
-            AmbientSound = VehicleBurningSound;
-        }
-    }
-    else
-    {
-        if (IdleSound != none)
-        {
-            AmbientSound = IdleSound;
-        }
-    }
-
-    ResetTime = Level.TimeSeconds - 1.0;
-    Instigator = self;
-
-    super(Vehicle).KDriverEnter(P);
-}
-*/
 
 // DriverLeft() called by KDriverLeave()
 function DriverLeft()
@@ -394,28 +380,11 @@ simulated function Tick(float dt)
 
     if (bEngineDead || bEngineOff)
     {
-        velocity = vect(0.0, 0.0, 0.0);
+        Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0.0;
         ThrottleAmount = 0.0;
         bDisableThrottle = true;
         Steering = 0.0;
-    }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        CheckEmitters();
-    }
-}
-
-simulated function CheckEmitters()
-{
-    if (bEmittersOn && (bEngineDead || bEngineOff))
-    {
-        StopEmitters();
-    }
-    else if (!bEmittersOn && !bEngineDead && !bEngineOff)
-    {
-        StartEmitters();
     }
 }
 

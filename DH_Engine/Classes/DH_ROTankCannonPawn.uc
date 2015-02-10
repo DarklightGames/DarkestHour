@@ -38,7 +38,7 @@ var     bool        bOpticsDamaged;
 var     texture     DestroyedScopeOverlay;
 
 // Manual & powered turret movement
-var     bool        bManualTraverseOnly; // TEST - not used - but can perhaps make use of in a different on/off system that doesn't use Tick
+var     bool        bManualTraverseOnly;
 var     sound       ManualRotateSound;
 var     sound       ManualPitchSound;
 var     sound       ManualRotateAndPitchSound;
@@ -206,6 +206,41 @@ function ServerToggleExtraRoundType()
     if (ROTankCannon(Gun) != none)
     {
         ROTankCannon(Gun).ToggleRoundType();
+    }
+}
+
+// Matt: new function to toggle between manual/powered turret settings - called from PostNetReceive on vehicle clients, instead of constantly checking in Tick()
+simulated function SetManualTurret(bool bManual)
+{
+    local DH_ROTankCannon Cannon;
+
+    Cannon = DH_ROTankCannon(Gun);
+
+    if (bManual || bManualTraverseOnly)
+    {
+        RotateSound = ManualRotateSound;
+        PitchSound = ManualPitchSound;
+        RotateAndPitchSound = ManualRotateAndPitchSound;
+        MinRotateThreshold = ManualMinRotateThreshold;
+        MaxRotateThreshold = ManualMaxRotateThreshold;
+
+        if (Cannon != none)
+        {
+            Cannon.RotationsPerSecond = Cannon.ManualRotationsPerSecond;
+        }
+    }
+    else
+    {
+        RotateSound = PoweredRotateSound;
+        PitchSound = PoweredPitchSound;
+        RotateAndPitchSound = PoweredRotateAndPitchSound;
+        MinRotateThreshold = PoweredMinRotateThreshold;
+        MaxRotateThreshold = PoweredMaxRotateThreshold;
+
+        if (Cannon != none)
+        {
+            Cannon.RotationsPerSecond = Cannon.PoweredRotationsPerSecond;
+        }
     }
 }
 
@@ -1045,9 +1080,6 @@ defaultproperties
     ManualMaxRotateThreshold=2.5
     PoweredMinRotateThreshold=0.15
     PoweredMaxRotateThreshold=1.75
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
-    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
     MaxRotateThreshold=1.5
     bPCRelativeFPRotation=true
     bFPNoZFromCameraPitch=true

@@ -55,9 +55,8 @@ defaultproperties
     OverlayCenterSize=0.555000
     UnbuttonedPositionIndex=0
     bManualTraverseOnly=true
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     bLockCameraDuringTransition=true

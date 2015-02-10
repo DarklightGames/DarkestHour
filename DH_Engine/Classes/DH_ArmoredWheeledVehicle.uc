@@ -161,11 +161,6 @@ simulated function Tick(float DeltaTime)
         bDisableThrottle =true;
         Steering = 0;
     }
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        CheckEmitters();
-    }
 }
 
 // TakeDamage - overloaded to prevent bayonet and bash attacks from damaging vehicles
@@ -374,20 +369,13 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     bProjectilePenetrated = false;
     bWasTurretHit = false;
 
+    // If vehicle health is very low, kill the engine & start a fire
     if (Health >= 0 && Health <= HealthMax / 3)
     {
-        bDisableThrottle = true;
-        bEngineOff = true;
-        EngineHealth = 0;
         bEngineDead = true;
-        SetEngine();
-        DamagedEffectHealthFireFactor = 1.0; //play fire effect
-        IdleSound = VehicleBurningSound;
-        StartUpSound = none;
-        ShutDownSound = none;
-        AmbientSound = VehicleBurningSound;
-        SoundVolume = 255;
-        SoundRadius = 600;
+        EngineHealth = 0;
+        bEngineOff = true;
+        StartEngineFire(InstigatedBy);
     }
 }
 

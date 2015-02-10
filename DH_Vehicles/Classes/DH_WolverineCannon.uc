@@ -12,7 +12,6 @@ defaultproperties
     SecondarySpread=0.001000
     TertiarySpread=0.001350
     ManualRotationsPerSecond=0.010000
-    PoweredRotationsPerSecond=0.010000
     FrontArmorFactor=5.700000
     RightArmorFactor=2.500000
     LeftArmorFactor=2.500000
@@ -47,7 +46,6 @@ defaultproperties
     FireInterval=5.000000
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_WolverineCannonShell'
     ShakeRotMag=(Z=50.000000)

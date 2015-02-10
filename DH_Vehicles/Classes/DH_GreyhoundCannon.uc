@@ -201,7 +201,6 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterAmerican'
     SecondarySpread=0.001450
     ManualRotationsPerSecond=0.040000
-    PoweredRotationsPerSecond=0.040000
     FrontArmorFactor=1.900000
     RightArmorFactor=1.900000
     LeftArmorFactor=1.900000
@@ -247,7 +246,6 @@ defaultproperties
     FireSoundVolume=512.000000
     AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
     AltFireSoundScaling=3.000000
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse2'
     AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'

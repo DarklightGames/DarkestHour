@@ -137,9 +137,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=18.000000,PositionMesh=SkeletalMesh'DH_Flakvierling38_anm.flak_turret',DriverTransitionAnim="Vt3485_driver_idle_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_Flakvierling38Cannon'
     CameraBone="Camera_com"
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     DriveAnim="Vt3485_driver_idle_close"
     ExitPositions(0)=(X=-150.000000,Y=0.000000,Z=0.000000)
     ExitPositions(1)=(X=-100.000000,Y=0.000000,Z=0.000000)

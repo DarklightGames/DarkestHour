@@ -46,9 +46,7 @@ defaultproperties
     OverlayCenterSize=0.733330
     UnbuttonedPositionIndex=1
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_traverse'
+    bManualTraverseOnly=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
     ScopePositionX=0.237000
     ScopePositionY=0.150000

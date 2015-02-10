@@ -24,7 +24,6 @@ var()   bool        bUsesTertiarySpread;
 // Manual/powered turret stuff
 var()   float       ManualRotationsPerSecond;
 var()   float       PoweredRotationsPerSecond;
-var     bool        bManualTurret;
 
 // Stuff for fire effects - Ch!cKeN
 var()   name                        FireAttachBone;
@@ -68,9 +67,8 @@ replication
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         MainAmmoChargeExtra; // Matt: should be able to change to byte - check & implement later
 
-    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) below as "or bNetInitial adds nothing) - move later as part of class review & refactor
-    reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
-        bManualTurret;
+//  reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
+//      bManualTurret; // Matt: have deprecated
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -125,28 +123,6 @@ simulated function Tick(float DeltaTime)
                 TurretHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
             }
             BurnTime = Level.TimeSeconds;
-        }
-    }
-
-    if (DH_ROTankCannonPawn(Owner) != none)
-    {
-        if (bManualTurret)
-        {
-            RotationsPerSecond = ManualRotationsPerSecond;
-            DH_ROTankCannonPawn(Owner).RotateSound = DH_ROTankCannonPawn(Owner).ManualRotateSound;
-            DH_ROTankCannonPawn(Owner).PitchSound = DH_ROTankCannonPawn(Owner).ManualPitchSound;
-            DH_ROTankCannonPawn(Owner).RotateAndPitchSound = DH_ROTankCannonPawn(Owner).ManualRotateAndPitchSound;
-            DH_ROTankCannonPawn(Owner).MinRotateThreshold = DH_ROTankCannonPawn(Owner).ManualMinRotateThreshold;
-            DH_ROTankCannonPawn(Owner).MaxRotateThreshold = DH_ROTankCannonPawn(Owner).ManualMaxRotateThreshold;
-        }
-        else
-        {
-            RotationsPerSecond = PoweredRotationsPerSecond;
-            DH_ROTankCannonPawn(Owner).RotateSound = DH_ROTankCannonPawn(Owner).PoweredRotateSound;
-            DH_ROTankCannonPawn(Owner).PitchSound = DH_ROTankCannonPawn(Owner).PoweredPitchSound;
-            DH_ROTankCannonPawn(Owner).RotateAndPitchSound = DH_ROTankCannonPawn(Owner).PoweredRotateAndPitchSound;
-            DH_ROTankCannonPawn(Owner).MinRotateThreshold = DH_ROTankCannonPawn(Owner).PoweredMinRotateThreshold;
-            DH_ROTankCannonPawn(Owner).MaxRotateThreshold = DH_ROTankCannonPawn(Owner).PoweredMaxRotateThreshold;
         }
     }
 }
@@ -1753,7 +1729,6 @@ defaultproperties
     FireAttachBone="com_player"
     FireEffectOffset=(Z=-20.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    bManualTurret=true
     CannonReloadState=CR_Waiting
     AltFireSpread=0.002
 }

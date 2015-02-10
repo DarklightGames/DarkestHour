@@ -99,9 +99,6 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_AT57_anm.AT57_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     GunClass=class'DH_Guns.DH_AT57Cannon'
     CameraBone="Gun"
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     bFPNoZFromCameraPitch=true
     DrivePos=(Z=-32.000000)
     ExitPositions(0)=(X=-150.000000,Y=0.000000,Z=0.000000)
