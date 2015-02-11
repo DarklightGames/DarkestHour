@@ -1194,6 +1194,15 @@ simulated function PostNetReceive()
         bSavedEngineOff = bEngineOff;
         SetEngine();
     }
+
+    if (Health > 0)
+    {
+        // One of the tracks has been damaged (uses DamagedTreadPanner as an effective flag that net client hasn't already done this)
+        if ((bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner) || (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner))
+        {
+            SetDamagedTracks();
+        }
+    }
 }
 
 simulated function Tick(float DeltaTime)
@@ -1256,41 +1265,11 @@ simulated function Tick(float DeltaTime)
         }
         else
         {
-            if (bLeftTrackDamaged)
-            {
-                if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
-                {
-                    LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                }
-
-                LeftTreadSoundAttach.SoundVolume = IntendedThrottle * 255;
-            }
-
-            if (bRightTrackDamaged)
-            {
-                if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
-                {
-                    RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                }
-
-                RightTreadSoundAttach.SoundVolume = IntendedThrottle * 255;
-            }
-
             SoundVolume = FMax(255.0 * 0.3, IntendedThrottle * 255.0);
 
             if (SoundVolume != default.SoundVolume)
             {
                 SoundVolume = default.SoundVolume;
-            }
-
-            if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
-            {
-                Skins[LeftTreadIndex]=DamagedTreadPanner;
-            }
-
-            if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
-            {
-                Skins[RightTreadIndex]=DamagedTreadPanner;
             }
         }
 
@@ -1643,6 +1622,31 @@ simulated function SetEngine()
     }
 }
 
+// New function to set up damaged tracks
+simulated function SetDamagedTracks()
+{
+    if (bLeftTrackDamaged)
+    {
+        Skins[LeftTreadIndex] = DamagedTreadPanner;
+
+        if (LeftTreadSoundAttach != none)
+        {
+            LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
+        }
+    }
+
+    if (bRightTrackDamaged)
+    {
+        Skins[RightTreadIndex] = DamagedTreadPanner;
+
+        if (RightTreadSoundAttach != none)
+        {
+            RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
+        }
+    }
+}
+
+// Modified to call SetDamagedTracks() for single player or listen server, as we no longer use Tick (net client gets that via PostNetReceive)
 function DamageTrack(bool bLeftTrack)
 {
     if (bLeftTrack)
@@ -1655,6 +1659,8 @@ function DamageTrack(bool bLeftTrack)
         bDisableThrottle = false;
         bRightTrackDamaged = true;
     }
+
+    SetDamagedTracks();
 }
 
 // Check to see if something hit a certain Hitpoint
@@ -2516,11 +2522,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
             {
-                if (!bDriving)
-                {
-                    Enable('Tick');
-                }
-
                 DamageTrack(true);
 
                 if (bDebugTreadText && Role == ROLE_Authority)
@@ -2540,11 +2541,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier >= TreadDamageThreshold)
             {
-                if (!bDriving)
-                {
-                    Enable('Tick');
-                }
-
                 DamageTrack(false);
 
                 if (bDebugTreadText && Role == ROLE_Authority)

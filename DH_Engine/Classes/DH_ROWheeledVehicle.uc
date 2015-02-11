@@ -537,64 +537,6 @@ function ServerStartEngine()
         }
     }
 }
-/*
-function ServerStartEngine()
-{
-    if (!bEngineDead) //can't turn Engine on or off if it's dead
-    {
-        if (!bEngineOff)
-        {
-            if (Throttle != 0.0) // cannot turn off while moving
-            {
-                return;
-            }
-
-            // So that people can't spam the ignition switch
-            if (Level.TimeSeconds - IgnitionSwitchTime > 4.0)
-            {
-                if (AmbientSound != none)
-                {
-                    AmbientSound = none;
-                }
-
-                if (ShutDownSound != none)
-                {
-                    PlaySound(ShutDownSound, SLOT_None, 1.0,, 300.0);
-                }
-
-                Throttle = 0.0;
-                ThrottleAmount = 0.0;
-                bDisableThrottle = true;
-                bEngineOff = true;
-
-                TurnDamping = 0.0;
-                IgnitionSwitchTime = Level.TimeSeconds;
-            }
-        }
-        else
-        {
-            if (Level.TimeSeconds - IgnitionSwitchTime > 4.0)
-            {
-                if (StartUpSound != none)
-                {
-                    PlaySound(StartUpSound, SLOT_None, 1.0,, 300.0);
-                }
-
-                if (IdleSound != none)
-                {
-                    AmbientSound = IdleSound;
-                }
-
-                Throttle = 0.0;
-                bDisableThrottle = false;
-                bEngineOff = false;
-
-                IgnitionSwitchTime = Level.TimeSeconds;
-            }
-        }
-    }
-}
-*/
 
 // Overridden to give players the same momentum as their vehicle had when exiting
 // Adds a little height kick to allow for hacked in damage system
