@@ -154,11 +154,9 @@ simulated function Tick(float DeltaTime)
 
     if (bEngineDead || bEngineOff)
     {
-        velocity = vect(0.0, 0.0, 0.0);
+        Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0;
         ThrottleAmount = 0;
-        bWantsToThrottle = false;
-        bDisableThrottle =true;
         Steering = 0;
     }
 }

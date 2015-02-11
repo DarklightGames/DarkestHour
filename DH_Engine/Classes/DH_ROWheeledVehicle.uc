@@ -164,8 +164,6 @@ simulated function PostNetReceive()
 // New function to set up the engine properties
 simulated function SetEngine()
 {
-    bDisableThrottle = bEngineOff;
-
     if (bEngineOff)
     {
         TurnDamping = 0.0;
@@ -383,7 +381,6 @@ simulated function Tick(float dt)
         Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0.0;
         ThrottleAmount = 0.0;
-        bDisableThrottle = true;
         Steering = 0.0;
     }
 }
@@ -1095,6 +1092,7 @@ defaultproperties
 {
     ObjectCollisionResistance=1.0
     bEngineOff=true
+    bDisableThrottle=false
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     DamagedStartUpSound=sound'DH_AlliedVehicleSounds2.Damaged.engine_start_damaged'

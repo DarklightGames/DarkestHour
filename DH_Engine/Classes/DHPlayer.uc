@@ -1338,6 +1338,25 @@ state Mantling
     }
 }
 
+// Matt: modified to ignore bDisableThrottle & bWantsToThrottle, which relate to waiting for crew & are now effectively deprecated
+state PlayerDriving
+{
+    // Set the throttle, steering etc for the vehicle based on the input provided
+    function ProcessDrive(float InForward, float InStrafe, float InUp, bool InJump)
+    {
+		local Vehicle CurrentVehicle;
+
+	    CurrentVehicle = Vehicle(Pawn);
+
+        if (CurrentVehicle != none)
+        {
+            CurrentVehicle.Throttle = FClamp(InForward / 5000.0, -1.0, 1.0);
+            CurrentVehicle.Steering = FClamp(-InStrafe / 5000.0, -1.0, 1.0);
+            CurrentVehicle.Rise = FClamp(InUp / 5000.0, -1.0, 1.0);
+        }
+    }
+}
+
 // Removes the awkward "jump" out of water - this has not been tested to much capacity (8/26/2014)
 state PlayerSwimming
 {
@@ -1357,7 +1376,7 @@ ignores SeePlayer, HearNoise, Bump;
                 if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) // check for water jump
                 {
                     // Below is the only line this function changes/comments out
-                    // Pawn.velocity.Z = FMax(Pawn.JumpZ, 420.0) + 2.0 * Pawn.CollisionRadius; // set here so physics uses this for remainder of tick
+                    // Pawn.Velocity.Z = FMax(Pawn.JumpZ, 420.0) + 2.0 * Pawn.CollisionRadius; // set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
                 else if (Pawn.Velocity.Z > 160.0 || !Pawn.TouchingWaterVolume())

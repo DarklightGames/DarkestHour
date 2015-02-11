@@ -1069,7 +1069,7 @@ function DenyEntry(Pawn P, int MessageNum)
 // Returns true if this tank is disabled
 simulated function bool IsDisabled()
 {
-    return ((EngineHealth <= 0) || (bLeftTrackDamaged && bRightTrackDamaged));
+    return (EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged));
 }
 
 simulated function PostBeginPlay()
@@ -1251,29 +1251,11 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (bDisableThrottle)
-        {
-            if (bWantsToThrottle)
-            {
-                IntendedThrottle = 1.0;
-            }
-            else if (IntendedThrottle > 0.0)
-            {
-                IntendedThrottle -= (DeltaTime * 0.5);
-            }
-            else
-            {
-                IntendedThrottle = 0.0;
-            }
-        }
-        else
-        {
-            SoundVolume = FMax(255.0 * 0.3, IntendedThrottle * 255.0);
+        SoundVolume = FMax(255.0 * 0.3, IntendedThrottle * 255.0);
 
-            if (SoundVolume != default.SoundVolume)
-            {
-                SoundVolume = default.SoundVolume;
-            }
+        if (SoundVolume != default.SoundVolume)
+        {
+            SoundVolume = default.SoundVolume;
         }
 
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once, as VSize() is very CPU intensive - Ramm
@@ -1401,8 +1383,6 @@ simulated function Tick(float DeltaTime)
         Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0.0;
         ThrottleAmount = 0.0;
-        bWantsToThrottle = false;
-        bDisableThrottle = true;
         Steering = 0.0;
     }
 }
@@ -1577,9 +1557,6 @@ function StartEngineFire(Pawn InstigatedBy)
 // New function to set up the engine properties
 simulated function SetEngine()
 {
-    bDisableThrottle = bEngineOff;
-    bWantsToThrottle = !bEngineOff;
-
     if (bEngineOff)
     {
         TurnDamping = 0.0;
@@ -1674,12 +1651,10 @@ function DamageTrack(bool bLeftTrack)
 {
     if (bLeftTrack)
     {
-        bDisableThrottle = false;
         bLeftTrackDamaged = true;
     }
     else
     {
-        bDisableThrottle = false;
         bRightTrackDamaged = true;
     }
 
@@ -3275,6 +3250,7 @@ defaultproperties
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     bEngineOff=true
+    bDisableThrottle=false
     DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
     WaitForCrewTime=7.0
     ChassisTorqueScale=0.9

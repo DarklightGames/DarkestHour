@@ -145,6 +145,24 @@ function SetPawnClass(string inClass, string inCharacter)
     PlayerReplicationInfo.SetCharacterName(PawnSetupRecord.DefaultName);
 }
 
+// Modified to remove setting vehicle's bDisableThrottle, now deprecated
+state WaitForCrew
+{
+    function BeginState()
+    {
+        CachedMoveTimer = MoveTimer;
+    }
+
+Begin:
+    Sleep(0.2);
+    if (ROWheeledVehicle(Pawn).CheckForCrew() || !ROSquadAI(Squad).ShouldWaitForCrew(self))
+    {
+        MoveTimer = CachedMoveTimer;
+        WhatToDoNext(53); // go back to the function that got us here
+    }
+    GoTo('Begin');
+}
+
 defaultproperties
 {
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'

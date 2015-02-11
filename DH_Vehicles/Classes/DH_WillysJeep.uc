@@ -93,11 +93,12 @@ simulated function Tick(float DeltaTime)
 
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
-
+    {
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity
         MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
+
         if (MySpeed > 0.1)
         {
             MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
@@ -106,7 +107,9 @@ simulated function Tick(float DeltaTime)
         {
             MotionSoundVolume=0;
         }
+
         UpdateMovementSound();
+    }
 
     super.Tick(DeltaTime);
 
@@ -115,7 +118,6 @@ simulated function Tick(float DeltaTime)
       velocity=vect(0.0, 0.0, 0.0);
       Throttle=0;
       ThrottleAmount=0;
-      bDisableThrottle=true;
       Steering=0;
     }
 }

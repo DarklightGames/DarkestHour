@@ -40,49 +40,11 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (bDisableThrottle)
+        SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
+
+        if (SoundVolume != default.SoundVolume)
         {
-            if (bWantsToThrottle)
-            {
-                IntendedThrottle=1.0;
-            }
-            else if (IntendedThrottle > 0)
-            {
-                IntendedThrottle -= (DeltaTime * 0.5);
-            }
-            else
-            {
-                IntendedThrottle=0;
-            }
-        }
-        else
-        {
-            if (bLeftTrackDamaged)
-            {
-                 if (LeftTreadSoundAttach.AmbientSound != TrackDamagedSound)
-                    LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                 LeftTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
-            }
-
-            if (bRightTrackDamaged)
-            {
-                 if (RightTreadSoundAttach.AmbientSound != TrackDamagedSound)
-                    RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
-                 RightTreadSoundAttach.SoundVolume= IntendedThrottle * 255;
-            }
-
-            SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
-
-            if (SoundVolume != default.SoundVolume)
-            {
-                SoundVolume = default.SoundVolume;
-            }
-
-            if (bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner)
-                Skins[LeftTreadIndex]=DamagedTreadPanner;
-
-            if (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)
-                Skins[RightTreadIndex]=DamagedTreadPanner;
+            SoundVolume = default.SoundVolume;
         }
 
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
@@ -91,6 +53,7 @@ simulated function Tick(float DeltaTime)
 
         // Setup sounds that are dependent on velocity
         MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
+
         if (MySpeed > 0.1)
         {
             MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
@@ -99,6 +62,7 @@ simulated function Tick(float DeltaTime)
         {
             MotionSoundVolume=0;
         }
+
         UpdateMovementSound();
 
         if (LeftTreadPanner != none)
@@ -198,8 +162,6 @@ simulated function Tick(float DeltaTime)
         velocity=vect(0.0, 0.0, 0.0);
         Throttle=0;
         ThrottleAmount=0;
-        bWantsToThrottle = false;
-        bDisableThrottle=true;
         Steering=0;
     }
 }
