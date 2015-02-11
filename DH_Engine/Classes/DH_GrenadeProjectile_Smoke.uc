@@ -48,8 +48,6 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     {
         LifeSpan = 1.0; // on a server this actor will be automatically destroyed in 1 second, allowing time for bTearOff to replicate to clients
     }
-
-    SetPhysics(PHYS_None);
 }
 
 // Switches off sound sound when grenade is no longer discharging smoke
