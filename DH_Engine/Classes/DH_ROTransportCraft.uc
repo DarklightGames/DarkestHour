@@ -100,12 +100,12 @@ simulated function UpdateMovementSound()
 {
     if (LeftTreadSoundAttach != none)
     {
-       LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 1.0;
+       LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
     }
 
     if (RightTreadSoundAttach != none)
     {
-       RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 1.0;
+       RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
     }
 
     if (InteriorRumbleSoundAttach != none)
@@ -198,10 +198,9 @@ simulated function Tick(float DeltaTime)
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity
-        MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
-
         if (MySpeed > 0.1)
         {
+            MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
             MotionSoundVolume = FClamp(MotionSoundTemp, 0.0, 255.0);
         }
         else

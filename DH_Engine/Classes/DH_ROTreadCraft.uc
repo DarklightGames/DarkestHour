@@ -1251,21 +1251,13 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SoundVolume = FMax(255.0 * 0.3, IntendedThrottle * 255.0);
-
-        if (SoundVolume != default.SoundVolume)
-        {
-            SoundVolume = default.SoundVolume;
-        }
-
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once, as VSize() is very CPU intensive - Ramm
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity
-        MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
-
         if (MySpeed > 0.1)
         {
+            MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
             MotionSoundVolume = FClamp(MotionSoundTemp, 0.0, 255.0);
         }
         else
@@ -1384,6 +1376,39 @@ simulated function Tick(float DeltaTime)
         Throttle = 0.0;
         ThrottleAmount = 0.0;
         Steering = 0.0;
+    }
+}
+
+// Modified to include damaged tracks in the MotionSoundVolume update - and make them a bit louder than undamaged tracks
+simulated function UpdateMovementSound()
+{
+    if (LeftTreadSoundAttach != none)
+    {
+        if (bLeftTrackDamaged)
+        {
+            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
+        }
+        else
+        {
+            LeftTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.75;
+        }
+    }
+
+    if (RightTreadSoundAttach != none)
+    {
+        if (bRightTrackDamaged)
+        {
+            RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
+        }
+        else
+        {
+            RightTreadSoundAttach.SoundVolume = MotionSoundVolume * 0.75;
+        }
+    }
+
+    if (InteriorRumbleSoundAttach != none)
+    {
+        InteriorRumbleSoundAttach.SoundVolume = MotionSoundVolume;
     }
 }
 
@@ -1588,6 +1613,8 @@ simulated function SetEngine()
         if (IdleSound != none)
         {
             AmbientSound = IdleSound;
+            SoundVolume = default.SoundVolume;
+            SoundRadius = default.SoundRadius;
         }
 
         if (!bEmittersOn)
@@ -2856,7 +2883,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
 
     AmbientSound = DestroyedBurningSound;
-    SoundVolume = 255.0;
+    SoundVolume = 255;
     SoundRadius = 600.0;
 
     if (!bDisintegrateVehicle)

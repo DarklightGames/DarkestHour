@@ -43,22 +43,14 @@ simulated function Tick(float DeltaTime)
     // Only need these effects client side
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SoundVolume = FMax(255 * 0.3,IntendedThrottle * 255);
-
-        if (SoundVolume != default.SoundVolume)
-        {
-            SoundVolume = default.SoundVolume;
-        }
-
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once.
         // VSize() is very CPU intensive - Ramm
         MySpeed = VSize(Velocity);
 
         // Setup sounds that are dependent on velocity
-        MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255;
-
         if (MySpeed > 0.1)
         {
+            MotionSoundTemp =  MySpeed/MaxPitchSpeed * 255.0;
             MotionSoundVolume =  FClamp(MotionSoundTemp, 0, 255);
         }
         else
