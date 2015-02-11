@@ -1463,7 +1463,119 @@ state RoundInPlay
 {
     function BeginState()
     {
-        super.BeginState();
+        local Controller P, NextC;
+        local Actor A;
+        local int i;
+        local ROGameReplicationInfo GRI;
+        local ROVehicleFactory ROV;
+
+        // Reset all round properties
+        RoundStartTime = ElapsedTime;
+        GRI = ROGameReplicationInfo(GameReplicationInfo);
+        GRI.RoundStartTime = RoundStartTime;
+
+        SpawnCount[AXIS_TEAM_INDEX] = 0;
+        SpawnCount[ALLIES_TEAM_INDEX] = 0;
+
+        LastReinforcementTime[AXIS_TEAM_INDEX] = ElapsedTime;
+        LastReinforcementTime[ALLIES_TEAM_INDEX] = ElapsedTime;
+        GRI.LastReinforcementTime[AXIS_TEAM_INDEX] = LastReinforcementTime[AXIS_TEAM_INDEX];
+        GRI.LastReinforcementTime[ALLIES_TEAM_INDEX] = LastReinforcementTime[ALLIES_TEAM_INDEX];
+
+        // Arty
+        GRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
+        GRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
+        GRI.LastArtyStrikeTime[AXIS_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(AXIS_TEAM_INDEX);
+        GRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
+        GRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
+        GRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
+        for (i = 0; i < ArrayCount(GRI.AxisRallyPoints); i++)
+        {
+            GRI.AlliedRallyPoints[i].OfficerPRI = none;
+            GRI.AlliedRallyPoints[i].RallyPointLocation = vect(0,0,0);
+            GRI.AxisRallyPoints[i].OfficerPRI = none;
+            GRI.AxisRallyPoints[i].RallyPointLocation = vect(0,0,0);
+        }
+
+        // Clear help requests
+        for (i = 0; i < ArrayCount(GRI.AxisHelpRequests); i++)
+        {
+            GRI.AlliedHelpRequests[i].OfficerPRI = none;
+            GRI.AlliedHelpRequests[i].requestType = 255;
+            GRI.AxisHelpRequests[i].OfficerPRI = none;
+            GRI.AxisHelpRequests[i].requestType = 255;
+        }
+
+        // Just in case the limit is set to a ridiculously low value, handle it right
+        if (!SpawnLimitReached(AXIS_TEAM_INDEX))
+        {
+            GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 1;
+            GRI.SpawnCount[AXIS_TEAM_INDEX] = 100;
+        }
+        if (!SpawnLimitReached(ALLIES_TEAM_INDEX))
+        {
+            GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 1;
+            GRI.SpawnCount[ALLIES_TEAM_INDEX] = 100;
+        }
+
+        // Reset all controllers
+        P = Level.ControllerList;
+        while ( P != None )
+        {
+            NextC = P.NextController;
+
+            if ( P.PlayerReplicationInfo == None || !P.PlayerReplicationInfo.bOnlySpectator )
+            {
+                if ( PlayerController(P) != None )
+                    PlayerController(P).ClientReset();
+                P.Reset();
+            }
+
+            P = NextC;
+        }
+
+        // Reset ALL actors (except controllers and ROVehicleFactorys)
+        foreach AllActors(class'Actor', A)
+        {
+            if (!A.IsA('Controller') && !A.IsA('ROVehicleFactory'))
+                A.Reset();
+        }
+
+        // Reset ALL ROVehicleFactorys - must reset these after vehicles, otherwise the vehicles that get spawned by the vehicle factories get destroyed instantly as they are reset
+        foreach AllActors(class'ROVehicleFactory', ROV)
+        {
+            ROV.Reset();
+        }
+
+        // Use the starting spawns
+        if (LevelInfo.bUseSpawnAreas)
+        {
+            CheckSpawnAreas();
+            CheckTankCrewSpawnAreas();
+            CheckVehicleFactories();
+            CheckResupplyVolumes();
+            CheckMineVolumes();
+        }
+
+        // Respawn all players
+        /*
+        for (P = Level.ControllerList; P != None; P = P.NextController)
+        {
+            if (!P.bIsPlayer || P.PlayerReplicationInfo.Team == None)
+                continue;
+
+            if (ROPlayer(P) != None && ROPlayer(P).CanRestartPlayer())
+                RestartPlayer(P);
+            else if (ROBot(P) != None && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != None)
+                RestartPlayer(P);
+        }
+        */
+
+        // Make the bots find objectives when the round starts
+        FindNewObjectives(None);
+
+        // Notify players that the map has been updated
+        NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, none, true);
 
         ResetMortarTargets();
 
@@ -1569,6 +1681,81 @@ state RoundInPlay
 
                 ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements).MatchEnded();
             }
+        }
+    }
+
+    function Timer()
+    {
+        local int i, ReinforceInt, ArtilleryStrikeInt;
+        local Controller P;
+        local ROGameReplicationInfo GRI;
+
+        global.Timer();
+
+        GRI = ROGameReplicationInfo(GameReplicationInfo);
+
+        if ( NeedPlayers() && AddBot() && (RemainingBots > 0) )
+            RemainingBots--;
+
+        // Go through both teams and spawn reinforcements if necessary
+        for (i = 0; i < 2; i++)
+        {
+            /*
+            if (i == ALLIES_TEAM_INDEX)
+                ReinforceInt = LevelInfo.Allies.ReinforcementInterval;
+            else
+                ReinforceInt = LevelInfo.Axis.ReinforcementInterval;
+
+            if (!SpawnLimitReached(i) && ElapsedTime > LastReinforcementTime[i] + ReinforceInt)
+            {
+                for (P = Level.ControllerList; P != None; P = P.NextController)
+                {
+                    if (!P.bIsPlayer || P.Pawn != None || P.PlayerReplicationInfo == None || P.PlayerReplicationInfo.Team == None || P.PlayerReplicationInfo.Team.TeamIndex != i)
+                        continue;
+
+                    if (ROPlayer(P) != None && ROPlayer(P).CanRestartPlayer())
+                        RestartPlayer(P);
+                    else if (ROBot(P) != None && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != None)
+                        RestartPlayer(P);
+
+                    // If spawn limit has now been reached, send a message out
+                    if (SpawnLimitReached(i))
+                    {
+                        SendReinforcementMessage(i, 1);
+                        break;
+                    }
+                }
+
+                LastReinforcementTime[i] = ElapsedTime;
+                ROGameReplicationInfo(GameReplicationInfo).LastReinforcementTime[i] = LastReinforcementTime[i];
+            }
+            */
+        }
+
+        // Go through both teams and update artillery availability
+        for (i = 0; i < 2; i++)
+        {
+            ArtilleryStrikeInt = LevelInfo.GetStrikeInterval(i);
+
+            if ((GRI.TotalStrikes[i] < GRI.ArtilleryStrikeLimit[i]) && ElapsedTime > GRI.LastArtyStrikeTime[i] + ArtilleryStrikeInt)
+            {
+                    GRI.bArtilleryAvailable[i] = 1;
+            }
+            else
+            {
+                    GRI.bArtilleryAvailable[i] = 0;
+            }
+        }
+
+        // If round time is up, the defending team wins, if any
+        if (ElapsedTime > RoundStartTime + RoundDuration)
+        {
+            if (LevelInfo.DefendingSide == SIDE_Axis)
+                EndRound(AXIS_TEAM_INDEX);
+            else if (LevelInfo.DefendingSide == SIDE_Allies)
+                EndRound(ALLIES_TEAM_INDEX);
+            else
+                ChooseWinner();
         }
     }
 
