@@ -1628,7 +1628,7 @@ simulated function SetEngine()
 // New function to set up damaged tracks
 simulated function SetDamagedTracks()
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode == NM_DedicatedServer)
     {
         return;
     }
