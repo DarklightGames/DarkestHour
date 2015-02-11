@@ -73,12 +73,13 @@ simulated function PostBeginPlay()
     local int i;
     local DHSpawnPoint SP;
 
+    super.PostBeginPlay();
+
     foreach AllActors(class'DHSpawnPoint', SP)
     {
-        if (i >= arraycount(SpawnPoints))
+        if (i >= SPAWN_POINTS_MAX)
         {
-            Warn("Number of DHSpawnPoints exceeds" @ arraycount(SpawnPoints) @ ", some spawn points will be ignored!");
-
+            Warn("Number of DHSpawnPoints exceeds" @ SPAWN_POINTS_MAX @ ", some spawn points will be ignored!");
             break;
         }
 
@@ -207,13 +208,13 @@ function DHSpawnPoint GetSpawnPoint(byte Index)
     return SpawnPoints[Index];
 }
 
-function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
+simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
 {
     local int i;
 
     for (i = 0; i < arraycount(SpawnPoints); ++i)
     {
-        if (SpawnPoints[i] != none && SpawnPoints[i].TeamIndex == TeamIndex && SpawnPointIsActives[i] != 0)
+        if (SpawnPoints[i] != none && SpawnPoints[i].TeamIndex == TeamIndex /*&& SpawnPointIsActives[i] != 0*/)
         {
             SpawnPoints_[SpawnPoints_.Length] = SpawnPoints[i];
         }
