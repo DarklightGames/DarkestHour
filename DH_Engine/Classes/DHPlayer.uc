@@ -37,6 +37,8 @@ var int     VehiclePoolIndex;
 
 var DHHintManager DHHintManager;
 
+var float   MapVoteTime;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -1344,9 +1346,9 @@ state PlayerDriving
     // Set the throttle, steering etc for the vehicle based on the input provided
     function ProcessDrive(float InForward, float InStrafe, float InUp, bool InJump)
     {
-		local Vehicle CurrentVehicle;
+        local Vehicle CurrentVehicle;
 
-	    CurrentVehicle = Vehicle(Pawn);
+        CurrentVehicle = Vehicle(Pawn);
 
         if (CurrentVehicle != none)
         {
