@@ -88,7 +88,7 @@ function SelectTeamSuccessfull()
             ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
         }
 
-        Controller.OpenMenu("DH_Interface.DHRoleSelection");
+        Controller.OpenMenu("DH_Interface.DHDeployMenu");
     }
 
     class'DHRoleSelection'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
