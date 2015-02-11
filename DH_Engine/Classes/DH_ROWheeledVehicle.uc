@@ -317,7 +317,7 @@ simulated function Tick(float dt)
     local float ThrottlePosition;
     local int   i;
 
-    super.Tick(dt);
+    super(ROVehicle).Tick(dt); // Matt: skip over the Super in ROWheeledVehicle, as it is already entirely re-stated her, so just duplicates everything
 
     // Pack the throttle setting into a byte to replicate it
     if (Role == ROLE_Authority)
