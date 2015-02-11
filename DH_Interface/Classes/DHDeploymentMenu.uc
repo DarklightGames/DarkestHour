@@ -2,6 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2014
 //==============================================================================
+//This is basically the vehicle tab for the deploymenu, and needs renamed and extended
 
 class DHDeploymentMenu extends ROGUIRoleSelection;
 
@@ -260,7 +261,7 @@ function UpdateSpawnPoints()
         //the vehicle spawn points were modified in such a way that requires us to repopulate the list
         li_AvailableWeapons[0].Clear();
 
-        SpawnPoints = DHGRI.GetActiveSpawnPointsForTeam(SpawnPoints, C.GetTeamNum());
+        DHGRI.GetActiveSpawnPointsForTeam(SpawnPoints, C.GetTeamNum());
 
         for (i = 0; i < SpawnPoints.Length; ++i)
         {
