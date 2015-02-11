@@ -54,10 +54,10 @@ var vector      RootDelta;
 var vector      NewAcceleration;       // Acceleration which is checked by PlayerMove in the Mantling state within DHPlayer
 var bool        bEndMantleBob;         // Initiates the pre mantle head bob up motion
 
-var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C, 
+var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
-var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S, MantleAnim_56S, MantleAnim_60S, MantleAnim_64S, 
+var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S, MantleAnim_56S, MantleAnim_60S, MantleAnim_64S,
                                 MantleAnim_68S, MantleAnim_72S, MantleAnim_76S, MantleAnim_80S, MantleAnim_84S, MantleAnim_88S;
 
 var             sound           MantleSound;
@@ -2043,7 +2043,7 @@ state PutWeaponAway
         if (Weapon != none)
         {
             Weapon.GotoState('Hidden');
-            
+
             if (Weapon != none) // Matt: added this 'if' to prevent "accessed none" errors, as Weapon can become 'none' during GoToState above, e.g. when parachute landing
             {
                 Weapon.NetUpdateFrequency = 2.0;
@@ -2576,8 +2576,8 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
     DHW = DHWeapon(Weapon);
 
-    if (bOnFire || !bForceTest && (Velocity != vect(0.0, 0.0, 0.0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') || 
-        (Level.TimeSeconds + 1.0 < NextJumpTime) || Stamina < 2.0 || bIsMantling || Physics != PHYS_Walking || bBipodDeployed || 
+    if (bOnFire || !bForceTest && (Velocity != vect(0.0, 0.0, 0.0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') ||
+        (Level.TimeSeconds + 1.0 < NextJumpTime) || Stamina < 2.0 || bIsMantling || Physics != PHYS_Walking || bBipodDeployed ||
         (Weapon != none && (Weapon.bUsingSights || !Weapon.IsInState('Idle') || (DHW != none && !DHW.WeaponAllowMantle())))))
     {
         return false;
@@ -3845,6 +3845,29 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
     if (Controller != none)
     {
         SetLockViewRotation(bIsCuttingWire, Controller.Rotation);
+    }
+}
+
+//Simulated?
+function SetAmmoPercent(float AmmoPercent)
+{
+    local Inventory Inv;
+    local DH_ProjectileWeapon Wep;
+    local int i;
+
+    //Cycle inventory and change ammo on needed items
+    for (Inv=Inventory;Inv!=none;Inv=Inv.Inventory)
+    {
+        Wep = DH_ProjectileWeapon(Inv);
+
+        if(Wep != none)
+        {
+            Wep.SetNumMags(int(AmmoPercent * Wep.MaxNumPrimaryMags / 100));
+        }
+        //Some odd prevention measure that exists in other things like this
+        i++;
+        if (i>500)
+            break;
     }
 }
 

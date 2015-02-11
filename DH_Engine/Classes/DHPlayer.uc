@@ -5,6 +5,12 @@
 
 class DHPlayer extends ROPlayer;
 
+var int     RedeployTime;       // The time after death before player can deploy
+var int     CurrentRedeployTime;// The actual redeploytime set for current life
+var float   LastKilledTime;     // The time at which last death occured
+var float   DesiredAmmoPercent; // The set ammo percent desired for player
+//var int
+
 var vector  FlinchRotMag;
 var vector  FlinchRotRate;
 var float   FlinchRotTime;
@@ -44,11 +50,11 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog;
+        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerDeployPlayer, ServerSetDesiredAmmoPercent;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand;
+        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientHandleDeath;
 }
 
 // Matt: modified to avoid "accessed none" error
@@ -78,6 +84,11 @@ event ClientReset()
     {
         GotoState('PlayerWaiting');
     }
+}
+
+simulated function ServerSetDesiredAmmoPercent(float PassedValue)
+{
+    DesiredAmmoPercent = PassedValue;
 }
 
 // Calculate free-aim and process recoil
@@ -221,16 +232,8 @@ exec function PlayerMenu(optional int Tab)
     }
     else
     {
-        ClientReplaceMenu("DH_Interface.DHRoleSelection");
+        ClientReplaceMenu("DH_Interface.DHDeployMenu");
     }
-}
-
-exec function DeploymentMenu(optional int Tab)
-{
-    //TODO: figure out what this does
-    //bPendingMapDisplay = false;
-
-    ClientReplaceMenu("DH_Interface.DHSpawnMenu");
 }
 
 exec function VehicleSay(string Msg)
@@ -1583,6 +1586,20 @@ simulated function QueueHint(byte HintIndex, bool bForceNext)
     }
 }
 
+simulated function SetDeployTime(int NewDeployTime)
+{
+    if (NewDeployTime > 0)
+    {
+        Redeploytime = NewDeployTime;
+    }
+}
+
+simulated function ClientHandleDeath()
+{
+    LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
+    bReadyToSpawn = false; // Don't allow player to redeploy right away
+}
+
 // Modified to avoid "accessed none" errors
 function bool CanRestartPlayer()
 {
@@ -1940,6 +1957,67 @@ exec function ShowDeploy()
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
+function ServerDeployPlayer(optional DHSpawnPoint SP, optional bool bUseAmmoPercent)
+{
+    local rotator newRot, oldRot;
+    local float mag;
+    local vector oldDir;
+    local Controller P;
+
+    Warn("SERVER SIDE DETECTED DEPLOYPLAYER");
+
+    //Respawn the player (might want to override this, but we'll see)
+    Level.Game.RestartPlayer(self);
+
+    //Teleport player to the SpawnPoint
+    if (Pawn != none && SP != none)
+    {
+        // Rotate the pawn to the same direction as the spawnpoint
+        //PlayerPawn.Rotation.Yaw = SP.Rotation.Yaw;
+        newRot = Pawn.Rotation;
+        newRot.Yaw = SP.Rotation.Yaw;
+        newRot.Roll = 0;
+
+        if (!Pawn.SetLocation(SP.Location))
+        {
+            Log(self @ "Teleport failed for" @ Pawn);
+            return;
+        }
+
+        Pawn.SetRotation(newRot);
+        Pawn.SetViewRotation(newRot);
+        Pawn.ClientSetRotation(newRot);
+
+        if (Pawn.Controller != none)
+        {
+            Pawn.Controller.MoveTimer = -1.0;
+            //PlayerPawn.Anchor = SP;
+            Pawn.SetMoveTarget(SP);
+        }
+        //Create spawn protection after teleport!
+        DH_Pawn(Pawn).TeleSpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+    }
+    //What if spawn succedes but tele fails? ?????
+    //Tele should never fail, but we should do something in case it does
+
+    Warn("SERVER SAYS DesiredAmmoPercent IS:"@DesiredAmmoPercent);
+    //SET WEAPON AMMO %
+    if (Pawn != none && bUseAmmoPercent)
+    {
+        DH_Pawn(Pawn).SetAmmoPercent(DesiredAmmoPercent);
+    }
+}
+
+function PawnDied(Pawn P)
+{
+    //Make sure the pawn that died is our pawn, not some random other pawn
+    if ( P != Pawn )
+        return;
+
+    ClientHandleDeath(); //Tells client to set his last killed time and that he can't spawn yet
+
+    super.PawnDied(P); //Calls super in ROPlayer
+}
 
 defaultproperties
 {
@@ -1950,7 +2028,7 @@ defaultproperties
     FlinchOffsetRate=(X=1000.0,Y=0.0,Z=1000.0)
     FlinchOffsetTime=1.0
     MortarTargetIndex=255
-    ROMidGameMenuClass="DH_Interface.DHRoleSelection"
+    ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5
     DesiredFOV=90.0
     DefaultFOV=90.0

@@ -2,11 +2,9 @@
 // DHDeploymentMapMenu
 //-----------------------------------------------------------
 //Theel: ToDo: This class still has a ton of work
-//Method of spawning
-//1) Spawn the pawn
-//2) Teleport pawn to the correct/requested location
-//3) Have player possess the pawn and take control
-
+//- Remove uneeded shit
+//- Fix draw map problems
+//- Clean up code
 //This will require a black room, but the player will never see or experience it and it is strictly
 //to reduce the required number of player starts and allow pawns to start "inside" eachother
 //Allowing for smaller cover to protect spawns!!!
@@ -19,10 +17,15 @@ var     automated GUIFooter         f_Legend;
 
 var     automated GUILabel          l_HelpText, l_HintText, l_TeamText;
 
-var     automated GUIImage          i_Background, i_HintImage, i_Team; //
+var     automated GUIImage          i_Background, i_HintImage, i_Team;
 
-var     automated GUIGFXButton      b_SpawnPoints[16]; //change to 32?
-var     material                    SpawnPoint[5];
+var     automated GUIGFXButton      b_SpawnPoints[16],b_Objectives[16];
+var     DHSpawnPoint                SpawnPoints[16];
+var     DHSpawnPoint                DesiredSpawnPoint; //THIS MIGHT NEED TO GO IN DHPlayer instead of here (pretty sure)
+var     ROObjective                 Objectives[16]; //Not sure if I need these
+
+var     material                    SpawnPointIcons[5]; //Spawn point icons (may not need 5?)
+var     material                    ObjectiveIcons[4]; //Objective flash modes
 
 var()   localized string            MapPreferenceStrings[3];
 var()   localized string            NodeTeleportHelpText,
@@ -47,35 +50,30 @@ var()   localized string            NewSelectedHint, NewTeleportHint, EnemyCoreH
 var     localized string            DefendMsg;
 
 var     color                       TColor[2];
-
-//var()   material                    NodeImage;
-
-
-
 var()   color                       SelectionColor;
 
 // Actor references - these must be cleared at level change
+var     DHGameReplicationInfo       DHGRI;
 var     DHPlayerReplicationInfo     PRI; //DHPlayerReplicationInfo used to be ONSPlayerReplicationInfo
-var     DHSpawnPoint                SelectedSpawnPoint;
-
-
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
-    local DHGameReplicationInfo DHGRI;
+
     Super.InitComponent(MyController, MyOwner);
 
     DHGRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
-    //i_LevelMap.Image = DHGRI.MapImage;
+    //Set the level image
     i_Background.Image = DHGRI.MapImage;
 
-    //Hide/disable all the spawn point buttons
     for (i=0;i<arraycount(b_SpawnPoints);++i)
     {
-        b_SpawnPoints[i].bVisible = false;
-        //b_SpawnPoints.DisableComponent
+        b_SpawnPoints[i].Graphic = none;
+    }
+    for (i=0;i<arraycount(b_Objectives);++i)
+    {
+        b_Objectives[i].Graphic = none;
     }
 }
 
@@ -169,50 +167,116 @@ function bool PreDrawMap(Canvas C)
     return false;
 }
 
+function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
+{
+    local float X, Y;
+    local float TDistance;
+    local float Distance;
+
+    //Why do I calculate each separately? Because it's the only way I can understand it
+    //Calculate X
+    TDistance = abs(DHGRI.SouthWestBounds.X) + abs(DHGRI.NorthEastBounds.X);
+    Distance = abs(DHGRI.NorthEastBounds.X - SP.Location.X);
+    X = Distance / TDistance;
+
+    //Calculate Y
+    TDistance = abs(DHGRI.SouthWestBounds.Y) + abs(DHGRI.NorthEastBounds.Y);
+    Distance = abs(DHGRI.SouthWestBounds.Y - SP.Location.Y);
+    Y = Distance / TDistance;
+
+    b_SpawnPoints[Index].SetPosition(X,Y,0.05,0.05,true); //SetPosition( float NewLeft, float NewTop, float NewWidth, float NewHeight, optional bool bForceRelative )
+    b_SpawnPoints[Index].Graphic = texture'InterfaceArt_tex.Tank_Hud.RedDot';
+    b_SpawnPoints[Index].Caption = SP.SpawnPointName;
+
+    //Assign the SP to the button
+    SpawnPoints[Index] = SP;
+}
+
+function PlaceObjectiveOnMap(ROObjective Obj, int ObjImageIndex, int Index)
+{
+    local float X, Y;
+    local float TDistance;
+    local float Distance;
+
+        /* ObjImageIndex
+        0 = Axis
+        1 = Allies
+        2 = Neutral
+        */
+
+    //Why do I calculate each separately? Because it's the only way I can understand it
+    //Calculate X
+    TDistance = abs(DHGRI.SouthWestBounds.X) + abs(DHGRI.NorthEastBounds.X);
+    Distance = abs(DHGRI.NorthEastBounds.X - Obj.Location.X);
+    X = Distance / TDistance;
+
+    //Calculate Y
+    TDistance = abs(DHGRI.SouthWestBounds.Y) + abs(DHGRI.NorthEastBounds.Y);
+    Distance = abs(DHGRI.SouthWestBounds.Y - Obj.Location.Y);
+    Y = Distance / TDistance;
+
+    b_Objectives[Index].SetPosition(X,Y,0.05,0.05,true);
+    b_Objectives[Index].Graphic = ObjectiveIcons[ObjImageIndex];
+    b_Objectives[Index].Caption = Obj.ObjectiveName;
+
+    //Assign the Obj to the button
+    Objectives[Index] = Obj;
+}
+
 function bool DrawMapComponents(Canvas C)
 {
-    local DHGameReplicationInfo DHGRI;
+    local int i,ObjImageIndex;
+    local bool bSpawnPointExists;
     local vector vBoundaryScale, vMapScaleCenter;
     local float fMapScale;
     local DHSpawnPoint SP;
+    local array<DHSpawnPoint> SPs;
 
-    //AppendComponent(ObjImage);
-    DHGRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
+    //Get/Draw Spawn Points for Current Team
+    DHGRI.GetActiveSpawnPointsForTeam(SPs, PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
 
-    //i_Background.SetVisibility(true);
-    //This is where I need to do the math for the scale calc
-
-    // This is how RO does it
-    // Calculate level map constants
-    vBoundaryScale = DHGRI.SouthWestBounds - DHGRI.NorthEastBounds;
-    vMapScaleCenter =  vBoundaryScale / 2.0  + DHGRI.NorthEastBounds;
-    fMapScale = Abs(vBoundaryScale.x);
-
-    if (fMapScale ~= 0.0)
+    for(i=0;i<SPs.length;++i)
     {
-        fMapScale = 1.0; // just so we never get divisions by 0
+        PlaceSpawnPointOnMap(SPs[i], i);
+        bSpawnPointExists = true;
+    }
+    l_TeamText.Caption = "SPs.length="@SPs.length;
+
+    //Draw RO/DH SpawnArea as spawn point if no spawnpoints exist
+    if (!bSpawnPointExists)
+    {
+        Log("OH NO NO NO NO BAD BAD BAD NO SPAWN POINTS FOUND IN GRI!!!!");
+        //This idea is kinda point less as ROSpawnAreas often exist off map or in odd spots
     }
 
-    /*
-    WinTop=0.070134
-    WinLeft=0.029188
+    //Draw objectives
+    for (i = 0; i < ArrayCount(DHGRI.Objectives); i++)
+    {
+        if (DHGRI.Objectives[i] == None)
+        {
+            continue;
+        }
+        //if (DHGRI.Objectives[i].bActive)
+        //{
+        //    continue;
+        //}
 
-    WinWidth=0.634989
-    WinHeight=0.747156
-    */
+        // Setup icon info
+        if (DHGRI.Objectives[i].ObjState == OBJ_Axis)
+        {
+            ObjImageIndex = 0;
+        }
+        else if (DHGRI.Objectives[i].ObjState == OBJ_Allies)
+        {
+            ObjImageIndex = 1;
+        }
+        else
+        {
+            ObjImageIndex = 2;
+        }
 
-    SelectedSpawnPoint = DHGRI.GetSpawnPointTest(PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
-
-    b_SpawnPoints[0].bVisible = true;
-    b_SpawnPoints[0].SetPosition(0.4,0.3,0.05,0.05);
-    //function SetPosition( float NewLeft, float NewTop, float NewWidth, float NewHeight, optional bool bForceRelative )
-
-    //Need a way to get active + team spawn point.
-
-    //foreach above show 0++ bSpawnPoints and move to relative position for the map
-
-        //DrawIconOnMap(C, SubCoords, MapIconVehicleResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
-
+        PlaceObjectiveOnMap(DHGRI.Objectives[i], ObjImageIndex, i);
+    }
 
     return false;
 }
@@ -245,135 +309,46 @@ function SetSelectedSpawn()
 }
 
 //Hehe this is a good function that handles either spawning or teleporting
-function bool SpawnClick(GUIComponent Sender)
+function bool SpawnClick(int Index)
 {
-    local PlayerController PC;
+    local DHPlayer PC;
+
+    //Log("Trying to call server restart player!!!");
 
     if (bInit || PRI == None || PRI.bOnlySpectator)
         return true;
 
-    PC = PlayerOwner();
-    //SetSelectedSpawn();
-
-    //SelectedSpawnPoint = DHGameReplicationInfo(PRI.Level.GRI).GetSpawnPointTest(PRI.Team.TeamIndex);
-
-    if ( SelectedSpawnPoint == None )
+    if ( SpawnPoints[Index] == None )
     {
         Log("No spawn point found! Error!");
         return true;
     }
 
-    //Spawn the pawn (for now just respawn the player?)
-    TeleportPawn(PC.Pawn, SelectedSpawnPoint);
+    PC = DHPlayer(PlayerOwner());
 
-    //Controller.CloseMenu(false);
+    //Need a check here to make sure player has role & stuff selected!
 
+    //Set the deisred spawn point
+    DesiredSpawnPoint = SpawnPoints[Index];
 
-
-
-
-    //PC.Suicide(); //Slay the player if living
-    //PC.ServerRestartPlayer(); //Restart the player?
-    //PRI.TeleportTo(SelectedSpawnPoint); //Teleport the player if they have a pawn
-
-    //Teleport the pawn
-
-    //Have controller possess pawn
-
-    //Do I need to call the server restart player or whatever functions?
-
-    /*
-    if ( bNodeTeleporting )
-    {
-        if ( SelectedCore != None )
-        {
-            Controller.CloseMenu(false);
-            PRI.TeleportTo(SelectedCore);
-        }
-    }
-    else
+    //Player already has a pawn, so lets close entire deploymenu
+    if (PC.Pawn != none)
     {
         Controller.CloseMenu(false);
-        PRI.SetStartCore( SelectedCore, true );
-        PC.ServerRestartPlayer();
     }
-    */
+
+    //Player isn't ready to respawn, as the redeploy timer hasn't reached 0?
+
+    //Spawn the player, teleport to spawn point, and send ammo % so it can be known to game
+    PC.CurrentRedeployTime = PC.RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
+
+    if (PC.bReadyToSpawn && PC.Pawn == none)
+    {
+        PC.ServerDeployPlayer(SpawnPoints[Index],true);
+        Controller.CloseMenu(false); //DeployPlayer needs to return true/false if succesful and this needs to be in an if statement
+    }
 }
 
-// Set timer for spawn protection
-simulated function bool TeleportPawn(Pawn PlayerPawn, DHSpawnPoint SP)
-{
-    local rotator newRot, oldRot;
-    local float mag;
-    local vector oldDir;
-    local Controller P;
-
-    if (PlayerPawn == none || SP == none)
-    {
-        return false;
-    }
-
-    // Rotate the pawn to the same direction as the spawnpoint
-    //PlayerPawn.Rotation.Yaw = SP.Rotation.Yaw;
-
-    newRot = PlayerPawn.Rotation;
-    newRot.Yaw = SP.Rotation.Yaw;
-    newRot.Roll = 0;
-
-    if (!PlayerPawn.SetLocation(SP.Location))
-    {
-        Log(self @ "Teleport failed for" @ PlayerPawn);
-        return false;
-    }
-
-    PlayerPawn.SetRotation(newRot);
-    PlayerPawn.SetViewRotation(newRot);
-    PlayerPawn.ClientSetRotation(newRot);
-
-    if (PlayerPawn.Controller != none)
-    {
-        PlayerPawn.Controller.MoveTimer = -1.0;
-        //PlayerPawn.Anchor = SP;
-        PlayerPawn.SetMoveTarget(SP);
-    }
-
-    DH_Pawn(PlayerPawn).TeleSpawnProtEnds = PRI.Level.TimeSeconds + SP.SpawnProtectionTime;
-
-
-    return true;
-
-
-    /*
-    if (bChangesYaw)
-    {
-        if (Incoming.Physics == PHYS_Walking)
-        {
-            OldRot.Pitch = 0;
-        }
-
-        oldDir = vector(OldRot);
-        mag = Incoming.Velocity dot oldDir;
-        Incoming.Velocity = Incoming.Velocity - mag * oldDir + mag * vector(Incoming.Rotation);
-    }
-    if (bReversesX)
-    {
-        Incoming.Velocity.X *= -1.0;
-    }
-
-    if (bReversesY)
-    {
-        Incoming.Velocity.Y *= -1.0;
-    }
-
-    if (bReversesZ)
-    {
-        Incoming.Velocity.Z *= -1.0;
-    }
-    */
-}
-
-
-//Nothing likely needed to be done here!
 function bool InternalOnClick(GUIComponent Sender)
 {
     local GUIButton Selected;
@@ -387,7 +362,37 @@ function bool InternalOnClick(GUIComponent Sender)
     switch (Selected)
     {
         case b_SpawnPoints[0]:
-            SpawnClick(Sender);
+            SpawnClick(0);
+        break;
+        case b_SpawnPoints[1]:
+            SpawnClick(1);
+        break;
+        case b_SpawnPoints[2]:
+            SpawnClick(2);
+        break;
+        case b_SpawnPoints[3]:
+            SpawnClick(3);
+        break;
+        case b_SpawnPoints[4]:
+            SpawnClick(4);
+        break;
+        case b_SpawnPoints[5]:
+            SpawnClick(5);
+        break;
+        case b_SpawnPoints[6]:
+            SpawnClick(6);
+        break;
+        case b_SpawnPoints[7]:
+            SpawnClick(7);
+        break;
+        case b_SpawnPoints[8]:
+            SpawnClick(8);
+        break;
+        case b_SpawnPoints[9]:
+            SpawnClick(9);
+        break;
+        case b_SpawnPoints[10]:
+            SpawnClick(10);
         break;
 
         default:
@@ -451,7 +456,11 @@ function LevelChanged()
 defaultproperties
 {
     //Background=Texture'DH_GUI_Tex.Menu.DHBox'
-    SpawnPoint(0)=Texture'DH_GUI_Tex.Menu.DHBox'
+    SpawnPointIcons(0)=Texture'DH_GUI_Tex.Menu.DHBox'
+
+    ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
+    ObjectiveIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
+    ObjectiveIcons(2)=Texture'DH_GUI_Tex.GUI.PlayerIcon'
 
     //These might need repurposed to support 512x512 and 1024x1024!
     DeploymentMapCenterX=0.650000
@@ -497,16 +506,11 @@ defaultproperties
      Begin Object Class=GUIImage Name=BackgroundImage
          Image=Texture'DH_GUI_Tex.Menu.DHBox'
          ImageStyle=ISTY_Justified
-         //WinTop=0.070134
-         //WinLeft=0.029188
-         //WinWidth=0.634989
-         //WinHeight=0.747156
-        WinWidth=0.744226
-        WinHeight=0.970106
-        WinLeft=0.007699
-        WinTop=0.005882
-
-         bAcceptsInput=True
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+         bAcceptsInput=false
          OnPreDraw=DHDeploymentMapMenu.PreDrawMap
          OnDraw=DHDeploymentMapMenu.DrawMapComponents
          //OnClick=DHDeploymentMapMenu.SpawnClick
@@ -516,7 +520,7 @@ defaultproperties
 
 
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
-        Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
+        Graphic=texture'InterfaceArt_tex.Tank_Hud.RedDot'
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
@@ -525,7 +529,7 @@ defaultproperties
         TabOrder=1 //wtf is this? was 21
         bTabStop=true
         OnClick=DHDeploymentMapMenu.InternalOnClick
-        OnKeyEvent=EquipButton0.InternalOnKeyEvent
+        //OnKeyEvent=EquipButton0.InternalOnKeyEvent
     End Object
     b_SpawnPoints(0)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
     b_SpawnPoints(1)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
@@ -546,7 +550,33 @@ defaultproperties
 
 
 
-
+    Begin Object Class=GUIGFXButton Name=ObjectiveButton
+        Graphic=texture'InterfaceArt_tex.Tank_Hud.RedDot'
+        Position=ICP_Justified
+        bClientBound=true
+        StyleName="DHGripButtonNB"
+        WinWidth=0.1
+        WinHeight=0.1
+        TabOrder=1 //wtf is this? was 21
+        bTabStop=true
+        //OnClick=DHDeploymentMapMenu.InternalOnClick
+    End Object
+    b_Objectives(0)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(1)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(2)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(3)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(4)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(5)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(6)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(7)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(8)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(9)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(10)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(11)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(12)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(13)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(14)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(15)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
 
 
 

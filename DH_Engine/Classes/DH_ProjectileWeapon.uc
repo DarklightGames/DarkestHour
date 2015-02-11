@@ -655,7 +655,7 @@ simulated state StartCrawling
                     }
 
                     break;
- 
+
                 default:
 
                     if (AmmoAmount(0) < 1 && HasAnim(CrawlBackwardEmptyAnim))
@@ -2035,6 +2035,15 @@ function bool FillAmmo()
     return bDidFillAmmo;
 }
 
+function SetNumMags(int M)
+{
+    local int DefaultMagSize, i;
+
+    PrimaryAmmoArray.Length = M;
+
+    CurrentMagCount = PrimaryAmmoArray.Length - 1;
+}
+
 function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
 {
     local bool bJustSpawnedAmmo;
@@ -2421,7 +2430,7 @@ function PerformBarrelChange()
     }
     else
     {
-        // At this point, we have more than 1 barrel, & the one being replaced hasn't failed, 
+        // At this point, we have more than 1 barrel, & the one being replaced hasn't failed,
         // so we'll switch the BarrelIndex tracker & also place the barrels in new states for whether they're on or off
         // First place the current BarrelIndex in the BarrelOff state
         Barrels[BarrelIndex].GotoState('BarrelOff');
@@ -2580,6 +2589,7 @@ simulated function Destroyed()
 }
 
 // Overridden to support notifying the barrels that we have fired
+// Theel: I think this should be done somewhere else (perhaps fire?) (Doing it here causes odd sound after changeing to fresh barrel)
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     local float       SoundModifier;

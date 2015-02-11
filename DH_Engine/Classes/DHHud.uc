@@ -27,6 +27,7 @@ var  globalconfig bool  bShowVoiceIcon;     // whether or not to show the voice 
 var  int                AlliedNationID;     // US = 0, Britain = 1, Canada = 2
 
 var  bool               bSetColour;         // whether we've set the Allied colour yet
+var  bool               bShouldShowDeployMenu;
 
 // For some added suspense:
 var  float              ObituaryFadeInTime;
@@ -2908,7 +2909,6 @@ simulated function DrawDeployMap(Canvas C, float CenterPosX, float CenterPosY, f
     C.ColorModulate = SavedModulation;
 }
 
-//Theel: I belive this function is complete and doesn't need anymore adjustment
 simulated static function DrawMapImage( Canvas C, Material Image, float MapX, float MapY, float PlayerX, float PlayerY, vector Dimensions )
 {
     local float DeployMapScale, MapSize;
@@ -3792,6 +3792,166 @@ exec function ShrinkHUD()
     }
 }
 
+//Overidden for a simple change to the respawn time
+simulated function DrawSpectatingHud(Canvas C)
+{
+    local ROGameReplicationInfo GRI;
+    local float Time, strX, strY, X, Y, Scale;
+    local string S;
+    local DHPlayer DHP;
+    local float SmallH, NameWidth;
+    local float XL;
+
+    // Draw fade effects
+    C.Style = ERenderStyle.STY_Alpha;
+    DrawFadeEffect(C);
+
+    Scale = C.ClipX / 1600.0;
+
+    GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+    DHP = DHPlayer(PlayerOwner);
+
+    if (GRI != None)
+    {
+        // Update round timer
+        if (!GRI.bMatchHasBegun)
+            CurrentTime = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
+        else
+            CurrentTime = GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime;
+
+        S = default.TimeRemainingText $ GetTimeString(CurrentTime);
+
+        X = 8 * Scale;
+        Y = 8 * Scale;
+
+        C.DrawColor = WhiteColor;
+        C.Font = GetConsoleFont(C);
+        C.TextSize(S, strX, strY);
+        C.SetPos(X, Y);
+        C.DrawTextClipped(S);
+
+        if (GRI.bMatchHasBegun && DHP != None && DHP.CanRestartPlayer()
+            && PlayerOwner.PlayerReplicationInfo.Team != none && GRI.bReinforcementsComing[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] == 1)
+        {
+            Time = DHP.LastKilledTime + DHP.CurrentRedeployTime - Level.TimeSeconds;// Level.TimeSeconds;
+            if (Time <= 0.0)
+            {
+                //Debug
+                //S = "LastKilledTime:"@DHP.LastKilledTime@"CurrentRedeployTime:"@DHP.CurrentRedeployTime;
+
+                DHP.bReadyToSpawn = true;
+                S = "Ready to deploy! Hit escape and select a spawn point";
+                if (bShouldShowDeployMenu)
+                {
+                    DHP.ClientOpenMenu("DH_Interface.DHDeployMenu");
+                    bShouldShowDeployMenu = false;
+                }
+            }
+            else
+            {
+                bShouldShowDeployMenu = true;
+                S = default.ReinforcementText $ GetTimeString(Time);
+            }
+
+            Y += 4 * Scale + strY;
+            //C.TextSize(S, strX, strY);
+            C.SetPos(X, Y);
+            C.DrawTextClipped(S);
+        }
+    }
+
+    if (PlayerOwner.ViewTarget != PlayerOwner.Pawn && PawnOwner != None && PawnOwner.PlayerReplicationInfo != None)
+    {
+        S = ViewingText $ PawnOwner.PlayerReplicationInfo.PlayerName;
+        C.DrawColor = WhiteColor;
+        C.Font = GetConsoleFont(C);
+        C.TextSize(S, strX, strY);
+        C.SetPos(C.ClipX / 2 - strX / 2, C.ClipY - 8 * scale - strY);
+        C.DrawTextClipped(S);
+    }
+
+    // Rough spectate hud stuff. TODO: Refine this so its not so plane
+    if( DHP != none )
+    {
+        S = DHP.GetSpecModeDescription();
+        C.DrawColor = WhiteColor;
+        C.Font = GetLargeMenuFont(C);
+
+        X = C.ClipX * 0.5;
+        Y = C.ClipY * 0.1;
+
+        C.TextSize(S, strX, strY);
+        C.SetPos(X - strX / 2, Y  - strY);
+        C.DrawTextClipped(S);
+
+        // Draw line 1
+        S = SpectateInstructionText1;
+        C.Font = GetConsoleFont(C);
+
+        X = C.ClipX * 0.5;
+        Y = C.ClipY * 0.90;
+
+        C.TextSize(S, strX, strY);
+        C.SetPos(X - strX / 2, Y  - strY);
+        C.DrawTextClipped(S);
+
+        // Draw line 2
+        S = SpectateInstructionText2;
+        X = C.ClipX * 0.5;
+        Y += strY + (3 * scale);
+
+        C.TextSize(S, strX, strY);
+        C.SetPos(X - strX / 2, Y  - strY);
+        C.DrawTextClipped(S);
+
+        // Draw line 3
+        S = SpectateInstructionText3;
+        X = C.ClipX * 0.5;
+        Y += strY + (3 * scale);
+
+        C.TextSize(S, strX, strY);
+        C.SetPos(X - strX / 2, Y  - strY);
+        C.DrawTextClipped(S);
+
+        // Draw line 4
+        S = SpectateInstructionText4;
+        X = C.ClipX * 0.5;
+        Y += strY + (3 * scale);
+
+        C.TextSize(S, strX, strY);
+        C.SetPos(X - strX / 2, Y  - strY);
+        C.DrawTextClipped(S);
+    }
+
+    // Draw the players name large if thier are viewing someone else in first person
+    if ( (PawnOwner != None) && (PawnOwner != PlayerOwner.Pawn)
+        && (PawnOwner.PlayerReplicationInfo != None) && !PlayerOwner.bBehindView)
+    {
+        // draw viewed player name
+        C.Font = GetMediumFontFor(C);
+        C.SetDrawColor(255,255,0,255);
+        C.StrLen(PawnOwner.PlayerReplicationInfo.PlayerName,NameWidth,SmallH);
+        NameWidth = FMax(NameWidth, 0.15 * C.ClipX);
+        if ( C.ClipX >= 640 )
+        {
+            C.Font = GetConsoleFont(C);
+            C.StrLen("W",XL,SmallH);
+            C.SetPos(79*C.ClipX/80 - NameWidth,C.ClipY * 0.68);
+            C.DrawText(NowViewing,false);
+        }
+
+        C.Font = GetMediumFontFor(C);
+        C.SetPos(79*C.ClipX/80 - NameWidth,C.ClipY * 0.68 + SmallH);
+        C.DrawText(PawnOwner.PlayerReplicationInfo.PlayerName,false);
+    }
+
+    // Draw hints
+    if (bDrawHint)
+        DrawHint(C);
+
+    DisplayLocalMessages(C);
+}
+
 defaultproperties
 {
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.20,DrawPivot=DP_LowerLeft,PosX=0.25,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
@@ -3857,4 +4017,6 @@ defaultproperties
     CaptureBarTeamColors(1)=(B=35,G=150,R=40)
     VOICE_ICON_DIST_MAX = 2624.672119
     TeamMessagePrefix="*TEAM* "
+
+    ReinforcementText="Redeploy in: "
 }

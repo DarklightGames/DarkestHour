@@ -4,8 +4,15 @@
 class DHDeployMenu extends UT2K4GUIPage;
 
 var automated       FloatingImage                   i_background;
-var automated       GUIButton                       b_Confirm, b_ChangeTeam;
-//var automated       GUISlider                       s_AmmoSlider; THIS SHOULD GO IN THE NEW ROLE GUI
+var automated       GUIButton                       b_ChangeTeam,
+                                                    b_MapVoting,
+                                                    b_KickVoting,
+                                                    b_Communication,
+                                                    b_Options,
+                                                    b_Disconnect,
+                                                    b_Confirm,
+                                                    b_DebugSpawn;
+
 var automated       GUIProgressBar                  p_SpawnProgressBar;
 var automated       GUITabControl                   c_LoadoutArea;
 var automated       GUITabControl                   c_DeploymentMapArea;
@@ -25,20 +32,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Super.InitComponent(MyController, MyOwner);
 
     //Initialize loadout panels
-
     for(i=0;i<LoadoutPanelClass.Length;++i)
     {
         c_LoadoutArea.AddTab(LoadoutPanelCaption[i],LoadoutPanelClass[i],,LoadoutPanelHint[i]);
     }
-
 
     //Initialize deployment panel(s)
     for(i=0;i<DeploymentPanelClass.Length;++i)
     {
         c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
     }
-
-    //function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITabPanel ExistingPanel, optional string InHint, optional bool bForceActive)
 }
 
 function bool OnClick(GUIComponent Sender)
@@ -46,6 +49,40 @@ function bool OnClick(GUIComponent Sender)
     switch(Sender)
     {
         case b_ChangeTeam:
+            Controller.OpenMenu("DH_Interface.DHGUITeamSelection");
+        break;
+
+        case b_MapVoting:
+            Controller.OpenMenu(Controller.MapVotingMenu);
+        break;
+
+        case b_KickVoting:
+            Controller.OpenMenu(Controller.KickVotingMenu);
+        break;
+
+        case b_Communication:
+            Controller.OpenMenu("ROInterface.ROCommunicationPage");
+        break;
+
+        case b_Options:
+            Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
+        break;
+
+        case b_Disconnect:
+            PlayerOwner().ConsoleCommand( "DISCONNECT" );
+            CloseMenu();
+        break;
+
+        case B_DebugSpawn:
+            DHPlayer(PlayerOwner()).bReadyToSpawn = true;
+            if(DHPlayer(PlayerOwner()).Pawn == none)
+            {
+                DHPlayer(PlayerOwner()).ServerDeployPlayer();
+            }
+            CloseMenu();
+        break;
+
+        case b_Confirm:
             CloseMenu();
         break;
     }
@@ -62,9 +99,9 @@ function InternalOnClose(optional bool bCancelled)
     local PlayerController pc;
 
     // Turn pause off if currently paused
-    pc = PlayerOwner();
-    if (pc != None && pc.Level.Pauser != None)
-        pc.SetPause(false);
+    //pc = PlayerOwner();
+    //if (pc != None && pc.Level.Pauser != None)
+    //   pc.SetPause(false);
 
     Super.OnClose(bCancelled);
 }
@@ -118,8 +155,12 @@ DefaultProperties
         bDockPanels=true
         TabHeight=0.06
         BackgroundStyleName="DHHeader"
-        WinWidth=0.656958
-        WinHeight=0.944096
+        //WinWidth=0.656958
+        //WinHeight=0.944096
+        //WinLeft=0.330549
+        //WinTop=0.053025
+        WinWidth=0.508460
+        WinHeight=0.957524
         WinLeft=0.330549
         WinTop=0.053025
         RenderWeight=0.49
@@ -131,7 +172,7 @@ DefaultProperties
     //CONFIRM BUTTON
     Begin Object class=GUIButton Name=ConfirmButton
         CaptionAlign=TXTA_Right
-        Caption="Confirm"
+        Caption="ExitMenu"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
@@ -141,13 +182,32 @@ DefaultProperties
         OnClick=DHDeployMenu.OnClick
         //OnKeyEvent=FixConfigButton.InternalOnKeyEvent
         WinWidth=0.099853
-		WinHeight=0.036120
-		WinLeft=0.887277
-		WinTop=0.955100
+        WinHeight=0.036120
+        WinLeft=0.887277
+        WinTop=0.955100
     End Object
     b_Confirm=GUIButton'DH_Interface.DHDeployMenu.ConfirmButton'
 
-    //CHANGE TEAM BUTTON
+    //DEBUG SPAWN BUTTON
+    Begin Object class=GUIButton Name=SpawnButton
+        CaptionAlign=TXTA_Right
+        Caption="Debug Spawn"
+        bAutoShrink=false
+        bUseCaptionHeight=true
+        FontScale=FNS_Large
+        StyleName="DHMenuTextButtonStyle"
+        TabOrder=0
+        bFocusOnWatch=true
+        OnClick=DHDeployMenu.OnClick
+        //OnKeyEvent=FixConfigButton.InternalOnKeyEvent
+        WinWidth=0.15
+        WinHeight=0.036120
+        WinLeft=0.8
+        WinTop=0.85
+    End Object
+    b_DebugSpawn=SpawnButton
+
+    //Top Buttons!
     Begin Object class=GUIButton Name=ChangeTeamButton
         CaptionAlign=TXTA_Center
         Caption="Change Team"
@@ -165,6 +225,72 @@ DefaultProperties
         WinTop=0.006250
     End Object
     b_ChangeTeam=GUIButton'DH_Interface.DHDeployMenu.ChangeTeamButton'
+
+    Begin Object Class=GUIButton Name=DisconnectButton
+        WinWidth=0.12
+        WinHeight=0.048
+        WinLeft=0.889564
+        WinTop=0.004
+        StyleName="DHMenuTextButtonStyle"
+        Caption="Disconnect"
+        Hint="Disconnect from current game"
+        TabOrder=1
+        OnClick=DHDeployMenu.OnClick
+        bAutoShrink=false
+    End Object
+    b_Disconnect=DisconnectButton
+
+    Begin Object Class=GUIButton Name=OptionsButton
+        WinWidth=0.12
+        WinHeight=0.048
+        WinLeft=0.784042
+        WinTop=0.004
+        StyleName="DHMenuTextButtonStyle"
+        Caption="Options"
+        TabOrder=1
+        OnClick=DHDeployMenu.OnClick
+        bAutoShrink=false
+    End Object
+    b_Options=OptionsButton
+
+    Begin Object Class=GUIButton Name=MapVotingButton
+        WinWidth=0.12
+        WinHeight=0.048
+        WinLeft=0.438865
+        WinTop=0.004
+        StyleName="DHMenuTextButtonStyle"
+        Caption="VoteMap"
+        TabOrder=1
+        OnClick=DHDeployMenu.OnClick
+        bAutoShrink=false
+    End Object
+    b_MapVoting=MapVotingButton
+
+    Begin Object Class=GUIButton Name=KickVotingButton
+        WinWidth=0.12
+        WinHeight=0.048
+        WinLeft=0.552607
+        WinTop=0.004
+        StyleName="DHMenuTextButtonStyle"
+        Caption="VoteKick"
+        TabOrder=1
+        OnClick=DHDeployMenu.OnClick
+        bAutoShrink=false
+    End Object
+    b_KickVoting=KickVotingButton
+
+    Begin Object Class=GUIButton Name=CommsButton
+        WinWidth=0.12
+        WinHeight=0.048
+        WinLeft=0.662401
+        WinTop=0.004
+        StyleName="DHMenuTextButtonStyle"
+        Caption="Communication"
+        TabOrder=1
+        OnClick=DHDeployMenu.OnClick
+        bAutoShrink=false
+    End Object
+    b_Communication=CommsButton
 
     //Panel Variables
     LoadoutPanelCaption(0)="Role"
