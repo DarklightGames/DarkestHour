@@ -2127,14 +2127,11 @@ function HandleFFViolation(PlayerController Offender)
     {
         for (i = 0; i < FFViolationIDs.Length; i++)
         {
-            //Theel Debug
-            Level.Game.Broadcast(self, "FFViolationID" $ i $ ":" @ FFViolationIDs[i], 'Say');
-
+            //Level.Game.Broadcast(self, "FFViolationID" $ i $ ":" @ FFViolationIDs[i], 'Say');
             if (FFViolationIDs[i] == OffenderID)
             {
-                //AccessControl.BanPlayer(Offender, true); //Session kick
-                //Theel Debug
-                Level.Game.Broadcast(self, "This offender would be session kicked:" @ OffenderID, 'Say');
+                AccessControl.BanPlayer(Offender, true); //Session kick
+                //Level.Game.Broadcast(self, "This offender would be session kicked:" @ OffenderID, 'Say');
                 return; // need to stop here because the player has been session kicked
             }
         }
@@ -2145,8 +2142,8 @@ function HandleFFViolation(PlayerController Offender)
 
     if (FFPunishment == FFP_Kick)
     {
-        Level.Game.Broadcast(self, "This offender would be kicked:" @ OffenderID, 'Say');
-        //bSuccess = KickPlayer(Offender);
+        //Level.Game.Broadcast(self, "This offender would be kicked:" @ OffenderID, 'Say');
+        bSuccess = KickPlayer(Offender);
     }
     else if (FFPunishment == FFP_SessionBan)
     {
