@@ -13,6 +13,14 @@ var     bool    bIsSquadLeader;
 var     bool    bIsMortarObserver;
 var     bool    bIsArtilleryOfficer;
 
+var()   float   DefaultStartAmmo;    // % of ammo role will default to (0.0 to 100.0)
+var()   float   MinStartAmmo;        // min % of ammo role can use (0.0 to 100.0)
+var()   float   MaxStartAmmo;        // max % of ammo role can use (0.0 to 100.0)
+
+var()   int     DeployTimeMod;       // role modification to team's base deploy time (in seconds)
+var()   int     MinAmmoTimeMod;      // mod for selecting the least ammo (in seconds)
+var()   int     MaxAmmoTimeMod;      // mod for selecting the most ammo (in seconds)
+
 var()   bool    bCarriesATAmmo;      // enable player to carry rocket anti-tank ammunition.
 var()   bool    bCarriesMortarAmmo;  // enable player to carry mortar ammunition.
 
@@ -55,6 +63,12 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
+    DefaultStartAmmo=70.0
+    MinStartAmmo=30.0
+    MaxStartAmmo=100.0
+    DeployTimeMod=0
+    MinAmmoTimeMod=-5
+    MaxAmmoTimeMod=25
     HeadgearProbabilities(0)=1.0
     HeadgearProbabilities(1)=0.0
     HeadgearProbabilities(2)=0.0
