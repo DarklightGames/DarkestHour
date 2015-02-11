@@ -193,7 +193,7 @@ replication
         
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerToggleDebugExits;
+        ServerStartEngine, ServerToggleDebugExits, ServerDamTrack;
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
 
@@ -3129,6 +3129,46 @@ function ServerToggleDebugExits()
     {
         class'DH_ROTreadCraft'.default.bDebugExitPositions = !class'DH_ROTreadCraft'.default.bDebugExitPositions;
         Log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
+    }
+}
+
+// Matt: handy exec during development for testing track damage
+exec function DamTrack(string Track)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ServerDamTrack(Track);
+    }
+}
+
+function ServerDamTrack(string Track)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (Track ~= "L" || Track ~= "Left")
+        {
+            DamageTrack(true);
+        }
+        else if (Track ~= "R" || Track ~= "Right")
+        {
+            DamageTrack(false);
+        }
+        else if (Track ~= "B" || Track ~= "Both")
+        {
+            DamageTrack(true);
+            DamageTrack(false);
+        }
+    }
+}
+
+// Matt: removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use DamTrack() exec above for testing
+// Also made it so can only be in single player or in dev mode (shouldn't be doing something like this during a real multi-player game)
+function exec DamageTank()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Health /= 2;
+        EngineHealth /= 2;
     }
 }
 
