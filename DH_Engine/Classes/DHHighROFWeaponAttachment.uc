@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHHighROFWeaponAttachment extends ROWeaponAttachment
+class DHHighROFWeaponAttachment extends DHWeaponAttachment
     abstract;
 
 // Struct that holds the info we need to launch our client side hit effect

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_SatchelCharge10lb10sAttachment extends ROWeaponAttachment;
+class DH_SatchelCharge10lb10sAttachment extends DHWeaponAttachment;
 
 simulated event ThirdPersonEffects()
 {
