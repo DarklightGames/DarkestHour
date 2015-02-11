@@ -18,7 +18,7 @@ var     DH_RoleInfo                 DHAlliesRoles[16];
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 
-var     array<String>               FFViolationIDs; //Array of ROIDs that have been kicked once this session
+var     array<string>               FFViolationIDs; //Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
