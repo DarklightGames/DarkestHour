@@ -11,6 +11,9 @@
 
 class DHDeploymentMapMenu extends MidGamePanel;
 
+const OBJECTIVES_MAX = 16;
+const SPAWN_POINTS_MAX = 16;
+
 var()   float                       DeploymentMapCenterX, DeploymentMapCenterY, DeploymentMapRadius;
 
 var     automated GUIFooter         f_Legend;
@@ -19,13 +22,12 @@ var     automated GUILabel          l_HelpText, l_HintText, l_TeamText;
 
 var     automated GUIImage          i_Background, i_HintImage, i_Team;
 
-var     automated GUIGFXButton      b_SpawnPoints[16],b_Objectives[16];
-var     DHSpawnPoint                SpawnPoints[16];
+var     automated GUIGFXButton      b_SpawnPoints[SPAWN_POINTS_MAX],b_Objectives[OBJECTIVES_MAX];
+var     DHSpawnPoint                SpawnPoints[SPAWN_POINTS_MAX];
 var     DHSpawnPoint                DesiredSpawnPoint; //THIS MIGHT NEED TO GO IN DHPlayer instead of here (pretty sure)
-var     ROObjective                 Objectives[16]; //Not sure if I need these
+var     ROObjective                 Objectives[OBJECTIVES_MAX]; //Not sure if I need these
 
-var     material                    SpawnPointIcons[5]; //Spawn point icons (may not need 5?)
-var     material                    ObjectiveIcons[4]; //Objective flash modes
+var     Material                    ObjectiveIcons[3]; //Objective flash modes
 
 var()   localized string            MapPreferenceStrings[3];
 var()   localized string            NodeTeleportHelpText,
@@ -53,8 +55,8 @@ var     color                       TColor[2];
 var()   color                       SelectionColor;
 
 // Actor references - these must be cleared at level change
-var     DHGameReplicationInfo       DHGRI;
-var     DHPlayerReplicationInfo     PRI; //DHPlayerReplicationInfo used to be ONSPlayerReplicationInfo
+var     DHGameReplicationInfo       GRI;
+var     DHPlayerReplicationInfo     PRI;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -62,44 +64,42 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     Super.InitComponent(MyController, MyOwner);
 
-    DHGRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
+    GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
     //Set the level image
-    i_Background.Image = DHGRI.MapImage;
+    i_Background.Image = GRI.MapImage;
 
-    for (i=0;i<arraycount(b_SpawnPoints);++i)
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
         b_SpawnPoints[i].Graphic = none;
     }
-    for (i=0;i<arraycount(b_Objectives);++i)
+
+    for (i = 0; i < arraycount(b_Objectives); ++i)
     {
         b_Objectives[i].Graphic = none;
     }
 }
 
-event Opened( GUIComponent Sender )
+event Opened(GUIComponent Sender)
 {
-    Super.Opened(Sender);
+    super.Opened(Sender);
 }
 
 //Not sure what this does yet.
 function ShowPanel(bool bShow)
 {
-    local string colorname,t;
+    local string ColorName, Caption;
 
-    Super.ShowPanel(bShow);
+    super.ShowPanel(bShow);
 
-    if ( bShow )
+    if (bShow && PRI != none && PRI.Team != none)
     {
-        if ( (PRI != None) && (PRI.Team != None) )
-        {
-            colorname = PRI.Team.ColorNames[PRI.Team.TeamIndex];
-            t = Repl(DefendMsg, "%t", colorname, false);
-            l_TeamText.Caption = t;
+        ColorName = PRI.Team.ColorNames[PRI.Team.TeamIndex];
+        Caption = Repl(DefendMsg, "%t", ColorName, false);
+        l_TeamText.Caption = Caption;
 
-            i_Team.Image = PRI.Level.GRI.TeamSymbols[PRI.Team.TeamIndex];
-            i_Team.ImageColor = TColor[PRI.Team.TeamIndex];
-        }
+        i_Team.Image = PRI.Level.GRI.TeamSymbols[PRI.Team.TeamIndex];
+        i_Team.ImageColor = TColor[PRI.Team.TeamIndex];
     }
 }
 
@@ -110,28 +110,28 @@ function bool InternalOnPreDraw( Canvas C )
 
 function bool PreDrawMap(Canvas C)
 {
-    local float L,T,W,H;
+    local float L, T, W, H;
 
-    DeploymentMapRadius = fmin( i_Background.ActualHeight(),i_Background.ActualWidth() ) / 2;
+    DeploymentMapRadius = FMin(i_Background.ActualHeight(),i_Background.ActualWidth()) / 2;
     DeploymentMapCenterX = i_Background.Bounds[0] + DeploymentMapRadius;
     DeploymentMapCenterY = i_Background.Bounds[1] + i_Background.ActualHeight() / 2;
 
-    l_HelpText.bBoundToParent=false;
-    l_HelpText.bScaleToParent=false;
+    l_HelpText.bBoundToParent = false;
+    l_HelpText.bScaleToParent = false;
 
-    l_HintText.bScaleToParent=false;
-    l_HintText.bBoundToParent=false;
+    l_HintText.bScaleToParent = false;
+    l_HintText.bBoundToParent = false;
 
-    i_HintImage.bScaleToParent=false;
-    i_HintImage.bBoundToParent=false;
+    i_HintImage.bScaleToParent = false;
+    i_HintImage.bBoundToParent = false;
 
-    l_TeamText.bScaleToParent=false;
-    l_TeamText.bBoundToParent=false;
+    l_TeamText.bScaleToParent = false;
+    l_TeamText.bBoundToParent = false;
 
-    i_Team.bScaleToParent=false;
-    i_Team.bBoundToParent=false;
+    i_Team.bScaleToParent = false;
+    i_Team.bBoundToParent = false;
 
-    L = DeploymentMapCenterX + DeploymentMapRadius + (ActualWidth()*0.05);
+    L = DeploymentMapCenterX + DeploymentMapRadius + (ActualWidth() * 0.05);
     T = DeploymentMapCenterY - DeploymentMapRadius;
 
     W = ActualLeft() + ActualWidth() - L;
@@ -145,7 +145,7 @@ function bool PreDrawMap(Canvas C)
     l_HelpText.WinHeight = i_HintImage.ActualHeight();
     l_HelpTExt.WinWidth = W - i_HintImage.ActualWidth() - 8;
 
-    t += i_HintImage.ActualHeight()+8;
+    t += i_HintImage.ActualHeight() + 8;
     l_HintText.WinLeft = l;
     l_HintText.WinTop= t;
     l_HintText.WinWidth = w;
@@ -159,7 +159,6 @@ function bool PreDrawMap(Canvas C)
     i_Team.WinHeight = W;
     i_Team.WinTop = i_Background.ActualTop() + i_Background.ActualHeight() - i_Team.ActualHeight();
 
-
     l_TeamText.WinLeft = L;
     l_TeamText.WinWidth = W;
     l_TeamText.WinTop = i_Team.ActualTop() - l_TeamText.ActualHeight();
@@ -167,115 +166,79 @@ function bool PreDrawMap(Canvas C)
     return false;
 }
 
+function GetMapCoords(vector Location, out float X, out float Y)
+{
+    local float TDistance;
+    local float Distance;
+
+    TDistance = Abs(GRI.SouthWestBounds.X) + Abs(GRI.NorthEastBounds.X);
+    Distance = Abs(GRI.NorthEastBounds.X - Location.X);
+    X = Distance / TDistance;
+
+    TDistance = Abs(GRI.SouthWestBounds.Y) + Abs(GRI.NorthEastBounds.Y);
+    Distance = Abs(GRI.SouthWestBounds.Y - Location.Y);
+    Y = Distance / TDistance;
+}
+
 function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 {
     local float X, Y;
-    local float TDistance;
-    local float Distance;
 
-    //Why do I calculate each separately? Because it's the only way I can understand it
-    //Calculate X
-    TDistance = abs(DHGRI.SouthWestBounds.X) + abs(DHGRI.NorthEastBounds.X);
-    Distance = abs(DHGRI.NorthEastBounds.X - SP.Location.X);
-    X = Distance / TDistance;
+    if (SP != none && Index >= 0 && Index < arraycount(b_SpawnPoints))
+    {
+        GetMapCoords(SP.Location, X, Y);
 
-    //Calculate Y
-    TDistance = abs(DHGRI.SouthWestBounds.Y) + abs(DHGRI.NorthEastBounds.Y);
-    Distance = abs(DHGRI.SouthWestBounds.Y - SP.Location.Y);
-    Y = Distance / TDistance;
+        b_SpawnPoints[Index].SetPosition(X, Y, 0.05, 0.05, true);
+        b_SpawnPoints[Index].Graphic = texture'InterfaceArt_tex.Tank_Hud.RedDot';
+        b_SpawnPoints[Index].Caption = SP.SpawnPointName;
 
-    b_SpawnPoints[Index].SetPosition(X,Y,0.05,0.05,true); //SetPosition( float NewLeft, float NewTop, float NewWidth, float NewHeight, optional bool bForceRelative )
-    b_SpawnPoints[Index].Graphic = texture'InterfaceArt_tex.Tank_Hud.RedDot';
-    b_SpawnPoints[Index].Caption = SP.SpawnPointName;
-
-    //Assign the SP to the button
-    SpawnPoints[Index] = SP;
+        SpawnPoints[Index] = SP;
+    }
 }
 
-function PlaceObjectiveOnMap(ROObjective Obj, int ObjImageIndex, int Index)
+function PlaceObjectiveOnMap(ROObjective O, int Index)
 {
     local float X, Y;
-    local float TDistance;
-    local float Distance;
 
-        /* ObjImageIndex
-        0 = Axis
-        1 = Allies
-        2 = Neutral
-        */
+    if (O != none && Index >= 0 && Index < arraycount(b_Objectives))
+    {
+        GetMapCoords(O.Location, X, Y);
 
-    //Why do I calculate each separately? Because it's the only way I can understand it
-    //Calculate X
-    TDistance = abs(DHGRI.SouthWestBounds.X) + abs(DHGRI.NorthEastBounds.X);
-    Distance = abs(DHGRI.NorthEastBounds.X - Obj.Location.X);
-    X = Distance / TDistance;
+        b_Objectives[Index].SetPosition(X, Y, 0.05, 0.05, true);
+        b_Objectives[Index].Graphic = ObjectiveIcons[int(GRI.Objectives[Index].ObjState)];
+        b_Objectives[Index].Caption = O.ObjectiveName;
 
-    //Calculate Y
-    TDistance = abs(DHGRI.SouthWestBounds.Y) + abs(DHGRI.NorthEastBounds.Y);
-    Distance = abs(DHGRI.SouthWestBounds.Y - Obj.Location.Y);
-    Y = Distance / TDistance;
-
-    b_Objectives[Index].SetPosition(X,Y,0.05,0.05,true);
-    b_Objectives[Index].Graphic = ObjectiveIcons[ObjImageIndex];
-    b_Objectives[Index].Caption = Obj.ObjectiveName;
-
-    //Assign the Obj to the button
-    Objectives[Index] = Obj;
+        Objectives[Index] = O;
+    }
 }
 
 function bool DrawMapComponents(Canvas C)
 {
-    local int i,ObjImageIndex;
-    local bool bSpawnPointExists;
-    local vector vBoundaryScale, vMapScaleCenter;
-    local float fMapScale;
-    local DHSpawnPoint SP;
-    local array<DHSpawnPoint> SPs;
+    local int i;
+    //local vector vBoundaryScale, vMapScaleCenter;
+    //local float fMapScale;
+    //local DHSpawnPoint SP;
+    local array<DHSpawnPoint> ActiveSpawnPoints;
 
     //Get/Draw Spawn Points for Current Team
-    DHGRI.GetActiveSpawnPointsForTeam(SPs, PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
+    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
 
-    for(i=0;i<SPs.length;++i)
+    for(i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
-        PlaceSpawnPointOnMap(SPs[i], i);
-        bSpawnPointExists = true;
+        PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
     }
-    l_TeamText.Caption = "SPs.length="@SPs.length;
 
-    //Draw RO/DH SpawnArea as spawn point if no spawnpoints exist
-    if (!bSpawnPointExists)
-    {
-        Log("OH NO NO NO NO BAD BAD BAD NO SPAWN POINTS FOUND IN GRI!!!!");
-        //This idea is kinda point less as ROSpawnAreas often exist off map or in odd spots
-    }
+    l_TeamText.Caption = "SpawnPoints.Length =" @ ActiveSpawnPoints.Length;
 
     //Draw objectives
-    for (i = 0; i < ArrayCount(DHGRI.Objectives); i++)
+    for (i = 0; i < arraycount(GRI.Objectives); i++)
     {
-        if (DHGRI.Objectives[i] == None)
+        if (GRI.Objectives[i] == none || !GRI.Objectives[i].bActive)
         {
             continue;
         }
-        //if (DHGRI.Objectives[i].bActive)
-        //{
-        //    continue;
-        //}
 
-        // Setup icon info
-        if (DHGRI.Objectives[i].ObjState == OBJ_Axis)
-        {
-            ObjImageIndex = 0;
-        }
-        else if (DHGRI.Objectives[i].ObjState == OBJ_Allies)
-        {
-            ObjImageIndex = 1;
-        }
-        else
-        {
-            ObjImageIndex = 2;
-        }
-
-        PlaceObjectiveOnMap(DHGRI.Objectives[i], ObjImageIndex, i);
+        PlaceObjectiveOnMap(GRI.Objectives[i], i);
     }
 
     return false;
@@ -286,14 +249,15 @@ function bool DrawMapComponents(Canvas C)
 function InternalOnPostDraw(Canvas Canvas)
 {
     PRI = DHPlayerReplicationInfo(PlayerOwner().PlayerReplicationInfo);
-    if (PRI != None)
+
+    if (PRI != none)
     {
-        bInit = False;
+        bInit = false;
         OnRendered = None;
+
         ShowPanel(true);
     }
 }
-
 
 //This is how the player is selecting a core to spawn at I think!
 function SetSelectedSpawn()
@@ -315,18 +279,21 @@ function bool SpawnClick(int Index)
 
     //Log("Trying to call server restart player!!!");
 
-    if (bInit || PRI == None || PRI.bOnlySpectator)
+    if (bInit || PRI == none || PRI.bOnlySpectator)
+    {
         return true;
+    }
 
-    if ( SpawnPoints[Index] == None )
+    if (SpawnPoints[Index] == none)
     {
         Log("No spawn point found! Error!");
+
         return true;
     }
 
     PC = DHPlayer(PlayerOwner());
 
-    //Need a check here to make sure player has role & stuff selected!
+    //TODO: Need a check here to make sure player has role & stuff selected!
 
     //Set the deisred spawn point
     DesiredSpawnPoint = SpawnPoints[Index];
@@ -344,7 +311,7 @@ function bool SpawnClick(int Index)
 
     if (PC.bReadyToSpawn && PC.Pawn == none)
     {
-        PC.ServerDeployPlayer(SpawnPoints[Index],true);
+        PC.ServerDeployPlayer(SpawnPoints[Index], true);
         Controller.CloseMenu(false); //DeployPlayer needs to return true/false if succesful and this needs to be in an if statement
     }
 }
@@ -352,56 +319,31 @@ function bool SpawnClick(int Index)
 function bool InternalOnClick(GUIComponent Sender)
 {
     local GUIButton Selected;
+    local int i;
 
-    if (GUIButton(Sender) != None)
-        Selected = GUIButton(Sender);
-
-    if (Selected == None)
-        return false;
-
-    switch (Selected)
+    if (GUIButton(Sender) != none)
     {
-        case b_SpawnPoints[0]:
-            SpawnClick(0);
-        break;
-        case b_SpawnPoints[1]:
-            SpawnClick(1);
-        break;
-        case b_SpawnPoints[2]:
-            SpawnClick(2);
-        break;
-        case b_SpawnPoints[3]:
-            SpawnClick(3);
-        break;
-        case b_SpawnPoints[4]:
-            SpawnClick(4);
-        break;
-        case b_SpawnPoints[5]:
-            SpawnClick(5);
-        break;
-        case b_SpawnPoints[6]:
-            SpawnClick(6);
-        break;
-        case b_SpawnPoints[7]:
-            SpawnClick(7);
-        break;
-        case b_SpawnPoints[8]:
-            SpawnClick(8);
-        break;
-        case b_SpawnPoints[9]:
-            SpawnClick(9);
-        break;
-        case b_SpawnPoints[10]:
-            SpawnClick(10);
-        break;
-
-        default:
-            //SpawnClick(Sender);
-        break;
+        Selected = GUIButton(Sender);
     }
+
+    if (Selected == none)
+    {
+        return false;
+    }
+
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        if (Selected == b_SpawnPoints[i])
+        {
+            SpawnClick(i);
+
+            break;
+
+        }
+    }
+
     return false;
 }
-
 
 //Hmmm wtf is this
 function Timer()
@@ -456,7 +398,6 @@ function LevelChanged()
 defaultproperties
 {
     //Background=Texture'DH_GUI_Tex.Menu.DHBox'
-    SpawnPointIcons(0)=Texture'DH_GUI_Tex.Menu.DHBox'
 
     ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
     ObjectiveIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
