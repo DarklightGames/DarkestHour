@@ -120,6 +120,9 @@ var     rotator     LeftTreadPanDirection;
 var     rotator     RightTreadPanDirection;
 var()   material    DamagedTreadPanner;
 
+var()   class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
+var     RODummyAttachment         DamagedTrackLeft, DamagedTrackRight;
+
 // Fire stuff- Shurek & Ch!cKeN
 var     class<DamageType>           VehicleBurningDamType;
 var     class<VehicleDamagedEffect> FireEffectClass;
@@ -1625,6 +1628,11 @@ simulated function SetEngine()
 // New function to set up damaged tracks
 simulated function SetDamagedTracks()
 {
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        return;
+    }
+
     if (bLeftTrackDamaged)
     {
         Skins[LeftTreadIndex] = DamagedTreadPanner;
@@ -1632,6 +1640,14 @@ simulated function SetDamagedTracks()
         if (LeftTreadSoundAttach != none)
         {
             LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
+        }
+
+        // Matt: added support for spawning damaged track model as decorative static mesh
+        if (DamagedTrackLeftClass != none)
+        {
+            DamagedTrackLeft = Spawn(DamagedTrackLeftClass);
+            DamagedTrackLeft.Skins[0] = default.Skins[LeftTreadIndex]; // sets damaged tread skin to match treads for this tank (i.e. whether normal or snowy)
+            AttachToBone(DamagedTrackLeft, 'Body');
         }
     }
 
@@ -1642,6 +1658,13 @@ simulated function SetDamagedTracks()
         if (RightTreadSoundAttach != none)
         {
             RightTreadSoundAttach.AmbientSound = TrackDamagedSound;
+        }
+
+        if (DamagedTrackRightClass != none)
+        {
+            DamagedTrackRight = Spawn(DamagedTrackRightClass);
+            DamagedTrackRight.Skins[0] = default.Skins[RightTreadIndex];
+            AttachToBone(DamagedTrackRight, 'Body');
         }
     }
 }

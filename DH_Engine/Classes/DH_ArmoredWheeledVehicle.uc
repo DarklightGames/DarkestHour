@@ -38,8 +38,8 @@ var()   array<CarHitpoint>      CarVehHitpoints;        // An array of possible 
 simulated function UpdateMovementSound();
 simulated function SetupTreads();
 simulated function DestroyTreads();
-
 function DamageTrack(bool bLeftTrack);
+simulated function SetDamagedTracks();
 
 simulated function bool IsDisabled()
 {
