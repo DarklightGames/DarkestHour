@@ -1359,7 +1359,7 @@ state PlayerDriving
     }
 }
 
-// Removes the awkward "jump" out of water - this has not been tested to much capacity (8/26/2014)
+// Overrided for the awkward "jump" out of water
 state PlayerSwimming
 {
 ignores SeePlayer, HearNoise, Bump;
@@ -1377,8 +1377,9 @@ ignores SeePlayer, HearNoise, Bump;
             {
                 if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) // check for water jump
                 {
-                    // Below is the only line this function changes/comments out
-                    // Pawn.Velocity.Z = FMax(Pawn.JumpZ, 420.0) + 2.0 * Pawn.CollisionRadius; // set here so physics uses this for remainder of tick
+                    // Below is the only line this function changes. Theel: Reverted back as there is major bug where you can get under terrain
+                    // Once we figure out how to fix that bug, this should be commented out again.
+                    Pawn.Velocity.Z = FMax(Pawn.JumpZ, 420.0) + 2.0 * Pawn.CollisionRadius; // set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
                 else if (Pawn.Velocity.Z > 160.0 || !Pawn.TouchingWaterVolume())
