@@ -25,7 +25,7 @@ defaultproperties
     scopeYaw=40
     scopeYawHigh=35
 
-    TexturedScopeTexture=texture'DH_Weapon_tex.AxisSmallArms.Ger_sniperscope_overlay'
+    TexturedScopeTexture=texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
 
     IronIdleAnim="Scope_Idle"
     IronBringUp="Scope_In"
