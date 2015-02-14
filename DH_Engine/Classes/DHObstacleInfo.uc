@@ -16,7 +16,9 @@ struct Type
     var()   bool                    bCanBeClearedWithWireCutters;
 };
 
-var()   array<Type> Types;
+var()   array<Type>         Types;
+
+var     array<DHObstacle>   Obstacles;
 
 defaultproperties
 {

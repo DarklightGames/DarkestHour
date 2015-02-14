@@ -8,8 +8,8 @@ class DHObstacleManager extends Actor
 
 const MAX_OBSTACLES = 1024;
 const BITFIELD_LENGTH = 128;
+const OBSTACLE_TYPE_INDEX_INVALID = 255;
 
-var array<DHObstacle>   Obstacles;
 var byte                Bitfield[BITFIELD_LENGTH];
 var byte                SavedBitfield[BITFIELD_LENGTH];
 var DHObstacleInfo      Info;
@@ -45,7 +45,7 @@ simulated function PostBeginPlay()
     {
         foreach AllActors(class'DHObstacle', Obstacle)
         {
-            if (Obstacles.Length >= MAX_OBSTACLES)
+            if (Info.Obstacles.Length >= MAX_OBSTACLES)
             {
                 Warn(Obstacle @ " discarded, exceeds limit of manageable DHObstacle actors");
 
@@ -54,7 +54,7 @@ simulated function PostBeginPlay()
                 continue;
             }
 
-            Obstacle.Index = Obstacles.Length;
+            Obstacle.Index = Info.Obstacles.Length;
 
             for (i = 0; i < Info.Types.Length; ++i)
             {
@@ -82,15 +82,16 @@ simulated function PostBeginPlay()
                 break;
             }
 
-            if (Obstacle.TypeIndex == 255)
+            if (Obstacle.TypeIndex == OBSTACLE_TYPE_INDEX_INVALID)
             {
                 Log("Obstacle with static mesh" @ Obstacle.StaticMesh @ "was unable to be matched to obstacle info!");
 
                 continue;
             }
 
-            Obstacles[Obstacles.Length] = Obstacle;
+            Info.Obstacles[Info.Obstacles.Length] = Obstacle;
 
+            //trigger replication
             Obstacle.RemoteRole = ROLE_SimulatedProxy;
         }
     }
@@ -108,25 +109,25 @@ function DebugObstacles(optional int Option)
     switch (Option)
     {
         case 0: // Make all obstacles intact
-            for (i = 0; i < Obstacles.Length; ++i)
+            for (i = 0; i < Info.Obstacles.Length; ++i)
             {
-                SetCleared(Obstacles[i], false);
+                SetCleared(Info.Obstacles[i], false);
             }
             break;
         case 1: // Clear all obstacles
-            for (i = 0; i < Obstacles.Length; ++i)
+            for (i = 0; i < Info.Obstacles.Length; ++i)
             {
-                SetCleared(Obstacles[i], true);
+                SetCleared(Info.Obstacles[i], true);
             }
             break;
         case 2: // Randomly make all obstacles intact or cleared (50/50 chance)
-            for (i = 0; i < Obstacles.Length; ++i)
+            for (i = 0; i < Info.Obstacles.Length; ++i)
             {
-                SetCleared(Obstacles[i], FRand() >= 0.5);
+                SetCleared(Info.Obstacles[i], FRand() >= 0.5);
             }
             break;
         case 3: // Print out the amount number of obstacles
-            Level.Game.Broadcast(self, "Obstacle Count:" @ Obstacles.Length);
+            Level.Game.Broadcast(self, "Obstacle Count:" @ Info.Obstacles.Length);
             break;
         case 4: // Reset obstacles as though a new round has started
             Reset();
@@ -138,12 +139,12 @@ function DebugObstacles(optional int Option)
 
 function ClearObstacle(int Index)
 {
-    if (Index < 0 || Index >= Obstacles.Length)
+    if (Index < 0 || Index >= Info.Obstacles.Length)
     {
         return;
     }
 
-    SetCleared(Obstacles[Index], true);
+    SetCleared(Info.Obstacles[Index], true);
 }
 
 simulated function bool IsClearedInBitfield(int Index)
@@ -196,12 +197,14 @@ simulated event PostNetReceive()
                 {
                     ObstacleIndex = (i * 8) + j;
 
-                    if (ObstacleIndex >= Obstacles.Length)
+                    if (ObstacleIndex < 0 ||
+                        ObstacleIndex >= Info.Obstacles.Length ||
+                        Info.Obstacles[ObstacleIndex] == none)
                     {
                         break;
                     }
 
-                    Obstacles[ObstacleIndex].SetCleared(bIsCleared);
+                    Info.Obstacles[ObstacleIndex].SetCleared(bIsCleared);
                 }
             }
 
@@ -219,9 +222,9 @@ simulated function Reset()
 
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < Obstacles.Length; ++i)
+        for (i = 0; i < Info.Obstacles.Length; ++i)
         {
-            Obstacle = Obstacles[i];
+            Obstacle = Info.Obstacles[i];
 
             SetCleared(Obstacle, false);
 
@@ -257,7 +260,7 @@ function SetCleared(DHObstacle Obstacle, bool bIsCleared)
 
 defaultproperties
 {
-    bDebug=true
+    bDebug=false
     bHidden=true
     bAlwaysRelevant=true
     RemoteRole=ROLE_SimulatedProxy

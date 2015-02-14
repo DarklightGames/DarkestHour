@@ -2,15 +2,19 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2014
 //==============================================================================
+// This is the placeable obstacle class.
+// Obstacles are replicated to clients only once, and then become independent.
+// The DHObstacleManager class handles obstacle state synchronization.
+//==============================================================================
 
 class DHObstacle extends Actor
     placeable;
 
-//------------------------------------------------------------------------------
+//==============================================================================
 // Because this is a non-static actor, location and rotations are quantized down
 // by default. Replicating this struct allows us the highest level of positional
 // precision possible over the network.
-//------------------------------------------------------------------------------
+//==============================================================================
 struct UncompressedPosition
 {
     var float LocationX;
@@ -35,6 +39,8 @@ var     bool                    bCanBeClearedWithWirecutters;
 var     DHObstacleInfo          Info;
 
 var()   float                   SpawnClearedChance;
+
+var config bool                 bDebug;
 
 replication
 {
@@ -93,10 +99,10 @@ simulated function PostNetBeginPlay()
             ClearEmitterClass = Info.Types[TypeIndex].ClearEmitterClasses[Index % Info.Types[TypeIndex].ClearEmitterClasses.Length];
         }
 
+        Info.Obstacles[Index] = self;
+
         foreach AllActors(class'DHObstacleManager', OM)
         {
-            OM.Obstacles[Index] = self;
-
             // If this obstacle gets replicated *after* the obstacle manager,
             // we need to query the manager to get the state otherwise the state
             // never gets set correctly!
@@ -104,6 +110,8 @@ simulated function PostNetBeginPlay()
             {
                 SetCleared(true);
             }
+
+            break;
         }
 
         L.X = UP.LocationX;
@@ -123,10 +131,15 @@ simulated function PostNetBeginPlay()
     }
 }
 
-auto simulated state Intact
+simulated state Intact
 {
     simulated function BeginState()
     {
+        if (bDebug)
+        {
+            Log(Index @ IntactStaticMesh);
+        }
+
         SetStaticMesh(IntactStaticMesh);
         KSetBlockKarma(false);
 
@@ -187,6 +200,11 @@ simulated state Cleared
 
 simulated function SetCleared(bool bIsCleared)
 {
+    if (bDebug)
+    {
+        Log(Index @ "SetCleared" @ bIsCleared);
+    }
+
     if (bIsCleared)
     {
         GotoState('Cleared');
@@ -220,5 +238,6 @@ defaultproperties
     SpawnClearedChance=0.0
     bCanBeClearedWithWireCutters=true
     TypeIndex=255
+    bDebug=false
 }
 
