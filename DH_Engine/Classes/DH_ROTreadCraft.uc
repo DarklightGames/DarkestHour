@@ -1072,6 +1072,7 @@ simulated function bool IsDisabled()
     return (EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged));
 }
 
+// Modified to set fire damage properties, to select any random schurzen model, & so net clients show unoccupied rider positions on the HUD vehicle icon
 simulated function PostBeginPlay()
 {
     local byte RandomNumber, CumulativeChance, i;
@@ -1114,6 +1115,10 @@ simulated function PostBeginPlay()
     }
     else
     {
+        // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
+        // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
+        WeaponPawns.Length = PassengerWeapons.Length;
+
         // Guarantees that client's saved value will be opposite of real value, meaning PostNetReceive will always call SetEngine() when vehicle spawns
         bSavedEngineOff = !bEngineOff;
     }
