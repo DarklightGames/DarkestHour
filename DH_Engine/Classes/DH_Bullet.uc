@@ -247,8 +247,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             return;
         }
 
-        if (Instigator != none)
-        {
+//        if (Instigator != none) // TEMP TEST
+//        {
             if (!bHasDeflected)
             {
                 // If bullet collides immediately after launch, it has no location (or so it would appear, go figure) - let's check against the firer's location instead
@@ -271,10 +271,10 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                     WhizType = 2;
                 }
             }
-        }
+//        }
 
-        // Matt: was Instigator.HitPointTrace but makes no difference which actor it's called on & calling on Instigator could lead to "accessed none" errors
-        Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , WhizType);
+        // Matt: was Instigator.HitPointTrace but makes no difference which actor it's called on & calling on Instigator could lead to "accessed none" errors // TEST added back
+        Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , WhizType);
 
         if (!bHasDeflected)
         {
@@ -534,6 +534,7 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    bDebugMode=true;
     WhizType=1
     ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
     WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
