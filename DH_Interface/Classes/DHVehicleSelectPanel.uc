@@ -4,7 +4,7 @@
 //==============================================================================
 //This is basically the vehicle tab for the deploymenu, and needs renamed and extended
 
-class DHDeploymentMenu extends ROGUIRoleSelection;
+class DHVehicleSelectPanel extends ROGUIRoleSelection;
 
 var DHGUIList   li_VehiclePools;
 var DHGUIList   li_SpawnPoints;
@@ -315,7 +315,7 @@ defaultproperties
         WinWidth=0.175000
         WinHeight=0.040000
     End Object
-    l_RolesTitle=GUILabel'DH_Interface.DHDeploymentMenu.RolesTitle'
+    l_RolesTitle=RolesTitle
     Begin Object Class=GUILabel Name=RoleDescTitle
         Caption="Role Description"
         TextAlign=TXTA_Right
@@ -325,7 +325,7 @@ defaultproperties
         WinWidth=0.175000
         WinHeight=0.040000
     End Object
-    l_RoleDescTitle=GUILabel'DH_Interface.DHDeploymentMenu.RoleDescTitle'
+    l_RoleDescTitle=RoleDescTitle
     Begin Object Class=GUILabel Name=PrimaryWeaponTitle
         Caption="Primary Weapon"
         TextAlign=TXTA_Right
@@ -335,7 +335,7 @@ defaultproperties
         WinWidth=0.175000
         WinHeight=0.040000
     End Object
-    l_PrimaryWeaponTitle=GUILabel'DH_Interface.DHDeploymentMenu.PrimaryWeaponTitle'
+    l_PrimaryWeaponTitle=PrimaryWeaponTitle
     Begin Object Class=GUILabel Name=SecondaryWeaponTitle
         Caption="Sidearm"
         TextAlign=TXTA_Right
@@ -345,7 +345,7 @@ defaultproperties
         WinWidth=0.175000
         WinHeight=0.040000
     End Object
-    l_SecondaryWeaponTitle=GUILabel'DH_Interface.DHDeploymentMenu.SecondaryWeaponTitle'
+    l_SecondaryWeaponTitle=SecondaryWeaponTitle
     Begin Object Class=GUILabel Name=EquipmentWeaponTitle
         Caption="Equipment"
         TextAlign=TXTA_Right
@@ -355,7 +355,7 @@ defaultproperties
         WinWidth=0.175000
         WinHeight=0.040000
     End Object
-    l_EquipTitle=GUILabel'DH_Interface.DHDeploymentMenu.EquipmentWeaponTitle'
+    l_EquipTitle=EquipmentWeaponTitle
     Begin Object Class=BackgroundImage Name=PageBackground
         Image=texture'DH_GUI_Tex.Menu.roleselect'
         ImageStyle=ISTY_Scaled
@@ -365,7 +365,7 @@ defaultproperties
         X2=1023
         Y2=1023
     End Object
-    bg_Background=BackgroundImage'DH_Interface.DHDeploymentMenu.PageBackground'
+    bg_Background=PageBackground
     Begin Object Class=BackgroundImage Name=PageBackground2
         Image=texture'DH_GUI_Tex.Menu.midgamemenu'
         ImageStyle=ISTY_Scaled
@@ -375,7 +375,7 @@ defaultproperties
         X2=1023
         Y2=1023
     End Object
-    bg_Background2=BackgroundImage'DH_Interface.DHDeploymentMenu.PageBackground2'
+    bg_Background2=PageBackground2
     Begin Object Class=DHGUIButton Name=DisconnectButton
         Caption="Disconnect"
         bAutoShrink=false
@@ -384,10 +384,10 @@ defaultproperties
         WinLeft=0.012000
         WinWidth=0.180000
         TabOrder=1
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=DisconnectButton.InternalOnKeyEvent
     End Object
-    b_Disconnect=DHGUIButton'DH_Interface.DHDeploymentMenu.DisconnectButton'
+    b_Disconnect=DisconnectButton
     Begin Object Class=DHGUIButton Name=MapButton
         Caption="Situation Map"
         bAutoShrink=false
@@ -396,10 +396,10 @@ defaultproperties
         WinLeft=0.220000
         WinWidth=0.180000
         TabOrder=2
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=MapButton.InternalOnKeyEvent
     End Object
-    b_Map=DHGUIButton'DH_Interface.DHDeploymentMenu.MapButton'
+    b_Map=MapButton
     Begin Object Class=DHGUIButton Name=ScoreButton
         Caption="Score"
         bAutoShrink=false
@@ -408,10 +408,10 @@ defaultproperties
         WinLeft=0.410000
         WinWidth=0.180000
         TabOrder=3
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=ScoreButton.InternalOnKeyEvent
     End Object
-    b_Score=DHGUIButton'DH_Interface.DHDeploymentMenu.ScoreButton'
+    b_Score=ScoreButton
     Begin Object Class=DHGUIButton Name=ConfigButton
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
@@ -419,10 +419,10 @@ defaultproperties
         WinLeft=0.600000
         WinWidth=0.180000
         TabOrder=4
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=ConfigButton.InternalOnKeyEvent
     End Object
-    b_Config=DHGUIButton'DH_Interface.DHDeploymentMenu.ConfigButton'
+    b_Config=ConfigButton
     Begin Object Class=DHGUIButton Name=ContinueButton
         Caption="Continue"
         bAutoShrink=false
@@ -431,51 +431,51 @@ defaultproperties
         WinLeft=0.808000
         WinWidth=0.180000
         TabOrder=5
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=ContinueButton.InternalOnKeyEvent
     End Object
-    b_Continue=DHGUIButton'DH_Interface.DHDeploymentMenu.ContinueButton'
+    b_Continue=ContinueButton
     Begin Object Class=DHGUIButton Name=JoinAxisButton
         Caption="Join Axis"
         StyleName="DHSmallTextButtonStyle"
         WinHeight=0.037500
         TabOrder=7
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=JoinAxisButton.InternalOnKeyEvent
     End Object
-    b_JoinAxis=DHGUIButton'DH_Interface.DHDeploymentMenu.JoinAxisButton'
+    b_JoinAxis=JoinAxisButton
     Begin Object Class=DHGUIButton Name=JoinAlliesButton
         Caption="Join Allies"
         StyleName="DHSmallTextButtonStyle"
         WinHeight=0.037500
         TabOrder=6
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=JoinAlliesButton.InternalOnKeyEvent
     End Object
-    b_JoinAllies=DHGUIButton'DH_Interface.DHDeploymentMenu.JoinAlliesButton'
+    b_JoinAllies=JoinAlliesButton
     Begin Object Class=DHGUIButton Name=SpectateButton
         Caption="Spectate"
         StyleName="DHSmallTextButtonStyle"
         Hint="Observe the game as a non-playing spectator"
         WinHeight=0.037500
         TabOrder=8
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=SpectateButton.InternalOnKeyEvent
     End Object
-    b_Spectate=DHGUIButton'DH_Interface.DHDeploymentMenu.SpectateButton'
+    b_Spectate=SpectateButton'
     Begin Object Class=GUILabel Name=NumAxisLabel
         Caption="?"
         TextAlign=TXTA_Center
         StyleName="DHSmallText"
     End Object
-    l_numAxis=GUILabel'DH_Interface.DHDeploymentMenu.NumAxisLabel'
-    l_numAllies=GUILabel'DH_Interface.DHDeploymentMenu.NumAxisLabel'
+    l_numAxis=NumAxisLabel'
+    l_numAllies=NumAxisLabel'
     Begin Object Class=GUILabel Name=NumFakeLabel
         Caption=" "
         TextAlign=TXTA_Center
         StyleName="DHSmallText"
     End Object
-    l_numFake=GUILabel'DH_Interface.DHDeploymentMenu.NumFakeLabel'
+    l_numFake=NumFakeLabel'
     Begin Object Class=ROGUIListBoxPlus Name=Roles
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
@@ -485,32 +485,32 @@ defaultproperties
         StyleName="DHSmallText"
         WinHeight=1.000000
         TabOrder=0
-        OnChange=DHDeploymentMenu.InternalOnChange
+        OnChange=InternalOnChange
     End Object
-    lb_Roles=ROGUIListBoxPlus'DH_Interface.DHDeploymentMenu.Roles'
+    lb_Roles=ROGUIListBoxPlus'DH_Interface.Roles'
     Begin Object Class=GUIImage Name=PlayerImage
         Image=texture'InterfaceArt_tex.Menu.empty'
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
         WinTop=0.120000
         WinHeight=0.880000
-        OnDraw=DHDeploymentMenu.InternalOnDraw
+        OnDraw=InternalOnDraw
     End Object
-    i_PlayerImage=GUIImage'DH_Interface.DHDeploymentMenu.PlayerImage'
+    i_PlayerImage=PlayerImage
     Begin Object Class=DHGUIScrollTextBox Name=RoleDescriptionTextBox
         bNoTeletype=true
         OnCreateComponent=RoleDescriptionTextBox.InternalOnCreateComponent
         StyleName="DHSmallText"
         WinHeight=1.000000
     End Object
-    l_RoleDescription=DHGUIScrollTextBox'DH_Interface.DHDeploymentMenu.RoleDescriptionTextBox'
+    l_RoleDescription=DHGUIScrollTextBox'DH_Interface.RoleDescriptionTextBox'
     Begin Object Class=GUILabel Name=PlayerNameLabel
         Caption="Name:"
         StyleName="DHLargeText"
         WinWidth=0.350000
         WinHeight=0.100000
     End Object
-    l_PlayerName=GUILabel'DH_Interface.DHDeploymentMenu.PlayerNameLabel'
+    l_PlayerName=PlayerNameLabel'
     Begin Object Class=DHGUIEditBox Name=PlayerNameEditbox
         TextStr="(Player name)"
         WinLeft=0.350000
@@ -518,19 +518,19 @@ defaultproperties
         WinHeight=0.100000
         OnActivate=PlayerNameEditbox.InternalActivate
         OnDeActivate=PlayerNameEditbox.InternalDeactivate
-        OnChange=DHDeploymentMenu.InternalOnChange
+        OnChange=InternalOnChange
         OnKeyType=PlayerNameEditbox.InternalOnKeyType
         OnKeyEvent=PlayerNameEditbox.InternalOnKeyEvent
     End Object
-    e_PlayerName=DHGUIEditBox'DH_Interface.DHDeploymentMenu.PlayerNameEditbox'
+    e_PlayerName=PlayerNameEditbox'
     Begin Object Class=GUIImage Name=WeaponImage
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
         WinWidth=0.650000
         WinHeight=0.500000
     End Object
-    i_WeaponImages(0)=GUIImage'DH_Interface.DHDeploymentMenu.WeaponImage'
-    i_WeaponImages(1)=GUIImage'DH_Interface.DHDeploymentMenu.WeaponImage'
+    i_WeaponImages(0)=WeaponImage
+    i_WeaponImages(1)=WeaponImage
     Begin Object Class=DHGUIScrollTextBox Name=WeaponDescription
         bNoTeletype=true
         OnCreateComponent=WeaponDescription.InternalOnCreateComponent
@@ -538,8 +538,8 @@ defaultproperties
         WinTop=0.550000
         WinHeight=0.450000
     End Object
-    l_WeaponDescription(0)=DHGUIScrollTextBox'DH_Interface.DHDeploymentMenu.WeaponDescription'
-    l_WeaponDescription(1)=DHGUIScrollTextBox'DH_Interface.DHDeploymentMenu.WeaponDescription'
+    l_WeaponDescription(0)=DHGUIScrollTextBox'DH_Interface.WeaponDescription'
+    l_WeaponDescription(1)=DHGUIScrollTextBox'DH_Interface.WeaponDescription'
     Begin Object Class=ROGUIListBoxPlus Name=WeaponListBox
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
@@ -550,10 +550,10 @@ defaultproperties
         WinWidth=0.300000
         WinHeight=0.500000
         TabOrder=0
-        OnChange=DHDeploymentMenu.InternalOnChange
+        OnChange=InternalOnChange
     End Object
-    lb_AvailableWeapons(0)=ROGUIListBoxPlus'DH_Interface.DHDeploymentMenu.WeaponListBox'
-    lb_AvailableWeapons(1)=ROGUIListBoxPlus'DH_Interface.DHDeploymentMenu.WeaponListBox'
+    lb_AvailableWeapons(0)=ROGUIListBoxPlus'DH_Interface.WeaponListBox'
+    lb_AvailableWeapons(1)=ROGUIListBoxPlus'DH_Interface.WeaponListBox'
     Begin Object Class=GUIGFXButton Name=EquipButton0
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
@@ -563,10 +563,10 @@ defaultproperties
         WinHeight=0.495000
         TabOrder=21
         bTabStop=true
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton0.InternalOnKeyEvent
     End Object
-    b_Equipment(0)=GUIGFXButton'DH_Interface.DHDeploymentMenu.EquipButton0'
+    b_Equipment(0)=GUIGFXButton'DH_Interface.EquipButton0'
     Begin Object Class=GUIGFXButton Name=EquipButton1
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
@@ -577,10 +577,10 @@ defaultproperties
         WinHeight=0.495000
         TabOrder=22
         bTabStop=true
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton1.InternalOnKeyEvent
     End Object
-    b_Equipment(1)=GUIGFXButton'DH_Interface.DHDeploymentMenu.EquipButton1'
+    b_Equipment(1)=GUIGFXButton'DH_Interface.EquipButton1'
     Begin Object Class=GUIGFXButton Name=EquipButton2
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
@@ -591,10 +591,10 @@ defaultproperties
         WinHeight=0.495000
         TabOrder=23
         bTabStop=true
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton2.InternalOnKeyEvent
     End Object
-    b_Equipment(2)=GUIGFXButton'DH_Interface.DHDeploymentMenu.EquipButton2'
+    b_Equipment(2)=GUIGFXButton'DH_Interface.EquipButton2'
     Begin Object Class=GUIGFXButton Name=EquipButton3
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Scaled
@@ -605,10 +605,10 @@ defaultproperties
         WinHeight=0.495000
         TabOrder=24
         bTabStop=true
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton3.InternalOnKeyEvent
     End Object
-    b_Equipment(3)=GUIGFXButton'DH_Interface.DHDeploymentMenu.EquipButton3'
+    b_Equipment(3)=GUIGFXButton'DH_Interface.EquipButton3'
     Begin Object Class=DHGUIScrollTextBox Name=EquipDescTextBox
         bNoTeletype=true
         OnCreateComponent=EquipDescTextBox.InternalOnCreateComponent
@@ -617,7 +617,7 @@ defaultproperties
         WinWidth=0.560000
         WinHeight=1.000000
     End Object
-    l_EquipmentDescription=DHGUIScrollTextBox'DH_Interface.DHDeploymentMenu.EquipDescTextBox'
+    l_EquipmentDescription=DHGUIScrollTextBox'DH_Interface.EquipDescTextBox'
     Begin Object Class=ROGUIContainerNoSkinAlt Name=ConfigButtonsContainer_inst
         WinTop=0.108333
         WinLeft=0.060000
@@ -625,71 +625,71 @@ defaultproperties
         WinHeight=0.600000
         OnPreDraw=ConfigButtonsContainer_inst.InternalPreDraw
     End Object
-    ConfigButtonsContainer=ROGUIContainerNoSkinAlt'DH_Interface.DHDeploymentMenu.ConfigButtonsContainer_inst'
+    ConfigButtonsContainer=ROGUIContainerNoSkinAlt'DH_Interface.ConfigButtonsContainer_inst'
     Begin Object Class=DHGUIButton Name=StartNewGameButton
         Caption="Start New Game"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=11
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=StartNewGameButton.InternalOnKeyEvent
     End Object
-    b_StartNewGame=DHGUIButton'DH_Interface.DHDeploymentMenu.StartNewGameButton'
+    b_StartNewGame=StartNewGameButton'
     Begin Object Class=DHGUIButton Name=ServerBrowserButton
         Caption="Server Browser"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=12
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=ServerBrowserButton.InternalOnKeyEvent
     End Object
-    b_ServerBrowser=DHGUIButton'DH_Interface.DHDeploymentMenu.ServerBrowserButton'
+    b_ServerBrowser=ServerBrowserButton'
     Begin Object Class=DHGUIButton Name=FavoritesButton
         Caption="Add Favorite"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=13
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=FavoritesButton.InternalOnKeyEvent
     End Object
-    b_AddFavorite=DHGUIButton'DH_Interface.DHDeploymentMenu.FavoritesButton'
+    b_AddFavorite=FavoritesButton'
     Begin Object Class=DHGUIButton Name=MapVotingButton
         Caption="Map Voting"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=2
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=MapVotingButton.InternalOnKeyEvent
     End Object
-    b_MapVoting=DHGUIButton'DH_Interface.DHDeploymentMenu.MapVotingButton'
+    b_MapVoting=MapVotingButton'
     Begin Object Class=DHGUIButton Name=KickVotingButton
         Caption="Kick Voting"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=14
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=KickVotingButton.InternalOnKeyEvent
     End Object
-    b_KickVoting=DHGUIButton'DH_Interface.DHDeploymentMenu.KickVotingButton'
+    b_KickVoting=KickVotingButton'
     Begin Object Class=DHGUIButton Name=CommunicationButton
         Caption="Communication"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=15
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=CommunicationButton.InternalOnKeyEvent
     End Object
-    b_Communication=DHGUIButton'DH_Interface.DHDeploymentMenu.CommunicationButton'
+    b_Communication=CommunicationButton'
     Begin Object Class=DHGUIButton Name=ConfigurationButton
         Caption="Configuration"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=16
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=ConfigurationButton.InternalOnKeyEvent
     End Object
-    b_Configuration=DHGUIButton'DH_Interface.DHDeploymentMenu.ConfigurationButton'
+    b_Configuration=ConfigurationButton'
     Begin Object Class=DHGUIButton Name=ExitROButton
         Caption="Exit Darkest Hour"
         StyleName="DHSmallTextButtonStyle"
         TabOrder=17
-        OnClick=DHDeploymentMenu.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=ExitROButton.InternalOnKeyEvent
     End Object
-    b_ExitRO=DHGUIButton'DH_Interface.DHDeploymentMenu.ExitROButton'
+    b_ExitRO=ExitROButton'
     ConfigurationButtonText1="Options"
     ConfigurationButtonHint1="Show game and configuration options"
     Background=none
@@ -698,4 +698,3 @@ defaultproperties
     SpawnPointIndex=-1
     VehiclePoolIndex=-1
 }
-

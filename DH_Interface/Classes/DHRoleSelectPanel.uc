@@ -5,9 +5,11 @@ class DHRoleSelectPanel extends MidGamePanel
     config;
 
 // DELETE THIS:: well should I?
+/*
 #exec OBJ LOAD FILE=..\Animations\Characters_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\Characters_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\WeaponPickupSM.usx
+*/
 
 // Constants
 const NUM_ROLES = 10;
@@ -25,17 +27,17 @@ var automated GUILabel                      l_RolesTitle,
                                             l_SecondaryWeaponTitle,
                                             l_EquipTitle,
                                             l_EstimatedRedeployTime,
-                                            l_AmmoSlider,
-                                            l_MagCount;
+                                            l_AmmoSlider;
+
 
 var automated BackgroundImage               bg_Background;
-var automated GUIButton                     b_Continue;
 var automated GUIImage                      i_WeaponImages[2];
 var automated GUIImage                      i_MagImages[2];
 var automated GUIListBox                    lb_Roles;
 var automated GUIListBox                    lb_AvailableWeapons[2];
 var automated GUIGFXButton                  b_Equipment[4];
-var automated GUISlider                     s_AmmoSlider;
+//var automated GUISlider                     s_AmmoSlider;
+var automated DHGUINumericEdit              nu_PrimaryAmmoMags;
 
 var ROGUIListPlus                           li_Roles;
 var ROGUIListPlus                           li_AvailableWeapons[2];
@@ -98,7 +100,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     */
     //MainContainer.ManageComponent(EquipContainer);
 
-
     // Current units container
 
     // Roles container
@@ -135,7 +136,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         NotifyDesiredRoleUpdated();
     }
     else
+    {
         ChangeDesiredRole(currentRole);
+    }
 
     // Set controls visibility
     UpdateConfigButtonsVisibility();
@@ -298,20 +301,6 @@ function ChangeDesiredRole(RORoleInfo newRole)
 
     desiredRole = newRole;
 
-    // Set ammo slider values
-    s_AmmoSlider.MinValue = DH_RoleInfo(desiredRole).MinStartAmmo;
-    if (DHPlayer(PlayerOwner()).DesiredAmmoPercent != 0)
-    {
-        s_AmmoSlider.Value = DHPlayer(PlayerOwner()).DesiredAmmoPercent;
-    }
-    else
-    {
-        s_AmmoSlider.Value = DH_RoleInfo(desiredRole).DefaultStartAmmo;
-        DHPlayer(PlayerOwner()).ServerSetDesiredAmmoPercent(s_AmmoSlider.Value);
-    }
-    s_AmmoSlider.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo;
-
-
     if (newRole == none)
     {
         li_Roles.SetIndex(-1);
@@ -374,14 +363,11 @@ function AutoPickRole()
 
 function NotifyDesiredRoleUpdated()
 {
-    //Ammo slider was changed, so lets store the new value in DHPlayer
-    DHPlayer(PlayerOwner()).ServerSetDesiredAmmoPercent(s_AmmoSlider.Value);
-
-    UpdateRoleDescription();
     UpdateWeaponsInfo();
-    UpdateSelectedWeapon(0);
-    UpdateSelectedWeapon(1);
-    UpdatePlayerInfo();
+    CalculateDeployTime();
+    //UpdateSelectedWeapon(0);
+    //UpdateSelectedWeapon(1);
+    //UpdatePlayerInfo();
 }
 
 function ChangeDesiredTeam(int team)
@@ -409,12 +395,8 @@ function int FindRoleIndexInList(RORoleInfo newRole)
     return -1;
 }
 
-function UpdateRoleDescription()
-{
-/*no more role description remove this*/
-}
-
-function UpdatePlayerInfo()
+//Calculate AmmoTimeMod
+function CalculateDeployTime()
 {
     local DHPlayer player;
     local DH_RoleInfo roleInfo;
@@ -426,35 +408,38 @@ function UpdatePlayerInfo()
     // Calc and set deploytime based on factors
     //Theel: I might not need to access the role from here, as the slider will need to do that and I can just access slider!
     //roleInfo = DH_RoleInfo(li_Roles.GetObject());
-    //or
     roleInfo = DH_RoleInfo(desiredRole);
 
-    if (s_AmmoSlider.Value == roleInfo.DefaultStartAmmo)
+    //Run a check on value and make sure it is legal
+    nu_PrimaryAmmoMags.CheckValue();
+
+    if (int(nu_PrimaryAmmoMags.Value) == nu_PrimaryAmmoMags.MidValue)
     {
         AmmoTimeMod = 0;
     }
-    else if (s_AmmoSlider.Value > roleInfo.DefaultStartAmmo)
+    else if (int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MidValue)
     {
-        totaldistance = roleInfo.MaxStartAmmo - roleInfo.DefaultStartAmmo;
-        distance = s_AmmoSlider.Value - roleInfo.DefaultStartAmmo;
+        totaldistance = nu_PrimaryAmmoMags.MaxValue - nu_PrimaryAmmoMags.MidValue;
+        distance = int(nu_PrimaryAmmoMags.Value) - nu_PrimaryAmmoMags.MidValue;
         percent = distance / totaldistance;
         AmmoTimeMod = int(percent * roleInfo.MaxAmmoTimeMod);
     }
-    else if (s_AmmoSlider.Value < roleInfo.DefaultStartAmmo)
+    else if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MidValue)
     {
-        totaldistance = roleInfo.DefaultStartAmmo - roleInfo.MinStartAmmo;
-        distance = s_AmmoSlider.Value - roleInfo.MinStartAmmo;
+        totaldistance = nu_PrimaryAmmoMags.MidValue - nu_PrimaryAmmoMags.MinValue;
+        distance = nu_PrimaryAmmoMags.MidValue - int(nu_PrimaryAmmoMags.Value);
         percent = distance / totaldistance;
-        AmmoTimeMod= int((1 - percent) * roleInfo.MinAmmoTimeMod);
+        AmmoTimeMod = int(percent * roleInfo.MinAmmoTimeMod); //Is likely negative
     }
 
     RedeployTime = GRI.ReinforcementInterval[desiredTeam] + roleInfo.DeployTimeMod + AmmoTimeMod;
+
     if (RedeployTime < 0)
     {
         RedeployTime = 0;
     }
 
-    l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ RedeployTime @ "Seconds";
+    l_EstimatedRedeployTime.Caption = "Estimated deploy time:" @ RedeployTime @ "Seconds";
     player.SetDeployTime(RedeployTime);
 }
 
@@ -665,10 +650,27 @@ function UpdateSelectedWeapon(int weaponCategory)
     {
         i = int(li_AvailableWeapons[weaponCategory].GetExtra());
         if (weaponCategory == 0)
+        {
             item = desiredRole.PrimaryWeapons[i].Item;
-        else
-            item = desiredRole.SecondaryWeapons[i].Item;
 
+            // Set min/max/mid for ammo button on primary weapon
+            nu_PrimaryAmmoMags.MinValue = DH_RoleInfo(desiredRole).MinStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+            nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(desiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+            nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+
+            // Set the value
+            nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+
+            // Check the value
+            nu_PrimaryAmmoMags.CheckValue();
+
+            // Update deploy time
+            CalculateDeployTime();
+        }
+        else
+        {
+            item = desiredRole.SecondaryWeapons[i].Item;
+        }
         if (item != none)
         {
             AttachClass = item.default.AttachmentClass;
@@ -678,17 +680,14 @@ function UpdateSelectedWeapon(int weaponCategory)
                 if (WeaponAttach.default.menuImage != none)
                 {
                     i_WeaponImages[weaponCategory].Image = WeaponAttach.default.MenuImage;
+
                     if (WeaponAttach.default.MenuMagizineImage != none)
                     {
                         i_MagImages[weaponCategory].Image = WeaponAttach.default.MenuMagizineImage;
                     }
-                    //calculate the number of magazines based on ammo %
-                    l_MagCount.Caption = string(int(s_AmmoSlider.Value * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags) / 100);
                 }
             }
             desiredWeapons[weaponCategory] = i;
-            // Update current weapon on player model
-            UpdatePlayerInfo();
         }
     }
 }
@@ -696,14 +695,7 @@ function UpdateSelectedWeapon(int weaponCategory)
 // Used to update team counts & role counts
 function Timer()
 {
-    UpdateTeamCounts();
     UpdateRoleCounts();
-}
-
-function UpdateTeamCounts()
-{
-    //l_numAxis.Caption = "" $ getTeamCount(ALLIES_TEAM_INDEX);
-    //l_numAllies.Caption = "" $ getTeamCount(AXIS_TEAM_INDEX);
 }
 
 function int getTeamCount(int index)
@@ -819,9 +811,11 @@ function string FormatRoleString(string roleName, int roleLimit, int roleCount, 
     }
 
     if (bHasBots)
-        return s $ RoleHasBotsText;
-    else
-        return s;
+    {
+        s = s $ RoleHasBotsText;
+    }
+
+    return s;
 }
 
 function AttemptRoleApplication()
@@ -889,9 +883,6 @@ function AttemptRoleApplication()
     w1 = desiredWeapons[0];
     w2 = desiredWeapons[1];
 
-    // Disable continue button
-    SetContinueButtonState(true);
-
     // Attempt team, role and weapons change
     player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
 }
@@ -899,14 +890,6 @@ function AttemptRoleApplication()
 static function CheckNeedForFadeFromBlackEffect(PlayerController controller)
 {
 
-}
-
-function SetContinueButtonState(bool bDisabled)
-{
-    if (bDisabled)
-        b_Continue.MenuStateChange(MSAT_Disabled);
-    else
-        b_Continue.MenuStateChange(MSAT_Blurry);
 }
 
 function UpdateConfigButtonsVisibility()
@@ -919,17 +902,13 @@ function UpdateConfigButtonsVisibility()
 
     // To make sure items that should be hidden are hidden
     NotifyDesiredRoleUpdated();
-
-    b_Continue.WinTop = myWinTop;
 }
 
 function bool InternalOnClick(GUIComponent Sender)
 {
     switch (sender)
     {
-        case b_Continue:
-            AttemptRoleApplication();
-        break;
+
     }
 
     return true;
@@ -957,8 +936,13 @@ function InternalOnChange( GUIComponent Sender )
             UpdateSelectedWeapon(1);
             break;
 
-        case s_AmmoSlider:
-            NotifyDesiredRoleUpdated();
+        case nu_PrimaryAmmoMags:
+            //Ammo was changed, lets only change what we need to!
+            //Set desired ammo amount in DHPlayer
+            DHPlayer(PlayerOwner()).ServerSetDesiredAmmoAmount(int(nu_PrimaryAmmoMags.Value));
+
+            //We need to change the estimated deploy time
+            CalculateDeployTime();
             break;
     }
 }
@@ -1001,8 +985,6 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 break;
         }
 
-        SetContinueButtonState(false);
-
         if (Controller != none)
         {
             Controller.OpenMenu(Controller.QuestionMenuClass);
@@ -1014,11 +996,6 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 function bool InternalOnDraw(Canvas canvas)
 {
     return false;
-}
-
-function InternalOnClose(optional bool bCancelled)
-{
-    //Super.OnClose(bCancelled);
 }
 
 static function string getErrorMessageForId(int id)
@@ -1102,16 +1079,11 @@ static function string getErrorMessageForId(int id)
 
 defaultproperties
 {
-    //bRenderWorld=True
-
     Background=Texture'DH_GUI_Tex.Menu.DHBox'
-
     OnKeyEvent=InternalOnKeyEvent
     OnMessage=InternalOnMessage
-    //OnDraw=InternalOnDraw
-    //OnClose=InternalOnClose
-
-    //bAllowedAsLast=true
+    bNeverFocus=true //=InternalOnClose
+    //bAllowedAsLast=True
 
     NoSelectedRoleText="Select a role from the role list."
     RoleHasBotsText=" (has bots)"
@@ -1165,19 +1137,6 @@ defaultproperties
     End Object
     MainContainer=MainContiner_inst
 
-    Begin Object Class=DHGUIButton Name=ContinueButton
-        Caption="Continue"
-        bAutoShrink=false
-        StyleName="DHSmallTextButtonStyle"
-        WinTop=0.95875
-        WinLeft=0.808000
-        WinWidth=0.18
-        TabOrder=5
-        OnClick=DHRoleSelectPanel.InternalOnClick
-        OnKeyEvent=ContinueButton.InternalOnKeyEvent
-    End Object
-    b_Continue=DHGUIButton'DH_Interface.DHRoleSelectPanel.ContinueButton'
-
     Begin Object Class=GUILabel Name=EstimatedRedeployTime
         Caption="Estimated Redeploy Time:"
         TextAlign=TXTA_Right
@@ -1188,17 +1147,6 @@ defaultproperties
         WinTop=0.415428
     End Object
     l_EstimatedRedeployTime=EstimatedRedeployTime
-
-    Begin Object Class=GUILabel Name=AmmoSliderLabel
-        Caption="Ammo Percentage"
-        TextAlign=TXTA_Left
-        StyleName="DHLargeText"
-        WinWidth=0.293728
-        WinHeight=0.0305
-        WinLeft=0.164193
-        WinTop=0.354586
-    End Object
-    l_AmmoSlider=AmmoSliderLabel
 
     Begin Object Class=GUILabel Name=PrimaryWeaponTitle
         Caption="Primary Weapon"
@@ -1216,7 +1164,6 @@ defaultproperties
         WinHeight=0.182460
         WinLeft=0.023428
         WinTop=0.517182
-
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1281,17 +1228,6 @@ defaultproperties
     End Object
     l_RolesTitle=GUILabel'DH_Interface.DHRoleSelectPanel.RolesTitle'
 
-    Begin Object Class=GUILabel Name=NumberOfMags
-        Caption="0"
-        TextAlign=TXTA_Center
-        StyleName="DHSmallText"
-        WinWidth=0.067899
-        WinHeight=0.026256
-        WinLeft=0.470862
-        WinTop=0.589624
-    End Object
-    l_MagCount=NumberOfMags
-
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainer_inst
         WinWidth=0.976899
         WinHeight=0.300269
@@ -1305,7 +1241,6 @@ defaultproperties
     RolesContainer=RolesContainer_inst
 
     // Roles controls
-
     Begin Object Class=DHGuiListBox Name=Roles
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
@@ -1323,7 +1258,6 @@ defaultproperties
     lb_Roles=DHGuiListBox'DH_Interface.DHRoleSelectPanel.Roles'
 
     // Weapons controls
-
     Begin Object Class=GUIImage Name=WeaponImage
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
@@ -1421,6 +1355,7 @@ defaultproperties
     b_Equipment(3)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton3'
 
     //The ammo slider!
+/*
     Begin Object Class=GUISlider Name=AmmoSlider
         WinWidth=0.651253
         WinHeight=0.033360
@@ -1435,5 +1370,18 @@ defaultproperties
         OnChange=InternalOnChange
     End Object
     s_AmmoSlider=AmmoSlider
+*/
 
+    //The primary ammo button
+    Begin Object Class=DHGUINumericEdit Name=PrimaryAmmoButton
+        WinWidth=0.204570
+        WinHeight=0.037307
+        WinLeft=0.469822
+        WinTop=0.585544
+        MinValue=0
+        MaxValue=12
+        Step=1
+        OnChange=InternalOnChange
+    End Object
+    nu_PrimaryAmmoMags=PrimaryAmmoButton
 }

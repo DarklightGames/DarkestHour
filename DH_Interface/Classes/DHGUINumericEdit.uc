@@ -5,6 +5,8 @@
 
 class DHGUINumericEdit extends GUINumericEdit;
 
+var()   int                 MidValue;
+
 defaultproperties
 {
     Begin Object Class=DHGUIEditBox Name=cMyEditBox

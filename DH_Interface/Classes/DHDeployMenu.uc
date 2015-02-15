@@ -99,9 +99,9 @@ function InternalOnClose(optional bool bCancelled)
     local PlayerController pc;
 
     // Turn pause off if currently paused
-    //pc = PlayerOwner();
-    //if (pc != None && pc.Level.Pauser != None)
-    //   pc.SetPause(false);
+    pc = PlayerOwner();
+    if (pc != None && pc.Level.Pauser != None)
+       pc.SetPause(false);
 
     Super.OnClose(bCancelled);
 }
@@ -135,12 +135,12 @@ DefaultProperties
     Begin Object class=GUITabControl Name=LoadoutArea
         bFillSpace=false
         bDockPanels=true
-        TabHeight=0.06
+        TabHeight=0.03
         BackgroundStyleName="DHHeader"
-        WinWidth=0.326861
-        WinHeight=0.065954
-        WinLeft=0.000000
-        WinTop=0.053385
+        WinWidth=0.313189
+        WinHeight=0.038610
+        WinLeft=0.018555
+        WinTop=0.052083
         RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
@@ -152,17 +152,25 @@ DefaultProperties
     //DEPLOYMENT MAP AREA
     Begin Object class=GUITabControl name=DeploymentArea
         bFillSpace=false
+        //bScaleToParent=false
+        //bBoundToParent=false
         bDockPanels=true
-        TabHeight=0.06
+        TabHeight=0.03
         BackgroundStyleName="DHHeader"
-        //WinWidth=0.656958
-        //WinHeight=0.944096
-        //WinLeft=0.330549
-        //WinTop=0.053025
+
+        WinWidth=0.642175
+		WinHeight=0.039361
+		WinLeft=0.340298
+		WinTop=0.050421
+
+
+
+        /*
         WinWidth=0.508460
         WinHeight=0.957524
         WinLeft=0.330549
         WinTop=0.053025
+        */
         RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
@@ -200,10 +208,10 @@ DefaultProperties
         bFocusOnWatch=true
         OnClick=DHDeployMenu.OnClick
         //OnKeyEvent=FixConfigButton.InternalOnKeyEvent
-        WinWidth=0.15
-        WinHeight=0.036120
-        WinLeft=0.8
-        WinTop=0.85
+        WinWidth=0.150000
+        WinHeight=0.045573
+        WinLeft=0.744338
+        WinTop=0.952863
     End Object
     b_DebugSpawn=SpawnButton
 
@@ -302,7 +310,7 @@ DefaultProperties
     LoadoutPanelHint(2)="Create or join a squad"
 
     LoadoutPanelClass(0)="DH_Interface.DHRoleSelectPanel"
-    LoadoutPanelClass(1)=""
+    LoadoutPanelClass(1)="DH_Interface.DHVehicleSelectPanel"
     LoadoutPanelClass(2)=""
 
     DeploymentPanelClass(0)="DH_Interface.DHDeploymentMapMenu"

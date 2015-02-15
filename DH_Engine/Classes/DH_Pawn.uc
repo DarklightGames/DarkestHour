@@ -3849,7 +3849,7 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
 }
 
 //Simulated?
-function SetAmmoPercent(float AmmoPercent)
+function SetAmmoPercent(byte AmmoAmount)
 {
     local Inventory Inv;
     local DH_ProjectileWeapon Wep;
@@ -3860,9 +3860,10 @@ function SetAmmoPercent(float AmmoPercent)
     {
         Wep = DH_ProjectileWeapon(Inv);
 
-        if(Wep != none)
+        //Theel: Only change primary weapon (for now)
+        if(Wep != none && Wep.InventoryGroup == 1)
         {
-            Wep.SetNumMags(int(AmmoPercent * Wep.MaxNumPrimaryMags / 100));
+            Wep.SetNumMags(AmmoAmount);
         }
         //Some odd prevention measure that exists in other things like this
         i++;

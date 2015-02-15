@@ -5,11 +5,11 @@
 
 class DHPlayer extends ROPlayer;
 
-var int     RedeployTime;       // The time after death before player can deploy
-var int     CurrentRedeployTime;// The actual redeploytime set for current life
-var float   LastKilledTime;     // The time at which last death occured
-var float   DesiredAmmoPercent; // The set ammo percent desired for player
-//var int
+var int             RedeployTime;           // The time after death before player can deploy
+var int             CurrentRedeployTime;    // The actual redeploytime set for current life
+var float           LastKilledTime;         // The time at which last death occured
+var byte            DesiredAmmoAmount;     // The set ammo percent desired for player
+var DHSpawnPoint    DesiredSpawnPoint;      // The spawn point the player will spawn at
 
 var vector  FlinchRotMag;
 var vector  FlinchRotRate;
@@ -52,7 +52,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerDeployPlayer, ServerSetDesiredAmmoPercent;
+        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerDeployPlayer, ServerSetDesiredAmmoAmount;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -88,9 +88,9 @@ event ClientReset()
     }
 }
 
-simulated function ServerSetDesiredAmmoPercent(float PassedValue)
+simulated function ServerSetDesiredAmmoAmount(byte PassedValue)
 {
-    DesiredAmmoPercent = PassedValue;
+    DesiredAmmoAmount = PassedValue;
 }
 
 // Calculate free-aim and process recoil
@@ -2022,11 +2022,10 @@ function ServerDeployPlayer(optional DHSpawnPoint SP, optional bool bUseAmmoPerc
     //What if spawn succedes but tele fails? ?????
     //Tele should never fail, but we should do something in case it does
 
-    Warn("SERVER SAYS DesiredAmmoPercent IS:"@DesiredAmmoPercent);
     //SET WEAPON AMMO %
     if (Pawn != none && bUseAmmoPercent)
     {
-        DH_Pawn(Pawn).SetAmmoPercent(DesiredAmmoPercent);
+        DH_Pawn(Pawn).SetAmmoPercent(DesiredAmmoAmount);
     }
 }
 
