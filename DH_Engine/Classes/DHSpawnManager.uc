@@ -124,6 +124,8 @@ function PostBeginPlay()
 
 function Reset()
 {
+    local int i;
+
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
         SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
