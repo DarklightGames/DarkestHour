@@ -101,11 +101,6 @@ function DebugObstacles(optional int Option)
 {
     local int i;
 
-    if (!bDebug)
-    {
-        return;
-    }
-
     switch (Option)
     {
         case 0: // Make all obstacles intact
