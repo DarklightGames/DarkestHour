@@ -107,7 +107,9 @@ function PostBeginPlay()
     //Update GameReplicationInfo
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
-        UpdateSpawnPointReplicationInfo(i);
+        Log("ASDASDASDA" @ SpawnPoints[i].bIsInitiallyActive);
+
+        GRI.SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
     }
 
     for (i = 0; i < VehiclePools.Length; ++i)
@@ -122,14 +124,14 @@ function PostBeginPlay()
 
 function Reset()
 {
+    for (i = 0; i < SpawnPoints.Length; ++i)
+    {
+        SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
+    }
+
     Vehicles.Length = 0;
 
     super.Reset();
-}
-
-function UpdateSpawnPointReplicationInfo(byte SpawnPointIndex)
-{
-    GRI.SetSpawnPointIsActive(SpawnPointIndex, SpawnPoints[SpawnPointIndex].bIsInitiallyActive);
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)
@@ -641,7 +643,6 @@ private function GetSpawnPointIndicesByTag(name SpawnPointTag, out array<byte> S
 
 private function SetSpawnPointIsActive(int SpawnPointIndex, bool bIsActive)
 {
-    //SpawnPoints[SpawnPointIndex].bIsActive = bIsActive;
     GRI.SetSpawnPointIsActive(SpawnPointIndex, bIsActive);
 }
 
