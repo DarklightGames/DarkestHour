@@ -113,7 +113,14 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
     {
         GetMapCoords(SP.Location, X, Y);
 
-        b_SpawnPoints[Index].SetPosition(X, Y, 0.05, 0.05, true);
+        if (SP == DHPlayer(PlayerOwner()).DesiredSpawnPoint)
+        {
+            b_SpawnPoints[Index].SetPosition(X, Y, 0.08, 0.08, true);
+        }
+        else
+        {
+            b_SpawnPoints[Index].SetPosition(X, Y, 0.04, 0.04, true);
+        }
         b_SpawnPoints[Index].Graphic = texture'InterfaceArt_tex.Tank_Hud.RedDot';
         b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
 
@@ -312,7 +319,7 @@ defaultproperties
 
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
         Graphic=texture'InterfaceArt_tex.Tank_Hud.RedDot'
-        Position=ICP_Justified
+        Position=ICP_Scaled //Justified
         bClientBound=true
         StyleName="RoundButton"
         WinWidth=0.0

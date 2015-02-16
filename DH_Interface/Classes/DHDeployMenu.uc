@@ -26,6 +26,7 @@ var localized array<string>     DeploymentPanelHint;
 var array<string>               LoadoutPanelClass;
 var localized array<string>     LoadoutPanelCaption;
 var localized array<string>     LoadoutPanelHint;
+var bool                        bOnlyCloseOnComplete, bTimeToClose;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -46,10 +47,23 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
     }
 
+    SetTimer(0.1,true);
+
     // Turn pause off if currently paused (Theel: nasty hack to make this menu not pause)
     pc = PlayerOwner();
     if (pc != None && pc.Level.Pauser != None)
        pc.SetPause(false);
+}
+
+event Timer()
+{
+    super.Timer();
+
+    //Should we close?
+    if (bTimeToClose)
+    {
+        AttemptCloseMenu(); //If we are waiting for deploy timer then lets close menu
+    }
 }
 
 function bool OnClick(GUIComponent Sender)
@@ -139,6 +153,7 @@ function bool DrawDeployTimer(Canvas C)
             //Progress isn't done
             l_DeployTimeStatus.Caption = "Deploy in:" @ int(DHP.LastKilledTime + DHP.CurrentRedeployTime - DHP.Level.TimeSeconds) @ "Seconds";
         }
+        bOnlyCloseOnComplete = true;
     }
     else
     {
@@ -147,11 +162,23 @@ function bool DrawDeployTimer(Canvas C)
         if (DHP.Pawn != none)
         {
             l_DeployTimeStatus.Caption = "Deployed"; //If we have a pawn and progress bar has finished, we are deployed
+            bTimeToClose = true;
         }
     }
     return false;
 }
 
+function AttemptCloseMenu()
+{
+    //Only close if we saw deploy timer complete
+    if (bOnlyCloseOnComplete)
+    {
+        if (Controller != none)
+        {
+            Controller.CloseMenu(false);
+        }
+    }
+}
 
 function CloseMenu()
 {
@@ -354,11 +381,11 @@ DefaultProperties
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
         WinWidth=0.315937
-		WinHeight=0.033589
-		WinLeft=0.137395
-		WinTop=0.010181
-		bNeverFocus=true
-		bAcceptsInput=false
+        WinHeight=0.033589
+        WinLeft=0.137395
+        WinTop=0.010181
+        bNeverFocus=true
+        bAcceptsInput=false
     End Object
     l_DeployTimeStatus=DeployTimeStatus
 
@@ -374,11 +401,11 @@ DefaultProperties
         BarTop=Texture'InterfaceArt_tex.Menu.GreyLight'
         OnDraw=DHDeployMenu.DrawDeployTimer
         WinWidth=0.315937
-		WinHeight=0.033589
-		WinLeft=0.137395
-		WinTop=0.010181
-		bNeverFocus=true
-		bAcceptsInput=false
+        WinHeight=0.033589
+        WinLeft=0.137395
+        WinTop=0.010181
+        bNeverFocus=true
+        bAcceptsInput=false
     End Object
     pb_DeployProgressBar=DeployTimePB
 

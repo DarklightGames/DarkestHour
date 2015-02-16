@@ -11,6 +11,7 @@ var float           LastKilledTime;         // The time at which last death occu
 var byte            DesiredAmmoAmount;      // The set ammo amount desired for player (used by server)
 var string          ClientDesiredAmmoAmount;// The set ammo amount (used by player) Theel: Try doing server only this may not be needed
 var DHSpawnPoint    DesiredSpawnPoint;      // The spawn point the player will spawn at
+var bool            bShouldAttemptAutoDeploy;
 
 var vector  FlinchRotMag;
 var vector  FlinchRotRate;
@@ -74,7 +75,16 @@ event ClientReset()
             A.Reset();
         }
     }
+    //Reset deploy stuff
+    RedeployTime = default.RedeployTime;
+    CurrentRedeployTime = default.CurrentRedeployTime;
+    LastKilledTime = 0;
+    DesiredAmmoAmount = 0;
+    ClientDesiredAmmoAmount = "";
+    DesiredSpawnPoint = none;
+    bShouldAttemptAutoDeploy = false;
 
+    //Reset camera stuff
     bBehindView = false;
     bFixedCamera = false;
     SetViewTarget(self);
@@ -1620,6 +1630,10 @@ simulated function SetDeployTime(int NewDeployTime)
 
 simulated function ClientHandleDeath()
 {
+    if (DesiredSpawnPoint != none)
+    {
+        bShouldAttemptAutoDeploy = true;
+    }
     LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
     bReadyToSpawn = false; // Don't allow player to redeploy right away
 }
@@ -2037,9 +2051,42 @@ function PawnDied(Pawn P)
     if ( P != Pawn )
         return;
 
-    ClientHandleDeath(); //Tells client to set his last killed time and that he can't spawn yet
+    ClientHandleDeath(); //Tells client to set his last killed time, that he can't spawn yet, and to autodeploy if has desired spawn
 
     super.PawnDied(P); //Calls super in ROPlayer
+}
+
+function HandleDeployReady()
+{
+    local bool bDeployed;
+
+    // Don't try to auto deploy lots of times or if we aren't ready
+    if (!bShouldAttemptAutoDeploy || !bReadyToSpawn)
+    {
+        return;
+    }
+    bShouldAttemptAutoDeploy = false;
+
+    //If we have a desired spawn point set, we won't need to open menu and can send spawn request from here
+    if (DesiredSpawnPoint != none && Pawn == none)
+    {
+        //Check if desired spawn is valid
+        bDeployed = DHGameReplicationInfo(GameReplicationInfo).ValidateSpawnPoint(DesiredSpawnPoint, PlayerReplicationInfo.Team.TeamIndex);
+        if (bDeployed)
+        {
+            CurrentRedeployTime = RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
+            ServerDeployPlayer(DesiredSpawnPoint, true);
+        }
+        else
+        {
+            //It wasn't valid so lets do nothing?  Theel: should we set desiredspawntpoint to none?  I think so
+        }
+    }
+    //Open deploy menu if no menu is currently open and player failed to deploy
+    if (!bDeployed && GUIController(Player.GUIController).ActivePage == none)
+    {
+        ClientReplaceMenu("DH_Interface.DHDeployMenu");
+    }
 }
 
 defaultproperties
