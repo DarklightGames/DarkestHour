@@ -13,7 +13,8 @@ struct Type
     var()   array<StaticMesh>       ClearedStaticMeshes;
     var()   sound                   ClearSound;
     var()   array<class<Emitter> >  ClearEmitterClasses;
-    var()   bool                    bCanBeClearedWithWireCutters;
+    var()   bool                    bCanBeCut;
+    var()   bool                    bCanBeMantled;
 };
 
 var()   array<Type>         Types;

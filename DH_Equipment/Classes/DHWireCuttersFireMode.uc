@@ -17,7 +17,7 @@ simulated function bool AllowFire()
     HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
     O = DHObstacle(HitActor);
 
-    if (O == none || !O.bCanBeClearedWithWireCutters)
+    if (O == none || !O.bCanBeCut)
     {
         return false;
     }

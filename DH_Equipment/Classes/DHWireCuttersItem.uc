@@ -146,7 +146,7 @@ simulated function Fire(float F)
 
     foreach TraceActors(class'DHObstacle', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
-        if (O != none && !O.IsCleared() && O.bCanBeClearedWithWireCutters)
+        if (O != none && !O.IsCleared() && O.bCanBeCut)
         {
             ObstacleBeingCut = O;
 

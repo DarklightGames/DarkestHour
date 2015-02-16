@@ -31,12 +31,15 @@ struct UncompressedPosition
 var     byte                    TypeIndex;
 var     int                     Index;
 var     UncompressedPosition    UP;
+
+var     DHObstacleInfo          Info;
+//TODO: shouldn't these be able to be inferred from the info?
 var     StaticMesh              IntactStaticMesh;
 var     StaticMesh              ClearedStaticMesh;
 var     sound                   ClearSound;
 var     class<Emitter>          ClearEmitterClass;
-var     bool                    bCanBeClearedWithWirecutters;
-var     DHObstacleInfo          Info;
+var     bool                    bCanBeCut;
+var     bool                    bCanBeMantled;
 
 var()   float                   SpawnClearedChance;
 
@@ -91,7 +94,8 @@ simulated function PostNetBeginPlay()
             ClearedStaticMesh = Info.Types[TypeIndex].ClearedStaticMeshes[Index % Info.Types[TypeIndex].ClearedStaticMeshes.Length];
         }
 
-        bCanBeClearedWithWirecutters = Info.Types[TypeIndex].bCanBeClearedWithWireCutters;
+        bCanBeCut = Info.Types[TypeIndex].bCanBeCut;
+        bCanBeMantled = Info.Types[TypeIndex].bCanBeMantled;
         ClearSound = Info.Types[TypeIndex].ClearSound;
 
         if (Info.Types[TypeIndex].ClearEmitterClasses.Length > 0)
@@ -236,7 +240,7 @@ defaultproperties
     RemoteRole=ROLE_None
     bCompressedPosition=false
     SpawnClearedChance=0.0
-    bCanBeClearedWithWireCutters=true
+    bCanBeCut=true
     TypeIndex=255
     bDebug=false
 }
