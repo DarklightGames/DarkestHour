@@ -247,33 +247,29 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             return;
         }
 
-//        if (Instigator != none) // TEMP TEST
-//        {
-            if (!bHasDeflected)
+        if (!bHasDeflected)
+        {
+            // If bullet collides immediately after launch, it has no location (or so it would appear, go figure) - let's check against the firer's location instead
+            if (OrigLoc == vect(0.0, 0.0, 0.0))
             {
-                // If bullet collides immediately after launch, it has no location (or so it would appear, go figure) - let's check against the firer's location instead
-                if (OrigLoc == vect(0.0, 0.0, 0.0))
-                {
-                    OrigLoc = Instigator.Location;
-                }
-
-                BulletDistance = VSize(Location - OrigLoc) / 60.352; // calculate distance travelled by bullet in metres
-
-                // If it's FF at close range, we won't suppress, so send a different WT through
-                if (BulletDistance < 10.0 && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none && 
-                    DH_Pawn(Other.Base).Controller != none && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
-                {
-                    WhizType = 3;
-                }
-                // Bullets only "snap" after a certain distance in reality, same goes here
-                else if (BulletDistance < 20.0 && WhizType == 1)
-                {
-                    WhizType = 2;
-                }
+                OrigLoc = Instigator.Location;
             }
-//        }
 
-        // Matt: was Instigator.HitPointTrace but makes no difference which actor it's called on & calling on Instigator could lead to "accessed none" errors // TEST added back
+            BulletDistance = VSize(Location - OrigLoc) / 60.352; // calculate distance travelled by bullet in metres
+
+            // If it's FF at close range, we won't suppress, so send a different WT through
+            if (BulletDistance < 10.0 && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none && 
+                DH_Pawn(Other.Base).Controller != none && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
+            {
+                WhizType = 3;
+            }
+            // Bullets only "snap" after a certain distance in reality, same goes here
+            else if (BulletDistance < 20.0 && WhizType == 1)
+            {
+                WhizType = 2;
+            }
+        }
+
         Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , WhizType);
 
         if (!bHasDeflected)
@@ -534,7 +530,6 @@ simulated function Destroyed()
 
 defaultproperties
 {
-    bDebugMode=true;
     WhizType=1
     ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
     WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
