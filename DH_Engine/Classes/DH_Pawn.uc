@@ -2566,6 +2566,30 @@ simulated function HUDCheckMantle()
     }
 }
 
+simulated function bool CanMantleActor(Actor A)
+{
+    local DHObstacle O;
+
+    if (A != none)
+    {
+        if (A.bStatic)
+        {
+            return true;
+        }
+
+        O = DHObstacle(A);
+
+        if (O != none)
+        {
+            Level.Game.Broadcast(self, "CanMantleActor" @ O);
+            //TODO: check if obstacle type can be mantled
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Check whether there's anything in front of the player that can be climbed
 simulated function bool CanMantle(optional bool bActualMantle, optional bool bForceTest)
 {
@@ -2602,7 +2626,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     EndLoc = StartLoc + X * 15.0;
 
     // This is the initial trace to see if there's anything in front of the pawn
-    if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) == none) // * 50.0
+    if (!CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent))) // * 50.0
     {
         return false;
     }
@@ -2619,7 +2643,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     StartLoc.Z = Location.Z + 31.1; // ~89 uu above ground, roughly shoulder height - 0.55 higher than max climb height
     EndLoc = StartLoc + X * 30.0;
 
-    if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
+    if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
     {
         //Spawn(class'DH_DebugTracer', self,, HitLoc, Rotator(HitNorm));
         //ClientMessage("Object is too high to mantle");
@@ -2631,7 +2655,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     EndLoc.Z = Location.Z - 22; // 36 uu above ground, which is just above MAXSTEPHEIGHT // NOTE: testing shows you can actually step higher than MAXSTEPHEIGHT - nevermind, this is staying as-is
 
     // Trace downward to find the top of the object - coming from above to prevent false positives from uneven surfaces
-    if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) == none)
+    if (!CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
     {
         //ClientMessage("Downward trace failed to find the top of the object");
         return false;
@@ -2652,14 +2676,14 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     EndLoc.Z += CollisionHeight * 2.0;
 
     // Trace back up to ensure that there's enough room to stand on the object
-    if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
+    if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent)))
     {
         //ClientMessage("Upward trace was obstructed - we can't stand!");
         EndLoc = StartLoc;
         EndLoc.Z += CrouchHeight * 2.0;
 
         // If we can't stand, see if there's room to crouch on it instead
-        if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
+        if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent)))
         {
             //ClientMessage("Upward trace was obstructed - we can't fit by crouching!");
             return false;
@@ -2693,7 +2717,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
 
         for (i = 0; i < 5; i++)
         {
-            if (Trace(HitLoc, HitNorm, EndLoc, StartLoc, false, Extent) != none)
+            if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
             {
                 break;
             }
