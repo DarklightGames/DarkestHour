@@ -85,7 +85,7 @@ function SelectTeamSuccessfull()
     {
         if (ROPlayer(PlayerOwner()) != none)
         {
-            ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
+            //ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
         }
 
         Controller.OpenMenu("DH_Interface.DHDeployMenu");

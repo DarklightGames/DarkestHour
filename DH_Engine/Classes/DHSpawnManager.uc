@@ -129,7 +129,7 @@ function Reset()
 
 function UpdateSpawnPointReplicationInfo(byte SpawnPointIndex)
 {
-    GRI.SetSpawnPointIsActive(SpawnPointIndex, SpawnPoints[SpawnPointIndex].bIsActive);
+    GRI.SetSpawnPointIsActive(SpawnPointIndex, SpawnPoints[SpawnPointIndex].bIsInitiallyActive);
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)
@@ -412,7 +412,7 @@ function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
         return SpawnError_BadTeamSpawnPoint;
     }
 
-    if (!SP.bIsActive)
+    if (!GRI.IsSpawnPointActive(C.SpawnPointIndex))
     {
         Error("[DHSM] Spawn point" @ C.SpawnPointIndex @ "is inactive");
 
@@ -641,7 +641,7 @@ private function GetSpawnPointIndicesByTag(name SpawnPointTag, out array<byte> S
 
 private function SetSpawnPointIsActive(int SpawnPointIndex, bool bIsActive)
 {
-    SpawnPoints[SpawnPointIndex].bIsActive = bIsActive;
+    //SpawnPoints[SpawnPointIndex].bIsActive = bIsActive;
     GRI.SetSpawnPointIsActive(SpawnPointIndex, bIsActive);
 }
 
@@ -667,7 +667,7 @@ function ToggleSpawnPointIsActiveByTag(name SpawnPointTag)
 
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
-        SetSpawnPointIsActive(SpawnPointIndices[i], !SpawnPoints[SpawnPointIndices[i]].bIsActive);
+        SetSpawnPointIsActive(SpawnPointIndices[i], !GRI.IsSpawnPointActive(i));
     }
 }
 

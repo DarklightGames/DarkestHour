@@ -62,6 +62,7 @@ var localized string                        TeamSwitchErrorRoundHasEnded;
 var localized string                        TeamSwitchErrorGameHasStarted;
 var localized string                        TeamSwitchErrorPlayingAgainstBots;
 var localized string                        TeamSwitchErrorTeamIsFull;
+var localized string                        TeamSwitchErrorNotReady;
 
 var localized string                        ConfigurationButtonText1;
 var localized string                        ConfigurationButtonHint1;
@@ -315,6 +316,7 @@ function ChangeDesiredRole(RORoleInfo newRole)
     NotifyDesiredRoleUpdated();
 }
 
+//Theel: I want to change this so it picks a role with no limit!
 function AutoPickRole()
 {
     local int i, currentRoleCount;
@@ -344,10 +346,10 @@ function AutoPickRole()
                 continue;
             }
 
-            if (role.GetLimit(GRI.MaxPlayers) == 0 || currentRoleCount < role.GetLimit(GRI.MaxPlayers))
+            if (role.GetLimit(GRI.MaxPlayers) == 0) //|| currentRoleCount < role.GetLimit(GRI.MaxPlayers))
             {
                 ChangeDesiredRole(role);
-
+                AttemptRoleApplication();
                 return;
             }
         }
@@ -368,6 +370,23 @@ function NotifyDesiredRoleUpdated()
     //UpdateSelectedWeapon(0);
     //UpdateSelectedWeapon(1);
     //UpdatePlayerInfo();
+}
+
+function ToggleTeam()
+{
+    if (currentTeam == AXIS_TEAM_INDEX)
+    {
+        ChangeDesiredTeam(1);
+    }
+    else if (currentTeam == ALLIES_TEAM_INDEX)
+    {
+        ChangeDesiredTeam(0);
+    }
+    else
+    {
+        ChangeDesiredTeam(-1); // Spectate
+    }
+    GetInitialValues();
 }
 
 function ChangeDesiredTeam(int team)
@@ -641,6 +660,9 @@ function UpdateSelectedWeapon(int weaponCategory)
     //local class<DH_ProjectileWeapon> DHWeaponClass;
     local int i;
     local class<Inventory> item;
+    local DHPlayer player;
+
+    player = DHPlayer(PlayerOwner());
 
     // Clear current weapon & mag display
     i_WeaponImages[weaponCategory].Image = none;
@@ -659,7 +681,14 @@ function UpdateSelectedWeapon(int weaponCategory)
             nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
             // Set the value
-            nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+            if (player.ClientDesiredAmmoAmount != "")
+            {
+                nu_PrimaryAmmoMags.Value = player.ClientDesiredAmmoAmount;
+            }
+            else
+            {
+                nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+            }
 
             // Check the value
             nu_PrimaryAmmoMags.CheckValue();
@@ -924,8 +953,10 @@ function InternalOnChange( GUIComponent Sender )
         case lb_Roles:
             role = RORoleInfo(li_Roles.GetObject());
             if (role != none)
+            {
                 ChangeDesiredRole(role);
                 AttemptRoleApplication();
+            }
             break;
 
         case lb_AvailableWeapons[0]:
@@ -937,12 +968,18 @@ function InternalOnChange( GUIComponent Sender )
             break;
 
         case nu_PrimaryAmmoMags:
-            //Ammo was changed, lets only change what we need to!
-            //Set desired ammo amount in DHPlayer
-            DHPlayer(PlayerOwner()).ServerSetDesiredAmmoAmount(int(nu_PrimaryAmmoMags.Value));
-
             //We need to change the estimated deploy time
             CalculateDeployTime();
+
+            //Theel: DO I really need to have separate values?
+            //Ammo was changed, lets only change what we need to!
+            //Set desired ammo amount in DHPlayer
+            DHPlayer(PlayerOwner()).ServerSetDesiredAmmoAmount(int(nu_PrimaryAmmoMags.Value)); // Server
+            if (int(nu_PrimaryAmmoMags.Value) != 0)
+            {
+                DHPlayer(PlayerOwner()).ClientDesiredAmmoAmount = nu_PrimaryAmmoMags.Value; // Client
+            }
+
             break;
     }
 }
@@ -1052,6 +1089,9 @@ static function string getErrorMessageForId(int id)
             error_msg = default.TeamSwitchErrorTeamIsFull;
             break;
 
+        case 19: // Couldn't switch teams: must wait to be ready to deploy
+            error_msg = default.TeamSwitchErrorNotReady;
+            break;
 
         case 99: // Couldn't change teams: unknown reason
             error_msg = default.ErrorChangingTeamsMessageText;
@@ -1079,7 +1119,7 @@ static function string getErrorMessageForId(int id)
 
 defaultproperties
 {
-    Background=Texture'DH_GUI_Tex.Menu.DHBox'
+    Background=Texture'InterfaceArt_tex.Menu.GreyDark'
     OnKeyEvent=InternalOnKeyEvent
     OnMessage=InternalOnMessage
     bNeverFocus=true //=InternalOnClose
@@ -1105,6 +1145,7 @@ defaultproperties
     TeamSwitchErrorGameHasStarted="Cannot switch teams: server rules disallow team changes after game has started."
     TeamSwitchErrorPlayingAgainstBots="Cannot switch teams: server rules ask for bots on one team and players on the other."
     TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
+    TeamSwitchErrorNotReady="Cannot switch teams: you must be ready to deploy."
 
     ConfigurationButtonText1="Options"
     ConfigurationButtonHint1="Show game and configuration options"

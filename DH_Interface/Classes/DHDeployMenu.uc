@@ -4,7 +4,7 @@
 class DHDeployMenu extends UT2K4GUIPage;
 
 var automated       FloatingImage                   i_background;
-var automated       GUIButton                       b_ChangeTeam,
+var automated       GUIButton                       b_SwitchTeam,
                                                     b_MapVoting,
                                                     b_KickVoting,
                                                     b_Communication,
@@ -13,7 +13,9 @@ var automated       GUIButton                       b_ChangeTeam,
                                                     b_Confirm,
                                                     b_DebugSpawn;
 
-var automated       GUIProgressBar                  p_SpawnProgressBar;
+var automated       GUILabel                        l_DeployTimeStatus;
+
+var automated       GUIProgressBar                  pb_DeployProgressBar;
 var automated       GUITabControl                   c_LoadoutArea;
 var automated       GUITabControl                   c_DeploymentMapArea;
 
@@ -28,6 +30,7 @@ var localized array<string>     LoadoutPanelHint;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
+    local PlayerController pc;
 
     Super.InitComponent(MyController, MyOwner);
 
@@ -42,14 +45,38 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
     }
+
+    // Turn pause off if currently paused (Theel: nasty hack to make this menu not pause)
+    pc = PlayerOwner();
+    if (pc != None && pc.Level.Pauser != None)
+       pc.SetPause(false);
 }
 
 function bool OnClick(GUIComponent Sender)
 {
     switch(Sender)
     {
-        case b_ChangeTeam:
-            Controller.OpenMenu("DH_Interface.DHGUITeamSelection");
+        case b_SwitchTeam:
+            //Theel: should add a check here to make sure player isn't waiting for deploy time (this will stop insane team switching)
+            if (DHPlayer(PlayerOwner()).bReadyToSpawn)
+            {
+                DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ToggleTeam();
+
+                //I don't think this works
+                if (PlayerOwner().Pawn != none)
+                {
+                    CloseMenu();
+                }
+            }
+            else
+            {
+                DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).InternalOnMessage("notify_gui_role_selection_page",19);
+
+                //GUIQuestionPage(Controller.TopPage()).SetupQuestion(RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
+                //Need to tell the player they must wait for deploy timer!
+            }
+
+            //Controller.OpenMenu("DH_Interface.DHGUITeamSelection");
         break;
 
         case b_MapVoting:
@@ -88,6 +115,44 @@ function bool OnClick(GUIComponent Sender)
     }
 }
 
+function bool DrawDeployTimer(Canvas C)
+{
+    local DHPlayer DHP;
+    local float P;
+
+    DHP = DHPlayer(PlayerOwner());
+
+    //Handle progress bar values (so they move/advance based on deploy time)
+    if (DHP.CurrentRedeployTime != 0 && !DHP.bReadyToSpawn)
+    {
+        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.CurrentRedeployTime - DHP.Level.TimeSeconds) / DHP.CurrentRedeployTime;
+        P = pb_DeployProgressBar.High - P;
+        pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
+
+        if (pb_DeployProgressBar.Value == pb_DeployProgressBar.High)
+        {
+            //Progress is done
+            l_DeployTimeStatus.Caption = "Ready To Deploy";
+        }
+        else
+        {
+            //Progress isn't done
+            l_DeployTimeStatus.Caption = "Deploy in:" @ int(DHP.LastKilledTime + DHP.CurrentRedeployTime - DHP.Level.TimeSeconds) @ "Seconds";
+        }
+    }
+    else
+    {
+        pb_DeployProgressBar.Value = pb_DeployProgressBar.High;
+        l_DeployTimeStatus.Caption = "Ready To Deploy";
+        if (DHP.Pawn != none)
+        {
+            l_DeployTimeStatus.Caption = "Deployed"; //If we have a pawn and progress bar has finished, we are deployed
+        }
+    }
+    return false;
+}
+
+
 function CloseMenu()
 {
     if (Controller != none)
@@ -114,7 +179,6 @@ DefaultProperties
     BackgroundColor=(B=0,G=125,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
     OnClose=InternalOnClose
-    //OnOpen=InternalOnOpen
     WinTop=0.0
     WinHeight=1.0
 
@@ -144,33 +208,19 @@ DefaultProperties
         RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
-        //OnActivate=PageTabs.InternalOnActivate
-        //OnChange=DHGamePageMP.InternalOnChange
     End Object
     c_LoadoutArea=GUITabControl'DH_Interface.DHDeployMenu.LoadoutArea'
 
     //DEPLOYMENT MAP AREA
     Begin Object class=GUITabControl name=DeploymentArea
         bFillSpace=false
-        //bScaleToParent=false
-        //bBoundToParent=false
         bDockPanels=true
         TabHeight=0.03
         BackgroundStyleName="DHHeader"
-
         WinWidth=0.642175
-		WinHeight=0.039361
-		WinLeft=0.340298
-		WinTop=0.050421
-
-
-
-        /*
-        WinWidth=0.508460
-        WinHeight=0.957524
-        WinLeft=0.330549
-        WinTop=0.053025
-        */
+        WinHeight=0.039361
+        WinLeft=0.340298
+        WinTop=0.050421
         RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
@@ -188,7 +238,6 @@ DefaultProperties
         TabOrder=0
         bFocusOnWatch=true
         OnClick=DHDeployMenu.OnClick
-        //OnKeyEvent=FixConfigButton.InternalOnKeyEvent
         WinWidth=0.099853
         WinHeight=0.036120
         WinLeft=0.887277
@@ -207,7 +256,6 @@ DefaultProperties
         TabOrder=0
         bFocusOnWatch=true
         OnClick=DHDeployMenu.OnClick
-        //OnKeyEvent=FixConfigButton.InternalOnKeyEvent
         WinWidth=0.150000
         WinHeight=0.045573
         WinLeft=0.744338
@@ -216,9 +264,9 @@ DefaultProperties
     b_DebugSpawn=SpawnButton
 
     //Top Buttons!
-    Begin Object class=GUIButton Name=ChangeTeamButton
+    Begin Object class=GUIButton Name=SwitchTeamButton
         CaptionAlign=TXTA_Center
-        Caption="Change Team"
+        Caption="Switch Team"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
@@ -226,13 +274,12 @@ DefaultProperties
         TabOrder=0
         bFocusOnWatch=true
         OnClick=DHDeployMenu.OnClick
-        //OnKeyEvent=FixConfigButton.InternalOnKeyEvent
         WinWidth=0.142500
         WinHeight=0.045573
         WinLeft=0.004297
         WinTop=0.006250
     End Object
-    b_ChangeTeam=GUIButton'DH_Interface.DHDeployMenu.ChangeTeamButton'
+    b_SwitchTeam=SwitchTeamButton
 
     Begin Object Class=GUIButton Name=DisconnectButton
         WinWidth=0.12
@@ -299,6 +346,41 @@ DefaultProperties
         bAutoShrink=false
     End Object
     b_Communication=CommsButton
+
+    //Deploy time status label
+    Begin Object Class=GUILabel Name=DeployTimeStatus
+        Caption=""
+        RenderWeight=5.85
+        TextAlign=TXTA_Center
+        StyleName="DHLargeText"
+        WinWidth=0.315937
+		WinHeight=0.033589
+		WinLeft=0.137395
+		WinTop=0.010181
+		bNeverFocus=true
+		bAcceptsInput=false
+    End Object
+    l_DeployTimeStatus=DeployTimeStatus
+
+    //Deploy time progress bar
+    Begin Object class=GUIProgressBar Name=DeployTimePB
+        BarColor=(B=255,G=255,R=255,A=255)
+        Value=0.0
+        RenderWeight=1.75
+        bShowValue=false
+        CaptionWidth=0.0
+        ValueRightWidth=0.0
+        BarBack=Texture'InterfaceArt_tex.Menu.GreyDark'
+        BarTop=Texture'InterfaceArt_tex.Menu.GreyLight'
+        OnDraw=DHDeployMenu.DrawDeployTimer
+        WinWidth=0.315937
+		WinHeight=0.033589
+		WinLeft=0.137395
+		WinTop=0.010181
+		bNeverFocus=true
+		bAcceptsInput=false
+    End Object
+    pb_DeployProgressBar=DeployTimePB
 
     //Panel Variables
     LoadoutPanelCaption(0)="Role"

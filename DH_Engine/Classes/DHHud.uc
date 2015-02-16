@@ -18,6 +18,7 @@ var  localized string   LegendCarriedArtilleryRadioText;
 
 var  localized string   NeedReloadText;
 var  localized string   CanReloadText;
+var  localized string   RedeployText[5];
 
 var  globalconfig int   PlayerNameFontSize; // the size of the name you see when you mouseover a player
 var  globalconfig bool  bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -3836,21 +3837,33 @@ simulated function DrawSpectatingHud(Canvas C)
             Time = DHP.LastKilledTime + DHP.CurrentRedeployTime - Level.TimeSeconds;// Level.TimeSeconds;
             if (Time <= 0.0)
             {
-                //Debug
-                //S = "LastKilledTime:"@DHP.LastKilledTime@"CurrentRedeployTime:"@DHP.CurrentRedeployTime;
-
                 DHP.bReadyToSpawn = true;
                 S = "Ready to deploy! Hit escape and select a spawn point";
+
+                //If we are supposed to show deploy menu lets try, but if it fails (menu already open, we shouldn't try again)
                 if (bShouldShowDeployMenu)
                 {
-                    DHP.ClientOpenMenu("DH_Interface.DHDeployMenu");
                     bShouldShowDeployMenu = false;
+
+                    //If we have a desired spawn point set, we won't need to open menu and can send spawn request from here
+                    if (DHP.DesiredSpawnPoint != none && DHP.Pawn == none)
+                    {
+                        //We need to check if it's valid!!! THEEL
+                        DHP.CurrentRedeployTime = DHP.RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
+                        DHP.ServerDeployPlayer(DHP.DesiredSpawnPoint, true);
+                    }
+                    //Open deploy menu if no menu is currently open and player doesn't have a pawn
+                    if (DHP.Pawn == none && GUIController(PlayerOwner.Player.GUIController).ActivePage == none)
+                    {
+                        DHP.ClientReplaceMenu("DH_Interface.DHDeployMenu");
+                    }
                 }
             }
             else
             {
                 bShouldShowDeployMenu = true;
-                S = default.ReinforcementText $ GetTimeString(Time);
+                //"Will deploy as" ROLE "at" SPAWNPOINTNAME "in" @ GetTimeString(Time) @ "Press escape to change";
+                S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(DHP.DesiredSpawnPoint.SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
             }
 
             Y += 4 * Scale + strY;
@@ -4018,5 +4031,12 @@ defaultproperties
     VOICE_ICON_DIST_MAX = 2624.672119
     TeamMessagePrefix="*TEAM* "
 
+//"Will deploy as" ROLE "at" SPAWNPOINTNAME "in" @ GetTimeString(Time) @ "Press escape to change";
+    RedeployText(0)="Will deploy as"
+    RedeployText(1)="at"
+    RedeployText(2)="in"
+    RedeployText(3)="| Press escape to change |"
+    RedeployText(4)="Ready to deploy! Hit escape and select a spawn point" //Theel: escape is variable
+    //RedeployText(5)=""
     ReinforcementText="Redeploy in: "
 }

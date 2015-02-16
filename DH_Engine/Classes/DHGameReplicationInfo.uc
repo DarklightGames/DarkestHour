@@ -130,7 +130,7 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 simulated function DHSpawnPoint GetSpawnPointTest(int TeamInt)
 {
     local DHSpawnPoint SP;
-
+/*
     //Lets just do a nasty/debug check and get the Allies active spawn point
     foreach AllActors(class'DHSpawnPoint', SP)
     {
@@ -139,7 +139,7 @@ simulated function DHSpawnPoint GetSpawnPointTest(int TeamInt)
             return SP;
         }
     }
-
+*/
     return none;
 }
 
@@ -208,13 +208,14 @@ function DHSpawnPoint GetSpawnPoint(byte Index)
     return SpawnPoints[Index];
 }
 
+//Theel: This function doesn't work with IsActives, and will need to work for deployment menu
 simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
 {
     local int i;
 
     for (i = 0; i < arraycount(SpawnPoints); ++i)
     {
-        if (SpawnPoints[i] != none && SpawnPoints[i].TeamIndex == TeamIndex /*&& SpawnPointIsActives[i] != 0*/)
+        if (SpawnPoints[i] != none && SpawnPoints[i].TeamIndex == TeamIndex && SpawnPointIsActives[i] != 0)
         {
             SpawnPoints_[SpawnPoints_.Length] = SpawnPoints[i];
         }

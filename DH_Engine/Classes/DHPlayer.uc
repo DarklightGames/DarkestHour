@@ -8,7 +8,8 @@ class DHPlayer extends ROPlayer;
 var int             RedeployTime;           // The time after death before player can deploy
 var int             CurrentRedeployTime;    // The actual redeploytime set for current life
 var float           LastKilledTime;         // The time at which last death occured
-var byte            DesiredAmmoAmount;     // The set ammo percent desired for player
+var byte            DesiredAmmoAmount;      // The set ammo amount desired for player (used by server)
+var string          ClientDesiredAmmoAmount;// The set ammo amount (used by player) Theel: Try doing server only this may not be needed
 var DHSpawnPoint    DesiredSpawnPoint;      // The spawn point the player will spawn at
 
 var vector  FlinchRotMag;
@@ -43,7 +44,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;
+        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;//, DesiredAmmoAmount;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -52,7 +53,8 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerDeployPlayer, ServerSetDesiredAmmoAmount;
+        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerDeployPlayer,
+        ServerSetDesiredAmmoAmount;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -1986,7 +1988,7 @@ function ServerDeployPlayer(optional DHSpawnPoint SP, optional bool bUseAmmoPerc
     local vector oldDir;
     local Controller P;
 
-    Warn("SERVER SIDE DETECTED DEPLOYPLAYER");
+    //Warn("SERVER SIDE DETECTED DEPLOYPLAYER");
 
     //Respawn the player (might want to override this, but we'll see)
     Level.Game.RestartPlayer(self);
@@ -2042,6 +2044,8 @@ function PawnDied(Pawn P)
 
 defaultproperties
 {
+    CurrentRedeployTime=15
+    RedeployTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)
     FlinchRotTime=1.0

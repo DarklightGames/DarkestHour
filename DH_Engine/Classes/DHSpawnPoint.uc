@@ -28,11 +28,11 @@ var() string SpawnPointName;
 var() float SpawnProtectionTime;
 
 var   array<DHLocationHint> LocationHints;
-var   bool bIsActive;
+//var   bool bIsActive;
 
 function PreBeginPlay()
 {
-    bIsActive = bIsInitiallyActive;
+    //bIsActive = bIsInitiallyActive;
 
     super.PreBeginPlay();
 }
@@ -54,7 +54,7 @@ function PostBeginPlay()
 
 function Reset()
 {
-    bIsActive = bIsInitiallyActive;
+    //bIsActive = bIsInitiallyActive;
 
     super.Reset();
 }

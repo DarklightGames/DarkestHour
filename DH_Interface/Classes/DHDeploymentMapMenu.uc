@@ -115,7 +115,7 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 
         b_SpawnPoints[Index].SetPosition(X, Y, 0.05, 0.05, true);
         b_SpawnPoints[Index].Graphic = texture'InterfaceArt_tex.Tank_Hud.RedDot';
-        b_SpawnPoints[Index].Caption = SP.SpawnPointName;
+        b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
 
         SpawnPoints[Index] = SP;
     }
@@ -129,7 +129,7 @@ function PlaceObjectiveOnMap(ROObjective O, int Index)
     {
         GetMapCoords(O.Location, X, Y);
 
-        b_Objectives[Index].SetPosition(X, Y, 0.05, 0.05, true);
+        b_Objectives[Index].SetPosition(X, Y, 0.04, 0.04, true);
         b_Objectives[Index].Graphic = ObjectiveIcons[int(GRI.Objectives[Index].ObjState)];
         b_Objectives[Index].Caption = O.ObjectiveName;
 
@@ -143,14 +143,6 @@ function bool DrawMapComponents(Canvas C)
     local array<DHSpawnPoint> ActiveSpawnPoints;
     local float H, W, L;
 
-    //Get/Draw Spawn Points for Current Team
-    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
-
-    for(i = 0; i < ActiveSpawnPoints.Length; ++i)
-    {
-        PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
-    }
-
     //Draw objectives
     for (i = 0; i < arraycount(GRI.Objectives); i++)
     {
@@ -160,6 +152,14 @@ function bool DrawMapComponents(Canvas C)
         }
 
         PlaceObjectiveOnMap(GRI.Objectives[i], i);
+    }
+
+    //Get/Draw Spawn Points for Current Team
+    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
+
+    for(i = 0; i < ActiveSpawnPoints.Length; ++i)
+    {
+        PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
     }
 
     return false;
@@ -203,8 +203,8 @@ function bool SpawnClick(int Index)
 
     //TODO: Need a check here to make sure player has role & stuff selected!
 
-    //Set the deisred spawn point
-    //DesiredSpawnPoint = SpawnPoints[Index];
+    //Set the desired spawn point
+    PC.DesiredSpawnPoint = SpawnPoints[Index];
 
     //Player already has a pawn, so lets close entire deploymenu
     if (PC.Pawn != none)
@@ -314,9 +314,9 @@ defaultproperties
         Graphic=texture'InterfaceArt_tex.Tank_Hud.RedDot'
         Position=ICP_Justified
         bClientBound=true
-        StyleName="DHGripButtonNB"
-        WinWidth=0.1
-        WinHeight=0.1
+        StyleName="RoundButton"
+        WinWidth=0.0
+        WinHeight=0.0
         bTabStop=true
         OnClick=DHDeploymentMapMenu.InternalOnClick
     End Object
@@ -342,8 +342,8 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.1
-        WinHeight=0.1
+        WinWidth=0.0
+        WinHeight=0.0
         bTabStop=true
     End Object
     b_Objectives(0)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
