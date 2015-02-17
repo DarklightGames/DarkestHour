@@ -127,6 +127,27 @@ simulated function Tick(float DeltaTime)
     }
 }
 
+// Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
+// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+simulated function InitialiseCannon(DH_ROTankCannonPawn CannonPwn)
+{
+    if (CannonPwn != none)
+    {
+        // On client, cannon pawn is destroyed if becomes net irrelevant - when it respawns, these values need to be set again or will cause lots of errors
+        if (Role < ROLE_Authority)
+        {
+            SetOwner(CannonPwn);
+            Instigator = CannonPwn;
+        }
+
+        // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server 
+        if (ROTreadCraft(CannonPwn.VehicleBase) != none)
+        {
+            ROTreadCraft(CannonPwn.VehicleBase).CannonTurret = self;
+        }
+    }
+}
+
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
 simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)

@@ -61,6 +61,89 @@ static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, in
     }
 }
 
+// Matt: modified to call InitialiseMG when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
+// 1. Do things that need one or both of those actor refs, controlling common problem of unpredictability of timing of receiving replicated actor references
+// 2. To do any extra set up in the MG classes, which can easily be subclassed for anything that is vehicle specific
+simulated function PostNetReceive()
+{
+    local int i;
+    
+    // Gunner has changed position
+    if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
+    {
+        if (Driver == none && DriverPositionIndex > 0 && !IsLocallyControlled() && Level.NetMode == NM_Client)
+        {
+            // do nothing
+        }
+        else
+        {
+            LastPositionIndex = SavedPositionIndex;
+            SavedPositionIndex = DriverPositionIndex;
+            NextViewPoint();
+        }
+    }
+
+    // Initialise the MG // Matt: added VehicleBase != none, so we guarantee that VB is available to InitialiseMG
+    if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
+    {
+        bInitializedVehicleGun = true;
+        InitialiseMG();
+    }
+
+    // Initialise the vehicle base
+    if (!bInitializedVehicleBase && VehicleBase != none)
+    {
+        bInitializedVehicleBase = true;
+
+        // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
+        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray && 
+            (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
+        {
+            VehicleBase.WeaponPawns[PositionInArray] = self;
+
+            return;
+        }
+
+        for (i = 0; i < VehicleBase.WeaponPawns.Length; i++)
+        {
+            if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
+            {
+                return;
+            }
+        }
+
+        VehicleBase.WeaponPawns[PositionInArray] = self;
+    }
+
+    // Matt: if this is a single position MG & we've initialised the vehicle weapon & vehicle base, we can now switch off PostNetReceive
+    if (!bMultiPosition && bInitializedVehicleGun && bInitializedVehicleBase)
+    {
+        bNetNotify = false;
+    }
+}
+
+// Matt: modified to call InitialiseMG to do any extra set up in the MG classes
+// This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
+function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
+{
+    super.AttachToVehicle(VehiclePawn, WeaponBone);
+
+    if (Role == ROLE_Authority)
+    {
+        InitialiseMG();
+    }
+}
+
+// Matt: new function to do any extra set up in the MG classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
+// Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
+simulated function InitialiseMG()
+{
+    if (DH_ROMountedTankMG(Gun) != none)
+    {
+        DH_ROMountedTankMG(Gun).InitialiseMG(self);
+    }
+}
+
 // Matt: modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
 function KDriverEnter(Pawn P)
 {

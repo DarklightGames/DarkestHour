@@ -1151,15 +1151,14 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to initialise engine-related properties & VehicleWeapon refs & to spawn any schurzen attachment (decorative only & not on a server)
+// Modified to initialise engine-related properties & to spawn any schurzen attachment (decorative only & not on a server)
 simulated function PostNetBeginPlay()
 {
     super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
 
-    // Initialise engine-related properties & VehicleWeapon refs (for net client we need to let PostNetReceive trigger this, as client won't yet have received VW actors)
+    // Initialise engine-related properties
     if (Role == ROLE_Authority)
     {
-        UpdateTurretReferences();
         SetEngine();
     }
 
@@ -1178,7 +1177,6 @@ simulated function PostNetBeginPlay()
 }
 
 // Matt: modified to handle engine on/off (including manual/powered turret & dust/exhaust emitters)
-// Also to set references to VehicleWeapons as as soon as we have received those actors
 simulated function PostNetReceive()
 {
     // Driver has changed position
@@ -1187,13 +1185,6 @@ simulated function PostNetReceive()
         PreviousPositionIndex = SavedPositionIndex;
         SavedPositionIndex = DriverPositionIndex;
         NextViewPoint();
-    }
-
-    // Set references to VehicleWeapons as as soon as we have received those actors
-    if (CannonTurret == none && WeaponPawns.Length > 0 && WeaponPawns[0] != none && WeaponPawns[0].Gun != none && 
-        (WeaponPawns.Length < 2 || (WeaponPawns[1] != none && WeaponPawns[1].Gun != none)))
-    {
-        UpdateTurretReferences();
     }
 
     // Engine has been switched on or off
