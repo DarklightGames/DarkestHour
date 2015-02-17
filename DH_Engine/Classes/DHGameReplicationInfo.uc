@@ -5,6 +5,9 @@
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
+//Theel: TODO
+// functions need sorted
+
 struct MortarTargetInfo
 {
     var vector      Location;
@@ -194,7 +197,19 @@ function DHSpawnPoint GetSpawnPoint(byte Index)
     return SpawnPoints[Index];
 }
 
-//Theel: This function doesn't work with IsActives, and will need to work for deployment menu
+function byte GetSpawnPointIndex(DHSpawnPoint SP)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] == SP)
+        {
+            return i;
+        }
+    }
+}
+
 simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
 {
     local int i;
@@ -206,6 +221,31 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
             SpawnPoints_[SpawnPoints_.Length] = SpawnPoints[i];
         }
     }
+}
+
+simulated function bool ValidateSpawnPoint(DHSpawnPoint SP, byte TeamIndex)
+{
+    local int i, index;
+    local array<DHSpawnPoint> ActiveSpawnPoints;
+
+    //Is spawn point active
+    index = GetSpawnPointIndex(SP);
+    if (!IsSpawnPointActive(index))
+    {
+        return false; //Not active
+    }
+
+    //Is spawn point for the correct team (needs to be last in check)
+    GetActiveSpawnPointsForTeam(ActiveSpawnPoints, TeamIndex);
+    for(i = 0; i < ActiveSpawnPoints.Length; ++i)
+    {
+        if (ActiveSpawnPoints[i] == SP)
+        {
+            return true; //Is for team
+        }
+    }
+
+    return false; //Not for team
 }
 
 defaultproperties

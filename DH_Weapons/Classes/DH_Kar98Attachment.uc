@@ -145,6 +145,7 @@ defaultproperties
     WA_WorkBolt="bolt_kar98"
     WA_BayonetWorkBolt="bolt_kar98_bayo"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.kar98'
+    MenuMagizineImage=texture'InterfaceArt_tex.HUD.kar98_ammo'
     MenuDescription="Bolt-action rifle made by the millions. Standard German rifle throughout the war, loved for its reliability and accuracy. 5-round mag/clip and bayonet attachment."
     bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.kar98'
