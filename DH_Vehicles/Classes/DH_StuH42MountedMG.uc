@@ -223,7 +223,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return false;
 }
 
-// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot // TEST
+// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
 state ProjectileFireMode
 {
 	function Fire(Controller C)
@@ -240,7 +240,7 @@ state ProjectileFireMode
     }
 }
 
-// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode) // TEST
+// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
 	super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
