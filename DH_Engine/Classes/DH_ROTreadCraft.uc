@@ -2939,6 +2939,7 @@ function ServerChangeDriverPosition(byte F)
 }
 
 // Modified to optimise & to avoid accessed none errors
+// Also, for HullMG it looks for any VehicleWeapon that is flagged bIsMountedTankMG, instead of specifically a ROMountedTankMG, so more generic
 simulated function UpdateTurretReferences()
 {
     local int i;
@@ -2951,7 +2952,7 @@ simulated function UpdateTurretReferences()
             {
                 CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
             }
-            else if (HullMG == none && WeaponPawns[i].Gun.IsA('ROMountedTankMG'))
+            else if (HullMG == none && ROVehicleWeapon(WeaponPawns[i].Gun) != none && ROVehicleWeapon(WeaponPawns[i].Gun).bIsMountedTankMG)
             {
                 HullMG = WeaponPawns[i].Gun;
             }

@@ -161,35 +161,6 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-simulated function UpdateTurretReferences()
-{
-    local int i;
-
-    if (CannonTurret == none)
-    {
-        for (i = 0; i < WeaponPawns.length; i++)
-        {
-            if (WeaponPawns[i].Gun.IsA('ROTankCannon'))
-            {
-                CannonTurret = ROTankCannon(WeaponPawns[i].Gun);
-                break;
-            }
-        }
-    }
-
-    if (HullMG == none)
-    {
-        for (i = 0; i < WeaponPawns.length; i++)
-        {
-            if (WeaponPawns[i].Gun.IsA('DH_Stug3GMountedMG'))
-            {
-                HullMG = WeaponPawns[i].Gun;
-                break;
-            }
-        }
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
