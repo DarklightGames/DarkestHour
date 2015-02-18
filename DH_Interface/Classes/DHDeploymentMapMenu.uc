@@ -96,11 +96,35 @@ function GetMapCoords(vector Location, out float X, out float Y)
     local float Distance;
 
     TDistance = Abs(GRI.SouthWestBounds.X) + Abs(GRI.NorthEastBounds.X);
-    Distance = Abs(GRI.NorthEastBounds.X - Location.X);
+    if (Location.X >= 0.0)
+    {
+        Distance = Abs(GRI.SouthWestBounds.X) + Location.X;
+    }
+    else
+    {
+        Distance = Abs(GRI.SouthWestBounds.X) - Abs(Location.X);
+    }
+
+    if (Distance > TDistance)
+    {
+        Distance = TDistance;
+    }
     X = Distance / TDistance;
 
     TDistance = Abs(GRI.SouthWestBounds.Y) + Abs(GRI.NorthEastBounds.Y);
-    Distance = Abs(GRI.SouthWestBounds.Y - Location.Y);
+    if (Location.Y >= 0.0)
+    {
+        Distance = Abs(GRI.SouthWestBounds.Y) + Location.Y;
+    }
+    else
+    {
+        Distance = Abs(GRI.SouthWestBounds.Y) - Abs(Location.Y);
+    }
+
+    if (Distance > TDistance)
+    {
+        Distance = TDistance;
+    }
     //Because the map is managed by a container, lets form to the container's winheight
     Y = Distance / TDistance * MapContainer.WinHeight;
 }
@@ -115,13 +139,13 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 
         if (SP == DHPlayer(PlayerOwner()).DesiredSpawnPoint)
         {
-            b_SpawnPoints[Index].SetPosition(X, Y, 0.08, 0.08, true);
+            b_SpawnPoints[Index].SetPosition(X, Y, 0.06, 0.03, true);
         }
         else
         {
-            b_SpawnPoints[Index].SetPosition(X, Y, 0.04, 0.04, true);
+            b_SpawnPoints[Index].SetPosition(X, Y, 0.06, 0.03, true);
         }
-        b_SpawnPoints[Index].Graphic = texture'InterfaceArt_tex.Tank_Hud.RedDot';
+        b_SpawnPoints[Index].Graphic = material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator';
         b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
 
         SpawnPoints[Index] = SP;
@@ -318,10 +342,10 @@ defaultproperties
     MapContainer=MapContainer_co
 
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
-        Graphic=texture'InterfaceArt_tex.Tank_Hud.RedDot'
-        Position=ICP_Scaled //Justified
+        Graphic=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+        Position=ICP_Normal
         bClientBound=true
-        StyleName="RoundButton"
+        StyleName="DHSmallTextButtonStyle"
         WinWidth=0.0
         WinHeight=0.0
         bTabStop=true

@@ -4,12 +4,10 @@
 class DHRoleSelectPanel extends MidGamePanel
     config;
 
-// DELETE THIS:: well should I?
-/*
-#exec OBJ LOAD FILE=..\Animations\Characters_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\Characters_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\WeaponPickupSM.usx
-*/
+//TODO
+//Remove unused functions & variables
+//Clean up functions/logic/design
+//Fix double select bug
 
 // Constants
 const NUM_ROLES = 10;
@@ -27,8 +25,7 @@ var automated GUILabel                      l_RolesTitle,
                                             l_SecondaryWeaponTitle,
                                             l_EquipTitle,
                                             l_EstimatedRedeployTime,
-                                            l_AmmoSlider;
-
+                                            l_StatusLabel;
 
 var automated BackgroundImage               bg_Background;
 var automated GUIImage                      i_WeaponImages[2];
@@ -36,7 +33,6 @@ var automated GUIImage                      i_MagImages[2];
 var automated GUIListBox                    lb_Roles;
 var automated GUIListBox                    lb_AvailableWeapons[2];
 var automated GUIGFXButton                  b_Equipment[4];
-//var automated GUISlider                     s_AmmoSlider;
 var automated DHGUINumericEdit              nu_PrimaryAmmoMags;
 
 var ROGUIListPlus                           li_Roles;
@@ -69,12 +65,12 @@ var localized string                        ConfigurationButtonHint1;
 var localized string                        ConfigurationButtonText2;
 var localized string                        ConfigurationButtonHint2;
 
-var ROGameReplicationInfo       GRI;
-var RORoleInfo                  currentRole, desiredRole;
-var int                         currentTeam, desiredTeam;
-var string                      currentName, desiredName;
-var int                         currentWeapons[2], desiredWeapons[2];
-var float                       SavedMainContainerPos, SavedConfigButtonsContainerPos, RoleSelectFooterButtonsWinTop, OptionsFooterButtonsWinTop;
+var ROGameReplicationInfo                   GRI;
+var RORoleInfo                              currentRole, desiredRole;
+var int                                     currentTeam, desiredTeam;
+var string                                  currentName, desiredName;
+var int                                     currentWeapons[2], desiredWeapons[2];
+var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -84,31 +80,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     GRI = ROGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
-    // Main containers
-    /*
-    MainContainer.ManageComponent(UnitsContainer);
-    MainContainer.ManageComponent(l_RolesTitle);
-    MainContainer.ManageComponent(RolesContainer);
-    MainContainer.ManageComponent(PlayerContainer);
-    MainContainer.ManageComponent(l_RoleDescTitle);
-
-
-    MainContainer.ManageComponent(l_PrimaryWeaponTitle);
-    MainContainer.ManageComponent(PrimaryWeaponContainer);
-    MainContainer.ManageComponent(l_SecondaryWeaponTitle);
-    MainContainer.ManageComponent(SecondaryWeaponContainer);
-    MainContainer.ManageComponent(l_EquipTitle);
-    */
-    //MainContainer.ManageComponent(EquipContainer);
-
-    // Current units container
-
     // Roles container
-    //RolesContainer.ManageComponent(lb_Roles);
     li_Roles = ROGUIListPlus(lb_Roles.List);
-
-    // Ammo slider container
-    //AmmoSliderContainer
 
     // Primary weapon container
     PrimaryWeaponContainer.ManageComponent(i_WeaponImages[0]);
@@ -367,9 +340,16 @@ function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
     CalculateDeployTime();
-    //UpdateSelectedWeapon(0);
-    //UpdateSelectedWeapon(1);
-    //UpdatePlayerInfo();
+
+    // Inform panel that we want to change role on next life
+    if (currentRole == desiredRole)
+    {
+        SetStatusString("You are currently a" @ currentRole.MyName);
+    }
+    else if (currentRole != desiredRole)
+    {
+        SetStatusString("You will attempt to change role to" @ desiredRole.MyName);
+    }
 }
 
 function ToggleTeam()
@@ -725,6 +705,14 @@ function UpdateSelectedWeapon(int weaponCategory)
 function Timer()
 {
     UpdateRoleCounts();
+    if (RoleSelectReclickTime < default.RoleSelectReclickTime)
+    {
+        RoleSelectReclickTime += 0.1; //Theel this shouldn't be a floating number it is reused
+    }
+    else
+    {
+        RoleSelectReclickTime = default.RoleSelectReclickTime;
+    }
 }
 
 function int getTeamCount(int index)
@@ -904,7 +892,6 @@ function AttemptRoleApplication()
             GUIQuestionPage(Controller.TopPage()).SetupQuestion(RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
             return;
         }
-
         roleIndex = FindRoleIndexInGRI(RORoleInfo(li_Roles.GetObject()), desiredTeam);
     }
 
@@ -914,6 +901,21 @@ function AttemptRoleApplication()
 
     // Attempt team, role and weapons change
     player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
+}
+
+function SetStatusString(optional string S)
+{
+    local string StatusStr;
+
+    if(S != "")
+    {
+        StatusStr = S;
+    }
+    else
+    {
+        StatusStr = "";
+    }
+    l_StatusLabel.Caption = StatusStr;
 }
 
 static function CheckNeedForFadeFromBlackEffect(PlayerController controller)
@@ -952,8 +954,9 @@ function InternalOnChange( GUIComponent Sender )
     {
         case lb_Roles:
             role = RORoleInfo(li_Roles.GetObject());
-            if (role != none)
+            if (role != none && RoleSelectReclickTime == default.RoleSelectReclickTime)
             {
+                RoleSelectReclickTime = 0.0;
                 ChangeDesiredRole(role);
                 AttemptRoleApplication();
             }
@@ -1041,7 +1044,6 @@ static function string getErrorMessageForId(int id)
     switch (id)
     {
         // TEAM CHANGE ERROR
-
         case 01: // Couldn't switch to spectator: no player replication info
             error_msg = default.UnknownErrorMessageText $ default.UnknownErrorSpectatorMissingReplicationInfo;
             break;
@@ -1054,7 +1056,6 @@ static function string getErrorMessageForId(int id)
         case 04: // Couldn't switch to spectator: round has ended
             error_msg = default.SpectatorErrorRoundHasEnded;
             break;
-
 
         case 10: // Couldn't switch teams: no player replication info
             error_msg = default.UnknownErrorMessageText $ default.UnknownErrorTeamMissingReplicationInfo;
@@ -1096,19 +1097,14 @@ static function string getErrorMessageForId(int id)
         case 99: // Couldn't change teams: unknown reason
             error_msg = default.ErrorChangingTeamsMessageText;
             break;
-
-
         // ROLE CHANGE ERROR
-
         case 100: // Couldn't change roles (role is full)
             error_msg = default.RoleIsFullMessageText;
             break;
 
-
         case 199: // Couldn't change roles (unknown error)
             error_msg = default.UnknownErrorMessageText;
             break;
-
 
         default:
             error_msg = default.UnknownErrorMessageText $ " (id = " $ id $ ")";
@@ -1122,9 +1118,8 @@ defaultproperties
     Background=Texture'InterfaceArt_tex.Menu.GreyDark'
     OnKeyEvent=InternalOnKeyEvent
     OnMessage=InternalOnMessage
-    bNeverFocus=true //=InternalOnClose
-    //bAllowedAsLast=True
-
+    bNeverFocus=true
+    RoleSelectReclickTime=1
     NoSelectedRoleText="Select a role from the role list."
     RoleHasBotsText=" (has bots)"
     RoleFullText="Full"
@@ -1153,7 +1148,6 @@ defaultproperties
     ConfigurationButtonHint2="Show the role selection controls"
 
     RoleSelectFooterButtonsWinTop=0.946667
-    OptionsFooterButtonsWinTop=0.958750
 
     Begin Object Class=BackgroundImage Name=PageBackground
         //Image=texture'DH_GUI_Tex.Menu.DHSectionHeader'
@@ -1188,6 +1182,18 @@ defaultproperties
         WinTop=0.415428
     End Object
     l_EstimatedRedeployTime=EstimatedRedeployTime
+
+    //Recent changes status label
+    Begin Object Class=GUILabel Name=RecentChangesStatus
+        Caption=""
+        TextAlign=TXTA_Left
+        StyleName="DHLargeText"
+       	WinWidth=0.982575
+		WinHeight=0.033589
+		WinLeft=0.010993
+		WinTop=0.359297
+    End Object
+    l_StatusLabel=RecentChangesStatus
 
     Begin Object Class=GUILabel Name=PrimaryWeaponTitle
         Caption="Primary Weapon"
