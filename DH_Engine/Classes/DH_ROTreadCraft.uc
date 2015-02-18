@@ -634,6 +634,11 @@ simulated function StartEmitters()
             }
 
             ExhaustPipes[i].ExhaustEffect.SetBase(self);
+
+            if (!bDriving) // if bDriving, Tick will be enabled & ExhaustEffect will get updated anyway, based on vehicle speed
+            {
+                ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0); // nil update just sets the lowest setting for an idling engine
+            }
         }
     }
 
