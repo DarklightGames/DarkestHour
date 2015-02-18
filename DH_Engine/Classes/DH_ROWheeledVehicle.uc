@@ -129,18 +129,16 @@ simulated function PostBeginPlay()
         // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
         // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
         WeaponPawns.Length = PassengerWeapons.Length;
-
-        // Guarantees that clients' saved value will be opposite of real value, meaning PostNetReceive will always call SetEngine() when vehicle spawns
-        bSavedEngineOff = !bEngineOff;
     }
 }
 
-// Modified to initialise engine-related properties (for net client we let PostNetReceive trigger this)
+// Modified to initialise engine-related properties
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
-    if (Role == ROLE_Authority)
+    // Skip if net client's bEOff != def.bSavedEOff, as PostNetReceive will call SetEngine anyway
+    if (Role == ROLE_Authority || bEngineOff == default.bSavedEngineOff)
     {
         SetEngine();
     }
@@ -1096,6 +1094,7 @@ defaultproperties
 {
     ObjectCollisionResistance=1.0
     bEngineOff=true
+    bSavedEngineOff=true
     bDisableThrottle=false
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'

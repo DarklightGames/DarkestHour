@@ -1118,11 +1118,8 @@ simulated function PostBeginPlay()
         // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
         // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
         WeaponPawns.Length = PassengerWeapons.Length;
-
-        // Guarantees that client's saved value will be opposite of real value, meaning PostNetReceive will always call SetEngine() when vehicle spawns
-        bSavedEngineOff = !bEngineOff;
     }
-    
+
     // Clientside treads & sound attachments
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -1156,8 +1153,8 @@ simulated function PostNetBeginPlay()
 {
     super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
 
-    // Initialise engine-related properties
-    if (Role == ROLE_Authority)
+    // Initialise engine-related properties (but skip if net client's bEOff != def.bSavedEOff, as PostNetReceive will call SetEngine anyway)
+    if (Role == ROLE_Authority || bEngineOff == default.bSavedEngineOff)
     {
         SetEngine();
     }
@@ -1188,7 +1185,7 @@ simulated function PostNetReceive()
     }
 
     // Engine has been switched on or off
-    if (bEngineOff != bSavedEngineOff && CannonTurret != none && DH_ROTankCannonPawn(CannonTurret.Owner) != none)
+    if (bEngineOff != bSavedEngineOff)
     {
         bSavedEngineOff = bEngineOff;
         SetEngine();
@@ -1575,7 +1572,7 @@ function StartEngineFire(Pawn InstigatedBy)
     Timer();
 }
 
-// New function to set up the engine properties
+// New function to set up the engine properties, including manual/powered turret
 simulated function SetEngine()
 {
     if (bEngineOff)
@@ -1619,9 +1616,9 @@ simulated function SetEngine()
         }
     }
 
-    if (WeaponPawns.Length > 0 && DH_ROTankCannonPawn(WeaponPawns[0]) != none)
+    if (CannonTurret != none && DH_ROTankCannonPawn(CannonTurret.Owner) != none)
     {
-        DH_ROTankCannonPawn(WeaponPawns[0]).SetManualTurret(bEngineOff);
+        DH_ROTankCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
     }
 }
 
@@ -3274,6 +3271,7 @@ defaultproperties
     SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     bEngineOff=true
+    bSavedEngineOff=true
     bDisableThrottle=false
     DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
     WaitForCrewTime=7.0
