@@ -15,6 +15,7 @@ struct Type
     var()   array<class<Emitter> >  ClearEmitterClasses;
     var()   bool                    bCanBeCut;
     var()   bool                    bCanBeMantled;
+    var()   bool                    bCanBeCrushed;
 };
 
 var()   array<Type>         Types;

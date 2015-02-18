@@ -64,20 +64,6 @@ simulated function PostBeginPlay()
                 }
 
                 Obstacle.TypeIndex = i;
-                Obstacle.IntactStaticMesh = Obstacle.StaticMesh;
-
-                if (Info.Types[i].ClearedStaticMeshes.Length > 0)
-                {
-                    Obstacle.ClearedStaticMesh = Info.Types[i].ClearedStaticMeshes[Obstacle.Index % Info.Types[i].ClearedStaticMeshes.Length];
-                }
-
-                //TODO: these are probably only relevant on the client
-                Obstacle.ClearSound = Info.Types[i].ClearSound;
-
-                if (Info.Types[i].ClearEmitterClasses.Length > 0)
-                {
-                    Obstacle.ClearEmitterClass = Info.Types[i].ClearEmitterClasses[Obstacle.Index % Info.Types[i].ClearEmitterClasses.Length];
-                }
 
                 break;
             }

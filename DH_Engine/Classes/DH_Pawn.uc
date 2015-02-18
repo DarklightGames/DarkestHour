@@ -2579,10 +2579,8 @@ simulated function bool CanMantleActor(Actor A)
 
         O = DHObstacle(A);
 
-        if (O != none)
+        if (O != none && O.CanBeMantled())
         {
-            Level.Game.Broadcast(self, "CanMantleActor" @ O);
-            //TODO: check if obstacle type can be mantled
             return true;
         }
     }

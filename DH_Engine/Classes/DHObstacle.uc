@@ -28,22 +28,14 @@ struct UncompressedPosition
     var float ScaleZ;
 };
 
-var     byte                    TypeIndex;
-var     int                     Index;
-var     UncompressedPosition    UP;
+var()       float                   SpawnClearedChance;
 
-var     DHObstacleInfo          Info;
-//TODO: shouldn't these be able to be inferred from the info?
-var     StaticMesh              IntactStaticMesh;
-var     StaticMesh              ClearedStaticMesh;
-var     sound                   ClearSound;
-var     class<Emitter>          ClearEmitterClass;
-var     bool                    bCanBeCut;
-var     bool                    bCanBeMantled;
+var config  bool                    bDebug;
 
-var()   float                   SpawnClearedChance;
-
-var config bool                 bDebug;
+var byte                            TypeIndex;
+var int                             Index;
+var private UncompressedPosition    UP;
+var private DHObstacleInfo          Info;
 
 replication
 {
@@ -80,29 +72,19 @@ simulated function PostNetBeginPlay()
     local vector L, S;
     local rotator R;
 
+    foreach AllActors(class'DHObstacleInfo', Info)
+    {
+        break;
+    }
+
+    if (Info == none)
+    {
+        Destroy();
+        return;
+    }
+
     if (Role < ROLE_Authority)
     {
-        foreach AllActors(class'DHObstacleInfo', Info)
-        {
-            break;
-        }
-
-        IntactStaticMesh = Info.Types[TypeIndex].IntactStaticMesh;
-
-        if (Info.Types[TypeIndex].ClearedStaticMeshes.Length > 0)
-        {
-            ClearedStaticMesh = Info.Types[TypeIndex].ClearedStaticMeshes[Index % Info.Types[TypeIndex].ClearedStaticMeshes.Length];
-        }
-
-        bCanBeCut = Info.Types[TypeIndex].bCanBeCut;
-        bCanBeMantled = Info.Types[TypeIndex].bCanBeMantled;
-        ClearSound = Info.Types[TypeIndex].ClearSound;
-
-        if (Info.Types[TypeIndex].ClearEmitterClasses.Length > 0)
-        {
-            ClearEmitterClass = Info.Types[TypeIndex].ClearEmitterClasses[Index % Info.Types[TypeIndex].ClearEmitterClasses.Length];
-        }
-
         Info.Obstacles[Index] = self;
 
         foreach AllActors(class'DHObstacleManager', OM)
@@ -139,12 +121,7 @@ simulated state Intact
 {
     simulated function BeginState()
     {
-        if (bDebug)
-        {
-            Log(Index @ IntactStaticMesh);
-        }
-
-        SetStaticMesh(IntactStaticMesh);
+        SetStaticMesh(GetIntactStaticMesh());
         KSetBlockKarma(false);
 
         super.BeginState();
@@ -159,17 +136,18 @@ simulated state Intact
     {
         local DarkestHourGame G;
 
-        if (Role == ROLE_Authority)
+        if (!CanBeCrushed())
         {
-            if (SVehicle(Other) != none)
-            {
-                G = DarkestHourGame(Level.Game);
+            return;
+        }
 
-                if (G != none && G.ObstacleManager != none)
-                {
-                    //TODO: destruction requires a certain speed?
-                    G.ObstacleManager.SetCleared(self, true);
-                }
+        if (Role == ROLE_Authority && SVehicle(Other) != none)
+        {
+            G = DarkestHourGame(Level.Game);
+
+            if (G != none && G.ObstacleManager != none)
+            {
+                G.ObstacleManager.SetCleared(self, true);
             }
         }
 
@@ -184,18 +162,18 @@ simulated state Cleared
         if (Level.NetMode != NM_DedicatedServer)
         {
             //TODO: this is super quiet for some reason
-            if (ClearSound != none)
+            if (GetClearSound() != none)
             {
-                PlayOwnedSound(ClearSound, SLOT_None);
+                PlayOwnedSound(GetClearSound(), SLOT_None);
             }
 
-            if (ClearEmitterClass != none)
+            if (GetClearEmitterClass() != none)
             {
-                Spawn(ClearEmitterClass, none, '', Location, Rotation);
+                Spawn(GetClearEmitterClass(), none, '', Location, Rotation);
             }
         }
 
-        SetStaticMesh(ClearedStaticMesh);
+        SetStaticMesh(GetClearedStaticMesh());
         KSetBlockKarma(false);
 
         super.BeginState();
@@ -219,6 +197,51 @@ simulated function SetCleared(bool bIsCleared)
     }
 }
 
+simulated function StaticMesh GetIntactStaticMesh()
+{
+    return Info.Types[TypeIndex].IntactStaticMesh;
+}
+
+simulated function StaticMesh GetClearedStaticMesh()
+{
+    if (Info.Types[TypeIndex].ClearedStaticMeshes.Length > 0)
+    {
+        return Info.Types[TypeIndex].ClearedStaticMeshes[Index % Info.Types[TypeIndex].ClearedStaticMeshes.Length];
+    }
+
+    return none;
+}
+
+simulated function bool CanBeCut()
+{
+    return Info.Types[TypeIndex].bCanBeCut;
+}
+
+simulated function bool CanBeMantled()
+{
+    return Info.Types[TypeIndex].bCanBeMantled;
+}
+
+simulated function bool CanBeCrushed()
+{
+    return Info.Types[TypeIndex].bCanBeCrushed;
+}
+
+simulated function sound GetClearSound()
+{
+    return Info.Types[TypeIndex].ClearSound;
+}
+
+simulated function class<Emitter> GetClearEmitterClass()
+{
+    if (Info.Types[TypeIndex].ClearEmitterClasses.Length > 0)
+    {
+        return Info.Types[TypeIndex].ClearEmitterClasses[Index % Info.Types[TypeIndex].ClearEmitterClasses.Length];
+    }
+
+    return none;
+}
+
 defaultproperties
 {
     bBlockPlayers=true
@@ -240,7 +263,6 @@ defaultproperties
     RemoteRole=ROLE_None
     bCompressedPosition=false
     SpawnClearedChance=0.0
-    bCanBeCut=true
     TypeIndex=255
     bDebug=false
 }
