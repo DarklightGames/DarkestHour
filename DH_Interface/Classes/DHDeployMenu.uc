@@ -1,15 +1,16 @@
-//-----------------------------------------------------------
-//
-//-----------------------------------------------------------
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 class DHDeployMenu extends UT2K4GUIPage;
 
-var automated       FloatingImage                   i_background;
+var automated FloatingImage     i_background;
 
-var automated       DHGUIComboBox                   co_MenuComboBox;
-var localized string                                MenuOptions[10];
+var automated DHGUIComboBox     co_MenuComboBox;
+var localized string            MenuOptions[10];
 
-var automated       GUITabControl                   c_LoadoutArea;
-var automated       GUITabControl                   c_DeploymentMapArea;
+var automated GUITabControl     c_LoadoutArea;
+var automated GUITabControl     c_DeploymentMapArea;
 
 var array<string>               DeploymentPanelClass;
 var localized array<string>     DeploymentPanelCaption;
@@ -18,7 +19,6 @@ var localized array<string>     DeploymentPanelHint;
 var array<string>               LoadoutPanelClass;
 var localized array<string>     LoadoutPanelCaption;
 var localized array<string>     LoadoutPanelHint;
-
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -32,7 +32,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         co_MenuComboBox.AddItem(MenuOptions[i]);
     }
-    //Center text on menu options
 
     //Initialize loadout panels
     for(i=0;i<LoadoutPanelClass.Length;++i)
@@ -51,20 +50,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Turn pause off if currently paused (Theel: nasty hack to make this menu not pause)
     pc = PlayerOwner();
     if (pc != None && pc.Level.Pauser != None)
-       pc.SetPause(false);
-}
-
-event Timer()
-{
-    super.Timer();
-
-    //Should we close?
-    /*
-    if (bTimeToClose)
     {
-        AttemptCloseMenu(); //If we are waiting for deploy timer then lets close menu
+        pc.SetPause(false);
     }
-    */
 }
 
 function InternalOnChange(GUIComponent Sender)
@@ -75,7 +63,6 @@ function InternalOnChange(GUIComponent Sender)
         {
             // Switch Team
             case 1:
-                // Forces player to be ready to deploy to switch teams!
                 if (DHPlayer(PlayerOwner()).bReadyToSpawn)
                 {
                     DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ToggleTeam();
@@ -135,7 +122,7 @@ function InternalOnChange(GUIComponent Sender)
                 break;
         }
 
-        co_MenuComboBox.SetIndex(0);
+        co_MenuComboBox.SetIndex(0); // Forces menu to always show "Menu"
     }
 }
 

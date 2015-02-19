@@ -1,14 +1,11 @@
-//-----------------------------------------------------------
-// DHDeploymentMapMenu
-//-----------------------------------------------------------
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2014
+//==============================================================================
 //Theel: ToDo: This class still has a ton of work
 //- Remove uneeded shit
 //- Fix draw map problems
 //- Clean up code
-//This will require a black room, but the player will never see or experience it and it is strictly
-//to reduce the required number of player starts and allow pawns to start "inside" eachother
-//Allowing for smaller cover to protect spawns!!!
-
 class DHDeploymentMapMenu extends MidGamePanel;
 
 const OBJECTIVES_MAX = 16;
@@ -17,20 +14,14 @@ const SPAWN_POINTS_MAX = 16;
 var automated ROGUIProportionalContainer    MapContainer;
 
 var()   float                               DeploymentMapCenterX, DeploymentMapCenterY, DeploymentMapRadius;
-
+var     bool                                bReadyToDeploy;
 var     automated GUIImage                  i_Background;
-
 var     automated DHGUIButton               b_DeployButton;
-
 var     automated GUIProgressBar            pb_DeployProgressBar;
-
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],b_Objectives[OBJECTIVES_MAX];
 var     DHSpawnPoint                        SpawnPoints[SPAWN_POINTS_MAX];
-var     ROObjective                         Objectives[OBJECTIVES_MAX]; //Not sure if I need these
-
-var     Material                            ObjectiveIcons[3]; //Objective flash modes
-
-var     bool                                bReadyToDeploy;
+var     ROObjective                         Objectives[OBJECTIVES_MAX];
+var     Material                            ObjectiveIcons[3];
 
 // Actor references - these must be cleared at level change
 var     DHGameReplicationInfo               GRI;
@@ -59,11 +50,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         b_Objectives[i].Graphic = none;
     }
-}
-
-event Opened(GUIComponent Sender)
-{
-    super.Opened(Sender);
 }
 
 //Not sure what this does yet.
