@@ -2059,13 +2059,14 @@ function PawnDied(Pawn P)
 function HandleDeployReady()
 {
     local bool bDeployed;
-
-    // Don't try to auto deploy lots of times or if we aren't ready
-    if (!bShouldAttemptAutoDeploy || !bReadyToSpawn)
+    //bShould should prob be checked in hud, instead of constantly call this function
+    // Don't try to auto deploy lots of times, if we aren't ready, or have a menu open
+    if (!bShouldAttemptAutoDeploy || !bReadyToSpawn || GUIController(Player.GUIController).ActivePage != none)
     {
+        bShouldAttemptAutoDeploy = false;
         return;
     }
-    bShouldAttemptAutoDeploy = false;
+    bShouldAttemptAutoDeploy = false; //Theel: Do we need this?
 
     //If we have a desired spawn point set, we won't need to open menu and can send spawn request from here
     if (DesiredSpawnPoint != none && Pawn == none)

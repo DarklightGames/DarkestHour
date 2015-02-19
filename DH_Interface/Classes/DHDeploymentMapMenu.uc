@@ -20,11 +20,17 @@ var()   float                               DeploymentMapCenterX, DeploymentMapC
 
 var     automated GUIImage                  i_Background;
 
+var     automated DHGUIButton               b_DeployButton;
+
+var     automated GUIProgressBar            pb_DeployProgressBar;
+
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],b_Objectives[OBJECTIVES_MAX];
 var     DHSpawnPoint                        SpawnPoints[SPAWN_POINTS_MAX];
 var     ROObjective                         Objectives[OBJECTIVES_MAX]; //Not sure if I need these
 
 var     Material                            ObjectiveIcons[3]; //Objective flash modes
+
+var     bool                                bReadyToDeploy;
 
 // Actor references - these must be cleared at level change
 var     DHGameReplicationInfo               GRI;
@@ -80,12 +86,21 @@ function bool InternalOnPreDraw( Canvas C )
 
 function bool PreDrawMap(Canvas C)
 {
-    local float L;
+    local float L, ML, BL;
 
     //MapContainer.WinHeight = 0.95; //Theel: do I need this?
     L = MapContainer.ActualHeight();
-    MenuOwner.SetPosition(MenuOwner.WinLeft, MenuOwner.WinTop, L, MenuOwner.WinHeight, true);
-    MapContainer.SetPosition(MapContainer.WinLeft, MapContainer.WinTop, MapContainer.WinWidth, L, true);
+    MenuOwner.SetPosition(MenuOwner.WinLeft, MenuOwner.WinTop, L, MenuOwner.WinHeight, true); //Tab docking panel
+    MapContainer.SetPosition(MapContainer.WinLeft, MapContainer.WinTop, MapContainer.WinWidth, L, true); //Container map is in!
+
+    //We should move the deploy button + progress bar to match/fit bottom of map
+    //Need to calculate how far down to place
+    //ML = L + MenuOwner.WinTop; //need one more + the height of tab dock
+    //BL = 1.0 - L
+    BL = 1.0 - MapContainer.WinHeight;
+
+    pb_DeployProgressBar.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, BL, true);
+    b_DeployButton.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, BL, true);
 
     return false;
 }
@@ -232,26 +247,29 @@ function bool SpawnClick(int Index)
 
     PC = DHPlayer(PlayerOwner());
 
-    //TODO: Need a check here to make sure player has role & stuff selected!
-
-    //Set the desired spawn point
-    PC.DesiredSpawnPoint = SpawnPoints[Index];
-
-    //Player already has a pawn, so lets close entire deploymenu
-    if (PC.Pawn != none)
+    //Check if we clicked the desired spawn point
+    if (SpawnPoints[Index] == PC.DesiredSpawnPoint)
     {
-        Controller.CloseMenu(false);
+        //We clicked desired spawn point! lets try to spawn
+        //Only deploy if we clicked the selected SP and are ready
+        if (PC.bReadyToSpawn && PC.Pawn == none)
+        {
+            PC.CurrentRedeployTime = PC.RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
+            PC.ServerDeployPlayer(SpawnPoints[Index], true);
+            Controller.CloseMenu(false); //DeployPlayer needs to return true/false if succesful and this needs to be in an if statement
+        }
     }
-
-    //Player isn't ready to respawn, as the redeploy timer hasn't reached 0?
-
-    //Spawn the player, teleport to spawn point, and send ammo % so it can be known to game
-    PC.CurrentRedeployTime = PC.RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
-
-    if (PC.bReadyToSpawn && PC.Pawn == none)
+    else
     {
-        PC.ServerDeployPlayer(SpawnPoints[Index], true);
-        Controller.CloseMenu(false); //DeployPlayer needs to return true/false if succesful and this needs to be in an if statement
+        //Set the desired spawn point
+        PC.DesiredSpawnPoint = SpawnPoints[Index];
+
+        //Should we close as below????
+        //Player already has a pawn, so lets close deploymenu
+        if (PC.Pawn != none)
+        {
+            Controller.CloseMenu(false);
+        }
     }
 }
 
@@ -260,25 +278,87 @@ function bool InternalOnClick(GUIComponent Sender)
     local GUIButton Selected;
     local int i;
 
-    if (GUIButton(Sender) != none)
+    switch(Sender)
     {
-        Selected = GUIButton(Sender);
-    }
-
-    if (Selected == none)
-    {
-        return false;
-    }
-
-    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
-    {
-        if (Selected == b_SpawnPoints[i])
-        {
-            SpawnClick(i);
+        case b_DeployButton:
+            //Send request to server to spawn as we think we can
+            if (bReadyToDeploy)
+            {
+                DHPlayer(PlayerOwner()).CurrentRedeployTime = DHPlayer(PlayerOwner()).RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
+                DHPlayer(PlayerOwner()).ServerDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, true);
+                Controller.CloseMenu(false); //Close menu as we clicked deploy!
+            }
             break;
+
+        default:
+            if (GUIButton(Sender) != none)
+            {
+                Selected = GUIButton(Sender);
+            }
+
+            if (Selected == none)
+            {
+                return false;
+            }
+
+            for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+            {
+                if (Selected == b_SpawnPoints[i])
+                {
+                    SpawnClick(i);
+                    break;
+                }
+            }
+            break;
+    }
+    return false;
+}
+
+//This function will require heavy redesign when I make things someone server sided
+function bool DrawDeployTimer(Canvas C)
+{
+    local DHPlayer DHP;
+    local float P;
+
+    DHP = DHPlayer(PlayerOwner());
+
+    //Handle progress bar values (so they move/advance based on deploy time)
+    if (!DHP.bReadyToSpawn)
+    {
+        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.CurrentRedeployTime - DHP.Level.TimeSeconds) / DHP.CurrentRedeployTime;
+        P = pb_DeployProgressBar.High - P;
+        pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
+
+        if (pb_DeployProgressBar.Value == pb_DeployProgressBar.High)
+        {
+            //Progress is done
+            bReadyToDeploy = true;
+        }
+        else
+        {
+            //Progress isn't done
+            b_DeployButton.Caption = "Deploy in:" @ int(DHP.LastKilledTime + DHP.CurrentRedeployTime - DHP.Level.TimeSeconds) @ "Seconds";
+            bReadyToDeploy = false;
         }
     }
-
+    else
+    {
+        if (DHP.DesiredSpawnPoint == none)
+        {
+            b_DeployButton.Caption = "Select a spawn point";
+        }
+        else if (DHP.Pawn != none)
+        {
+            b_DeployButton.Caption = "Deployed"; //If we have a pawn and progress bar has finished, we are deployed
+            bReadyToDeploy = false;
+        }
+        else
+        {
+            bReadyToDeploy = true;
+            pb_DeployProgressBar.Value = pb_DeployProgressBar.High;
+            b_DeployButton.Caption = "Deploy!";
+        }
+    }
     return false;
 }
 
@@ -340,6 +420,41 @@ defaultproperties
         BottomPadding=0.0
     End Object
     MapContainer=MapContainer_co
+
+    // Deploy button
+    Begin Object Class=DHGUIButton Name=DeployButton
+        Caption=""
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHLargeText"
+        WinWidth=0.315937
+        WinHeight=0.033589
+        WinLeft=0.137395
+        WinTop=0.010181
+        //bNeverFocus=true
+        OnClick=DHDeploymentMapMenu.InternalOnClick
+    End Object
+    b_DeployButton=DeployButton
+
+    // Deploy time progress bar
+    Begin Object class=GUIProgressBar Name=DeployTimePB
+        BarColor=(B=255,G=255,R=255,A=255)
+        Value=0.0
+        RenderWeight=1.75
+        bShowValue=false
+        CaptionWidth=0.0
+        ValueRightWidth=0.0
+        BarBack=Texture'InterfaceArt_tex.Menu.GreyDark'
+        BarTop=Texture'InterfaceArt_tex.Menu.GreyLight'
+        OnDraw=DHDeploymentMapMenu.DrawDeployTimer
+        WinWidth=0.315937
+        WinHeight=0.033589
+        WinLeft=0.137395
+        WinTop=0.010181
+        bNeverFocus=true
+        bAcceptsInput=false
+    End Object
+    pb_DeployProgressBar=DeployTimePB
 
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
         Graphic=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
