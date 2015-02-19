@@ -93,11 +93,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     SecondaryWeaponContainer.ManageComponent(lb_AvailableWeapons[1]);
     li_AvailableWeapons[1] = ROGUIListPlus(lb_AvailableWeapons[1].List);
 
-    // Equipment container
-    EquipContainer.ManageComponent(b_Equipment[0]);
-    EquipContainer.ManageComponent(b_Equipment[1]);
-    EquipContainer.ManageComponent(b_Equipment[2]);
-    EquipContainer.ManageComponent(b_Equipment[3]);
+    // Equipment container Theel: Why contain these?
+    //EquipContainer.ManageComponent(b_Equipment[0]);
+    //EquipContainer.ManageComponent(b_Equipment[1]);
+    //EquipContainer.ManageComponent(b_Equipment[2]);
+    //EquipContainer.ManageComponent(b_Equipment[3]);
 
     // Get player's initial values (name, team, role, weapons)
     GetInitialValues();
@@ -688,7 +688,8 @@ function UpdateSelectedWeapon(int weaponCategory)
 
             if (class<Weapon>(item) != none &&
                 class<Weapon>(item).default.FireModeClass[0] != none &&
-                class<Weapon>(item).default.FireModeClass[0].default.AmmoClass != none)
+                class<Weapon>(item).default.FireModeClass[0].default.AmmoClass != none &&
+                weaponCategory == 0)
             {
                 i_MagImages[weaponCategory].Image = class<Weapon>(item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
             }
@@ -1340,8 +1341,10 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.2
-        WinHeight=0.3
+        WinWidth=0.171937
+		WinHeight=0.072377
+		WinLeft=0.018709
+		WinTop=0.837604
         TabOrder=21
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1354,9 +1357,10 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.2
-        WinWidth=0.2
-        WinHeight=0.3
+        WinWidth=0.175055
+		WinHeight=0.069259
+		WinLeft=0.193764
+		WinTop=0.839028
         TabOrder=22
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1369,9 +1373,10 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.4
-        WinWidth=0.2
-        WinHeight=0.3
+        WinWidth=0.277953
+		WinHeight=0.125385
+		WinLeft=0.365701
+		WinTop=0.834756
         TabOrder=23
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1384,33 +1389,16 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinTop=0.50
-        WinWidth=0.4
-        WinHeight=0.4
+        WinWidth=0.680630
+		WinHeight=0.069478
+		WinLeft=0.018709
+		WinTop=0.908829
         TabOrder=24
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton3.InternalOnKeyEvent
     End Object
     b_Equipment(3)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton3'
-
-    //The ammo slider!
-/*
-    Begin Object Class=GUISlider Name=AmmoSlider
-        WinWidth=0.651253
-        WinHeight=0.033360
-        WinLeft=0.161911
-        WinTop=0.386896
-        MinValue=0.0
-        MaxValue=100.0
-        bIntSlider=true
-        bDrawPercentSign=true
-        TabOrder=0
-        Hint="Ammo Percentage"
-        OnChange=InternalOnChange
-    End Object
-    s_AmmoSlider=AmmoSlider
-*/
 
     //The primary ammo button
     Begin Object Class=DHGUINumericEdit Name=PrimaryAmmoButton

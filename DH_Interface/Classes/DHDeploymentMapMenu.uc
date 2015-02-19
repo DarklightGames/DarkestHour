@@ -22,12 +22,6 @@ var     Material                            ObjectiveIcons[3];
 var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
 
-//Theel: ToDo: This class still has a ton of work
-//- Remove uneeded shit
-//- Fix draw map problems
-//- Clean up code
-
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -249,7 +243,7 @@ function bool InternalOnClick(GUIComponent Sender)
     {
         case b_DeployButton:
             // Send request to server to spawn as we think we can
-            if (bReadyToDeploy)
+            if (bReadyToDeploy && DHPlayer(PlayerOwner()).Pawn == none)
             {
                 DHPlayer(PlayerOwner()).CurrentRedeployTime = DHPlayer(PlayerOwner()).RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
                 DHPlayer(PlayerOwner()).ServerDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, true);
@@ -314,6 +308,10 @@ function bool DrawDeployTimer(Canvas C)
         if (DHP.DesiredSpawnPoint == none)
         {
             b_DeployButton.Caption = "Select a spawn point";
+
+            // Temp hack to make it so you can spawn on maps without spawn points
+            b_DeployButton.Caption = "Select a spawn point or Deploy to SpawnArea";
+            bReadyToDeploy = true;
         }
         else if (DHP.Pawn != none)
         {
@@ -329,21 +327,6 @@ function bool DrawDeployTimer(Canvas C)
     }
     return false;
 }
-
-//Hmmm wtf is this doing?
-//Theel: I don't think this is desired, commented out for temporary confirmation
-/*
-function Timer()
-{
-    local PlayerController PC;
-
-    PC = PlayerOwner();
-    PC.ServerRestartPlayer();
-    PC.bFire = 0;
-    PC.bAltFire = 0;
-    Controller.CloseMenu(false);
-}
-*/
 
 defaultproperties
 {

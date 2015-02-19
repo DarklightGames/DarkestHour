@@ -5,18 +5,6 @@
 
 class DHSettingsPage extends UT2K4SettingsPage;
 
-var Automated GUIButton b_Back;
-var Automated GUIButton b_Apply, b_Reset;
-
-var() config bool                 bApplyImmediately;  // Whether to apply changes to setting immediately
-var UT2K4Tab_GameSettings       tp_Game;
-
-var() editconst noexport float               SavedPitch;
-var() string PageCaption;
-var() GUIButton SizingButton;
-var() Settings_Tabs ActivePanel;
-var localized string InvalidStats;
-
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
         local rotator PlayerRot;
