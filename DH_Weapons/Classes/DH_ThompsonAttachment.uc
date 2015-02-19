@@ -168,7 +168,6 @@ defaultproperties
     WA_ProneReload="Idle_thompson"
     WA_ProneReloadEmpty="Idle_thompson"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Thompson_icon'
-    MenuMagizineImage=texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'
     MenuDescription="Standard American sub-machine gun firing .45 ACP rounds from a 30-round detachable box magazine. Rate of fire: 750-800 rounds per minute. Accurate out to about 150-200 metres."
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Thompson_3rd'
 }

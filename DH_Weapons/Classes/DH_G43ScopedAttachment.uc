@@ -143,7 +143,6 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_g43"
     WA_ProneReloadEmpty="prone_reloadempty_g43"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.g43scope'
-    MenuMagizineImage=texture'InterfaceArt_tex.HUD.G43_ammo'
     MenuDescription="Semi-automatic rifle, used a 10-round mag with good accuracy and stopping power. Many fitted with a 4x ZF4 sniper scope as factory-standard."
     bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.g43scope'

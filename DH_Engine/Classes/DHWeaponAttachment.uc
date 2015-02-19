@@ -6,8 +6,6 @@
 class DHWeaponAttachment extends ROWeaponAttachment
     abstract;
 
-var     Material            MenuMagizineImage;
-
 var()   name    PA_AssistedReloadAnim;
 var()   name    PA_MortarDeployAnim;
 var()   name    WA_MortarDeployAnim;

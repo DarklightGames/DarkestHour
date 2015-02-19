@@ -161,7 +161,6 @@ defaultproperties
     WA_PostReload="close_kar98scope"
     WA_WorkBolt="bolt_kar98scope"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.kar98scope'
-    MenuMagizineImage=texture'InterfaceArt_tex.HUD.kar98_ammo'
     MenuDescription="Sniper version of the Mauser 98K. Bolt-action rifle fitted with either a 4x or 6x sniper scope. Slow-firing, but very accurate. 5-round mag/clip."
     bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.Kar98_Scoped'

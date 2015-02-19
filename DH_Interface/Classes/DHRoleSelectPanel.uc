@@ -651,6 +651,7 @@ function UpdateSelectedWeapon(int weaponCategory)
     if (desiredRole != none)
     {
         i = int(li_AvailableWeapons[weaponCategory].GetExtra());
+
         if (weaponCategory == 0)
         {
             item = desiredRole.PrimaryWeapons[i].Item;
@@ -680,22 +681,21 @@ function UpdateSelectedWeapon(int weaponCategory)
         {
             item = desiredRole.SecondaryWeapons[i].Item;
         }
+
         if (item != none)
         {
-            AttachClass = item.default.AttachmentClass;
-            WeaponAttach = class<DHWeaponAttachment>(AttachClass);
-            if (WeaponAttach != none)
+            if (class<ROWeaponAttachment>(item.default.AttachmentClass) != none)
             {
-                if (WeaponAttach.default.menuImage != none)
-                {
-                    i_WeaponImages[weaponCategory].Image = WeaponAttach.default.MenuImage;
-
-                    if (WeaponAttach.default.MenuMagizineImage != none)
-                    {
-                        i_MagImages[weaponCategory].Image = WeaponAttach.default.MenuMagizineImage;
-                    }
-                }
+                i_WeaponImages[weaponCategory].Image = class<ROWeaponAttachment>(item.default.AttachmentClass).default.menuImage;
             }
+
+            if (class<Weapon>(item) != none &&
+                class<Weapon>(item).default.FireModeClass[0] != none &&
+                class<Weapon>(item).default.FireModeClass[0].default.AmmoClass != none)
+            {
+                i_MagImages[weaponCategory].Image = class<Weapon>(item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
+            }
+
             desiredWeapons[weaponCategory] = i;
         }
     }

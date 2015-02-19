@@ -163,7 +163,6 @@ defaultproperties
     WA_PostReload="idle_enfieldno4_scoped"
     WA_WorkBolt="idle_enfieldno4_scoped"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Scoped_icon'
-    MenuMagizineImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4_ammo'
     MenuDescription="Bolt-action rifle with sniper scope."
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_Scoped_3rd'
