@@ -2,18 +2,13 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2014
 //==============================================================================
-//Theel: ToDo: This class still has a ton of work
-//- Remove uneeded shit
-//- Fix draw map problems
-//- Clean up code
 class DHDeploymentMapMenu extends MidGamePanel;
 
-const OBJECTIVES_MAX = 16;
-const SPAWN_POINTS_MAX = 16;
+const   OBJECTIVES_MAX =                    16;
+const   SPAWN_POINTS_MAX =                  16;
 
 var automated ROGUIProportionalContainer    MapContainer;
 
-var()   float                               DeploymentMapCenterX, DeploymentMapCenterY, DeploymentMapRadius;
 var     bool                                bReadyToDeploy;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton;
@@ -27,6 +22,12 @@ var     Material                            ObjectiveIcons[3];
 var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
 
+//Theel: ToDo: This class still has a ton of work
+//- Remove uneeded shit
+//- Fix draw map problems
+//- Clean up code
+
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -35,62 +36,44 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
-    //Set the level image
+    // Set the level map image
     i_Background.Image = GRI.MapImage;
 
+    // Have container manage level map image
     MapContainer.ManageComponent(i_Background);
-    //Background = GRI.MapImage;
 
+    // Initialize spawn points (make hidden)
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
         b_SpawnPoints[i].Graphic = none;
     }
 
+    // Initialize spawn points (make hidden)
     for (i = 0; i < arraycount(b_Objectives); ++i)
     {
         b_Objectives[i].Graphic = none;
     }
 }
 
-//Not sure what this does yet.
-function ShowPanel(bool bShow)
-{
-    local string ColorName, Caption;
-
-    super.ShowPanel(bShow);
-
-    if (bShow && PRI != none && PRI.Team != none)
-    {
-        ColorName = PRI.Team.ColorNames[PRI.Team.TeamIndex];
-    }
-}
-
-function bool InternalOnPreDraw( Canvas C )
-{
-    return false;
-}
-
+// Make panel uniform (square) and adjust other components accordingly
 function bool PreDrawMap(Canvas C)
 {
-    local float L, ML, BL;
+    local float ImageHeight, LeftOverSpace;
 
-    //MapContainer.WinHeight = 0.95; //Theel: do I need this?
-    L = MapContainer.ActualHeight();
-    MenuOwner.SetPosition(MenuOwner.WinLeft, MenuOwner.WinTop, L, MenuOwner.WinHeight, true); //Tab docking panel
-    MapContainer.SetPosition(MapContainer.WinLeft, MapContainer.WinTop, MapContainer.WinWidth, L, true); //Container map is in!
+    ImageHeight = MapContainer.ActualHeight();
+    MenuOwner.SetPosition(MenuOwner.WinLeft, MenuOwner.WinTop, ImageHeight, MenuOwner.WinHeight, true);
+    MapContainer.SetPosition(MapContainer.WinLeft, MapContainer.WinTop, MapContainer.WinWidth, ImageHeight, true);
 
-    //We should move the deploy button + progress bar to match/fit bottom of map
-    //Need to calculate how far down to place
-    //ML = L + MenuOwner.WinTop; //need one more + the height of tab dock
-    //BL = 1.0 - L
-    BL = 1.0 - MapContainer.WinHeight;
+    LeftOverSpace = 1.0 - MapContainer.WinHeight;
 
-    pb_DeployProgressBar.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, BL, true);
-    b_DeployButton.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, BL, true);
+    pb_DeployProgressBar.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, LeftOverSpace, true);
+    b_DeployButton.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, LeftOverSpace, true);
 
     return false;
 }
 
+//Theel: This function is still buggy and needs to support rotation, clean up, and variables renamed
+//it needs to account for icon size or something
 function GetMapCoords(vector Location, out float X, out float Y)
 {
     local float TDistance;
@@ -130,6 +113,7 @@ function GetMapCoords(vector Location, out float X, out float Y)
     Y = Distance / TDistance * MapContainer.WinHeight;
 }
 
+//Theel: This function has floating variables
 function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 {
     local float X, Y;
@@ -153,6 +137,7 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
     }
 }
 
+//Theel: This function has floating variables
 function PlaceObjectiveOnMap(ROObjective O, int Index)
 {
     local float X, Y;
@@ -169,11 +154,11 @@ function PlaceObjectiveOnMap(ROObjective O, int Index)
     }
 }
 
+//Theel: will eventually want to draw 'deployed' MDVs also
 function bool DrawMapComponents(Canvas C)
 {
     local int i;
     local array<DHSpawnPoint> ActiveSpawnPoints;
-    local float H, W, L;
 
     //Draw objectives
     for (i = 0; i < arraycount(GRI.Objectives); i++)
@@ -197,8 +182,7 @@ function bool DrawMapComponents(Canvas C)
     return false;
 }
 
-//After initial drawing is complete this is ran?
-//Needs repurposed, this I guess actually shows the panel once it's rendered
+// Actually shows the panel once it's rendered (Needs confirmed and tested)
 function InternalOnPostDraw(Canvas Canvas)
 {
     PRI = DHPlayerReplicationInfo(PlayerOwner().PlayerReplicationInfo);
@@ -212,12 +196,10 @@ function InternalOnPostDraw(Canvas Canvas)
     }
 }
 
-//Hehe this is a good function that handles either spawning or teleporting
+// Player clicked a spawn point
 function bool SpawnClick(int Index)
 {
     local DHPlayer PC;
-
-    //Log("Trying to call server restart player!!!");
 
     if (bInit || PRI == none || PRI.bOnlySpectator)
     {
@@ -227,17 +209,16 @@ function bool SpawnClick(int Index)
     if (SpawnPoints[Index] == none)
     {
         Log("No spawn point found! Error!");
-
         return true;
     }
 
     PC = DHPlayer(PlayerOwner());
 
-    //Check if we clicked the desired spawn point
+    // Check if we clicked the desired spawn point
     if (SpawnPoints[Index] == PC.DesiredSpawnPoint)
     {
-        //We clicked desired spawn point! lets try to spawn
-        //Only deploy if we clicked the selected SP and are ready
+        // We clicked desired spawn point! lets try to spawn
+        // Only deploy if we clicked the selected SP and are ready
         if (PC.bReadyToSpawn && PC.Pawn == none)
         {
             PC.CurrentRedeployTime = PC.RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
@@ -247,11 +228,11 @@ function bool SpawnClick(int Index)
     }
     else
     {
-        //Set the desired spawn point
+        // Set the desired spawn point
         PC.DesiredSpawnPoint = SpawnPoints[Index];
 
-        //Should we close as below????
-        //Player already has a pawn, so lets close deploymenu
+        //Theel: Should we close as below????
+        // Player already has a pawn, so lets close deploymenu
         if (PC.Pawn != none)
         {
             Controller.CloseMenu(false);
@@ -267,7 +248,7 @@ function bool InternalOnClick(GUIComponent Sender)
     switch(Sender)
     {
         case b_DeployButton:
-            //Send request to server to spawn as we think we can
+            // Send request to server to spawn as we think we can
             if (bReadyToDeploy)
             {
                 DHPlayer(PlayerOwner()).CurrentRedeployTime = DHPlayer(PlayerOwner()).RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
@@ -277,6 +258,7 @@ function bool InternalOnClick(GUIComponent Sender)
             break;
 
         default:
+            // Something else was clicked, if spawn point button handle it
             if (GUIButton(Sender) != none)
             {
                 Selected = GUIButton(Sender);
@@ -300,7 +282,7 @@ function bool InternalOnClick(GUIComponent Sender)
     return false;
 }
 
-//This function will require heavy redesign when I make things someone server sided
+// This function will require heavy redesign when I make things someone server sided
 function bool DrawDeployTimer(Canvas C)
 {
     local DHPlayer DHP;
@@ -349,6 +331,8 @@ function bool DrawDeployTimer(Canvas C)
 }
 
 //Hmmm wtf is this doing?
+//Theel: I don't think this is desired, commented out for temporary confirmation
+/*
 function Timer()
 {
     local PlayerController PC;
@@ -359,32 +343,21 @@ function Timer()
     PC.bAltFire = 0;
     Controller.CloseMenu(false);
 }
+*/
 
 defaultproperties
 {
-    //bFillHeight=True
-    //WinWidth=1.0
-    //WinHeight=0.8
-    //WinLeft=0.0
-    //WinTop=0.0
-
-    //Background=Texture'DH_GUI_Tex.Menu.DHBox'
     bNeverFocus=true
-    OnPreDraw=DHDeploymentMapMenu.InternalOnPreDraw
     OnRendered=DHDeploymentMapMenu.InternalOnPostDraw
 
+    //Theel: need a neutral objective icon, as we actually don't have one singled out
     ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
     ObjectiveIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
     ObjectiveIcons(2)=Texture'DH_GUI_Tex.GUI.PlayerIcon'
 
-    //These might need repurposed to support 512x512 and 1024x1024!
-    DeploymentMapCenterX=0.650000   // THESE DO NOTHIGN NOW! ??
-    DeploymentMapCenterY=0.400000
-    DeploymentMapRadius=0.300000
-
+    // Image for level map
     Begin Object Class=GUIImage Name=BackgroundImage
-        //Image=Texture'DH_GUI_Tex.Menu.DHBox'
-        ImageStyle=ISTY_Justified //Scaled
+        ImageStyle=ISTY_Justified
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
@@ -395,6 +368,7 @@ defaultproperties
     End Object
     i_Background=GUIImage'DH_Interface.DHDeploymentMapMenu.BackgroundImage'
 
+    // Container for level map image (used for plotting of elements)
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainer_co
         WinLeft=0.0
         WinTop=0.0
@@ -417,7 +391,6 @@ defaultproperties
         WinHeight=0.033589
         WinLeft=0.137395
         WinTop=0.010181
-        //bNeverFocus=true
         OnClick=DHDeploymentMapMenu.InternalOnClick
     End Object
     b_DeployButton=DeployButton
@@ -442,6 +415,7 @@ defaultproperties
     End Object
     pb_DeployProgressBar=DeployTimePB
 
+    // Spawn point buttons
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
         Graphic=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
         Position=ICP_Normal
@@ -469,6 +443,7 @@ defaultproperties
     b_SpawnPoints(14)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
     b_SpawnPoints(15)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
 
+    // Objective buttons
     Begin Object Class=GUIGFXButton Name=ObjectiveButton
         Graphic=texture'InterfaceArt_tex.Tank_Hud.RedDot'
         Position=ICP_Justified

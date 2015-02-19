@@ -635,9 +635,6 @@ function int FindIndexInWeaponsList(int index, GUIList list)
 
 function UpdateSelectedWeapon(int weaponCategory)
 {
-    local class<InventoryAttachment> AttachClass;
-    local class<DHWeaponAttachment> WeaponAttach;
-    //local class<DH_ProjectileWeapon> DHWeaponClass;
     local int i;
     local class<Inventory> item;
     local DHPlayer player;
@@ -838,10 +835,7 @@ function string FormatRoleString(string roleName, int roleLimit, int roleCount, 
 function AttemptRoleApplication()
 {
     local DHPlayer player;
-    local DH_RoleInfo roleInfo;
     local byte teamIndex, roleIndex, w1, w2;
-    local float distance, totaldistance, percent;
-    local int RedeployTime, AmmoTimeMod;
 
     player = DHPlayer(PlayerOwner());
 
@@ -947,7 +941,6 @@ function bool InternalOnClick(GUIComponent Sender)
 
 function InternalOnChange( GUIComponent Sender )
 {
-    local string s;
     local RORoleInfo role;
 
     switch (Sender)
@@ -1188,10 +1181,10 @@ defaultproperties
         Caption=""
         TextAlign=TXTA_Left
         StyleName="DHLargeText"
-       	WinWidth=0.982575
-		WinHeight=0.033589
-		WinLeft=0.010993
-		WinTop=0.359297
+        WinWidth=0.982575
+        WinHeight=0.033589
+        WinLeft=0.010993
+        WinTop=0.359297
     End Object
     l_StatusLabel=RecentChangesStatus
 

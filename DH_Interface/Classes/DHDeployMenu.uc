@@ -27,19 +27,19 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     Super.InitComponent(MyController, MyOwner);
 
-    //Initialize menu options
+    // Initialize menu options
     for (i = 0; i < arraycount(MenuOptions); i++)
     {
         co_MenuComboBox.AddItem(MenuOptions[i]);
     }
 
-    //Initialize loadout panels
+    // Initialize loadout panels
     for(i=0;i<LoadoutPanelClass.Length;++i)
     {
         c_LoadoutArea.AddTab(LoadoutPanelCaption[i],LoadoutPanelClass[i],,LoadoutPanelHint[i]);
     }
 
-    //Initialize deployment panel(s)
+    // Initialize deployment panel(s)
     for(i=0;i<DeploymentPanelClass.Length;++i)
     {
         c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
@@ -47,7 +47,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     SetTimer(0.1,true);
 
-    // Turn pause off if currently paused (Theel: nasty hack to make this menu not pause)
+    // Makes this menu not pause in single-player
     pc = PlayerOwner();
     if (pc != None && pc.Level.Pauser != None)
     {
@@ -122,40 +122,28 @@ function InternalOnChange(GUIComponent Sender)
                 break;
         }
 
-        co_MenuComboBox.SetIndex(0); // Forces menu to always show "Menu"
+        co_MenuComboBox.SetIndex(0); // Forces edit area to always show index 0
     }
 }
 
 function CloseMenu()
 {
     if (Controller != none)
+    {
         Controller.RemoveMenu(self);
-}
-
-function InternalOnClose(optional bool bCancelled)
-{
-    local PlayerController pc;
-
-    // Turn pause off if currently paused
-    pc = PlayerOwner();
-    if (pc != None && pc.Level.Pauser != None)
-       pc.SetPause(false);
-
-    Super.OnClose(bCancelled);
+    }
 }
 
 DefaultProperties
 {
-    //Menu variables
     bRenderWorld=True
     bAllowedAsLast=True
     BackgroundColor=(B=0,G=125,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
-    OnClose=InternalOnClose
     WinTop=0.0
     WinHeight=1.0
 
-    //Components
+    // Background
     Begin Object Class=FloatingImage Name=FloatingBackground
         Image=texture'DH_GUI_Tex.Menu.MultiMenuBack'
         DropShadow=none
@@ -168,7 +156,7 @@ DefaultProperties
     End Object
     i_Background=FloatingImage'DH_Interface.DHDeployMenu.FloatingBackground'
 
-    //LOADOUT AREA
+    // Loadout / Role Area
     Begin Object class=GUITabControl Name=LoadoutArea
         bFillSpace=false
         bDockPanels=true
@@ -184,7 +172,7 @@ DefaultProperties
     End Object
     c_LoadoutArea=GUITabControl'DH_Interface.DHDeployMenu.LoadoutArea'
 
-    //DEPLOYMENT MAP AREA
+    // Deployment Area
     Begin Object class=GUITabControl name=DeploymentArea
         bFillSpace=false
         bDockPanels=true
@@ -200,20 +188,19 @@ DefaultProperties
     End Object
     c_DeploymentMapArea=GUITabControl'DH_Interface.DHDeployMenu.DeploymentArea'
 
-    //Menu Combo Box
+    // Menu Combo Box
     Begin Object Class=DHGUIComboBox Name=MenuOptionsBox
         bReadOnly=true
         WinWidth=0.111653
-		WinHeight=0.036836
-		WinLeft=0.018159
-		WinTop=0.007060
+        WinHeight=0.036836
+        WinLeft=0.018159
+        WinTop=0.007060
         TabOrder=0
         OnChange=DHDeployMenu.InternalOnChange
         MaxVisibleItems=10
     End Object
     co_MenuComboBox=MenuOptionsBox
 
-    //Actual menu options
     MenuOptions(0)="Menu"
     MenuOptions(1)="Switch Team"
     MenuOptions(2)="Spectate"
@@ -225,7 +212,7 @@ DefaultProperties
     MenuOptions(8)="Suicide"
     MenuOptions(9)="Disconnect"
 
-    //Panel Variables
+    // Panel Variables
     LoadoutPanelCaption(0)="Role"
     LoadoutPanelCaption(1)="Vehicle"
     LoadoutPanelCaption(2)="Squad"
