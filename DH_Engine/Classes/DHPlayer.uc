@@ -2090,6 +2090,24 @@ function HandleDeployReady()
     }
 }
 
+//Temp function Theel will be using to get offset coordinates from nearby vehicle to create/adjust vehicle exit positions
+exec function ExitPosTool()
+{
+    local ROVehicle NearbyVeh;
+    local vector Offset;
+
+    foreach RadiusActors(class'ROVehicle', NearbyVeh, 1024.0, Pawn.Location)
+    {
+        //Debug test
+        Log("Found a vehicle:" @ NearbyVeh.GetHumanReadableName());
+
+        Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
+
+        Log("Your offset is:");
+        Log("(X=" $ Offset.X $ ",Y=" $ Offset.Y $ ",Z=" $ Offset.Z $ ")");
+    }
+}
+
 defaultproperties
 {
     CurrentRedeployTime=15
