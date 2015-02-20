@@ -6,10 +6,6 @@
 class DH_GermanTankCannonPawn extends DH_ROTankCannonPawn
      abstract;
 
-var() float ScopeCenterScale;
-var         TexRotator ScopeCenterRotator;
-var() int   CenterRotationFactor;
-
 var() float ScopeCenterScaleX;
 var() float ScopeCenterScaleY;
 

@@ -122,6 +122,7 @@ defaultproperties
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.000000,Y=60.000000,Z=-10.000000),ExhaustRotation=(Pitch=36000,Yaw=-5000))
+
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackGunPawn',WeaponBone="mg_base")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerOne',WeaponBone="passenger_l_1")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerTwo',WeaponBone="passenger_l_3")
@@ -129,6 +130,8 @@ defaultproperties
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFour',WeaponBone="passenger_r_2")
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFive',WeaponBone="passenger_r_3")
     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerSix',WeaponBone="passenger_r_5")
+
+
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'

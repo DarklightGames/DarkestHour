@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_GMCTruckPassengerSeven extends DH_ROPassengerPawn;
+class DH_GMCTruckPassengerSeven extends DH_GMCTruckPassengerOne;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_OpelBlitzPassengerSix extends DH_ROPassengerPawn;
+class DH_OpelBlitzPassengerSix extends DH_OpelBlitzPassengerOne;
 
 defaultproperties
 {

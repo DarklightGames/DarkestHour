@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_StuartPassengerThree extends DH_ROPassengerPawn;
+class DH_StuartPassengerThree extends DH_StuartPassengerOne;
 
 defaultproperties
 {
