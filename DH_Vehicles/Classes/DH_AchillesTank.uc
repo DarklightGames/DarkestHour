@@ -185,7 +185,6 @@ defaultproperties
     ExitPositions(3)=(X=-250.0,Y=-35.0,Z=75.0)  //passenger (rl)
     ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)   //passenger (rr)
     ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  //passenger (r)
-    ExitPositions(6)=(X=275.0,Y=0.0,Z=75.0)     //front
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=600.000000

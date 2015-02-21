@@ -94,6 +94,10 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.000000,Z=40.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverinePassengerOne',WeaponBone="body")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverinePassengerTwo',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverinePassengerThree',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverinePassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
     StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
@@ -173,8 +177,12 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-3.000000,Y=0.000000,Z=3.000000)
     DriveAnim="VPanzer3_driver_idle_close"
-    ExitPositions(0)=(X=98.000000,Y=-100.000000,Z=156.000000)
-    ExitPositions(1)=(Y=-100.000000,Z=156.000000)
+    ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  //driver
+    ExitPositions(1)=(X=-20.0,Y=0.0,Z=250.0)    //commander
+    ExitPositions(2)=(X=-125.0,Y=-150.0,Z=75.0) //passenger (l)
+    ExitPositions(3)=(X=-250.0,Y=-35.0,Z=75.0)  //passenger (rl)
+    ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)   //passenger (rr)
+    ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  //passenger (r)
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=600.000000
