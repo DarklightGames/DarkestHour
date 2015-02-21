@@ -80,12 +80,12 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         FireRot.Pitch += AddedPitch;
     }
 
-    if (!bAltFire)
+    if (!bAltFire && RangeSettings.Length > 0)
     {
         FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
     }
 
-    if (bGunFireDebug)
+    if (bGunFireDebug && RangeSettings.Length > 0)
     {
         Log("After pitch corrections FireRot =" @ FireRot);
         Log("GetPitchForRange for" @ CurrentRangeIndex @ "=" @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
@@ -99,7 +99,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
         if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
         {
-            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, 
+            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
                 WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
             {
                 StartLocation = HitLocation;
@@ -137,7 +137,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     {
         Log("At the moment of spawning: FireRot =" @ FireRot);
     }
-    
+
     // Swap to the next round type after firing (hmm shouldn't I have this moved? or REMOVED ???)
     if (bLastShot && PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
     {
