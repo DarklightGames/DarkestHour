@@ -30,47 +30,10 @@ var     float               PointValue;
 
 var     bool                bDebugExitPositions;
 
-struct ExitPositionPair
-{
-    var int   Index;
-    var float DistanceSquared;
-};
-
-static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
-{
-    return A.DistanceSquared > B.DistanceSquared;
-}
-
-static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
-{
-    local int InsertIndex, RemovedIndex;
-
-    if (LowerBound < UpperBound)
-    {
-        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
-        {
-            InsertIndex = RemovedIndex;
-
-            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
-            {
-                --InsertIndex;
-            }
-
-            if (RemovedIndex != InsertIndex)
-            {
-                MyArray.Insert(InsertIndex, 1);
-                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
-                MyArray.Remove(RemovedIndex + 1, 1);
-            }
-        }
-    }
-}
-
 function bool PlaceExitingDriver()
 {
     local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-    local array<ExitPositionPair> ExitPositionPairs;
 
     if (Driver == none)
     {
@@ -81,29 +44,20 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    ExitPositionPairs.Length = ExitPositions.Length;
-
-    for (i = 0; i < ExitPositions.Length; ++i)
+    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROWheeledVehicles
+    if (class'DH_ROWheeledVehicle'.default.bDebugExitPositions)
     {
-        ExitPositionPairs[i].Index = i;
-        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - ExitPositions[i]);
-    }
-
-    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
-
-    if (bDebugExitPositions)
-    {
-        for (i = 0; i < ExitPositionPairs.Length; ++i)
+        for (i = 0; i < ExitPositions.Length; ++i)
         {
-            ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+            ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
-            Spawn(class'RODebugTracer',,, ExitPosition);
+            Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
-    for (i = 0; i < ExitPositionPairs.Length; ++i)
+    for (i = 0; i < ExitPositions.Length; ++i)
     {
-        ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+        ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
         if (Trace(HitLocation, HitNormal, ExitPosition, Location + ZOffset, false, Extent) != none ||
             Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)

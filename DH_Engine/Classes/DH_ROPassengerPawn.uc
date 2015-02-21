@@ -22,12 +22,6 @@ This is necessary to allow properties updated on exit (e.g. Owner, Driver & PRI 
 Changes in other classes: slight modifications to functions NumPassengers in Vehicle classes & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
 */
 
-struct ExitPositionPair
-{
-    var int Index;
-    var float DistanceSquared;
-};
-
 var bool bDebugExitPositions;
 
 replication
@@ -35,38 +29,6 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerToggleDebugExits;
-}
-
-
-static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
-{
-    return A.DistanceSquared > B.DistanceSquared;
-}
-
-// http://wiki.beyondunreal.com/Legacy:Insertion_Sort
-static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
-{
-    local int InsertIndex, RemovedIndex;
-
-    if (LowerBound < UpperBound)
-    {
-        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
-        {
-            InsertIndex = RemovedIndex;
-
-            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
-            {
-                --InsertIndex;
-            }
-
-            if (RemovedIndex != InsertIndex)
-            {
-                MyArray.Insert(InsertIndex, 1);
-                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
-                MyArray.Remove(RemovedIndex + 1, 1);
-            }
-        }
-    }
 }
 
 // Modified to set bTearOff to true on a server, which stops this rider pawn being replicated to clients (until entered, when we unset bTearOff)
@@ -85,7 +47,6 @@ function bool PlaceExitingDriver()
 {
     local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-    local array<ExitPositionPair> ExitPositionPairs;
 
     if (Driver == none)
     {
@@ -101,42 +62,39 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    ExitPositionPairs.Length = VehicleBase.ExitPositions.Length;
-
-    for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
-    {
-        ExitPositionPairs[i].Index = i;
-        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - VehicleBase.ExitPositions[i]);
-    }
-
-    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
-
-    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all rider pawns
+    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
     if (class'DH_ROPassengerPawn'.default.bDebugExitPositions)
     {
-        for (i = 0; i < ExitPositionPairs.Length; ++i)
+        for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
         {
-            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
+            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
 
-            Spawn(class'DH_DebugTracer', , , ExitPosition);
+            Spawn(class'DH_DebugTracer',,, ExitPosition);
         }
     }
 
-    for (i = 0; i < ExitPositionPairs.Length; ++i)
-    {
-        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
+    i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
 
-        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) != none ||
-            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
+    while (i >= 0 && i < VehicleBase.ExitPositions.Length)
+    {
+        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+
+        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) == none &&
+            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none &&
+            Driver.SetLocation(ExitPosition))
         {
-            continue;
+            return true;
         }
 
-        if (Driver.SetLocation(ExitPosition))
-        {
-            Level.Game.Broadcast(self, ExitPosition);
+        ++i;
 
-            return true;
+        if (i == PositionInArray + 1)
+        {
+            break;
+        }
+        else if(i == VehicleBase.ExitPositions.Length)
+        {
+            i = 0;
         }
     }
 
@@ -311,7 +269,7 @@ simulated function SwitchWeapon(byte F)
         }
 
         // Stop call to server if player has selected a tank crew role but isn't a tanker
-        if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+        if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
             ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
         {
             ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
@@ -336,7 +294,7 @@ function AltFire(optional float F)
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
-    {    
+    {
         ServerToggleDebugExits();
     }
 }

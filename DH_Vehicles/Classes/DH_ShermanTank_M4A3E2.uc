@@ -192,8 +192,14 @@ defaultproperties
     VehicleMass=14.000000
     bFPNoZFromCameraPitch=true
     DrivePos=(X=3.000000,Y=0.000000,Z=7.000000)
-    ExitPositions(0)=(X=100.000000,Y=-100.000000,Z=156.000000)
-    ExitPositions(1)=(X=100.000000,Y=100.000000,Z=156.000000)
+    ExitPositions(0)=(X=125.0,Y=-25.0,Z=200.0)      //driver's hatch
+    ExitPositions(1)=(X=0.0,Y=-25.0,Z=225.0)        //commander's hatch
+    ExitPositions(2)=(X=125.0,Y=25.0,Z=200.0)       //mg's hatch
+    ExitPositions(3)=(X=-100.0,Y=-150.0,Z=75.0)     //passenger (l)
+    ExitPositions(4)=(X=-250.0,Y=-35.0.0,Z=75.0)    //passenger (rl)
+    ExitPositions(5)=(X=-250.0,Y=35.0.0,Z=75.0)     //passenger (rr)
+    ExitPositions(6)=(X=-100.0,Y=150.0,Z=75.0)      //passenger (r)
+    ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)         //front
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=600.000000

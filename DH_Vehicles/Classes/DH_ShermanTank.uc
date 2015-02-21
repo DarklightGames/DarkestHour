@@ -34,17 +34,6 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    //Exit positions
-    ExitPositions(0)=(X=-9.24,Y=-26.13,Z=205.78) //Commander exit (above turret)
-    ExitPositions(1)=(X=-124.01,Y=-33.87,Z=163.76) //On back of tank 1
-    ExitPositions(2)=(X=-127.11,Y=58.30,Z=163.80) //On back of tank 2
-    ExitPositions(3)=(X=-37.23,Y=139.37,Z=81.66) //Right side of tank
-    ExitPositions(4)=(X=-19.97,Y=-129.79,Z=55.30) //Left side of tank
-    ExitPositions(5)=(X=-201.84,Y=-33.15,Z=53.42) //Rear of tank 1
-    ExitPositions(6)=(X=-206.84,Y=48.69,Z=53.67) //Rear of tank 2
-    ExitPositions(7)=(X=129.09,Y=54.94,Z=169.47) //Hull Gunner Exit
-    ExitPositions(8)=(X=90.49,Y=-39.92,Z=169.59) //Driver Exit
-
     LeftTreadIndex=5
     RightTreadIndex=4
     MaxCriticalSpeed=638.000000
@@ -197,6 +186,14 @@ defaultproperties
     VehicleMass=13.500000
     bFPNoZFromCameraPitch=true
     DrivePos=(X=5.000000,Y=0.000000,Z=3.000000)
+    ExitPositions(0)=(X=125.0,Y=-25.0,Z=200.0)      //driver's hatch
+    ExitPositions(1)=(X=0.0,Y=-25.0,Z=225.0)        //commander's hatch
+    ExitPositions(2)=(X=125.0,Y=25.0,Z=200.0)       //mg's hatch
+    ExitPositions(3)=(X=-100.0,Y=-150.0,Z=75.0)     //passenger (l)
+    ExitPositions(4)=(X=-250.0,Y=-35.0.0,Z=75.0)    //passenger (rl)
+    ExitPositions(5)=(X=-250.0,Y=35.0.0,Z=75.0)     //passenger (rr)
+    ExitPositions(6)=(X=-100.0,Y=150.0,Z=75.0)      //passenger (r)
+    ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)         //front
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=600.000000

@@ -64,14 +64,6 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Look'
     VehicleHudThreadsPosX(0)=0.370000
     VehicleHudThreadsPosY=0.480000
-    VehicleHudOccupantsX(3)=0.400000
-    VehicleHudOccupantsY(3)=0.670000
-    VehicleHudOccupantsX(4)=0.400000
-    VehicleHudOccupantsY(4)=0.760000
-    VehicleHudOccupantsX(5)=0.625000
-    VehicleHudOccupantsY(5)=0.760000
-    VehicleHudOccupantsX(6)=0.625000
-    VehicleHudOccupantsY(6)=0.670000
     VehicleHudThreadsScale=0.700000
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
@@ -125,6 +117,14 @@ defaultproperties
     VehicleHudOccupantsX(0)=0.560000
     VehicleHudOccupantsX(1)=0.520000
     VehicleHudOccupantsX(2)=0.460000
+    VehicleHudOccupantsX(3)=0.400000
+    VehicleHudOccupantsY(3)=0.670000
+    VehicleHudOccupantsX(4)=0.400000
+    VehicleHudOccupantsY(4)=0.760000
+    VehicleHudOccupantsX(5)=0.625000
+    VehicleHudOccupantsY(5)=0.760000
+    VehicleHudOccupantsX(6)=0.625000
+    VehicleHudOccupantsY(6)=0.670000
     VehicleHudEngineX=0.510000
     VehHitpoints(0)=(PointBone="body",PointOffset=(X=128.000000,Y=27.000000,Z=25.000000),bPenetrationPoint=false)
     VehHitpoints(1)=(PointRadius=35.000000,PointOffset=(X=-95.000000,Z=2.000000),DamageMultiplier=1.000000)
@@ -188,10 +188,13 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-2.000000,Y=-5.000000,Z=2.000000)
     DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(X=100.000000,Y=-165.000000,Z=25.000000)
-    ExitPositions(1)=(X=100.000000,Y=165.000000,Z=25.000000)
-    ExitPositions(2)=(X=-100.000000,Y=-165.000000,Z=25.000000)
-    ExitPositions(3)=(X=-100.000000,Y=165.000000,Z=-25.000000)
+    ExitPositions(0)=(X=125.0,Y=35.0,Z=175.0)	//driver
+    ExitPositions(1)=(X=25.0,Y=-35.0,Z=250.0)	//commander
+    ExitPositions(2)=(X=125.0,Y=35.0,Z=175.0)	//hull gun
+    ExitPositions(3)=(X=-150.0,Y=-150.0,Z=75.0)	//passenger (l)
+    ExitPositions(4)=(X=-255.0,Y=-50.0,Z=75.0)	//passenger (rl)
+    ExitPositions(5)=(X=-255.0,Y=50.0,Z=75.0)	//passenger (rr)
+    ExitPositions(6)=(X=-150.0,Y=150,Z=75.0)	//passenger (r)
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=600.000000

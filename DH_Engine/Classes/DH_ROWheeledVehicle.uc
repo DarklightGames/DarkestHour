@@ -8,11 +8,6 @@ class DH_ROWheeledVehicle extends ROWheeledVehicle
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
-struct ExitPositionPair
-{
-    var int Index;
-    var float DistanceSquared;
-};
 
 enum ECarHitPointType
 {
@@ -78,46 +73,14 @@ replication
         ServerStartEngine, ServerToggleDebugExits;
 }
 
-
-static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
-{
-    return A.DistanceSquared > B.DistanceSquared;
-}
-
-// http://wiki.beyondunreal.com/Legacy:Insertion_Sort
-static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
-{
-    local int InsertIndex, RemovedIndex;
-
-    if (LowerBound < UpperBound)
-    {
-        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
-        {
-            InsertIndex = RemovedIndex;
-
-            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
-            {
-                --InsertIndex;
-            }
-
-            if (RemovedIndex != InsertIndex)
-            {
-                MyArray.Insert(InsertIndex, 1);
-                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
-                MyArray.Remove(RemovedIndex + 1, 1);
-            }
-        }
-    }
-}
-
 simulated function PostBeginPlay()
 {
     super(ROVehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     if (HasAnim(BeginningIdleAnim))
-	{
-	    PlayAnim(BeginningIdleAnim);
-	}
+    {
+        PlayAnim(BeginningIdleAnim);
+    }
 
     // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
     if (Level.NetMode == NM_Standalone)
@@ -570,7 +533,6 @@ function bool PlaceExitingDriver()
 {
     local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-    local array<ExitPositionPair> ExitPositionPairs;
 
     if (Driver == none)
     {
@@ -581,30 +543,20 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    ExitPositionPairs.Length = ExitPositions.Length;
-
-    for (i = 0; i < ExitPositions.Length; ++i)
-    {
-        ExitPositionPairs[i].Index = i;
-        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - ExitPositions[i]);
-    }
-
-    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
-
     // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROWheeledVehicles
     if (class'DH_ROWheeledVehicle'.default.bDebugExitPositions)
     {
-        for (i = 0; i < ExitPositionPairs.Length; ++i)
+        for (i = 0; i < ExitPositions.Length; ++i)
         {
-            ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+            ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
             Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
-    for (i = 0; i < ExitPositionPairs.Length; ++i)
+    for (i = 0; i < ExitPositions.Length; ++i)
     {
-        ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+        ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
         if (Trace(HitLocation, HitNormal, ExitPosition, Location + ZOffset, false, Extent) != none ||
             Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
@@ -738,7 +690,7 @@ event CheckReset()
     if (bKeyVehicle && IsVehicleEmpty())
     {
         Died(none, class'DamageType', Location);
- 
+
         return;
     }
 
@@ -950,7 +902,7 @@ simulated function SwitchWeapon(byte F)
     }
 
     // Stop call to server if player has selected a tank crew role but isn't a tanker
-    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
         ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle

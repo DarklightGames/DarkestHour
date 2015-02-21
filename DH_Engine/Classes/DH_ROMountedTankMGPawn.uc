@@ -8,13 +8,7 @@ class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-struct ExitPositionPair
-{
-    var int   Index;
-    var float DistanceSquared;
-};
-
-var bool bDebugExitPositions;
+var bool        bDebugExitPositions;
 
 var()   float   OverlayCenterScale;
 var()   float   OverlayCenterSize; // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
@@ -30,44 +24,13 @@ replication
         ServerToggleDebugExits;
 }
 
-static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
-{
-    return A.DistanceSquared > B.DistanceSquared;
-}
-
-// http://wiki.beyondunreal.com/Legacy:Insertion_Sort
-static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
-{
-    local int InsertIndex, RemovedIndex;
-
-    if (LowerBound < UpperBound)
-    {
-        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
-        {
-            InsertIndex = RemovedIndex;
-
-            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
-            {
-                --InsertIndex;
-            }
-
-            if (RemovedIndex != InsertIndex)
-            {
-                MyArray.Insert(InsertIndex, 1);
-                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
-                MyArray.Remove(RemovedIndex + 1, 1);
-            }
-        }
-    }
-}
-
 // Matt: modified to call InitialiseMG when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
 // 1. Do things that need one or both of those actor refs, controlling common problem of unpredictability of timing of receiving replicated actor references
 // 2. To do any extra set up in the MG classes, which can easily be subclassed for anything that is vehicle specific
 simulated function PostNetReceive()
 {
     local int i;
-    
+
     // Gunner has changed position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
@@ -96,7 +59,7 @@ simulated function PostNetReceive()
         bInitializedVehicleBase = true;
 
         // On client, this actor is destroyed if becomes net irrelevant - when it respawns, empty WeaponPawns array needs filling again or will cause lots of errors
-        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray && 
+        if (VehicleBase.WeaponPawns.Length > 0 && VehicleBase.WeaponPawns.Length > PositionInArray &&
             (VehicleBase.WeaponPawns[PositionInArray] == none || VehicleBase.WeaponPawns[PositionInArray].default.Class == none))
         {
             VehicleBase.WeaponPawns[PositionInArray] = self;
@@ -177,7 +140,6 @@ function bool PlaceExitingDriver()
 {
     local int    i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-    local array<ExitPositionPair> ExitPositionPairs;
 
     if (Driver == none)
     {
@@ -193,40 +155,39 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    ExitPositionPairs.Length = VehicleBase.ExitPositions.Length;
-
-    for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
-    {
-        ExitPositionPairs[i].Index = i;
-        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - VehicleBase.ExitPositions[i]);
-    }
-
-    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
-
     // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
     if (class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions)
     {
-        for (i = 0; i < ExitPositionPairs.Length; ++i)
+        for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
         {
-            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
+            ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
 
-            Spawn(class'DH_DebugTracer', , , ExitPosition);
+            Spawn(class'DH_DebugTracer',,, ExitPosition);
         }
     }
 
-    for (i = 0; i < ExitPositionPairs.Length; ++i)
+    i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
+
+    while (i >= 0 && i < VehicleBase.ExitPositions.Length)
     {
-        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[ExitPositionPairs[i].Index] >> VehicleBase.Rotation) + ZOffset;
+        ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
 
-        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) != none ||
-            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
-        {
-            continue;
-        }
-
-        if (Driver.SetLocation(ExitPosition))
+        if (Trace(HitLocation, HitNormal, ExitPosition, VehicleBase.Location + ZOffset, false, Extent) == none &&
+            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) == none &&
+            Driver.SetLocation(ExitPosition))
         {
             return true;
+        }
+
+        ++i;
+
+        if (i == PositionInArray + 1)
+        {
+            break;
+        }
+        else if(i == VehicleBase.ExitPositions.Length)
+        {
+            i = 0;
         }
     }
 
@@ -391,7 +352,7 @@ simulated function SwitchWeapon(byte F)
         }
 
         // Stop call to server if player has selected a tank crew role but isn't a tanker
-        if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+        if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
             ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
         {
             ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
@@ -498,7 +459,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = 1;
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) 
+                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
                     && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 {
                     Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
@@ -544,10 +505,10 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
                     DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
                     DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
-                    DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;            
+                    DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) 
+                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
                     && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
                 {
                     Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
@@ -622,10 +583,10 @@ exec function ToggleViewLimit()
             for (i = 0; i < DriverPositions.Length; i++)
             {
                 DriverPositions[i].ViewPitchUpLimit = 65535;
-                DriverPositions[i].ViewPitchDownLimit = 1;            
+                DriverPositions[i].ViewPitchDownLimit = 1;
             }
         }
-        else 
+        else
         {
             Gun.bLimitYaw = Gun.default.bLimitYaw;
             Gun.PitchUpLimit = Gun.default.PitchUpLimit;
@@ -634,7 +595,7 @@ exec function ToggleViewLimit()
             for (i = 0; i < DriverPositions.Length; i++)
             {
                 DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
-                DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;            
+                DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
             }
         }
     }

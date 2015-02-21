@@ -12,12 +12,6 @@ class DH_ROTreadCraft extends ROTreadCraft
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
-struct ExitPositionPair
-{
-    var int Index;
-    var float DistanceSquared;
-};
-
 // Set-up for new hitpoint types
 enum ENewHitPointType
 {
@@ -172,7 +166,7 @@ replication
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         SchurzenIndex;
-   
+
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         MaxCriticalSpeed; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
@@ -190,49 +184,17 @@ replication
     // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - do later as part of class review & refactor
     reliable if (Role == ROLE_Authority) // Matt: at a glance, I'm not sure bProjPen or bFirstHit are used clientside (& peri not used at all) - check later & possibly remove
         bProjectilePenetrated, bFirstHit, bRoundShattered, bPeriscopeDamaged;
-        
+
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine, ServerToggleDebugExits, ServerDamTrack;
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
 
-static final operator(24) bool > (ExitPositionPair A, ExitPositionPair B)
-{
-    return A.DistanceSquared > B.DistanceSquared;
-}
-
-//http://wiki.beyondunreal.com/Legacy:Insertion_Sort
-static final function InsertSortEPPArray(out array<ExitPositionPair> MyArray, int LowerBound, int UpperBound)
-{
-    local int InsertIndex, RemovedIndex;
-
-    if (LowerBound < UpperBound)
-    {
-        for (RemovedIndex = LowerBound + 1; RemovedIndex <= UpperBound; ++RemovedIndex)
-        {
-            InsertIndex = RemovedIndex;
-
-            while (InsertIndex > LowerBound && MyArray[InsertIndex - 1] > MyArray[RemovedIndex])
-            {
-                --InsertIndex;
-            }
-
-            if (RemovedIndex != InsertIndex)
-            {
-                MyArray.Insert(InsertIndex, 1);
-                MyArray[InsertIndex] = MyArray[RemovedIndex + 1];
-                MyArray.Remove(RemovedIndex + 1, 1);
-            }
-        }
-    }
-}
-
 function bool PlaceExitingDriver()
 {
     local int i;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-    local array<ExitPositionPair> ExitPositionPairs;
 
     if (Driver == none)
     {
@@ -243,30 +205,20 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    ExitPositionPairs.Length = ExitPositions.Length;
-
-    for (i = 0; i < ExitPositions.Length; ++i)
-    {
-        ExitPositionPairs[i].Index = i;
-        ExitPositionPairs[i].DistanceSquared = VSizeSquared(DrivePos - ExitPositions[i]);
-    }
-
-    InsertSortEPPArray(ExitPositionPairs, 0, ExitPositionPairs.Length - 1);
-
     // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
     if (class'DH_ROTreadCraft'.default.bDebugExitPositions)
     {
-        for (i = 0; i < ExitPositionPairs.Length; ++i)
+        for (i = 0; i < ExitPositions.Length; ++i)
         {
-            ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+            ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
             Spawn(class'DH_DebugTracer', , , ExitPosition);
         }
     }
 
-    for (i = 0; i < ExitPositionPairs.Length; ++i)
+    for (i = 0; i < ExitPositions.Length; ++i)
     {
-        ExitPosition = Location + (ExitPositions[ExitPositionPairs[i].Index] >> Rotation) + ZOffset;
+        ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
         if (Trace(HitLocation, HitNormal, ExitPosition, Location + ZOffset, false, Extent) != none ||
             Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
@@ -813,7 +765,7 @@ simulated function SwitchWeapon(byte F)
     }
 
     // Stop call to server if player has selected a tank crew role but isn't a tanker
-    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none || 
+    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
         ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
@@ -855,7 +807,7 @@ event CheckReset()
     if (bKeyVehicle && IsVehicleEmpty())
     {
         Died(none, class'DamageType', Location);
- 
+
         return;
     }
 
@@ -1490,7 +1442,7 @@ function TakeEngineFireDamage()
                 }
             }
 
-            DamageEngine(EngineFireDamagePer3Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);   
+            DamageEngine(EngineFireDamagePer3Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
 
             // Small chance each time of engine fire spreading & setting whole tank on fire
             if (!bOnFire && FRand() < EngineToHullFireChance)
@@ -1560,17 +1512,17 @@ function StartEngineFire(Pawn InstigatedBy)
     if (InstigatedBy != none)
     {
         WhoSetEngineOnFire = InstigatedBy.Controller;
-        
+
         if (WhoSetEngineOnFire != none)
         {
             EngineFireStarterTeam = WhoSetEngineOnFire.GetTeamNum();
-            
+
             if (DelayedDamageInstigatorController == none) // don't override DDIC if already set, e.g. someone else may already have set hull on fire
             {
                 DelayedDamageInstigatorController = WhoSetEngineOnFire;
             }
         }
-    }    
+    }
 
     // Set fire damage due immediately & call Timer() directly (it handles damage & setting of next due Timer)
     NextEngineFireDamageTime = Level.TimeSeconds;
@@ -1837,7 +1789,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
         return CheckPenetration(P, UFrontArmorFactor, GetCompoundAngle(InAngle, UFrontArmorSlope), PenetrationNumber);
     }
-    
+
     // Right side hit
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
@@ -2362,7 +2314,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 // Extra check here prevents splashing HE/HEAT from triggering ammo detonation or fires; Engine hit will stop shell from passing through to cabin
                 if (bProjectilePenetrated == true && bRearHit == false)
                 {
-                    if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5 && 
+                    if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5 &&
                         (FRand() <= AmmoIgnitionProbability || (bWasHEATRound && FRand() < 0.85)))
                     {
                         if (bDebuggingText)
@@ -2536,7 +2488,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Left side hit
-    if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit) 
+    if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit)
     {
         HitDir = Hitlocation - Location;
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
@@ -2586,7 +2538,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
 
     // This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
-    if (!bOnFire && Damage > 0 && Health > 0 && class<ROWeaponDamageType>(DamageType) != none && 
+    if (!bOnFire && Damage > 0 && Health > 0 && class<ROWeaponDamageType>(DamageType) != none &&
         class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.50 && bProjectilePenetrated == true)
     {
         if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
@@ -2662,7 +2614,7 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
         if (DamageScale > 0.0)
         {
             Driver.SetDelayedDamageInstigatorController(EventInstigator);
-            Driver.TakeDamage(DamageScale * DamageAmount, EventInstigator.Pawn, Driver.Location - (0.5 * (Driver.CollisionHeight + Driver.CollisionRadius)) * Direction, 
+            Driver.TakeDamage(DamageScale * DamageAmount, EventInstigator.Pawn, Driver.Location - (0.5 * (Driver.CollisionHeight + Driver.CollisionRadius)) * Direction,
                 DamageScale * Momentum * Direction, DamageType);
         }
     }

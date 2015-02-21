@@ -2096,15 +2096,11 @@ exec function ExitPosTool()
     local ROVehicle NearbyVeh;
     local vector Offset;
 
-    foreach RadiusActors(class'ROVehicle', NearbyVeh, 1024.0, Pawn.Location)
+    foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
     {
-        //Debug test
-        Log("Found a vehicle:" @ NearbyVeh.GetHumanReadableName());
-
         Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
 
-        Log("Your offset is:");
-        Log("(X=" $ Offset.X $ ",Y=" $ Offset.Y $ ",Z=" $ Offset.Z $ ")");
+        Log("(X=" $ Round(Offset.X) $ ",Y=" $ Round(Offset.Y) $ ",Z=" $ Round(Offset.Z) $ ")");
     }
 }
 
