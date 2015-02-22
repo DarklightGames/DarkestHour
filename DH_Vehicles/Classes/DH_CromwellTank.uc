@@ -188,13 +188,13 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-2.000000,Y=-5.000000,Z=2.000000)
     DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(X=125.0,Y=35.0,Z=175.0)	//driver
-    ExitPositions(1)=(X=25.0,Y=-35.0,Z=250.0)	//commander
-    ExitPositions(2)=(X=125.0,Y=35.0,Z=175.0)	//hull gun
-    ExitPositions(3)=(X=-150.0,Y=-150.0,Z=75.0)	//passenger (l)
-    ExitPositions(4)=(X=-255.0,Y=-50.0,Z=75.0)	//passenger (rl)
-    ExitPositions(5)=(X=-255.0,Y=50.0,Z=75.0)	//passenger (rr)
-    ExitPositions(6)=(X=-150.0,Y=150,Z=75.0)	//passenger (r)
+    ExitPositions(0)=(X=125.0,Y=35.0,Z=175.0)   //driver
+    ExitPositions(1)=(X=25.0,Y=-35.0,Z=250.0)   //commander
+    ExitPositions(2)=(X=125.0,Y=35.0,Z=175.0)   //hull gun
+    ExitPositions(3)=(X=-77.00,Y=-160.00,Z=75.00)
+    ExitPositions(4)=(X=-142.00,Y=-160.00,Z=75.00)
+    ExitPositions(6)=(X=-142.00,Y=160.00,Z=75.00)
+    ExitPositions(5)=(X=-77.00,Y=160.00,Z=75.00)
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=600.000000
