@@ -100,6 +100,10 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-160.000000,Y=65.000000,Z=-10.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatPassengerOne',WeaponBone="body")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatPassengerTwo',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatPassengerThree',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
     StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
@@ -113,9 +117,17 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M18_body'
     VehicleHudOccupantsX(0)=0.430000
-    VehicleHudOccupantsX(2)=0.000000
     VehicleHudOccupantsY(0)=0.320000
-    VehicleHudOccupantsY(2)=0.000000
+    VehicleHudOccupantsX(1)=0.500000
+    VehicleHudOccupantsY(1)=0.500000
+    VehicleHudOccupantsX(2)=0.375
+    VehicleHudOccupantsY(2)=0.75
+    VehicleHudOccupantsX(3)=0.45
+    VehicleHudOccupantsY(3)=0.8
+    VehicleHudOccupantsX(4)=0.55
+    VehicleHudOccupantsY(4)=0.8
+    VehicleHudOccupantsX(5)=0.625
+    VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.510000
     VehHitpoints(0)=(PointRadius=10.000000,PointOffset=(X=-5.000000,Y=-5.000000,Z=-5.000000),bPenetrationPoint=false)
     VehHitpoints(1)=(PointRadius=40.000000,PointOffset=(X=-100.000000,Z=4.000000),DamageMultiplier=1.000000)
@@ -178,8 +190,12 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=12.000000,Y=0.000000,Z=-18.000000)
     DriveAnim="VPanzer3_driver_idle_close"
-    ExitPositions(0)=(X=98.000000,Y=-100.000000,Z=156.000000)
-    ExitPositions(1)=(Y=-100.000000,Z=156.000000)
+    ExitPositions(0)=(X=107.00,Y=-41.00,Z=98.00)
+    ExitPositions(1)=(X=-29.00,Y=-37.00,Z=164.00)
+    ExitPositions(2)=(X=-125.00,Y=-158.00,Z=5.00)
+    ExitPositions(3)=(X=-244.00,Y=-37.00,Z=5.00)
+    ExitPositions(4)=(X=-241.00,Y=34.00,Z=5.00)
+    ExitPositions(5)=(X=-125.00,Y=156.00,Z=5.00)
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=600.000000
