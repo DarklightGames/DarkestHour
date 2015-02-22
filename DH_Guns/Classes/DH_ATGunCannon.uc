@@ -49,21 +49,6 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
    return true;
 }
 
-// TakeDamage - overloaded to allow nade, bayonet, and bash attacks to the driver.
-function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
-{
-    // Fix for suicide death messages
-    if (DamageType == class'Suicided')
-    {
-        DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-    }
-    else if (DamageType == class'ROSuicided')
-    {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, instigatedBy, Hitlocation, Momentum, damageType);
-    }
-}
-
 // Matt: reinstating original RO functions for AT guns, as generally don't have gunner's collision & if they do (e.g. German 88mm) they need different handling from new commander hit system
 simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 {

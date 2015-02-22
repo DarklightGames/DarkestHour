@@ -13,25 +13,47 @@ var  DH_ATCannonFactoryBase   DHParentFactory;
 var  ROVehicleFactory         ROParentFactory;
 
 // The following functions are empty functions, as AT guns have no treads, engine, movement, fire (burning), resupply or self-destruct if empty:
-simulated function UpdateMovementSound();
-simulated function SetupTreads();
-simulated function DestroyTreads();
-function DamageTrack(bool bLeftTrack);
-function MaybeDestroyVehicle();
-function TakeFireDamage();
-function Timer();
+simulated function PostNetReceive();
 function Fire(optional float F);
 function ServerStartEngine();
 simulated function SetEngine();
+simulated function StopEmitters();
+simulated function StartEmitters();
+simulated function UpdateMovementSound();
 function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType);
+simulated function SetupTreads();
+simulated function DestroyTreads();
+function DamageTrack(bool bLeftTrack);
+simulated function SetDamagedTracks();
+function MaybeDestroyVehicle();
+event CheckReset();
+simulated function SetFireEffects();
+function TakeFireDamage();
+function TakeEngineFireDamage();
+function StartHullFire(Pawn InstigatedBy);
+function StartEngineFire(Pawn InstigatedBy);
+simulated function StartDriverHatchFire();
+function Timer();
+simulated function SetNextTimer(optional float Now);
 //function bool ResupplyAmmo();
 //function EnteredResupply();
 //function LeftResupply();
 
-// Returns true, an AT-Gun is always disabled (i.e. can not move)
-simulated function bool IsDisabled()
+// Modified as nearly everything in DH_ROTreadCraft is irrelevant to AT gun
+simulated function PostBeginPlay()
 {
-    return true; // for now just return true
+    super(Vehicle).PostBeginPlay();
+
+    if (HasAnim(BeginningIdleAnim))
+    {
+        PlayAnim(BeginningIdleAnim);
+    }
+}
+
+// Modified as everything in DH_ROTreadCraft is irrelevant to AT gun
+simulated function PostNetBeginPlay()
+{
+    super(ROVehicle).PostNetBeginPlay();
 }
 
 // Overridden to bypass attaching as a driver and go straight to the gun
@@ -236,6 +258,7 @@ exec function DamageTank()
 
 defaultproperties
 {
+    bNetNotify=false
     UFrontArmorFactor=0.8
     URightArmorFactor=0.8
     ULeftArmorFactor=0.8
