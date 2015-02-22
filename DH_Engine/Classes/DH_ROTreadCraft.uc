@@ -865,6 +865,27 @@ event CheckReset()
     Destroy();
 }
 
+// Modified to avoid "accessed none" errors
+function bool IsVehicleEmpty()
+{
+    local int i;
+
+    if (Driver != none)
+    {
+        return false;
+    }
+
+    for (i = 0; i < WeaponPawns.Length; i++)
+    {
+        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Modified to use Sleep to control exit from state (including dedicated server), to avoid unnecessary stuff on a server & to add possibility for FOV changes
 simulated state ViewTransition
 {
@@ -1154,7 +1175,8 @@ simulated function PostNetReceive()
     }
 
     // One of the tracks has been damaged (uses DamagedTreadPanner as an effective flag that net client hasn't already done this)
-    if (((bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner) || (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)) && Health > 0)
+    if (((bLeftTrackDamaged && Skins.Length > LeftTreadIndex && Skins[LeftTreadIndex] != DamagedTreadPanner) || 
+        (bRightTrackDamaged && Skins.Length > LeftTreadIndex && Skins[RightTreadIndex] != DamagedTreadPanner)) && Health > 0)
     {
         SetDamagedTracks();
     }

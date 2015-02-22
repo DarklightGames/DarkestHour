@@ -362,13 +362,13 @@ function Timer()
     // Check to see if we need to destroy a spiked, abandoned vehicle
     if (bSpikedVehicle)
     {
-        if (IsVehicleEmpty())
+        if (Health > 0 && IsVehicleEmpty())
         {
             KilledBy(self);
         }
         else
         {
-            bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied
+            bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied or destroyed
         }
     }
 }
@@ -750,6 +750,27 @@ event CheckReset()
     }
 
     Destroy();
+}
+
+// Modified to avoid "accessed none" errors
+function bool IsVehicleEmpty()
+{
+    local int i;
+
+    if (Driver != none)
+    {
+        return false;
+    }
+
+    for (i = 0; i < WeaponPawns.Length; i++)
+    {
+        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
