@@ -265,8 +265,10 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-1.000000,Y=3.000000,Z=-12.000000)
     DriveAnim="Vhalftrack_driver_idle"
-    ExitPositions(0)=(Y=-100.000000,Z=60.000000)
-    ExitPositions(1)=(Y=100.000000,Z=60.000000)
+    ExitPositions(0)=(X=40.00,Y=-110.00,Z=25.00)
+    ExitPositions(1)=(X=25.00,Y=110.00,Z=25.00)
+    ExitPositions(2)=(X=-25.00,Y=-110.00,Z=25.00)
+    ExitPositions(3)=(X=-40.00,Y=110.00,Z=25.00)
     EntryRadius=160.000000
     FPCamViewOffset=(Z=2.000000)
     TPCamDistance=300.000000

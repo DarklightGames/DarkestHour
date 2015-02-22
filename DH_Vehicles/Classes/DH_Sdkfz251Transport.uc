@@ -212,8 +212,9 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RRight_Drive_Wheel'
     VehicleMass=8.500000
     DriveAnim="Vhalftrack_driver_idle"
-    ExitPositions(0)=(X=40.000000,Y=-165.000000,Z=100.000000)
-    ExitPositions(1)=(X=40.000000,Y=165.000000,Z=100.000000)
+    ExitPositions(0)=(X=-240.00,Y=-30.00,Z=5.00)
+    ExitPositions(1)=(X=-240.00,Y=30.00,Z=5.00)
+    ExitPositions(2)=(X=-285.00,Y=0.00,Z=5.00)
     EntryRadius=375.000000
     TPCamDistance=1000.000000
     CenterSpringForce="SpringONSSRV"
