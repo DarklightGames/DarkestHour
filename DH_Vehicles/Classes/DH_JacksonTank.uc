@@ -112,10 +112,10 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jackson_anm.Jackson_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Jackson_anm.Jackson_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M36_Body'
-    VehicleHudOccupantsX(0)=0.430000
-    VehicleHudOccupantsY(0)=0.320000
-    VehicleHudOccupantsX(1)=0.500000
-    VehicleHudOccupantsY(1)=0.500000
+    VehicleHudOccupantsX(0)=0.43
+    VehicleHudOccupantsY(0)=0.32
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.5
     VehicleHudOccupantsX(2)=0.4
     VehicleHudOccupantsY(2)=0.65
     VehicleHudOccupantsX(3)=0.45
