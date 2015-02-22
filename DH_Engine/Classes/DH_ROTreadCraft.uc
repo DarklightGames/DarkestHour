@@ -107,6 +107,8 @@ var     bool        bEngineDead; // tank engine is damaged and cannot run or be 
 var     bool        bEngineOff;  // tank engine is simply switched off
 var     bool        bSavedEngineOff; // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;
+var     sound       DamagedStartUpSound;
+var     sound       DamagedShutDownSound;
 
 // Treads
 var     int         LeftTreadIndex;
@@ -118,7 +120,7 @@ var()   material    DamagedTreadPanner;
 var()   class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
 var     RODummyAttachment         DamagedTrackLeft, DamagedTrackRight;
 
-// Fire stuff- Shurek & Ch!cKeN
+// Fire stuff- Shurek & Ch!cKeN (modified by Matt)
 var     class<DamageType>           VehicleBurningDamType;
 var     class<VehicleDamagedEffect> FireEffectClass;
 var     VehicleDamagedEffect        DriverHatchFireEffect;
@@ -135,8 +137,13 @@ var     float       EngineFireHEATChance;
 var     bool        bEngineOnFire;
 var     float       EngineFireDamagePer3Secs;
 var     float       NextEngineFireDamageTime;
-var     bool        bTurretFireTriggered;
-var     bool        bHullMGFireTriggered;
+var     bool        bSetHullFireEffects;
+var     bool        bDriverHatchFireNeeded;
+var     float       DriverHatchFireSpawnTime;
+var     bool        bTurretFireNeeded;
+var     float       TurretHatchFireSpawnTime;
+var     bool        bHullMGFireNeeded;
+var     float       HullMGHatchFireSpawnTime;
 var     float       FireDetonationChance;   // chance of a fire blowing a tank up, runs each time the fire does damage
 var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the tank, runs each time engine takes fire damage
 var     bool        bFirstHit;
@@ -145,14 +152,9 @@ var     Controller  WhoSetOnFire;
 var     int         HullFireStarterTeam;
 var     Controller  WhoSetEngineOnFire;
 var     int         EngineFireStarterTeam;
-var     float       DriverHatchBurnTime;
-
-// New sounds
+var     sound       SmokingEngineSound;
 var     sound       VehicleBurningSound;
 var     sound       DestroyedBurningSound;
-var     sound       DamagedStartUpSound;
-var     sound       DamagedShutDownSound;
-var     sound       SmokingEngineSound;
 
 // Debugging help and customizable stuff
 var     bool        bDrawPenetration;
@@ -188,7 +190,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerToggleDebugExits, ServerDamTrack;
+        ServerStartEngine, ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire;
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
 
@@ -472,8 +474,7 @@ simulated event DrivingStatusChanged()
         bDropDetail = false;
     }
 
-    // We want the fire code to continue running even if no one is in the vehicle
-    if (bDriving || bOnFire || bEngineOnFire)
+    if (bDriving)
     {
         Enable('Tick');
     }
@@ -1134,7 +1135,7 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: modified to handle engine on/off (including manual/powered turret & dust/exhaust emitters)
+// Matt: modified to handle engine on/off (including manual/powered turret & dust/exhaust emitters), damaged tracks & fire effects, instead of constantly checking in Tick
 simulated function PostNetReceive()
 {
     // Driver has changed position
@@ -1152,13 +1153,32 @@ simulated function PostNetReceive()
         SetEngine();
     }
 
-    if (Health > 0)
+    // One of the tracks has been damaged (uses DamagedTreadPanner as an effective flag that net client hasn't already done this)
+    if (((bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner) || (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner)) && Health > 0)
     {
-        // One of the tracks has been damaged (uses DamagedTreadPanner as an effective flag that net client hasn't already done this)
-        if ((bLeftTrackDamaged && Skins[LeftTreadIndex] != DamagedTreadPanner) || (bRightTrackDamaged && Skins[RightTreadIndex] != DamagedTreadPanner))
+        SetDamagedTracks();
+    }
+
+    if (bOnFire)
+    {
+        // Vehicle fire has started
+        if (!bSetHullFireEffects && Health > 0)
         {
-            SetDamagedTracks();
+            SetFireEffects();
         }
+    }
+    else if (bEngineOnFire)
+    {
+        // Engine fire has started (DEHFireFactor of 1.0 would flag that the engine fire effect is already on)
+        if (DamagedEffectHealthFireFactor != 1.0 && Health > 0)
+        {
+            SetFireEffects();
+        }
+    }
+    // Engine is dead & engine fire has burned out, so set it to smoke instead of burn
+    else if (EngineHealth <= 0 && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0) && Health > 0)
+    {
+        SetFireEffects();
     }
 }
 
@@ -1273,53 +1293,6 @@ simulated function Tick(float DeltaTime)
     else
     {
         WheelLatFrictionScale = default.WheelLatFrictionScale;
-    }
-
-    if (bEngineOnFire || (bOnFire && Health > 0) && DamagedEffect != none)
-    {
-        if (DamagedEffectHealthFireFactor != 1.0)
-        {
-            DamagedEffectHealthFireFactor = 1.0;
-            DamagedEffect.UpdateDamagedEffect(true, 0.0, false, false);
-        }
-
-        if (bOnFire && DriverHatchFireEffect == none)
-        {
-            // Lets randomise the fire start times to desync them with the turret and engine ones
-            if (Level.TimeSeconds - DriverHatchBurnTime > 0.2)
-            {
-                if (FRand() < 0.1)
-                {
-                    DriverHatchFireEffect = Spawn(FireEffectClass);
-                    AttachToBone(DriverHatchFireEffect, FireAttachBone);
-                    DriverHatchFireEffect.SetRelativeLocation(FireEffectOffset);
-                    DriverHatchFireEffect.SetEffectScale(DamagedEffectScale);
-                    DriverHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
-                }
-
-                DriverHatchBurnTime = Level.TimeSeconds;
-            }
-            else if (!bTurretFireTriggered && WeaponPawns.Length > 0 && WeaponPawns[0] != none && DH_ROTankCannon(WeaponPawns[0].Gun) != none)
-            {
-                DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
-                bTurretFireTriggered = true;
-            }
-            else if (!bHullMGFireTriggered && WeaponPawns.Length > 1 && WeaponPawns[1] != none && DH_ROMountedTankMG(WeaponPawns[1].Gun) != none)
-            {
-                DH_ROMountedTankMG(WeaponPawns[1].Gun).bOnFire = true;
-                bHullMGFireTriggered = true;
-            }
-        }
-    }
-    else if (EngineHealth <= 0 && Health > 0)
-    {
-        if (DamagedEffectHealthFireFactor != 0.0)
-        {
-            DamagedEffectHealthFireFactor = 0.0;
-            DamagedEffectHealthHeavySmokeFactor = 1.0;
-            DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // reset fire effects
-            DamagedEffect.UpdateDamagedEffect(false, 0.0, false, true);  // set the tank to smoke instead of burn
-        }
     }
 
     super(ROWheeledVehicle).Tick(DeltaTime);
@@ -1468,8 +1441,7 @@ function TakeEngineFireDamage()
         // Engine fire dies down 30 seconds after engine health hits zero, unless hull has caught fire
         else if (!bOnFire)
         {
-            bEngineOnFire = false;
-            SetEngine();
+            bEngineOnFire = false; // this will have been called from Timer(), which will now call SetFireEffects() to handle fire & sound effects
         }
     }
 }
@@ -1477,14 +1449,14 @@ function TakeEngineFireDamage()
 // New function to handle starting a hull fire
 function StartHullFire(Pawn InstigatedBy)
 {
+    bOnFire = true;
+
     if (bDebuggingText)
     {
         Level.Game.Broadcast(self, "Vehicle set on fire");
     }
 
-    bOnFire = true;
-    SetEngine();
-
+    // Record the player responsible for starting fire, so score can be awarded later if results in a kill
     if (InstigatedBy != none)
     {
         WhoSetOnFire = InstigatedBy.Controller;
@@ -1498,21 +1470,22 @@ function StartHullFire(Pawn InstigatedBy)
 
     // Set the 1st hull damage due in 2 seconds
     NextHullFireDamageTime = Level.TimeSeconds + 2.0;
-    SetNextTimer();
+
+    // Fire effects, including timers for delayed hatch fires (will set 1st timer for either damage or starting hatch fires)
+    SetFireEffects();
 }
 
 // New function to handle starting an engine fire
 function StartEngineFire(Pawn InstigatedBy)
 {
+    bEngineOnFire = true;
+
     if (bDebuggingText)
     {
         Level.Game.Broadcast(self, "Engine set on fire");
     }
 
-    bEngineOnFire = true;
-    SetEngine();
-
-    // Record which player is responsible for the delayed damage
+    // Record the player responsible for starting fire, so score can be awarded later if results in a kill
     if (InstigatedBy != none)
     {
         WhoSetEngineOnFire = InstigatedBy.Controller;
@@ -1531,6 +1504,112 @@ function StartEngineFire(Pawn InstigatedBy)
     // Set fire damage due immediately & call Timer() directly (it handles damage & setting of next due Timer)
     NextEngineFireDamageTime = Level.TimeSeconds;
     Timer();
+
+    // Engine fire effect
+    SetFireEffects();
+}
+
+// Set up for spawning various hatch fire effects, but randomise start times to desync them
+simulated function SetFireEffects()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (bOnFire || bEngineOnFire)
+        {
+            // Engine fire effect
+            if (DamagedEffectHealthFireFactor != 1.0)
+            {
+                DamagedEffectHealthFireFactor = 1.0;
+                DamagedEffectHealthSmokeFactor = 1.0; // appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
+                                                      // (presumably doesn't check for fire unless vehicle is at least damaged enough to smoke)
+
+                if (DamagedEffect == none && Health == HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
+                {
+                    Health--;
+                }
+            }
+
+            // Hatch fire effects
+            if (bOnFire && !bSetHullFireEffects)
+            {
+                bSetHullFireEffects = true;
+
+                // If bClientInitialized or we're an authority role (single player or listen server) then this must have been called as the fire breaks out
+                // Randomise the fire effect start times (spreading from the engine forwards) & set a timer
+                if (bClientInitialized || Role == ROLE_Authority)
+                {
+                    if (CannonTurret != none)
+                    {
+                        bTurretFireNeeded = true;
+                        TurretHatchFireSpawnTime = Level.TimeSeconds + 0.5 + FRand();
+                    }
+
+                    bDriverHatchFireNeeded = true;
+                    DriverHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
+
+                    if (HullMG != none)
+                    {
+                        bHullMGFireNeeded = true;
+                        HullMGHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
+                    }
+
+                    SetNextTimer();
+                }
+                // Otherwise this must have been called when an already burning vehicle is replicated to a net client
+                // Start driver's hatch fire effect immediately, but let VehicleWeapons start their own fires as those actors replicate
+                else
+                {
+                    StartDriverHatchFire();
+                }
+            }
+        }
+        // Engine is dead, but there's no fire, so make sure it is set to smoke instead of burn
+        else if (EngineHealth <= 0 && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
+        {
+            DamagedEffectHealthFireFactor = 0.0;
+            DamagedEffectHealthHeavySmokeFactor = 1.0;
+            DamagedEffectHealthSmokeFactor = 1.0; // appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
+                                                  // (presumably doesn't check for fire or dark smoke unless vehicle is at least damaged enough to lightly smoke)
+            if (DamagedEffect != none)
+            {
+                DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // reset existing effect
+                DamagedEffect.UpdateDamagedEffect(false, 0.0, false, true);  // then set to dark smoke
+            }
+            else if (Health == HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
+            {
+                Health--;
+            }
+        }
+    }
+
+    // If engine is off, update sound to burning or smoking sound)
+    if (bEngineOff)
+    {
+        SetEngine();
+    }
+}
+
+// New function to start a driver's hatch fire effect
+simulated function StartDriverHatchFire()
+{
+    bDriverHatchFireNeeded = false;    
+
+    if (DriverHatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
+    {
+        DriverHatchFireEffect = Spawn(FireEffectClass);
+    }
+
+    if (DriverHatchFireEffect != none)
+    {
+        AttachToBone(DriverHatchFireEffect, FireAttachBone);
+        DriverHatchFireEffect.SetRelativeLocation(FireEffectOffset);
+        DriverHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
+
+        if (DamagedEffectScale != 1.0)
+        {
+            DriverHatchFireEffect.SetEffectScale(DamagedEffectScale);
+        }
+    }
 }
 
 // New function to set up the engine properties, including manual/powered turret
@@ -1544,13 +1623,13 @@ simulated function SetEngine()
         {
             AmbientSound = VehicleBurningSound;
             SoundVolume = 255;
-            SoundRadius = 600.0;
+            SoundRadius = 200.0;
         }
         else if (EngineHealth <= 0)
         {
             AmbientSound = SmokingEngineSound;
-            SoundVolume = 40;
-            SoundRadius = 600.0;
+            SoundVolume = 64;
+            SoundRadius = 200.0;
         }
         else
         {
@@ -2650,7 +2729,7 @@ function MaybeDestroyVehicle()
 
 // Matt: modified to use a system of interwoven timers instead of constantly checking for things in Tick() - fire damage, spiked vehicle timer
 // Drops all RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as in DH we don't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
-function Timer()
+simulated function Timer()
 {
     local float Now;
 
@@ -2689,11 +2768,46 @@ function Timer()
         }
     }
 
+    // Vehicle is burning, so check if we need to spawn any hatch fire effects
+    if (bOnFire && Level.NetMode != NM_DedicatedServer)
+    {
+        if (bDriverHatchFireNeeded && Now >= DriverHatchFireSpawnTime && DriverHatchFireSpawnTime != 0.0)
+        {
+            StartDriverHatchFire();
+        }
+
+        if (bTurretFireNeeded && Now >= TurretHatchFireSpawnTime && TurretHatchFireSpawnTime != 0.0)
+        {
+            bTurretFireNeeded = false;
+
+            if (DH_ROTankCannon(CannonTurret) != none)
+            {
+                DH_ROTankCannon(CannonTurret).StartTurretFire();
+            }
+        }
+
+        if (bHullMGFireNeeded && Now >= HullMGHatchFireSpawnTime && HullMGHatchFireSpawnTime != 0.0)
+        {
+            bHullMGFireNeeded = false;
+
+            if (DH_ROMountedTankMG(HullMG) != none)
+            {
+                DH_ROMountedTankMG(HullMG).StartMGFire();
+            }
+        }
+    }
+
+    // Engine is dead, but there's no fire, so make sure it is set to smoke instead of burn
+    if (EngineHealth <= 0 && !bEngineOnFire && !bOnFire && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
+    {
+        SetFireEffects();
+    }
+
     SetNextTimer(Now);
 }
 
 // New function as we are using timers for different things in different net modes, so work out which one (if any) is due next
-function SetNextTimer(optional float Now)
+simulated function SetNextTimer(optional float Now)
 {
     local float NextTimerTime;
 
@@ -2709,14 +2823,32 @@ function SetNextTimer(optional float Now)
             NextTimerTime = NextHullFireDamageTime;
         }
 
-        if (bEngineOnFire && NextEngineFireDamageTime > Now && (NextTimerTime == 0.0 || NextEngineFireDamageTime < NextTimerTime))
+        if (bEngineOnFire && (NextEngineFireDamageTime < NextTimerTime || NextTimerTime == 0.0) && NextEngineFireDamageTime > Now)
         {
             NextTimerTime = NextEngineFireDamageTime;
         }
 
-        if (bSpikedVehicle && SpikeTime > Now && (NextTimerTime == 0.0 || SpikeTime < NextTimerTime))
+        if (bSpikedVehicle && (SpikeTime < NextTimerTime || NextTimerTime == 0.0) && SpikeTime > Now)
         {
             NextTimerTime = SpikeTime;
+        }
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bOnFire)
+    {
+        if (bDriverHatchFireNeeded && (DriverHatchFireSpawnTime < NextTimerTime || NextTimerTime == 0.0) && DriverHatchFireSpawnTime > Now)
+        {
+            NextTimerTime = DriverHatchFireSpawnTime;
+        }
+
+        if (bTurretFireNeeded && (TurretHatchFireSpawnTime < NextTimerTime || NextTimerTime == 0.0) && TurretHatchFireSpawnTime > Now)
+        {
+            NextTimerTime = TurretHatchFireSpawnTime;
+        }
+
+        if (bHullMGFireNeeded && (HullMGHatchFireSpawnTime < NextTimerTime || NextTimerTime == 0.0) && HullMGHatchFireSpawnTime > Now)
+        {
+            NextTimerTime = HullMGHatchFireSpawnTime;
         }
     }
 
@@ -3127,6 +3259,33 @@ function exec DamageTank()
         Health /= 2;
         EngineHealth /= 2;
     }
+}
+
+// Matt: handy execs during development for testing fire damage & effects
+exec function HullFire()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ServerHullFire();
+    }
+}
+
+exec function EngineFire()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ServerEngineFire();
+    }
+}
+
+function ServerHullFire()
+{
+    if (!bOnFire) StartHullFire(none);
+}
+
+function ServerEngineFire()
+{
+    if (!bEngineOnFire) StartEngineFire(none);
 }
 
 simulated function DrawHUD(Canvas Canvas)

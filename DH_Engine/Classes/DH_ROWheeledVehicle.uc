@@ -138,14 +138,18 @@ simulated function SetEngine()
         // If engine is dead then start a fire
         if (EngineHealth <= 0)
         {
-            DamagedEffectHealthFireFactor = 1.0; // play fire effect
-            DamagedEffectHealthSmokeFactor = 1.0;
-            DamagedEffectHealthMediumSmokeFactor = 1.0;
-            DamagedEffectHealthHeavySmokeFactor = 1.0;
+            DamagedEffectHealthFireFactor = 1.0;
+            DamagedEffectHealthSmokeFactor = 1.0; // appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
+                                                  // (presumably doesn't check for fire unless vehicle is at least damaged enough to smoke)
+
+            if (DamagedEffect == none && Health == HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
+            {
+                Health--;
+            }
 
             AmbientSound = VehicleBurningSound;
             SoundVolume = 255;
-            SoundRadius = 600.0;
+            SoundRadius = 200.0;
         }
         else
         {

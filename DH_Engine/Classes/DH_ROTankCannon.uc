@@ -26,12 +26,11 @@ var()   float       ManualRotationsPerSecond;
 var()   float       PoweredRotationsPerSecond;
 
 // Stuff for fire effects - Ch!cKeN
+var     VehicleDamagedEffect        TurretHatchFireEffect;
+var     class<VehicleDamagedEffect> FireEffectClass;
 var()   name                        FireAttachBone;
 var()   vector                      FireEffectOffset;
-var     class<VehicleDamagedEffect> FireEffectClass;
-var     VehicleDamagedEffect        TurretHatchFireEffect;
-var     bool                        bOnFire; // set by Treadcraft base to notify when to start fire effects
-var     float                       BurnTime;
+var()   float                       FireEffectScale;
 
 // Armor penetration stuff
 var()   bool    bIsAssaultGun;
@@ -67,12 +66,9 @@ replication
     reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
         MainAmmoChargeExtra; // Matt: should be able to change to byte - check & implement later
 
-//  reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
-//      bManualTurret; // Matt: have deprecated
-
     // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire;
+//  reliable if (bNetDirty && Role == ROLE_Authority)
+//      bManualTurret, bOnFire; // Matt: have deprecated both of these
 
     // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - move later as part of class review & refactor
     reliable if (Role == ROLE_Authority)
@@ -106,23 +102,30 @@ simulated function PostNetBeginPlay()
     }
 }
 
+// Matt: no longer use Tick, as turret hatch fire effect & manual/powered turret are now triggered on net client from VehicleBase's PostNetReceive()
+// Let's disable Tick altogether to save unnecessary processing
 simulated function Tick(float DeltaTime)
 {
-    super.Tick(DeltaTime);
+    Disable('Tick');
+}
 
-    if (bOnFire && TurretHatchFireEffect == none)
+// Matt: new function to start a turret hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
+simulated function StartTurretFire()
+{
+    if (TurretHatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
     {
-        // Lets randomise the fire start times to desync them with the driver and engine ones
-        if (Level.TimeSeconds - BurnTime > 0.2)
+        TurretHatchFireEffect = Spawn(FireEffectClass);
+    }
+
+    if (TurretHatchFireEffect != none)
+    {
+        AttachToBone(TurretHatchFireEffect, FireAttachBone);
+        TurretHatchFireEffect.SetRelativeLocation(FireEffectOffset);
+        TurretHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
+
+        if (FireEffectScale != 1.0)
         {
-            if (FRand() < 0.1)
-            {
-                TurretHatchFireEffect = Spawn(FireEffectClass);
-                AttachToBone(TurretHatchFireEffect, FireAttachBone);
-                TurretHatchFireEffect.SetRelativeLocation(FireEffectOffset);
-                TurretHatchFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
-            }
-            BurnTime = Level.TimeSeconds;
+            TurretHatchFireEffect.SetEffectScale(FireEffectScale);
         }
     }
 }
@@ -140,10 +143,16 @@ simulated function InitialiseCannon(DH_ROTankCannonPawn CannonPwn)
             Instigator = CannonPwn;
         }
 
-        // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server 
-        if (ROTreadCraft(CannonPwn.VehicleBase) != none)
+        if (DH_ROTreadCraft(CannonPwn.VehicleBase) != none)
         {
-            ROTreadCraft(CannonPwn.VehicleBase).CannonTurret = self;
+            // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server 
+            DH_ROTreadCraft(CannonPwn.VehicleBase).CannonTurret = self;
+
+            // If vehicle is burning, start the turret hatch fire effect
+            if (DH_ROTreadCraft(CannonPwn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            {
+                StartTurretFire();
+            }
         }
     }
 }
@@ -1749,6 +1758,7 @@ defaultproperties
     PoweredRotationsPerSecond=0.05
     FireAttachBone="com_player"
     FireEffectOffset=(Z=-20.0)
+    FireEffectScale=1.0
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     CannonReloadState=CR_Waiting
     AltFireSpread=0.002

@@ -80,7 +80,7 @@ simulated function Destroyed()
     else
         bDropDetail = false;
 
-    if (bDriving || bOnFire || bEngineOnFire)
+    if (bDriving)
         Enable('Tick');
     else
         Disable('Tick');
@@ -105,48 +105,6 @@ simulated function Tick(float DeltaTime)
             {
                 ROPlayer(Controller).aForward = -32768; //forces player to pull back on throttle
             }
-        }
-    }
-
-    if (bEngineOnFire || (bOnFire && Health > 0))
-    {
-        if (DamagedEffectHealthFireFactor != 1.0)
-        {
-            DamagedEffectHealthFireFactor = 1.0;
-            DamagedEffect.UpdateDamagedEffect(true, 0, false, false);
-        }
-
-        if (bOnFire && DriverHatchFireEffect == none)
-        {
-            // Lets randomise the fire start times to desync them with the turret and engine ones
-            if (Level.TimeSeconds - DriverHatchBurnTime > 0.2)
-            {
-                if (FRand() < 0.1)
-                {
-                    DriverHatchFireEffect = Spawn(FireEffectClass);
-                    AttachToBone(DriverHatchFireEffect, FireAttachBone);
-                    DriverHatchFireEffect.SetRelativeLocation(FireEffectOffset);
-                    DriverHatchFireEffect.SetEffectScale(DamagedEffectScale);
-                    DriverHatchFireEffect.UpdateDamagedEffect(true, 0, false, false);
-                }
-
-                DriverHatchBurnTime = Level.TimeSeconds;
-            }
-            else if (!bTurretFireTriggered)
-            {
-                DH_ROTankCannon(WeaponPawns[0].Gun).bOnFire = true;
-                bTurretFireTriggered = true;
-            }
-        }
-    }
-    else if (EngineHealth <= 0 && Health > 0)
-    {
-        if (DamagedEffectHealthFireFactor != 0)
-        {
-            DamagedEffectHealthFireFactor = 0.0;
-            DamagedEffectHealthHeavySmokeFactor = 1.0;
-            DamagedEffect.UpdateDamagedEffect(false, 0, false, false); // reset fire effects
-            DamagedEffect.UpdateDamagedEffect(false, 0, false, true);  // set the tank to smoke instead of burn
         }
     }
 

@@ -21,14 +21,10 @@ var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specif
 var DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
 
 // Stuff for fire effects - Ch!cKeN
+var     VehicleDamagedEffect        HullMGFireEffect;
+var     class<VehicleDamagedEffect> FireEffectClass;
 var()   name                        FireAttachBone;
 var()   vector                      FireEffectOffset;
-var     class<VehicleDamagedEffect> FireEffectClass;
-var     VehicleDamagedEffect        HullMGFireEffect;
-var     bool                        bOnFire; // set by Treadcraft base to notify when to start fire effects
-var     float                       BurnTime;
-var     class<DamageType>           VehicleBurningDamType;
-var     float                       PlayerFireDamagePerSec;
 
 replication
 {
@@ -37,8 +33,8 @@ replication
         bReloading, NumMags;
 
     // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire;
+//  reliable if (bNetDirty && Role == ROLE_Authority)
+//      bOnFire; // Matt: removed as have deprecated
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -88,33 +84,40 @@ simulated function InitialiseMG(DH_ROMountedTankMGPawn MGPwn)
             Instigator = MGPwn;
         }
 
-        // Set the vehicle's HullMG reference - normally unused but can be useful
-        if (ROTreadCraft(MGPwn.VehicleBase) != none)
+        if (DH_ROTreadCraft(MGPwn.VehicleBase) != none)
         {
-            ROTreadCraft(MGPwn.VehicleBase).HullMG = self;
+            // Set the vehicle's HullMG reference - normally unused but can be useful
+            DH_ROTreadCraft(MGPwn.VehicleBase).HullMG = self;
+
+            // If vehicle is burning, start the MG hatch fire effect
+            if (DH_ROTreadCraft(MGPwn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            {
+                StartMGFire();
+            }
         }
     }
 }
 
+// Matt: no longer use Tick, as MG hatch fire effect is now triggered on net client from VehicleBase's PostNetReceive()
+// Let's disable Tick altogether to save unnecessary processing
 simulated function Tick(float DeltaTime)
 {
-    super.Tick(DeltaTime);
+    Disable('Tick');
+}
 
-    if (bOnFire && HullMGFireEffect == none)
+// Matt: new function to start an MG hatch fire effect - all fires now triggered from vehicle base, so don't need MG's Tick() constantly checking for a fire
+simulated function StartMGFire()
+{
+    if (HullMGFireEffect == none && Level.NetMode != NM_DedicatedServer)
     {
-        // Lets randomise the fire start times to desync them with the driver and engine ones
-        if (Level.TimeSeconds - BurnTime > 0.2)
-        {
-            if (FRand() < 0.1)
-            {
-                HullMGFireEffect = Spawn(FireEffectClass);
-                AttachToBone(HullMGFireEffect, FireAttachBone);
-                HullMGFireEffect.SetRelativeLocation(FireEffectOffset);
-                HullMGFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
-            }
+        HullMGFireEffect = Spawn(FireEffectClass);
+    }
 
-            BurnTime = Level.TimeSeconds;
-        }
+    if (HullMGFireEffect != none)
+    {
+        AttachToBone(HullMGFireEffect, FireAttachBone);
+        HullMGFireEffect.SetRelativeLocation(FireEffectOffset);
+        HullMGFireEffect.UpdateDamagedEffect(true, 0.0, false, false);
     }
 }
 
@@ -438,5 +441,4 @@ defaultproperties
     FireAttachBone="mg_pitch"
     FireEffectOffset=(X=10.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    VehicleBurningDamType=class'DH_VehicleBurningDamType'
 }
