@@ -70,6 +70,10 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.000000,Y=-68.000000,Z=45.000000),ExhaustRotation=(Pitch=36000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=69.000000,Z=45.000000),ExhaustRotation=(Pitch=36000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2342CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz234PassengerOne',WeaponBone="body")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz234PassengerTwo',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz234PassengerThree',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz234PassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
@@ -84,10 +88,17 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true,ViewFOV=90.000000)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.234_body'
     VehicleHudOccupantsX(0)=0.480000
-    VehicleHudOccupantsX(2)=0.000000
     VehicleHudOccupantsY(0)=0.320000
-    VehicleHudOccupantsY(1)=0.430000
-    VehicleHudOccupantsY(2)=0.000000
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.43
+    VehicleHudOccupantsX(2)=0.4
+    VehicleHudOccupantsY(2)=0.75
+    VehicleHudOccupantsX(3)=0.5
+    VehicleHudOccupantsY(3)=0.6
+    VehicleHudOccupantsX(4)=0.6
+    VehicleHudOccupantsY(4)=0.75
+    VehicleHudOccupantsX(5)=0.5
+    VehicleHudOccupantsY(5)=0.8
     VehicleHudEngineX=0.510000
     VehHitpoints(0)=(PointOffset=(X=5.000000,Z=-5.000000),bPenetrationPoint=false)
     VehHitpoints(1)=(PointOffset=(X=-150.000000,Z=52.000000),DamageMultiplier=1.000000)
@@ -106,10 +117,12 @@ defaultproperties
     VehicleMass=5.000000
     DrivePos=(X=4.000000,Y=-2.000000,Z=0.000000)
     DriveAnim="VBA64_driver_idle_close"
-    ExitPositions(0)=(Y=-200.000000,Z=100.000000)
-    ExitPositions(1)=(Y=200.000000,Z=100.000000)
-    ExitPositions(2)=(Y=-200.000000,Z=100.000000)
-    ExitPositions(3)=(Y=200.000000,Z=100.000000)
+    ExitPositions(0)=(X=-92.00,Y=4.00,Z=150.00)
+    ExitPositions(1)=(X=-92.00,Y=4.00,Z=150.00)
+    ExitPositions(2)=(X=-160.00,Y=-120.00,Z=35.00)
+    ExitPositions(3)=(X=-300.00,Y=0.00,Z=35.00)
+    ExitPositions(4)=(X=-160.00,Y=120.00,Z=35.00)
+    ExitPositions(5)=(X=-300.00,Y=0.00,Z=35.00)
     EntryRadius=375.000000
     FPCamPos=(X=42.000000,Y=-18.000000,Z=33.000000)
     DriverDamageMult=1.000000
