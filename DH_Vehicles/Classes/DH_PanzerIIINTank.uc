@@ -172,8 +172,13 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
     DriveAnim="VPanzer3_driver_idle_close"
-    ExitPositions(0)=(Y=-200.000000,Z=100.000000)
-    ExitPositions(1)=(Y=200.000000,Z=100.000000)
+    ExitPositions(0)=(X=-66.00,Y=1.00,Z=145.00)
+    ExitPositions(1)=(X=-66.00,Y=1.00,Z=145.00)
+    ExitPositions(2)=(X=-66.00,Y=1.00,Z=145.00)
+    ExitPositions(3)=(X=-87.00,Y=-156.00,Z=10.00)
+    ExitPositions(4)=(X=-230.00,Y=-34.00,Z=10.00)
+    ExitPositions(5)=(X=-230.00,Y=34.00,Z=10.00)
+    ExitPositions(6)=(X=-87.00,Y=156.00,Z=10.00)
     EntryRadius=375.000000
     FPCamPos=(X=0.000000,Y=0.000000,Z=0.000000)
     TPCamDistance=600.000000

@@ -187,8 +187,13 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIVHTank.Right_Drive_Wheel'
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
-    ExitPositions(0)=(Y=-200.000000,Z=100.000000)
-    ExitPositions(1)=(Y=200.000000,Z=100.000000)
+    ExitPositions(0)=(X=104.00,Y=-37.00,Z=110.00)
+    ExitPositions(1)=(X=-90.00,Y=-4.00,Z=150.00)
+    ExitPositions(2)=(X=105.00,Y=44.00,Z=115.00)
+    ExitPositions(3)=(X=-121.00,Y=-163.00,Z=5.00)
+    ExitPositions(4)=(X=-251.00,Y=-35.00,Z=5.00)
+    ExitPositions(5)=(X=-251.00,Y=35.00,Z=5.00)
+    ExitPositions(6)=(X=-121.00,Y=163.00,Z=5.00)
     EntryRadius=375.000000
     FPCamPos=(X=0.000000,Y=0.000000,Z=0.000000)
     TPCamDistance=600.000000

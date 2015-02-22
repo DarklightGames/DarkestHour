@@ -193,8 +193,11 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-5.000000,Y=-5.000000,Z=0.000000)
     DriveAnim="VStug3_driver_idle_close"
-    ExitPositions(0)=(Y=-125.000000,Z=100.000000)
-    ExitPositions(1)=(Y=125.000000,Z=100.000000)
+    ExitPositions(0)=(X=-26.00,Y=-25.00,Z=135.00)
+    ExitPositions(1)=(X=-26.00,Y=-25.00,Z=135.00)
+    ExitPositions(2)=(X=-26.00,Y=-25.00,Z=135.00)
+    ExitPositions(3)=(X=-251.00,Y=-7.00,Z=5.00)
+    ExitPositions(4)=(X=-252.00,Y=39.00,Z=5.00)
     EntryRadius=375.000000
     FPCamPos=(X=-5.000000,Y=0.000000,Z=25.000000)
     TPCamDistance=600.000000
