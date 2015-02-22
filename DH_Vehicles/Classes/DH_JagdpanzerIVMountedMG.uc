@@ -9,6 +9,7 @@ defaultproperties
 {
     ReloadSound=sound'Vehicle_reloads.Reloads.MG34_ReloadHidden'
     NumMags=8
+    FireAttachBone="mg_yaw"
     TracerProjectileClass=class'DH_MG42VehicleTracerBullet'
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'

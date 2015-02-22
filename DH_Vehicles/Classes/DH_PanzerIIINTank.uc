@@ -37,7 +37,6 @@ defaultproperties
     LeftTreadIndex=2
     RightTreadIndex=3
     MaxCriticalSpeed=729.000000
-    FireAttachBone="Player_Driver"
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     UFrontArmorFactor=7.200000
     URightArmorFactor=3.000000
