@@ -59,7 +59,8 @@ var     float       SpikeTime;              // the time an empty, disabled vehic
 var     float       MaxCriticalSpeed;
 var     float       WaitForCrewTime;
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
-
+var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialisation (set at end of PostNetBeginPlay)
+                                            // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Positions
 var     int         UnbuttonedPositionIndex;
 var     bool        bSpecialExiting;
@@ -1034,7 +1035,7 @@ simulated function PostBeginPlay()
 {
     local byte RandomNumber, CumulativeChance, i;
 
-    super(ROVehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
+    super(Vehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     if (HasAnim(BeginningIdleAnim))
     {
@@ -1105,16 +1106,13 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to initialise engine-related properties & to spawn any schurzen attachment (decorative only & not on a server)
+// Modified to initialise engine-related properties, to spawn any decorative schurzen attachment & to set bClientInitialized flag
 simulated function PostNetBeginPlay()
 {
     super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
 
-    // Initialise engine-related properties (but skip if net client's bEOff != def.bSavedEOff, as PostNetReceive will call SetEngine anyway)
-    if (Role == ROLE_Authority || bEngineOff == default.bSavedEngineOff)
-    {
-        SetEngine();
-    }
+    // Initialise engine-related properties
+    SetEngine();
 
     // Only spawn schurzen if a valid attachment class has been selected
     if (SchurzenTexture != none && Level.NetMode != NM_DedicatedServer && SchurzenIndex < ArrayCount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none)
@@ -1127,6 +1125,12 @@ simulated function PostNetBeginPlay()
             AttachToBone(Schurzen, 'body');
             Schurzen.SetRelativeLocation(SchurzenOffset);
         }
+    }
+
+    // Flags on net client that we've completed initialisation of replicated actor
+    if (Role < ROLE_Authority)
+    {
+        bClientInitialized = true;
     }
 }
 
@@ -1141,8 +1145,8 @@ simulated function PostNetReceive()
         NextViewPoint();
     }
 
-    // Engine has been switched on or off
-    if (bEngineOff != bSavedEngineOff)
+    // Engine has been switched on or off (but if not bClientInitialized, then actor has just replicated & SetEngine() will get called in PostBeginPlay)
+    if (bEngineOff != bSavedEngineOff && bClientInitialized)
     {
         bSavedEngineOff = bEngineOff;
         SetEngine();

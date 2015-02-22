@@ -41,7 +41,8 @@ var     bool        bEmittersOn;
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var()   float       ObjectCollisionResistance;
 var     bool        bResupplyVehicle;
-
+var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialisation (set at end of PostNetBeginPlay)
+                                            // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Engine stuff
 var     bool        bEngineDead;        // vehicle engine is damaged and cannot run or be restarted ... ever
 var     bool        bEngineOff;         // vehicle engine is simply switched off
@@ -75,7 +76,7 @@ replication
 
 simulated function PostBeginPlay()
 {
-    super(ROVehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
+    super(Vehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     if (HasAnim(BeginningIdleAnim))
     {
@@ -95,15 +96,16 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to initialise engine-related properties
+// Modified to initialise engine-related properties & to set bClientInitialized flag
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
-    // Skip if net client's bEOff != def.bSavedEOff, as PostNetReceive will call SetEngine anyway
-    if (Role == ROLE_Authority || bEngineOff == default.bSavedEngineOff)
+    SetEngine();
+
+    if (Role < ROLE_Authority)
     {
-        SetEngine();
+        bClientInitialized = true;
     }
 }
 
@@ -118,8 +120,8 @@ simulated function PostNetReceive()
         NextViewPoint();
     }
 
-    // Engine has been switched on or off
-    if (bEngineOff != bSavedEngineOff)
+    // Engine has been switched on or off (but if not bClientInitialized, then actor has just replicated & SetEngine() will get called in PostBeginPlay)
+    if (bEngineOff != bSavedEngineOff && bClientInitialized)
     {
         bSavedEngineOff = bEngineOff;
         SetEngine();
