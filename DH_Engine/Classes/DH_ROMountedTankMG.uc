@@ -73,7 +73,7 @@ simulated function PostBeginPlay()
 
 // Matt: new function to do any extra set up in the MG classes (called from MG pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitialiseMG(DH_ROMountedTankMGPawn MGPwn)
+simulated function InitializeMG(DH_ROMountedTankMGPawn MGPwn)
 {
     if (MGPwn != none)
     {

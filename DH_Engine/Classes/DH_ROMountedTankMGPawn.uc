@@ -24,7 +24,7 @@ replication
         ServerToggleDebugExits;
 }
 
-// Matt: modified to call InitialiseMG when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
+// Matt: modified to call InitializeMG when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
 // 1. Do things that need one or both of those actor refs, controlling common problem of unpredictability of timing of receiving replicated actor references
 // 2. To do any extra set up in the MG classes, which can easily be subclassed for anything that is vehicle specific
 simulated function PostNetReceive()
@@ -46,14 +46,14 @@ simulated function PostNetReceive()
         }
     }
 
-    // Initialise the MG // Matt: added VehicleBase != none, so we guarantee that VB is available to InitialiseMG
+    // Initialize the MG // Matt: added VehicleBase != none, so we guarantee that VB is available to InitializeMG
     if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
     {
         bInitializedVehicleGun = true;
-        InitialiseMG();
+        InitializeMG();
     }
 
-    // Initialise the vehicle base
+    // Initialize the vehicle base
     if (!bInitializedVehicleBase && VehicleBase != none)
     {
         bInitializedVehicleBase = true;
@@ -78,14 +78,14 @@ simulated function PostNetReceive()
         VehicleBase.WeaponPawns[PositionInArray] = self;
     }
 
-    // Matt: if this is a single position MG & we've initialised the vehicle weapon & vehicle base, we can now switch off PostNetReceive
+    // Matt: if this is a single position MG & we've initialized the vehicle weapon & vehicle base, we can now switch off PostNetReceive
     if (!bMultiPosition && bInitializedVehicleGun && bInitializedVehicleBase)
     {
         bNetNotify = false;
     }
 }
 
-// Matt: modified to call InitialiseMG to do any extra set up in the MG classes
+// Matt: modified to call InitializeMG to do any extra set up in the MG classes
 // This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
 function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 {
@@ -93,17 +93,17 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 
     if (Role == ROLE_Authority)
     {
-        InitialiseMG();
+        InitializeMG();
     }
 }
 
 // Matt: new function to do any extra set up in the MG classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitialiseMG()
+simulated function InitializeMG()
 {
     if (DH_ROMountedTankMG(Gun) != none)
     {
-        DH_ROMountedTankMG(Gun).InitialiseMG(self);
+        DH_ROMountedTankMG(Gun).InitializeMG(self);
     }
 }
 

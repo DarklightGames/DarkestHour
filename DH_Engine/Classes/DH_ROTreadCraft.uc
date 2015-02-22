@@ -59,7 +59,7 @@ var     float       SpikeTime;              // the time an empty, disabled vehic
 var     float       MaxCriticalSpeed;
 var     float       WaitForCrewTime;
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
-var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialisation (set at end of PostNetBeginPlay)
+var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Positions
 var     int         UnbuttonedPositionIndex;
@@ -1107,12 +1107,12 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to initialise engine-related properties, to spawn any decorative schurzen attachment & to set bClientInitialized flag
+// Modified to initialize engine-related properties, to spawn any decorative schurzen attachment & to set bClientInitialized flag
 simulated function PostNetBeginPlay()
 {
     super(ROWheeledVehicle).PostNetBeginPlay(); // skip over bugged Super in ROTreadCraft (just tries to get CannonTurret ref from non-existent driver weapons)
 
-    // Initialise engine-related properties
+    // Initialize engine-related properties
     SetEngine();
 
     // Only spawn schurzen if a valid attachment class has been selected
@@ -1128,7 +1128,7 @@ simulated function PostNetBeginPlay()
         }
     }
 
-    // Flags on net client that we've completed initialisation of replicated actor
+    // Flags on net client that we've completed initialization of replicated actor
     if (Role < ROLE_Authority)
     {
         bClientInitialized = true;

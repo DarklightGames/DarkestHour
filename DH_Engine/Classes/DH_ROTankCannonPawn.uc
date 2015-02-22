@@ -150,7 +150,7 @@ simulated function PostBeginPlay()
     bGunPivotDamaged = false;
 }
 
-// Matt: modified to call InitialiseCannon when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
+// Matt: modified to call InitializeCannon when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
 // 1. Do things that need one or both of those actor refs, controlling common problem of unpredictability of timing of receiving replicated actor references
 // 2. To do any extra set up in the cannon classes, which can easily be subclassed for anything that is vehicle specific
 simulated function PostNetReceive()
@@ -172,14 +172,14 @@ simulated function PostNetReceive()
         }
     }
 
-    // Initialise the cannon // Matt: added VehicleBase != none, so we guarantee that VB is available to InitialiseCannon
+    // Initialize the cannon // Matt: added VehicleBase != none, so we guarantee that VB is available to InitializeCannon
     if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
     {
         bInitializedVehicleGun = true;
-        InitialiseCannon();
+        InitializeCannon();
     }
 
-    // Initialise the vehicle base
+    // Initialize the vehicle base
     if (!bInitializedVehicleBase && VehicleBase != none)
     {
         bInitializedVehicleBase = true;
@@ -205,7 +205,7 @@ simulated function PostNetReceive()
     }
 }
 
-// Matt: modified to call InitialiseCannon to do any extra set up in the cannon classes
+// Matt: modified to call InitializeCannon to do any extra set up in the cannon classes
 // This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
 function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 {
@@ -213,18 +213,18 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 
     if (Role == ROLE_Authority)
     {
-        InitialiseCannon();
+        InitializeCannon();
     }
 }
 
 // Matt: new function to do any extra set up in the cannon classes (called from PostNetReceive on net client or from AttachToVehicle on standalone or server)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-// Using it to reliably initialise the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
-simulated function InitialiseCannon()
+// Using it to reliably initialize the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
+simulated function InitializeCannon()
 {
     if (DH_ROTankCannon(Gun) != none)
     {
-        DH_ROTankCannon(Gun).InitialiseCannon(self);
+        DH_ROTankCannon(Gun).InitializeCannon(self);
     }
 
     if (DH_ROTreadCraft(VehicleBase) != none)

@@ -44,7 +44,7 @@ var  config  bool      bBypassAdminLogin;      // allows the option of disabling
 var  config  bool      bDebug;                 // if true, various events will be logged
 var  config  sound     WarningSound;           // the sound to play when sending an admin warning message to a player (default is a klaxon)
 
-////////////////////////////  INITIALISATION FUNCTIONS  ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////  INITIALIZATION FUNCTIONS  ////////////////////////////////////////////////////////////////////////////////
 
 // Waits until the GameInfo has completed its BeginPlay events & then sets the initial variables we need here
 // Note that we use this instead of a BeginPlay event as it allows time to make sure other mutators have been spawned & for the ROTG.MineVolumes array to be populated

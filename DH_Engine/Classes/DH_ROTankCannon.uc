@@ -132,7 +132,7 @@ simulated function StartTurretFire()
 
 // Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitialiseCannon(DH_ROTankCannonPawn CannonPwn)
+simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
     {

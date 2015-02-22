@@ -41,7 +41,7 @@ var     bool        bEmittersOn;
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var()   float       ObjectCollisionResistance;
 var     bool        bResupplyVehicle;
-var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialisation (set at end of PostNetBeginPlay)
+var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Engine stuff
 var     bool        bEngineDead;        // vehicle engine is damaged and cannot run or be restarted ... ever
@@ -96,7 +96,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to initialise engine-related properties & to set bClientInitialized flag
+// Modified to initialize engine-related properties & to set bClientInitialized flag
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
