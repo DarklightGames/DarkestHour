@@ -8,7 +8,8 @@ class DH_JacksonPassengerFour extends DH_JacksonPassengerOne;
 defaultproperties
 {
     PositionInArray=4
-    DrivePos=(X=-125.0,Y=65.0,Z=12.0)
+    DrivePos=(X=-125.0,Y=75.0,Z=115.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_Rider3_idle"
+    CameraBone="Jackson_body_ext"
 }

@@ -8,7 +8,8 @@ class DH_JacksonPassengerTwo extends DH_AchillesPassengerOne;
 defaultproperties
 {
     PositionInArray=2
-    DrivePos=(X=-165.0,Y=-35.0,Z=12.0)
+    DrivePos=(X=-185.0,Y=-35.0,Z=115.0)
     DriveRot=(Yaw=32768)
     DriveAnim="VHalftrack_Rider3_idle"
+    CameraBone="Jackson_body_ext"
 }
