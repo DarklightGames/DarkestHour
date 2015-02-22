@@ -20,7 +20,6 @@ simulated function PostBeginPlay()
         {
             if (A.Role == ROLE_Authority) // means this must be a non-replicated actor that exists independently on the client
             {
-                Log("DH_ClientResetGame.PostBeginPlay: calling Reset on" @ A.Tag @ " LifeSpan =" @ A.LifeSpan); // Matt: TEMP - delete before release
                 A.Reset();
             }
         }
