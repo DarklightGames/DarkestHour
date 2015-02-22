@@ -265,10 +265,10 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=6.000000,Z=2.000000)
     DriveAnim="VUC_driver_idle_open"
-    ExitPositions(0)=(X=50.000000,Y=-125.000000,Z=75.000000)
-    ExitPositions(1)=(X=50.000000,Y=125.000000,Z=75.000000)
-    ExitPositions(2)=(Y=-125.000000,Z=75.000000)
-    ExitPositions(3)=(Y=125.000000,Z=75.000000)
+    ExitPositions(0)=(X=57.00,Y=-132.00,Z=25.00)
+    ExitPositions(1)=(X=-273.00,Y=-34.00,Z=25.00)
+    ExitPositions(2)=(X=-271.00,Y=23.00,Z=25.00)
+    ExitPositions(3)=(X=65.00,Y=137.00,Z=25.00)
     EntryRadius=375.000000
     FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
     TPCamDistance=500.000000

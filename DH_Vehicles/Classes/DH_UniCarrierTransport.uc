@@ -248,10 +248,12 @@ defaultproperties
     VehicleMass=5.000000
     bHasHandbrake=true
     DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(Y=165.000000,Z=40.000000)
-    ExitPositions(1)=(Y=-165.000000,Z=40.000000)
-    ExitPositions(2)=(Y=-165.000000,Z=-40.000000)
-    ExitPositions(3)=(Y=165.000000,Z=-40.000000)
+    ExitPositions(0)=(X=48.00,Y=117.00,Z=15.00)
+    ExitPositions(1)=(X=48.00,Y=-107.00,Z=15.00)
+    ExitPositions(2)=(X=52.00,Y=-119.00,Z=13.00)
+    ExitPositions(3)=(X=-45.00,Y=-118.00,Z=15.00)
+    ExitPositions(4)=(X=7.00,Y=110.00,Z=15.00)
+    ExitPositions(5)=(X=-48.00,Y=111.00,Z=15.00)
     EntryRadius=375.000000
     TPCamDistance=200.000000
     TPCamLookat=(X=0.000000,Z=0.000000)

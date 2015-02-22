@@ -221,8 +221,14 @@ defaultproperties
     VehicleMass=8.500000
     DrivePos=(X=4.000000,Y=5.000000,Z=-10.000000)
     DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(X=40.000000,Y=-165.000000,Z=125.000000)
-    ExitPositions(1)=(X=40.000000,Y=165.000000,Z=125.000000)
+    ExitPositions(0)=(X=5.00,Y=-117.00,Z=10.00)	//driver
+    ExitPositions(1)=(X=9.00,Y=122.00,Z=10.00)	//mg
+    ExitPositions(2)=(X=-266.00,Y=-35.00,Z=10.00)	//left rear
+    ExitPositions(3)=(X=-266.00,Y=-35.00,Z=10.00)	//left rear
+    ExitPositions(4)=(X=-266.00,Y=-35.00,Z=10.00)	//left rear
+    ExitPositions(5)=(X=-266.00,Y=28.00,Z=10.00)	//right rear
+    ExitPositions(6)=(X=-266.00,Y=28.00,Z=10.00)	//right rear
+    ExitPositions(7)=(X=-266.00,Y=28.00,Z=10.00)	//right rear
     EntryRadius=375.000000
     FPCamPos=(Z=-60.000000)
     TPCamDistance=1000.000000
