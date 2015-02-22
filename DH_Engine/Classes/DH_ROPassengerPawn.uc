@@ -310,7 +310,7 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
-    WeaponFOV=80.0
+    WeaponFOV=90.0
     bSinglePositionExposed=true
     bAllowViewChange=false
     bDesiredBehindView=false
