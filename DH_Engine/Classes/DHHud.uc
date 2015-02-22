@@ -3553,9 +3553,13 @@ simulated function DrawSpectatingHud(Canvas C)
                 DHP.HandleDeployReady();
                 S = "Ready to deploy! Hit escape and select a spawn point";
             }
-            else
+            else if (DHP.DesiredSpawnPoint != none) // Matt: added 'if/else' with != none to avoid spamming "accessed none" log errors
             {
                 S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(DHP.DesiredSpawnPoint.SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+            }
+            else
+            {
+                S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ "No DesiredSpawnPoint" @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
             }
 
             Y += 4 * Scale + strY;
