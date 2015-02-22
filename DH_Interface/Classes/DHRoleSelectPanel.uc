@@ -346,7 +346,7 @@ function NotifyDesiredRoleUpdated()
     {
         SetStatusString("You are currently a" @ currentRole.MyName);
     }
-    else if (currentRole != desiredRole)
+    else if (currentRole != desiredRole && desiredRole != none)
     {
         SetStatusString("You will attempt to change role to" @ desiredRole.MyName);
     }
@@ -397,22 +397,24 @@ function int FindRoleIndexInList(RORoleInfo newRole)
 //Calculate AmmoTimeMod
 function CalculateDeployTime()
 {
-    local DHPlayer player;
     local DH_RoleInfo roleInfo;
     local float distance, totaldistance, percent;
     local int RedeployTime, AmmoTimeMod;
-
-    player = DHPlayer(PlayerOwner());
 
     // Calc and set deploytime based on factors
     //Theel: I might not need to access the role from here, as the slider will need to do that and I can just access slider!
     //roleInfo = DH_RoleInfo(li_Roles.GetObject());
     roleInfo = DH_RoleInfo(desiredRole);
 
+    if (roleInfo == none || GRI == none) // Matt: added to prevent "accessed none" errors
+    {
+        return;
+    }
+
     //Run a check on value and make sure it is legal
     nu_PrimaryAmmoMags.CheckValue();
 
-    if (int(nu_PrimaryAmmoMags.Value) == nu_PrimaryAmmoMags.MidValue)
+    if (int(nu_PrimaryAmmoMags.Value) == nu_PrimaryAmmoMags.MidValue || roleInfo == none)
     {
         AmmoTimeMod = 0;
     }
@@ -439,7 +441,8 @@ function CalculateDeployTime()
     }
 
     l_EstimatedRedeployTime.Caption = "Estimated deploy time:" @ RedeployTime @ "Seconds";
-    player.SetDeployTime(RedeployTime);
+
+    DHPlayer(PlayerOwner()).SetDeployTime(RedeployTime);
 }
 
 function UpdateWeaponsInfo()
