@@ -119,16 +119,16 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
     VehicleHudOccupantsX(0)=0.430000
-    VehicleHudOccupantsX(2)=0.000000
-    VehicleHudOccupantsY(2)=0.000000
-    VehicleHudOccupantsX(3)=0.375
-    VehicleHudOccupantsY(3)=0.75
-    VehicleHudOccupantsX(4)=0.45
+    VehicleHudOccupantsX(1)=0.500000
+    VehicleHudOccupantsY(1)=0.500000
+    VehicleHudOccupantsX(2)=0.375
+    VehicleHudOccupantsY(2)=0.75
+    VehicleHudOccupantsX(3)=0.45
+    VehicleHudOccupantsY(3)=0.8
+    VehicleHudOccupantsX(4)=0.55
     VehicleHudOccupantsY(4)=0.8
-    VehicleHudOccupantsX(5)=0.55
-    VehicleHudOccupantsY(5)=0.8
-    VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.75
+    VehicleHudOccupantsX(5)=0.625
+    VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.510000
     bVehicleHudUsesLargeTexture=true
     VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(Y=-1.000000,Z=-5.000000),bPenetrationPoint=false)
