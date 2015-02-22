@@ -756,7 +756,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             BurnTimeLeft = 10;
             SetTimer(1.0, false);
-            DH_PlayerFlame(FlameFX).PlayerDied();
+
+            if (DH_PlayerFlame(FlameFX) != none)
+            {
+                DH_PlayerFlame(FlameFX).PlayerDied();
+            }
         }
 
         // Pawn died
@@ -1299,7 +1303,11 @@ state Dying
                 }
             }
 
-            DH_PlayerFlame(FlameFX).DouseFlames();
+            if (DH_PlayerFlame(FlameFX) != none)
+            {
+                DH_PlayerFlame(FlameFX).DouseFlames();
+            }
+
             BurnTimeLeft--;
 
             SetTimer(1.0, false);
@@ -3634,7 +3642,11 @@ simulated function StartBurnFX()
     }
 
     SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
-    HeadGear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
+
+    if (HeadGear != none)
+    {
+        HeadGear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
+    }
 
     for (i = 0; i < AmmoPouches.Length; i++)
     {
@@ -3704,7 +3716,10 @@ function DropWeaponInventory(vector TossVel)
         Inv = Inv.Inventory;
     }
 
-    Level.Game.Broadcast(self, InventoryList.Length);
+    if (Level.Game != none)
+    {
+        Level.Game.Broadcast(self, InventoryList.Length);
+    }
 
     for (i = 0; i < InventoryList.Length; ++i)
     {
