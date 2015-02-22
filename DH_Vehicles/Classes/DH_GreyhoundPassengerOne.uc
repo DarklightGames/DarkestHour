@@ -3,14 +3,12 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DH_GreyhoundPassengerPawn extends DH_ROPassengerPawn;
+class DH_GreyhoundPassengerOne extends DH_ROPassengerPawn;
 
 defaultproperties
 {
     PositionInArray=1
-    CameraBone="Passenger_attachement"
-    DrivePos=(X=5.0,Y=-2.0,Z=5.0)
-    DriveAnim="VBA64_driver_idle_close"
-    FPCamViewOffset=(X=2.0,Z=-2.0)
-    bKeepDriverAuxCollision=false
+    DrivePos=(X=-125.0,Y=-70.0,Z=105.0)
+    DriveRot=(Yaw=-16384)
+    DriveAnim="VHalftrack_Rider4_idle"
 }

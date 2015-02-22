@@ -61,6 +61,10 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.000000,Y=34.000000,Z=45.000000),ExhaustRotation=(Pitch=34000,Yaw=-5000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundPassengerOne',WeaponBone="body")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundPassengerTwo',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundPassengerThree',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
@@ -76,9 +80,17 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.greyhound_body'
     VehicleHudOccupantsX(0)=0.450000
-    VehicleHudOccupantsX(2)=0.550000
     VehicleHudOccupantsY(0)=0.350000
-    VehicleHudOccupantsY(2)=0.350000
+    VehicleHudOccupantsX(1)=0.500000
+    VehicleHudOccupantsY(1)=0.500000
+    VehicleHudOccupantsX(2)=0.375
+    VehicleHudOccupantsY(2)=0.75
+    VehicleHudOccupantsX(3)=0.45
+    VehicleHudOccupantsY(3)=0.8
+    VehicleHudOccupantsX(4)=0.55
+    VehicleHudOccupantsY(4)=0.8
+    VehicleHudOccupantsX(5)=0.625
+    VehicleHudOccupantsY(5)=0.75
     VehicleHudEngineX=0.510000
     VehHitpoints(0)=(PointOffset=(X=4.000000),bPenetrationPoint=false)
     VehHitpoints(1)=(PointBone="Engine",PointOffset=(Z=-10.000000),DamageMultiplier=1.000000)
@@ -143,10 +155,12 @@ defaultproperties
     bHasHandbrake=false
     DrivePos=(X=5.000000,Y=-2.000000,Z=5.000000)
     DriveAnim="VBA64_driver_idle_close"
-    ExitPositions(0)=(Y=-200.000000,Z=100.000000)
-    ExitPositions(1)=(Y=200.000000,Z=100.000000)
-    ExitPositions(2)=(Y=-200.000000,Z=100.000000)
-    ExitPositions(3)=(Y=200.000000,Z=100.000000)
+    ExitPositions(0)=(X=135.00,Y=-33.00,Z=176.00)
+    ExitPositions(1)=(X=-73.00,Y=1.00,Z=207.00)
+    ExitPositions(2)=(X=-124.00,Y=-161.00,Z=64.00)
+    ExitPositions(3)=(X=-245.00,Y=-42.00,Z=63.00)
+    ExitPositions(4)=(X=-249.00,Y=31.00,Z=63.00)
+    ExitPositions(5)=(X=-126.00,Y=169.00,Z=64.00)
     EntryRadius=375.000000
     FPCamPos=(X=42.000000,Y=-18.000000,Z=33.000000)
     DriverDamageMult=1.000000
