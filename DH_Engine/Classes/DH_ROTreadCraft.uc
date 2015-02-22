@@ -1471,8 +1471,15 @@ function StartHullFire(Pawn InstigatedBy)
     // Set the 1st hull damage due in 2 seconds
     NextHullFireDamageTime = Level.TimeSeconds + 2.0;
 
-    // Fire effects, including timers for delayed hatch fires (will set 1st timer for either damage or starting hatch fires)
-    SetFireEffects();
+    // Fire effects, including timers for delayed hatch fires
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetFireEffects();
+    }
+    else
+    {
+        SetNextTimer(); // for damage only on server
+    }
 }
 
 // New function to handle starting an engine fire
