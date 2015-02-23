@@ -45,7 +45,7 @@ simulated function PostBeginPlay()
 // Overridden to stop the game playing silly buggers with exit positions while moving and breaking my damage code
 function bool PlaceExitingDriver()
 {
-    local int    i;
+    local int    i, StartIndex;
     local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
 
     if (Driver == none)
@@ -74,6 +74,7 @@ function bool PlaceExitingDriver()
     }
 
     i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
+    StartIndex = i;
 
     while (i >= 0 && i < VehicleBase.ExitPositions.Length)
     {
@@ -88,7 +89,7 @@ function bool PlaceExitingDriver()
 
         ++i;
 
-        if (i == PositionInArray + 1)
+        if (i == StartIndex)
         {
             break;
         }
