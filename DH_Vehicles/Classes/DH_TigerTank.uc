@@ -170,13 +170,13 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VTiger_driver_idle_close"
-    ExitPositions(0)=(X=122.00,Y=-56.00,Z=115.00)
-    ExitPositions(1)=(X=-81.00,Y=-36.00,Z=165.00)
-    ExitPositions(2)=(X=123.00,Y=57.00,Z=115.00)
-    ExitPositions(3)=(X=-90.00,Y=-160.00,Z=5.00)
-    ExitPositions(4)=(X=-155.00,Y=-160.00,Z=5.00)
-    ExitPositions(5)=(X=-155.00,Y=160.00,Z=5.00)
-    ExitPositions(6)=(X=-90.00,Y=160.00,Z=5.00)
+    ExitPositions(0)=(X=122.0,Y=-56.0,Z=115.0)
+    ExitPositions(1)=(X=-81.0,Y=-36.0,Z=165.0)
+    ExitPositions(2)=(X=123.0,Y=57.0,Z=115.0)
+    ExitPositions(3)=(X=-90.0,Y=-160.0,Z=5.0)
+    ExitPositions(4)=(X=-155.0,Y=-160.0,Z=5.0)
+    ExitPositions(5)=(X=-155.0,Y=160.0,Z=5.0)
+    ExitPositions(6)=(X=-90.0,Y=160.0,Z=5.0)
     EntryRadius=375.0
     FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     TPCamDistance=600.0
@@ -232,5 +232,5 @@ defaultproperties
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.69
+    VehicleHudOccupantsY(6)=0.69ti
 }

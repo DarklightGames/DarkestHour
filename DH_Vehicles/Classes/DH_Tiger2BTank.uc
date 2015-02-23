@@ -95,6 +95,10 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-232.0,Y=-27.0,Z=27.0),ExhaustRotation=(Pitch=22000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BPassengerOne',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BPassengerTwo',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BPassengerThree',WeaponBone="body")
+    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
     StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
@@ -111,6 +115,14 @@ defaultproperties
     VehicleHudOccupantsX(2)=0.57
     VehicleHudOccupantsY(0)=0.35
     VehicleHudOccupantsY(2)=0.35
+    VehicleHudOccupantsX(3)=0.375
+    VehicleHudOccupantsY(3)=0.75
+    VehicleHudOccupantsX(4)=0.45
+    VehicleHudOccupantsY(4)=0.8
+    VehicleHudOccupantsX(5)=0.55
+    VehicleHudOccupantsY(5)=0.8
+    VehicleHudOccupantsX(6)=0.625
+    VehicleHudOccupantsY(6)=0.75
     bVehicleHudUsesLargeTexture=true
     VehHitpoints(0)=(PointOffset=(X=-3.0),bPenetrationPoint=false)
     VehHitpoints(1)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0),DamageMultiplier=1.0)
@@ -176,8 +188,13 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=10.0,Y=2.0,Z=-25.0)
     DriveAnim="VPanther_driver_idle_close"
-    ExitPositions(0)=(X=130.0,Y=-150.0,Z=100.0)
-    ExitPositions(1)=(X=130.0,Y=150.0,Z=100.0)
+    ExitPositions(0)=(X=165.0,Y=-30.0,Z=80.0)
+    ExitPositions(1)=(X=-35.0,Y=-30.0,Z=145.0)
+    ExitPositions(2)=(X=165.0,Y=40.0,Z=80.0)
+    ExitPositions(3)=(X=-135.0,Y=-175.0,Z=-40.0)
+    ExitPositions(4)=(X=-280.0,Y=-55.0,Z=-40.0)
+    ExitPositions(5)=(X=-280.0,Y=55.0,Z=-40.0)
+    ExitPositions(6)=(X=-135.0,Y=175.0,Z=-40.0)
     EntryRadius=375.0
     FPCamPos=(X=0.0,Y=-5.0,Z=0.0)
     TPCamDistance=300.0
