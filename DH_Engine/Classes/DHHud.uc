@@ -3546,20 +3546,18 @@ simulated function DrawSpectatingHud(Canvas C)
         if (GRI.bMatchHasBegun && DHP != None && DHP.CanRestartPlayer()
             && PlayerOwner.PlayerReplicationInfo.Team != none && GRI.bReinforcementsComing[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] == 1)
         {
-            Time = DHP.LastKilledTime + DHP.CurrentRedeployTime - Level.TimeSeconds;// Level.TimeSeconds;
+            Time = DHP.LastKilledTime + DHP.RedeployTime - Level.TimeSeconds;// Level.TimeSeconds;
             if (Time <= 0.0)
             {
-                DHP.bReadyToSpawn = true;
-                DHP.HandleDeployReady();
+                //DHP.HandleDeployReady();
                 S = "Ready to deploy! Hit escape and select a spawn point";
-            }
-            else if (DHP.DesiredSpawnPoint != none) // Matt: added 'if/else' with != none to avoid spamming "accessed none" log errors
-            {
-                S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(DHP.DesiredSpawnPoint.SpawnPointName, 2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
             }
             else
             {
-                S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ "[?]" @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                if (DHP.DesiredSpawnPoint != none && ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
+                {
+                    S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(DHP.DesiredSpawnPoint.SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                }
             }
 
             Y += 4 * Scale + strY;
