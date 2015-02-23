@@ -5,10 +5,10 @@
 
 class DH_GMCTruckDecoAttachment extends DH_VehicleDecoAttachment;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\MilitarySM
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Military_stc
 
 defaultproperties
 {
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'MilitarySM.Crates_Trunk.CratePile3'
+    StaticMesh=StaticMesh'DH_Military_stc.Ammo.CratePile3_Dark'
 }
