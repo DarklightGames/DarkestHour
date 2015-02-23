@@ -109,6 +109,14 @@ function PlayFiring()   // overridden to make last round eject clip & add audibl
 
 defaultproperties
 {
+    PctStandIronRecoil=0.4
+    PctCrouchRecoil=0.85
+    PctCrouchIronRecoil=0.3
+    PctProneRecoil=0.75
+    PctProneIronRecoil=0.25
+    PctLeanPenalty=1.15
+    maxVerticalRecoilAngle=2400
+    maxHorizontalRecoilAngle=800
     FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
     FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
     FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
@@ -120,8 +128,6 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_fire03'
-    maxVerticalRecoilAngle=1600
-    maxHorizontalRecoilAngle=150
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=15.0)
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-5000)
@@ -134,7 +140,7 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=200.0)
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
-    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
+    ShakeOffsetMag=(X=4.0,Y=1.0,Z=4.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=1.0
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
@@ -144,5 +150,6 @@ defaultproperties
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     aimerror=800.0
     Spread=100.0
+    HipSpreadModifier=8.0
     SpreadStyle=SS_Random
 }

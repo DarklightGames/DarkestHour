@@ -114,7 +114,7 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
     FireVolume=512.0
     maxVerticalRecoilAngle=1600
-    maxHorizontalRecoilAngle=600
+    maxHorizontalRecoilAngle=450
     PctStandIronRecoil=0.8
     PctCrouchRecoil=0.65
     PctCrouchIronRecoil=0.45
@@ -134,7 +134,7 @@ defaultproperties
     TweenTime=0.0
     FireRate=0.2
     AmmoClass=class'DH_Weapons.DH_BARAmmo'
-    ShakeRotMag=(X=75.0,Y=75.0,Z=200.0)
+    ShakeRotMag=(X=64.0,Y=64.0,Z=180.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=0.75
     ShakeOffsetMag=(X=4.0,Y=1.0,Z=4.0)
@@ -147,6 +147,6 @@ defaultproperties
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     aimerror=1200.0
     Spread=150.0
-    HipSpreadModifier=4.0
+    HipSpreadModifier=8.0
     SpreadStyle=SS_Random
 }
