@@ -2017,8 +2017,9 @@ function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte 
     //Check if SP is valid
     if (!DHGRI.ValidateSpawnPoint(SP,PRI.Team.TeamIndex))
     {
-        Log("Failed at 3");
-        return false;
+        //Temp hack to allow spawning on all maps
+        //Log("Failed at 3");
+        //return false;
     }
     else
     {
@@ -2066,11 +2067,11 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
         RI = DH_RoleInfo(RInfo);
     }
 
-    if (RI != none && WeaponIndex != -1)
+    if (RI != none && WeaponIndex == -1)
     {
         PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
     }
-    else if (RI != none)
+    else if (RI != none && RI.PrimaryWeapons[WeaponIndex].Item != none)
     {
         PrimaryWep = RI.PrimaryWeapons[WeaponIndex].Item;
     }

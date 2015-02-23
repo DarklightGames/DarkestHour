@@ -606,28 +606,31 @@ function UpdateSelectedWeapon(int weaponCategory)
             item = desiredRole.PrimaryWeapons[i].Item;
 
             // Set min/max/mid for ammo button on primary weapon
-            nu_PrimaryAmmoMags.MinValue = DH_RoleInfo(desiredRole).MinStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
-            nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(desiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
-            nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
-
-            Log("DesiredAmmoAmount:" @ player.DesiredAmmoAmount);
-
-            // Set the value
-            if (player.DesiredAmmoAmount != 0)
+            if (item != none)
             {
-                nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
-            }
-            else
-            {
-                nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
-                //player.DesiredAmmoAmount = nu_PrimaryAmmoMags.MidValue;
-            }
+                nu_PrimaryAmmoMags.MinValue = DH_RoleInfo(desiredRole).MinStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(desiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
-            // Check the value Theel: this isn't really needed
-            nu_PrimaryAmmoMags.CheckValue();
+                Log("DesiredAmmoAmount:" @ player.DesiredAmmoAmount);
 
-            // Update deploy time
-            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+                // Set the value
+                if (player.DesiredAmmoAmount != 0)
+                {
+                    nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
+                }
+                else
+                {
+                    nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+                    //player.DesiredAmmoAmount = nu_PrimaryAmmoMags.MidValue;
+                }
+
+                // Check the value Theel: this isn't really needed
+                nu_PrimaryAmmoMags.CheckValue();
+
+                // Update deploy time
+                l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+            }
         }
         else
         {
