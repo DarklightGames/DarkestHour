@@ -77,7 +77,7 @@ function bool TryToDrive(Pawn P)
         return false;
     }
 
-    if (bEnteredOnce && DHP.Weapon.IsA('DH_MortarWeapon'))
+    if (bEnteredOnce && DHP.Weapon != none && DHP.Weapon.IsA('DH_MortarWeapon'))
     {
         return false;
     }
