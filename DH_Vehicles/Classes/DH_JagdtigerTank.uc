@@ -33,7 +33,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    bAllowRiders=false
+    bAllowRiders=true
     NewVehHitpoints(0)=(PointRadius=6.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-37.0,Z=98.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Z=55.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Z=55.0),NewHitPointType=NHP_GunPitch)
@@ -99,6 +99,10 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-252.0,Y=-28.0,Z=30.0),ExhaustRotation=(Pitch=22000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerPassengerOne',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerPassengerTwo',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerPassengerThree',WeaponBone="body")
+    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
     StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
@@ -114,6 +118,14 @@ defaultproperties
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsX(1)=0.54
     VehicleHudOccupantsX(2)=0.56
+    VehicleHudOccupantsX(3)=0.4
+    VehicleHudOccupantsY(3)=0.69
+    VehicleHudOccupantsX(4)=0.4
+    VehicleHudOccupantsY(4)=0.79
+    VehicleHudOccupantsX(5)=0.605
+    VehicleHudOccupantsY(5)=0.79
+    VehicleHudOccupantsX(6)=0.605
+    VehicleHudOccupantsY(6)=0.69
     VehicleHudEngineY=0.75
     bVehicleHudUsesLargeTexture=true
     VehHitpoints(0)=(PointOffset=(X=8.0,Z=7.0),bPenetrationPoint=false)
@@ -180,8 +192,13 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=10.0,Y=2.0,Z=-25.0)
     DriveAnim="VPanther_driver_idle_close"
-    ExitPositions(0)=(X=130.0,Y=-150.0,Z=100.0)
-    ExitPositions(1)=(X=130.0,Y=150.0,Z=100.0)
+    ExitPositions(0)=(X=134.00,Y=-37.00,Z=85.00)
+    ExitPositions(1)=(X=-45.00,Y=21.00,Z=155.00)
+    ExitPositions(2)=(X=132.00,Y=41.00,Z=85.00)
+    ExitPositions(3)=(X=-142.00,Y=-175.00,Z=-40.00)
+    ExitPositions(4)=(X=-202.00,Y=-175.00,Z=-40.00)
+    ExitPositions(5)=(X=-142.00,Y=175.00,Z=-40.00)
+    ExitPositions(6)=(X=-202.00,Y=175.00,Z=-40.00)
     EntryRadius=375.0
     FPCamPos=(X=0.0,Y=-5.0,Z=0.0)
     TPCamDistance=300.0
