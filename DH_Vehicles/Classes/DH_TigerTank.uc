@@ -31,7 +31,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    bAllowRiders=false
+    bAllowRiders=true
     MaxCriticalSpeed=693.0
     TreadDamageThreshold=1.0
     UFrontArmorFactor=10.8
@@ -91,6 +91,10 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-190.0,Y=-25.0,Z=65.0),ExhaustRotation=(Pitch=18000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerMountedMGPawn',WeaponBone="Mg_placement")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerPassengerOne',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerPassengerTwo',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerPassengerThree',WeaponBone="body")
+    PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_TigerPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
     StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
@@ -166,8 +170,13 @@ defaultproperties
     bFPNoZFromCameraPitch=true
     DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VTiger_driver_idle_close"
-    ExitPositions(0)=(X=50.0,Y=-200.0,Z=100.0)
-    ExitPositions(1)=(X=50.0,Y=200.0,Z=100.0)
+    ExitPositions(0)=(X=122.00,Y=-56.00,Z=115.00)
+    ExitPositions(1)=(X=-81.00,Y=-36.00,Z=165.00)
+    ExitPositions(2)=(X=123.00,Y=57.00,Z=115.00)
+    ExitPositions(3)=(X=-90.00,Y=-160.00,Z=5.00)
+    ExitPositions(4)=(X=-155.00,Y=-160.00,Z=5.00)
+    ExitPositions(5)=(X=-155.00,Y=160.00,Z=5.00)
+    ExitPositions(6)=(X=-90.00,Y=160.00,Z=5.00)
     EntryRadius=375.0
     FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
     TPCamDistance=600.0
@@ -216,4 +225,12 @@ defaultproperties
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
+    VehicleHudOccupantsX(3)=0.375
+    VehicleHudOccupantsY(3)=0.69
+    VehicleHudOccupantsX(4)=0.375
+    VehicleHudOccupantsY(4)=0.79
+    VehicleHudOccupantsX(5)=0.625
+    VehicleHudOccupantsY(5)=0.79
+    VehicleHudOccupantsX(6)=0.625
+    VehicleHudOccupantsY(6)=0.69
 }
