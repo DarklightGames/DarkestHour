@@ -5,12 +5,10 @@
 
 class DHPlayer extends ROPlayer;
 
-var int             RedeployTime;           // The time after death before player can deploy
-var int             CurrentRedeployTime;    // The actual redeploytime set for current life
-var float           LastKilledTime;         // The time at which last death occured
-var byte            DesiredAmmoAmount;      // The set ammo amount desired for player (used by server)
-var string          ClientDesiredAmmoAmount;// The set ammo amount (used by player) Theel: Try doing server only this may not be needed
-var DHSpawnPoint    DesiredSpawnPoint;      // The spawn point the player will spawn at
+var int             RedeployTime;
+var float           LastKilledTime; // The time at which last death occured
+var byte            DesiredAmmoAmount;
+var DHSpawnPoint    DesiredSpawnPoint;
 var bool            bShouldAttemptAutoDeploy;
 
 var vector  FlinchRotMag;
@@ -33,7 +31,6 @@ var int     MantleLoopCount;
 var byte    MortarTargetIndex;
 var vector  MortarHitLocation;
 
-var bool    bReadyToSpawn;
 var int     SpawnPointIndex;
 var int     VehiclePoolIndex;
 
@@ -45,7 +42,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        bReadyToSpawn, SpawnPointIndex, VehiclePoolIndex;//, DesiredAmmoAmount;
+        RedeployTime, SpawnPointIndex, VehiclePoolIndex;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -54,8 +51,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerDeployPlayer,
-        ServerSetDesiredAmmoAmount;
+        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerAttemptDeployPlayer;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -77,10 +73,8 @@ event ClientReset()
     }
     //Reset deploy stuff
     RedeployTime = default.RedeployTime;
-    CurrentRedeployTime = default.CurrentRedeployTime;
     LastKilledTime = 0;
     DesiredAmmoAmount = 0;
-    ClientDesiredAmmoAmount = "";
     DesiredSpawnPoint = none;
     bShouldAttemptAutoDeploy = false;
 
@@ -98,11 +92,6 @@ event ClientReset()
     {
         GotoState('PlayerWaiting');
     }
-}
-
-simulated function ServerSetDesiredAmmoAmount(byte PassedValue)
-{
-    DesiredAmmoAmount = PassedValue;
 }
 
 // Calculate free-aim and process recoil
@@ -1620,24 +1609,6 @@ simulated function QueueHint(byte HintIndex, bool bForceNext)
     }
 }
 
-simulated function SetDeployTime(int NewDeployTime)
-{
-    if (NewDeployTime > 0)
-    {
-        Redeploytime = NewDeployTime;
-    }
-}
-
-simulated function ClientHandleDeath()
-{
-    if (DesiredSpawnPoint != none)
-    {
-        bShouldAttemptAutoDeploy = true;
-    }
-    LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
-    bReadyToSpawn = false; // Don't allow player to redeploy right away
-}
-
 // Modified to avoid "accessed none" errors
 function bool CanRestartPlayer()
 {
@@ -1927,8 +1898,6 @@ function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
 
     self.SpawnPointIndex = SpawnPointIndex;
     self.VehiclePoolIndex = VehiclePoolIndex;
-
-    bReadyToSpawn = true; //TODO: do a more thorough check here
 }
 
 function ServerClearObstacle(int Index)
@@ -1975,6 +1944,7 @@ function ServerDoLog(string LogMessage)
     }
 }
 
+//Theel: Keep this function as it's used as a control to show communication page allowing fast muting of players
 exec function CommunicationMenu()
 {
     ClientReplaceMenu("ROInterface.ROCommunicationPage");
@@ -1985,64 +1955,178 @@ exec function DebugFOV()
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
 }
 
-exec function ShowDeployment()
-{
-    ClientReplaceMenu("DH_Interface.DHDeployMenu");
-}
+//This function will be called "ServerAttemptDeployPlayer" and needs to be passed (SP and AmmoAmmount)
+//It will check/confirm that the player
+// - Isn't already deployed
+// - Has role selected (may not need this)
+// - Has valid ammo setting based on role/weapon ()
+// - SP is valid (will check GRI for bActive and player's team)
+// - Is ready to deploy based on past deploy time
+// - If above is okay, then it will attempt to spawn the player and teleport to SP
+// -  If succesful, it'll set the server sided deploy time and also pass it back via a client function
 
-exec function ShowDeploy()
-{
-    ClientReplaceMenu("DH_Interface.DHDeployMenu");
-}
-
-function ServerDeployPlayer(optional DHSpawnPoint SP, optional bool bUseAmmoPercent)
+function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte MagCount)
 {
     local rotator newRot, oldRot;
+    local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo DHGRI;
     local float mag;
     local vector oldDir;
     local Controller P;
+    local int NewDeployTime;
 
-    //Warn("SERVER SIDE DETECTED DEPLOYPLAYER");
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    //Respawn the player (might want to override this, but we'll see)
+    Warn("SERVER SIDE ATTEMPTING TO DEPLOY PLAYER");
+
+    if (PRI == none)
+    {
+        Log("Failed at 0");
+        return false;
+    }
+
+    if (DHGRI == none)
+    {
+        Log("Failed at 0.5");
+        return false;
+    }
+
+    //If player already has a pawn, then we don't need to deploy them
+    if (Pawn != none)
+    {
+        Log("Failed at 0.75");
+        return false;
+    }
+
+    //Confirm this player has a role && check if MagCount is valid based on role/weapon
+    if (PRI.RoleInfo != none)// && class'DH_ProjectileWeapon'(PRI.RoleInfo.PrimaryWeapons[PrimaryWeapon].Item) != none)
+    {
+        if (MagCount > 12) //class'DH_ProjectileWeapon'(PRI.RoleInfo.PrimaryWeapons[PrimaryWeapon].Item).default.MaxNumPrimaryMags || MagCount <= 0)
+        {
+            Log("Failed at 1");
+            return false;
+        }
+    }
+    else
+    {
+        Log("Failed at 2");
+        return false;
+    }
+
+    //Check if SP is valid
+    if (!DHGRI.ValidateSpawnPoint(SP,PRI.Team.TeamIndex))
+    {
+        Log("Failed at 3");
+        return false;
+    }
+    else
+    {
+        SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
+    }
+
+    //Check if player is ready to deploy
+    if (LastKilledTime + RedeployTime - Level.TimeSeconds > 0) //Theel: May not be able to use Level.TimeSeconds anymore atleast for server check!
+    {
+        Log("Failed at 4");
+        return false;
+    }
+
+    //Lets assume it worked and now lets tell the client the redeploy time
+    NewDeployTime = CalculateDeployTime(MagCount);
+    RedeployTime = NewDeployTime;
+
     Level.Game.RestartPlayer(self);
+    //DarkestHourGame(Level.Game).DHRestartPlayer(self);  This is currently bugged as fuck
 
-    //Teleport player to the SpawnPoint
-    if (Pawn != none && SP != none)
+    //SET WEAPON AMMO
+    if (Pawn != none && MagCount != 0)
     {
-        // Rotate the pawn to the same direction as the spawnpoint
-        //PlayerPawn.Rotation.Yaw = SP.Rotation.Yaw;
-        newRot = Pawn.Rotation;
-        newRot.Yaw = SP.Rotation.Yaw;
-        newRot.Roll = 0;
-
-        if (!Pawn.SetLocation(SP.Location))
-        {
-            Log(self @ "Teleport failed for" @ Pawn);
-            return;
-        }
-
-        Pawn.SetRotation(newRot);
-        Pawn.SetViewRotation(newRot);
-        Pawn.ClientSetRotation(newRot);
-
-        if (Pawn.Controller != none)
-        {
-            Pawn.Controller.MoveTimer = -1.0;
-            //PlayerPawn.Anchor = SP;
-            Pawn.SetMoveTarget(SP);
-        }
-        //Create spawn protection after teleport!
-        DH_Pawn(Pawn).TeleSpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+        DH_Pawn(Pawn).SetAmmoPercent(MagCount);
     }
-    //What if spawn succedes but tele fails? ?????
-    //Tele should never fail, but we should do something in case it does
+}
 
-    //SET WEAPON AMMO %
-    if (Pawn != none && bUseAmmoPercent)
+simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RInfo, optional int WeaponIndex)
+{
+    local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo   GRI;
+    local DH_RoleInfo             RI;
+    local class<Inventory>        PrimaryWep;
+    local int MinValue, MidValue, MaxValue, AmmoTimeMod, NewDeployTime;
+    local float TD, D, P;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    if (PRI != none && RInfo == none)
     {
-        DH_Pawn(Pawn).SetAmmoPercent(DesiredAmmoAmount);
+        RI = DH_RoleInfo(PRI.RoleInfo);
     }
+    else
+    {
+        RI = DH_RoleInfo(RInfo);
+    }
+
+    if (RI != none && WeaponIndex != -1)
+    {
+        PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
+    }
+    else if (RI != none)
+    {
+        PrimaryWep = RI.PrimaryWeapons[WeaponIndex].Item;
+    }
+
+    // Make sure everything is set and no access nones
+    if (PRI == none || RI == none || GRI == none || PrimaryWep == none)
+    {
+        Warn("Error in Calculating deploy time");
+        return 0;
+    }
+
+    // If MagCount wasn't passed, lets use desired ammo amount
+    if (MagCount == -1)
+    {
+        MagCount = DesiredAmmoAmount;
+    }
+
+    Log("MagCount is:" @ MagCount);
+
+    // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
+    MinValue = RI.MinStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
+    MidValue = RI.DefaultStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
+    MaxValue = RI.MaxStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
+
+    // Set AmmoTimeMod based on MagCount
+    if (MagCount == MidValue)
+    {
+        AmmoTimeMod = 0;
+    }
+    else if (MagCount > MidValue)
+    {
+        TD = MaxValue - MidValue;
+        D = MagCount - MidValue;
+        P = D / TD;
+        AmmoTimeMod = int(P * RI.MaxAmmoTimeMod);
+    }
+    else if (MagCount < MidValue)
+    {
+        TD = MidValue - MinValue;
+        D = MidValue - MagCount;
+        P = D / TD;
+        AmmoTimeMod = int(P * RI.MinAmmoTimeMod);
+    }
+
+    Log("AmmoTimeMod is:" @ AmmoTimeMod);
+
+    NewDeployTime = GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod;
+
+    if (NewDeployTime < 0)
+    {
+        NewDeployTime = 0;
+    }
+
+    Log("Newdeploytime is:" @ NewDeployTime);
+
+    return NewDeployTime;
 }
 
 function PawnDied(Pawn P)
@@ -2051,17 +2135,30 @@ function PawnDied(Pawn P)
     if ( P != Pawn )
         return;
 
+    LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
     ClientHandleDeath(); //Tells client to set his last killed time, that he can't spawn yet, and to autodeploy if has desired spawn
 
     super.PawnDied(P); //Calls super in ROPlayer
 }
 
-function HandleDeployReady()
+simulated function ClientHandleDeath()
+{
+    if (DesiredSpawnPoint != none)
+    {
+        bShouldAttemptAutoDeploy = true;
+    }
+    LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
+}
+
+// THEEL this function is no longer being used, do something with it!
+//Function should only be run on client and renamed proper
+//This function is used to check if the client thinks it's ready to deploy or not
+function CheckIfReadyToDeploy()
 {
     local bool bDeployed;
     //bShould should prob be checked in hud, instead of constantly call this function
     // Don't try to auto deploy lots of times, if we aren't ready, or have a menu open
-    if (!bShouldAttemptAutoDeploy || !bReadyToSpawn || GUIController(Player.GUIController).ActivePage != none)
+    if (!bShouldAttemptAutoDeploy || GUIController(Player.GUIController).ActivePage != none)
     {
         bShouldAttemptAutoDeploy = false;
         return;
@@ -2075,8 +2172,7 @@ function HandleDeployReady()
         bDeployed = DHGameReplicationInfo(GameReplicationInfo).ValidateSpawnPoint(DesiredSpawnPoint, PlayerReplicationInfo.Team.TeamIndex);
         if (bDeployed)
         {
-            CurrentRedeployTime = RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
-            ServerDeployPlayer(DesiredSpawnPoint, true);
+            ServerAttemptDeployPlayer(DesiredSpawnPoint, DesiredAmmoAmount);
         }
         else
         {
@@ -2106,7 +2202,6 @@ exec function ExitPosTool()
 
 defaultproperties
 {
-    CurrentRedeployTime=15
     RedeployTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)

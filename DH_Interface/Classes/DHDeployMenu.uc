@@ -63,18 +63,11 @@ function InternalOnChange(GUIComponent Sender)
         {
             // Switch Team
             case 1:
-                if (DHPlayer(PlayerOwner()).bReadyToSpawn)
-                {
-                    DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ToggleTeam();
+                DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ToggleTeam();
 
-                    if (PlayerOwner().Pawn != none)
-                    {
-                        CloseMenu();
-                    }
-                }
-                else
+                if (PlayerOwner().Pawn != none)
                 {
-                    DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).InternalOnMessage("notify_gui_role_selection_page",19);
+                    CloseMenu();
                 }
                 break;
 

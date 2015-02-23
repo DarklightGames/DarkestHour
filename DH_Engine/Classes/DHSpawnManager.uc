@@ -235,12 +235,15 @@ function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vecto
 
     if (LocationHintIndex == -1)
     {
-        //No usable location hint found
-        return false;
+        //No usable location hint found, so use spawn point itself
+        SpawnLocation = SP.Location;
+        SpawnRotation = SP.Rotation;
     }
-
-    SpawnLocation = SP.LocationHints[LocationHintIndex].Location;
-    SpawnRotation = SP.LocationHints[LocationHintIndex].Rotation;
+    else
+    {
+        SpawnLocation = SP.LocationHints[LocationHintIndex].Location;
+        SpawnRotation = SP.LocationHints[LocationHintIndex].Rotation;
+    }
 
     return true;
 }

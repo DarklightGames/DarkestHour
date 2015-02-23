@@ -2013,11 +2013,6 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
-    if (!DHC.bReadyToSpawn)
-    {
-        return;
-    }
-
     SpawnManager.SpawnPlayer(DHC, SpawnError);
 
     if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
@@ -2076,7 +2071,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             P.bWeaponsSelected = false;
 
             // DARKEST HOUR
-            P.bReadyToSpawn = false;
             P.SpawnPointIndex = -1;
             P.VehiclePoolIndex = -1;
         }

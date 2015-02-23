@@ -213,10 +213,9 @@ function bool SpawnClick(int Index)
     {
         // We clicked desired spawn point! lets try to spawn
         // Only deploy if we clicked the selected SP and are ready
-        if (PC.bReadyToSpawn && PC.Pawn == none)
+        if (bReadyToDeploy && PC.Pawn == none)
         {
-            PC.CurrentRedeployTime = PC.RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
-            PC.ServerDeployPlayer(SpawnPoints[Index], true);
+            PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount);
             Controller.CloseMenu(false); //DeployPlayer needs to return true/false if succesful and this needs to be in an if statement
         }
     }
@@ -245,8 +244,7 @@ function bool InternalOnClick(GUIComponent Sender)
             // Send request to server to spawn as we think we can
             if (bReadyToDeploy && DHPlayer(PlayerOwner()).Pawn == none)
             {
-                DHPlayer(PlayerOwner()).CurrentRedeployTime = DHPlayer(PlayerOwner()).RedeployTime; //This make it so the player can't adjust Redeploytime post spawning
-                DHPlayer(PlayerOwner()).ServerDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, true);
+                DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount);
                 Controller.CloseMenu(false); //Close menu as we clicked deploy!
             }
             break;
@@ -285,9 +283,9 @@ function bool DrawDeployTimer(Canvas C)
     DHP = DHPlayer(PlayerOwner());
 
     //Handle progress bar values (so they move/advance based on deploy time)
-    if (!DHP.bReadyToSpawn)
+    if (!bReadyToDeploy)
     {
-        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.CurrentRedeployTime - DHP.Level.TimeSeconds) / DHP.CurrentRedeployTime;
+        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) / DHP.RedeployTime;
         P = pb_DeployProgressBar.High - P;
         pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
 
@@ -299,7 +297,7 @@ function bool DrawDeployTimer(Canvas C)
         else
         {
             //Progress isn't done
-            b_DeployButton.Caption = "Deploy in:" @ int(DHP.LastKilledTime + DHP.CurrentRedeployTime - DHP.Level.TimeSeconds) @ "Seconds";
+            b_DeployButton.Caption = "Deploy in:" @ int(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) @ "Seconds";
             bReadyToDeploy = false;
         }
     }
