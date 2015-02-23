@@ -103,7 +103,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     local int     PitchAdjust;
     local rotator AppliedRecoil;
 
-    if (Pawn == none || DH_ProjectileWeapon(Pawn.Weapon) == none || !DH_ProjectileWeapon(Pawn.Weapon).ShouldUseFreeAim())
+    if (Pawn == none || ROWeapon(Pawn.Weapon) == none || !ROWeapon(Pawn.Weapon).ShouldUseFreeAim())
     {
         LastFreeAimSuspendTime = Level.TimeSeconds;
 
@@ -443,15 +443,12 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         }
 
         // Limit Pitch and yaw for the ROVehicles - Ramm
-        if (Pawn != none)
+        if (Pawn != none && Pawn.IsA('ROVehicle'))
         {
-            if (Pawn.IsA('ROVehicle'))
-            {
-                ROVeh = ROVehicle(Pawn);
+            ROVeh = ROVehicle(Pawn);
 
-                ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
-                ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
-            }
+            ViewRotation.Yaw = ROVeh.LimitYaw(ViewRotation.Yaw);
+            ViewRotation.Pitch = ROVeh.LimitPawnPitch(ViewRotation.Pitch);
         }
 
         ViewRotation.Yaw += SwayYaw;
