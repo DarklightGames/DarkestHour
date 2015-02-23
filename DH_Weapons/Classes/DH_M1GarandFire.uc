@@ -115,8 +115,8 @@ defaultproperties
     PctProneRecoil=0.75
     PctProneIronRecoil=0.25
     PctLeanPenalty=1.15
-    maxVerticalRecoilAngle=2400
-    maxHorizontalRecoilAngle=800
+    maxVerticalRecoilAngle=2500
+    maxHorizontalRecoilAngle=500
     FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
     FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
     FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
