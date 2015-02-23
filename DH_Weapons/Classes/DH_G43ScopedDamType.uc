@@ -10,5 +10,5 @@ defaultproperties
 {
     HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
     WeaponClass=class'DH_Weapons.DH_G43ScopedWeapon'
-    KDamageImpulse=2500.000000
+    KDamageImpulse=2500.0
 }

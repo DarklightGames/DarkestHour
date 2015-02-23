@@ -24,8 +24,8 @@ static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadL
 
 defaultproperties
 {
-    ShoutRadius=1024.000000
-    WhisperRadius=128.000000
+    ShoutRadius=1024.0
+    WhisperRadius=128.0
     bUseLocationalVoice=true
 }
 

@@ -36,9 +36,9 @@ defaultproperties
 {
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-    Spread=0.002000
+    Spread=0.002
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AmbientSoundScaling=5.000000
+    AmbientSoundScaling=5.0
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun'

@@ -20,15 +20,15 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     AnimName="Higgins-Idle"
-    AnimRate=1.000000
+    AnimRate=1.0
     bExactProjectileCollision=true
     DrawType=DT_Mesh
     bUseDynamicLights=true
     bNoDelete=true
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
     bShadowCast=true
-    CollisionRadius=200.000000
-    CollisionHeight=200.000000
+    CollisionRadius=200.0
+    CollisionHeight=200.0
     bCollideActors=true
     bBlockActors=true
     bBlockKarma=true

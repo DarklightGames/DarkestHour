@@ -8,8 +8,8 @@ class DH_G41Bullet extends DH_Bullet;
 defaultproperties
 {
     MyVehicleDamage=class'DH_Weapons.DH_G41VehDamType'
-    BallisticCoefficient=0.515000
-    Speed=47075.000000
-    Damage=115.000000
+    BallisticCoefficient=0.515
+    Speed=47075.0
+    Damage=115.0
     MyDamageType=class'DH_Weapons.DH_G41DamType'
 }

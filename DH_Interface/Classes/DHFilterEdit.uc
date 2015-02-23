@@ -312,13 +312,13 @@ defaultproperties
     Begin Object Class=DHGUISectionBackground Name=sbOptions
         bFillClient=true
         Caption="Options..."
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.200000
-        BottomPadding=0.002500
-        ImageOffset(0)=5.000000
-        ImageOffset(2)=15.000000
-        ImageOffset(3)=5.000000
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.2
+        BottomPadding=0.0025
+        ImageOffset(0)=5.0
+        ImageOffset(2)=15.0
+        ImageOffset(3)=5.0
         NumColumns=2
         WinTop=0.057448
         WinLeft=0.036094
@@ -330,13 +330,13 @@ defaultproperties
     Begin Object Class=DHGUISectionBackground Name=sbMutators
         bFillClient=true
         Caption="Custom Mutator Config"
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.002500
-        BottomPadding=0.002500
-        ImageOffset(0)=5.000000
-        ImageOffset(2)=15.000000
-        ImageOffset(3)=5.000000
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.0025
+        BottomPadding=0.0025
+        ImageOffset(0)=5.0
+        ImageOffset(2)=15.0
+        ImageOffset(3)=5.0
         WinTop=0.436614
         WinLeft=0.036094
         WinWidth=0.929296
@@ -345,7 +345,7 @@ defaultproperties
     End Object
     sb_Mutators=DHGUISectionBackground'DH_Interface.DHFilterEdit.sbMutators'
     Begin Object Class=DHmoEditBox Name=ebName
-        ComponentWidth=0.700000
+        ComponentWidth=0.7
         Caption="Filter Name:"
         OnCreateComponent=ebName.InternalOnCreateComponent
         WinTop=0.124114
@@ -357,86 +357,86 @@ defaultproperties
     eb_Name=DHmoEditBox'DH_Interface.DHFilterEdit.ebName'
     Begin Object Class=DHmoComboBox Name=cbStats
         bReadOnly=true
-        ComponentWidth=0.550000
+        ComponentWidth=0.55
         Caption="Stats Servers:"
         OnCreateComponent=cbStats.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=5
     End Object
     cb_Stats=DHmoComboBox'DH_Interface.DHFilterEdit.cbStats'
     Begin Object Class=DHmoComboBox Name=cbWeaponStay
         bReadOnly=true
-        ComponentWidth=0.550000
+        ComponentWidth=0.55
         Caption="Weapon Stay:"
         OnCreateComponent=cbWeaponStay.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=6
     End Object
     cb_WeaponStay=DHmoComboBox'DH_Interface.DHFilterEdit.cbWeaponStay'
     Begin Object Class=DHmoComboBox Name=cbTranslocator
         bReadOnly=true
-        ComponentWidth=0.550000
+        ComponentWidth=0.55
         Caption="Translocator:"
         OnCreateComponent=cbTranslocator.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=7
     End Object
     cb_Translocator=DHmoComboBox'DH_Interface.DHFilterEdit.cbTranslocator'
     Begin Object Class=DHmoComboBox Name=cbMutators
         bReadOnly=true
-        ComponentWidth=0.550000
+        ComponentWidth=0.55
         Caption="Mutators:"
         OnCreateComponent=cbMutators.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=8
     End Object
     cb_Mutators=DHmoComboBox'DH_Interface.DHFilterEdit.cbMutators'
     Begin Object Class=DHmoCheckBox Name=ckVACOnly
-        ComponentWidth=0.100000
+        ComponentWidth=0.1
         Caption="Valve Anti-Cheat Protected Only"
         OnCreateComponent=ckVACOnly.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=1
     End Object
     ck_VACOnly=DHmoCheckBox'DH_Interface.DHFilterEdit.ckVACOnly'
     Begin Object Class=DHmoCheckBox Name=ckFull
-        ComponentWidth=0.100000
+        ComponentWidth=0.1
         Caption="No Full Servers"
         OnCreateComponent=ckFull.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=1
     End Object
     ck_Full=DHmoCheckBox'DH_Interface.DHFilterEdit.ckFull'
     Begin Object Class=DHmoCheckBox Name=ckBots
-        ComponentWidth=0.100000
+        ComponentWidth=0.1
         Caption="No Bots"
         OnCreateComponent=ckBots.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=2
     End Object
     ck_Bots=DHmoCheckBox'DH_Interface.DHFilterEdit.ckBots'
     Begin Object Class=DHmoCheckBox Name=ckEmpty
-        ComponentWidth=0.100000
+        ComponentWidth=0.1
         Caption="No Empty Servers"
         OnCreateComponent=ckEmpty.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=3
     End Object
     ck_Empty=DHmoCheckBox'DH_Interface.DHFilterEdit.ckEmpty'
     Begin Object Class=DHmoCheckBox Name=ckPassworded
-        ComponentWidth=0.100000
+        ComponentWidth=0.1
         Caption="No Passworded Servers"
         OnCreateComponent=ckPassworded.InternalOnCreateComponent
-        WinTop=0.250000
-        WinLeft=0.250000
+        WinTop=0.25
+        WinLeft=0.25
         TabOrder=4
     End Object
     ck_Passworded=DHmoCheckBox'DH_Interface.DHFilterEdit.ckPassworded'
@@ -445,8 +445,8 @@ defaultproperties
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.903612
         WinLeft=0.611564
-        WinWidth=0.168750
-        WinHeight=0.050000
+        WinWidth=0.16875
+        WinHeight=0.05
         OnClick=DHFilterEdit.OkClick
         OnKeyEvent=bOk.InternalOnKeyEvent
     End Object
@@ -456,8 +456,8 @@ defaultproperties
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.903507
         WinLeft=0.792814
-        WinWidth=0.168750
-        WinHeight=0.050000
+        WinWidth=0.16875
+        WinHeight=0.05
         OnClick=DHFilterEdit.CancelClick
         OnKeyEvent=bCancel.InternalOnKeyEvent
     End Object
@@ -480,9 +480,9 @@ defaultproperties
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
         StyleName="DHNoBox"
-        WinTop=0.017000
-        WinHeight=0.050000
-        RenderWeight=0.100000
+        WinTop=0.017
+        WinHeight=0.05
+        RenderWeight=0.1
         bBoundToParent=true
         bScaleToParent=true
         bAcceptsInput=true
@@ -498,15 +498,15 @@ defaultproperties
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
-        WinTop=0.020000
-        WinLeft=0.000000
-        WinWidth=1.000000
-        WinHeight=0.980000
+        WinTop=0.02
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=0.98
         RenderWeight=0.000003
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHFilterEdit.FloatingFrameBackground'
-    WinTop=0.000000
-    WinLeft=0.000000
-    WinWidth=1.000000
-    WinHeight=1.000000
+    WinTop=0.0
+    WinLeft=0.0
+    WinWidth=1.0
+    WinHeight=1.0
 }

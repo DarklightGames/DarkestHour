@@ -9,21 +9,21 @@ defaultproperties
 {
     DHPenetrationTable(0)=19.200001
     DHPenetrationTable(1)=17.700001
-    DHPenetrationTable(2)=16.500000
-    DHPenetrationTable(3)=14.600000
-    DHPenetrationTable(4)=13.700000
-    DHPenetrationTable(5)=12.500000
-    DHPenetrationTable(6)=11.300000
-    DHPenetrationTable(7)=10.600000
-    DHPenetrationTable(8)=9.400000
-    DHPenetrationTable(9)=8.000000
-    DHPenetrationTable(10)=6.700000
-    ShellDiameter=7.620000
+    DHPenetrationTable(2)=16.5
+    DHPenetrationTable(3)=14.6
+    DHPenetrationTable(4)=13.7
+    DHPenetrationTable(5)=12.5
+    DHPenetrationTable(6)=11.3
+    DHPenetrationTable(7)=10.6
+    DHPenetrationTable(8)=9.4
+    DHPenetrationTable(9)=8.0
+    DHPenetrationTable(10)=6.7
+    ShellDiameter=7.62
     ShellImpactDamage=class'DH_Vehicles.DH_WolverineCannonShellDamageHVAP'
     ImpactDamage=450
-    BallisticCoefficient=0.888000
-    SpeedFudgeScale=0.400000
-    Speed=62525.000000
-    MaxSpeed=62525.000000
+    BallisticCoefficient=0.888
+    SpeedFudgeScale=0.4
+    Speed=62525.0
+    MaxSpeed=62525.0
     Tag="M93 HVAP"
 }

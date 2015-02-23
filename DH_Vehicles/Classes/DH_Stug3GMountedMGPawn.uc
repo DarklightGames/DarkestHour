@@ -361,11 +361,11 @@ simulated function DrawHUD(Canvas Canvas)
 defaultproperties
 {
     UnbuttonedPositionIndex=1
-    FirstPersonGunShakeScale=2.000000
-    WeaponFOV=72.000000
-    DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1)
-    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-    DriverPositions(2)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    FirstPersonGunShakeScale=2.0
+    WeaponFOV=72.0
+    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
     bMultiPosition=true
     GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
     bCustomAiming=true
@@ -373,15 +373,15 @@ defaultproperties
     CameraBone="loader_cam"
     bPCRelativeFPRotation=true
     bDesiredBehindView=false
-    DrivePos=(X=16.000000,Z=20.000000)
+    DrivePos=(X=16.0,Z=20.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
-    EntryRadius=130.000000
-    TPCamDistance=300.000000
-    TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
+    EntryRadius=130.0
+    TPCamDistance=300.0
+    TPCamLookat=(X=-50.0,Y=25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
     HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
-    HUDOverlayFOV=45.000000
+    HUDOverlayFOV=45.0
     PitchUpLimit=6000
     PitchDownLimit=63500
 }

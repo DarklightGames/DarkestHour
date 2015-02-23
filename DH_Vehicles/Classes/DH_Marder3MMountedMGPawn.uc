@@ -131,10 +131,10 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-    FirstPersonGunShakeScale=2.000000
-    WeaponFOV=60.000000
-    DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-    DriverPositions(1)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    FirstPersonGunShakeScale=2.0
+    WeaponFOV=60.0
+    DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    DriverPositions(1)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
     bMultiPosition=true
     GunClass=class'DH_Vehicles.DH_Marder3MMountedMG'
     bCustomAiming=true
@@ -142,15 +142,15 @@ defaultproperties
     CameraBone="loader_cam"
     bPCRelativeFPRotation=true
     bAllowViewChange=true
-    DrivePos=(X=7.000000,Z=-22.000000)
+    DrivePos=(X=7.0,Z=-22.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
-    EntryRadius=130.000000
-    TPCamDistance=300.000000
-    TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
+    EntryRadius=130.0
+    TPCamDistance=300.0
+    TPCamLookat=(X=-50.0,Y=25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
     HUDOverlayClass=class'DH_Vehicles.DH_Stug3GOverlayMG'
-    HUDOverlayFOV=45.000000
+    HUDOverlayFOV=45.0
     PitchUpLimit=6000
     PitchDownLimit=63500
 }

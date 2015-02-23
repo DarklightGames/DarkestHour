@@ -263,10 +263,10 @@ function ChangePriority(int NewPriority)
 
 defaultproperties
 {
-    EnemyRadius=4096.000000
+    EnemyRadius=4096.0
     bStatic=false
     bHidden=false
     bAlwaysRelevant=true
     Texture=texture'DH_MDV_Tex.TeleMDV.MobileTele_Deny'
-    DrawScale=0.330000
+    DrawScale=0.33
 }

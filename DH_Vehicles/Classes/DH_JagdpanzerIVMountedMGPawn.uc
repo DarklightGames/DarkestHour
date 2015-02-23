@@ -7,19 +7,19 @@ class DH_JagdpanzerIVMountedMGPawn extends DH_ROMountedTankMGPawn;
 
 defaultproperties
 {
-    OverlayCenterSize=0.500000
+    OverlayCenterSize=0.5
     MGOverlay=texture'DH_VehicleOptics_tex.Common.MG_sight'
-    WeaponFOV=72.000000
+    WeaponFOV=72.0
     GunClass=class'DH_Vehicles.DH_JagdpanzerIVMountedMG'
     bHasAltFire=false
     CameraBone="mg_yaw"
     bDrawDriverInTP=false
-    DrivePos=(Z=130.000000)
-    EntryRadius=130.000000
-    FPCamViewOffset=(Z=3.000000)
-    TPCamDistance=300.000000
-    TPCamLookat=(X=-25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
+    DrivePos=(Z=130.0)
+    EntryRadius=130.0
+    FPCamViewOffset=(Z=3.0)
+    TPCamDistance=300.0
+    TPCamLookat=(X=-25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=2730
     PitchDownLimit=64000
 }

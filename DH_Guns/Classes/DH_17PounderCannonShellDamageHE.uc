@@ -9,17 +9,17 @@ class DH_17PounderCannonShellDamageHE extends ROTankShellExplosionDamage
 defaultproperties
 {
     HUDIcon=texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
-    TankDamageModifier=0.040000
-    APCDamageModifier=0.500000
-    VehicleDamageModifier=1.000000
-    TreadDamageModifier=0.850000
+    TankDamageModifier=0.04
+    APCDamageModifier=0.5
+    VehicleDamageModifier=1.0
+    TreadDamageModifier=0.85
     DeathString="%o was ripped by shrapnel from %k's 17 Pounder AT-Gun HE shell."
     FemaleSuicide="%o fired her 17 Pounder AT-Gun HE shell prematurely."
     MaleSuicide="%o fired his 17 Pounder AT-Gun HE shell prematurely."
-    KDeathVel=300.000000
-    KDeathUpKick=60.000000
-    KDeadLinZVelScale=0.002000
-    KDeadAngVelScale=0.003000
-    VehicleMomentumScaling=1.400000
+    KDeathVel=300.0
+    KDeathUpKick=60.0
+    KDeadLinZVelScale=0.002
+    KDeadAngVelScale=0.003
+    VehicleMomentumScaling=1.4
     HumanObliterationThreshhold=325
 }

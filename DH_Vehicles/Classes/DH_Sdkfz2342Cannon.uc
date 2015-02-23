@@ -7,20 +7,20 @@ class DH_Sdkfz2342Cannon extends DH_ROTankCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.001300
-    ManualRotationsPerSecond=0.040000
-    FrontArmorFactor=3.000000
-    RightArmorFactor=1.000000
-    LeftArmorFactor=1.000000
-    RearArmorFactor=1.000000
-    FrontArmorSlope=40.000000
-    RightArmorSlope=25.000000
-    LeftArmorSlope=25.000000
-    RearArmorSlope=25.000000
-    FrontLeftAngle=331.000000
-    FrontRightAngle=29.000000
-    RearRightAngle=151.000000
-    RearLeftAngle=209.000000
+    SecondarySpread=0.0013
+    ManualRotationsPerSecond=0.04
+    FrontArmorFactor=3.0
+    RightArmorFactor=1.0
+    LeftArmorFactor=1.0
+    RearArmorFactor=1.0
+    FrontArmorSlope=40.0
+    RightArmorSlope=25.0
+    LeftArmorSlope=25.0
+    RearArmorSlope=25.0
+    FrontLeftAngle=331.0
+    FrontRightAngle=29.0
+    RearRightAngle=151.0
+    RearLeftAngle=209.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
@@ -56,7 +56,7 @@ defaultproperties
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=37.0
-    VehHitpoints(0)=(PointRadius=14.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=4.000000,Z=-14.000000))
+    VehHitpoints(0)=(PointRadius=14.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=4.0,Z=-14.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
@@ -64,35 +64,35 @@ defaultproperties
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=175.000000
-    AltFireOffset=(X=21.000000,Y=14.500000,Z=1.500000)
+    WeaponFireOffset=175.0
+    AltFireOffset=(X=21.0,Y=14.5,Z=1.5)
     bAmbientAltFireSound=true
-    FireInterval=4.000000
-    AltFireInterval=0.050000
+    FireInterval=4.0
+    AltFireInterval=0.05
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AltFireSoundScaling=3.000000
+    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AltShakeRotMag=(X=1.000000,Y=1.000000,Z=1.000000)
-    AltShakeRotRate=(X=10000.000000,Y=10000.000000,Z=10000.000000)
-    AltShakeRotTime=2.000000
-    AltShakeOffsetMag=(X=0.100000,Y=0.100000,Z=0.100000)
-    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
+    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    AltShakeRotTime=2.0
+    AltShakeOffsetMag=(X=0.1,Y=0.1,Z=0.1)
+    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3640
     CustomPitchDownLimit=63715
     BeginningIdleAnim="com_idle_close"
@@ -104,5 +104,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

@@ -45,7 +45,7 @@ defaultproperties
 {
     Begin Object Class=ROGUIContainerNoSkinAlt Name=subcontainer
         NumColumns=3
-        WinHeight=1.000000
+        WinHeight=1.0
         TabOrder=1
         OnPreDraw=subcontainer.InternalPreDraw
     End Object
@@ -73,10 +73,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=AddButton
         Caption="Add"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.300000
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinTop=0.3
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=6
         bScaleToParent=true
         bRepeatClick=true
@@ -88,10 +88,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=AddAllButton
         Caption="Add All"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.360000
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinTop=0.36
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=5
         bScaleToParent=true
         OnClickSound=CS_Up
@@ -101,12 +101,12 @@ defaultproperties
     b_AddAll=GUIButton'DH_Interface.DHMaplistEditor.AddAllButton'
     Begin Object Class=GUIButton Name=RemoveButton
         Caption="Remove"
-        AutoSizePadding=(HorzPerc=0.500000)
+        AutoSizePadding=(HorzPerc=0.5)
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.700000
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinTop=0.7
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=10
         bScaleToParent=true
         bRepeatClick=true
@@ -118,10 +118,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=RemoveAllButton
         Caption="Remove All"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.760000
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinTop=0.76
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=11
         bScaleToParent=true
         OnClickSound=CS_Down
@@ -132,10 +132,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=MoveUpButton
         Caption="Move Up"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.500000
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinTop=0.5
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=9
         bScaleToParent=true
         bRepeatClick=true
@@ -147,10 +147,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=MoveDownButton
         Caption="Move Down"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.560000
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinTop=0.56
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=8
         bScaleToParent=true
         bRepeatClick=true
@@ -162,9 +162,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=NewMaplistButton
         Caption="New"
         StyleName="DHMenuTextButtonStyle"
-        WinLeft=0.600000
-        WinWidth=0.100000
-        WinHeight=0.050000
+        WinLeft=0.6
+        WinWidth=0.1
+        WinHeight=0.05
         TabOrder=1
         OnClick=DHMaplistEditor.CustomMaplistClick
         OnKeyEvent=NewMaplistButton.InternalOnKeyEvent
@@ -173,9 +173,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=DeleteMaplistButton
         Caption="Delete"
         StyleName="DHMenuTextButtonStyle"
-        WinLeft=0.900000
-        WinWidth=0.100000
-        WinHeight=0.050000
+        WinLeft=0.9
+        WinWidth=0.1
+        WinHeight=0.05
         TabOrder=3
         OnPreDraw=DHMaplistEditor.ButtonPreDraw
         OnClick=DHMaplistEditor.CustomMaplistClick
@@ -185,9 +185,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=RenameMaplistButton
         Caption="Rename"
         StyleName="DHMenuTextButtonStyle"
-        WinLeft=0.750000
-        WinWidth=0.100000
-        WinHeight=0.050000
+        WinLeft=0.75
+        WinWidth=0.1
+        WinHeight=0.05
         TabOrder=2
         OnClick=DHMaplistEditor.CustomMaplistClick
         OnKeyEvent=RenameMaplistButton.InternalOnKeyEvent
@@ -195,8 +195,8 @@ defaultproperties
     b_Rename=GUIButton'DH_Interface.DHMaplistEditor.RenameMaplistButton'
     Begin Object Class=DHGUIComboBox Name=SelectMaplistCombo
         bReadOnly=true
-        WinWidth=0.550000
-        WinHeight=0.050000
+        WinWidth=0.55
+        WinHeight=0.05
         TabOrder=0
         OnChange=DHMaplistEditor.MaplistSelectChange
         OnKeyEvent=SelectMaplistCombo.InternalOnKeyEvent
@@ -204,25 +204,25 @@ defaultproperties
     co_Maplist=DHGUIComboBox'DH_Interface.DHMaplistEditor.SelectMaplistCombo'
     Begin Object Class=DHGUISectionBackground Name=MapListSectionBackground
         Caption="Saved Map Lists"
-        TopPadding=0.050000
-        BottomPadding=0.050000
+        TopPadding=0.05
+        BottomPadding=0.05
         NumColumns=2
         StyleName="DHSmallText"
-        WinTop=0.080000
+        WinTop=0.08
         WinLeft=0.023646
-        WinWidth=0.943100
-        WinHeight=0.150000
+        WinWidth=0.9431
+        WinHeight=0.15
         OnPreDraw=MapListSectionBackground.InternalPreDraw
     End Object
     sb_MapList=DHGUISectionBackground'DH_Interface.DHMaplistEditor.MapListSectionBackground'
     Begin Object Class=DHGUISectionBackground Name=AvailBackground
         bFillClient=true
         Caption="Available Maps"
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.002500
-        BottomPadding=0.002500
-        WinTop=0.255000
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.0025
+        BottomPadding=0.0025
+        WinTop=0.255
         WinLeft=0.025156
         WinWidth=0.380859
         WinHeight=0.716073
@@ -234,11 +234,11 @@ defaultproperties
     Begin Object Class=DHGUISectionBackground Name=ActiveBackground
         bFillClient=true
         Caption="Selected Maps"
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.002500
-        BottomPadding=0.002500
-        WinTop=0.255000
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.0025
+        BottomPadding=0.0025
+        WinTop=0.255
         WinLeft=0.586876
         WinWidth=0.380859
         WinHeight=0.716073
@@ -250,9 +250,9 @@ defaultproperties
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
         StyleName="DHNoBox"
-        WinTop=0.017000
-        WinHeight=0.050000
-        RenderWeight=0.100000
+        WinTop=0.017
+        WinHeight=0.05
+        RenderWeight=0.1
         bBoundToParent=true
         bScaleToParent=true
         bAcceptsInput=true
@@ -267,10 +267,10 @@ defaultproperties
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
-        WinTop=0.020000
-        WinLeft=0.000000
-        WinWidth=1.000000
-        WinHeight=0.980000
+        WinTop=0.02
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=0.98
         RenderWeight=0.000003
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHMaplistEditor.FloatingFrameBackground'

@@ -18,7 +18,7 @@ defaultproperties
     Edit=GUIEditBox'DH_Interface.DHGUIComboBox.EditBox1'
     Begin Object Class=GUIComboButton Name=ShowList
         StyleName="DHGripButton"
-        RenderWeight=0.600000
+        RenderWeight=0.6
         bNeverScale=true
         OnKeyEvent=ShowList.InternalOnKeyEvent
     End Object
@@ -27,7 +27,7 @@ defaultproperties
         SelectedStyleName="DHListSelectionStyle"
         OnCreateComponent=ListBox1.InternalOnCreateComponent
         StyleName="DHComboListBox"
-        RenderWeight=0.700000
+        RenderWeight=0.7
         bTabStop=false
         bVisible=false
         bNeverScale=true

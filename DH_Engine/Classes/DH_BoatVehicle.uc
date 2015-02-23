@@ -340,42 +340,42 @@ function bool CheckForCrew()
 defaultproperties
 {
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-    PointValue=1.000000
-    ChangeUpPoint=1990.000000
-    ChangeDownPoint=1000.000000
+    PointValue=1.0
+    ChangeUpPoint=1990.0
+    ChangeDownPoint=1000.0
     SteerBoneName="steeringwheel"
-    DustSlipRate=0.000000
-    DustSlipThresh=100000.000000
-    ViewShakeRadius=600.000000
-    ViewShakeOffsetMag=(X=0.500000,Z=2.000000)
-    ViewShakeOffsetFreq=7.000000
-    DisintegrationHealth=-10000.000000
-    DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
-    DestructionAngularMomentum=(Max=150.000000)
-    ExplosionSoundRadius=800.000000
-    ExplosionDamage=300.000000
-    ExplosionRadius=600.000000
-    ImpactDamageMult=0.001000
-    TimeTilDissapear=15.000000
-    IdleTimeBeforeReset=30.000000
+    DustSlipRate=0.0
+    DustSlipThresh=100000.0
+    ViewShakeRadius=600.0
+    ViewShakeOffsetMag=(X=0.5,Z=2.0)
+    ViewShakeOffsetFreq=7.0
+    DisintegrationHealth=-10000.0
+    DestructionLinearMomentum=(Min=100.0,Max=350.0)
+    DestructionAngularMomentum=(Max=150.0)
+    ExplosionSoundRadius=800.0
+    ExplosionDamage=300.0
+    ExplosionRadius=600.0
+    ImpactDamageMult=0.001
+    TimeTilDissapear=15.0
+    IdleTimeBeforeReset=30.0
     InitialPositionIndex=0
-    VehicleSpikeTime=15.000000
+    VehicleSpikeTime=15.0
     VehHitpoints(0)=(PointBone="Driver")
-    VehicleMass=12.000000
+    VehicleMass=12.0
     bKeyVehicle=true
     bFPNoZFromCameraPitch=true
     CenterSpringForce="SpringONSSRV"
     VehiclePositionString="in a Boat"
     StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
-    MaxDesireability=0.100000
-    ObjectiveGetOutDist=1500.000000
-    WaterDamage=0.000000
+    MaxDesireability=0.1
+    ObjectiveGetOutDist=1500.0
+    WaterDamage=0.0
     bCanSwim=true
-    GroundSpeed=200.000000
-    WaterSpeed=200.000000
+    GroundSpeed=200.0
+    WaterSpeed=200.0
     PitchUpLimit=500
     PitchDownLimit=58000
-    CollisionRadius=300.000000
-    CollisionHeight=45.000000
+    CollisionRadius=300.0
+    CollisionHeight=45.0
     bDebugExitPositions=true
 }

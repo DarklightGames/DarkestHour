@@ -10,15 +10,15 @@ defaultproperties
     CurrentGameType="DH_Engine.DarkestHourGame"
     Begin Object Class=DHmoComboBox Name=GameTypeCombo
         bReadOnly=true
-        CaptionWidth=0.100000
+        CaptionWidth=0.1
         Caption="Game Type"
         OnCreateComponent=GameTypeCombo.InternalOnCreateComponent
         IniOption="@INTERNAL"
-        WinTop=0.860000
-        WinLeft=0.620000
-        WinWidth=0.358680
-        WinHeight=0.035000
-        RenderWeight=1.000000
+        WinTop=0.86
+        WinLeft=0.62
+        WinWidth=0.35868
+        WinHeight=0.035
+        RenderWeight=1.0
         TabOrder=0
         OnPreDraw=DHServerBrowser.ComboOnPreDraw
         OnLoadINI=DHServerBrowser.InternalOnLoadINI
@@ -27,10 +27,10 @@ defaultproperties
     Begin Object Class=DHGUITabControl Name=PageTabs
         bFillSpace=false
         bDockPanels=true
-        TabHeight=0.060000
+        TabHeight=0.06
         BackgroundStyleName="DHHeader"
-        WinHeight=0.044000
-        RenderWeight=0.490000
+        WinHeight=0.044
+        RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
         OnActivate=PageTabs.InternalOnActivate
@@ -44,9 +44,9 @@ defaultproperties
     End Object
     t_Header=DHGUIHeader'DH_Interface.DHServerBrowser.ServerBrowserHeader'
     Begin Object Class=DHBrowser_Footer Name=FooterPanel
-        Spacer=0.010000
+        Spacer=0.01
         StyleName="DHFooter"
-        WinHeight=0.070000
+        WinHeight=0.07
         TabOrder=4
         OnPreDraw=FooterPanel.InternalOnPreDraw
     End Object

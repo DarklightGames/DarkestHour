@@ -142,8 +142,8 @@ defaultproperties
     SingleReloadAnim="Single_Insert"
     PostReloadAnim="Single_Close"
     lenseMaterialID=5
-    scopePortalFOVHigh=13.000000
-    scopePortalFOV=7.000000
+    scopePortalFOVHigh=13.0
+    scopePortalFOV=7.0
     scopeYaw=25
     scopePitchHigh=20
     scopeYawHigh=40
@@ -162,25 +162,25 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=40.000000
-    IronSightDisplayFOVHigh=43.000000
-    ZoomInTime=0.400000
-    ZoomOutTime=0.400000
+    IronSightDisplayFOV=40.0
+    IronSightDisplayFOVHigh=43.0
+    ZoomInTime=0.4
+    ZoomOutTime=0.4
     PlayerFOVZoom=25.714285 // 3.5x magnification
-    XoffsetHighDetail=(X=-12.000000)
+    XoffsetHighDetail=(X=-12.0)
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
     SelectAnim="Draw"
     PutDownAnim="putaway"
-    SelectAnimRate=1.000000
-    PutDownAnimRate=1.000000
-    AIRating=0.400000
-    CurrentRating=0.400000
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    AIRating=0.4
+    CurrentRating=0.4
     bSniping=true
-    DisplayFOV=70.000000
+    DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_EnfieldNo4ScopedPickup'
-    BobDamping=1.600000
+    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
     ItemName="Scoped Enfield No.4"
     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'

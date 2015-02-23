@@ -39,17 +39,17 @@ defaultproperties
     bSpecialExiting=true
     LeftTreadIndex=2
     RightTreadIndex=3
-    MaxCriticalSpeed=729.000000
+    MaxCriticalSpeed=729.0
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-    UFrontArmorFactor=7.200000
-    URightArmorFactor=3.000000
-    ULeftArmorFactor=3.000000
-    URearArmorFactor=5.000000
-    UFrontArmorSlope=9.000000
-    URearArmorSlope=9.000000
-    PointValue=3.000000
-    MaxPitchSpeed=150.000000
-    TreadVelocityScale=225.000000
+    UFrontArmorFactor=7.2
+    URightArmorFactor=3.0
+    ULeftArmorFactor=3.0
+    URearArmorFactor=5.0
+    UFrontArmorSlope=9.0
+    URearArmorSlope=9.0
+    PointValue=3.0
+    MaxPitchSpeed=150.0
+    TreadVelocityScale=225.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L01'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R01'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble01'
@@ -81,19 +81,19 @@ defaultproperties
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
     WheelRotationScale=2200
-    TreadHitMinAngle=1.800000
-    FrontLeftAngle=330.000000
-    FrontRightAngle=30.000000
-    RearRightAngle=150.000000
-    RearLeftAngle=210.000000
-    GearRatios(4)=0.650000
+    TreadHitMinAngle=1.8
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=150.0
+    RearLeftAngle=210.0
+    GearRatios(4)=0.65
     LeftLeverBoneName="lever_L"
     LeftLeverAxis=AXIS_Z
     RightLeverBoneName="lever_R"
     RightLeverAxis=AXIS_Z
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-175.000000,Y=-52.000000,Z=55.000000),ExhaustRotation=(Pitch=22000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-175.0,Y=-52.0,Z=55.0),ExhaustRotation=(Pitch=22000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIILCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIMountedMGPawn',WeaponBone="Mg_placement")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIIIPassengerOne',WeaponBone="body")
@@ -104,27 +104,27 @@ defaultproperties
     StartUpSound=sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3L_dest2'
-    DamagedEffectScale=0.850000
-    DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
-    SteeringScaleFactor=0.750000
+    DamagedEffectScale=0.85
+    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
+    SteeringScaleFactor=0.75
     BeginningIdleAnim="periscope_idle_out"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=70.000000,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",DriverTransitionAnim="VPanzer3_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,ViewFOV=70.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",DriverTransitionAnim="VPanzer3_driver_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0)
     VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.panzer3_body'
-    VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=85.000000,Y=-27.000000,Z=30.000000),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=30.000000,PointHeight=32.000000,PointOffset=(X=-70.000000,Z=6.000000),DamageMultiplier=1.000000)
-    VehHitpoints(2)=(PointRadius=10.000000,PointHeight=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=-25.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=10.000000,PointHeight=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=25.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=15.000000,PointHeight=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-30.000000,Y=25.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointRadius=10.0,PointBone="body",PointOffset=(X=85.0,Y=-27.0,Z=30.0),bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=30.0,PointHeight=32.0,PointOffset=(X=-70.0,Z=6.0),DamageMultiplier=1.0)
+    VehHitpoints(2)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=15.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-30.0,Y=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=40.000000,Y=-5.000000,Z=7.000000)
-        WheelRadius=30.000000
+        BoneOffset=(X=40.0,Y=-5.0,Z=7.0)
+        WheelRadius=30.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -132,8 +132,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=40.000000,Y=5.000000,Z=7.000000)
-        WheelRadius=30.000000
+        BoneOffset=(X=40.0,Y=5.0,Z=7.0)
+        WheelRadius=30.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -141,8 +141,8 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-5.000000,Y=-5.000000,Z=7.000000)
-        WheelRadius=30.000000
+        BoneOffset=(X=-5.0,Y=-5.0,Z=7.0)
+        WheelRadius=30.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -150,53 +150,53 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-5.000000,Y=5.000000,Z=7.000000)
-        WheelRadius=30.000000
+        BoneOffset=(X=-5.0,Y=5.0,Z=7.0)
+        WheelRadius=30.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=10.000000,Z=7.000000)
-        WheelRadius=30.000000
+        BoneOffset=(X=10.0,Z=7.0)
+        WheelRadius=30.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=10.000000,Z=7.000000)
-        WheelRadius=30.000000
+        BoneOffset=(X=10.0,Z=7.0)
+        WheelRadius=30.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PanzerIIILTank.Right_Drive_Wheel'
-    VehicleMass=11.500000
+    VehicleMass=11.5
     bDrawDriverInTP=false // Matt: added as driver cannot be seen (matches ausf.N)
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
+    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VPanzer3_driver_idle_close"
-    ExitPositions(0)=(X=-66.00,Y=1.00,Z=145.00)
-    ExitPositions(1)=(X=-66.00,Y=1.00,Z=145.00)
-    ExitPositions(2)=(X=-66.00,Y=1.00,Z=145.00)
-    ExitPositions(3)=(X=-87.00,Y=-156.00,Z=10.00)
-    ExitPositions(4)=(X=-230.00,Y=-34.00,Z=10.00)
-    ExitPositions(5)=(X=-230.00,Y=34.00,Z=10.00)
-    ExitPositions(6)=(X=-87.00,Y=156.00,Z=10.00)
-    EntryRadius=375.000000
-    FPCamPos=(X=0.000000,Y=0.000000,Z=0.000000)
-    TPCamDistance=600.000000
-    TPCamLookat=(X=-50.000000)
-    TPCamWorldOffset=(Z=250.000000)
-    DriverDamageMult=1.000000
+    ExitPositions(0)=(X=-66.0,Y=1.0,Z=145.0)
+    ExitPositions(1)=(X=-66.0,Y=1.0,Z=145.0)
+    ExitPositions(2)=(X=-66.0,Y=1.0,Z=145.0)
+    ExitPositions(3)=(X=-87.0,Y=-156.0,Z=10.0)
+    ExitPositions(4)=(X=-230.0,Y=-34.0,Z=10.0)
+    ExitPositions(5)=(X=-230.0,Y=34.0,Z=10.0)
+    ExitPositions(6)=(X=-87.0,Y=156.0,Z=10.0)
+    EntryRadius=375.0
+    FPCamPos=(X=0.0,Y=0.0,Z=0.0)
+    TPCamDistance=600.0
+    TPCamLookat=(X=-50.0)
+    TPCamWorldOffset=(Z=250.0)
+    DriverDamageMult=1.0
     VehicleNameString="Panzer III Ausf.M"
-    MaxDesireability=1.800000
+    MaxDesireability=1.8
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayOffset=(X=2.000000)
-    HUDOverlayFOV=90.000000
+    HUDOverlayOffset=(X=2.0)
+    HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
-    HealthMax=475.000000
+    HealthMax=475.0
     Health=475
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
@@ -205,19 +205,19 @@ defaultproperties
     Skins(3)=texture'axis_vehicles_tex.Treads.Panzer3_treads'
     Skins(4)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
     Skins(5)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
-    SoundRadius=800.000000
-    TransientSoundRadius=1500.000000
-    CollisionRadius=175.000000
-    CollisionHeight=60.000000
+    SoundRadius=800.0
+    TransientSoundRadius=1500.0
+    CollisionRadius=175.0
+    CollisionHeight=60.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=4
     VehicleHudOccupantsX(3)=0.375
-    VehicleHudOccupantsY(3)=0.70
+    VehicleHudOccupantsY(3)=0.7
     VehicleHudOccupantsX(4)=0.45
     VehicleHudOccupantsY(4)=0.75
     VehicleHudOccupantsX(5)=0.55
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
-    VehicleHudOccupantsY(6)=0.70
+    VehicleHudOccupantsY(6)=0.7
 }

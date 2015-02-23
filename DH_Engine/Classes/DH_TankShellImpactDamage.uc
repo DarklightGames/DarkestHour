@@ -10,7 +10,7 @@ class DH_TankShellImpactDamage extends DHTankShellImpactDamage
 
 defaultproperties
 {
-    APCDamageModifier=0.250000
-    TreadDamageModifier=0.850000
+    APCDamageModifier=0.25
+    TreadDamageModifier=0.85
     HumanObliterationThreshhold=250
 }

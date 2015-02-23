@@ -125,9 +125,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=bCreate
         Caption="Create"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.105000
+        WinTop=0.105
         WinLeft=0.610001
-        WinWidth=0.168750
+        WinWidth=0.16875
         WinHeight=0.05
         OnClick=DHFilterListPage.CreateClick
         OnKeyEvent=bCreate.InternalOnKeyEvent
@@ -139,7 +139,7 @@ defaultproperties
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.158333
         WinLeft=0.610001
-        WinWidth=0.168750
+        WinWidth=0.16875
         WinHeight=0.05
         OnClick=DHFilterListPage.RemoveClick
         OnKeyEvent=bRemove.InternalOnKeyEvent
@@ -151,7 +151,7 @@ defaultproperties
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.266666
         WinLeft=0.610001
-        WinWidth=0.168750
+        WinWidth=0.16875
         WinHeight=0.05
         OnClick=DHFilterListPage.EditClick
         OnKeyEvent=bEdit.InternalOnKeyEvent
@@ -161,9 +161,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=bOk
         Caption="OK"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.770000
+        WinTop=0.77
         WinLeft=0.610001
-        WinWidth=0.168750
+        WinWidth=0.16875
         WinHeight=0.05
         OnClick=DHFilterListPage.OkClick
         OnKeyEvent=bOk.InternalOnKeyEvent
@@ -173,9 +173,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=bCancel
         Caption="Cancel"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.820000
+        WinTop=0.82
         WinLeft=0.610001
-        WinWidth=0.168750
+        WinWidth=0.16875
         WinHeight=0.05
         OnClick=DHFilterListPage.CancelClick
         OnKeyEvent=bCancel.InternalOnKeyEvent

@@ -7,7 +7,7 @@ class DH_Flak88Cannon extends DH_ATGunCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.001250
+    SecondarySpread=0.00125
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
@@ -40,29 +40,29 @@ defaultproperties
     RangeSettings(23)=2600
     RangeSettings(24)=2800
     RangeSettings(25)=3000
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=-15.000000,Z=17.000000))
-    VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=-15.000000,Z=-5.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-15.0,Z=17.0))
+    VehHitpoints(1)=(PointRadius=16.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-15.0,Z=-5.0))
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=20.000000
-    RotationsPerSecond=0.025000
-    FireInterval=4.000000
+    WeaponFireOffset=20.0
+    RotationsPerSecond=0.025
+    FireInterval=4.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
-    ShakeRotMag=(Z=110.000000)
-    ShakeRotRate=(Z=1100.000000)
-    ShakeRotTime=2.000000
-    ShakeOffsetMag=(Z=5.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=110.0)
+    ShakeRotRate=(Z=1100.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
     BeginningIdleAnim="Vt3485_driver_idle_close"
@@ -74,5 +74,5 @@ defaultproperties
     Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88'
     Skins(1)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

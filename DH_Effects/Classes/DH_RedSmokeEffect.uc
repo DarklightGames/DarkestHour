@@ -51,33 +51,33 @@ defaultproperties
         UseRegularSizeScale=false
         UniformSize=true
         AutomaticInitialSpawning=false
-        Acceleration=(X=7.000000)
+        Acceleration=(X=7.0)
         ColorScale(0)=(Color=(R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(R=255,A=255))
-        Opacity=0.600000
-        FadeOutStartTime=18.000000
-        FadeInEndTime=0.500000
+        ColorScale(1)=(RelativeTime=1.0,Color=(R=255,A=255))
+        Opacity=0.6
+        FadeOutStartTime=18.0
+        FadeInEndTime=0.5
         MaxParticles=160
-        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
-        StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
-        SizeScale(0)=(RelativeSize=0.100000)
-        SizeScale(1)=(RelativeTime=0.050000,RelativeSize=0.500000)
-        SizeScale(2)=(RelativeTime=0.100000,RelativeSize=1.000000)
-        SizeScale(3)=(RelativeTime=1.000000,RelativeSize=4.000000)
-        StartSizeRange=(X=(Min=50.000000,Max=50.000000),Y=(Min=50.000000,Max=50.000000),Z=(Min=50.000000,Max=50.000000))
-        InitialParticlesPerSecond=5.000000
+        SpinsPerSecondRange=(X=(Min=0.05,Max=0.05))
+        StartSpinRange=(X=(Min=-0.5,Max=0.5))
+        SizeScale(0)=(RelativeSize=0.1)
+        SizeScale(1)=(RelativeTime=0.05,RelativeSize=0.5)
+        SizeScale(2)=(RelativeTime=0.1,RelativeSize=1.0)
+        SizeScale(3)=(RelativeTime=1.0,RelativeSize=4.0)
+        StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
+        InitialParticlesPerSecond=5.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'DH_FX_Tex.Smoke.grenadesmokeRed'
-        LifetimeRange=(Min=25.000000,Max=30.000000)
-        StartVelocityRange=(X=(Min=-15.000000,Max=15.000000),Y=(Min=-10.000000,Max=10.000000),Z=(Min=40.000000,Max=70.000000))
-        VelocityLossRange=(X=(Min=0.200000,Max=0.200000),Y=(Min=0.050000,Max=0.050000),Z=(Min=0.100000,Max=0.100000))
+        LifetimeRange=(Min=25.0,Max=30.0)
+        StartVelocityRange=(X=(Min=-15.0,Max=15.0),Y=(Min=-10.0,Max=10.0),Z=(Min=40.0,Max=70.0))
+        VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.05,Max=0.05),Z=(Min=0.1,Max=0.1))
     End Object
     Emitters(0)=SpriteEmitter'DH_Effects.DH_RedSmokeEffect.SpriteEmitter0'
     AutoDestroy=true
     bNoDelete=false
     bNetTemporary=true
     RemoteRole=ROLE_SimulatedProxy
-    LifeSpan=50.000000
+    LifeSpan=50.0
     Style=STY_Masked
     bHardAttach=true
     bDirectional=true

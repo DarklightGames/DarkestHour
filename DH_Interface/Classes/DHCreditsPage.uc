@@ -69,9 +69,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=CloseButton
         Caption="Close"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.900000
-        WinLeft=0.400000
-        WinWidth=0.200000
+        WinTop=0.9
+        WinLeft=0.4
+        WinWidth=0.2
         bBoundToParent=true
         OnClick=DHCreditsPage.InternalOnClick
         OnKeyEvent=CloseButton.InternalOnKeyEvent
@@ -81,10 +81,10 @@ defaultproperties
         bNoTeletype=true
         OnCreateComponent=CreditText.InternalOnCreateComponent
         StyleName="DHLargeText"
-        WinTop=0.080000
-        WinLeft=0.070000
-        WinWidth=0.860000
-        WinHeight=0.800000
+        WinTop=0.08
+        WinLeft=0.07
+        WinWidth=0.86
+        WinHeight=0.8
         bBoundToParent=true
         bScaleToParent=true
     End Object
@@ -184,9 +184,9 @@ defaultproperties
     credit_lines(116)="And to everyone else who has contributed to this mod over the past four years that we may have missed, thank you!"
     Begin Object Class=DHGUIHeader Name=TitleBar
         StyleName="DHLargeText"
-        WinTop=0.020000
-        WinHeight=0.050000
-        RenderWeight=0.100000
+        WinTop=0.02
+        WinHeight=0.05
+        RenderWeight=0.1
         bBoundToParent=true
         bScaleToParent=true
         bAcceptsInput=true
@@ -202,16 +202,16 @@ defaultproperties
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
-        WinTop=0.020000
-        WinLeft=0.000000
-        WinWidth=1.000000
-        WinHeight=0.980000
+        WinTop=0.02
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=0.98
         RenderWeight=0.000003
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHCreditsPage.FloatingFrameBackground'
     bRequire640x480=false
-    WinTop=0.100000
-    WinLeft=0.100000
-    WinWidth=0.800000
-    WinHeight=0.800000
+    WinTop=0.1
+    WinLeft=0.1
+    WinWidth=0.8
+    WinHeight=0.8
 }

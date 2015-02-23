@@ -30,7 +30,7 @@ defaultproperties
         bVisibleWhenEmpty=true
         OnCreateComponent=DHGUIDynArrayPage.InternalOnCreateComponent
         WinTop=0.140209
-        WinLeft=0.021250
+        WinLeft=0.02125
         WinWidth=0.865001
         WinHeight=0.714452
         TabOrder=0
@@ -42,18 +42,18 @@ defaultproperties
     ButtonStyle="DHMenuTextButtonStyle"
     Begin Object Class=AltSectionBackground Name=Bk1
         HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay'
-        LeftPadding=0.010000
-        RightPadding=0.150000
+        LeftPadding=0.01
+        RightPadding=0.15
         WinTop=0.095833
-        WinLeft=0.043750
-        WinWidth=0.762500
-        WinHeight=0.575000
+        WinLeft=0.04375
+        WinWidth=0.7625
+        WinHeight=0.575
         OnPreDraw=Bk1.InternalPreDraw
     End Object
     sb_Bk1=AltSectionBackground'DH_Interface.DHGUIDynArrayPage.Bk1'
     Begin Object Class=DHGUISectionBackground Name=InternalFrameImage
-        WinTop=0.075000
-        WinLeft=0.040000
+        WinTop=0.075
+        WinLeft=0.04
         WinWidth=0.675859
         WinHeight=0.550976
         OnPreDraw=InternalFrameImage.InternalPreDraw
@@ -88,9 +88,9 @@ defaultproperties
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
         StyleName="DHNoBox"
-        WinTop=0.017000
-        WinHeight=0.050000
-        RenderWeight=0.100000
+        WinTop=0.017
+        WinHeight=0.05
+        RenderWeight=0.1
         bBoundToParent=true
         bScaleToParent=true
         bAcceptsInput=true
@@ -105,10 +105,10 @@ defaultproperties
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
-        WinTop=0.020000
-        WinLeft=0.000000
-        WinWidth=1.000000
-        WinHeight=0.980000
+        WinTop=0.02
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=0.98
         RenderWeight=0.000003
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHGUIDynArrayPage.FloatingFrameBackground'

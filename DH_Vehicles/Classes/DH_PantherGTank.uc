@@ -27,11 +27,11 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    UFrontArmorFactor=8.200000
-    URightArmorFactor=5.000000
-    ULeftArmorFactor=5.000000
-    URightArmorSlope=30.000000
-    ULeftArmorSlope=30.000000
+    UFrontArmorFactor=8.2
+    URightArmorFactor=5.0
+    ULeftArmorFactor=5.0
+    URightArmorSlope=30.0
+    ULeftArmorSlope=30.0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherGCannonPawn')
     VehicleNameString="Panzer V Ausf.G"
 }

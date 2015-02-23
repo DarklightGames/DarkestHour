@@ -8,8 +8,8 @@ class DH_ShermanCannonShellDamageAP extends DHTankShellImpactDamage
 
 defaultproperties
 {
-    APCDamageModifier=0.750000
-    VehicleDamageModifier=1.500000
-    TreadDamageModifier=0.850000
+    APCDamageModifier=0.75
+    VehicleDamageModifier=1.5
+    TreadDamageModifier=0.85
     DeathString="%o was killed by %k's Sherman 75mm APC shell."
 }

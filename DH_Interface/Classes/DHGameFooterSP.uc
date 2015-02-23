@@ -31,8 +31,8 @@ defaultproperties
     Begin Object Class=GUIButton Name=GamePrimaryButton
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.085678
-        WinLeft=0.880000
-        WinWidth=0.120000
+        WinLeft=0.88
+        WinWidth=0.12
         WinHeight=0.036482
         TabOrder=0
         bBoundToParent=true
@@ -43,7 +43,7 @@ defaultproperties
         Caption="Back"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.085678
-        WinWidth=0.120000
+        WinWidth=0.12
         WinHeight=0.036482
         TabOrder=2
         bBoundToParent=true

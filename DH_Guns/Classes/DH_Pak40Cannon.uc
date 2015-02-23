@@ -7,7 +7,7 @@ class DH_Pak40Cannon extends DH_ATGunCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.001270
+    SecondarySpread=0.00127
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
@@ -36,28 +36,28 @@ defaultproperties
     RangeSettings(19)=1900
     RangeSettings(20)=2000
     YawBone="Turret"
-    YawStartConstraint=-6000.000000
-    YawEndConstraint=6000.000000
+    YawStartConstraint=-6000.0
+    YawEndConstraint=6000.0
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_player"
-    WeaponFireOffset=200.000000
-    RotationsPerSecond=0.025000
-    FireInterval=3.000000
+    WeaponFireOffset=200.0
+    RotationsPerSecond=0.025
+    FireInterval=3.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
-    ShakeRotMag=(Z=110.000000)
-    ShakeRotRate=(Z=1100.000000)
-    ShakeRotTime=2.000000
-    ShakeOffsetMag=(Z=5.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=110.0)
+    ShakeRotRate=(Z=1100.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=4005
     CustomPitchDownLimit=64623
     MaxPositiveYaw=5825
@@ -73,5 +73,5 @@ defaultproperties
     Skins(1)=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     Skins(2)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

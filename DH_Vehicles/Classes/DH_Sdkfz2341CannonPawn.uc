@@ -40,35 +40,35 @@ function float GetAltAmmoReloadState()
 
 defaultproperties
 {
-    ScopeCenterScale=0.635000
+    ScopeCenterScale=0.635
     ScopeCenterRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
     CenterRotationFactor=2048
-    OverlayCenterSize=0.733330
+    OverlayCenterSize=0.73333
     UnbuttonedPositionIndex=1
     DestroyedScopeOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
     bManualTraverseOnly=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
-    ScopePositionX=0.237000
-    ScopePositionY=0.150000
+    ScopePositionX=0.237
+    ScopePositionY=0.15
     BinocPositionIndex=2
-    WeaponFOV=30.000000
+    WeaponFOV=30.0
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
-    DriverPositions(0)=(ViewLocation=(X=40.000000,Y=12.000000,Z=3.000000),ViewFOV=30.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=true)
-    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(ViewLocation=(X=40.0,Y=12.0,Z=3.0),ViewFOV=30.0,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=12743,ViewPitchDownLimit=64443,bDrawOverlays=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     bMustBeTankCrew=true
-    FireImpulse=(X=-15000.000000)
+    FireImpulse=(X=-15000.0)
     GunClass=class'DH_Vehicles.DH_Sdkfz2341Cannon'
     bHasFireImpulse=false
     CameraBone="Gun"
-    DrivePos=(X=4.000000,Y=-2.000000)
+    DrivePos=(X=4.0,Y=-2.0)
     DriveAnim="VSU76_com_idle_close"
-    EntryRadius=130.000000
-    FPCamPos=(X=50.000000,Y=-30.000000,Z=11.000000)
-    TPCamDistance=300.000000
-    TPCamLookat=(X=-25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
+    EntryRadius=130.0
+    FPCamPos=(X=50.0,Y=-30.0,Z=11.0)
+    TPCamDistance=300.0
+    TPCamLookat=(X=-25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
     PitchUpLimit=6000
     PitchDownLimit=64000
     SoundVolume=130

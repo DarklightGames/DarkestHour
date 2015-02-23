@@ -21,19 +21,19 @@ defaultproperties
     GroundExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
     SnowExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
     WaterExplosionEmitterClass=class'DH_Effects.DH_M2MortarHEExplosion'
-    ShakeRotMag=(Z=100.000000)
-    ShakeRotRate=(Z=2500.000000)
-    ShakeRotTime=3.000000
-    ShakeOffsetMag=(Z=5.000000)
-    ShakeOffsetRate=(Z=200.000000)
-    ShakeOffsetTime=5.000000
-    BlurTime=4.000000
-    BlurEffectScalar=2.000000
-    BallisticCoefficient=1.000000
-    MaxSpeed=4800.000000
+    ShakeRotMag=(Z=100.0)
+    ShakeRotRate=(Z=2500.0)
+    ShakeRotTime=3.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetRate=(Z=200.0)
+    ShakeOffsetTime=5.0
+    BlurTime=4.0
+    BlurEffectScalar=2.0
+    BallisticCoefficient=1.0
+    MaxSpeed=4800.0
     Damage=233.332993
-    DamageRadius=640.000000
-    MomentumTransfer=75000.000000
+    DamageRadius=640.0
+    MomentumTransfer=75000.0
     MyDamageType=class'DH_Mortars.DH_M2MortarDamageType'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'

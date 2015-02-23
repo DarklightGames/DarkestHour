@@ -109,7 +109,7 @@ defaultproperties
     FireAnim="shoothip"
     TweenTime=0.0
     FireForce="RocketLauncherFire"
-    FireRate=2.600000
+    FireRate=2.6
     AmmoClass=class'DH_ATWeapons.DH_PIATAmmo'
     ShakeRotMag=(X=100.0,Y=100.0,Z=800.0)
     ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)

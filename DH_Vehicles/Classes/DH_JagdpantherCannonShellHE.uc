@@ -7,59 +7,59 @@ class DH_JagdpantherCannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties
 {
-    MechanicalRanges(0)=(RangeValue=24.000000)
-    MechanicalRanges(1)=(Range=100,RangeValue=32.000000)
-    MechanicalRanges(2)=(Range=200,RangeValue=40.000000)
-    MechanicalRanges(3)=(Range=300,RangeValue=48.000000)
-    MechanicalRanges(4)=(Range=400,RangeValue=54.000000)
-    MechanicalRanges(5)=(Range=500,RangeValue=56.000000)
-    MechanicalRanges(6)=(Range=600,RangeValue=62.000000)
-    MechanicalRanges(7)=(Range=700,RangeValue=66.000000)
-    MechanicalRanges(8)=(Range=800,RangeValue=70.000000)
-    MechanicalRanges(9)=(Range=900,RangeValue=76.000000)
-    MechanicalRanges(10)=(Range=1000,RangeValue=82.000000)
-    MechanicalRanges(11)=(Range=1100,RangeValue=86.000000)
-    MechanicalRanges(12)=(Range=1200,RangeValue=90.000000)
-    MechanicalRanges(13)=(Range=1300,RangeValue=94.000000)
-    MechanicalRanges(14)=(Range=1400,RangeValue=98.000000)
-    MechanicalRanges(15)=(Range=1500,RangeValue=102.000000)
-    MechanicalRanges(16)=(Range=1600,RangeValue=106.000000)
-    MechanicalRanges(17)=(Range=1700,RangeValue=112.000000)
-    MechanicalRanges(18)=(Range=1800,RangeValue=122.000000)
-    MechanicalRanges(19)=(Range=1900,RangeValue=128.000000)
-    MechanicalRanges(20)=(Range=2000,RangeValue=136.000000)
-    MechanicalRanges(21)=(Range=2200,RangeValue=148.000000)
-    MechanicalRanges(22)=(Range=2400,RangeValue=156.000000)
-    MechanicalRanges(23)=(Range=2600,RangeValue=176.000000)
-    MechanicalRanges(24)=(Range=2800,RangeValue=196.000000)
-    MechanicalRanges(25)=(Range=3000,RangeValue=216.000000)
-    MechanicalRanges(26)=(Range=3200,RangeValue=232.000000)
-    MechanicalRanges(27)=(Range=3400,RangeValue=256.000000)
-    MechanicalRanges(28)=(Range=3600,RangeValue=280.000000)
-    MechanicalRanges(29)=(Range=3800,RangeValue=300.000000)
-    MechanicalRanges(30)=(Range=4000,RangeValue=324.000000)
+    MechanicalRanges(0)=(RangeValue=24.0)
+    MechanicalRanges(1)=(Range=100,RangeValue=32.0)
+    MechanicalRanges(2)=(Range=200,RangeValue=40.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=48.0)
+    MechanicalRanges(4)=(Range=400,RangeValue=54.0)
+    MechanicalRanges(5)=(Range=500,RangeValue=56.0)
+    MechanicalRanges(6)=(Range=600,RangeValue=62.0)
+    MechanicalRanges(7)=(Range=700,RangeValue=66.0)
+    MechanicalRanges(8)=(Range=800,RangeValue=70.0)
+    MechanicalRanges(9)=(Range=900,RangeValue=76.0)
+    MechanicalRanges(10)=(Range=1000,RangeValue=82.0)
+    MechanicalRanges(11)=(Range=1100,RangeValue=86.0)
+    MechanicalRanges(12)=(Range=1200,RangeValue=90.0)
+    MechanicalRanges(13)=(Range=1300,RangeValue=94.0)
+    MechanicalRanges(14)=(Range=1400,RangeValue=98.0)
+    MechanicalRanges(15)=(Range=1500,RangeValue=102.0)
+    MechanicalRanges(16)=(Range=1600,RangeValue=106.0)
+    MechanicalRanges(17)=(Range=1700,RangeValue=112.0)
+    MechanicalRanges(18)=(Range=1800,RangeValue=122.0)
+    MechanicalRanges(19)=(Range=1900,RangeValue=128.0)
+    MechanicalRanges(20)=(Range=2000,RangeValue=136.0)
+    MechanicalRanges(21)=(Range=2200,RangeValue=148.0)
+    MechanicalRanges(22)=(Range=2400,RangeValue=156.0)
+    MechanicalRanges(23)=(Range=2600,RangeValue=176.0)
+    MechanicalRanges(24)=(Range=2800,RangeValue=196.0)
+    MechanicalRanges(25)=(Range=3000,RangeValue=216.0)
+    MechanicalRanges(26)=(Range=3200,RangeValue=232.0)
+    MechanicalRanges(27)=(Range=3400,RangeValue=256.0)
+    MechanicalRanges(28)=(Range=3600,RangeValue=280.0)
+    MechanicalRanges(29)=(Range=3800,RangeValue=300.0)
+    MechanicalRanges(30)=(Range=4000,RangeValue=324.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=5.200000
-    DHPenetrationTable(1)=4.900000
-    DHPenetrationTable(2)=4.300000
-    DHPenetrationTable(3)=4.000000
-    DHPenetrationTable(4)=3.800000
-    DHPenetrationTable(5)=3.200000
-    DHPenetrationTable(6)=3.000000
-    DHPenetrationTable(7)=2.700000
-    DHPenetrationTable(8)=2.300000
-    DHPenetrationTable(9)=1.900000
-    DHPenetrationTable(10)=1.500000
-    ShellDiameter=8.800000
+    DHPenetrationTable(0)=5.2
+    DHPenetrationTable(1)=4.9
+    DHPenetrationTable(2)=4.3
+    DHPenetrationTable(3)=4.0
+    DHPenetrationTable(4)=3.8
+    DHPenetrationTable(5)=3.2
+    DHPenetrationTable(6)=3.0
+    DHPenetrationTable(7)=2.7
+    DHPenetrationTable(8)=2.3
+    DHPenetrationTable(9)=1.9
+    DHPenetrationTable(10)=1.5
+    ShellDiameter=8.8
     bIsAlliedShell=false
-    PenetrationMag=1020.000000
+    PenetrationMag=1020.0
     ShellImpactDamage=class'DH_Vehicles.DH_JagdpantherCannonShellDamageAP'
     ImpactDamage=550
-    BallisticCoefficient=3.250000
-    Speed=45264.000000
-    MaxSpeed=45264.000000
-    Damage=475.000000
-    DamageRadius=1550.000000
+    BallisticCoefficient=3.25
+    Speed=45264.0
+    MaxSpeed=45264.0
+    Damage=475.0
+    DamageRadius=1550.0
     MyDamageType=class'DH_Vehicles.DH_JagdpantherCannonShellDamageHE'
     Tag="Sprgr.Patr."
 }

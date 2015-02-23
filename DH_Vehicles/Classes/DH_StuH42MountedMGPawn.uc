@@ -370,12 +370,12 @@ simulated function DrawHUD(Canvas Canvas)
 defaultproperties
 {
     UnbuttonedPositionIndex=1
-    OverlayCenterSize=0.700000
+    OverlayCenterSize=0.7
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
-    FirstPersonGunShakeScale=0.850000
-    WeaponFOV=41.000000
-    DriverPositions(0)=(ViewFOV=41.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
-    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    FirstPersonGunShakeScale=0.85
+    WeaponFOV=41.0
+    DriverPositions(0)=(ViewFOV=41.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionUpAnim="com_open",DriverTransitionAnim="VPanzer3_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote',TransitionDownAnim="com_close",DriverTransitionAnim="VPanzer3_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
     bMultiPosition=true
     GunClass=class'DH_Vehicles.DH_StuH42MountedMG'
     bCustomAiming=true
@@ -383,14 +383,14 @@ defaultproperties
     CameraBone="Gun"
     bPCRelativeFPRotation=true
     bDesiredBehindView=false
-    DrivePos=(Z=-9.000000)
+    DrivePos=(Z=-9.0)
     DriveAnim="VPanzer3_com_idle_close"
-    EntryRadius=130.000000
-    FPCamPos=(X=4.000000,Z=-1.500000)
-    TPCamDistance=300.000000
-    TPCamLookat=(X=-50.000000,Y=25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
-    HUDOverlayFOV=45.000000
+    EntryRadius=130.0
+    FPCamPos=(X=4.0,Z=-1.5)
+    TPCamDistance=300.0
+    TPCamLookat=(X=-50.0,Y=25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
+    HUDOverlayFOV=45.0
     PitchUpLimit=6000
     PitchDownLimit=63500
 }

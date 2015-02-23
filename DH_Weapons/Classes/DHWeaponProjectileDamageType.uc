@@ -32,7 +32,7 @@ defaultproperties
     DeathString="%o was killed by %k's %w."
     FemaleSuicide="%o turned the gun on herself."
     MaleSuicide="%o turned the gun on himself."
-    GibModifier=0.000000
+    GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
 }
 

@@ -9,8 +9,8 @@ defaultproperties
 {
     WhizType=2
     MyVehicleDamage=class'DH_Vehicles.DH_CanisterShotVehDamType'
-    BallisticCoefficient=4.000000
-    Speed=45988.000000
-    Damage=120.000000
+    BallisticCoefficient=4.0
+    Speed=45988.0
+    Damage=120.0
     MyDamageType=class'DH_Vehicles.DH_CanisterShotDamType'
 }

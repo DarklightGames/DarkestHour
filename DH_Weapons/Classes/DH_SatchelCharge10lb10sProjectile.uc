@@ -91,8 +91,8 @@ defaultproperties
 {
     FuzeLengthTimer=15.0
     Speed=300.0
-    Damage=550.000000 //was 600 in 5.1
-    DamageRadius=500.000000 //was 725.0 in 5.1
+    Damage=550.0 //was 600 in 5.1
+    DamageRadius=500.0 //was 725.0 in 5.1
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
     ExplosionSound(0)=sound'Inf_Weapons.satchel.satchel_explode01'
     ExplosionSound(1)=sound'Inf_Weapons.satchel.satchel_explode02'
@@ -101,8 +101,8 @@ defaultproperties
     ExplodeDirtEffectClass=class'ROSatchelExplosion'
     ExplodeSnowEffectClass=class'ROSatchelExplosion'
     ExplodeMidAirEffectClass=class'ROSatchelExplosion'
-    CollisionRadius=4.000000
-    CollisionHeight=4.000000
+    CollisionRadius=4.0
+    CollisionHeight=4.0
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.Satchel_throw'
     ShakeRotMag=(X=0.0,Y=0.0,Z=300.0)
     ShakeRotRate=(Z=2500.0)

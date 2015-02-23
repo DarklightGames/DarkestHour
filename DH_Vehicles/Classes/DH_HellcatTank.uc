@@ -36,19 +36,19 @@ defaultproperties
     bAllowRiders=false
     LeftTreadIndex=4
     RightTreadIndex=3
-    MaxCriticalSpeed=1193.000000
-    TreadDamageThreshold=0.750000
-    UFrontArmorFactor=1.300000
-    URightArmorFactor=1.300000
-    ULeftArmorFactor=1.300000
-    URearArmorFactor=1.300000
-    UFrontArmorSlope=38.000000
-    URightArmorSlope=23.000000
-    ULeftArmorSlope=23.000000
-    URearArmorSlope=13.000000
-    PointValue=3.000000
-    MaxPitchSpeed=150.000000
-    TreadVelocityScale=110.000000
+    MaxCriticalSpeed=1193.0
+    TreadDamageThreshold=0.75
+    UFrontArmorFactor=1.3
+    URightArmorFactor=1.3
+    ULeftArmorFactor=1.3
+    URearArmorFactor=1.3
+    UFrontArmorSlope=38.0
+    URightArmorSlope=23.0
+    ULeftArmorSlope=23.0
+    URearArmorSlope=13.0
+    PointValue=3.0
+    MaxPitchSpeed=150.0
+    TreadVelocityScale=110.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
     RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
@@ -57,9 +57,9 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M18_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M18_turret_look'
-    VehicleHudThreadsPosX(0)=0.360000
-    VehicleHudThreadsPosY=0.510000
-    VehicleHudThreadsScale=0.700000
+    VehicleHudThreadsPosX(0)=0.36
+    VehicleHudThreadsPosY=0.51
+    VehicleHudThreadsScale=0.7
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -83,14 +83,14 @@ defaultproperties
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
     WheelRotationScale=1100
-    TreadHitMinAngle=1.600000
-    FrontLeftAngle=330.000000
-    FrontRightAngle=30.000000
-    RearRightAngle=150.000000
-    RearLeftAngle=210.000000
-    GearRatios(3)=0.620000
-    GearRatios(4)=0.850000
-    TransRatio=0.170000
+    TreadHitMinAngle=1.6
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=150.0
+    RearLeftAngle=210.0
+    GearRatios(3)=0.62
+    GearRatios(4)=0.85
+    TransRatio=0.17
     SteerBoneName="Steering"
     LeftLeverBoneName="lever_L"
     LeftLeverAxis=AXIS_Z
@@ -98,7 +98,7 @@ defaultproperties
     RightLeverAxis=AXIS_Z
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-160.000000,Y=65.000000,Z=-10.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-160.0,Y=65.0,Z=-10.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatPassengerOne',WeaponBone="body")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatPassengerTwo',WeaponBone="body")
@@ -108,18 +108,18 @@ defaultproperties
     StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.Hellcat.Hellcat_dest'
-    DamagedEffectOffset=(X=-140.000000,Y=0.000000,Z=35.000000)
+    DamagedEffectOffset=(X=-140.0,Y=0.0,Z=35.0)
     VehicleTeam=1
-    SteeringScaleFactor=0.750000
+    SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M18_body'
-    VehicleHudOccupantsX(0)=0.430000
-    VehicleHudOccupantsY(0)=0.320000
-    VehicleHudOccupantsX(1)=0.500000
-    VehicleHudOccupantsY(1)=0.500000
+    VehicleHudOccupantsX(0)=0.43
+    VehicleHudOccupantsY(0)=0.32
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.5
     VehicleHudOccupantsX(2)=0.375
     VehicleHudOccupantsY(2)=0.75
     VehicleHudOccupantsX(3)=0.45
@@ -128,19 +128,19 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
-    VehicleHudEngineX=0.510000
-    VehHitpoints(0)=(PointRadius=10.000000,PointOffset=(X=-5.000000,Y=-5.000000,Z=-5.000000),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=40.000000,PointOffset=(X=-100.000000,Z=4.000000),DamageMultiplier=1.000000)
-    VehHitpoints(2)=(PointRadius=25.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=30.000000,Y=-30.000000,Z=4.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=25.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=30.000000,Y=30.000000,Z=4.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
+    VehicleHudEngineX=0.51
+    VehHitpoints(0)=(PointRadius=10.0,PointOffset=(X=-5.0,Y=-5.0,Z=-5.0),bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=40.0,PointOffset=(X=-100.0,Z=4.0),DamageMultiplier=1.0)
+    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=30.0,Z=4.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=10.000000,Z=10.000000)
-        WheelRadius=38.000000
+        BoneOffset=(X=10.0,Z=10.0)
+        WheelRadius=38.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -148,8 +148,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=10.000000,Z=10.000000)
-        WheelRadius=38.000000
+        BoneOffset=(X=10.0,Z=10.0)
+        WheelRadius=38.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -157,8 +157,8 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.000000,Z=10.000000)
-        WheelRadius=38.000000
+        BoneOffset=(X=-30.0,Z=10.0)
+        WheelRadius=38.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -166,51 +166,51 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.000000,Z=10.000000)
-        WheelRadius=38.000000
+        BoneOffset=(X=-30.0,Z=10.0)
+        WheelRadius=38.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.000000)
-        WheelRadius=38.000000
+        BoneOffset=(Z=10.0)
+        WheelRadius=38.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.000000)
-        WheelRadius=38.000000
+        BoneOffset=(Z=10.0)
+        WheelRadius=38.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.Right_Drive_Wheel'
-    VehicleMass=11.000000
+    VehicleMass=11.0
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=12.000000,Y=0.000000,Z=-18.000000)
+    DrivePos=(X=12.0,Y=0.0,Z=-18.0)
     DriveAnim="VPanzer3_driver_idle_close"
-    ExitPositions(0)=(X=107.00,Y=-41.00,Z=98.00)
-    ExitPositions(1)=(X=-29.00,Y=-37.00,Z=164.00)
-    ExitPositions(2)=(X=-125.00,Y=-158.00,Z=5.00)
-    ExitPositions(3)=(X=-244.00,Y=-37.00,Z=5.00)
-    ExitPositions(4)=(X=-241.00,Y=34.00,Z=5.00)
-    ExitPositions(5)=(X=-125.00,Y=156.00,Z=5.00)
-    EntryRadius=375.000000
-    FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
-    TPCamDistance=600.000000
-    TPCamLookat=(X=-50.000000)
-    TPCamWorldOffset=(Z=250.000000)
-    DriverDamageMult=1.000000
+    ExitPositions(0)=(X=107.0,Y=-41.0,Z=98.0)
+    ExitPositions(1)=(X=-29.0,Y=-37.0,Z=164.0)
+    ExitPositions(2)=(X=-125.0,Y=-158.0,Z=5.0)
+    ExitPositions(3)=(X=-244.0,Y=-37.0,Z=5.0)
+    ExitPositions(4)=(X=-241.0,Y=34.0,Z=5.0)
+    ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)
+    EntryRadius=375.0
+    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
+    TPCamDistance=600.0
+    TPCamLookat=(X=-50.0)
+    TPCamWorldOffset=(Z=250.0)
+    DriverDamageMult=1.0
     VehicleNameString="M18 Hellcat"
-    MaxDesireability=1.900000
+    MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayOffset=(X=5.000000)
-    HUDOverlayFOV=90.000000
+    HUDOverlayOffset=(X=5.0)
+    HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
-    HealthMax=500.000000
+    HealthMax=500.0
     Health=500
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
     Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext'
@@ -219,27 +219,27 @@ defaultproperties
     Skins(3)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
     Skins(4)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
     Skins(5)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int'
-    SoundRadius=800.000000
-    TransientSoundRadius=1500.000000
-    CollisionRadius=175.000000
-    CollisionHeight=60.000000
+    SoundRadius=800.0
+    TransientSoundRadius=1500.0
+    CollisionRadius=175.0
+    CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.000000
-        KInertiaTensor(3)=3.000000
-        KInertiaTensor(5)=3.000000
-        KCOMOffset=(Z=-1.000000)
-        KLinearDamping=0.050000
-        KAngularDamping=0.050000
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(Z=-1.0)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.900000
+        KMaxAngularSpeed=0.9
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
-        KFriction=0.500000
-        KImpactThreshold=700.000000
+        KFriction=0.5
+        KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_HellcatTank.KParams0'
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)

@@ -7,7 +7,7 @@ class DH_Sdkfz251Factory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.000000
+    RespawnTime=1.0
     bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_Sdkfz251Transport'
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'

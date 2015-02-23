@@ -7,7 +7,7 @@ class DH_Stug3gFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.000000
+    RespawnTime=1.0
     bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_Stug3GDestroyer'
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'

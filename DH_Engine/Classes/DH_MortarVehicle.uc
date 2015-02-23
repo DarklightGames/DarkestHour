@@ -115,13 +115,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
 defaultproperties
 {
-    ExplosionSoundRadius=0.000000
-    ExplosionDamage=0.000000
-    ExplosionRadius=0.000000
-    ExplosionMomentum=0.000000
+    ExplosionSoundRadius=0.0
+    ExplosionDamage=0.0
+    ExplosionRadius=0.0
+    ExplosionMomentum=0.0
     TouchMessage="Operate "
-    MaxDesireability=0.000000
-    GroundSpeed=0.000000
+    MaxDesireability=0.0
+    GroundSpeed=0.0
     bOwnerNoSee=false
     CollisionRadius=20.0
     CollisionHeight=10.0

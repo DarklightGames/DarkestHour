@@ -7,40 +7,40 @@ class DH_CromwellCannonShell extends DH_ROTankCannonShell;
 
 defaultproperties
 {
-    MechanicalRanges(0)=(RangeValue=16.000000)
-    MechanicalRanges(1)=(Range=200,RangeValue=36.000000)
-    MechanicalRanges(2)=(Range=400,RangeValue=68.000000)
-    MechanicalRanges(3)=(Range=600,RangeValue=96.000000)
-    MechanicalRanges(4)=(Range=800,RangeValue=136.000000)
-    MechanicalRanges(5)=(Range=1000,RangeValue=176.000000)
-    MechanicalRanges(6)=(Range=1200,RangeValue=228.000000)
-    MechanicalRanges(7)=(Range=1400,RangeValue=292.000000)
-    MechanicalRanges(8)=(Range=1600,RangeValue=352.000000)
-    MechanicalRanges(9)=(Range=1800,RangeValue=412.000000)
-    MechanicalRanges(10)=(Range=2000,RangeValue=476.000000)
-    MechanicalRanges(11)=(Range=2200,RangeValue=556.000000)
-    MechanicalRanges(12)=(Range=2400,RangeValue=640.000000)
-    MechanicalRanges(13)=(Range=2600,RangeValue=726.000000)
-    MechanicalRanges(14)=(Range=2800,RangeValue=828.000000)
-    MechanicalRanges(15)=(Range=3000,RangeValue=938.000000)
-    MechanicalRanges(16)=(Range=3200,RangeValue=1064.000000)
+    MechanicalRanges(0)=(RangeValue=16.0)
+    MechanicalRanges(1)=(Range=200,RangeValue=36.0)
+    MechanicalRanges(2)=(Range=400,RangeValue=68.0)
+    MechanicalRanges(3)=(Range=600,RangeValue=96.0)
+    MechanicalRanges(4)=(Range=800,RangeValue=136.0)
+    MechanicalRanges(5)=(Range=1000,RangeValue=176.0)
+    MechanicalRanges(6)=(Range=1200,RangeValue=228.0)
+    MechanicalRanges(7)=(Range=1400,RangeValue=292.0)
+    MechanicalRanges(8)=(Range=1600,RangeValue=352.0)
+    MechanicalRanges(9)=(Range=1800,RangeValue=412.0)
+    MechanicalRanges(10)=(Range=2000,RangeValue=476.0)
+    MechanicalRanges(11)=(Range=2200,RangeValue=556.0)
+    MechanicalRanges(12)=(Range=2400,RangeValue=640.0)
+    MechanicalRanges(13)=(Range=2600,RangeValue=726.0)
+    MechanicalRanges(14)=(Range=2800,RangeValue=828.0)
+    MechanicalRanges(15)=(Range=3000,RangeValue=938.0)
+    MechanicalRanges(16)=(Range=3200,RangeValue=1064.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=8.800000
-    DHPenetrationTable(1)=8.500000
-    DHPenetrationTable(2)=8.100000
-    DHPenetrationTable(3)=7.700000
-    DHPenetrationTable(4)=7.300000
-    DHPenetrationTable(5)=6.900000
-    DHPenetrationTable(6)=6.500000
-    DHPenetrationTable(7)=6.200000
-    DHPenetrationTable(8)=5.900000
-    DHPenetrationTable(9)=5.300000
-    DHPenetrationTable(10)=4.700000
-    ShellDiameter=7.500000
+    DHPenetrationTable(0)=8.8
+    DHPenetrationTable(1)=8.5
+    DHPenetrationTable(2)=8.1
+    DHPenetrationTable(3)=7.7
+    DHPenetrationTable(4)=7.3
+    DHPenetrationTable(5)=6.9
+    DHPenetrationTable(6)=6.5
+    DHPenetrationTable(7)=6.2
+    DHPenetrationTable(8)=5.9
+    DHPenetrationTable(9)=5.3
+    DHPenetrationTable(10)=4.7
+    ShellDiameter=7.5
     ShellImpactDamage=class'DH_Vehicles.DH_CromwellCannonShellDamageAP'
     ImpactDamage=540
-    BallisticCoefficient=1.735000
-    Speed=37358.000000
-    MaxSpeed=37358.000000
+    BallisticCoefficient=1.735
+    Speed=37358.0
+    MaxSpeed=37358.0
     Tag="M61 APC"
 }

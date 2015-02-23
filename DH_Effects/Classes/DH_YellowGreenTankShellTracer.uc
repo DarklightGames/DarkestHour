@@ -12,10 +12,10 @@ auto state Start
 {
     simulated function Tick(float dt)
     {
-        SetDrawScale(FMin(DrawScale + dt*0.3, 0.20));
-        if (DrawScale >= 0.20)
+        SetDrawScale(FMin(DrawScale + dt*0.3, 0.2));
+        if (DrawScale >= 0.2)
         {
-            SetDrawScale(0.20);
+            SetDrawScale(0.2);
             GotoState('');
         }
     }
@@ -26,8 +26,8 @@ defaultproperties
     bTrailerSameRotation=true
     Physics=PHYS_Trailer
     Texture=texture'Effects_Tex.Weapons.Russ_Flare_Final'
-    DrawScale=0.010000
+    DrawScale=0.01
     Skins(0)=texture'Effects_Tex.Weapons.Russ_Flare_Final'
     Style=STY_Additive
-    Mass=13.000000
+    Mass=13.0
 }

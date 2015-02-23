@@ -7,55 +7,55 @@ class DH_PanzerIIINCannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties
 {
-    MechanicalRanges(0)=(RangeValue=16.000000)
-    MechanicalRanges(1)=(Range=100,RangeValue=32.000000)
-    MechanicalRanges(2)=(Range=200,RangeValue=64.000000)
-    MechanicalRanges(3)=(Range=300,RangeValue=96.000000)
-    MechanicalRanges(4)=(Range=400,RangeValue=128.000000)
-    MechanicalRanges(5)=(Range=500,RangeValue=168.000000)
-    MechanicalRanges(6)=(Range=600,RangeValue=196.000000)
-    MechanicalRanges(7)=(Range=700,RangeValue=222.000000)
-    MechanicalRanges(8)=(Range=800,RangeValue=268.000000)
-    MechanicalRanges(9)=(Range=900,RangeValue=304.000000)
-    MechanicalRanges(10)=(Range=1000,RangeValue=344.000000)
-    MechanicalRanges(11)=(Range=1100,RangeValue=388.000000)
-    MechanicalRanges(12)=(Range=1200,RangeValue=428.000000)
-    MechanicalRanges(13)=(Range=1300,RangeValue=468.000000)
-    MechanicalRanges(14)=(Range=1400,RangeValue=512.000000)
-    MechanicalRanges(15)=(Range=1500,RangeValue=556.000000)
-    MechanicalRanges(16)=(Range=1600,RangeValue=600.000000)
-    MechanicalRanges(17)=(Range=1700,RangeValue=644.000000)
-    MechanicalRanges(18)=(Range=1800,RangeValue=688.000000)
-    MechanicalRanges(19)=(Range=1900,RangeValue=728.000000)
-    MechanicalRanges(20)=(Range=2000,RangeValue=764.000000)
-    MechanicalRanges(21)=(Range=2200,RangeValue=808.000000)
-    MechanicalRanges(22)=(Range=2400,RangeValue=852.000000)
-    MechanicalRanges(23)=(Range=2600,RangeValue=898.000000)
-    MechanicalRanges(24)=(Range=2800,RangeValue=938.000000)
-    MechanicalRanges(25)=(Range=3000,RangeValue=976.000000)
+    MechanicalRanges(0)=(RangeValue=16.0)
+    MechanicalRanges(1)=(Range=100,RangeValue=32.0)
+    MechanicalRanges(2)=(Range=200,RangeValue=64.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=96.0)
+    MechanicalRanges(4)=(Range=400,RangeValue=128.0)
+    MechanicalRanges(5)=(Range=500,RangeValue=168.0)
+    MechanicalRanges(6)=(Range=600,RangeValue=196.0)
+    MechanicalRanges(7)=(Range=700,RangeValue=222.0)
+    MechanicalRanges(8)=(Range=800,RangeValue=268.0)
+    MechanicalRanges(9)=(Range=900,RangeValue=304.0)
+    MechanicalRanges(10)=(Range=1000,RangeValue=344.0)
+    MechanicalRanges(11)=(Range=1100,RangeValue=388.0)
+    MechanicalRanges(12)=(Range=1200,RangeValue=428.0)
+    MechanicalRanges(13)=(Range=1300,RangeValue=468.0)
+    MechanicalRanges(14)=(Range=1400,RangeValue=512.0)
+    MechanicalRanges(15)=(Range=1500,RangeValue=556.0)
+    MechanicalRanges(16)=(Range=1600,RangeValue=600.0)
+    MechanicalRanges(17)=(Range=1700,RangeValue=644.0)
+    MechanicalRanges(18)=(Range=1800,RangeValue=688.0)
+    MechanicalRanges(19)=(Range=1900,RangeValue=728.0)
+    MechanicalRanges(20)=(Range=2000,RangeValue=764.0)
+    MechanicalRanges(21)=(Range=2200,RangeValue=808.0)
+    MechanicalRanges(22)=(Range=2400,RangeValue=852.0)
+    MechanicalRanges(23)=(Range=2600,RangeValue=898.0)
+    MechanicalRanges(24)=(Range=2800,RangeValue=938.0)
+    MechanicalRanges(25)=(Range=3000,RangeValue=976.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=3.300000
-    DHPenetrationTable(1)=3.100000
-    DHPenetrationTable(2)=2.800000
-    DHPenetrationTable(3)=2.400000
-    DHPenetrationTable(4)=2.000000
-    DHPenetrationTable(5)=1.700000
-    DHPenetrationTable(6)=1.300000
-    DHPenetrationTable(7)=1.100000
-    DHPenetrationTable(8)=0.900000
-    DHPenetrationTable(9)=0.500000
-    DHPenetrationTable(10)=0.300000
-    ShellDiameter=7.500000
+    DHPenetrationTable(0)=3.3
+    DHPenetrationTable(1)=3.1
+    DHPenetrationTable(2)=2.8
+    DHPenetrationTable(3)=2.4
+    DHPenetrationTable(4)=2.0
+    DHPenetrationTable(5)=1.7
+    DHPenetrationTable(6)=1.3
+    DHPenetrationTable(7)=1.1
+    DHPenetrationTable(8)=0.9
+    DHPenetrationTable(9)=0.5
+    DHPenetrationTable(10)=0.3
+    ShellDiameter=7.5
     bIsAlliedShell=false
-    PenetrationMag=900.000000
+    PenetrationMag=900.0
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIINCannonShellImpactDamageHEAT'
     ImpactDamage=455
-    BallisticCoefficient=2.000000
-    SpeedFudgeScale=0.700000
-    Speed=25348.000000
-    MaxSpeed=25348.000000
-    Damage=415.000000
-    DamageRadius=1350.000000
+    BallisticCoefficient=2.0
+    SpeedFudgeScale=0.7
+    Speed=25348.0
+    MaxSpeed=25348.0
+    Damage=415.0
+    DamageRadius=1350.0
     MyDamageType=class'DH_Vehicles.DH_PanzerIIINCannonShellDamageHE'
     Tag="Sprgr.Kw.K."
 }

@@ -18,22 +18,22 @@ function bool AlignBK(Canvas C)
 defaultproperties
 {
     Begin Object Class=MapVoteCountMultiColumnListBox Name=VoteCountListBox
-        HeaderColumnPerc(0)=0.400000
-        HeaderColumnPerc(1)=0.200000
+        HeaderColumnPerc(0)=0.4
+        HeaderColumnPerc(1)=0.2
         DefaultListClass="DH_Interface.DHMapVoteCountMultiColumnList"
         bVisibleWhenEmpty=true
         OnCreateComponent=VoteCountListBox.InternalOnCreateComponent
         WinTop=0.077369
-        WinLeft=0.020000
-        WinWidth=0.960000
-        WinHeight=0.267520
+        WinLeft=0.02
+        WinWidth=0.96
+        WinHeight=0.26752
         bBoundToParent=true
         bScaleToParent=true
         OnRightClick=VoteCountListBox.InternalOnRightClick
     End Object
     lb_VoteCountListBox=MapVoteCountMultiColumnListBox'DH_Interface.DHMapVotingPage.VoteCountListBox'
     Begin Object Class=moComboBox Name=GameTypeCombo
-        CaptionWidth=0.350000
+        CaptionWidth=0.35
         Caption="Filter Game Type:"
         OnCreateComponent=GameTypeCombo.InternalOnCreateComponent
         bScaleToParent=true

@@ -13,5 +13,5 @@ defaultproperties
     FemaleSuicide="%o burned himself to a crisp."
     MaleSuicide="%o burned himself to a crisp."
     bLocationalHit=false
-    GibModifier=0.000000
+    GibModifier=0.0
 }

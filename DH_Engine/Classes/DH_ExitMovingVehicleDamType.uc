@@ -13,5 +13,5 @@ defaultproperties
     MaleSuicide="%o broke his neck jumping from a speeding vehicle."
     bLocationalHit=false
     bCausedByWorld=true
-    GibModifier=0.000000
+    GibModifier=0.0
 }

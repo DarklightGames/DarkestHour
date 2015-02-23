@@ -7,44 +7,44 @@ class DH_AchillesCannonShellAPDS extends DH_ROTankCannonShellAPDS;
 
 defaultproperties
 {
-    MechanicalRanges(0)=(RangeValue=32.000000)
-    MechanicalRanges(1)=(Range=100,RangeValue=34.000000)
-    MechanicalRanges(2)=(Range=200,RangeValue=36.000000)
-    MechanicalRanges(3)=(Range=300,RangeValue=38.000000)
-    MechanicalRanges(4)=(Range=400,RangeValue=40.000000)
-    MechanicalRanges(5)=(Range=500,RangeValue=42.000000)
-    MechanicalRanges(6)=(Range=600,RangeValue=44.000000)
-    MechanicalRanges(7)=(Range=700,RangeValue=52.000000)
-    MechanicalRanges(8)=(Range=800,RangeValue=60.000000)
-    MechanicalRanges(9)=(Range=900,RangeValue=70.000000)
-    MechanicalRanges(10)=(Range=1000,RangeValue=80.000000)
-    MechanicalRanges(11)=(Range=1100,RangeValue=92.000000)
-    MechanicalRanges(12)=(Range=1200,RangeValue=104.000000)
-    MechanicalRanges(13)=(Range=1300,RangeValue=114.000000)
-    MechanicalRanges(14)=(Range=1400,RangeValue=124.000000)
-    MechanicalRanges(15)=(Range=1500,RangeValue=137.000000)
-    MechanicalRanges(16)=(Range=1600,RangeValue=148.000000)
-    MechanicalRanges(17)=(Range=1700,RangeValue=156.000000)
-    MechanicalRanges(18)=(Range=1800,RangeValue=168.000000)
-    MechanicalRanges(19)=(Range=1900,RangeValue=175.000000)
-    MechanicalRanges(20)=(Range=2000,RangeValue=184.000000)
+    MechanicalRanges(0)=(RangeValue=32.0)
+    MechanicalRanges(1)=(Range=100,RangeValue=34.0)
+    MechanicalRanges(2)=(Range=200,RangeValue=36.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=38.0)
+    MechanicalRanges(4)=(Range=400,RangeValue=40.0)
+    MechanicalRanges(5)=(Range=500,RangeValue=42.0)
+    MechanicalRanges(6)=(Range=600,RangeValue=44.0)
+    MechanicalRanges(7)=(Range=700,RangeValue=52.0)
+    MechanicalRanges(8)=(Range=800,RangeValue=60.0)
+    MechanicalRanges(9)=(Range=900,RangeValue=70.0)
+    MechanicalRanges(10)=(Range=1000,RangeValue=80.0)
+    MechanicalRanges(11)=(Range=1100,RangeValue=92.0)
+    MechanicalRanges(12)=(Range=1200,RangeValue=104.0)
+    MechanicalRanges(13)=(Range=1300,RangeValue=114.0)
+    MechanicalRanges(14)=(Range=1400,RangeValue=124.0)
+    MechanicalRanges(15)=(Range=1500,RangeValue=137.0)
+    MechanicalRanges(16)=(Range=1600,RangeValue=148.0)
+    MechanicalRanges(17)=(Range=1700,RangeValue=156.0)
+    MechanicalRanges(18)=(Range=1800,RangeValue=168.0)
+    MechanicalRanges(19)=(Range=1900,RangeValue=175.0)
+    MechanicalRanges(20)=(Range=2000,RangeValue=184.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=27.500000
+    DHPenetrationTable(0)=27.5
     DHPenetrationTable(1)=26.799999
-    DHPenetrationTable(2)=25.600000
+    DHPenetrationTable(2)=25.6
     DHPenetrationTable(3)=23.200001
-    DHPenetrationTable(4)=21.600000
+    DHPenetrationTable(4)=21.6
     DHPenetrationTable(5)=17.200001
     DHPenetrationTable(6)=16.700001
-    DHPenetrationTable(7)=15.900000
-    DHPenetrationTable(8)=15.100000
-    DHPenetrationTable(9)=14.000000
-    DHPenetrationTable(10)=12.700000
-    ShellDiameter=5.000000
+    DHPenetrationTable(7)=15.9
+    DHPenetrationTable(8)=15.1
+    DHPenetrationTable(9)=14.0
+    DHPenetrationTable(10)=12.7
+    ShellDiameter=5.0
     ShellImpactDamage=class'DH_Vehicles.DH_AchillesCannonShellDamageAPDS'
-    BallisticCoefficient=1.470000
-    SpeedFudgeScale=0.400000
-    Speed=77492.000000
-    MaxSpeed=77492.000000
+    BallisticCoefficient=1.47
+    SpeedFudgeScale=0.4
+    Speed=77492.0
+    MaxSpeed=77492.0
     Tag="Mk.I APDS"
 }

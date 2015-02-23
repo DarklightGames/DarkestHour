@@ -234,7 +234,7 @@ defaultproperties
         WinTop=0.018125
         WinLeft=0.016993
         WinWidth=0.482149
-        WinHeight=0.600000
+        WinHeight=0.6
         OnPreDraw=SelectionGroup.InternalPreDraw
     End Object
     sb_Selection=DHGUISectionBackground'DH_Interface.DHTab_MainSP.SelectionGroup'
@@ -272,7 +272,7 @@ defaultproperties
         WinTop=0.628421
         WinLeft=0.561065
         WinWidth=0.379993
-        WinHeight=0.268410
+        WinHeight=0.26841
         bTabStop=false
         bNeverFocus=true
     End Object
@@ -284,7 +284,7 @@ defaultproperties
         WinTop=0.169272
         WinLeft=0.045671
         WinWidth=0.422481
-        WinHeight=0.449870
+        WinHeight=0.44987
         TabOrder=0
         OnChange=DHTab_MainSP.MapListChange
     End Object
@@ -338,7 +338,7 @@ defaultproperties
         WinTop=0.107691
         WinLeft=0.562668
         WinWidth=0.372002
-        WinHeight=0.357480
+        WinHeight=0.35748
     End Object
     l_NoPreview=GUILabel'DH_Interface.DHTab_MainSP.NoPreview'
 

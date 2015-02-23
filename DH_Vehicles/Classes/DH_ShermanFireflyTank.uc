@@ -36,19 +36,19 @@ defaultproperties
     FirstRiderPositionIndex=1
     LeftTreadIndex=5
     RightTreadIndex=4
-    MaxCriticalSpeed=693.000000
-    TreadDamageThreshold=0.750000
+    MaxCriticalSpeed=693.0
+    TreadDamageThreshold=0.75
     FireAttachBone="Player_Driver"
-    HullFireChance=0.500000
-    UFrontArmorFactor=6.400000
-    URightArmorFactor=3.800000
-    ULeftArmorFactor=3.800000
-    URearArmorFactor=3.800000
-    UFrontArmorSlope=47.000000
-    URearArmorSlope=10.000000
-    PointValue=3.000000
-    MaxPitchSpeed=150.000000
-    TreadVelocityScale=250.000000
+    HullFireChance=0.5
+    UFrontArmorFactor=6.4
+    URightArmorFactor=3.8
+    ULeftArmorFactor=3.8
+    URearArmorFactor=3.8
+    UFrontArmorSlope=47.0
+    URearArmorSlope=10.0
+    PointValue=3.0
+    MaxPitchSpeed=150.0
+    TreadVelocityScale=250.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
     RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
@@ -57,10 +57,10 @@ defaultproperties
     RumbleSoundBone="Turret_placement"
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_look'
-    VehicleHudThreadsPosX(0)=0.340000
-    VehicleHudThreadsPosX(1)=0.640000
-    VehicleHudThreadsPosY=0.510000
-    VehicleHudThreadsScale=0.720000
+    VehicleHudThreadsPosX(0)=0.34
+    VehicleHudThreadsPosX(1)=0.64
+    VehicleHudThreadsPosY=0.51
+    VehicleHudThreadsScale=0.72
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -84,14 +84,14 @@ defaultproperties
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
     WheelRotationScale=2200
-    TreadHitMinAngle=1.300000
-    FrontLeftAngle=335.000000
-    FrontRightAngle=25.000000
-    RearRightAngle=155.000000
-    RearLeftAngle=205.000000
-    GearRatios(3)=0.620000
-    GearRatios(4)=0.760000
-    TransRatio=0.090000
+    TreadHitMinAngle=1.3
+    FrontLeftAngle=335.0
+    FrontRightAngle=25.0
+    RearRightAngle=155.0
+    RearLeftAngle=205.0
+    GearRatios(3)=0.62
+    GearRatios(4)=0.76
+    TransRatio=0.09
     SteerBoneName="Steering"
     LeftLeverBoneName="lever_L"
     LeftLeverAxis=AXIS_Z
@@ -99,7 +99,7 @@ defaultproperties
     RightLeverAxis=AXIS_Z
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-116.000000,Z=35.000000),ExhaustRotation=(Pitch=31000,Yaw=-16384))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-116.0,Z=35.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireflyPassengerOne',WeaponBone="body")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireflyPassengerTwo',WeaponBone="body")
@@ -109,18 +109,18 @@ defaultproperties
     StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_Dest'
-    DamagedEffectScale=0.900000
-    DamagedEffectOffset=(X=-113.000000,Y=20.000000,Z=79.000000)
+    DamagedEffectScale=0.9
+    DamagedEffectOffset=(X=-113.0,Y=20.0,Z=79.0)
     VehicleTeam=1
-    SteeringScaleFactor=0.750000
+    SteeringScaleFactor=0.75
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.000000,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.000000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VPanzer4_driver_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
-    VehicleHudOccupantsX(0)=0.430000
-    VehicleHudOccupantsX(1)=0.500000
-    VehicleHudOccupantsY(1)=0.500000
+    VehicleHudOccupantsX(0)=0.43
+    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(1)=0.5
     VehicleHudOccupantsX(2)=0.375
     VehicleHudOccupantsY(2)=0.75
     VehicleHudOccupantsX(3)=0.45
@@ -129,22 +129,22 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
-    VehicleHudEngineX=0.510000
+    VehicleHudEngineX=0.51
     bVehicleHudUsesLargeTexture=true
-    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(Y=-1.000000,Z=-5.000000),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=30.000000,PointOffset=(X=-90.000000,Z=6.000000),DamageMultiplier=1.000000)
-    VehHitpoints(2)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=75.000000,Y=22.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=-55.000000,Z=30.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=20.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=50.000000,Y=55.000000,Z=30.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(5)=(PointRadius=30.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-15.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
+    VehHitpoints(0)=(PointBone="Player_Driver",PointOffset=(Y=-1.0,Z=-5.0),bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0),DamageMultiplier=1.0)
+    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=75.0,Y=22.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-55.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=55.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(5)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=20.000000,Z=17.000000)
-        WheelRadius=36.000000
+        BoneOffset=(X=20.0,Z=17.0)
+        WheelRadius=36.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -152,8 +152,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=20.000000,Z=17.000000)
-        WheelRadius=36.000000
+        BoneOffset=(X=20.0,Z=17.0)
+        WheelRadius=36.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -161,8 +161,8 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.000000,Z=17.000000)
-        WheelRadius=36.000000
+        BoneOffset=(X=-30.0,Z=17.0)
+        WheelRadius=36.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -170,29 +170,29 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.000000,Z=17.000000)
-        WheelRadius=36.000000
+        BoneOffset=(X=-30.0,Z=17.0)
+        WheelRadius=36.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=17.000000)
-        WheelRadius=36.000000
+        BoneOffset=(Z=17.0)
+        WheelRadius=36.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=17.000000)
-        WheelRadius=36.000000
+        BoneOffset=(Z=17.0)
+        WheelRadius=36.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Right_Drive_Wheel'
-    VehicleMass=13.500000
+    VehicleMass=13.5
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=3.000000,Y=0.000000,Z=7.000000)
+    DrivePos=(X=3.0,Y=0.0,Z=7.0)
     ExitPositions(0)=(X=125.0,Y=-25.0,Z=200.0)      //driver's hatch
     ExitPositions(1)=(X=0.0,Y=-25.0,Z=225.0)        //commander's hatch
     ExitPositions(2)=(X=-100.0,Y=-150.0,Z=75.0)     //passenger (l)
@@ -200,21 +200,21 @@ defaultproperties
     ExitPositions(4)=(X=-250.0,Y=35.0.0,Z=75.0)     //passenger (rr)
     ExitPositions(5)=(X=-100.0,Y=150.0,Z=75.0)      //passenger (r)
     ExitPositions(6)=(X=250.0,Y=0.0,Z=75.0)         //front
-    EntryRadius=375.000000
-    FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
-    TPCamDistance=600.000000
-    TPCamLookat=(X=-50.000000)
-    TPCamWorldOffset=(Z=250.000000)
-    DriverDamageMult=1.000000
+    EntryRadius=375.0
+    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
+    TPCamDistance=600.0
+    TPCamLookat=(X=-50.0)
+    TPCamWorldOffset=(Z=250.0)
+    DriverDamageMult=1.0
     VehicleNameString="Sherman Mk.VC"
-    MaxDesireability=1.900000
+    MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayOffset=(X=5.000000)
-    HUDOverlayFOV=90.000000
+    HUDOverlayOffset=(X=5.0)
+    HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
-    HealthMax=525.000000
+    HealthMax=525.0
     Health=525
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
@@ -223,27 +223,27 @@ defaultproperties
     Skins(3)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
     Skins(4)=texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
     Skins(5)=texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
-    SoundRadius=800.000000
-    TransientSoundRadius=1500.000000
-    CollisionRadius=175.000000
-    CollisionHeight=60.000000
+    SoundRadius=800.0
+    TransientSoundRadius=1500.0
+    CollisionRadius=175.0
+    CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.000000
-        KInertiaTensor(3)=3.000000
-        KInertiaTensor(5)=3.000000
-        KCOMOffset=(Z=-0.600000)
-        KLinearDamping=0.050000
-        KAngularDamping=0.050000
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(Z=-0.6)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.900000
+        KMaxAngularSpeed=0.9
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
-        KFriction=0.500000
-        KImpactThreshold=700.000000
+        KFriction=0.5
+        KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_ShermanFireflyTank.KParams0'
 }

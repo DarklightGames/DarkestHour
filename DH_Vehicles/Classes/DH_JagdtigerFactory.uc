@@ -7,7 +7,7 @@ class DH_JagdtigerFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.000000
+    RespawnTime=1.0
     VehicleClass=class'DH_Vehicles.DH_JagdtigerTank'
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.JagdTiger_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'

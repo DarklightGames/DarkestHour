@@ -254,7 +254,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     {
         if (!bWasTurretHit)
         {
-            if (Driver != none && !bRearHit && FRand() < 0.50)
+            if (Driver != none && !bRearHit && FRand() < 0.5)
             {
                 if (bDebuggingText)
                 {
@@ -313,7 +313,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     super(ROVehicle).TakeDamage(Damage, instigatedBy, HitLocation, Momentum, DamageType);
 
     //This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
-    if (!bOnFire && Damage > 0 && Health > 0 && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.50) && bProjectilePenetrated)
+    if (!bOnFire && Damage > 0 && Health > 0 && (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5) && bProjectilePenetrated)
     {
         if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
         {
@@ -338,7 +338,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
 defaultproperties
 {
     bAllowRiders=true
-    PointValue=2.000000
+    PointValue=2.0
     FirstRiderPositionIndex=1
     bSpecialTankTurning=false
 }

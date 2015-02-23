@@ -165,7 +165,7 @@ defaultproperties
         WinTop=0.036614
         WinLeft=0.025156
         WinWidth=0.949688
-        WinHeight=0.900000
+        WinHeight=0.9
         OnPreDraw=myBackgroundGroup.InternalPreDraw
     End Object
     sb_Background=DHGUIProportionalContainer'DH_Interface.DHIAMultiColumnRulesPanel.myBackgroundGroup'
@@ -173,10 +173,10 @@ defaultproperties
         Caption="View Advanced Options"
         OnCreateComponent=AdvancedButton.InternalOnCreateComponent
         WinTop=0.948334
-        WinLeft=0.000000
-        WinWidth=0.350000
-        WinHeight=0.040000
-        RenderWeight=1.000000
+        WinLeft=0.0
+        WinWidth=0.35
+        WinHeight=0.04
+        RenderWeight=1.0
         TabOrder=1
         bBoundToParent=true
         bScaleToParent=true

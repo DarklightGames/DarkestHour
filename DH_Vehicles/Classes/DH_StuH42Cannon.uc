@@ -9,12 +9,12 @@ defaultproperties
 {
     InitialTertiaryAmmo=6
     TertiaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellSmoke'
-    SecondarySpread=0.001500
-    TertiarySpread=0.003570
-    ManualRotationsPerSecond=0.025000
+    SecondarySpread=0.0015
+    TertiarySpread=0.00357
+    ManualRotationsPerSecond=0.025
     bIsAssaultGun=true
-    GunMantletArmorFactor=5.000000
-    GunMantletSlope=0.000000
+    GunMantletArmorFactor=5.0
+    GunMantletSlope=0.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
@@ -56,47 +56,47 @@ defaultproperties
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=37.0 // note there is no other collision box (e.g. mantlet) so every hit on the StuH cannon is actually a hit on commander's collision box
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-1.000000,Z=12.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-1.000000,Z=-10.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-1.0,Z=12.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-1.0,Z=-10.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
-    YawStartConstraint=-3000.000000
-    YawEndConstraint=3000.000000
+    YawStartConstraint=-3000.0
+    YawEndConstraint=3000.0
     PitchBone="Turret"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=-60.000000
-    AltFireOffset=(X=-145.000000,Y=-9.000000,Z=14.000000)
+    WeaponFireOffset=-60.0
+    AltFireOffset=(X=-145.0,Y=-9.0,Z=14.0)
     bAmbientAltFireSound=true
-    Spread=0.002750
-    FireInterval=4.000000
-    AltFireInterval=0.070000
+    Spread=0.00275
+    FireInterval=4.0
+    AltFireInterval=0.07
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireSoundScaling=3.000000
+    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'
     AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AltShakeRotMag=(X=1.000000,Y=1.000000,Z=1.000000)
-    AltShakeRotRate=(X=10000.000000,Y=10000.000000,Z=10000.000000)
-    AltShakeRotTime=2.000000
-    AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
+    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    AltShakeRotTime=2.0
+    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=64444
     MaxPositiveYaw=1820
@@ -112,7 +112,7 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
     HighDetailOverlay=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_turret_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1

@@ -39,16 +39,16 @@ defaultproperties
     newsIPAddr="darkesthourgame.com"
     Begin Object Class=DHGUIScrollTextBox Name=MyMOTDText
         bNoTeletype=true
-        CharDelay=0.050000
-        EOLDelay=0.100000
+        CharDelay=0.05
+        EOLDelay=0.1
         bVisibleWhenEmpty=true
         OnCreateComponent=MyMOTDText.InternalOnCreateComponent
         StyleName="DHSmallText"
         WinTop=0.002679
-        WinLeft=0.031250
-        WinWidth=0.968750
-        WinHeight=1.000000
-        RenderWeight=0.600000
+        WinLeft=0.03125
+        WinWidth=0.96875
+        WinHeight=1.0
+        RenderWeight=0.6
         TabOrder=1
         bNeverFocus=true
     End Object
@@ -56,10 +56,10 @@ defaultproperties
     Begin Object Class=GUILabel Name=VersionNum
         TextAlign=TXTA_Right
         StyleName="DHSmallText"
-        WinTop=-0.030000
-        WinLeft=0.793500
+        WinTop=-0.03
+        WinLeft=0.7935
         WinWidth=0.202128
-        WinHeight=0.040000
+        WinHeight=0.04
         RenderWeight=20.700001
     End Object
     l_Version=GUILabel'DH_Interface.DHBrowser_MOTD.VersionNum'

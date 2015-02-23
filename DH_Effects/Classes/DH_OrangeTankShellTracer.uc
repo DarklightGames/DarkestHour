@@ -23,8 +23,8 @@ defaultproperties
     bTrailerSameRotation=true
     Physics=PHYS_Trailer
     Texture=texture'DH_FX_Tex.Effects.FlareOrange'
-    DrawScale=0.010000
+    DrawScale=0.01
     Skins(0)=texture'DH_FX_Tex.Effects.FlareOrange'
     Style=STY_Additive
-    Mass=13.000000
+    Mass=13.0
 }

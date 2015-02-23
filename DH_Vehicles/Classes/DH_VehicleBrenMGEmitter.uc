@@ -33,24 +33,24 @@ defaultproperties
         AutomaticInitialSpawning=false
         BlendBetweenSubdivisions=true
         UseRandomSubdivision=true
-        Opacity=0.450000
+        Opacity=0.45
         CoordinateSystem=PTCS_Relative
-        StartLocationOffset=(X=10.500000)
+        StartLocationOffset=(X=10.5)
         StartLocationShape=PTLS_Sphere
         UseRotationFrom=PTRS_Normal
-        StartSpinRange=(X=(Min=-1.000000,Max=1.000000),Y=(Min=-1.000000,Max=1.000000),Z=(Min=-1.000000,Max=1.000000))
-        SizeScale(0)=(RelativeSize=1.000000)
-        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=2.500000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.000000)
-        StartSizeRange=(X=(Min=1.500000,Max=2.500000))
+        StartSpinRange=(X=(Min=-1.0,Max=1.0),Y=(Min=-1.0,Max=1.0),Z=(Min=-1.0,Max=1.0))
+        SizeScale(0)=(RelativeSize=1.0)
+        SizeScale(1)=(RelativeTime=0.5,RelativeSize=2.5)
+        SizeScale(2)=(RelativeTime=1.0,RelativeSize=1.0)
+        StartSizeRange=(X=(Min=1.5,Max=2.5))
         DrawStyle=PTDS_Brighten
         Texture=texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
-        LifetimeRange=(Min=0.100000,Max=0.100000)
+        LifetimeRange=(Min=0.1,Max=0.1)
     End Object
     Emitters(0)=SpriteEmitter'ROVehicles.TankMGEmitter.SpriteEmitter0'
-    CullDistance=4000.000000
+    CullDistance=4000.0
     bNoDelete=false
     bUnlit=false
     bHardAttach=true

@@ -13,9 +13,9 @@ defaultproperties
     DeathString="%o was killed by %k's vehicle Besa machinegun."
     FemaleSuicide="%o turned the gun on herself."
     MaleSuicide="%o turned the gun on himself."
-    GibModifier=0.000000
+    GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
-    KDamageImpulse=1500.000000
-    KDeathVel=110.000000
-    KDeathUpKick=2.000000
+    KDamageImpulse=1500.0
+    KDeathVel=110.0
+    KDeathUpKick=2.0
 }

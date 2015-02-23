@@ -10,10 +10,10 @@ class DH_Kz8cmGrW42VehicleWeapon extends DH_MortarVehicleWeapon;
 defaultproperties
 {
     MuzzleBoneName="Muzzle"
-    ElevationMaximum=88.000000
+    ElevationMaximum=88.0
     FireSound=SoundGroup'DH_WeaponSounds.Mortars.8cmFireSG'
-    SpreadYawMin=728.000000
-    SpreadYawMax=364.000000
+    SpreadYawMin=728.0
+    SpreadYawMax=364.0
     YawBone="Vehicle_attachment01"
     GunnerAttachmentBone="com_player"
     RotationsPerSecond=0.007813

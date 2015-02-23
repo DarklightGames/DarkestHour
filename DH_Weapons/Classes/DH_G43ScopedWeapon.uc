@@ -64,8 +64,8 @@ simulated event StopFire(int Mode)
 defaultproperties
 {
     lenseMaterialID=4
-    scopePortalFOVHigh=13.000000
-    scopePortalFOV=7.000000
+    scopePortalFOVHigh=13.0
+    scopePortalFOV=7.0
     scopePitch=-10
     scopeYaw=40
     scopeYawHigh=35
@@ -82,24 +82,24 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=45.000000
-    IronSightDisplayFOVHigh=25.000000
-    ZoomInTime=0.400000
-    ZoomOutTime=0.200000
-    PlayerFOVZoom=22.500000
+    IronSightDisplayFOV=45.0
+    IronSightDisplayFOVHigh=25.0
+    ZoomInTime=0.4
+    ZoomOutTime=0.2
+    PlayerFOVZoom=22.5
     FireModeClass(0)=class'DH_Weapons.DH_G43ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
-    SelectAnimRate=1.000000
-    PutDownAnimRate=1.000000
-    AIRating=0.400000
-    CurrentRating=0.400000
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    AIRating=0.4
+    CurrentRating=0.4
     bSniping=true
-    DisplayFOV=70.000000
+    DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_G43ScopedPickup'
-    BobDamping=1.600000
+    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_G43ScopedAttachment'
     ItemName="Gewehr 43"
     Mesh=SkeletalMesh'Axis_G43_1st.g43_scoped_mesh'

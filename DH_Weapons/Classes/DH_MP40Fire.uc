@@ -7,8 +7,8 @@ class DH_MP40Fire extends DH_AutomaticFire;
 
 defaultproperties
 {
-    ProjSpawnOffset=(X=25.000000)
-    FAProjSpawnOffset=(X=-20.000000)
+    ProjSpawnOffset=(X=25.0)
+    FAProjSpawnOffset=(X=-20.0)
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"
@@ -17,29 +17,29 @@ defaultproperties
     FireSounds(2)=SoundGroup'Inf_Weapons.mp40.mp40_fire03'
     maxVerticalRecoilAngle=550
     maxHorizontalRecoilAngle=75
-    PctProneIronRecoil=0.500000
-    RecoilRate=0.075000
+    PctProneIronRecoil=0.5
+    RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
-    ShellIronSightOffset=(X=15.000000)
+    ShellIronSightOffset=(X=15.0)
     FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"
     FireEndAnim="Shoot_End"
-    TweenTime=0.000000
+    TweenTime=0.0
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_smg'
-    FireRate=0.120000
+    FireRate=0.12
     AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    ShakeRotMag=(X=50.000000,Y=50.000000,Z=150.000000)
-    ShakeRotRate=(X=10000.000000,Y=10000.000000,Z=10000.000000)
-    ShakeRotTime=0.500000
-    ShakeOffsetMag=(X=3.000000,Y=1.000000,Z=3.000000)
-    ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    ShakeOffsetTime=1.000000
+    ShakeRotMag=(X=50.0,Y=50.0,Z=150.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    ShakeRotTime=0.5
+    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
     ProjectileClass=class'DH_Weapons.DH_MP40Bullet'
-    BotRefireRate=0.990000
-    WarnTargetPct=0.900000
+    BotRefireRate=0.99
+    WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=1200.000000
-    Spread=300.000000
+    aimerror=1200.0
+    Spread=300.0
     SpreadStyle=SS_Random
 }

@@ -23,12 +23,12 @@ function bool InternalOnClick(GUIComponent Sender)
 defaultproperties
 {
     Begin Object Class=DHmoCheckBox Name=OnlyStandardCheckBox
-        CaptionWidth=0.900000
+        CaptionWidth=0.9
         Caption="Standard Servers Only"
         OnCreateComponent=OnlyStandardCheckBox.InternalOnCreateComponent
         FontScale=FNS_Small
         WinTop=0.093073
-        WinLeft=0.020000
+        WinLeft=0.02
         WinWidth=0.243945
         WinHeight=0.308203
         TabOrder=5
@@ -44,7 +44,7 @@ defaultproperties
         WinTop=0.030495
         WinLeft=0.238945
         WinWidth=0.761055
-        WinHeight=0.450000
+        WinHeight=0.45
         bBoundToParent=true
         bScaleToParent=true
     End Object
@@ -52,11 +52,11 @@ defaultproperties
     Begin Object Class=GUIButton Name=BrowserJoin
         Caption="JOIN"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
-        WinLeft=611.000000
-        WinWidth=124.000000
+        WinTop=0.5
+        WinLeft=611.0
+        WinWidth=124.0
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=2
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick
@@ -66,11 +66,11 @@ defaultproperties
     Begin Object Class=GUIButton Name=BrowserSpec
         Caption="SPECTATE"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
+        WinTop=0.5
         WinLeft=0.771094
         WinWidth=0.114648
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=1
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick
@@ -80,9 +80,9 @@ defaultproperties
     Begin Object Class=GUIButton Name=BrowserBack
         Caption="BACK"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
+        WinTop=0.5
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=4
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick
@@ -92,9 +92,9 @@ defaultproperties
     Begin Object class=GUIButton Name=BrowserMain
         Caption="MAIN"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
+        WinTop=0.5
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=5
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick
@@ -104,11 +104,11 @@ defaultproperties
     Begin Object Class=GUIButton Name=BrowserRefresh
         Caption="REFRESH"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
+        WinTop=0.5
         WinLeft=0.885352
         WinWidth=0.114648
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=3
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick
@@ -119,9 +119,9 @@ defaultproperties
         Caption="FILTERS"
         bAutoSize=true
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
+        WinTop=0.5
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=0
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick

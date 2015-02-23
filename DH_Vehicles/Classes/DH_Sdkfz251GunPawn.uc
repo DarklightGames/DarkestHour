@@ -178,10 +178,10 @@ function bool KDriverLeave(bool bForceLeave)
 
 defaultproperties
 {
-    FirstPersonGunShakeScale=2.000000
-    WeaponFOV=72.000000
-    DriverPositions(0)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    FirstPersonGunShakeScale=2.0
+    WeaponFOV=72.0
+    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_Sdkfz251Gun'
@@ -192,12 +192,12 @@ defaultproperties
     bDesiredBehindView=false
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
-    EntryRadius=130.000000
-    TPCamDistance=300.000000
-    TPCamLookat=(X=-25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
+    EntryRadius=130.0
+    TPCamDistance=300.0
+    TPCamLookat=(X=-25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
     HUDOverlayClass=class'ROVehicles.ROVehMG34Overlay'
-    HUDOverlayFOV=45.000000
+    HUDOverlayFOV=45.0
     PitchUpLimit=4000
     PitchDownLimit=61000
 }

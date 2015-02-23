@@ -7,22 +7,22 @@ class DH_JacksonCannonShell extends DH_ROTankCannonShell;
 
 defaultproperties
 {
-    DHPenetrationTable(0)=16.900000
+    DHPenetrationTable(0)=16.9
     DHPenetrationTable(1)=16.799999
-    DHPenetrationTable(2)=16.400000
-    DHPenetrationTable(3)=15.700000
-    DHPenetrationTable(4)=15.100000
-    DHPenetrationTable(5)=14.400000
-    DHPenetrationTable(6)=13.800000
-    DHPenetrationTable(7)=13.300000
-    DHPenetrationTable(8)=12.700000
-    DHPenetrationTable(9)=11.500000
-    DHPenetrationTable(10)=10.400000
-    ShellDiameter=9.000000
+    DHPenetrationTable(2)=16.4
+    DHPenetrationTable(3)=15.7
+    DHPenetrationTable(4)=15.1
+    DHPenetrationTable(5)=14.4
+    DHPenetrationTable(6)=13.8
+    DHPenetrationTable(7)=13.3
+    DHPenetrationTable(8)=12.7
+    DHPenetrationTable(9)=11.5
+    DHPenetrationTable(10)=10.4
+    ShellDiameter=9.0
     ShellImpactDamage=class'DH_Vehicles.DH_JacksonCannonShellDamageAP'
     ImpactDamage=700
-    BallisticCoefficient=2.134000
-    Speed=49127.000000
-    MaxSpeed=49127.000000
+    BallisticCoefficient=2.134
+    Speed=49127.0
+    MaxSpeed=49127.0
     Tag="M82 APC"
 }

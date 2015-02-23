@@ -8,6 +8,6 @@ class DH_JacksonCannonShellDamageAPShot extends DHTankShellImpactDamage
 
 defaultproperties
 {
-    APCDamageModifier=0.650000
+    APCDamageModifier=0.65
     DeathString="%o was killed by %k's Jackson M77 AP shot."
 }

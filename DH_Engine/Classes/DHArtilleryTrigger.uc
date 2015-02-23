@@ -183,7 +183,7 @@ function Touch(Actor Other)
 defaultproperties
 {
     bShouldShowOnSituationMap=true
-    TriggerDelay=5.000000
+    TriggerDelay=5.0
     Message="Request artillery support from HQ"
     RussianRequestSound=SoundGroup'DH_ArtillerySounds.requests.USrequest'
     RussianConfirmSound=SoundGroup'DH_US_Voice_Infantry.Artillery.confirm'

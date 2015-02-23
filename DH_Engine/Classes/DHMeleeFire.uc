@@ -6,7 +6,7 @@
 class DHMeleeFire extends ROMeleeFire
     abstract;
 
-const SoundRadius = 32.000000;
+const SoundRadius = 32.0;
 
 function DoTrace(vector Start, rotator Dir)
 {

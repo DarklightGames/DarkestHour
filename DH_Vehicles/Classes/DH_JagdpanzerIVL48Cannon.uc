@@ -9,12 +9,12 @@ defaultproperties
 {
     InitialTertiaryAmmo=5
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
-    SecondarySpread=0.001270
-    TertiarySpread=0.003570
-    ManualRotationsPerSecond=0.033000
+    SecondarySpread=0.00127
+    TertiarySpread=0.00357
+    ManualRotationsPerSecond=0.033
     bIsAssaultGun=true
-    GunMantletArmorFactor=8.000000
-    GunMantletSlope=40.000000
+    GunMantletArmorFactor=8.0
+    GunMantletSlope=40.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
@@ -50,29 +50,29 @@ defaultproperties
     RangeSettings(24)=2800
     RangeSettings(25)=3000
     MinCommanderHitHeight=18.0 // note there is no other collision box (e.g. mantlet) so every hit on the jagdpanzer IV cannon is actually a hit on commander's collision box
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-1.000000,Z=-1.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-1.0,Z=-1.0))
     YawBone="Turret"
-    YawStartConstraint=-3000.000000
-    YawEndConstraint=3000.000000
+    YawStartConstraint=-3000.0
+    YawEndConstraint=3000.0
     PitchBone="Turret"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="Commander_attachment"
-    WeaponFireOffset=-80.000000
-    FireInterval=4.000000
+    WeaponFireOffset=-80.0
+    FireInterval=4.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2731
     CustomPitchDownLimit=64653
     MaxPositiveYaw=1820
@@ -88,5 +88,5 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
     Skins(2)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

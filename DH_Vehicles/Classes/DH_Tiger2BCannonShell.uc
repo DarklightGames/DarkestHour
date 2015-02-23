@@ -7,53 +7,53 @@ class DH_Tiger2BCannonShell extends DH_GermanTankCannonShell;
 
 defaultproperties
 {
-    MechanicalRanges(1)=(Range=100,RangeValue=8.000000)
-    MechanicalRanges(2)=(Range=200,RangeValue=10.000000)
-    MechanicalRanges(3)=(Range=300,RangeValue=22.000000)
-    MechanicalRanges(4)=(Range=400,RangeValue=26.000000)
-    MechanicalRanges(5)=(Range=500,RangeValue=30.000000)
-    MechanicalRanges(6)=(Range=600,RangeValue=36.000000)
-    MechanicalRanges(7)=(Range=700,RangeValue=42.000000)
-    MechanicalRanges(8)=(Range=800,RangeValue=44.000000)
-    MechanicalRanges(9)=(Range=900,RangeValue=52.000000)
-    MechanicalRanges(10)=(Range=1000,RangeValue=56.000000)
-    MechanicalRanges(11)=(Range=1100,RangeValue=62.000000)
-    MechanicalRanges(12)=(Range=1200,RangeValue=66.000000)
-    MechanicalRanges(13)=(Range=1300,RangeValue=74.000000)
-    MechanicalRanges(14)=(Range=1400,RangeValue=82.000000)
-    MechanicalRanges(15)=(Range=1500,RangeValue=88.000000)
-    MechanicalRanges(16)=(Range=1600,RangeValue=94.000000)
-    MechanicalRanges(17)=(Range=1700,RangeValue=100.000000)
-    MechanicalRanges(18)=(Range=1800,RangeValue=106.000000)
-    MechanicalRanges(19)=(Range=1900,RangeValue=112.000000)
-    MechanicalRanges(20)=(Range=2000,RangeValue=118.000000)
-    MechanicalRanges(21)=(Range=2200,RangeValue=130.000000)
-    MechanicalRanges(22)=(Range=2400,RangeValue=141.000000)
-    MechanicalRanges(23)=(Range=2600,RangeValue=153.000000)
-    MechanicalRanges(24)=(Range=2800,RangeValue=164.000000)
-    MechanicalRanges(25)=(Range=3000,RangeValue=179.000000)
-    MechanicalRanges(26)=(Range=3200,RangeValue=222.000000)
-    MechanicalRanges(27)=(Range=3400,RangeValue=244.000000)
-    MechanicalRanges(28)=(Range=3600,RangeValue=262.000000)
-    MechanicalRanges(29)=(Range=3800,RangeValue=282.000000)
-    MechanicalRanges(30)=(Range=4000,RangeValue=304.000000)
+    MechanicalRanges(1)=(Range=100,RangeValue=8.0)
+    MechanicalRanges(2)=(Range=200,RangeValue=10.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=22.0)
+    MechanicalRanges(4)=(Range=400,RangeValue=26.0)
+    MechanicalRanges(5)=(Range=500,RangeValue=30.0)
+    MechanicalRanges(6)=(Range=600,RangeValue=36.0)
+    MechanicalRanges(7)=(Range=700,RangeValue=42.0)
+    MechanicalRanges(8)=(Range=800,RangeValue=44.0)
+    MechanicalRanges(9)=(Range=900,RangeValue=52.0)
+    MechanicalRanges(10)=(Range=1000,RangeValue=56.0)
+    MechanicalRanges(11)=(Range=1100,RangeValue=62.0)
+    MechanicalRanges(12)=(Range=1200,RangeValue=66.0)
+    MechanicalRanges(13)=(Range=1300,RangeValue=74.0)
+    MechanicalRanges(14)=(Range=1400,RangeValue=82.0)
+    MechanicalRanges(15)=(Range=1500,RangeValue=88.0)
+    MechanicalRanges(16)=(Range=1600,RangeValue=94.0)
+    MechanicalRanges(17)=(Range=1700,RangeValue=100.0)
+    MechanicalRanges(18)=(Range=1800,RangeValue=106.0)
+    MechanicalRanges(19)=(Range=1900,RangeValue=112.0)
+    MechanicalRanges(20)=(Range=2000,RangeValue=118.0)
+    MechanicalRanges(21)=(Range=2200,RangeValue=130.0)
+    MechanicalRanges(22)=(Range=2400,RangeValue=141.0)
+    MechanicalRanges(23)=(Range=2600,RangeValue=153.0)
+    MechanicalRanges(24)=(Range=2800,RangeValue=164.0)
+    MechanicalRanges(25)=(Range=3000,RangeValue=179.0)
+    MechanicalRanges(26)=(Range=3200,RangeValue=222.0)
+    MechanicalRanges(27)=(Range=3400,RangeValue=244.0)
+    MechanicalRanges(28)=(Range=3600,RangeValue=262.0)
+    MechanicalRanges(29)=(Range=3800,RangeValue=282.0)
+    MechanicalRanges(30)=(Range=4000,RangeValue=304.0)
     bMechanicalAiming=true
     DHPenetrationTable(0)=25.700001
-    DHPenetrationTable(1)=24.900000
-    DHPenetrationTable(2)=23.500000
+    DHPenetrationTable(1)=24.9
+    DHPenetrationTable(2)=23.5
     DHPenetrationTable(3)=22.200001
-    DHPenetrationTable(4)=21.000000
-    DHPenetrationTable(5)=19.600000
+    DHPenetrationTable(4)=21.0
+    DHPenetrationTable(5)=19.6
     DHPenetrationTable(6)=18.799999
     DHPenetrationTable(7)=18.299999
-    DHPenetrationTable(8)=17.600000
-    DHPenetrationTable(9)=16.400000
-    DHPenetrationTable(10)=15.300000
-    ShellDiameter=8.800000
+    DHPenetrationTable(8)=17.6
+    DHPenetrationTable(9)=16.4
+    DHPenetrationTable(10)=15.3
+    ShellDiameter=8.8
     ShellImpactDamage=class'DH_Vehicles.DH_Tiger2BCannonShellDamageAP'
     ImpactDamage=775
-    BallisticCoefficient=3.800000
-    Speed=60352.000000
-    MaxSpeed=60352.000000
+    BallisticCoefficient=3.8
+    Speed=60352.0
+    MaxSpeed=60352.0
     Tag="PzGr.39/43"
 }

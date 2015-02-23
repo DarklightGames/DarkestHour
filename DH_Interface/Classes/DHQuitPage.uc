@@ -26,10 +26,10 @@ defaultproperties
     InactiveFadeColor=(B=255,G=255,R=255)
     Begin Object Class=GUIButton Name=QuitBackground
         StyleName="DHExitPageStyle"
-        WinTop=0.060000
-        WinLeft=0.270000
-        WinWidth=0.470000
-        WinHeight=0.800000
+        WinTop=0.06
+        WinLeft=0.27
+        WinWidth=0.47
+        WinHeight=0.8
         bBoundToParent=true
         bScaleToParent=true
         bAcceptsInput=false
@@ -40,10 +40,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=YesButton
         Caption="YES"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.500000
-        WinLeft=0.280000
-        WinWidth=0.200000
-        WinHeight=0.080000
+        WinTop=0.5
+        WinLeft=0.28
+        WinWidth=0.2
+        WinHeight=0.08
         bBoundToParent=true
         OnClick=DHQuitPage.InternalOnClick
         OnKeyEvent=YesButton.InternalOnKeyEvent
@@ -52,10 +52,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=NoButton
         Caption="NO"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.500000
-        WinLeft=0.520000
-        WinWidth=0.200000
-        WinHeight=0.080000
+        WinTop=0.5
+        WinLeft=0.52
+        WinWidth=0.2
+        WinHeight=0.08
         bBoundToParent=true
         OnClick=DHQuitPage.InternalOnClick
         OnKeyEvent=NoButton.InternalOnKeyEvent
@@ -67,10 +67,10 @@ defaultproperties
         TextColor=(B=255,G=255,R=255)
         TextFont="DHMenuFont"
         StyleName="none"
-        WinTop=0.420000
-        WinHeight=32.000000
+        WinTop=0.42
+        WinHeight=32.0
     End Object
     Controls(3)=GUILabel'DH_Interface.DHQuitPage.QuitDesc'
-    WinTop=0.375000
-    WinHeight=0.250000
+    WinTop=0.375
+    WinHeight=0.25
 }

@@ -29,10 +29,10 @@ defaultproperties
         bVisibleWhenEmpty=true
         OnCreateComponent=DHMutatorConfigMenu.InternalOnCreateComponent
         WinTop=0.143333
-        WinLeft=0.037500
+        WinLeft=0.0375
         WinWidth=0.918753
         WinHeight=0.697502
-        RenderWeight=0.900000
+        RenderWeight=0.9
         TabOrder=1
         bBoundToParent=true
         bScaleToParent=true
@@ -43,18 +43,18 @@ defaultproperties
         Caption="View Advanced Options"
         OnCreateComponent=AdvancedButton.InternalOnCreateComponent
         WinTop=0.911982
-        WinLeft=0.037500
-        WinWidth=0.310000
-        WinHeight=0.040000
-        RenderWeight=1.000000
+        WinLeft=0.0375
+        WinWidth=0.31
+        WinHeight=0.04
+        RenderWeight=1.0
         TabOrder=1
         bBoundToParent=true
         OnChange=DHMutatorConfigMenu.InternalOnChange
     End Object
     ch_Advanced=DHmoCheckBox'DH_Interface.DHMutatorConfigMenu.AdvancedButton'
     Begin Object Class=DHGUIPlainBackground Name=InternalFrameImage
-        WinTop=0.092000
-        WinLeft=0.040000
+        WinTop=0.092
+        WinLeft=0.04
         WinWidth=0.675859
         WinHeight=0.548976
         OnPreDraw=InternalFrameImage.InternalPreDraw
@@ -89,9 +89,9 @@ defaultproperties
     Begin Object Class=DHGUIHeader Name=TitleBar
         bUseTextHeight=true
         StyleName="DHNoBox"
-        WinTop=0.020000
-        WinHeight=0.050000
-        RenderWeight=0.100000
+        WinTop=0.02
+        WinHeight=0.05
+        RenderWeight=0.1
         bBoundToParent=true
         bScaleToParent=true
         bAcceptsInput=true
@@ -106,10 +106,10 @@ defaultproperties
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal
-        WinTop=0.020000
-        WinLeft=0.000000
-        WinWidth=1.000000
-        WinHeight=1.000000
+        WinTop=0.02
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=1.0
         RenderWeight=0.000003
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHMutatorConfigMenu.FloatingFrameBackground'

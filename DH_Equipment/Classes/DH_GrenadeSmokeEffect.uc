@@ -57,23 +57,23 @@ defaultproperties
         AutomaticInitialSpawning=false
         UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.900000
-        FadeOutStartTime=2.560000
-        FadeInEndTime=0.480000
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        Opacity=0.9
+        FadeOutStartTime=2.56
+        FadeInEndTime=0.48
         MaxParticles=150
-        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.050000))
-        StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
-        SizeScale(0)=(RelativeSize=0.100000)
-        SizeScale(1)=(RelativeTime=0.600000,RelativeSize=0.500000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.250000)
-        StartSizeRange=(X=(Min=50.000000,Max=50.000000),Y=(Min=50.000000,Max=50.000000),Z=(Min=50.000000,Max=50.000000))
-        InitialParticlesPerSecond=6.000000
+        SpinsPerSecondRange=(X=(Min=0.05,Max=0.05))
+        StartSpinRange=(X=(Min=-0.5,Max=0.5))
+        SizeScale(0)=(RelativeSize=0.1)
+        SizeScale(1)=(RelativeTime=0.6,RelativeSize=0.5)
+        SizeScale(2)=(RelativeTime=1.0,RelativeSize=1.25)
+        StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
+        InitialParticlesPerSecond=6.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke'
-        LifetimeRange=(Max=5.000000)
-        StartVelocityRange=(X=(Min=50.000000,Max=60.000000),Y=(Min=-5.000000,Max=5.000000),Z=(Min=5.000000,Max=15.000000))
-        VelocityLossRange=(X=(Min=0.100000,Max=0.200000),Y=(Min=0.100000,Max=0.200000),Z=(Min=0.100000,Max=0.200000))
+        LifetimeRange=(Max=5.0)
+        StartVelocityRange=(X=(Min=50.0,Max=60.0),Y=(Min=-5.0,Max=5.0),Z=(Min=5.0,Max=15.0))
+        VelocityLossRange=(X=(Min=0.1,Max=0.2),Y=(Min=0.1,Max=0.2),Z=(Min=0.1,Max=0.2))
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
@@ -85,30 +85,30 @@ defaultproperties
         UseRegularSizeScale=false
         UniformSize=true
         AutomaticInitialSpawning=false
-        Acceleration=(Z=-0.200000)
+        Acceleration=(Z=-0.2)
         UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.800000
-        FadeOutFactor=(W=3.000000)
-        FadeOutStartTime=32.000000
-        FadeInEndTime=15.000000
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        Opacity=0.8
+        FadeOutFactor=(W=3.0)
+        FadeOutStartTime=32.0
+        FadeInEndTime=15.0
         MaxParticles=4
-        StartLocationRange=(X=(Min=-64.000000,Max=64.000000),Y=(Min=-64.000000,Max=64.000000),Z=(Min=25.000000,Max=150.000000))
+        StartLocationRange=(X=(Min=-64.0,Max=64.0),Y=(Min=-64.0,Max=64.0),Z=(Min=25.0,Max=150.0))
         AddLocationFromOtherEmitter=0
-        SpinsPerSecondRange=(X=(Min=0.003000,Max=0.004000))
-        StartSpinRange=(X=(Min=-0.750000,Max=0.750000))
-        SizeScale(0)=(RelativeSize=0.250000)
-        SizeScale(1)=(RelativeTime=0.280000,RelativeSize=0.750000)
-        SizeScale(2)=(RelativeTime=0.870000,RelativeSize=1.500000)
-        StartSizeRange=(X=(Min=300.000000,Max=400.000000),Y=(Min=300.000000,Max=400.000000),Z=(Min=300.000000,Max=400.000000))
-        InitialParticlesPerSecond=10.000000
+        SpinsPerSecondRange=(X=(Min=0.003,Max=0.004))
+        StartSpinRange=(X=(Min=-0.75,Max=0.75))
+        SizeScale(0)=(RelativeSize=0.25)
+        SizeScale(1)=(RelativeTime=0.28,RelativeSize=0.75)
+        SizeScale(2)=(RelativeTime=0.87,RelativeSize=1.5)
+        StartSizeRange=(X=(Min=300.0,Max=400.0),Y=(Min=300.0,Max=400.0),Z=(Min=300.0,Max=400.0))
+        InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke'
-        LifetimeRange=(Min=50.000000,Max=50.000000)
-        InitialDelayRange=(Min=4.000000,Max=4.000000)
-        StartVelocityRange=(Z=(Min=1.000000,Max=3.000000))
-        VelocityLossRange=(X=(Min=0.100000,Max=0.200000),Y=(Min=0.100000,Max=0.200000),Z=(Min=0.300000,Max=0.400000))
+        LifetimeRange=(Min=50.0,Max=50.0)
+        InitialDelayRange=(Min=4.0,Max=4.0)
+        StartVelocityRange=(Z=(Min=1.0,Max=3.0))
+        VelocityLossRange=(X=(Min=0.1,Max=0.2),Y=(Min=0.1,Max=0.2),Z=(Min=0.3,Max=0.4))
         AddVelocityFromOtherEmitter=0
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
@@ -121,29 +121,29 @@ defaultproperties
         UseRegularSizeScale=false
         UniformSize=true
         AutomaticInitialSpawning=false
-        Acceleration=(Z=-0.200000)
+        Acceleration=(Z=-0.2)
         UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.800000
-        FadeOutFactor=(W=3.000000)
-        FadeOutStartTime=42.000000
-        FadeInEndTime=4.800000
-        StartLocationRange=(X=(Min=-200.000000,Max=200.000000),Y=(Min=-200.000000,Max=200.000000),Z=(Max=100.000000))
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        Opacity=0.8
+        FadeOutFactor=(W=3.0)
+        FadeOutStartTime=42.0
+        FadeInEndTime=4.8
+        StartLocationRange=(X=(Min=-200.0,Max=200.0),Y=(Min=-200.0,Max=200.0),Z=(Max=100.0))
         AddLocationFromOtherEmitter=0
-        SpinsPerSecondRange=(X=(Min=0.003000,Max=0.004000))
-        StartSpinRange=(X=(Min=-0.090000,Max=0.090000))
-        SizeScale(0)=(RelativeSize=0.330000)
-        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=0.900000)
-        SizeScale(2)=(RelativeTime=0.870000,RelativeSize=1.500000)
-        StartSizeRange=(X=(Min=150.000000,Max=400.000000),Y=(Min=150.000000,Max=400.000000),Z=(Min=150.000000,Max=400.000000))
-        InitialParticlesPerSecond=10.000000
+        SpinsPerSecondRange=(X=(Min=0.003,Max=0.004))
+        StartSpinRange=(X=(Min=-0.09,Max=0.09))
+        SizeScale(0)=(RelativeSize=0.33)
+        SizeScale(1)=(RelativeTime=0.5,RelativeSize=0.9)
+        SizeScale(2)=(RelativeTime=0.87,RelativeSize=1.5)
+        StartSizeRange=(X=(Min=150.0,Max=400.0),Y=(Min=150.0,Max=400.0),Z=(Min=150.0,Max=400.0))
+        InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke'
-        LifetimeRange=(Min=60.000000,Max=60.000000)
-        InitialDelayRange=(Min=3.000000,Max=5.000000)
-        StartVelocityRange=(X=(Min=-5.000000,Max=5.000000),Y=(Min=-5.000000,Max=5.000000),Z=(Min=2.000000,Max=5.000000))
-        VelocityLossRange=(X=(Min=0.100000,Max=0.200000),Y=(Min=0.100000,Max=0.200000),Z=(Min=0.300000,Max=0.400000))
+        LifetimeRange=(Min=60.0,Max=60.0)
+        InitialDelayRange=(Min=3.0,Max=5.0)
+        StartVelocityRange=(X=(Min=-5.0,Max=5.0),Y=(Min=-5.0,Max=5.0),Z=(Min=2.0,Max=5.0))
+        VelocityLossRange=(X=(Min=0.1,Max=0.2),Y=(Min=0.1,Max=0.2),Z=(Min=0.3,Max=0.4))
         AddVelocityFromOtherEmitter=0
     End Object
     Emitters(2)=SpriteEmitter'SpriteEmitter2'
@@ -156,27 +156,27 @@ defaultproperties
         UseRegularSizeScale=false
         UniformSize=true
         AutomaticInitialSpawning=false
-        Acceleration=(X=1.000000,Y=1.000000)
+        Acceleration=(X=1.0,Y=1.0)
         UseColorScale=true
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.500000
-        FadeOutStartTime=6.000000
-        FadeInEndTime=2.000000
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        Opacity=0.5
+        FadeOutStartTime=6.0
+        FadeInEndTime=2.0
         MaxParticles=55
-        StartLocationRange=(X=(Min=-350.000000,Max=350.000000),Y=(Min=-350.000000,Max=350.000000),Z=(Max=50.000000))
+        StartLocationRange=(X=(Min=-350.0,Max=350.0),Y=(Min=-350.0,Max=350.0),Z=(Max=50.0))
         AddLocationFromOtherEmitter=2
-        SpinsPerSecondRange=(X=(Min=0.025000,Max=0.050000))
-        StartSpinRange=(X=(Min=-0.500000,Max=0.500000))
-        SizeScale(0)=(RelativeTime=1.000000,RelativeSize=3.000000)
-        StartSizeRange=(X=(Min=50.000000),Y=(Min=50.000000),Z=(Min=50.000000))
-        InitialParticlesPerSecond=1.500000
+        SpinsPerSecondRange=(X=(Min=0.025,Max=0.05))
+        StartSpinRange=(X=(Min=-0.5,Max=0.5))
+        SizeScale(0)=(RelativeTime=1.0,RelativeSize=3.0)
+        StartSizeRange=(X=(Min=50.0),Y=(Min=50.0),Z=(Min=50.0))
+        InitialParticlesPerSecond=1.5
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke_fill'
-        SecondsBeforeInactive=0.000000
-        LifetimeRange=(Min=8.000000,Max=9.000000)
-        InitialDelayRange=(Min=10.000000,Max=15.000000)
-        VelocityLossRange=(X=(Min=0.150000,Max=0.150000),Y=(Min=0.150000,Max=0.150000),Z=(Min=0.100000,Max=0.100000))
+        SecondsBeforeInactive=0.0
+        LifetimeRange=(Min=8.0,Max=9.0)
+        InitialDelayRange=(Min=10.0,Max=15.0)
+        VelocityLossRange=(X=(Min=0.15,Max=0.15),Y=(Min=0.15,Max=0.15),Z=(Min=0.1,Max=0.1))
         AddVelocityFromOtherEmitter=2
     End Object
     Emitters(3)=SpriteEmitter'SpriteEmitter3'

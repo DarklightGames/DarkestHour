@@ -78,31 +78,31 @@ defaultproperties
     PurgeCacheDaysText(2)="Yearly"
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Gameplay"
-        WinTop=0.050000
-        WinLeft=0.250000
-        WinWidth=0.500000
-        WinHeight=0.250000
-        RenderWeight=0.100100
+        WinTop=0.05
+        WinLeft=0.25
+        WinWidth=0.5
+        WinHeight=0.25
+        RenderWeight=0.1001
         OnPreDraw=GameBK1.InternalPreDraw
     End Object
     i_BG1=DHGUISectionBackground'DH_Interface.DHTab_GameSettings.GameBK1'
     Begin Object Class=DHGUISectionBackground Name=GameBK2
         Caption="Network"
-        WinTop=0.350000
-        WinLeft=0.250000
-        WinWidth=0.500000
-        WinHeight=0.250000
-        RenderWeight=0.100200
+        WinTop=0.35
+        WinLeft=0.25
+        WinWidth=0.5
+        WinHeight=0.25
+        RenderWeight=0.1002
         OnPreDraw=GameBK2.InternalPreDraw
     End Object
     i_BG2=DHGUISectionBackground'DH_Interface.DHTab_GameSettings.GameBK2'
     Begin Object Class=DHGUISectionBackground Name=GameBK3
         Caption="Simulation Realism"
-        WinTop=0.650000
-        WinLeft=0.250000
-        WinWidth=0.500000
-        WinHeight=0.250000
-        RenderWeight=0.100200
+        WinTop=0.65
+        WinLeft=0.25
+        WinWidth=0.5
+        WinHeight=0.25
+        RenderWeight=0.1002
         OnPreDraw=GameBK3.InternalPreDraw
     End Object
     i_BG3=DHGUISectionBackground'DH_Interface.DHTab_GameSettings.GameBK3'
@@ -124,9 +124,9 @@ defaultproperties
         OnCreateComponent=GameGoreLevel.InternalOnCreateComponent
         IniOption="@Internal"
         WinTop=0.415521
-        WinLeft=0.050000
-        WinWidth=0.400000
-        RenderWeight=1.040000
+        WinLeft=0.05
+        WinWidth=0.4
+        RenderWeight=1.04
         TabOrder=2
         OnChange=DHTab_GameSettings.InternalOnChange
         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
@@ -134,7 +134,7 @@ defaultproperties
     co_GoreLevel=DHmoComboBox'DH_Interface.DHTab_GameSettings.GameGoreLevel'
     Begin Object Class=DHmoCheckBox Name=NetworkDynamicNetspeed
         ComponentJustification=TXTA_Left
-        CaptionWidth=0.950000
+        CaptionWidth=0.95
         Caption="Dynamic Netspeed"
         OnCreateComponent=NetworkDynamicNetspeed.InternalOnCreateComponent
         IniOption="@Internal"
@@ -163,7 +163,7 @@ defaultproperties
     co_Netspeed=DHmoComboBox'DH_Interface.DHTab_GameSettings.OnlineNetSpeed'
     Begin Object Class=DHmoCheckBox Name=ThrottleTanks
         ComponentJustification=TXTA_Left
-        CaptionWidth=0.950000
+        CaptionWidth=0.95
         Caption="Incremental Tank Throttle"
         OnCreateComponent=ThrottleTanks.InternalOnCreateComponent
         IniOption="@Internal"
@@ -177,7 +177,7 @@ defaultproperties
     ch_TankThrottle=DHmoCheckBox'DH_Interface.DHTab_GameSettings.ThrottleTanks'
     Begin Object Class=DHmoCheckBox Name=ThrottleVehicle
         ComponentJustification=TXTA_Left
-        CaptionWidth=0.950000
+        CaptionWidth=0.95
         Caption="Incremental Vehicle Throttle"
         OnCreateComponent=ThrottleVehicle.InternalOnCreateComponent
         IniOption="@Internal"
@@ -191,7 +191,7 @@ defaultproperties
     ch_VehicleThrottle=DHmoCheckBox'DH_Interface.DHTab_GameSettings.ThrottleVehicle'
     Begin Object Class=DHmoCheckBox Name=ManualReloading
         ComponentJustification=TXTA_Left
-        CaptionWidth=0.950000
+        CaptionWidth=0.95
         Caption="Manual Tank Shell Reloading"
         OnCreateComponent=ManualReloading.InternalOnCreateComponent
         IniOption="@Internal"

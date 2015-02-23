@@ -202,12 +202,12 @@ defaultproperties
 {
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     BinocsPositionIndex=2
-    FirstPersonGunShakeScale=0.750000
-    WeaponFOV=60.000000
+    FirstPersonGunShakeScale=0.75
+    WeaponFOV=60.0
     HudName="Engineer"
-    DriverPositions(0)=(ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.000000,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_HigginsBoatGun'
@@ -216,16 +216,16 @@ defaultproperties
     bHasAltFire=false
     CameraBone="Camera_com"
     bDesiredBehindView=false
-    DrivePos=(Y=-5.000000,Z=14.000000)
+    DrivePos=(Y=-5.0,Z=14.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
-    EntryRadius=350.000000
-    TPCamDistance=300.000000
-    TPCamLookat=(X=-25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
+    EntryRadius=350.0
+    TPCamDistance=300.0
+    TPCamLookat=(X=-25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
     HUDOverlayClass=class'DH_Vehicles.DH_M3A1HalftrackMGOverlay'
-    HUDOverlayOffset=(X=-2.000000)
-    HUDOverlayFOV=35.000000
+    HUDOverlayOffset=(X=-2.0)
+    HUDOverlayFOV=35.0
     PitchUpLimit=8000
     PitchDownLimit=60000
 }

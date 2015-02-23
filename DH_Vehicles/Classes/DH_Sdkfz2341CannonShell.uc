@@ -7,31 +7,31 @@ class DH_Sdkfz2341CannonShell extends DH_GermanTankCannonShell;
 
 defaultproperties
 {
-    MechanicalRanges(1)=(Range=100,RangeValue=33.000000)
-    MechanicalRanges(2)=(Range=200,RangeValue=37.000000)
-    MechanicalRanges(3)=(Range=300,RangeValue=41.000000)
-    MechanicalRanges(4)=(Range=400,RangeValue=48.000000)
-    MechanicalRanges(5)=(Range=500,RangeValue=56.000000)
-    MechanicalRanges(6)=(Range=600,RangeValue=64.000000)
-    MechanicalRanges(7)=(Range=700,RangeValue=76.000000)
-    MechanicalRanges(8)=(Range=800,RangeValue=87.000000)
-    MechanicalRanges(9)=(Range=900,RangeValue=97.000000)
-    MechanicalRanges(10)=(Range=1000,RangeValue=109.000000)
-    MechanicalRanges(11)=(Range=1100,RangeValue=122.000000)
-    MechanicalRanges(12)=(Range=1200,RangeValue=131.000000)
+    MechanicalRanges(1)=(Range=100,RangeValue=33.0)
+    MechanicalRanges(2)=(Range=200,RangeValue=37.0)
+    MechanicalRanges(3)=(Range=300,RangeValue=41.0)
+    MechanicalRanges(4)=(Range=400,RangeValue=48.0)
+    MechanicalRanges(5)=(Range=500,RangeValue=56.0)
+    MechanicalRanges(6)=(Range=600,RangeValue=64.0)
+    MechanicalRanges(7)=(Range=700,RangeValue=76.0)
+    MechanicalRanges(8)=(Range=800,RangeValue=87.0)
+    MechanicalRanges(9)=(Range=900,RangeValue=97.0)
+    MechanicalRanges(10)=(Range=1000,RangeValue=109.0)
+    MechanicalRanges(11)=(Range=1100,RangeValue=122.0)
+    MechanicalRanges(12)=(Range=1200,RangeValue=131.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=2.500000
-    DHPenetrationTable(1)=2.100000
-    DHPenetrationTable(2)=1.800000
-    DHPenetrationTable(3)=1.300000
-    DHPenetrationTable(4)=1.100000
-    DHPenetrationTable(5)=0.800000
-    DHPenetrationTable(6)=0.600000
-    DHPenetrationTable(7)=0.400000
-    DHPenetrationTable(8)=0.200000
-    DHPenetrationTable(9)=0.100000
-    DHPenetrationTable(10)=0.100000
-    ShellDiameter=2.000000
+    DHPenetrationTable(0)=2.5
+    DHPenetrationTable(1)=2.1
+    DHPenetrationTable(2)=1.8
+    DHPenetrationTable(3)=1.3
+    DHPenetrationTable(4)=1.1
+    DHPenetrationTable(5)=0.8
+    DHPenetrationTable(6)=0.6
+    DHPenetrationTable(7)=0.4
+    DHPenetrationTable(8)=0.2
+    DHPenetrationTable(9)=0.1
+    DHPenetrationTable(10)=0.1
+    ShellDiameter=2.0
     bHasTracer=false
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
     ImpactDamage=175
@@ -47,16 +47,16 @@ defaultproperties
     ShellHitWoodEffectClass=class'ROEffects.ROBulletHitWoodEffect'
     ShellHitRockEffectClass=class'ROEffects.ROBulletHitConcreteEffect'
     ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
-    AmbientVolumeScale=2.000000
-    BallisticCoefficient=0.770000
-    SpeedFudgeScale=0.750000
-    Speed=47075.000000
-    MaxSpeed=47075.000000
+    AmbientVolumeScale=2.0
+    BallisticCoefficient=0.77
+    SpeedFudgeScale=0.75
+    Speed=47075.0
+    MaxSpeed=47075.0
     ExplosionDecal=class'ROEffects.BulletHoleConcrete'
     ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
     AmbientSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Whiz'
     Tag="PzGr."
-    SoundRadius=350.000000
-    TransientSoundRadius=600.000000
+    SoundRadius=350.0
+    TransientSoundRadius=600.0
 }

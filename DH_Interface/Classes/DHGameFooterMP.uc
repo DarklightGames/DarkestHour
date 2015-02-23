@@ -11,8 +11,8 @@ defaultproperties
         MenuState=MSAT_Disabled
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.966146
-        WinLeft=0.880000
-        WinWidth=0.120000
+        WinLeft=0.88
+        WinWidth=0.12
         WinHeight=0.033203
         TabOrder=0
         bBoundToParent=true
@@ -24,7 +24,7 @@ defaultproperties
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.966146
         WinLeft=0.758125
-        WinWidth=0.120000
+        WinWidth=0.12
         WinHeight=0.033203
         TabOrder=1
         bBoundToParent=true
@@ -35,7 +35,7 @@ defaultproperties
         Caption="Back"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.966146
-        WinWidth=0.120000
+        WinWidth=0.12
         WinHeight=0.033203
         TabOrder=2
         bBoundToParent=true

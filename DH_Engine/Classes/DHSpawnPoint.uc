@@ -55,6 +55,6 @@ defaultproperties
     SpawnProtectionTime=5.0
     Method=ESPM_LocationHint
     bCollideWhenPlacing=true
-    CollisionRadius=+00040.000000
-    CollisionHeight=+00043.000000
+    CollisionRadius=+00040.0
+    CollisionHeight=+00043.0
 }

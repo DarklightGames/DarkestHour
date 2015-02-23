@@ -8,6 +8,6 @@ class DH_JagdpantherCannonShellDamageAPCR extends DHTankShellImpactDamage
 
 defaultproperties
 {
-    APCDamageModifier=0.500000
+    APCDamageModifier=0.5
     DeathString="%o was killed by %k's Jagdpanzer V APCR shell."
 }

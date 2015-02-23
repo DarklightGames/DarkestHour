@@ -161,7 +161,7 @@ function exec DebugHints()
 
 defaultproperties
 {
-    PostHintDisplayDelay=10.000000
+    PostHintDisplayDelay=10.0
     Hints(0)=(Title="Welcome to Darkest Hour!",Text="These hint messages will show up periodically in the game. Pay attention to them, your survival might depend on it! They can be disabled from the HUD tab in the configuration menu.")
     Hints(1)=(Title="Mantling",Text="You are able to mantle on to small obstacles. To mantle, stand in front of any low obstacle until the mantling icon to appears then press %JUMP% to mantle on top of the obstacle.")
     Hints(2)=(Title="Parachutes",Text="You can guide your parachute's trajectory with your movement keys.")

@@ -358,10 +358,10 @@ function float getAmmoReloadState()
     {
         switch (Cannon.CannonReloadState)
         {
-            case CR_ReadyToFire:    return 0.00;
+            case CR_ReadyToFire:    return 0.0;
             case CR_Waiting:
             case CR_Empty:
-            case CR_ReloadedPart1:  return 1.00;
+            case CR_ReloadedPart1:  return 1.0;
             case CR_ReloadedPart2:  return 0.66;
             case CR_ReloadedPart3:  return 0.33;
         }

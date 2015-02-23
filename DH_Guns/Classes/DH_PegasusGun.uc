@@ -90,24 +90,24 @@ function bool TryToDrive(Pawn P)
 defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_PegasusGunPawn')
-    HealthMax=101.000000
+    HealthMax=101.0
     Health=101
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.000000
-        KInertiaTensor(3)=3.000000
-        KInertiaTensor(5)=3.000000
-        KLinearDamping=0.050000
-        KAngularDamping=0.050000
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KLinearDamping=0.05
+        KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=0.000000
+        KMaxAngularSpeed=0.0
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
-        KFriction=50.000000
-        KImpactThreshold=700.000000
+        KFriction=50.0
+        KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Guns.DH_PegasusGun.KParams0'
 }

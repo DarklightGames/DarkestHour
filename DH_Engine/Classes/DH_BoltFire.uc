@@ -68,8 +68,8 @@ event ModeDoFire()
 
 defaultproperties
 {
-    PctRestDeployRecoil=0.650000
+    PctRestDeployRecoil=0.65
     bDelayedRecoil=true
-    DelayedRecoilTime=0.050000
+    DelayedRecoilTime=0.05
     bAnimNotifiedShellEjects=true
 }

@@ -9,22 +9,22 @@ defaultproperties
 {
     InitialTertiaryAmmo=26
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
-    SecondarySpread=0.001000
-    TertiarySpread=0.001350
-    ManualRotationsPerSecond=0.020000
-    PoweredRotationsPerSecond=0.062500
-    FrontArmorFactor=8.900000
-    RightArmorFactor=6.400000
-    LeftArmorFactor=6.400000
-    RearArmorFactor=6.400000
-    FrontArmorSlope=1.010000
-    RightArmorSlope=1.010000
-    LeftArmorSlope=1.010000
-    RearArmorSlope=1.000000
-    FrontLeftAngle=322.000000
-    FrontRightAngle=38.000000
-    RearRightAngle=142.000000
-    RearLeftAngle=218.000000
+    SecondarySpread=0.001
+    TertiarySpread=0.00135
+    ManualRotationsPerSecond=0.02
+    PoweredRotationsPerSecond=0.0625
+    FrontArmorFactor=8.9
+    RightArmorFactor=6.4
+    LeftArmorFactor=6.4
+    RearArmorFactor=6.4
+    FrontArmorSlope=1.01
+    RightArmorSlope=1.01
+    LeftArmorSlope=1.01
+    RearArmorSlope=1.0
+    FrontLeftAngle=322.0
+    FrontRightAngle=38.0
+    RearRightAngle=142.0
+    RearLeftAngle=218.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
@@ -43,8 +43,8 @@ defaultproperties
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=54.0;
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-2.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-24.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=-2.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=-24.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
@@ -52,34 +52,34 @@ defaultproperties
     PitchDownLimit=45000
     WeaponFireAttachmentBone="barrelA"
     GunnerAttachmentBone="com_attachment"
-    AltFireOffset=(X=-170.000000,Y=-21.000000,Z=2.000000)
+    AltFireOffset=(X=-170.0,Y=-21.0,Z=2.0)
     bAmbientAltFireSound=true
-    FireInterval=5.000000
-    AltFireInterval=0.120000
+    FireInterval=5.0
+    AltFireInterval=0.12
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
-    FireSoundVolume=512.000000
-    AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
-    AltFireSoundScaling=3.000000
-    AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
+    FireSoundVolume=512.0
+    AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
+    AltFireSoundScaling=3.0
+    AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AltShakeRotMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeRotRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeRotTime=2.000000
-    AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeRotTime=2.0
+    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=5461
     CustomPitchDownLimit=63715
     BeginningIdleAnim="com_idle_close"
@@ -92,5 +92,5 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

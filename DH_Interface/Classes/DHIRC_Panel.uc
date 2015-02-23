@@ -15,14 +15,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 defaultproperties
 {
     Begin Object Class=DHmoComboBox Name=MyServerCombo
-        CaptionWidth=0.250000
+        CaptionWidth=0.25
         Caption="Server"
         OnCreateComponent=MyServerCombo.InternalOnCreateComponent
         WinTop=0.102967
-        WinLeft=0.150000
-        WinWidth=0.400000
-        WinHeight=0.300000
-        RenderWeight=3.000000
+        WinLeft=0.15
+        WinWidth=0.4
+        WinHeight=0.3
+        RenderWeight=3.0
         TabOrder=0
         bBoundToParent=true
         bScaleToParent=true
@@ -30,14 +30,14 @@ defaultproperties
     End Object
     co_Server=DHmoComboBox'DH_Interface.DHIRC_Panel.MyServerCombo'
     Begin Object Class=DHmoComboBox Name=MyChannelCombo
-        CaptionWidth=0.250000
+        CaptionWidth=0.25
         Caption="Channel"
         OnCreateComponent=MyChannelCombo.InternalOnCreateComponent
-        WinTop=0.500000
-        WinLeft=0.150000
-        WinWidth=0.400000
-        WinHeight=0.300000
-        RenderWeight=3.000000
+        WinTop=0.5
+        WinLeft=0.15
+        WinWidth=0.4
+        WinHeight=0.3
+        RenderWeight=3.0
         TabOrder=1
         bBoundToParent=true
         bScaleToParent=true
@@ -46,11 +46,11 @@ defaultproperties
     Begin Object Class=GUIButton Name=MyConnectButton
         Caption="Connect"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.100000
-        WinLeft=0.560000
-        WinWidth=0.200000
-        WinHeight=0.300000
-        RenderWeight=3.000000
+        WinTop=0.1
+        WinLeft=0.56
+        WinWidth=0.2
+        WinHeight=0.3
+        RenderWeight=3.0
         TabOrder=2
         bBoundToParent=true
         bScaleToParent=true
@@ -61,11 +61,11 @@ defaultproperties
     Begin Object Class=GUIButton Name=MyRemoveServerButton
         Caption="Remove"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.100000
-        WinLeft=0.770000
-        WinWidth=0.200000
-        WinHeight=0.300000
-        RenderWeight=3.000000
+        WinTop=0.1
+        WinLeft=0.77
+        WinWidth=0.2
+        WinHeight=0.3
+        RenderWeight=3.0
         TabOrder=4
         bBoundToParent=true
         bScaleToParent=true
@@ -76,11 +76,11 @@ defaultproperties
     Begin Object Class=GUIButton Name=MyJoinChannelButton
         Caption="Join"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
-        WinLeft=0.560000
-        WinWidth=0.200000
-        WinHeight=0.300000
-        RenderWeight=3.000000
+        WinTop=0.5
+        WinLeft=0.56
+        WinWidth=0.2
+        WinHeight=0.3
+        RenderWeight=3.0
         TabOrder=3
         bBoundToParent=true
         bScaleToParent=true
@@ -91,11 +91,11 @@ defaultproperties
     Begin Object Class=GUIButton Name=MyRemoveChannelButton
         Caption="Remove"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.500000
-        WinLeft=0.770000
-        WinWidth=0.200000
-        WinHeight=0.300000
-        RenderWeight=3.000000
+        WinTop=0.5
+        WinLeft=0.77
+        WinWidth=0.2
+        WinHeight=0.3
+        RenderWeight=3.0
         TabOrder=5
         bBoundToParent=true
         bScaleToParent=true

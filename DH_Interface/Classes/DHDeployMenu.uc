@@ -156,7 +156,7 @@ DefaultProperties
         TabHeight=0.03
         BackgroundStyleName="DHHeader"
         WinWidth=0.313189
-        WinHeight=0.038610
+        WinHeight=0.03861
         WinLeft=0.018555
         WinTop=0.052083
         RenderWeight=0.49
@@ -187,7 +187,7 @@ DefaultProperties
         WinWidth=0.111653
         WinHeight=0.036836
         WinLeft=0.018159
-        WinTop=0.007060
+        WinTop=0.00706
         TabOrder=0
         OnChange=DHDeployMenu.InternalOnChange
         MaxVisibleItems=10

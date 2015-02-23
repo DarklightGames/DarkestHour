@@ -7,11 +7,11 @@ class DH_JagdpantherCannon extends DH_ROTankCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.001350
-    ManualRotationsPerSecond=0.020000
+    SecondarySpread=0.00135
+    ManualRotationsPerSecond=0.02
     bIsAssaultGun=true
-    GunMantletArmorFactor=10.000000
-    GunMantletSlope=35.000000
+    GunMantletArmorFactor=10.0
+    GunMantletSlope=35.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
@@ -51,30 +51,30 @@ defaultproperties
     RangeSettings(29)=3800
     RangeSettings(30)=4000
     MinCommanderHitHeight=32.0
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-4.000000))
-    VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-4.000000,Z=-23.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-4.0))
+    VehHitpoints(1)=(PointRadius=16.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-4.0,Z=-23.0))
     YawBone="Gun"
-    YawStartConstraint=-3000.000000
-    YawEndConstraint=3000.000000
+    YawStartConstraint=-3000.0
+    YawEndConstraint=3000.0
     PitchBone="gun_pitch"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=30.000000
-    FireInterval=8.000000
+    WeaponFireOffset=30.0
+    FireInterval=8.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2548
     CustomPitchDownLimit=64079
     MaxPositiveYaw=2367
@@ -90,5 +90,5 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
     Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
     SoundVolume=130
-    SoundRadius=300.000000
+    SoundRadius=300.0
 }

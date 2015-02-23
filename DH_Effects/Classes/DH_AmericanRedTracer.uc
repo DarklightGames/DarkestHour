@@ -11,24 +11,24 @@ defaultproperties
         TrailShadeType=PTTST_PointLife
         TrailLocation=PTTL_FollowEmitter
         MaxPointsPerTrail=150
-        DistanceThreshold=80.000000
+        DistanceThreshold=80.0
         UseCrossedSheets=true
-        PointLifeTime=0.200000
+        PointLifeTime=0.2
         UseColorScale=true
         UseSizeScale=true
         UseRegularSizeScale=false
         AutomaticInitialSpawning=false
         ColorScale(0)=(Color=(R=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(R=255))
-        Opacity=0.650000
+        ColorScale(1)=(RelativeTime=1.0,Color=(R=255))
+        Opacity=0.65
         MaxParticles=1
-        SizeScale(0)=(RelativeSize=1.000000)
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=0.500000)
-        StartSizeRange=(X=(Min=2.000000,Max=2.000000))
-        InitialParticlesPerSecond=2000.000000
+        SizeScale(0)=(RelativeSize=1.0)
+        SizeScale(1)=(RelativeTime=1.0,RelativeSize=0.5)
+        StartSizeRange=(X=(Min=2.0,Max=2.0))
+        InitialParticlesPerSecond=2000.0
         Texture=texture'Effects_Tex.Weapons.trailblur'
-        SecondsBeforeInactive=0.000000
-        LifetimeRange=(Min=1.500000,Max=2.500000)
+        SecondsBeforeInactive=0.0
+        LifetimeRange=(Min=1.5,Max=2.5)
     End Object
     Emitters(0)=TrailEmitter'DH_Effects.DH_AmericanRedTracer.TrailEmitter0'
     AutoDestroy=true

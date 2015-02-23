@@ -14,22 +14,22 @@ defaultproperties
     TracerFrequency=7
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
-    YawStartConstraint=0.000000
-    YawEndConstraint=65535.000000
+    YawStartConstraint=0.0
+    YawEndConstraint=65535.0
     PitchBone="mg_yaw"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="mg_yaw"
-    WeaponFireOffset=11.000000
+    WeaponFireOffset=11.0
     bInstantFire=false
-    Spread=0.002000
-    FireInterval=0.050000
+    Spread=0.002
+    FireInterval=0.05
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AmbientSoundScaling=1.300000
+    AmbientSoundScaling=1.3
     FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     ProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
-    ShakeRotMag=(X=10.000000,Y=10.000000,Z=10.000000)
-    ShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
+    ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
+    ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
     MaxPositiveYaw=4000
     MaxNegativeYaw=-4000
     bLimitYaw=true

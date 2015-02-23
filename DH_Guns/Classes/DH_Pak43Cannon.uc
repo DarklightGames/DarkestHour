@@ -7,7 +7,7 @@ class DH_Pak43Cannon extends DH_ATGunCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.001350
+    SecondarySpread=0.00135
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04'
@@ -41,28 +41,28 @@ defaultproperties
     RangeSettings(24)=2800
     RangeSettings(25)=3000
     YawBone="Turret"
-    YawStartConstraint=-6000.000000
-    YawEndConstraint=6000.000000
+    YawStartConstraint=-6000.0
+    YawEndConstraint=6000.0
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_player"
-    WeaponFireOffset=340.000000
-    RotationsPerSecond=0.017000
-    FireInterval=6.000000
+    WeaponFireOffset=340.0
+    RotationsPerSecond=0.017
+    FireInterval=6.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_Pak43CannonShell'
-    ShakeRotMag=(Z=110.000000)
-    ShakeRotRate=(Z=1100.000000)
-    ShakeRotTime=2.000000
-    ShakeOffsetMag=(Z=5.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=110.0)
+    ShakeRotRate=(Z=1100.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=6918
     CustomPitchDownLimit=64626
     MaxPositiveYaw=5097
@@ -76,5 +76,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Pak43_anm.pak43_turret'
     Skins(0)=texture'DH_Artillery_Tex.Pak43.pak43_nocamo_ext'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

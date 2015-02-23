@@ -94,6 +94,6 @@ function ComponentPosValues getAlignOriginalValues(GUIComponent component)
 
 defaultproperties
 {
-    TopPadding=0.050000
-    BottomPadding=0.050000
+    TopPadding=0.05
+    BottomPadding=0.05
 }

@@ -134,10 +134,10 @@ defaultproperties
 {
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
     bShowRangeText=false
-    OverlayCenterSize=1.000000
+    OverlayCenterSize=1.0
     DestroyedScopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
-    ScopePositionX=0.215000
-    ScopePositionY=0.500000
+    ScopePositionX=0.215
+    ScopePositionY=0.5
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     RangeText="Yards"
 }

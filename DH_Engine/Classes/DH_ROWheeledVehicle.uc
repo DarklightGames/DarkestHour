@@ -671,7 +671,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     // Heavy damage to engine slows vehicle way down // Matt: won't have any effect setting this here - will move elsewhere later
     if (EngineHealth <= (default.EngineHealth * 0.25) && EngineHealth > 0)
     {
-        Throttle = FClamp(Throttle, -0.50, 0.50);
+        Throttle = FClamp(Throttle, -0.5, 0.5);
     }
     // Kill the engine if its health has now fallen to zero
     else if (EngineHealth <= 0)
@@ -1092,7 +1092,7 @@ defaultproperties
     ExplosionDamage=325.0
     ExplosionRadius=700.0
     DamagedEffectHealthSmokeFactor=0.75
-    DamagedEffectHealthMediumSmokeFactor=0.50
+    DamagedEffectHealthMediumSmokeFactor=0.5
     DamagedEffectHealthHeavySmokeFactor=0.25
     DamagedEffectHealthFireFactor=0.15
     ImpactDamageTicks=2.0

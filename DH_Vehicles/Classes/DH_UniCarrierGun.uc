@@ -44,23 +44,23 @@ simulated function ClientDoReload()
 defaultproperties
 {
     NumMags=20
-    ReloadLength=7.000000
+    ReloadLength=7.0
     TracerProjectileClass=class'DH_BrenVehicleTracerBullet'
     TracerFrequency=5
     hudAltAmmoIcon=texture'DH_InterfaceArt_tex.weapon_icons.Bren_ammo'
     YawBone="Gun_protection"
     PitchBone="Gun_protection"
-    RotationsPerSecond=0.500000
-    Spread=0.002000
-    FireInterval=0.125000
-    AltFireInterval=0.125000
+    RotationsPerSecond=0.5
+    Spread=0.002
+    FireInterval=0.125
+    AltFireInterval=0.125
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_VehicleBrenMGEmitter'
     FireSoundClass=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_loop'
-    AmbientSoundScaling=5.000000
+    AmbientSoundScaling=5.0
     FireEndSound=SoundGroup'Inf_Weapons.dp1927.dp1927_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_BrenVehicleBullet'
-    ShakeRotRate=(X=50.000000,Y=50.000000,Z=50.000000)
-    ShakeOffsetRate=(X=5.000000,Y=5.000000,Z=5.000000)
+    ShakeRotRate=(X=50.0,Y=50.0,Z=50.0)
+    ShakeOffsetRate=(X=5.0,Y=5.0,Z=5.0)
     CustomPitchUpLimit=3500
     CustomPitchDownLimit=63000
     MaxPositiveYaw=7500

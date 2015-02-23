@@ -9,22 +9,22 @@ defaultproperties
 {
     InitialTertiaryAmmo=35
     TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
-    SecondarySpread=0.001650
-    TertiarySpread=0.001200
-    ManualRotationsPerSecond=0.011000
-    PoweredRotationsPerSecond=0.033000
-    FrontArmorFactor=9.800000
-    RightArmorFactor=4.500000
-    LeftArmorFactor=4.500000
-    RearArmorFactor=4.500000
-    FrontArmorSlope=13.000000
-    RightArmorSlope=25.000000
-    LeftArmorSlope=25.000000
-    RearArmorSlope=25.000000
-    FrontLeftAngle=322.000000
-    FrontRightAngle=38.000000
-    RearRightAngle=142.000000
-    RearLeftAngle=218.000000
+    SecondarySpread=0.00165
+    TertiarySpread=0.0012
+    ManualRotationsPerSecond=0.011
+    PoweredRotationsPerSecond=0.033
+    FrontArmorFactor=9.8
+    RightArmorFactor=4.5
+    LeftArmorFactor=4.5
+    RearArmorFactor=4.5
+    FrontArmorSlope=13.0
+    RightArmorSlope=25.0
+    LeftArmorSlope=25.0
+    RearArmorSlope=25.0
+    FrontLeftAngle=322.0
+    FrontRightAngle=38.0
+    RearRightAngle=142.0
+    RearLeftAngle=218.0
     ReloadSoundOne=sound'Vehicle_reloads.Reloads.STUG_III_reload_01'
     ReloadSoundTwo=sound'Vehicle_reloads.Reloads.STUG_III_reload_02'
     ReloadSoundThree=sound'Vehicle_reloads.Reloads.STUG_III_reload_03'
@@ -67,8 +67,8 @@ defaultproperties
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=52.5
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-4.000000,Z=18.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-4.000000,Z=-3.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-4.0,Z=18.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-4.0,Z=-3.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
@@ -76,35 +76,35 @@ defaultproperties
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=200.000000
-    AltFireOffset=(X=21.000000,Y=27.000000,Z=7.000000)
+    WeaponFireOffset=200.0
+    AltFireOffset=(X=21.0,Y=27.0,Z=7.0)
     bAmbientAltFireSound=true
-    FireInterval=7.000000
-    AltFireInterval=0.070580
+    FireInterval=7.0
+    AltFireInterval=0.07058
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AltFireSoundScaling=3.000000
+    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
     AltFireProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AltShakeRotMag=(X=1.000000,Y=1.000000,Z=1.000000)
-    AltShakeRotRate=(X=10000.000000,Y=10000.000000,Z=10000.000000)
-    AltShakeRotTime=2.000000
-    AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
+    AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
+    AltShakeRotTime=2.0
+    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3276
     CustomPitchDownLimit=64080
     BeginningIdleAnim="com_idle_close"
@@ -117,7 +117,7 @@ defaultproperties
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
     Skins(1)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     SoundVolume=120
-    SoundRadius=300.000000
+    SoundRadius=300.0
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1

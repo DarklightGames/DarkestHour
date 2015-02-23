@@ -8,5 +8,5 @@ class DH_30calBeltRound extends ROFPAmmoRound;
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.30Cal_ammo'
-    DrawScale=4.500000
+    DrawScale=4.5
 }

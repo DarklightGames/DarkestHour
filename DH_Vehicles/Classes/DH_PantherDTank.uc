@@ -39,20 +39,20 @@ defaultproperties
     SchurzenOffset=(X=45.5,Y=7.45,Z=-1.0)
     SchurzenIndex=255 // invalid starting value just so if schurzen no. zero is selected, it gets actively set & so flagged for replication
     UnbuttonedPositionIndex=1
-    MaxCriticalSpeed=932.000000
-    TreadDamageThreshold=0.850000
+    MaxCriticalSpeed=932.0
+    TreadDamageThreshold=0.85
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
-    UFrontArmorFactor=8.500000
-    URightArmorFactor=4.000000
-    ULeftArmorFactor=4.000000
-    URearArmorFactor=4.000000
-    UFrontArmorSlope=55.000000
-    URightArmorSlope=40.000000
-    ULeftArmorSlope=40.000000
-    URearArmorSlope=30.000000
-    PointValue=4.000000
-    MaxPitchSpeed=100.000000
-    TreadVelocityScale=225.000000
+    UFrontArmorFactor=8.5
+    URightArmorFactor=4.0
+    ULeftArmorFactor=4.0
+    URearArmorFactor=4.0
+    UFrontArmorSlope=55.0
+    URightArmorSlope=40.0
+    ULeftArmorSlope=40.0
+    URearArmorSlope=30.0
+    PointValue=4.0
+    MaxPitchSpeed=100.0
+    TreadVelocityScale=225.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L05'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R05'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
@@ -61,10 +61,10 @@ defaultproperties
     RumbleSoundBone="driver_attachment"
     VehicleHudTurret=TexRotator'InterfaceArt_tex.Tank_Hud.panther_turret_rot'
     VehicleHudTurretLook=TexRotator'InterfaceArt_tex.Tank_Hud.panther_turret_look'
-    VehicleHudThreadsPosX(0)=0.380000
-    VehicleHudThreadsPosX(1)=0.630000
-    VehicleHudThreadsPosY=0.490000
-    VehicleHudThreadsScale=0.610000
+    VehicleHudThreadsPosX(0)=0.38
+    VehicleHudThreadsPosX(1)=0.63
+    VehicleHudThreadsPosY=0.49
+    VehicleHudThreadsScale=0.61
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -86,19 +86,19 @@ defaultproperties
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
     WheelRotationScale=2500
-    TreadHitMinAngle=1.700000
-    FrontLeftAngle=334.000000
-    FrontRightAngle=26.000000
-    RearRightAngle=154.000000
-    RearLeftAngle=206.000000
-    GearRatios(4)=0.800000
-    TransRatio=0.110000
-    ChangeUpPoint=1990.000000
-    ChangeDownPoint=1000.000000
+    TreadHitMinAngle=1.7
+    FrontLeftAngle=334.0
+    FrontRightAngle=26.0
+    RearRightAngle=154.0
+    RearLeftAngle=206.0
+    GearRatios(4)=0.8
+    TransRatio=0.11
+    ChangeUpPoint=1990.0
+    ChangeDownPoint=1000.0
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-230.000000,Y=20.000000,Z=65.000000),ExhaustRotation=(Pitch=22000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-230.000000,Y=-20.000000,Z=65.000000),ExhaustRotation=(Pitch=22000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherDCannonPawn',WeaponBone="Turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherMountedMGPawn',WeaponBone="Mg_placement")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_PantherPassengerOne',WeaponBone="body")
@@ -109,37 +109,37 @@ defaultproperties
     StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
     ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
     DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed'
-    DamagedEffectOffset=(X=-100.000000,Y=20.000000,Z=26.000000)
+    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.000000,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.000000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionUpAnim="driver_hatch_open",DriverTransitionAnim="VPanther_driver_close",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanther_driver_open",ViewPitchUpLimit=8000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
     VehicleHudImage=texture'InterfaceArt_tex.Tank_Hud.panther_body'
-    VehicleHudOccupantsX(0)=0.450000
-    VehicleHudOccupantsY(0)=0.380000
-    VehicleHudOccupantsX(2)=0.550000
-    VehicleHudOccupantsY(2)=0.380000
-    VehicleHudOccupantsX(3)=0.400000
-    VehicleHudOccupantsY(3)=0.690000
-    VehicleHudOccupantsX(4)=0.400000
-    VehicleHudOccupantsY(4)=0.790000
-    VehicleHudOccupantsX(5)=0.605000
-    VehicleHudOccupantsY(5)=0.790000
-    VehicleHudOccupantsX(6)=0.605000
-    VehicleHudOccupantsY(6)=0.690000
-    VehHitpoints(0)=(PointRadius=10.000000,PointBone="body",PointOffset=(X=100.000000,Y=-30.000000,Z=61.000000),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=32.000000,PointHeight=35.000000,PointOffset=(X=-90.000000,Z=6.000000),DamageMultiplier=1.000000)
-    VehHitpoints(2)=(PointRadius=15.000000,PointHeight=30.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=20.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=15.000000,PointHeight=10.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-20.000000,Y=-40.000000,Z=40.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=15.000000,PointHeight=10.000000,PointScale=1.000000,PointBone="body",PointOffset=(X=-20.000000,Y=40.000000,Z=40.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
+    VehicleHudOccupantsX(0)=0.45
+    VehicleHudOccupantsY(0)=0.38
+    VehicleHudOccupantsX(2)=0.55
+    VehicleHudOccupantsY(2)=0.38
+    VehicleHudOccupantsX(3)=0.4
+    VehicleHudOccupantsY(3)=0.69
+    VehicleHudOccupantsX(4)=0.4
+    VehicleHudOccupantsY(4)=0.79
+    VehicleHudOccupantsX(5)=0.605
+    VehicleHudOccupantsY(5)=0.79
+    VehicleHudOccupantsX(6)=0.605
+    VehicleHudOccupantsY(6)=0.69
+    VehHitpoints(0)=(PointRadius=10.0,PointBone="body",PointOffset=(X=100.0,Y=-30.0,Z=61.0),bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-90.0,Z=6.0),DamageMultiplier=1.0)
+    VehHitpoints(2)=(PointRadius=15.0,PointHeight=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=-40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=15.0,PointHeight=10.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=40.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=32.000000,Y=-15.000000,Z=-1.000000)
-        WheelRadius=33.000000
+        BoneOffset=(X=32.0,Y=-15.0,Z=-1.0)
+        WheelRadius=33.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -147,8 +147,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=32.000000,Y=15.000000,Z=-1.000000)
-        WheelRadius=33.000000
+        BoneOffset=(X=32.0,Y=15.0,Z=-1.0)
+        WheelRadius=33.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -156,8 +156,8 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-14.000000,Y=-15.000000,Z=-1.000000)
-        WheelRadius=33.000000
+        BoneOffset=(X=-14.0,Y=-15.0,Z=-1.0)
+        WheelRadius=33.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -165,16 +165,16 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-14.000000,Y=15.000000,Z=-1.000000)
-        WheelRadius=33.000000
+        BoneOffset=(X=-14.0,Y=15.0,Z=-1.0)
+        WheelRadius=33.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-15.000000,Z=-1.000000)
-        WheelRadius=33.000000
+        BoneOffset=(Y=-15.0,Z=-1.0)
+        WheelRadius=33.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
@@ -182,36 +182,36 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=15.000000,Z=-1.000000)
-        WheelRadius=33.000000
+        BoneOffset=(Y=15.0,Z=-1.0)
+        WheelRadius=33.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Right_Drive_Wheel'
-    VehicleMass=14.000000
+    VehicleMass=14.0
     bTurnInPlace=true
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=0.000000,Y=0.000000,Z=0.000000)
+    DrivePos=(X=0.0,Y=0.0,Z=0.0)
     DriveAnim="VPanther_driver_idle_close"
-    ExitPositions(0)=(X=123.00,Y=-28.00,Z=105.00)
-    ExitPositions(1)=(X=-91.00,Y=20.00,Z=110.00)
-    ExitPositions(2)=(X=128.00,Y=39.00,Z=105.00)
-    ExitPositions(3)=(X=-95.00,Y=-160.00,Z=5.00)
-    ExitPositions(4)=(X=-176.00,Y=-162.00,Z=5.00)
-    ExitPositions(5)=(X=-176.00,Y=162.00,Z=5.00)
-    ExitPositions(6)=(X=-95.00,Y=160.00,Z=5.00)
-    EntryRadius=375.000000
-    FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
-    TPCamDistance=600.000000
-    TPCamLookat=(X=-50.000000)
-    TPCamWorldOffset=(Z=250.000000)
-    DriverDamageMult=1.000000
+    ExitPositions(0)=(X=123.0,Y=-28.0,Z=105.0)
+    ExitPositions(1)=(X=-91.0,Y=20.0,Z=110.0)
+    ExitPositions(2)=(X=128.0,Y=39.0,Z=105.0)
+    ExitPositions(3)=(X=-95.0,Y=-160.0,Z=5.0)
+    ExitPositions(4)=(X=-176.0,Y=-162.0,Z=5.0)
+    ExitPositions(5)=(X=-176.0,Y=162.0,Z=5.0)
+    ExitPositions(6)=(X=-95.0,Y=160.0,Z=5.0)
+    EntryRadius=375.0
+    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
+    TPCamDistance=600.0
+    TPCamLookat=(X=-50.0)
+    TPCamWorldOffset=(Z=250.0)
+    DriverDamageMult=1.0
     VehicleNameString="Panzer V Ausf.D"
-    MaxDesireability=2.100000
+    MaxDesireability=2.1
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayFOV=90.000000
+    HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
-    HealthMax=600.000000
+    HealthMax=600.0
     Health=600
     Mesh=SkeletalMesh'axis_pantherg_anm.PantherG_body_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
@@ -219,27 +219,27 @@ defaultproperties
     Skins(2)=texture'axis_vehicles_tex.Treads.PantherG_treads'
     Skins(3)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     SoundPitch=32
-    SoundRadius=2500.000000
-    TransientSoundRadius=5000.000000
-    CollisionRadius=175.000000
-    CollisionHeight=60.000000
+    SoundRadius=2500.0
+    TransientSoundRadius=5000.0
+    CollisionRadius=175.0
+    CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.000000
-        KInertiaTensor(3)=3.000000
-        KInertiaTensor(5)=3.000000
-        KCOMOffset=(Z=-0.600000)
-        KLinearDamping=0.050000
-        KAngularDamping=0.050000
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(Z=-0.6)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
-        KMaxAngularSpeed=1.000000
+        KMaxAngularSpeed=1.0
         bHighDetailOnly=false
         bClientOnly=false
         bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
-        KFriction=0.500000
-        KImpactThreshold=700.000000
+        KFriction=0.5
+        KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_PantherDTank.KParams0'
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'

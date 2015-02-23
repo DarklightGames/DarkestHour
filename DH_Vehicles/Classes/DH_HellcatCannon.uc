@@ -9,21 +9,21 @@ defaultproperties
 {
     InitialTertiaryAmmo=10
     TertiaryProjectileClass=class'DH_Vehicles.DH_HellcatCannonShellHE'
-    SecondarySpread=0.001000
-    TertiarySpread=0.001350
-    ManualRotationsPerSecond=0.033000
-    PoweredRotationsPerSecond=0.067000
-    FrontArmorFactor=1.900000
-    RightArmorFactor=1.300000
-    LeftArmorFactor=1.300000
-    RearArmorFactor=1.300000
-    RightArmorSlope=20.000000
-    LeftArmorSlope=20.000000
-    RearArmorSlope=13.000000
-    FrontLeftAngle=324.000000
-    FrontRightAngle=36.000000
-    RearRightAngle=144.000000
-    RearLeftAngle=216.000000
+    SecondarySpread=0.001
+    TertiarySpread=0.00135
+    ManualRotationsPerSecond=0.033
+    PoweredRotationsPerSecond=0.067
+    FrontArmorFactor=1.9
+    RightArmorFactor=1.3
+    LeftArmorFactor=1.3
+    RearArmorFactor=1.3
+    RightArmorSlope=20.0
+    LeftArmorSlope=20.0
+    RearArmorSlope=13.0
+    FrontLeftAngle=324.0
+    FrontRightAngle=36.0
+    RearRightAngle=144.0
+    RearLeftAngle=216.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
@@ -36,27 +36,27 @@ defaultproperties
     ProjectileDescriptions(2)="HE"
     AddedPitch=52
     MinCommanderHitHeight=47.0;
-    VehHitpoints(0)=(PointRadius=13.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-15.000000))
+    VehHitpoints(0)=(PointRadius=13.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=-15.0))
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=10.000000
-    FireInterval=5.000000
+    WeaponFireOffset=10.0
+    FireInterval=5.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_HellcatCannonShell'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=63715
     BeginningIdleAnim="com_idle_close"
@@ -68,5 +68,5 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_turret_int'
     SoundVolume=130
-    SoundRadius=300.000000
+    SoundRadius=300.0
 }

@@ -148,9 +148,9 @@ defaultproperties
 {
     OnColor=(B=16,G=88,R=112,A=255)
     OffColor=(B=48,G=24,R=16,A=255)
-    ChangeTime=60.000000
-    ChangeTimeTwo=0.001000
-    SwapTime=0.001000
+    ChangeTime=60.0
+    ChangeTimeTwo=0.001
+    SwapTime=0.001
     bStatic=false
     bAlwaysRelevant=true
     bSkipActorPropertyReplication=false

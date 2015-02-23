@@ -7,5 +7,5 @@ class DH_BrenBarrel extends DH_MGBarrel;
 
 defaultproperties
 {
-    FiringHeatIncrement=0.750000
+    FiringHeatIncrement=0.75
 }

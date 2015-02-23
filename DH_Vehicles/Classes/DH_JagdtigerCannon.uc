@@ -7,11 +7,11 @@ class DH_JagdtigerCannon extends DH_ROTankCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.001290
-    ManualRotationsPerSecond=0.010000
+    SecondarySpread=0.00129
+    ManualRotationsPerSecond=0.01
     bIsAssaultGun=true
-    GunMantletArmorFactor=10.000000
-    GunMantletSlope=40.000000
+    GunMantletArmorFactor=10.0
+    GunMantletSlope=40.0
     ReloadSoundOne=sound'Vehicle_reloads.Reloads.Tiger_reload_01'
     ReloadSoundTwo=sound'Vehicle_reloads.Reloads.Tiger_reload_02'
     ReloadSoundThree=sound'Vehicle_reloads.Reloads.Tiger_reload_03'
@@ -46,29 +46,29 @@ defaultproperties
     RangeSettings(24)=2800
     RangeSettings(25)=3000
     MinCommanderHitHeight=44.0 // note there is no other collision box (e.g. mantlet) so every hit on the jagdtiger cannon is actually a hit on commander's collision box
-    VehHitpoints(0)=(PointRadius=10.000000,PointScale=1.000000,PointBone="com_player")
+    VehHitpoints(0)=(PointRadius=10.0,PointScale=1.0,PointBone="com_player")
     YawBone="Gun"
-    YawStartConstraint=-2000.000000
-    YawEndConstraint=2000.000000
+    YawStartConstraint=-2000.0
+    YawEndConstraint=2000.0
     PitchBone="Turret"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=30.000000
-    FireInterval=15.000000
+    WeaponFireOffset=30.0
+    FireInterval=15.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShell'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=2731
     CustomPitchDownLimit=64171
     MaxPositiveYaw=1820
@@ -82,5 +82,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
     SoundVolume=130
-    SoundRadius=300.000000
+    SoundRadius=300.0
 }

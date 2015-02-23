@@ -158,10 +158,10 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-    FirstPersonGunShakeScale=1.500000
-    WeaponFOV=60.000000
-    DriverPositions(0)=(ViewLocation=(X=10.000000),ViewFOV=60.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
-    DriverPositions(1)=(ViewFOV=90.000000,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
+    FirstPersonGunShakeScale=1.5
+    WeaponFOV=60.0
+    DriverPositions(0)=(ViewLocation=(X=10.0),ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_UniCarrierGun'
@@ -170,24 +170,24 @@ defaultproperties
     bHasAltFire=false
     CameraBone="Camera_com"
     bDesiredBehindView=false
-    DrivePos=(X=-11.000000,Y=-4.000000,Z=31.000000)
+    DrivePos=(X=-11.0,Y=-4.0,Z=31.0)
     DriveRot=(Yaw=16384)
     DriveAnim="VUC_com_idle_close"
-    EntryRadius=130.000000
-    FPCamPos=(X=10.000000)
-    TPCamDistance=50.000000
-    TPCamLookat=(X=-25.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=120.000000)
+    EntryRadius=130.0
+    FPCamPos=(X=10.0)
+    TPCamDistance=50.0
+    TPCamLookat=(X=-25.0,Z=0.0)
+    TPCamWorldOffset=(Z=120.0)
     HUDOverlayClass=class'DH_Vehicles.DH_UniCarrierMGOverlay'
-    HUDOverlayOffset=(X=-6.000000)
-    HUDOverlayFOV=35.000000
+    HUDOverlayOffset=(X=-6.0)
+    HUDOverlayFOV=35.0
     bKeepDriverAuxCollision=true
     PitchUpLimit=4000
     PitchDownLimit=60000
-    ExitPositions(0)=(X=48.00,Y=-107.00,Z=15.00)
-    ExitPositions(1)=(X=48.00,Y=117.00,Z=15.00)
-    ExitPositions(2)=(X=52.00,Y=-119.00,Z=13.00)
-    ExitPositions(3)=(X=-45.00,Y=-118.00,Z=15.00)
-    ExitPositions(4)=(X=7.00,Y=110.00,Z=15.00)
-    ExitPositions(5)=(X=-48.00,Y=111.00,Z=15.00)
+    ExitPositions(0)=(X=48.0,Y=-107.0,Z=15.0)
+    ExitPositions(1)=(X=48.0,Y=117.0,Z=15.0)
+    ExitPositions(2)=(X=52.0,Y=-119.0,Z=13.0)
+    ExitPositions(3)=(X=-45.0,Y=-118.0,Z=15.0)
+    ExitPositions(4)=(X=7.0,Y=110.0,Z=15.0)
+    ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
 }

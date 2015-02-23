@@ -121,49 +121,49 @@ defaultproperties
     ResupplyAttachBone="supply"
     DecorationAttachBone="Deco"
     bResupplyVehicle=true
-    WheelSoftness=0.025000
-    WheelPenScale=1.200000
-    WheelPenOffset=0.010000
-    WheelRestitution=0.100000
-    WheelInertia=0.100000
-    WheelLongFrictionFunc=(Points=(,(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
-    WheelLongSlip=0.001000
-    WheelLatSlipFunc=(Points=(,(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
-    WheelLongFrictionScale=1.100000
-    WheelLatFrictionScale=1.350000
-    WheelHandbrakeSlip=0.010000
-    WheelHandbrakeFriction=0.100000
-    WheelSuspensionTravel=15.000000
-    WheelSuspensionMaxRenderTravel=15.000000
-    FTScale=0.030000
-    ChassisTorqueScale=0.400000
-    MinBrakeFriction=4.000000
-    MaxSteerAngleCurve=(Points=((OutVal=35.000000),(InVal=1500.000000,OutVal=20.000000),(InVal=1000000000.000000,OutVal=15.000000)))
-    TorqueCurve=(Points=((OutVal=10.000000),(InVal=300.000000,OutVal=2.000000),(InVal=1500.000000,OutVal=5.000000),(InVal=2400.000000)))
-    GearRatios(0)=-0.200000
-    GearRatios(1)=0.200000
-    GearRatios(2)=0.350000
-    GearRatios(3)=0.650000
-    GearRatios(4)=0.950000
-    TransRatio=0.200000
-    ChangeUpPoint=2000.000000
-    ChangeDownPoint=1000.000000
-    LSDFactor=1.000000
-    EngineBrakeFactor=0.000100
-    EngineBrakeRPMScale=0.100000
-    MaxBrakeTorque=20.000000
-    SteerSpeed=50.000000
-    TurnDamping=35.000000
-    StopThreshold=100.000000
-    HandbrakeThresh=200.000000
-    EngineInertia=0.100000
-    IdleRPM=700.000000
-    EngineRPMSoundRange=5000.000000
+    WheelSoftness=0.025
+    WheelPenScale=1.2
+    WheelPenOffset=0.01
+    WheelRestitution=0.1
+    WheelInertia=0.1
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongSlip=0.001
+    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
+    WheelLongFrictionScale=1.1
+    WheelLatFrictionScale=1.35
+    WheelHandbrakeSlip=0.01
+    WheelHandbrakeFriction=0.1
+    WheelSuspensionTravel=15.0
+    WheelSuspensionMaxRenderTravel=15.0
+    FTScale=0.03
+    ChassisTorqueScale=0.4
+    MinBrakeFriction=4.0
+    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    TorqueCurve=(Points=((OutVal=10.0),(InVal=300.0,OutVal=2.0),(InVal=1500.0,OutVal=5.0),(InVal=2400.0)))
+    GearRatios(0)=-0.2
+    GearRatios(1)=0.2
+    GearRatios(2)=0.35
+    GearRatios(3)=0.65
+    GearRatios(4)=0.95
+    TransRatio=0.2
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    LSDFactor=1.0
+    EngineBrakeFactor=0.0001
+    EngineBrakeRPMScale=0.1
+    MaxBrakeTorque=20.0
+    SteerSpeed=50.0
+    TurnDamping=35.0
+    StopThreshold=100.0
+    HandbrakeThresh=200.0
+    EngineInertia=0.1
+    IdleRPM=700.0
+    EngineRPMSoundRange=5000.0
     SteerBoneName="WheelDrive"
-    RevMeterScale=4000.000000
+    RevMeterScale=4000.0
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-30.000000,Y=180.000000,Z=-50.000000),ExhaustRotation=(Pitch=36000,Yaw=5000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-30.0,Y=180.0,Z=-50.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerOne',WeaponBone="passenger1")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerFour',WeaponBone="passenger_l_3")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_OpelBlitzPassengerSeven',WeaponBone="passenger_r_3")
@@ -173,38 +173,38 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
-    DisintegrationHealth=-1000.000000
-    DestructionLinearMomentum=(Min=100.000000,Max=350.000000)
-    DestructionAngularMomentum=(Max=150.000000)
-    DamagedEffectScale=0.800000
-    DamagedEffectOffset=(X=115.000000,Z=70.000000)
-    ImpactDamageThreshold=5000.000000
-    ImpactDamageMult=0.001000
-    SteeringScaleFactor=4.000000
+    DisintegrationHealth=-1000.0
+    DestructionLinearMomentum=(Min=100.0,Max=350.0)
+    DestructionAngularMomentum=(Max=150.0)
+    DamagedEffectScale=0.8
+    DamagedEffectOffset=(X=115.0,Z=70.0)
+    ImpactDamageThreshold=5000.0
+    ImpactDamageMult=0.001
+    SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.000000)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.000000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
-    VehicleHudOccupantsX(0)=0.450000
-    VehicleHudOccupantsX(1)=0.550000
-    VehicleHudOccupantsX(2)=0.450000
-    VehicleHudOccupantsX(3)=0.550000
-    VehicleHudOccupantsY(0)=0.350000
-    VehicleHudOccupantsY(1)=0.350000
-    VehicleHudOccupantsY(2)=0.800000
-    VehicleHudOccupantsY(3)=0.800000
-    VehicleHudEngineY=0.250000
+    VehicleHudOccupantsX(0)=0.45
+    VehicleHudOccupantsX(1)=0.55
+    VehicleHudOccupantsX(2)=0.45
+    VehicleHudOccupantsX(3)=0.55
+    VehicleHudOccupantsY(0)=0.35
+    VehicleHudOccupantsY(1)=0.35
+    VehicleHudOccupantsY(2)=0.8
+    VehicleHudOccupantsY(3)=0.8
+    VehicleHudEngineY=0.25
     VehHitpoints(0)=(PointBone="Camera_driver",bPenetrationPoint=false)
-    VehHitpoints(1)=(PointBone="Engine",PointOffset=(X=16.000000),DamageMultiplier=1.000000)
-    VehHitpoints(2)=(PointRadius=40.000000,PointScale=1.000000,PointBone="body",PointOffset=(Y=50.000000,Z=15.000000),DamageMultiplier=5.000000,HitPointType=HP_AmmoStore)
+    VehHitpoints(1)=(PointBone="Engine",PointOffset=(X=16.0),DamageMultiplier=1.0)
+    VehHitpoints(2)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     EngineHealth=35
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         BoneName="wheel_FR"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.000000
+        WheelRadius=25.0
         SupportBoneName="Axle_F_R"
         SupportBoneAxis=AXIS_X
     End Object
@@ -213,7 +213,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="wheel_FL"
         BoneRollAxis=AXIS_Y
-        WheelRadius=25.000000
+        WheelRadius=25.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_X
     End Object
@@ -223,7 +223,7 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="wheel_RR"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26.000000
+        WheelRadius=26.0
         SupportBoneName="Axle_R_R"
         SupportBoneAxis=AXIS_Z
     End Object
@@ -233,48 +233,48 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="wheel_LR"
         BoneRollAxis=AXIS_Y
-        WheelRadius=26.000000
+        WheelRadius=26.0
         SupportBoneName="Axle_R_L"
         SupportBoneAxis=AXIS_Z
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_OpelBlitzTransport.LRWheel'
-    VehicleMass=3.500000
+    VehicleMass=3.5
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=6.000000)
+    DrivePos=(X=6.0)
     DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(X=70.00,Y=-130.00,Z=60.00)
-    ExitPositions(1)=(X=70.00,Y=130.00,Z=60.00)
-    ExitPositions(2)=(X=-255.00,Y=-30.00,Z=60.00)
-    ExitPositions(3)=(X=-255.00,Y=30.00,Z=60.00)
-    EntryRadius=375.000000
-    FPCamPos=(X=120.000000,Y=-21.000000,Z=17.000000)
-    TPCamDistance=1000.000000
+    ExitPositions(0)=(X=70.0,Y=-130.0,Z=60.0)
+    ExitPositions(1)=(X=70.0,Y=130.0,Z=60.0)
+    ExitPositions(2)=(X=-255.0,Y=-30.0,Z=60.0)
+    ExitPositions(3)=(X=-255.0,Y=30.0,Z=60.0)
+    EntryRadius=375.0
+    FPCamPos=(X=120.0,Y=-21.0,Z=17.0)
+    TPCamDistance=1000.0
     CenterSpringForce="SpringONSSRV"
-    TPCamLookat=(X=0.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=50.000000)
-    DriverDamageMult=1.000000
+    TPCamLookat=(X=0.0,Z=0.0)
+    TPCamWorldOffset=(Z=50.0)
+    DriverDamageMult=1.0
     VehicleNameString="Opel Blitz"
-    MaxDesireability=0.120000
+    MaxDesireability=0.12
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    GroundSpeed=325.000000
+    GroundSpeed=325.0
     PitchUpLimit=5000
     PitchDownLimit=49000
-    HealthMax=150.000000
+    HealthMax=150.0
     Health=150
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
-    SoundRadius=800.000000
-    TransientSoundRadius=1500.000000
-    CollisionRadius=175.000000
-    CollisionHeight=40.000000
+    SoundRadius=800.0
+    TransientSoundRadius=1500.0
+    CollisionRadius=175.0
+    CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.000000
-        KInertiaTensor(3)=3.000000
-        KInertiaTensor(5)=3.000000
-        KLinearDamping=0.500000
-        KAngularDamping=0.500000
+        KInertiaTensor(0)=1.0
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KLinearDamping=0.5
+        KAngularDamping=0.5
         KStartEnabled=true
         bKNonSphericalInertia=true
         bHighDetailOnly=false
@@ -282,8 +282,8 @@ defaultproperties
         bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
-        KFriction=0.500000
-        KImpactThreshold=700.000000
+        KFriction=0.5
+        KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_OpelBlitzTransport.KParams0'
 }

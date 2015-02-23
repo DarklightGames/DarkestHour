@@ -7,13 +7,13 @@ class DH_PanzerIIILCannonShellDamageHE extends ROTankShellExplosionDamage;
 
 defaultproperties
 {
-    TankDamageModifier=0.000000
-    APCDamageModifier=0.500000
-    VehicleDamageModifier=1.000000
-    TreadDamageModifier=0.500000
+    TankDamageModifier=0.0
+    APCDamageModifier=0.5
+    VehicleDamageModifier=1.0
+    TreadDamageModifier=0.5
     DeathString="%o was ripped by shrapnel from %k's Panzer III Ausf.L HE shell."
     bArmorStops=true
-    KDamageImpulse=3000.000000
-    VehicleMomentumScaling=1.100000
+    KDamageImpulse=3000.0
+    VehicleMomentumScaling=1.1
     HumanObliterationThreshhold=180
 }

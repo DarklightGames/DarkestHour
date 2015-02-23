@@ -7,33 +7,33 @@ class DH_SpringfieldScopedFire extends DH_BoltFire;
 
 defaultproperties
 {
-    ProjSpawnOffset=(X=25.000000)
-    FAProjSpawnOffset=(X=-35.000000)
+    ProjSpawnOffset=(X=25.0)
+    FAProjSpawnOffset=(X=-35.0)
     FireIronAnim="Scope_Shoot"
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Springfield.Springfield_Fire01'
     maxVerticalRecoilAngle=1000
     maxHorizontalRecoilAngle=100
-    PctRestDeployRecoil=0.250000
+    PctRestDeployRecoil=0.25
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
-    ShellIronSightOffset=(X=10.000000,Y=3.000000,Z=-5.000000)
+    ShellIronSightOffset=(X=10.0,Y=3.0,Z=-5.0)
     bWaitForRelease=true
     FireAnim="shoot_last"
-    TweenTime=0.000000
+    TweenTime=0.0
     FireForce="RocketLauncherFire"
-    FireRate=2.400000
+    FireRate=2.4
     AmmoClass=class'DH_Weapons.DH_SpringfieldAmmo'
-    ShakeRotMag=(X=50.000000,Y=50.000000,Z=400.000000)
-    ShakeRotRate=(X=12500.000000,Y=12500.000000,Z=12500.000000)
-    ShakeRotTime=5.000000
-    ShakeOffsetMag=(X=3.000000,Y=1.000000,Z=5.000000)
-    ShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    ShakeOffsetTime=1.000000
+    ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=5.0
+    ShakeOffsetMag=(X=3.0,Y=1.0,Z=5.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
     ProjectileClass=class'DH_Weapons.DH_SpringfieldScopedBullet'
-    BotRefireRate=0.500000
-    WarnTargetPct=0.900000
+    BotRefireRate=0.5
+    WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stNagant'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    aimerror=500.000000
-    Spread=30.000000
+    aimerror=500.0
+    Spread=30.0
     SpreadStyle=SS_Random
 }

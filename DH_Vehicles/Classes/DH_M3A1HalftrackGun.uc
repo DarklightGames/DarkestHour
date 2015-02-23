@@ -240,14 +240,14 @@ simulated function int getNumMags()
 defaultproperties
 {
     NumMags=8
-    ReloadLength=6.590000
+    ReloadLength=6.59
 //  DummyTracerClass=class'DH_Vehicles.DH_30CalVehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_30CalVehicleTracerBullet'
     TracerFrequency=5
-//  mTracerInterval=0.600000 // deprecated
+//  mTracerInterval=0.6 // deprecated
     bUsesTracers=true
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=8.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=-13.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(Z=8.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(Z=-13.0))
     bIsMountedTankMG=true
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Gun_protection"
@@ -256,38 +256,38 @@ defaultproperties
     PitchDownLimit=50000
     WeaponFireAttachmentBone="tip"
     GunnerAttachmentBone="com_attachment"
-    RotationsPerSecond=0.500000
+    RotationsPerSecond=0.5
     bInstantRotation=true
     bDoOffsetTrace=true
     bAmbientFireSound=true
     bIsRepeatingFF=true
-    Spread=0.002000
-    FireInterval=0.120000
-    AltFireInterval=0.150000
+    Spread=0.002
+    FireInterval=0.12
+    AltFireInterval=0.15
     AmbientEffectEmitterClass=class'DH_Vehicles.DH_Vehicle30CalMGEmitter'
-    FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
-    AmbientSoundScaling=5.000000
-    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
+    FireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
+    AmbientSoundScaling=5.0
+    FireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
     FireForce="minifireb"
     DamageType=class'ROGame.ROVehMountedMGDamType'
     DamageMin=100
     DamageMax=100
-    TraceRange=15000.000000
+    TraceRange=15000.0
     ProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
-    ShakeRotMag=(X=25.000000,Z=10.000000)
-    ShakeRotRate=(X=5000.000000,Y=5000.000000,Z=5000.000000)
-    ShakeRotTime=2.000000
-    ShakeOffsetMag=(X=0.500000,Z=0.200000)
-    ShakeOffsetRate=(X=500.000000,Y=500.000000,Z=500.000000)
-    ShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.000000,RefireRate=0.070580)
+    ShakeRotMag=(X=25.0,Z=10.0)
+    ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(X=0.5,Z=0.2)
+    ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
+    ShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.0,RefireRate=0.07058)
     CustomPitchUpLimit=5000
     CustomPitchDownLimit=63000
     MaxPositiveYaw=12000
     MaxNegativeYaw=-12000
     bLimitYaw=true
     InitialPrimaryAmmo=200
-    CullDistance=8000.000000
+    CullDistance=8000.0
     Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
     bCollideActors=true
     bBlockActors=true

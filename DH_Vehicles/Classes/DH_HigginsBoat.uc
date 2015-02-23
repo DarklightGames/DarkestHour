@@ -179,7 +179,7 @@ defaultproperties
 {
     RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
     RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
-    RampSoundVolume=180.000000
+    RampSoundVolume=180.0
     RampDownIdleAnim="Ramp_Idle"
     DriverCameraBoneName="Camera_driver"
     WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
@@ -188,46 +188,46 @@ defaultproperties
     EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
     EngineSoundBone="Engine"
     DestAnimName="Higgins-Idle"
-    DestAnimRate=1.000000
-    WheelSoftness=0.025000
-    WheelPenScale=1.200000
-    WheelPenOffset=0.010000
-    WheelRestitution=0.100000
-    WheelInertia=0.100000
-    WheelLongFrictionFunc=(Points=(,(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
-    WheelLongSlip=0.001000
-    WheelLatSlipFunc=(Points=(,(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
-    WheelLongFrictionScale=1.100000
-    WheelLatFrictionScale=1.550000
-    WheelHandbrakeSlip=0.010000
-    WheelHandbrakeFriction=0.100000
-    WheelSuspensionTravel=10.000000
-    WheelSuspensionMaxRenderTravel=5.000000
-    FTScale=0.030000
-    ChassisTorqueScale=0.095000
-    MinBrakeFriction=4.000000
-    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
-    TorqueCurve=(Points=((OutVal=1.000000),(InVal=200.000000,OutVal=0.750000),(InVal=1500.000000,OutVal=2.000000),(InVal=2200.000000)))
-    GearRatios(0)=-0.200000
-    GearRatios(1)=0.200000
-    GearRatios(2)=0.350000
-    GearRatios(3)=0.500000
-    GearRatios(4)=0.630000
-    TransRatio=0.090000
-    LSDFactor=1.000000
-    EngineBrakeFactor=0.000100
-    EngineBrakeRPMScale=0.100000
-    MaxBrakeTorque=20.000000
-    SteerSpeed=20.000000
-    TurnDamping=50.000000
-    StopThreshold=100.000000
-    HandbrakeThresh=200.000000
-    EngineInertia=0.100000
+    DestAnimRate=1.0
+    WheelSoftness=0.025
+    WheelPenScale=1.2
+    WheelPenOffset=0.01
+    WheelRestitution=0.1
+    WheelInertia=0.1
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongSlip=0.001
+    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
+    WheelLongFrictionScale=1.1
+    WheelLatFrictionScale=1.55
+    WheelHandbrakeSlip=0.01
+    WheelHandbrakeFriction=0.1
+    WheelSuspensionTravel=10.0
+    WheelSuspensionMaxRenderTravel=5.0
+    FTScale=0.03
+    ChassisTorqueScale=0.095
+    MinBrakeFriction=4.0
+    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
+    TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
+    GearRatios(0)=-0.2
+    GearRatios(1)=0.2
+    GearRatios(2)=0.35
+    GearRatios(3)=0.5
+    GearRatios(4)=0.63
+    TransRatio=0.09
+    LSDFactor=1.0
+    EngineBrakeFactor=0.0001
+    EngineBrakeRPMScale=0.1
+    MaxBrakeTorque=20.0
+    SteerSpeed=20.0
+    TurnDamping=50.0
+    StopThreshold=100.0
+    HandbrakeThresh=200.0
+    EngineInertia=0.1
     SteerBoneName="Master3z00"
-    RevMeterScale=4000.000000
+    RevMeterScale=4000.0
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-270.000000,Y=-30.000000,Z=23.000000),ExhaustRotation=(Pitch=31000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-270.0,Y=-30.0,Z=23.0),ExhaustRotation=(Pitch=31000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatGunnerPawn',WeaponBone="mg_base")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerOne',WeaponBone="Master1z00")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsPassengerTwo',WeaponBone="Master1z00")
@@ -239,31 +239,31 @@ defaultproperties
     StartUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
     ShutDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_destroyed'
-    DamagedEffectOffset=(X=-170.000000,Y=20.000000,Z=50.000000)
+    DamagedEffectOffset=(X=-170.0,Y=20.0,Z=50.0)
     VehicleTeam=1
-    SteeringScaleFactor=2.000000
+    SteeringScaleFactor=2.0
     BeginningIdleAnim="Higgins-Idle"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Drop",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.000000)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.000000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Drop",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,ViewFOV=90.0)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,ViewFOV=90.0)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
-    VehicleHudOccupantsX(0)=0.430000
-    VehicleHudOccupantsX(1)=0.570000
-    VehicleHudOccupantsX(2)=0.430000
-    VehicleHudOccupantsX(3)=0.430000
-    VehicleHudOccupantsX(4)=0.430000
-    VehicleHudOccupantsX(5)=0.570000
-    VehicleHudOccupantsX(6)=0.570000
-    VehicleHudOccupantsX(7)=0.570000
-    VehicleHudOccupantsY(0)=0.670000
-    VehicleHudOccupantsY(1)=0.670000
-    VehicleHudOccupantsY(3)=0.400000
-    VehicleHudOccupantsY(4)=0.500000
-    VehicleHudOccupantsY(5)=0.300000
-    VehicleHudOccupantsY(6)=0.400000
-    VehicleHudOccupantsY(7)=0.500000
-    VehicleHudEngineY=0.000000
-    VehHitpoints(0)=(PointBone="driver_player",PointOffset=(Z=45.000000))
-    VehHitpoints(1)=(PointRadius=50.000000,PointBone="Master1z00",PointOffset=(X=-160.000000,Z=60.000000))
+    VehicleHudOccupantsX(0)=0.43
+    VehicleHudOccupantsX(1)=0.57
+    VehicleHudOccupantsX(2)=0.43
+    VehicleHudOccupantsX(3)=0.43
+    VehicleHudOccupantsX(4)=0.43
+    VehicleHudOccupantsX(5)=0.57
+    VehicleHudOccupantsX(6)=0.57
+    VehicleHudOccupantsX(7)=0.57
+    VehicleHudOccupantsY(0)=0.67
+    VehicleHudOccupantsY(1)=0.67
+    VehicleHudOccupantsY(3)=0.4
+    VehicleHudOccupantsY(4)=0.5
+    VehicleHudOccupantsY(5)=0.3
+    VehicleHudOccupantsY(6)=0.4
+    VehicleHudOccupantsY(7)=0.5
+    VehicleHudEngineY=0.0
+    VehHitpoints(0)=(PointBone="driver_player",PointOffset=(Z=45.0))
+    VehHitpoints(1)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Z=60.0))
     bIsApc=true
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=LFWheel
@@ -271,8 +271,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=-6.000000)
-        WheelRadius=30.000000
+        BoneOffset=(Z=-6.0)
+        WheelRadius=30.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -280,8 +280,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=-6.000000)
-        WheelRadius=30.000000
+        BoneOffset=(Z=-6.0)
+        WheelRadius=30.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RFWheel'
     Begin Object Class=SVehicleWheel Name=LRWheel
@@ -289,8 +289,8 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=-6.000000)
-        WheelRadius=30.000000
+        BoneOffset=(Z=-6.0)
+        WheelRadius=30.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -298,39 +298,39 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=-6.000000)
-        WheelRadius=30.000000
+        BoneOffset=(Z=-6.0)
+        WheelRadius=30.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RRWheel'
-    VehicleMass=6.000000
-    DrivePos=(Z=10.000000)
+    VehicleMass=6.0
+    DrivePos=(Z=10.0)
     DriveAnim="stand_idlehip_satchel"
-    ExitPositions(0)=(X=-30.000000,Y=-38.000000,Z=150.000000)
-    ExitPositions(1)=(X=-30.000000,Y=-38.000000,Z=150.000000)
-    EntryRadius=350.000000
-    FPCamPos=(Z=30.000000)
-    TPCamDistance=375.000000
-    TPCamLookat=(X=0.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=100.000000)
-    DriverDamageMult=1.000000
+    ExitPositions(0)=(X=-30.0,Y=-38.0,Z=150.0)
+    ExitPositions(1)=(X=-30.0,Y=-38.0,Z=150.0)
+    EntryRadius=350.0
+    FPCamPos=(Z=30.0)
+    TPCamDistance=375.0
+    TPCamLookat=(X=0.0,Z=0.0)
+    TPCamWorldOffset=(Z=100.0)
+    DriverDamageMult=1.0
     VehicleNameString="Higgins Boat"
-    MaxDesireability=1.900000
-    GroundSpeed=80.000000
-    WaterSpeed=80.000000
-    HealthMax=800.000000
+    MaxDesireability=1.9
+    GroundSpeed=80.0
+    WaterSpeed=80.0
+    HealthMax=800.0
     Health=800
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
     DestroyedVehicleTexture=texture'DH_VehiclesUS_tex.Destroyed.HigginsBoat_dest'
-    CollisionRadius=100.000000
-    CollisionHeight=60.000000
+    CollisionRadius=100.0
+    CollisionHeight=60.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.300000
-        KInertiaTensor(3)=4.000000
-        KInertiaTensor(5)=4.500000
-        KLinearDamping=0.050000
-        KAngularDamping=0.050000
-        KBuoyancy=1.200000
+        KInertiaTensor(0)=1.3
+        KInertiaTensor(3)=4.0
+        KInertiaTensor(5)=4.5
+        KLinearDamping=0.05
+        KAngularDamping=0.05
+        KBuoyancy=1.2
         KStartEnabled=true
         bKNonSphericalInertia=true
         bHighDetailOnly=false
@@ -340,8 +340,8 @@ defaultproperties
         bKAllowRotate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
-        KFriction=0.500000
-        KImpactThreshold=850.000000
+        KFriction=0.5
+        KImpactThreshold=850.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_HigginsBoat.KParams0'
     bUseHighDetailOverlayIndex=true

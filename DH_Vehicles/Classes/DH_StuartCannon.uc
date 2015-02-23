@@ -199,18 +199,18 @@ defaultproperties
     bLastShot=true
     InitialTertiaryAmmo=15
     TertiaryProjectileClass=class'DH_Vehicles.DH_TankCannonShellCanisterAmerican'
-    SecondarySpread=0.001450
-    ManualRotationsPerSecond=0.040000
-    PoweredRotationsPerSecond=0.083000
-    FrontArmorFactor=5.100000
-    RightArmorFactor=3.200000
-    LeftArmorFactor=3.200000
-    RearArmorFactor=3.200000
-    FrontArmorSlope=10.000000
-    FrontLeftAngle=323.000000
-    FrontRightAngle=37.000000
-    RearRightAngle=143.000000
-    RearLeftAngle=217.000000
+    SecondarySpread=0.00145
+    ManualRotationsPerSecond=0.04
+    PoweredRotationsPerSecond=0.083
+    FrontArmorFactor=5.1
+    RightArmorFactor=3.2
+    LeftArmorFactor=3.2
+    RearArmorFactor=3.2
+    FrontArmorSlope=10.0
+    FrontLeftAngle=323.0
+    FrontRightAngle=37.0
+    RearRightAngle=143.0
+    RearLeftAngle=217.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03'
@@ -228,8 +228,8 @@ defaultproperties
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=37.5;
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=10.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(Z=-12.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=10.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_player",PointOffset=(Z=-12.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
@@ -237,35 +237,35 @@ defaultproperties
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=85.000000
-    AltFireOffset=(X=26.000000,Y=7.000000,Z=1.000000)
+    WeaponFireOffset=85.0
+    AltFireOffset=(X=26.0,Y=7.0,Z=1.0)
     bAmbientAltFireSound=true
-    FireInterval=3.000000
-    AltFireInterval=0.120000
+    FireInterval=3.0
+    AltFireInterval=0.12
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
-    FireSoundVolume=512.000000
-    AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_loop01'
-    AltFireSoundScaling=3.000000
-    AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.30Cal.V30cal_end01'
+    FireSoundVolume=512.0
+    AltFireSoundClass=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_loop01'
+    AltFireSoundScaling=3.0
+    AltFireEndSound=SoundGroup'DH_AlliedVehicleSounds2.3Cal.V30cal_end01'
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
     AltFireProjectileClass=class'DH_Vehicles.DH_30CalVehicleBullet'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=600.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=5.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=6.000000
-    AltShakeRotMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeRotRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeRotTime=2.000000
-    AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=600.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=6.0
+    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeRotTime=2.0
+    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=63352
     BeginningIdleAnim="com_idle_close"

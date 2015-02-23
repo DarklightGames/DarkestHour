@@ -7,7 +7,7 @@ class DH_17PounderGunCannon extends DH_ATGunCannon;
 
 defaultproperties
 {
-    SecondarySpread=0.001560
+    SecondarySpread=0.00156
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04'
@@ -35,31 +35,31 @@ defaultproperties
     RangeSettings(18)=1800
     RangeSettings(19)=1900
     RangeSettings(20)=2000
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-12.000000,Y=-12.000000,Z=-35.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=-12.000000,Y=-12.000000,Z=-55.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-12.0,Y=-12.0,Z=-35.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=-12.0,Y=-12.0,Z=-55.0))
     YawBone="Turret"
-    YawStartConstraint=-6000.000000
-    YawEndConstraint=6000.000000
+    YawStartConstraint=-6000.0
+    YawEndConstraint=6000.0
     PitchBone="gun01"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_player"
-    WeaponFireOffset=20.000000
-    RotationsPerSecond=0.020000
-    FireInterval=4.000000
+    WeaponFireOffset=20.0
+    RotationsPerSecond=0.02
+    FireInterval=4.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
-    ShakeRotMag=(Z=110.000000)
-    ShakeRotRate=(Z=1100.000000)
-    ShakeRotTime=2.000000
-    ShakeOffsetMag=(Z=5.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=110.0)
+    ShakeRotRate=(Z=1100.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(Z=5.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3004
     CustomPitchDownLimit=64444
     MaxPositiveYaw=5460
@@ -74,5 +74,5 @@ defaultproperties
     Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder_ext'
     Skins(1)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

@@ -8,15 +8,15 @@ class DH_HECannonShellDamage extends ROTankShellExplosionDamage
 
 defaultproperties
 {
-    TankDamageModifier=0.030000
-    APCDamageModifier=1.000000
-    VehicleDamageModifier=1.000000
-    TreadDamageModifier=0.850000
+    TankDamageModifier=0.03
+    APCDamageModifier=1.0
+    VehicleDamageModifier=1.0
+    TreadDamageModifier=0.85
     bArmorStops=true
     bLocationalHit=true
-    KDeathVel=300.000000
-    KDeathUpKick=60.000000
-    KDeadLinZVelScale=0.002000
-    KDeadAngVelScale=0.003000
+    KDeathVel=300.0
+    KDeathUpKick=60.0
+    KDeadLinZVelScale=0.002
+    KDeadAngVelScale=0.003
     HumanObliterationThreshhold=265
 }

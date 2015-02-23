@@ -8,12 +8,12 @@ class DH_HEATCannonShellDamage extends ROTankShellExplosionDamage
 
 defaultproperties
 {
-    TankDamageModifier=0.020000
-    APCDamageModifier=0.400000
-    VehicleDamageModifier=0.850000
-    TreadDamageModifier=0.200000
+    TankDamageModifier=0.02
+    APCDamageModifier=0.4
+    VehicleDamageModifier=0.85
+    TreadDamageModifier=0.2
     bArmorStops=true
     bExtraMomentumZ=false
-    KDeathVel=150.000000
+    KDeathVel=150.0
     HumanObliterationThreshhold=400
 }

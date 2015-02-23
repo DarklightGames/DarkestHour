@@ -7,7 +7,7 @@ class DH_HetzerFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.000000
+    RespawnTime=1.0
     bFactoryActive=true
     VehicleClass=class'DH_Vehicles.DH_HetzerDestroyer'
     Mesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_body_ext'

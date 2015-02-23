@@ -151,7 +151,7 @@ defaultproperties
         WinTop=0.036614
         WinLeft=0.025156
         WinWidth=0.949688
-        WinHeight=0.900000
+        WinHeight=0.9
         OnPreDraw=myBackgroundGroup.InternalPreDraw
     End Object
     sb_Background=DHGUIProportionalContainer'DH_Interface.DHTab_ServerRulesPanel.myBackgroundGroup'
@@ -159,10 +159,10 @@ defaultproperties
         Caption="Enable WebAdmin"
         OnCreateComponent=EnableWebadmin.InternalOnCreateComponent
         IniOption="@Internal"
-        WinTop=0.900000
-        WinLeft=0.550000
-        WinWidth=0.400000
-        WinHeight=0.040000
+        WinTop=0.9
+        WinLeft=0.55
+        WinWidth=0.4
+        WinHeight=0.04
         TabOrder=4
         OnChange=DHTab_ServerRulesPanel.Change
         OnLoadINI=DHTab_ServerRulesPanel.InternalOnLoadINI
@@ -172,10 +172,10 @@ defaultproperties
         Caption="LAN Server"
         OnCreateComponent=LANServer.InternalOnCreateComponent
         IniOption="@Internal"
-        WinTop=0.950000
-        WinLeft=0.050000
-        WinWidth=0.400000
-        WinHeight=0.040000
+        WinTop=0.95
+        WinLeft=0.05
+        WinWidth=0.4
+        WinHeight=0.04
         TabOrder=3
         OnChange=DHTab_ServerRulesPanel.Change
         OnLoadINI=DHTab_ServerRulesPanel.InternalOnLoadINI
@@ -184,15 +184,15 @@ defaultproperties
     Begin Object Class=DHmoNumericEdit Name=WebadminPort
         MinValue=1
         MaxValue=65536
-        CaptionWidth=0.700000
-        ComponentWidth=0.300000
+        CaptionWidth=0.7
+        ComponentWidth=0.3
         Caption="WebAdmin Port"
         OnCreateComponent=WebadminPort.InternalOnCreateComponent
         IniOption="@Internal"
-        WinTop=0.950000
-        WinLeft=0.550000
-        WinWidth=0.400000
-        WinHeight=0.040000
+        WinTop=0.95
+        WinLeft=0.55
+        WinWidth=0.4
+        WinHeight=0.04
         TabOrder=5
         OnChange=DHTab_ServerRulesPanel.Change
         OnLoadINI=DHTab_ServerRulesPanel.InternalOnLoadINI
@@ -201,11 +201,11 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=AdvancedButton
         Caption="View Advanced Options"
         OnCreateComponent=AdvancedButton.InternalOnCreateComponent
-        WinTop=0.900000
-        WinLeft=0.050000
-        WinWidth=0.400000
-        WinHeight=0.040000
-        RenderWeight=1.000000
+        WinTop=0.9
+        WinLeft=0.05
+        WinWidth=0.4
+        WinHeight=0.04
+        RenderWeight=1.0
         TabOrder=1
         bBoundToParent=true
         bScaleToParent=true
@@ -218,7 +218,7 @@ defaultproperties
         bVisibleWhenEmpty=true
         OnCreateComponent=DHTab_ServerRulesPanel.ListBoxCreateComponent
         StyleName="DHNoBox"
-        WinHeight=0.850000
+        WinHeight=0.85
         TabOrder=0
         bBoundToParent=true
         bScaleToParent=true

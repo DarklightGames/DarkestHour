@@ -17,7 +17,7 @@ defaultproperties
     SmokeResupplyCount=1
     SelectAnim="Draw"
     PutDownAnim="putaway"
-    PlayerViewOffset=(Z=-2.000000)
+    PlayerViewOffset=(Z=-2.0)
     AttachmentClass=class'DH_Mortars.DH_M2MortarAttachment'
     ItemName="60mm Mortar M2"
     Mesh=SkeletalMesh'DH_Mortars_1st.M2_Mortar1st'

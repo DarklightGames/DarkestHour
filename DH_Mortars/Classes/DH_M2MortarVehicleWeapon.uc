@@ -10,11 +10,11 @@ class DH_M2MortarVehicleWeapon extends DH_MortarVehicleWeapon;
 defaultproperties
 {
     MuzzleBoneName="Muzzle"
-    ElevationMaximum=85.000000
-    ElevationMinimum=40.000000
+    ElevationMaximum=85.0
+    ElevationMinimum=40.0
     FireSound=SoundGroup'DH_WeaponSounds.Mortars.6cmFireSG'
-    SpreadYawMin=728.000000
-    SpreadYawMax=364.000000
+    SpreadYawMin=728.0
+    SpreadYawMax=364.0
     YawBone="Vehicle_attachment01"
     GunnerAttachmentBone="com_player"
     RotationsPerSecond=0.015625

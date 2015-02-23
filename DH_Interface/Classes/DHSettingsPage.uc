@@ -122,10 +122,10 @@ defaultproperties
     Begin Object Class=DHGUITabControl Name=SettingTabs
         bFillSpace=false
         bDockPanels=true
-        TabHeight=0.060000
+        TabHeight=0.06
         BackgroundStyleName="DHHeader"
-        WinHeight=0.044000
-        RenderWeight=0.490000
+        WinHeight=0.044
+        RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
         OnActivate=SettingTabs.InternalOnActivate
@@ -135,16 +135,16 @@ defaultproperties
     Begin Object Class=DHGUIHeader Name=SettingHeader
         Caption="Settings"
         StyleName="DHTopper"
-        WinHeight=32.000000
-        RenderWeight=0.300000
+        WinHeight=32.0
+        RenderWeight=0.3
     End Object
     t_Header=DHGUIHeader'DH_Interface.DHSettingsPage.SettingHeader'
     Begin Object Class=DHSettings_Footer Name=SettingFooter
-        Spacer=0.010000
+        Spacer=0.01
         StyleName="DHFooter"
-        WinTop=0.950000
-        WinHeight=0.045000
-        RenderWeight=0.300000
+        WinTop=0.95
+        WinHeight=0.045
+        RenderWeight=0.3
         TabOrder=4
         OnPreDraw=SettingFooter.InternalOnPreDraw
     End Object

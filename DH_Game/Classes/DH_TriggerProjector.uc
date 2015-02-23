@@ -241,9 +241,9 @@ defaultproperties
     ProjColorOff=(A=255)
     ProjTintOn=(B=128,G=128,R=128,A=255)
     ProjTintOff=(B=128,G=128,R=128,A=255)
-    ChangeTime=60.000000
-    ChangeTimeTwo=0.001000
-    SwapTime=0.001000
+    ChangeTime=60.0
+    ChangeTimeTwo=0.001
+    SwapTime=0.001
     bClipBSP=true
     bStatic=false
     bNoDelete=true

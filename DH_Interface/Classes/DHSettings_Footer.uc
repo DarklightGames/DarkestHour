@@ -31,7 +31,7 @@ defaultproperties
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.085678
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=1
         bBoundToParent=true
         OnClick=DHSettings_Footer.InternalOnClick
@@ -45,7 +45,7 @@ defaultproperties
         WinLeft=0.885352
         WinWidth=0.114648
         WinHeight=0.036482
-        RenderWeight=2.000000
+        RenderWeight=2.0
         TabOrder=0
         bBoundToParent=true
         OnClick=DHSettings_Footer.InternalOnClick

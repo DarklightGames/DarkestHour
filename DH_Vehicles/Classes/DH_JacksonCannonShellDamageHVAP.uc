@@ -8,6 +8,6 @@ class DH_JacksonCannonShellDamageHVAP extends DHTankShellImpactDamage
 
 defaultproperties
 {
-    APCDamageModifier=0.500000
+    APCDamageModifier=0.5
     DeathString="%o was killed by %k's Jackson M304 HVAP shot."
 }

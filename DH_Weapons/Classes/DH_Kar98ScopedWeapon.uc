@@ -18,8 +18,8 @@ defaultproperties
     PostReloadAnim="Single_Close"
     lenseMaterialID=5
 
-    scopePortalFOVHigh=13.000000
-    scopePortalFOV=7.000000
+    scopePortalFOVHigh=13.0
+    scopePortalFOV=7.0
 
     scopePitch=-10
     scopeYaw=40
@@ -41,25 +41,25 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawl_in"
     CrawlEndAnim="crawl_out"
-    IronSightDisplayFOV=45.000000
-    IronSightDisplayFOVHigh=43.000000
-    ZoomInTime=0.400000
-    ZoomOutTime=0.400000
-    PlayerFOVZoom=22.500000
-    XoffsetHighDetail=(X=-5.000000)
+    IronSightDisplayFOV=45.0
+    IronSightDisplayFOVHigh=43.0
+    ZoomInTime=0.4
+    ZoomOutTime=0.4
+    PlayerFOVZoom=22.5
+    XoffsetHighDetail=(X=-5.0)
     FireModeClass(0)=class'DH_Weapons.DH_Kar98ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_Kar98ScopedMeleeFire'
     SelectAnim="Draw"
     PutDownAnim="Put_away"
-    SelectAnimRate=1.000000
-    PutDownAnimRate=1.000000
-    AIRating=0.400000
-    CurrentRating=0.400000
+    SelectAnimRate=1.0
+    PutDownAnimRate=1.0
+    AIRating=0.4
+    CurrentRating=0.4
     bSniping=true
-    DisplayFOV=70.000000
+    DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_Kar98ScopedPickup'
-    BobDamping=1.600000
+    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_Kar98ScopedAttachment'
     ItemName="Karabiner 98k"
     Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k-scoped-mesh'

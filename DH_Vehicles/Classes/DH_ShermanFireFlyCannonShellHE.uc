@@ -7,44 +7,44 @@ class DH_ShermanFireFlyCannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties
 {
-    MechanicalRanges(0)=(RangeValue=32.000000)
-    MechanicalRanges(1)=(Range=200,RangeValue=36.000000)
-    MechanicalRanges(2)=(Range=400,RangeValue=40.000000)
-    MechanicalRanges(3)=(Range=600,RangeValue=44.000000)
-    MechanicalRanges(4)=(Range=800,RangeValue=60.000000)
-    MechanicalRanges(5)=(Range=1000,RangeValue=80.000000)
-    MechanicalRanges(6)=(Range=1200,RangeValue=104.000000)
-    MechanicalRanges(7)=(Range=1400,RangeValue=124.000000)
-    MechanicalRanges(8)=(Range=1600,RangeValue=148.000000)
-    MechanicalRanges(9)=(Range=1800,RangeValue=168.000000)
-    MechanicalRanges(10)=(Range=2000,RangeValue=184.000000)
-    MechanicalRanges(11)=(Range=2400,RangeValue=224.000000)
-    MechanicalRanges(12)=(Range=2800,RangeValue=264.000000)
-    MechanicalRanges(13)=(Range=3200,RangeValue=304.000000)
-    MechanicalRanges(14)=(Range=3600,RangeValue=344.000000)
-    MechanicalRanges(15)=(Range=4000,RangeValue=392.000000)
+    MechanicalRanges(0)=(RangeValue=32.0)
+    MechanicalRanges(1)=(Range=200,RangeValue=36.0)
+    MechanicalRanges(2)=(Range=400,RangeValue=40.0)
+    MechanicalRanges(3)=(Range=600,RangeValue=44.0)
+    MechanicalRanges(4)=(Range=800,RangeValue=60.0)
+    MechanicalRanges(5)=(Range=1000,RangeValue=80.0)
+    MechanicalRanges(6)=(Range=1200,RangeValue=104.0)
+    MechanicalRanges(7)=(Range=1400,RangeValue=124.0)
+    MechanicalRanges(8)=(Range=1600,RangeValue=148.0)
+    MechanicalRanges(9)=(Range=1800,RangeValue=168.0)
+    MechanicalRanges(10)=(Range=2000,RangeValue=184.0)
+    MechanicalRanges(11)=(Range=2400,RangeValue=224.0)
+    MechanicalRanges(12)=(Range=2800,RangeValue=264.0)
+    MechanicalRanges(13)=(Range=3200,RangeValue=304.0)
+    MechanicalRanges(14)=(Range=3600,RangeValue=344.0)
+    MechanicalRanges(15)=(Range=4000,RangeValue=392.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=4.500000
-    DHPenetrationTable(1)=4.200000
-    DHPenetrationTable(2)=3.800000
-    DHPenetrationTable(3)=3.200000
-    DHPenetrationTable(4)=2.900000
-    DHPenetrationTable(5)=2.400000
-    DHPenetrationTable(6)=2.000000
-    DHPenetrationTable(7)=1.700000
-    DHPenetrationTable(8)=1.300000
-    DHPenetrationTable(9)=1.100000
-    DHPenetrationTable(10)=1.000000
-    ShellDiameter=7.620000
+    DHPenetrationTable(0)=4.5
+    DHPenetrationTable(1)=4.2
+    DHPenetrationTable(2)=3.8
+    DHPenetrationTable(3)=3.2
+    DHPenetrationTable(4)=2.9
+    DHPenetrationTable(5)=2.4
+    DHPenetrationTable(6)=2.0
+    DHPenetrationTable(7)=1.7
+    DHPenetrationTable(8)=1.3
+    DHPenetrationTable(9)=1.1
+    DHPenetrationTable(10)=1.0
+    ShellDiameter=7.62
     bHasTracer=true
-    PenetrationMag=880.000000
+    PenetrationMag=880.0
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAP'
     ImpactDamage=450
-    BallisticCoefficient=2.450000
-    Speed=53351.000000
-    MaxSpeed=53351.000000
-    Damage=400.000000
-    DamageRadius=1140.000000
+    BallisticCoefficient=2.45
+    Speed=53351.0
+    MaxSpeed=53351.0
+    Damage=400.0
+    DamageRadius=1140.0
     MyDamageType=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageHE'
     Tag="Mk.I HE-T"
 }

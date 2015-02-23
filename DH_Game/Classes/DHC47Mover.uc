@@ -59,11 +59,11 @@ LoopAnim(AnimName, AnimRate);               //DH - loop the anim
 defaultproperties
 {
     AnimName="c47_in_flight"
-    AnimRate=1.000000
+    AnimRate=1.0
     DrawType=DT_Mesh
-    CullDistance=16000.000000
+    CullDistance=16000.0
     Mesh=SkeletalMesh'DH_C47_anm.FlyingC47'
-    CollisionRadius=1800.000000
-    CollisionHeight=400.000000
+    CollisionRadius=1800.0
+    CollisionHeight=400.0
     bBlockKarma=true
 }

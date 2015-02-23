@@ -8,8 +8,8 @@ class DH_HellcatCannonShellDamageAP extends DHTankShellImpactDamage
 
 defaultproperties
 {
-    APCDamageModifier=0.750000
-    VehicleDamageModifier=1.500000
-    TreadDamageModifier=0.950000
+    APCDamageModifier=0.75
+    VehicleDamageModifier=1.5
+    TreadDamageModifier=0.95
     DeathString="%o was killed by %k's Hellcat APC shell."
 }

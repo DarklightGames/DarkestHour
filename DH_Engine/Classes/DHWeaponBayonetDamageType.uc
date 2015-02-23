@@ -32,8 +32,8 @@ defaultproperties
     DeathString="%o was stabbed by %k's %w bayonet."
     FemaleSuicide="%o stabbed herself with her %w bayonet."
     MaleSuicide="%o stabbed himself with his %w bayonet."
-    GibModifier=0.000000
+    GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
-    KDamageImpulse=400.000000
+    KDamageImpulse=400.0
     HumanObliterationThreshhold=1000001
 }

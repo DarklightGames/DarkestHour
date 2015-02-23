@@ -66,7 +66,7 @@ var()       float       ShakeRotTime;     // how much time to rot the instigator
 var()       vector      ShakeOffsetMag;   // max view offset vertically
 var()       vector      ShakeOffsetRate;  // how fast to offset view vertically
 var()       float       ShakeOffsetTime;  // how much time to offset view
-var()       float       BlurEffectScalar; 
+var()       float       BlurEffectScalar;
 
 struct DigitSet
 {
@@ -598,7 +598,7 @@ simulated function DrawHUD(Canvas C)
                 SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
                 SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
 
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].X1, 
+                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].X1,
                     Digits.TextureCoords[Gun.MainAmmoCharge[PendingRoundIndex]].Y1, SizeX, SizeY);
             }
             else

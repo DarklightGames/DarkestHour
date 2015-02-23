@@ -125,9 +125,9 @@ defaultproperties
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
         WinTop=0.871667
-        WinLeft=0.096250
-        WinWidth=0.300000
-        WinHeight=0.040000
+        WinLeft=0.09625
+        WinWidth=0.3
+        WinHeight=0.04
     End Object
     l_TeamCount(0)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount'
 
@@ -135,10 +135,10 @@ defaultproperties
         Caption="? units"
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
-        WinTop=0.415000
-        WinLeft=0.096250
-        WinWidth=0.300000
-        WinHeight=0.040000
+        WinTop=0.415
+        WinLeft=0.09625
+        WinWidth=0.3
+        WinHeight=0.04
     End Object
     l_TeamCount(1)=GUILabel'DH_Interface.DHGUITeamSelection.TeamsCount2'
 
@@ -146,9 +146,9 @@ defaultproperties
         bNoTeletype=true
         OnCreateComponent=TeamsBriefing.InternalOnCreateComponent
         StyleName="DHBlackText"
-        WinTop=0.530000
-        WinLeft=0.503750
-        WinWidth=0.446250
+        WinTop=0.53
+        WinLeft=0.50375
+        WinWidth=0.44625
         WinHeight=0.342498
     End Object
     l_TeamBriefing(0)=DHGUIScrollTextBox'DH_Interface.DHGUITeamSelection.TeamsBriefing'
@@ -158,8 +158,8 @@ defaultproperties
         OnCreateComponent=TeamsBriefing2.InternalOnCreateComponent
         StyleName="DHBlackText"
         WinTop=0.078333
-        WinLeft=0.503750
-        WinWidth=0.446250
+        WinLeft=0.50375
+        WinWidth=0.44625
         WinHeight=0.342498
     End Object
     l_TeamBriefing(1)=DHGUIScrollTextBox'DH_Interface.DHGUITeamSelection.TeamsBriefing2'
@@ -167,9 +167,9 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=JoinTeamButton
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.823333
-        WinLeft=0.118750
-        WinWidth=0.250000
-        WinHeight=0.050000
+        WinLeft=0.11875
+        WinWidth=0.25
+        WinHeight=0.05
         TabOrder=1
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
@@ -178,10 +178,10 @@ defaultproperties
 
     Begin Object Class=DHGUIButton Name=JoinTeamButton2
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.370000
-        WinLeft=0.118750
-        WinWidth=0.250000
-        WinHeight=0.050000
+        WinTop=0.37
+        WinLeft=0.11875
+        WinWidth=0.25
+        WinHeight=0.05
         TabOrder=2
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
@@ -191,10 +191,10 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=Spectate
         Caption="Spectate"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.920000
-        WinLeft=0.550000
-        WinWidth=0.250000
-        WinHeight=0.050000
+        WinTop=0.92
+        WinLeft=0.55
+        WinWidth=0.25
+        WinHeight=0.05
         TabOrder=4
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
@@ -204,10 +204,10 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=AutoSelect
         Caption="Auto-select"
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.920000
-        WinLeft=0.250000
-        WinWidth=0.250000
-        WinHeight=0.050000
+        WinTop=0.92
+        WinLeft=0.25
+        WinWidth=0.25
+        WinHeight=0.05
         TabOrder=3
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent

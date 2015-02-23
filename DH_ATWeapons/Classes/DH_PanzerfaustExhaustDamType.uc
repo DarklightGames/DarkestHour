@@ -14,8 +14,8 @@ defaultproperties
     DeathString="%o was cooked by the exhaust from %k's %w."
     FemaleSuicide="%o was cooked by the exhaust from her own %w."
     MaleSuicide="%o was cooked by the exhaust from his own %w."
-    GibModifier=0.000000
+    GibModifier=0.0
     DeathOverlayMaterial=Combiner'Effects_Tex.GoreDecals.PlayerDeathOverlay'
-    DeathOverlayTime=999.000000
-    KDeathVel=20.000000
+    DeathOverlayTime=999.0
+    KDeathVel=20.0
 }

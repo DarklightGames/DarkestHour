@@ -7,6 +7,6 @@ class DH_BulletWhipAttachment extends ROBulletWhipAttachment;
 
 defaultproperties
 {
-    CollisionRadius=300.000000
-    CollisionHeight=300.000000
+    CollisionRadius=300.0
+    CollisionHeight=300.0
 }

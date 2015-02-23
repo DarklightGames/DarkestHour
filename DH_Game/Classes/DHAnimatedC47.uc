@@ -20,16 +20,16 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     AnimName="c47_in_flight"
-    AnimRate=1.000000
+    AnimRate=1.0
     bExactProjectileCollision=true
     DrawType=DT_Mesh
-    CullDistance=16000.000000
+    CullDistance=16000.0
     bUseDynamicLights=true
     bNoDelete=true
     Mesh=SkeletalMesh'DH_C47_anm.FlyingC47'
     bShadowCast=true
-    CollisionRadius=1800.000000
-    CollisionHeight=400.000000
+    CollisionRadius=1800.0
+    CollisionHeight=400.0
     bCollideActors=true
     bBlockActors=true
     bBlockKarma=true

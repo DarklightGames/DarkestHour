@@ -98,12 +98,12 @@ defaultproperties
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
         Caption="Bindings"
-        LeftPadding=0.000000
-        RightPadding=0.000000
-        TopPadding=0.000000
-        BottomPadding=0.000000
-        ImageOffset(2)=10.000000
-        WinTop=0.004000
+        LeftPadding=0.0
+        RightPadding=0.0
+        TopPadding=0.0
+        BottomPadding=0.0
+        ImageOffset(2)=10.0
+        WinTop=0.004
         WinLeft=0.021641
         WinWidth=0.956718
         WinHeight=0.958
@@ -116,21 +116,21 @@ defaultproperties
         VertAlign=TXTA_Center
         FontScale=FNS_Small
         StyleName="DHSmallText"
-        WinTop=0.950000
-        WinHeight=0.050000
+        WinTop=0.95
+        WinHeight=0.05
         bBoundToParent=true
         bScaleToParent=true
     End Object
     l_Hint=GUILabel'DH_Interface.DHTab_Controls.HintLabel'
     Begin Object Class=DHGUIMultiColumnListBox Name=BindListBox
-        HeaderColumnPerc(0)=0.500000
-        HeaderColumnPerc(1)=0.250000
-        HeaderColumnPerc(2)=0.250000
+        HeaderColumnPerc(0)=0.5
+        HeaderColumnPerc(1)=0.25
+        HeaderColumnPerc(2)=0.25
         SelectedStyleName="DHListSelectionStyle"
         OnCreateComponent=DHTab_Controls.InternalOnCreateComponent
         StyleName="DHNoBox"
         WinTop=0.05
-        WinHeight=0.900000
+        WinHeight=0.9
         TabOrder=0
         bBoundToParent=true
         bScaleToParent=true

@@ -200,7 +200,7 @@ simulated function bool ShouldPlayDescendingSound(out vector OutHitLocation)
     local vector HitLocation, HitNormal, TraceEnd, HalfVector;
 
     Halfvector = Normal(Normal(Velocity) + vect(0.0, 0.0, -1.0));
-    TraceEnd = Location + (HalfVector * (VSize(Velocity) * (GetSoundDuration(DescendingSound) + 0.50)));
+    TraceEnd = Location + (HalfVector * (VSize(Velocity) * (GetSoundDuration(DescendingSound) + 0.5)));
 
     if (Trace(HitLocation, HitNormal, TraceEnd, Location, true) != none)
     {

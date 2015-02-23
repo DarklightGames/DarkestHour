@@ -9,20 +9,20 @@ defaultproperties
 {
     InitialTertiaryAmmo=15
     TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
-    SecondarySpread=0.006000
-    TertiarySpread=0.001560
+    SecondarySpread=0.006
+    TertiarySpread=0.00156
     ManualRotationsPerSecond=0.011111
-    FrontArmorFactor=5.000000
-    RightArmorFactor=2.500000
-    LeftArmorFactor=2.500000
-    RearArmorFactor=2.500000
-    FrontArmorSlope=45.000000
-    RightArmorSlope=15.000000
-    LeftArmorSlope=15.000000
-    FrontLeftAngle=332.000000
-    FrontRightAngle=28.000000
-    RearRightAngle=152.000000
-    RearLeftAngle=208.000000
+    FrontArmorFactor=5.0
+    RightArmorFactor=2.5
+    LeftArmorFactor=2.5
+    RearArmorFactor=2.5
+    FrontArmorSlope=45.0
+    RightArmorSlope=15.0
+    LeftArmorSlope=15.0
+    FrontLeftAngle=332.0
+    FrontRightAngle=28.0
+    RearRightAngle=152.0
+    RearLeftAngle=208.0
     ReloadSoundOne=sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
     ReloadSoundTwo=sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
     ReloadSoundThree=sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
@@ -54,27 +54,27 @@ defaultproperties
     RangeSettings(19)=1900
     RangeSettings(20)=2000
     MinCommanderHitHeight=42.5;
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=15.000000,Y=6.000000,Z=3.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=15.0,Y=6.0,Z=3.0))
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=15.000000
-    FireInterval=6.000000
+    WeaponFireOffset=15.0
+    FireInterval=6.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_AchillesCannonShell'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=64653
     BeginningIdleAnim="com_idle_close"
@@ -84,5 +84,5 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellAPDS'
     Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext'
     SoundVolume=130
-    SoundRadius=300.000000
+    SoundRadius=300.0
 }

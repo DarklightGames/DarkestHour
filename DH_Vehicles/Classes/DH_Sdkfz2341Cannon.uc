@@ -666,8 +666,8 @@ defaultproperties
     bUsesTracers=true
     bAltFireTracersOnly=true
     MinCommanderHitHeight=21.0
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=12.000000,Y=4.000000,Z=34.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=12.000000,Y=4.000000,Z=12.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=12.0,Y=4.0,Z=34.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=12.0,Y=4.0,Z=12.0))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
     PitchBone="Gun"
@@ -675,42 +675,42 @@ defaultproperties
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=5.000000
-    AltFireOffset=(X=-54.000000,Y=-24.000000,Z=-3.000000)
+    WeaponFireOffset=5.0
+    AltFireOffset=(X=-54.0,Y=-24.0,Z=-3.0)
     ManualRotationsPerSecond=0.04
     bAmbientAltFireSound=true
-    Spread=0.003000
+    Spread=0.003
     bUsesSecondarySpread=false
     bUsesTertiarySpread=false
-    FireInterval=0.200000
-    AltFireInterval=0.050000
+    FireInterval=0.2
+    AltFireInterval=0.05
     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
     AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
     bAmbientEmitterAltFireOnly=true
     CannonDustEmitterClass=none // Matt: avoids having to override FlashMuzzleFlash function
     FireEffectOffset=(X=20.0,Y=-5.0,Z=20.0)
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
-    AltFireSoundScaling=3.000000
+    AltFireSoundScaling=3.0
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     FireForce="Explosion05"
     bIsRepeatingFF=true // Matt: added, as strongly suspect this should be true, like a tank mounted MG
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
     AltFireProjectileClass=class'DH_Vehicles.DH_MG42VehicleBullet'
-    ShakeRotMag=(Z=5.000000)
-    ShakeRotRate=(Z=100.000000)
-    ShakeRotTime=2.000000
-    ShakeOffsetMag=(Z=0.500000)
-    ShakeOffsetRate=(Z=10.000000)
-    ShakeOffsetTime=2.000000
-    AltShakeRotMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeRotRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeRotTime=2.000000
-    AltShakeOffsetMag=(X=0.010000,Y=0.010000,Z=0.010000)
-    AltShakeOffsetRate=(X=1000.000000,Y=1000.000000,Z=1000.000000)
-    AltShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=5.0)
+    ShakeRotRate=(Z=100.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(Z=0.5)
+    ShakeOffsetRate=(Z=10.0)
+    ShakeOffsetTime=2.0
+    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeRotTime=2.0
+    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
+    AltShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    AltShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=12743
     CustomPitchDownLimit=64443
     BeginningIdleAnim="com_idle_close"
@@ -727,5 +727,5 @@ defaultproperties
     Skins(2)=texture'Weapons1st_tex.MG.mg42_barrel'
     Skins(3)=texture'Weapons1st_tex.MG.mg42'
     SoundVolume=100
-    SoundRadius=256.000000
+    SoundRadius=256.0
 }

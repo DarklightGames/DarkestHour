@@ -9,8 +9,8 @@ class DH_17PounderCannonShellDamageAP extends DHTankShellImpactDamage
 defaultproperties
 {
     HUDIcon=texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
-    APCDamageModifier=0.750000
-    VehicleDamageModifier=1.500000
+    APCDamageModifier=0.75
+    VehicleDamageModifier=1.5
     DeathString="%o was killed by %k's 17 Pounder AT-Gun APC shell."
     FemaleSuicide="%o fired her 17 Pounder AT-Gun APC shell prematurely."
     MaleSuicide="%o fired his 17 Pounder AT-Gun APC shell prematurely."

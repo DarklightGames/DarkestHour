@@ -20,20 +20,20 @@ defaultproperties
     End Object
     b_Cancel=GUIButton'DH_Interface.DHGetDataMenu.CancelButton'
     Begin Object Class=DHmoEditBox Name=Data
-        CaptionWidth=0.200000
+        CaptionWidth=0.2
         OnCreateComponent=Data.InternalOnCreateComponent
-        WinTop=0.487500
+        WinTop=0.4875
         WinLeft=0.302383
-        WinWidth=0.408200
+        WinWidth=0.4082
         TabOrder=0
     End Object
     ed_Data=DHmoEditBox'DH_Interface.DHGetDataMenu.Data'
     Begin Object Class=GUIButton Name=OkButton
         Caption="OK"
         StyleName="DHMenuTextButtonStyle"
-        WinTop=0.300000
-        WinLeft=0.400000
-        WinWidth=0.200000
+        WinTop=0.3
+        WinLeft=0.4
+        WinWidth=0.2
         OnClick=DHGetDataMenu.InternalOnClick
         OnKeyEvent=OkButton.InternalOnKeyEvent
     End Object
@@ -44,7 +44,7 @@ defaultproperties
         TextFont="DHMenuFont"
         FontScale=FNS_Large
         WinTop=0.319479
-        WinHeight=0.093750
+        WinHeight=0.09375
     End Object
     l_Text=GUILabel'DH_Interface.DHGetDataMenu.DialogText'
     Begin Object Class=FloatingImage Name=MessageWindowFrameBackground
@@ -52,10 +52,10 @@ defaultproperties
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"
-        WinTop=0.060000
-        WinLeft=0.270000
-        WinWidth=0.470000
-        WinHeight=0.800000
+        WinTop=0.06
+        WinLeft=0.27
+        WinWidth=0.47
+        WinHeight=0.8
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHGetDataMenu.MessageWindowFrameBackground'
 }

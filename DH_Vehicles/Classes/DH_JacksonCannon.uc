@@ -9,21 +9,21 @@ defaultproperties
 {
     InitialTertiaryAmmo=10
     TertiaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHE'
-    SecondarySpread=0.001100
-    TertiarySpread=0.001250
-    ManualRotationsPerSecond=0.010000
-    PoweredRotationsPerSecond=0.062500
-    FrontArmorFactor=6.900000
-    RightArmorFactor=3.200000
-    LeftArmorFactor=3.200000
-    RearArmorFactor=8.000000
-    FrontArmorSlope=45.000000
-    RightArmorSlope=5.000000
-    LeftArmorSlope=5.000000
-    FrontLeftAngle=325.000000
-    FrontRightAngle=35.000000
-    RearRightAngle=145.000000
-    RearLeftAngle=215.000000
+    SecondarySpread=0.0011
+    TertiarySpread=0.00125
+    ManualRotationsPerSecond=0.01
+    PoweredRotationsPerSecond=0.0625
+    FrontArmorFactor=6.9
+    RightArmorFactor=3.2
+    LeftArmorFactor=3.2
+    RearArmorFactor=8.0
+    FrontArmorSlope=45.0
+    RightArmorSlope=5.0
+    LeftArmorSlope=5.0
+    FrontLeftAngle=325.0
+    FrontRightAngle=35.0
+    RearRightAngle=145.0
+    RearLeftAngle=215.0
     ReloadSoundOne=sound'Vehicle_reloads.Reloads.SU_76_Reload_01'
     ReloadSoundTwo=sound'Vehicle_reloads.Reloads.SU_76_Reload_02'
     ReloadSoundThree=sound'Vehicle_reloads.Reloads.SU_76_Reload_03'
@@ -36,27 +36,27 @@ defaultproperties
     ProjectileDescriptions(2)="HE"
     AddedPitch=145
     MinCommanderHitHeight=50.0;
-    VehHitpoints(0)=(PointRadius=10.000000,PointScale=1.000000,PointBone="com_player",PointOffset=(X=20.000000,Z=-10.000000))
+    VehHitpoints(0)=(PointRadius=10.0,PointScale=1.0,PointBone="com_player",PointOffset=(X=20.0,Z=-10.0))
     YawBone="Turret"
     PitchBone="Gun"
     PitchUpLimit=15000
     PitchDownLimit=45000
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=240.000000
-    FireInterval=6.000000
+    WeaponFireOffset=240.0
+    FireInterval=6.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=3641
     CustomPitchDownLimit=63715
     BeginningIdleAnim="com_idle_close"
@@ -69,5 +69,5 @@ defaultproperties
     Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
     Skins(2)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
     SoundVolume=130
-    SoundRadius=300.000000
+    SoundRadius=300.0
 }

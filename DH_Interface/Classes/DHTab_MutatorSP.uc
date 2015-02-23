@@ -16,10 +16,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 defaultproperties
 {
     Begin Object Class=DHGUIPlainBackground Name=ButtonBackground
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.002500
-        BottomPadding=0.002500
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.0025
+        BottomPadding=0.0025
         WinTop=0.036614
         WinLeft=0.421015
         WinWidth=0.155861
@@ -29,10 +29,10 @@ defaultproperties
     sb_ButtonBackground=DHGUIPlainBackground'DH_Interface.DHTab_MutatorSP.ButtonBackground'
     Begin Object Class=DHGUISectionBackground Name=AvailBackground
         Caption="Available Mutators"
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.002500
-        BottomPadding=0.002500
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.0025
+        BottomPadding=0.0025
         WinTop=0.036614
         WinLeft=0.025156
         WinWidth=0.380859
@@ -42,10 +42,10 @@ defaultproperties
     sb_Avail=DHGUISectionBackground'DH_Interface.DHTab_MutatorSP.AvailBackground'
     Begin Object Class=DHGUISectionBackground Name=ActiveBackground
         Caption="Active Mutators"
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.002500
-        BottomPadding=0.002500
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.0025
+        BottomPadding=0.0025
         WinTop=0.036614
         WinLeft=0.586876
         WinWidth=0.380859
@@ -55,10 +55,10 @@ defaultproperties
     sb_Active=DHGUISectionBackground'DH_Interface.DHTab_MutatorSP.ActiveBackground'
     Begin Object Class=DHGUISectionBackground Name=DescriptionBackground
         Caption="Mutator Details"
-        LeftPadding=0.002500
-        RightPadding=0.002500
-        TopPadding=0.002500
-        BottomPadding=0.002500
+        LeftPadding=0.0025
+        RightPadding=0.0025
+        TopPadding=0.0025
+        BottomPadding=0.0025
         WinTop=0.610678
         WinLeft=0.025976
         WinWidth=0.942969
@@ -101,8 +101,8 @@ defaultproperties
     lb_Active=GUIListBox'DH_Interface.DHTab_MutatorSP.IAMutatorSelectedList'
     Begin Object Class=DHGUIScrollTextBox Name=IAMutatorScroll
         bNoTeletype=true
-        CharDelay=0.002500
-        EOLDelay=0.500000
+        CharDelay=0.0025
+        EOLDelay=0.5
         bVisibleWhenEmpty=true
         OnCreateComponent=IAMutatorScroll.InternalOnCreateComponent
         StyleName="DHSmallText"
@@ -131,9 +131,9 @@ defaultproperties
         Caption="Add"
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.174114
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=1
         OnClickSound=CS_Up
         OnClick=UT2K4Tab_MutatorBase.AddMutator
@@ -144,9 +144,9 @@ defaultproperties
         Caption="Add All"
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.239218
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=2
         OnClickSound=CS_Up
         OnClick=UT2K4Tab_MutatorBase.AddAllMutators
@@ -157,9 +157,9 @@ defaultproperties
         Caption="Remove"
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.404322
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=4
         OnClickSound=CS_Down
         OnClick=UT2K4Tab_MutatorBase.RemoveMutator
@@ -170,9 +170,9 @@ defaultproperties
         Caption="Remove All"
         StyleName="DHMenuTextButtonStyle"
         WinTop=0.340259
-        WinLeft=0.425000
-        WinWidth=0.145000
-        WinHeight=0.050000
+        WinLeft=0.425
+        WinWidth=0.145
+        WinHeight=0.05
         TabOrder=3
         OnClickSound=CS_Down
         OnClick=UT2K4Tab_MutatorBase.RemoveAllMutators

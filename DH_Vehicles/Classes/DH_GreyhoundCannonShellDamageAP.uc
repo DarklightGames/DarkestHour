@@ -10,7 +10,7 @@ class DH_GreyhoundCannonShellDamageAP extends DHTankShellImpactDamage
 
 defaultproperties
 {
-    APCDamageModifier=0.750000
-    TreadDamageModifier=0.750000
+    APCDamageModifier=0.75
+    TreadDamageModifier=0.75
     DeathString="%o was killed by %k's Greyhound APC shell."
 }

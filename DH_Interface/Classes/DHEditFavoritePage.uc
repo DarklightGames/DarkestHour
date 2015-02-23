@@ -50,18 +50,18 @@ defaultproperties
         WinTop=0.319479
         WinLeft=0.070313
         WinWidth=0.854492
-        WinHeight=0.050000
+        WinHeight=0.05
     End Object
     l_name=GUILabel'DH_Interface.DHEditFavoritePage.ServerName'
     UnknownText="Unknown Server"
     Begin Object Class=DHmoEditBox Name=IpEntryBox
         ComponentJustification=TXTA_Left
-        CaptionWidth=0.200000
+        CaptionWidth=0.2
         Caption="IP Address: "
         OnCreateComponent=IpEntryBox.InternalOnCreateComponent
-        WinTop=0.487500
+        WinTop=0.4875
         WinLeft=0.302383
-        WinWidth=0.408200
+        WinWidth=0.4082
         TabOrder=0
     End Object
     ed_Data=DHmoEditBox'DH_Interface.DHEditFavoritePage.IpEntryBox'
@@ -70,9 +70,9 @@ defaultproperties
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"
-        WinTop=0.060000
-        WinWidth=0.510000
-        WinHeight=0.800000
+        WinTop=0.06
+        WinWidth=0.51
+        WinHeight=0.8
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHEditFavoritePage.MessageWindowFrameBackground'
 }

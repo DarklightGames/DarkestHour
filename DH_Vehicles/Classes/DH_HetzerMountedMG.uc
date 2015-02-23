@@ -168,33 +168,33 @@ defaultproperties
     MGReloadState=MG_ReadyToFire
     NumMags=12
     FireAttachBone="gunner_int"
-    FireEffectOffset=(Y=6.000000)
+    FireEffectOffset=(Y=6.0)
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-    VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=12.500000,Y=6.000000,Z=43.000000))
-    VehHitpoints(1)=(PointRadius=17.000000,PointScale=1.000000,PointBone="loader_attachment",PointOffset=(X=5.000000,Y=6.000000,Z=18.500000))
+    VehHitpoints(0)=(PointRadius=8.0,PointScale=1.0,PointBone="loader_attachment",PointOffset=(X=12.5,Y=6.0,Z=43.0))
+    VehHitpoints(1)=(PointRadius=17.0,PointScale=1.0,PointBone="loader_attachment",PointOffset=(X=5.0,Y=6.0,Z=18.5))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
-    YawStartConstraint=0.000000
-    YawEndConstraint=65535.000000
+    YawStartConstraint=0.0
+    YawEndConstraint=65535.0
     PitchBone="Gun"
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="loader_attachment"
-    WeaponFireOffset=3.000000
-    RotationsPerSecond=0.500000
+    WeaponFireOffset=3.0
+    RotationsPerSecond=0.5
     bInstantFire=false
-    Spread=0.002000
-    FireInterval=0.070580
+    Spread=0.002
+    FireInterval=0.07058
     AmbientEffectEmitterClass=class'ROVehicles.VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AmbientSoundScaling=5.000000
+    AmbientSoundScaling=5.0
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
-    ShakeRotMag=(X=25.000000,Y=0.000000,Z=10.000000)
-    ShakeRotRate=(X=5000.000000,Y=5000.000000,Z=5000.000000)
-    ShakeOffsetMag=(X=0.500000,Y=0.000000,Z=0.200000)
-    ShakeOffsetRate=(X=500.000000,Y=500.000000,Z=500.000000)
-    AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.000000,RefireRate=0.070580)
+    ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
+    ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
+    ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
+    ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
+    AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.0,RefireRate=0.07058)
     CustomPitchUpLimit=2100
     CustomPitchDownLimit=63100
     BeginningIdleAnim="loader_idle_close"

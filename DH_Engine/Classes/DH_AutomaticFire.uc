@@ -32,7 +32,7 @@ function ModeTick(float dt)
 
 defaultproperties
 {
-    PreLaunchTraceDistance=1312.000000
+    PreLaunchTraceDistance=1312.0
     bPawnRapidFireAnim=true
 }
 

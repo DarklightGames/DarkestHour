@@ -27,9 +27,9 @@ defaultproperties
     ExitSoundName="Inf_Player.FootstepWaterDeep"
     EntryActorName="ROEffects.WaterSplashEmitter"
     PawnEntryActorName="DH_Game.DHWakeEmitter"
-    GroundFriction=0.000000
-    FluidFriction=0.000000
+    GroundFriction=0.0
+    FluidFriction=0.0
     bWaterVolume=true
-    KExtraLinearDamping=2.500000
-    KExtraAngularDamping=0.400000
+    KExtraLinearDamping=2.5
+    KExtraAngularDamping=0.4
 }

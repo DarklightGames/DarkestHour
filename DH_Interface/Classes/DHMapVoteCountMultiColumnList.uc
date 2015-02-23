@@ -50,9 +50,9 @@ defaultproperties
     ColumnHeadings(0)="MapName"
     ColumnHeadings(1)="Votes"
     ColumnHeadings(2)="none"
-    InitColumnPerc(0)=0.700000
-    InitColumnPerc(1)=0.300000
-    InitColumnPerc(2)=0.000000
+    InitColumnPerc(0)=0.7
+    InitColumnPerc(1)=0.3
+    InitColumnPerc(2)=0.0
     ColumnHeadingHints(0)="Map Name"
     ColumnHeadingHints(1)="Number of votes registered for this map."
     ColumnHeadingHints(2)="none"

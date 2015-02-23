@@ -531,8 +531,8 @@ defaultproperties
         Caption="Equipment"
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
-        WinTop=0.640000
-        WinLeft=0.806250
+        WinTop=0.64
+        WinLeft=0.80625
         WinWidth=0.175
         WinHeight=0.04
     End Object
@@ -616,7 +616,7 @@ defaultproperties
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.95875
-        WinLeft=0.808000
+        WinLeft=0.808
         WinWidth=0.18
         TabOrder=5
         OnClick=DHRoleSelection.InternalOnClick
@@ -704,7 +704,7 @@ defaultproperties
     Begin Object Class=GUILabel Name=PlayerNameLabel
         Caption="Name:"
         StyleName="DHLargeText"
-        WinWidth=0.350000
+        WinWidth=0.35
         WinHeight=0.1
     End Object
     l_PlayerName=GUILabel'DH_Interface.DHRoleSelection.PlayerNameLabel'
@@ -761,7 +761,7 @@ defaultproperties
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.200000
+        WinWidth=0.2
         WinHeight=0.495
         TabOrder=21
         bTabStop=true

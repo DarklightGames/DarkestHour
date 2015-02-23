@@ -1218,7 +1218,7 @@ simulated function Tick(float DeltaTime)
     {
         if (bLeftTrackDamaged)
         {
-            Throttle = FClamp(Throttle, -0.50, 0.50);
+            Throttle = FClamp(Throttle, -0.5, 0.5);
 
             if (Controller.IsA('ROPlayer'))
             {
@@ -1231,7 +1231,7 @@ simulated function Tick(float DeltaTime)
         }
         else if (bRightTrackDamaged)
         {
-            Throttle = FClamp(Throttle, -0.50, 0.50);
+            Throttle = FClamp(Throttle, -0.5, 0.5);
 
             if (Controller.IsA('ROPlayer'))
             {
@@ -2215,17 +2215,17 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
     if (P.default.RoundType == RT_AP) // from Darkest Orchestra
     {
         if      (CompoundAngleDegrees <= 10.0)  return 0.98  * (OverMatchFactor ** 0.0637); // at 10 degrees
-        else if (CompoundAngleDegrees <= 15.0)  return 1.00  * (OverMatchFactor ** 0.0969);
+        else if (CompoundAngleDegrees <= 15.0)  return 1.0  * (OverMatchFactor ** 0.0969);
         else if (CompoundAngleDegrees <= 20.0)  return 1.04  * (OverMatchFactor ** 0.13561);
         else if (CompoundAngleDegrees <= 25.0)  return 1.11  * (OverMatchFactor ** 0.16164);
         else if (CompoundAngleDegrees <= 30.0)  return 1.22  * (OverMatchFactor ** 0.19702);
         else if (CompoundAngleDegrees <= 35.0)  return 1.38  * (OverMatchFactor ** 0.22546);
         else if (CompoundAngleDegrees <= 40.0)  return 1.63  * (OverMatchFactor ** 0.26313);
-        else if (CompoundAngleDegrees <= 45.0)  return 2.00  * (OverMatchFactor ** 0.34717);
+        else if (CompoundAngleDegrees <= 45.0)  return 2.0  * (OverMatchFactor ** 0.34717);
         else if (CompoundAngleDegrees <= 50.0)  return 2.64  * (OverMatchFactor ** 0.57353);
         else if (CompoundAngleDegrees <= 55.0)  return 3.23  * (OverMatchFactor ** 0.69075);
         else if (CompoundAngleDegrees <= 60.0)  return 4.07  * (OverMatchFactor ** 0.81826);
-        else if (CompoundAngleDegrees <= 65.0)  return 6.27  * (OverMatchFactor ** 0.91920);
+        else if (CompoundAngleDegrees <= 65.0)  return 6.27  * (OverMatchFactor ** 0.9192);
         else if (CompoundAngleDegrees <= 70.0)  return 8.65  * (OverMatchFactor ** 1.00539);
         else if (CompoundAngleDegrees <= 75.0)  return 13.75 * (OverMatchFactor ** 1.074);
         else if (CompoundAngleDegrees <= 80.0)  return 21.87 * (OverMatchFactor ** 1.17973);
@@ -2237,24 +2237,24 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
         else if (CompoundAngleDegrees <= 15.0)  return 1.06 * (OverMatchFactor ** 0.02315);
         else if (CompoundAngleDegrees <= 20.0)  return 1.08 * (OverMatchFactor ** 0.03448);
         else if (CompoundAngleDegrees <= 25.0)  return 1.11 * (OverMatchFactor ** 0.05134);
-        else if (CompoundAngleDegrees <= 30.0)  return 1.16 * (OverMatchFactor ** 0.07710);
+        else if (CompoundAngleDegrees <= 30.0)  return 1.16 * (OverMatchFactor ** 0.0771);
         else if (CompoundAngleDegrees <= 35.0)  return 1.22 * (OverMatchFactor ** 0.11384);
         else if (CompoundAngleDegrees <= 40.0)  return 1.31 * (OverMatchFactor ** 0.16952);
         else if (CompoundAngleDegrees <= 45.0)  return 1.44 * (OverMatchFactor ** 0.24604);
-        else if (CompoundAngleDegrees <= 50.0)  return 1.68 * (OverMatchFactor ** 0.37910);
+        else if (CompoundAngleDegrees <= 50.0)  return 1.68 * (OverMatchFactor ** 0.3791);
         else if (CompoundAngleDegrees <= 55.0)  return 2.11 * (OverMatchFactor ** 0.56444);
-        else if (CompoundAngleDegrees <= 60.0)  return 3.50 * (OverMatchFactor ** 1.07411);
+        else if (CompoundAngleDegrees <= 60.0)  return 3.5 * (OverMatchFactor ** 1.07411);
         else if (CompoundAngleDegrees <= 65.0)  return 5.34 * (OverMatchFactor ** 1.46188);
-        else if (CompoundAngleDegrees <= 70.0)  return 9.48 * (OverMatchFactor ** 1.81520);
+        else if (CompoundAngleDegrees <= 70.0)  return 9.48 * (OverMatchFactor ** 1.8152);
         else if (CompoundAngleDegrees <= 75.0)  return 20.22 * (OverMatchFactor ** 2.19155);
-        else if (CompoundAngleDegrees <= 80.0)  return 56.20 * (OverMatchFactor ** 2.56210);
+        else if (CompoundAngleDegrees <= 80.0)  return 56.2 * (OverMatchFactor ** 2.5621);
         else                                    return 221.3 * (OverMatchFactor ** 2.93265); // at 85 degrees
     }
     else // should mean RoundType is RT_APC (also covers APCBC) or RT_HE, but treating this as a catch-all default
     {
         if      (CompoundAngleDegrees <= 10.0)  return 1.01  * (OverMatchFactor ** 0.0225); // at 10 degrees
         else if (CompoundAngleDegrees <= 15.0)  return 1.03  * (OverMatchFactor ** 0.0327);
-        else if (CompoundAngleDegrees <= 20.0)  return 1.10  * (OverMatchFactor ** 0.0454);
+        else if (CompoundAngleDegrees <= 20.0)  return 1.1  * (OverMatchFactor ** 0.0454);
         else if (CompoundAngleDegrees <= 25.0)  return 1.17  * (OverMatchFactor ** 0.0549);
         else if (CompoundAngleDegrees <= 30.0)  return 1.27  * (OverMatchFactor ** 0.0655);
         else if (CompoundAngleDegrees <= 35.0)  return 1.39  * (OverMatchFactor ** 0.0993);
@@ -2262,12 +2262,12 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
         else if (CompoundAngleDegrees <= 45.0)  return 1.72  * (OverMatchFactor ** 0.1655);
         else if (CompoundAngleDegrees <= 50.0)  return 1.94  * (OverMatchFactor ** 0.2035);
         else if (CompoundAngleDegrees <= 55.0)  return 2.12  * (OverMatchFactor ** 0.2427);
-        else if (CompoundAngleDegrees <= 60.0)  return 2.56  * (OverMatchFactor ** 0.2450);
-        else if (CompoundAngleDegrees <= 65.0)  return 3.20  * (OverMatchFactor ** 0.3354);
+        else if (CompoundAngleDegrees <= 60.0)  return 2.56  * (OverMatchFactor ** 0.245);
+        else if (CompoundAngleDegrees <= 65.0)  return 3.2  * (OverMatchFactor ** 0.3354);
         else if (CompoundAngleDegrees <= 70.0)  return 3.98  * (OverMatchFactor ** 0.3478);
         else if (CompoundAngleDegrees <= 75.0)  return 5.17  * (OverMatchFactor ** 0.3831);
         else if (CompoundAngleDegrees <= 80.0)  return 8.09  * (OverMatchFactor ** 0.4131);
-        else                                    return 11.32 * (OverMatchFactor ** 0.4550); // at 85 degrees
+        else                                    return 11.32 * (OverMatchFactor ** 0.455); // at 85 degrees
     }
 
     return 1.0; // fail-safe neutral return value
@@ -2280,14 +2280,14 @@ simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, flo
     {
         if (P.default.ShellDiameter >= 9.0) // HVAP rounds of at least 90mm shell diameter, e.g. Jackson's 90mm cannon (instead of using separate RoundType RT_HVAPLarge)
         {
-            if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.27)
+            if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.27)
             {
                 return true;
             }
         }
         else // smaller HVAP rounds
         {
-            if (PenetrationRatio >= 1.10 && PenetrationRatio <= 1.34)
+            if (PenetrationRatio >= 1.1 && PenetrationRatio <= 1.34)
             {
                 return true;
             }
@@ -2295,7 +2295,7 @@ simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, flo
     }
     else if (P.default.RoundType == RT_APDS)
     {
-        if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.20)
+        if (PenetrationRatio >= 1.06 && PenetrationRatio <= 1.2)
         {
             return true;
         }
@@ -2440,7 +2440,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     else // either detonate above - or - set the sucker on fire!
                     {
                        HullFireChance=0.75;
-                       HullFireHEATChance=0.90;
+                       HullFireHEATChance=0.9;
                     }
                 }
             }
@@ -2577,7 +2577,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         if (!bFirstHit)
         {
             HullFireChance = 0.75;
-            HullFireHEATChance = 0.90;
+            HullFireHEATChance = 0.9;
         }
     }
 
@@ -2651,7 +2651,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     // This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
     if (!bOnFire && Damage > 0 && Health > 0 && class<ROWeaponDamageType>(DamageType) != none &&
-        class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.50 && bProjectilePenetrated == true)
+        class<ROWeaponDamageType>(DamageType).default.TankDamageModifier > 0.5 && bProjectilePenetrated == true)
     {
         if ((DamageType != VehicleBurningDamType && FRand() < HullFireChance) || (bWasHEATRound && FRand() < HullFireHEATChance))
         {
@@ -2682,9 +2682,9 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     }
 
     // If engine health drops below a certain level, slow the tank way down // Matt: won't have any effect setting this here - will move elsewhere later
-    if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.50))
+    if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.5))
     {
-        Throttle = FClamp(Throttle, -0.50, 0.50);
+        Throttle = FClamp(Throttle, -0.5, 0.5);
     }
     // Kill the engine if its health has now fallen to zero
     else if (EngineHealth <= 0)
@@ -3392,7 +3392,7 @@ defaultproperties
     RightTreadIndex=2
     MaxCriticalSpeed=700.0
     AmmoIgnitionProbability=0.75
-    TreadDamageThreshold=0.50
+    TreadDamageThreshold=0.5
     DriverKillChance=1150.0
     GunnerKillChance=1150.0
     CommanderKillChance=950.0
@@ -3402,10 +3402,10 @@ defaultproperties
     TurretDetonationThreshold=1750.0
     FireAttachBone="driver_player"
     FireEffectOffset=(Z=-10.0)
-    EngineFireChance=0.50
+    EngineFireChance=0.5
     EngineFireHEATChance=0.85
     HullFireChance=0.25
-    HullFireHEATChance=0.50
+    HullFireHEATChance=0.5
     VehicleBurningDamType=class'DH_VehicleBurningDamType'
     PlayerFireDamagePer2Secs=15.0
     bFirstHit=true

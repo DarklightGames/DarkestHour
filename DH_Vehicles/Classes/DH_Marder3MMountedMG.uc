@@ -240,14 +240,14 @@ simulated function int getNumMags()
 defaultproperties
 {
     NumMags=8
-    ReloadLength=6.590000
+    ReloadLength=6.59
 //  DummyTracerClass=class'DH_Vehicles.DH_MG34VehicleClientTracer' // deprecated
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
 //  mTracerInterval=0.495867 // deprecated
     bUsesTracers=true
-    VehHitpoints(0)=(PointRadius=9.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(X=10.000000,Z=-10.000000))
-    VehHitpoints(1)=(PointRadius=15.000000,PointScale=1.000000,PointBone="loader_player",PointOffset=(X=10.000000,Z=-30.000000))
+    VehHitpoints(0)=(PointRadius=9.0,PointScale=1.0,PointBone="loader_player",PointOffset=(X=10.0,Z=-10.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="loader_player",PointOffset=(X=10.0,Z=-30.0))
     bIsMountedTankMG=true
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
@@ -256,31 +256,31 @@ defaultproperties
     PitchDownLimit=50000
     WeaponFireAttachmentBone="tip"
     GunnerAttachmentBone="loader_player"
-    RotationsPerSecond=0.050000
+    RotationsPerSecond=0.05
     bInstantRotation=true
     bDoOffsetTrace=true
     bAmbientFireSound=true
     bIsRepeatingFF=true
-    Spread=0.002000
-    FireInterval=0.070580
-    AltFireInterval=0.070580
+    Spread=0.002
+    FireInterval=0.07058
+    AltFireInterval=0.07058
     AmbientEffectEmitterClass=class'ROVehicles.VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AmbientSoundScaling=5.000000
+    AmbientSoundScaling=5.0
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     FireForce="minifireb"
     DamageType=class'ROGame.ROVehMountedMGDamType'
     DamageMin=25
     DamageMax=25
-    TraceRange=15000.000000
+    TraceRange=15000.0
     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
-    ShakeRotMag=(X=25.000000,Z=10.000000)
-    ShakeRotRate=(X=5000.000000,Y=5000.000000,Z=5000.000000)
-    ShakeRotTime=2.000000
-    ShakeOffsetMag=(X=0.500000,Z=0.200000)
-    ShakeOffsetRate=(X=500.000000,Y=500.000000,Z=500.000000)
-    ShakeOffsetTime=2.000000
-    AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.000000,RefireRate=0.070580)
+    ShakeRotMag=(X=25.0,Z=10.0)
+    ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
+    ShakeRotTime=2.0
+    ShakeOffsetMag=(X=0.5,Z=0.2)
+    ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
+    ShakeOffsetTime=2.0
+    AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.0,RefireRate=0.07058)
     CustomPitchUpLimit=4500
     CustomPitchDownLimit=63500
     MaxPositiveYaw=5500
@@ -288,7 +288,7 @@ defaultproperties
     bLimitYaw=true
     BeginningIdleAnim="loader_close_idle"
     InitialPrimaryAmmo=75
-    CullDistance=8000.000000
+    CullDistance=8000.0
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
     bCollideActors=true
     bBlockActors=true

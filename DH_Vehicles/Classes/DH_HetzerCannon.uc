@@ -9,11 +9,11 @@ defaultproperties
 {
     InitialTertiaryAmmo=5
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
-    SecondarySpread=0.001270
-    ManualRotationsPerSecond=0.025000
+    SecondarySpread=0.00127
+    ManualRotationsPerSecond=0.025
     bIsAssaultGun=true
-    GunMantletArmorFactor=6.000000
-    GunMantletSlope=40.000000
+    GunMantletArmorFactor=6.0
+    GunMantletSlope=40.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02'
     ReloadSoundThree=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
@@ -49,28 +49,28 @@ defaultproperties
     RangeSettings(24)=2800
     RangeSettings(25)=3000
     MinCommanderHitHeight=15.0;
-    VehHitpoints(0)=(PointRadius=8.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(Z=24.799999))
-    VehHitpoints(1)=(PointRadius=16.000000,PointScale=1.000000,PointBone="com_attachment",PointOffset=(X=-8.000000,Z=2.400000))
+    VehHitpoints(0)=(PointRadius=8.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(Z=24.799999))
+    VehHitpoints(1)=(PointRadius=16.0,PointScale=1.0,PointBone="com_attachment",PointOffset=(X=-8.0,Z=2.4))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
-    YawStartConstraint=-2000.000000
-    YawEndConstraint=3000.000000
+    YawStartConstraint=-2000.0
+    YawEndConstraint=3000.0
     PitchBone="gun_pitch"
     WeaponFireAttachmentBone="Gun"
     GunnerAttachmentBone="com_attachment"
-    WeaponFireOffset=160.000000
+    WeaponFireOffset=160.0
     EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    FireSoundVolume=512.000000
+    FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
-    ShakeRotMag=(Z=50.000000)
-    ShakeRotRate=(Z=1000.000000)
-    ShakeRotTime=4.000000
-    ShakeOffsetMag=(Z=1.000000)
-    ShakeOffsetRate=(Z=100.000000)
-    ShakeOffsetTime=10.000000
-    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.500000)
-    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.750000,RefireRate=0.015000)
+    ShakeRotMag=(Z=50.0)
+    ShakeRotRate=(Z=1000.0)
+    ShakeRotTime=4.0
+    ShakeOffsetMag=(Z=1.0)
+    ShakeOffsetRate=(Z=100.0)
+    ShakeOffsetTime=10.0
+    AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.5)
+    AIInfo(1)=(bLeadTarget=true,WarnTargetPct=0.75,RefireRate=0.015)
     CustomPitchUpLimit=1820
     CustomPitchDownLimit=64444
     MaxPositiveYaw=2000
@@ -84,5 +84,5 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_turret'
     Skins(0)=texture'DH_Hetzer_tex_V1.hetzer_body'
     SoundVolume=130
-    SoundRadius=200.000000
+    SoundRadius=200.0
 }

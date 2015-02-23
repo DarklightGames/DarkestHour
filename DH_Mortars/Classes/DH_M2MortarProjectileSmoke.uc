@@ -9,7 +9,7 @@ class DH_M2MortarProjectileSmoke extends DH_MortarProjectileSmoke;
 
 defaultproperties
 {
-    BallisticCoefficient=1.000000
-    MaxSpeed=4800.000000
+    BallisticCoefficient=1.0
+    MaxSpeed=4800.0
     Tag="M302 WP"
 }

@@ -7,7 +7,7 @@ class DH_Flak88Factory extends DH_ATCannonFactoryBase;
 
 defaultproperties
 {
-    RespawnTime=1.000000
+    RespawnTime=1.0
     bFactoryActive=true
     VehicleClass=class'DH_Guns.DH_Flak88Gun'
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_body'

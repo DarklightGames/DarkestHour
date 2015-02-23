@@ -16,22 +16,22 @@ defaultproperties
         UseRegularSizeScale=false
         UniformSize=true
         AutomaticInitialSpawning=false
-        Acceleration=(X=50.000000)
+        Acceleration=(X=50.0)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        FadeOutStartTime=1.000000
-        StartLocationOffset=(X=25.000000)
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        FadeOutStartTime=1.0
+        StartLocationOffset=(X=25.0)
         StartLocationShape=PTLS_Sphere
         UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Min=0.050000,Max=0.100000))
-        StartSpinRange=(X=(Min=-0.500000,Max=0.500000),Y=(Min=0.500000,Max=1.000000),Z=(Min=0.500000,Max=1.000000))
-        SizeScale(0)=(RelativeTime=1.000000,RelativeSize=20.000000)
-        StartSizeRange=(X=(Min=3.000000,Max=5.000000),Y=(Min=3.000000,Max=5.000000),Z=(Min=3.000000,Max=5.000000))
-        InitialParticlesPerSecond=5000.000000
+        SpinsPerSecondRange=(X=(Min=0.05,Max=0.1))
+        StartSpinRange=(X=(Min=-0.5,Max=0.5),Y=(Min=0.5,Max=1.0),Z=(Min=0.5,Max=1.0))
+        SizeScale(0)=(RelativeTime=1.0,RelativeSize=20.0)
+        StartSizeRange=(X=(Min=3.0,Max=5.0),Y=(Min=3.0,Max=5.0),Z=(Min=3.0,Max=5.0))
+        InitialParticlesPerSecond=5000.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.explosions.DSmoke_2'
-        LifetimeRange=(Min=1.750000,Max=2.000000)
-        StartVelocityRange=(X=(Max=400.000000),Y=(Min=-20.000000,Max=20.000000),Z=(Min=-20.000000,Max=20.000000))
+        LifetimeRange=(Min=1.75,Max=2.0)
+        StartVelocityRange=(X=(Max=400.0),Y=(Min=-20.0,Max=20.0),Z=(Min=-20.0,Max=20.0))
     End Object
     Emitters(0)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonMuzzleFX.SpriteEmitter0'
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
@@ -44,23 +44,23 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         ColorScale(0)=(Color=(B=174,G=228,R=255,A=255))
-        ColorScale(1)=(RelativeTime=0.200000,Color=(B=255,G=255,R=255,A=255))
-        ColorScale(2)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        ColorScale(3)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        ColorScale(4)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.500000
-        FadeOutStartTime=0.102500
-        FadeInEndTime=0.050000
+        ColorScale(1)=(RelativeTime=0.2,Color=(B=255,G=255,R=255,A=255))
+        ColorScale(2)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        ColorScale(3)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        ColorScale(4)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        Opacity=0.5
+        FadeOutStartTime=0.1025
+        FadeInEndTime=0.05
         MaxParticles=2
-        StartLocationOffset=(X=25.000000)
+        StartLocationOffset=(X=25.0)
         UseRotationFrom=PTRS_Actor
-        SizeScale(1)=(RelativeTime=0.250000,RelativeSize=1.000000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)
-        StartSizeRange=(X=(Min=50.000000,Max=50.000000),Y=(Min=50.000000,Max=50.000000),Z=(Min=50.000000,Max=50.000000))
-        InitialParticlesPerSecond=60.000000
+        SizeScale(1)=(RelativeTime=0.25,RelativeSize=1.0)
+        SizeScale(2)=(RelativeTime=1.0,RelativeSize=2.0)
+        StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
+        InitialParticlesPerSecond=60.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.explosions.radialexplosion_1frame'
-        LifetimeRange=(Min=0.250000,Max=0.250000)
+        LifetimeRange=(Min=0.25,Max=0.25)
     End Object
     Emitters(1)=SpriteEmitter'DH_Effects.DH_Bazooka3rdPersonMuzzleFX.SpriteEmitter1'
     AutoDestroy=true
@@ -68,7 +68,7 @@ defaultproperties
     bNoDelete=false
     bNetTemporary=true
     RemoteRole=ROLE_SimulatedProxy
-    LifeSpan=8.000000
+    LifeSpan=8.0
     Style=STY_Masked
     bHardAttach=true
     bDirectional=true

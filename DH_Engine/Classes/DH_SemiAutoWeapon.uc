@@ -62,6 +62,6 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
-    FreeAimRotationSpeed=6.000000
+    FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
 }

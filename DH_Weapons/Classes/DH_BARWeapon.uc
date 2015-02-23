@@ -204,8 +204,8 @@ defaultproperties
     NumMagsToResupply=2
     MaxNumPrimaryMags=6
     InitialNumPrimaryMags=6
-    IronSightDisplayFOV=25.000000
-    FreeAimRotationSpeed=2.000000
+    IronSightDisplayFOV=25.0
+    FreeAimRotationSpeed=2.0
     bHasSelectFire=true
     FireModeClass(0)=class'DH_Weapons.DH_BARFire'
     FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'

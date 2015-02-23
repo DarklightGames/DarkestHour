@@ -26,21 +26,21 @@ simulated function PostBeginPlay() // Matt: removed as unnecessary - SmokeTrail 
 
 defaultproperties
 {
-    StraightFlightTime=0.250000
-    DHPenetrationTable(0)=21.500000
-    DHPenetrationTable(1)=21.500000
-    DHPenetrationTable(2)=21.500000
-    DHPenetrationTable(3)=21.500000
-    DHPenetrationTable(4)=21.500000
-    DHPenetrationTable(5)=21.500000
-    DHPenetrationTable(6)=21.500000
+    StraightFlightTime=0.25
+    DHPenetrationTable(0)=21.5
+    DHPenetrationTable(1)=21.5
+    DHPenetrationTable(2)=21.5
+    DHPenetrationTable(3)=21.5
+    DHPenetrationTable(4)=21.5
+    DHPenetrationTable(5)=21.5
+    DHPenetrationTable(6)=21.5
     bIsAlliedShell=false
     bHasTracer=false
     ShellImpactDamage=class'DH_ATWeapons.DH_PanzerFaustImpactDamType'
     ImpactDamage=650
-    BallisticCoefficient=0.075000
-    Speed=2716.000000
-    MaxSpeed=2716.000000
+    BallisticCoefficient=0.075
+    Speed=2716.0
+    MaxSpeed=2716.0
     MyDamageType=class'DH_ATWeapons.DH_PanzerFaustDamType'
     StaticMesh=StaticMesh'DH_Military_Axis.Weapons.Panzerfaust_warhead'
 }

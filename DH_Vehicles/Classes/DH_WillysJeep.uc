@@ -71,7 +71,7 @@ simulated function UpdateMovementSound()
 
     if (InteriorRumbleSoundAttach != none)
     {
-      InteriorRumbleSoundAttach.SoundVolume= MotionSoundVolume*2.50;
+      InteriorRumbleSoundAttach.SoundVolume= MotionSoundVolume*2.5;
     }
 }
 
@@ -137,52 +137,52 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    MaxPitchSpeed=250.000000
+    MaxPitchSpeed=250.0
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
-    WheelSoftness=0.025000
-    WheelPenScale=1.200000
-    WheelPenOffset=0.010000
-    WheelRestitution=0.100000
-    WheelInertia=0.100000
-    WheelLongFrictionFunc=(Points=(,(InVal=100.000000,OutVal=1.000000),(InVal=200.000000,OutVal=0.900000),(InVal=10000000000.000000,OutVal=0.900000)))
-    WheelLongSlip=0.001000
-    WheelLatSlipFunc=(Points=(,(InVal=30.000000,OutVal=0.009000),(InVal=45.000000),(InVal=10000000000.000000)))
-    WheelLongFrictionScale=1.100000
-    WheelLatFrictionScale=1.550000
-    WheelHandbrakeSlip=0.010000
-    WheelHandbrakeFriction=0.100000
-    WheelSuspensionTravel=10.000000
-    WheelSuspensionMaxRenderTravel=5.000000
-    FTScale=0.030000
-    ChassisTorqueScale=0.095000
-    MinBrakeFriction=4.000000
-    MaxSteerAngleCurve=(Points=((OutVal=45.000000),(InVal=300.000000,OutVal=30.000000),(InVal=500.000000,OutVal=20.000000),(InVal=600.000000,OutVal=15.000000),(InVal=1000000000.000000,OutVal=10.000000)))
-    TorqueCurve=(Points=((OutVal=10.000000),(InVal=200.000000,OutVal=0.750000),(InVal=1500.000000,OutVal=2.000000),(InVal=2200.000000)))
-    GearRatios(0)=-0.200000
-    GearRatios(1)=0.200000
-    GearRatios(2)=0.350000
-    GearRatios(3)=0.550000
-    GearRatios(4)=0.800000
-    TransRatio=0.170000
-    ChangeUpPoint=2000.000000
-    ChangeDownPoint=1000.000000
-    LSDFactor=1.000000
-    EngineBrakeFactor=0.000100
-    EngineBrakeRPMScale=0.100000
-    MaxBrakeTorque=20.000000
-    SteerSpeed=160.000000
-    TurnDamping=35.000000
-    StopThreshold=100.000000
-    HandbrakeThresh=200.000000
-    EngineInertia=0.100000
-    IdleRPM=500.000000
-    EngineRPMSoundRange=6000.000000
+    WheelSoftness=0.025
+    WheelPenScale=1.2
+    WheelPenOffset=0.01
+    WheelRestitution=0.1
+    WheelInertia=0.1
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongSlip=0.001
+    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
+    WheelLongFrictionScale=1.1
+    WheelLatFrictionScale=1.55
+    WheelHandbrakeSlip=0.01
+    WheelHandbrakeFriction=0.1
+    WheelSuspensionTravel=10.0
+    WheelSuspensionMaxRenderTravel=5.0
+    FTScale=0.03
+    ChassisTorqueScale=0.095
+    MinBrakeFriction=4.0
+    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
+    TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
+    GearRatios(0)=-0.2
+    GearRatios(1)=0.2
+    GearRatios(2)=0.35
+    GearRatios(3)=0.55
+    GearRatios(4)=0.8
+    TransRatio=0.17
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    LSDFactor=1.0
+    EngineBrakeFactor=0.0001
+    EngineBrakeRPMScale=0.1
+    MaxBrakeTorque=20.0
+    SteerSpeed=160.0
+    TurnDamping=35.0
+    StopThreshold=100.0
+    HandbrakeThresh=200.0
+    EngineInertia=0.1
+    IdleRPM=500.0
+    EngineRPMSoundRange=6000.0
     SteerBoneName="Steer_Wheel"
-    RevMeterScale=4000.000000
+    RevMeterScale=4000.0
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-120.000000,Y=30.000000,Z=-5.000000),ExhaustRotation=(Pitch=34000,Roll=-5000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-120.0,Y=30.0,Z=-5.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerOne',WeaponBone="passenger2")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerTwo',WeaponBone="Passenger3")
     PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_WillysJeepPassengerThree',WeaponBone="Passenger4")
@@ -190,32 +190,32 @@ defaultproperties
     StartUpSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
     ShutDownSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Jeep.WillysJeep_dest1'
-    DisintegrationHealth=-10000.000000
-    DestructionLinearMomentum=(Min=50.000000,Max=175.000000)
-    DestructionAngularMomentum=(Min=5.000000,Max=15.000000)
-    DamagedEffectScale=0.800000
-    DamagedEffectOffset=(X=75.000000,Y=5.000000,Z=45.000000)
+    DisintegrationHealth=-10000.0
+    DestructionLinearMomentum=(Min=50.0,Max=175.0)
+    DestructionAngularMomentum=(Min=5.0,Max=15.0)
+    DamagedEffectScale=0.8
+    DamagedEffectOffset=(X=75.0,Y=5.0,Z=45.0)
     VehicleTeam=1
-    SteeringScaleFactor=4.000000
+    SteeringScaleFactor=4.0
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.000000)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext',ViewPitchUpLimit=8000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=26000,ViewNegativeYawLimit=-24000,bExposed=true,ViewFOV=90.0)
     InitialPositionIndex=0
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
-    VehicleHudOccupantsX(0)=0.440000
-    VehicleHudOccupantsX(1)=0.570000
-    VehicleHudOccupantsX(2)=0.410000
-    VehicleHudOccupantsX(3)=0.600000
-    VehicleHudOccupantsY(0)=0.530000
-    VehicleHudOccupantsY(1)=0.530000
-    VehicleHudOccupantsY(2)=0.660000
-    VehicleHudOccupantsY(3)=0.660000
-    VehicleHudEngineY=0.280000
-    VehHitpoints(0)=(PointBone="body",PointOffset=(X=-10.000000,Y=-25.000000,Z=55.000000),bPenetrationPoint=false)
-    VehHitpoints(1)=(PointRadius=20.000000,PointOffset=(X=65.000000,Z=15.000000),DamageMultiplier=1.000000)
-    VehHitpoints(2)=(PointRadius=18.000000,PointScale=1.000000,PointBone="LeftFrontWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
-    VehHitpoints(3)=(PointRadius=18.000000,PointScale=1.000000,PointBone="RightFrontWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=18.000000,PointScale=1.000000,PointBone="LeftRearWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
-    VehHitpoints(5)=(PointRadius=18.000000,PointScale=1.000000,PointBone="RightRearWheel",DamageMultiplier=1.000000,HitPointType=HP_Engine)
+    VehicleHudOccupantsX(0)=0.44
+    VehicleHudOccupantsX(1)=0.57
+    VehicleHudOccupantsX(2)=0.41
+    VehicleHudOccupantsX(3)=0.6
+    VehicleHudOccupantsY(0)=0.53
+    VehicleHudOccupantsY(1)=0.53
+    VehicleHudOccupantsY(2)=0.66
+    VehicleHudOccupantsY(3)=0.66
+    VehicleHudEngineY=0.28
+    VehHitpoints(0)=(PointBone="body",PointOffset=(X=-10.0,Y=-25.0,Z=55.0),bPenetrationPoint=false)
+    VehHitpoints(1)=(PointRadius=20.0,PointOffset=(X=65.0,Z=15.0),DamageMultiplier=1.0)
+    VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(3)=(PointRadius=18.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(4)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(5)=(PointRadius=18.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
     EngineHealth=25
     bMultiPosition=false
     DriverAttachmentBone="driver_attachment"
@@ -223,8 +223,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="LeftFrontWheel"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=9.000000,Z=1.000000)
-        WheelRadius=25.000000
+        BoneOffset=(Y=9.0,Z=1.0)
+        WheelRadius=25.0
         SupportBoneName="RightFrontSusp00"
         SupportBoneAxis=AXIS_X
     End Object
@@ -233,8 +233,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="RightFrontWheel"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-9.000000,Z=1.000000)
-        WheelRadius=25.000000
+        BoneOffset=(Y=-9.0,Z=1.0)
+        WheelRadius=25.0
         SupportBoneName="LeftFrontSusp00"
         SupportBoneAxis=AXIS_X
     End Object
@@ -244,8 +244,8 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="LeftRearWheel"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=9.000000,Z=1.000000)
-        WheelRadius=25.000000
+        BoneOffset=(Y=9.0,Z=1.0)
+        WheelRadius=25.0
         SupportBoneName="LeftRearAxle"
         SupportBoneAxis=AXIS_X
     End Object
@@ -255,48 +255,48 @@ defaultproperties
         bHandbrakeWheel=true
         BoneName="RightRearWheel"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Y=-9.000000,Z=1.000000)
-        WheelRadius=25.000000
+        BoneOffset=(Y=-9.0,Z=1.0)
+        WheelRadius=25.0
         SupportBoneName="RightRearAxle"
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RRWheel'
-    VehicleMass=3.000000
+    VehicleMass=3.0
     bHasHandbrake=true
     bFPNoZFromCameraPitch=true
-    DrivePos=(X=5.000000,Z=8.000000)
+    DrivePos=(X=5.0,Z=8.0)
     DriveAnim="Vhalftrack_driver_idle"
-    ExitPositions(0)=(X=-4.00,Y=-111.00,Z=30.00)
-    ExitPositions(1)=(X=-3.00,Y=107.00,Z=30.00)
-    ExitPositions(2)=(X=-64.00,Y=-109.00,Z=30.00)
-    ExitPositions(3)=(X=-71.00,Y=109.00,Z=30.00)
-    EntryRadius=225.000000
-    FPCamPos=(Z=10.000000)
-    FPCamViewOffset=(Z=-5.000000)
-    TPCamDistance=300.000000
+    ExitPositions(0)=(X=-4.0,Y=-111.0,Z=30.0)
+    ExitPositions(1)=(X=-3.0,Y=107.0,Z=30.0)
+    ExitPositions(2)=(X=-64.0,Y=-109.0,Z=30.0)
+    ExitPositions(3)=(X=-71.0,Y=109.0,Z=30.0)
+    EntryRadius=225.0
+    FPCamPos=(Z=10.0)
+    FPCamViewOffset=(Z=-5.0)
+    TPCamDistance=300.0
     CenterSpringForce="SpringONSSRV"
-    TPCamLookat=(X=0.000000,Z=0.000000)
-    TPCamWorldOffset=(Z=250.000000)
-    DriverDamageMult=1.000000
+    TPCamLookat=(X=0.0,Z=0.0)
+    TPCamWorldOffset=(Z=250.0)
+    DriverDamageMult=1.0
     VehicleNameString="Willys Jeep MB"
-    HUDOverlayOffset=(X=2.000000)
-    HUDOverlayFOV=90.000000
-    GroundSpeed=325.000000
+    HUDOverlayOffset=(X=2.0)
+    HUDOverlayFOV=90.0
+    GroundSpeed=325.0
     PitchUpLimit=500
     PitchDownLimit=58000
-    HealthMax=125.000000
+    HealthMax=125.0
     Health=125
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
     Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
-    CollisionRadius=175.000000
-    CollisionHeight=40.000000
+    CollisionRadius=175.0
+    CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
-        KInertiaTensor(0)=1.300000
-        KInertiaTensor(3)=3.000000
-        KInertiaTensor(5)=3.000000
-        KCOMOffset=(Z=-0.200000)
-        KLinearDamping=0.050000
-        KAngularDamping=0.050000
+        KInertiaTensor(0)=1.3
+        KInertiaTensor(3)=3.0
+        KInertiaTensor(5)=3.0
+        KCOMOffset=(Z=-0.2)
+        KLinearDamping=0.05
+        KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
         bHighDetailOnly=false
@@ -304,8 +304,8 @@ defaultproperties
         bKDoubleTickRate=true
         bDestroyOnWorldPenetrate=true
         bDoSafetime=true
-        KFriction=0.500000
-        KImpactThreshold=700.000000
+        KFriction=0.5
+        KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_WillysJeep.KParams0'
     HighDetailOverlay=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'

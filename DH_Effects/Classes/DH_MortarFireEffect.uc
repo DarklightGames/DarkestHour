@@ -16,17 +16,17 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         ColorScale(0)=(Color=(B=255,G=255,R=255))
-        ColorScale(1)=(RelativeTime=1.000000)
+        ColorScale(1)=(RelativeTime=1.0)
         MaxParticles=1
         DetailMode=DM_SuperHigh
         StartLocationShape=PTLS_Sphere
-        StartSpinRange=(X=(Max=1.000000))
-        SizeScale(0)=(RelativeSize=0.150000)
-        SizeScale(1)=(RelativeTime=0.750000,RelativeSize=0.500000)
-        StartSizeRange=(X=(Max=60.000000))
-        InitialParticlesPerSecond=5000.000000
+        StartSpinRange=(X=(Max=1.0))
+        SizeScale(0)=(RelativeSize=0.15)
+        SizeScale(1)=(RelativeTime=0.75,RelativeSize=0.5)
+        StartSizeRange=(X=(Max=60.0))
+        InitialParticlesPerSecond=5000.0
         Texture=texture'Effects_Tex.BulletHits.glowfinal'
-        LifetimeRange=(Min=0.250000,Max=0.350000)
+        LifetimeRange=(Min=0.25,Max=0.35)
     End Object
     Emitters(0)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter21'
     Begin Object Class=SpriteEmitter Name=SpriteEmitter31
@@ -39,19 +39,19 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         ColorScale(0)=(Color=(B=174,G=228,R=255,A=255))
-        ColorScale(1)=(RelativeTime=0.200000,Color=(B=255,G=255,R=255,A=255))
-        ColorScale(2)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        ColorScale(3)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        ColorScale(4)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        FadeOutStartTime=0.102500
-        FadeInEndTime=0.050000
+        ColorScale(1)=(RelativeTime=0.2,Color=(B=255,G=255,R=255,A=255))
+        ColorScale(2)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        ColorScale(3)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        ColorScale(4)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
+        FadeOutStartTime=0.1025
+        FadeInEndTime=0.05
         MaxParticles=1
-        SizeScale(1)=(RelativeTime=0.250000,RelativeSize=0.250000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=0.500000)
-        InitialParticlesPerSecond=30.000000
+        SizeScale(1)=(RelativeTime=0.25,RelativeSize=0.25)
+        SizeScale(2)=(RelativeTime=1.0,RelativeSize=0.5)
+        InitialParticlesPerSecond=30.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.explosions.radialexplosion_1frame'
-        LifetimeRange=(Min=0.250000,Max=0.250000)
+        LifetimeRange=(Min=0.25,Max=0.25)
     End Object
     Emitters(1)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter31'
     Begin Object Class=SpriteEmitter Name=SpriteEmitter37
@@ -63,26 +63,26 @@ defaultproperties
         UniformSize=true
         AutomaticInitialSpawning=false
         UseRandomSubdivision=true
-        Acceleration=(X=25.000000,Y=25.000000)
+        Acceleration=(X=25.0,Y=25.0)
         ColorScale(0)=(Color=(B=95,G=95,R=95,A=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(B=150,G=150,R=150))
-        Opacity=0.750000
-        FadeOutStartTime=0.780000
+        ColorScale(1)=(RelativeTime=1.0,Color=(B=150,G=150,R=150))
+        Opacity=0.75
+        FadeOutStartTime=0.78
         MaxParticles=16
         UseRotationFrom=PTRS_Actor
-        SpinsPerSecondRange=(X=(Max=0.125000))
-        StartSpinRange=(X=(Max=1.000000))
-        SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.000000)
-        StartSizeRange=(X=(Min=32.000000,Max=64.000000),Y=(Min=32.000000,Max=64.000000),Z=(Min=32.000000,Max=64.000000))
-        InitialParticlesPerSecond=62500.000000
+        SpinsPerSecondRange=(X=(Max=0.125))
+        StartSpinRange=(X=(Max=1.0))
+        SizeScale(1)=(RelativeTime=1.0,RelativeSize=1.0)
+        StartSizeRange=(X=(Min=32.0,Max=64.0),Y=(Min=32.0,Max=64.0),Z=(Min=32.0,Max=64.0))
+        InitialParticlesPerSecond=62500.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.explosions.DSmoke_2'
-        LifetimeRange=(Min=1.000000,Max=3.000000)
-        StartVelocityRange=(X=(Min=32.000000,Max=320.000000))
-        VelocityLossRange=(X=(Max=5.000000),Y=(Max=5.000000),Z=(Max=5.000000))
-        VelocityScale(0)=(RelativeVelocity=(X=1.000000,Y=1.000000,Z=1.000000))
-        VelocityScale(1)=(RelativeTime=0.125000,RelativeVelocity=(X=0.200000,Y=0.200000,Z=0.200000))
-        VelocityScale(2)=(RelativeTime=1.000000)
+        LifetimeRange=(Min=1.0,Max=3.0)
+        StartVelocityRange=(X=(Min=32.0,Max=320.0))
+        VelocityLossRange=(X=(Max=5.0),Y=(Max=5.0),Z=(Max=5.0))
+        VelocityScale(0)=(RelativeVelocity=(X=1.0,Y=1.0,Z=1.0))
+        VelocityScale(1)=(RelativeTime=0.125,RelativeVelocity=(X=0.2,Y=0.2,Z=0.2))
+        VelocityScale(2)=(RelativeTime=1.0)
     End Object
     Emitters(2)=SpriteEmitter'DH_Effects.DH_MortarFireEffect.SpriteEmitter37'
     AutoDestroy=true

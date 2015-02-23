@@ -924,7 +924,7 @@ static function Swap(out int A, out int B)
 defaultproperties
 {
     bDirectional=false
-    DrawScale=3.000000
+    DrawScale=3.0
     SpawnError_None=0
     SpawnError_Fatal=1
     SpawnError_MaxVehicles=2

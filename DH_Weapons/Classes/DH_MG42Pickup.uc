@@ -23,7 +23,7 @@ defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_MG42Weapon'
     StaticMesh=StaticMesh'WeaponPickupSM.Weapons.mg42'
-    PrePivot=(Z=3.000000)
-    CollisionRadius=25.000000
-    CollisionHeight=3.000000
+    PrePivot=(Z=3.0)
+    CollisionRadius=25.0
+    CollisionHeight=3.0
 }

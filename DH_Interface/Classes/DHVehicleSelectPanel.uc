@@ -311,9 +311,9 @@ defaultproperties
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
         WinTop=0.223333
-        WinLeft=0.071250
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinLeft=0.07125
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_RolesTitle=RolesTitle
     Begin Object Class=GUILabel Name=RoleDescTitle
@@ -321,19 +321,19 @@ defaultproperties
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
         WinTop=0.571666
-        WinLeft=0.316250
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinLeft=0.31625
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_RoleDescTitle=RoleDescTitle
     Begin Object Class=GUILabel Name=PrimaryWeaponTitle
         Caption="Primary Weapon"
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
-        WinTop=0.035000
+        WinTop=0.035
         WinLeft=0.803751
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_PrimaryWeaponTitle=PrimaryWeaponTitle
     Begin Object Class=GUILabel Name=SecondaryWeaponTitle
@@ -342,18 +342,18 @@ defaultproperties
         StyleName="DHLargeText"
         WinTop=0.343334
         WinLeft=0.802501
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_SecondaryWeaponTitle=SecondaryWeaponTitle
     Begin Object Class=GUILabel Name=EquipmentWeaponTitle
         Caption="Equipment"
         TextAlign=TXTA_Right
         StyleName="DHLargeText"
-        WinTop=0.640000
-        WinLeft=0.806250
-        WinWidth=0.175000
-        WinHeight=0.040000
+        WinTop=0.64
+        WinLeft=0.80625
+        WinWidth=0.175
+        WinHeight=0.04
     End Object
     l_EquipTitle=EquipmentWeaponTitle
     Begin Object Class=BackgroundImage Name=PageBackground
@@ -380,9 +380,9 @@ defaultproperties
         Caption="Disconnect"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.012000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.012
+        WinWidth=0.18
         TabOrder=1
         OnClick=InternalOnClick
         OnKeyEvent=DisconnectButton.InternalOnKeyEvent
@@ -392,9 +392,9 @@ defaultproperties
         Caption="Situation Map"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.220000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.22
+        WinWidth=0.18
         TabOrder=2
         OnClick=InternalOnClick
         OnKeyEvent=MapButton.InternalOnKeyEvent
@@ -404,9 +404,9 @@ defaultproperties
         Caption="Score"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.410000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.41
+        WinWidth=0.18
         TabOrder=3
         OnClick=InternalOnClick
         OnKeyEvent=ScoreButton.InternalOnKeyEvent
@@ -415,9 +415,9 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=ConfigButton
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.600000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.6
+        WinWidth=0.18
         TabOrder=4
         OnClick=InternalOnClick
         OnKeyEvent=ConfigButton.InternalOnKeyEvent
@@ -427,9 +427,9 @@ defaultproperties
         Caption="Continue"
         bAutoShrink=false
         StyleName="DHSmallTextButtonStyle"
-        WinTop=0.958750
-        WinLeft=0.808000
-        WinWidth=0.180000
+        WinTop=0.95875
+        WinLeft=0.808
+        WinWidth=0.18
         TabOrder=5
         OnClick=InternalOnClick
         OnKeyEvent=ContinueButton.InternalOnKeyEvent
@@ -438,7 +438,7 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=JoinAxisButton
         Caption="Join Axis"
         StyleName="DHSmallTextButtonStyle"
-        WinHeight=0.037500
+        WinHeight=0.0375
         TabOrder=7
         OnClick=InternalOnClick
         OnKeyEvent=JoinAxisButton.InternalOnKeyEvent
@@ -447,7 +447,7 @@ defaultproperties
     Begin Object Class=DHGUIButton Name=JoinAlliesButton
         Caption="Join Allies"
         StyleName="DHSmallTextButtonStyle"
-        WinHeight=0.037500
+        WinHeight=0.0375
         TabOrder=6
         OnClick=InternalOnClick
         OnKeyEvent=JoinAlliesButton.InternalOnKeyEvent
@@ -457,7 +457,7 @@ defaultproperties
         Caption="Spectate"
         StyleName="DHSmallTextButtonStyle"
         Hint="Observe the game as a non-playing spectator"
-        WinHeight=0.037500
+        WinHeight=0.0375
         TabOrder=8
         OnClick=InternalOnClick
         OnKeyEvent=SpectateButton.InternalOnKeyEvent
@@ -483,7 +483,7 @@ defaultproperties
         bSorted=true
         OnCreateComponent=Roles.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinHeight=1.000000
+        WinHeight=1.0
         TabOrder=0
         OnChange=InternalOnChange
     End Object
@@ -492,8 +492,8 @@ defaultproperties
         Image=texture'InterfaceArt_tex.Menu.empty'
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        WinTop=0.120000
-        WinHeight=0.880000
+        WinTop=0.12
+        WinHeight=0.88
         OnDraw=InternalOnDraw
     End Object
     i_PlayerImage=PlayerImage
@@ -501,21 +501,21 @@ defaultproperties
         bNoTeletype=true
         OnCreateComponent=RoleDescriptionTextBox.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinHeight=1.000000
+        WinHeight=1.0
     End Object
     l_RoleDescription=DHGUIScrollTextBox'DH_Interface.RoleDescriptionTextBox'
     Begin Object Class=GUILabel Name=PlayerNameLabel
         Caption="Name:"
         StyleName="DHLargeText"
-        WinWidth=0.350000
-        WinHeight=0.100000
+        WinWidth=0.35
+        WinHeight=0.1
     End Object
     l_PlayerName=PlayerNameLabel'
     Begin Object Class=DHGUIEditBox Name=PlayerNameEditbox
         TextStr="(Player name)"
-        WinLeft=0.350000
-        WinWidth=0.650000
-        WinHeight=0.100000
+        WinLeft=0.35
+        WinWidth=0.65
+        WinHeight=0.1
         OnActivate=PlayerNameEditbox.InternalActivate
         OnDeActivate=PlayerNameEditbox.InternalDeactivate
         OnChange=InternalOnChange
@@ -526,8 +526,8 @@ defaultproperties
     Begin Object Class=GUIImage Name=WeaponImage
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        WinWidth=0.650000
-        WinHeight=0.500000
+        WinWidth=0.65
+        WinHeight=0.5
     End Object
     i_WeaponImages(0)=WeaponImage
     i_WeaponImages(1)=WeaponImage
@@ -535,8 +535,8 @@ defaultproperties
         bNoTeletype=true
         OnCreateComponent=WeaponDescription.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinTop=0.550000
-        WinHeight=0.450000
+        WinTop=0.55
+        WinHeight=0.45
     End Object
     l_WeaponDescription(0)=DHGUIScrollTextBox'DH_Interface.WeaponDescription'
     l_WeaponDescription(1)=DHGUIScrollTextBox'DH_Interface.WeaponDescription'
@@ -546,9 +546,9 @@ defaultproperties
         bVisibleWhenEmpty=true
         OnCreateComponent=WeaponListBox.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinLeft=0.700000
-        WinWidth=0.300000
-        WinHeight=0.500000
+        WinLeft=0.7
+        WinWidth=0.3
+        WinHeight=0.5
         TabOrder=0
         OnChange=InternalOnChange
     End Object
@@ -559,8 +559,8 @@ defaultproperties
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.200000
-        WinHeight=0.495000
+        WinWidth=0.2
+        WinHeight=0.495
         TabOrder=21
         bTabStop=true
         OnClick=InternalOnClick
@@ -572,9 +572,9 @@ defaultproperties
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.210000
-        WinWidth=0.200000
-        WinHeight=0.495000
+        WinLeft=0.21
+        WinWidth=0.2
+        WinHeight=0.495
         TabOrder=22
         bTabStop=true
         OnClick=InternalOnClick
@@ -586,9 +586,9 @@ defaultproperties
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinLeft=0.420000
-        WinWidth=0.200000
-        WinHeight=0.495000
+        WinLeft=0.42
+        WinWidth=0.2
+        WinHeight=0.495
         TabOrder=23
         bTabStop=true
         OnClick=InternalOnClick
@@ -600,9 +600,9 @@ defaultproperties
         Position=ICP_Scaled
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinTop=0.505000
-        WinWidth=0.410000
-        WinHeight=0.495000
+        WinTop=0.505
+        WinWidth=0.41
+        WinHeight=0.495
         TabOrder=24
         bTabStop=true
         OnClick=InternalOnClick
@@ -613,16 +613,16 @@ defaultproperties
         bNoTeletype=true
         OnCreateComponent=EquipDescTextBox.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinLeft=0.440000
-        WinWidth=0.560000
-        WinHeight=1.000000
+        WinLeft=0.44
+        WinWidth=0.56
+        WinHeight=1.0
     End Object
     l_EquipmentDescription=DHGUIScrollTextBox'DH_Interface.EquipDescTextBox'
     Begin Object Class=ROGUIContainerNoSkinAlt Name=ConfigButtonsContainer_inst
         WinTop=0.108333
-        WinLeft=0.060000
-        WinWidth=0.200000
-        WinHeight=0.600000
+        WinLeft=0.06
+        WinWidth=0.2
+        WinHeight=0.6
         OnPreDraw=ConfigButtonsContainer_inst.InternalPreDraw
     End Object
     ConfigButtonsContainer=ROGUIContainerNoSkinAlt'DH_Interface.ConfigButtonsContainer_inst'

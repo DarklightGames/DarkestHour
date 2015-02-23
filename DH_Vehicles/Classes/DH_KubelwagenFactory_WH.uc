@@ -7,7 +7,7 @@ class DH_KubelwagenFactory_WH extends DH_GermanVehicles;
 
 defaultproperties
 {
-    RespawnTime=1.000000
+    RespawnTime=1.0
     VehicleClass=class'DH_Vehicles.DH_KubelwagenCar_WH'
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
     Skins(0)=FinalBlend'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB'

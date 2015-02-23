@@ -1148,7 +1148,7 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PrimaryWeaponContainer_inst
         WinWidth=0.975537
-        WinHeight=0.182460
+        WinHeight=0.18246
         WinLeft=0.023428
         WinTop=0.517182
         ImageOffset(0)=10
@@ -1193,7 +1193,7 @@ defaultproperties
     l_EquipTitle=GUILabel'DH_Interface.DHRoleSelectPanel.EquipmentWeaponTitle'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=EquipmentContainer_inst
-        WinWidth=1.00
+        WinWidth=1.0
         WinHeight=0.112097
         WinLeft=0.0
         WinTop=0.833621
@@ -1208,7 +1208,7 @@ defaultproperties
         Caption="Role Selection"
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
-        WinWidth=0.392070
+        WinWidth=0.39207
         WinHeight=0.045108
         WinLeft=0.280658
         WinTop=0.007675
@@ -1348,7 +1348,7 @@ defaultproperties
 
     //The primary ammo button
     Begin Object Class=DHGUINumericEdit Name=PrimaryAmmoButton
-        WinWidth=0.204570
+        WinWidth=0.20457
         WinHeight=0.037307
         WinLeft=0.469822
         WinTop=0.585544

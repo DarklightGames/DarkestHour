@@ -35,7 +35,7 @@ defaultproperties
 {
     Begin Object Class=DHGUITabControl Name=ChannelTabControl
         bDockPanels=true
-        WinHeight=1.000000
+        WinHeight=1.0
         bAcceptsInput=true
         OnActivate=ChannelTabControl.InternalOnActivate
     End Object
