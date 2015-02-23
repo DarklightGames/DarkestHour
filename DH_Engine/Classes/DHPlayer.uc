@@ -101,7 +101,6 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     local rotator NewPlayerRotation;
     local int     YawAdjust;
     local int     PitchAdjust;
-    local float   FreeAimBlendAmount;
     local rotator AppliedRecoil;
 
     if (Pawn == none || DH_ProjectileWeapon(Pawn.Weapon) == none || !DH_ProjectileWeapon(Pawn.Weapon).ShouldUseFreeAim())
@@ -169,8 +168,8 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     // Add the freeaim movement in
     if (!bHudLocksPlayerRotation)
     {
-        WeaponBufferRotation.Yaw += (FAAWeaponRotationFactor * DeltaTime * aTurn) * FreeAimBlendAmount;
-        WeaponBufferRotation.Pitch += (FAAWeaponRotationFactor * DeltaTime * aLookUp) * FreeAimBlendAmount;
+        WeaponBufferRotation.Yaw += (FAAWeaponRotationFactor * DeltaTime * aTurn);
+        WeaponBufferRotation.Pitch += (FAAWeaponRotationFactor * DeltaTime * aLookUp);
     }
 
     if (Level.TimeSeconds - LastRecoilTime <= RecoilSpeed)
