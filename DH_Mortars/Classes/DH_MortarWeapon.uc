@@ -70,11 +70,17 @@ simulated function bool WeaponAllowMantle()
 
 simulated event AnimEnd(int Channel)
 {
+    local DH_Pawn P;
+
+    P = DH_Pawn(Instigator);
+
     //-----------------------------------------------------------------------
     //If the deploy animation ended, then let's let the server know about it.
     if (bDeploying)
     {
-        DH_Pawn(Instigator).bIsDeployingMortar = false;
+        P.bIsDeployingMortar = false;
+        P.SetLockViewRotation(false);
+
         ServerDeployEnd();
     }
 }
@@ -100,6 +106,7 @@ simulated exec function Deploy()
 simulated function ClientDeploy()
 {
     local DH_Pawn P;
+    local rotator R;
 
     P = DH_Pawn(Instigator);
 
@@ -113,9 +120,10 @@ simulated function ClientDeploy()
 
     //-------------------------------------------------
     //This is so the pawn knows to limit pitch and yaw.
-    P.bLockViewRotation = true;
-    P.LockViewRotation.Yaw = P.Rotation.Yaw;
-    P.LockViewRotation.Pitch = 0;
+    R = P.Rotation;
+    R.Pitch = 0;
+
+    P.SetLockViewRotation(true, R);
 
     //--------------------
     //Let's start
