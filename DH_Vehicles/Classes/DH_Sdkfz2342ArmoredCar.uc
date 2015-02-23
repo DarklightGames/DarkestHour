@@ -35,7 +35,7 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     bSpecialExiting=true
-    bAllowRiders=false
+    bAllowRiders=true
     MaxCriticalSpeed=1039.0
     UFrontArmorFactor=3.0
     URightArmorFactor=0.8
@@ -144,5 +144,4 @@ defaultproperties
     CollisionHeight=60.0
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz2341ArmoredCar.KParams0'
     HighDetailOverlayIndex=4
-    bAllowRiders=true
 }
