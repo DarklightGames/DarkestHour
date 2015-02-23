@@ -114,13 +114,13 @@ defaultproperties
     FireSounds(1)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire02'
     FireVolume=512.0
     maxVerticalRecoilAngle=1600
-    maxHorizontalRecoilAngle=250
+    maxHorizontalRecoilAngle=600
     PctStandIronRecoil=0.8
     PctCrouchRecoil=0.65
     PctCrouchIronRecoil=0.45
     PctProneIronRecoil=0.25
-    PctBipodDeployRecoil=0.01
-    PctRestDeployRecoil=0.05
+    PctBipodDeployRecoil=0.05
+    PctRestDeployRecoil=0.1
     RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Z=-2.0)
@@ -134,10 +134,10 @@ defaultproperties
     TweenTime=0.0
     FireRate=0.2
     AmmoClass=class'DH_Weapons.DH_BARAmmo'
-    ShakeRotMag=(X=50.0,Y=50.0,Z=150.0)
+    ShakeRotMag=(X=75.0,Y=75.0,Z=200.0)
     ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=0.75
-    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
+    ShakeOffsetMag=(X=4.0,Y=1.0,Z=4.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=1.0
     ProjectileClass=class'DH_Weapons.DH_BARBullet'
@@ -147,5 +147,6 @@ defaultproperties
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     aimerror=1200.0
     Spread=150.0
+    HipSpreadModifier=4.0
     SpreadStyle=SS_Random
 }
