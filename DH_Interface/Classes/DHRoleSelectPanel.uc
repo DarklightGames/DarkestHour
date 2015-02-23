@@ -339,14 +339,14 @@ function AutoPickRole()
 function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
-    CalculateDeployTime();
+    l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
 
     // Inform panel that we want to change role on next life
     if (currentRole == desiredRole)
     {
         SetStatusString("You are currently a" @ currentRole.MyName);
     }
-    else if (currentRole != desiredRole && desiredRole != none)
+    else if (currentRole != desiredRole)
     {
         SetStatusString("You will attempt to change role to" @ desiredRole.MyName);
     }
@@ -392,57 +392,6 @@ function int FindRoleIndexInList(RORoleInfo newRole)
             return i;
 
     return -1;
-}
-
-//Calculate AmmoTimeMod
-function CalculateDeployTime()
-{
-    local DH_RoleInfo roleInfo;
-    local float distance, totaldistance, percent;
-    local int RedeployTime, AmmoTimeMod;
-
-    // Calc and set deploytime based on factors
-    //Theel: I might not need to access the role from here, as the slider will need to do that and I can just access slider!
-    //roleInfo = DH_RoleInfo(li_Roles.GetObject());
-    roleInfo = DH_RoleInfo(desiredRole);
-
-    if (roleInfo == none || GRI == none) // Matt: added to prevent "accessed none" errors
-    {
-        return;
-    }
-
-    //Run a check on value and make sure it is legal
-    nu_PrimaryAmmoMags.CheckValue();
-
-    if (int(nu_PrimaryAmmoMags.Value) == nu_PrimaryAmmoMags.MidValue || roleInfo == none)
-    {
-        AmmoTimeMod = 0;
-    }
-    else if (int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MidValue)
-    {
-        totaldistance = nu_PrimaryAmmoMags.MaxValue - nu_PrimaryAmmoMags.MidValue;
-        distance = int(nu_PrimaryAmmoMags.Value) - nu_PrimaryAmmoMags.MidValue;
-        percent = distance / totaldistance;
-        AmmoTimeMod = int(percent * roleInfo.MaxAmmoTimeMod);
-    }
-    else if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MidValue)
-    {
-        totaldistance = nu_PrimaryAmmoMags.MidValue - nu_PrimaryAmmoMags.MinValue;
-        distance = nu_PrimaryAmmoMags.MidValue - int(nu_PrimaryAmmoMags.Value);
-        percent = distance / totaldistance;
-        AmmoTimeMod = int(percent * roleInfo.MinAmmoTimeMod); //Is likely negative
-    }
-
-    RedeployTime = GRI.ReinforcementInterval[desiredTeam] + roleInfo.DeployTimeMod + AmmoTimeMod;
-
-    if (RedeployTime < 0)
-    {
-        RedeployTime = 0;
-    }
-
-    l_EstimatedRedeployTime.Caption = "Estimated deploy time:" @ RedeployTime @ "Seconds";
-
-    DHPlayer(PlayerOwner()).SetDeployTime(RedeployTime);
 }
 
 function UpdateWeaponsInfo()
@@ -661,21 +610,24 @@ function UpdateSelectedWeapon(int weaponCategory)
             nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(desiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
             nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
+            Log("DesiredAmmoAmount:" @ player.DesiredAmmoAmount);
+
             // Set the value
-            if (player.ClientDesiredAmmoAmount != "")
+            if (player.DesiredAmmoAmount != 0)
             {
-                nu_PrimaryAmmoMags.Value = player.ClientDesiredAmmoAmount;
+                nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
             }
             else
             {
                 nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+                //player.DesiredAmmoAmount = nu_PrimaryAmmoMags.MidValue;
             }
 
-            // Check the value
+            // Check the value Theel: this isn't really needed
             nu_PrimaryAmmoMags.CheckValue();
 
             // Update deploy time
-            CalculateDeployTime();
+            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
         }
         else
         {
@@ -968,18 +920,9 @@ function InternalOnChange( GUIComponent Sender )
             break;
 
         case nu_PrimaryAmmoMags:
-            //We need to change the estimated deploy time
-            CalculateDeployTime();
-
-            //Theel: DO I really need to have separate values?
-            //Ammo was changed, lets only change what we need to!
-            //Set desired ammo amount in DHPlayer
-            DHPlayer(PlayerOwner()).ServerSetDesiredAmmoAmount(int(nu_PrimaryAmmoMags.Value)); // Server
-            if (int(nu_PrimaryAmmoMags.Value) != 0)
-            {
-                DHPlayer(PlayerOwner()).ClientDesiredAmmoAmount = nu_PrimaryAmmoMags.Value; // Client
-            }
-
+            //We need to change the estimated deploy time (shouldn't we do this after we change it in DHPlayer?)
+            DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value); // Client
+            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
             break;
     }
 }
@@ -1345,9 +1288,9 @@ defaultproperties
         bClientBound=true
         StyleName="DHGripButtonNB"
         WinWidth=0.171937
-		WinHeight=0.072377
-		WinLeft=0.018709
-		WinTop=0.837604
+        WinHeight=0.072377
+        WinLeft=0.018709
+        WinTop=0.837604
         TabOrder=21
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1361,9 +1304,9 @@ defaultproperties
         bClientBound=true
         StyleName="DHGripButtonNB"
         WinWidth=0.175055
-		WinHeight=0.069259
-		WinLeft=0.193764
-		WinTop=0.839028
+        WinHeight=0.069259
+        WinLeft=0.193764
+        WinTop=0.839028
         TabOrder=22
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1377,9 +1320,9 @@ defaultproperties
         bClientBound=true
         StyleName="DHGripButtonNB"
         WinWidth=0.277953
-		WinHeight=0.125385
-		WinLeft=0.365701
-		WinTop=0.834756
+        WinHeight=0.125385
+        WinLeft=0.365701
+        WinTop=0.834756
         TabOrder=23
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
@@ -1393,9 +1336,9 @@ defaultproperties
         bClientBound=true
         StyleName="DHGripButtonNB"
         WinWidth=0.680630
-		WinHeight=0.069478
-		WinLeft=0.018709
-		WinTop=0.908829
+        WinHeight=0.069478
+        WinLeft=0.018709
+        WinTop=0.908829
         TabOrder=24
         bTabStop=true
         OnClick=DHRoleSelectPanel.InternalOnClick
