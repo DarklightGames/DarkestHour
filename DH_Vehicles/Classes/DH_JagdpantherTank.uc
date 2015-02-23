@@ -128,6 +128,14 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.38
     VehicleHudOccupantsY(1)=0.51
     VehicleHudOccupantsY(2)=0.38
+    VehicleHudOccupantsX(3)=0.4
+    VehicleHudOccupantsY(3)=0.69
+    VehicleHudOccupantsX(4)=0.4
+    VehicleHudOccupantsY(4)=0.79
+    VehicleHudOccupantsX(5)=0.605
+    VehicleHudOccupantsY(5)=0.79
+    VehicleHudOccupantsX(6)=0.605
+    VehicleHudOccupantsY(6)=0.69
     VehicleHudEngineX=0.51
     VehHitpoints(0)=(PointBone="body",PointOffset=(X=100.0,Y=-40.0,Z=30.0),bPenetrationPoint=false)
     VehHitpoints(1)=(PointRadius=32.0,PointHeight=35.0,PointOffset=(X=-122.0,Z=-6.0),DamageMultiplier=1.0)
