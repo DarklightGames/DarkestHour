@@ -95,4 +95,7 @@ simulated event ThirdPersonEffects()
 
 defaultproperties
 {
+    //for some stupid reason, crouch_boltiron_kar doesn't exist anymore;
+    //fall back to non iron-sighted version
+    PA_CrouchIronBoltActionAnim=crouch_bolt_kar
 }
