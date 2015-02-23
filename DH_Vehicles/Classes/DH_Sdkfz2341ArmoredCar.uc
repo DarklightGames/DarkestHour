@@ -232,4 +232,5 @@ defaultproperties
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz2341ArmoredCar.KParams0'
     HighDetailOverlayIndex=4
+    bAllowRiders=true
 }
