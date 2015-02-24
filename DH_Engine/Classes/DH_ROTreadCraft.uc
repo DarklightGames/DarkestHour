@@ -2741,17 +2741,18 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
     }
 }
 
-// Check to see if vehicle should destroy itself - stops vehicle from premature detonation when on fire
+// Modified to stop vehicle from prematurely destroying itself when on fire
 function MaybeDestroyVehicle()
 {
-    if (IsDisabled() && IsVehicleEmpty() && !bNeverReset && !bOnFire && !bEngineOnFire)
+    if (IsDisabled() && IsVehicleEmpty() && !bOnFire && !bEngineOnFire && !bNeverReset)
     {
         bSpikedVehicle = true;
-        SetTimer(VehicleSpikeTime, false);
+        SpikeTime = Level.TimeSeconds + VehicleSpikeTime;
+        SetNextTimer();
 
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Initiating vehicle SpikeTimer");
+            Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ Tag);
         }
     }
 }
