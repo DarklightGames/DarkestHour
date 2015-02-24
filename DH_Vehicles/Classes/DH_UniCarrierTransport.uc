@@ -10,26 +10,6 @@ class DH_UniCarrierTransport extends DH_ROTransportCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\Sounds\Vehicle_EnginesTwo.uax
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[1];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[1] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[2];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[2] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -297,4 +277,6 @@ defaultproperties
     HighDetailOverlay=Shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
 }

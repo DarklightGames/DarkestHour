@@ -7,26 +7,6 @@ class DH_Sdkfz251Transport extends DH_ROTransportCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -259,4 +239,6 @@ defaultproperties
     HighDetailOverlay=Shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
 }

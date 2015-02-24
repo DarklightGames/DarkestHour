@@ -13,6 +13,7 @@ var     int                 LeftTreadIndex;
 var     int                 RightTreadIndex;
 var     VariableTexPanner   LeftTreadPanner, RightTreadPanner;
 var()   float               TreadVelocityScale;
+var     rotator             LeftTreadPanDirection, RightTreadPanDirection;
 
 // Wheel animation
 var()   array<name>         LeftWheelBones;     // for animation only - the bone names for the wheels on the left side
@@ -39,7 +40,7 @@ simulated function SetupTreads()
     if (LeftTreadPanner != none)
     {
         LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 0, 16384);
+        LeftTreadPanner.PanDirection = LeftTreadPanDirection;
         LeftTreadPanner.PanRate = 0.0;
         Skins[LeftTreadIndex] = LeftTreadPanner;
     }
@@ -49,7 +50,7 @@ simulated function SetupTreads()
     if (RightTreadPanner != none)
     {
         RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 0, 16384);
+        RightTreadPanner.PanDirection = RightTreadPanDirection;
         RightTreadPanner.PanRate = 0.0;
         Skins[RightTreadIndex] = RightTreadPanner;
     }
@@ -349,4 +350,6 @@ defaultproperties
     VehicleSpikeTime=60.0
     bIsApc=true
     bKeepDriverAuxCollision=false
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
 }

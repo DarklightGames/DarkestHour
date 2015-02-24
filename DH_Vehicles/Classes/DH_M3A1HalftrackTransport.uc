@@ -9,26 +9,6 @@ class DH_M3A1HalftrackTransport extends DH_ROTransportCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
-simulated function SetupTreads()
-{
-    LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (LeftTreadPanner != none)
-    {
-        LeftTreadPanner.Material = Skins[LeftTreadIndex];
-        LeftTreadPanner.PanDirection = rot(0, 32768, -16384);
-        LeftTreadPanner.PanRate = 0.0;
-        Skins[LeftTreadIndex] = LeftTreadPanner;
-    }
-    RightTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
-    if (RightTreadPanner != none)
-    {
-        RightTreadPanner.Material = Skins[RightTreadIndex];
-        RightTreadPanner.PanDirection = rot(0, 32768, -16384);
-        RightTreadPanner.PanRate = 0.0;
-        Skins[RightTreadIndex] = RightTreadPanner;
-    }
-}
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -272,4 +252,7 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3A1HalftrackTransport.KParams0'
+
+    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
 }
