@@ -16,76 +16,37 @@ enum ECarHitPointType
     CHP_Petrol,
 };
 
-var     ECarHitPointType                    CarHitPointType;
+var     ECarHitPointType    CarHitPointType;
 
 struct CarHitpoint
 {
-    var() float             PointRadius;        // Squared radius of the head of the pawn that is vulnerable to headshots
-    var() float             PointHeight;        // Distance from base of neck to center of head - used for headshot calculation
+    var() float             PointRadius;       // squared radius of the head of the pawn that is vulnerable to headshots
+    var() float             PointHeight;       // distance from base of neck to center of head - used for headshot calculation
     var() float             PointScale;
-    var() name              PointBone;          // Bone to reference in offset
-    var() vector            PointOffset;        // Amount to offset the hitpoint from the bone
-    var() bool              bPenetrationPoint;  // This is a penetration point, open hatch, etc
-    var() float             DamageMultiplier;   // Amount to scale damage to the vehicle if this point is hit
-    var() ECarHitPointType  CarHitPointType;    // What type of hit point this is
+    var() name              PointBone;         // bone to reference in offset
+    var() vector            PointOffset;       // amount to offset the hitpoint from the bone
+    var() bool              bPenetrationPoint; // this is a penetration point, open hatch, etc
+    var() float             DamageMultiplier;  // amount to scale damage to the vehicle if this point is hit
+    var() ECarHitPointType  CarHitPointType;   // what type of hit point this is
 };
 
-var()   array<CarHitpoint>      CarVehHitpoints;        // An array of possible small points that can be hit. Index zero is always the driver
+var()   array<CarHitpoint>  CarVehHitpoints;   // an array of possible small points that can be hit (index zero is always the driver)
 
 //==============================================================================
-// Empty Functions: we don't need for Armored Cars
+// Empty functions: we don't need for armored cars
 //==============================================================================
 simulated function UpdateMovementSound();
 simulated function SetupTreads();
 simulated function DestroyTreads();
 function DamageTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
+exec function DamTrack(string Track);
 
+// Modified to ignore damaged treads & to disable if vehicle takes major damage, as well as if engine is dead
+// This should give time for troops to bail out & escape before vehicle blows
 simulated function bool IsDisabled()
 {
-    return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax/3));
-}
-
-simulated function Destroyed()
-{
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (DriverHatchFireEffect != none)
-        {
-            DriverHatchFireEffect.Destroy();
-            DriverHatchFireEffect = none;
-        }
-    }
-    //need to destroy dust and exhaust effects
-    super(ROWheeledVehicle).Destroyed();       //Skip ROTreadCraft
-}
-
-//overriding here because we don't want exhaust to work until
-//engine start/stop AND we don't need tread stuff from TreadCraft
- simulated event DrivingStatusChanged()
-{
-    local PlayerController PC;
-
-    PC = Level.GetLocalPlayerController();
-
-    if (!bDriving || bEngineOff || bEngineDead)
-    {
-        // Not moving, so no motion sound
-        MotionSoundVolume=0.0;
-        UpdateMovementSound();
-    }
-
-    if (bDriving && PC != none && (PC.ViewTarget == none || !(PC.ViewTarget.IsJoinedTo(self))))
-        bDropDetail = (Level.bDropDetail || (Level.DetailMode == DM_Low));
-    else
-        bDropDetail = false;
-
-    if (bDriving)
-        Enable('Tick');
-    else
-        Disable('Tick');
-
-    super(ROVehicle).DrivingStatusChanged();
+    return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
 }
 
 simulated function Tick(float DeltaTime)
