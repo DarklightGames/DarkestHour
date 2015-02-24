@@ -8,7 +8,6 @@ class DH_ROWheeledVehicle extends ROWheeledVehicle
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
-
 enum ECarHitPointType
 {
     CHP_Normal,
@@ -46,14 +45,21 @@ var     bool        bClientInitialized;     // Matt: clientside flag that replic
 // Engine stuff
 var     bool        bEngineOff;         // vehicle engine is simply switched off
 var     bool        bSavedEngineOff;    // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
-var     float       IgnitionSwitchTime;
+var     float       IgnitionSwitchTime; // records last time the engine was switched on/off - requires 4 second interval to stop people spamming the ignition switch
 
-// New sounds
-var    sound        VehicleBurningSound;
-var    sound        DestroyedBurningSound;
-var    sound        DamagedStartUpSound;
+// New sounds & sound attachment actors
+var()   float               MaxPitchSpeed;
+var()   sound               EngineSound;
+var     ROSoundAttachment   EngineSoundAttach;
+var()   name                EngineSoundBone;
+var()   sound               RumbleSound; // interior rumble sound
+var     ROSoundAttachment   InteriorRumbleSoundAttach;
+var()   name                RumbleSoundBone;
+var     sound               VehicleBurningSound;
+var     sound               DestroyedBurningSound;
+var     sound               DamagedStartUpSound;
 
-// Debugging help
+// Debugging
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
 
@@ -93,6 +99,24 @@ simulated function PostBeginPlay()
         // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
         // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
         WeaponPawns.Length = PassengerWeapons.Length;
+    }
+
+    // Clientside sound & decorative attachments
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (EngineSound != none && EngineSoundBone != '' && EngineSoundAttach == none)
+        {
+            EngineSoundAttach = Spawn(class'ROSoundAttachment');
+            EngineSoundAttach.AmbientSound = EngineSound;
+            AttachToBone(EngineSoundAttach, EngineSoundBone);
+        }
+
+        if (RumbleSound != none && RumbleSoundBone != '' && InteriorRumbleSoundAttach == none)
+        {
+            InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
+            InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
+            AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
+        }
     }
 }
 
@@ -283,7 +307,7 @@ function bool TryToDrive(Pawn P)
 simulated function Tick(float dt)
 {
     local bool  LostTraction;
-    local float ThrottlePosition;
+    local float MySpeed, MotionSoundVolume, ThrottlePosition;
     local int   i;
 
     super(ROVehicle).Tick(dt); // Matt: skip over the Super in ROWheeledVehicle, as it is already entirely re-stated her, so just duplicates everything
@@ -302,35 +326,48 @@ simulated function Tick(float dt)
     }
 
     // Don't bother doing effects on dedicated server
-    if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        LostTraction = true;
+        MySpeed = Abs(ForwardVel);
 
-        // Update dust kicked up by wheels
-        for (i = 0; i < Dust.Length; i++)
+        // Update engine & interior rumble sounds dependent on speed
+        if (MySpeed > 0.1)
         {
-            Dust[i].UpdateDust(Wheels[i], DustSlipRate, DustSlipThresh);
-        }
-
-        // Unpack the replicated throttle byte
-        if (ThrottleRep < 101)
-        {
-            ThrottlePosition = Float(ThrottleRep) / 100.0;
-        }
-        else if (ThrottleRep == 101)
-        {
-            ThrottlePosition = 0.0;
-        }
-        else
-        {
-            ThrottlePosition = Float(ThrottleRep - 101) / 100.0;
+            MotionSoundVolume = FClamp(MySpeed / MaxPitchSpeed * 255.0, 0.0, 255.0);
         }
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        UpdateMovementSound(MotionSoundVolume);
+
+        if (!bDropDetail)
         {
-            if (ExhaustPipes[i].ExhaustEffect != none)
+            LostTraction = true;
+
+            // Update dust kicked up by wheels
+            for (i = 0; i < Dust.Length; i++)
             {
-                ExhaustPipes[i].ExhaustEffect.UpdateExhaust(ThrottlePosition);
+                Dust[i].UpdateDust(Wheels[i], DustSlipRate, DustSlipThresh);
+            }
+
+            // Unpack the replicated throttle byte
+            if (ThrottleRep < 101)
+            {
+                ThrottlePosition = Float(ThrottleRep) / 100.0;
+            }
+            else if (ThrottleRep == 101)
+            {
+                ThrottlePosition = 0.0;
+            }
+            else
+            {
+                ThrottlePosition = Float(ThrottleRep - 101) / 100.0;
+            }
+
+            for (i = 0; i < ExhaustPipes.Length; i++)
+            {
+                if (ExhaustPipes[i].ExhaustEffect != none)
+                {
+                    ExhaustPipes[i].ExhaustEffect.UpdateExhaust(ThrottlePosition);
+                }
             }
         }
     }
@@ -370,6 +407,21 @@ function Timer()
         {
             bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied or destroyed
         }
+    }
+}
+
+// New function to update movement sound volumes, similar to a tracked vehicle updating its tread sounds
+// Although here we optimise by incorporating MotionSoundVolume as a passed function argument instead of a separate instance variable
+simulated function UpdateMovementSound(float MotionSoundVolume)
+{
+    if (EngineSoundAttach != none)
+    {
+        EngineSoundAttach.SoundVolume = MotionSoundVolume * 0.75;
+    }
+
+    if (InteriorRumbleSoundAttach != none)
+    {
+        InteriorRumbleSoundAttach.SoundVolume = MotionSoundVolume * 2.5;
     }
 }
 
@@ -857,6 +909,24 @@ simulated event DestroyAppearance()
     NetPriority = 2.0;
 }
 
+// Modified to destroy extra effects & attachments
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (EngineSoundAttach != none)
+        {
+            EngineSoundAttach.Destroy();
+        }
+
+        if (InteriorRumbleSoundAttach != none)
+        {
+            InteriorRumbleSoundAttach.Destroy();
+        }
+    }
+}
 
 // Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
