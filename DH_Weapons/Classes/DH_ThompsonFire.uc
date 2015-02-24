@@ -12,7 +12,9 @@ defaultproperties
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_Fire01'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG1'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG2'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG3'
     maxVerticalRecoilAngle=600
     maxHorizontalRecoilAngle=75
     RecoilRate=0.05
