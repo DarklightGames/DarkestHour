@@ -39,7 +39,6 @@ var     float       PointValue;             // used for scoring
 var     bool        bEmittersOn;
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var()   float       ObjectCollisionResistance;
-var     bool        bResupplyVehicle;
 var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Engine stuff
@@ -59,27 +58,33 @@ var     sound               VehicleBurningSound;
 var     sound               DestroyedBurningSound;
 var     sound               DamagedStartUpSound;
 
+// Resupply attachments
+var()   class<RODummyAttachment>    ResupplyAttachmentClass;
+var     RODummyAttachment           ResupplyAttachment;
+var()   name                        ResupplyAttachBone;
+var()   class<RODummyAttachment>    ResupplyDecoAttachmentClass;
+var     RODummyAttachment           ResupplyDecoAttachment;
+var()   name                        ResupplyDecoAttachBone;
+
 // Debugging
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
 
 replication
 {
-    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) below as "or bNetInitial adds nothing) - move later as part of class review & refactor
-    reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
-        bEngineOff;
-//      bEngineDead // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
-
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bResupplyVehicle; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
+        bEngineOff;
+//      bEngineDead      // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
 //      EngineHealthMax  // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
+//      bResupplyVehicle // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine, ServerToggleDebugExits;
 }
 
+// Modified to spawn any sound or resuppply attachments & so net clients show unoccupied rider positions on the HUD vehicle icon
 simulated function PostBeginPlay()
 {
     super(Vehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
@@ -89,12 +94,22 @@ simulated function PostBeginPlay()
         PlayAnim(BeginningIdleAnim);
     }
 
-    // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
-    if (Level.NetMode == NM_Standalone)
+    if (Role == ROLE_Authority)
     {
-        bDriverAlreadyEntered = true;
+        // Spawn the actual resupply actor - this is not the visual attachment, it's the real thing on the server
+        if (ResupplyAttachmentClass != none && ResupplyAttachBone != '' && ResupplyAttachment == none)
+        {
+            ResupplyAttachment = Spawn(ResupplyAttachmentClass);
+            AttachToBone(ResupplyAttachment, ResupplyAttachBone);
+        }
+
+        // For single player mode, we may as well set this here, as it's only intended to stop idiot players blowing up friendly vehicles in spawn
+        if (Level.NetMode == NM_Standalone)
+        {
+            bDriverAlreadyEntered = true;
+        }
     }
-    else if (Role < ROLE_Authority)
+    else
     {
         // Matt: set this on a net client to work with our new rider pawn system, as rider pawns won't exist on client unless occupied
         // It forces client's WeaponPawns array to normal length, even though rider pawn slots may be empty - simply so we see all the grey rider position dots on HUD vehicle icon
@@ -116,6 +131,12 @@ simulated function PostBeginPlay()
             InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
             InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
             AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
+        }
+
+        if (ResupplyDecoAttachmentClass != none && ResupplyDecoAttachBone != '' && ResupplyDecoAttachment == none)
+        {
+            ResupplyDecoAttachment = Spawn(ResupplyDecoAttachmentClass);
+            AttachToBone(ResupplyDecoAttachment, ResupplyDecoAttachBone);
         }
     }
 }
@@ -199,6 +220,7 @@ simulated function SetEngine()
     }
 }
 
+// Modified to avoid playing engine start sound when entering vehicle
 function KDriverEnter(Pawn P)
 {
     bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROWheeledVehicle
@@ -429,8 +451,12 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
 simulated event DrivingStatusChanged()
 {
     super(Vehicle).DrivingStatusChanged();
-
-    // Moved exhaust and dust spawning to StartEngineFunction
+    
+    // Not moving, so no motion sound
+    if (Level.NetMode != NM_DedicatedServer && (!bDriving || bEngineOff))
+    {
+        UpdateMovementSound(0.0);
+    }
 }
 
 // Modified to use fire button to start or stop engine
@@ -680,7 +706,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 
     RandomExplModifier = FRand();
 
-    if (bResupplyVehicle)
+    if (ResupplyAttachment != none)
     {
         HurtRadius(ExplosionDamage, ExplosionRadius, ExplosionDamageType, ExplosionMomentum, Location);
     }
@@ -836,22 +862,28 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
+// Modified to kill extra effects & destroy any decorative attachments
 simulated event DestroyAppearance()
 {
     local int         i;
     local KarmaParams KP;
 
-    // For replication
-    bDestroyAppearance = true;
+    bDestroyAppearance = true; // for replication
 
     // Put brakes on
     Throttle = 0.0;
     Steering = 0.0;
     Rise     = 0.0;
 
-    // Destroy the weapons
     if (Role == ROLE_Authority)
     {
+        // Destroy any resupply attachment
+        if (ResupplyAttachment != none)
+        {
+            ResupplyAttachment.Destroy();
+        }
+
+        // Destroy the vehicle weapons
         for (i = 0; i < WeaponPawns.Length; i++)
         {
             if (WeaponPawns[i] != none)
@@ -866,22 +898,14 @@ simulated event DestroyAppearance()
     // Destroy the effects
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < Dust.Length; i++)
+        if (bEmittersOn)
         {
-            if (Dust[i] != none)
-            {
-                Dust[i].Kill();
-            }
+            StopEmitters();
         }
 
-        Dust.Length = 0;
-
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        if (DamagedEffect != none)
         {
-            if (ExhaustPipes[i].ExhaustEffect != none)
-            {
-                ExhaustPipes[i].ExhaustEffect.Kill();
-            }
+            DamagedEffect.Kill();
         }
     }
 
@@ -891,11 +915,6 @@ simulated event DestroyAppearance()
     if (KP != none)
     {
         KP.KStartLinVel = Velocity;
-    }
-
-    if (DamagedEffect != none)
-    {
-        DamagedEffect.Kill();
     }
 
     // Become the dead vehicle mesh
@@ -913,6 +932,11 @@ simulated event DestroyAppearance()
 simulated function Destroyed()
 {
     super.Destroyed();
+
+    if (ResupplyAttachment != none && Role == ROLE_Authority)
+    {
+        ResupplyAttachment.Destroy();
+    }
 
     if (Level.NetMode != NM_DedicatedServer)
     {

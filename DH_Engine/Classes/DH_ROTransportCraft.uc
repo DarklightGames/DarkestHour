@@ -7,7 +7,6 @@ class DH_ROTransportCraft extends DH_ROWheeledVehicle
     abstract;
 
 var()   float               MaxCriticalSpeed;
-var()   float               MaxPitchSpeed;
 
 // Tread stuff
 var     int                 LeftTreadIndex;
@@ -25,16 +24,12 @@ var()   int                 WheelRotationScale;
 // Sound attachment actor variables
 var()   sound               LeftTreadSound;    // sound for the left tread squeaking
 var()   sound               RightTreadSound;   // sound for the right tread squeaking
-var()   sound               RumbleSound;       // interior rumble sound
 var     bool                bPlayTreadSound;
 var     float               TreadSoundVolume;
 var     ROSoundAttachment   LeftTreadSoundAttach;
 var     ROSoundAttachment   RightTreadSoundAttach;
-var     ROSoundAttachment   InteriorRumbleSoundAttach;
-var     float               MotionSoundVolume;
 var()   name                LeftTrackSoundBone;
 var()   name                RightTrackSoundBone;
-var()   name                RumbleSoundBone;
 
 
 simulated function SetupTreads()
@@ -81,23 +76,13 @@ simulated function PostBeginPlay()
             RightTreadSoundAttach.AmbientSound = RightTreadSound;
             AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
         }
-
-        if (InteriorRumbleSoundAttach == none)
-        {
-            InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
-            InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
-            AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
-        }
     }
-
-/*  if (HasAnim('driver_hatch_idle_open'))
-    {
-        LoopAnim('driver_hatch_idle_open');
-    }*/
 }
 
-simulated function UpdateMovementSound()
+simulated function UpdateMovementSound(float MotionSoundVolume)
 {
+    super.UpdateMovementSound(MotionSoundVolume);
+
     if (LeftTreadSoundAttach != none)
     {
        LeftTreadSoundAttach.SoundVolume = MotionSoundVolume;
@@ -106,11 +91,6 @@ simulated function UpdateMovementSound()
     if (RightTreadSoundAttach != none)
     {
        RightTreadSoundAttach.SoundVolume = MotionSoundVolume;
-    }
-
-    if (InteriorRumbleSoundAttach != none)
-    {
-       InteriorRumbleSoundAttach.SoundVolume = MotionSoundVolume;
     }
 }
 
@@ -129,10 +109,6 @@ simulated event DrivingStatusChanged()
         {
             RightTreadPanner.PanRate = 0.0;
         }
-
-        // Not moving, so no motion sound
-        MotionSoundVolume = 0.0;
-        UpdateMovementSound();
     }
 }
 
@@ -150,22 +126,7 @@ simulated function Destroyed()
         RightTreadSoundAttach.Destroy();
     }
 
-    if (InteriorRumbleSoundAttach != none)
-    {
-        InteriorRumbleSoundAttach.Destroy();
-    }
-
     super.Destroyed();
-}
-
-// DriverLeft() called by KDriverLeave()
-function DriverLeft()
-{
-    // Not moving, so no motion sound
-    MotionSoundVolume = 0.0;
-    UpdateMovementSound();
-
-    super.DriverLeft();
 }
 
 simulated function DestroyTreads()
@@ -186,7 +147,7 @@ simulated function DestroyTreads()
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
-    local float           LinTurnSpeed, MotionSoundTemp, MySpeed;
+    local float           MySpeed, LinTurnSpeed;
     local int             i;
 
     super.Tick(DeltaTime);
@@ -196,19 +157,6 @@ simulated function Tick(float DeltaTime)
     {
         // Shame on you Psyonix, for calling VSize() 3 times every tick, when it only needed to be called once, as VSize() is very CPU intensive - Ramm
         MySpeed = VSize(Velocity);
-
-        // Setup sounds that are dependent on velocity
-        if (MySpeed > 0.1)
-        {
-            MotionSoundTemp =  MySpeed / MaxPitchSpeed * 255.0;
-            MotionSoundVolume = FClamp(MotionSoundTemp, 0.0, 255.0);
-        }
-        else
-        {
-            MotionSoundVolume = 0.0;
-        }
-
-        UpdateMovementSound();
 
         if (MySpeed >= MaxCriticalSpeed && ROPlayer(Controller) != none)
         {

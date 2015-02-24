@@ -8,66 +8,18 @@ class DH_GMCTruckTransport extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_GMCTruck_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Allied_MilitarySM.utx
 
-//resupply attachment code
-var     DH_GMCTruckResupplyAttachment     ResupplyAttach;
-var()   name                              ResupplyAttachBone;
-
-var     DH_GMCTruckDecoAttachment         DecorationAttach;
-var()   name                              DecorationAttachBone;
-
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_Allied_MilitarySM.American.GMC');
-
 }
 
 simulated function UpdatePrecacheMaterials()
 {
     Level.AddPrecacheMaterial(Material'DH_Allied_MilitarySM.American.GMC');
+
     super.UpdatePrecacheMaterials();
-}
-
-simulated function PostBeginPlay()
-{
-     super.PostBeginPlay();
-
-     if (ResupplyAttach == none)
-     {
-           ResupplyAttach = Spawn(class'DH_GMCTruckResupplyAttachment');
-           AttachToBone(ResupplyAttach, ResupplyAttachBone);
-     }
-
-     if (DecorationAttach == none)
-     {
-           DecorationAttach = Spawn(class'DH_GMCTruckDecoAttachment');
-           AttachToBone(DecorationAttach, DecorationAttachBone);
-     }
-
-}
-
-simulated function Destroyed()
-{
-
-    if (ResupplyAttach != none)
-        ResupplyAttach.Destroy();
-
-    if (DecorationAttach != none)
-        DecorationAttach.Destroy();
-
-    super.Destroyed();
-}
-
-simulated event DestroyAppearance()
-{
-
-    if (ResupplyAttach != none)
-    {
-        ResupplyAttach.Destroy();
-    }
-
-    super.DestroyAppearance();
 }
 
 // Overridden due to the Onslaught team lock not working in RO
@@ -116,9 +68,10 @@ function bool TryToDrive(Pawn P)
 
 defaultproperties
 {
+    ResupplyAttachmentClass=class'DH_GMCTruckResupplyAttachment'
     ResupplyAttachBone="supply"
-    DecorationAttachBone="Deco"
-    bResupplyVehicle=true
+    ResupplyDecoAttachmentClass=class'DH_GMCTruckDecoAttachment'
+    ResupplyDecoAttachBone="Deco"
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01

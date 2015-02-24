@@ -8,13 +8,6 @@ class DH_OpelBlitzTransport extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_OpelBlitz_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
-//resupply attachment code
-var     DH_OpelBlitzResupplyAttachment    ResupplyAttach;
-var()   name                              ResupplyAttachBone;
-
-var     DH_OpelBlitzDecoAttachment        DecorationAttach;
-var()   name                              DecorationAttachBone;
-
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
@@ -30,47 +23,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
 
     super.UpdatePrecacheMaterials();
-}
-
-simulated function PostBeginPlay()
-{
-     super.PostBeginPlay();
-
-     if (ResupplyAttach == none)
-     {
-           ResupplyAttach = Spawn(class'DH_OpelBlitzResupplyAttachment');
-           AttachToBone(ResupplyAttach, ResupplyAttachBone);
-     }
-
-     if (DecorationAttach == none)
-     {
-           DecorationAttach = Spawn(class'DH_OpelBlitzDecoAttachment');
-           AttachToBone(DecorationAttach, DecorationAttachBone);
-     }
-
-}
-
-simulated function Destroyed()
-{
-
-    if (ResupplyAttach != none)
-        ResupplyAttach.Destroy();
-
-    if (DecorationAttach != none)
-        DecorationAttach.Destroy();
-
-    super.Destroyed();
-}
-
-simulated event DestroyAppearance()
-{
-
-    if (ResupplyAttach != none)
-    {
-        ResupplyAttach.Destroy();
-    }
-
-    super.DestroyAppearance();
 }
 
 // Overridden due to the Onslaught team lock not working in RO
@@ -119,9 +71,10 @@ function bool TryToDrive(Pawn P)
 
 defaultproperties
 {
+    ResupplyAttachmentClass=class'DH_OpelBlitzResupplyAttachment'
     ResupplyAttachBone="supply"
-    DecorationAttachBone="Deco"
-    bResupplyVehicle=true
+    ResupplyDecoAttachmentClass=class'DH_OpelBlitzDecoAttachment'
+    ResupplyDecoAttachBone="Deco"
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
