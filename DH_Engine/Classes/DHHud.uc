@@ -1188,7 +1188,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
 
             // Get speed value & update rotator
-            f = ((VSize(WheeledVehicle.Velocity) * 3600.0) / 60.35) / 1000.0;
+            f = VSize(WheeledVehicle.Velocity) * 0.05965; // convert from UU to kph // was " * 3600.0 / 60.352 / 1000.0" but optimised calculation as done many times per sec
             f *= VehicleSpeedScale[i];
             f += VehicleSpeedZeroPosition[i];
 
