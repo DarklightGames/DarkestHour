@@ -81,7 +81,8 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerToggleDebugExits;
+        ServerStartEngine, 
+        ServerToggleDebugExits, ServerKillEngine; // these ones only during development
 }
 
 // Modified to spawn any sound or resuppply attachments & so net clients show unoccupied rider positions on the HUD vehicle icon
@@ -477,7 +478,7 @@ simulated event DrivingStatusChanged()
 simulated function Fire(optional float F)
 {
     // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
     {
         ServerStartEngine();
         IgnitionSwitchTime = Level.TimeSeconds;
@@ -579,26 +580,31 @@ simulated function StartEmitters()
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
-    // Engine can't be dead & vehicle can't be moving - also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
+    // Throttle must be zeroed & also a time check so people can't spam the ignition switch
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
     {
         IgnitionSwitchTime = Level.TimeSeconds;
-        bEngineOff = !bEngineOff;
-        SetEngine();
 
-        if (bEngineOff)
+        if (EngineHealth > 0)
         {
-            if (ShutDownSound != none)
+            bEngineOff = !bEngineOff;
+            SetEngine();
+
+            if (bEngineOff)
             {
-                PlaySound(ShutDownSound, SLOT_None, 1.0);
+                if (ShutDownSound != none)
+                {
+                    PlaySound(ShutDownSound, SLOT_None, 1.0);
+                }
+            }
+            else if (StartUpSound != none)
+            {
+                PlaySound(StartUpSound, SLOT_None, 1.0);
             }
         }
         else
         {
-            if (StartUpSound != none)
-            {
-                PlaySound(StartUpSound, SLOT_None, 1.0);
-            }
+            PlaySound(DamagedStartUpSound, SLOT_None, 2.0);
         }
     }
 }
@@ -1163,6 +1169,20 @@ function ServerToggleDebugExits()
         class'DH_ROWheeledVehicle'.default.bDebugExitPositions = !class'DH_ROWheeledVehicle'.default.bDebugExitPositions;
         Log("DH_ROWheeledVehicle.bDebugExitPositions =" @ class'DH_ROWheeledVehicle'.default.bDebugExitPositions);
     }
+}
+
+// Matt: handy execs during development for testing engine damage
+function exec KillEngine()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
+    {
+        ServerKillEngine();
+    }
+}
+
+function ServerKillEngine()
+{
+    DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
 }
 
 // Overridden to eliminate "Waiting for Additional Crewmembers" message

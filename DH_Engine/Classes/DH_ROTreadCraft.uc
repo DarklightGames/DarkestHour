@@ -173,7 +173,8 @@ replication
         
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire;
+        ServerStartEngine, 
+        ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones only during development
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
 
@@ -483,7 +484,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 simulated function Fire(optional float F)
 {
     // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
     {
         ServerStartEngine();
         IgnitionSwitchTime = Level.TimeSeconds;
@@ -585,26 +586,31 @@ simulated function StartEmitters()
 // Server side function called to switch engine on/off
 function ServerStartEngine()
 {
-    // Engine can't be dead & vehicle can't be moving - also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
+    // Throttle must be zeroed & also a time check so people can't spam the ignition switch
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
     {
         IgnitionSwitchTime = Level.TimeSeconds;
-        bEngineOff = !bEngineOff;
-        SetEngine();
 
-        if (bEngineOff)
+        if (EngineHealth > 0)
         {
-            if (ShutDownSound != none)
+            bEngineOff = !bEngineOff;
+            SetEngine();
+
+            if (bEngineOff)
             {
-                PlaySound(ShutDownSound, SLOT_None, 1.0);
+                if (ShutDownSound != none)
+                {
+                    PlaySound(ShutDownSound, SLOT_None, 1.0);
+                }
+            }
+            else if (StartUpSound != none)
+            {
+                PlaySound(StartUpSound, SLOT_None, 1.0);
             }
         }
         else
         {
-            if (StartUpSound != none)
-            {
-                PlaySound(StartUpSound, SLOT_None, 1.0);
-            }
+            PlaySound(DamagedStartUpSound, SLOT_None, 2.0);
         }
     }
 }
@@ -2677,7 +2683,12 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
             Level.Game.Broadcast(self, "Engine is dead");
         }
 
-        bEngineOff = true;
+        if (!bEngineOff)
+        {
+            bEngineOff = true;
+            PlaySound(DamagedShutDownSound, SLOT_None, FClamp(Abs(Throttle), 0.3, 0.75)); // TEST // 1.0);
+        }
+
         SetEngine();
     }
     // Or if engine still alive, a random chance of engine fire breaking out
@@ -3233,7 +3244,20 @@ function ServerToggleDebugExits()
     }
 }
 
-// Matt: handy exec during development for testing track damage
+// Matt: handy execs during development for testing engine or track damage
+function exec KillEngine()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
+    {
+        ServerKillEngine();
+    }
+}
+
+function ServerKillEngine()
+{
+    DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
+}
+
 exec function DamTrack(string Track)
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
