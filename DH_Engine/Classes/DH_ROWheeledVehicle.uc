@@ -949,6 +949,11 @@ simulated function Destroyed()
         {
             InteriorRumbleSoundAttach.Destroy();
         }
+
+        if (ResupplyDecoAttachment != none)
+        {
+            ResupplyDecoAttachment.Destroy();
+        }
     }
 }
 
