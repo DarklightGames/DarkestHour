@@ -6,33 +6,26 @@
 class DH_ROTransportCraft extends DH_ROWheeledVehicle
     abstract;
 
-var()   float               MaxCriticalSpeed;
+var()   float               MaxCriticalSpeed; // if vehicle goes over max speed, it forces player to pull back on throttle
 
 // Tread stuff
-var     int                 LeftTreadIndex;
-var     int                 RightTreadIndex;
+var     int                 LeftTreadIndex, RightTreadIndex;
 var     VariableTexPanner   LeftTreadPanner, RightTreadPanner;
 var()   float               TreadVelocityScale;
 var     rotator             LeftTreadPanDirection, RightTreadPanDirection;
 
+// Tread sounds
+var()   sound               LeftTreadSound, RightTreadSound; // sound for each tread squeaking
+var     float               TreadSoundVolume;
+var     ROSoundAttachment   LeftTreadSoundAttach, RightTreadSoundAttach;
+var()   name                LeftTrackSoundBone, RightTrackSoundBone;
+
 // Wheel animation
-var()   array<name>         LeftWheelBones;     // for animation only - the bone names for the wheels on the left side
-var()   array<name>         RightWheelBones;    // for animation only - the bone names for the wheels on the right side
-var     rotator             LeftWheelRot;       // keep track of the left wheels rotational speed for animation
-var     rotator             RightWheelRot;      // keep track of the right wheels rotational speed for animation
+var()   array<name>         LeftWheelBones, RightWheelBones; // for animation only - the bone names for the wheels on each side
+var     rotator             LeftWheelRot, RightWheelRot;     // keep track of the wheel rotational speed for animation
 var()   int                 WheelRotationScale;
 
-// Sound attachment actor variables
-var()   sound               LeftTreadSound;    // sound for the left tread squeaking
-var()   sound               RightTreadSound;   // sound for the right tread squeaking
-var     bool                bPlayTreadSound;
-var     float               TreadSoundVolume;
-var     ROSoundAttachment   LeftTreadSoundAttach;
-var     ROSoundAttachment   RightTreadSoundAttach;
-var()   name                LeftTrackSoundBone;
-var()   name                RightTrackSoundBone;
-
-
+// From DH_ROTreadCraft & ROTreadCraft (combines SetupTreads & some PostBeginPlay)
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
@@ -54,8 +47,23 @@ simulated function SetupTreads()
         RightTreadPanner.PanRate = 0.0;
         Skins[RightTreadIndex] = RightTreadPanner;
     }
+
+    if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
+    {
+        LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
+        AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
+    }
+
+    if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
+    {
+        RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        RightTreadSoundAttach.AmbientSound = RightTreadSound;
+        AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
+    }
 }
 
+// Modified to add treads (from ROTreadCraft)
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -63,23 +71,10 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetupTreads();
-
-        if (LeftTreadSoundAttach == none)
-        {
-            LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
-            LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
-            AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
-        }
-
-        if (RightTreadSoundAttach == none)
-        {
-            RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
-            RightTreadSoundAttach.AmbientSound = RightTreadSound;
-            AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
-        }
     }
 }
 
+// Modified to add tread sounds (from ROTreadCraft)
 simulated function UpdateMovementSound(float MotionSoundVolume)
 {
     super.UpdateMovementSound(MotionSoundVolume);
@@ -95,6 +90,7 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
     }
 }
 
+// Modified to add treads (from ROTreadCraft)
 simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
@@ -113,35 +109,34 @@ simulated event DrivingStatusChanged()
     }
 }
 
+// Modified to destroy treads (from ROTreadCraft)
 simulated function Destroyed()
 {
-    DestroyTreads();
-
-    if (LeftTreadSoundAttach != none)
-    {
-        LeftTreadSoundAttach.Destroy();
-    }
-
-    if (RightTreadSoundAttach != none)
-    {
-        RightTreadSoundAttach.Destroy();
-    }
-
     super.Destroyed();
-}
 
-simulated function DestroyTreads()
-{
-    if (LeftTreadPanner != none)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        Level.ObjectPool.FreeObject(LeftTreadPanner);
-        LeftTreadPanner = none;
-    }
+        if (LeftTreadPanner != none)
+        {
+            Level.ObjectPool.FreeObject(LeftTreadPanner);
+            LeftTreadPanner = none;
+        }
 
-    if (RightTreadPanner != none)
-    {
-        Level.ObjectPool.FreeObject(RightTreadPanner);
-        RightTreadPanner = none;
+        if (RightTreadPanner != none)
+        {
+            Level.ObjectPool.FreeObject(RightTreadPanner);
+            RightTreadPanner = none;
+        }
+
+        if (LeftTreadSoundAttach != none)
+        {
+            LeftTreadSoundAttach.Destroy();
+        }
+
+        if (RightTreadSoundAttach != none)
+        {
+            RightTreadSoundAttach.Destroy();
+        }
     }
 }
 
@@ -331,8 +326,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 }
 
-// We want to disable APC if: engine is dead or vehicle takes big damage
-// This should give time for troops to bail out and escape before vehicle blows
+// Modified to disable if vehicle takes major damage, as well as if engine is dead
+// This should give time for troops to bail out & escape before vehicle blows
 simulated function bool IsDisabled()
 {
     return (EngineHealth <= 0 || (Health >= 0 && Health <= HealthMax / 3));
