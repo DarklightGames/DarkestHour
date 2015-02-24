@@ -39,82 +39,57 @@ struct NewHitpoint
 
 var()   array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
 
-// Schurzen
-struct SchurzenType
-{
-    var class<RODummyAttachment> SchurzenClass; // a possible schurzen decorative attachment class, with different degrees of damage
-    var byte                     PercentChance; // the % chance of this deco attachment being the one spawned
-};
-
-var     SchurzenType        SchurzenTypes[4]; // an array of possible schurzen attachments
-var     byte                SchurzenIndex;    // the schurzen index number selected randomly to be spawned for this vehicle
-var     RODummyAttachment   Schurzen;         // actor reference to the schurzen deco attachment, so it can be destroyed when the vehicle gets destroyed
-var     vector              SchurzenOffset;   // the positional offset from the attachment bone
-var     Material            SchurzenTexture;  // the camo skin for the schurzen attachment
-
 // General
-var     float       PointValue; // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
-var     bool        bEmittersOn;
+var()   texture     PeriscopeOverlay;
+var()   float       PointValue;             // used for scoring - 1 = Jeeps/Trucks; 2 = Light Tank/Recon Vehicle/AT Gun; 3 = Medium Tank; 4 = Medium Heavy (Pz V,JP), 5 = Heavy Tank
+var()   float       MaxCriticalSpeed;       // if vehicle goes over max speed, it forces player to pull back on throttle
 var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
-var     float       MaxCriticalSpeed;
-var     float       WaitForCrewTime;
+var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Positions
-var     int         UnbuttonedPositionIndex;
-var     bool        bNoDriverHatch;         // no driver's hatch to exit from, e.g. for Stug, JP & Panzer III (formerly called bSpecialExiting)
-var     float       ViewTransitionDuration; // used to control the time we stay in state ViewTransition
-var()   bool        bAllowRiders;
+var()   int         UnbuttonedPositionIndex;
 var()   int         FirstRiderPositionIndex;
+var     float       ViewTransitionDuration; // used to control the time we stay in state ViewTransition
+var()   bool        bNoDriverHatch;         // no driver's hatch to exit from, e.g. for Stug, JP & Panzer III (formerly called bSpecialExiting)
+var()   bool        bAllowRiders;           // players, including non-tankers, can ride on the back or top of the vehicle
 var()   bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 
 // Armor penetration
-var     bool        bProjectilePenetrated; // shell has passed penetration test and has entered the hull or turret
-var     bool        bRoundShattered;
-var     bool        bRearHit;
+var     bool        bProjectilePenetrated; // shell has passed penetration test & has entered the hull or turret
+var     bool        bRoundShattered;       // tells projectile to show shattered round effects
+var     bool        bRearHit;              // saves rear hit in DHShouldPenetrate, so TakeDamage can tell if an engine hit should stop the round penetrating any further
 
-var     float       UFrontArmorFactor; // upper armor values
-var     float       URightArmorFactor;
-var     float       ULeftArmorFactor;
-var     float       URearArmorFactor;
-
-var     float       UFrontArmorSlope;
-var     float       URightArmorSlope;
-var     float       ULeftArmorSlope;
-var     float       URearArmorSlope;
-
+var()   float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (actually used for whole hull, for now)
+var()   float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope
 
 // Damage stuff
-var     float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
+var()   float       TreadDamageThreshold;    // allows for tank by tank adjustment of tread vulnerability
+var()   float       AmmoIgnitionProbability; // allows for tank by tank ammo box ignition probabilities
 var     float       DriverKillChance;        // chance that shrapnel will kill driver
 var     float       GunnerKillChance;        // chance that shrapnel will kill bow gunner
-var     float       TreadDamageThreshold;    // allows for tank by tank adjustment of tread vulnerability
-var     bool        bPeriscopeDamaged;
-var     texture     PeriscopeOverlay;
 var     texture     DamagedPeriscopeOverlay;
 
 // Turret damage stuff
-var     bool        bWasTurretHit; // used to prevent lower turret hits from registering as tread hits
+var     bool        bWasTurretHit;
 var     float       CommanderKillChance;
-var     float       OpticsDamageChance;
 var     float       GunDamageChance;
 var     float       TraverseDamageChance;
+var     float       OpticsDamageChance;
 var     float       TurretDetonationThreshold; // chance that turret ammo will go up
 
 // Engine stuff
-var     bool        bEngineOff;  // tank engine is simply switched off
+var     bool        bEngineOff;      // tank engine is simply switched off
 var     bool        bSavedEngineOff; // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;
 var     sound       DamagedStartUpSound;
 var     sound       DamagedShutDownSound;
 
 // Treads
-var     int         LeftTreadIndex;
-var     int         RightTreadIndex;
-var     rotator     LeftTreadPanDirection;
-var     rotator     RightTreadPanDirection;
-var()   material    DamagedTreadPanner;
+var()   int         LeftTreadIndex, RightTreadIndex;
+var()   rotator     LeftTreadPanDirection, RightTreadPanDirection;
+var     material    DamagedTreadPanner;
 
 var()   class<RODummyAttachment>  DamagedTrackLeftClass, DamagedTrackRightClass; // class for static mesh showing damaged track, e.g. broken track links (clientside only)
 var     RODummyAttachment         DamagedTrackLeft, DamagedTrackRight;
@@ -155,7 +130,20 @@ var     sound       SmokingEngineSound;
 var     sound       VehicleBurningSound;
 var     sound       DestroyedBurningSound;
 
-// Debugging help and customizable stuff
+// Schurzen
+struct SchurzenType
+{
+    var class<RODummyAttachment> SchurzenClass; // a possible schurzen decorative attachment class, with different degrees of damage
+    var byte                     PercentChance; // the % chance of this deco attachment being the one spawned
+};
+
+var     SchurzenType        SchurzenTypes[4]; // an array of possible schurzen attachments
+var     byte                SchurzenIndex;    // the schurzen index number selected randomly to be spawned for this vehicle
+var     RODummyAttachment   Schurzen;         // actor reference to the schurzen deco attachment, so it can be destroyed when the vehicle gets destroyed
+var     vector              SchurzenOffset;   // the positional offset from the attachment bone
+var     Material            SchurzenTexture;  // the camo skin for the schurzen attachment
+
+// Debugging help & customizable stuff
 var     bool        bDrawPenetration;
 var     bool        bDebuggingText;
 var     bool        bPenetrationText;
@@ -168,26 +156,21 @@ replication
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         SchurzenIndex;
-
+   
     // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
-        MaxCriticalSpeed; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
-
-    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) below as "or bNetInitial adds nothing) - move later as part of class review & refactor
-    reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
-        bEngineOff;
-//      bEngineDead // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
+//    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+//        MaxCriticalSpeed; // Matt: removed as it never changes & doesn't need to be replicated
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-//      EngineHealthMax,         // Matt: removed as I have deprecated
-        UnbuttonedPositionIndex, // Matt: never changes & doesn't need to be replicated - check later & possibly remove
-        bEngineOnFire, bOnFire;
-
-    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - do later as part of class review & refactor
-    reliable if (Role == ROLE_Authority) // Matt: at a glance, I'm not sure bProjPen or bFirstHit are used clientside (& peri not used at all) - check later & possibly remove
-        bProjectilePenetrated, bFirstHit, bRoundShattered, bPeriscopeDamaged;
-
+        bEngineOff, bOnFire, bEngineOnFire;
+//      bEngineDead                                 // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
+//      EngineHealthMax                             // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
+//      UnbuttonedPositionIndex,                    // Matt: removed as never changes & doesn't need to be replicated
+//      bProjectilePenetrated, bFirstPenetratingHit // Matt: removed as not even used clientside
+//      bRoundShattered                             // Matt: removed as is set independently on clients
+//      bPeriscopeDamaged                           // Matt: removed variable as is part of functionality never implemented
+        
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerStartEngine, ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire;
@@ -3423,7 +3406,6 @@ defaultproperties
     bSavedEngineOff=true
     bDisableThrottle=false
     DriverTraceDistSquared=20250000.0 // Matt: increased from 4500 as made variable into a squared value (VSizeSquared is more efficient than VSize)
-    WaitForCrewTime=7.0
     ChassisTorqueScale=0.9
     ChangeUpPoint=2050.0
     ChangeDownPoint=1100.0
