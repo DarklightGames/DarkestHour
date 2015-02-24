@@ -2096,8 +2096,6 @@ function TakeFallingDamage()
 {
     local float Shake, EffectiveSpeed, TotalSpeed;
 
-    TotalSpeed = Vsize(Velocity);
-
     if (Velocity.Z < -0.5 * MaxFallSpeed)
     {
         if (Role == ROLE_Authority)
@@ -2112,6 +2110,7 @@ function TakeFallingDamage()
                 {
                     EffectiveSpeed = FMin(0.0, EffectiveSpeed + 100.0);
                 }
+
                 if (EffectiveSpeed < -1 * MaxFallSpeed)
                 {
                     TakeDamage(-100 * (1.5 * EffectiveSpeed + MaxFallSpeed) / MaxFallSpeed, none, Location, vect(0.0, 0.0, 0.0), class'Fell');
@@ -2127,36 +2126,41 @@ function TakeFallingDamage()
             Controller.DamageShake(Shake);
         }
     }
-    else if (TotalSpeed > 0.75 * MinHurtSpeed)
+    else
     {
-        if (Role == ROLE_Authority)
-        {
-            MakeNoise(1.0);
+        TotalSpeed = VSize(Velocity);
 
-            if (TotalSpeed > MinHurtSpeed)
+        if (TotalSpeed > 0.75 * MinHurtSpeed)
+        {
+            if (Role == ROLE_Authority)
             {
-                if (TouchingWaterVolume())
-                {
-                    TotalSpeed = FMin(0.0, TotalSpeed + 100.0);
-                }
+                MakeNoise(1.0);
 
                 if (TotalSpeed > MinHurtSpeed)
                 {
-                    TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0.0, 0.0, 0.0), class'DH_ExitMovingVehicleDamType');
-                    UpdateDamageList(254); // damaged the legs
+                    if (TouchingWaterVolume())
+                    {
+                        TotalSpeed = FMin(0.0, TotalSpeed + 100.0);
+                    }
+
+                    if (TotalSpeed > MinHurtSpeed)
+                    {
+                        TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0.0, 0.0, 0.0), class'DH_ExitMovingVehicleDamType');
+                        UpdateDamageList(254); // damaged the legs
+                    }
                 }
             }
-        }
 
-        if (Controller != none)
-        {
-            Shake = FMin(1.0, TotalSpeed / MinHurtSpeed);
-            Controller.DamageShake(Shake);
+            if (Controller != none)
+            {
+                Shake = FMin(1.0, TotalSpeed / MinHurtSpeed);
+                Controller.DamageShake(Shake);
+            }
         }
-    }
-    else if (Velocity.Z < -1.4 * JumpZ)
-    {
-        MakeNoise(0.5);
+        else if (Velocity.Z < -1.4 * JumpZ)
+        {
+            MakeNoise(0.5);
+        }
     }
 }
 
