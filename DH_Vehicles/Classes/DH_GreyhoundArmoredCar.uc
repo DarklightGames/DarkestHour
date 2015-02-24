@@ -152,7 +152,6 @@ defaultproperties
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LRWheel'
     VehicleMass=5.0
-    bHasHandbrake=false
     DrivePos=(X=5.0,Y=-2.0,Z=5.0)
     DriveAnim="VBA64_driver_idle_close"
     ExitPositions(0)=(X=135.0,Y=-33.0,Z=176.0)
