@@ -44,7 +44,6 @@ var     bool        bResupplyVehicle;
 var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Engine stuff
-var     bool        bEngineDead;        // vehicle engine is damaged and cannot run or be restarted ... ever
 var     bool        bEngineOff;         // vehicle engine is simply switched off
 var     bool        bSavedEngineOff;    // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;
@@ -62,7 +61,8 @@ replication
 {
     // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) below as "or bNetInitial adds nothing) - move later as part of class review & refactor
     reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
-        bEngineDead, bEngineOff;
+        bEngineOff;
+//      bEngineDead // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -347,7 +347,7 @@ simulated function Tick(float dt)
         MinBrakeFriction=Default.MinBrakeFriction;
     }
 
-    if (bEngineDead || bEngineOff)
+    if (bEngineOff)
     {
         Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0.0;
@@ -488,7 +488,7 @@ simulated function StartEmitters()
 function ServerStartEngine()
 {
     // Engine can't be dead & vehicle can't be moving - also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && !bEngineDead)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
     {
         IgnitionSwitchTime = Level.TimeSeconds;
         bEngineOff = !bEngineOff;
@@ -681,7 +681,6 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
             Level.Game.Broadcast(self, "Vehicle engine is dead");
         }
 
-        bEngineDead = true;
         bEngineOff = true;
         SetEngine();
     }

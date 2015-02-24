@@ -376,7 +376,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // If vehicle health is very low, kill the engine (which will start a fire)
     if (Health >= 0 && Health <= HealthMax / 3)
     {
-        bEngineDead = true;
         EngineHealth = 0;
         bEngineOff = true;
         SetEngine();

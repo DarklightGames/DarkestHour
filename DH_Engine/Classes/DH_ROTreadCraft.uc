@@ -103,7 +103,6 @@ var     float       TraverseDamageChance;
 var     float       TurretDetonationThreshold; // chance that turret ammo will go up
 
 // Engine stuff
-var     bool        bEngineDead; // tank engine is damaged and cannot run or be restarted...ever
 var     bool        bEngineOff;  // tank engine is simply switched off
 var     bool        bSavedEngineOff; // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;
@@ -176,7 +175,8 @@ replication
 
     // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) below as "or bNetInitial adds nothing) - move later as part of class review & refactor
     reliable if ((bNetInitial || bNetDirty) && Role == ROLE_Authority)
-        bEngineDead, bEngineOff;
+        bEngineOff;
+//      bEngineDead // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -452,7 +452,7 @@ simulated event DrivingStatusChanged()
 
     PC = Level.GetLocalPlayerController();
 
-    if (!bDriving || bEngineOff || bEngineDead)
+    if (!bDriving || bEngineOff)
     {
         if (LeftTreadPanner != none)
             LeftTreadPanner.PanRate = 0.0;
@@ -603,7 +603,7 @@ simulated function StartEmitters()
 function ServerStartEngine()
 {
     // Engine can't be dead & vehicle can't be moving - also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && !bEngineDead)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0 && EngineHealth > 0)
     {
         IgnitionSwitchTime = Level.TimeSeconds;
         bEngineOff = !bEngineOff;
@@ -1319,7 +1319,7 @@ simulated function Tick(float DeltaTime)
 
     super(ROWheeledVehicle).Tick(DeltaTime);
 
-    if (bEngineDead || bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
+    if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
         Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0.0;
@@ -2694,7 +2694,6 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
             Level.Game.Broadcast(self, "Engine is dead");
         }
 
-        bEngineDead = true;
         bEngineOff = true;
         SetEngine();
     }

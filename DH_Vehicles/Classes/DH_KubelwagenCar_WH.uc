@@ -112,7 +112,7 @@ simulated function Tick(float DeltaTime)
 
     super.Tick(DeltaTime);
 
-    if (bEngineDead || bEngineOff)
+    if (bEngineOff)
     {
       velocity=vect(0.0, 0.0, 0.0);
       Throttle=0;

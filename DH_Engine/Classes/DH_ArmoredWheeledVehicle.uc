@@ -71,7 +71,7 @@ simulated function Tick(float DeltaTime)
 
     super(ROWheeledVehicle).Tick(DeltaTime);
 
-    if (bEngineDead || bEngineOff)
+    if (bEngineOff)
     {
         Velocity = vect(0.0, 0.0, 0.0);
         Throttle = 0;
@@ -289,7 +289,6 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
     // If vehicle health is very low, kill the engine & start a fire
     if (Health >= 0 && Health <= HealthMax / 3)
     {
-        bEngineDead = true;
         EngineHealth = 0;
         bEngineOff = true;
         StartEngineFire(InstigatedBy);
