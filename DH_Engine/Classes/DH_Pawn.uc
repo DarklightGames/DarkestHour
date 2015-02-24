@@ -681,7 +681,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         Momentum *= 0.6;
     }
 
-    Momentum = Momentum/Mass;
+    Momentum = Momentum / Mass;
 
     if (Weapon != none)
     {

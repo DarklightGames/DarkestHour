@@ -690,7 +690,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     ViewActor = self;
 
     WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-    WeaponAimRot.Roll =  VehicleBase.Rotation.Roll;
+    WeaponAimRot.Roll = VehicleBase.Rotation.Roll;
 
     if (ROPlayer(Controller) != none)
     {

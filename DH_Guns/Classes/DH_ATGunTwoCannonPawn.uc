@@ -348,7 +348,7 @@ event bool KDriverLeave(bool bForceLeave)
 }
 
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
-function float getAmmoReloadState()
+function float GetAmmoReloadState()
 {
     local ROTankCannon Cannon;
 

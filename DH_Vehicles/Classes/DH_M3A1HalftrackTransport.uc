@@ -31,22 +31,22 @@ simulated function SetupTreads()
 
 static function StaticPrecache(LevelInfo L)
 {
-        super.StaticPrecache(L);
+    super.StaticPrecache(L);
 
-      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
-      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
-      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
-      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
-      L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
+    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
 }
 
 simulated function UpdatePrecacheMaterials()
 {
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
-        Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
+    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
 
     super.UpdatePrecacheMaterials();
 }
@@ -130,7 +130,6 @@ defaultproperties
     PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFour',WeaponBone="passenger_r_2")
     PassengerWeapons(5)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerFive',WeaponBone="passenger_r_3")
     PassengerWeapons(6)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackPassengerSix',WeaponBone="passenger_r_5")
-
 
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
