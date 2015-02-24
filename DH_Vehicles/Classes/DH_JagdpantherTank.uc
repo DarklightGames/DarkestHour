@@ -44,7 +44,7 @@ defaultproperties
     NewVehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="Turret_placement",PointOffset=(X=72.0,Z=45.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Turret_placement",PointOffset=(X=72.0,Z=45.0),NewHitPointType=NHP_GunPitch)
     UnbuttonedPositionIndex=1
-    bSpecialExiting=true
+    bNoDriverHatch=true
     LeftTreadIndex=2
     RightTreadIndex=1
     MaxCriticalSpeed=1002.0

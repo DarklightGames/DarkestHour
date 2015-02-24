@@ -33,7 +33,7 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     UnbuttonedPositionIndex=1
-    bSpecialExiting=true
+    bNoDriverHatch=true
     LeftTreadIndex=2
     RightTreadIndex=3
     MaxCriticalSpeed=729.0

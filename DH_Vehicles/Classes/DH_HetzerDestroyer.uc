@@ -66,12 +66,12 @@ function bool KDriverLeave(bool bForceLeave)
 {
     // if player is not unbuttoned and is trying to exit rather than switch positions, don't let them out
     // bForceLeave is always true for position switch, so checking against false means no risk of locking someone in one slot
-    if (!bForceLeave && !bSpecialExiting && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
+    if (!bForceLeave && !bNoDriverHatch && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
     {
         DenyEntry(Instigator, 4); // I realise that this is actually denying EXIT, but the function does the exact same thing - Ch!cken
         return false;
     }
-    else if (!bForceLeave && bSpecialExiting)
+    else if (!bForceLeave && bNoDriverHatch)
     {
         Instigator.ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 0); // Matt: now says "You must exit through the commander's or loader's hatch"
         return false;
@@ -82,10 +82,10 @@ function bool KDriverLeave(bool bForceLeave)
 
 defaultproperties
 {
-    bSpecialExiting=true
     NewVehHitpoints(0)=(PointRadius=3.2,PointScale=1.0,PointBone="body",PointOffset=(X=29.2,Y=-9.04,Z=58.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=40.8,Y=16.0,Z=32.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=40.8,Y=16.0,Z=32.0),NewHitPointType=NHP_GunPitch)
+    bNoDriverHatch=true
     MaxCriticalSpeed=730.0
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=6.0

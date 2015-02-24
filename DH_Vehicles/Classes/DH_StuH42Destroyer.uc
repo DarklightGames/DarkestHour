@@ -32,7 +32,7 @@ defaultproperties
     NewVehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=5.0,Z=35.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=5.0,Z=35.0),NewHitPointType=NHP_GunPitch)
     UnbuttonedPositionIndex=1
-    bSpecialExiting=true
+    bNoDriverHatch=true
     LeftTreadIndex=3
     MaxCriticalSpeed=729.0
     UFrontArmorFactor=8.1

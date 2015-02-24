@@ -63,7 +63,7 @@ var     bool        bClientInitialized;     // Matt: clientside flag that replic
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Positions
 var     int         UnbuttonedPositionIndex;
-var     bool        bSpecialExiting;
+var     bool        bNoDriverHatch;         // no driver's hatch to exit from, e.g. for Stug, JP & Panzer III (formerly called bSpecialExiting)
 var     float       ViewTransitionDuration; // used to control the time we stay in state ViewTransition
 var()   bool        bAllowRiders;
 var()   int         FirstRiderPositionIndex;
@@ -689,13 +689,13 @@ function bool KDriverLeave(bool bForceLeave)
 
     // If player is not unbuttoned and is trying to exit rather than switch positions, don't let them out
     // bForceLeave is always true for position switch, so checking against false means no risk of locking someone in one slot
-    if (!bForceLeave && !bSpecialExiting && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
+    if (!bForceLeave && !bNoDriverHatch && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
     {
         DenyEntry(Instigator, 4); // I realise that this is actually denying EXIT, but the function does the exact same thing - Ch!cken
 
         return false;
     }
-    else if (!bForceLeave && bSpecialExiting)
+    else if (!bForceLeave && bNoDriverHatch)
     {
         DenyEntry(Instigator, 5); // Stug, JP, and Panzer III drivers must exit through commander's hatch
 
@@ -726,7 +726,7 @@ simulated function SwitchWeapon(byte F)
     // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
     if (bAllowRiders && ChosenWeaponPawnIndex >= FirstRiderPositionIndex && bMustUnbuttonToSwitchToRider)
     {
-        if (bSpecialExiting)
+        if (bNoDriverHatch)
         {
             ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
 
