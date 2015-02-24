@@ -239,38 +239,54 @@ function KDriverEnter(Pawn P)
     Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
 }
 
-// DriverLeft() called by KDriverLeave()
+// Modified to add engine start/stop hint
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    super.ClientKDriverEnter(PC);
+
+    DHPlayer(PC).QueueHint(40, true);
+}
+
+// Matt: modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
+simulated state EnteringVehicle
+{
+    simulated function HandleEnter()
+    {
+        if (DriverPositions[InitialPositionIndex].PositionMesh != none)
+        {
+            LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
+        }
+
+        if (HasAnim(BeginningIdleAnim))
+        {
+            PlayAnim(BeginningIdleAnim);
+        }
+
+        if (PlayerController(Controller) != none)
+        {
+            PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
+        }
+    }
+}
+
+// Modified to avoid playing engine shut down sound when entering vehicle & also to use IdleTimeBeforeReset
 function DriverLeft()
 {
     // Matt: changed from VSize > 5000 to VSizeSquared > 25000000, as is more efficient processing & does same thing
-    if (!bNeverReset && ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)))
+    if (IsVehicleEmpty() && ParentFactory != none && (VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) && !bNeverReset)
     {
-        if (bKeyVehicle)
-        {
-            ResetTime = Level.TimeSeconds + 15.0;
-        }
-        else
-        {
-            ResetTime = Level.TimeSeconds + 30.0;
-        }
+        ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
     }
 
-    super(Vehicle).DriverLeft();
+    DrivingStatusChanged(); // Matt: this is the Super from Vehicle, as we need to skip over Super in ROVehicle
 }
 
+// Modified to prevent entry if player is on fire
 function bool TryToDrive(Pawn P)
 {
-    local DH_Pawn DHP;
-    local int     i;
+    local int i;
 
-    DHP = DH_Pawn(P);
-
-    if (DHP == none || DH_Pawn(P).bOnFire)
-    {
-        return false;
-    }
-
-    if (bDebuggingText)
+    if (bDebuggingText && P != none)
     {
         P.ClientMessage("Vehicle Health:" @ Health $ ", EngineHealth:" @ EngineHealth);
     }
@@ -282,48 +298,46 @@ function bool TryToDrive(Pawn P)
         {
             if (WeaponPawns[i].Driver != none)
             {
-                DenyEntry(P, 2);
+                DenyEntry(P, 2); // cannot enter
 
                 return false;
             }
         }
     }
 
-    // Took out the crouch requirement to enter
-    if (bNonHumanControl || P.Controller == none || Driver != none || P.DrivenVehicle != none || !P.Controller.bIsPlayer || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')))
+    // Deny entry if vehicle has driver or is dead, or if player is crouching or on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Driver != none || Health <= 0 || P == none || P.bIsCrouched || (DH_Pawn(P) != none && DH_Pawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) || 
+        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
     {
         return false;
     }
 
-    if (!Level.Game.CanEnterVehicle(self, P))
-    {
-        return false;
-    }
-
-    // Check vehicle locking
+    // Deny entry to enemy vehicle that is team locked
     if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
     {
-        DenyEntry(P, 1);
+        DenyEntry(P, 1); // can't use enemy vehicle
 
         return false;
     }
-    else if (bMustBeTankCommander && P.IsHumanControlled() && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)
+
+    // Deny entry if vehicle can only be used by tank crew & player is not a tanker role
+    if (bMustBeTankCommander && (ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) == none || ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo == none 
+        || !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew) && P.IsHumanControlled())
     {
-       DenyEntry(P, 0);
+       DenyEntry(P, 0); // not qualified to operate vehicle
 
        return false;
     }
-    else
+
+    // Passed all checks, so allow player to enter the vehicle
+    if (bEnterringUnlocks && bTeamLocked)
     {
-        if (bEnterringUnlocks && bTeamLocked)
-        {
-            bTeamLocked = false;
-        }
-
-        KDriverEnter(P);
-
-        return true;
+        bTeamLocked = false;
     }
+
+    KDriverEnter(P);
+
+    return true;
 }
 
 simulated function Tick(float dt)
@@ -657,19 +671,6 @@ function bool PlaceExitingDriver()
     return false;
 }
 
-event KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
-{
-    if (Role == ROLE_Authority)
-    {
-        ImpactInfo.Other = Other;
-        ImpactInfo.Pos = Pos;
-        ImpactInfo.ImpactVel = ImpactVel;
-        ImpactInfo.ImpactNorm = ImpactNorm;
-        ImpactInfo.ImpactAccel = KParams.KAcceleration;
-        ImpactTicksLeft = ImpactDamageTicks;
-    }
-}
-
 event TakeImpactDamage(float AccelMag)
 {
     local int Damage;
@@ -677,12 +678,12 @@ event TakeImpactDamage(float AccelMag)
     if (Vehicle(ImpactInfo.Other) != none)
     {
         Damage = Int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier());
-
         TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
     }
     else
     {
-        TakeDamage(Int(AccelMag * ImpactDamageModifier()) / ObjectCollisionResistance, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
+        Damage = Int(AccelMag * ImpactDamageModifier()) / ObjectCollisionResistance;
+        TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
     }
 
     // FIXME - scale sound volume to damage amount
@@ -694,11 +695,10 @@ event TakeImpactDamage(float AccelMag)
     if (Health < 0 && (Level.TimeSeconds - LastImpactExplosionTime) > TimeBetweenImpactExplosions)
     {
         VehicleExplosion(Normal(ImpactInfo.ImpactNorm), 0.5);
-
         LastImpactExplosionTime = Level.TimeSeconds;
     }
 }
-
+// Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
     local vector LinearImpulse, AngularImpulse;
@@ -737,7 +737,6 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     }
 }
 
-// Handle the engine damage
 function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
     if (EngineHealth > 0)
@@ -764,26 +763,27 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
     }
 }
 
-// Vehicle has been in the middle of nowhere with no driver for a while, so consider resetting it called after ResetTime has passed since driver left
-// Overridden so we can control the time it takes for the vehicle to disappear - Ramm
+// Modified to use DriverTraceDistSquared instead of literal values (& add debug)
 event CheckReset()
 {
     local Pawn P;
 
-    if (bKeyVehicle && IsVehicleEmpty())
-    {
-        Died(none, class'DamageType', Location);
-
-        return;
-    }
-
+    // Vehicle occupied, so reset ResetTime
     if (!IsVehicleEmpty())
     {
         ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
 
         return;
     }
+    // Vehicle empty & is a bKeyVehicle, so destroy it now to make it respawn
+    else if (bKeyVehicle)
+    {
+        Died(none, class'DamageType', Location);
 
+        return;
+    }
+
+    // Check for friendlies nearby
     foreach CollidingActors(class'Pawn', P, 4000.0)
     {
         if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum()) // traces only work on friendly players nearby
@@ -792,7 +792,7 @@ event CheckReset()
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Initiating collision reset check");
+                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly player nearby");
                 }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
@@ -803,7 +803,7 @@ event CheckReset()
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Initiating FastTrace reset check");
+                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly pawn nearby");
                 }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
@@ -818,7 +818,7 @@ event CheckReset()
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Player not found - respawn");
+            Level.Game.Broadcast(self, Tag @ "is empty vehicle & re-spawned as no friendly player nearby");
         }
 
         ParentFactory.VehicleDestroyed(self);
@@ -850,16 +850,15 @@ function bool IsVehicleEmpty()
     return true;
 }
 
+// Modified to score the vehicle kill
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
 
-    if (Killer == none)
+    if (Killer != none)
     {
-        return;
+        DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
     }
-
-    DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
 // Modified to kill extra effects & destroy any decorative attachments
@@ -1170,6 +1169,27 @@ function ServerToggleDebugExits()
 function bool CheckForCrew()
 {
     return true;
+}
+
+// Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
+simulated function int NumPassengers()
+{
+    local  int  i, num;
+
+    if (Driver != none)
+    {
+        num = 1;
+    }
+
+    for (i = 0; i < WeaponPawns.Length; i++)
+    {
+        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
+        {
+            num++;
+        }
+    }
+
+    return num;
 }
 
 defaultproperties
