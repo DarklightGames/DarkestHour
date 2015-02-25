@@ -4,15 +4,9 @@
 class DHRoleSelectPanel extends MidGamePanel
     config;
 
-//TODO
-//Remove unused functions & variables
-//Clean up functions/logic/design
-//Fix double select bug
-
-// Constants
 const NUM_ROLES = 10;
 
-// Containers
+
 var automated ROGUIProportionalContainer    MainContainer,
                                             RolesContainer,
                                             AmmoSliderContainer,
@@ -28,42 +22,33 @@ var automated GUILabel                      l_RolesTitle,
                                             l_StatusLabel;
 
 var automated BackgroundImage               bg_Background;
-var automated GUIImage                      i_WeaponImages[2];
-var automated GUIImage                      i_MagImages[2];
-var automated GUIListBox                    lb_Roles;
-var automated GUIListBox                    lb_AvailableWeapons[2];
+var automated GUIImage                      i_WeaponImages[2], i_MagImages[2];
+var automated GUIListBox                    lb_Roles, lb_AvailableWeapons[2];
 var automated GUIGFXButton                  b_Equipment[4];
 var automated DHGUINumericEdit              nu_PrimaryAmmoMags;
 
-var ROGUIListPlus                           li_Roles;
-var ROGUIListPlus                           li_AvailableWeapons[2];
+var ROGUIListPlus                           li_Roles, li_AvailableWeapons[2];
 
-var localized string                        NoSelectedRoleText;
-var localized string                        RoleHasBotsText;
-var localized string                        RoleFullText;
-var localized string                        SelectEquipmentText;
-var localized string                        RoleIsFullMessageText;
-var localized string                        ChangingRoleMessageText;
-var localized string                        UnknownErrorMessageText;
-var localized string                        ErrorChangingTeamsMessageText;
+var localized string                        NoSelectedRoleText,
+                                            RoleHasBotsText,
+                                            RoleFullText,
+                                            SelectEquipmentText,
+                                            RoleIsFullMessageText,
+                                            ChangingRoleMessageText,
+                                            UnknownErrorMessageText,
+                                            ErrorChangingTeamsMessageText;
 
-var localized string                        UnknownErrorSpectatorMissingReplicationInfo;
-var localized string                        SpectatorErrorTooManySpectators;
-var localized string                        SpectatorErrorRoundHasEnded;
-var localized string                        UnknownErrorTeamMissingReplicationInfo;
-var localized string                        ErrorTeamMustJoinBeforeStart;
-var localized string                        TeamSwitchErrorTooManyPlayers;
-var localized string                        UnknownErrorTeamMaxLives;
-var localized string                        TeamSwitchErrorRoundHasEnded;
-var localized string                        TeamSwitchErrorGameHasStarted;
-var localized string                        TeamSwitchErrorPlayingAgainstBots;
-var localized string                        TeamSwitchErrorTeamIsFull;
-var localized string                        ErrorChangingTooFast;
-
-var localized string                        ConfigurationButtonText1;
-var localized string                        ConfigurationButtonHint1;
-var localized string                        ConfigurationButtonText2;
-var localized string                        ConfigurationButtonHint2;
+var localized string                        UnknownErrorSpectatorMissingReplicationInfo,
+                                            SpectatorErrorTooManySpectators,
+                                            SpectatorErrorRoundHasEnded,
+                                            UnknownErrorTeamMissingReplicationInfo,
+                                            ErrorTeamMustJoinBeforeStart,
+                                            TeamSwitchErrorTooManyPlayers,
+                                            UnknownErrorTeamMaxLives,
+                                            TeamSwitchErrorRoundHasEnded,
+                                            TeamSwitchErrorGameHasStarted,
+                                            TeamSwitchErrorPlayingAgainstBots,
+                                            TeamSwitchErrorTeamIsFull;
 
 var ROGameReplicationInfo                   GRI;
 var RORoleInfo                              currentRole, desiredRole;
@@ -71,13 +56,10 @@ var int                                     currentTeam, desiredTeam;
 var string                                  currentName, desiredName;
 var int                                     currentWeapons[2], desiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
-var bool                                    bRenderedPanel;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController, MyOwner);
-
-    //class'ROInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
     GRI = ROGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
@@ -94,7 +76,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     SecondaryWeaponContainer.ManageComponent(lb_AvailableWeapons[1]);
     li_AvailableWeapons[1] = ROGUIListPlus(lb_AvailableWeapons[1].List);
 
-    // Equipment container Theel: Why contain these?
+    // Equipment container
     //EquipContainer.ManageComponent(b_Equipment[0]);
     //EquipContainer.ManageComponent(b_Equipment[1]);
     //EquipContainer.ManageComponent(b_Equipment[2]);
@@ -120,15 +102,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set initial counts
     Timer();
     SetTimer(0.1, true);
-}
-
-function bool OnPostDraw(Canvas C)
-{
-    super.OnPostDraw(C);
-
-    bRenderedPanel = true;
-
-    return true;
 }
 
 function GetInitialValues()
@@ -299,7 +272,6 @@ function ChangeDesiredRole(RORoleInfo newRole)
     }
 }
 
-//Theel: I want to change this so it picks a role with no limit!
 function AutoPickRole()
 {
     local int i, currentRoleCount;
@@ -329,7 +301,7 @@ function AutoPickRole()
                 continue;
             }
 
-            if (role.GetLimit(GRI.MaxPlayers) == 0) //|| currentRoleCount < role.GetLimit(GRI.MaxPlayers))
+            if (role.GetLimit(GRI.MaxPlayers) == 0) //Pick role with no max
             {
                 ChangeDesiredRole(role);
                 AttemptRoleApplication();
@@ -337,7 +309,6 @@ function AutoPickRole()
             }
         }
 
-        // If they're all full.. well though noogies :)
         Warn("All roles are full!");
     }
     else
@@ -349,10 +320,8 @@ function AutoPickRole()
 function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
-    //l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
 
-    // Inform panel that we want to change role on next life
-    // Fix this shit
+    // Inform player that they are changing roles
     if (currentRole == desiredRole)
     {
         SetStatusString("You are currently a" @ currentRole.MyName);
@@ -373,7 +342,7 @@ function ToggleTeam()
     {
         ChangeDesiredTeam(0);
     }
-    GetInitialValues();
+    //GetInitialValues(); //Theel do I need this?
 }
 
 function ChangeDesiredTeam(int team)
@@ -624,7 +593,11 @@ function UpdateSelectedWeapon(int weaponCategory)
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
                 nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
-                nu_PrimaryAmmoMags.CheckValue();
+                if (nu_PrimaryAmmoMags.Value <= "0" || nu_PrimaryAmmoMags.Value > string(nu_PrimaryAmmoMags.MaxValue))
+                {
+                    nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+                }
+                nu_PrimaryAmmoMags.CheckValue(); //clamps value to be in range
                 player.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
 
                 // Update deploy time
@@ -670,13 +643,13 @@ function Timer()
     }
 
     //Temp hack to make sure we have a role list
-    if (li_Roles.Elements.Length <= 0 && bRenderedPanel)
+    if (li_Roles.Elements.Length <= 0)
     {
         //we aren't showing any roles!
         Log("Role list has" @ li_Roles.Elements.Length @ "elements");
         Log("       ");
         Log("       ");
-        Log("We are retrying to fill role list as we detected we didn't have one!!!!");
+        Warn("We are retrying to fill role list as we detected we didn't have one!!!!");
         Log("       ");
         Log("       ");
 
@@ -728,7 +701,7 @@ function bool checkIfRoleIsFull(RORoleInfo role, int team, optional out int role
 
     DHGRI = DHGameReplicationInfo(GRI);
 
-    index = FindRoleIndexInGRI(role, team); // ugh, slow
+    index = FindRoleIndexInGRI(role, team);
 
     if (team == AXIS_TEAM_INDEX)
     {
@@ -806,7 +779,8 @@ function string FormatRoleString(string roleName, int roleLimit, int roleCount, 
     return s;
 }
 
-function AttemptRoleApplication()
+//This function needs work
+function AttemptRoleApplication(optional bool bDontShowErrors)
 {
     local DHPlayer player;
     local byte teamIndex, roleIndex, w1, w2;
@@ -814,6 +788,21 @@ function AttemptRoleApplication()
     Log("AttemptRoleApplication() Called!!                                     CALLLED!");
 
     player = DHPlayer(PlayerOwner());
+
+    //Theel's fast check to see if we even need to attempt role change
+    if (currentRole != desiredRole ||
+        currentTeam != desiredTeam ||
+        currentName != desiredName ||
+        currentWeapons[0] != desiredWeapons[0] ||
+        currentWeapons[1] != desiredWeapons[1] ||
+        nu_PrimaryAmmoMags.Value != string(DHPlayer(PlayerOwner()).DesiredAmmoAmount))
+    {
+        //Do nothing for now
+    }
+    else
+    {
+        return;
+    }
 
     if (player == none)
     {
@@ -856,7 +845,7 @@ function AttemptRoleApplication()
     }
     else
     {
-        if (checkIfRoleIsFull(desiredRole, desiredTeam) && Controller != none)
+        if (checkIfRoleIsFull(desiredRole, desiredTeam) && Controller != none && !bDontShowErrors)
         {
             Controller.OpenMenu(Controller.QuestionMenuClass);
             GUIQuestionPage(Controller.TopPage()).SetupQuestion(RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
@@ -873,6 +862,7 @@ function AttemptRoleApplication()
     player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
 }
 
+//Does this really need to be a function?
 function SetStatusString(optional string S)
 {
     local string StatusStr;
@@ -923,11 +913,6 @@ function InternalOnChange( GUIComponent Sender )
 {
     local RORoleInfo role;
 
-    if (!bRenderedPanel)
-    {
-        return;
-    }
-
     switch (Sender)
     {
         case lb_Roles:
@@ -947,6 +932,7 @@ function InternalOnChange( GUIComponent Sender )
     }
 }
 
+//WTF IS THIS DOING?
 function bool InternalOnKeyEvent(out byte Key, out byte State, float delta)
 {
     if (key == 0x1B)
@@ -969,10 +955,12 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         switch (result)
         {
             case 0: // All is well!
-                return;
             case 97:
-                return;
             case 98:
+                if (ROPlayer(PlayerOwner()) != none)
+                {
+                    ROPlayer(PlayerOwner()).PlayerReplicationInfo.bReadyToPlay = true;
+                }
                 return;
 
             default:
@@ -986,11 +974,6 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             GUIQuestionPage(Controller.TopPage()).SetupQuestion(error_msg, QBTN_Ok, QBTN_Ok);
         }
     }
-}
-
-function bool InternalOnDraw(Canvas canvas)
-{
-    return false;
 }
 
 static function string getErrorMessageForId(int id)
@@ -1045,10 +1028,6 @@ static function string getErrorMessageForId(int id)
             error_msg = default.TeamSwitchErrorTeamIsFull;
             break;
 
-        case 19: // Changing too fast
-            error_msg = default.ErrorChangingTooFast;
-            break;
-
         case 99: // Couldn't change teams: unknown reason
             error_msg = default.ErrorChangingTeamsMessageText;
             break;
@@ -1066,6 +1045,13 @@ static function string getErrorMessageForId(int id)
     }
 
     return error_msg;
+}
+
+event Closed(GUIComponent Sender, bool bCancelled)
+{
+    super.Closed(Sender, bCancelled);
+
+    AttemptRoleApplication(true);
 }
 
 defaultproperties
@@ -1096,12 +1082,6 @@ defaultproperties
     TeamSwitchErrorGameHasStarted="Cannot switch teams: server rules disallow team changes after game has started."
     TeamSwitchErrorPlayingAgainstBots="Cannot switch teams: server rules ask for bots on one team and players on the other."
     TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
-    ErrorChangingTooFast="You are trying to change role/weapon too fast. Please try again."
-
-    ConfigurationButtonText1="Options"
-    ConfigurationButtonHint1="Show game and configuration options"
-    ConfigurationButtonText2="Role Selection"
-    ConfigurationButtonHint2="Show the role selection controls"
 
     RoleSelectFooterButtonsWinTop=0.946667
 

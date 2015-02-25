@@ -73,7 +73,8 @@ function InternalOnChange(GUIComponent Sender)
 
             // Spectate
             case 2:
-                DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ChangeDesiredTeam(-1);
+                DHPlayer(PlayerOwner()).ServerChangePlayerInfo(254, 255, 0, 0);
+                //DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ChangeDesiredTeam(-1);
                 CloseMenu();
                 break;
 
