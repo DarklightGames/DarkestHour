@@ -167,7 +167,7 @@ replication
 //      bEngineDead                                 // Matt: removed as I have deprecated it (EngineHealth <= 0 does the same thing)
 //      EngineHealthMax                             // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
 //      UnbuttonedPositionIndex,                    // Matt: removed as never changes & doesn't need to be replicated
-//      bProjectilePenetrated, bFirstPenetratingHit // Matt: removed as not even used clientside
+//      bProjectilePenetrated, bFirstHit            // Matt: removed as not even used clientside
 //      bRoundShattered                             // Matt: removed as is set independently on clients
 //      bPeriscopeDamaged                           // Matt: removed variable as is part of functionality never implemented
         
@@ -239,6 +239,7 @@ simulated function UpdatePrecacheMaterials()
 // Don't need this in DH
 simulated function bool HitPenetrationPoint(vector HitLocation, vector HitRay);
 
+// Modified to replace literal for pan direction, so can be easily subclassed, & to incorporate extra tread sounds that were spawned in PostBeginPlay()
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
@@ -259,6 +260,20 @@ simulated function SetupTreads()
         RightTreadPanner.PanDirection = RightTreadPanDirection;
         RightTreadPanner.PanRate = 0.0;
         Skins[RightTreadIndex] = RightTreadPanner;
+    }
+
+    if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
+    {
+        LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
+        AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
+    }
+
+    if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
+    {
+        RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
+        RightTreadSoundAttach.AmbientSound = RightTreadSound;
+        AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
     }
 }
 
@@ -411,6 +426,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     }
 }
 
+// Modified to avoid playing engine start sound when entering vehicle
 function KDriverEnter(Pawn p)
 {
     bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROTreadCraft
@@ -439,10 +455,14 @@ simulated event DrivingStatusChanged()
     if (!bDriving || bEngineOff)
     {
         if (LeftTreadPanner != none)
+        {
             LeftTreadPanner.PanRate = 0.0;
+        }
 
         if (RightTreadPanner != none)
+        {
             RightTreadPanner.PanRate = 0.0;
+        }
 
         // Not moving, so no motion sound
         MotionSoundVolume = 0.0;
@@ -467,20 +487,40 @@ simulated event DrivingStatusChanged()
         Disable('Tick');
     }
 
-    super(ROVehicle).DrivingStatusChanged();
-
-    // Moved exhaust and dust spawning to StartEngineFunction
+    super(Vehicle).DrivingStatusChanged();
 }
 
-// Overridden to add hint
+// Modified to add engine start/stop hint
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
 
-    // Engine start/stop hint
     DHPlayer(PC).QueueHint(40, true);
 }
 
+// Matt: modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
+simulated state EnteringVehicle
+{
+    simulated function HandleEnter()
+    {
+        if (DriverPositions[InitialPositionIndex].PositionMesh != none)
+        {
+            LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
+        }
+
+        if (HasAnim(BeginningIdleAnim))
+        {
+            PlayAnim(BeginningIdleAnim);
+        }
+
+        if (PlayerController(Controller) != none)
+        {
+            PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
+        }
+    }
+}
+
+// Modified to use fire button to start or stop engine
 simulated function Fire(optional float F)
 {
     // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
@@ -496,6 +536,7 @@ function AltFire(optional float F)
 {
 }
 
+// New function to kill exhaust & wheel dust emitters
 simulated function StopEmitters()
 {
     local int i;
@@ -524,6 +565,7 @@ simulated function StopEmitters()
     bEmittersOn = false;
 }
 
+// New function to spawn exhaust & wheel dust emitters
 simulated function StartEmitters()
 {
     local int    i;
@@ -675,25 +717,25 @@ function ServerChangeViewPoint(bool bForward)
 // Overridden to prevent players exiting unless unbuttoned first
 function bool KDriverLeave(bool bForceLeave)
 {
-
-    // If player is not unbuttoned and is trying to exit rather than switch positions, don't let them out
-    // bForceLeave is always true for position switch, so checking against false means no risk of locking someone in one slot
-    if (!bForceLeave && !bNoDriverHatch && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
+    // bForceLeave is always true for position switch, so player is trying to exit not switch (checking for false means no risk of locking someone in one slot)
+    if (!bForceLeave)
     {
-        DenyEntry(Instigator, 4); // I realise that this is actually denying EXIT, but the function does the exact same thing - Ch!cken
+        if (bNoDriverHatch)
+        {
+            DisplayVehicleMessage(5); // must exit through commander's hatch
 
-        return false;
-    }
-    else if (!bForceLeave && bNoDriverHatch)
-    {
-        DenyEntry(Instigator, 5); // Stug, JP, and Panzer III drivers must exit through commander's hatch
+            return false;
+        }
+        // Driver is not unbuttoned, so don't let them exit
+        else if (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition'))
+        {
+            DisplayVehicleMessage(4); // must unbutton the hatch
 
-        return false;
+            return false;
+        }
     }
-    else
-    {
-        super.KDriverLeave(bForceLeave);
-    }
+
+    return super.KDriverLeave(bForceLeave);
 }
 
 // Modified to add clientside checks before sending the function call to the server
@@ -717,13 +759,13 @@ simulated function SwitchWeapon(byte F)
     {
         if (bNoDriverHatch)
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
+            DisplayVehicleMessage(5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
 
             return;
         }
         else if (DriverPositionIndex < UnbuttonedPositionIndex)
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+            DisplayVehicleMessage(4); // must unbutton the hatch
 
             return;
         }
@@ -759,7 +801,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+        DisplayVehicleMessage(0); // not qualified to operate vehicle
 
         return;
     }
@@ -789,26 +831,27 @@ function DriverLeft()
     super(Vehicle).DriverLeft();
 }
 
-// Vehicle has been in the middle of nowhere with no driver for a while, so consider resetting it called after ResetTime has passed since driver left
-// Overridden so we can control the time it takes for the vehicle to disappear - Ramm
+// Modified to use DriverTraceDistSquared instead of literal values (& add debug)
 event CheckReset()
 {
     local Pawn P;
 
-    if (bKeyVehicle && IsVehicleEmpty())
-    {
-        Died(none, class'DamageType', Location);
-
-        return;
-    }
-
+    // Vehicle occupied, so reset ResetTime
     if (!IsVehicleEmpty())
     {
         ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
 
         return;
     }
+    // Vehicle empty & is a bKeyVehicle, so destroy it now to make it respawn
+    else if (bKeyVehicle)
+    {
+        Died(none, class'DamageType', Location);
 
+        return;
+    }
+
+    // Check for friendlies nearby
     foreach CollidingActors(class'Pawn', P, 4000.0)
     {
         if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum()) // traces only work on friendly players nearby
@@ -817,7 +860,7 @@ event CheckReset()
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Initiating collision reset check ...");
+                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly player nearby");
                 }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
@@ -828,7 +871,7 @@ event CheckReset()
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Initiating FastTrace reset check ...");
+                    Level.Game.Broadcast(self, Tag @ "is empty vehicle, but set new ResetTime as found friendly pawn nearby");
                 }
 
                 ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
@@ -843,7 +886,7 @@ event CheckReset()
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Player not found - respawn");
+            Level.Game.Broadcast(self, Tag @ "is empty vehicle & re-spawned as no friendly player nearby");
         }
 
         ParentFactory.VehicleDestroyed(self);
@@ -942,60 +985,67 @@ Begin:
     GotoState('');
 }
 
+// Modified to check for available rider positions if player can't crew a tank, & also to prevent entry if either vehicle or player is on fire
 function bool TryToDrive(Pawn P)
 {
     local int i;
 
-    if (DH_Pawn(P).bOnFire)
-    {
-        return false;
-    }
-
+    // Don't allow entry to burning vehicle (with message)
     if (bOnFire || bEngineOnFire)
     {
-        DenyEntry(P, 9);
+        DisplayVehicleMessage(9, P); // vehicle is on fire
 
-        return false;
+//        return false; // TEMP rem to we can enter burning veh
     }
 
-    // Don't allow vehicle to be stolen when somebody is in a turret
-    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
+    // Trying to enter a vehicle that isn't on our team
+    if (P != none && P.GetTeamNum() != VehicleTeam)
     {
-        for (i = 0; i < WeaponPawns.Length; i++)
+        // Deny entry to TeamLocked enemy vehicle
+        if (bTeamLocked)
         {
-            if (WeaponPawns[i].Driver != none)
+            DisplayVehicleMessage(1, P); // can't use enemy vehicle
+
+            return false;
+        }
+        // Don't allow non-TeamLocked vehicle to be stolen if it already has an enemy occupant
+        else
+        {
+            if (Driver != none && P.GetTeamNum() != Driver.GetTeamNum())
             {
-                DenyEntry(P, 2);
+                DisplayVehicleMessage(1, P); // can't use enemy vehicle
 
                 return false;
+            }
+
+            for (i = 0; i < WeaponPawns.Length; i++)
+            {
+                if (WeaponPawns[i].Driver != none && P.GetTeamNum() != WeaponPawns[i].Driver.GetTeamNum())
+                {
+                    DisplayVehicleMessage(1, P); // can't use enemy vehicle
+
+                    return false;
+                }
             }
         }
     }
 
-    if (P.bIsCrouched || bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer || P.IsA('Vehicle') || Health <= 0)
+    // Deny entry if vehicle has driver or is dead, or if player is crouching or on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Driver != none || Health <= 0 || P == none || P.bIsCrouched || (DH_Pawn(P) != none && DH_Pawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) || 
+        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
     {
+        if(Driver != none) log("TreadCraft.TryToDrive denying entry as already has driver"); // TEMP
         return false;
     }
 
-    if (!Level.Game.CanEnterVehicle(self, P))
-    {
-        return false;
-    }
-
-    // Check vehicle locking
-    if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
-    {
-        DenyEntry(P, 1);
-
-        return false;
-    }
-    // They must be a non-tanker role so let's go through the available rider positions and find a place for them to sit
-    else if (bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
+    // Vehicle can only be used by tank crew & player is not a tanker role, so next check if there are any available rider positions before denying entry
+    if (bMustBeTankCommander && (ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) == none || ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo == none 
+        || !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew) && P.IsHumanControlled())
     {
         // Check first to ensure riders are allowed
         if (!bAllowRiders)
         {
-            DenyEntry(P, 3);
+            DisplayVehicleMessage(3, P); // can't ride on this vehicle
 
             return false;
         }
@@ -1012,30 +1062,23 @@ function bool TryToDrive(Pawn P)
             }
         }
 
-        DenyEntry(P, 8);
+        DisplayVehicleMessage(8, P); // all rider positions full
 
         return false;
     }
-    else
+
+    // Passed all checks, so allow player to enter the vehicle
+    if (bEnterringUnlocks && bTeamLocked)
     {
-        if (bEnterringUnlocks && bTeamLocked)
-        {
-            bTeamLocked = false;
-        }
-
-        KDriverEnter(P);
-
-        return true;
+        bTeamLocked = false;
     }
+
+    KDriverEnter(P);
+
+    return true;
 }
 
-// Send a message on why they can't get in the vehicle
-function DenyEntry(Pawn P, int MessageNum)
-{
-    P.ReceiveLocalizedMessage(class'DH_VehicleMessage', MessageNum);
-}
-
-// Returns true if this tank is disabled
+// Modified to require both tracks to be damaged to class as disabled, not just one
 simulated function bool IsDisabled()
 {
     return (EngineHealth <= 0 || (bLeftTrackDamaged && bRightTrackDamaged));
@@ -1099,20 +1142,6 @@ simulated function PostBeginPlay()
             InteriorRumbleSoundAttach = Spawn(class'ROSoundAttachment');
             InteriorRumbleSoundAttach.AmbientSound = RumbleSound;
             AttachToBone(InteriorRumbleSoundAttach, RumbleSoundBone);
-        }
-
-        if (LeftTreadSound != none && LeftTrackSoundBone != '' && LeftTreadSoundAttach == none)
-        {
-            LeftTreadSoundAttach = Spawn(class'ROSoundAttachment');
-            LeftTreadSoundAttach.AmbientSound = LeftTreadSound;
-            AttachToBone(LeftTreadSoundAttach, LeftTrackSoundBone);
-        }
-
-        if (RightTreadSound != none && RightTrackSoundBone != '' && RightTreadSoundAttach == none)
-        {
-            RightTreadSoundAttach = Spawn(class'ROSoundAttachment');
-            RightTreadSoundAttach.AmbientSound = RightTreadSound;
-            AttachToBone(RightTreadSoundAttach, RightTrackSoundBone);
         }
     }
 }
@@ -2657,6 +2686,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     bWasTurretHit = false;
 }
 
+// Modified to to kill engine if zero health & to add random chance of engine fire breaking out
 function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
     // Apply new damage
@@ -2882,44 +2912,44 @@ simulated function SetNextTimer(optional float Now)
     }
 }
 
+// Modified to destroy extra effects & decorative attachments
 simulated function Destroyed()
 {
+    super.Destroyed();
+
     if (Level.NetMode != NM_DedicatedServer)
     {
         if (DriverHatchFireEffect != none)
         {
             DriverHatchFireEffect.Destroy();
-            DriverHatchFireEffect = none;
         }
-    }
 
-    super.Destroyed();
-
-    if (Schurzen != none)
-    {
-        Schurzen.Destroy();
+        DestroyDecoAttachments();
     }
 }
 
+// Modified to kill extra effects & destroy any decorative attachments
 simulated event DestroyAppearance()
 {
     local int         i;
     local KarmaParams KP;
 
-    // For replication
-    bDestroyAppearance = true;
+    bDestroyAppearance = true; // for replication
 
     // Put brakes on
     Throttle = 0.0;
     Steering = 0.0;
     Rise     = 0.0;
 
-    // Destroy the weapons
+    // Destroy the vehicle weapons
     if (Role == ROLE_Authority)
     {
         for (i = 0; i < WeaponPawns.Length; i++)
         {
-            WeaponPawns[i].Destroy();
+            if (WeaponPawns[i] != none)
+            {
+                WeaponPawns[i].Destroy();
+            }
         }
     }
 
@@ -2928,23 +2958,22 @@ simulated event DestroyAppearance()
     // Destroy the effects
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < Dust.Length; i++)
+        if (bEmittersOn)
         {
-            if (Dust[i] != none)
-            {
-                Dust[i].Kill();
-            }
+            StopEmitters();
         }
 
-        Dust.Length = 0;
-
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        if (DamagedEffect != none)
         {
-            if (ExhaustPipes[i].ExhaustEffect != none)
-            {
-                ExhaustPipes[i].ExhaustEffect.Kill();
-            }
+            DamagedEffect.Kill();
         }
+
+        if (DriverHatchFireEffect != none)
+        {
+            DriverHatchFireEffect.Kill();
+        }
+
+        DestroyDecoAttachments();
     }
 
     // Copy linear velocity from actor so it doesn't just stop
@@ -2953,16 +2982,6 @@ simulated event DestroyAppearance()
     if (KP != none)
     {
         KP.KStartLinVel = Velocity;
-    }
-
-    if (DamagedEffect != none)
-    {
-        DamagedEffect.Kill();
-    }
-
-    if (DriverHatchFireEffect != none)
-    {
-        DriverHatchFireEffect.Kill();
     }
 
     // Become the dead vehicle mesh
@@ -2974,10 +2993,24 @@ simulated event DestroyAppearance()
     SetPhysics(PHYS_Karma);
     Skins.Length = 0;
     NetPriority = 2.0;
+}
 
+// New function to destroy decorative attachments when the vehicle gets destroyed (just reduces code repetition as called from more than one place)
+simulated function DestroyDecoAttachments()
+{
     if (Schurzen != none)
     {
         Schurzen.Destroy();
+    }
+    
+    if (DamagedTrackLeft != none)
+    {
+        DamagedTrackLeft.Destroy();
+    }
+
+    if (DamagedTrackRight != none)
+    {
+        DamagedTrackRight.Destroy();
     }
 }
 
@@ -3013,6 +3046,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     }
 }
 
+// Modified to score the vehicle kill
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
@@ -3025,6 +3059,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
+// Modified to prevent switch to other vehicle position while moving between view points & to prevent 'teleporting' outside to external rider position unless unbuttoned
 function ServerChangeDriverPosition(byte F)
 {
     if (IsInState('ViewTransition'))
@@ -3032,14 +3067,35 @@ function ServerChangeDriverPosition(byte F)
         return;
     }
 
-    if (bAllowRiders && (F - 2) >= FirstRiderPositionIndex && bMustUnbuttonToSwitchToRider && DriverPositionIndex < UnbuttonedPositionIndex)
+    // Prevent 'teleporting' outside to an external rider position unless unbuttoned
+    if (bAllowRiders && (F - 2) >= FirstRiderPositionIndex && bMustUnbuttonToSwitchToRider)
     {
-        ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You must unbutton the hatch to exit"
+        if (bNoDriverHatch)
+        {
+            DisplayVehicleMessage(5); // must exit through commander's hatch
 
-        return;
+            return;
+        }
+        else if (DriverPositionIndex < UnbuttonedPositionIndex)
+        {
+            DisplayVehicleMessage(4); // must unbutton the hatch
+
+            return;
+        }
     }
 
     super.ServerChangeDriverPosition(F);
+}
+
+// New function to prominently display one of the standard DH vehicle-related message (instead of using DenyEntry(), which can be misleading)
+function DisplayVehicleMessage(int MessageNum, optional Pawn P)
+{
+    if (P == none)
+    {
+        P = self;
+    }
+
+    P.ReceiveLocalizedMessage(class'DH_VehicleMessage', MessageNum);
 }
 
 // Modified to optimise & to avoid accessed none errors
@@ -3381,7 +3437,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
     Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
-// Overridden to eliminate "Waiting for Additional Crewmembers" message
+// Overridden to eliminate "Waiting for additional crewmembers" message // Matt: now only used by bots
 function bool CheckForCrew()
 {
     return true;
