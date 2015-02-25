@@ -3549,7 +3549,6 @@ simulated function DrawSpectatingHud(Canvas C)
             Time = DHP.LastKilledTime + DHP.RedeployTime - Level.TimeSeconds;// Level.TimeSeconds;
             if (Time <= 0.0)
             {
-                //DHP.HandleDeployReady();
                 S = "Ready to deploy! Hit escape and select a spawn point";
             }
             else
@@ -3557,6 +3556,10 @@ simulated function DrawSpectatingHud(Canvas C)
                 if (DHP.DesiredSpawnPoint != none && ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
                 {
                     S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(DHP.DesiredSpawnPoint.SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                }
+                else
+                {
+                    S = "Hit escape and select a spawn point";
                 }
             }
 

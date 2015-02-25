@@ -58,7 +58,7 @@ var localized string                        TeamSwitchErrorRoundHasEnded;
 var localized string                        TeamSwitchErrorGameHasStarted;
 var localized string                        TeamSwitchErrorPlayingAgainstBots;
 var localized string                        TeamSwitchErrorTeamIsFull;
-var localized string                        TeamSwitchErrorNotReady;
+var localized string                        ErrorChangingTooFast;
 
 var localized string                        ConfigurationButtonText1;
 var localized string                        ConfigurationButtonHint1;
@@ -71,6 +71,7 @@ var int                                     currentTeam, desiredTeam;
 var string                                  currentName, desiredName;
 var int                                     currentWeapons[2], desiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
+var bool                                    bRenderedPanel;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -107,7 +108,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     if (currentRole == none)
     {
         AutoPickRole();
-        NotifyDesiredRoleUpdated();
     }
     else
     {
@@ -120,6 +120,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set initial counts
     Timer();
     SetTimer(0.1, true);
+}
+
+function bool OnPostDraw(Canvas C)
+{
+    super.OnPostDraw(C);
+
+    bRenderedPanel = true;
+
+    return true;
 }
 
 function GetInitialValues()
@@ -283,10 +292,11 @@ function ChangeDesiredRole(RORoleInfo newRole)
     {
         roleIndex = FindRoleIndexInList(newRole);
         if (roleIndex != -1)
+        {
             li_Roles.SetIndex(roleIndex);
+            NotifyDesiredRoleUpdated();
+        }
     }
-
-    NotifyDesiredRoleUpdated();
 }
 
 //Theel: I want to change this so it picks a role with no limit!
@@ -339,9 +349,10 @@ function AutoPickRole()
 function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
-    l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+    //l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
 
     // Inform panel that we want to change role on next life
+    // Fix this shit
     if (currentRole == desiredRole)
     {
         SetStatusString("You are currently a" @ currentRole.MyName);
@@ -361,10 +372,6 @@ function ToggleTeam()
     else if (currentTeam == ALLIES_TEAM_INDEX)
     {
         ChangeDesiredTeam(0);
-    }
-    else
-    {
-        ChangeDesiredTeam(-1); // Spectate
     }
     GetInitialValues();
 }
@@ -546,6 +553,8 @@ function AutoPickWeapons()
 {
     local int i;
 
+    Log("AutoPickWeapons() called");
+
     // If we already had selected a weapon, then re-select it.
     if (currentTeam == desiredTeam && currentRole == desiredRole &&
         desiredWeapons[0] == -5 && desiredWeapons[1] == -5)
@@ -585,6 +594,7 @@ function int FindIndexInWeaponsList(int index, GUIList list)
     return -1;
 }
 
+//Theel fix this function, strange if/else embedding
 function UpdateSelectedWeapon(int weaponCategory)
 {
     local int i;
@@ -612,21 +622,10 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(desiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
                 nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
-                Log("DesiredAmmoAmount:" @ player.DesiredAmmoAmount);
-
-                // Set the value
-                if (player.DesiredAmmoAmount != 0)
-                {
-                    nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
-                }
-                else
-                {
-                    nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
-                    //player.DesiredAmmoAmount = nu_PrimaryAmmoMags.MidValue;
-                }
-
-                // Check the value Theel: this isn't really needed
+                // Set value to desired, if desired is out of range, set desired to clamped value
+                nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
                 nu_PrimaryAmmoMags.CheckValue();
+                player.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
 
                 // Update deploy time
                 l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
@@ -668,6 +667,22 @@ function Timer()
     else
     {
         RoleSelectReclickTime = default.RoleSelectReclickTime;
+    }
+
+    //Temp hack to make sure we have a role list
+    if (li_Roles.Elements.Length <= 0 && bRenderedPanel)
+    {
+        //we aren't showing any roles!
+        Log("Role list has" @ li_Roles.Elements.Length @ "elements");
+        Log("       ");
+        Log("       ");
+        Log("We are retrying to fill role list as we detected we didn't have one!!!!");
+        Log("       ");
+        Log("       ");
+
+        //Refill the list then
+        FillRoleList();
+        AutoPickRole();
     }
 }
 
@@ -796,6 +811,8 @@ function AttemptRoleApplication()
     local DHPlayer player;
     local byte teamIndex, roleIndex, w1, w2;
 
+    Log("AttemptRoleApplication() Called!!                                     CALLLED!");
+
     player = DHPlayer(PlayerOwner());
 
     if (player == none)
@@ -876,6 +893,7 @@ static function CheckNeedForFadeFromBlackEffect(PlayerController controller)
 
 }
 
+//Theel this need renamed etc.
 function UpdateConfigButtonsVisibility()
 {
     local float myWinTop;
@@ -883,16 +901,19 @@ function UpdateConfigButtonsVisibility()
     MainContainer.SetVisibility(true);
     bg_Background.SetVisibility(true);
     myWinTop = RoleSelectFooterButtonsWinTop;
-
-    // To make sure items that should be hidden are hidden
-    NotifyDesiredRoleUpdated();
 }
 
 function bool InternalOnClick(GUIComponent Sender)
 {
     switch (sender)
     {
+        case lb_AvailableWeapons[0]:
+            UpdateSelectedWeapon(0);
+            break;
 
+        case lb_AvailableWeapons[1]:
+            UpdateSelectedWeapon(1);
+            break;
     }
 
     return true;
@@ -901,6 +922,11 @@ function bool InternalOnClick(GUIComponent Sender)
 function InternalOnChange( GUIComponent Sender )
 {
     local RORoleInfo role;
+
+    if (!bRenderedPanel)
+    {
+        return;
+    }
 
     switch (Sender)
     {
@@ -914,17 +940,8 @@ function InternalOnChange( GUIComponent Sender )
             }
             break;
 
-        case lb_AvailableWeapons[0]:
-            UpdateSelectedWeapon(0);
-            break;
-
-        case lb_AvailableWeapons[1]:
-            UpdateSelectedWeapon(1);
-            break;
-
         case nu_PrimaryAmmoMags:
-            //We need to change the estimated deploy time (shouldn't we do this after we change it in DHPlayer?)
-            DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value); // Client
+            DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
             l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
             break;
     }
@@ -947,21 +964,16 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
     if (msg == "notify_gui_role_selection_page")
     {
-        // Received success/failure message from server.
-
         result = int(MsgLife);
 
         switch (result)
         {
             case 0: // All is well!
-            case 97:
-            case 98:
-                // Set flag saying that player is ready to play
-                if (ROPlayer(PlayerOwner()) != none)
-                    ROPlayer(PlayerOwner()).PlayerReplicationInfo.bReadyToPlay = true;
-
                 return;
-                //break;
+            case 97:
+                return;
+            case 98:
+                return;
 
             default:
                 error_msg = getErrorMessageForId(result);
@@ -1033,8 +1045,8 @@ static function string getErrorMessageForId(int id)
             error_msg = default.TeamSwitchErrorTeamIsFull;
             break;
 
-        case 19: // Couldn't switch teams: must wait to be ready to deploy
-            error_msg = default.TeamSwitchErrorNotReady;
+        case 19: // Changing too fast
+            error_msg = default.ErrorChangingTooFast;
             break;
 
         case 99: // Couldn't change teams: unknown reason
@@ -1059,10 +1071,11 @@ static function string getErrorMessageForId(int id)
 defaultproperties
 {
     Background=Texture'InterfaceArt_tex.Menu.GreyDark'
+    OnPostDraw=OnPostDraw
     OnKeyEvent=InternalOnKeyEvent
     OnMessage=InternalOnMessage
     bNeverFocus=true
-    RoleSelectReclickTime=1
+    RoleSelectReclickTime=1.0
     NoSelectedRoleText="Select a role from the role list."
     RoleHasBotsText=" (has bots)"
     RoleFullText="Full"
@@ -1083,7 +1096,7 @@ defaultproperties
     TeamSwitchErrorGameHasStarted="Cannot switch teams: server rules disallow team changes after game has started."
     TeamSwitchErrorPlayingAgainstBots="Cannot switch teams: server rules ask for bots on one team and players on the other."
     TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
-    TeamSwitchErrorNotReady="Cannot switch teams: you must be ready to deploy."
+    ErrorChangingTooFast="You are trying to change role/weapon too fast. Please try again."
 
     ConfigurationButtonText1="Options"
     ConfigurationButtonHint1="Show game and configuration options"
@@ -1278,11 +1291,10 @@ defaultproperties
         WinWidth=0.3
         WinHeight=0.5
         TabOrder=0
-        OnChange=DHRoleSelectPanel.InternalOnChange
+        OnClick=DHRoleSelectPanel.InternalOnClick
     End Object
     lb_AvailableWeapons(0)=DHGuiListBox'DH_Interface.DHRoleSelectPanel.WeaponListBox'
     lb_AvailableWeapons(1)=DHGuiListBox'DH_Interface.DHRoleSelectPanel.WeaponListBox'
-
 
     // Equipment controls
     Begin Object Class=GUIGFXButton Name=EquipButton0

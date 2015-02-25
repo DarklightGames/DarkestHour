@@ -38,7 +38,7 @@ var DHHintManager DHHintManager;
 
 var float   MapVoteTime;
 
-replication
+replication //THEEL: SpawnPointIndex does not need to be replicated to my knowledge
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -1951,54 +1951,41 @@ exec function DebugFOV()
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
 }
 
-//This function will be called "ServerAttemptDeployPlayer" and needs to be passed (SP and AmmoAmmount)
-//It will check/confirm that the player
-// - Isn't already deployed
-// - Has role selected (may not need this)
-// - Has valid ammo setting based on role/weapon ()
-// - SP is valid (will check GRI for bActive and player's team)
-// - Is ready to deploy based on past deploy time
-// - If above is okay, then it will attempt to spawn the player and teleport to SP
-// -  If succesful, it'll set the server sided deploy time and also pass it back via a client function
-
 function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte MagCount)
 {
     local rotator newRot, oldRot;
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo DHGRI;
+    local DH_RoleInfo RI;
+    local class<Inventory> PrimaryWep;
     local float mag;
     local vector oldDir;
     local Controller P;
-    local int NewDeployTime;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    Warn("SERVER SIDE ATTEMPTING TO DEPLOY PLAYER");
+    if (PRI != none)
+    {
+        RI = DH_RoleInfo(PRI.RoleInfo);
+    }
+    if (RI != none)
+    {
+        PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
+    }
 
-    if (PRI == none)
+    //Warn("=================== SERVER SIDE ATTEMPTING TO DEPLOY PLAYER ===================");
+
+    if (PRI == none || DHGRI == none || Pawn != none)
     {
         Log("Failed at 0");
         return false;
     }
 
-    if (DHGRI == none)
+    // Confirm this player has a role && check if MagCount is valid based on role/weapon
+    if (PRI.RoleInfo != none && PrimaryWep != none)
     {
-        Log("Failed at 0.5");
-        return false;
-    }
-
-    //If player already has a pawn, then we don't need to deploy them
-    if (Pawn != none)
-    {
-        Log("Failed at 0.75");
-        return false;
-    }
-
-    //Confirm this player has a role && check if MagCount is valid based on role/weapon
-    if (PRI.RoleInfo != none)// && class'DH_ProjectileWeapon'(PRI.RoleInfo.PrimaryWeapons[PrimaryWeapon].Item) != none)
-    {
-        if (MagCount > 12) //class'DH_ProjectileWeapon'(PRI.RoleInfo.PrimaryWeapons[PrimaryWeapon].Item).default.MaxNumPrimaryMags || MagCount <= 0)
+        if (MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags || MagCount <= 0)
         {
             Log("Failed at 1");
             return false;
@@ -2010,33 +1997,33 @@ function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte 
         return false;
     }
 
-    //Check if SP is valid
-    if (!DHGRI.ValidateSpawnPoint(SP,PRI.Team.TeamIndex))
-    {
-        //Temp hack to allow spawning on all maps
-        //Log("Failed at 3");
-        //return false;
-    }
-    else
-    {
-        SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
-    }
-
-    //Check if player is ready to deploy
+    // Check if player is ready to deploy
     if (LastKilledTime + RedeployTime - Level.TimeSeconds > 0) //Theel: May not be able to use Level.TimeSeconds anymore atleast for server check!
     {
         Log("Failed at 4");
         return false;
     }
+    else
+    {
+        //Log("Server Says:" @ string(LastKilledTime + RedeployTime - Level.TimeSeconds) @ "left to spawn");
+    }
 
-    //Lets assume it worked and now lets tell the client the redeploy time
-    NewDeployTime = CalculateDeployTime(MagCount);
-    RedeployTime = NewDeployTime;
+    // Check if SP is valid
+    if (!DHGRI.ValidateSpawnPoint(SP,PRI.Team.TeamIndex))
+    {
+        //Temp hack to allow spawning on all maps
+        Level.Game.RestartPlayer(self);
+    }
+    else
+    {
+        SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
+        DarkestHourGame(Level.Game).DHRestartPlayer(self);
+    }
 
-    Level.Game.RestartPlayer(self);
-    //DarkestHourGame(Level.Game).DHRestartPlayer(self);  This is currently bugged as fuck
+    // Lets assume it worked and now lets tell the client the redeploy time
+    RedeployTime = CalculateDeployTime(MagCount);
 
-    //SET WEAPON AMMO
+    // Set primary weapon ammo
     if (Pawn != none && MagCount != 0)
     {
         DH_Pawn(Pawn).SetAmmoPercent(MagCount);
@@ -2085,8 +2072,6 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
         MagCount = DesiredAmmoAmount;
     }
 
-    Log("MagCount is:" @ MagCount);
-
     // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
     MinValue = RI.MinStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
     MidValue = RI.DefaultStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
@@ -2112,16 +2097,12 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
         AmmoTimeMod = int(P * RI.MinAmmoTimeMod);
     }
 
-    Log("AmmoTimeMod is:" @ AmmoTimeMod);
-
     NewDeployTime = GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod;
 
     if (NewDeployTime < 0)
     {
         NewDeployTime = 0;
     }
-
-    Log("Newdeploytime is:" @ NewDeployTime);
 
     return NewDeployTime;
 }

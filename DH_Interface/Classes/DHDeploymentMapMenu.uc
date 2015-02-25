@@ -11,7 +11,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 
 var     bool                                bReadyToDeploy;
 var     automated GUIImage                  i_Background;
-var     automated DHGUIButton               b_DeployButton;
+var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
 var     automated GUIProgressBar            pb_DeployProgressBar;
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],b_Objectives[OBJECTIVES_MAX];
 var     DHSpawnPoint                        SpawnPoints[SPAWN_POINTS_MAX];
@@ -215,8 +215,9 @@ function bool SpawnClick(int Index)
         // Only deploy if we clicked the selected SP and are ready
         if (bReadyToDeploy && PC.Pawn == none)
         {
-            PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount);
-            Controller.CloseMenu(false); //DeployPlayer needs to return true/false if succesful and this needs to be in an if statement
+            DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
+            DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount);
+            Controller.CloseMenu(false); //Close menu as we clicked deploy!
         }
     }
     else
@@ -240,10 +241,19 @@ function bool InternalOnClick(GUIComponent Sender)
 
     switch(Sender)
     {
-        case b_DeployButton:
-            // Send request to server to spawn as we think we can
+        case b_ExploitSpawn:
+            if (DHPlayer(PlayerOwner()).Pawn == none)
+            {
+                DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount);
+                Controller.CloseMenu(false); //Close menu as we clicked deploy!
+            }
+
+            break;
+
+        case b_DeployButton: //Below should be a separate function so it can be reused when player clicks a desired spawn point
             if (bReadyToDeploy && DHPlayer(PlayerOwner()).Pawn == none)
             {
+                DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
                 DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount);
                 Controller.CloseMenu(false); //Close menu as we clicked deploy!
             }
@@ -375,6 +385,20 @@ defaultproperties
         OnClick=DHDeploymentMapMenu.InternalOnClick
     End Object
     b_DeployButton=DeployButton
+
+    // Exploit spawn button
+    Begin Object Class=DHGUIButton Name=TempExploitButton
+        Caption="Exploit Spawn"
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHLargeText"
+        WinWidth=0.315937
+        WinHeight=0.033589
+        WinLeft=0.137395
+        WinTop=0.010181
+        OnClick=DHDeploymentMapMenu.InternalOnClick
+    End Object
+    b_ExploitSpawn=TempExploitButton
 
     // Deploy time progress bar
     Begin Object class=GUIProgressBar Name=DeployTimePB
