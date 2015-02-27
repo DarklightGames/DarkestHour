@@ -3550,6 +3550,10 @@ simulated function DrawSpectatingHud(Canvas C)
             if (Time <= 0.0)
             {
                 S = "Ready to deploy! Hit escape and select a spawn point";
+                if (DHP.bShouldAttemptAutoDeploy)
+                {
+                    DHP.CheckToAutoDeploy();
+                }
             }
             else
             {

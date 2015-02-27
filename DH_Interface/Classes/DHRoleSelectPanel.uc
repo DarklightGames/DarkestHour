@@ -6,7 +6,6 @@ class DHRoleSelectPanel extends MidGamePanel
 
 const NUM_ROLES = 10;
 
-
 var automated ROGUIProportionalContainer    MainContainer,
                                             RolesContainer,
                                             AmmoSliderContainer,
@@ -56,6 +55,7 @@ var int                                     currentTeam, desiredTeam;
 var string                                  currentName, desiredName;
 var int                                     currentWeapons[2], desiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
+var bool                                    bRendered;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -96,12 +96,19 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         ChangeDesiredRole(currentRole);
     }
 
-    // Set controls visibility
-    UpdateConfigButtonsVisibility();
-
     // Set initial counts
     Timer();
     SetTimer(0.1, true);
+}
+
+// This function informs InternalOnChange not to run until we are done rendering
+function bool OnPostDraw(Canvas C)
+{
+    super.OnPostDraw(C);
+
+    bRendered = true;
+
+    return true;
 }
 
 function GetInitialValues()
@@ -342,7 +349,6 @@ function ToggleTeam()
     {
         ChangeDesiredTeam(0);
     }
-    //GetInitialValues(); //Theel do I need this?
 }
 
 function ChangeDesiredTeam(int team)
@@ -592,16 +598,15 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
+                Log("Desired Ammo Amount before:" @ player.DesiredAmmoAmount);
                 nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
-                if (nu_PrimaryAmmoMags.Value <= "0" || nu_PrimaryAmmoMags.Value > string(nu_PrimaryAmmoMags.MaxValue))
+                if (int(nu_PrimaryAmmoMags.Value) < 1 || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
                     nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
                 }
                 nu_PrimaryAmmoMags.CheckValue(); //clamps value to be in range
                 player.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
-
-                // Update deploy time
-                l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+                Log("Desired Ammo Amount after:" @ player.DesiredAmmoAmount);
             }
         }
         else
@@ -625,6 +630,9 @@ function UpdateSelectedWeapon(int weaponCategory)
             }
 
             desiredWeapons[weaponCategory] = i;
+
+            // Update deploy time
+            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
         }
     }
 }
@@ -785,8 +793,6 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     local DHPlayer player;
     local byte teamIndex, roleIndex, w1, w2;
 
-    Log("AttemptRoleApplication() Called!!                                     CALLLED!");
-
     player = DHPlayer(PlayerOwner());
 
     //Theel's fast check to see if we even need to attempt role change
@@ -858,8 +864,18 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     w1 = desiredWeapons[0];
     w2 = desiredWeapons[1];
 
+    Log("AttemptRoleApplication() Calling ServerChangePlayerInfo!!!                                     Attempt Semi-Success");
+
     // Attempt team, role and weapons change
     player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
+
+    // We possibly changed, so lets update the values  THis might be causing bugs on semi-failure
+    currentRole = desiredRole;
+    currentTeam = desiredTeam;
+    currentName = desiredName;
+    currentWeapons[0] = desiredWeapons[0];
+    currentWeapons[1] = desiredWeapons[1];
+    //GetInitialValues(); //gulp lets see if this works and doesn't bug the fuck out
 }
 
 //Does this really need to be a function?
@@ -883,16 +899,6 @@ static function CheckNeedForFadeFromBlackEffect(PlayerController controller)
 
 }
 
-//Theel this need renamed etc.
-function UpdateConfigButtonsVisibility()
-{
-    local float myWinTop;
-
-    MainContainer.SetVisibility(true);
-    bg_Background.SetVisibility(true);
-    myWinTop = RoleSelectFooterButtonsWinTop;
-}
-
 function bool InternalOnClick(GUIComponent Sender)
 {
     switch (sender)
@@ -913,6 +919,11 @@ function InternalOnChange( GUIComponent Sender )
 {
     local RORoleInfo role;
 
+    if (!bRendered)
+    {
+        return;
+    }
+
     switch (Sender)
     {
         case lb_Roles:
@@ -927,6 +938,7 @@ function InternalOnChange( GUIComponent Sender )
 
         case nu_PrimaryAmmoMags:
             DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
+            Log("Desired Ammo Amount after:" @ DHPlayer(PlayerOwner()).DesiredAmmoAmount);
             l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
             break;
     }

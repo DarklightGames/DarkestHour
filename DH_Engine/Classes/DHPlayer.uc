@@ -2128,20 +2128,18 @@ simulated function ClientHandleDeath()
     LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
 }
 
-// THEEL this function is no longer being used, do something with it!
-//Function should only be run on client and renamed proper
-//This function is used to check if the client thinks it's ready to deploy or not
-function CheckIfReadyToDeploy()
+// This function is called from DHHud to deploy the player when their deploy time hits zero and they are waiting in the HUD
+simulated function CheckToAutoDeploy()
 {
     local bool bDeployed;
-    //bShould should prob be checked in hud, instead of constantly call this function
-    // Don't try to auto deploy lots of times, if we aren't ready, or have a menu open
-    if (!bShouldAttemptAutoDeploy || GUIController(Player.GUIController).ActivePage != none)
+
+    bShouldAttemptAutoDeploy = false;
+
+    //If player is in a menu, don't try to deploy
+    if (GUIController(Player.GUIController).ActivePage != none)
     {
-        bShouldAttemptAutoDeploy = false;
         return;
     }
-    bShouldAttemptAutoDeploy = false; //Theel: Do we need this?
 
     //If we have a desired spawn point set, we won't need to open menu and can send spawn request from here
     if (DesiredSpawnPoint != none && Pawn == none)
@@ -2151,13 +2149,14 @@ function CheckIfReadyToDeploy()
         if (bDeployed)
         {
             ServerAttemptDeployPlayer(DesiredSpawnPoint, DesiredAmmoAmount);
+            return;
         }
         else
         {
-            //It wasn't valid so lets do nothing?  Theel: should we set desiredspawntpoint to none?  I think so
+            DesiredSpawnPoint = none;
         }
     }
-    //Open deploy menu if no menu is currently open and player failed to deploy
+    //Open deploy menu if no menu is currently open and player doesn't have a valid spawn point selected
     if (!bDeployed && GUIController(Player.GUIController).ActivePage == none)
     {
         ClientReplaceMenu("DH_Interface.DHDeployMenu");
