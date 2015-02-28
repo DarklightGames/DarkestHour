@@ -11,6 +11,7 @@ defaultproperties
     AltName="Lance Corporal"
     Article="a "
     PluralName="Lance Corporals"
+    InfoText="The lance corporal is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
     MenuImage=texture'DHBritishCharactersTex.Icons.Brit_LanceCorporal'
     Models(0)="RMC1"
     Models(1)="RMC2"
@@ -24,12 +25,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=1)
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    Limit=2
-}
-renadeWeapon',Amount=1)
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'

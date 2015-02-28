@@ -22,6 +22,7 @@ defaultproperties
     AltName="Sergeant"
     Article="a "
     PluralName="Sergeants"
+    InfoText="The sergeant is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the sergeant's presence is an excellent force multiplier to the units under his command."
     MenuImage=texture'DHUSCharactersTex.Icons.IconSg'
     Models(0)="US_WinterInfSarg1"
     Models(1)="US_WinterInfSarg2"
@@ -35,15 +36,6 @@ defaultproperties
     Grenades(1)=(Item=class'DH_Equipment.DH_RedSmokeWeapon',Amount=1)
     HeadgearProbabilities(0)=0.2
     Headgear(0)=class'DH_USPlayers.DH_AmericanWinterWoolHat'
-    HeadgearProbabilities(1)=0.4
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
-    HeadgearProbabilities(2)=0.4
-    Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
-    Limit=2
-}
-  Headgear(0)=class'DH_USPlayers.DH_AmericanWinterWoolHat'
     HeadgearProbabilities(1)=0.4
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
     HeadgearProbabilities(2)=0.4

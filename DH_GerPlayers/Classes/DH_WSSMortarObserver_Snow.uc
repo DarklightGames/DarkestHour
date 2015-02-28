@@ -12,6 +12,7 @@ defaultproperties
     AltName="Werferbeobachter"
     Article="a "
     PluralName="Mortar Observers"
+    InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MortarObserver'
     Models(0)="SSS_1"
     Models(1)="SSS_2"
@@ -22,12 +23,6 @@ defaultproperties
     SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-    GivenItems(0)="DH_Engine.DH_BinocularsItem"
-    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
-    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
-    Limit=1
-}
-eapons.DH_StielGranateWeapon',Amount=2)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'

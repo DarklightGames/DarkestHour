@@ -12,6 +12,7 @@ defaultproperties
     AltName="Werferbeobachter"
     Article="a "
     PluralName="Mortar Observers"
+    InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_MortarObserver'
     Models(0)="FJ451"
     Models(1)="FJ452"
@@ -23,12 +24,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
-    Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
-    Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
-    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
-    Limit=1
-}
-venItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'

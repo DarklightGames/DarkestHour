@@ -12,6 +12,7 @@ defaultproperties
     AltName="Mortar Observer"
     Article="a "
     PluralName="Mortar Observers"
+    InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
     MenuImage=texture'DHUSCharactersTex.Icons.IconMortarObserver'
     Models(0)="US_AutumnInf1"
     Models(1)="US_AutumnInf2"
@@ -23,12 +24,6 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1GarandWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
-    PrimaryWeaponType=WT_SemiAuto
-    Limit=1
-}
-enItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
     PrimaryWeaponType=WT_SemiAuto

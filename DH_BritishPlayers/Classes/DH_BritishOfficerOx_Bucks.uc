@@ -12,6 +12,7 @@ defaultproperties
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
+    InfoText="The artillery officer is tasked with directing artillery fire upon the battlefield through the use of long-range observation. Coordinating his efforts with a radio operator, he is able to target locations for off-grid artillery to lay down a  barrage with devastating effect."
     MenuImage=texture'DHBritishCharactersTex.Icons.Para_Off'
     Models(0)="paraOf1"
     Models(1)="paraOf2"
@@ -21,13 +22,6 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
-    Limit=1
-}
-  Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
     PrimaryWeaponType=WT_SMG

@@ -11,20 +11,12 @@ defaultproperties
     AltName="Tank Crewman"
     Article="a "
     PluralName="Tank Crewmen"
+    InfoText="The tank crewman is a composite role tasked with a variety of operations including gunner, hull gunner and driver. Each position has a specific view sector out of the tank and is responsible for keeping watch and reporting enemy movements in that direction, as well as performing their primary function."
     MenuImage=texture'DHUSCharactersTex.Icons.IconTCrew'
     Models(0)="US_743rdT1"
     Models(1)="US_743rdT2"
     Models(2)="US_743rdT3"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
-    Headgear(1)=class'DH_USPlayers.DH_USTankerHat'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
-    bCanBeTankCrew=true
-    Limit=3
-}
-ersTex.Sleeves.US_sleeves'
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
     Headgear(1)=class'DH_USPlayers.DH_USTankerHat'

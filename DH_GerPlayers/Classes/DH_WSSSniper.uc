@@ -11,6 +11,7 @@ defaultproperties
     AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
+    InfoText="The sniper is tasked with the specialized goal of eliminating key hostile units and shaking enemy morale through careful marksmanship and fieldcraft.  Through patient observation, the sniper is also capable of providing valuable reconnaissance which can have a significant impact on the outcome of the battle."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Sniper'
     Models(0)="SS_1"
     Models(1)="SS_2"
@@ -21,14 +22,6 @@ defaultproperties
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43ScopedWeapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
-    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    PrimaryWeaponType=WT_Sniper
-    Limit=2
-}
-pedWeapon',Amount=6)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'

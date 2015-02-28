@@ -11,6 +11,7 @@ defaultproperties
     AltName="Panzerführer"
     Article="a "
     PluralName="Tank Commanders"
+    InfoText="The tank commander is primarily tasked with the operation of the main gun of the tank as well as to direct the rest of the operating crew. From his usual turret position, he is often the only crew member with an all-round view. As a commander, he is expected to lead a complete platoon of tanks as well as direct his own."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_TankCom'
     Models(0)="SSP_1"
     Models(1)="SSP_2"
@@ -24,16 +25,6 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_C96Weapon',Amount=2,AssociatedAttachment=class'DH_Weapons.DH_C96AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-    GivenItems(0)="DH_Engine.DH_BinocularsItem"
-    Headgear(0)=class'DH_GerPlayers.DH_WSSTankerCrushercap'
-    Headgear(1)=class'DH_GerPlayers.DH_SSCap'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
-    bCanBeTankCrew=true
-    bCanBeTankCommander=true
-    Limit=1
-}
-ss'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_WSSTankerCrushercap'
     Headgear(1)=class'DH_GerPlayers.DH_SSCap'

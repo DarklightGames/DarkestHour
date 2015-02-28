@@ -11,6 +11,7 @@ defaultproperties
     AltName="Stoßtruppe"
     Article="an "
     PluralName="Assault Troopers"
+    InfoText="The assault trooper is a specialized infantry class who is tasked with closing with the enemy and eliminating him from difficult positions such as houses and fortifications.  The assault trooper is generally better armed than most infantrymen."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Ass'
     Models(0)="SS_1"
     Models(1)="SS_2"
@@ -22,13 +23,6 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_STG44Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
-    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    PrimaryWeaponType=WT_SMG
-    bEnhancedAutomaticControl=true
-    Limit=4
-}
-   Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
     PrimaryWeaponType=WT_SMG
