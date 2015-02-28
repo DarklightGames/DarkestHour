@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 // Matt: this class is deprecated, as functions that used to use HVAPlarge now use RoundType=HVAP and simply lookup the projectile's default ShellDiameter

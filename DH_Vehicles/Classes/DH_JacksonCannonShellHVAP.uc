@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 class DH_JacksonCannonShellHVAP extends DH_ROTankCannonShellHVAP; // Matt: extended DH_ROTankCannonShellHVAP90, but now a deprecated class

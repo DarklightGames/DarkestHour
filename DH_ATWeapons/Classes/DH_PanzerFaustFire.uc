@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 // Matt: originally extended ROProjectileFire, but this is the only DH weapon to do so - the minor changes in DH_ProjectileFire won't affect a faust, so changed to DH version for uniformity

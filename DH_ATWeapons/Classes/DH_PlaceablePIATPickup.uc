@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 // Matt: renamed class from DH_PIAT_Pickup (could not find any maps, including custom ones, that have used this actor, so should not break anything)

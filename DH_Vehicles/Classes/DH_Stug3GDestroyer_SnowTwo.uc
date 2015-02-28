@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 class DH_Stug3GDestroyer_SnowTwo extends DH_Stug3GDestroyer_CamoTwo;

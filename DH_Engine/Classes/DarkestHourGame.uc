@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2014
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame;
@@ -51,17 +51,11 @@ function PostBeginPlay()
     local int                   i, j, k, m, n, o, p;
     local DHObstacleInfo        DHOI;
 
-    // Don't call the RO super because we already do everything for DH and don't want levels using ROLevelInfo
+    // Don't call the RO super because we already do everything for DH and don't
+    // want levels using ROLevelInfo
     super(TeamGame).PostBeginPlay();
 
-    if (MaxIdleTime > 0.0)
-    {
-        Level.bKickLiveIdlers = true;
-    }
-    else
-    {
-        Level.bKickLiveIdlers = false;
-    }
+    Level.bKickLiveIdlers = MaxIdleTime > 0.0;
 
     // Find the ROLevelInfo
     foreach AllActors(class'ROLevelInfo', LI)
@@ -80,15 +74,13 @@ function PostBeginPlay()
     // Find the DH_LevelInfo
     foreach AllActors(class'DH_LevelInfo', DLI)
     {
-        if (DHLevelInfo == none)
-        {
-            DHLevelInfo = DLI;
-        }
-        else
+        if (DHLevelInfo != none)
         {
             Log("DarkestHourGame: More than one DH_LevelInfo detected!");
             break;
         }
+
+        DHLevelInfo = DLI;
     }
 
     foreach AllActors(class'DHObstacleInfo', DHOI)
@@ -110,7 +102,7 @@ function PostBeginPlay()
     //We made it here so lets setup our DarkestHourGame
 
     // Setup spectator viewpoints
-    for (n = 0; n < LevelInfo.EntryCamTags.Length; n++)
+    for (n = 0; n < LevelInfo.EntryCamTags.Length; ++n)
     {
         foreach AllActors(class'SpectatorCam', ViewPoint, LevelInfo.EntryCamTags[n])
         {
