@@ -33,16 +33,24 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         co_MenuComboBox.AddItem(MenuOptions[i]);
     }
 
-    // Initialize loadout panels
-    for(i=0;i<LoadoutPanelClass.Length;++i)
+    // Lets don't add tabs if owner is a spectator as it might confuse player if they somehow open this menu
+    if (PlayerOwner().PlayerReplicationInfo.Team == none)
     {
-        c_LoadoutArea.AddTab(LoadoutPanelCaption[i],LoadoutPanelClass[i],,LoadoutPanelHint[i]);
+        // We are spectating, lets not add any tabs
     }
-
-    // Initialize deployment panel(s)
-    for(i=0;i<DeploymentPanelClass.Length;++i)
+    else
     {
-        c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
+        // Initialize loadout panels
+        for(i=0;i<LoadoutPanelClass.Length;++i)
+        {
+            c_LoadoutArea.AddTab(LoadoutPanelCaption[i],LoadoutPanelClass[i],,LoadoutPanelHint[i]);
+        }
+
+        // Initialize deployment panel(s)
+        for(i=0;i<DeploymentPanelClass.Length;++i)
+        {
+            c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
+        }
     }
 
     SetTimer(0.1,true);
@@ -63,54 +71,43 @@ function InternalOnChange(GUIComponent Sender)
         {
             // Switch Team
             case 1:
-                DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ToggleTeam();
-
-                if (PlayerOwner().Pawn != none)
-                {
-                    CloseMenu();
-                }
-                break;
-
-            // Spectate
-            case 2:
-                DHPlayer(PlayerOwner()).ServerChangePlayerInfo(254, 255, 0, 0);
-                //DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel).ChangeDesiredTeam(-1);
-                CloseMenu();
+                // Open team select menu
+                Controller.ReplaceMenu("DH_Interface.DHGUITeamSelection");
                 break;
 
             // Map Vote
-            case 3:
+            case 2:
                 Controller.OpenMenu(Controller.MapVotingMenu);
                 break;
 
             // Kick Vote
-            case 4:
+            case 3:
                 Controller.OpenMenu(Controller.KickVotingMenu);
                 break;
 
             // Communication
-            case 5:
+            case 4:
                 Controller.OpenMenu("ROInterface.ROCommunicationPage");
                 break;
 
             // Server Browser
-            case 6:
+            case 5:
                 Controller.OpenMenu("DH_Interface.DHServerBrowser");
                 break;
 
             // Options
-            case 7:
+            case 6:
                 Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
                 break;
 
             // Suicide
-            case 8:
+            case 7:
                 PlayerOwner().ConsoleCommand( "SUICIDE" );
                 CloseMenu();
                 break;
 
             // Disconnect
-            case 9:
+            case 8:
                 PlayerOwner().ConsoleCommand( "DISCONNECT" );
                 CloseMenu();
                 break;
@@ -196,15 +193,14 @@ DefaultProperties
     co_MenuComboBox=MenuOptionsBox
 
     MenuOptions(0)="Menu"
-    MenuOptions(1)="Switch Team"
-    MenuOptions(2)="Spectate"
-    MenuOptions(3)="Map Vote"
-    MenuOptions(4)="Kick Vote"
-    MenuOptions(5)="Communication"
-    MenuOptions(6)="Server Browser"
-    MenuOptions(7)="Options"
-    MenuOptions(8)="Suicide"
-    MenuOptions(9)="Disconnect"
+    MenuOptions(1)="Change Team"
+    MenuOptions(2)="Map Vote"
+    MenuOptions(3)="Kick Vote"
+    MenuOptions(4)="Communication"
+    MenuOptions(5)="Server Browser"
+    MenuOptions(6)="Options"
+    MenuOptions(7)="Suicide"
+    MenuOptions(8)="Disconnect"
 
     // Panel Variables
     LoadoutPanelCaption(0)="Role"

@@ -227,14 +227,55 @@ exec function PlayerMenu(optional int Tab)
 {
     bPendingMapDisplay = false;
 
-    // If we haven't picked a team, role and weapons yet, open the team pick menu
+    // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
     if (!bWeaponsSelected)
+    {
+        ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
+    }
+    else if (PlayerReplicationInfo.Team == none)
+    {
+        ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
+    }
+    else if (PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex == 254)
     {
         ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
     }
     else
     {
         ClientReplaceMenu("DH_Interface.DHDeployMenu");
+    }
+}
+
+// Modified to remove pausing in singleplayer and to open the correct menu
+function ShowMidGameMenu(bool bPause)
+{
+    if ( Level.NetMode != NM_DedicatedServer )
+        StopForceFeedback();
+
+    // Open correct menu
+    if (bDemoOwner)
+    {
+        ClientOpenMenu(DemoMenuClass);
+    }
+    else
+    {
+        // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
+        if (!bWeaponsSelected)
+        {
+            ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
+        }
+        else if (PlayerReplicationInfo.Team == none)
+        {
+            ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
+        }
+        else if (PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex == 254)
+        {
+            ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
+        }
+        else
+        {
+            ClientOpenMenu(ROMidGameMenuClass);
+        }
     }
 }
 
@@ -1620,12 +1661,24 @@ function bool CanRestartPlayer()
     return true;
 }
 
+// Modified incase this ever gets called, make it open the deploy menu instead of old RoleMenu
+simulated function ClientForcedTeamChange(int NewTeamIndex, int NewRoleIndex)
+{
+    // Store the new team and role info
+    ForcedTeamSelectOnRoleSelectPage = NewTeamIndex;
+    DesiredRole = NewRoleIndex;
+
+    // Open the Deploy menu
+    ClientOpenMenu("DH_Interface.DHDeployMenu");
+}
+
 // Modified to avoid "accessed none" errors
 function bool HasSelectedTeam()
 {
     return PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex < 2;
 }
 
+// Modified to fix nasty server crash and fix other bugs
 function BecomeSpectator()
 {
     if (Pawn != none)
@@ -1974,6 +2027,13 @@ function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte 
         PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
     }
 
+    // Check if the player is on Axis / Allies and not spectator or something
+    if (PRI.Team == none) // && (PRI.Team.TeamIndex != 0 || PRI.Team.TeamIndex != 1))
+    {
+        Log("Failed at team check");
+        return false;
+    }
+
     //Warn("=================== SERVER SIDE ATTEMPTING TO DEPLOY PLAYER ===================");
 
     if (PRI == none || DHGRI == none || Pawn != none)
@@ -2030,6 +2090,8 @@ function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte 
     }
 }
 
+// This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
+// Pass this function with MagCount = -1 to have the function use Desired variable in this clas
 simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RInfo, optional int WeaponIndex)
 {
     local DHPlayerReplicationInfo PRI;
