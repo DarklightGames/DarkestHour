@@ -35,7 +35,7 @@ simulated function SetAlliedColour()
         }
         else
         {
-    
+
         }
 
         bColourCheck = bActorShadows;
@@ -50,13 +50,20 @@ simulated function SetAlliedColour()
 // HACK - Calling SetAlliedColour here because the GRI unfortunately hasn't replicated yet in PostNetBeginPlay
 simulated function UpdateScoreBoard (Canvas C)
 {
-    local ROPlayerReplicationInfo PRI, GermanPRI[32], RussianPRI[32], UnassignedPRI[32];
+    local ROPlayerReplicationInfo myPRI, PRI, GermanPRI[32], RussianPRI[32], UnassignedPRI[32];
     local color  TeamColor;
     local float  X, Y, CellHeight, XL, YL, LeftY, RightY, CurrentTime;
     local int    i, j, CurMaxPerSide, GECount, RUCount, UnassignedCount, AxisTotalScore, AlliesTotalScore;
     local int    AxisReqObjCount, AlliesReqObjCount, Axis2ndObjCount, Allies2ndObjCount;
     local string RoleName, S;
     local bool   bHighLight, bRequiredObjectives, bOwnerDrawn;
+
+    myPRI = ROPlayerReplicationInfo(PlayerController(Owner).PlayerReplicationInfo);
+
+    if (myPRI == none)
+    {
+        return;
+    }
 
     if (C == none)
     {
@@ -260,7 +267,7 @@ simulated function UpdateScoreBoard (Canvas C)
 
     Y += CellHeight;
 
-    if (PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
+    if (myPRI.Team != none && myPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
     {
         DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).DHSpawnCount[0]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
     }
@@ -297,10 +304,10 @@ simulated function UpdateScoreBoard (Canvas C)
     for (i = 0; i < GECount; i++)
     {
         // If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
-        if (i >= CurMaxPerSide - 1 && PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && !bOwnerDrawn)
+        if (i >= CurMaxPerSide - 1 && myPRI.Team != none && myPRI.Team.TeamIndex == AXIS_TEAM_INDEX && !bOwnerDrawn)
         {
             // If this is not the owner, skip it
-            if (GermanPRI[i] != PlayerController(Owner).PlayerReplicationInfo)
+            if (GermanPRI[i] != myPRI)
             {
                 continue;
             }
@@ -310,7 +317,7 @@ simulated function UpdateScoreBoard (Canvas C)
             break;
         }
 
-        if (GermanPRI[i] == PlayerController(Owner).PlayerReplicationInfo)
+        if (GermanPRI[i] == myPRI)
         {
             bHighlight = true;
             bOwnerDrawn = true;
@@ -444,7 +451,7 @@ simulated function UpdateScoreBoard (Canvas C)
     DrawCell(C, TeamNameAllies @ "-" @ ROGameReplicationInfo(GRI).UnitName[1], 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
     Y += CellHeight;
 
-    if (PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
+    if (myPRI.Team != none && myPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
     {
         DrawCell(C, ReinforcementsText @ ":" @ string(DHGameReplicationInfo(GRI).DHSpawnCount[1]), 0, X, Y, CalcX(13.5, C), CellHeight, false, TeamColor);
     }
@@ -481,10 +488,10 @@ simulated function UpdateScoreBoard (Canvas C)
     for (i = 0; i < RUCount; i++)
     {
         // If we're on the last available spot, the owner is on this team, and we haven't drawn the owner's score
-        if (i >= CurMaxPerSide - 1 && PlayerController(Owner).PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && !bOwnerDrawn)
+        if (i >= CurMaxPerSide - 1 && myPRI.Team != none && myPRI.Team.TeamIndex == ALLIES_TEAM_INDEX && !bOwnerDrawn)
         {
             // If this is not the owner, skip it
-            if (RussianPRI[i] != PlayerController(Owner).PlayerReplicationInfo)
+            if (RussianPRI[i] != myPRI)
             {
                 continue;
             }
@@ -494,7 +501,7 @@ simulated function UpdateScoreBoard (Canvas C)
             break;
         }
 
-        if (RussianPRI[i] == PlayerController(Owner).PlayerReplicationInfo)
+        if (RussianPRI[i] == myPRI)
         {
             bHighlight = true;
             bOwnerDrawn = true;
