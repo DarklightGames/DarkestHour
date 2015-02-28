@@ -11,7 +11,6 @@ defaultproperties
     AltName="Artillerie Offizier"
     Article="a "
     PluralName="Artillery Officers"
-    InfoText="Artillerie Offizier||The artillery officer is the artillery commander, either an NCO or officer. His primary task was to spot targets for the gunner. ||Only artillery crew can use artillery"
     MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'
     Models(0)="WHA_1"
     Models(1)="WHA_2"
@@ -23,6 +22,13 @@ defaultproperties
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetOne'
+    PrimaryWeaponType=WT_SMG
+    bEnhancedAutomaticControl=true
+    bCanBeTankCrew=true
+    Limit=1
+}
+0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetOne'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

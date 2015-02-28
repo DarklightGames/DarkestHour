@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rottenführer"
     Article="a "
     PluralName="Fireteam Leaders"
-    InfoText="The fireteam leader is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Semi'
     Models(0)="12SS_1"
     Models(1)="12SS_2"
@@ -24,6 +23,14 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',Amount=9,AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
+    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
+    Limit=1
+    Limit33to44=2
+    LimitOver44=2
+}
+mount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'

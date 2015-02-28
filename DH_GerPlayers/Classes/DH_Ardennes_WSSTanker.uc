@@ -11,7 +11,6 @@ defaultproperties
     AltName="Panzerbesatzung"
     Article="a "
     PluralName="Tank Crewmen"
-    InfoText="The tank crewman is a composite role tasked with a variety of operations including  gunner, hull gunner and driver. Each position has a specific view sector out of the tank and is responsible for keeping watch and reporting enemy movements in that direction, as well as performing their primary function."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_TankCrew'
     Models(0)="Ardennes_SSP_1"
     Models(1)="Ardennes_SSP_2"
@@ -21,6 +20,15 @@ defaultproperties
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+    Headgear(0)=class'DH_GerPlayers.DH_WSSHatPanzerA'
+    Headgear(1)=class'DH_GerPlayers.DH_WSSHatPanzerB'
+    PrimaryWeaponType=WT_SMG
+    bEnhancedAutomaticControl=true
+    bCanBeTankCrew=true
+    Limit=3
+}
+ROEffects.SeveredLegGerTanker'
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
     Headgear(0)=class'DH_GerPlayers.DH_WSSHatPanzerA'
     Headgear(1)=class'DH_GerPlayers.DH_WSSHatPanzerB'

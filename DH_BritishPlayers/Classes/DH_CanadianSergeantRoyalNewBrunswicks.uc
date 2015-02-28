@@ -12,7 +12,6 @@ defaultproperties
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    InfoText="The corporal is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the corporal's presence is an excellent force multiplier to the units under his command."
     MenuImage=texture'DHCanadianCharactersTex.Icons.Can_Sg'
     Models(0)="RNB_Sarg1"
     Models(1)="RNB_Sarg2"
@@ -24,6 +23,15 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
     Grenades(2)=(Item=class'DH_Equipment.DH_RedSmokeWeapon',Amount=1)
+    HeadgearProbabilities(0)=0.5
+    Headgear(0)=class'DH_BritishPlayers.DH_CanadianInfantryBeretRoyalNewBrunswicks'
+    HeadgearProbabilities(1)=0.5
+    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
+    PrimaryWeaponType=WT_SMG
+    bEnhancedAutomaticControl=true
+    Limit=2
+}
+DH_RedSmokeWeapon',Amount=1)
     HeadgearProbabilities(0)=0.5
     Headgear(0)=class'DH_BritishPlayers.DH_CanadianInfantryBeretRoyalNewBrunswicks'
     HeadgearProbabilities(1)=0.5

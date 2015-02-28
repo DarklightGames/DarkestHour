@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
-    InfoText="The rifleman is the basic soldier of the battlefield that is tasked with the important role of capturing and holding objectives, as well as the defense of key positions. Armed with the standard-issue battle rifle, the rifleman’s efficiency is determined by his ability to work as a member of a larger unit."
     MenuImage=texture'DHUSCharactersTex.Icons.ABRifleman'
     Models(0)="US_506101AB1"
     Models(1)="US_506101AB2"
@@ -19,6 +18,13 @@ defaultproperties
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
+    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet506101stEMb'
+    PrimaryWeaponType=WT_SemiAuto
+}
+uch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
     Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
