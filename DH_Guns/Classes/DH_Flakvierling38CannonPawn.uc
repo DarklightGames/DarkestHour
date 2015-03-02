@@ -32,14 +32,9 @@ function ServerToggleExtraRoundType()
     }
 }
 
-function Fire(optional float F)
+function bool CanFire()
 {
-    if (DriverPositionIndex == 2 || DriverPositionIndex == BinocPositionIndex && ROPlayer(Controller) != none)
-    {
-        return;
-    }
-
-    super.Fire(F);
+    return (!IsInState('ViewTransition') && DriverPositionIndex < 2) || ROPlayer(Controller) == none;
 }
 
 simulated function DrawHUD(Canvas Canvas)

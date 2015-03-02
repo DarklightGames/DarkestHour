@@ -722,16 +722,35 @@ function bool CanFire()
     return (!IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
 }
 
+// Modified to use CanFire() & to skip over obsolete RO functionality in ROTankCannonPawn & to optimise what remains
 function Fire(optional float F)
 {
+    local ROTankCannon Cannon;
+
     if (!CanFire())
     {
         return;
     }
 
-    super.Fire(F);
+    Cannon = ROTankCannon(Gun);
+
+    if (ROTankCannon(Gun) != none)
+    {
+        if (Cannon.CannonReloadState != CR_ReadyToFire || !Cannon.bClientCanFireCannon)
+        {
+            if (Cannon.CannonReloadState == CR_Waiting && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+            {
+                Cannon.ServerManualReload();
+            }
+
+            return;
+        }
+    }
+
+    super(VehicleWeaponPawn).Fire(F);
 }
 
+// Modified to use CanFire() & to skip over obsolete RO functionality in ROTankCannonPawn
 function AltFire(optional float F)
 {
     if (!CanFire())
@@ -739,7 +758,7 @@ function AltFire(optional float F)
         return;
     }
 
-    super.AltFire(F);
+    super(VehicleWeaponPawn).AltFire(F);
 }
 
 // Modified to add clientside checks before sending the function call to the server

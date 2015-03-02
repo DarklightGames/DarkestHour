@@ -13,14 +13,12 @@ class DH_ATGunTwoCannonPawn extends AssaultGunCannonPawn
 //     So, I copied ATGunCannonPawn and called it ATGunTwoCannonPawn.  This then extends from AssaultGunCannonPawn.
 //     Ramm also improved the original AT-Gun code by better handling the player exit for the fixed AT-Gun.
 
-// More debugging stuff
-var()   bool    bShowCenter; // shows centering cross in tank sight for testing purposes
-
-// New variables used in subclasses
-var()   float   OverlayCenterScale; // scale of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float   OverlayCenterScale;  // scale of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var()   float   OverlayCenterSize;
 var()   int     OverlayCorrectionX, OverlayCorrectionY; // scope center correction in pixels, as some overlays are off-center by pixel or two
                                                         // (it's in pixels of overlay bitmap, not pixels of screen, so works for every resolution)
+
+var()   bool    bShowCenter; // debugging - shows centering cross in tank sight for testing purposes
 
 replication
 {
@@ -444,15 +442,45 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
     Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
+// New function, checked by Fire() so we prevent firing while moving between view points or when on binoculars
+function bool CanFire()
+{
+    return (!IsInState('ViewTransition') && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
+}
+
+// Modified to skip over obsolete RO functionality in ROTankCannonPawn & to optimise what remains
 function Fire(optional float F)
 {
-    if (IsInState('ViewTransition'))
+    local ROTankCannon Cannon;
+
+    if (!CanFire())
     {
         return;
     }
 
-    super.Fire(F);
+    Cannon = ROTankCannon(Gun);
+
+    if (ROTankCannon(Gun) != none)
+    {
+        if (Cannon.CannonReloadState != CR_ReadyToFire || !Cannon.bClientCanFireCannon)
+        {
+            if (Cannon.CannonReloadState == CR_Waiting && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
+            {
+                Cannon.ServerManualReload();
+            }
+
+            return;
+        }
+    }
+
+    super(VehicleWeaponPawn).Fire(F);
 }
+
+// Matt: emptied out as AT gun has no alt fire mode, so just ensures nothing happens
+function AltFire(optional float F)
+{
+}
+
 
 defaultproperties
 {
