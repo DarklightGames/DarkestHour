@@ -31,15 +31,55 @@ simulated function Tick(float DeltaTime)
     SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
 }
 
-// Matt: added from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon, which will run armor checks
+// Modified to play shoot open or closed firing animation based on DriverPositionIndex, as all DriverPositionsan are always bExposed in an AT gun
+simulated function FlashMuzzleFlash(bool bWasAltFire)
+{
+    local ROVehicleWeaponPawn OwningPawn;
+
+    if (Role == ROLE_Authority)
+    {
+        FiringMode = byte(bWasAltFire);
+        FlashCount++;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+    }
+    else
+    {
+        CalcWeaponFire(bWasAltFire);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
+    {
+        if (FlashEmitter != none)
+        {
+            FlashEmitter.Trigger(self, Instigator);
+        }
+
+        OwningPawn = ROVehicleWeaponPawn(Instigator);
+
+        if (OwningPawn != none && OwningPawn.DriverPositionIndex >= 2)
+        {
+            if (HasAnim(TankShootOpenAnim))
+            {
+                PlayAnim(TankShootOpenAnim);
+            }
+            else if (HasAnim(TankShootClosedAnim))
+            {
+                PlayAnim(TankShootClosedAnim);
+            }
+        }
+    }
+}
+
+// Added from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon, which will run armor checks
 simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }
 
+// Modified as there aren't any angles that are below the driver angle for an AT gun
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
-    return false; // there aren't any angles that are below the driver angle for an AT Gun cannon
+    return false;
 }
 
 defaultproperties

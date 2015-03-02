@@ -32,11 +32,6 @@ function ServerToggleExtraRoundType()
     }
 }
 
-function bool CanFire()
-{
-    return (!IsInState('ViewTransition') && DriverPositionIndex < 2) || ROPlayer(Controller) == none;
-}
-
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;

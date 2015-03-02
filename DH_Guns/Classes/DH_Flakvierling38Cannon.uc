@@ -10,7 +10,7 @@ class DH_Flakvierling38Cannon extends DH_Sdkfz2341Cannon;
 
 var     name        BarrelBones[4];       // bone names for each
 var     byte        BarrelBoneIndex;      // bone index for each gun starting with the top 2
-var     name        FireAnimations[2];
+var     name        FireAnimations[4];    // alternating shoot anims for both 'open' & 'closed' positions, i.e. on the sights or with gunner's head raised
 var     bool        bSecondGunPairFiring; // false = fire top right & bottom left guns, true = fire top left & bottom right guns
 var     Emitter     FlashEmitters[4];     // we will have a separate flash emitter for each barrel
 var     name        SightBone;
@@ -201,6 +201,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
+    local ROVehicleWeaponPawn OwningPawn;
     local int FireAnimationIndex;
 
     if (Role == ROLE_Authority)
@@ -241,7 +242,16 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             }
         }
 
-        FireAnimationIndex = int(bSecondGunPairFiring);
+        OwningPawn = ROVehicleWeaponPawn(Instigator);
+
+        if (OwningPawn != none && OwningPawn.DriverPositionIndex >= 2)
+        {
+            FireAnimationIndex = int(bSecondGunPairFiring) + 2;
+        }
+        else
+        {
+            FireAnimationIndex = int(bSecondGunPairFiring);
+        }
 
         if (HasAnim(FireAnimations[FireAnimationIndex]))
         {
@@ -296,8 +306,10 @@ defaultproperties
     BarrelBones(1)="G2"
     BarrelBones(2)="g3"
     BarrelBones(3)="g4"
-    FireAnimations(0)="shoot_open"
-    FireAnimations(1)="Shoot_open2"
+    FireAnimations(0)="shoot_open"        // on sights, 1st gun pair
+    FireAnimations(1)="Shoot_open2"       // on sights, 2nd gun pair
+    FireAnimations(2)="shoot_unbuttoned"  // raised head, 1st gun pair
+    FireAnimations(3)="shoot_unbuttoned2" // raised head, 2nd gun pair
     SightBone="Object002"
     TraverseWheelBone="yaw_w"
     ElevationWheelBone="pitch_w"
