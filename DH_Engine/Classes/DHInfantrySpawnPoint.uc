@@ -3,7 +3,7 @@
 //-----------------------------------------------------------
 class DHInfantrySpawnPoint extends Note;
 
-DefaultProperties
+defaultproperties
 {
 
 }

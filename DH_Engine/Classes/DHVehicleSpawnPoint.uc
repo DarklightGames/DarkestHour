@@ -3,7 +3,7 @@
 //-----------------------------------------------------------
 class DHVehicleSpawnPoint extends Note;
 
-DefaultProperties
+defaultproperties
 {
 
 }

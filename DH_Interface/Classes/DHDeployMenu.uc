@@ -125,7 +125,7 @@ function CloseMenu()
     }
 }
 
-DefaultProperties
+defaultproperties
 {
     bRenderWorld=True
     bAllowedAsLast=True
