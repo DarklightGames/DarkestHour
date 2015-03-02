@@ -690,7 +690,7 @@ function UpdateRoleCounts()
         bIsFull = checkIfRoleIsFull(role, desiredTeam, roleLimit, roleCurrentCount, roleBotCount);
         bHasBots = (roleBotCount > 0);
 
-        if( ROPlayer(PlayerOwner()) != none &&  ROPlayer(PlayerOwner()).bUseNativeRoleNames )
+        if (ROPlayer(PlayerOwner()) != none &&  ROPlayer(PlayerOwner()).bUseNativeRoleNames)
         {
             li_Roles.SetItemAtIndex(i, FormatRoleString(role.AltName, roleLimit, roleCurrentCount, bHasBots));
         }
@@ -883,7 +883,7 @@ function SetStatusString(optional string S)
 {
     local string StatusStr;
 
-    if(S != "")
+    if (S != "")
     {
         StatusStr = S;
     }
@@ -915,7 +915,7 @@ function bool InternalOnClick(GUIComponent Sender)
     return true;
 }
 
-function InternalOnChange( GUIComponent Sender )
+function InternalOnChange(GUIComponent Sender)
 {
     local RORoleInfo role;
 

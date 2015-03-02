@@ -219,7 +219,7 @@ function DropFrom(vector StartLocation)
     local int     DropMagCount, i;
     local rotator R;
 
-    if (!bCanThrow )
+    if (!bCanThrow)
     {
         return;
     }
@@ -270,7 +270,7 @@ function DropFrom(vector StartLocation)
 
         AmmoPickup.AmmoMags.Length = CurrentMagCount;
 
-        for (i = 0; i < PrimaryAmmoArray.Length; i++ )
+        for (i = 0; i < PrimaryAmmoArray.Length; i++)
         {
             if (i != CurrentMagIndex)
             {

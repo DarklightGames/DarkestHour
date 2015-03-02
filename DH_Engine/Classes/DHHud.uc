@@ -3585,7 +3585,7 @@ simulated function DrawSpectatingHud(Canvas C)
     }
 
     // Rough spectate hud stuff. TODO: Refine this so its not so plane
-    if( DHP != none )
+    if (DHP != none)
     {
         S = DHP.GetSpecModeDescription();
         C.DrawColor = WhiteColor;
@@ -3638,7 +3638,7 @@ simulated function DrawSpectatingHud(Canvas C)
     }
 
     // Draw the players name large if thier are viewing someone else in first person
-    if ( (PawnOwner != None) && (PawnOwner != PlayerOwner.Pawn)
+    if ((PawnOwner != None) && (PawnOwner != PlayerOwner.Pawn)
         && (PawnOwner.PlayerReplicationInfo != None) && !PlayerOwner.bBehindView)
     {
         // draw viewed player name
@@ -3646,7 +3646,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.SetDrawColor(255,255,0,255);
         C.StrLen(PawnOwner.PlayerReplicationInfo.PlayerName,NameWidth,SmallH);
         NameWidth = FMax(NameWidth, 0.15 * C.ClipX);
-        if ( C.ClipX >= 640 )
+        if (C.ClipX >= 640)
         {
             C.Font = GetConsoleFont(C);
             C.StrLen("W",XL,SmallH);

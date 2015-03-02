@@ -249,7 +249,7 @@ exec function PlayerMenu(optional int Tab)
 // Modified to remove pausing in singleplayer and to open the correct menu
 function ShowMidGameMenu(bool bPause)
 {
-    if ( Level.NetMode != NM_DedicatedServer )
+    if (Level.NetMode != NM_DedicatedServer)
         StopForceFeedback();
 
     // Open correct menu

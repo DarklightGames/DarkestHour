@@ -1512,13 +1512,13 @@ state RoundInPlay
 
         // Reset all controllers
         P = Level.ControllerList;
-        while ( P != None )
+        while (P != None)
         {
             NextC = P.NextController;
 
-            if ( P.PlayerReplicationInfo == None || !P.PlayerReplicationInfo.bOnlySpectator )
+            if (P.PlayerReplicationInfo == None || !P.PlayerReplicationInfo.bOnlySpectator)
             {
-                if ( PlayerController(P) != None )
+                if (PlayerController(P) != None)
                     PlayerController(P).ClientReset();
                 P.Reset();
             }
@@ -1686,7 +1686,7 @@ state RoundInPlay
 
         GRI = ROGameReplicationInfo(GameReplicationInfo);
 
-        if ( NeedPlayers() && AddBot() && (RemainingBots > 0) )
+        if (NeedPlayers() && AddBot() && (RemainingBots > 0))
             RemainingBots--;
 
         // Go through both teams and spawn reinforcements if necessary

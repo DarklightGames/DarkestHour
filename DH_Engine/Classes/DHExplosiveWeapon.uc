@@ -21,7 +21,7 @@ function DropFrom(vector StartLocation)
     local Pickup Pickup;
     local rotator R;
 
-    if (!bCanThrow )
+    if (!bCanThrow)
         return;
 
     ClientWeaponThrown();
@@ -32,24 +32,24 @@ function DropFrom(vector StartLocation)
             StopFire(m);
     }
 
-    if ( Instigator != None )
+    if (Instigator != None)
     {
         DetachFromPawn(Instigator);
     }
 
     // Destroy empty weapons without pickups if needed (panzerfaust, etc)
-    if( AmmoAmount(0) < 1 )
+    if (AmmoAmount(0) < 1)
     {
         Destroy();
     }
     else
     {
-        for ( i = 0; i<AmmoAmount(0); i++ )
+        for (i = 0; i<AmmoAmount(0); i++)
         {
             R.Yaw = rand(65536);
             Pickup = Spawn(PickupClass,,, StartLocation,R);
 
-            if ( Pickup != None )
+            if (Pickup != None)
             {
                 Pickup.InitDroppedPickupFor(self);
                 Pickup.Velocity = Velocity >> R;

@@ -3902,7 +3902,7 @@ function SetAmmoPercent(byte AmmoAmount)
         Wep = DH_ProjectileWeapon(Inv);
 
         //Theel: Only change primary weapon (for now)
-        if(Wep != none && Wep.InventoryGroup == 1)
+        if (Wep != none && Wep.InventoryGroup == 1)
         {
             Wep.SetNumMags(AmmoAmount);
         }
