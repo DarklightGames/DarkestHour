@@ -11,7 +11,6 @@ defaultproperties
     AltName="Sturmpioniere"
     Article="a "
     PluralName="Combat Engineers"
-    InfoText="The combat engineer is tasked with destroying front-line enemy obstacles and fortifications.  Geared for close quarters combat, the combat engineer is generally equipped with sub machine-guns and grenades.  For instances where enemy fortifications or obstacles are exposed to enemy fire, he is equipped with concealment smoke so he may get close enough to destroy the target."
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Eng'
     Models(0)="FJ1"
     Models(1)="FJ2"

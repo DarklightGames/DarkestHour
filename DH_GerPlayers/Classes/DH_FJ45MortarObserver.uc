@@ -12,7 +12,6 @@ defaultproperties
     AltName="Werferbeobachter"
     Article="a "
     PluralName="Mortar Observers"
-    InfoText="The mortar observer is tasked with assisting the mortar operator by acquiring and marking targets using his binoculars.  Targets marked by the mortar observer will be relayed to the mortar operator."
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_MortarObserver'
     Models(0)="FJ451"
     Models(1)="FJ452"

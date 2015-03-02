@@ -11,7 +11,6 @@ defaultproperties
     AltName="Rottenführer"
     Article="a "
     PluralName="Fireteam Leaders"
-    InfoText="The fireteam leader is the NCO tasked to coordinate his team's movement in accordance with the squad's objectives. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Semi'
     Models(0)="SS_1"
     Models(1)="SS_2"

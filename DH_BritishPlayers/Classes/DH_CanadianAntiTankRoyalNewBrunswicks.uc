@@ -13,7 +13,6 @@ defaultproperties
     AltName="Tank Hunter"
     Article="an "
     PluralName="Tank Hunters"
-    InfoText="The tank hunter is tasked with locating and destroying or disabling enemy vehicles.  Armed with close-range anti-tank weaponry, he must often get dangerously close to his target in order to assure a hit.  His weaponry can also be effective against enemy fortifications."
     MenuImage=texture'DHCanadianCharactersTex.Icons.Can_AT'
     Models(0)="RNB_1"
     Models(1)="RNB_2"

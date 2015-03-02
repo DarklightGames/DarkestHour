@@ -11,7 +11,6 @@ defaultproperties
     AltName="Stugbesatzung"
     Article="a "
     PluralName="Assault Gun Crewmen"
-    InfoText="Stugbesatzung||The assault gun crew consists of variations on gunner, loader, hull gunner/radio operator and the driver. Each is a specialized role, requiring specialized training. Each has a specific view sector out of the vehicle and is responsible for keeping watch in that direction, as well as performing their primary function."
     MenuImage=texture'DHGermanCharactersTex.Icons.IconSPCrew'
     Models(0)="WHSP_1"
     Models(1)="WHSP_2"

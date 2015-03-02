@@ -11,7 +11,6 @@ defaultproperties
     AltName="Stoßtruppe"
     Article="an "
     PluralName="Assault Troopers"
-    InfoText="The assault trooper is a specialized infantry class who is tasked with closing with the enemy and eliminating him from difficult positions such as houses and fortifications.  The assault trooper is generally better armed than most infantrymen."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Ass'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

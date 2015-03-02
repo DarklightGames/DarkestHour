@@ -12,7 +12,6 @@ defaultproperties
     AltName="Unterscharführer"
     Article="a "
     PluralName="Squad Leaders"
-    InfoText="The squad leader is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the squad leader's presence is an excellent force multiplier to the units under his command."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_SqL'
     Models(0)="SS_1"
     Models(1)="SS_2"

@@ -13,7 +13,6 @@ defaultproperties
     AltName="Mortar Operator"
     Article="a "
     PluralName="Mortar Operators"
-    InfoText="The mortar operator is tasked with providing indirect fire on distant targets using his medium mortar.  The mortar operator should work closely with a mortar observer to accurately bombard targets out of visual range.||* Targets marked by a mortar observer will appear on your situation map.|* Rounds that land near the marked target will appear on your situation map."
     MenuImage=texture'DHUSCharactersTex.Icons.IconMortarOperator'
     Models(0)="US_WinterInf1"
     Models(1)="US_WinterInf2"

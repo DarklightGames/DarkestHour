@@ -11,7 +11,6 @@ defaultproperties
     AltName="Funktruppe"
     Article="a "
     PluralName="Radio Operator"
-    InfoText="The radio operator carries a man-packed radio and is tasked with the role of calling in artillery strikes towards targets designated by the artillery officer. Effective communication between the radio operator and the artillery officer is critical to the success of a coordinated barrage."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Radioman'
     Models(0)="WSS_Radio_1"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'

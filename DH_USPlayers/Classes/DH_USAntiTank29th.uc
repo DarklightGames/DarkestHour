@@ -13,7 +13,6 @@ defaultproperties
     AltName="Anti-Tank Soldier"
     Article="an "
     PluralName="Anti-Tank Soldiers"
-    InfoText="The anti-tank soldier is tasked with locating and destroying or disabling enemy vehicles.  Armed with close-range anti-tank weaponry, he must often get dangerously close to his target in order to assure a hit.  His weaponry can also be effective against enemy fortifications."
     MenuImage=texture'DHUSCharactersTex.Icons.IconAT'
     Models(0)="US_29Inf1"
     Models(1)="US_29Inf2"

@@ -11,7 +11,6 @@ defaultproperties
     AltName="Tank Commander"
     Article="a "
     PluralName="Tank Commanders"
-    InfoText="The tank commander is primarily tasked with the operation of the main gun of the tank as well as to direct the rest of the operating crew. From his usual turret position, he is often the only crew member with an all-round view. As a commander, he is expected to lead a complete platoon of tanks as well as direct his own."
     MenuImage=texture'DHUSCharactersTex.Icons.IconTCom'
     Models(0)="US_743rdT1"
     Models(1)="US_743rdT2"

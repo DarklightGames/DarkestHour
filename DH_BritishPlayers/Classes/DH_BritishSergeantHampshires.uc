@@ -20,7 +20,6 @@ defaultproperties
     AltName="Corporal"
     Article="a "
     PluralName="Corporals"
-    InfoText="The corporal is tasked with overseeing the completion of the squad's objectives by directing his men in combat and ensuring the overall firepower is put to good use.  With the effective use of smoke and close-quarters weaponry, the corporal's presence is an excellent force multiplier to the units under his command."
     MenuImage=texture'DHBritishCharactersTex.Icons.Brit_Sg'
     Models(0)="Hamp_Sarg1"
     Models(1)="Hamp_Sarg2"

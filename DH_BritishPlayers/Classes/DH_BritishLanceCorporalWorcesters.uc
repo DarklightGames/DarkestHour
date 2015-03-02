@@ -11,7 +11,6 @@ defaultproperties
     AltName="Lance Corporal"
     Article="a "
     PluralName="Lance Corporals"
-    InfoText="The lance corporal is the NCO tasked to coordinate his team's movement in accordance with the squad's objective. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
     MenuImage=texture'DHBritishCharactersTex.Icons.Brit_LanceCorporal'
     Models(0)="Wor_1"
     Models(1)="Wor_2"

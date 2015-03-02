@@ -11,7 +11,6 @@ defaultproperties
     AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
-    InfoText="The sniper is tasked with the specialized goal of eliminating key hostile units and shaking enemy morale through careful marksmanship and fieldcraft.  Through patient observation, the sniper is also capable of providing valuable reconnaissance which can have a significant impact on the outcome of the battle."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Sniper'
     Models(0)="SSS_1"
     Models(1)="SSS_2"

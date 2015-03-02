@@ -12,7 +12,6 @@ defaultproperties
     AltName="Artillery Officer"
     Article="an "
     PluralName="Artillery Officers"
-    InfoText="The artillery officer is tasked with directing artillery fire upon the battlefield through the use of long-range observation. Coordinating his efforts with a radio operator, he is able to target locations for off-grid artillery to lay down a  barrage with devastating effect."
     MenuImage=texture'DHUSCharactersTex.Icons.ABOf'
     Models(0)="US_506101ABOf1"
     Models(1)="US_506101ABOf2"

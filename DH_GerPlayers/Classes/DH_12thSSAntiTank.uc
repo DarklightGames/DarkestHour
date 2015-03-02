@@ -13,7 +13,6 @@ defaultproperties
     AltName="Panzerjäger"
     Article="a "
     PluralName="Tank Hunters"
-    InfoText="The tank hunter is tasked with locating and destroying or disabling enemy vehicles.  Armed with close-range anti-tank weaponry, he must often get dangerously close to his target in order to ensure a hit.  His weaponry can also be effective against enemy fortifications."
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_AT'
     Models(0)="12SS_1"
     Models(1)="12SS_2"

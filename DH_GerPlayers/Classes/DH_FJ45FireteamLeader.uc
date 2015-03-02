@@ -11,7 +11,6 @@ defaultproperties
     AltName="Gefreiter"
     Article="a "
     PluralName="Fireteam Leaders"
-    InfoText="The fireteam leader is the NCO tasked to coordinate his team's movement in accordance with the squad's objectives. As the direct assistant to the squad leader, he is expected to provide a comparable level of support to his men."
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_Ftl'
     Models(0)="FJ451"
     Models(1)="FJ452"
