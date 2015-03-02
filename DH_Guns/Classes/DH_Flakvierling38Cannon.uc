@@ -8,20 +8,19 @@ class DH_Flakvierling38Cannon extends DH_Sdkfz2341Cannon;
 #exec OBJ LOAD FILE=..\Animations\DH_Flakvierling38_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Flakvierling38_tex.utx
 
-var name                    BarrelBones[4];     // bone names for each
-var byte                    BarrelBoneIndex;    // bone index for each gun starting with the top 2
-var name                    FireAnimations[2];
-var byte                    FireAnimationIndex; // 0 - fire top guns, 1 - fire bottom guns
-var Emitter                 FlashEmitters[4];   // we will have a separate flash emitter for each barrel
-var name                    SightBone;
-var name                    TraverseWheelBone;
-var name                    ElevationWheelBone;
+var     name        BarrelBones[4];       // bone names for each
+var     byte        BarrelBoneIndex;      // bone index for each gun starting with the top 2
+var     name        FireAnimations[2];
+var     bool        bSecondGunPairFiring; // false = fire top right & bottom left guns, true = fire top left & bottom right guns
+var     Emitter     FlashEmitters[4];     // we will have a separate flash emitter for each barrel
+var     name        SightBone;
+var     name        TraverseWheelBone;
+var     name        ElevationWheelBone;
 
 replication
 {
-    // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        FireAnimationIndex;
+    reliable if (bNetInitial && Role == ROLE_Authority)
+        bSecondGunPairFiring; // Matt: replicate when actor replicates to net client, but after that the client should be able to keep track itself
 }
 
 simulated function Tick(float DeltaTime)
@@ -49,15 +48,7 @@ state ProjectileFireMode
     {
         SpawnProjectile(ProjectileClass, false);
 
-        // Swap animation index
-        if (FireAnimationIndex == 0)
-        {
-            FireAnimationIndex = 1;
-        }
-        else
-        {
-            FireAnimationIndex = 0;
-        }
+        bSecondGunPairFiring = !bSecondGunPairFiring; // toggle on server or single player
     }
 
     function AltFire(Controller C)
@@ -72,7 +63,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     local Projectile P;
     local int        i;
 
-    if (FireAnimationIndex == 0)
+    if (!bSecondGunPairFiring)
     {
         GetBarrelLocationAndRotation(0, BarrelLocation[0], BarrelRotation[0]);
         GetBarrelLocationAndRotation(3, BarrelLocation[1], BarrelRotation[1]);
@@ -208,55 +199,58 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     }
 }
 
-simulated event FlashMuzzleFlash(bool bWasAltFire)
+simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
+    local int FireAnimationIndex;
+
     if (Role == ROLE_Authority)
     {
-        if (bWasAltFire)
-        {
-            FiringMode = 1;
-        }
-        else
-        {
-            FiringMode = 0;
-        }
-
+        FiringMode = byte(bWasAltFire);
         FlashCount++;
-
-        NetUpdateTime = Level.TimeSeconds - 1;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
     }
     else
     {
         CalcWeaponFire(bWasAltFire);
     }
 
-    if (HasAnim(FireAnimations[FireAnimationIndex]))
+    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
     {
-        PlayAnim(FireAnimations[FireAnimationIndex]);
-    }
-
-    if (FireAnimationIndex == 0)
-    {
-        if (FlashEmitters[0] != none)
+        if (!bSecondGunPairFiring)
         {
-            FlashEmitters[0].Trigger(self, Instigator);
+            if (FlashEmitters[0] != none)
+            {
+                FlashEmitters[0].Trigger(self, Instigator);
+            }
+
+            if (FlashEmitters[3] != none)
+            {
+                FlashEmitters[3].Trigger(self, Instigator);
+            }
+        }
+        else
+        {
+            if (FlashEmitters[1] != none)
+            {
+                FlashEmitters[1].Trigger(self, Instigator);
+            }
+
+            if (FlashEmitters[2] != none)
+            {
+                FlashEmitters[2].Trigger(self, Instigator);
+            }
         }
 
-        if (FlashEmitters[3] != none)
+        FireAnimationIndex = int(bSecondGunPairFiring);
+
+        if (HasAnim(FireAnimations[FireAnimationIndex]))
         {
-            FlashEmitters[3].Trigger(self, Instigator);
-        }
-    }
-    else
-    {
-        if (FlashEmitters[1] != none)
-        {
-            FlashEmitters[1].Trigger(self, Instigator);
+            PlayAnim(FireAnimations[FireAnimationIndex]);
         }
 
-        if (FlashEmitters[2] != none)
+        if (Role < ROLE_Authority)
         {
-            FlashEmitters[2].Trigger(self, Instigator);
+            bSecondGunPairFiring = !bSecondGunPairFiring; // toggle on net client
         }
     }
 }
@@ -284,15 +278,16 @@ simulated function InitEffects()
     }
 }
 
-// Matt: added from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon, which will run armor checks
+// Added from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon, which will run armor checks
 simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }
 
+// Modified as there aren't any angles that are below the driver angle for an AT gun
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
-    return false; // there aren't any angles that are below the driver angle for an AT Gun cannon
+    return false;
 }
 
 defaultproperties
