@@ -26,7 +26,7 @@ function bool GameTypeLocked()
     local int          i;
     local GUITabButton tb;
 
-    for (i = 0; i < c_Tabs.TabStack.Length; i++)
+    for (i = 0; i < c_Tabs.TabStack.Length; ++i)
     {
         tb = c_Tabs.TabStack[i];
 

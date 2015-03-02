@@ -19,7 +19,7 @@ function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    for (i = 0; i < AttachedArtilleryTags.Length; i++)
+    for (i = 0; i < AttachedArtilleryTags.Length; ++i)
     {
         foreach AllActors(class'DH_ArtilleryActor', RAA, AttachedArtilleryTags[i])
         {

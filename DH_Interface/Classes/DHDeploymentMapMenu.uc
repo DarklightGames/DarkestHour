@@ -155,7 +155,7 @@ function bool DrawMapComponents(Canvas C)
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
     //Draw objectives
-    for (i = 0; i < arraycount(GRI.Objectives); i++)
+    for (i = 0; i < arraycount(GRI.Objectives); ++i)
     {
         if (GRI.Objectives[i] == none || !GRI.Objectives[i].bActive)
         {

@@ -27,7 +27,7 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0,0,1);
 
-    for (i = 0; i<ExitPositions.Length; i++)
+    for (i = 0; i<ExitPositions.Length; ++i)
     {
         if (bRelativeExitPos)
         {

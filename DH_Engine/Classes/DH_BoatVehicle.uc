@@ -252,7 +252,7 @@ simulated event DestroyAppearance()
     // Destroy the vehicle weapons
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < WeaponPawns.Length; i++)
+        for (i = 0; i < WeaponPawns.Length; ++i)
         {
             if (WeaponPawns[i] != none)
             {
@@ -266,7 +266,7 @@ simulated event DestroyAppearance()
     // Destroy the effects
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; ++i)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {

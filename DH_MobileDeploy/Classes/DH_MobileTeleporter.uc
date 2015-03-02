@@ -33,7 +33,7 @@ function PostBeginPlay()
 
     //Get the vehicle factorys and set the reference to it
     //Can search Dynamic Actors beccause ROVehicleFactory is Dynamic
-    for (i = 0; i < MDVFactoryPriority.Length; i++)
+    for (i = 0; i < MDVFactoryPriority.Length; ++i)
     {
         foreach DynamicActors(class'ROVehicleFactory', ROFactory, MDVFactoryPriority[i])
         {
@@ -145,7 +145,7 @@ function Timer()
     local int i;
 
     //Deactivate all active factories but current factory
-    for (i = 0; i < MDVFactoryReferences.Length; i++)
+    for (i = 0; i < MDVFactoryReferences.Length; ++i)
     {
         if (i != CurrentPriority && MDVFactoryReferences[i].bFactoryActive)
         {
@@ -243,7 +243,7 @@ function ChangePriority(int NewPriority)
     if (MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle == none || MDVFactoryReferences[CurrentPriority].LastSpawnedVehicle.bVehicleDestroyed)
     {
         //The MDV is dead, now lets deactivate all factories
-        for (i = 0; i < MDVFactoryReferences.Length; i++)
+        for (i = 0; i < MDVFactoryReferences.Length; ++i)
             MDVFactoryReferences[i].Deactivate();
             if (ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).IsVehicleEmpty())
                 ROVehicle(MDVFactoryReferences[i].LastSpawnedVehicle).Destroy(); //Destroy the vehicle

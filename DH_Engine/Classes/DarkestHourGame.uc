@@ -150,7 +150,7 @@ function PostBeginPlay()
     DHGRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
     DHGRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
 
-    for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); k++)
+    for (k = 0; k < arraycount(DHGRI.AxisRallyPoints); ++k)
     {
         DHGRI.AlliedRallyPoints[k].OfficerPRI = none;
         DHGRI.AlliedRallyPoints[k].RallyPointLocation = vect(0.0, 0.0, 0.0);
@@ -159,7 +159,7 @@ function PostBeginPlay()
     }
 
     // Clear help requests array
-    for (k = 0; k < arraycount(DHGRI.AlliedHelpRequests); k++)
+    for (k = 0; k < arraycount(DHGRI.AlliedHelpRequests); ++k)
     {
         DHGRI.AlliedHelpRequests[k].OfficerPRI = none;
         DHGRI.AlliedHelpRequests[k].requestType = 255;
@@ -318,7 +318,7 @@ function CheckResupplyVolumes()
     // Activate any resupply areas that are activated based on spawn areas
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    for (i = 0; i < arraycount(DHResupplyAreas); i++)
+    for (i = 0; i < arraycount(DHResupplyAreas); ++i)
     {
         if (DHResupplyAreas[i] == none)
         {
@@ -371,7 +371,7 @@ function CheckMortarmanSpawnAreas()
     local bool        bReqsMet, bSomeReqsMet;
     local int         i, j, h, k;
 
-    for (i = 0; i < DHMortarSpawnAreas.Length; i++)
+    for (i = 0; i < DHMortarSpawnAreas.Length; ++i)
     {
         if (!DHMortarSpawnAreas[i].bEnabled)
         {
@@ -384,7 +384,7 @@ function CheckMortarmanSpawnAreas()
             bReqsMet = true;
             bSomeReqsMet = false;
 
-            for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; j++)
+            for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
                 if (Objectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
                 {
@@ -393,7 +393,7 @@ function CheckMortarmanSpawnAreas()
                 }
             }
 
-            for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; h++)
+            for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
                 if (Objectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
                 {
@@ -404,7 +404,7 @@ function CheckMortarmanSpawnAreas()
 
             if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
             {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
+                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
                     if (Objectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
@@ -430,7 +430,7 @@ function CheckMortarmanSpawnAreas()
             bReqsMet = true;
             bSomeReqsMet = false;
 
-            for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; j++)
+            for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
                 if (Objectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
                 {
@@ -441,7 +441,7 @@ function CheckMortarmanSpawnAreas()
 
             // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
-            for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; h++)
+            for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
                 if (Objectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
                 {
@@ -454,7 +454,7 @@ function CheckMortarmanSpawnAreas()
             // Allows mappers to have spawns be used when objectives are neutral, not just captured
             if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
             {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
+                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
                     if (Objectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
                     {
@@ -1147,7 +1147,7 @@ function int GetVehicleRole(int Team, int Num)
     }
 
     // Should probably do this team specific in case the teams have different amounts of roles
-    for (i = 0; i < arraycount(DHAxisRoles); i++)
+    for (i = 0; i < arraycount(DHAxisRoles); ++i)
     {
         if (GetRoleInfo(Team, i) != none && GetRoleInfo(Team, i).bCanBeTankCrew && !RoleLimitReached(Team, i))
         {
@@ -1221,7 +1221,7 @@ function UpdateRoleCounts()
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    for (i = 0; i < arraycount(DHAxisRoles); i++)
+    for (i = 0; i < arraycount(DHAxisRoles); ++i)
     {
         if (DHAxisRoles[i] != none)
         {
@@ -1230,7 +1230,7 @@ function UpdateRoleCounts()
         }
     }
 
-    for (i = 0; i < arraycount(DHAlliesRoles); i++)
+    for (i = 0; i < arraycount(DHAlliesRoles); ++i)
     {
         if (DHAlliesRoles[i] != none)
         {
@@ -1429,7 +1429,7 @@ function bool RoleExists(byte TeamID, DH_RoleInfo RI)
 
     if (TeamID == 0)
     {
-        for (i = 0; i < arraycount(DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHAxisRoles); ++i)
         {
             if (DHAxisRoles[i] == RI)
             {
@@ -1439,7 +1439,7 @@ function bool RoleExists(byte TeamID, DH_RoleInfo RI)
     }
     else if (TeamID == 1)
     {
-        for (i = 0; i < arraycount(DHAlliesRoles); i++)
+        for (i = 0; i < arraycount(DHAlliesRoles); ++i)
         {
             if (DHAlliesRoles[i] == RI)
             {
@@ -1481,7 +1481,7 @@ state RoundInPlay
         GRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
         GRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
         GRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
-        for (i = 0; i < arraycount(GRI.AxisRallyPoints); i++)
+        for (i = 0; i < arraycount(GRI.AxisRallyPoints); ++i)
         {
             GRI.AlliedRallyPoints[i].OfficerPRI = none;
             GRI.AlliedRallyPoints[i].RallyPointLocation = vect(0,0,0);
@@ -1490,7 +1490,7 @@ state RoundInPlay
         }
 
         // Clear help requests
-        for (i = 0; i < arraycount(GRI.AxisHelpRequests); i++)
+        for (i = 0; i < arraycount(GRI.AxisHelpRequests); ++i)
         {
             GRI.AlliedHelpRequests[i].OfficerPRI = none;
             GRI.AlliedHelpRequests[i].requestType = 255;
@@ -1643,7 +1643,7 @@ state RoundInPlay
         MapName = Mid(MapName, i + 1, j - i);
 
         // Set the map as won in the Steam Stats of everyone on the winning team
-        for (i = 0; i < GameReplicationInfo.PRIArray.Length; i++)
+        for (i = 0; i < GameReplicationInfo.PRIArray.Length; ++i)
         {
             if (ROSteamStatsAndAchievements(GameReplicationInfo.PRIArray[i].SteamStatsAndAchievements) != none)
             {
@@ -1690,7 +1690,7 @@ state RoundInPlay
             RemainingBots--;
 
         // Go through both teams and spawn reinforcements if necessary
-        for (i = 0; i < 2; i++)
+        for (i = 0; i < 2; ++i)
         {
             /*
             if (i == ALLIES_TEAM_INDEX)
@@ -1725,7 +1725,7 @@ state RoundInPlay
         }
 
         // Go through both teams and update artillery availability
-        for (i = 0; i < 2; i++)
+        for (i = 0; i < 2; ++i)
         {
             ArtilleryStrikeInt = LevelInfo.GetStrikeInterval(i);
 
@@ -1847,7 +1847,7 @@ function ResetMortarTargets()
     }
 
     // Clear mortar allied targets
-    for (k = 0; k < arraycount(GRI.AlliedMortarTargets); k++)
+    for (k = 0; k < arraycount(GRI.AlliedMortarTargets); ++k)
     {
         GRI.AlliedMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
         GRI.AlliedMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
@@ -1856,7 +1856,7 @@ function ResetMortarTargets()
     }
 
     // Clear mortar german targets
-    for (k = 0; k < arraycount(GRI.GermanMortarTargets); k++)
+    for (k = 0; k < arraycount(GRI.GermanMortarTargets); ++k)
     {
         GRI.GermanMortarTargets[k].Location = vect(0.0, 0.0, 0.0);
         GRI.GermanMortarTargets[k].HitLocation = vect(0.0, 0.0, 0.0);
@@ -2111,7 +2111,7 @@ function HandleFFViolation(PlayerController Offender)
     // The player has been kicked once and needs to be session kicked
     if (FFPunishment == FFP_Kick && bSessionKickOnSecondFFViolation)
     {
-        for (i = 0; i < FFViolationIDs.Length; i++)
+        for (i = 0; i < FFViolationIDs.Length; ++i)
         {
             //Level.Game.Broadcast(self, "FFViolationID" $ i $ ":" @ FFViolationIDs[i], 'Say');
             if (FFViolationIDs[i] == OffenderID)

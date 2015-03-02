@@ -40,7 +40,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-    for (i = 0; i < NUM_CREDIT_LINES; i++)
+    for (i = 0; i < NUM_CREDIT_LINES; ++i)
         text $= credit_lines[i] $ "|";
 
     lb_credits.SetContent(text);

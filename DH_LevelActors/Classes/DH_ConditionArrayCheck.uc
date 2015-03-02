@@ -20,7 +20,7 @@ function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    for (i = 0; i < ConditionsToCheck.Length; i++)
+    for (i = 0; i < ConditionsToCheck.Length; ++i)
     {
         foreach AllActors(class'TriggeredCondition', TC, ConditionsToCheck[i])
         {
@@ -35,7 +35,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int RandomNum, i;
 
-    for (i = 0; i < ConditionReferenceArray.Length; i++)
+    for (i = 0; i < ConditionReferenceArray.Length; ++i)
     {
         if (UseRandomness)
         {

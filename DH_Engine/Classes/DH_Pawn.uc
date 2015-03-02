@@ -242,7 +242,7 @@ function PossessedBy(Controller C)
             Log("Error!!! Possess with no RoleInfo!!!");
         }
 
-        for (i = 0; i < AmmoClasses.Length; i++)
+        for (i = 0; i < AmmoClasses.Length; ++i)
         {
             AmmoPouchClasses[i] = AmmoClasses[i];
         }
@@ -255,7 +255,7 @@ function PossessedBy(Controller C)
                 Headgear = Spawn(HeadgearClass, self);
             }
 
-            for (i = 0; i < arraycount(AmmoPouchClasses); i++)
+            for (i = 0; i < arraycount(AmmoPouchClasses); ++i)
             {
                 if (AmmoPouchClasses[i] == none)
                 {
@@ -546,7 +546,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         return;
     }
 
-    for (i = 0; i < PointsHit.Length; i++)
+    for (i = 0; i < PointsHit.Length; ++i)
     {
         // If someone else has killed this player , return
         if (bDeleteMe || Health <= 0)
@@ -1297,7 +1297,7 @@ state Dying
             {
                 SetOverlayMaterial(DeadBurningOverlayMaterial, 999.0, true);
 
-                for (i = 0; i < AmmoPouches.Length; i++)
+                for (i = 0; i < AmmoPouches.Length; ++i)
                 {
                     AmmoPouches[i].SetOverlayMaterial(DeadBurningOverlayMaterial, 999.0, true);
                 }
@@ -1863,7 +1863,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            for (i = 0; i < 3; i++)
+            for (i = 0; i < 3; ++i)
             {
                 S = string(RI.Grenades[i].Item);
 
@@ -1875,7 +1875,7 @@ function AddDefaultInventory()
 
             if (RI != none)
             {
-                for (i = 0; i < RI.GivenItems.Length; i++)
+                for (i = 0; i < RI.GivenItems.Length; ++i)
                 {
                     CreateInventory(RI.GivenItems[i]);
                 }
@@ -1901,7 +1901,7 @@ function AddDefaultInventory()
 
             if (RI != none)
             {
-                for (i = 0; i < RI.GivenItems.Length; i++)
+                for (i = 0; i < RI.GivenItems.Length; ++i)
                 {
                     CreateInventory(RI.GivenItems[i]);
                 }
@@ -1926,7 +1926,7 @@ function AddDefaultInventory()
                 }
             }
 
-            for (i = 0; i < 3; i++)
+            for (i = 0; i < 3; ++i)
             {
                 S = string(RI.Grenades[i].Item);
 
@@ -2725,7 +2725,7 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         StartLoc.Z = MantleEndPoint.Z - 1.0;
         EndLoc = StartLoc + X * 30.0;
 
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 5; ++i)
         {
             if (CanMantleActor(Trace(HitLoc, HitNorm, EndLoc, StartLoc, true, Extent)))
             {
@@ -3652,7 +3652,7 @@ simulated function StartBurnFX()
         HeadGear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
     }
 
-    for (i = 0; i < AmmoPouches.Length; i++)
+    for (i = 0; i < AmmoPouches.Length; ++i)
     {
         AmmoPouches[i].SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
     }
@@ -3671,7 +3671,7 @@ simulated function EndBurnFX()
 
     SetOverlayMaterial(CharredOverlayMaterial, 999.0, true);
 
-    for (i = 0; i < AmmoPouches.Length; i++)
+    for (i = 0; i < AmmoPouches.Length; ++i)
     {
         AmmoPouches[i].SetOverlayMaterial(CharredOverlayMaterial, 999.0, true);
     }

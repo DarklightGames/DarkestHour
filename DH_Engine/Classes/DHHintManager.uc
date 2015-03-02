@@ -38,7 +38,7 @@ static function StaticReset()
 {
     local int i;
 
-    for (i = 0; i < HINT_COUNT; i++)
+    for (i = 0; i < HINT_COUNT; ++i)
     {
         default.bUsedUpHints[i] = 0;
     }
@@ -50,7 +50,7 @@ function NonStaticReset()
 {
     local int i;
 
-    for (i = 0; i < HINT_COUNT; i++)
+    for (i = 0; i < HINT_COUNT; ++i)
     {
         bUsedUpHints[i] = 0;
     }
@@ -80,7 +80,7 @@ function QueueHint(byte HintIndex, bool bForceNext)
         return;
     }
 
-    for (i = 0; i < QueuedHintIndices.Length; i++)
+    for (i = 0; i < QueuedHintIndices.Length; ++i)
     {
         if (QueuedHintIndices[i] == HintIndex)
         {

@@ -205,7 +205,7 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetDrawColor(0, 255, 0);
 
     // remove and destroy the barrels in the Barrels array
-    for (i = 0; i < Barrels.Length; i++)
+    for (i = 0; i < Barrels.Length; ++i)
     {
         Barrel = Barrels[i];
 

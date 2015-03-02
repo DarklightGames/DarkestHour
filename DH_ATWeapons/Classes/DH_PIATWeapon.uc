@@ -235,7 +235,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
         {
             PrimaryAmmoArray.Length = MaxNumPrimaryMags;
 
-            for (i = 0; i < PrimaryAmmoArray.Length; i++)
+            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
@@ -469,7 +469,7 @@ function bool HandlePickupQuery(Pickup Item)
     if (bNoAmmoInstances)
     {
         // Handle ammo pickups
-        for (i = 0; i < 2; i++)
+        for (i = 0; i < 2; ++i)
         {
             if (Item.Inventorytype == AmmoClass[i] && AmmoClass[i] != none)
             {
@@ -478,7 +478,7 @@ function bool HandlePickupQuery(Pickup Item)
                     // Handle multi mag ammo type pickups
                     if (ROMultiMagAmmoPickup(Item) != none)
                     {
-                        for (j = 0; j < ROMultiMagAmmoPickup(Item).AmmoMags.Length; j++)
+                        for (j = 0; j < ROMultiMagAmmoPickup(Item).AmmoMags.Length; ++j)
                         {
                             if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
                             {

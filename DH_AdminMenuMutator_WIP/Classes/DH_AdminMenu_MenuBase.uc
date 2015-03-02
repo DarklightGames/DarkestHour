@@ -161,7 +161,7 @@ function DrawMenu(canvas Canvas, int PosX, out int PosY, string Title, array<str
     }
 
     // Draw the numbered menu options
-    for (i = MenuPage * ITEMS_PER_PAGE; i < Min((MenuPage + 1) * ITEMS_PER_PAGE, LineText.Length); i++)
+    for (i = MenuPage * ITEMS_PER_PAGE; i < Min((MenuPage + 1) * ITEMS_PER_PAGE, LineText.Length); ++i)
     {
         if (LineText[i] != "")
         {

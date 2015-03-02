@@ -40,7 +40,7 @@ function GetAllObjectiveNames()
     MenuText.Length = 0;
     GRI = ROGameReplicationInfo(PC.GameReplicationInfo);
 
-    for (i = 0; i < arraycount(GRI.Objectives); i++)
+    for (i = 0; i < arraycount(GRI.Objectives); ++i)
     {
         if (GRI.Objectives[i] != none)
         {

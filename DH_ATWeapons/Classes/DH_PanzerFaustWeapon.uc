@@ -158,7 +158,7 @@ function GiveAmmoPickupAmmo(int m, Ammo AP, bool bJustSpawned)
         {
             PrimaryAmmoArray.Length = MaxNumPrimaryMags;
 
-            for (i = 0; i < PrimaryAmmoArray.Length; i++)
+            for (i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
                 PrimaryAmmoArray[i] = InitialAmount;
             }
@@ -226,7 +226,7 @@ function DropFrom(vector StartLocation)
     }
     else
     {
-        for (i = 0; i < AmmoAmount(0); i++)
+        for (i = 0; i < AmmoAmount(0); ++i)
         {
             R.Yaw = Rand(65536);
             Pickup = Spawn(PickupClass,,, StartLocation,R);
@@ -257,7 +257,7 @@ function bool HandlePickupQuery(Pickup Item)
     if (bNoAmmoInstances)
     {
         // handle ammo pickups
-        for (i = 0; i < 2; i++)
+        for (i = 0; i < 2; ++i)
         {
             if (Item.inventorytype == AmmoClass[i] && AmmoClass[i] != none)
             {

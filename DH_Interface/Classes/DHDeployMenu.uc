@@ -28,7 +28,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Super.InitComponent(MyController, MyOwner);
 
     // Initialize menu options
-    for (i = 0; i < arraycount(MenuOptions); i++)
+    for (i = 0; i < arraycount(MenuOptions); ++i)
     {
         co_MenuComboBox.AddItem(MenuOptions[i]);
     }

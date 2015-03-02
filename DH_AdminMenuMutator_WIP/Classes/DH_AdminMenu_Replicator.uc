@@ -124,7 +124,7 @@ simulated function CreateLocalMenus(PlayerController PC)
     }
 
     // Add all the admin menu interactions
-    for (i = 0; i < MenuArray.Length; i++)
+    for (i = 0; i < MenuArray.Length; ++i)
     {
         NewInteraction = DH_AdminMenu_MenuBase(PC.Player.InteractionMaster.AddInteraction(MenuArray[i], PC.Player));
 
@@ -143,7 +143,7 @@ simulated function CreateLocalMenus(PlayerController PC)
         Log("DH_AdminMenu_Replicator: bParaDropPlayerAllowed =" @ bParaDropPlayerAllowed @ " bShowRealismMenu =" @ bShowRealismMenu @ 
             " bRealismMutPresent =" @ bRealismMutPresent @ " bMinesDisabled =" @ bMinesDisabled);
 
-        for (i = 0; i < PC.Player.LocalInteractions.Length; i++)
+        for (i = 0; i < PC.Player.LocalInteractions.Length; ++i)
         {
             Log("DH_AdminMenu_Replicator: LocalInteractions[" $ i $ "] =" @ PC.Player.LocalInteractions[i]);
         }
@@ -155,7 +155,7 @@ simulated function RemoveMenu(string MenuPartName)
 {
     local  int  i;
 
-    for (i = 0; i < MenuArray.Length; i++)
+    for (i = 0; i < MenuArray.Length; ++i)
     {
         if (InStr(MenuArray[i], MenuPartName) >= 0)
         {
@@ -376,7 +376,7 @@ simulated function Destroyed()
     
     if (PC != none && PC.Player != none)
     {    
-        for (i = 0; i < PC.Player.LocalInteractions.Length; i++)
+        for (i = 0; i < PC.Player.LocalInteractions.Length; ++i)
         {
             AdminMenu = DH_AdminMenu_MenuBase(PC.Player.LocalInteractions[i]);
             

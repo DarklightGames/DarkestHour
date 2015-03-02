@@ -21,7 +21,7 @@ final simulated static function int SetROStyle(GUIController MyController, array
         return -1;
     }
 
-    for (i = 0; i < Components.Length; i++)
+    for (i = 0; i < Components.Length; ++i)
     {
         if (Components[i] != none)
         {

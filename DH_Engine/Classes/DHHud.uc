@@ -301,7 +301,7 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
         PlayerOwner.PlayBeepSound();
     }
 
-    for (i = 0; i < ConsoleMessageCount; i++)
+    for (i = 0; i < ConsoleMessageCount; ++i)
     {
         if (TextMessages[i].Text == "")
         {
@@ -311,7 +311,7 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 
     if (i == ConsoleMessageCount)
     {
-        for (i = 0; i < ConsoleMessageCount-1; i++)
+        for (i = 0; i < ConsoleMessageCount-1; ++i)
         {
             TextMessages[i] = TextMessages[i+1];
         }
@@ -340,7 +340,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
 
     if (ObituaryCount == arraycount(DHObituaries))
     {
-        for (i = 1; i < arraycount(DHObituaries); i++)
+        for (i = 1; i < arraycount(DHObituaries); ++i)
         {
             DHObituaries[i - 1] = DHObituaries[i];
         }
@@ -412,7 +412,7 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
             InitialNumLines = Lines.Length;
             Message.DX = TempXL; // Matt: added to fix problem, so Message.DX is always set, even for the 1st pass
 
-            for (i = 0; i < 20; i++)
+            for (i = 0; i < 20; ++i)
             {
                 TempXL *= 0.8;
                 Lines.Length = 0;
@@ -430,7 +430,7 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
                     XL = 0;
                     YL = 0;
 
-                    for (j = 0; j < Lines.Length; j++)
+                    for (j = 0; j < Lines.Length; ++j)
                     {
                         MessageExtra.Lines[j] = Lines[j];
                         C.TextSize(Lines[j], TempXL, TempYL);
@@ -1321,7 +1321,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Draw occupant dots
-    for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; i++)
+    for (i = 0; i < Vehicle.VehicleHudOccupantsX.Length; ++i)
     {
         if (Vehicle.VehicleHudOccupantsX[i] ~= 0)
         {
@@ -1417,7 +1417,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     }
 
     // Passengers' names
-    for (i = 0; i < Vehicle.WeaponPawns.Length; i++)
+    for (i = 0; i < Vehicle.WeaponPawns.Length; ++i)
     {
         WeaponPawn = ROVehicleWeaponPawn(Vehicle.WeaponPawns[i]);
 
@@ -1953,7 +1953,7 @@ simulated function DrawObjectives(Canvas C)
     MapLevelImageCoordinates = SubCoords;
 
     // Draw coordinates text on sides of the map
-    for (i = 0; i < 9; i++)
+    for (i = 0; i < 9; ++i)
     {
         MapCoordTextXWidget.PosX = (Float(i) + 0.5) / 9.0;
         MapCoordTextXWidget.Text = MapCoordTextX[i];
@@ -1986,7 +1986,7 @@ simulated function DrawObjectives(Canvas C)
     C.Font = GetSmallMenuFont(C);
 
     // Draw resupply areas
-    for (i = 0; i < arraycount(DHGRI.ResupplyAreas); i++)
+    for (i = 0; i < arraycount(DHGRI.ResupplyAreas); ++i)
     {
         if (!DHGRI.ResupplyAreas[i].bActive || (DHGRI.ResupplyAreas[i].Team != OwnerTeam && DHGRI.ResupplyAreas[i].Team != NEUTRAL_TEAM_INDEX))
         {
@@ -2008,7 +2008,7 @@ simulated function DrawObjectives(Canvas C)
     }
 
     // Draw AT guns
-    for (i = 0; i < arraycount(DHGRI.ATCannons); i++)
+    for (i = 0; i < arraycount(DHGRI.ATCannons); ++i)
     {
         if (DHGRI.ATCannons[i].ATCannonLocation != vect(0.0, 0.0, 0.0) && DHGRI.ATCannons[i].Team == PlayerOwner.GetTeamNum())
         {
@@ -2173,7 +2173,7 @@ simulated function DrawObjectives(Canvas C)
         // Draw the destroyable/destroyed targets
         if (Player.Destroyables.Length != 0)
         {
-            for (i = 0; i < Player.Destroyables.Length; i++)
+            for (i = 0; i < Player.Destroyables.Length; ++i)
             {
                 if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
                 {
@@ -2199,7 +2199,7 @@ simulated function DrawObjectives(Canvas C)
         }
 
         // Draw the rally points
-        for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); i++)
+        for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
         {
             if (OwnerTeam == AXIS_TEAM_INDEX)
             {
@@ -2221,7 +2221,7 @@ simulated function DrawObjectives(Canvas C)
         // Draw Artillery Radio Icons
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AxisRadios); i++)
+            for (i = 0; i < arraycount(DHGRI.AxisRadios); ++i)
             {
                 if (DHGRI.AxisRadios[i] == none || (DHGRI.AxisRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AxisRadios[i]).bShouldShowOnSituationMap))
                 {
@@ -2234,7 +2234,7 @@ simulated function DrawObjectives(Canvas C)
         }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AlliedRadios); i++)
+            for (i = 0; i < arraycount(DHGRI.AlliedRadios); ++i)
             {
                 if (DHGRI.AlliedRadios[i] == none || (DHGRI.AlliedRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AlliedRadios[i]).bShouldShowOnSituationMap))
                 {
@@ -2251,7 +2251,7 @@ simulated function DrawObjectives(Canvas C)
         {
             if (OwnerTeam == AXIS_TEAM_INDEX)
             {
-                for (i = 0; i < arraycount(DHGRI.CarriedAxisRadios); i++)
+                for (i = 0; i < arraycount(DHGRI.CarriedAxisRadios); ++i)
                 {
                     if (DHGRI.CarriedAxisRadios[i] == none)
                     {
@@ -2264,7 +2264,7 @@ simulated function DrawObjectives(Canvas C)
             }
             else if (OwnerTeam == ALLIES_TEAM_INDEX)
             {
-                for (i = 0; i < arraycount(DHGRI.CarriedAlliedRadios); i++)
+                for (i = 0; i < arraycount(DHGRI.CarriedAlliedRadios); ++i)
                 {
                     if (DHGRI.CarriedAlliedRadios[i] == none)
                     {
@@ -2280,7 +2280,7 @@ simulated function DrawObjectives(Canvas C)
         // Draw help requests
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); i++)
+            for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
             {
                 if (DHGRI.AxisHelpRequests[i].requestType == 255)
                 {
@@ -2321,7 +2321,7 @@ simulated function DrawObjectives(Canvas C)
             // Draw all mortar targets on the map
             if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))
             {
-                for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); i++)
+                for (i = 0; i < arraycount(DHGRI.GermanMortarTargets); ++i)
                 {
                     if (DHGRI.GermanMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.GermanMortarTargets[i].bCancelled == 0)
                     {
@@ -2347,7 +2347,7 @@ simulated function DrawObjectives(Canvas C)
         }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
-            for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); i++)
+            for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); ++i)
             {
                 if (DHGRI.AlliedHelpRequests[i].requestType == 255)
                 {
@@ -2386,7 +2386,7 @@ simulated function DrawObjectives(Canvas C)
             }
 
             // Draw all mortar targets on the map
-            for (i = 0; i < arraycount(DHGRI.AlliedMortarTargets); i++)
+            for (i = 0; i < arraycount(DHGRI.AlliedMortarTargets); ++i)
             {
                 if (DHGRI.AlliedMortarTargets[i].Location != vect(0.0, 0.0, 0.0) && DHGRI.AlliedMortarTargets[i].bCancelled == 0)
                 {
@@ -2412,7 +2412,7 @@ simulated function DrawObjectives(Canvas C)
     }
 
     // Draw objectives
-    for (i = 0; i < arraycount(DHGRI.Objectives); i++)
+    for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
     {
         if (DHGRI.Objectives[i] == none)
         {
@@ -2576,7 +2576,7 @@ simulated function DrawObjectives(Canvas C)
     // Draw timer values
     C.Font = GetFontSizeIndex(C, -2);
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
         DrawTextWidgetClipped(C, MapTimerTexts[i], MapCoords, XL, YL, YL_one);
     }
@@ -2674,7 +2674,7 @@ simulated function DrawObjectives(Canvas C)
     GetAbsoluteCoordinatesAlt(MapCoords, MapObjectivesCoords, SubCoords);
 
     // See if there are any secondary objectives
-    for (i = 0; i < arraycount(DHGRI.Objectives); i++)
+    for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
     {
         if (DHGRI.Objectives[i] == none || !DHGRI.Objectives[i].bActive)
         {
@@ -2704,7 +2704,7 @@ simulated function DrawObjectives(Canvas C)
     ObjCount = 1;
     C.Font = GetSmallMenuFont(C);
 
-    for (i = 0; i < arraycount(DHGRI.Objectives); i++)
+    for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
     {
         if (DHGRI.Objectives[i] == none || !DHGRI.Objectives[i].bActive || !DHGRI.Objectives[i].bRequired)
         {
@@ -2732,7 +2732,7 @@ simulated function DrawObjectives(Canvas C)
         MapSecondaryObjectivesTitle.OffsetY = MapObjectivesTexts.OffsetY;
         DrawTextWidgetClipped(C, MapSecondaryObjectivesTitle, SubCoords, XL, YL, YL_one);
 
-        for (i = 0; i < arraycount(DHGRI.Objectives); i++)
+        for (i = 0; i < arraycount(DHGRI.Objectives); ++i)
         {
             if (DHGRI.Objectives[i] == none || !DHGRI.Objectives[i].bActive|| DHGRI.Objectives[i].bRequired)
             {
@@ -2789,7 +2789,7 @@ simulated function DrawLocationHits(Canvas C, ROPawn P)
         Team = 0;
     }
 
-    for (i = 0; i < arraycount(P.DamageList); i++)
+    for (i = 0; i < arraycount(P.DamageList); ++i)
     {
         if (P.DamageList[i] > 0)
         {
@@ -3049,7 +3049,7 @@ function DisplayMessages(Canvas C)
 
     while (DHObituaries[0].VictimName != "" && DHObituaries[0].EndOfLife < Level.TimeSeconds)
     {
-        for (i = 1; i < ObituaryCount; i++)
+        for (i = 1; i < ObituaryCount; ++i)
         {
             DHObituaries[i - 1] = DHObituaries[i];
         }
@@ -3071,7 +3071,7 @@ function DisplayMessages(Canvas C)
         Y += 2.0 * Y + (HintCoords.Y + HintCoords.YL) * C.ClipY;
     }
 
-    for (i = 0; i < ObituaryCount; i++)
+    for (i = 0; i < ObituaryCount; ++i)
     {
         TimeOfDeath = DHObituaries[i].EndOfLife - ObituaryLifeSpan;
         FadeInBeginTime = TimeOfDeath + ObituaryDelayTime;
@@ -3413,7 +3413,7 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
         return;
     }
 
-    for (i = 0; i < CurrentObj; i++)
+    for (i = 0; i < CurrentObj; ++i)
     {
         if (GRI.Objectives[i] == none) // Matt: added to avoid spamming "accessed none" errors
         {

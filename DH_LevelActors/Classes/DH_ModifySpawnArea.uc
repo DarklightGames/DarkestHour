@@ -17,7 +17,7 @@ function PostBeginPlay()
     super.PostBeginPlay();
 
     //Spawn areas are dynamic so use dynamic actor list
-    for (i = 0; i < SpawnsToModify.Length; i++)
+    for (i = 0; i < SpawnsToModify.Length; ++i)
     {
         foreach DynamicActors(class'ROSpawnArea', ROSA, SpawnsToModify[i])
         {
@@ -34,19 +34,19 @@ event Trigger(Actor Other, Pawn EventInstigator)
     switch (HowToModify)
     {
         case SMT_Activate:
-            for (i = 0; i < SpawnReference.Length; i++)
+            for (i = 0; i < SpawnReference.Length; ++i)
             {
                 SpawnReference[i].bEnabled = true; //Activates the Spawn
             }
             break;
         case SMT_Deactivate:
-            for (i = 0; i < SpawnReference.Length; i++)
+            for (i = 0; i < SpawnReference.Length; ++i)
             {
                 SpawnReference[i].bEnabled = false; //Deactivates the Spawn
             }
             break;
         case SMT_Toggle: //Check spawn area status and toggle it
-            for (i = 0; i < SpawnReference.Length; i++)
+            for (i = 0; i < SpawnReference.Length; ++i)
             {
                 SpawnReference[i].bEnabled = !SpawnReference[i].bEnabled;
             }

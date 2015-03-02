@@ -729,7 +729,7 @@ simulated function int GetRoundsDescription(out array<string> Descriptions)
 
     Descriptions.Length = 0;
 
-    for (i = 0; i < ProjectileDescriptions.Length; i++)
+    for (i = 0; i < ProjectileDescriptions.Length; ++i)
     {
         Descriptions[i] = ProjectileDescriptions[i];
     }

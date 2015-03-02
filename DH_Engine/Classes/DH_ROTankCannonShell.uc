@@ -70,7 +70,7 @@ simulated static function int GetPitchForRange(int Range)
         return 0;
     }
 
-    for (i = 0; i < default.MechanicalRanges.Length; i++)
+    for (i = 0; i < default.MechanicalRanges.Length; ++i)
     {
         if (default.MechanicalRanges[i].Range >= Range)
         {
@@ -91,7 +91,7 @@ simulated static function float GetYAdjustForRange(int Range)
         return 0;
     }
 
-    for (i = 0; i < default.OpticalRanges.Length; i++)
+    for (i = 0; i < default.OpticalRanges.Length; ++i)
     {
         if (default.OpticalRanges[i].Range >= Range)
         {

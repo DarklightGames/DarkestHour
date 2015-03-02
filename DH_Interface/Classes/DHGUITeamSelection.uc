@@ -28,7 +28,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         }
     }
 
-    for (i = 0; i < 2; i++)
+    for (i = 0; i < 2; ++i)
     {
         b_TeamSelect[i].Caption = TeamJoinText[i];
         b_TeamSelect[i].SetHint(TeamJoinHint[i]);

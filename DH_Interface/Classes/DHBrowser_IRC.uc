@@ -17,7 +17,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Channel.TabHeight = 0.06;
     c_Channel.BackgroundStyle = none;
     c_Channel.BackgroundStyleName = "";
-    for (i = 0; i < c_Channel.TabStack.Length; i++)
+    for (i = 0; i < c_Channel.TabStack.Length; ++i)
     {
         if (c_Channel.TabStack[i] != none)
         {

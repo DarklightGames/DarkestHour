@@ -225,7 +225,7 @@ function FillRoleList()
 
     DHGRI = DHGameReplicationInfo(GRI);
 
-    for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+    for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
     {
         if (desiredTeam == AXIS_TEAM_INDEX)
         {
@@ -290,7 +290,7 @@ function AutoPickRole()
     if (desiredTeam == AXIS_TEAM_INDEX || desiredTeam == ALLIES_TEAM_INDEX)
     {
         // Pick the first non-full role
-        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
         {
             if (desiredTeam == AXIS_TEAM_INDEX)
             {
@@ -369,7 +369,7 @@ function int FindRoleIndexInList(RORoleInfo newRole)
     if (li_Roles.ItemCount == 0)
         return -1;
 
-    for (i = 0; i < li_Roles.ItemCount; i++)
+    for (i = 0; i < li_Roles.ItemCount; ++i)
         if (newRole == li_Roles.GetObjectAtIndex(i))
             return i;
 
@@ -394,7 +394,7 @@ function UpdateWeaponsInfo()
     if (desiredRole != none)
     {
         // Update available primary weapons list
-        for (i = 0; i < arraycount(desiredRole.PrimaryWeapons); i++)
+        for (i = 0; i < arraycount(desiredRole.PrimaryWeapons); ++i)
         {
             if (desiredRole.PrimaryWeapons[i].item != none)
             {
@@ -402,7 +402,7 @@ function UpdateWeaponsInfo()
             }
         }
         // Update available secondary weapons list
-        for (i = 0; i < arraycount(desiredRole.SecondaryWeapons); i++)
+        for (i = 0; i < arraycount(desiredRole.SecondaryWeapons); ++i)
         {
             if (desiredRole.SecondaryWeapons[i].item != none)
             {
@@ -420,7 +420,7 @@ function ClearEquipment()
 {
     local int i;
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
         b_Equipment[i].Graphic = none;
         b_Equipment[i].bVisible = false;
@@ -439,7 +439,7 @@ function UpdateRoleEquipment()
     temp = -1;
 
     // Add grenades if needed
-    for (i = 0; i < arraycount(desiredRole.Grenades); i++)
+    for (i = 0; i < arraycount(desiredRole.Grenades); ++i)
     {
         if (desiredRole.Grenades[i].Item != none)
         {
@@ -459,7 +459,7 @@ function UpdateRoleEquipment()
     }
 
     // Parse GivenItems array
-    for (i = 0; i < desiredRole.GivenItems.Length; i++)
+    for (i = 0; i < desiredRole.GivenItems.Length; ++i)
     {
         if (desiredRole.GivenItems[i] != "")
         {
@@ -534,7 +534,7 @@ function AutoPickWeapons()
     if (currentTeam == desiredTeam && currentRole == desiredRole &&
         desiredWeapons[0] == -5 && desiredWeapons[1] == -5)
     {
-        for (i = 0; i < 2; i++)
+        for (i = 0; i < 2; ++i)
         {
             desiredWeapons[i] = currentWeapons[i];
 
@@ -547,7 +547,7 @@ function AutoPickWeapons()
     else
     {
         // Simple implementation, just select first weapon in list.
-        for (i = 0; i < 2; i++)
+        for (i = 0; i < 2; ++i)
         {
             if (li_AvailableWeapons[i].ItemCount != 0)
                 li_AvailableWeapons[i].SetIndex(0);
@@ -562,7 +562,7 @@ function AutoPickWeapons()
 function int FindIndexInWeaponsList(int index, GUIList list)
 {
     local int i;
-    for (i = 0; i < list.ItemCount; i++)
+    for (i = 0; i < list.ItemCount; ++i)
         if (int(list.GetExtraAtIndex(i)) == index)
             return i;
 
@@ -681,7 +681,7 @@ function UpdateRoleCounts()
     if (desiredTeam != AXIS_TEAM_INDEX && desiredTeam != ALLIES_TEAM_INDEX)
         return;
 
-    for (i = 0; i < li_Roles.ItemCount; i++)
+    for (i = 0; i < li_Roles.ItemCount; ++i)
     {
         role = RORoleInfo(li_Roles.GetObjectAtIndex(i));
         if (role == none)
@@ -742,7 +742,7 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
 
     if (team == AXIS_TEAM_INDEX)
     {
-        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
         {
             if (DHGRI.DHAxisRoles[i] == role)
             {
@@ -752,7 +752,7 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
     }
     else if (team == ALLIES_TEAM_INDEX)
     {
-        for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); ++i)
         {
             if (DHGRI.DHAlliesRoles[i] == role)
             {

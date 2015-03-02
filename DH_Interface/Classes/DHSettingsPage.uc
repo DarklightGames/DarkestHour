@@ -21,7 +21,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         PlayerRot.Roll = 0;
         PlayerOwner().SetRotation(PlayerRot);
 
-    for (i = 0; i < PanelCaption.Length && i < PanelClass.Length && i < PanelHint.Length; i++)
+    for (i = 0; i < PanelCaption.Length && i < PanelClass.Length && i < PanelHint.Length; ++i)
     {
         Profile("Settings_" $ PanelCaption[i]);
         c_Tabs.AddTab(PanelCaption[i], PanelClass[i],, PanelHint[i]);
@@ -34,7 +34,7 @@ function GetSizingButton()
 {
         local int i;
         SizingButton = none;
-        for (i = 0; i < Components.Length; i++)
+        for (i = 0; i < Components.Length; ++i)
         {
                 if (GUIButton(Components[i]) == none)
                         continue;

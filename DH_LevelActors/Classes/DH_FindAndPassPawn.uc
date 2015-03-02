@@ -69,7 +69,7 @@ state FindClass
         if (Pawn(Other) == none)
             return;
 
-        for (i = 0; i < PawnClassToFind.Length; i++)
+        for (i = 0; i < PawnClassToFind.Length; ++i)
         {
             if (Other.IsA(PawnClassToFind[i].Name))
             {

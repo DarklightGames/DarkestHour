@@ -16,7 +16,7 @@ function Trigger(Actor Other, Pawn EventInstigator)
     if (!bFireOnce && !bFired)
     {
         //Start the loop to trigger all the events we need
-        for (i = 0; i < EventsToTrigger.Length; i++)
+        for (i = 0; i < EventsToTrigger.Length; ++i)
             TriggerEvent(EventsToTrigger[i], self, none); //Triggers the events
 
         bFired = true;

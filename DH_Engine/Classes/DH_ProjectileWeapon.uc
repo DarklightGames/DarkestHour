@@ -121,7 +121,7 @@ exec function LogAmmo()
         return;
     }
 
-    for (i = 0; i < PrimaryAmmoArray.Length; i++)
+    for (i = 0; i < PrimaryAmmoArray.Length; ++i)
     {
         if (i == CurrentMagIndex)
         {
@@ -163,7 +163,7 @@ simulated event RenderOverlays(Canvas Canvas)
     // Draw muzzleflashes/smoke for all fire modes so idle state won't cause emitters to just disappear
     Canvas.DrawActor(none, false, true);
 
-    for (i = 0; i < NUM_FIRE_MODES; i++)
+    for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
         if (FireMode[i] != none)
         {
@@ -379,7 +379,7 @@ simulated state RaisingWeapon
 
         SetTimer(GetAnimDuration(Anim, SelectAnimRate), false);
 
-        for (i = 0; i < NUM_FIRE_MODES; i++)
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
             FireMode[i].bIsFiring = false;
             FireMode[i].HoldTime = 0.0;
@@ -427,7 +427,7 @@ simulated state LoweringWeapon
         {
             if (Instigator.IsLocallyControlled())
             {
-                for (i = 0; i < NUM_FIRE_MODES; i++)
+                for (i = 0; i < NUM_FIRE_MODES; ++i)
                 {
                     if (FireMode[i].bIsFiring)
                     {
@@ -450,7 +450,7 @@ simulated state LoweringWeapon
 
         SetTimer(GetAnimDuration(Anim, PutDownAnimRate), false);
 
-        for (i = 0; i < NUM_FIRE_MODES; i++)
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
         {
             FireMode[i].bServerDelayStartFire = false;
             FireMode[i].bServerDelayStopFire = false;
@@ -2219,7 +2219,7 @@ function DropFrom(vector StartLocation)
 
     ClientWeaponThrown();
 
-    for (i = 0; i < NUM_FIRE_MODES; i++)
+    for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
         if (FireMode[i].bIsFiring)
         {

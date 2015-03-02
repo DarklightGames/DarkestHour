@@ -83,7 +83,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         GetBarrelLocationAndRotation(2, BarrelLocation[1], BarrelRotation[1]);
     }
 
-    for (i = 0; i < 2; i++)
+    for (i = 0; i < 2; ++i)
     {
         if (ProjectileClass == PrimaryProjectileClass)
         {
@@ -270,7 +270,7 @@ simulated function InitEffects()
         return;
     }
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 4; ++i)
     {
         if (FlashEmitterClass != none && FlashEmitters[i] == none)
         {

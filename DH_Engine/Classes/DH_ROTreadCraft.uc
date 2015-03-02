@@ -543,7 +543,7 @@ simulated function StopEmitters()
 
     if (Level.NetMode != NM_DedicatedServer && !bDropDetail)
     {
-        for (i = 0; i < Dust.Length; i++)
+        for (i = 0; i < Dust.Length; ++i)
         {
             if (Dust[i] != none)
             {
@@ -553,7 +553,7 @@ simulated function StopEmitters()
 
         Dust.Length = 0;
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; ++i)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {
@@ -575,7 +575,7 @@ simulated function StartEmitters()
     {
         Dust.Length = Wheels.Length;
 
-        for (i = 0; i < Wheels.Length; i++)
+        for (i = 0; i < Wheels.Length; ++i)
         {
             if (Dust[i] != none)
             {
@@ -596,7 +596,7 @@ simulated function StartEmitters()
             Dust[i].SetDirtColor(Level.DustColor);
         }
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; ++i)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {
@@ -907,7 +907,7 @@ function bool IsVehicleEmpty()
         return false;
     }
 
-    for (i = 0; i < WeaponPawns.Length; i++)
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
         {
@@ -1018,7 +1018,7 @@ function bool TryToDrive(Pawn P)
                 return false;
             }
 
-            for (i = 0; i < WeaponPawns.Length; i++)
+            for (i = 0; i < WeaponPawns.Length; ++i)
             {
                 if (WeaponPawns[i].Driver != none && P.GetTeamNum() != WeaponPawns[i].Driver.GetTeamNum())
                 {
@@ -1051,7 +1051,7 @@ function bool TryToDrive(Pawn P)
         }
 
         // Cycle through the available passenger positions
-        for (i = FirstRiderPositionIndex; i < WeaponPawns.Length; i++)
+        for (i = FirstRiderPositionIndex; i < WeaponPawns.Length; ++i)
         {
             // If it's a passenger pawn & the position is free, then climb aboard
             if (ROPassengerPawn(WeaponPawns[i]) != none && WeaponPawns[i].Driver == none)
@@ -1113,7 +1113,7 @@ simulated function PostBeginPlay()
         {
             RandomNumber = RAND(100);
 
-            for (i = 0; i < arraycount(SchurzenTypes); i++)
+            for (i = 0; i < arraycount(SchurzenTypes); ++i)
             {
                 CumulativeChance += SchurzenTypes[i].PercentChance;
 
@@ -1309,12 +1309,12 @@ simulated function Tick(float DeltaTime)
         LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-        for (i = 0; i < LeftWheelBones.Length; i++)
+        for (i = 0; i < LeftWheelBones.Length; ++i)
         {
             SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
-        for (i = 0; i < RightWheelBones.Length; i++)
+        for (i = 0; i < RightWheelBones.Length; ++i)
         {
             SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
@@ -1408,7 +1408,7 @@ function TakeFireDamage()
         }
 
         // Burn any other vehicle occupants
-        for (i = 0; i < WeaponPawns.Length; i++)
+        for (i = 0; i < WeaponPawns.Length; ++i)
         {
             if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
             {
@@ -2392,7 +2392,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
     }
 
-    for (i = 0; i < VehHitpoints.Length; i++)
+    for (i = 0; i < VehHitpoints.Length; ++i)
     {
         HitPointDamage = Damage;
 
@@ -2465,7 +2465,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    for (i = 0; i < NewVehHitpoints.Length; i++)
+    for (i = 0; i < NewVehHitpoints.Length; ++i)
     {
         HitPointDamage = Damage;
 
@@ -2755,7 +2755,7 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
     }
 
     // Pass on to each VehicleWeaponPawn, but not if it has collision as whatever is causing the radius damage will hit the VWP by itself
-    for (i = 0; i < WeaponPawns.Length; i++)
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (!WeaponPawns[i].bCollideActors)
         {
@@ -2944,7 +2944,7 @@ simulated event DestroyAppearance()
     // Destroy the vehicle weapons
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < WeaponPawns.Length; i++)
+        for (i = 0; i < WeaponPawns.Length; ++i)
         {
             if (WeaponPawns[i] != none)
             {
@@ -3104,7 +3104,7 @@ simulated function UpdateTurretReferences()
 {
     local int i;
 
-    for (i = 0; i < WeaponPawns.Length; i++)
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Gun != none)
         {
@@ -3135,7 +3135,7 @@ simulated function int NumPassengers()
         num = 1;
     }
 
-    for (i = 0; i < WeaponPawns.Length; i++)
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
         {
@@ -3165,7 +3165,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                 PC.SetRotation(rotator(vector(PC.Rotation) >> Rotation));
             }
 
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = default.Mesh;
                 DriverPositions[i].ViewFOV = PC.DefaultFOV;
@@ -3205,7 +3205,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
         if (bBehindViewChanged)
         {
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
                 DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
@@ -3247,14 +3247,14 @@ exec function ToggleMesh()
     {
         if (Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
         {
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = default.Mesh;
             }
         }
         else
         {
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
             }

@@ -32,7 +32,7 @@ function InitFilterList()
     li_Filters.Clear();
     FilterNames = FM.GetFilterNames();
 
-    for (i = 0; i < FilterNames.Length; i++)
+    for (i = 0; i < FilterNames.Length; ++i)
     {
         ch = moCheckBox(li_Filters.AddItem("DH_Interface.DHmoCheckbox",,FilterNames[i]));
 
@@ -63,7 +63,7 @@ function bool CreateClick(GUIComponent Sender)
 
     cnt = 0;
 
-    for (i = 0; i < li_Filters.ItemCount; i++)
+    for (i = 0; i < li_Filters.ItemCount; ++i)
     {
         cb = moCheckbox(li_Filters.GetItem(i));
 

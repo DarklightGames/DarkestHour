@@ -718,7 +718,7 @@ function Timer()
 
     // Figure out the rate of capture that each side is capable of
     // Rate is defined as: Number of players in the area * BaseCaptureRate * Leader bonus (if any) * Percentage of players on the team in the area
-    for (i = 0; i < 2; i++)
+    for (i = 0; i < 2; ++i)
     {
         if (Num[i] >= PlayersNeededToCapture)
         {

@@ -34,7 +34,7 @@ function PostBeginPlay()
 
   ReplicatedMaterialTriggers.Length = MaterialsToTrigger.Length;
 
-  for (i = 0; i < MaterialsToTrigger.Length; i++) {
+  for (i = 0; i < MaterialsToTrigger.Length; ++i) {
     ReplicatedMaterialTriggers[i] = Spawn(class'DH_MaterialTriggerReplicationInfo', self);
     ReplicatedMaterialTriggers[i].SetMaterialToTrigger(string(MaterialsToTrigger[i]));
   }
@@ -55,12 +55,12 @@ function Trigger(Actor Other, Pawn EventInstigator)
     Other = self;
 
   if (TriggerAction == TriggerTriggers) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
+    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
       if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
   }
   else if (TriggerAction == TriggerResets) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
+    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
       if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].ResetMaterial();
   }
@@ -80,12 +80,12 @@ function Untrigger(Actor Other, Pawn EventInstigator)
     Other = self;
 
   if (UntriggerAction == UntriggerTriggers) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
+    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
       if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].TriggerMaterial(Other, EventInstigator);
   }
   else if (UntriggerAction == UntriggerResets) {
-    for (i = 0; i < ReplicatedMaterialTriggers.Length; i++)
+    for (i = 0; i < ReplicatedMaterialTriggers.Length; ++i)
       if (ReplicatedMaterialTriggers[i] != none)
         ReplicatedMaterialTriggers[i].ResetMaterial();
   }

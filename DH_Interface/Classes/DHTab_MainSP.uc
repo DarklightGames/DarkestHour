@@ -59,7 +59,7 @@ function InitGameType()
 
     class'CacheManager'.static.GetGameTypeList(Games);
 
-    for (i = 0; i < Games.Length; i++)
+    for (i = 0; i < Games.Length; ++i)
     {
         if (Games[i].ClassName == "DH_Engine.DarkestHourGame")
         {
@@ -158,7 +158,7 @@ function InitDifficulty()
         return;
     }
 
-    for (i = 0; i < count / 2; i++)
+    for (i = 0; i < count / 2; ++i)
     {
         Difficulties[i] = float(splits[i * 2]);
         co_Difficulty.AddItem(splits[(i * 2) + 1],, splits[i * 1]);
@@ -174,7 +174,7 @@ function UpdateCurrentGameDifficulty()
 
     currentDifficulty = class'DH_Engine.DarkestHourGame'.default.GameDifficulty;
 
-    for (i = 0; i < Difficulties.length; i++)
+    for (i = 0; i < Difficulties.length; ++i)
     {
         if (currentDifficulty == Difficulties[i])
         {

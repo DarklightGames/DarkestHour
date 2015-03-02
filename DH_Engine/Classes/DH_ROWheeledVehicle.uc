@@ -295,7 +295,7 @@ function bool TryToDrive(Pawn P)
     // Don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
-        for (i = 0; i < WeaponPawns.Length; i++)
+        for (i = 0; i < WeaponPawns.Length; ++i)
         {
             if (WeaponPawns[i].Driver != none)
             {
@@ -380,7 +380,7 @@ simulated function Tick(float dt)
             LostTraction = true;
 
             // Update dust kicked up by wheels
-            for (i = 0; i < Dust.Length; i++)
+            for (i = 0; i < Dust.Length; ++i)
             {
                 Dust[i].UpdateDust(Wheels[i], DustSlipRate, DustSlipThresh);
             }
@@ -399,7 +399,7 @@ simulated function Tick(float dt)
                 ThrottlePosition = Float(ThrottleRep - 101) / 100.0;
             }
 
-            for (i = 0; i < ExhaustPipes.Length; i++)
+            for (i = 0; i < ExhaustPipes.Length; ++i)
             {
                 if (ExhaustPipes[i].ExhaustEffect != none)
                 {
@@ -496,7 +496,7 @@ simulated function StopEmitters()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < Dust.Length; i++)
+        for (i = 0; i < Dust.Length; ++i)
         {
             if (Dust[i] != none)
             {
@@ -506,7 +506,7 @@ simulated function StopEmitters()
 
         Dust.Length = 0;
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; ++i)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {
@@ -527,7 +527,7 @@ simulated function StartEmitters()
     {
         Dust.Length = Wheels.Length;
 
-        for (i = 0; i < Wheels.Length; i++)
+        for (i = 0; i < Wheels.Length; ++i)
         {
             if (Dust[i] != none)
             {
@@ -548,7 +548,7 @@ simulated function StartEmitters()
             Dust[i].SetDirtColor(Level.DustColor);
         }
 
-        for (i = 0; i < ExhaustPipes.Length; i++)
+        for (i = 0; i < ExhaustPipes.Length; ++i)
         {
             if (ExhaustPipes[i].ExhaustEffect != none)
             {
@@ -845,7 +845,7 @@ function bool IsVehicleEmpty()
         return false;
     }
 
-    for (i = 0; i < WeaponPawns.Length; i++)
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
         {
@@ -889,7 +889,7 @@ simulated event DestroyAppearance()
         }
 
         // Destroy the vehicle weapons
-        for (i = 0; i < WeaponPawns.Length; i++)
+        for (i = 0; i < WeaponPawns.Length; ++i)
         {
             if (WeaponPawns[i] != none)
             {
@@ -1062,7 +1062,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                 PC.SetRotation(rotator(vector(PC.Rotation) >> Rotation));
             }
 
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = default.Mesh;
                 DriverPositions[i].ViewFOV = PC.DefaultFOV;
@@ -1102,7 +1102,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
         if (bBehindViewChanged)
         {
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
                 DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
@@ -1201,7 +1201,7 @@ simulated function int NumPassengers()
         num = 1;
     }
 
-    for (i = 0; i < WeaponPawns.Length; i++)
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
         {

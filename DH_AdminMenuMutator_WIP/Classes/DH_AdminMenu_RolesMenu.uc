@@ -48,13 +48,13 @@ function GetAllRoleNames()
 
     if (DHGRI != none)
     {
-        for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); ++i)
         {
             if (DHGRI.DHAlliesRoles[i] != none)
                 AlliesRoleNames[AlliesRoleNames.Length] = DHGRI.DHAlliesRoles[i].MyName;
         }
 
-        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
         {
             if (DHGRI.DHAxisRoles[i] != none)
                 AxisRoleNames[AxisRoleNames.Length] = DHGRI.DHAxisRoles[i].MyName;
@@ -66,13 +66,13 @@ function GetAllRoleNames()
 
         if (ROGRI != none)
         {
-            for (i = 0; i < arraycount(ROGRI.AlliesRoles); i++)
+            for (i = 0; i < arraycount(ROGRI.AlliesRoles); ++i)
             {
                 if (ROGRI.AlliesRoles[i] != none)
                     AlliesRoleNames[AlliesRoleNames.Length] = ROGRI.AlliesRoles[i].MyName;
             }
 
-            for (i = 0; i < arraycount(ROGRI.AxisRoles); i++)
+            for (i = 0; i < arraycount(ROGRI.AxisRoles); ++i)
             {
                 if (ROGRI.AxisRoles[i] != none)
                     AxisRoleNames[AxisRoleNames.Length] = ROGRI.AxisRoles[i].MyName;

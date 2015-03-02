@@ -137,7 +137,7 @@ function UpdateRoleEquipment()
     temp = -1;
 
     // Add grenades if needed
-    for (i = 0; i < arraycount(desiredRole.Grenades); i++)
+    for (i = 0; i < arraycount(desiredRole.Grenades); ++i)
     {
         if (desiredRole.Grenades[i].Item != none)
         {
@@ -160,7 +160,7 @@ function UpdateRoleEquipment()
     }
 
     // Parse GivenItems array
-    for (i = 0; i < desiredRole.GivenItems.Length; i++)
+    for (i = 0; i < desiredRole.GivenItems.Length; ++i)
     {
         if (desiredRole.GivenItems[i] != "")
         {
@@ -342,7 +342,7 @@ function FillRoleList()
 
     DHGRI = DHGameReplicationInfo(GRI);
 
-    for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+    for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
     {
         if (desiredTeam == AXIS_TEAM_INDEX)
         {
@@ -380,7 +380,7 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
 
     if (team == AXIS_TEAM_INDEX)
     {
-        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
         {
             if (DHGRI.DHAxisRoles[i] == role)
             {
@@ -390,7 +390,7 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
     }
     else if (team == ALLIES_TEAM_INDEX)
     {
-        for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); ++i)
         {
             if (DHGRI.DHAlliesRoles[i] == role)
             {
@@ -446,7 +446,7 @@ function AutoPickRole()
     if (desiredTeam == AXIS_TEAM_INDEX || desiredTeam == ALLIES_TEAM_INDEX)
     {
         // Pick the first non-full role
-        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
         {
             if (desiredTeam == AXIS_TEAM_INDEX)
             {

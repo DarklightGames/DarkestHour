@@ -12,7 +12,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
     local GUITabPanel        NewTabPanel;
     local int i;
 
-    for (i = 0; i < TabStack.Length; i++)
+    for (i = 0; i < TabStack.Length; ++i)
     {
         if (TabStack[i].Caption ~= InCaption)
         {

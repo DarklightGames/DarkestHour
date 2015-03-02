@@ -25,7 +25,7 @@ function PlayerExit(Controller Exiting)
     if (bMapVote || bKickVote || bMatchSetup)
     {
         // Find the MVRI belonging to the exiting player
-        for (i = 0; i < MVRI.Length; i++)
+        for (i = 0; i < MVRI.Length; ++i)
         {
             // Remove players vote from vote count
             if (MVRI[i] != none && (MVRI[i].PlayerOwner == none || MVRI[i].PlayerOwner == Exiting))

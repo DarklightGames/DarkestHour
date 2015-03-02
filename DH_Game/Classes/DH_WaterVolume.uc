@@ -62,7 +62,7 @@ simulated event Touch(Actor Other)
             P.HeadGear.SetOverlayMaterial(none, 0.0, true);
 
             //Gotta do it to ammo pouches as well
-            for (i = 0; i < P.AmmoPouches.Length; i++)
+            for (i = 0; i < P.AmmoPouches.Length; ++i)
             {
                 P.AmmoPouches[i].SetOverlayMaterial(none, 0.0, true);
             }

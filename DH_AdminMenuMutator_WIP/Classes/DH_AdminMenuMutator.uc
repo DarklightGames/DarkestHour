@@ -115,7 +115,7 @@ function SaveMinefields()
     {
         SavedMinefields.Length = ROTG.MineVolumes.Length;
 
-        for (i = 0; i < ROTG.MineVolumes.Length; i++)
+        for (i = 0; i < ROTG.MineVolumes.Length; ++i)
         {
             SavedMinefields[i].MVKillTime = ROTG.MineVolumes[i].KillTime;
             SavedMinefields[i].MVWarnInterval = ROTG.MineVolumes[i].WarnInterval;
@@ -642,7 +642,7 @@ function DisableMinefields() // doesn't actually disable them, but it makes thei
             Replicator.bMinesDisabled = true; // also update the Replicator, which then replicates this to clients for use by the menu interactions
         }
 
-        for (i = 0; i < ROTG.MineVolumes.Length; i++)
+        for (i = 0; i < ROTG.MineVolumes.Length; ++i)
         {
             ROTG.MineVolumes[i].KillTime = 9999.0;
             ROTG.MineVolumes[i].WarnInterval = 9999.0;
@@ -684,7 +684,7 @@ function EnableMinefields()
             Replicator.bMinesDisabled = false; // also update the Replicator, which then replicates this to clients for use by the menu interactions
         }
 
-        for (i = 0; i < ROTG.MineVolumes.Length; i++)
+        for (i = 0; i < ROTG.MineVolumes.Length; ++i)
         {
             ROTG.MineVolumes[i].KillTime = SavedMinefields[i].MVKillTime;
             ROTG.MineVolumes[i].WarnInterval = SavedMinefields[i].MVWarnInterval;
@@ -939,7 +939,7 @@ function string PutMessageTogether(array<string> Words, byte StartIndex)
 
         if (Words.Length > (StartIndex +1))
         {
-            for (i = StartIndex +1; i < Words.Length; i++)
+            for (i = StartIndex +1; i < Words.Length; ++i)
             {
                 Message @= Words[i];
             }
@@ -1079,7 +1079,7 @@ function string ConcatenateGridRef(array<string> Characters, byte StartIndex)
     local  string  GridRef;
     local  int     i;
 
-    for (i = StartIndex; i < Characters.Length; i++)
+    for (i = StartIndex; i < Characters.Length; ++i)
     {
         GridRef $= Characters[i];
     }
@@ -1312,7 +1312,7 @@ function SetParaDropVariables()
         break;
     }
 
-    for (i = 1; i < 6; i++)
+    for (i = 1; i < 6; ++i)
     {
         TILocation.Z += 1920.0;
         TestActor = Spawn(class'DH_AdminMenuMutator_WIP.DH_AdminMenu_TestSM', , , TILocation);

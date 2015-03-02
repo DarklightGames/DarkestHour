@@ -155,7 +155,7 @@ function bool FillAmmo()
 
     PrimaryAmmoArray.Length = MaxNumPrimaryMags;
 
-    for (i = 0; i < PrimaryAmmoArray.Length; i++)
+    for (i = 0; i < PrimaryAmmoArray.Length; ++i)
     {
         PrimaryAmmoArray[i] = InitialAmount;
     }

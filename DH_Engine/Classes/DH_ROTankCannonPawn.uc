@@ -194,7 +194,7 @@ simulated function PostNetReceive()
             return;
         }
 
-        for (i = 0; i < VehicleBase.WeaponPawns.Length; i++)
+        for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
         {
             if (VehicleBase.WeaponPawns[i] != none && (VehicleBase.WeaponPawns[i] == self || VehicleBase.WeaponPawns[i].Class == class))
             {
@@ -933,7 +933,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 
             if (bMultiPosition)
             {
-                for (i = 0; i < DriverPositions.Length; i++)
+                for (i = 0; i < DriverPositions.Length; ++i)
                 {
                     DriverPositions[i].PositionMesh = Gun.default.Mesh;
                     DriverPositions[i].ViewFOV = PC.DefaultFOV;
@@ -982,7 +982,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         {
             if (bMultiPosition)
             {
-                for (i = 0; i < DriverPositions.Length; i++)
+                for (i = 0; i < DriverPositions.Length; ++i)
                 {
                     DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
                     DriverPositions[i].ViewFOV = default.DriverPositions[i].ViewFOV;
@@ -1032,14 +1032,14 @@ exec function ToggleMesh()
     {
         if (Gun.Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
         {
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = Gun.default.Mesh;
             }
         }
         else
         {
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].PositionMesh = default.DriverPositions[i].PositionMesh;
             }
@@ -1062,7 +1062,7 @@ exec function ToggleViewLimit()
             Gun.PitchUpLimit = 65535;
             Gun.PitchDownLimit = 1;
 
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].ViewPitchUpLimit = 65535;
                 DriverPositions[i].ViewPitchDownLimit = 1;
@@ -1074,7 +1074,7 @@ exec function ToggleViewLimit()
             Gun.PitchUpLimit = Gun.default.PitchUpLimit;
             Gun.PitchDownLimit = Gun.default.PitchDownLimit;
 
-            for (i = 0; i < DriverPositions.Length; i++)
+            for (i = 0; i < DriverPositions.Length; ++i)
             {
                 DriverPositions[i].ViewPitchUpLimit = default.DriverPositions[i].ViewPitchUpLimit;
                 DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;

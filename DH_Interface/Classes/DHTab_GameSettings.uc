@@ -18,7 +18,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG1.ManageComponent(co_PurgeCacheDays);
 
-    for (i = 0; i < arraycount(PurgeCacheDaysText); i++)
+    for (i = 0; i < arraycount(PurgeCacheDaysText); ++i)
     {
         co_PurgeCacheDays.AddItem(PurgeCacheDaysText[i]);
     }

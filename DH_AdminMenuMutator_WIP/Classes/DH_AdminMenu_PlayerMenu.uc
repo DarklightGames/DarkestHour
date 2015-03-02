@@ -27,7 +27,7 @@ function GetAllPlayerNames()
     MenuText[0] = Label_AimedPlayer;
     PC.GameReplicationInfo.GetPRIArray(AllPRI);
 
-    for (i = 0; i < AllPRI.Length; i++)
+    for (i = 0; i < AllPRI.Length; ++i)
     {
         PRI = AllPRI[i];
 

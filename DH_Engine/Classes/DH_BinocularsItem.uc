@@ -270,7 +270,7 @@ function DropFrom(vector StartLocation)
 
         AmmoPickup.AmmoMags.Length = CurrentMagCount;
 
-        for (i = 0; i < PrimaryAmmoArray.Length; i++)
+        for (i = 0; i < PrimaryAmmoArray.Length; ++i)
         {
             if (i != CurrentMagIndex)
             {
@@ -282,7 +282,7 @@ function DropFrom(vector StartLocation)
     // Handle standard/old style ammo pickups
     else
     {
-        for (i = 0; i < PrimaryAmmoArray.Length; i++)
+        for (i = 0; i < PrimaryAmmoArray.Length; ++i)
         {
             if (i != CurrentMagIndex)
             {

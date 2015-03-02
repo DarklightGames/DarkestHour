@@ -28,7 +28,7 @@ function Touch(Actor Other)
 
         if (Pawn(Other) != none && Pawn(Other).Controller != none)
         {
-            for (i = 0; i < 4; i++)
+            for (i = 0; i < 4; ++i)
             {
                 if (Pawn(Other).Controller.GoalList[i] == self)
                 {

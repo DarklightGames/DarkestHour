@@ -28,7 +28,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     switch (HowToRandom)
     {
         case TR_NoRandom:
-            for (i = 0; i < ObjectivesNumsToModify.Length; i++)
+            for (i = 0; i < ObjectivesNumsToModify.Length; ++i)
             {
                 switch (HowToModify)
                 {
@@ -46,7 +46,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
             }
         break;
         case TR_Percentage:
-            for (i = 0; i < ObjectivesNumsToModify.Length; i++)
+            for (i = 0; i < ObjectivesNumsToModify.Length; ++i)
             {
                 RandomNum = Rand(101);  //Gets a random # between 0 & 100
                 if (RandomPercent >= RandomNum)
@@ -71,7 +71,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
         break;
         case TR_MaxToModify:
             TempObjNumsModify = ObjectivesNumsToModify; //Setup a temp array = to ObjectiveNumsToModify
-            for (i = 0; i < MaxNumToModify; i++)
+            for (i = 0; i < MaxNumToModify; ++i)
             {
                 if (TempObjNumsModify.Length <= 0) //Check to make sure we don't do more times than needed
                     break; //break out of the for loop because we won't be changing anymore

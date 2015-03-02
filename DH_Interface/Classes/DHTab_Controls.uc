@@ -23,7 +23,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG1.ManageComponent(co_ControlProfiles);
 
-    for (i = 0; i < arraycount(ControlProfiles); i++)
+    for (i = 0; i < arraycount(ControlProfiles); ++i)
     {
         co_ControlProfiles.AddItem(ControlProfiles[i]);
     }

@@ -190,12 +190,12 @@ simulated function Tick(float DeltaTime)
         LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
         RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
-        for (i = 0; i < LeftWheelBones.Length; i++)
+        for (i = 0; i < LeftWheelBones.Length; ++i)
         {
             SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
         }
 
-        for (i = 0; i < RightWheelBones.Length; i++)
+        for (i = 0; i < RightWheelBones.Length; ++i)
         {
             SetBoneRotation(RightWheelBones[i], RightWheelRot);
         }
@@ -260,7 +260,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
     }
 
-    for (i = 0; i < VehHitpoints.Length; i++)
+    for (i = 0; i < VehHitpoints.Length; ++i)
     {
         HitPointDamage = Damage;
 

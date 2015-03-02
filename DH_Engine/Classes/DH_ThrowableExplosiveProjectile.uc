@@ -103,7 +103,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
             if (P != none)
             {
-                for (i = 0; i < CheckedROPawns.Length; i++)
+                for (i = 0; i < CheckedROPawns.Length; ++i)
                 {
                     if (CheckedROPawns[i] == P)
                     {
@@ -235,7 +235,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         // So as a workaround we'll loop through the meshes TypesCanDamage array & check if the server's weapon bash DamageType will have broken the mesh
         else
         {
-            for (i = 0; i < DestroMesh.TypesCanDamage.Length; i++)
+            for (i = 0; i < DestroMesh.TypesCanDamage.Length; ++i)
             {
                 // The destroyable mesh will be damaged by a weapon bash, so we'll exit without deflecting
                 if (DestroMesh.TypesCanDamage[i] == class'DHWeaponBashDamageType' || ClassIsChildOf(class'DHWeaponBashDamageType', DestroMesh.TypesCanDamage[i]))
@@ -346,7 +346,7 @@ simulated function Destroyed()
 
     if (ShrapnelCount > 0 && Role == ROLE_Authority)
     {
-        for (i = 0; i < ShrapnelCount; i++)
+        for (i = 0; i < ShrapnelCount; ++i)
         {
             Spawn(class'ROShrapnelChunk', , '', Start);
         }

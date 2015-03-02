@@ -89,7 +89,7 @@ function EvaluateRandom()
     }
 
     // Loop through all the the factories found for this group tag & calculate whether or not they should be activated
-    for (i = 0; i < GunFactories.Length; i++)
+    for (i = 0; i < GunFactories.Length; ++i)
     {
         if (TotalActive >= MaxToSpawn && MaxToSpawn > 0)
         {
@@ -157,9 +157,9 @@ function ProcessRandomActivation()
     }
 
     // Loop through the gun factories activating the ones stored in the ActivatedIndexes array
-    for (i = 0; i < ActivatedIndexes.Length; i++)
+    for (i = 0; i < ActivatedIndexes.Length; ++i)
     {
-        for (j = 0; j < GunFactories.Length; j++)
+        for (j = 0; j < GunFactories.Length; ++j)
         {
             if (GunFactories[j].GunIndex == ActivatedIndexes[i])
             {

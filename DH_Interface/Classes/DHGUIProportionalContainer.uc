@@ -63,7 +63,7 @@ function bool InternalPreDraw(Canvas C)
     AW -= LPad + RPad;
     AH -= TPad + BPad;
 
-    for (i = 0; i < AlignStack.Length; i++)
+    for (i = 0; i < AlignStack.Length; ++i)
     {
             values = getAlignOriginalValues(AlignStack[i]);
             AlignStack[i].WinLeft = RelativeLeft(values.WinLeft * AW + AL);
@@ -79,7 +79,7 @@ function ComponentPosValues getAlignOriginalValues(GUIComponent component)
         local ComponentPosValues values;
         local int i;
 
-        for (i = 0; i < AlignOriginalValues.Length; i++)
+        for (i = 0; i < AlignOriginalValues.Length; ++i)
                 if (AlignOriginalValues[i].component == component)
                     return AlignOriginalValues[i];
 
