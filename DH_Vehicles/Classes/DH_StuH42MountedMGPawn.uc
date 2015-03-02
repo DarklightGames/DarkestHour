@@ -296,14 +296,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
-    local rotator NewRotation;
+    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
 
-    NewRotation = Rotation;
-    NewRotation.Yaw += 32.0 * deltaTime * YawChange;
-    NewRotation.Pitch += 32.0 * deltaTime * PitchChange;
-    NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
-
-    SetRotation(NewRotation);
 
     UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 
