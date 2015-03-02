@@ -1155,7 +1155,7 @@ simulated function PostNetBeginPlay()
     SetEngine();
 
     // Only spawn schurzen if a valid attachment class has been selected
-    if (SchurzenTexture != none && Level.NetMode != NM_DedicatedServer && SchurzenIndex < ArrayCount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none)
+    if (SchurzenTexture != none && Level.NetMode != NM_DedicatedServer && SchurzenIndex < arraycount(SchurzenTypes) && SchurzenTypes[SchurzenIndex].SchurzenClass != none)
     {
         Schurzen = Spawn(SchurzenTypes[SchurzenIndex].SchurzenClass);
 

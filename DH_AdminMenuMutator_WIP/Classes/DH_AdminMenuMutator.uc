@@ -398,22 +398,22 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
             {
                 if (TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    bFoundRole = RoleIndex < ArrayCount(DHG.DHAlliesRoles) && DHG.DHAlliesRoles[RoleIndex] != none;
+                    bFoundRole = RoleIndex < arraycount(DHG.DHAlliesRoles) && DHG.DHAlliesRoles[RoleIndex] != none;
                 }
                 else
                 {
-                    bFoundRole = RoleIndex < ArrayCount(DHG.DHAxisRoles) && DHG.DHAxisRoles[RoleIndex] != none;
+                    bFoundRole = RoleIndex < arraycount(DHG.DHAxisRoles) && DHG.DHAxisRoles[RoleIndex] != none;
                 }
             }
             else // this makes it work with Red Orchestra or any game class/mod that uses RO's AlliesRoles/AxisRoles
             {
                 if (TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    bFoundRole = RoleIndex < ArrayCount(ROTG.AlliesRoles) && ROTG.AlliesRoles[RoleIndex] != none;
+                    bFoundRole = RoleIndex < arraycount(ROTG.AlliesRoles) && ROTG.AlliesRoles[RoleIndex] != none;
                 }
                 else
                 {
-                    bFoundRole = RoleIndex < ArrayCount(ROTG.AxisRoles) && ROTG.AxisRoles[RoleIndex] != none;
+                    bFoundRole = RoleIndex < arraycount(ROTG.AxisRoles) && ROTG.AxisRoles[RoleIndex] != none;
                 }
             }
         }
@@ -1213,7 +1213,7 @@ function vector GetObjectiveDropLocation(string ObjectiveName, string ObjectiveI
 
     ObjectiveIndex = RemoveBracketsFromIndex(ObjectiveIndexString);
 
-    if (ObjectiveIndex >= 0 && ObjectiveIndex < ArrayCount(ROTG.Objectives))
+    if (ObjectiveIndex >= 0 && ObjectiveIndex < arraycount(ROTG.Objectives))
     {
         Objective = ROTG.Objectives[ObjectiveIndex];
 

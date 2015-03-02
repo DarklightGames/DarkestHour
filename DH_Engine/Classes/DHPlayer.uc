@@ -549,7 +549,7 @@ function ServerSaveArtilleryPosition()
     // If a player tries to mark artillery on a level with no arty for their team, give them a message
     if (PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
     {
-        for (i = 0; i < ArrayCount(GRI.AlliedRadios); ++i)
+        for (i = 0; i < arraycount(GRI.AlliedRadios); ++i)
         {
             if (GRI.AlliedRadios[i] != none)
             {
@@ -560,7 +560,7 @@ function ServerSaveArtilleryPosition()
 
         if (!bFoundARadio)
         {
-            for (i = 0; i < ArrayCount(GRI.CarriedAlliedRadios); ++i)
+            for (i = 0; i < arraycount(GRI.CarriedAlliedRadios); ++i)
             {
                 if (GRI.CarriedAlliedRadios[i] != none)
                 {
@@ -572,7 +572,7 @@ function ServerSaveArtilleryPosition()
     }
     else if (PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
     {
-        for (i = 0; i < ArrayCount(GRI.AxisRadios); ++i)
+        for (i = 0; i < arraycount(GRI.AxisRadios); ++i)
         {
             if (GRI.AxisRadios[i] != none)
             {
@@ -583,7 +583,7 @@ function ServerSaveArtilleryPosition()
 
         if (!bFoundARadio)
         {
-            for (i = 0; i < ArrayCount(GRI.CarriedAxisRadios); ++i)
+            for (i = 0; i < arraycount(GRI.CarriedAxisRadios); ++i)
             {
                 if (GRI.CarriedAxisRadios[i] != none)
                 {
@@ -794,7 +794,7 @@ function ServerSaveMortarTarget()
     // Check that there are mortar operators available and that we haven't set a mortar target in the last 30 seconds
     if (TeamIndex == 0) // axis
     {
-        for (i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Controller == self && GRI.GermanMortarTargets[i].Time != 0.0 && Level.TimeSeconds - GRI.GermanMortarTargets[i].Time < 15.0)
             {
@@ -806,7 +806,7 @@ function ServerSaveMortarTarget()
         }
 
         // Go through the roles and find a mortar operator role that has someone on it
-        for (i = 0; i < ArrayCount(GRI.DHAxisRoles); i++)
+        for (i = 0; i < arraycount(GRI.DHAxisRoles); i++)
         {
             if (GRI.DHAxisRoles[i]!= none && GRI.DHAxisRoles[i].bCanUseMortars && GRI.DHAxisRoleCount[i] > 0)
             {
@@ -818,7 +818,7 @@ function ServerSaveMortarTarget()
     }
     else
     {
-        for (i = 0; i < ArrayCount(GRI.AlliedMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
         {
             if (GRI.AlliedMortarTargets[i].Controller == self && GRI.AlliedMortarTargets[i].Time != 0.0 && Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time < 15.0)
             {
@@ -828,7 +828,7 @@ function ServerSaveMortarTarget()
             }
         }
 
-        for (i = 0; i < ArrayCount(GRI.DHAlliesRoles); i++)
+        for (i = 0; i < arraycount(GRI.DHAlliesRoles); i++)
         {
             if (GRI.DHAlliesRoles[i] != none && GRI.DHAlliesRoles[i].bCanUseMortars && GRI.DHAlliesRoleCount[i] > 0)
             {
@@ -851,7 +851,7 @@ function ServerSaveMortarTarget()
 
     if (TeamIndex == 0) // axis
     {
-        for (i = 0; i < ArrayCount(GRI.GermanMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.GermanMortarTargets); i++)
         {
             if (GRI.GermanMortarTargets[i].Controller == none || GRI.GermanMortarTargets[i].Controller == self)
             {
@@ -868,7 +868,7 @@ function ServerSaveMortarTarget()
     }
     else // allies
     {
-        for (i = 0; i < ArrayCount(GRI.AlliedMortarTargets); i++)
+        for (i = 0; i < arraycount(GRI.AlliedMortarTargets); i++)
         {
             if (GRI.AlliedMortarTargets[i].Controller == none || GRI.AlliedMortarTargets[i].Controller == self)
             {
@@ -2103,6 +2103,7 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
     if (PRI != none && RInfo == none)
     {
         RI = DH_RoleInfo(PRI.RoleInfo);
@@ -2172,10 +2173,13 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
 function PawnDied(Pawn P)
 {
     //Make sure the pawn that died is our pawn, not some random other pawn
-    if ( P != Pawn )
+    if (P != Pawn)
+    {
         return;
+    }
 
     LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
+
     ClientHandleDeath(); //Tells client to set his last killed time, that he can't spawn yet, and to autodeploy if has desired spawn
 
     super.PawnDied(P); //Calls super in ROPlayer
@@ -2187,6 +2191,7 @@ simulated function ClientHandleDeath()
     {
         bShouldAttemptAutoDeploy = true;
     }
+
     LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
 }
 
@@ -2194,6 +2199,9 @@ simulated function ClientHandleDeath()
 simulated function CheckToAutoDeploy()
 {
     local bool bDeployed;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     bShouldAttemptAutoDeploy = false;
 
@@ -2207,10 +2215,12 @@ simulated function CheckToAutoDeploy()
     if (DesiredSpawnPoint != none && Pawn == none)
     {
         //Check if desired spawn is valid
-        bDeployed = DHGameReplicationInfo(GameReplicationInfo).ValidateSpawnPoint(DesiredSpawnPoint, PlayerReplicationInfo.Team.TeamIndex);
+        bDeployed = GRI.ValidateSpawnPoint(DesiredSpawnPoint, PlayerReplicationInfo.Team.TeamIndex);
+
         if (bDeployed)
         {
             ServerAttemptDeployPlayer(DesiredSpawnPoint, DesiredAmmoAmount);
+
             return;
         }
         else
@@ -2218,6 +2228,7 @@ simulated function CheckToAutoDeploy()
             DesiredSpawnPoint = none;
         }
     }
+
     //Open deploy menu if no menu is currently open and player doesn't have a valid spawn point selected
     if (!bDeployed && GUIController(Player.GUIController).ActivePage == none)
     {
