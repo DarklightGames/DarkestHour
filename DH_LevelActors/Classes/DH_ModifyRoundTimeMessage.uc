@@ -95,7 +95,7 @@ static function CreateTimeString(out string TimeString, int Seconds)
 
 static final function LeftTrim(out string S)
 {
-    while(Left(S, 1) == " ")
+    while (Left(S, 1) == " ")
     {
         S = Right(S, Len(S) - 1);
     }
@@ -103,7 +103,7 @@ static final function LeftTrim(out string S)
 
 static final function RightTrim(out string S)
 {
-    while(Right(S, 1) == " ")
+    while (Right(S, 1) == " ")
     {
         S = Left(S, Len(S) - 1);
     }

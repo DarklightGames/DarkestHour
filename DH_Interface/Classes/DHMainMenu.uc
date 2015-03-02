@@ -337,7 +337,7 @@ event Timer()
             // data waiting
             page = "";
 
-            while(MyLink.ReadBufferedLine(text))
+            while (MyLink.ReadBufferedLine(text))
             {
                 page = page $ text;
             }

@@ -237,7 +237,7 @@ simulated function bool ValidateSpawnPoint(DHSpawnPoint SP, byte TeamIndex)
 
     //Is spawn point for the correct team (needs to be last in check)
     GetActiveSpawnPointsForTeam(ActiveSpawnPoints, TeamIndex);
-    for(i = 0; i < ActiveSpawnPoints.Length; ++i)
+    for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
         if (ActiveSpawnPoints[i] == SP)
         {

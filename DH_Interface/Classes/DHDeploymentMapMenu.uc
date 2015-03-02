@@ -168,7 +168,7 @@ function bool DrawMapComponents(Canvas C)
     //Get/Draw Spawn Points for Current Team
     GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
 
-    for(i = 0; i < ActiveSpawnPoints.Length; ++i)
+    for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
         PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
     }

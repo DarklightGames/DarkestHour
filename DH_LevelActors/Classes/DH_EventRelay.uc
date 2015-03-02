@@ -27,7 +27,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 state Activated
 {
 Begin:
-    while(EventIndex < Events.Length)
+    while (EventIndex < Events.Length)
     {
         Sleep(Events[EventIndex].Delay);
         TriggerEvent(Events[EventIndex].EventName, self, none);
