@@ -5,7 +5,8 @@
 
 class DH_Marder3MCannonPawn extends DH_AssaultGunCannonPawn;
 
-// Overridden because the animation needs to play on the server for this vehicle for the commanders hit detection
+// Modified so the server plays a TransitionUp/DownAnim to move the commander's collision box for hit detection
+// AnimateTransition() does this & we don't need to go to state ViewTransition as this is an open vehicle & commander doesn't need to unbutton
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -19,14 +20,9 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 AnimateTransition();
-
-                // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-                if (DriverPositionIndex == UnbuttonedPositionIndex)
-                    GoToState('ViewTransition');
             }
         }
     }
@@ -41,8 +37,7 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 AnimateTransition();
             }

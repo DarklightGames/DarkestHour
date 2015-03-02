@@ -129,10 +129,9 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            // Run the state on the server whenever we're unbuttoning in order to prevent early exit
+            else if (Level.NetMode == NM_DedicatedServer)
             {
-                // Run the state on the server whenever we're unbuttoning in order to prevent early exit
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
                 {
                     GoToState('ViewTransition');

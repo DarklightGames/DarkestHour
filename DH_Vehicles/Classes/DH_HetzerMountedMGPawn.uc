@@ -123,7 +123,7 @@ simulated function NextWeapon()
     super.NextWeapon();
 }
 
-// Matt: modified to run the state 'ViewTransition' on the server when buttoning up, so the transition down anim plays on the server & puts the loader's collision box in correct position
+// Modified to run state 'ViewTransition' on server when buttoning up, so transition down anim plays on server & puts loader's collision box in correct position
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -137,13 +137,14 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            // Run the state on the server whenever we're unbuttoning in order to prevent early exit
+            else if (Level.NetMode == NM_DedicatedServer)
             {
-                // Run the state on the server whenever we're unbuttoning in order to prevent early exit
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
+                {
                     GoToState('ViewTransition');
-               }
+                }
+            }
         }
     }
     else
@@ -157,13 +158,15 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer) // Matt: added this section to run the state 'ViewTransition' on the server when buttoning up
+            // Added this section to run the state 'ViewTransition' on the server when buttoning up
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 if (LastPositionIndex == UnbuttonedPositionIndex)
+                {
                     GoToState('ViewTransition');
+                }
             }
-         }
+        }
     }
 }
 

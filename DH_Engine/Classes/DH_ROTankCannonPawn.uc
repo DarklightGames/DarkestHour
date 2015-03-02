@@ -589,9 +589,9 @@ function ServerChangeViewPoint(bool bForward)
                 }
             }
         }
-     }
-     else
-     {
+    }
+    else
+    {
         if (DriverPositionIndex > 0)
         {
             LastPositionIndex = DriverPositionIndex;
@@ -602,7 +602,7 @@ function ServerChangeViewPoint(bool bForward)
                 NextViewPoint();
             }
         }
-     }
+    }
 }
 
 simulated state ViewTransition

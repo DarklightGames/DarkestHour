@@ -154,7 +154,7 @@ simulated function DrawHUD(Canvas Canvas)
     }
 }
 
-// Overridden because the animation needs to play on the server for this vehicle for the commanders hit detection
+// Overridden because the animation needs to play on the server for this vehicle for the gunner's hit detection
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -168,15 +168,14 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 AnimateTransition();
             }
         }
-     }
-     else
-     {
+    }
+    else
+    {
         if (DriverPositionIndex > 0)
         {
             LastPositionIndex = DriverPositionIndex;
@@ -186,8 +185,7 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 AnimateTransition();
             }

@@ -77,12 +77,13 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 // Run the state on the server whenever we're unbuttoning in order to prevent early exit
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
+                {
                     GoToState('ViewTransition');
+                }
             }
         }
     }
@@ -97,11 +98,12 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer) // Matt: added this section to run the state 'ViewTransition' on the server when buttoning up
+            else if (Level.NetMode == NM_DedicatedServer) // added this section to run the state 'ViewTransition' on the server when buttoning up
             {
                 if (LastPositionIndex == UnbuttonedPositionIndex)
+                {
                     GoToState('ViewTransition');
+                }
             }
         }
     }

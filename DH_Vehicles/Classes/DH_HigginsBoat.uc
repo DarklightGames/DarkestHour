@@ -42,8 +42,7 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 GoToState('ViewTransition');
             }
@@ -60,8 +59,7 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-
-            if (Level.NetMode == NM_DedicatedServer)
+            else if (Level.NetMode == NM_DedicatedServer)
             {
                 GoToState('ViewTransition');
             }
