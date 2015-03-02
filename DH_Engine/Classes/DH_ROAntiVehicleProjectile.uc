@@ -231,7 +231,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 // If shell doesn't explode on hitting a body, we'll slow it down a bit but exit so shell carries on, as it only hit Driver's collision box & not actual VehicleWeapon
                 if (!bExplodesOnHittingBody)
                 {
-                    Velocity *= 0.8; 
+                    Velocity *= 0.8;
 
                     return;
                 }
