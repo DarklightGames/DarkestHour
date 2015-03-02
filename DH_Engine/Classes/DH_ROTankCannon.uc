@@ -1253,6 +1253,7 @@ simulated function bool HasAmmo(int Mode)
     return false;
 }
 
+// Modified to optimise slightly
 simulated function bool ReadyToFire(bool bAltFire)
 {
     local int Mode;
@@ -1261,25 +1262,28 @@ simulated function bool ReadyToFire(bool bAltFire)
     {
         Mode = 3;
     }
-    else if (ProjectileClass == PrimaryProjectileClass)
+    else
     {
-        Mode = 0;
-    }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        Mode = 1;
-    }
-    else if (ProjectileClass == TertiaryProjectileClass)
-    {
-        Mode = 2;
+        if (CannonReloadState != CR_ReadyToFire || !bClientCanFireCannon)
+        {
+            return false;
+        }
+
+        if (ProjectileClass == PrimaryProjectileClass)
+        {
+            Mode = 0;
+        }
+        else if (ProjectileClass == SecondaryProjectileClass)
+        {
+            Mode = 1;
+        }
+        else if (ProjectileClass == TertiaryProjectileClass)
+        {
+            Mode = 2;
+        }
     }
 
-    if (HasAmmo(Mode))
-    {
-        return true;
-    }
-
-    return false;
+    return HasAmmo(Mode);
 }
 
 simulated function int PrimaryAmmoCount()
