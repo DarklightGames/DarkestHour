@@ -719,7 +719,7 @@ simulated state LeavingVehicle
 // New function, checked by Fire() so we prevent firing while moving between view points or when on periscope or binoculars
 function bool CanFire()
 {
-    return !IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex && ROPlayer(Controller) != none;
+    return (!IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
 }
 
 function Fire(optional float F)
