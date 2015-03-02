@@ -13,6 +13,9 @@ var     sound       RampUpSound;
 var     float       RampSoundVolume;
 var     name        RampDownIdleAnim;
 
+// Functions we want to empty as they relate to start/stop engine, which we don't allow in the Higgins boat:
+function Fire(optional float F);
+function ServerStartEngine();
 
 static function StaticPrecache(LevelInfo L)
 {
@@ -96,24 +99,6 @@ simulated state ViewTransition
             Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
         }
     }
-
-    simulated function AnimEnd(int channel)
-    {
-        GotoState('');
-    }
-
-    simulated function EndState()
-    {
-        if (PlayerController(Controller) != none)
-        {
-            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            PlayerController(Controller).SetRotation(rot(0, 0, 0));
-        }
-    }
-
-    Begin:
-    HandleTransition();
-    Sleep(0.2);
 }
 
 // overwritten for ramp
@@ -124,7 +109,7 @@ function bool KDriverLeave(bool bForceLeave)
     InitialPositionIndex = DriverPositionIndex;
     PreviousPositionIndex = InitialPositionIndex;
 
-    bSuperDriverLeave = super.KDriverLeave(bForceLeave);
+    bSuperDriverLeave = super(ROWheeledVehicle).KDriverLeave(bForceLeave);
 
     DriverLeft();
     MaybeDestroyVehicle();
@@ -172,6 +157,8 @@ function bool EncroachingOn(Actor Other)
 
 defaultproperties
 {
+    bEngineOff=false
+    bSavedEngineOff=false
     RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
     RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     RampSoundVolume=180.0

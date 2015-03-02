@@ -3,9 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BoatVehicle extends ROWheeledVehicle;
+class DH_BoatVehicle extends DH_ROWheeledVehicle; // Matt: originally extended ROWheeledVehicle
 
-#exec OBJ LOAD FILE=..\Textures\InterfaceArt_tex.utx
 
 var()   name                DriverCameraBoneName;
 var     vector              CameraBoneLocation;
@@ -16,74 +15,13 @@ var     ROSoundAttachment   WashSoundAttachL;
 var()   name                WashSoundBoneR;
 var     ROSoundAttachment   WashSoundAttachR;
 
-var()   sound               EngineSound;
-var()   name                EngineSoundBone;
-var     ROSoundAttachment   EngineSoundAttach;
-var     float               MotionSoundVolume;
-
-var     sound               DestroyedBurningSound;
 var     Material            DestroyedVehicleTexture;
 var     name                DestAnimName;
 var     float               DestAnimRate;
 
-var     float               PointValue;
-
-var     bool                bDebugExitPositions;
-
-function bool PlaceExitingDriver()
-{
-    local int    i;
-    local vector Extent, HitLocation, HitNormal, ZOffset, ExitPosition;
-
-    if (Driver == none)
-    {
-        return false;
-    }
-
-    Extent = Driver.default.CollisionRadius * vect(1.0, 1.0, 0.0);
-    Extent.Z = Driver.default.CollisionHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROWheeledVehicles
-    if (class'DH_ROWheeledVehicle'.default.bDebugExitPositions)
-    {
-        for (i = 0; i < ExitPositions.Length; ++i)
-        {
-            ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
-
-            Spawn(class'DH_DebugTracer', , , ExitPosition);
-        }
-    }
-
-    for (i = 0; i < ExitPositions.Length; ++i)
-    {
-        ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
-
-        if (Trace(HitLocation, HitNormal, ExitPosition, Location + ZOffset, false, Extent) != none ||
-            Trace(HitLocation, HitNormal, ExitPosition, ExitPosition + ZOffset, false, Extent) != none)
-        {
-            continue;
-        }
-
-        if (Driver.SetLocation(ExitPosition))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// Overridden to play the correct idle animation for the vehicle
+// Modified to spawn wash sound attachments
 simulated function PostBeginPlay()
 {
-    if (HasAnim(BeginningIdleAnim))
-    {
-        LoopAnim(BeginningIdleAnim);
-    }
-
-    SetTimer(1.0, false);
-
     super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -105,56 +43,13 @@ simulated function PostBeginPlay()
             WashSoundAttachR.SoundRadius = 300.0;
             AttachToBone(WashSoundAttachR, WashSoundBoneR);
         }
-
-        if (EngineSoundAttach == none)
-        {
-            EngineSoundAttach = Spawn(class'ROSoundAttachment');
-            EngineSoundAttach.AmbientSound = EngineSound;
-            EngineSoundAttach.SoundVolume = 150;
-            EngineSoundAttach.SoundRadius = 1000.0;
-            AttachToBone(EngineSoundAttach, EngineSoundBone);
-        }
     }
 }
 
-function DriverLeft()
+// Skip over the Super in DH_ROWheeledVehicle to avoid an engine hint
+simulated function ClientKDriverEnter(PlayerController PC)
 {
-    // Not moving, so no motion sound
-    MotionSoundVolume = 0.0;
-    UpdateMovementSound();
-
-    super.DriverLeft();
-}
-
-simulated function PostNetReceive()
-{
-    super.PostNetReceive();
-
-    if (DriverPositionIndex != SavedPositionIndex)
-    {
-        PreviousPositionIndex = SavedPositionIndex;
-        SavedPositionIndex = DriverPositionIndex;
-        NextViewPoint();
-    }
-
-    // Kill the engine sounds if the engine is dead
-    if (EngineHealth <= 0)
-    {
-        if (IdleSound != none)
-            IdleSound = none;
-
-        if (StartUpSound != none)
-            StartUpSound = none;
-
-        if (ShutDownSound != none)
-            ShutDownSound = none;
-
-        if (AmbientSound != none)
-            AmbientSound = none;
-
-        if (EngineSound != none)
-            EngineSound = none;
-    }
+    super(ROWheeledVehicle).ClientKDriverEnter(PC);
 }
 
 // Overridden for locking the player to the camerabone // altered slightly to allow change of camera bone name - Fennich
@@ -196,13 +91,9 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
+// Modified to include wash sound attachments
 simulated function Destroyed()
 {
-    if (EngineSoundAttach != none)
-    {
-        EngineSoundAttach.Destroy();
-    }
-
     if (WashSoundAttachL != none)
     {
         WashSoundAttachL.Destroy();
@@ -214,26 +105,6 @@ simulated function Destroyed()
     }
 
     super.Destroyed();
-}
-
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
-{
-    super.Died(Killer, DamageType, HitLocation);
-
-    if (Killer == none)
-    {
-        return;
-    }
-
-    DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
-}
-
-simulated function UpdateMovementSound()
-{
-    if (EngineSoundAttach != none)
-    {
-        EngineSoundAttach.SoundVolume = MotionSoundVolume;
-    }
 }
 
 // Modified to avoid switching to static mesh DestroyedVehicleMesh, instead switching the boat skin to a DestroyedVehicleTexture & playing a destroyed animation
@@ -266,12 +137,14 @@ simulated event DestroyAppearance()
     // Destroy the effects
     if (Level.NetMode != NM_DedicatedServer)
     {
-        for (i = 0; i < ExhaustPipes.Length; ++i)
+        if (bEmittersOn)
         {
-            if (ExhaustPipes[i].ExhaustEffect != none)
-            {
-                ExhaustPipes[i].ExhaustEffect.Destroy();
-            }
+            StopEmitters();
+        }
+
+        if (DamagedEffect != none)
+        {
+            DamagedEffect.Kill();
         }
     }
 
@@ -281,11 +154,6 @@ simulated event DestroyAppearance()
     if (KP != none)
     {
         KP.KStartLinVel = Velocity;
-    }
-
-    if (DamagedEffect != none)
-    {
-        DamagedEffect.Kill();
     }
 
     //Become the dead vehicle mesh // Matt: removed as in this case we aren't switching to a destroyed static mesh
@@ -301,46 +169,9 @@ simulated event DestroyAppearance()
     LoopAnim(DestAnimName, DestAnimRate);
 }
 
-function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
-{
-    local vector LinearImpulse, AngularImpulse;
-    local float  RandomExplModifier;
-
-    RandomExplModifier = FRand();
-    HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
-
-    AmbientSound = DestroyedBurningSound;
-    SoundVolume = 255;
-    SoundRadius = 600.0;
-
-    if (!bDisintegrateVehicle)
-    {
-        ExplosionCount++;
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            ClientVehicleExplosion(false);
-        }
-
-        LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
-        AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
-
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-        KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
-        KAddAngularImpulse(AngularImpulse);
-    }
-}
-
-// Overridden to eliminate "Waiting for additional crewmembers" message
-function bool CheckForCrew()
-{
-    return true;
-}
-
 defaultproperties
 {
-    DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
-    PointValue=1.0
+    EngineHealth=100 // reinstate default from ROWheeledVehicle
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
     SteerBoneName="steeringwheel"
@@ -349,15 +180,20 @@ defaultproperties
     ViewShakeRadius=600.0
     ViewShakeOffsetMag=(X=0.5,Z=2.0)
     ViewShakeOffsetFreq=7.0
+	DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter' // reinstate defaults x 3 from ROWheeledVehicle
+    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
+	DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
     DisintegrationHealth=-10000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
     ExplosionSoundRadius=800.0
     ExplosionDamage=300.0
     ExplosionRadius=600.0
+    ImpactDamageThreshold=5000.0 // reinstate default from ROWheeledVehicle
     ImpactDamageMult=0.001
     TimeTilDissapear=15.0
     IdleTimeBeforeReset=30.0
+    DriverTraceDistSquared=4000000.0 // Matt: default 2000 from ROWheeledVehicle, but squared for new DistSquared variable
     InitialPositionIndex=0
     VehicleSpikeTime=15.0
     VehHitpoints(0)=(PointBone="Driver")
@@ -368,14 +204,13 @@ defaultproperties
     VehiclePositionString="in a Boat"
     StolenAnnouncement="Shiver me timbers - some buggers gone and nicked me boat'"
     MaxDesireability=0.1
-    ObjectiveGetOutDist=1500.0
     WaterDamage=0.0
     bCanSwim=true
     GroundSpeed=200.0
     WaterSpeed=200.0
     PitchUpLimit=500
     PitchDownLimit=58000
+    bKeepDriverAuxCollision=false // reinstate default from ROWheeledVehicle
     CollisionRadius=300.0
     CollisionHeight=45.0
-    bDebugExitPositions=true
 }
