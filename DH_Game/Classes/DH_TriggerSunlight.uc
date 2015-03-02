@@ -120,9 +120,9 @@ simulated function vector ColourMap (vector rgb)
   rgb.y= Fclamp(rgb.y, 0, 1);
   rgb.z= Fclamp(rgb.z, 0, 1);
 
-  r=rgb.x;
-  g=rgb.y;
-  b=rgb.z;
+  r = rgb.x;
+  g = rgb.y;
+  b = rgb.z;
 
   max = Fmax(fmax(r,g),b);
   min = Fmin(Fmin(r,g),b);
@@ -144,9 +144,9 @@ simulated function vector ColourMap (vector rgb)
   If (G == max) h = 2.0 + (B-R)/(max-min);
   If (B == max)    h = 4.0 + (R-G)/(max-min);
 
-  hls.x=(h/6)*255;
-  hls.y=(l*255);
-  hls.z=(255-s*255);
+  hls.x = (h/6)*255;
+  hls.y = (l*255);
+  hls.z = (255-s*255);
 
   return(hls);
 }

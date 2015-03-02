@@ -22,11 +22,11 @@ simulated function PlayIdle()
     {
         LoopAnim(WA_SightUp_Idle);
 
-            WA_Fire=WA_SightUp_Fire;
-            WA_Reload=WA_SightUp_Reload;
-            WA_ReloadEmpty=WA_SightUp_ReloadEmpty;
-            WA_ProneReload=WA_SightUp_Reload;
-            WA_ProneReloadEmpty=WA_SightUp_ReloadEmpty;
+            WA_Fire = WA_SightUp_Fire;
+            WA_Reload = WA_SightUp_Reload;
+            WA_ReloadEmpty = WA_SightUp_ReloadEmpty;
+            WA_ProneReload = WA_SightUp_Reload;
+            WA_ProneReloadEmpty = WA_SightUp_ReloadEmpty;
 
     }
     else
@@ -36,11 +36,11 @@ simulated function PlayIdle()
         else
             LoopAnim(WA_Idle);
 
-            WA_Fire=WA_SightDown_Fire;
-            WA_Reload=WA_SightDown_Reload;
-            WA_ReloadEmpty=WA_SightDown_ReloadEmpty;
-            WA_ProneReload=WA_SightDown_Reload;
-            WA_ProneReloadEmpty=WA_SightDown_ReloadEmpty;
+            WA_Fire = WA_SightDown_Fire;
+            WA_Reload = WA_SightDown_Reload;
+            WA_ReloadEmpty = WA_SightDown_ReloadEmpty;
+            WA_ProneReload = WA_SightDown_Reload;
+            WA_ProneReloadEmpty = WA_SightDown_ReloadEmpty;
     }
 }
 

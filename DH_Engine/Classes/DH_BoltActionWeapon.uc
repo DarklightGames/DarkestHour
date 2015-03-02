@@ -196,7 +196,7 @@ simulated state PostFiring
 
     simulated function BeginState()
     {
-        bWaitingToBolt=true;
+        bWaitingToBolt = true;
 
         if (bUsingSights)
         {

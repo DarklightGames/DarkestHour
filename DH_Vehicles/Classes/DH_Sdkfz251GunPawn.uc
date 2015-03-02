@@ -16,7 +16,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super.ClientKDriverEnter(PC);
 
-    HUDOverlayOffset=default.HUDOverlayOffset;
+    HUDOverlayOffset = default.HUDOverlayOffset;
 }
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)

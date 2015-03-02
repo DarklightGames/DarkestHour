@@ -140,7 +140,7 @@ function Timer()
 
                         if (recvr_weapon != none && recvr_weapon.FillAmmo())
                         {
-                            bResupplied=true;
+                            bResupplied = true;
                         }
                     }
 
@@ -166,7 +166,7 @@ function Timer()
 
                     // Resupply vehicles
                     if (V.ResupplyAmmo())
-                        bResupplied=true;
+                        bResupplied = true;
                 }
 
                 //Mortar specific resupplying.
@@ -222,7 +222,7 @@ event Touch(Actor Other)
     local ROPawn ROP;
     local Vehicle V;
 
-    ROP=ROPawn(Other);
+    ROP = ROPawn(Other);
     V = Vehicle(Other);
 
     // This stops us from the vehicle resupplying itself.
@@ -256,7 +256,7 @@ event UnTouch(Actor Other)
     local ROPawn ROP;
     local Vehicle V;
 
-    ROP=ROPawn(Other);
+    ROP = ROPawn(Other);
     V = Vehicle(Other);
 
     // This stops us from the vehicle resupplying itself.

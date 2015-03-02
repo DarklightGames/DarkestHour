@@ -88,7 +88,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     if (bGunFireDebug && RangeSettings.Length > 0)
     {
         Log("After pitch corrections FireRot =" @ FireRot);
-        Log("GetPitchForRange for" @ CurrentRangeIndex @ "=" @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
+        Log("GetPitchForRange for" @ CurrentRangeIndex @ " = " @ ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]));
     }
 
     if (bDoOffsetTrace)

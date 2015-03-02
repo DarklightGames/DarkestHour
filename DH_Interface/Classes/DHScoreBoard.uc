@@ -160,7 +160,7 @@ simulated function UpdateScoreBoard (Canvas C)
             }
             else
             {
-                bRequiredObjectives=true;
+                bRequiredObjectives = true;
                 Axis2ndObjCount++;
             }
         }
@@ -172,7 +172,7 @@ simulated function UpdateScoreBoard (Canvas C)
             }
             else
             {
-                bRequiredObjectives=true;
+                bRequiredObjectives = true;
                 Allies2ndObjCount++;
             }
         }

@@ -267,7 +267,7 @@ simulated function EjectShell()
 
             EjectRot = rotator(Y);
             EjectRot.Yaw += 16384;
-            Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
+            Shell = Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
             EjectRot = rotator(Y);
             EjectRot += ShellRotOffsetIron;
 
@@ -292,7 +292,7 @@ simulated function EjectShell()
             EjectOffset = EjectOffset + EjectCoords.XAxis * ShellHipOffset.X + EjectCoords.YAxis * ShellHipOffset.Y +  EjectCoords.ZAxis * ShellHipOffset.Z;
 
             EjectRot = rotator(-EjectCoords.YAxis);
-            Shell=Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
+            Shell = Weapon.Spawn(ShellEjectClass,none,,EjectOffset,EjectRot);
             EjectRot = rotator(EjectCoords.XAxis);
             EjectRot += ShellRotOffsetHip;
 

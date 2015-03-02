@@ -128,7 +128,7 @@ function MaplistConfigClick(GUIComponent Sender)
 {
     local DHMaplistEditor MaplistPage;
 
-    MaplistEditorMenu="DH_Interface.DHMaplistEditor";
+    MaplistEditorMenu = "DH_Interface.DHMaplistEditor";
 
     if (Controller.OpenMenu(MaplistEditorMenu))
     {

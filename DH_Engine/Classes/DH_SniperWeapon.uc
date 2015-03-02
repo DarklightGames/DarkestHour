@@ -257,7 +257,7 @@ simulated event Destroyed()
     {
         ScopeScriptedTexture.Client = none;
         Level.ObjectPool.FreeObject(ScopeScriptedTexture);
-        ScopeScriptedTexture=none;
+        ScopeScriptedTexture = none;
     }
 
     if (ScriptedScopeCombiner != none)
@@ -284,7 +284,7 @@ simulated function PreTravelCleanUp()
     {
         ScopeScriptedTexture.Client = none;
         Level.ObjectPool.FreeObject(ScopeScriptedTexture);
-        ScopeScriptedTexture=none;
+        ScopeScriptedTexture = none;
     }
 
     if (ScriptedScopeCombiner != none)

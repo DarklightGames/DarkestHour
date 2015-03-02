@@ -123,8 +123,8 @@ function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
 
-    InitialPositionIndex=DriverPositionIndex;
-    PreviousPositionIndex=InitialPositionIndex;
+    InitialPositionIndex = DriverPositionIndex;
+    PreviousPositionIndex = InitialPositionIndex;
 
     bSuperDriverLeave = super.KDriverLeave(bForceLeave);
 
@@ -144,7 +144,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 // overwritten for ramp
 function DriverDied()
 {
-    InitialPositionIndex=DriverPositionIndex;
+    InitialPositionIndex = DriverPositionIndex;
     super.DriverDied();
     DriverLeft();
     MaybeDestroyVehicle();

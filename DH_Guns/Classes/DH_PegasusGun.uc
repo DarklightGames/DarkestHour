@@ -12,7 +12,7 @@ function bool TryToDrive(Pawn P)
 //  Deny entry to bots - cos on Benouville Bridge map - the Brit bots all go for gun & ignore bridge
     if (!p.IsHumanControlled())
             {
-        bTeamLocked=true;
+        bTeamLocked = true;
                     DenyEntry(P, 3);
         return false;
     }

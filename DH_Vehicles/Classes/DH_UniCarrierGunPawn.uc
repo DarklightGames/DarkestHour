@@ -14,7 +14,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
 
-    HUDOverlayOffset=default.HUDOverlayOffset;
+    HUDOverlayOffset = default.HUDOverlayOffset;
 }
 
 // Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise

@@ -48,8 +48,8 @@ function bool KDriverLeave(bool bForceLeave)
     }
     else
     {
-        DriverPositionIndex=InitialPositionIndex;
-        LastPositionIndex=InitialPositionIndex;
+        DriverPositionIndex = InitialPositionIndex;
+        LastPositionIndex = InitialPositionIndex;
 
         bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 

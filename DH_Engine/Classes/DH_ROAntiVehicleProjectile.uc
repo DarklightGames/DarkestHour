@@ -22,7 +22,7 @@ enum ERoundType
 var   ERoundType     RoundType;               // Matt: added to identify round type, making it easier to write more generic functionality & avoid code repetition
 var   float          DHPenetrationTable[11];
 var   float          ShellDiameter;           // to assist in T/d calculations
-//var bool           bIsHEATRound;            // triggers different penetration calcs for HEAT projectiles // Matt: removed as unnecessary, as we now have RoundType=RT_HEAT
+//var bool           bIsHEATRound;            // triggers different penetration calcs for HEAT projectiles // Matt: removed as unnecessary, as we now have RoundType = RT_HEAT
 var   bool           bIsAlliedShell;          // just for debugging stuff, maybe later for shell shatter
 var   bool           bShatterProne;           // assists with shatter gap calculations
 var   bool           bExplodesOnArmor;        // shell explodes on vehicle armor if it fails to penetrate

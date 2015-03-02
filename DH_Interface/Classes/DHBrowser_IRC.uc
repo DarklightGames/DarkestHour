@@ -14,18 +14,18 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
     // Change the Style of the Tabs
-    c_Channel.TabHeight=0.06;
+    c_Channel.TabHeight = 0.06;
     c_Channel.BackgroundStyle = none;
     c_Channel.BackgroundStyleName = "";
     for (i = 0; i < c_Channel.TabStack.Length; i++)
     {
         if (c_Channel.TabStack[i] != none)
         {
-                    c_Channel.TabStack[i].Style=none;   // needed to reset style
-            c_Channel.TabStack[i].FontScale=FNS_Medium;
-            c_Channel.TabStack[i].bAutoSize=true;
+                    c_Channel.TabStack[i].Style = none;   // needed to reset style
+            c_Channel.TabStack[i].FontScale = FNS_Medium;
+            c_Channel.TabStack[i].bAutoSize = true;
             c_Channel.TabStack[i].bAutoShrink = false;
-            c_Channel.TabStack[i].StyleName="DHTabTextButtonStyle";
+            c_Channel.TabStack[i].StyleName = "DHTabTextButtonStyle";
             c_Channel.TabStack[i].Initcomponent(MyController, c_Channel);
         }
     }

@@ -100,7 +100,7 @@ function bool KDriverLeave(bool bForceLeave)
         return false;
     }
 
-    DriverPositionIndex=0;
+    DriverPositionIndex = 0;
     bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
     VehicleBase.MaybeDestroyVehicle();
 

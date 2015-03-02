@@ -141,19 +141,19 @@ simulated function PostNetReceive()
     if (EngineHealth <= 0)
     {
         if (IdleSound != none)
-            IdleSound=none;
+            IdleSound = none;
 
         if (StartUpSound != none)
-            StartUpSound=none;
+            StartUpSound = none;
 
         if (ShutDownSound != none)
-            ShutDownSound=none;
+            ShutDownSound = none;
 
         if (AmbientSound != none)
-            AmbientSound=none;
+            AmbientSound = none;
 
         if (EngineSound != none)
-            EngineSound=none;
+            EngineSound = none;
     }
 }
 

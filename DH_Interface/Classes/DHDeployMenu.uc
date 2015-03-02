@@ -41,13 +41,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     else
     {
         // Initialize loadout panels
-        for(i=0;i<LoadoutPanelClass.Length;++i)
+        for(i = 0;i<LoadoutPanelClass.Length;++i)
         {
             c_LoadoutArea.AddTab(LoadoutPanelCaption[i],LoadoutPanelClass[i],,LoadoutPanelHint[i]);
         }
 
         // Initialize deployment panel(s)
-        for(i=0;i<DeploymentPanelClass.Length;++i)
+        for(i = 0;i<DeploymentPanelClass.Length;++i)
         {
             c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
         }

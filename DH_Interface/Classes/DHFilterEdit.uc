@@ -35,13 +35,13 @@ function AddSystemMenu()
     b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
     b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
     b_ExitButton.OnClick = XButtonClicked;
-    b_ExitButton.bNeverFocus=true;
+    b_ExitButton.bNeverFocus = true;
     b_ExitButton.FocusInstead = t_WindowTitle;
-    b_ExitButton.RenderWeight=1;
+    b_ExitButton.RenderWeight = 1;
     b_ExitButton.bScaleToParent = false;
     b_ExitButton.OnPreDraw = SystemMenuPreDraw;
-    b_ExitButton.bStandardized=true;
-    b_ExitButton.StandardHeight=0.03;
+    b_ExitButton.bStandardized = true;
+    b_ExitButton.StandardHeight = 0.03;
     // Do not want OnClick() called from MousePressed()
     b_ExitButton.bRepeatClick = false;
 }
@@ -89,7 +89,7 @@ function InitComponent(GUIController MyC, GUIComponent MyO)
         cb.ReadOnly(true);
     }
 
-    cb_Mutators.OnChange=MutChange;
+    cb_Mutators.OnChange = MutChange;
     lb_Mutators.DisableMe();
 
 }
@@ -181,7 +181,7 @@ function SetMutator(string ClassName, int index)
 
         if (s ~= ClassName)
         {
-            for (j=0;j<li_Mutators.ItemCount;j++)
+            for (j = 0;j<li_Mutators.ItemCount;j++)
             {
                 Box = moComboBox(li_Mutators.GetItem(j));
                 if (Box.Caption ~= MutRecords[i].FriendlyName)
