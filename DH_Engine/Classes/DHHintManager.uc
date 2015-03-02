@@ -9,20 +9,19 @@ class DHHintManager extends Info
 struct HintInfo
 {
     var() localized string      Title;
-    var() localized string      Text;   // actual hint text
+    var() localized string      Text;  // actual hint text
     var int                     Index; // set in code, do not use!
 };
 
-// Constants
 const                           HINT_COUNT = 64;
 
-// config variables
-var()   float                   PostHintDisplayDelay;           // How long to wait before displaying any other hint (value higher than 0 needed)
+// Config variables
+var()   float                   PostHintDisplayDelay;     // how long to wait before displaying any other hint (value higher than 0 needed)
 
 var()   HintInfo                Hints[HINT_COUNT];
 var     config byte             bUsedUpHints[HINT_COUNT]; // 0 = hint unused, 1 = hint used before
 
-var     int                     CurrentHintIndex; // Index in the SortedHints array
+var     int                     CurrentHintIndex;         // index in the SortedHints array
 var     float                   LastHintDisplayTime;
 
 var     array<byte>             QueuedHintIndices;
@@ -40,7 +39,9 @@ static function StaticReset()
     local int i;
 
     for (i = 0; i < HINT_COUNT; i++)
+    {
         default.bUsedUpHints[i] = 0;
+    }
 
     StaticSaveConfig();
 }
@@ -50,7 +51,9 @@ function NonStaticReset()
     local int i;
 
     for (i = 0; i < HINT_COUNT; i++)
+    {
         bUsedUpHints[i] = 0;
+    }
 
     SaveConfig();
     Reload();
@@ -73,11 +76,17 @@ function QueueHint(byte HintIndex, bool bForceNext)
     local int i;
 
     if (bUsedUpHints[HintIndex] == 1)
+    {
         return;
+    }
 
     for (i = 0; i < QueuedHintIndices.Length; i++)
+    {
         if (QueuedHintIndices[i] == HintIndex)
+        {
             return;
+        }
+    }
 
     if (bForceNext)
     {
@@ -85,22 +94,26 @@ function QueueHint(byte HintIndex, bool bForceNext)
         QueuedHintIndices[0] = HintIndex;
     }
     else
+    {
         QueuedHintIndices[QueuedHintIndices.Length] = HintIndex;
+    }
 }
 
 function StopHinting()
 {
     GotoState('');
-    SetTimer(0, true);
+    SetTimer(0.0, true);
 }
 
-// Implemented in WaitHintDone state
-function NotifyHintRenderingDone() { }
+// Emptied as implemented in WaitHintDone state
+function NotifyHintRenderingDone();
 
 simulated function Timer()
 {
     if (QueuedHintIndices.Length > 0)
+    {
         GotoState('WaitHintDone');
+    }
 }
 
 state WaitHintDone
@@ -111,14 +124,10 @@ state WaitHintDone
 
         player = DHPlayer(Owner);
 
-        if (player != none && DHHud(player.myHud) != none &&
-            !DHHud(player.myHud).bHideHud)
+        if (player != none && DHHud(player.myHud) != none && !DHHud(player.myHud).bHideHud)
         {
             CurrentHintIndex = QueuedHintIndices[0];
-
-            DHHud(player.myHud).ShowHint(
-                Hints[CurrentHintIndex].Title,
-                Hints[CurrentHintIndex].Text);
+            DHHud(player.myHud).ShowHint(Hints[CurrentHintIndex].Title, Hints[CurrentHintIndex].Text);
         }
         else
         {
@@ -144,13 +153,9 @@ state PostDisplay
     function Timer()
     {
         bUsedUpHints[CurrentHintIndex] = 1;
-
         SaveConfig();
-
         QueuedHintIndices.Remove(0, 1);
-
         SetTimer(1.0, true);
-
         GotoState('');
     }
 }
@@ -173,7 +178,7 @@ defaultproperties
     Hints(8)=(Title="Mortar Targets",Text="A mortar observer can mark targets that become visible on your map.  When a round lands near a target marker, the location of the impact will be marked your map.  Use these markers to zero in on your target.")
     Hints(9)=(Title="Mortar Leaving",Text="You may leave your mortar at any time by pressing the %Use% key.  While you are off your mortar, you can retrieve ammunition at a resupply area or from your teammates.")
     Hints(10)=(Title="Mortar Undeploy",Text="To undeploy your mortar, press the %Deploy% key.  Undeploying your mortar will reset your elevation and traverse settings.")
-    Hints(11)=(Title="Mortar Targetting",Text="You can mark targets for your team's mortar operators with your binoculars by pressing %FIRE%.  To cancel a target, press %ALTFIRE%.")
+    Hints(11)=(Title="Mortar Targeting",Text="You can mark targets for your team's mortar operators with your binoculars by pressing %FIRE%.  To cancel a target, press %ALTFIRE%.")
     Hints(12)=(Title="Artillery Officer",Text="You are an artillery officer.  You can mark artillery targets with binoculars.  Call in long-range artillery with from a radio position or with the help of a radio operator.")
     Hints(13)=(Title="Radio Operator",Text="You are a radio operator.  Stay close to an artillery officer so he may call in artillery strikes.")
     Hints(14)=(Title="Mobile Deploy Vehicle",Text="You have entered a mobile deploy vehicle.  This vehicle acts as a mobile spawn point and can be driven only by a squad leader.")

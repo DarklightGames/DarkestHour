@@ -29,9 +29,9 @@ function ServerChangeViewPoint(bool bForward)
                     GoToState('ViewTransition');
             }
         }
-     }
-     else
-     {
+    }
+    else
+    {
         if (DriverPositionIndex > 0)
         {
             LastPositionIndex = DriverPositionIndex;
@@ -47,7 +47,7 @@ function ServerChangeViewPoint(bool bForward)
                 AnimateTransition();
             }
         }
-     }
+    }
 }
 
 defaultproperties

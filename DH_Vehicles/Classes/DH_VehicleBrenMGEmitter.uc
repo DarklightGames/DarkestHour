@@ -7,18 +7,16 @@ class DH_VehicleBrenMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)
 {
-
     if (bEnabled)
     {
-        Emitters[0].ParticlesPerSecond = 20.0; //500 RPM
-        Emitters[0].InitialParticlesPerSecond = 20.0; //500 RPM
+        Emitters[0].ParticlesPerSecond = 20.0; // 500 RPM
+        Emitters[0].InitialParticlesPerSecond = 20.0;
         Emitters[0].AllParticlesDead = false;
     }
     else
     {
         Emitters[0].ParticlesPerSecond = 0.0;
         Emitters[0].InitialParticlesPerSecond = 0.0;
-
     }
 }
 
@@ -50,6 +48,7 @@ defaultproperties
         LifetimeRange=(Min=0.1,Max=0.1)
     End Object
     Emitters(0)=SpriteEmitter'ROVehicles.TankMGEmitter.SpriteEmitter0'
+
     CullDistance=4000.0
     bNoDelete=false
     bUnlit=false

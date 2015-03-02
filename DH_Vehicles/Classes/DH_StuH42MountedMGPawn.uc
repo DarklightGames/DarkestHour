@@ -134,12 +134,14 @@ function ServerChangeViewPoint(bool bForward)
             {
                 // Run the state on the server whenever we're unbuttoning in order to prevent early exit
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
+                {
                     GoToState('ViewTransition');
+                }
             }
         }
-     }
-     else
-     {
+    }
+    else
+    {
         if (DriverPositionIndex > 0)
         {
             LastPositionIndex = DriverPositionIndex;
@@ -234,13 +236,12 @@ Begin:
     Sleep(0.2);
 }
 
-// modification allowing dual-magnification optics is here (look for "GunsightPositions")
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local vector x, y, z;
-    local vector VehicleZ, CamViewOffsetWorld;
-    local float CamViewOffsetZAmount;
-    local coords CamBoneCoords;
+    local vector  x, y, z;
+    local vector  VehicleZ, CamViewOffsetWorld;
+    local float   CamViewOffsetZAmount;
+    local coords  CamBoneCoords;
     local rotator WeaponAimRot;
 
     GetAxes(CameraRotation, x, y, z);
@@ -294,7 +295,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local rotator NewRotation;
 
@@ -314,57 +315,54 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
     }
 }
 
-//Hacked in for Texture overlay
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
     local float SavedOpacity;
-    local float scale;
-
     local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
     PC = PlayerController(Controller);
+
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //Log("PanzerTurret PlayerController was none, returning");
+
         return;
     }
     else if (!PC.bBehindView)
     {
-        // store old opacity and set to 1.0 for map overlay rendering
+        // Store old opacity and set to 1.0 for map overlay rendering
         SavedOpacity = Canvas.ColorModulate.W;
         Canvas.ColorModulate.W = 1.0;
 
         Canvas.DrawColor.A = 255;
         Canvas.Style = ERenderStyle.STY_Alpha;
 
-        scale = Canvas.SizeY / 1200.0;
-
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
             if (DriverPositionIndex == 0)
             {
+                // Draw reticle
+                ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
+                OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
+                OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(MGOverlay.USize) / 2.0;
+                OverlayCenterTexSize =  float(MGOverlay.USize) * OverlayCenterScale;
 
-             // Draw reticle
-             ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-             OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-             OverlayCenterTexStart = (1 - OverlayCenterScale) * float(MGOverlay.USize) / 2;
-             OverlayCenterTexSize =  float(MGOverlay.USize) * OverlayCenterScale;
+                Canvas.SetPos(0.0, 0.0);
+                Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, 
+                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-             Canvas.SetPos(0, 0);
-             Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-
-             // reset HudOpacity to original value
-             Canvas.ColorModulate.W = SavedOpacity;
+                // Reset HudOpacity to original value
+                Canvas.ColorModulate.W = SavedOpacity;
             }
         }
     }
 
-    if (PC != none)
-        // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && VehicleBase != none)
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+    // Draw tank, turret, ammo count, passenger list
+    if (ROHud(PC.myHUD) != none && VehicleBase != none)
+    {
+        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+    }
 }
 
 defaultproperties

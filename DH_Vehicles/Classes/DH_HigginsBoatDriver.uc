@@ -5,62 +5,58 @@
 
 class DH_HigginsBoatDriver extends DH_HigginsPassengerPawn;
 
-var         texture                       BinocsOverlay;
-//var()     float                         BinocsEnlargementFactor;
-var()       bool        bLimitYaw;                       // limit panning left or right
-var()       bool        bLimitPitch;                    // limit pitching up and down
-
-replication
-{
-    reliable if (bNetInitial && Role == ROLE_Authority)
-        bLimitYaw, bLimitPitch;
-}
+var     texture     BinocsOverlay;
+var()   bool        bLimitYaw;     // limit panning left or right
+var()   bool        bLimitPitch;   // limit pitching up and down
 
 simulated function DrawHUD(Canvas Canvas)
 {
-        local PlayerController PC;
-        local vector CameraLocation;
-        local rotator CameraRotation;
-        local float  SavedOpacity;
-        local float scale;
-        local Actor ViewActor;
+    local PlayerController PC;
+    local vector  CameraLocation;
+    local rotator CameraRotation;
+    local float   SavedOpacity;
+    local float   Scale;
+    local Actor   ViewActor;
 
-        PC = PlayerController(Controller);
+    PC = PlayerController(Controller);
 
-        if (PC == none)
+    if (PC == none)
+    {
+        super.RenderOverlays(Canvas);
+
+        return;
+    }
+    else if (!PC.bBehindView)
+    {
+        // Store old opacity and set to 1.0 for map overlay rendering
+        SavedOpacity = Canvas.ColorModulate.W;
+        Canvas.ColorModulate.W = 1.0;
+
+        Canvas.DrawColor.A = 255;
+        Canvas.Style = ERenderStyle.STY_Alpha;
+
+        Scale = Canvas.SizeY / 1200.0;
+
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
-            super.RenderOverlays(Canvas);
-            //Log("PanzerTurret PlayerController was none, returning");
-            return;
-        }
-        else if (!PC.bBehindView)
-        {
-            // store old opacity and set to 1.0 for map overlay rendering
-            SavedOpacity = Canvas.ColorModulate.W;
-            Canvas.ColorModulate.W = 1.0;
-
-            Canvas.DrawColor.A = 255;
-            Canvas.Style = ERenderStyle.STY_Alpha;
-
-                scale = Canvas.SizeY / 1200.0;
-
-            if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+            if (DriverPositionIndex == 0)
             {
-               if (DriverPositionIndex == 0)
-               {
-               }
-               else
-               {
-                  DrawBinocsOverlay(Canvas);
-               }
             }
-           // reset HudOpacity to original value
-           Canvas.ColorModulate.W = SavedOpacity;
-
-           // Draw tank, turret, ammo count, passenger list
-           if (ROHud(PC.myHUD) != none && VehicleBase != none)
-              ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+            else
+            {
+                DrawBinocsOverlay(Canvas);
+            }
         }
+
+        // Reset HudOpacity to original value
+        Canvas.ColorModulate.W = SavedOpacity;
+
+        // Draw tank, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        }
+    }
 
     // Zap the lame crosshair - Ramm
     if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
@@ -68,8 +64,8 @@ simulated function DrawHUD(Canvas Canvas)
         Canvas.DrawColor = CrosshairColor;
         Canvas.DrawColor.A = 255;
         Canvas.Style = ERenderStyle.STY_Alpha;
-        Canvas.SetPos(Canvas.SizeX*0.5-CrosshairX, Canvas.SizeY*0.5-CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX*2.0, CrosshairY*2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
+        Canvas.SetPos(Canvas.SizeX * 0.5 - CrosshairX, Canvas.SizeY * 0.5 - CrosshairY);
+        Canvas.DrawTile(CrosshairTexture, CrosshairX * 2.0, CrosshairY * 2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
     }
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
@@ -80,12 +76,13 @@ simulated function DrawHUD(Canvas Canvas)
             SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
             HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
             HUDOverlay.SetRotation(CameraRotation);
-            Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1, 170));
+            Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
         }
     }
     else
+    {
         ActivateOverlay(false);
-
+    }
 }
 
 //AB CODE
@@ -95,7 +92,7 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
     Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Limit the left and right movement of the driver
@@ -135,9 +132,13 @@ function int LimitPawnPitch(int pitch)
     if (pitch > DriverPositions[DriverPositionIndex].ViewPitchUpLimit && pitch < DriverPositions[DriverPositionIndex].ViewPitchDownLimit)
     {
         if (pitch - DriverPositions[DriverPositionIndex].ViewPitchUpLimit < PitchDownLimit - pitch)
+        {
             pitch = DriverPositions[DriverPositionIndex].ViewPitchUpLimit;
+        }
         else
+        {
             pitch = DriverPositions[DriverPositionIndex].ViewPitchDownLimit;
+        }
     }
 
     return pitch;

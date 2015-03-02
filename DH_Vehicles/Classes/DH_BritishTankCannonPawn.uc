@@ -6,10 +6,10 @@
 class DH_BritishTankCannonPawn extends DH_ROTankCannonPawn
     abstract;
 
-var() float ScopeCenterScaleX;
-var() float ScopeCenterScaleY;
+var()   float     ScopeCenterScaleX;
+var()   float     ScopeCenterScaleY;
 
-var     texture                 PeriscopeOverlay;
+var     texture   PeriscopeOverlay;
 
 simulated function DrawHUD(Canvas Canvas)
 {
@@ -152,7 +152,7 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
     Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties

@@ -158,7 +158,7 @@ simulated function PostNetReceive()
 }
 
 // Overridden for locking the player to the camerabone // altered slightly to allow change of camera bone name - Fennich
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local quat   CarQuat, LookQuat, ResultQuat;
     local vector VehicleZ, CamViewOffsetWorld, x, y, z;
@@ -236,20 +236,20 @@ simulated function UpdateMovementSound()
     }
 }
 
+// Modified to avoid switching to static mesh DestroyedVehicleMesh, instead switching the boat skin to a DestroyedVehicleTexture & playing a destroyed animation
 simulated event DestroyAppearance()
 {
-    local int i;
-    local     KarmaParams KP;
+    local int         i;
+    local KarmaParams KP;
 
-    // For replication
-    bDestroyAppearance = true;
+    bDestroyAppearance = true; // for replication
 
     // Put brakes on
     Throttle = 0.0;
     Steering = 0.0;
-    Rise = 0.0;
+    Rise     = 0.0;
 
-    // Destroy the weapons
+    // Destroy the vehicle weapons
     if (Role == ROLE_Authority)
     {
         for (i = 0; i < WeaponPawns.Length; i++)
@@ -295,7 +295,7 @@ simulated event DestroyAppearance()
 //  KSetBlockKarma(true);
 //  SetPhysics(PHYS_Karma);
 //  Skins.length = 1;
-    NetPriority = 2;
+    NetPriority = 2.0;
 
     Skins[0] = DestroyedVehicleTexture;
     LoopAnim(DestAnimName, DestAnimRate);

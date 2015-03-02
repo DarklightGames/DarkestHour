@@ -4,10 +4,10 @@
 //==============================================================================
 
 class DH_GermanTankCannonPawn extends DH_ROTankCannonPawn
-     abstract;
+    abstract;
 
-var() float ScopeCenterScaleX;
-var() float ScopeCenterScaleY;
+var()   float       ScopeCenterScaleX;
+var()   float       ScopeCenterScaleY;
 
 simulated function DrawHUD(Canvas Canvas)
 {

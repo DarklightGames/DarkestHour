@@ -6,9 +6,9 @@
 class DH_ROMountedTankMG extends ROMountedTankMG
     abstract;
 
-var()   class<Projectile>   TracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
+var()   class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
 var()   int                 TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
- 
+
 // Reload stuff
 var     bool    bReloading;      // this MG is currently reloading
 var()   sound   ReloadSound;     // sound of this MG reloading
@@ -426,7 +426,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
 }
 
-simulated function Destroyed() // Matt: added
+simulated function Destroyed()
 {
     if (CollisionMeshActor != none)
     {

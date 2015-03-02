@@ -8,18 +8,17 @@ class DH_HigginsBoat extends DH_BoatVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
-var         sound               RampDownSound;
-var         sound               RampUpSound;
-var         float               RampSoundVolume;
+var     sound       RampDownSound;
+var     sound       RampUpSound;
+var     float       RampSoundVolume;
+var     name        RampDownIdleAnim;
 
-var name            RampDownIdleAnim;
 
 static function StaticPrecache(LevelInfo L)
 {
     super.StaticPrecache(L);
 
     L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat');
-
 }
 
 simulated function UpdatePrecacheMaterials()
@@ -29,7 +28,7 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-// Overridden because the animation needs to play on the server for this vehicle for the commanders hit detection
+// Overridden because the animation needs to play on the server for this vehicle for the driver's hit detection
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -49,9 +48,9 @@ function ServerChangeViewPoint(bool bForward)
                 GoToState('ViewTransition');
             }
         }
-     }
-     else
-     {
+    }
+    else
+    {
         if (DriverPositionIndex > 0)
         {
             PreviousPositionIndex = DriverPositionIndex;
@@ -66,39 +65,38 @@ function ServerChangeViewPoint(bool bForward)
             {
                 GoToState('ViewTransition');
             }
-
         }
-     }
+    }
 }
 
-//Overwritten to add Higgins Boat ramp sounds
+// Overwritten to add Higgins Boat ramp sounds
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-            if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+        {
+            if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
             {
-                    if (DriverPositions[DriverPositionIndex].PositionMesh != none && !bDontUsePositionMesh)
-                            LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+                LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
             }
-
-         if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
-         {
-             //Log("HandleTransition Player Transition Up!");
-             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
-             //ADDED RAMP UP sound HERE
-             PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume/255.0,, 150,, false);
-         }
-         else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
-         {
-             //Log("HandleTransition Player Transition Down!");
-             PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
-             //ADDED RAMP DOWN sound HERE
-             PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume/255.0,, 150,, false);
         }
 
-         if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
-                Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+        if (PreviousPositionIndex < DriverPositionIndex && HasAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim))
+        {
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionUpAnim);
+            PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+        }
+        else if (HasAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim))
+        {
+            PlayAnim(DriverPositions[PreviousPositionIndex].TransitionDownAnim);
+            PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+        }
+
+        if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim))
+        {
+            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+        }
     }
 
     simulated function AnimEnd(int channel)
@@ -152,27 +150,26 @@ function DriverDied()
     MaybeDestroyVehicle();
 }
 
-// Called by notifies!!
+// Called by notifies
 function RampUpIdle()
 {
     LoopAnim(BeginningIdleAnim);
-    DestAnimName=BeginningIdleAnim;
+    DestAnimName = BeginningIdleAnim;
 }
 
 function RampDownIdle()
 {
     LoopAnim(RampDownIdleAnim);
-    DestAnimName=RampDownIdleAnim;
+    DestAnimName = RampDownIdleAnim;
 }
 
 event RanInto(Actor Other)
 {
-     return;
 }
 
 function bool EncroachingOn(Actor Other)
 {
-     return false;
+    return false;
 }
 
 defaultproperties

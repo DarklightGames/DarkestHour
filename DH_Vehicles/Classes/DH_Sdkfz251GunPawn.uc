@@ -19,11 +19,11 @@ simulated function ClientKDriverEnter(PlayerController PC)
     HUDOverlayOffset=default.HUDOverlayOffset;
 }
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local vector x, y, z;
-    local vector VehicleZ, CamViewOffsetWorld;
-    local float CamViewOffsetZAmount;
+    local vector  x, y, z;
+    local vector  VehicleZ, CamViewOffsetWorld;
+    local float   CamViewOffsetZAmount;
     local rotator WeaponAimRot;
 
     GetAxes(CameraRotation, x, y, z);
@@ -33,8 +33,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (ROPlayer(Controller) != none)
     {
-         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
+        ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
+        ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
     }
 
     CameraRotation =  WeaponAimRot;
@@ -48,7 +48,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
-
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -69,7 +68,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local rotator NewRotation;
 
@@ -84,18 +83,18 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
 
     if (ROPlayer(Controller) != none)
     {
-         ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-         ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
     }
 }
 
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local vector CameraLocation;
+    local vector  CameraLocation;
     local rotator CameraRotation;
-    local Actor ViewActor;
-    local vector GunOffset;
+    local Actor   ViewActor;
+    local vector  GunOffset;
 
     PC = PlayerController(Controller);
 
@@ -103,7 +102,6 @@ simulated function DrawHUD(Canvas Canvas)
     {
         if (!Level.IsSoftwareRendering())
         {
-
             CameraRotation = PC.Rotation;
             SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
 
@@ -111,25 +109,31 @@ simulated function DrawHUD(Canvas Canvas)
             GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
 
             // Make the first person gun appear lower when your sticking your head up
-            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 3));
+            GunOffset.Z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 3.0));
             GunOffset += HUDOverlayOffset;
 
             // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
             HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
 
-            Canvas.DrawBoundActor(HUDOverlay, false, true,HUDOverlayFOV,CameraRotation,PC.ShakeRot*FirstPersonGunShakeScale,GunOffset*-1);
-         }
+            Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+        }
     }
     else
+    {
         ActivateOverlay(false);
+    }
 
     if (PC != none)
+    {
         // Draw tank, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        }
+    }
 }
 
-// Hack - Turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
+// Hack - turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
 simulated state ViewTransition
 {
     simulated function BeginState()
@@ -138,7 +142,7 @@ simulated state ViewTransition
         {
             if (DriverPositionIndex > 0)
             {
-              Gun.AmbientEffectEmitter.bHidden = true;
+                Gun.AmbientEffectEmitter.bHidden = true;
             }
         }
 
@@ -151,7 +155,7 @@ simulated state ViewTransition
         {
             if (DriverPositionIndex == 0)
             {
-              Gun.AmbientEffectEmitter.bHidden = false;
+                Gun.AmbientEffectEmitter.bHidden = false;
             }
         }
 

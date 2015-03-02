@@ -125,7 +125,7 @@ function bool PlaceExitingDriver()
         {
             break;
         }
-        else if(i == VehicleBase.ExitPositions.Length)
+        else if (i == VehicleBase.ExitPositions.Length)
         {
             i = 0;
         }

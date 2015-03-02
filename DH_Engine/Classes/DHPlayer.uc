@@ -392,7 +392,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
     if (bInterpolating || (Pawn != none && Pawn.bInterpolating))
     {
-        ViewShake(deltaTime);
+        ViewShake(DeltaTime);
 
         return;
     }
@@ -497,8 +497,8 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
         SetRotation(ViewRotation);
 
-        ViewShake(deltaTime);
-        ViewFlash(deltaTime);
+        ViewShake(DeltaTime);
+        ViewFlash(DeltaTime);
 
         NewRotation = ViewRotation;
 
@@ -1112,7 +1112,7 @@ state PlayerWalking
             {
                 if (bLookUpStairs || bSnapToLevel)
                 {
-                    GroundPitch = FindStairRotation(deltaTime);
+                    GroundPitch = FindStairRotation(DeltaTime);
                     ViewRotation.Pitch = GroundPitch;
                 }
             }

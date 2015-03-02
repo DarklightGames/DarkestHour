@@ -7,11 +7,12 @@ class DH_Vehicle30CalMGEmitter extends WeaponAmbientEmitter;
 
 simulated function SetEmitterStatus(bool bEnabled)
 {
-    Emitters[0].UseCollision = (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (VSize(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 1600));
+    Emitters[0].UseCollision = (!Level.bDropDetail && (Level.DetailMode != DM_Low) && (VSize(Level.GetLocalPlayerController().ViewTarget.Location - Location) < 1600.0));
+
     if (bEnabled)
     {
-        Emitters[0].ParticlesPerSecond = 7.0; //400 RPM
-        Emitters[0].InitialParticlesPerSecond = 7.0; //400 RPM
+        Emitters[0].ParticlesPerSecond = 7.0; // 400 RPM
+        Emitters[0].InitialParticlesPerSecond = 7.0;
         Emitters[0].AllParticlesDead = false;
 
         Emitters[1].ParticlesPerSecond = 14.0;
@@ -49,6 +50,7 @@ defaultproperties
         StartVelocityRadialRange=(Min=-250.0,Max=250.0)
     End Object
     Emitters(0)=MeshEmitter'DH_Vehicles.DH_Vehicle30CalMGEmitter.MeshEmitter0'
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         RespawnDeadParticles=false
         SpinParticles=true
@@ -75,6 +77,7 @@ defaultproperties
         LifetimeRange=(Min=0.1,Max=0.1)
     End Object
     Emitters(1)=SpriteEmitter'DH_Vehicles.DH_Vehicle30CalMGEmitter.SpriteEmitter1'
+
     CullDistance=4000.0
     bNoDelete=false
     bUnlit=false

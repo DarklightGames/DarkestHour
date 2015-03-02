@@ -122,12 +122,14 @@ function ServerChangeViewPoint(bool bForward)
             {
                 // Run the state on the server whenever we're unbuttoning in order to prevent early exit
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
+                {
                     GoToState('ViewTransition');
+                }
             }
         }
-     }
-     else
-     {
+    }
+    else
+    {
         if (DriverPositionIndex > 0)
         {
             LastPositionIndex = DriverPositionIndex;
@@ -222,11 +224,11 @@ Begin:
     Sleep(0.2);
 }
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local vector x, y, z;
-    local vector VehicleZ, CamViewOffsetWorld;
-    local float CamViewOffsetZAmount;
+    local vector  x, y, z;
+    local vector  VehicleZ, CamViewOffsetWorld;
+    local float   CamViewOffsetZAmount;
     local rotator WeaponAimRot;
 
     GetAxes(CameraRotation, x, y, z);
@@ -236,7 +238,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (ROPlayer(Controller) != none)
     {
-        //limit view of gunner while inside tank
+        // Limit view of gunner while inside tank
         if (DriverPositionIndex == 0 && !IsInState('ViewTransition'))
         {
             ROPlayer(Controller).WeaponBufferRotation.Yaw = 0;
@@ -280,7 +282,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local rotator NewRotation;
 
@@ -323,10 +325,10 @@ function Fire(optional float F)
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local vector CameraLocation;
+    local vector  CameraLocation;
     local rotator CameraRotation;
-    local Actor ViewActor;
-    local vector GunOffset;
+    local Actor   ViewActor;
+    local vector  GunOffset;
 
     PC = PlayerController(Controller);
 
@@ -334,28 +336,35 @@ simulated function DrawHUD(Canvas Canvas)
     {
         if (!Level.IsSoftwareRendering() && DriverPositionIndex > 0)
         {
-
             CameraRotation = PC.Rotation;
             SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+
             CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
             GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
 
             // Make the first person gun appear lower when your sticking your head up
-            GunOffset.z += (((Gun.GetBoneCoords('firstperson_wep').Origin.Z - CameraLocation.Z) * 3));
+            GunOffset.Z += (((Gun.GetBoneCoords('firstperson_wep').Origin.Z - CameraLocation.Z) * 3.0));
             GunOffset += HUDOverlayOffset;
 
             // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
             HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            Canvas.DrawBoundActor(HUDOverlay, false, true,HUDOverlayFOV,CameraRotation,PC.ShakeRot*FirstPersonGunShakeScale,GunOffset*-1);
-         }
+
+            Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+        }
     }
     else
+    {
         ActivateOverlay(false);
+    }
 
     if (PC != none)
+    {
         // Draw tank, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        }
+    }
 }
 
 defaultproperties

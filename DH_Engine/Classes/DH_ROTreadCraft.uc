@@ -995,7 +995,7 @@ function bool TryToDrive(Pawn P)
     {
         DisplayVehicleMessage(9, P); // vehicle is on fire
 
-//        return false; // TEMP rem to we can enter burning veh
+        return false;
     }
 
     // Trying to enter a vehicle that isn't on our team
@@ -2716,7 +2716,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector 
         if (!bEngineOff)
         {
             bEngineOff = true;
-            PlaySound(DamagedShutDownSound, SLOT_None, FClamp(Abs(Throttle), 0.3, 0.75)); // TEST // 1.0);
+            PlaySound(DamagedShutDownSound, SLOT_None, FClamp(Abs(Throttle), 0.3, 0.75));
         }
 
         SetEngine();

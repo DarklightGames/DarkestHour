@@ -28,7 +28,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerToggleExtraRoundType;
 }
-
+    
 simulated exec function SwitchFireMode()
 {
     if (Gun != none && DH_ATGunCannon(Gun) != none && DH_ATGunCannon(Gun).bMultipleRoundTypes)

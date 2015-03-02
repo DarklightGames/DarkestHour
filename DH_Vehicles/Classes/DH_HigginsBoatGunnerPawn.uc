@@ -5,9 +5,8 @@
 
 class DH_HigginsBoatGunnerPawn extends DH_ROMountedTankMGPawn;
 
-var         texture                       BinocsOverlay;
-//var()     float                         BinocsEnlargementFactor;
-var         int                           BinocsPositionIndex;
+var     texture     BinocsOverlay;
+var     int         BinocsPositionIndex;
 
 // Engineer cannot fire MG when he is in binocs
 function Fire(optional float F)
@@ -46,11 +45,11 @@ simulated function ClientKDriverLeave(PlayerController PC)
     super.ClientKDriverLeave(PC);
 }
 
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local vector x, y, z;
-    local vector VehicleZ, CamViewOffsetWorld;
-    local float CamViewOffsetZAmount;
+    local vector  x, y, z;
+    local vector  VehicleZ, CamViewOffsetWorld;
+    local float   CamViewOffsetZAmount;
     local rotator WeaponAimRot;
 
     GetAxes(CameraRotation, x, y, z);
@@ -60,8 +59,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
 
     if (ROPlayer(Controller) != none)
     {
-         ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
+        ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
+        ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
     }
 
     CameraRotation =  WeaponAimRot;
@@ -75,7 +74,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         if (bFPNoZFromCameraPitch)
         {
             VehicleZ = vect(0.0, 0.0, 1.0) >> WeaponAimRot;
-
             CamViewOffsetZAmount = CamViewOffsetWorld dot VehicleZ;
             CameraLocation -= CamViewOffsetZAmount * VehicleZ;
         }
@@ -96,7 +94,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     local rotator NewRotation;
 
@@ -111,52 +109,58 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
 
     if (ROPlayer(Controller) != none)
     {
-         ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-         ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+        ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
     }
 }
 
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local vector CameraLocation;
+    local vector  CameraLocation;
     local rotator CameraRotation;
-    local Actor ViewActor;
-    local vector GunOffset;
+    local Actor   ViewActor;
+    local vector  GunOffset;
 
     PC = PlayerController(Controller);
 
     if (PC != none && !PC.bBehindView && HUDOverlay != none)
     {
-        if (!Level.IsSoftwareRendering() && DriverPositionIndex < 2)
+        if (!Level.IsSoftwareRendering() && DriverPositionIndex != BinocsPositionIndex)
         {
-
             CameraRotation = PC.Rotation;
             SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
 
             CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
             GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
 
-            GunOffset.z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1));
+            // Make the first person gun appear lower when your sticking your head up
+            GunOffset.Z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1.0));
             GunOffset += HUDOverlayOffset;
 
             // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
             HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
 
-            Canvas.DrawBoundActor(HUDOverlay, false, true,HUDOverlayFOV,CameraRotation,PC.ShakeRot*FirstPersonGunShakeScale,GunOffset*-1);
-         }
-         else
-         {
+            Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+        }
+        else
+        {
             DrawBinocsOverlay(Canvas);
-         }
+        }
     }
     else
+    {
         ActivateOverlay(false);
+    }
 
     if (PC != none)
+    {
         // Draw tank, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        }
+    }
 }
 
 // Hack - Turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
@@ -168,7 +172,7 @@ simulated state ViewTransition
         {
             if (DriverPositionIndex > 0)
             {
-              Gun.AmbientEffectEmitter.bHidden = true;
+                Gun.AmbientEffectEmitter.bHidden = true;
             }
         }
 
@@ -181,7 +185,7 @@ simulated state ViewTransition
         {
             if (DriverPositionIndex == 0)
             {
-              Gun.AmbientEffectEmitter.bHidden = false;
+                Gun.AmbientEffectEmitter.bHidden = false;
             }
         }
 
@@ -195,7 +199,7 @@ simulated function DrawBinocsOverlay(Canvas Canvas)
 
     ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
     Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1 - ScreenRatio) * float(BinocsOverlay.VSize) / 2, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 defaultproperties

@@ -186,7 +186,7 @@ function bool PlaceExitingDriver()
         {
             break;
         }
-        else if(i == VehicleBase.ExitPositions.Length)
+        else if (i == VehicleBase.ExitPositions.Length)
         {
             i = 0;
         }
@@ -223,11 +223,12 @@ simulated function DrawHUD(Canvas Canvas)
         // Draw reticle
         ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
         OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1 - OverlayCenterScale) * Float(MGOverlay.USize) / 2;
+        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(MGOverlay.USize) / 2.0;
         OverlayCenterTexSize =  Float(MGOverlay.USize) * OverlayCenterScale;
 
-        Canvas.SetPos(0, 0);
-        Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+        Canvas.SetPos(0.0, 0.0);
+        Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, 
+            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
         // Reset HudOpacity to original value
         Canvas.ColorModulate.W = SavedOpacity;
