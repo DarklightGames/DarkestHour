@@ -33,7 +33,7 @@ simulated function PostBeginPlay()
     }
 
     super(DH_ROAntiVehicleProjectile).PostBeginPlay();
-    
+
     SetTimer(StraightFlightTime, false); // Matt: added so we can cut off the rocket engine effects when out of propellant, instead of using Tick
 }
 
@@ -84,45 +84,6 @@ simulated function Timer()
         Corona.Destroy();
     }
 }
-
-/*
-// Fixes broken RO class to make rockets work like rockets
-simulated function Tick(float DeltaTime) // Matt: removed as a timer can be used, which is more efficient (note if Tick was retained it could be much optimised, as below)
-{
-//  SetPhysics(PHYS_Flying); // Matt: removed as crazy to keep setting this every Tick, just to reset to PHYS_Projectile at end of every Tick once out of propellant (moved to PostBeginPlay)
-
-//  super.Tick(DeltaTime); // Matt: in shells generally, we now empty out the Super from ROAntiVehicleProjectile
-
-    if (!bOutOfPropellant)
-    {
-        if (TotalFlightTime <= StraightFlightTime)
-        {
-            TotalFlightTime += DeltaTime;
-        }
-        else
-        {
-            bOutOfPropellant = true;
-            SetPhysics(PHYS_Projectile); // Matt: moved here as we only need to do this once
-
-            // Cut off the rocket engine effects when out of propellant
-            if (SmokeTrail != none)
-            {
-                SmokeTrail.HandleOwnerDestroyed();
-            }
-
-            if (Corona != none)
-            {
-                Corona.Destroy();
-            }
-        }
-    }
-
-//  if (bOutOfPropellant && Physics != PHYS_Projectile) // Matt: moved up, as we only need to do this once, when we run out of propellant - it's crazy to keep checking it every Tick
-//  {
-//      SetPhysics(PHYS_Projectile);
-//  }
-}
-*/
 
 simulated function BlowUp(vector HitLocation)
 {
@@ -188,7 +149,7 @@ defaultproperties
     MyDamageType=class'DamageType'
     AmbientSound=none
     TransientSoundVolume=0.3
-    TransientSoundRadius=300.0 
+    TransientSoundRadius=300.0
     SpeedFudgeScale=1.0
     InitialAccelerationTime=0.1
     RotationRate=(Roll=0)
