@@ -44,7 +44,7 @@ function DropFrom(vector StartLocation)
     }
     else
     {
-        for ( i=0; i<AmmoAmount(0); i++ )
+        for ( i = 0; i<AmmoAmount(0); i++ )
         {
             R.Yaw = rand(65536);
             Pickup = Spawn(PickupClass,,, StartLocation,R);

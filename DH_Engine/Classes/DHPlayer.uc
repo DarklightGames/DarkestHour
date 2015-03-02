@@ -1861,7 +1861,7 @@ simulated exec function DebugTreadVelocityScale(float TreadVelocityScale)
         }
     }
 
-    Level.Game.Broadcast(self, "DebugTreadVelocityScale=" $ TreadVelocityScale);
+    Level.Game.Broadcast(self, "DebugTreadVelocityScale = " $ TreadVelocityScale);
 }
 
 simulated exec function DebugTreadVelocityScaleIncrement()
@@ -1900,7 +1900,7 @@ simulated exec function DebugWheelRotationScale(int WheelRotationScale)
         }
     }
 
-    Level.Game.Broadcast(self, "DebugWheelRotationScale=" $ WheelRotationScale);
+    Level.Game.Broadcast(self, "DebugWheelRotationScale = " $ WheelRotationScale);
 }
 
 exec function LeaveBody()
@@ -2246,7 +2246,7 @@ exec function ExitPosTool()
     {
         Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
 
-        Log("(X=" $ Round(Offset.X) $ ",Y=" $ Round(Offset.Y) $ ",Z=" $ Round(Offset.Z) $ ")");
+        Log("(X = " $ Round(Offset.X) $ ",Y = " $ Round(Offset.Y) $ ",Z = " $ Round(Offset.Z) $ ")");
     }
 }
 

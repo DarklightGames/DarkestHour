@@ -35,8 +35,8 @@ To set up a VW col mesh actor the process is:
 2. Copy mesh properties of the actual VW mesh & paste onto collision skeletal mesh, so new mesh has same collision boxes (enable view collision in editor to see this).
 3. Assign the col static mesh to the new collision skeletal mesh.
 4. Create new col mesh actor class that extends DH_VehicleWeaponCollisionMeshActor, named something like DH_MyVehicleTurretCollisionMesh.
-5. In col mesh actor class just add in default props: Mesh=SkeletalMesh'DH_MyVehicle_anm_WIP.MyVehicle_TurretCollision'.
-6. in WV class just add in default props: CollisionMeshActorClass=class'DH_MyVehicleTurretCollisionMesh'
+5. In col mesh actor class just add in default props: Mesh = SkeletalMesh'DH_MyVehicle_anm_WIP.MyVehicle_TurretCollision'.
+6. in WV class just add in default props: CollisionMeshActorClass = class'DH_MyVehicleTurretCollisionMesh'
 
 When modelling a new VW col mesh, e.g. a tank turret:
 - Keep the mesh as simple as possible with as few triangles as possible - just model the main shape of the turret, where a shell may potentially hit & destroy.

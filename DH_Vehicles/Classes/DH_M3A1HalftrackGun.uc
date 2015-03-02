@@ -196,7 +196,7 @@ state ProjectileFireMode
 {
 	function Fire(Controller C)
 	{
-        // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
+        // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result = 0) then it's time to fire a tracer
         if (bUsesTracers && ((InitialPrimaryAmmo - MainAmmoCharge[0] - 1) % TracerFrequency == 0.0))
         {
             SpawnProjectile(TracerProjectileClass, false);

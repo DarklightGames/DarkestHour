@@ -478,7 +478,7 @@ simulated function ProcessHitFX()
                     if (!bLeftLegGibbed)
                     {
                         SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bLeftLegGibbed=true;
+                        bLeftLegGibbed = true;
                     }
                     break;
 
@@ -487,7 +487,7 @@ simulated function ProcessHitFX()
                     if (!bRightLegGibbed)
                     {
                         SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bRightLegGibbed=true;
+                        bRightLegGibbed = true;
                     }
                     break;
 
@@ -496,7 +496,7 @@ simulated function ProcessHitFX()
                     if (!bLeftArmGibbed)
                     {
                         SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bLeftArmGibbed=true;
+                        bLeftArmGibbed = true;
                     }
                     break;
 
@@ -505,7 +505,7 @@ simulated function ProcessHitFX()
                     if (!bRightArmGibbed)
                     {
                         SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bRightArmGibbed=true;
+                        bRightArmGibbed = true;
                     }
                     break;
 
@@ -827,12 +827,12 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
     {
         if (bHasATAmmo && bIsATWeapon)
         {
-            bResupplySuccessful=true;
+            bResupplySuccessful = true;
             bHasATAmmo = false;
         }
         else if (bHasMGAmmo && !bIsATWeapon)
         {
-            bResupplySuccessful=true;
+            bResupplySuccessful = true;
             bHasMGAmmo = false;
         }
     }
@@ -1324,7 +1324,7 @@ Begin:
     Sleep(0.2);
     bInvulnerableBody = false;
 
-    if (Level.Game != none && !Level.Game.bGameEnded) // Matt: needs != none check to avoid "accessed none" error on a client (actor has been torn off so usual Role=authority check doesn't work)
+    if (Level.Game != none && !Level.Game.bGameEnded) // Matt: needs != none check to avoid "accessed none" error on a client (actor has been torn off so usual Role = authority check doesn't work)
     {
         PlayDyingSound();
     }
@@ -3897,7 +3897,7 @@ function SetAmmoPercent(byte AmmoAmount)
     local int i;
 
     //Cycle inventory and change ammo on needed items
-    for (Inv=Inventory;Inv!=none;Inv=Inv.Inventory)
+    for (Inv = Inventory;Inv!=none;Inv = Inv.Inventory)
     {
         Wep = DH_ProjectileWeapon(Inv);
 

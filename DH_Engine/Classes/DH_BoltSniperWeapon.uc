@@ -264,7 +264,7 @@ simulated state Reloading
     {
         if (ReloadState == RS_PostReload)
         {
-            NumRoundsToLoad=0;
+            NumRoundsToLoad = 0;
             bWaitingToBolt = false;
             ReloadState = RS_none;
         }

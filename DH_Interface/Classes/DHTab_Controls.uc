@@ -67,7 +67,7 @@ function SetUpProfileControls(int Index)
         }
 
         //DH Defaults
-        for (i=0;i<ControlProfileBindings[1].KeyNames.Length;++i)
+        for (i = 0;i<ControlProfileBindings[1].KeyNames.Length;++i)
         {
             PlayerOwner().ConsoleCommand("set input" @ ControlProfileBindings[1].KeyNames[i] @ ControlProfileBindings[1].KeyValues[i]);
         }
@@ -75,7 +75,7 @@ function SetUpProfileControls(int Index)
     // If profile is not 0 or 1 add in controls
     if (Index > 1)
     {
-        for (i=0;i<ControlProfileBindings[Index].KeyNames.Length;++i)
+        for (i = 0;i<ControlProfileBindings[Index].KeyNames.Length;++i)
         {
             PlayerOwner().ConsoleCommand("set input" @ ControlProfileBindings[Index].KeyNames[i] @ ControlProfileBindings[Index].KeyValues[i]);
         }

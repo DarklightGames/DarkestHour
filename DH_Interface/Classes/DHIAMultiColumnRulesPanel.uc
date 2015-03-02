@@ -46,7 +46,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
             co.ReadOnly(true);
             co.bAutoSizeCaption = true;
             co.Tag = Index;
-            co.CaptionWidth=0.5;
+            co.CaptionWidth = 0.5;
             GamePI.SplitStringToArray(Range, NewRule.Data, ";");
             for (i = 0; i+1 < Range.Length; i += 2)
                 co.AddItem(Range[i+1],,Range[i]);
@@ -97,7 +97,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
                 if (bu == none) break;
                 bu.Tag = Index;
                 bu.bAutoSizeCaption = true;
-    bu.ButtonStyleName="DHSmallTextButtonStyle";
+    bu.ButtonStyleName = "DHSmallTextButtonStyle";
                 bu.ComponentWidth = 0.25;
                 bu.OnChange = ArrayPropClicked;
             }
@@ -118,7 +118,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
             if (bu == none) break;
             bu.Tag = Index;
             bu.bAutoSizeCaption = true;
-    bu.ButtonStyleName="DHSmallTextButtonStyle";
+    bu.ButtonStyleName = "DHSmallTextButtonStyle";
             bu.ComponentWidth = 0.25;
             bu.OnChange = CustomClicked;
     }
@@ -139,7 +139,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function UpdateSymbolButton()
 {
-    b_Symbols=none;
+    b_Symbols = none;
 }
 
 function InternalOnChange(GUIComponent Sender)

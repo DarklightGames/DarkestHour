@@ -2394,7 +2394,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     for (i = 0; i < VehHitpoints.Length; i++)
     {
-        HitPointDamage=Damage;
+        HitPointDamage = Damage;
 
         if (VehHitpoints[i].HitPointType == HP_Driver)
         {
@@ -2457,8 +2457,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     }
                     else // either detonate above - or - set the sucker on fire!
                     {
-                       HullFireChance=0.75;
-                       HullFireHEATChance=0.9;
+                       HullFireChance = 0.75;
+                       HullFireHEATChance = 0.9;
                     }
                 }
             }
@@ -2467,7 +2467,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     for (i = 0; i < NewVehHitpoints.Length; i++)
     {
-        HitPointDamage=Damage;
+        HitPointDamage = Damage;
 
         if (bLogPenetration)
         {

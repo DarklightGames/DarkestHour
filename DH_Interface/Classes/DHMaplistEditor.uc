@@ -14,7 +14,7 @@ function AddSystemMenu()
     b_ExitButton = GUIButton(t_WindowTitle.AddComponent("XInterface.GUIButton"));
     b_ExitButton.Style = Controller.GetStyle("DHCloseButton",tFontScale);
     b_ExitButton.OnClick = XButtonClicked;
-    b_ExitButton.bNeverFocus=true;
+    b_ExitButton.bNeverFocus = true;
     b_ExitButton.FocusInstead = t_WindowTitle;
     b_ExitButton.RenderWeight = 1;
     b_ExitButton.bScaleToParent = false;

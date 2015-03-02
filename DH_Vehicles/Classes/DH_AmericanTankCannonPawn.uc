@@ -47,8 +47,8 @@ simulated function DrawHUD(Canvas Canvas)
                 if (bShowCenter)
                 {
                     //debug, draw cross on the center of the screen
-                    posx=Canvas.SizeX / 2;
-                    posy=Canvas.SizeY / 2;
+                    posx = Canvas.SizeX / 2;
+                    posy = Canvas.SizeY / 2;
                     Canvas.SetPos(0, 0);
                     Canvas.DrawVertical(posx-1, posy-3);
                     Canvas.DrawVertical(posx, posy-3);

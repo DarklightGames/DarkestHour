@@ -32,7 +32,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     super.ClientKDriverEnter(PC);
 
-    HUDOverlayOffset=default.HUDOverlayOffset;
+    HUDOverlayOffset = default.HUDOverlayOffset;
 }
 
 simulated function ClientKDriverLeave(PlayerController PC)

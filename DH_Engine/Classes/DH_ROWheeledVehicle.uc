@@ -418,7 +418,7 @@ simulated function Tick(float dt)
     }
     else
     {
-        MinBrakeFriction=Default.MinBrakeFriction;
+        MinBrakeFriction = Default.MinBrakeFriction;
     }
 
     if (bEngineOff)

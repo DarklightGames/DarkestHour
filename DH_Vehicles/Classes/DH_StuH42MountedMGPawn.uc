@@ -81,7 +81,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     PendingPositionIndex = InitialPositionIndex;
     ServerChangeDriverPos();
-    HUDOverlayOffset=default.HUDOverlayOffset;
+    HUDOverlayOffset = default.HUDOverlayOffset;
 }
 
 simulated function ClientKDriverLeave(PlayerController PC)
@@ -102,7 +102,7 @@ function bool KDriverLeave(bool bForceLeave)
     }
     else
     {
-        DriverPositionIndex=InitialPositionIndex;
+        DriverPositionIndex = InitialPositionIndex;
         bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
         VehicleBase.MaybeDestroyVehicle();
@@ -165,7 +165,7 @@ simulated state ViewTransition
                 Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
         }
 
-        //bDrawDriverinTP=true; //Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
+        //bDrawDriverinTP = true; //Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
 
         if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
             && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))

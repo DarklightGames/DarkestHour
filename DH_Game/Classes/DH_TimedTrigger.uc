@@ -43,7 +43,7 @@ function Reset()
     {
         TriggerEvent(Event, self, none);
         Log("TRIGGERED EVENT TO RESET!");
-        bIsStateOne=true;
+        bIsStateOne = true;
     }
 
     SetTimer(DelayTime, false);

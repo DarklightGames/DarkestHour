@@ -45,7 +45,7 @@ function AddRule(PlayInfo.PlayInfoData NewRule, int Index)
             co.ReadOnly(true);
             co.bAutoSizeCaption = true;
             co.Tag = Index;
-            co.CaptionWidth=0.5;
+            co.CaptionWidth = 0.5;
             GamePI.SplitStringToArray(Range, NewRule.Data, ";");
             for (i = 0; i+1 < Range.Length; i += 2)
                 co.AddItem(Range[i+1],,Range[i]);
