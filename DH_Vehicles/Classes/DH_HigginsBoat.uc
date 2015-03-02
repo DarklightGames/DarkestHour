@@ -31,6 +31,23 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
+// Matt: modified to avoid playing BeginningIdleAnim because it makes the ramp position reset every time a player enters
+simulated state EnteringVehicle
+{
+    simulated function HandleEnter()
+    {
+        if (DriverPositions[InitialPositionIndex].PositionMesh != none)
+        {
+            LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
+        }
+
+        if (PlayerController(Controller) != none)
+        {
+            PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
+        }
+    }
+}
+
 // Overridden because the animation needs to play on the server for this vehicle for the driver's hit detection
 function ServerChangeViewPoint(bool bForward)
 {
@@ -101,35 +118,51 @@ simulated state ViewTransition
     }
 }
 
-// overwritten for ramp
-function bool KDriverLeave(bool bForceLeave)
-{
-    local bool bSuperDriverLeave;
-
-    InitialPositionIndex = DriverPositionIndex;
-    PreviousPositionIndex = InitialPositionIndex;
-
-    bSuperDriverLeave = super(ROWheeledVehicle).KDriverLeave(bForceLeave);
-
-    DriverLeft();
-    MaybeDestroyVehicle();
-    return bSuperDriverLeave;
-}
-
+// Add Higgins boat hint
+// Matt: also to set PPI to match DPI, instead of usual InitialPositionIndex, otherwise net client can get stuck & unable to lower/raise the ramp, because server may have changed IPI
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    super.ClientKDriverEnter(PC);
+    FPCamPos = default.FPCamPos;
 
-    //Higgins boat hint.  A long time coming.
+    if (!bDontUsePositionMesh)
+    {
+        Gotostate('EnteringVehicle');
+    }
+
+    PendingPositionIndex = DriverPositionIndex;
+
+    super(ROVehicle).ClientKDriverEnter(PC); // skip over Super in ROWheeledVehicle as it sets PPI to match IPI
+
     DHPlayer(PC).QueueHint(42, true);
 }
 
-// overwritten for ramp
+// Overridden for ramp (sets InitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position)
+// Also removes vehicle momentum added in DH_ROWheeledVehicle, as it can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
+function bool KDriverLeave(bool bForceLeave)
+{
+    InitialPositionIndex = DriverPositionIndex;
+
+    if (super(ROVehicle).KDriverLeave(bForceLeave))
+    {
+        DriverPositionIndex = InitialPositionIndex;
+        PreviousPositionIndex = InitialPositionIndex;
+
+        MaybeDestroyVehicle();
+
+        return true;
+    }
+
+    return false;
+}
+
+// Overwridden for ramp (sets InitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position)
 function DriverDied()
 {
     InitialPositionIndex = DriverPositionIndex;
-    super.DriverDied();
-    DriverLeft();
+	DriverPositionIndex = InitialPositionIndex;
+
+    super(ROVehicle).DriverDied(); // skip over Super in ROWheeledVehicle, which would reset DriverPositionIndex to 0
+
     MaybeDestroyVehicle();
 }
 
