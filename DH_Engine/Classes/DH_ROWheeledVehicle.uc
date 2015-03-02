@@ -609,28 +609,34 @@ function ServerStartEngine()
     }
 }
 
-// Overridden to give players the same momentum as their vehicle had when exiting
-// Adds a little height kick to allow for hacked in damage system
+// Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
+// Also so that exit stuff only happens if the Super returns true
 function bool KDriverLeave(bool bForceLeave)
 {
     local vector OldVel;
-    local bool   bSuperDriverLeave;
 
     if (!bForceLeave)
     {
         OldVel = Velocity;
-
-        bSuperDriverLeave = super.KDriverLeave(bForceLeave);
-
-        OldVel.Z += 75.0;
-        Instigator.AddVelocity(OldVel);
-
-        return bSuperDriverLeave;
     }
-    else
+
+    if (super(ROVehicle).KDriverLeave(bForceLeave))
     {
-        super.KDriverLeave(bForceLeave);
+        DriverPositionIndex = InitialPositionIndex;
+        PreviousPositionIndex = InitialPositionIndex;
+
+        MaybeDestroyVehicle();
+
+        if (!bForceLeave)
+        {
+            OldVel.Z += 75.0;
+            Instigator.AddVelocity(OldVel);
+        }
+
+        return true;
     }
+
+    return false;
 }
 
 function bool PlaceExitingDriver()
@@ -957,7 +963,7 @@ simulated function Destroyed()
 
         if (ResupplyDecoAttachment != none)
         {
-            ResupplyDecoAttachment.Destroy();
+            ResupplyDecoAttachment.Destroy(); // TEST - maybe this should happen in DestroyAppearance too? (perhaps with sound attachments too?)
         }
     }
 }

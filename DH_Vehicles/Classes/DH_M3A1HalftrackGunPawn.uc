@@ -156,21 +156,33 @@ simulated state ViewTransition
     }
 }
 
-// Overridden to give players the same momentum as their vehicle had when exiting
-// Adds a little height kick to allow for hacked in damage system
+// Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
 function bool KDriverLeave(bool bForceLeave)
 {
     local vector OldVel;
-    local bool   bSuperDriverLeave;
 
-    OldVel = Velocity;
+    if (!bForceLeave)
+    {
+        OldVel = VehicleBase.Velocity;
+    }
 
-    bSuperDriverLeave = super.KDriverLeave(bForceLeave);
+    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
+    {
+        DriverPositionIndex = 0;
+        LastPositionIndex = 0;
 
-    OldVel.Z += 50;
-    Instigator.Velocity = OldVel;
+        VehicleBase.MaybeDestroyVehicle();
 
-    return bSuperDriverLeave;
+        if (!bForceLeave)
+        {
+            OldVel.Z += 50.0;
+            Instigator.Velocity = OldVel;
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 defaultproperties

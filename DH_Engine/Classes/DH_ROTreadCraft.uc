@@ -714,7 +714,7 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Overridden to prevent players exiting unless unbuttoned first
+// Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
 function bool KDriverLeave(bool bForceLeave)
 {
     // bForceLeave is always true for position switch, so player is trying to exit not switch (checking for false means no risk of locking someone in one slot)
@@ -727,7 +727,7 @@ function bool KDriverLeave(bool bForceLeave)
             return false;
         }
         // Driver is not unbuttoned, so don't let them exit
-        else if (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition'))
+        else if (DriverPositionIndex < UnbuttonedPositionIndex || (DriverPositionIndex == UnbuttonedPositionIndex && Instigator.IsInState('ViewTransition')))
         {
             DisplayVehicleMessage(4); // must unbutton the hatch
 
@@ -735,7 +735,17 @@ function bool KDriverLeave(bool bForceLeave)
         }
     }
 
-    return super.KDriverLeave(bForceLeave);
+    if (super(ROVehicle).KDriverLeave(bForceLeave))
+    {
+        DriverPositionIndex = InitialPositionIndex;
+        PreviousPositionIndex = InitialPositionIndex;
+
+        MaybeDestroyVehicle();
+        
+        return true;
+    }
+    
+    return false;
 }
 
 // Modified to add clientside checks before sending the function call to the server

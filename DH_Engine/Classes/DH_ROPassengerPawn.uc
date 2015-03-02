@@ -126,28 +126,34 @@ function KDriverEnter(Pawn P)
     super.KDriverEnter(P);
 }
 
-// Overridden to give players the same momentum as their vehicle had when exiting
-// Adds a little height kick to allow for hacked in damage system
+// Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
+// Also so that exit stuff only happens if the Super returns true
 function bool KDriverLeave(bool bForceLeave)
 {
     local vector OldVel;
-    local bool   bSuperDriverLeave;
 
     if (!bForceLeave)
     {
         OldVel = VehicleBase.Velocity;
-
-        bSuperDriverLeave = super.KDriverLeave(bForceLeave);
-
-        OldVel.Z += 50.0;
-        Instigator.Velocity = OldVel;
     }
-    else
+
+    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
     {
-        bSuperDriverLeave = super.KDriverLeave(bForceLeave);
+        DriverPositionIndex = 0;
+        LastPositionIndex = 0;
+
+        VehicleBase.MaybeDestroyVehicle();
+
+        if (!bForceLeave)
+        {
+            OldVel.Z += 50.0;
+            Instigator.Velocity = OldVel;
+        }
+
+        return true;
     }
 
-    return bSuperDriverLeave;
+    return false;
 }
 
 // Modified to call DriverLeft (which calls DrivingStatusChanged) because player death doesn't trigger KDriverLeave-DriverLeft

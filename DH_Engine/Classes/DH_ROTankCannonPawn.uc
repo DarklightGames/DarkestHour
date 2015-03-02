@@ -507,28 +507,28 @@ function ServerChangeDriverPos()
     DriverPositionIndex = InitialPositionIndex;
 }
 
-// Modified to prevent exit if not unbuttoned (& also to reset to InitialPositionIndex instead of zero)
+// Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
+// Also to reset to InitialPositionIndex instead of zero
 function bool KDriverLeave(bool bForceLeave)
 {
-    local bool bSuperDriverLeave;
-
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
+    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || (DriverPositionIndex == UnbuttonedPositionIndex && IsInState('ViewTransition'))))
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
+        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
 
         return false;
     }
-    else
+
+    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
     {
         DriverPositionIndex = InitialPositionIndex;
         LastPositionIndex = InitialPositionIndex;
 
-        bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
-
         VehicleBase.MaybeDestroyVehicle();
-
-        return bSuperDriverLeave;
+        
+        return true;
     }
+    
+    return false;
 }
 
 // Modified to reset to InitialPositionIndex instead of zero
