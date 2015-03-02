@@ -22,50 +22,6 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-// Overridden due to the Onslaught team lock not working in RO
-function bool TryToDrive(Pawn P)
-{
-    local int x;
-
-    //don't allow vehicle to be stolen when somebody is in a turret
-    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
-    {
-        for (x = 0; x < WeaponPawns.length; x++)
-            if (WeaponPawns[x].Driver != none)
-            {
-                DenyEntry(P, 2);
-                return false;
-            }
-    }
-
-    if (P.bIsCrouched ||  bNonHumanControl || (P.Controller == none) || (Driver != none) || (P.DrivenVehicle != none) || !P.Controller.bIsPlayer
-         || P.IsA('Vehicle') || Health <= 0 || (P.Weapon != none && P.Weapon.IsInState('Reloading')))
-        return false;
-
-    if (!Level.Game.CanEnterVehicle(self, P))
-        return false;
-
-    // Check vehicle Locking....
-    if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
-    {
-        DenyEntry(P, 1);
-        return false;
-    }
-    else if (bMustBeTankCommander && !ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && P.IsHumanControlled())
-    {
-       DenyEntry(P, 0);
-       return false;
-    }
-    else
-    {
-        if (bEnterringUnlocks && bTeamLocked)
-            bTeamLocked = false;
-
-        KDriverEnter(P);
-        return true;
-    }
-}
-
 defaultproperties
 {
     ResupplyAttachmentClass=class'DH_GMCTruckResupplyAttachment'
