@@ -96,10 +96,10 @@ defaultproperties
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Z=40.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesCannonPawn',WeaponBone="Turret_placement")
-    Passengerweapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerOne',WeaponBone="body")
-    Passengerweapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerTwo',WeaponBone="body")
-    Passengerweapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerThree',WeaponBone="body")
-    Passengerweapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerFour',WeaponBone="body")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerOne',WeaponBone="body")
+    PassengerWeapons(2)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerTwo',WeaponBone="body")
+    PassengerWeapons(3)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerThree',WeaponBone="body")
+    PassengerWeapons(4)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesPassengerFour',WeaponBone="body")
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
     StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
