@@ -32,7 +32,7 @@ function DropFrom(vector StartLocation)
             StopFire(m);
     }
 
-    if (Instigator != None)
+    if (Instigator != none)
     {
         DetachFromPawn(Instigator);
     }
@@ -49,7 +49,7 @@ function DropFrom(vector StartLocation)
             R.Yaw = rand(65536);
             Pickup = Spawn(PickupClass,,, StartLocation,R);
 
-            if (Pickup != None)
+            if (Pickup != none)
             {
                 Pickup.InitDroppedPickupFor(self);
                 Pickup.Velocity = Velocity >> R;

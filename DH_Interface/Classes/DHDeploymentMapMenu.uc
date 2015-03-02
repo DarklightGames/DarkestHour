@@ -184,7 +184,7 @@ function InternalOnPostDraw(Canvas Canvas)
     if (PRI != none)
     {
         bInit = false;
-        OnRendered = None;
+        OnRendered = none;
 
         ShowPanel(true);
     }

@@ -258,7 +258,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             BulletDistance = VSize(Location - OrigLoc) / 60.352; // calculate distance travelled by bullet in metres
 
             // If it's FF at close range, we won't suppress, so send a different WT through
-            if (BulletDistance < 10.0 && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none && 
+            if (BulletDistance < 10.0 && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none &&
                 DH_Pawn(Other.Base).Controller != none && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
             {
                 WhizType = 3;

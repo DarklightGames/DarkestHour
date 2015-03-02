@@ -3524,7 +3524,7 @@ simulated function DrawSpectatingHud(Canvas C)
     GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
     DHP = DHPlayer(PlayerOwner);
 
-    if (GRI != None)
+    if (GRI != none)
     {
         // Update round timer
         if (!GRI.bMatchHasBegun)
@@ -3543,7 +3543,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.SetPos(X, Y);
         C.DrawTextClipped(S);
 
-        if (GRI.bMatchHasBegun && DHP != None && DHP.CanRestartPlayer()
+        if (GRI.bMatchHasBegun && DHP != none && DHP.CanRestartPlayer()
             && PlayerOwner.PlayerReplicationInfo.Team != none && GRI.bReinforcementsComing[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] == 1)
         {
             Time = DHP.LastKilledTime + DHP.RedeployTime - Level.TimeSeconds;// Level.TimeSeconds;
@@ -3574,7 +3574,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
     }
 
-    if (PlayerOwner.ViewTarget != PlayerOwner.Pawn && PawnOwner != None && PawnOwner.PlayerReplicationInfo != None)
+    if (PlayerOwner.ViewTarget != PlayerOwner.Pawn && PawnOwner != none && PawnOwner.PlayerReplicationInfo != none)
     {
         S = ViewingText $ PawnOwner.PlayerReplicationInfo.PlayerName;
         C.DrawColor = WhiteColor;
@@ -3638,8 +3638,8 @@ simulated function DrawSpectatingHud(Canvas C)
     }
 
     // Draw the players name large if thier are viewing someone else in first person
-    if ((PawnOwner != None) && (PawnOwner != PlayerOwner.Pawn)
-        && (PawnOwner.PlayerReplicationInfo != None) && !PlayerOwner.bBehindView)
+    if ((PawnOwner != none) && (PawnOwner != PlayerOwner.Pawn)
+        && (PawnOwner.PlayerReplicationInfo != none) && !PlayerOwner.bBehindView)
     {
         // draw viewed player name
         C.Font = GetMediumFontFor(C);

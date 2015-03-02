@@ -524,7 +524,7 @@ simulated function ProcessHitFX()
         {
             if (DH_Headgear(HeadGear).bIsHelmet)
             {
-                DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 100.0);
+                DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
             }
 
             HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
@@ -615,7 +615,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
         {
             if (DamageType.default.HumanObliterationThreshhold != 1000001) // Shitty way of identifying Melee damage classes using existing DamageType parent
             {
-                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+                PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
             }
 
             TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
@@ -632,7 +632,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
 
         if (DamageType.default.HumanObliterationThreshhold != 1000001) // Shitty way of identifying Melee damage classes using existing DamageType parent
         {
-            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_None, 1.0);
+            PlaySound(PlayerHitSounds[Rand(PlayerHitSounds.Length)], SLOT_none, 1.0);
         }
 
         TakeDamage(TotalDamage, InstigatedBy, hitlocation, Momentum, DamageType, HighestDamagePoint);
@@ -666,7 +666,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         InstigatedBy = DelayedDamageInstigatorController.Pawn;
     }
 
-    if (Physics == PHYS_None && DrivenVehicle == none)
+    if (Physics == PHYS_none && DrivenVehicle == none)
     {
         SetMovementPhysics();
     }
@@ -2520,7 +2520,7 @@ simulated event SetAnimAction(name NewAction)
             ResetRootBone();
             GoToState('');
         }
-        else if (Physics == PHYS_None || (Level.Game != none && Level.Game.IsInState('MatchOver')))
+        else if (Physics == PHYS_none || (Level.Game != none && Level.Game.IsInState('MatchOver')))
         {
             PlayAnim(UsedAction,, 0.1);
             AnimBlendToAlpha(1, 0.0, 0.05);
@@ -2538,7 +2538,7 @@ simulated event SetAnimAction(name NewAction)
             }
             else if (PlayAnim(UsedAction))
             {
-                if (Physics != PHYS_None)
+                if (Physics != PHYS_none)
                 {
                     bWaitForAnim = true;
                 }
@@ -2555,7 +2555,7 @@ simulated event SetAnimAction(name NewAction)
         }
         else // running taunt
         {
-            if (WeaponState == GS_None || WeaponState == GS_Ready)
+            if (WeaponState == GS_none || WeaponState == GS_Ready)
             {
                 AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
                 PlayAnim(UsedAction,, 0.1, 1.0);
@@ -2803,7 +2803,7 @@ function PreMantle()
     SetPhysics(PHYS_Flying);
 
     bCollideWorld = false;
-    WeaponAttachment.SetDrawType(DT_None);
+    WeaponAttachment.SetDrawType(DT_none);
     AirSpeed = default.GroundSpeed;
     AccelRate = 50000.0;
 

@@ -1108,7 +1108,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     }
 
     // Now spawn the projectile
-    P = Spawn(ProjClass, none, , StartLocation, FireRot); 
+    P = Spawn(ProjClass, none, , StartLocation, FireRot);
 
     // If pending round type is different, switch round type
     if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
@@ -1476,7 +1476,7 @@ simulated function bool HitDriver(vector Hitlocation, vector Momentum)
     PwningPawn = ROVehicleWeaponPawn(Owner);
 
     // Commander is present & is not buttoned up & we hit commander's collision box & hit one of the hit points representing his head or torso
-    if (PwningPawn != none && PwningPawn.Driver != none && !PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].bExposed && 
+    if (PwningPawn != none && PwningPawn.Driver != none && !PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].bExposed &&
         HitDriverArea(HitLocation, Momentum) && IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1))
     {
         return true;

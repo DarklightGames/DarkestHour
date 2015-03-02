@@ -1512,13 +1512,13 @@ state RoundInPlay
 
         // Reset all controllers
         P = Level.ControllerList;
-        while (P != None)
+        while (P != none)
         {
             NextC = P.NextController;
 
-            if (P.PlayerReplicationInfo == None || !P.PlayerReplicationInfo.bOnlySpectator)
+            if (P.PlayerReplicationInfo == none || !P.PlayerReplicationInfo.bOnlySpectator)
             {
-                if (PlayerController(P) != None)
+                if (PlayerController(P) != none)
                     PlayerController(P).ClientReset();
                 P.Reset();
             }
@@ -1551,14 +1551,14 @@ state RoundInPlay
 
         // Respawn all players
         /*
-        for (P = Level.ControllerList; P != None; P = P.NextController)
+        for (P = Level.ControllerList; P != none; P = P.NextController)
         {
-            if (!P.bIsPlayer || P.PlayerReplicationInfo.Team == None)
+            if (!P.bIsPlayer || P.PlayerReplicationInfo.Team == none)
                 continue;
 
-            if (ROPlayer(P) != None && ROPlayer(P).CanRestartPlayer())
+            if (ROPlayer(P) != none && ROPlayer(P).CanRestartPlayer())
                 RestartPlayer(P);
-            else if (ROBot(P) != None && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != None)
+            else if (ROBot(P) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
                 RestartPlayer(P);
         }
         */
@@ -1700,14 +1700,14 @@ state RoundInPlay
 
             if (!SpawnLimitReached(i) && ElapsedTime > LastReinforcementTime[i] + ReinforceInt)
             {
-                for (P = Level.ControllerList; P != None; P = P.NextController)
+                for (P = Level.ControllerList; P != none; P = P.NextController)
                 {
-                    if (!P.bIsPlayer || P.Pawn != None || P.PlayerReplicationInfo == None || P.PlayerReplicationInfo.Team == None || P.PlayerReplicationInfo.Team.TeamIndex != i)
+                    if (!P.bIsPlayer || P.Pawn != none || P.PlayerReplicationInfo == none || P.PlayerReplicationInfo.Team == none || P.PlayerReplicationInfo.Team.TeamIndex != i)
                         continue;
 
-                    if (ROPlayer(P) != None && ROPlayer(P).CanRestartPlayer())
+                    if (ROPlayer(P) != none && ROPlayer(P).CanRestartPlayer())
                         RestartPlayer(P);
-                    else if (ROBot(P) != None && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != None)
+                    else if (ROBot(P) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
                         RestartPlayer(P);
 
                     // If spawn limit has now been reached, send a message out

@@ -11,7 +11,7 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Ar)
     local int i;
 
     Ar.Remove(0, Ar.Length);
-    if (Combo == None)
+    if (Combo == none)
         return;
 
     switch (Combo)

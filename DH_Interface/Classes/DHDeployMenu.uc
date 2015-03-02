@@ -41,13 +41,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     else
     {
         // Initialize loadout panels
-        for(i = 0;i<LoadoutPanelClass.Length;++i)
+        for (i = 0;i<LoadoutPanelClass.Length;++i)
         {
             c_LoadoutArea.AddTab(LoadoutPanelCaption[i],LoadoutPanelClass[i],,LoadoutPanelHint[i]);
         }
 
         // Initialize deployment panel(s)
-        for(i = 0;i<DeploymentPanelClass.Length;++i)
+        for (i = 0;i<DeploymentPanelClass.Length;++i)
         {
             c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
         }
@@ -57,7 +57,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     // Makes this menu not pause in single-player
     pc = PlayerOwner();
-    if (pc != None && pc.Level.Pauser != None)
+    if (pc != none && pc.Level.Pauser != none)
     {
         pc.SetPause(false);
     }
@@ -102,13 +102,13 @@ function InternalOnChange(GUIComponent Sender)
 
             // Suicide
             case 7:
-                PlayerOwner().ConsoleCommand( "SUICIDE" );
+                PlayerOwner().ConsoleCommand("SUICIDE");
                 CloseMenu();
                 break;
 
             // Disconnect
             case 8:
-                PlayerOwner().ConsoleCommand( "DISCONNECT" );
+                PlayerOwner().ConsoleCommand("DISCONNECT");
                 CloseMenu();
                 break;
         }
