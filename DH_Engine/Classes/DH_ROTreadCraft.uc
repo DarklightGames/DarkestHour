@@ -156,7 +156,7 @@ replication
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         SchurzenIndex;
-   
+
     // Variables the server will replicate to the client that owns this actor
 //    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
 //        MaxCriticalSpeed; // Matt: removed as it never changes & doesn't need to be replicated
@@ -170,10 +170,10 @@ replication
 //      bProjectilePenetrated, bFirstHit            // Matt: removed as not even used clientside
 //      bRoundShattered                             // Matt: removed as is set independently on clients
 //      bPeriscopeDamaged                           // Matt: removed variable as is part of functionality never implemented
-        
+
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, 
+        ServerStartEngine,
         ServerToggleDebugExits, ServerDamTrack, ServerHullFire, ServerEngineFire, ServerKillEngine; // these ones only during development
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
@@ -741,10 +741,10 @@ function bool KDriverLeave(bool bForceLeave)
         PreviousPositionIndex = InitialPositionIndex;
 
         MaybeDestroyVehicle();
-        
+
         return true;
     }
-    
+
     return false;
 }
 
@@ -1203,7 +1203,7 @@ simulated function PostNetReceive()
     }
 
     // One of the tracks has been damaged (uses DamagedTreadPanner as an effective flag that net client hasn't already done this)
-    if (((bLeftTrackDamaged && Skins.Length > LeftTreadIndex && Skins[LeftTreadIndex] != DamagedTreadPanner) || 
+    if (((bLeftTrackDamaged && Skins.Length > LeftTreadIndex && Skins[LeftTreadIndex] != DamagedTreadPanner) ||
         (bRightTrackDamaged && Skins.Length > LeftTreadIndex && Skins[RightTreadIndex] != DamagedTreadPanner)) && Health > 0)
     {
         SetDamagedTracks();
@@ -1613,7 +1613,7 @@ simulated function SetFireEffects()
                         HullMGHatchFireSpawnTime = TurretHatchFireSpawnTime + (0.5 + FRand()) * DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor; // Matt: TEMP replacing above
                     }
 
-                    Log(Tag @ "FireFXSpreadSpeedFactor =" @ DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor @ " turret fire in" @ TurretHatchFireSpawnTime - Level.TimeSeconds @ 
+                    Log(Tag @ "FireFXSpreadSpeedFactor =" @ DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor @ " turret fire in" @ TurretHatchFireSpawnTime - Level.TimeSeconds @
                         " driver fire in" @ DriverHatchFireSpawnTime - Level.TimeSeconds @ " MG fire in" @ HullMGHatchFireSpawnTime - Level.TimeSeconds); // Matt: TEMP
 
                     SetNextTimer();
@@ -1655,7 +1655,7 @@ simulated function SetFireEffects()
 // New function to start a driver's hatch fire effect
 simulated function StartDriverHatchFire()
 {
-    bDriverHatchFireNeeded = false;    
+    bDriverHatchFireNeeded = false;
 
     if (DriverHatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
     {
@@ -3018,7 +3018,7 @@ simulated function DestroyDecoAttachments()
     {
         Schurzen.Destroy();
     }
-    
+
     if (DamagedTrackLeft != none)
     {
         DamagedTrackLeft.Destroy();

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_CromwellPassengerThree extends DH_CromwellPassengerOne;
+class DH_CromwellPassengerThree extends DH_ROPassengerPawn;
 
 defaultproperties
 {

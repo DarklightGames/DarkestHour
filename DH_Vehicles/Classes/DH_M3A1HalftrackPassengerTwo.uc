@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackPassengerTwo extends DH_M3A1HalftrackPassengerOne;
+class DH_M3A1HalftrackPassengerTwo extends DH_ROPassengerPawn;
 
 defaultproperties
 {

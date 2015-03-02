@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GPassengerFour extends DH_Stug3GPassengerOne;
+class DH_Stug3GPassengerFour extends DH_ROPassengerPawn;
 
 defaultproperties
 {

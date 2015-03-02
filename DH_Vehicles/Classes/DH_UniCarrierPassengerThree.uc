@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierPassengerThree extends DH_UniCarrierPassengerOne;
+class DH_UniCarrierPassengerThree extends DH_ROPassengerPawn;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HellcatPassengerThree extends DH_GreyhoundPassengerOne;
+class DH_HellcatPassengerThree extends DH_ROPassengerPawn;
 
 defaultproperties
 {

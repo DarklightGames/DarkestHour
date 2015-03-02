@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_KubelwagenPassengerThree extends DH_KubelwagenPassengerOne;
+class DH_KubelwagenPassengerThree extends DH_ROPassengerPawn;
 
 defaultproperties
 {

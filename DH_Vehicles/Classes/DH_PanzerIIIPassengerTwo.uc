@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIIIPassengerTwo extends DH_PanzerIIIPassengerOne;
+class DH_PanzerIIIPassengerTwo extends DH_ROPassengerPawn;
 
 defaultproperties
 {

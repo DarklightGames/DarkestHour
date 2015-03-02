@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdtigerPassengerThree extends DH_JagdtigerPassengerOne;
+class DH_JagdtigerPassengerThree extends DH_ROPassengerPawn;
 
 defaultproperties
 {
