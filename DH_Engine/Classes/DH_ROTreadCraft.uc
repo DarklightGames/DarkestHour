@@ -1598,17 +1598,23 @@ simulated function SetFireEffects()
                     if (CannonTurret != none)
                     {
                         bTurretFireNeeded = true;
-                        TurretHatchFireSpawnTime = Level.TimeSeconds + 0.5 + FRand();
+//                        TurretHatchFireSpawnTime = Level.TimeSeconds + 0.5 + FRand();
+                        TurretHatchFireSpawnTime = Level.TimeSeconds + (0.5 + FRand()) * DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor; // Matt: TEMP replacing above
                     }
 
                     bDriverHatchFireNeeded = true;
-                    DriverHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
+//                    DriverHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
+                    DriverHatchFireSpawnTime = TurretHatchFireSpawnTime + (0.5 + FRand()) * DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor; // Matt: TEMP replacing above
 
                     if (HullMG != none)
                     {
                         bHullMGFireNeeded = true;
-                        HullMGHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
+//                        HullMGHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
+                        HullMGHatchFireSpawnTime = TurretHatchFireSpawnTime + (0.5 + FRand()) * DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor; // Matt: TEMP replacing above
                     }
+
+                    Log(Tag @ "FireFXSpreadSpeedFactor =" @ DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor @ " turret fire in" @ TurretHatchFireSpawnTime - Level.TimeSeconds @ 
+                        " driver fire in" @ DriverHatchFireSpawnTime - Level.TimeSeconds @ " MG fire in" @ HullMGHatchFireSpawnTime - Level.TimeSeconds); // Matt: TEMP
 
                     SetNextTimer();
                 }

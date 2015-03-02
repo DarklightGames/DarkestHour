@@ -38,6 +38,8 @@ var DHHintManager DHHintManager;
 
 var float   MapVoteTime;
 
+var float   FireEffectsSpreadSpeedFactor; // Matt: TEMP
+
 replication //THEEL: SpawnPointIndex does not need to be replicated to my knowledge
 {
     // Variables the server will replicate to the client that owns this actor
@@ -56,6 +58,15 @@ replication //THEEL: SpawnPointIndex does not need to be replicated to my knowle
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientHandleDeath;
+}
+
+exec function SetFireSpeed(float NewValue) // Matt: TEMP
+{
+    if (NewValue > 0.0)
+    {
+        default.FireEffectsSpreadSpeedFactor = NewValue;
+        Log("FireEffectsSpreadSpeedFactor =" @ default.FireEffectsSpreadSpeedFactor);
+    }
 }
 
 // Matt: modified to avoid "accessed none" error
@@ -2252,6 +2263,8 @@ exec function ExitPosTool()
 
 defaultproperties
 {
+    FireEffectsSpreadSpeedFactor=3.0 // Matt: TEMP
+
     RedeployTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)
