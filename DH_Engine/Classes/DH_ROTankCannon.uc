@@ -1157,21 +1157,14 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 }
 
 // Matt: modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
+// Also to avoid playing unnecessary shoot animations on a server
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     local ROVehicleWeaponPawn OwningPawn;
 
     if (Role == ROLE_Authority)
     {
-        if (bWasAltFire)
-        {
-            FiringMode = 1;
-        }
-        else
-        {
-            FiringMode = 0;
-        }
-
+        FiringMode = byte(bWasAltFire);
         FlashCount++;
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
@@ -1185,38 +1178,36 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 //      UpdateTracer();
 //  }
 
-    if (bWasAltFire)
+    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
     {
-        return;
-    }
-
-    if (FlashEmitter != none)
-    {
-        FlashEmitter.Trigger(self, Instigator);
-    }
-
-    if (EffectEmitterClass != none && EffectIsRelevant(Location, false))
-    {
-        EffectEmitter = Spawn(EffectEmitterClass, self, , WeaponFireLocation, WeaponFireRotation);
-    }
-
-    if (CannonDustEmitterClass != none && EffectIsRelevant(Location, false))
-    {
-        CannonDustEmitter = Spawn(CannonDustEmitterClass, self, , Base.Location, Base.Rotation);
-    }
-
-    OwningPawn = ROVehicleWeaponPawn(Instigator);
-
-    if (OwningPawn != none && OwningPawn.DriverPositions[OwningPawn.DriverPositionIndex].bExposed)
-    {
-        if (HasAnim(TankShootOpenAnim))
-        {       
-            PlayAnim(TankShootOpenAnim);
+        if (FlashEmitter != none)
+        {
+            FlashEmitter.Trigger(self, Instigator);
         }
-    }
-    else if (HasAnim(TankShootClosedAnim))
-    {
-        PlayAnim(TankShootClosedAnim);
+
+        if (EffectEmitterClass != none && EffectIsRelevant(Location, false))
+        {
+            EffectEmitter = Spawn(EffectEmitterClass, self, , WeaponFireLocation, WeaponFireRotation);
+        }
+
+        if (CannonDustEmitterClass != none && EffectIsRelevant(Location, false))
+        {
+            CannonDustEmitter = Spawn(CannonDustEmitterClass, self, , Base.Location, Base.Rotation);
+        }
+
+        OwningPawn = ROVehicleWeaponPawn(Instigator);
+
+        if (OwningPawn != none && OwningPawn.DriverPositions[OwningPawn.DriverPositionIndex].bExposed)
+        {
+            if (HasAnim(TankShootOpenAnim))
+            {
+                PlayAnim(TankShootOpenAnim);
+            }
+        }
+        else if (HasAnim(TankShootClosedAnim))
+        {
+            PlayAnim(TankShootClosedAnim);
+        }
     }
 }
 
