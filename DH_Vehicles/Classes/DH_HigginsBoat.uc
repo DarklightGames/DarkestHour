@@ -320,7 +320,14 @@ defaultproperties
     VehicleMass=6.0
     DrivePos=(Z=10.0)
     DriveAnim="stand_idlehip_satchel"
-    ExitPositions(0)=(X=-30.0,Y=-38.0,Z=100.0) // Matt: Z was 150 but driver often couldn't exit - 100 seems to work ok
+    ExitPositions(0)=(X=-30.0,Y=-38.0,Z=100.0)
+    ExitPositions(1)=(X=-30.0,Y=38.0,Z=100.0)
+    ExitPositions(2)=(X=185.0,Y=-38.0,Z=100.0)
+    ExitPositions(3)=(X=115.0,Y=-38.0,Z=100.0)
+    ExitPositions(4)=(X=45.0,Y=-38.0,Z=100.0)
+    ExitPositions(5)=(X=185.0,Y=38.0,Z=100.0)
+    ExitPositions(6)=(X=115.0,Y=38.0,Z=100.0)
+    ExitPositions(7)=(X=45.0,Y=38.0,Z=100.0)
     EntryRadius=350.0
     FPCamPos=(Z=30.0)
     TPCamDistance=375.0
