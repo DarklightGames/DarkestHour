@@ -9,15 +9,10 @@ class DH_StuH42MountedMGPawn extends DH_ROMountedTankMGPawn;
 
 var     int     UnbuttonedPositionIndex; // lowest pos number where player is unbuttoned
 
-// Gunner cannot fire MG when unbuttoned
-function Fire(optional float F)
+// Can't fire unless buttoned up & controlling the remote MG
+function bool CanFire()
 {
-    if (DriverPositionIndex == 1 && ROPlayer(Controller) != none)
-    {
-        return;
-    }
-
-    super.Fire(F);
+    return DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition');
 }
 
 function bool KDriverLeave(bool bForceLeave)
@@ -98,7 +93,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+        if (CanFire())
         {
             CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }

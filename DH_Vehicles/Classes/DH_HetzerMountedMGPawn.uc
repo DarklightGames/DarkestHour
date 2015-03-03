@@ -7,17 +7,10 @@ class DH_HetzerMountedMGPawn extends DH_ROMountedTankMGPawn;
 
 var    int    UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
 
-// Modified to prevent MG firing if player is unbuttoned or in the process of unbuttoning or buttoning up (with custom message)
-function Fire(optional float F)
+// Can't fire unless buttoned up & controlling the remote MG
+function bool CanFire()
 {
-    if ((DriverPositionIndex >= UnbuttonedPositionIndex || IsInState('ViewTransition')) && ROPlayer(Controller) != none)
-    {
-        PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 2); // "You cannot fire the MG while unbuttoned"
-
-        return;
-    }
-
-    super.Fire(F);
+    return DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition');
 }
 
 // So that MG reloads on pressing 'reload' key (which calls this function)
@@ -327,8 +320,8 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 {
     super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
 
-    // This 'if' prevents the MG from moving if the player is unbuttoned or in the process of buttoning or unbuttoning
-    if (DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition'))
+    // Only move the MG if buttoned up & controlling the remote MG
+    if (CanFire())
     {
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
 

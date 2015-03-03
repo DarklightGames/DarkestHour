@@ -8,15 +8,10 @@ class DH_HigginsBoatGunnerPawn extends DH_ROMountedTankMGPawn;
 var     texture     BinocsOverlay;
 var     int         BinocsPositionIndex;
 
-// Engineer cannot fire MG when he is in binocs
-function Fire(optional float F)
+// Gunner cannot fire MG when he is in binocs
+function bool CanFire()
 {
-    if (DriverPositionIndex == BinocsPositionIndex && ROPlayer(Controller) != none)
-    {
-        return;
-    }
-
-    super.Fire(F);
+    return DriverPositionIndex != BinocsPositionIndex;
 }
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)

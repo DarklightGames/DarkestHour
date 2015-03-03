@@ -7,6 +7,12 @@ class DH_Stug3GMountedMGPawn extends DH_ROMountedTankMGPawn;
 
 var     int     UnbuttonedPositionIndex; // lowest pos number where player is unbuttoned
 
+// Can't fire unless unbuttoned & controlling the external MG
+function bool CanFire()
+{
+    return (DriverPositionIndex == UnbuttonedPositionIndex && !IsInState('ViewTransition')) || DriverPositionIndex > UnbuttonedPositionIndex;
+}
+
 function bool KDriverLeave(bool bForceLeave)
 {
     if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
@@ -55,7 +61,7 @@ function ServerChangeViewPoint(bool bForward)
                 NextViewPoint();
             }
         }
-     }
+    }
 }
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
@@ -136,17 +142,6 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
             ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
         }
     }
-}
-
-// Gunner cannot fire MG when he is buttoned inside tank (because he's not mounted on the damn gun!)
-function Fire(optional float F)
-{
-    if (DriverPositionIndex == 0 && ROPlayer(Controller) != none)
-    {
-        return;
-    }
-
-    super.Fire(F);
 }
 
 simulated function DrawHUD(Canvas Canvas)

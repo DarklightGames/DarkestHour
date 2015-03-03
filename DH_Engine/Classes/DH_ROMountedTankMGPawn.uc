@@ -261,9 +261,16 @@ simulated function DrawHUD(Canvas Canvas)
     }
 }
 
+// New function, checked by Fire() to see if we are in an eligible firing position (subclass as required)
+function bool CanFire()
+{
+    return true;
+}
+
+// Modified to check if CanFire()
 function Fire(optional float F)
 {
-    if (IsInState('ViewTransition'))
+    if (!CanFire())
     {
         return;
     }
