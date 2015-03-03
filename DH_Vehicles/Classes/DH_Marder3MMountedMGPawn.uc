@@ -5,20 +5,6 @@
 
 class DH_Marder3MMountedMGPawn extends DH_ROMountedTankMGPawn;
 
-simulated function bool PointOfView()
-{
-    return false;
-}
-
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    GotoState('EnteringVehicle');
-
-    super.ClientKDriverEnter(PC);
-
-    HUDOverlayOffset = default.HUDOverlayOffset;
-}
-
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z;

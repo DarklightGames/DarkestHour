@@ -5,30 +5,6 @@
 
 class DH_UniCarrierGunPawn extends DH_ROMountedTankMGPawn; // Matt: originally extended ROMountedTankMGPawn
 
-simulated function bool PointOfView()
-{
-    return false;
-}
-
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    super.ClientKDriverEnter(PC);
-
-    HUDOverlayOffset = default.HUDOverlayOffset;
-}
-
-// Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
-simulated function ClientKDriverLeave(PlayerController PC)
-{
-    local rotator NewRot;
-
-    NewRot = VehicleBase.Rotation;
-    NewRot.Pitch = LimitPitch(NewRot.Pitch);
-    SetRotation(NewRot);
-
-    super.ClientKDriverLeave(PC);
-}
-
 // Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
 function bool KDriverLeave(bool bForceLeave)
 {
