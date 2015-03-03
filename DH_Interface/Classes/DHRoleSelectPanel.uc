@@ -598,19 +598,22 @@ function UpdateSelectedWeapon(int weaponCategory)
             if (item != none)
             {
                 nu_PrimaryAmmoMags.MinValue = DH_RoleInfo(desiredRole).MinStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+                if (nu_PrimaryAmmoMags.MinValue < 1)
+                {
+                    nu_PrimaryAmmoMags.MinValue = 1;
+                }
                 nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(desiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
                 nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
                 Log("Desired Ammo Amount before:" @ player.DesiredAmmoAmount);
                 nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
-                if (int(nu_PrimaryAmmoMags.Value) < 1 || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
+                if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MinValue || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
-                    nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue);
+                    nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue); // Will reset value to mid if out of range
                 }
-                nu_PrimaryAmmoMags.CheckValue(); //clamps value to be in range
+                nu_PrimaryAmmoMags.CheckValue(); // Hard clamps value to be in range (visually)
                 player.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
-                Log("Desired Ammo Amount after:" @ player.DesiredAmmoAmount);
                 nu_PrimaryAmmoMags.SetVisibility(true);
             }
             else
