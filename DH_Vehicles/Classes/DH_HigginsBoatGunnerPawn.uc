@@ -19,6 +19,32 @@ function Fire(optional float F)
     super.Fire(F);
 }
 
+//We don't ever want to allow behindview. It doesn't work with our system - Ramm
+simulated function bool PointOfView()
+{
+    return false;
+}
+
+simulated function ClientKDriverEnter(PlayerController PC)
+{
+    GotoState('EnteringVehicle');
+
+    super.ClientKDriverEnter(PC);
+
+    HUDOverlayOffset = default.HUDOverlayOffset;
+}
+
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    local rotator NewRot;
+
+    NewRot = VehicleBase.Rotation;
+    NewRot.Pitch = LimitPitch(NewRot.Pitch);
+    SetRotation(NewRot);
+
+    super.ClientKDriverLeave(PC);
+}
+
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z;

@@ -10,7 +10,6 @@ const NUM_ROLES = 10;
 
 var automated ROGUIProportionalContainer    MainContainer,
                                             RolesContainer,
-                                            AmmoSliderContainer,
                                             PrimaryWeaponContainer,
                                             SecondaryWeaponContainer,
                                             EquipContainer;
@@ -72,6 +71,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Primary weapon container
     PrimaryWeaponContainer.ManageComponent(i_WeaponImages[0]);
     PrimaryWeaponContainer.ManageComponent(lb_AvailableWeapons[0]);
+    PrimaryWeaponContainer.ManageComponent(i_MagImages[0]);
+    PrimaryWeaponContainer.ManageComponent(nu_PrimaryAmmoMags);
     li_AvailableWeapons[0] = ROGUIListPlus(lb_AvailableWeapons[0].List);
 
     // Secondary weapon container
@@ -610,6 +611,11 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.CheckValue(); //clamps value to be in range
                 player.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
                 Log("Desired Ammo Amount after:" @ player.DesiredAmmoAmount);
+                nu_PrimaryAmmoMags.SetVisibility(true);
+            }
+            else
+            {
+                nu_PrimaryAmmoMags.SetVisibility(false);
             }
         }
         else
@@ -1125,43 +1131,45 @@ defaultproperties
 
     Begin Object Class=GUILabel Name=EstimatedRedeployTime
         Caption="Estimated Redeploy Time:"
-        TextAlign=TXTA_Right
-        StyleName="DHSmallText"
-        WinWidth=0.651253
-        WinHeight=0.0305
-        WinLeft=0.162253
-        WinTop=0.415428
+        TextAlign=TXTA_Center
+        StyleName="DHLargeText"
+        WinWidth=1.0
+        WinHeight=0.03
+        WinLeft=0.0
+        WinTop=0.365
     End Object
     l_EstimatedRedeployTime=EstimatedRedeployTime
 
     //Recent changes status label
     Begin Object Class=GUILabel Name=RecentChangesStatus
         Caption=""
-        TextAlign=TXTA_Left
+        TextAlign=TXTA_Center
         StyleName="DHLargeText"
-        WinWidth=0.982575
+        WinWidth=1.0
         WinHeight=0.033589
-        WinLeft=0.010993
-        WinTop=0.359297
+        WinLeft=0.0
+        WinTop=0.963281
     End Object
     l_StatusLabel=RecentChangesStatus
 
     Begin Object Class=GUILabel Name=PrimaryWeaponTitle
         Caption="Primary Weapon"
-        TextAlign=TXTA_Left
+        TextAlign=TXTA_Center
         StyleName="DHLargeText"
-        WinWidth=0.450806
-        WinHeight=0.042554
-        WinLeft=0.009531
-        WinTop=0.427909
+        WinWidth=1.0
+        WinHeight=0.04
+        WinLeft=0.0
+        WinTop=0.4250
     End Object
     l_PrimaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelectPanel.PrimaryWeaponTitle'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PrimaryWeaponContainer_inst
-        WinWidth=0.975537
-        WinHeight=0.18246
-        WinLeft=0.023428
-        WinTop=0.517182
+        HeaderBase=Texture'InterfaceArt_tex.Menu.RODisplay_withcaption'
+        HeaderTop=Texture'InterfaceArt_tex.Menu.SectionHeader_captionbar'
+        WinWidth=1.0
+        WinHeight=0.175
+        WinLeft=0.0
+        WinTop=0.445
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1219,10 +1227,10 @@ defaultproperties
         Caption="Role Selection"
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
-        WinWidth=0.39207
-        WinHeight=0.045108
-        WinLeft=0.280658
-        WinTop=0.007675
+        WinWidth=1.0
+        WinHeight=0.04
+        WinLeft=0.0
+        WinTop=0.002
     End Object
     l_RolesTitle=GUILabel'DH_Interface.DHRoleSelectPanel.RolesTitle'
 
@@ -1232,7 +1240,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.3
         WinLeft=0.0
-        WinTop=0.05
+        WinTop=0.0275
         TopPadding=0.03
         ImageOffset(0)=10
         ImageOffset(1)=10
@@ -1261,20 +1269,22 @@ defaultproperties
     // Weapons controls
     Begin Object Class=GUIImage Name=WeaponImage
         ImageStyle=ISTY_Justified
-        ImageAlign=IMGA_Center
-        WinWidth=0.65
+        ImageAlign=IMGA_Left
+        WinWidth=0.5
         WinHeight=0.5
+        WinLeft=0.0
+        WinTop=0.1
     End Object
     i_WeaponImages(0)=GUIImage'DH_Interface.DHRoleSelectPanel.WeaponImage'
     i_WeaponImages(1)=GUIImage'DH_Interface.DHRoleSelectPanel.WeaponImage'
 
     Begin Object Class=GUIImage Name=MagImage
         ImageStyle=ISTY_Justified
-        ImageAlign=IMGA_Center
-        WinWidth=0.146491
-        WinHeight=0.063004
-        WinLeft=0.352801
-        WinTop=0.570795
+        ImageAlign=IMGA_Left
+        WinWidth=0.3
+        WinHeight=0.5
+        WinLeft=0.0
+        WinTop=0.5
     End Object
     i_MagImages(0)=MagImage
     i_MagImages(1)=MagImage
@@ -1282,12 +1292,13 @@ defaultproperties
     Begin Object Class=DHGuiListBox Name=WeaponListBox
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
-        bVisibleWhenEmpty=true
+        bVisibleWhenEmpty=false
         OnCreateComponent=WeaponListBox.InternalOnCreateComponent
         StyleName="DHSmallText"
-        WinLeft=0.7
-        WinWidth=0.3
-        WinHeight=0.5
+        WinTop=0.05
+        WinLeft=0.5
+        WinWidth=0.5
+        WinHeight=1.0
         TabOrder=0
         OnClick=DHRoleSelectPanel.InternalOnClick
     End Object
@@ -1359,12 +1370,12 @@ defaultproperties
     End Object
     b_Equipment(3)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton3'
 
-    //The primary ammo button
+    // The primary ammo button
     Begin Object Class=DHGUINumericEdit Name=PrimaryAmmoButton
-        WinWidth=0.20457
-        WinHeight=0.037307
-        WinLeft=0.469822
-        WinTop=0.585544
+        WinWidth=0.15
+        WinHeight=0.175
+        WinLeft=0.155
+        WinTop=0.6625
         MinValue=0
         MaxValue=12
         Step=1
