@@ -7,8 +7,8 @@ class DH_HetzerDestroyer extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Hetzer_anm_V1.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Hetzer_tex_V1.utx
-#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx // Matt: for the treads
-#exec OBJ LOAD FILE=..\Textures\VegetationSMT.utx // Matt: for the bushes added as extra camo
+#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx // for the treads
+#exec OBJ LOAD FILE=..\Textures\VegetationSMT.utx     // for the bushes added as extra camo
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Hetzer_stc_V1.usx
 
 static function StaticPrecache(LevelInfo L)
@@ -31,53 +31,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 
     super(ROTreadCraft).UpdatePrecacheMaterials();
-}
-
-// Matt: modified to play BeginningIdleAnim on internal mesh when entering vehicle - necessary to get camera into correct place for initial DriverPosition 1
-simulated state EnteringVehicle
-{
-    simulated function HandleEnter()
-    {
-        if (DriverPositions[InitialPositionIndex].PositionMesh != none) // Matt: updated to use DriverPositions[InitialPositionIndex] instead of DriverPositions[0]
-            LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
-
-        if (HasAnim(BeginningIdleAnim)) // Matt: added to play BeginningIdleAnim when entering vehicle and we switch to the internal mesh (similar to ROVehicleWeaponPawn)
-            PlayAnim(BeginningIdleAnim);
-
-        if (PlayerController(Controller) != none)
-            PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
-    }
-}
-
-// Matt: modified to prevent tank crew from 'teleporting' outside to rider positions
-function ServerChangeDriverPosition(byte F)
-{
-    if (F > 3) // Matt: if trying to switch to vehicle position 4 or 5, which are the rider positions
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 0); // "You must exit through the commander's or loader's hatch"
-        return;
-    }
-
-    super.ServerChangeDriverPosition(F);
-}
-
-// Matt: modified to play a different message if trying to exit from the driver's position (can exit from loader's hatch as well as commander's)
-function bool KDriverLeave(bool bForceLeave)
-{
-    // if player is not unbuttoned and is trying to exit rather than switch positions, don't let them out
-    // bForceLeave is always true for position switch, so checking against false means no risk of locking someone in one slot
-    if (!bForceLeave && !bNoDriverHatch && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-    {
-        DenyEntry(Instigator, 4); // I realise that this is actually denying EXIT, but the function does the exact same thing - Ch!cken
-        return false;
-    }
-    else if (!bForceLeave && bNoDriverHatch)
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 0); // Matt: now says "You must exit through the commander's or loader's hatch"
-        return false;
-    }
-    else
-        return super(ROWheeledVehicle).KDriverLeave(bForceLeave); // Matt: skipping over the Super in DH_ROTreadcraft
 }
 
 defaultproperties

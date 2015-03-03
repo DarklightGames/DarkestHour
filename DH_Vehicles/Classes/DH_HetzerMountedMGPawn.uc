@@ -5,64 +5,53 @@
 
 class DH_HetzerMountedMGPawn extends DH_ROMountedTankMGPawn;
 
-var    int    UnbuttonedPositionIndex; // Matt: lowest position number where player is unbuttoned
+var    int    UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
 
-// Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
-simulated function PostBeginPlay() // Matt: modified to lower the loader's exit position above the roof
-{
-    local vector Offset;
-    local vector Loc;
-
-    super.PostBeginPlay();
-
-    Offset.Z += 150; // Matt: this was 220 but the exit was a long way above the roof
-    Loc = GetBoneCoords('loader_player').ZAxis;
-
-    ExitPositions[0] = Loc + Offset;
-    ExitPositions[1] = ExitPositions[0];
-}
-
-// Matt: modified to prevent MG firing if player is unbuttoned or in the process of unbuttoning or buttoning up (with custom message)
+// Modified to prevent MG firing if player is unbuttoned or in the process of unbuttoning or buttoning up (with custom message)
 function Fire(optional float F)
 {
     if ((DriverPositionIndex >= UnbuttonedPositionIndex || IsInState('ViewTransition')) && ROPlayer(Controller) != none)
     {
         PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 2); // "You cannot fire the MG while unbuttoned"
+
         return;
     }
 
     super.Fire(F);
 }
 
-// Matt: added so that MG reloads on pressing 'reload' key (which calls this function)
-simulated exec function ROManualReload()
+// So that MG reloads on pressing 'reload' key (which calls this function)
+exec function ROManualReload()
 {
-    if (Gun != none && DH_HetzerMountedMG(gun) != none)
+    local DH_HetzerMountedMG MG;
+
+    MG = DH_HetzerMountedMG(Gun);
+
+    if (MG != none && MG.NumMags > 0 && (MG.MGReloadState == MG_Waiting || MG.MGReloadState == MG_ReadyToFire))
     {
         if (DriverPositionIndex >= UnbuttonedPositionIndex && !IsInState('ViewTransition'))
-            DH_HetzerMountedMG(gun).ServerManualReload();
+        {
+            MG.ServerManualReload();
+        }
         else
-            PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 1); // "You must open the hatch to reload the MG"
+        {
+            ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 1); // "You must open the hatch to reload the MG"
+        }
     }
 }
 
-// Matt: modified to replicate the MG's current reload state (the basis of this is in ROTankCannonPawn)
-// Matt: also so rotation is set to Gun.CurrentAim, which makes player face the way the MG is facing, relative to the tank's rotation (then bPCRelativeFPRotation works correctly, including player exit direction)
+// Modified to replicate the MG's current reload state (the basis of this is in ROTankCannonPawn)
 function KDriverEnter(Pawn P)
 {
-    local rotator NewRotation;
-
     super(VehicleWeaponPawn).KDriverEnter(P);
 
-    NewRotation = Gun.CurrentAim;
-    NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
-    SetRotation(NewRotation);
-
-    if (Gun != none && DH_HetzerMountedMG(gun) != none)
-        DH_HetzerMountedMG(gun).ClientSetReloadState(DH_HetzerMountedMG(gun).MGReloadState);
+    if (Gun != none && DH_HetzerMountedMG(Gun) != none)
+    {
+        DH_HetzerMountedMG(Gun).ClientSetReloadState(DH_HetzerMountedMG(Gun).MGReloadState);
+    }
 }
 
-// Matt: modified so rotation is set to Gun.CurrentAim, which makes the player face the way the MG is facing, relative to the tank's rotation
+// Modified so rotation is set to Gun.CurrentAim, which makes the player face the way the MG is facing, relative to the tank's rotation
 // then bPCRelativeFPRotation works correctly, including player exit direction
 simulated function ClientKDriverEnter(PlayerController PC)
 {
@@ -71,25 +60,26 @@ simulated function ClientKDriverEnter(PlayerController PC)
     super(ROVehicleWeaponPawn).ClientKDriverEnter(PC);
 
     PC.SetFOV(WeaponFOV);
+
     NewRotation = Gun.CurrentAim;
     NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
     SetRotation(NewRotation);
 }
 
-// Matt: modified to prevent tank crew from switching to rider positions unless unbuttoned
+// Modified to prevent tank crew from switching to rider positions unless unbuttoned
 function ServerChangeDriverPosition(byte F)
 {
-    // Matt: if trying to switch to vehicle position 4 or 5, which are the rider positions, and player is buttoned up or in the process of buttoning/ubuttoning
     if (F > 3 && (DriverPositionIndex < UnbuttonedPositionIndex || IsInState('ViewTransition')))
     {
         Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You Must Unbutton the Hatch to Exit"
+
         return;
     }
 
     super.ServerChangeDriverPosition(F);
 }
 
-// Matt: was in StuH (taken from DH_ROTankCannonPawn) - I've modified to play idle animation on the server as a workaround to stop the collision box glitch on the roof
+// Was in StuH (taken from DH_ROTankCannonPawn)
 function bool KDriverLeave(bool bForceLeave)
 {
     local bool bSuperDriverLeave;
@@ -97,6 +87,7 @@ function bool KDriverLeave(bool bForceLeave)
     if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
     {
         Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You Must Unbutton the Hatch to Exit"
+
         return false;
     }
 
@@ -104,19 +95,27 @@ function bool KDriverLeave(bool bForceLeave)
     bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
     VehicleBase.MaybeDestroyVehicle();
 
-    if (bSuperDriverLeave && Gun.HasAnim(Gun.BeginningIdleAnim)) // Matt: added to play idle animation on the server to stop the collision box glitch on the roof
-        Gun.PlayAnim(Gun.BeginningIdleAnim);
-
     return bSuperDriverLeave;
 }
 
-// Matt: modified to prevent the player from unbuttoning if the MG is not turned sideways (otherwise it will be blocking the hatch, due to hetzer's small size)
+// Modified to play idle animation on server & non-owning net clients, so loader's collision box gets reset on all machines when player exits
+simulated function DrivingStatusChanged()
+{
+    super.DrivingStatusChanged();
+
+    if (!bDriving && !IsLocallyControlled() && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    {
+        Gun.PlayAnim(Gun.BeginningIdleAnim);
+    }
+}
+
+// Modified to prevent the player from unbuttoning if the MG is not turned sideways (otherwise it will be blocking the hatch, due to hetzer's small size)
 simulated function NextWeapon()
 {
-//    Matt: these values correspond, in clockface directions, to "if Yaw < 1:58 or Yaw > 4:09", plus the reverse of those
-    if (abs(Gun.CurrentAim.Yaw) < (10700) || abs(Gun.CurrentAim.Yaw) > (22700))
+    if (Abs(Gun.CurrentAim.Yaw) < (10700) || Abs(Gun.CurrentAim.Yaw) > (22700))
     {
         PlayerController(Controller).ReceiveLocalizedMessage(class'DH_HetzerVehicleMessage', 3); // "The MG is blocking the hatch - turn it sideways to open"
+
         return;
     }
 
@@ -170,37 +169,32 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Matt: modified so that when buttoning up the pawn rotation is set to match the direction the MG is facing
+// Modified so that when buttoning up the pawn rotation is reset to match the direction the MG is facing (after looking around unbuttoned)
 simulated state ViewTransition
 {
-    simulated function AnimEnd(int channel)
-    {
-        if (IsLocallyControlled()) // Matt: the StuH (taking the function from DH_ROTankCannonPawn) just adds this 'if'
-            GotoState('');
-    }
-
-       simulated function EndState()
+    simulated function EndState()
     {
         if (PlayerController(Controller) != none)
         {
             PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
 
-            // Matt: added this so that when buttoning up the rotation is re-set to the direction the MG is facing (after looking around unbuttoned)
             if (DriverPositionIndex < UnbuttonedPositionIndex)
+            {
                 SetRotation(Gun.CurrentAim);
+            }
         }
     }
 }
 
-// Matt: modified from StuH so that unbuttoned player can look around, similar to a CannonPawn
-simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
+// Modified from StuH so that unbuttoned player can look around, similar to a CannonPawn
+simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
-    local vector x, y, z;
-    local vector VehicleZ, CamViewOffsetWorld;
-    local float CamViewOffsetZAmount;
-    local coords CamBoneCoords;
+    local vector  x, y, z;
+    local vector  VehicleZ, CamViewOffsetWorld;
+    local float   CamViewOffsetZAmount;
+    local coords  CamBoneCoords;
     local rotator WeaponAimRot;
-    local quat AQuat, BQuat, CQuat;
+    local quat    AQuat, BQuat, CQuat;
 
     GetAxes(CameraRotation, x, y, z);
     ViewActor = self;
@@ -213,29 +207,30 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
     }
 
-    // Matt: in StuH the camera rotation always =WeaponAimRot - this modification only does that if player is buttoned up and controlling the remote MG
+    // In StuH the camera rotation always =WeaponAimRot - this modification only does that if player is buttoned up & controlling remote MG
     if (DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition'))
-        CameraRotation =  WeaponAimRot;
-
-    else if (bPCRelativeFPRotation) // Matt: will now use this 'free look around' code when unbuttoned, similar to a tank cannon pawn
     {
-        //__________________________________________
-        // First, Rotate the headbob by the player
-        // controllers rotation (looking around) ---
+        CameraRotation =  WeaponAimRot;
+    }
+    // Will now use this 'free look around' code when unbuttoned, similar to a tank cannon pawn
+    else if (bPCRelativeFPRotation)
+    {
+        // First, rotate the headbob by the PlayerController's rotation (looking around)
         AQuat = QuatFromRotator(PC.Rotation);
         BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
         CQuat = QuatProduct(AQuat,BQuat);
-        //__________________________________________
-        // Then, rotate that by the vehicles rotation
-        // to get the final rotation ---------------
+
+        // Then, rotate that by the vehicle's rotation to get the final rotation
         AQuat = QuatFromRotator(VehicleBase.Rotation);
         BQuat = QuatProduct(CQuat,AQuat);
-        //__________________________________________
-        // Make it back into a rotator!
+
+        // Finally make it back into a rotator
         CameraRotation = QuatToRotator(BQuat);
     }
     else
+    {
         CameraRotation = PC.Rotation;
+    }
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
@@ -249,7 +244,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         }
         else
         {
-//            CameraLocation = Gun.GetBoneCoords('loader_cam').Origin; // Matt: replaced by the extended line below, which makes use of a ViewLocation camera adjutment in DriverPosition 1
+//          CameraLocation = Gun.GetBoneCoords('loader_cam').Origin; // replaced by extended line below, making use of ViewLocation camera adjustment in DriverPosition 1
             CameraLocation = Gun.GetBoneCoords('loader_cam').Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
 
@@ -276,32 +271,29 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-//Hacked in for Texture overlay (Matt: this is from StuH, unaltered)
+// From the StuH, unaltered
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local float    SavedOpacity;
-    local float    scale;
-
+    local float SavedOpacity;
     local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
 
     PC = PlayerController(Controller);
+
     if (PC == none)
     {
         super.RenderOverlays(Canvas);
-        //Log("PanzerTurret PlayerController was none, returning");
+
         return;
     }
     else if (!PC.bBehindView)
     {
-        // store old opacity and set to 1.0 for map overlay rendering
+        // Store old opacity and set to 1.0 for map overlay rendering
         SavedOpacity = Canvas.ColorModulate.W;
         Canvas.ColorModulate.W = 1.0;
 
         Canvas.DrawColor.A = 255;
         Canvas.Style = ERenderStyle.STY_Alpha;
-
-        scale = Canvas.SizeY / 1200.0;
 
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
@@ -310,30 +302,32 @@ simulated function DrawHUD(Canvas Canvas)
                 // Draw reticle
                 ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
                 OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-                OverlayCenterTexStart = (1 - OverlayCenterScale) * float(MGOverlay.USize) / 2;
+                OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(MGOverlay.USize) / 2.0;
                 OverlayCenterTexSize =  float(MGOverlay.USize) * OverlayCenterScale;
 
-                Canvas.SetPos(0, 0);
-                Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, OverlayCenterTexStart - OverlayCorrectionY + (1 - ScreenRatio) * OverlayCenterTexSize / 2 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+                Canvas.SetPos(0.0, 0.0);
+                Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, 
+                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
-                // reset HudOpacity to original value
+                // Reset HudOpacity to original value
                 Canvas.ColorModulate.W = SavedOpacity;
             }
         }
     }
 
-    if (PC != none)
-        // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && VehicleBase != none)
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+    // Draw tank, turret, ammo count, passenger list
+    if (ROHud(PC.myHUD) != none && VehicleBase != none)
+    {
+        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+    }
 }
 
-// Matt: modified so that the new functionality (from StuH) that moves the MG, only happens if the player is buttoned up
-function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchChange)
+// Modified so that the new functionality (from StuH) that moves the MG, only happens if the player is buttoned up
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
-    super.UpdateRocketAcceleration(deltaTime, YawChange, PitchChange); // Matt: call the Super to replace unnecessary several lines in original function
+    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
 
-    // Matt: this 'if' prevents the MG from moving if the player is unbuttoned or in the process of buttoning or unbuttoning
+    // This 'if' prevents the MG from moving if the player is unbuttoned or in the process of buttoning or unbuttoning
     if (DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition'))
     {
         UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
@@ -344,6 +338,26 @@ function UpdateRocketAcceleration(float deltaTime, float YawChange, float PitchC
             ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
         }
     }
+}
+
+// Modified to use hetzer's 4 part MG rleoad process
+function float GetAmmoReloadState()
+{
+    if (DH_HetzerMountedMG(Gun) != none)
+    {
+        switch (DH_HetzerMountedMG(Gun).MGReloadState)
+        {
+            case MG_ReadyToFire:    return 0.00;
+            case MG_Waiting:
+            case MG_Empty:
+            case MG_ReloadedPart1:  return 1.00;
+            case MG_ReloadedPart2:  return 0.65;
+            case MG_ReloadedPart3:  return 0.45;
+            case MG_ReloadedPart4:  return 0.25;
+        }
+    }
+
+    return 0.0;
 }
 
 defaultproperties
