@@ -66,8 +66,8 @@ function StartGame(string GameURL, bool bAlt)
         }
 
         Log("GameURL is" @ GameURL);
-        Log("ConsoleCommand is " $ "relaunch" @ GameURL @ "-server -mod = DarkestHour -log = server.log");
-        PlayerOwner().ConsoleCommand("relaunch" @ GameURL @ "-server -mod = DarkestHour -log = server.log");
+        Log("ConsoleCommand is " $ "relaunch" @ GameURL @ "-server -mod=DarkestHourDev -log=server.log");
+        PlayerOwner().ConsoleCommand("relaunch" @ GameURL @ "-server -mod=DarkestHourDev -log=server.log");
     }
     else
     {
