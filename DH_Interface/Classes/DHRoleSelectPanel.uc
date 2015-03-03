@@ -663,6 +663,7 @@ function Timer()
     }
 
     //Temp hack to make sure we have a role list
+    /* this hack doesn't work -remove
     if (li_Roles.Elements.Length <= 0)
     {
         //we aren't showing any roles!
@@ -677,6 +678,7 @@ function Timer()
         FillRoleList();
         AutoPickRole();
     }
+    */
 }
 
 function int getTeamCount(int index)

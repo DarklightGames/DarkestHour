@@ -2367,7 +2367,7 @@ defaultproperties
 {
     FireEffectsSpreadSpeedFactor=3.0 // Matt: TEMP
 
-    SwayCurve=(Points=((InVal=0.0,OutVal=4.0),(InVal=2.0,OutVal=1.5),(InVal=4.0,OutVal=0.9),(InVal=8.0,OutVal=1.5),(InVal=24.0,OutVal=2.0),(InVal=26.0,OutVal=0.9),(InVal=60.0,OutVal=1.75),(InVal=10000000000.0,OutVal=2.0)))
+    SwayCurve=(Points=((InVal=0.0,OutVal=3.0),(InVal=2.0,OutVal=1.5),(InVal=3.0,OutVal=0.9),(InVal=8.0,OutVal=1.5),(InVal=24.0,OutVal=2.0),(InVal=26.0,OutVal=0.9),(InVal=60.0,OutVal=1.75),(InVal=10000000000.0,OutVal=2.0)))
     baseSwayYawAcc=750
     baseSwayPitchAcc=750
     RedeployTime=15

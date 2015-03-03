@@ -20,6 +20,8 @@ var array<string>               LoadoutPanelClass;
 var localized array<string>     LoadoutPanelCaption;
 var localized array<string>     LoadoutPanelHint;
 
+var bool                        bReceivedTeam;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -33,13 +35,17 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         co_MenuComboBox.AddItem(MenuOptions[i]);
     }
 
-    // Lets don't add tabs if owner is a spectator as it might confuse player if they somehow open this menu
+    // Check if the player doesn't have a team
     if (PlayerOwner().PlayerReplicationInfo.Team == none)
     {
-        // We are spectating, lets not add any tabs
+        // We haven't got a team yet, lets tell timer to try again!
+        bReceivedTeam = false;
     }
     else
     {
+        //We have a team!
+        bReceivedTeam = true;
+
         // Initialize loadout panels
         for (i = 0;i<LoadoutPanelClass.Length;++i)
         {
@@ -60,6 +66,34 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     if (pc != none && pc.Level.Pauser != none)
     {
         pc.SetPause(false);
+    }
+}
+
+function Timer()
+{
+    local int i;
+
+    if (!bReceivedTeam && ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage != -5)
+    {
+        ROPlayer(PlayerOwner()).ServerChangePlayerInfo(ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage, 255, 0, 0);
+
+        if (PlayerOwner().PlayerReplicationInfo.Team != none)
+        {
+            //We have a team!
+            bReceivedTeam = true;
+
+            // Initialize loadout panels
+            for (i = 0;i<LoadoutPanelClass.Length;++i)
+            {
+                c_LoadoutArea.AddTab(LoadoutPanelCaption[i],LoadoutPanelClass[i],,LoadoutPanelHint[i]);
+            }
+
+            // Initialize deployment panel(s)
+            for (i = 0;i<DeploymentPanelClass.Length;++i)
+            {
+                c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
+            }
+        }
     }
 }
 
