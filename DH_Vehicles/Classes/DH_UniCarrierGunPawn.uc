@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierGunPawn extends ROMountedTankMGPawn;
+class DH_UniCarrierGunPawn extends DH_ROMountedTankMGPawn; // Matt: originally extended ROMountedTankMGPawn
 
 simulated function bool PointOfView()
 {
