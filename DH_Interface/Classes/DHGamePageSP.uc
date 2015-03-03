@@ -55,7 +55,7 @@ function PrepareToPlay(out string GameURL, optional string OverrideMap)
 
         if (Value == 1)
         {
-            GameURL $= "?bAutoNumBots = true";
+            GameURL $= "?bAutoNumBots=true";
         }
         else if (Value == 2)
         {
@@ -67,7 +67,7 @@ function PrepareToPlay(out string GameURL, optional string OverrideMap)
 
             if (i >= 0)
             {
-                GameURL $= "?bAutoNumBots = false?NumBots = " $ RuleInfo.Settings[i].Value;
+                GameURL $= "?bAutoNumBots=false?NumBots=" $ RuleInfo.Settings[i].Value;
             }
         }
     }
