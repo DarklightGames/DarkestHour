@@ -60,7 +60,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 }
             }
 
-            PlayerOwner().Level.Game.Broadcast(none, ">>" @ PurgeCacheDays @ "." @ PurgeCacheDaysIndex @ "<<");
+            //Theel remove at release //PlayerOwner().Level.Game.Broadcast(none, ">>" @ PurgeCacheDays @ "." @ PurgeCacheDaysIndex @ "<<");
 
             break;
     }

@@ -3720,10 +3720,11 @@ function DropWeaponInventory(vector TossVel)
         Inv = Inv.Inventory;
     }
 
+    /* Theel Remove this before release
     if (Level.Game != none)
     {
         Level.Game.Broadcast(self, InventoryList.Length);
-    }
+    }*/
 
     for (i = 0; i < InventoryList.Length; ++i)
     {
