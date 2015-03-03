@@ -5,102 +5,18 @@
 
 class DH_Stug3GMountedMGPawn extends DH_ROMountedTankMGPawn;
 
-var     int             InitialPositionIndex; // Initial Gunner Position
-var     int             UnbuttonedPositionIndex; // Lowest pos number where player is unbuttoned
-
-// Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
-simulated function PostBeginPlay()
-{
-    local vector Offset;
-    local vector Loc;
-
-    super.PostBeginPlay();
-
-    Offset.Z += 220;
-    Loc = GetBoneCoords('loader_player').ZAxis;
-
-    ExitPositions[0] = Loc + Offset;
-    ExitPositions[1] = ExitPositions[0];
-}
-
-simulated state EnteringVehicle
-{
-    simulated function HandleEnter()
-    {
-            //if (DriverPositions[0].PositionMesh != none)
-            //  LinkMesh(DriverPositions[0].PositionMesh);
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone ||  Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
-            {
-                Gun.LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
-            }
-        }
-
-        if (Gun.HasAnim(Gun.BeginningIdleAnim))
-        {
-            Gun.PlayAnim(Gun.BeginningIdleAnim);
-        }
-
-        WeaponFOV = DriverPositions[InitialPositionIndex].ViewFOV;
-        PlayerController(Controller).SetFOV(WeaponFOV);
-
-        FPCamPos = DriverPositions[InitialPositionIndex].ViewLocation;
-    }
-
-Begin:
-    HandleEnter();
-    Sleep(0.2);
-    GotoState('');
-}
-
-simulated function bool PointOfView()
-{
-    return false;
-}
-
-// Overridden to handle mesh swapping when entering the vehicle
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    GotoState('EnteringVehicle');
-
-    super.ClientKDriverEnter(PC);
-
-    PendingPositionIndex = InitialPositionIndex;
-    ServerChangeDriverPos();
-
-    HUDOverlayOffset = default.HUDOverlayOffset;
-}
-
-simulated function ClientKDriverLeave(PlayerController PC)
-{
-    GotoState('LeavingVehicle');
-
-    super.ClientKDriverLeave(PC);
-}
+var     int     UnbuttonedPositionIndex; // lowest pos number where player is unbuttoned
 
 function bool KDriverLeave(bool bForceLeave)
 {
-    local bool bSuperDriverLeave;
-
     if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
     {
         Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
+
         return false;
     }
-    else
-    {
-        DriverPositionIndex = InitialPositionIndex;
-        bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
 
-        VehicleBase.MaybeDestroyVehicle();
-        return bSuperDriverLeave;
-    }
-}
-
-function ServerChangeDriverPos()
-{
-    DriverPositionIndex = InitialPositionIndex;
+    return super.KDriverLeave(bForceLeave);
 }
 
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
@@ -140,87 +56,6 @@ function ServerChangeViewPoint(bool bForward)
             }
         }
      }
-}
-
-simulated state ViewTransition
-{
-    simulated function HandleTransition()
-    {
-        StoredVehicleRotation = VehicleBase.Rotation;
-
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
-                Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-        }
-
-        //bDrawDriverinTP = true; //Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-
-        if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim)
-            && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
-        {
-            Driver.PlayAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim);
-        }
-
-        WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
-
-        FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-        //FPCamViewOffset = DriverPositions[DriverPositionIndex].ViewOffset; // depractated
-
-        if (DriverPositionIndex != 0)
-        {
-            if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                PlayerController(Controller).SetFOV(WeaponFOV);
-            else
-                PlayerController(Controller).DesiredFOV = WeaponFOV;
-        }
-
-        if (LastPositionIndex < DriverPositionIndex)
-        {
-            if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionUpAnim))
-            {
-//                  if (IsLocallyControlled())
-                    Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionUpAnim);
-                SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionUpAnim, 1.0), false);
-            }
-            else
-                GotoState('');
-        }
-        else if (Gun.HasAnim(DriverPositions[LastPositionIndex].TransitionDownAnim))
-        {
-//              if (IsLocallyControlled())
-                Gun.PlayAnim(DriverPositions[LastPositionIndex].TransitionDownAnim);
-            SetTimer(Gun.GetAnimDuration(DriverPositions[LastPositionIndex].TransitionDownAnim, 1.0), false);
-        }
-        else
-        {
-            GotoState('');
-        }
-    }
-
-    simulated function Timer()
-    {
-        GotoState('');
-    }
-
-    simulated function AnimEnd(int channel)
-    {
-        if (IsLocallyControlled())
-            GotoState('');
-    }
-
-    simulated function EndState()
-    {
-        if (PlayerController(Controller) != none)
-        {
-            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
-            //PlayerController(Controller).SetRotation(Gun.GetBoneRotation('Camera_com'));
-        }
-    }
-
-Begin:
-    HandleTransition();
-    Sleep(0.2);
 }
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
