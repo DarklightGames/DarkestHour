@@ -141,6 +141,80 @@ simulated function DrawHUD(Canvas Canvas)
     }
 }
 
+// Hack - turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
+// Matt: added this to bren carrier as muzzle flash looked wrong in raised gunner position - 
+// I don't think it's ideal but it's better than seeing the muzzle flash and it's exactly the same as the other APC MGs
+simulated state ViewTransition
+{
+    simulated function BeginState()
+    {
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        {
+            if (DriverPositionIndex > 0)
+            {
+                Gun.AmbientEffectEmitter.bHidden = true;
+            }
+        }
+
+        super.BeginState();
+    }
+
+    simulated function EndState()
+    {
+        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+        {
+            if (DriverPositionIndex == 0)
+            {
+                Gun.AmbientEffectEmitter.bHidden = false;
+            }
+        }
+
+        super.EndState();
+    }
+}
+
+// Modified to better suit the curved magazine of the bren gun
+function float GetAmmoReloadState()
+{
+    local DH_ROMountedTankMG MG;
+    local float ProportionOfReloadRemaining;
+
+    MG = DH_ROMountedTankMG(Gun);
+
+    if (MG != none)
+    {
+        if (MG.ReadyToFire(false))
+        {
+            return 0.0;
+        }
+        else if (MG.bReloading)
+        {
+            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MG.ReloadStartTime) / MG.ReloadDuration);
+
+            if (ProportionOfReloadRemaining >= 0.75)
+            {
+                return 1.0;
+            }
+            else if (ProportionOfReloadRemaining >= 0.5)
+            {
+                return 0.67;
+            }
+            else if (ProportionOfReloadRemaining >= 0.25)
+            {
+                return 0.5;
+            }
+            else
+            {
+                return 0.35;
+            }
+        }
+        else
+        {
+            return 1.0;
+        }
+    }
+}
+
 defaultproperties
 {
     FirstPersonGunShakeScale=1.5
