@@ -244,7 +244,8 @@ function bool InternalOnClick(GUIComponent Sender)
         case b_ExploitSpawn:
             if (DHPlayer(PlayerOwner()).Pawn == none)
             {
-                DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount);
+                DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
+                DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount, true);
                 Controller.CloseMenu(false); //Close menu as we clicked deploy!
             }
 
@@ -393,7 +394,7 @@ defaultproperties
         RenderWeight=5.85
         StyleName="DHLargeText"
         WinWidth=0.315937
-        WinHeight=0.033589
+        WinHeight=0.045
         WinLeft=0.137395
         WinTop=0.010181
         OnClick=DHDeploymentMapMenu.InternalOnClick

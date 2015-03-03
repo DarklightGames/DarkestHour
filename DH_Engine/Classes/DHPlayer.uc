@@ -2015,7 +2015,7 @@ exec function DebugFOV()
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
 }
 
-function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte MagCount)
+function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte MagCount, optional bool bExploit)
 {
     local rotator newRot, oldRot;
     local DHPlayerReplicationInfo PRI;
@@ -2025,6 +2025,12 @@ function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte 
     local float mag;
     local vector oldDir;
     local Controller P;
+
+    if (bExploit)
+    {
+        //Temp hack to allow spawning on all maps
+        Level.Game.RestartPlayer(self);
+    }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
@@ -2261,10 +2267,109 @@ exec function ExitPosTool()
     }
 }
 
+// Calculate the weapon sway, modified for DH sway system (large sway from start, reduces, then averages)
+simulated function SwayHandler(float DeltaTime)
+{
+    local float WeaponSwayYawAcc;
+    local float WeaponSwayPitchAcc;
+    local float DeltaSwayYaw;
+    local float DeltaSwayPitch;
+    local float timeFactor;
+    local float staminaFactor;
+    local ROPawn P;
+
+    P = ROPawn(Pawn);
+
+    if (P == None )
+    {
+        return;
+    }
+
+    StaminaFactor = (P.default.Stamina - P.Stamina)/(P.default.Stamina*0.5);
+    SwayTime += DeltaTime;
+
+    if (SwayClearTime >= 0.05)
+    {
+        SwayClearTime = 0.0;
+        WeaponSwayYawAcc = RandRange(-baseSwayYawAcc, baseSwayYawAcc);
+        WeaponSwayPitchAcc = RandRange(-baseSwayPitchAcc, baseSwayPitchAcc);
+    }
+    else
+    {
+        WeaponSwayYawAcc = 0.0;
+        WeaponSwayPitchAcc = 0.0;
+        SwayClearTime += DeltaTime;
+    }
+
+    // Get timefactor based on sway curve
+    timeFactor = InterpCurveEval(SwayCurve,SwayTime);
+
+    // Add modifiers to sway for time in iron sights and stamina
+    WeaponSwayYawAcc = (timeFactor * WeaponSwayYawAcc) + (staminaFactor * WeaponSwayYawAcc);
+    WeaponSwayPitchAcc = (timeFactor * WeaponSwayPitchAcc) + (staminaFactor * WeaponSwayPitchAcc);
+
+    // Sway reduction for crouching, prone, and resting the weapon
+    if (P.bRestingWeapon)
+    {
+        WeaponSwayYawAcc *= 0.1;
+        WeaponSwayPitchAcc *= 0.1;
+    }
+    else if (P.bIsCrouched)
+    {
+        WeaponSwayYawAcc *= 0.5;
+        WeaponSwayPitchAcc *= 0.5;
+    }
+    else if (P.bIsCrawling)
+    {
+        WeaponSwayYawAcc *= 0.33;
+        WeaponSwayPitchAcc *= 0.33;
+    }
+
+    // Create large but short sway for when coming out of or into prone
+    if (P.IsProneTransitioning())
+    {
+        WeaponSwayYawAcc *= 5.0;
+        WeaponSwayPitchAcc *= 5.0;
+    }
+
+    if (P.LeanAmount != 0)
+    {
+        WeaponSwayYawAcc *= 1.45;
+        WeaponSwayPitchAcc *= 1.45;
+    }
+
+    // Add a elastic factor to get sway near the original aim-point
+    WeaponSwayYawAcc = WeaponSwayYawAcc - (SwayElasticFactor*SwayYaw) - (SwayDampingFactor*WeaponSwayYawRate);
+
+    // Add a damping factor to keep the elastic factor from causing wild oscillations
+    WeaponSwayPitchAcc = WeaponSwayPitchAcc - (SwayElasticFactor*SwayPitch) - (SwayDampingFactor*WeaponSwayPitchRate);
+
+    // Calculation for motion
+    DeltaSwayYaw = (WeaponSwayYawRate * DeltaTime) + (0.5*WeaponSwayYawAcc*DeltaTime*DeltaTime);
+    DeltaSwayPitch = (WeaponSwayPitchRate * DeltaTime) + (0.5*WeaponSwayPitchAcc*DeltaTime*DeltaTime);
+
+    // Dampen actual sway
+    SwayYaw += DeltaSwayYaw * timeFactor - (SwayYaw / 2);
+    SwayPitch += DeltaSwayPitch * timeFactor - (SwayPitch / 2);
+
+    if (P.bRestingWeapon)
+    {
+        SwayYaw = 0;
+        SwayPitch = 0;
+    }
+
+    // Update new sway velocity (R = D*T) added time factor
+    WeaponSwayYawRate += WeaponSwayYawAcc*DeltaTime*timeFactor;
+    WeaponSwayPitchRate += WeaponSwayPitchAcc*DeltaTime*timeFactor;
+}
+
 defaultproperties
 {
     FireEffectsSpreadSpeedFactor=3.0 // Matt: TEMP
 
+    SwayCurve=(Points=((InVal=0.0,OutVal=4.0),(InVal=2.0,OutVal=1.5),(InVal=4.0,OutVal=0.9),(InVal=8.0,OutVal=1.5),(InVal=24.0,OutVal=2.0),(InVal=26.0,OutVal=0.9),(InVal=60.0,OutVal=1.75),(InVal=10000000000.0,OutVal=2.0)))
+    baseSwayYawAcc=750
+    baseSwayPitchAcc=750
     RedeployTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)
