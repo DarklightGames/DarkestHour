@@ -1,6 +1,8 @@
-//-----------------------------------------------------------
-//
-//-----------------------------------------------------------
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2015
+//==============================================================================
+
 class DHRoleSelectPanel extends MidGamePanel
     config;
 
@@ -65,6 +67,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     // Roles container
     li_Roles = ROGUIListPlus(lb_Roles.List);
+    RolesContainer.ManageComponent(lb_Roles);
 
     // Primary weapon container
     PrimaryWeaponContainer.ManageComponent(i_WeaponImages[0]);
@@ -1224,10 +1227,13 @@ defaultproperties
     l_RolesTitle=GUILabel'DH_Interface.DHRoleSelectPanel.RolesTitle'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainer_inst
-        WinWidth=0.976899
-        WinHeight=0.300269
-        WinLeft=0.017662
-        WinTop=0.050251
+        HeaderBase=Texture'InterfaceArt_tex.Menu.RODisplay_withcaption'
+        HeaderTop=Texture'InterfaceArt_tex.Menu.SectionHeader_captionbar'
+        WinWidth=1.0
+        WinHeight=0.3
+        WinLeft=0.0
+        WinTop=0.05
+        TopPadding=0.03
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1245,10 +1251,10 @@ defaultproperties
         StyleName="DHSmallText"
         TabOrder=0
         OnChange=DHRoleSelectPanel.InternalOnChange
-        WinWidth=0.979453
-        WinHeight=0.300269
-        WinLeft=0.012554
-        WinTop=0.051728
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
     End Object
     lb_Roles=DHGuiListBox'DH_Interface.DHRoleSelectPanel.Roles'
 
