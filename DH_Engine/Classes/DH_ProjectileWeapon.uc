@@ -2037,10 +2037,7 @@ function bool FillAmmo()
 
 function SetNumMags(int M)
 {
-    local int DefaultMagSize, i;
-
     PrimaryAmmoArray.Length = M;
-
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
 }
 

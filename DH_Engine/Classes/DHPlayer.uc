@@ -2017,14 +2017,10 @@ exec function DebugFOV()
 
 function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte MagCount, optional bool bExploit)
 {
-    local rotator newRot, oldRot;
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo DHGRI;
     local DH_RoleInfo RI;
     local class<Inventory> PrimaryWep;
-    local float mag;
-    local vector oldDir;
-    local Controller P;
 
     if (bExploit)
     {
@@ -2267,6 +2263,12 @@ exec function ExitPosTool()
     }
 }
 
+// Modified to actually restart the sway process, not just stop it. This is only called when the player changes stances (crouch prone stand).
+simulated function ResetSwayValues()
+{
+    SwayTime = 0.0;
+}
+
 // Calculate the weapon sway, modified for DH sway system (large sway from start, reduces, then averages)
 simulated function SwayHandler(float DeltaTime)
 {
@@ -2325,11 +2327,11 @@ simulated function SwayHandler(float DeltaTime)
         WeaponSwayPitchAcc *= 0.33;
     }
 
-    // Create large but short sway for when coming out of or into prone
+    // Create large but not everlasting sway for when coming out of or into prone
     if (P.IsProneTransitioning())
     {
-        WeaponSwayYawAcc *= 5.0;
-        WeaponSwayPitchAcc *= 5.0;
+        WeaponSwayYawAcc *= 6.5;
+        WeaponSwayPitchAcc *= 6.5;
     }
 
     if (P.LeanAmount != 0)
@@ -2367,9 +2369,9 @@ defaultproperties
 {
     FireEffectsSpreadSpeedFactor=3.0 // Matt: TEMP
 
-    SwayCurve=(Points=((InVal=0.0,OutVal=3.0),(InVal=2.0,OutVal=1.5),(InVal=3.0,OutVal=0.9),(InVal=8.0,OutVal=1.5),(InVal=24.0,OutVal=2.0),(InVal=26.0,OutVal=0.9),(InVal=60.0,OutVal=1.75),(InVal=10000000000.0,OutVal=2.0)))
-    baseSwayYawAcc=750
-    baseSwayPitchAcc=750
+    SwayCurve=(Points=((InVal=0.0,OutVal=3.5),(InVal=1.0,OutVal=1.5),(InVal=2.0,OutVal=0.9),(InVal=8.0,OutVal=1.5),(InVal=24.0,OutVal=2.0),(InVal=26.0,OutVal=0.9),(InVal=60.0,OutVal=1.75),(InVal=10000000000.0,OutVal=2.0)))
+    baseSwayYawAcc=900
+    baseSwayPitchAcc=700
     RedeployTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)

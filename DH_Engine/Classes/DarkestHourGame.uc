@@ -1678,8 +1678,7 @@ state RoundInPlay
 
     function Timer()
     {
-        local int i, ReinforceInt, ArtilleryStrikeInt;
-        local Controller P;
+        local int i, ArtilleryStrikeInt;
         local ROGameReplicationInfo GRI;
 
         global.Timer();
