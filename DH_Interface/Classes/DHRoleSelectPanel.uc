@@ -14,16 +14,14 @@ var automated ROGUIProportionalContainer    MainContainer,
                                             SecondaryWeaponContainer,
                                             EquipContainer;
 
-var automated GUILabel                      l_RolesTitle,
-                                            l_PrimaryWeaponTitle,
+var automated GUILabel                      l_PrimaryWeaponTitle,
                                             l_SecondaryWeaponTitle,
                                             l_EquipTitle,
-                                            l_EstimatedRedeployTime,
-                                            l_StatusLabel;
+                                            l_EstimatedRedeployTime;
 
-var automated BackgroundImage               bg_Background;
+//var automated BackgroundImage               bg_Background;
 var automated GUIImage                      i_WeaponImages[2], i_MagImages[2];
-var automated GUIListBox                    lb_Roles, lb_AvailableWeapons[2];
+var automated DHGUIListBox                  lb_Roles, lb_AvailableWeapons[2];
 var automated GUIGFXButton                  b_Equipment[4];
 var automated DHGUINumericEdit              nu_PrimaryAmmoMags;
 
@@ -31,6 +29,7 @@ var ROGUIListPlus                           li_Roles, li_AvailableWeapons[2];
 
 var localized string                        NoSelectedRoleText,
                                             RoleHasBotsText,
+                                            CurrentRoleText,
                                             RoleFullText,
                                             SelectEquipmentText,
                                             RoleIsFullMessageText,
@@ -73,21 +72,33 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     PrimaryWeaponContainer.ManageComponent(lb_AvailableWeapons[0]);
     PrimaryWeaponContainer.ManageComponent(i_MagImages[0]);
     PrimaryWeaponContainer.ManageComponent(nu_PrimaryAmmoMags);
+    PrimaryWeaponContainer.ManageComponent(l_PrimaryWeaponTitle);
     li_AvailableWeapons[0] = ROGUIListPlus(lb_AvailableWeapons[0].List);
+
+    // Remove secondary mag image
+    i_MagImages[1] = none;
 
     // Secondary weapon container
     SecondaryWeaponContainer.ManageComponent(i_WeaponImages[1]);
     SecondaryWeaponContainer.ManageComponent(lb_AvailableWeapons[1]);
+    SecondaryWeaponContainer.ManageComponent(l_SecondaryWeaponTitle);
     li_AvailableWeapons[1] = ROGUIListPlus(lb_AvailableWeapons[1].List);
 
     // Equipment container
-    //EquipContainer.ManageComponent(b_Equipment[0]);
-    //EquipContainer.ManageComponent(b_Equipment[1]);
-    //EquipContainer.ManageComponent(b_Equipment[2]);
-    //EquipContainer.ManageComponent(b_Equipment[3]);
+    EquipContainer.ManageComponent(b_Equipment[0]);
+    EquipContainer.ManageComponent(b_Equipment[1]);
+    EquipContainer.ManageComponent(b_Equipment[2]);
+    EquipContainer.ManageComponent(b_Equipment[3]);
+    EquipContainer.ManageComponent(l_EquipTitle);
 
     // Get player's initial values (name, team, role, weapons)
     GetInitialValues();
+
+    // Change background from default if team == Axis
+    if (currentTeam == Axis_Team_Index)
+    {
+        Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
+    }
 
     // Fill roles list
     FillRoleList();
@@ -333,16 +344,10 @@ function NotifyDesiredRoleUpdated()
     UpdateWeaponsInfo();
 
     // Inform player that they are changing roles
-    if (currentRole == desiredRole)
-    {
-        SetStatusString("You are currently a" @ currentRole.MyName);
-    }
-    else if (currentRole != desiredRole)
-    {
-        SetStatusString("You will attempt to change role to" @ desiredRole.MyName);
-    }
+    // Theel need a way to let the player know what they are?
 }
 
+// I don't think this function is being used
 function ToggleTeam()
 {
     if (currentTeam == AXIS_TEAM_INDEX)
@@ -355,6 +360,7 @@ function ToggleTeam()
     }
 }
 
+// Or this one!
 function ChangeDesiredTeam(int team)
 {
     desiredTeam = team;
@@ -661,24 +667,6 @@ function Timer()
     {
         RoleSelectReclickTime = default.RoleSelectReclickTime;
     }
-
-    //Temp hack to make sure we have a role list
-    /* this hack doesn't work -remove
-    if (li_Roles.Elements.Length <= 0)
-    {
-        //we aren't showing any roles!
-        Log("Role list has" @ li_Roles.Elements.Length @ "elements");
-        Log("       ");
-        Log("       ");
-        Warn("We are retrying to fill role list as we detected we didn't have one!!!!");
-        Log("       ");
-        Log("       ");
-
-        //Refill the list then
-        FillRoleList();
-        AutoPickRole();
-    }
-    */
 }
 
 function int getTeamCount(int index)
@@ -690,7 +678,7 @@ function UpdateRoleCounts()
 {
     local int i, roleLimit, roleCurrentCount, roleBotCount;
     local RORoleInfo role;
-    local bool bHasBots, bIsFull;
+    local bool bHasBots, bIsFull, bIsCurrent;
 
     if (desiredTeam != AXIS_TEAM_INDEX && desiredTeam != ALLIES_TEAM_INDEX)
         return;
@@ -704,13 +692,22 @@ function UpdateRoleCounts()
         bIsFull = checkIfRoleIsFull(role, desiredTeam, roleLimit, roleCurrentCount, roleBotCount);
         bHasBots = (roleBotCount > 0);
 
-        if (ROPlayer(PlayerOwner()) != none &&  ROPlayer(PlayerOwner()).bUseNativeRoleNames)
+        if (role == currentRole)
         {
-            li_Roles.SetItemAtIndex(i, FormatRoleString(role.AltName, roleLimit, roleCurrentCount, bHasBots));
+            bIsCurrent = true;
         }
         else
         {
-            li_Roles.SetItemAtIndex(i, FormatRoleString(role.MyName, roleLimit, roleCurrentCount, bHasBots));
+            bIsCurrent = false;
+        }
+
+        if (ROPlayer(PlayerOwner()) != none &&  ROPlayer(PlayerOwner()).bUseNativeRoleNames)
+        {
+            li_Roles.SetItemAtIndex(i, FormatRoleString(role.AltName, roleLimit, roleCurrentCount, bHasBots, bIsCurrent));
+        }
+        else
+        {
+            li_Roles.SetItemAtIndex(i, FormatRoleString(role.MyName, roleLimit, roleCurrentCount, bHasBots, bIsCurrent));
         }
         li_Roles.SetDisabledAtIndex(i, bIsFull);
     }
@@ -780,17 +777,25 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
     }
 }
 
-function string FormatRoleString(string roleName, int roleLimit, int roleCount, bool bHasBots)
+function string FormatRoleString(string roleName, int roleLimit, int roleCount, bool bHasBots, optional bool bIsCurrentRole)
 {
     local string s;
+
     if (roleLimit == 0)
+    {
         s = roleName $ " [" $ roleCount $ "]";
+    }
     else
     {
         if (roleCount == roleLimit && !bHasBots)
             s = roleName $ " [" $ RoleFullText $ "]";
         else
             s = roleName $ " [" $ roleCount $ "/" $ roleLimit $ "]";
+    }
+
+    if (bIsCurrentRole)
+    {
+        s = s @ CurrentRoleText;
     }
 
     if (bHasBots)
@@ -890,22 +895,6 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     currentWeapons[0] = desiredWeapons[0];
     currentWeapons[1] = desiredWeapons[1];
     //GetInitialValues(); //gulp lets see if this works and doesn't bug the fuck out
-}
-
-//Does this really need to be a function?
-function SetStatusString(optional string S)
-{
-    local string StatusStr;
-
-    if (S != "")
-    {
-        StatusStr = S;
-    }
-    else
-    {
-        StatusStr = "";
-    }
-    l_StatusLabel.Caption = StatusStr;
 }
 
 static function CheckNeedForFadeFromBlackEffect(PlayerController controller)
@@ -1082,7 +1071,7 @@ event Closed(GUIComponent Sender, bool bCancelled)
 
 defaultproperties
 {
-    Background=Texture'InterfaceArt_tex.Menu.GreyDark'
+    Background=Texture'DH_GUI_Tex.Menu.AlliesLoadout_BG'
     OnPostDraw=OnPostDraw
     OnKeyEvent=InternalOnKeyEvent
     OnMessage=InternalOnMessage
@@ -1090,13 +1079,13 @@ defaultproperties
     RoleSelectReclickTime=1.0
     NoSelectedRoleText="Select a role from the role list."
     RoleHasBotsText=" (has bots)"
+    CurrentRoleText="Current Role"
     RoleFullText="Full"
     SelectEquipmentText="Select an item to view its description."
     RoleIsFullMessageText="The role you selected is full. Select another role from the list and hit continue."
     ChangingRoleMessageText="Please wait while your player information is being updated."
     UnknownErrorMessageText="An unknown error occured when updating player information. Please wait a bit and retry."
     ErrorChangingTeamsMessageText="An error occured when changing teams. Please retry in a few moments or select another team."
-
     UnknownErrorSpectatorMissingReplicationInfo=" (Spectator switch error: player has no replication info.)"
     SpectatorErrorTooManySpectators="Cannot switch to Spectating mode: too many spectators on server."
     SpectatorErrorRoundHasEnded="Cannot switch to Spectating mode: round has ended."
@@ -1110,17 +1099,6 @@ defaultproperties
     TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
 
     RoleSelectFooterButtonsWinTop=0.946667
-
-    Begin Object Class=BackgroundImage Name=PageBackground
-        //Image=texture'DH_GUI_Tex.Menu.DHSectionHeader'
-        ImageStyle=ISTY_Scaled
-        ImageRenderStyle=MSTY_Alpha
-        X1=0
-        Y1=0
-        X2=1023
-        Y2=1023
-    End Object
-    bg_Background=BackgroundImage'DH_Interface.DHRoleSelectPanel.PageBackground'
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MainContiner_inst
         WinLeft=0.0
@@ -1141,40 +1119,29 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.03
         WinLeft=0.0
-        WinTop=0.365
+        WinTop=0.43
     End Object
     l_EstimatedRedeployTime=EstimatedRedeployTime
 
-    //Recent changes status label
-    Begin Object Class=GUILabel Name=RecentChangesStatus
-        Caption=""
-        TextAlign=TXTA_Center
-        StyleName="DHLargeText"
-        WinWidth=1.0
-        WinHeight=0.033589
-        WinLeft=0.0
-        WinTop=0.963281
-    End Object
-    l_StatusLabel=RecentChangesStatus
-
+    // Primary Title
     Begin Object Class=GUILabel Name=PrimaryWeaponTitle
         Caption="Primary Weapon"
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
         WinWidth=1.0
-        WinHeight=0.04
+        WinHeight=0.15
         WinLeft=0.0
-        WinTop=0.4250
+        WinTop=-0.2
     End Object
     l_PrimaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelectPanel.PrimaryWeaponTitle'
 
+    // Primary Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PrimaryWeaponContainer_inst
-        HeaderBase=Texture'InterfaceArt_tex.Menu.RODisplay_withcaption'
-        HeaderTop=Texture'InterfaceArt_tex.Menu.SectionHeader_captionbar'
+        HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
         WinWidth=1.0
         WinHeight=0.175
         WinLeft=0.0
-        WinTop=0.445
+        WinTop=0.486
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1182,22 +1149,25 @@ defaultproperties
     End Object
     PrimaryWeaponContainer=PrimaryWeaponContainer_inst
 
+    // Secondary Title
     Begin Object Class=GUILabel Name=SecondaryWeaponTitle
-        Caption="Sidearm"
-        TextAlign=TXTA_Left
+        Caption="Secondary Weapon"
+        TextAlign=TXTA_Center
         StyleName="DHLargeText"
-        WinWidth=0.457124
-        WinHeight=0.034503
-        WinLeft=0.013212
-        WinTop=0.637017
+        WinWidth=1.0
+        WinHeight=0.15
+        WinLeft=0.0
+        WinTop=-0.25
     End Object
     l_SecondaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelectPanel.SecondaryWeaponTitle'
 
+    // Secondary Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SecondaryWeaponContainer_inst
-        WinWidth=0.978091
-        WinHeight=0.131546
-        WinLeft=0.010659
-        WinTop=0.669514
+        HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
+        WinWidth=1.0
+        WinHeight=0.1315
+        WinLeft=0.0
+        WinTop=0.68
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1205,22 +1175,25 @@ defaultproperties
     End Object
     SecondaryWeaponContainer=SecondaryWeaponContainer_inst
 
+    // Equipment title
     Begin Object Class=GUILabel Name=EquipmentWeaponTitle
         Caption="Equipment"
-        TextAlign=TXTA_Left
+        TextAlign=TXTA_Center
         StyleName="DHLargeText"
-        WinWidth=0.343548
-        WinHeight=0.042554
-        WinLeft=0.042675
-        WinTop=0.795098
+        WinWidth=1.0
+        WinHeight=0.15
+        WinLeft=0.0
+        WinTop=-0.2
     End Object
     l_EquipTitle=GUILabel'DH_Interface.DHRoleSelectPanel.EquipmentWeaponTitle'
 
+    // Equipment Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=EquipmentContainer_inst
+        HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
         WinWidth=1.0
-        WinHeight=0.112097
+        WinHeight=0.1695
         WinLeft=0.0
-        WinTop=0.833621
+        WinTop=0.8305
         ImageOffset(0)=10
         ImageOffset(1)=10
         ImageOffset(2)=10
@@ -1228,24 +1201,13 @@ defaultproperties
     End Object
     EquipContainer=EquipmentContainer_inst
 
-    Begin Object Class=GUILabel Name=RolesTitle
-        Caption="Role Selection"
-        TextAlign=TXTA_Center
-        StyleName="DHLargeText"
-        WinWidth=1.0
-        WinHeight=0.04
-        WinLeft=0.0
-        WinTop=0.002
-    End Object
-    l_RolesTitle=GUILabel'DH_Interface.DHRoleSelectPanel.RolesTitle'
-
+    // Role Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainer_inst
-        HeaderBase=Texture'InterfaceArt_tex.Menu.RODisplay_withcaption'
-        HeaderTop=Texture'InterfaceArt_tex.Menu.SectionHeader_captionbar'
+        HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
         WinWidth=1.0
-        WinHeight=0.3
+        WinHeight=0.407
         WinLeft=0.0
-        WinTop=0.0275
+        WinTop=0.0
         TopPadding=0.03
         ImageOffset(0)=10
         ImageOffset(1)=10
@@ -1254,7 +1216,7 @@ defaultproperties
     End Object
     RolesContainer=RolesContainer_inst
 
-    // Roles controls
+    // Role list box
     Begin Object Class=DHGuiListBox Name=Roles
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
@@ -1271,8 +1233,8 @@ defaultproperties
     End Object
     lb_Roles=DHGuiListBox'DH_Interface.DHRoleSelectPanel.Roles'
 
-    // Weapons controls
-    Begin Object Class=GUIImage Name=WeaponImage
+    // Weapons images
+    Begin Object Class=GUIImage Name=PWeaponImage
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Left
         WinWidth=0.5
@@ -1280,9 +1242,18 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.1
     End Object
-    i_WeaponImages(0)=GUIImage'DH_Interface.DHRoleSelectPanel.WeaponImage'
-    i_WeaponImages(1)=GUIImage'DH_Interface.DHRoleSelectPanel.WeaponImage'
+    i_WeaponImages(0)=PWeaponImage
+    Begin Object Class=GUIImage Name=SWeaponImage
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Left
+        WinWidth=0.5
+        WinHeight=0.85
+        WinLeft=0.0
+        WinTop=0.1
+    End Object
+    i_WeaponImages(1)=SWeaponImage
 
+    // Mag image
     Begin Object Class=GUIImage Name=MagImage
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Left
@@ -1292,7 +1263,6 @@ defaultproperties
         WinTop=0.5
     End Object
     i_MagImages(0)=MagImage
-    i_MagImages(1)=MagImage
 
     Begin Object Class=DHGuiListBox Name=WeaponListBox
         SelectedStyleName="DHListSelectionStyle"
@@ -1310,66 +1280,61 @@ defaultproperties
     lb_AvailableWeapons(0)=DHGuiListBox'DH_Interface.DHRoleSelectPanel.WeaponListBox'
     lb_AvailableWeapons(1)=DHGuiListBox'DH_Interface.DHRoleSelectPanel.WeaponListBox'
 
-    // Equipment controls
+    // Primary grenade
     Begin Object Class=GUIGFXButton Name=EquipButton0
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.171937
-        WinHeight=0.072377
-        WinLeft=0.018709
-        WinTop=0.837604
-        TabOrder=21
-        bTabStop=true
+        WinWidth=0.25
+        WinHeight=0.5
+        WinLeft=0.0
+        WinTop=0.05
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton0.InternalOnKeyEvent
     End Object
     b_Equipment(0)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton0'
 
+    // Secondary grenade/satchel
     Begin Object Class=GUIGFXButton Name=EquipButton1
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.175055
-        WinHeight=0.069259
-        WinLeft=0.193764
-        WinTop=0.839028
-        TabOrder=22
-        bTabStop=true
+        WinWidth=0.25
+        WinHeight=0.5
+        WinLeft=0.25
+        WinTop=0.05
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton1.InternalOnKeyEvent
     End Object
     b_Equipment(1)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton1'
 
+    // Third equipment
     Begin Object Class=GUIGFXButton Name=EquipButton2
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.277953
-        WinHeight=0.125385
-        WinLeft=0.365701
-        WinTop=0.834756
-        TabOrder=23
-        bTabStop=true
+        WinWidth=0.25
+        WinHeight=0.5
+        WinLeft=0.5
+        WinTop=0.05
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton2.InternalOnKeyEvent
     End Object
     b_Equipment(2)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton2'
 
+    // Bazooka, Piat, Shrek, Panzerfaust
     Begin Object Class=GUIGFXButton Name=EquipButton3
         Graphic=texture'InterfaceArt_tex.HUD.satchel_ammo'
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.680630
-        WinHeight=0.069478
-        WinLeft=0.018709
-        WinTop=0.908829
-        TabOrder=24
-        bTabStop=true
+        WinWidth=0.75
+        WinHeight=0.5
+        WinLeft=0.0
+        WinTop=0.5
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton3.InternalOnKeyEvent
     End Object
