@@ -173,6 +173,7 @@ function bool KDriverLeave(bool bForceLeave)
 
 defaultproperties
 {
+    UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=0.75
     WeaponFOV=60.0
     DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)

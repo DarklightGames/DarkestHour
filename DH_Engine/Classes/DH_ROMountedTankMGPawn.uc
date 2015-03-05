@@ -8,14 +8,15 @@ class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var bool        bDebugExitPositions;
+var     int     UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
+var     texture VehicleMGReloadTexture;  // used to show reload progress on the HUD, like a tank cannon reload
 
 var()   float   OverlayCenterScale;
-var()   float   OverlayCenterSize; // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float   OverlayCenterSize;       // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var()   float   OverlayCorrectionX;
 var()   float   OverlayCorrectionY;
 
-var     texture VehicleMGReloadTexture; // used to show reload progress on the HUD, like a tank cannon reload
+var     bool    bDebugExitPositions;
 
 replication
 {
@@ -122,6 +123,27 @@ function KDriverEnter(Pawn P)
     }
 
     super.KDriverEnter(P);
+}
+
+// Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
+function bool KDriverLeave(bool bForceLeave)
+{
+    if (!bForceLeave && !CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
+    {
+        return false;
+    }
+
+    if (super(VehicleWeaponPawn).KDriverLeave(bForceLeave))
+    {
+        DriverPositionIndex = 0;
+        LastPositionIndex = 0;
+
+        VehicleBase.MaybeDestroyVehicle();
+
+        return true;
+    }
+
+    return false;
 }
 
 // Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
@@ -309,78 +331,129 @@ simulated function SwitchWeapon(byte F)
     local bool                bMustBeTankerToSwitch;
     local byte                ChosenWeaponPawnIndex;
 
-    if (VehicleBase != none && !IsInState('ViewTransition'))
+    if (VehicleBase == none)
     {
-        if (F == 1)
+        return;
+    }
+
+    // Trying to switch to driver position
+    if (F == 1)
+    {
+        // Stop call to server as there is already a human driver
+        if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
         {
-            // Stop call to server as driver position already has a human player
-            if (VehicleBase.Driver != none && VehicleBase.Driver.IsHumanControlled())
+            return;
+        }
+
+        if (VehicleBase.bMustBeTankCommander)
+        {
+            bMustBeTankerToSwitch = true;
+        }
+    }
+    // Trying to switch to non-driver position
+    else
+    {
+        ChosenWeaponPawnIndex = F - 2;
+
+        // Stop call to server if player has selected an invalid weapon position or the current position
+        // Note that if player presses 0, which is invalid choice, the byte index will end up as 254 & so will still fail this test (which is what we want)
+        if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
+        {
+            return;
+        }
+
+        // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
+        if (StopExitToRiderPosition(ChosenWeaponPawnIndex))
+        {
+            return;
+        }
+
+        // Get weapon pawn
+        if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
+        {
+            WeaponPawn = ROVehicleWeaponPawn(VehicleBase.WeaponPawns[ChosenWeaponPawnIndex]);
+        }
+
+        if (WeaponPawn != none)
+        {
+            // Stop call to server as weapon position already has a human player
+            if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
             {
                 return;
             }
 
-            if (VehicleBase.bMustBeTankCommander)
+            if (WeaponPawn.bMustBeTankCrew)
             {
                 bMustBeTankerToSwitch = true;
             }
         }
-        else
+        // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
+        // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
+        else if (class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
         {
-            ChosenWeaponPawnIndex = F - 2;
-
-            // Stop call to server if player has selected an invalid weapon position or the current position
-            if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
-            {
-                return;
-            }
-
-            if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
-            {
-                WeaponPawn = ROVehicleWeaponPawn(VehicleBase.WeaponPawns[ChosenWeaponPawnIndex]);
-            }
-
-            if (WeaponPawn != none)
-            {
-                // Stop call to server as weapon position already has a human player
-                if (WeaponPawn.Driver != none && WeaponPawn.Driver.IsHumanControlled())
-                {
-                    return;
-                }
-
-                if (WeaponPawn.bMustBeTankCrew)
-                {
-                    bMustBeTankerToSwitch = true;
-                }
-            }
-            // Stop call to server if weapon pawn doesn't exist, UNLESS PassengerWeapons array lists it as a rider position
-            // This is because our new system means rider pawns won't exist on clients unless occupied, so we have to allow this switch through to server
-            else if (class<ROPassengerPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass) == none)
-            {
-                return;
-            }
-        }
-
-        // Stop call to server if player has selected a tank crew role but isn't a tanker
-        if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
-            ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
-        {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
-
             return;
         }
-
-        ServerChangeDriverPosition(F);
     }
+
+    // Stop call to server if player has selected a tank crew role but isn't a tanker
+    if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
+        ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
+    {
+        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+
+        return;
+    }
+
+    ServerChangeDriverPosition(F);
 }
 
+// Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
 function ServerChangeDriverPosition(byte F)
 {
-    if (IsInState('ViewTransition'))
+    if (StopExitToRiderPosition(F - 2))
     {
         return;
     }
 
     super.ServerChangeDriverPosition(F);
+}
+
+// New function to check if player can exit, displaying an "unbutton hatch" message if he can't (just saves repeating code in different functions)
+simulated function bool CanExit()
+{
+    if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
+    {
+        if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
+        {
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+        }
+        else
+        {
+            if (DH_ROTreadCraft(VehicleBase) != none && DH_ROTreadCraft(VehicleBase).DriverPositions.Length > DH_ROTreadCraft(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
+            {
+                ReceiveLocalizedMessage(class'DH_VehicleMessage', 10); // must exit through driver's or commander's hatch
+            }
+            else
+            {
+                ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch
+            }
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
+simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
+{
+    local DH_ROTreadCraft TreadCraft;
+
+    TreadCraft = DH_ROTreadCraft(VehicleBase);
+
+    return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
+        ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
 }
 
 function bool ResupplyAmmo()
@@ -629,6 +702,7 @@ function ServerToggleDebugExits()
 
 defaultproperties
 {
+    UnbuttonedPositionIndex=1
     OverlayCenterSize=1.0
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
 }

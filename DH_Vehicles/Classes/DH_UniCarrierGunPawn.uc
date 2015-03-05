@@ -142,7 +142,7 @@ simulated function DrawHUD(Canvas Canvas)
 }
 
 // Hack - turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
-// Matt: added this to bren carrier as muzzle flash looked wrong in raised gunner position - 
+// Matt: added this to bren carrier as muzzle flash looked wrong in raised gunner position
 // I don't think it's ideal but it's better than seeing the muzzle flash and it's exactly the same as the other APC MGs
 simulated state ViewTransition
 {
@@ -217,6 +217,7 @@ function float GetAmmoReloadState()
 
 defaultproperties
 {
+    UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=1.5
     WeaponFOV=60.0
     DriverPositions(0)=(ViewLocation=(X=10.0),ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)

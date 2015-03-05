@@ -7,24 +7,10 @@ class DH_StuH42MountedMGPawn extends DH_ROMountedTankMGPawn;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var     int     UnbuttonedPositionIndex; // lowest pos number where player is unbuttoned
-
 // Can't fire unless buttoned up & controlling the remote MG
 function bool CanFire()
 {
     return DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition');
-}
-
-function bool KDriverLeave(bool bForceLeave)
-{
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
-
-        return false;
-    }
-
-    return super.KDriverLeave(bForceLeave);
 }
 
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
@@ -191,7 +177,6 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-    UnbuttonedPositionIndex=1
     OverlayCenterSize=0.7
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.85

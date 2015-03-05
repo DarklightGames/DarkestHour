@@ -5,24 +5,10 @@
 
 class DH_Stug3GMountedMGPawn extends DH_ROMountedTankMGPawn;
 
-var     int     UnbuttonedPositionIndex; // lowest pos number where player is unbuttoned
-
 // Can't fire unless unbuttoned & controlling the external MG
 function bool CanFire()
 {
     return (DriverPositionIndex == UnbuttonedPositionIndex && !IsInState('ViewTransition')) || DriverPositionIndex > UnbuttonedPositionIndex;
-}
-
-function bool KDriverLeave(bool bForceLeave)
-{
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4);
-
-        return false;
-    }
-
-    return super.KDriverLeave(bForceLeave);
 }
 
 // Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
@@ -191,7 +177,6 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
-    UnbuttonedPositionIndex=1
     FirstPersonGunShakeScale=2.0
     WeaponFOV=72.0
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1)

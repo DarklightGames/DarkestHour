@@ -114,6 +114,7 @@ simulated function DrawHUD(Canvas Canvas)
 
 defaultproperties
 {
+    UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=2.0
     WeaponFOV=60.0
     DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_Marder3M_anm.Marder_M34_int',TransitionUpAnim="loader_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)

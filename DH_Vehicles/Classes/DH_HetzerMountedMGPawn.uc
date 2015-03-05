@@ -5,8 +5,6 @@
 
 class DH_HetzerMountedMGPawn extends DH_ROMountedTankMGPawn;
 
-var    int    UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
-
 // Can't fire unless buttoned up & controlling the remote MG
 function bool CanFire()
 {
@@ -57,38 +55,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     NewRotation = Gun.CurrentAim;
     NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
     SetRotation(NewRotation);
-}
-
-// Modified to prevent tank crew from switching to rider positions unless unbuttoned
-function ServerChangeDriverPosition(byte F)
-{
-    if (F > 3 && (DriverPositionIndex < UnbuttonedPositionIndex || IsInState('ViewTransition')))
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You Must Unbutton the Hatch to Exit"
-
-        return;
-    }
-
-    super.ServerChangeDriverPosition(F);
-}
-
-// Was in StuH (taken from DH_ROTankCannonPawn)
-function bool KDriverLeave(bool bForceLeave)
-{
-    local bool bSuperDriverLeave;
-
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || Instigator.IsInState('ViewTransition')))
-    {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // "You Must Unbutton the Hatch to Exit"
-
-        return false;
-    }
-
-    DriverPositionIndex = 0;
-    bSuperDriverLeave = super(VehicleWeaponPawn).KDriverLeave(bForceLeave);
-    VehicleBase.MaybeDestroyVehicle();
-
-    return bSuperDriverLeave;
 }
 
 // Modified to play idle animation on server & non-owning net clients, so loader's collision box gets reset on all machines when player exits
@@ -299,7 +265,7 @@ simulated function DrawHUD(Canvas Canvas)
                 OverlayCenterTexSize =  float(MGOverlay.USize) * OverlayCenterScale;
 
                 Canvas.SetPos(0.0, 0.0);
-                Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, 
+                Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
                     OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
                 // Reset HudOpacity to original value
@@ -355,7 +321,6 @@ function float GetAmmoReloadState()
 
 defaultproperties
 {
-    UnbuttonedPositionIndex=1
     OverlayCenterSize=0.7
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.85
