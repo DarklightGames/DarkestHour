@@ -52,7 +52,6 @@ var     bool        bClientInitialized;     // Matt: clientside flag that replic
 var()   int         UnbuttonedPositionIndex;
 var()   int         FirstRiderPositionIndex;
 var     float       ViewTransitionDuration; // used to control the time we stay in state ViewTransition
-var()   bool        bNoDriverHatch;         // no driver's hatch to exit from, e.g. for Stug, JP & Panzer III (formerly called bSpecialExiting)
 var()   bool        bAllowRiders;           // players, including non-tankers, can ride on the back or top of the vehicle
 var()   bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position while buttoned up
 
@@ -3066,13 +3065,13 @@ simulated function bool CanExit()
 {
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
-        if (bNoDriverHatch)
+        if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
         }
         else
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch
         }
 
         return false;

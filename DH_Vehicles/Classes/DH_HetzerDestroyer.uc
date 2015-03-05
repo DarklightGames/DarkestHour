@@ -38,7 +38,6 @@ defaultproperties
     NewVehHitpoints(0)=(PointRadius=3.2,PointScale=1.0,PointBone="body",PointOffset=(X=29.2,Y=-9.04,Z=58.0),NewHitPointType=NHP_GunOptics)
     NewVehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=40.8,Y=16.0,Z=32.0),NewHitPointType=NHP_Traverse)
     NewVehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=40.8,Y=16.0,Z=32.0),NewHitPointType=NHP_GunPitch)
-    bNoDriverHatch=true
     MaxCriticalSpeed=730.0
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
     UFrontArmorFactor=6.0

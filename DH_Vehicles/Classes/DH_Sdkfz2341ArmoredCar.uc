@@ -34,7 +34,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    bNoDriverHatch=true
+    UnbuttonedPositionIndex=3
     MaxCriticalSpeed=1039.0
     UFrontArmorFactor=3.0
     URightArmorFactor=0.8
