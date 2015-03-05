@@ -81,7 +81,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, 
+        ServerStartEngine,
         ServerToggleDebugExits, ServerKillEngine; // these ones only during development
 }
 
@@ -466,7 +466,7 @@ simulated function UpdateMovementSound(float MotionSoundVolume)
 simulated event DrivingStatusChanged()
 {
     super(Vehicle).DrivingStatusChanged();
-    
+
     // Not moving, so no motion sound
     if (Level.NetMode != NM_DedicatedServer && (!bDriving || bEngineOff))
     {

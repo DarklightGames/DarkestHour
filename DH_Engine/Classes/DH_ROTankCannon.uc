@@ -145,7 +145,7 @@ simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
 
         if (DH_ROTreadCraft(CannonPwn.VehicleBase) != none)
         {
-            // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server 
+            // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
             DH_ROTreadCraft(CannonPwn.VehicleBase).CannonTurret = self;
 
             // If vehicle is burning, start the turret hatch fire effect
@@ -1075,7 +1075,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
         if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
         {
-            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, 
+            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
                 WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
             {
                 StartLocation = HitLocation;
@@ -1329,7 +1329,7 @@ simulated function bool ConsumeAmmo(int Mode)
 // Modified to use DH's MainAmmoChargeExtra array
 function bool GiveInitialAmmo()
 {
-    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo || 
+    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo ||
         AltAmmoCharge != InitialAltAmmo || NumAltMags != default.NumAltMags)
     {
         MainAmmoChargeExtra[0] = InitialPrimaryAmmo;

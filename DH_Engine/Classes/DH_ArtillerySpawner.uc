@@ -46,7 +46,7 @@ function Timer()
         }
 
         Destroy();
-       
+
         return;
     }
 

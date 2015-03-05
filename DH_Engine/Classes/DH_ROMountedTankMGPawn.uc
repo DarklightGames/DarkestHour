@@ -227,7 +227,7 @@ simulated function DrawHUD(Canvas Canvas)
         OverlayCenterTexSize =  Float(MGOverlay.USize) * OverlayCenterScale;
 
         Canvas.SetPos(0.0, 0.0);
-        Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, 
+        Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
             OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
         // Reset HudOpacity to original value

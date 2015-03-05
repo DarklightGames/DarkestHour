@@ -193,7 +193,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     if (FireCountdown <= 0.0)
     {
         CalcWeaponFire(bAltFire);
-        
+
         if (bCorrectAim)
         {
             WeaponFireRotation = AdjustAim(bAltFire);

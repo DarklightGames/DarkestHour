@@ -26,7 +26,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerToggleExtraRoundType;
 }
-    
+
 simulated exec function SwitchFireMode()
 {
     if (Gun != none && DH_ATGunCannon(Gun) != none && DH_ATGunCannon(Gun).bMultipleRoundTypes)
@@ -85,7 +85,7 @@ simulated function DrawHUD(Canvas Canvas)
                 OverlayCenterTexSize =  Float(CannonScopeOverlay.USize) * OverlayCenterScale;
 
                 Canvas.SetPos(0.0, 0.0);
-                Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, 
+                Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
                     OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
                 // Draw the range setting

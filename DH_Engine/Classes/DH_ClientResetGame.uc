@@ -25,7 +25,7 @@ simulated function PostBeginPlay()
         }
     }
 
-    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone) 
+    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
     {
         Destroy(); // the client version of this actor has done it's job (& this actor has no business existing on a standalone)
     }

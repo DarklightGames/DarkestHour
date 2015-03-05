@@ -46,7 +46,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         return;
     }
 
-    // Just return if the player switches teams after throwing the explosive - this prevent people TK exploiting by switching teams 
+    // Just return if the player switches teams after throwing the explosive - this prevent people TK exploiting by switching teams
     if (Role == ROLE_Authority)
     {
         if (Instigator == none || Instigator.Controller == none)
@@ -224,7 +224,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         if (Role == ROLE_Authority)
         {
             DestroMesh.TakeDamage(DestroMesh.Health + 1, Instigator, Location, MomentumTransfer * Normal(Velocity), class'DHWeaponBashDamageType');
-            
+
             // But it will only take damage if it's vulnerable to a weapon bash - so check if it's been reduced to zero Health & if so then we'll exit without deflecting
             if (DestroMesh.Health < 0)
             {

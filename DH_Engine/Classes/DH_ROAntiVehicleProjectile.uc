@@ -102,7 +102,7 @@ simulated function PostNetBeginPlay()
         }
 
         Log("Shell debug tracing: TraceHitActor =" @ TraceHitActor);
-    }    
+    }
 }
 
 // Matt: emptied out to remove delayed destruction stuff from the Super in ROAntiVehicleProjectile - it's far cleaner just to set a short LifeSpan on a server
@@ -248,7 +248,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         SavedHitActor = HitVehicle;
 
         Trace(TempHitLocation, HitNormal, HitLocation + Normal(Velocity) * 50.0, HitLocation - Normal(Velocity) * 50.0, true); // get a reliable vehicle HitNormal, e.g. for a deflection
-        
+
         if (bDebuggingText && Role == ROLE_Authority)
         {
             DebugShotDistanceAndSpeed();
@@ -468,7 +468,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
         else if (DH_ROTreadCraft(HitActor) != none && DH_ROTreadCraft(HitActor).bRoundShattered)
         {
             bShattered = true;
-            DH_ROTreadCraft(HitActor).bRoundShattered = false; // reset for next hit 
+            DH_ROTreadCraft(HitActor).bRoundShattered = false; // reset for next hit
         }
 
         if (bShattered)
@@ -675,7 +675,7 @@ simulated function HandleDestruction()
         Destroy();
     }
 }
-    
+
 simulated function Destroyed()
 {
     if (Corona != none)

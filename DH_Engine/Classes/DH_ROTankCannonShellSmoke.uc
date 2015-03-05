@@ -20,7 +20,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 {
     if (!bCollided)
     {
-        super.Explode(HitLocation, HitNormal);   
+        super.Explode(HitLocation, HitNormal);
 
         if (Level.NetMode != NM_DedicatedServer)
         {
@@ -53,7 +53,7 @@ simulated function HandleDestruction()
     bCollideWorld = false;
 }
 
-/* 
+/*
 // Matt: removed these functions as this stuff isn't necessary & didn't work to prevent the SmokeEmitter from persisting on clients if the game was reset
 // Destruction of SmokeEmitter now handled by emitter's Reset, called as standard in single player & by new DH_ClientResetGame actor on net clients
 simulated function KillSmoke()

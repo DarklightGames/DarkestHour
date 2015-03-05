@@ -367,7 +367,7 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
             {
                 if (Other.IsA('ROVehicle'))
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
                         class<ROBullet>(ProjectileClass).default.MyVehicleDamage);
                 }
                 else
@@ -378,13 +378,13 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
                     {
                         if (!HitPawn.bDeleteMe)
                         {
-                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
                                 class<ROBullet>(ProjectileClass).default.MyDamageType, HitPoints);
                         }
                     }
                     else
                     {
-                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
                             class<ROBullet>(ProjectileClass).default.MyDamageType);
                     }
                 }
@@ -393,7 +393,7 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
             {
                 if (RODestroyableStaticMesh(Other) != none)
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), 
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir),
                         class<ROBullet>(ProjectileClass).default.MyDamageType);
 
                     if (RODestroyableStaticMesh(Other).bWontStopBullets)

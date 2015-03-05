@@ -64,7 +64,7 @@ simulated function DrawHUD(Canvas Canvas)
                 OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(CannonScopeOverlay.USize) / 2.0;
                 OverlayCenterTexSize =  float(CannonScopeOverlay.USize) * OverlayCenterScale;
                 Canvas.SetPos(0.0, 0.0);
-                Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX, 
+                Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
                     OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
 
                 // Draw the range setting

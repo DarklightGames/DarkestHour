@@ -56,7 +56,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             else if (ProjectileClass == SecondaryProjectileClass)
             {
                 FireMode = 1;
-                
+
                 if (bUsesSecondarySpread && SecondarySpread > 0.0)
                 {
                     FireSpread = SecondarySpread;
@@ -71,7 +71,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                     FireSpread = TertiarySpread;
                 }
             }
-            
+
             if (FireSpread > 0)
             {
                 WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * FireSpread);
@@ -193,7 +193,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
         if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
         {
-            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation, 
+            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
                 WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
             {
                 StartLocation = HitLocation;
@@ -543,7 +543,7 @@ simulated function int PrimaryAmmoCount()
 // Modified as this cannon uses magazines
 function bool GiveInitialAmmo()
 {
-    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo || 
+    if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo ||
         AltAmmoCharge != InitialAltAmmo || NumMags != default.NumMags || NumSecMags != default.NumSecMags || NumTertMags != default.NumTertMags || NumAltMags != default.NumAltMags)
     {
         MainAmmoChargeExtra[0] = InitialPrimaryAmmo;

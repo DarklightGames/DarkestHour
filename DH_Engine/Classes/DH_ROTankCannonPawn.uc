@@ -524,10 +524,10 @@ function bool KDriverLeave(bool bForceLeave)
         LastPositionIndex = InitialPositionIndex;
 
         VehicleBase.MaybeDestroyVehicle();
-        
+
         return true;
     }
-    
+
     return false;
 }
 

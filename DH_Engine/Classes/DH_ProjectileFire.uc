@@ -262,7 +262,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
                 if (Other.IsA('ROVehicle'))
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
                         ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), class<DH_Bullet>(ProjectileClass).default.MyVehicleDamage);
                 }
                 else
@@ -273,13 +273,13 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                     {
                         if (!HitPawn.bDeleteMe)
                         {
-                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                            HitPawn.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
                                 ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType, HitPoints);
                         }
                     }
                     else
                     {
-                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
                             ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
                     }
                 }
@@ -293,7 +293,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
                 if (RODestroyableStaticMesh(Other) != none)
                 {
-                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation, 
+                    Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
                         ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), ProjectileClass.default.MyDamageType);
 
                     if (RODestroyableStaticMesh(Other).bWontStopBullets)
@@ -345,7 +345,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
     if (!bSpawnedTracer && ProjectileClass != none) // Matt: added so we spawn bullet OR tracer, not both
     {
-        SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir);        
+        SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir);
     }
 
     return SpawnedProjectile;

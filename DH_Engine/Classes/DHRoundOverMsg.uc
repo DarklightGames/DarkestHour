@@ -67,7 +67,7 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
         {
             // Lets find out if we are dealing with a sound group
             SoundG = SoundGroup(DHLI.AxisWinsMusic);
- 
+
             // Check to make sure the sound exists and the index is valid
             if (SoundG != none && DHGRI.AxisVictoryMusicIndex >= 0 && DHGRI.AxisVictoryMusicIndex < SoundG.Sounds.Length)
             {
