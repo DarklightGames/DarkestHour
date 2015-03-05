@@ -32,7 +32,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    UnbuttonedPositionIndex=1
+    UnbuttonedPositionIndex=3
     bNoDriverHatch=true
     LeftTreadIndex=2
     RightTreadIndex=3

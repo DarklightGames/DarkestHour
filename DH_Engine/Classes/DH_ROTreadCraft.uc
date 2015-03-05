@@ -442,7 +442,7 @@ function KDriverEnter(Pawn p)
 
     super(Vehicle).KDriverEnter(P); // need to skip over Super from ROVehicle
 
-    Driver.bSetPCRotOnPossess = false; // so when driver gets out he'll be facing the same direction as he was inside the vehicle
+    Driver.bSetPCRotOnPossess = false; // so when player gets out he'll be facing the same direction as he was inside the vehicle
 }
 
 // Overriding here because we don't want exhaust/dust to start up until engine starts
@@ -717,22 +717,9 @@ function ServerChangeViewPoint(bool bForward)
 // Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
 function bool KDriverLeave(bool bForceLeave)
 {
-    // bForceLeave is always true for position switch, so player is trying to exit not switch (checking for false means no risk of locking someone in one slot)
-    if (!bForceLeave)
+    if (!bForceLeave && !CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
     {
-        if (bNoDriverHatch)
-        {
-            DisplayVehicleMessage(5); // must exit through commander's hatch
-
-            return false;
-        }
-        // Driver is not unbuttoned, so don't let them exit
-        else if (DriverPositionIndex < UnbuttonedPositionIndex || (DriverPositionIndex == UnbuttonedPositionIndex && Instigator.IsInState('ViewTransition')))
-        {
-            DisplayVehicleMessage(4); // must unbutton the hatch
-
-            return false;
-        }
+        return false;
     }
 
     if (super(ROVehicle).KDriverLeave(bForceLeave))
@@ -757,28 +744,17 @@ simulated function SwitchWeapon(byte F)
 
     ChosenWeaponPawnIndex = F - 2;
 
-    // Stop call to server if player has selected an invalid weapon position, or if player is moving between view points
+    // Stop call to server if player has selected an invalid weapon position
     // Note that if player presses 0 or 1, which are invalid choices for a vehicle driver, the byte index will end up as 254 or 255 & so will still fail this test (which is what we want)
-    if (ChosenWeaponPawnIndex >= PassengerWeapons.Length || IsInState('ViewTransition'))
+    if (ChosenWeaponPawnIndex >= PassengerWeapons.Length)
     {
         return;
     }
 
     // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-    if (bAllowRiders && ChosenWeaponPawnIndex >= FirstRiderPositionIndex && bMustUnbuttonToSwitchToRider)
+    if (StopExitToRiderPosition(ChosenWeaponPawnIndex))
     {
-        if (bNoDriverHatch)
-        {
-            DisplayVehicleMessage(5); // must exit through commander's hatch (e.g. for Stug, JP, & Panzer III drivers, who have no hatch)
-
-            return;
-        }
-        else if (DriverPositionIndex < UnbuttonedPositionIndex)
-        {
-            DisplayVehicleMessage(4); // must unbutton the hatch
-
-            return;
-        }
+        return;
     }
 
     // Get weapon pawn
@@ -811,7 +787,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        DisplayVehicleMessage(0); // not qualified to operate vehicle
+        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
 
         return;
     }
@@ -1003,7 +979,7 @@ function bool TryToDrive(Pawn P)
     // Don't allow entry to burning vehicle (with message)
     if (bOnFire || bEngineOnFire)
     {
-        DisplayVehicleMessage(9, P); // vehicle is on fire
+        DenyEntry(P, 9); // vehicle is on fire
 
         return false;
     }
@@ -1014,7 +990,7 @@ function bool TryToDrive(Pawn P)
         // Deny entry to TeamLocked enemy vehicle
         if (bTeamLocked)
         {
-            DisplayVehicleMessage(1, P); // can't use enemy vehicle
+            DenyEntry(P, 1); // can't use enemy vehicle
 
             return false;
         }
@@ -1023,7 +999,7 @@ function bool TryToDrive(Pawn P)
         {
             if (Driver != none && P.GetTeamNum() != Driver.GetTeamNum())
             {
-                DisplayVehicleMessage(1, P); // can't use enemy vehicle
+                DenyEntry(P, 1); // can't use enemy vehicle
 
                 return false;
             }
@@ -1032,7 +1008,7 @@ function bool TryToDrive(Pawn P)
             {
                 if (WeaponPawns[i].Driver != none && P.GetTeamNum() != WeaponPawns[i].Driver.GetTeamNum())
                 {
-                    DisplayVehicleMessage(1, P); // can't use enemy vehicle
+                    DenyEntry(P, 1); // can't use enemy vehicle
 
                     return false;
                 }
@@ -1044,7 +1020,6 @@ function bool TryToDrive(Pawn P)
     if (Driver != none || Health <= 0 || P == none || P.bIsCrouched || (DH_Pawn(P) != none && DH_Pawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
     {
-        if (Driver != none) log("TreadCraft.TryToDrive denying entry as already has driver"); // TEMP
         return false;
     }
 
@@ -1055,7 +1030,7 @@ function bool TryToDrive(Pawn P)
         // Check first to ensure riders are allowed
         if (!bAllowRiders)
         {
-            DisplayVehicleMessage(3, P); // can't ride on this vehicle
+            DenyEntry(P, 3); // can't ride on this vehicle
 
             return false;
         }
@@ -1072,7 +1047,7 @@ function bool TryToDrive(Pawn P)
             }
         }
 
-        DisplayVehicleMessage(8, P); // all rider positions full
+        DenyEntry(P, 3); // all rider positions full
 
         return false;
     }
@@ -1187,7 +1162,7 @@ simulated function PostNetBeginPlay()
 // Matt: modified to handle engine on/off (including manual/powered turret & dust/exhaust emitters), damaged tracks & fire effects, instead of constantly checking in Tick
 simulated function PostNetReceive()
 {
-    // Driver has changed position
+    // Player has changed position
     if (DriverPositionIndex != SavedPositionIndex)
     {
         PreviousPositionIndex = SavedPositionIndex;
@@ -3075,43 +3050,41 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
 }
 
-// Modified to prevent switch to other vehicle position while moving between view points & to prevent 'teleporting' outside to external rider position unless unbuttoned
+// Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
 function ServerChangeDriverPosition(byte F)
 {
-    if (IsInState('ViewTransition'))
+    if (StopExitToRiderPosition(F - 2))
     {
         return;
-    }
-
-    // Prevent 'teleporting' outside to an external rider position unless unbuttoned
-    if (bAllowRiders && (F - 2) >= FirstRiderPositionIndex && bMustUnbuttonToSwitchToRider)
-    {
-        if (bNoDriverHatch)
-        {
-            DisplayVehicleMessage(5); // must exit through commander's hatch
-
-            return;
-        }
-        else if (DriverPositionIndex < UnbuttonedPositionIndex)
-        {
-            DisplayVehicleMessage(4); // must unbutton the hatch
-
-            return;
-        }
     }
 
     super.ServerChangeDriverPosition(F);
 }
 
-// New function to prominently display one of the standard DH vehicle-related message (instead of using DenyEntry(), which can be misleading)
-function DisplayVehicleMessage(int MessageNum, optional Pawn P)
+// New function to check if player can exit, displaying an "unbutton the hatch" message if he can't (just saves repeating code in different functions)
+simulated function bool CanExit()
 {
-    if (P == none)
+    if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
-        P = self;
+        if (bNoDriverHatch)
+        {
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch
+        }
+        else
+        {
+            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+        }
+
+        return false;
     }
 
-    P.ReceiveLocalizedMessage(class'DH_VehicleMessage', MessageNum);
+    return true;
+}
+
+// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
+simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
+{
+    return bMustUnbuttonToSwitchToRider && bAllowRiders && ChosenWeaponPawnIndex >= FirstRiderPositionIndex && ChosenWeaponPawnIndex < PassengerWeapons.Length && !CanExit();
 }
 
 // Modified to optimise & to avoid accessed none errors

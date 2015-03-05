@@ -158,7 +158,7 @@ simulated function PostNetReceive()
 {
     local int i;
 
-    // Commander has changed position
+    // Player has changed view position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
         if (Driver == none && DriverPositionIndex > 0 && !IsLocallyControlled() && Level.NetMode == NM_Client)
@@ -507,14 +507,12 @@ function ServerChangeDriverPos()
     DriverPositionIndex = InitialPositionIndex;
 }
 
-// Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
-// Also to reset to InitialPositionIndex instead of zero
+// Modified to prevent players exiting unless unbuttoned
+// Also to reset to InitialPositionIndex instead of zero & so that exit stuff only happens if the Super returns true
 function bool KDriverLeave(bool bForceLeave)
 {
-    if (!bForceLeave && (DriverPositionIndex < UnbuttonedPositionIndex || (DriverPositionIndex == UnbuttonedPositionIndex && IsInState('ViewTransition'))))
+    if (!bForceLeave && !CanExit()) // bForceLeave means so player is trying to exit not just switch position, so no risk of locking someone in one slot
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
-
         return false;
     }
 
@@ -765,12 +763,10 @@ function AltFire(optional float F)
 simulated function SwitchWeapon(byte F)
 {
     local ROVehicleWeaponPawn WeaponPawn;
-    local DH_ROTreadCraft     TreadCraft;
     local bool                bMustBeTankerToSwitch;
     local byte                ChosenWeaponPawnIndex;
 
-    // Stop call to server if we don't have a vehicle base, or if player is moving between view points
-    if (VehicleBase == none || IsInState('ViewTransition'))
+    if (VehicleBase == none)
     {
         return;
     }
@@ -795,19 +791,15 @@ simulated function SwitchWeapon(byte F)
         ChosenWeaponPawnIndex = F - 2;
 
         // Stop call to server if player has selected an invalid weapon position or the current position
+        // Note that if player presses 0, which is invalid choice, the byte index will end up as 254 & so will still fail this test (which is what we want)
         if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
         {
             return;
         }
 
-        TreadCraft = DH_ROTreadCraft(VehicleBase);
-
         // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-        if (TreadCraft != none && TreadCraft.bAllowRiders && ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex &&
-            TreadCraft.bMustUnbuttonToSwitchToRider && DriverPositionIndex < UnbuttonedPositionIndex)
+        if (StopExitToRiderPosition(ChosenWeaponPawnIndex))
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
-
             return;
         }
 
@@ -850,26 +842,39 @@ simulated function SwitchWeapon(byte F)
     ServerChangeDriverPosition(F);
 }
 
-// Modified to prevent switch to other vehicle position while moving between view points & to prevent 'teleporting' outside to external rider position unless unbuttoned
+// Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
 function ServerChangeDriverPosition(byte F)
 {
-    local DH_ROTreadCraft TreadCraft;
-
-    if (IsInState('ViewTransition'))
+    if (StopExitToRiderPosition(F - 2)) // driver (1) becomes -1, which for byte becomes 255
     {
-        return;
-    }
-
-    TreadCraft = DH_ROTreadCraft(VehicleBase);
-
-    if (TreadCraft != none && TreadCraft.bAllowRiders && (F - 2) >= TreadCraft.FirstRiderPositionIndex && TreadCraft.bMustUnbuttonToSwitchToRider && DriverPositionIndex < UnbuttonedPositionIndex)
-    {
-        DenyEntry(Instigator, 4); // must unbutton the hatch
-
         return;
     }
 
     super.ServerChangeDriverPosition(F);
+}
+
+// New function to check if player can exit, displaying an "unbutton hatch" message if he can't (just saves repeating code in different functions)
+simulated function bool CanExit()
+{
+    if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
+    {
+        ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+
+        return false;
+    }
+
+    return true;
+}
+
+// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
+simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
+{
+    local DH_ROTreadCraft TreadCraft;
+
+    TreadCraft = DH_ROTreadCraft(VehicleBase);
+
+    return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
+        ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
 }
 
 // Matt: re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
