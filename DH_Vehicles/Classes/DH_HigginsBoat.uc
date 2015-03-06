@@ -31,7 +31,7 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 }
 
-// Matt: modified to avoid playing BeginningIdleAnim because it makes the ramp position reset every time a player enters
+// Matt: modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player entered
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
@@ -164,6 +164,18 @@ function DriverDied()
     super(ROVehicle).DriverDied(); // skip over Super in ROWheeledVehicle, which would reset DriverPositionIndex to 0
 
     MaybeDestroyVehicle();
+}
+
+// Matt: modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player exited
+simulated event DrivingStatusChanged()
+{
+    super(Vehicle).DrivingStatusChanged();
+
+    // Not moving, so no motion sound
+    if (Level.NetMode != NM_DedicatedServer && (!bDriving || bEngineOff))
+    {
+        UpdateMovementSound(0.0);
+    }
 }
 
 // Called by notifies

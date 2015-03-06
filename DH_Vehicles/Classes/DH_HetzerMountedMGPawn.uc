@@ -57,17 +57,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     SetRotation(NewRotation);
 }
 
-// Modified to play idle animation on server & non-owning net clients, so loader's collision box gets reset on all machines when player exits
-simulated function DrivingStatusChanged()
-{
-    super.DrivingStatusChanged();
-
-    if (!bDriving && !IsLocallyControlled() && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
-    {
-        Gun.PlayAnim(Gun.BeginningIdleAnim);
-    }
-}
-
 // Modified to prevent the player from unbuttoning if the MG is not turned sideways (otherwise it will be blocking the hatch, due to hetzer's small size)
 simulated function NextWeapon()
 {

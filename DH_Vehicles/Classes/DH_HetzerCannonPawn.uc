@@ -5,22 +5,6 @@
 
 class DH_HetzerCannonPawn extends DH_AssaultGunCannonPawn;
 
-// Modified to play idle animation on server as workaround to stop collision box glitch on the roof
-function bool KDriverLeave(bool bForceLeave)
-{
-    if (super.KDriverLeave(bForceLeave))
-    {
-        if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
-        {
-            Gun.PlayAnim(Gun.BeginningIdleAnim);
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 // Modified to run state 'ViewTransition' on server when buttoning up, so transition down anim plays on server & puts commander's collision box in correct position
 function ServerChangeViewPoint(bool bForward)
 {

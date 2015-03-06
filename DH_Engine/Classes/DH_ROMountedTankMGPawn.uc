@@ -158,6 +158,26 @@ simulated function ClientKDriverLeave(PlayerController PC)
     super.ClientKDriverLeave(PC);
 }
 
+// Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
+simulated state LeavingVehicle
+{
+    simulated function HandleExit()
+    {
+        Gun.LinkMesh(Gun.default.Mesh);
+    }
+}
+
+// Modified to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
+simulated event DrivingStatusChanged()
+{
+    super.DrivingStatusChanged();
+
+    if (!bDriving && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    {
+        Gun.PlayAnim(Gun.BeginningIdleAnim);
+    }
+}
+
 function bool PlaceExitingDriver()
 {
     local int    i, StartIndex;

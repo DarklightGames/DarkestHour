@@ -444,7 +444,8 @@ function KDriverEnter(Pawn p)
     Driver.bSetPCRotOnPossess = false; // so when player gets out he'll be facing the same direction as he was inside the vehicle
 }
 
-// Overriding here because we don't want exhaust/dust to start up until engine starts
+// Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
+// Also to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
 simulated event DrivingStatusChanged()
 {
     local PlayerController PC;
@@ -484,6 +485,11 @@ simulated event DrivingStatusChanged()
     else
     {
         Disable('Tick');
+
+        if (HasAnim(BeginningIdleAnim))
+        {
+            PlayAnim(BeginningIdleAnim);
+        }
     }
 
     super(Vehicle).DrivingStatusChanged();

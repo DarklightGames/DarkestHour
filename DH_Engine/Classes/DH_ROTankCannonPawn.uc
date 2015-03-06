@@ -542,6 +542,15 @@ function DriverDied()
     if (VehicleBase.Health > 0)
     {
         SetRotatingStatus(0);
+
+// Modified to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
+simulated event DrivingStatusChanged()
+{
+    super.DrivingStatusChanged();
+
+    if (!bDriving && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    {
+        Gun.PlayAnim(Gun.BeginningIdleAnim);
     }
 }
 
@@ -688,6 +697,7 @@ Begin:
 }
 
 // Modified so mesh rotation is matched in all net modes, not just standalone as in the RO original (not sure why they did that)
+// Also to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
 simulated state LeavingVehicle
 {
     simulated function HandleExit()
@@ -705,11 +715,6 @@ simulated state LeavingVehicle
             // Now make the new mesh you swap to have the same rotation as the old one
             Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
             Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
-        }
-
-        if (Gun.HasAnim(Gun.BeginningIdleAnim))
-        {
-            Gun.PlayAnim(Gun.BeginningIdleAnim);
         }
     }
 }
