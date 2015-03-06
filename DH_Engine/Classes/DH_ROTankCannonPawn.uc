@@ -529,20 +529,21 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified to reset to InitialPositionIndex instead of zero
+// Modified to reset to InitialPositionIndex instead of zero & to call DriverLeft() because player death doesn't trigger KDriverLeave/DriverLeft/DrivingStatusChanged
 function DriverDied()
 {
     DriverPositionIndex = InitialPositionIndex;
 
-    super.DriverDied();
+    super(Vehicle).DriverDied(); // need to skip over Super in ROVehicleWeaponPawn (& Super in VehicleWeaponPawn adds nothing)
 
     VehicleBase.MaybeDestroyVehicle();
 
-    // Kill the rotation sound if the driver dies but the vehicle doesn't
     if (VehicleBase.Health > 0)
     {
-        SetRotatingStatus(0);
+        SetRotatingStatus(0); // kill the rotation sound if the driver dies but the vehicle doesn't
     }
+
+    DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
 }
 
 // Modified to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)

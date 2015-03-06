@@ -156,15 +156,12 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified to call DriverLeft (which calls DrivingStatusChanged) because player death doesn't trigger KDriverLeave-DriverLeft
+// Modified to call DriverLeft() because player death doesn't trigger KDriverLeave/DriverLeft/DrivingStatusChanged
 function DriverDied()
 {
     super.DriverDied();
 
-    if (Health > 0) // means player has died but the vehicle hasn't been destroyed (ROVehicle adds the same for vehicles)
-    {
-        DriverLeft();
-    }
+    DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
 }
 
 // Modified to set bTearOff to true (after a short timer) on a server when player exits, which kills off the clientside actor & closes the net channel
