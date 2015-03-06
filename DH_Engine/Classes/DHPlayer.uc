@@ -2015,7 +2015,7 @@ exec function DebugFOV()
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
 }
 
-function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte MagCount, optional bool bExploit)
+function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional bool bExploit)
 {
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo DHGRI;
@@ -2058,9 +2058,11 @@ function bool ServerAttemptDeployPlayer(optional DHSpawnPoint SP, optional byte 
     // Confirm this player has a role && check if MagCount is valid based on role/weapon
     if (PRI.RoleInfo != none && PrimaryWep != none)
     {
+        //Log("PrimaryWeapon: "$PrimaryWep.GetHumanReadableName());
+
         if (MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags || MagCount <= 0)
         {
-            Log("Failed at 1");
+            Log("Failed at 1 MagCount is:"@MagCount);
             return false;
         }
     }

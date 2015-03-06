@@ -582,7 +582,10 @@ function UpdateSelectedWeapon(int weaponCategory)
 
     // Clear current weapon & mag display
     i_WeaponImages[weaponCategory].Image = none;
-    i_MagImages[0].Image = none;
+    if (weaponCategory == 0)
+    {
+        i_MagImages[weaponCategory].Image = none;
+    }
 
     if (desiredRole != none)
     {
@@ -604,7 +607,7 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
-                Log("Desired Ammo Amount before:" @ player.DesiredAmmoAmount);
+                //Log("Desired Ammo Amount before:" @ player.DesiredAmmoAmount);
                 nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
                 if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MinValue || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
@@ -636,7 +639,7 @@ function UpdateSelectedWeapon(int weaponCategory)
                 class<Weapon>(item).default.FireModeClass[0].default.AmmoClass != none &&
                 weaponCategory == 0)
             {
-                i_MagImages[0].Image = class<Weapon>(item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
+                i_MagImages[weaponCategory].Image = class<Weapon>(item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
             }
 
             desiredWeapons[weaponCategory] = i;
@@ -875,7 +878,10 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     w1 = desiredWeapons[0];
     w2 = desiredWeapons[1];
 
-    Log("AttemptRoleApplication() Calling ServerChangePlayerInfo!!!                                     Attempt Semi-Success");
+    //Log("AttemptRoleApplication() Calling ServerChangePlayerInfo!!!                                     Attempt Semi-Success");
+
+    // Set Desired Ammo Amount
+    //DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
 
     // Attempt team, role and weapons change
     player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
@@ -933,7 +939,7 @@ function InternalOnChange(GUIComponent Sender)
 
         case nu_PrimaryAmmoMags:
             DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            Log("Desired Ammo Amount after:" @ DHPlayer(PlayerOwner()).DesiredAmmoAmount);
+            //Log("Desired Ammo Amount after:" @ DHPlayer(PlayerOwner()).DesiredAmmoAmount);
             l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
             break;
     }
