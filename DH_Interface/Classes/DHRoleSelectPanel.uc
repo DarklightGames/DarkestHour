@@ -880,8 +880,8 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
 
     //Log("AttemptRoleApplication() Calling ServerChangePlayerInfo!!!                                     Attempt Semi-Success");
 
-    // Set Desired Ammo Amount
-    //DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
+    // Make sure DesiredAmmoAmount is set
+    DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
 
     // Attempt team, role and weapons change
     player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);

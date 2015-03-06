@@ -10,7 +10,10 @@ const   SPAWN_POINTS_MAX =                  16;
 
 var automated ROGUIProportionalContainer    MapContainer;
 
+var localized string                        ReinforcementText;
+
 var     bool                                bReadyToDeploy;
+var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
 var     automated GUIProgressBar            pb_DeployProgressBar;
@@ -22,6 +25,7 @@ var     Material                            ObjectiveIcons[3];
 // Actor references - these must be cleared at level change
 var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
+var     DHHud                               HUD;
 var     vector                              NELocation,SWLocation;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -31,6 +35,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Super.InitComponent(MyController, MyOwner);
 
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
+
+    HUD = DHHud(DHPlayer(PlayerOwner()).myHUD);
 
     // Set the level map image
     i_Background.Image = GRI.MapImage;
@@ -53,6 +59,18 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set the location of the map bounds
     NELocation = GRI.NorthEastBounds;
     SWLocation = GRI.SouthWestBounds;
+
+    // Timer for updating reinforcements & time
+    Timer();
+    SetTimer(1.0, true);
+}
+
+// Used to update round time and reinforcements
+function Timer()
+{
+    // Update round time & reinforcement count
+    l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(HUD.CurrentTime);
+    l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PlayerOwner().PlayerReplicationInfo.Team.TeamIndex]);
 }
 
 // Make panel uniform (square) and adjust other components accordingly
@@ -341,6 +359,7 @@ defaultproperties
 {
     bNeverFocus=true
     OnRendered=DHDeploymentMapMenu.InternalOnPostDraw
+    ReinforcementText="Reinforcements Remaining:"
 
     //Theel: need a neutral objective icon, as we actually don't have one singled out
     ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
@@ -393,10 +412,10 @@ defaultproperties
         CaptionAlign=TXTA_Center
         RenderWeight=5.85
         StyleName="DHSpawnButtonStyle"
-        WinWidth=0.4
-        WinHeight=0.1
+        WinWidth=0.2
+        WinHeight=0.05
         WinLeft=0.05
-        WinTop=0.010181
+        WinTop=0.7
         OnClick=DHDeploymentMapMenu.InternalOnClick
     End Object
     b_ExploitSpawn=TempExploitButton
@@ -475,4 +494,26 @@ defaultproperties
     b_Objectives(13)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
     b_Objectives(14)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
     b_Objectives(15)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+
+    // Reinforcement Counter
+    Begin Object Class=GUILabel Name=ReinforceCounter
+        TextAlign=TXTA_Left
+        StyleName="DHLargeText"
+        WinWidth=0.3
+        WinHeight=0.025
+        WinLeft=0.0
+        WinTop=0.025
+    End Object
+    l_ReinforcementCount=ReinforceCounter
+
+    // Round Time Counter
+    Begin Object Class=GUILabel Name=RoundTimeCounter
+        TextAlign=TXTA_Left
+        StyleName="DHLargeText"
+        WinWidth=0.3
+        WinHeight=0.025
+        WinLeft=0.0
+        WinTop=0.0
+    End Object
+    l_RoundTime=RoundTimeCounter
 }
