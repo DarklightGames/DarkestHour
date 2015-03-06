@@ -161,6 +161,8 @@ defaultproperties
     DefaultStyleNames(76)="DH_Interface.DHStyle_LargeBlackText"
     DefaultStyleNames(77)="DH_Interface.DHStyle_GripButtonNB"
     DefaultStyleNames(78)="DH_Interface.DHStyle_ListSelectionBlack"
+    DefaultStyleNames(79)="DH_Interface.DHStyle_SpawnButton"
+    DefaultStyleNames(80)="DH_Interface.DHStyle_DeployButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

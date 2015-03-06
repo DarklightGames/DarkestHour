@@ -14,12 +14,8 @@ var automated ROGUIProportionalContainer    MainContainer,
                                             SecondaryWeaponContainer,
                                             EquipContainer;
 
-var automated GUILabel                      l_PrimaryWeaponTitle,
-                                            l_SecondaryWeaponTitle,
-                                            l_EquipTitle,
-                                            l_EstimatedRedeployTime;
+var automated GUILabel                      l_EstimatedRedeployTime;
 
-//var automated BackgroundImage               bg_Background;
 var automated GUIImage                      i_WeaponImages[2], i_MagImages[2];
 var automated DHGUIListBox                  lb_Roles, lb_AvailableWeapons[2];
 var automated GUIGFXButton                  b_Equipment[4];
@@ -72,16 +68,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     PrimaryWeaponContainer.ManageComponent(lb_AvailableWeapons[0]);
     PrimaryWeaponContainer.ManageComponent(i_MagImages[0]);
     PrimaryWeaponContainer.ManageComponent(nu_PrimaryAmmoMags);
-    PrimaryWeaponContainer.ManageComponent(l_PrimaryWeaponTitle);
     li_AvailableWeapons[0] = ROGUIListPlus(lb_AvailableWeapons[0].List);
 
     // Remove secondary mag image
-    i_MagImages[1] = none;
+    //i_MagImages[1] = none;
 
     // Secondary weapon container
     SecondaryWeaponContainer.ManageComponent(i_WeaponImages[1]);
     SecondaryWeaponContainer.ManageComponent(lb_AvailableWeapons[1]);
-    SecondaryWeaponContainer.ManageComponent(l_SecondaryWeaponTitle);
     li_AvailableWeapons[1] = ROGUIListPlus(lb_AvailableWeapons[1].List);
 
     // Equipment container
@@ -89,7 +83,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     EquipContainer.ManageComponent(b_Equipment[1]);
     EquipContainer.ManageComponent(b_Equipment[2]);
     EquipContainer.ManageComponent(b_Equipment[3]);
-    EquipContainer.ManageComponent(l_EquipTitle);
 
     // Get player's initial values (name, team, role, weapons)
     GetInitialValues();
@@ -399,7 +392,6 @@ function UpdateWeaponsInfo()
     i_WeaponImages[0].Image = none;
     i_WeaponImages[1].Image = none;
     i_MagImages[0].Image = none;
-    i_MagImages[1].Image = none;
 
     if (desiredRole != none)
     {
@@ -590,7 +582,7 @@ function UpdateSelectedWeapon(int weaponCategory)
 
     // Clear current weapon & mag display
     i_WeaponImages[weaponCategory].Image = none;
-    i_MagImages[weaponCategory].Image = none;
+    i_MagImages[0].Image = none;
 
     if (desiredRole != none)
     {
@@ -644,7 +636,7 @@ function UpdateSelectedWeapon(int weaponCategory)
                 class<Weapon>(item).default.FireModeClass[0].default.AmmoClass != none &&
                 weaponCategory == 0)
             {
-                i_MagImages[weaponCategory].Image = class<Weapon>(item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
+                i_MagImages[0].Image = class<Weapon>(item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
             }
 
             desiredWeapons[weaponCategory] = i;
@@ -1100,6 +1092,7 @@ defaultproperties
 
     RoleSelectFooterButtonsWinTop=0.946667
 
+    // Main Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MainContiner_inst
         WinLeft=0.0
         WinTop=0.0
@@ -1112,6 +1105,7 @@ defaultproperties
     End Object
     MainContainer=MainContiner_inst
 
+    // Estimated deploy time label
     Begin Object Class=GUILabel Name=EstimatedRedeployTime
         Caption="Estimated Redeploy Time:"
         TextAlign=TXTA_Center
@@ -1123,20 +1117,11 @@ defaultproperties
     End Object
     l_EstimatedRedeployTime=EstimatedRedeployTime
 
-    // Primary Title
-    Begin Object Class=GUILabel Name=PrimaryWeaponTitle
-        Caption="Primary Weapon"
-        TextAlign=TXTA_Center
-        StyleName="DHLargeText"
-        WinWidth=1.0
-        WinHeight=0.15
-        WinLeft=0.0
-        WinTop=-0.2
-    End Object
-    l_PrimaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelectPanel.PrimaryWeaponTitle'
-
     // Primary Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PrimaryWeaponContainer_inst
+        bNoCaption=false
+        Caption="Primary Weapon"
+        CaptionAlign=TXTA_Left
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
         WinWidth=1.0
         WinHeight=0.175
@@ -1149,20 +1134,11 @@ defaultproperties
     End Object
     PrimaryWeaponContainer=PrimaryWeaponContainer_inst
 
-    // Secondary Title
-    Begin Object Class=GUILabel Name=SecondaryWeaponTitle
-        Caption="Secondary Weapon"
-        TextAlign=TXTA_Center
-        StyleName="DHLargeText"
-        WinWidth=1.0
-        WinHeight=0.15
-        WinLeft=0.0
-        WinTop=-0.25
-    End Object
-    l_SecondaryWeaponTitle=GUILabel'DH_Interface.DHRoleSelectPanel.SecondaryWeaponTitle'
-
     // Secondary Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SecondaryWeaponContainer_inst
+        bNoCaption=false
+        Caption="Secondary Weapon"
+        CaptionAlign=TXTA_Left
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
         WinWidth=1.0
         WinHeight=0.1315
@@ -1175,20 +1151,11 @@ defaultproperties
     End Object
     SecondaryWeaponContainer=SecondaryWeaponContainer_inst
 
-    // Equipment title
-    Begin Object Class=GUILabel Name=EquipmentWeaponTitle
-        Caption="Equipment"
-        TextAlign=TXTA_Center
-        StyleName="DHLargeText"
-        WinWidth=1.0
-        WinHeight=0.15
-        WinLeft=0.0
-        WinTop=-0.2
-    End Object
-    l_EquipTitle=GUILabel'DH_Interface.DHRoleSelectPanel.EquipmentWeaponTitle'
-
     // Equipment Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=EquipmentContainer_inst
+        bNoCaption=false
+        Caption="Equipment"
+        CaptionAlign=TXTA_Left
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHLoadout_Box'
         WinWidth=1.0
         WinHeight=0.1695
@@ -1264,6 +1231,7 @@ defaultproperties
     End Object
     i_MagImages(0)=MagImage
 
+    // Weapon selection boxes
     Begin Object Class=DHGuiListBox Name=WeaponListBox
         SelectedStyleName="DHListSelectionStyle"
         OutlineStyleName="ItemOutline"
@@ -1286,10 +1254,10 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.25
-        WinHeight=0.5
+        WinWidth=0.15
+        WinHeight=0.35
         WinLeft=0.0
-        WinTop=0.05
+        WinTop=0.15
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton0.InternalOnKeyEvent
     End Object
@@ -1301,10 +1269,10 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.25
-        WinHeight=0.5
+        WinWidth=0.15
+        WinHeight=0.35
         WinLeft=0.25
-        WinTop=0.05
+        WinTop=0.15
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton1.InternalOnKeyEvent
     End Object
@@ -1316,10 +1284,10 @@ defaultproperties
         Position=ICP_Justified
         bClientBound=true
         StyleName="DHGripButtonNB"
-        WinWidth=0.25
-        WinHeight=0.5
+        WinWidth=0.15
+        WinHeight=0.35
         WinLeft=0.5
-        WinTop=0.05
+        WinTop=0.15
         OnClick=DHRoleSelectPanel.InternalOnClick
         OnKeyEvent=EquipButton2.InternalOnKeyEvent
     End Object

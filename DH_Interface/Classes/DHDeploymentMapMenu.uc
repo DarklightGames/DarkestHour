@@ -2,6 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
+
 class DHDeploymentMapMenu extends MidGamePanel;
 
 const   OBJECTIVES_MAX =                    16;
@@ -21,6 +22,7 @@ var     Material                            ObjectiveIcons[3];
 // Actor references - these must be cleared at level change
 var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
+var     vector                              NELocation,SWLocation;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -47,6 +49,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         b_Objectives[i].Graphic = none;
     }
+
+    // Set the location of the map bounds
+    NELocation = GRI.NorthEastBounds;
+    SWLocation = GRI.SouthWestBounds;
 }
 
 // Make panel uniform (square) and adjust other components accordingly
@@ -66,65 +72,65 @@ function bool PreDrawMap(Canvas C)
     return false;
 }
 
-//Theel: This function is still buggy and needs to support rotation, clean up, and variables renamed
-//it needs to account for icon size or something
-function GetMapCoords(vector Location, out float X, out float Y)
+function float GetDistance(float A, float B)
+{
+    if (A <= 0.0 && B >= 0.0)
+    {
+        return Abs(A) + B;
+    }
+    else
+    {
+        return Abs(A - B);
+    }
+}
+
+//Theel: This function is still slightly buggy and needs to support rotation and variables renamed
+//Object location, sets map X, Y, based on image size W&H
+function GetMapCoords(vector Location, out float X, out float Y, float W, float H)
 {
     local float TDistance;
     local float Distance;
 
-    TDistance = Abs(GRI.SouthWestBounds.X) + Abs(GRI.NorthEastBounds.X);
-    if (Location.X >= 0.0)
-    {
-        Distance = Abs(GRI.SouthWestBounds.X) + Location.X;
-    }
-    else
-    {
-        Distance = Abs(GRI.SouthWestBounds.X) - Abs(Location.X);
-    }
+    // Calculations for X
+    TDistance = GetDistance(SWLocation.X, NELocation.X);
+    Distance = GetDistance(SWLocation.X, Location.X);
+    Distance = FMin(Distance, TDistance);
+    X = Distance / TDistance - (W / 2);
 
-    if (Distance > TDistance)
-    {
-        Distance = TDistance;
-    }
-    X = Distance / TDistance;
-
-    TDistance = Abs(GRI.SouthWestBounds.Y) + Abs(GRI.NorthEastBounds.Y);
-    if (Location.Y >= 0.0)
-    {
-        Distance = Abs(GRI.SouthWestBounds.Y) + Location.Y;
-    }
-    else
-    {
-        Distance = Abs(GRI.SouthWestBounds.Y) - Abs(Location.Y);
-    }
-
-    if (Distance > TDistance)
-    {
-        Distance = TDistance;
-    }
-    //Because the map is managed by a container, lets form to the container's winheight
-    Y = Distance / TDistance * MapContainer.WinHeight;
+    // Calculations for Y
+    TDistance = GetDistance(SWLocation.Y, NELocation.Y);
+    Distance = GetDistance(SWLocation.Y, Location.Y);
+    Distance = FMin(Distance, TDistance);
+    Y = MapContainer.WinHeight - Distance / TDistance * MapContainer.WinHeight - (H / 2); //Because the map is managed by a container, lets form to the container's winheight
 }
 
 //Theel: This function has floating variables
 function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 {
-    local float X, Y;
+    local float X, Y, W, H;
 
     if (SP != none && Index >= 0 && Index < arraycount(b_SpawnPoints))
     {
-        GetMapCoords(SP.Location, X, Y);
-
         if (SP == DHPlayer(PlayerOwner()).DesiredSpawnPoint)
         {
-            b_SpawnPoints[Index].SetPosition(X, Y, 0.06, 0.03, true);
+            W = 0.075;
+            H = 0.035;
+
+            GetMapCoords(SP.Location, X, Y, W, H);
+
+            b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
+            b_SpawnPoints[Index].SetFocus(none);
         }
         else
         {
-            b_SpawnPoints[Index].SetPosition(X, Y, 0.06, 0.03, true);
+            W = 0.07;
+            H = 0.03;
+
+            GetMapCoords(SP.Location, X, Y, W, H);
+
+            b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
         }
-        b_SpawnPoints[Index].Graphic = material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator';
+        //b_SpawnPoints[Index].Graphic = material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator';
         b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
 
         SpawnPoints[Index] = SP;
@@ -138,7 +144,7 @@ function PlaceObjectiveOnMap(ROObjective O, int Index)
 
     if (O != none && Index >= 0 && Index < arraycount(b_Objectives))
     {
-        GetMapCoords(O.Location, X, Y);
+        GetMapCoords(O.Location, X, Y, 0.04, 0.04);
 
         b_Objectives[Index].SetPosition(X, Y, 0.04, 0.04, true);
         b_Objectives[Index].Graphic = ObjectiveIcons[int(GRI.Objectives[Index].ObjState)];
@@ -224,13 +230,6 @@ function bool SpawnClick(int Index)
     {
         // Set the desired spawn point
         PC.DesiredSpawnPoint = SpawnPoints[Index];
-
-        //Theel: Should we close as below????
-        // Player already has a pawn, so lets close deploymenu
-        if (PC.Pawn != none)
-        {
-            Controller.CloseMenu(false);
-        }
     }
 }
 
@@ -304,32 +303,33 @@ function bool DrawDeployTimer(Canvas C)
         {
             //Progress is done
             bReadyToDeploy = true;
+            b_DeployButton.EnableMe();
         }
         else
         {
             //Progress isn't done
-            b_DeployButton.Caption = "Deploy in:" @ int(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) @ "Seconds";
+            b_DeployButton.Caption = "Deploy in:" @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ "Seconds";
             bReadyToDeploy = false;
+            b_DeployButton.DisableMe();
         }
     }
     else
     {
         if (DHP.DesiredSpawnPoint == none)
         {
-            b_DeployButton.Caption = "Select a spawn point";
-
+            //b_DeployButton.Caption = "Select a spawn point";
             // Temp hack to make it so you can spawn on maps without spawn points
             b_DeployButton.Caption = "Select a spawn point or Deploy to SpawnArea";
-            bReadyToDeploy = true;
+            b_DeployButton.EnableMe();
         }
         else if (DHP.Pawn != none)
         {
             b_DeployButton.Caption = "Deployed"; //If we have a pawn and progress bar has finished, we are deployed
-            bReadyToDeploy = false;
+            b_DeployButton.DisableMe();
         }
         else
         {
-            bReadyToDeploy = true;
+            b_DeployButton.EnableMe();
             pb_DeployProgressBar.Value = pb_DeployProgressBar.High;
             b_DeployButton.Caption = "Deploy!";
         }
@@ -378,9 +378,9 @@ defaultproperties
         Caption=""
         CaptionAlign=TXTA_Center
         RenderWeight=5.85
-        StyleName="DHLargeText"
+        StyleName="DHDeployButtonStyle"
         WinWidth=0.315937
-        WinHeight=0.033589
+        WinHeight=0.3
         WinLeft=0.137395
         WinTop=0.010181
         OnClick=DHDeploymentMapMenu.InternalOnClick
@@ -392,10 +392,10 @@ defaultproperties
         Caption="Exploit Spawn"
         CaptionAlign=TXTA_Center
         RenderWeight=5.85
-        StyleName="DHLargeText"
-        WinWidth=0.315937
-        WinHeight=0.045
-        WinLeft=0.137395
+        StyleName="DHSpawnButtonStyle"
+        WinWidth=0.4
+        WinHeight=0.1
+        WinLeft=0.05
         WinTop=0.010181
         OnClick=DHDeploymentMapMenu.InternalOnClick
     End Object
@@ -423,10 +423,10 @@ defaultproperties
 
     // Spawn point buttons
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
-        Graphic=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+        //Graphic=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
         Position=ICP_Normal
         bClientBound=true
-        StyleName="DHSmallTextButtonStyle"
+        StyleName="DHSpawnButtonStyle"
         WinWidth=0.0
         WinHeight=0.0
         bTabStop=true
