@@ -542,6 +542,8 @@ function DriverDied()
     if (VehicleBase.Health > 0)
     {
         SetRotatingStatus(0);
+    }
+}
 
 // Modified to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
 simulated event DrivingStatusChanged()
