@@ -11,7 +11,7 @@ function bool CanFire()
     return (DriverPositionIndex == UnbuttonedPositionIndex && !IsInState('ViewTransition')) || DriverPositionIndex > UnbuttonedPositionIndex;
 }
 
-// Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
+// Modified to run state 'ViewTransition' on server when buttoning/unbuttoning, so transition anim plays on server & puts player hit detection in correct position
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -45,6 +45,14 @@ function ServerChangeViewPoint(bool bForward)
             if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
+            }
+            // Play the down animation on the server when buttoning up, as loader's collision box & hit points are moved by unbutton/button anims
+            else if (Level.NetMode == NM_DedicatedServer)
+            {
+                if (LastPositionIndex == UnbuttonedPositionIndex)
+                {
+                    GoToState('ViewTransition');
+                }
             }
         }
     }
