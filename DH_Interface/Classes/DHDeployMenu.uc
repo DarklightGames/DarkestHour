@@ -4,23 +4,27 @@
 //==============================================================================
 class DHDeployMenu extends UT2K4GUIPage;
 
-var automated FloatingImage     i_background;
+var automated ROGUIProportionalContainer    MenuOptionsContainer;
 
-var automated DHGUIComboBox     co_MenuComboBox;
-var localized string            MenuOptions[10];
+var automated FloatingImage                 i_background;
 
-var automated GUITabControl     c_LoadoutArea;
-var automated GUITabControl     c_DeploymentMapArea;
+var automated DHGUIButton                   b_MenuButton,
+                                            b_MenuOptions[10];
 
-var array<string>               DeploymentPanelClass;
-var localized array<string>     DeploymentPanelCaption;
-var localized array<string>     DeploymentPanelHint;
+var localized string                        MenuOptions[10];
 
-var array<string>               LoadoutPanelClass;
-var localized array<string>     LoadoutPanelCaption;
-var localized array<string>     LoadoutPanelHint;
+var automated GUITabControl                 c_LoadoutArea;
+var automated GUITabControl                 c_DeploymentMapArea;
 
-var bool                        bReceivedTeam;
+var array<string>                           DeploymentPanelClass;
+var localized array<string>                 DeploymentPanelCaption;
+var localized array<string>                 DeploymentPanelHint;
+
+var array<string>                           LoadoutPanelClass;
+var localized array<string>                 LoadoutPanelCaption;
+var localized array<string>                 LoadoutPanelHint;
+
+var bool                                    bReceivedTeam, bShowingMenuOptions;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -30,10 +34,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Super.InitComponent(MyController, MyOwner);
 
     // Initialize menu options
-    for (i = 0; i < arraycount(MenuOptions); ++i)
-    {
-        co_MenuComboBox.AddItem(MenuOptions[i]);
-    }
+    InitializeMenuOptions();
 
     // Check if the player doesn't have a team
     if (PlayerOwner().PlayerReplicationInfo.Team == none)
@@ -97,58 +98,101 @@ function Timer()
     }
 }
 
-function InternalOnChange(GUIComponent Sender)
+function InitializeMenuOptions()
 {
-    if (Sender == co_MenuComboBox)
+    local int i;
+    local int t;
+
+    t = arraycount(b_MenuOptions);
+
+    for (i = 0; i < arraycount(b_MenuOptions); ++i)
     {
-        switch (co_MenuComboBox.GetIndex())
-        {
-            // Switch Team
-            case 1:
-                // Open team select menu
-                Controller.ReplaceMenu("DH_Interface.DHGUITeamSelection");
-                break;
-
-            // Map Vote
-            case 2:
-                Controller.OpenMenu(Controller.MapVotingMenu);
-                break;
-
-            // Kick Vote
-            case 3:
-                Controller.OpenMenu(Controller.KickVotingMenu);
-                break;
-
-            // Communication
-            case 4:
-                Controller.OpenMenu("ROInterface.ROCommunicationPage");
-                break;
-
-            // Server Browser
-            case 5:
-                Controller.OpenMenu("DH_Interface.DHServerBrowser");
-                break;
-
-            // Options
-            case 6:
-                Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
-                break;
-
-            // Suicide
-            case 7:
-                PlayerOwner().ConsoleCommand("SUICIDE");
-                CloseMenu();
-                break;
-
-            // Disconnect
-            case 8:
-                PlayerOwner().ConsoleCommand("DISCONNECT");
-                CloseMenu();
-                break;
-        }
-
-        co_MenuComboBox.SetIndex(0); // Forces edit area to always show index 0
+        b_MenuOptions[i].Caption = MenuOptions[i];
+        MenuOptionsContainer.ManageComponent(b_MenuOptions[i]);
     }
+
+    MenuOptionsContainer.SetVisibility(false); // Initially hidden
+}
+
+function bool OnClick(GUIComponent Sender)
+{
+    switch (Sender)
+    {
+        case b_MenuButton:
+            if (!bShowingMenuOptions)
+            {
+                bShowingMenuOptions = true;
+                b_MenuButton.Caption = "Deployment";
+                MenuOptionsContainer.SetVisibility(true);
+                c_LoadoutArea.SetVisibility(false);
+                c_DeploymentMapArea.SetVisibility(false);
+            }
+            else
+            {
+                bShowingMenuOptions = false;
+                b_MenuButton.Caption = "Menu";
+                MenuOptionsContainer.SetVisibility(false);
+                c_LoadoutArea.SetVisibility(true);
+                c_DeploymentMapArea.SetVisibility(true);
+            }
+            break;
+
+        // Back to deploy
+        case b_MenuOptions[0]:
+            if (bShowingMenuOptions)
+            {
+                bShowingMenuOptions = false;
+                b_MenuButton.Caption = "Menu";
+                MenuOptionsContainer.SetVisibility(false);
+                c_LoadoutArea.SetVisibility(true);
+                c_DeploymentMapArea.SetVisibility(true);
+            }
+            break;
+
+        // Switch Team
+        case b_MenuOptions[1]:
+            // Open team select menu
+            Controller.ReplaceMenu("DH_Interface.DHGUITeamSelection");
+            break;
+
+        // Map Vote
+        case b_MenuOptions[2]:
+            Controller.OpenMenu(Controller.MapVotingMenu);
+            break;
+
+        // Kick Vote
+        case b_MenuOptions[3]:
+            Controller.OpenMenu(Controller.KickVotingMenu);
+            break;
+
+        // Communication
+        case b_MenuOptions[4]:
+            Controller.OpenMenu("ROInterface.ROCommunicationPage");
+            break;
+
+        // Server Browser
+        case b_MenuOptions[5]:
+            Controller.OpenMenu("DH_Interface.DHServerBrowser");
+            break;
+
+        // Options
+        case b_MenuOptions[6]:
+            Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
+            break;
+
+        // Suicide
+        case b_MenuOptions[7]:
+            PlayerOwner().ConsoleCommand("SUICIDE");
+            CloseMenu();
+            break;
+
+        // Disconnect
+        case b_MenuOptions[8]:
+            PlayerOwner().ConsoleCommand("DISCONNECT");
+            CloseMenu();
+            break;
+    }
+    return false;
 }
 
 function CloseMenu()
@@ -189,8 +233,8 @@ defaultproperties
         BackgroundStyleName="DHHeader"
         WinWidth=0.313189
         WinHeight=0.03861
-        WinLeft=0.018555
-        WinTop=0.052083
+        WinLeft=0.01
+        WinTop=0.05
         RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
@@ -206,27 +250,143 @@ defaultproperties
         WinWidth=0.642175
         WinHeight=0.039361
         WinLeft=0.340298
-        WinTop=0.050421
+        WinTop=0.05
         RenderWeight=0.49
         TabOrder=3
         bAcceptsInput=true
     End Object
     c_DeploymentMapArea=GUITabControl'DH_Interface.DHDeployMenu.DeploymentArea'
 
-    // Menu Combo Box
-    Begin Object Class=DHGUIComboBox Name=MenuOptionsBox
-        bReadOnly=true
-        WinWidth=0.111653
-        WinHeight=0.036836
-        WinLeft=0.018159
-        WinTop=0.00706
-        TabOrder=0
-        OnChange=DHDeployMenu.InternalOnChange
-        MaxVisibleItems=10
+    // Menu Options Container
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MenuContainer
+        HeaderBase=Texture'DH_GUI_Tex.Menu.DHBox'
+        WinWidth=0.5
+        WinHeight=0.9
+        WinLeft=0.01
+        WinTop=0.05
+        ImageOffset(0)=10
+        ImageOffset(1)=10
+        ImageOffset(2)=10
+        ImageOffset(3)=10
     End Object
-    co_MenuComboBox=MenuOptionsBox
+    MenuOptionsContainer=MenuContainer
 
-    MenuOptions(0)="Menu"
+    // Menu Button
+    Begin Object Class=DHGUIButton Name=MenuButton
+        Caption="Menu"
+        CaptionAlign=TXTA_Left
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=0.2
+        WinHeight=0.05
+        WinLeft=0.0155
+        WinTop=0.004
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuButton=MenuButton
+
+    // Menu Option Buttons
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton0
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.01
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(0)=MenuOptionsButton0
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton1
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.11
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(1)=MenuOptionsButton1
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton2
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.22
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(2)=MenuOptionsButton2
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton3
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.33
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(3)=MenuOptionsButton3
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton4
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.44
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(4)=MenuOptionsButton4
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton5
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.55
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(5)=MenuOptionsButton5
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton6
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.66
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(6)=MenuOptionsButton6
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton7
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.77
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(7)=MenuOptionsButton7
+    Begin Object Class=DHGUIButton Name=MenuOptionsButton8
+        CaptionAlign=TXTA_Center
+        RenderWeight=5.85
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=1.0
+        WinHeight=0.05
+        WinLeft=0.0
+        WinTop=0.88
+        OnClick=DHDeployMenu.OnClick
+    End Object
+    b_MenuOptions(8)=MenuOptionsButton8
+
+    MenuOptions(0)="Back"
     MenuOptions(1)="Change Team"
     MenuOptions(2)="Map Vote"
     MenuOptions(3)="Kick Vote"
