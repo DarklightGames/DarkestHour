@@ -52,6 +52,7 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
+// Modified so that unbuttoned player can look around, similar to a cannon pawn
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z;
@@ -59,6 +60,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     local float   CamViewOffsetZAmount;
     local coords  CamBoneCoords;
     local rotator WeaponAimRot;
+    local quat    AQuat, BQuat, CQuat;
 
     GetAxes(CameraRotation, x, y, z);
     ViewActor = self;
@@ -71,7 +73,30 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
     }
 
-    CameraRotation =  WeaponAimRot;
+    // Use gun camera bone rotation if buttoned up & controlling the remote MG
+	if (CanFire())
+	{
+		CameraRotation =  WeaponAimRot;
+	}
+    // Or if buttoned up we'll use this 'free look around' code instead (inside the loader's internal 'box')
+	else if (bPCRelativeFPRotation)
+	{
+        // First, rotate the headbob by the PlayerController's rotation (looking around)
+		AQuat = QuatFromRotator(PC.Rotation);
+		BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
+		CQuat = QuatProduct(AQuat, BQuat);
+
+		// Then, rotate that by the vehicle's rotation to get the final rotation
+		AQuat = QuatFromRotator(VehicleBase.Rotation);
+		BQuat = QuatProduct(CQuat, AQuat);
+
+        // Finally make it back into a rotator
+		CameraRotation = QuatToRotator(BQuat);
+	}
+	else
+    {
+        CameraRotation = PC.Rotation;
+    }
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
@@ -79,10 +104,12 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         CamBoneCoords = Gun.GetBoneCoords(CameraBone);
 
+        // Use gun camera bone location if buttoned up & controlling the remote MG
         if (CanFire())
         {
             CameraLocation = CamBoneCoords.Origin + (FPCamPos >> WeaponAimRot) + CamViewOffsetWorld;
         }
+        // Or if unbuttoned (or unbuttoning) we'll use loader's camera bone location
         else
         {
             CameraLocation = Gun.GetBoneCoords('loader_cam').Origin;
@@ -111,17 +138,20 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
+// Modified so that the remote MG only moves if the player is buttoned up & controlling it
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
 
-
-    UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-    if (ROPlayer(Controller) != none)
+    if (CanFire())
     {
-         ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-         ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+
+        if (ROPlayer(Controller) != none)
+        {
+            ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+            ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        }
     }
 }
 

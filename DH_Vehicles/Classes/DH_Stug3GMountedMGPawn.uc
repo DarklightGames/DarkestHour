@@ -11,6 +11,17 @@ function bool CanFire()
     return (DriverPositionIndex == UnbuttonedPositionIndex && !IsInState('ViewTransition')) || DriverPositionIndex > UnbuttonedPositionIndex;
 }
 
+// Modified to do null UpdateSpecialCustomAim(), otherwise MG faces wrong direction when player enters in buttoned up position, not controlling external MG
+simulated state EnteringVehicle // Matt: this is a TEST as an alternative to doing this in UpdateRocketAcceleration
+{
+    simulated function HandleEnter()
+    {
+        super.HandleEnter();
+
+        UpdateSpecialCustomAim(0.01, 0.0, 0.0);
+    }
+}
+
 // Modified to run state 'ViewTransition' on server when buttoning/unbuttoning, so transition anim plays on server & puts player hit detection in correct position
 function ServerChangeViewPoint(bool bForward)
 {
@@ -58,12 +69,14 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
+// Modified so that unbuttoned player can look around, similar to a cannon pawn
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z;
     local vector  VehicleZ, CamViewOffsetWorld;
     local float   CamViewOffsetZAmount;
     local rotator WeaponAimRot;
+	local quat    AQuat, BQuat, CQuat;
 
     GetAxes(CameraRotation, x, y, z);
     ViewActor = self;
@@ -72,20 +85,34 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
     if (ROPlayer(Controller) != none)
     {
-        // Limit view of gunner while inside tank
-        if (DriverPositionIndex == 0 && !IsInState('ViewTransition'))
-        {
-            ROPlayer(Controller).WeaponBufferRotation.Yaw = 0;
-            ROPlayer(Controller).WeaponBufferRotation.Pitch = 0;
-        }
-        else
-        {
-            ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-            ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-        }
+        ROPlayer(Controller).WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
+        ROPlayer(Controller).WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
     }
 
-    CameraRotation = WeaponAimRot;
+    // Use loader's camera bone rotation if unbuttoned & controlling the external MG
+	if (CanFire())
+	{
+		CameraRotation =  WeaponAimRot;
+	}
+    // Or if unbuttoned we'll use this 'free look around' code instead
+	else if (bPCRelativeFPRotation)
+	{
+        // First, rotate the headbob by the PlayerController's rotation (looking around)
+		AQuat = QuatFromRotator(PC.Rotation);
+		BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
+		CQuat = QuatProduct(AQuat, BQuat);
+
+		// Then, rotate that by the vehicle's rotation to get the final rotation
+		AQuat = QuatFromRotator(VehicleBase.Rotation);
+		BQuat = QuatProduct(CQuat, AQuat);
+
+        // Finally make it back into a rotator
+		CameraRotation = QuatToRotator(BQuat);
+	}
+	else
+    {
+        CameraRotation = PC.Rotation;
+    }
 
     CamViewOffsetWorld = FPCamViewOffset >> CameraRotation;
 
@@ -116,26 +143,26 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
+// Modified so the MG only moves if unbuttoned up & controlling the external MG
+// Includes a null UpdateSpecialCustomAim if buttoned up, otherwise MG faces wrong direction when player enters vehicle & is buttoned up // Matt: TEST moved to HandleEnter()
 function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
 {
     super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
 
-    UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-    if (ROPlayer(Controller) != none)
+    if (CanFire())
     {
-        //limit view of gunner while inside tank
-        if (DriverPositionIndex == 0 && !IsInState('ViewTransition'))
-        {
-            ROPlayer(Controller).WeaponBufferRotation.Yaw = 0;
-            ROPlayer(Controller).WeaponBufferRotation.Pitch = 0;
-        }
-        else
+        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+
+        if (ROPlayer(Controller) != none)
         {
             ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
             ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
         }
     }
+//    else
+//    {
+//        UpdateSpecialCustomAim(DeltaTime, 0.0, 0.0);
+//    }
 }
 
 simulated function DrawHUD(Canvas Canvas)
