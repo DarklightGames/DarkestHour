@@ -134,23 +134,6 @@ function bool PlaceExitingDriver()
     return false;
 }
 
-// Cheating here to always spawn exiting players above their exit hatch, regardless of tank, without having to set it individually
-simulated function PostBeginPlay()
-{
-    local vector Offset, Loc;
-
-    super.PostBeginPlay();
-
-    Offset.Z += 250.0;
-    Loc = GetBoneCoords('com_player').ZAxis;
-
-    ExitPositions[0] = Loc + Offset;
-    ExitPositions[1] = ExitPositions[0];
-
-    bTurretRingDamaged = false;
-    bGunPivotDamaged = false;
-}
-
 // Matt: modified to call InitializeCannon when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
 // 1. Do things that need one or both of those actor refs, controlling common problem of unpredictability of timing of receiving replicated actor references
 // 2. To do any extra set up in the cannon classes, which can easily be subclassed for anything that is vehicle specific
@@ -453,11 +436,6 @@ simulated state EnteringVehicle
 
         FPCamPos = DriverPositions[InitialPositionIndex].ViewLocation;
     }
-
-Begin:
-    HandleEnter();
-    Sleep(0.2);
-    GotoState('');
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero
@@ -883,12 +861,7 @@ simulated function DecrementRange()
 
 function bool ResupplyAmmo()
 {
-    if (DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).ResupplyAmmo())
-    {
-        return true;
-    }
-
-    return false;
+    return DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).ResupplyAmmo();
 }
 
 // Matt: used by HUD to show coaxial MG reload progress, like the cannon reload

@@ -503,16 +503,7 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 
 function bool ResupplyAmmo()
 {
-    local DH_ROMountedTankMG P;
-
-    P = DH_ROMountedTankMG(Gun);
-
-    if (P != none && P.ResupplyAmmo())
-    {
-        return true;
-    }
-
-    return false;
+    return DH_ROMountedTankMG(Gun) != none && DH_ROMountedTankMG(Gun).ResupplyAmmo();
 }
 
 // Matt: used by HUD to show coaxial MG reload progress, like the cannon reload
