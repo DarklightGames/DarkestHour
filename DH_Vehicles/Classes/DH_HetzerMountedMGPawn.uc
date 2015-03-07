@@ -270,24 +270,6 @@ simulated function DrawHUD(Canvas Canvas)
     }
 }
 
-// Modified so that the new functionality (from StuH) that moves the MG, only happens if the player is buttoned up
-function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
-{
-    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
-
-    // Only move the MG if buttoned up & controlling the remote MG
-    if (CanFire())
-    {
-        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-        if (ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-            ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
-        }
-    }
-}
-
 // Modified to use hetzer's 4 part MG rleoad process
 function float GetAmmoReloadState()
 {

@@ -245,6 +245,23 @@ function bool PlaceExitingDriver()
     return false;
 }
 
+// Modified to update custom aim for MGs that use it, but only if the player is actually controlling the MG, i.e. CanFire()
+function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
+{
+    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
+
+    if (bCustomAiming && CanFire())
+    {
+        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
+
+        if (PlayerController(Controller) != none)
+        {
+            PlayerController(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
+            PlayerController(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
+        }
+    }
+}
+
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;

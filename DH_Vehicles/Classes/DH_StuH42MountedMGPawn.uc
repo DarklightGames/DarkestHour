@@ -138,23 +138,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-// Modified so that the remote MG only moves if the player is buttoned up & controlling it
-function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchChange)
-{
-    super.UpdateRocketAcceleration(DeltaTime, YawChange, PitchChange);
-
-    if (CanFire())
-    {
-        UpdateSpecialCustomAim(DeltaTime, YawChange, PitchChange);
-
-        if (ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).WeaponBufferRotation.Yaw = CustomAim.Yaw;
-            ROPlayer(Controller).WeaponBufferRotation.Pitch = CustomAim.Pitch;
-        }
-    }
-}
-
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
