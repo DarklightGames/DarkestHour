@@ -67,12 +67,9 @@ replication
         MainAmmoChargeExtra; // Matt: should be able to change to byte - check & implement later
 
     // Variables the server will replicate to all clients
-//  reliable if (bNetDirty && Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bRoundShattered;        // Matt: is set independently on client & server, so shouldn't need replicating - TEST later & plan to remove from replication
 //      bManualTurret, bOnFire; // Matt: have deprecated both of these
-
-    // Variables the server will replicate to all clients // Matt: should be added to if (bNetDirty) above - move later as part of class review & refactor
-    reliable if (Role == ROLE_Authority)
-        bRoundShattered;
 }
 
 // Modified to fix minor bug where 1st key press to switch round type key didn't do anything

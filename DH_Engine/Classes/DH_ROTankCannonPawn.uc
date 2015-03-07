@@ -59,15 +59,15 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnbuttonedPositionIndex; // Matt: this never changes & doesn't need to be replicated - check later & possibly remove
-
-    // Variables the server will replicate to all clients
-    reliable if (Role == ROLE_Authority)
-        bTurretRingDamaged, bGunPivotDamaged, bOpticsDamaged; // bOpticsLit // Matt: not sure any of these are used clientside - check later & possibly remove
+        bTurretRingDamaged, bGunPivotDamaged;
+//      UnbuttonedPositionIndex;      // Matt: removed as never changes & doesn't need to be replicated
+//      bOpticsDamaged; // bOpticsLit // Matt: removed as not even used clientside
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleExtraRoundType, ServerChangeDriverPos, DamageCannonOverlay, ServerToggleDebugExits, ServerToggleDriverDebug; // Matt: don't think DamageCannonOverlay is called by client - check later & possibly remove
+        ServerChangeDriverPos, ServerToggleDebugExits, ServerToggleDriverDebug;
+//      ServerToggleExtraRoundType // Matt: removed as is pointless - the normal RO ServerToggleRoundType can be called; it's only the functionality in Gun.ToggleRoundType() that changes
+//      DamageCannonOverlay        // Matt: removed as isn't called by client
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -235,27 +235,6 @@ simulated function InitializeCannon()
     else
     {
         SetManualTurret(true);
-    }
-}
-
-simulated exec function SwitchFireMode()
-{
-    if (DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).bMultipleRoundTypes)
-    {
-        if (ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-        }
-
-        ServerToggleExtraRoundType();
-    }
-}
-
-function ServerToggleExtraRoundType()
-{
-    if (ROTankCannon(Gun) != none)
-    {
-        ROTankCannon(Gun).ToggleRoundType();
     }
 }
 
