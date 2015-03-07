@@ -75,6 +75,16 @@ replication
         bRoundShattered;
 }
 
+// Modified to fix minor bug where 1st key press to switch round type key didn't do anything
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Role == ROLE_Authority && bMultipleRoundTypes)
+    {
+        PendingProjectileClass = PrimaryProjectileClass;
+    }
+}
 
 // Matt: modified to handle new collision static mesh actor, if one has been specified
 simulated function PostNetBeginPlay()
