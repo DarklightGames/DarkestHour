@@ -332,7 +332,7 @@ defaultproperties
     ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
     ShakeOffsetTime=2.0
     AIInfo(0)=(bLeadTarget=true,bFireOnRelease=true,aimerror=800.0,RefireRate=0.07058)
-    CustomPitchUpLimit=4500
+    CustomPitchUpLimit=2400 // Matt: reduced from 4500 to stop MG butt poking through hatch
     CustomPitchDownLimit=63500
     MaxPositiveYaw=5500
     MaxNegativeYaw=-5500
