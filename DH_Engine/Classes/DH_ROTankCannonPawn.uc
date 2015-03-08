@@ -414,19 +414,14 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to handle InitialPositionIndex instead of assuming start in position zero
+// Also so cannon retains its aimed direction when player enters & may switch to internal mesh // Matt: TEST
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
     {
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone ||  Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositions[InitialPositionIndex].PositionMesh != none && Gun != none)
-            {
-                Gun.LinkMesh(DriverPositions[InitialPositionIndex].PositionMesh);
-            }
-        }
+        SwitchMesh(InitialPositionIndex);
 
-        if (Gun.HasAnim(Gun.BeginningIdleAnim))
+        if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
         {
             Gun.PlayAnim(Gun.BeginningIdleAnim);
         }
@@ -578,13 +573,7 @@ simulated state ViewTransition
     {
         StoredVehicleRotation = VehicleBase.Rotation;
 
-        if (Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-        {
-            if (DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
-            {
-                Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-            }
-        }
+        SwitchMesh(DriverPositionIndex);
 
         if (Driver != none && Driver.HasAnim(DriverPositions[DriverPositionIndex].DriverTransitionAnim) && Driver.HasAnim(DriverPositions[LastPositionIndex].DriverTransitionAnim))
         {
@@ -662,20 +651,7 @@ simulated state LeavingVehicle
 {
     simulated function HandleExit()
     {
-        local rotator TurretYaw, TurretPitch;
-
-        if (Gun != none)
-        {
-            // Save old mesh rotation
-            TurretYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
-            TurretPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
-
-            Gun.LinkMesh(Gun.default.Mesh);
-
-            // Now make the new mesh you swap to have the same rotation as the old one
-            Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
-            Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
-        }
+        SwitchMesh(-1); // -1 signifies switch to default external mesh
     }
 }
 
@@ -842,6 +818,51 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
         ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
 }
 
+// New function to handle switching between external & internal mesh, including copying cannon's aimed direction to new mesh (just saves code repetition)
+simulated function SwitchMesh(int PositionIndex)
+{
+    local rotator TurretYaw, TurretPitch;
+    local mesh    NewMesh;
+
+    if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
+    {
+        if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length) // pass PositionIndex of -1 to signify switch to default external mesh (as it's an invalid PositionIndex)
+        {
+            if (DriverPositions[PositionIndex].PositionMesh != none)
+            {
+                NewMesh = DriverPositions[PositionIndex].PositionMesh;
+            }
+        }
+        else
+        {
+            NewMesh = Gun.default.Mesh;
+        }
+
+        if (bCustomAiming)
+        {
+            // Save old mesh rotation
+            TurretYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
+            TurretPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
+
+            Gun.LinkMesh(NewMesh);
+
+            // Now make the new mesh you swap to have the same rotation as the old one
+            Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
+            Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
+        }
+        else
+        {
+            TurretYaw.Yaw = VehicleBase.Rotation.Yaw - Gun.CurrentAim.Yaw;
+            TurretPitch.Pitch = VehicleBase.Rotation.Pitch - Gun.CurrentAim.Pitch;
+
+            Gun.LinkMesh(NewMesh);
+
+            Gun.SetBoneRotation(Gun.YawBone, TurretYaw);
+            Gun.SetBoneRotation(Gun.PitchBone, TurretPitch);
+        }
+    }
+}
+
 // Matt: re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
 simulated function IncrementRange()
 {
@@ -925,11 +946,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = 1;
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-                    && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
-                {
-                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-                }
+                SwitchMesh(DriverPositionIndex);
 
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
             }
@@ -974,11 +991,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-                    && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
-                {
-                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-                }
+                SwitchMesh(DriverPositionIndex);
 
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
@@ -1029,7 +1042,7 @@ exec function ToggleMesh()
             }
         }
 
-        Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+        SwitchMesh(DriverPositionIndex);
     }
 }
 

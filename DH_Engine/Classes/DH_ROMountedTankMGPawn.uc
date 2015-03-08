@@ -125,6 +125,25 @@ function KDriverEnter(Pawn P)
     super.KDriverEnter(P);
 }
 
+// Modified so MG retains its aimed direction when player enters & may switch to internal mesh
+simulated state EnteringVehicle
+{
+    simulated function HandleEnter()
+    {
+        SwitchMesh(0);
+
+        if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+        {
+            Gun.PlayAnim(Gun.BeginningIdleAnim);
+        }
+
+        WeaponFOV = DriverPositions[0].ViewFOV;
+        PlayerController(Controller).SetFOV(WeaponFOV);
+
+        FPCamPos = DriverPositions[0].ViewLocation;
+    }
+}
+
 // Modified to prevent players exiting unless unbuttoned & also so that exit stuff only happens if the Super returns true
 function bool KDriverLeave(bool bForceLeave)
 {
@@ -158,12 +177,13 @@ simulated function ClientKDriverLeave(PlayerController PC)
     super.ClientKDriverLeave(PC);
 }
 
-// Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
+// Modified so MG retains its aimed direction when player exits & may switch back to external mesh
+// Also to remove playing BeginningIdleAnim as now that's played on all net modes in DrivingStatusChanged()
 simulated state LeavingVehicle
 {
     simulated function HandleExit()
     {
-        Gun.LinkMesh(Gun.default.Mesh);
+        SwitchMesh(-1); // -1 signifies switch to default external mesh
     }
 }
 
@@ -501,6 +521,52 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
         ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
 }
 
+// New function to handle switching between external & internal mesh, including copying MG's aimed direction to new mesh (just saves code repetition)
+simulated function SwitchMesh(int PositionIndex)
+{
+    local rotator MGYaw, MGPitch;
+    local mesh    NewMesh;
+
+    if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
+    {
+        if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length) // pass PositionIndex of -1 to signify switch to default external mesh (as it's an invalid PositionIndex)
+        {
+            if (DriverPositions[PositionIndex].PositionMesh != none)
+            {
+                NewMesh = DriverPositions[PositionIndex].PositionMesh;
+            }
+        }
+        else
+        {
+            NewMesh = Gun.default.Mesh;
+        }
+
+        if (bCustomAiming)
+        {
+            // Save old mesh rotation
+            MGYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
+            MGPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
+
+            Gun.LinkMesh(NewMesh);
+
+            // Now make the new mesh you swap to have the same rotation as the old one
+            Gun.SetBoneRotation(Gun.YawBone, MGYaw);
+            Gun.SetBoneRotation(Gun.PitchBone, MGPitch);
+        }
+        // Matt: not certain about this part, using CurrentAim for MGs that don't use custom aim, so will TEST further (although I think the future of MGs is to be all custom aim)
+        else
+        {
+            MGYaw.Yaw = VehicleBase.Rotation.Yaw - Gun.CurrentAim.Yaw;
+            MGPitch.Pitch = VehicleBase.Rotation.Pitch - Gun.CurrentAim.Pitch;
+
+            Gun.LinkMesh(NewMesh);
+
+            Gun.SetBoneRotation(Gun.YawBone, MGYaw);
+            Gun.SetBoneRotation(Gun.PitchBone, MGPitch);
+        }
+    }
+}
+
 function bool ResupplyAmmo()
 {
     return DH_ROMountedTankMG(Gun) != none && DH_ROMountedTankMG(Gun).ResupplyAmmo();
@@ -576,12 +642,8 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchUpLimit = 65535;
                     DriverPositions[i].ViewPitchDownLimit = 1;
                 }
-
-                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-                    && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
-                {
-                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-                }
+                
+                SwitchMesh(DriverPositionIndex);
 
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
             }
@@ -626,11 +688,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchDownLimit = default.DriverPositions[i].ViewPitchDownLimit;
                 }
 
-                if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-                    && DriverPositions[DriverPositionIndex].PositionMesh != none && Gun != none)
-                {
-                    Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
-                }
+                SwitchMesh(DriverPositionIndex);
 
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
@@ -681,7 +739,7 @@ exec function ToggleMesh()
             }
         }
 
-        Gun.LinkMesh(DriverPositions[DriverPositionIndex].PositionMesh);
+        SwitchMesh(DriverPositionIndex);
     }
 }
 
@@ -718,6 +776,7 @@ exec function ToggleViewLimit()
         }
     }
 }
+
 // Matt: allows debugging exit positions to be toggled for all MG pawns
 exec function ToggleDebugExits()
 {
