@@ -187,8 +187,8 @@ simulated function Tick(float DeltaTime)
         }
 
         // Animate the tank wheels
-        LeftWheelRot.pitch += LeftTreadPanner.PanRate * WheelRotationScale;
-        RightWheelRot.pitch += RightTreadPanner.PanRate * WheelRotationScale;
+        LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
+        RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
 
         for (i = 0; i < LeftWheelBones.Length; ++i)
         {

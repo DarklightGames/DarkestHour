@@ -1975,7 +1975,7 @@ simulated function DrawObjectives(Canvas C)
     // Calculate level map constants
     Temp = DHGRI.SouthWestBounds - DHGRI.NorthEastBounds;
     MapCenter =  Temp / 2.0  + DHGRI.NorthEastBounds;
-    MyMapScale = Abs(Temp.x);
+    MyMapScale = Abs(Temp.X);
 
     if (MyMapScale ~= 0.0)
     {
