@@ -524,45 +524,45 @@ simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 // New function to handle switching between external & internal mesh, including copying MG's aimed direction to new mesh (just saves code repetition)
 simulated function SwitchMesh(int PositionIndex)
 {
-    local rotator MGYaw, MGPitch;
     local mesh    NewMesh;
+    local rotator MGYaw, MGPitch;
 
     if ((Role == ROLE_AutonomousProxy || Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer) && Gun != none)
     {
-        if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length) // pass PositionIndex of -1 to signify switch to default external mesh (as it's an invalid PositionIndex)
+        // If switching to a valid driver position, get its PositionMesh
+        if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length)
         {
             if (DriverPositions[PositionIndex].PositionMesh != none)
             {
                 NewMesh = DriverPositions[PositionIndex].PositionMesh;
             }
         }
+        // Else switch to default external mesh (pass PositionIndex of -1 to signify this, as it's an invalid position)
         else
         {
             NewMesh = Gun.default.Mesh;
         }
 
-        if (bCustomAiming)
+        // Only switch mesh if we actually have a different new mesh
+        if (NewMesh != Gun.Mesh && NewMesh != none)
         {
-            // Save old mesh rotation
-            MGYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
-            MGPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
+            if (bCustomAiming)
+            {
+                // Save old mesh rotation
+                MGYaw.Yaw = VehicleBase.Rotation.Yaw - CustomAim.Yaw;
+                MGPitch.Pitch = VehicleBase.Rotation.Pitch - CustomAim.Pitch;
 
-            Gun.LinkMesh(NewMesh);
+                // Switch to the new mesh
+                Gun.LinkMesh(NewMesh);
 
-            // Now make the new mesh you swap to have the same rotation as the old one
-            Gun.SetBoneRotation(Gun.YawBone, MGYaw);
-            Gun.SetBoneRotation(Gun.PitchBone, MGPitch);
-        }
-        // Matt: not certain about this part, using CurrentAim for MGs that don't use custom aim, so will TEST further (although I think the future of MGs is to be all custom aim)
-        else
-        {
-            MGYaw.Yaw = VehicleBase.Rotation.Yaw - Gun.CurrentAim.Yaw;
-            MGPitch.Pitch = VehicleBase.Rotation.Pitch - Gun.CurrentAim.Pitch;
-
-            Gun.LinkMesh(NewMesh);
-
-            Gun.SetBoneRotation(Gun.YawBone, MGYaw);
-            Gun.SetBoneRotation(Gun.PitchBone, MGPitch);
+                // Now make the new mesh you swap to have the same rotation as the old one
+                Gun.SetBoneRotation(Gun.YawBone, MGYaw);
+                Gun.SetBoneRotation(Gun.PitchBone, MGPitch);
+            }
+            else
+            {
+                Gun.LinkMesh(NewMesh);
+            }
         }
     }
 }
