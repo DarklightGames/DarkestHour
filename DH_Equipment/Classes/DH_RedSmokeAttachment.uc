@@ -10,6 +10,5 @@ defaultproperties
     WA_Idle="Idle"
     WA_Fire="Idle"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.RedSmoke'
-    MenuDescription="Used to communicate on the battlefield with teammates."
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.RedSmokeGrenade_3rd'
 }

@@ -212,7 +212,6 @@ defaultproperties
     WA_Reload="idle_PIAT"
     WA_ProneReload="idle_PIAT"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
-    MenuDescription="Man portable anti-tank weapon used by British and Commonwealth forces. Uses a manually set spigot system to launch a hollow charge bomb up to 350 yards, although only accurate to about 100 yards. Armor penetration: 85 to 90mm of effective armor. Sights are calibrated at 50, 80, and 110 yards."
     bHeavy=true
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_3rd'

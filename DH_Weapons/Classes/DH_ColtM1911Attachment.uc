@@ -198,7 +198,6 @@ defaultproperties
     WA_ProneReload="prone_reload_half_Colt"
     WA_ProneReloadEmpty="prone_reload_empty_Colt"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
-    MenuDescription="Semi-automatic pistol. Standard issue sidearm in the United States Army. Used .45 caliber rounds in a 7-round box mag, with reasonable accuracy and good stopping power. Maximum effective range: 50 metres."
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Colt45_3rd'
     DrawScale=1.25

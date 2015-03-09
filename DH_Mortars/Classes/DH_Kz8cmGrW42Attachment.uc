@@ -46,7 +46,6 @@ defaultproperties
     WA_Idle="idle_GrW42"
     WA_Fire="idle_GrW42"
     MenuImage=texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42'
-    MenuDescription="Kurz 8cm Granatwerfer 42"
     Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_chr'
 }
 

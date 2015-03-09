@@ -167,7 +167,6 @@ defaultproperties
     WA_Idle="idle_binocs"
     WA_Fire="idle_binocs"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.Binocs'
-    MenuDescription="Used to spot enemy movements and mark targets."
     bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None

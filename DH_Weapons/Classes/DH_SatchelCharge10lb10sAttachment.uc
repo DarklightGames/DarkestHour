@@ -242,7 +242,6 @@ defaultproperties
     WA_Idle="idle_satchel"
     WA_Fire="idle_satchel"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.satchel'
-    MenuDescription="10 lb of explosives in a simple canvas bag. Primed for use, with a 10-second fuse. Destructive force based on concussion rather than fragmentation. Used primarily for demolitions, but can be used effectively against personnel and light vehicles."
     bRapidFire=false
     LightType=LT_none
     LightEffect=LE_none

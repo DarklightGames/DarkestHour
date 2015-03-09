@@ -182,6 +182,5 @@ defaultproperties
     WA_ProneReload="prone_reload_30cal"
     WA_ProneReloadEmpty="prone_reload_30cal"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.30cal_icon'
-    MenuDescription="An air-cooled medium machine gun which played a key role in company-level automatic fire support for both assault and defense.  Fed from a 250-round canvas belt, this weapon is capable of firing approximately 550 rounds per minute. Unlike its German counterparts, the M1919A4 has a fixed barrel which can not be changed when overheated. Maximum effective range (on bipod) is 800 yards."
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.30Cal_3rd'
 }

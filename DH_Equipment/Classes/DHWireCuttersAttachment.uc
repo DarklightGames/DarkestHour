@@ -143,7 +143,6 @@ defaultproperties
     WA_Idle="idle_binocs"
     WA_Fire="idle_binocs"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
-    MenuDescription="WIRE CUTTERS DESCRIPTION PLACEHOLDER"
     bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None

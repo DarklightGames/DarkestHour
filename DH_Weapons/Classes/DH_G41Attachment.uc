@@ -132,7 +132,6 @@ defaultproperties
     WA_ProneReload="prone_reloadhalf_g43"
     WA_ProneReloadEmpty="prone_reloadempty_g43"
     MenuImage=texture'InterfaceArt2_tex.Menu_weapons.g41'
-    MenuDescription="Semi-automatic rifle, used a 10-round non-detachable mag with good accuracy and stopping power. Maximum effective range: 400-500 metres."
     bRapidFire=false
     Mesh=SkeletalMesh'Weapons3rd_anm.g41'
 }

@@ -196,6 +196,5 @@ defaultproperties
     WA_ProneReload="idle_c96"
     WA_ProneReloadEmpty="idle_c96"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
-    MenuDescription="The Mauser C96 'Schnellfuer' is a recoil operated machine pistol.  It fires 9x19mm Parabellum rounds from a 20 round box magazine.  With its select fire switch, it can fire in either a semi-automatic or fully automatic mode. Maximum effective range 50-70 metres."
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.C96_3rd'
 }

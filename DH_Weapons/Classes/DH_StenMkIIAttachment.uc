@@ -187,6 +187,5 @@ defaultproperties
     WA_ProneReload="idle_sten"
     WA_ProneReloadEmpty="idle_sten"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Sten_icon'
-    MenuDescription="British sub-machine gun, firing 9mm Parabellum rounds from a 32-round box mag. The Sten can be fired either full-auto at 550rpm or semi-auto and is accurate out to about 150 metres."
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.StenMkII_3rd'
 }

@@ -144,7 +144,6 @@ defaultproperties
     WA_BayonetAttachProne="idle_garand"
     WA_BayonetDetachProne="idle_garand_bayo"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
-    MenuDescription="Main battle rifle of the United States armed forces. A semi-automatic rifle firing a full 30-06 cartidge from an 8-round en bloc clip. Good killing power with an effective range of 500-600 metres. Mounts a 10-inch blade bayonet for close quarters combat."
     bRapidFire=false
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Garand_3rd'
 }

@@ -181,6 +181,5 @@ defaultproperties
     WA_ProneReload="prone_reload_mg42"
     WA_ProneReloadEmpty="prone_reload_mg42"
     MenuImage=texture'InterfaceArt_tex.Menu_weapons.mg42'
-    MenuDescription="Designed to replace the Maschinengewehr 34, it was renowned as the best machine-gun for its time. Belt-fed from 250 round boxes, it can fire up to 1,200 rounds per minute.  Due to the tendency for overheating when used in a sustained fire mode, the operator is equipped with a replacement barrel. Maximum effective range (on bipod): 700-800 metres."
     Mesh=SkeletalMesh'Weapons3rd_anm.mg42'
 }

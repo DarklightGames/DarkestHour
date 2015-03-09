@@ -187,6 +187,5 @@ defaultproperties
     WA_ProneReload="prone_reload_half_GreaseGun"
     WA_ProneReloadEmpty="prone_reload_empty_GreaseGun"
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_icon'
-    MenuDescription="American sub-machine gun, firing .45 ACP rounds from a 30-round box mag. Rate of fire: 450rpm. Accurate out to about 200 metres."
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.GreaseGun_3rd'
 }
