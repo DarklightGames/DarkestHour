@@ -204,6 +204,7 @@ function float GetAmmoReloadState()
 
 defaultproperties
 {
+    VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.Bren_ammo_reload'
     UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=1.5
     WeaponFOV=60.0
