@@ -377,6 +377,39 @@ simulated function int GetNumMags()
     return NumMags;
 }
 
+// Modified to make into a generic function to handle single & multi position MGs, without need for overrides in subclasses, & to optimise
+simulated function int LimitYaw(int yaw)
+{
+    local ROVehicleWeaponPawn MGPawn;
+    local int                 VehYaw;
+
+    if (!bLimitYaw)
+    {
+        return yaw;
+    }
+
+    MGPawn = ROVehicleWeaponPawn(Owner);
+
+    if (MGPawn != none)
+    {
+        // For multi-position MGs, we use the view yaw limits in the MG pawn's DriverPositions
+        if (MGPawn.bMultiPosition)
+        {
+            return Clamp(yaw, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewNegativeYawLimit, MGPawn.DriverPositions[MGPawn.DriverPositionIndex].ViewPositiveYawLimit);
+        }
+        // Or for single position MGs we use our max/min yaw values from the MG weapon class
+        else if (MGPawn.VehicleBase != none)
+        {
+            VehYaw = MGPawn.VehicleBase.Rotation.Yaw;
+
+            return Clamp(yaw, VehYaw + MaxNegativeYaw, VehYaw + MaxPositiveYaw);
+        }
+    }
+
+    // Just a fallback
+    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
+}
+
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     // Fix for suicide death messages
@@ -467,4 +500,6 @@ defaultproperties
     FireAttachBone="mg_pitch"
     FireEffectOffset=(X=10.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
+    YawStartConstraint=0 // Matt: revert to defaults from VehicleWeapon, as MGs such as the Stuh don't work with the values from ROMountedTankMG
+    YawEndConstraint=65535
 }

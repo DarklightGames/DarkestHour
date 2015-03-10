@@ -15,8 +15,6 @@ defaultproperties
     TracerFrequency=5
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="mg_yaw"
-    YawStartConstraint=0.0
-    YawEndConstraint=65535.0
     PitchBone="mg_yaw"
     PitchUpLimit=15000
     PitchDownLimit=45000

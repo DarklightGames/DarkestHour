@@ -150,8 +150,6 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=17.0,PointScale=1.0,PointBone="loader_attachment",PointOffset=(X=5.0,Y=6.0,Z=18.5))
     hudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
     YawBone="Turret"
-    YawStartConstraint=0.0
-    YawEndConstraint=65535.0
     PitchBone="Gun"
     WeaponFireAttachmentBone="Barrel"
     GunnerAttachmentBone="loader_attachment"
