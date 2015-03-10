@@ -30,7 +30,7 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Ar)
             break;
     }
 
-    if (Ar.length == 0)
+    if (Ar.Length == 0)
         GetComboOptions(Combo, Ar);
 }
 

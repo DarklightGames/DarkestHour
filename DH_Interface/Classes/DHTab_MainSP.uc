@@ -174,7 +174,7 @@ function UpdateCurrentGameDifficulty()
 
     currentDifficulty = class'DH_Engine.DarkestHourGame'.default.GameDifficulty;
 
-    for (i = 0; i < Difficulties.length; ++i)
+    for (i = 0; i < Difficulties.Length; ++i)
     {
         if (currentDifficulty == Difficulties[i])
         {

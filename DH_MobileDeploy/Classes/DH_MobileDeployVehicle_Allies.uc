@@ -19,7 +19,7 @@ function bool TryToDrive(Pawn P)
     //Don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
-        for (x = 0; x < WeaponPawns.length; x++)
+        for (x = 0; x < WeaponPawns.Length; x++)
             if (WeaponPawns[x].Driver != none)
             {
                 DenyEntry(P, 2);
@@ -45,7 +45,7 @@ function bool TryToDrive(Pawn P)
     else if (bMustBeSL && !DH_Pawn(P).GetRoleInfo().bIsSquadLeader)
     {
         //Cycle through the available passenger positions.  Check the class type to see if it is ROPassengerPawn
-        for (x = 0; x < WeaponPawns.length; x++)
+        for (x = 0; x < WeaponPawns.Length; x++)
         {
             //If riders are allowed, the WeaponPawn is free and it is a passenger pawn class then climb aboard.
             if (WeaponPawns[x].Driver == none && WeaponPawns[x].IsA('ROPassengerPawn'))
@@ -62,7 +62,7 @@ function bool TryToDrive(Pawn P)
     else if ((Driver != none) || (P.DrivenVehicle != none))
     {
         //Cycle through the available passenger positions.  Check the class type to see if it is ROPassengerPawn
-        for (x = 0; x < WeaponPawns.length; x++)
+        for (x = 0; x < WeaponPawns.Length; x++)
         {
             //If riders are allowed, the WeaponPawn is free and it is a passenger pawn class then climb aboard.
             if (WeaponPawns[x].Driver == none && WeaponPawns[x].IsA('ROPassengerPawn'))

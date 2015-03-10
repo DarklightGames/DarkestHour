@@ -162,7 +162,7 @@ simulated event DestroyAppearance()
 //  SetDrawType(DT_Mesh);
 //  KSetBlockKarma(true);
 //  SetPhysics(PHYS_Karma);
-//  Skins.length = 1;
+//  Skins.Length = 1;
     NetPriority = 2.0;
 
     Skins[0] = DestroyedVehicleTexture;

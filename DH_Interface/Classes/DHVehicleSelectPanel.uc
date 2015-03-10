@@ -201,7 +201,7 @@ function UpdateVehiclePools()
         VehiclePoolsUpdateTime = DHGRI.VehiclePoolsUpdateTime;
     }
 
-    for (i = 0; i < VehiclePoolIndices.length; ++i)
+    for (i = 0; i < VehiclePoolIndices.Length; ++i)
     {
         j = VehiclePoolIndices[i];
 

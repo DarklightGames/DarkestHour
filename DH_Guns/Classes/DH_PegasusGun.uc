@@ -24,7 +24,7 @@ function bool TryToDrive(Pawn P)
     //don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
-        for (x = 0; x < WeaponPawns.length; x++)
+        for (x = 0; x < WeaponPawns.Length; x++)
             if (WeaponPawns[x].Driver != none)
             {
                 DenyEntry(P, 2);

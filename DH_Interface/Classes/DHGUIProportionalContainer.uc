@@ -88,7 +88,7 @@ function ComponentPosValues getAlignOriginalValues(GUIComponent component)
         values.WinTop = component.WinTop;
         values.WinWidth = component.WinWidth;
         values.WinHeight = component.WinHeight;
-        AlignOriginalValues[AlignOriginalValues.length] = values;
+        AlignOriginalValues[AlignOriginalValues.Length] = values;
         return values;
 }
 

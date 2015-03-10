@@ -47,7 +47,7 @@ function CalculateBulletCount()
 {
     local int i, TempCount;
 
-    for (i = 1; i < PrimaryAmmoArray.length; ++i)
+    for (i = 1; i < PrimaryAmmoArray.Length; ++i)
     {
         TempCount = TempCount + PrimaryAmmoArray[i];
     }
