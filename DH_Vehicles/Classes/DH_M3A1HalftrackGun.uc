@@ -194,8 +194,8 @@ event bool AttemptFire(Controller C, bool bAltFire)
 // Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
 state ProjectileFireMode
 {
-	function Fire(Controller C)
-	{
+    function Fire(Controller C)
+    {
         // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result = 0) then it's time to fire a tracer
         if (bUsesTracers && ((InitialPrimaryAmmo - MainAmmoCharge[0] - 1) % TracerFrequency == 0.0))
         {
@@ -211,7 +211,7 @@ state ProjectileFireMode
 // Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
-	super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
+    super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
 // Fill the ammo up to the initial ammount

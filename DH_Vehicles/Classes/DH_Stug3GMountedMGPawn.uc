@@ -76,7 +76,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     local vector  VehicleZ, CamViewOffsetWorld;
     local float   CamViewOffsetZAmount;
     local rotator WeaponAimRot;
-	local quat    AQuat, BQuat, CQuat;
+    local quat    AQuat, BQuat, CQuat;
 
     GetAxes(CameraRotation, x, y, z);
     ViewActor = self;
@@ -90,26 +90,26 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 
     // Use loader's camera bone rotation if unbuttoned & controlling the external MG
-	if (CanFire())
-	{
-		CameraRotation =  WeaponAimRot;
-	}
+    if (CanFire())
+    {
+        CameraRotation =  WeaponAimRot;
+    }
     // Or if unbuttoned we'll use this 'free look around' code instead
-	else if (bPCRelativeFPRotation)
-	{
+    else if (bPCRelativeFPRotation)
+    {
         // First, rotate the headbob by the PlayerController's rotation (looking around)
-		AQuat = QuatFromRotator(PC.Rotation);
-		BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
-		CQuat = QuatProduct(AQuat, BQuat);
+        AQuat = QuatFromRotator(PC.Rotation);
+        BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
+        CQuat = QuatProduct(AQuat, BQuat);
 
-		// Then, rotate that by the vehicle's rotation to get the final rotation
-		AQuat = QuatFromRotator(VehicleBase.Rotation);
-		BQuat = QuatProduct(CQuat, AQuat);
+        // Then, rotate that by the vehicle's rotation to get the final rotation
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
+        BQuat = QuatProduct(CQuat, AQuat);
 
         // Finally make it back into a rotator
-		CameraRotation = QuatToRotator(BQuat);
-	}
-	else
+        CameraRotation = QuatToRotator(BQuat);
+    }
+    else
     {
         CameraRotation = PC.Rotation;
     }

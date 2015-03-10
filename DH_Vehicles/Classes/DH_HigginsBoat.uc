@@ -159,7 +159,7 @@ function bool KDriverLeave(bool bForceLeave)
 function DriverDied()
 {
     InitialPositionIndex = DriverPositionIndex;
-	DriverPositionIndex = InitialPositionIndex;
+    DriverPositionIndex = InitialPositionIndex;
 
     super(ROVehicle).DriverDied(); // skip over Super in ROWheeledVehicle, which would reset DriverPositionIndex to 0
 

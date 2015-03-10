@@ -74,26 +74,26 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 
     // Use gun camera bone rotation if buttoned up & controlling the remote MG
-	if (CanFire())
-	{
-		CameraRotation =  WeaponAimRot;
-	}
+    if (CanFire())
+    {
+        CameraRotation =  WeaponAimRot;
+    }
     // Or if buttoned up we'll use this 'free look around' code instead (inside the loader's internal 'box')
-	else if (bPCRelativeFPRotation)
-	{
+    else if (bPCRelativeFPRotation)
+    {
         // First, rotate the headbob by the PlayerController's rotation (looking around)
-		AQuat = QuatFromRotator(PC.Rotation);
-		BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
-		CQuat = QuatProduct(AQuat, BQuat);
+        AQuat = QuatFromRotator(PC.Rotation);
+        BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
+        CQuat = QuatProduct(AQuat, BQuat);
 
-		// Then, rotate that by the vehicle's rotation to get the final rotation
-		AQuat = QuatFromRotator(VehicleBase.Rotation);
-		BQuat = QuatProduct(CQuat, AQuat);
+        // Then, rotate that by the vehicle's rotation to get the final rotation
+        AQuat = QuatFromRotator(VehicleBase.Rotation);
+        BQuat = QuatProduct(CQuat, AQuat);
 
         // Finally make it back into a rotator
-		CameraRotation = QuatToRotator(BQuat);
-	}
-	else
+        CameraRotation = QuatToRotator(BQuat);
+    }
+    else
     {
         CameraRotation = PC.Rotation;
     }

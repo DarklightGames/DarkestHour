@@ -200,14 +200,14 @@ defaultproperties
     VehicleMass=8.5
     DrivePos=(X=4.0,Y=5.0,Z=-10.0)
     DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(X=5.0,Y=-117.0,Z=10.0)	//driver
-    ExitPositions(1)=(X=9.0,Y=122.0,Z=10.0)	//mg
-    ExitPositions(2)=(X=-266.0,Y=-35.0,Z=10.0)	//left rear
-    ExitPositions(3)=(X=-266.0,Y=-35.0,Z=10.0)	//left rear
-    ExitPositions(4)=(X=-266.0,Y=-35.0,Z=10.0)	//left rear
-    ExitPositions(5)=(X=-266.0,Y=28.0,Z=10.0)	//right rear
-    ExitPositions(6)=(X=-266.0,Y=28.0,Z=10.0)	//right rear
-    ExitPositions(7)=(X=-266.0,Y=28.0,Z=10.0)	//right rear
+    ExitPositions(0)=(X=5.0,Y=-117.0,Z=10.0)   // driver
+    ExitPositions(1)=(X=9.0,Y=122.0,Z=10.0)    // mg
+    ExitPositions(2)=(X=-266.0,Y=-35.0,Z=10.0) // left rear
+    ExitPositions(3)=(X=-266.0,Y=-35.0,Z=10.0) // left rear
+    ExitPositions(4)=(X=-266.0,Y=-35.0,Z=10.0) // left rear
+    ExitPositions(5)=(X=-266.0,Y=28.0,Z=10.0)  // right rear
+    ExitPositions(6)=(X=-266.0,Y=28.0,Z=10.0)  // right rear
+    ExitPositions(7)=(X=-266.0,Y=28.0,Z=10.0)  // right rear
     EntryRadius=375.0
     FPCamPos=(Z=-60.0)
     TPCamDistance=1000.0

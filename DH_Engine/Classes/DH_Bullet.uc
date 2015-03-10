@@ -439,7 +439,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         }
     }
 
-	if (!bHasDeflected)
+    if (!bHasDeflected)
     {
         super(ROBallisticProjectile).HitWall(HitNormal, Wall); // is debug only
     }
