@@ -55,9 +55,9 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
     return super(ROVehicleWeapon).HitDriverArea(HitLocation, Momentum);
 }
 
-simulated function bool HitDriver(vector Hitlocation, vector Momentum)
+simulated function bool HitDriver(vector HitLocation, vector Momentum)
 {
-    return super(ROVehicleWeapon).HitDriver(Hitlocation, Momentum);
+    return super(ROVehicleWeapon).HitDriver(HitLocation, Momentum);
 }
 
 // There aren't any angles that are below the driver angle for the AT Gun cannon

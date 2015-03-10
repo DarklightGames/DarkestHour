@@ -213,11 +213,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         DamageType = class'ROSuicided';
 
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     // Quick fix for the thing giving itself impact damage
@@ -269,21 +269,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             // Damage for large weapons
             if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i))
                 {
-                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                 }
             }
             // Damage for small (non penetrating) arms
             else
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i, DriverHitCheckDist))
                 {
-                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(150, InstigatedBy, HitLocation, Momentum, DamageType);
                 }
             }
         }
-        else if (IsPointShot(Hitlocation,Momentum, 1.0, i))
+        else if (IsPointShot(HitLocation,Momentum, 1.0, i))
         {
             HitPointDamage *= VehHitpoints[i].DamageMultiplier;
             HitPointDamage *= VehicleDamageMod;
@@ -295,7 +295,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Engine hit effective");
                 }
 
-                DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                DamageEngine(HitPointDamage, InstigatedBy, HitLocation, Momentum, DamageType);
             }
             else if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
@@ -315,7 +315,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Add in the Vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+    super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // If vehicle health is very low, kill the engine (which will start a fire)
     if (Health >= 0 && Health <= HealthMax / 3)

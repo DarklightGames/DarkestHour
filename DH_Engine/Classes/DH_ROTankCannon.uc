@@ -180,7 +180,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     // Figure out which side we hit
     LocDir = vector(Rotation);
     LocDir.Z = 0.0;
-    HitDir =  Hitlocation - Location;
+    HitDir =  HitLocation - Location;
     HitDir.Z = 0.0;
     HitAngleDegrees = (Acos(Normal(LocDir) dot Normal(HitDir))) * 57.2957795131; // final multiplier converts the angle into degrees from radians
     GetAxes(Rotation, X, Y, Z);
@@ -702,11 +702,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle so we call TD on that
@@ -717,13 +717,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             VehicleWeaponPawn(Owner).VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
         }
 
-        VehicleWeaponPawn(Owner).VehicleBase.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        VehicleWeaponPawn(Owner).VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     // Removed as projectile's ProcessTouch now call TD directly on Driver if he was hit
-//  if (HitDriver(Hitlocation, Momentum))
+//  if (HitDriver(HitLocation, Momentum))
 //  {
-//      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+//      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 //  }
 
     bRoundShattered = false; // reset for next time
@@ -1435,7 +1435,7 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 {
     local vector HitOffset;
 
-    HitOffset = (Hitlocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
+    HitOffset = (HitLocation - Location) << Rotation; // hit offset in local space (after actor's 3D rotation applied)
 
     // We must have hit the commander's collision box (HitOffset.Z is how far the HitLocation is above the mesh origin)
     if (HitOffset.Z >= MinCommanderHitHeight)
@@ -1471,7 +1471,7 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 
 // Matt: slightly different concept to work more accurately & simply with projectiles
 // Think of this function as asking "is there an exposed commander there & did we actually hit him, not just his collision box?"
-simulated function bool HitDriver(vector Hitlocation, vector Momentum)
+simulated function bool HitDriver(vector HitLocation, vector Momentum)
 {
     local ROVehicleWeaponPawn PwningPawn;
 

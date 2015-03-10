@@ -1825,7 +1825,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     // Figure out which side we hit
     LocDir = vector(Rotation);
     LocDir.Z = 0.0;
-    HitDir =  Hitlocation - Location;
+    HitDir =  HitLocation - Location;
     HitDir.Z = 0.0;
     HitAngleDegrees = (Acos(Normal(LocDir) dot Normal(HitDir))) * 57.2957795131; // final multiplier converts the angle into degrees from radians
     GetAxes(Rotation, X, Y, Z);
@@ -2341,11 +2341,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         DamageType = class'ROSuicided';
 
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     // Quick fix for the thing giving itself impact damage
@@ -2397,21 +2397,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             // Damage for large weapons
             if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i))
                 {
-                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                 }
             }
             // Damage for small (non penetrating) arms
             else
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i, DriverHitCheckDist))
                 {
-                    Driver.TakeDamage(150, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(150, InstigatedBy, HitLocation, Momentum, DamageType);
                 }
             }
         }
-        else if (IsPointShot(Hitlocation,Momentum, 1.0, i))
+        else if (IsPointShot(HitLocation,Momentum, 1.0, i))
         {
             HitPointDamage *= VehHitpoints[i].DamageMultiplier;
             HitPointDamage *= VehicleDamageMod;
@@ -2431,7 +2431,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Engine hit effective");
                     }
 
-                    DamageEngine(HitPointDamage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    DamageEngine(HitPointDamage, InstigatedBy, HitLocation, Momentum, DamageType);
                     Damage *= 0.55; // hitting the engine shouldn't blow up the tank automatically!
                 }
             }
@@ -2470,7 +2470,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             Log("We hit" @ GetEnum(enum'ENewHitPointType', NewVehHitpoints[i].NewHitPointType) @ "hitpoint");
         }
 
-        if (IsNewPointShot(Hitlocation,Momentum, 1.0, i))
+        if (IsNewPointShot(HitLocation,Momentum, 1.0, i))
         {
             HitPointDamage *= VehicleDamageMod;
 
@@ -2598,7 +2598,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Tread damage calculations
     LocDir = vector(Rotation);
     LocDir.Z = 0.0;
-    HitDir =  Hitlocation - Location;
+    HitDir =  HitLocation - Location;
     HitDir.Z = 0.0;
     HitAngle = Acos(Normal(LocDir) dot Normal(HitDir));
 
@@ -2616,7 +2616,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Left side hit
     if ((HitAngle >= FrontRightAngle && HitAngle < RearRightAngle) && !bWasTurretHit)
     {
-        HitDir = Hitlocation - Location;
+        HitDir = HitLocation - Location;
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (InAngle > TreadHitMinAngle)
@@ -2635,7 +2635,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     //Right side hit
     else if ((HitAngle >= RearLeftAngle && HitAngle < FrontLeftAngle) && !bWasTurretHit)
     {
-        HitDir = Hitlocation - Location;
+        HitDir = HitLocation - Location;
         InAngle= Acos(Normal(HitDir) dot Normal(Z));
 
         if (InAngle > TreadHitMinAngle)
@@ -2661,7 +2661,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Add in the vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+    super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // This starts the hull fire; extra check added below to prevent HE splash from triggering Hull Fire Chance function
     if (!bOnFire && Damage > 0 && Health > 0 && class<ROWeaponDamageType>(DamageType) != none &&
@@ -2683,7 +2683,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 }
 
 // Modified to to kill engine if zero health & to add random chance of engine fire breaking out
-function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
     // Apply new damage
     if (EngineHealth > 0)

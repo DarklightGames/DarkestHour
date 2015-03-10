@@ -755,7 +755,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     }
 }
 
-function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
+function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
     if (EngineHealth > 0)
     {
