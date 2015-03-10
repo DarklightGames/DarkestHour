@@ -20,7 +20,7 @@ simulated function SetEngine();
 simulated function StopEmitters();
 simulated function StartEmitters();
 simulated function UpdateMovementSound();
-function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType);
+function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType);
 simulated function SetupTreads();
 simulated function DestroyTreads();
 function DamageTrack(bool bLeftTrack);
@@ -59,7 +59,7 @@ simulated function PostNetBeginPlay()
 // Overridden to bypass attaching as a driver and go straight to the gun
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    if (WeaponPawns.length > 0)
+    if (WeaponPawns.Length > 0)
     {
         WeaponPawns[0].ClientKDriverEnter(PC); // attach to the first WeaponPawn, do not pass "Go" :-)
     }
@@ -68,7 +68,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 // Overridden to bypass attaching as a driver and go straight to the gun
 function KDriverEnter(Pawn P)
 {
-    if (WeaponPawns.length > 0)
+    if (WeaponPawns.Length > 0)
     {
         WeaponPawns[0].KDriverEnter(P); // attach to the first WeaponPawn, do not pass "Go" :-)
     }
@@ -108,7 +108,7 @@ function bool TryToDrive(Pawn P)
     // Don't allow vehicle to be stolen when somebody is in a turret
     if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
     {
-        for (x = 0; x < WeaponPawns.length; x++)
+        for (x = 0; x < WeaponPawns.Length; x++)
         {
             if (WeaponPawns[x].Driver != none)
             {
@@ -188,11 +188,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         DamageType = class'ROSuicided';
 
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+        super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     // Hacked in APC damage mods for AT Guns, but bullets/bayo/bashing still shouldn't work...
@@ -220,22 +220,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             // Damage for large weapons
             if (class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier > 0.25)
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i))
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i))
                 {
-                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                 }
             }
             // Damage for small (non penetrating) arms
             else
             {
-                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(Hitlocation,Momentum, 1.0, i, DriverHitCheckDist))
+                if (Driver != none && DriverPositions[DriverPositionIndex].bExposed && IsPointShot(HitLocation,Momentum, 1.0, i, DriverHitCheckDist))
                 {
-                    Driver.TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+                    Driver.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                 }
             }
         }
         // An AT gun does not have an engine - we will however leave the ammo store because we need it to get around a collision issue with the gunner (player)
-        else if (IsPointShot(Hitlocation,Momentum, 1.0, i))
+        else if (IsPointShot(HitLocation,Momentum, 1.0, i))
         {
             if (VehHitpoints[i].HitPointType == HP_AmmoStore)
             {
@@ -248,7 +248,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Add in the vehicle damage modifier for the actual damage to the vehicle itself
     Damage *= VehicleDamageMod;
 
-    super(ROVehicle).TakeDamage(Damage, InstigatedBy, Hitlocation, Momentum, DamageType);
+    super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
 exec function DamageTank()
