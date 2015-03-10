@@ -25,10 +25,10 @@ var     DH_CatchAndWatchPawn    CatchActorRef;
 function PostBeginPlay()
 {
     //can use dynamic actors?
-    foreach allactors(class'DH_CatchAndWatchPawn', CatchActorRef, CatchActorTag)
+    foreach AllActors(class'DH_CatchAndWatchPawn', CatchActorRef, CatchActorTag)
         break;
 
-    foreach allactors(class'ROVehicleFactory', VehicleFactoryRef, VehicleFactoryTag)
+    foreach AllActors(class'ROVehicleFactory', VehicleFactoryRef, VehicleFactoryTag)
         break;
 }
 
@@ -75,7 +75,7 @@ state FindClass
             {
                 //Other is of type to find and we need to pass it and goto passed
                 CatchActorRef.PassPawnRef(Pawn(Other));
-                gotostate('Passed');
+                GotoState('Passed');
             }
         }
     }
@@ -92,7 +92,7 @@ state FindTag
         {
             //we have a matching tag this is the pawn we want!
             CatchActorRef.PassPawnRef(Pawn(Other));
-            gotostate('Passed');
+            GotoState('Passed');
         }
     }
 }
@@ -104,7 +104,7 @@ state FindFactory
         if (VehicleFactoryRef.LastSpawnedVehicle != none && VehicleFactoryRef.LastSpawnedVehicle.Health >= 0)
         {
             CatchActorRef.PassPawnRef(VehicleFactoryRef.LastSpawnedVehicle);
-            gotostate('Passed');
+            GotoState('Passed');
         }
     }
 }

@@ -17,7 +17,7 @@ var()   name            nEventToTrigger;
 
 function Reset()
 {
-    gotostate('Initialize'); //cancles the Timing Timer (allowing for resetgame)
+    GotoState('Initialize'); //cancles the Timing Timer (allowing for resetgame)
     bFired = false;
     TimeElapsed = 0;
 }
@@ -25,9 +25,9 @@ function Reset()
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     if (!IsInState('Timing'))
-        gotostate('Timing'); //Not Timing? Then start
+        GotoState('Timing'); //Not Timing? Then start
     else
-        gotostate('Initialize'); //Timing? Then lets stop and only restart if bAutoStart is true
+        GotoState('Initialize'); //Timing? Then lets stop and only restart if bAutoStart is true
 }
 
 auto state Initialize
@@ -35,7 +35,7 @@ auto state Initialize
     function BeginState()
     {
         if (bAutoStart)
-            gotostate('Timing');
+            GotoState('Timing');
     }
 }
 

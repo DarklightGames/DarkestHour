@@ -53,7 +53,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     }
 
     //Because we are here everything checked out so lets goto done
-    gotostate('Done');
+    GotoState('Done');
 
     //if EventToTrigger is set lets trigger the event
     if (EventToTrigger != '')
@@ -68,7 +68,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
 
 function Reset()
 {
-    gotostate('Initialize'); //cancles the Timing Timer (allowing for resetgame)
+    GotoState('Initialize'); //cancles the Timing Timer (allowing for resetgame)
 }
 
 auto state Initialize
@@ -76,7 +76,7 @@ auto state Initialize
     function BeginState()
     {
         if (bAutoStartCheck)
-            gotostate('Timing');
+            GotoState('Timing');
     }
 }
 

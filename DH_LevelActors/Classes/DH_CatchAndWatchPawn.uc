@@ -10,10 +10,10 @@ var()   name        EventToTriggerOnDeath;
 var     bool        bFired;
 //messages
 
-function reset()
+function Reset()
 {
     PawnReference = none;
-    gotostate('WaitToWatch');
+    GotoState('WaitToWatch');
 }
 
 auto state WaitToWatch
@@ -49,12 +49,12 @@ state Done
 
 function PassPawnRef(pawn PassedPawn)
 {
-    if (!Level.Game.IsInState('RoundInPlay') || bFired || PassedPawn.health <= 0)
+    if (!Level.Game.IsInState('RoundInPlay') || bFired || PassedPawn.Health <= 0)
         return; //Leave as the game was not in Play was already fired or the pawn was alredy dead
     else
     {
         PawnReference = PassedPawn;
-        gotostate('Watch');
+        GotoState('Watch');
     }
 }
 
@@ -65,7 +65,7 @@ function PawnReferenceIsDead()
         TriggerEvent(EventToTriggerOnDeath, self, PawnReference);
         bFired = true;
         //Messages
-        gotostate('Done');
+        GotoState('Done');
     }
 }
 
