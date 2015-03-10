@@ -5,7 +5,8 @@
 // A warning message sent by an admin, displayed on a parchment-style banner in the centre of the screen
 //
 //=======================================================================================================
-class DH_AdminMenu_WarningMessage extends ROCriticalMessage;
+class DH_AdminMenu_WarningMessage extends ROCriticalMessage
+    abstract;
 
 // Localised so different language versions could be produced:
 var  localized  string  WarningHeader;

@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleDestroyedMessage extends DHLocalMessage;
+class DHVehicleDestroyedMessage extends DHLocalMessage
+    abstract;
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {

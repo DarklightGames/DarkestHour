@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHResupplyMessage extends ROCriticalMessage;
+class DHResupplyMessage extends ROCriticalMessage
+    abstract;
 
 var localized string  ResuppliedMortar;
 var localized string  ResuppliedNoOperator;

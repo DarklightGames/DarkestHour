@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHTeamSayMessage extends DHLocalMessage;
+class DHTeamSayMessage extends DHLocalMessage
+    abstract;
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {

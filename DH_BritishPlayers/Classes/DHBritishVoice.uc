@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHBritishVoice extends DHVoicePack;
+class DHBritishVoice extends DHVoicePack
+    abstract;
 
 #exec OBJ LOAD FILE=..\Sounds\DH_Brit_Voice_Infantry.uax
 #exec OBJ LOAD FILE=..\Sounds\DH_Brit_Voice_vehicle.uax

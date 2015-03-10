@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BazookaWarningMsg extends DHRocketWarningMessage;
+class DH_BazookaWarningMsg extends DHRocketWarningMessage
+    abstract;
 
 defaultproperties
 {

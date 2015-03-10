@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HetzerVehicleMessage extends ROVehicleMessage;
+class DH_HetzerVehicleMessage extends ROVehicleMessage
+    abstract;
 
 var(Messages) localized string CannotExit;
 var(Messages) localized string UnbuttonToReloadMG;

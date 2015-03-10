@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHRoundOverMsg extends RORoundOverMsg;
-
+class DHRoundOverMsg extends RORoundOverMsg
+    abstract;
 
 // Overridden to support varying victory music
 static simulated function ClientReceive(PlayerController P, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)

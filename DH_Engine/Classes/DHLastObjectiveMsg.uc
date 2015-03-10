@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHLastObjectiveMsg extends ROCriticalMessage;
+class DHLastObjectiveMsg extends ROCriticalMessage
+    abstract;
 
 var(Messages) localized string AboutToWin;
 var(Messages) localized string AboutToLose;

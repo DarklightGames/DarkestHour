@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHATLoadMessage extends ROCriticalMessage;
+class DHATLoadMessage extends ROCriticalMessage
+    abstract;
 
 var localized string        LoadedGunner;
 var localized string        BeenLoaded;

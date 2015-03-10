@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerschreckWarningMsg extends DHRocketWarningMessage;
+class DH_PanzerschreckWarningMsg extends DHRocketWarningMessage
+    abstract;
 
 defaultproperties
 {

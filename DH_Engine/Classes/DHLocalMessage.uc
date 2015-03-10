@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHLocalMessage extends LocalMessage;
+class DHLocalMessage extends LocalMessage
+    abstract;
 
 var()   color       GermanColour;
 var()   color       USColour;

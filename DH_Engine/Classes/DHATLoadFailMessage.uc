@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHATLoadFailMessage extends ROCriticalMessage;
+class DHATLoadFailMessage extends ROCriticalMessage
+    abstract;
 
 var localized string  CantLoad;
 
