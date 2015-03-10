@@ -52,6 +52,20 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
+// Modified so if player buttons up & is now on the gun, rotation is set to match the direction MG is facing (after looking around while unbuttoned)
+simulated state ViewTransition
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        if (DriverPositionIndex < UnbuttonedPositionIndex)
+        {
+            MatchRotationToGunAim();
+        }
+    }
+}
+
 // Modified so that unbuttoned player can look around, similar to a cannon pawn
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {

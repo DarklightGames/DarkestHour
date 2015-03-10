@@ -433,25 +433,26 @@ simulated state EnteringVehicle
     }
 }
 
-// Modified to handle InitialPositionIndex instead of assuming start in position zero
+// Modified to handle InitialPositionIndex instead of assuming start in position zero, & to match rotation to cannon's aim (also consolidates & optimises the Supers)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    super.ClientKDriverEnter(PC);
 
-    PendingPositionIndex = InitialPositionIndex;
-    ServerChangeDriverPos();
-}
+    if (bMultiPosition)
+    {
+        Gotostate('EnteringVehicle');
+        PendingPositionIndex = InitialPositionIndex;
+        ServerChangeDriverPos();
+    }
+    else
+    {
+        PC.SetFOV(WeaponFOV);
+    }
 
-// Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
-simulated function ClientKDriverLeave(PlayerController PC)
-{
-    local rotator NewRot;
+    StoredVehicleRotation = VehicleBase.Rotation; // Matt: I don't think this is used anywhere & will probably remove from all functions later
 
-    NewRot = VehicleBase.Rotation;
-    NewRot.Pitch = LimitPitch(NewRot.Pitch);
-    SetRotation(NewRot);
+    super(Vehicle).ClientKDriverEnter(PC);
 
-    super.ClientKDriverLeave(PC);
+    MatchRotationToGunAim();
 }
 
 function ServerChangeDriverPos()
@@ -864,6 +865,35 @@ simulated function SwitchMesh(int PositionIndex)
     }
 }
 
+// New function to match rotation to cannon's current aim, either relative or independent to vehicle rotation
+simulated function MatchRotationToGunAim()
+{
+    local rotator NewRotation;
+
+    if (Gun != none)
+    {
+        if (bPCRelativeFPRotation)
+        {
+            NewRotation = Gun.CurrentAim;
+        }
+        else
+        {
+            NewRotation = rotator(vector(Gun.CurrentAim) >> Gun.Rotation); // note Gun.Rotation is effectively same as vehicle base's rotation
+        }
+
+        NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
+
+        SetRotation(NewRotation); // note owning net client will update rotation back to server
+    }
+}
+
+// Modified so if PC's rotation was relative to vehicle (bPCRelativeFPRotation), it gets set to the correct non-relative rotation on exit
+// Doing this in a more obvious way here avoids the previous workaround in ClientKDriverLeave, which matched the cannon pawn's rotation to the vehicle
+simulated function FixPCRotation(PlayerController PC)
+{
+    PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. cannon pawn's rotation (note Gun.Rotation is effectively same as vehicle base's rotation)
+}
+
 // Matt: re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
 simulated function IncrementRange()
 {
@@ -934,7 +964,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         {
             if (bPCRelativeFPRotation)
             {
-                PC.SetRotation(rotator(vector(PC.Rotation) >> Rotation));
+                PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation));
             }
 
             if (bMultiPosition)
@@ -977,7 +1007,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     {
         if (bPCRelativeFPRotation)
         {
-            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation));
+            PC.SetRotation(rotator(vector(PC.Rotation) << Gun.Rotation));
         }
 
         if (bBehindViewChanged)

@@ -42,21 +42,6 @@ function KDriverEnter(Pawn P)
     }
 }
 
-// Modified so rotation is set to Gun.CurrentAim, which makes the player face the way the MG is facing, relative to the tank's rotation
-// then bPCRelativeFPRotation works correctly, including player exit direction
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    local rotator NewRotation;
-
-    super(ROVehicleWeaponPawn).ClientKDriverEnter(PC);
-
-    PC.SetFOV(WeaponFOV);
-
-    NewRotation = Gun.CurrentAim;
-    NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
-    SetRotation(NewRotation);
-}
-
 // Modified to prevent the player from unbuttoning if the MG is not turned sideways (otherwise it will be blocking the hatch, due to hetzer's small size)
 simulated function NextWeapon()
 {
@@ -117,19 +102,16 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Modified so that when buttoning up the pawn rotation is reset to match the direction the MG is facing (after looking around unbuttoned)
+// Modified so if player buttons up & is now on the gun, rotation is set to match the direction MG is facing (after looking around while unbuttoned)
 simulated state ViewTransition
 {
     simulated function EndState()
     {
-        if (PlayerController(Controller) != none)
-        {
-            PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+        super.EndState();
 
-            if (DriverPositionIndex < UnbuttonedPositionIndex)
-            {
-                SetRotation(Gun.CurrentAim);
-            }
+        if (DriverPositionIndex < UnbuttonedPositionIndex)
+        {
+            MatchRotationToGunAim();
         }
     }
 }
