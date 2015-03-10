@@ -1531,9 +1531,9 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
         t = 0.0;
     }
 
-    Distance = Sqrt(Diff Dot Diff);
+    Distance = Sqrt(Diff dot Diff);
 
-    return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
+    return Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
 }
 
 simulated function UpdatePrecacheStaticMeshes()
