@@ -572,6 +572,12 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
+        // Added so when player moves up from gunsight, rotation is set to match the direction cannon is facing (feels more natural to come up from the cannon)
+        if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions)
+        {
+            MatchRotationToGunAim();
+        }
+
         StoredVehicleRotation = VehicleBase.Rotation;
 
         SwitchMesh(DriverPositionIndex);
