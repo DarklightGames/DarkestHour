@@ -119,7 +119,7 @@ function KDriverEnter(Pawn P)
     if (MG != none && MG.bReloading)
     {
         PercentageOfReloadDone = Byte(100.0 * (Level.TimeSeconds - MG.ReloadStartTime) / MG.ReloadDuration);
-        MG.ClientSetReloadStartTime(PercentageOfReloadDone);
+        MG.ClientHandleReload(PercentageOfReloadDone);
     }
 
     super(VehicleWeaponPawn).KDriverEnter(P); // skip over Super in ROMountedTankMGPawn as it sets rotation we now want to avoid
@@ -646,7 +646,7 @@ function float GetAmmoReloadState()
         }
         else
         {
-            return 1.0; // HUD will draw ammo icon all in red to show can't fire MG - either totally out of ammo or a net client that doesn't have the variables to calculate progress
+            return 1.0; // must be totally out of ammo, so HUD will draw ammo icon all in red to indicate that MG can't be fired
         }
     }
 }

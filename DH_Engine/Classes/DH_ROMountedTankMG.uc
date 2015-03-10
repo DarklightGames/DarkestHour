@@ -10,11 +10,12 @@ var()   class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass 
 var()   int                 TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
 
 // Reload stuff
-var     bool    bReloading;      // this MG is currently reloading
-var()   sound   ReloadSound;     // sound of this MG reloading
-var     float   ReloadDuration;  // time duration of reload (set automatically)
-var     float   ReloadStartTime; // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
-var     byte    NumMags;         // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
+var     bool    bReloading;           // this MG is currently reloading
+var()   sound   ReloadSound;          // sound of this MG reloading
+var     float   ReloadDuration;       // time duration of reload (set automatically)
+var     float   ReloadStartTime;      // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
+var()   name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
+var     byte    NumMags;              // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -38,7 +39,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientSetReloadStartTime;
+        ClientHandleReload;
 }
 
 // Matt: modified to handle new collision static mesh actor, if one has been specified
@@ -46,7 +47,12 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    ReloadDuration = GetSoundDuration(ReloadSound); // just so the client's MGPawn doesn't have to do this many times per second to display reload progress on the HUD
+    // Just so the client's MGPawn doesn't have to do this many times per second to display reload progress on the HUD
+    // This will be ignored if MG has a HUDOverlay with a reload animation, as a literal ReloadDuration value will have to be set in default properties
+    if (ReloadDuration <= 0.0 && ReloadSound != none)
+    {
+        ReloadDuration = GetSoundDuration(ReloadSound);
+    }
 
     if (CollisionMeshActorClass != none)
     {
@@ -152,25 +158,45 @@ function CeaseFire(Controller C, bool bWasAltFire)
     }
 }
 
+// Matt: modified to generic function handling HUDOverlay reloads as well as normal reloads, including making client record ReloadStartTime (used for reload progress on HUD ammo icon)
 function HandleReload()
 {
+    local VehicleWeaponPawn MGPawn;
+
     if (NumMags > 0 && !bReloading)
     {
         bReloading = true;
         NumMags--;
-        NetUpdateTime = Level.TimeSeconds - 1;
-        ReloadStartTime = Level.TimeSeconds; // Matt: added so we can pass this to client (using next function call), so client can work out reload progress to display on HUD 
-        ClientSetReloadStartTime();
-        SetTimer(GetSoundDuration(ReloadSound), false);
-        PlaySound(ReloadSound, SLOT_None, 1.5,, 25,, true);
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+        ReloadStartTime = Level.TimeSeconds;
+        ClientHandleReload();
+        MGPawn = VehicleWeaponPawn(Owner);
+
+        if (MGPawn == none || MGPawn.HUDOverlay == none || !HasAnim(HUDOverlayReloadAnim)) // don't play sound if there's a HUDOverlay with reload animation, as it plays its own sounds
+        {
+            PlaySound(ReloadSound, SLOT_None, 1.5,, 25.0,, true);
+        }
+
+        SetTimer(ReloadDuration, false);
     }
 }
 
-// Matt: new server-to-client function passing the % of reload already done, so client can determine when reload started - used to show reload progress on HUD ammo icon
-// Only called once for owning player, either when reload starts or if player enters MG position that is in the process of reloading
-simulated function ClientSetReloadStartTime(optional byte PercentageDone) // replication optimised to a byte, instead of passing start time as float
+// Matt: new server-to-client function called at start of reload or if player enters an MG that is reloading
+// Client records when reload started, which is used to show reload progress on HUD ammo icon (replication optimised to a byte instead of passing start time as float)
+// Also plays any HUDOverlay reload animation, starting it from the appropriate point if a reload is already in progress
+simulated function ClientHandleReload(optional byte PercentageDone)
 {
+    local VehicleWeaponPawn MGPawn;
+
     ReloadStartTime = Level.TimeSeconds - (Float(PercentageDone) / 100.0 * ReloadDuration);
+
+    MGPawn = VehicleWeaponPawn(Owner);
+
+    if (MGPawn != none && MGPawn.HUDOverlay != none && MGPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
+    {
+        MGPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
+		MGPawn.HUDOverlay.SetAnimFrame(Float(PercentageDone)); // move reload animation to appropriate point
+    }
 }
 
 simulated function Timer()
