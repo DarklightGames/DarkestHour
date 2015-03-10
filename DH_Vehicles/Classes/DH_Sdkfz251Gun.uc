@@ -3,43 +3,50 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Gun extends Sdkfz251Gun;
-
-var()   class<Projectile> TracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
-var()   int               TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
-
-
-// Matt: modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
-state ProjectileFireMode
-{
-    function Fire(Controller C)
-    {
-        // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result = 0) then it's time to fire a tracer
-        if (bUsesTracers && ((InitialPrimaryAmmo - MainAmmoCharge[0] - 1) % TracerFrequency == 0.0))
-        {
-            SpawnProjectile(TracerProjectileClass, false);
-        }
-        else
-        {
-            SpawnProjectile(ProjectileClass, false);
-        }
-    }
-}
-
-// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
-simulated function FlashMuzzleFlash(bool bWasAltFire)
-{
-    super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
-}
+class DH_Sdkfz251Gun extends DH_ROMountedTankMG; // Matt: was Sdkfz251Gun
 
 defaultproperties
 {
+    NumMags=15
+    HUDOverlayReloadAnim="Bipod_Reload_s"
+    ReloadDuration=6.59
     TracerProjectileClass=class'DH_MG34VehicleTracerBullet'
     TracerFrequency=7
-    Spread=0.002
+    VehHitpoints(0)=(PointRadius=9.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=0.0,Y=0.0,Z=15.0))
+    VehHitpoints(1)=(PointRadius=15.0,PointHeight=0.0,PointScale=1.0,PointBone=com_attachment,PointOffset=(X=0.0,Y=0.0,Z=-5.0))
+    hudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
+    YawBone="Gun_protection"
+    PitchBone="Gun"
+    PitchUpLimit=10000
+    PitchDownLimit=50000
+    WeaponFireAttachmentBone="Gun"
+    GunnerAttachmentBone="com_attachment"
+    WeaponFireOffset=40.0
+    bInstantFire=false // override inherited from ROMountedTankMG (all MGs have this)
+    Spread=0.002 // 0.03
+    FireInterval=0.07058
+    AltFireInterval=0.07058
+    AmbientEffectEmitterClass=class'VehicleMGEmitter'
     FireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
-    AmbientSoundScaling=5.0
+    AmbientSoundScaling=5.0 // 3.0
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
     ProjectileClass=class'DH_Vehicles.DH_MG34VehicleBullet'
+    ShakeOffsetMag=(X=0.5,Y=0.0,Z=0.2)
+    ShakeOffsetRate=(X=500.0,Y=500.0,Z=500.0)
+    ShakeRotMag=(X=25.0,Y=0.0,Z=10.0)
+    ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
+    AIInfo[0]=(bLeadTarget=true,bFireOnRelease=true,AimError=800.0,RefireRate=0.07058)
+    CustomPitchUpLimit=2000
+    CustomPitchDownLimit=63000
+    MaxPositiveYaw=10000
+    MaxNegativeYaw=-10000
+    bLimitYaw=true
+    InitialPrimaryAmmo=50
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_gun'
+    bCollideActors=true
+    bCollideWorld=false
+    bProjTarget=true
+    bBlockActors=true
+    bBlockNonZeroExtentTraces=true
+    bBlockZeroExtentTraces=true
 }
