@@ -8,8 +8,7 @@ class DHRoleSelectPanel extends MidGamePanel
 
 const NUM_ROLES = 10;
 
-var automated ROGUIProportionalContainer    MainContainer,
-                                            RolesContainer,
+var automated ROGUIProportionalContainer    RolesContainer,
                                             PrimaryWeaponContainer,
                                             SecondaryWeaponContainer,
                                             EquipContainer;
@@ -1097,19 +1096,6 @@ defaultproperties
     TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
 
     RoleSelectFooterButtonsWinTop=0.946667
-
-    // Main Container
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MainContiner_inst
-        WinLeft=0.0
-        WinTop=0.0
-        WinWidth=1.0
-        WinHeight=1.0
-        TopPadding=0.0
-        LeftPadding=0.0
-        RightPadding=0.0
-        BottomPadding=0.0
-    End Object
-    MainContainer=MainContiner_inst
 
     // Estimated deploy time label
     Begin Object Class=GUILabel Name=EstimatedRedeployTime
