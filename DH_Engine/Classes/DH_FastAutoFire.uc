@@ -99,7 +99,7 @@ function DoFireEffect()
 
             X = vector(Aim);
 
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ProjectileID++)
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
             {
                 R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
                 R.Pitch = AppliedSpread * (FRand() - 0.5);
@@ -112,7 +112,7 @@ function DoFireEffect()
 
         case SS_Line:
 
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ProjectileID++)
+            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
             {
                 theta = AppliedSpread * PI / 32768.0 * (ProjectileID - Float(SpawnCount - 1) / 2.0);
                 X.X = Cos(theta);

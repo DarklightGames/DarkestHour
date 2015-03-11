@@ -420,7 +420,7 @@ simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, 
     AngleDelta = 2.0 * PI / NumSides;
     LastVertex = Base + X * Radius;
 
-    for (SideIndex = 0; SideIndex < NumSides; SideIndex++)
+    for (SideIndex = 0; SideIndex < NumSides; ++SideIndex)
     {
         Vertex = Base + (X * Cos(AngleDelta * (SideIndex + 1.0)) + Y * Sin(AngleDelta * (SideIndex + 1.0))) * Radius;
 

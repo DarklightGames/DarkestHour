@@ -321,7 +321,7 @@ function Vehicle FindEntryVehicle(Pawn P)
             return none;
         }
 
-        for (x = 0; x < WeaponPawns.Length; x++)
+        for (x = 0; x < WeaponPawns.Length; ++x)
         {
             if (VehicleGoal == WeaponPawns[x])
             {
@@ -352,7 +352,7 @@ function Vehicle FindEntryVehicle(Pawn P)
             return self;
         }
 
-        for (x = 0; x < WeaponPawns.Length; x++)
+        for (x = 0; x < WeaponPawns.Length; ++x)
         {
             DistSquared = VSizeSquared(P.Location - (WeaponPawns[x].Location + (WeaponPawns[x].EntryPosition >> Rotation)));
 
@@ -377,7 +377,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     BackupDistSquared = 1000000.0; // added so we can check the closest weapon pawn player could occupy, even though it may be out of range (vehicle itself may be in range)
 
     // Loop through weapon pawns to check if we are in entry range
-    for (x = 0; x < WeaponPawns.Length; x++)
+    for (x = 0; x < WeaponPawns.Length; ++x)
     {
         // Ignore this weapon pawn if it's already occupied by another player
         if (WeaponPawns[x] == none || (WeaponPawns[x].Driver != none && WeaponPawns[x].Driver.IsHumanControlled()))

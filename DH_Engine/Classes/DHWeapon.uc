@@ -87,7 +87,7 @@ simulated state StartMantle extends Busy
         {
             if (Instigator.IsLocallyControlled())
             {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+                for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
                 {
                     if (FireMode[Mode].bIsFiring)
                     {
@@ -110,7 +110,7 @@ simulated state StartMantle extends Busy
 
         SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
         {
             FireMode[Mode].bServerDelayStartFire = false;
             FireMode[Mode].bServerDelayStopFire = false;
