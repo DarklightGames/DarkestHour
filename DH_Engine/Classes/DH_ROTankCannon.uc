@@ -9,7 +9,7 @@ class DH_ROTankCannon extends ROTankCannon
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // Variables for up to three ammo types, plus new MG tracer
-var     int               MainAmmoChargeExtra[3];
+var     byte              MainAmmoChargeExtra[3];   // Matt: changed from int to byte for more efficient replication
 var()   int               InitialTertiaryAmmo;
 var()   class<Projectile> TertiaryProjectileClass;
 var()   class<Projectile> AltTracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
@@ -63,8 +63,8 @@ var     config bool bGunsightSettingMode;
 replication
 {
     // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetDirty && bNetOwner && Role == ROLE_Authority)
-        MainAmmoChargeExtra; // Matt: should be able to change to byte - check & implement later
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        MainAmmoChargeExtra;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
