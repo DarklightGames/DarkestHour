@@ -271,36 +271,39 @@ simulated function ClientDamageCannonOverlay()
 // Modified to allow turret traverse or elevation seizure if turret ring or pivot are damaged
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    if (!bTurretRingDamaged && !bGunPivotDamaged)
+    if (bTurretRingDamaged)
     {
-        super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
-    }
-    else if (bTurretRingDamaged && bGunPivotDamaged)
-    {
-        if (bDebuggingText && Role == ROLE_Authority)
+        if (bGunPivotDamaged)
         {
-            Level.Game.Broadcast(self, "Gun & turret disabled");
-        }
+            if (bDebuggingText && Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "Gun & turret disabled");
+            }
 
-        super.HandleTurretRotation(DeltaTime, 0.0, 0.0);
+            super.HandleTurretRotation(DeltaTime, 0.0, 0.0);
+        }
+        else
+        {
+            if (bDebuggingText && Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "Turret disabled");
+            }
+
+            super.HandleTurretRotation(DeltaTime, 0.0, PitchChange);
+        }
     }
-    else if (!bTurretRingDamaged && bGunPivotDamaged)
+    else if (bGunPivotDamaged)
     {
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Gun disabled");
+            Level.Game.Broadcast(self, "Gun pivot disabled");
         }
 
         super.HandleTurretRotation(DeltaTime, YawChange, 0.0);
     }
-    else if (bTurretRingDamaged && !bGunPivotDamaged)
+    else // no damage
     {
-        if (bDebuggingText && Role == ROLE_Authority)
-        {
-            Level.Game.Broadcast(self, "Turret disabled");
-        }
-
-        super.HandleTurretRotation(DeltaTime, 0.0, PitchChange);
+        super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);
     }
 }
 
