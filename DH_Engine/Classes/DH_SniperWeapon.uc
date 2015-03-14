@@ -310,5 +310,6 @@ defaultproperties
     bIsSniper=true
     FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
+    BobModifyFactor=0.15
 }
 

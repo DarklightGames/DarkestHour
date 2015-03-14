@@ -510,7 +510,7 @@ simulated state WorkingBolt extends Busy
         else
         {
             // Let the server set the bWaitingToBolt to false a little sooner than the client
-            // Since the client can't attempt to fire until he is done bolting, this will help alleviate situations 
+            // Since the client can't attempt to fire until he is done bolting, this will help alleviate situations
             // where the client finishes bolting before the server registers the bolting as finished
             BoltWaitTime = BoltWaitTime - (BoltWaitTime * 0.1);
             SetTimer(BoltWaitTime, false);
@@ -614,4 +614,5 @@ function bool HandlePickupQuery(Pickup Item)
 
 defaultproperties
 {
+    BobModifyFactor=0.05
 }

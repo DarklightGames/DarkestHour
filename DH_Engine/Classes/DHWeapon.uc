@@ -6,6 +6,9 @@
 class DHWeapon extends ROWeapon
     abstract;
 
+var float   SwayModifyFactor;
+var float   BobModifyFactor;
+
 var bool    bIsMantling;
 var float   PlayerIronsightFOV;
 
@@ -130,4 +133,6 @@ defaultproperties
 {
     PlayerIronsightFOV=60.0
     ScopeDetail=RO_TextureScope
+    SwayModifyFactor=1.0
+    BobModifyFactor=0.25
 }

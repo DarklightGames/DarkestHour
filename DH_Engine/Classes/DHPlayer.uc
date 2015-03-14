@@ -12,6 +12,7 @@ var DHSpawnPoint    DesiredSpawnPoint;
 var bool            bShouldAttemptAutoDeploy;
 
 // DH Sway values
+var() InterpCurve             BobCurve; // The amount of weapon bob to apply based on an input time in ironsights
 var protected float           DHSwayElasticFactor;
 var protected float           DHSwayDampingFactor;
 
@@ -2292,10 +2293,11 @@ simulated function SwayHandler(float DeltaTime)
     local float DeltaSwayYaw;
     local float DeltaSwayPitch;
     local float timeFactor;
+    local float bobFactor;
     local float staminaFactor;
-    local ROPawn P;
+    local DH_Pawn P;
 
-    P = ROPawn(Pawn);
+    P = DH_Pawn(Pawn);
 
     if (P == None )
     {
@@ -2320,6 +2322,16 @@ simulated function SwayHandler(float DeltaTime)
 
     // Get timefactor based on sway curve
     timeFactor = InterpCurveEval(SwayCurve,SwayTime);
+
+    // Get bobfactor based on bob curve
+    bobFactor = InterpCurveEval(BobCurve,SwayTime);
+
+    // Handle timefactor modifier & weapon bob for weapon type
+    if (DHWeapon(P.Weapon) != none)
+    {
+        timeFactor *= DHWeapon(P.Weapon).SwayModifyFactor;
+        P.IronSightBobFactor = bobFactor * DHWeapon(P.Weapon).BobModifyFactor;
+    }
 
     // Add modifiers to sway for time in iron sights and stamina
     WeaponSwayYawAcc = (timeFactor * WeaponSwayYawAcc) + (staminaFactor * WeaponSwayYawAcc);
@@ -2385,6 +2397,7 @@ defaultproperties
 
     // Sway values
     SwayCurve=(Points=((InVal=0.0,OutVal=3.5),(InVal=1.0,OutVal=1.25),(InVal=3.0,OutVal=0.0),(InVal=8.0,OutVal=0.5),(InVal=12.0,OutVal=1.1),(InVal=16.0,OutVal=0.0),(InVal=24.0,OutVal=1.25),(InVal=10000000000.0,OutVal=1.33)))
+    BobCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=1.0,OutVal=0.8),(InVal=3.0,OutVal=0.0),(InVal=8.0,OutVal=0.15),(InVal=16.0,OutVal=0.25),(InVal=10000000000.0,OutVal=0.15)))
     DHSwayElasticFactor=3.0;
     DHSwayDampingFactor=0.85;
     baseSwayYawAcc=120

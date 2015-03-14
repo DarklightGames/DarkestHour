@@ -141,7 +141,7 @@ simulated state WorkingBolt extends Busy
         else
         {
             // Let the server set the bWaitingToBolt to false a little sooner than the client
-            // Since the client can't attempt to fire until he is done bolting, this will help alleviate situations 
+            // Since the client can't attempt to fire until he is done bolting, this will help alleviate situations
             // where the client finishes bolting before the server registers the bolting as finished
             BoltWaitTime = BoltWaitTime - (BoltWaitTime * 0.1);
             SetTimer(BoltWaitTime, false);
@@ -213,4 +213,6 @@ defaultproperties
 {
     FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
+    SwayModifyFactor=0.5
+    BobModifyFactor=0.1
 }

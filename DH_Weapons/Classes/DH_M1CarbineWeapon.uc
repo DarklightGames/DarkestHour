@@ -46,4 +46,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_M1Carbine_1st.M1Carbine'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
+    SwayModifyFactor=0.9
+    BobModifyFactor=0.1
 }

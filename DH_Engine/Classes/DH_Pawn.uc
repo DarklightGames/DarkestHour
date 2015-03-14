@@ -92,6 +92,9 @@ var bool                bIsCuttingWire;
 var bool                bLockViewRotation;
 var rotator             LockViewRotation;
 
+// Sway
+var float               IronSightBobFactor;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -3912,6 +3915,104 @@ function SetAmmoPercent(byte AmmoAmount)
         if (i>500)
             break;
     }
+}
+
+// Overriden to add some inital weapon bobbing when first iron sighting
+function CheckBob(float DeltaTime, vector Y)
+{
+    local float Speed2D;
+    local float OldBobTime;
+    local int m,n;
+    local float BobModifier;
+
+    OldBobTime = BobTime;
+
+    Bob = FClamp(Bob, -0.01, 0.01);
+    BobModifier = 1.0;
+
+    // Modify the amount of bob based on the movement state
+    if( bIsSprinting )
+    {
+        BobModifier = 1.75;
+    }
+    else if( bIsCrawling && !bIronSights)
+    {
+        BobModifier = 2.5;
+    }
+    else if( bIsCrouched && !bIronSights)
+    {
+        BobModifier = 2.5;
+    }
+
+    if (Physics == PHYS_Walking )
+    {
+        Speed2D = VSize(Velocity);
+
+        // Bob in iron sights based on IronSightBobFactor
+        if (Speed2D == 0.0 && bIronSights)
+        {
+            Speed2D = GroundSpeed * IronSightBobFactor;
+        }
+
+        if( bIsCrawling && !bIronSights )
+        {
+            BobTime += DeltaTime * ((0.3 + 0.7 * Speed2D/(GroundSpeed*PronePct))/2);
+        }
+        else if( bIsSprinting )
+        {
+            if ( Speed2D < 10 )
+                BobTime += 0.2 * DeltaTime;
+            else
+            {
+                if ( bIsCrouched )
+                {
+                    BobTime += DeltaTime * (0.3 + 0.7 * Speed2D/((GroundSpeed*CrouchedSprintPct)/1.25));
+                }
+                else
+                {
+                    BobTime += DeltaTime * (0.3 + 0.7 * Speed2D/((GroundSpeed*SprintPct)/1.25));
+                }
+            }
+        }
+        else
+        {
+            if ( Speed2D < 10 )
+                BobTime += 0.2 * DeltaTime;
+            else
+                BobTime += DeltaTime * (0.3 + 0.7 * Speed2D/GroundSpeed);
+        }
+        WalkBob = Y * (Bob * BobModifier) * Speed2D * sin(8 * BobTime);
+        AppliedBob = AppliedBob * (1 - FMin(1, 16 * deltatime));
+        WalkBob.Z = AppliedBob;
+        if ( Speed2D > 10 )
+            WalkBob.Z = WalkBob.Z + 0.75 * (Bob * BobModifier) * Speed2D * sin(16 * BobTime);
+        if ( LandBob > 0.01 )
+        {
+            AppliedBob += FMin(1, 16 * deltatime) * LandBob;
+            LandBob *= (1 - 8*Deltatime);
+        }
+    }
+    else if ( Physics == PHYS_Swimming )
+    {
+        Speed2D = Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y);
+        WalkBob = Y * Bob *  0.5 * Speed2D * sin(4.0 * Level.TimeSeconds);
+        WalkBob.Z = Bob * 1.5 * Speed2D * sin(8.0 * Level.TimeSeconds);
+    }
+    else
+    {
+        BobTime = 0;
+        WalkBob = WalkBob * (1 - FMin(1, 8 * deltatime));
+    }
+
+    if ( (Physics != PHYS_Walking) || (VSize(Velocity) < 10)
+        || ((PlayerController(Controller) != None) && PlayerController(Controller).bBehindView) )
+        return;
+
+    m = int(0.5 * Pi + 9.0 * OldBobTime/Pi);
+    n = int(0.5 * Pi + 9.0 * BobTime/Pi);
+
+    if ( (m != n) && !bIsCrawling)
+        FootStepping(0);
 }
 
 defaultproperties
