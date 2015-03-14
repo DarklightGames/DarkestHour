@@ -2354,13 +2354,6 @@ simulated function SwayHandler(float DeltaTime)
         WeaponSwayPitchAcc *= 0.25;
     }
 
-    // Create large but not everlasting sway for when coming out of or into prone
-    if (P.IsProneTransitioning())
-    {
-        WeaponSwayYawAcc *= 6.5;
-        WeaponSwayPitchAcc *= 6.5;
-    }
-
     if (P.LeanAmount != 0)
     {
         WeaponSwayYawAcc *= 1.45;
@@ -2390,6 +2383,14 @@ simulated function SwayHandler(float DeltaTime)
     WeaponSwayPitchRate += WeaponSwayPitchAcc * DeltaTime;
 }
 
+// Modified to not allow IronSighting when transitioning to/from prone
+simulated exec function ROIronSights()
+{
+    if( Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
+    {
+        Pawn.Weapon.ROIronSights();
+    }
+}
 
 defaultproperties
 {
