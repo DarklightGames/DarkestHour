@@ -47,9 +47,9 @@ const VEHICLE_POOLS_MAX = 32;
 var class<ROVehicle>    VehiclePoolVehicleClasses[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolIsActives[VEHICLE_POOLS_MAX];
 var float               VehiclePoolNextAvailableTimes[VEHICLE_POOLS_MAX];
-var private byte        VehiclePoolActiveCounts[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolActiveCounts[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolSpawnsRemainings[VEHICLE_POOLS_MAX];
-var private byte        VehiclePoolMaxActives[VEHICLE_POOLS_MAX];
+var byte                VehiclePoolMaxActives[VEHICLE_POOLS_MAX];
 
 const SPAWN_POINTS_MAX = 64;
 

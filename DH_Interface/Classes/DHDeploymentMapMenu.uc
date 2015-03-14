@@ -12,7 +12,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 
 var localized string                        ReinforcementText;
 
-var     bool                                bReadyToDeploy;
+var     bool                                bReadyToDeploy, bSpawningVehicle;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
@@ -25,6 +25,7 @@ var     Material                            ObjectiveIcons[3];
 // Actor references - these must be cleared at level change
 var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
+var     DHPlayer                            PC;
 var     DHHud                               HUD;
 var     vector                              NELocation,SWLocation;
 
@@ -34,9 +35,18 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     Super.InitComponent(MyController, MyOwner);
 
-    GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
-
-    HUD = DHHud(DHPlayer(PlayerOwner()).myHUD);
+    PC = DHPlayer(PlayerOwner());
+    if (PC == none)
+    {
+        return;
+    }
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    HUD = DHHud(PC.myHUD);
+    if (GRI == none || HUD == none || PRI == none)
+    {
+        return;
+    }
 
     // Set the level map image
     i_Background.Image = GRI.MapImage;
@@ -48,9 +58,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
         b_SpawnPoints[i].Graphic = none;
+        b_SpawnPoints[i].WinWidth=0.0;
+        b_SpawnPoints[i].WinHeight=0.0;
     }
 
-    // Initialize spawn points (make hidden)
+    // Initialize objective points (make hidden)
     for (i = 0; i < arraycount(b_Objectives); ++i)
     {
         b_Objectives[i].Graphic = none;
@@ -70,7 +82,19 @@ function Timer()
 {
     // Update round time & reinforcement count
     l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(HUD.CurrentTime);
-    l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PlayerOwner().PlayerReplicationInfo.Team.TeamIndex]);
+    l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PRI.Team.TeamIndex]);
+}
+
+function ClearSpawnsIcons()
+{
+    local int i;
+
+    // Clear spawn points (make hidden)
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        b_SpawnPoints[i].WinWidth=0.0;
+        b_SpawnPoints[i].WinHeight=0.0;
+    }
 }
 
 // Make panel uniform (square) and adjust other components accordingly
@@ -129,7 +153,7 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 
     if (SP != none && Index >= 0 && Index < arraycount(b_SpawnPoints))
     {
-        if (SP == DHPlayer(PlayerOwner()).DesiredSpawnPoint)
+        if (SP == PC.DesiredSpawnPoint)
         {
             W = 0.075;
             H = 0.035;
@@ -148,9 +172,8 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 
             b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
         }
-        //b_SpawnPoints[Index].Graphic = material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator';
-        b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
 
+        b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
         SpawnPoints[Index] = SP;
     }
 }
@@ -189,12 +212,20 @@ function bool DrawMapComponents(Canvas C)
         PlaceObjectiveOnMap(GRI.Objectives[i], i);
     }
 
-    //Get/Draw Spawn Points for Current Team
-    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PlayerOwner().PlayerReplicationInfo.Team.TeamIndex);
+    //Get Spawn Points for Current Team
+    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PRI.Team.TeamIndex);
 
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
-        PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
+        // Draw infantry or vehicle spawn points
+        if (!bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
+        {
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
+        }
+        else if (bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
+        {
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
+        }
     }
 
     return false;
@@ -203,45 +234,42 @@ function bool DrawMapComponents(Canvas C)
 // Actually shows the panel once it's rendered (Needs confirmed and tested)
 function InternalOnPostDraw(Canvas Canvas)
 {
-    PRI = DHPlayerReplicationInfo(PlayerOwner().PlayerReplicationInfo);
-
-    if (PRI != none)
-    {
-        bInit = false;
-        OnRendered = none;
-
-        ShowPanel(true);
-    }
+    bInit = false;
+    OnRendered = none;
+    ShowPanel(true);
 }
 
 // Player clicked a spawn point
 function bool SpawnClick(int Index)
 {
-    local DHPlayer PC;
-
     if (bInit || PRI == none || PRI.bOnlySpectator)
     {
         return true;
     }
 
-    if (SpawnPoints[Index] == none)
+    if (Index != -1)
     {
-        Log("No spawn point found! Error!");
-        return true;
+        if (SpawnPoints[Index] == none)
+        {
+            Log("No spawn point found! Error!");
+            return true;
+        }
     }
 
-    PC = DHPlayer(PlayerOwner());
-
     // Check if we clicked the desired spawn point
-    if (SpawnPoints[Index] == PC.DesiredSpawnPoint)
+    if (Index == -1 || SpawnPoints[Index] == PC.DesiredSpawnPoint)
     {
         // We clicked desired spawn point! lets try to spawn
         // Only deploy if we clicked the selected SP and are ready
         if (bReadyToDeploy && PC.Pawn == none)
         {
             DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
-            DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount);
+            PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount);
             Controller.CloseMenu(false); //Close menu as we clicked deploy!
+        }
+        else if (bReadyToDeploy && bSpawningVehicle && PC.Pawn == none)
+        {
+
         }
     }
     else
@@ -259,21 +287,19 @@ function bool InternalOnClick(GUIComponent Sender)
     switch(Sender)
     {
         case b_ExploitSpawn:
-            if (DHPlayer(PlayerOwner()).Pawn == none)
+            if (PC.Pawn == none)
             {
                 DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
-                DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount, true);
+                PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount, true);
                 Controller.CloseMenu(false); //Close menu as we clicked deploy!
             }
 
             break;
 
         case b_DeployButton: //Below should be a separate function so it can be reused when player clicks a desired spawn point
-            if (bReadyToDeploy && DHPlayer(PlayerOwner()).Pawn == none)
+            if (PC.DesiredSpawnPoint != none)
             {
-                DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
-                DHPlayer(PlayerOwner()).ServerAttemptDeployPlayer(DHPlayer(PlayerOwner()).DesiredSpawnPoint, DHPlayer(PlayerOwner()).DesiredAmmoAmount);
-                Controller.CloseMenu(false); //Close menu as we clicked deploy!
+                SpawnClick(-1);
             }
             break;
 
@@ -305,15 +331,12 @@ function bool InternalOnClick(GUIComponent Sender)
 // This function will require heavy redesign when I make things someone server sided
 function bool DrawDeployTimer(Canvas C)
 {
-    local DHPlayer DHP;
     local float P;
-
-    DHP = DHPlayer(PlayerOwner());
 
     //Handle progress bar values (so they move/advance based on deploy time)
     if (!bReadyToDeploy)
     {
-        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) / DHP.RedeployTime;
+        P = pb_DeployProgressBar.High * (PC.LastKilledTime + PC.RedeployTime - PC.Level.TimeSeconds) / PC.RedeployTime;
         P = pb_DeployProgressBar.High - P;
         pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
 
@@ -326,21 +349,21 @@ function bool DrawDeployTimer(Canvas C)
         else
         {
             //Progress isn't done
-            b_DeployButton.Caption = "Deploy in:" @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ "Seconds";
+            b_DeployButton.Caption = "Deploy in:" @ int(Ceil(PC.LastKilledTime + PC.RedeployTime - PC.Level.TimeSeconds)) @ "Seconds";
             bReadyToDeploy = false;
             b_DeployButton.DisableMe();
         }
     }
     else
     {
-        if (DHP.DesiredSpawnPoint == none)
+        if (PC.DesiredSpawnPoint == none)
         {
             //b_DeployButton.Caption = "Select a spawn point";
             // Temp hack to make it so you can spawn on maps without spawn points
             b_DeployButton.Caption = "Select a spawn point or Deploy to SpawnArea";
             b_DeployButton.EnableMe();
         }
-        else if (DHP.Pawn != none)
+        else if (PC.Pawn != none)
         {
             b_DeployButton.Caption = "Deployed"; //If we have a pawn and progress bar has finished, we are deployed
             b_DeployButton.DisableMe();
@@ -442,7 +465,6 @@ defaultproperties
 
     // Spawn point buttons
     Begin Object Class=GUIGFXButton Name=SpawnPointButton
-        //Graphic=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
         Position=ICP_Normal
         bClientBound=true
         StyleName="DHSpawnButtonStyle"

@@ -406,7 +406,7 @@ defaultproperties
     LoadoutPanelHint(2)="Create or join a squad"
 
     LoadoutPanelClass(0)="DH_Interface.DHRoleSelectPanel"
-    LoadoutPanelClass(1)="DH_Interface.DHVehicleSelectPanel"
+    LoadoutPanelClass(1)=""//DH_Interface.DHVehicleSelectPanel"
     LoadoutPanelClass(2)=""
 
     DeploymentPanelClass(0)="DH_Interface.DHDeploymentMapMenu"

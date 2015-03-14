@@ -1866,6 +1866,11 @@ simulated function DrawObjectives(Canvas C)
     local DH_Pawn       DHP;
     local DH_RoleInfo   RI;
 
+    if (ROTeamGame(Level.Game) == none)
+    {
+        return;
+    }
+
     if (PlayerOwner.Pawn != none)
     {
         DHP = DH_Pawn(PlayerOwner.Pawn);

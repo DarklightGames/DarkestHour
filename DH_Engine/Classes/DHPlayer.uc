@@ -11,6 +11,10 @@ var byte            DesiredAmmoAmount;
 var DHSpawnPoint    DesiredSpawnPoint;
 var bool            bShouldAttemptAutoDeploy;
 
+// DH Sway values
+var protected float           DHSwayElasticFactor;
+var protected float           DHSwayDampingFactor;
+
 var vector  FlinchRotMag;
 var vector  FlinchRotRate;
 var float   FlinchRotTime;
@@ -2021,11 +2025,20 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     local DHGameReplicationInfo DHGRI;
     local DH_RoleInfo RI;
     local class<Inventory> PrimaryWep;
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none)
+    {
+        Warn("Level.Game is not DHGame????? WTF!");
+        return false;
+    }
 
     if (bExploit)
     {
         //Temp hack to allow spawning on all maps
-        Level.Game.RestartPlayer(self);
+        G.RestartPlayer(self);
     }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
@@ -2041,7 +2054,7 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     }
 
     // Check if the player is on Axis / Allies and not spectator or something
-    if (PRI.Team == none) // && (PRI.Team.TeamIndex != 0 || PRI.Team.TeamIndex != 1))
+    if (PRI.Team == none)
     {
         Log("Failed at team check");
         return false;
@@ -2056,11 +2069,9 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     }
 
     // Confirm this player has a role && check if MagCount is valid based on role/weapon
-    if (PRI.RoleInfo != none && PrimaryWep != none)
+    if (PRI.RoleInfo != none)
     {
-        //Log("PrimaryWeapon: "$PrimaryWep.GetHumanReadableName());
-
-        if (MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags || MagCount <= 0)
+        if (PrimaryWep != none && MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags || MagCount <= 0)
         {
             Log("Failed at 1 MagCount is:"@MagCount);
             return false;
@@ -2068,12 +2079,12 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     }
     else
     {
-        Log("Failed at 2");
+        Log("Failed at RoleInfo Check");
         return false;
     }
 
     // Check if player is ready to deploy
-    if (LastKilledTime + RedeployTime - Level.TimeSeconds > 0) //Theel: May not be able to use Level.TimeSeconds anymore atleast for server check!
+    if (LastKilledTime + RedeployTime - Level.TimeSeconds > 0)
     {
         Log("Failed at 4");
         return false;
@@ -2087,21 +2098,23 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     if (!DHGRI.ValidateSpawnPoint(SP,PRI.Team.TeamIndex))
     {
         //Temp hack to allow spawning on all maps
-        Level.Game.RestartPlayer(self);
+        G.RestartPlayer(self);
     }
     else
     {
         SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
-        DarkestHourGame(Level.Game).DHRestartPlayer(self);
+        G.DHRestartPlayer(self);
     }
 
-    // Lets assume it worked and now lets tell the client the redeploy time
-    RedeployTime = CalculateDeployTime(MagCount);
-
-    // Set primary weapon ammo
-    if (Pawn != none && MagCount != 0)
+    if (Pawn != none)
     {
-        DH_Pawn(Pawn).SetAmmoPercent(MagCount);
+        if (MagCount != 0 && DH_Pawn(Pawn) != none)
+        {
+            DH_Pawn(Pawn).SetAmmoPercent(MagCount);
+        }
+
+        RedeployTime = CalculateDeployTime(MagCount); // Calculate and set server/client redeploy time
+        return true;
     }
 }
 
@@ -2325,8 +2338,8 @@ simulated function SwayHandler(float DeltaTime)
     }
     else if (P.bIsCrawling)
     {
-        WeaponSwayYawAcc *= 0.33;
-        WeaponSwayPitchAcc *= 0.33;
+        WeaponSwayYawAcc *= 0.25;
+        WeaponSwayPitchAcc *= 0.25;
     }
 
     // Create large but not everlasting sway for when coming out of or into prone
@@ -2342,19 +2355,17 @@ simulated function SwayHandler(float DeltaTime)
         WeaponSwayPitchAcc *= 1.45;
     }
 
-    // Add a elastic factor to get sway near the original aim-point
-    WeaponSwayYawAcc = WeaponSwayYawAcc - (SwayElasticFactor*SwayYaw) - (SwayDampingFactor*WeaponSwayYawRate);
-
-    // Add a damping factor to keep the elastic factor from causing wild oscillations
-    WeaponSwayPitchAcc = WeaponSwayPitchAcc - (SwayElasticFactor*SwayPitch) - (SwayDampingFactor*WeaponSwayPitchRate);
+    // Add a elastic and damping factor to get sway near the original aim-point and from causing wild oscillations
+    WeaponSwayYawAcc = WeaponSwayYawAcc - (DHSwayElasticFactor*SwayYaw) - (DHSwayDampingFactor*WeaponSwayYawRate);
+    WeaponSwayPitchAcc = WeaponSwayPitchAcc - (DHSwayElasticFactor*SwayPitch) - (DHSwayDampingFactor*WeaponSwayPitchRate);
 
     // Calculation for motion
     DeltaSwayYaw = (WeaponSwayYawRate * DeltaTime) + (0.5*WeaponSwayYawAcc*DeltaTime*DeltaTime);
     DeltaSwayPitch = (WeaponSwayPitchRate * DeltaTime) + (0.5*WeaponSwayPitchAcc*DeltaTime*DeltaTime);
 
-    // Dampen actual sway
-    SwayYaw += DeltaSwayYaw * timeFactor - (SwayYaw / 2);
-    SwayPitch += DeltaSwayPitch * timeFactor - (SwayPitch / 2);
+    // Add actual sway
+    SwayYaw += DeltaSwayYaw;
+    SwayPitch += DeltaSwayPitch;
 
     if (P.bRestingWeapon)
     {
@@ -2362,18 +2373,23 @@ simulated function SwayHandler(float DeltaTime)
         SwayPitch = 0;
     }
 
-    // Update new sway velocity (R = D*T) added time factor
-    WeaponSwayYawRate += WeaponSwayYawAcc*DeltaTime*timeFactor;
-    WeaponSwayPitchRate += WeaponSwayPitchAcc*DeltaTime*timeFactor;
+    // Update new sway velocity (R = D*T)
+    WeaponSwayYawRate += WeaponSwayYawAcc * DeltaTime;
+    WeaponSwayPitchRate += WeaponSwayPitchAcc * DeltaTime;
 }
+
 
 defaultproperties
 {
     FireEffectsSpreadSpeedFactor=3.0 // Matt: TEMP
 
-    SwayCurve=(Points=((InVal=0.0,OutVal=3.5),(InVal=1.0,OutVal=1.5),(InVal=2.0,OutVal=0.9),(InVal=8.0,OutVal=1.5),(InVal=24.0,OutVal=2.0),(InVal=26.0,OutVal=0.9),(InVal=60.0,OutVal=1.75),(InVal=10000000000.0,OutVal=2.0)))
-    baseSwayYawAcc=900
-    baseSwayPitchAcc=700
+    // Sway values
+    SwayCurve=(Points=((InVal=0.0,OutVal=3.5),(InVal=1.0,OutVal=1.25),(InVal=3.0,OutVal=0.0),(InVal=8.0,OutVal=0.5),(InVal=12.0,OutVal=1.1),(InVal=16.0,OutVal=0.0),(InVal=24.0,OutVal=1.25),(InVal=10000000000.0,OutVal=1.33)))
+    DHSwayElasticFactor=3.0;
+    DHSwayDampingFactor=0.85;
+    baseSwayYawAcc=120
+    baseSwayPitchAcc=100
+
     RedeployTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)

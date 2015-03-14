@@ -108,6 +108,19 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     SetTimer(0.1, true);
 }
 
+function ShowPanel(bool bShow)
+{
+    super.ShowPanel(bShow);
+
+    //We are showing this panel so we want to spawn as infantry
+    if (bShow)
+    {
+        DHDeploymentMapMenu(DHDeployMenu(PageOwner).c_DeploymentMapArea.TabStack[0].MyPanel).bSpawningVehicle = false;
+        DHDeploymentMapMenu(DHDeployMenu(PageOwner).c_DeploymentMapArea.TabStack[0].MyPanel).ClearSpawnsIcons();
+        DHPlayer(PlayerOwner()).ServerChangeSpawn(DHPlayer(PlayerOwner()).SpawnPointIndex, -1);
+    }
+}
+
 // This function informs InternalOnChange not to run until we are done rendering
 function bool OnPostDraw(Canvas C)
 {

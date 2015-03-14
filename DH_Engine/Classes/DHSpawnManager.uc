@@ -142,6 +142,8 @@ function UpdatePoolReplicationInfo(byte PoolIndex)
     GRI.SetVehiclePoolIsActive(PoolIndex, VehiclePools[PoolIndex].bIsActive);
     GRI.SetVehiclePoolSpawnsRemaining(PoolIndex, GetPoolSpawnsRemaining(PoolIndex));
     GRI.SetVehiclePoolNextAvailableTime(PoolIndex, VehiclePools[PoolIndex].NextAvailableTime);
+    GRI.SetVehiclePoolActiveCount(PoolIndex, VehiclePools[PoolIndex].ActiveCount);
+    GRI.SetVehiclePoolMaxActives(PoolIndex, VehiclePools[PoolIndex].MaxActive);
 }
 
 function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator SpawnRotation, out byte SpawnError)
@@ -257,7 +259,7 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
 
     if (C.VehiclePoolIndex != -1)
     {
-        Log("attempting to spawn vehicle at VP" @ C.VehiclePoolIndex @ "SP" @ C.SpawnPointIndex);
+        Log("Attempting to spawn vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
 
         SpawnVehicle(C, SpawnError);
     }
@@ -300,15 +302,26 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         return none;
     }
 
-    //Spawn a player
-    SpawnPawn(C, SpawnLocation, SpawnRotation);
+    // Spawn via restartplayer because otherwise the spawn location is blocked by the Vehicle!  This will put the pawn in the black room
+    Level.Game.RestartPlayer(C);
 
-    //TODO: spawn the player somewhere way out in left field!
-    if (C.Pawn == none || !V.TryToDrive(C.Pawn))
+    // Make sure player has a pawn
+    if (C.Pawn == none)
     {
+        Warn("Pawn does not exist!!!! NO PLAYER WAS SPAWNED OR SOMETHING!!!!");
+        return none;
+    }
+
+    if(!V.TryToDrive(C.Pawn))
+    {
+        // Try to drive function failed, lets destroy the vehicle
         V.Destroy();
 
+        // Lets slay the player, so they aren't stuck in the black room
+        C.Pawn.Suicide();
+
         SpawnError = SpawnError_TryToDriveFailed;
+        return none;
     }
     else
     {
@@ -359,6 +372,15 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
         DefaultPlayerClass = DarkestHourGame(Level.Game).GetDefaultPlayerClass(C);
 
         C.Pawn = Spawn(DefaultPlayerClass,,, SpawnLocation, SpawnRotation);
+    }
+
+    if (C.Pawn == none)
+    {
+        // Likely the spawn function is failing because SpawnLocation is being blocked by another player/vehicle
+        // Lets force spawn the player in the black room and then teleport them to SpawnLocation with SpawnRotation
+        Level.Game.RestartPlayer(C);
+
+        //Theel need a function to properly teleport a player and return if it fails
     }
 
     if (C.Pawn == none)
@@ -559,7 +581,7 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
 
     if (SpawnError != SpawnError_None)
     {
-        return;
+        //return; Theel Debug attempting to remove need for dry spawn infantry function
     }
 
     P = SpawnPawn(C, SpawnLocation, SpawnRotation);
