@@ -223,7 +223,7 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
     }
 }
 
-simulated function bool ValidateSpawnPoint(DHSpawnPoint SP, byte TeamIndex)
+simulated function bool IsSpawnPointValid(DHSpawnPoint SP, byte TeamIndex)
 {
     local int i, index;
     local array<DHSpawnPoint> ActiveSpawnPoints;
