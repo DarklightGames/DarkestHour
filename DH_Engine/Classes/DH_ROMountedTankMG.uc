@@ -6,8 +6,9 @@
 class DH_ROMountedTankMG extends ROMountedTankMG
     abstract;
 
-var()   class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
-var()   int                 TracerFrequency;       // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
+var()   class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
+var()   byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
+var     byte    NumMags;              // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
 
 // Reload stuff
 var     bool    bReloading;           // this MG is currently reloading
@@ -15,7 +16,6 @@ var()   sound   ReloadSound;          // sound of this MG reloading
 var     float   ReloadDuration;       // time duration of reload (set automatically)
 var     float   ReloadStartTime;      // records the level time the reload started, which can be used to determine reload progress on the HUD ammo indicator
 var()   name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
-var     byte    NumMags;              // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
 var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
@@ -83,7 +83,6 @@ simulated function InitializeMG(DH_ROMountedTankMGPawn MGPwn)
 {
     if (MGPwn != none)
     {
-        // On client, MG pawn is destroyed if becomes net irrelevant - when it respawns, these values need to be set again or will cause lots of errors
         if (Role < ROLE_Authority)
         {
             SetOwner(MGPwn);
@@ -111,7 +110,7 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Matt: new function to start an MG hatch fire effect - all fires now triggered from vehicle base, so don't need MG's Tick() constantly checking for a fire
+// New function to start an MG hatch fire effect - all fires now triggered from vehicle base, so don't need MG's Tick() constantly checking for a fire
 simulated function StartMGFire()
 {
     if (HullMGFireEffect == none && Level.NetMode != NM_DedicatedServer)
@@ -137,7 +136,7 @@ simulated function DestroyEffects()
     }
 }
 
-// Returns true if this weapon is ready to fire
+// Modified to return false if MG reloading
 simulated function bool ReadyToFire(bool bAltFire)
 {
     if (bReloading)
@@ -148,6 +147,7 @@ simulated function bool ReadyToFire(bool bAltFire)
     return super.ReadyToFire(bAltFire);
 }
 
+// Modified to start a reload when empty
 function CeaseFire(Controller C, bool bWasAltFire)
 {
     super.CeaseFire(C, bWasAltFire);
@@ -181,7 +181,7 @@ function HandleReload()
     }
 }
 
-// Matt: new server-to-client function called at start of reload or if player enters an MG that is reloading
+// New server-to-client function called at start of reload or if player enters an MG that is reloading
 // Client records when reload started, which is used to show reload progress on HUD ammo icon (replication optimised to a byte instead of passing start time as float)
 // Also plays any HUDOverlay reload animation, starting it from the appropriate point if a reload is already in progress
 simulated function ClientHandleReload(optional byte PercentageDone)
@@ -199,6 +199,7 @@ simulated function ClientHandleReload(optional byte PercentageDone)
     }
 }
 
+// Timer used to reload the MG, after the set reload duration
 simulated function Timer()
 {
     if (bReloading && Role == ROLE_Authority)
@@ -209,6 +210,7 @@ simulated function Timer()
     }
 }
 
+// Modified to call HandleReload when empty
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     if (Role != ROLE_Authority || bForceCenterAim)
@@ -313,13 +315,14 @@ state ProjectileFireMode
     }
 }
 
-// Matt: modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
+// Modified to remove the Super in ROVehicleWeapon to remove calling UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
 // Fill the ammo up to the initial ammount
+// Modified to handle MG magazines
 function bool GiveInitialAmmo()
 {
     local bool bDidResupply;
@@ -337,6 +340,7 @@ function bool GiveInitialAmmo()
     return bDidResupply;
 }
 
+// Modified to use DH's new incremental resupply system
 function bool ResupplyAmmo()
 {
     local bool bDidResupply;
@@ -372,6 +376,7 @@ function bool ResupplyAmmo()
     return bDidResupply;
 }
 
+// Modified to handle MG magazines
 simulated function int GetNumMags()
 {
     return NumMags;
@@ -410,6 +415,10 @@ simulated function int LimitYaw(int yaw)
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
+// Matt: modified to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
+// Note that shell's ProcessTouch also now calls TD() on VehicleWeapon instead of VehicleBase
+// For a vehicle MG this is not counted as a hit on vehicle itself, but we could add any desired functionality here or in subclasses, e.g. shell could wreck MG
+// Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     // Fix for suicide death messages
@@ -422,18 +431,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
-
-/**
-    Matt: shell's ProcessTouch now calls TD on VehicleWeapon instead of VehicleBase & for vehicle MG this is not counted as hit on vehicle itself
-    But we can add any desired functionality here or in subclasses, e.g. shell could wreck MG
-    Note that if calling a damage function & DamageType.bDelayedDamage, we need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on the relevant pawn
-*/
-
-    // Matt: removed as shell & bullet's ProcessTouch now call TakeDamage directly on Driver if he was hit
-    //  if (HitDriver(HitLocation, Momentum))
-//  {
-//      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-//  }
 }
 
 // Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
@@ -498,8 +495,8 @@ simulated function Destroyed()
 defaultproperties
 {
     FireAttachBone="mg_pitch"
-    FireEffectOffset=(X=10.0,Z=5.0)
+    FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    YawStartConstraint=0 // Matt: revert to defaults from VehicleWeapon, as MGs such as the Stuh don't work with the values from ROMountedTankMG
+    YawStartConstraint=0 // Matt: revert to defaults from VehicleWeapon, as MGs such as the StuH don't work with the values from ROMountedTankMG
     YawEndConstraint=65535
 }

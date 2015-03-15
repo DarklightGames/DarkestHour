@@ -28,7 +28,7 @@ replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits;
+        ServerToggleDebugExits; // only during development
 }
 
 // Modified to set bTearOff to true on a server, which stops this rider pawn being replicated to clients (until entered, when we unset bTearOff)
@@ -42,7 +42,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Overridden to stop the game playing silly buggers with exit positions while moving and breaking my damage code
+// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
 function bool PlaceExitingDriver()
 {
     local int    i, StartIndex;
@@ -62,7 +62,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
+    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
     if (class'DH_ROPassengerPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
@@ -188,6 +188,7 @@ function Timer()
     }
 }
 
+// Modified to use VehicleBase.VehicleTeam for team check
 function bool TryToDrive(Pawn P)
 {
     if (VehicleBase != none && P != none)
@@ -285,7 +286,7 @@ simulated function SwitchWeapon(byte F)
     }
 }
 
-// Matt: emptied out to prevent unnecessary replicated function calls to server
+// Emptied out to prevent unnecessary replicated function calls to server
 function Fire(optional float F)
 {
 }
@@ -294,7 +295,7 @@ function AltFire(optional float F)
 {
 }
 
-// Matt: allows debugging exit positions to be toggled for all rider pawns
+// Allows debugging exit positions to be toggled for all rider pawns
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())

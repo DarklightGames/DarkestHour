@@ -187,7 +187,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-
         super(ROVehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')

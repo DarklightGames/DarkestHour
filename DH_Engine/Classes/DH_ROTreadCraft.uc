@@ -46,7 +46,7 @@ var()   float       MaxCriticalSpeed;       // if vehicle goes over max speed, i
 var     float       SpikeTime;              // the time an empty, disabled vehicle will be automatically blown up
 var     bool        bEmittersOn;            // dust & exhaust emitters are active (engine on/off)
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
-var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
+var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Positions
 var()   int         UnbuttonedPositionIndex;
@@ -167,7 +167,7 @@ replication
 //      EngineHealthMax                             // Matt: removed as I have deprecated it (it never changed anyway & didn't need to be replicated)
 //      UnbuttonedPositionIndex,                    // Matt: removed as never changes & doesn't need to be replicated
 //      bProjectilePenetrated, bFirstHit            // Matt: removed as not even used clientside
-//      bRoundShattered                             // Matt: removed as is set independently on clients
+//      bRoundShattered                             // Matt: removed as is set independently on client & server & so doesn't need replicating
 //      bPeriscopeDamaged                           // Matt: removed variable as is part of functionality never implemented
 
     // Functions a client can call on the server
@@ -177,6 +177,7 @@ replication
 //      TakeFireDamage // Matt: removed as doesn't need to be replicated as is only called from Tick, which server gets anyway (tbh replication every Tick is pretty heinous)
 }
 
+// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
 function bool PlaceExitingDriver()
 {
     local int i;
@@ -191,7 +192,7 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
+    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
     if (class'DH_ROTreadCraft'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositions.Length; ++i)
@@ -234,9 +235,6 @@ simulated function UpdatePrecacheMaterials()
 
     super.UpdatePrecacheMaterials();
 }
-
-// Don't need this in DH
-simulated function bool HitPenetrationPoint(vector HitLocation, vector HitRay);
 
 // Modified to replace literal for pan direction, so can be easily subclassed, & to incorporate extra tread sounds that were spawned in PostBeginPlay()
 simulated function SetupTreads()
@@ -426,7 +424,7 @@ function Vehicle FindEntryVehicle(Pawn P)
 }
 
 // Modified to avoid playing engine start sound when entering vehicle
-function KDriverEnter(Pawn p)
+function KDriverEnter(Pawn P)
 {
     bDriverAlreadyEntered = true; // Matt: added here as a much simpler alternative to the Timer() in ROTreadCraft
     DriverPositionIndex = InitialPositionIndex;
@@ -503,7 +501,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     DHPlayer(PC).QueueHint(40, true);
 }
 
-// Matt: modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
+// Modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
@@ -515,7 +513,7 @@ simulated state EnteringVehicle
 
         if (HasAnim(BeginningIdleAnim))
         {
-            PlayAnim(BeginningIdleAnim);
+            PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
         if (PlayerController(Controller) != none)
@@ -528,7 +526,7 @@ simulated state EnteringVehicle
 // Modified to use fire button to start or stop engine
 simulated function Fire(optional float F)
 {
-    // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
+    // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
     {
         ServerStartEngine();
@@ -536,7 +534,7 @@ simulated function Fire(optional float F)
     }
 }
 
-// Matt: emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
+// Emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
 function AltFire(optional float F)
 {
 }
@@ -625,9 +623,9 @@ simulated function StartEmitters()
                 ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0); // nil update just sets the lowest setting for an idling engine
             }
         }
-    }
 
-    bEmittersOn = true;
+        bEmittersOn = true;
+    }
 }
 
 // Server side function called to switch engine on/off
@@ -662,7 +660,7 @@ function ServerStartEngine()
     }
 }
 
-// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+// Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
 {
     if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
@@ -800,7 +798,7 @@ simulated function SwitchWeapon(byte F)
     ServerChangeDriverPosition(F);
 }
 
-// DriverLeft() called by KDriverLeave()
+// Modified to avoid playing engine shut down sound when leaving vehicle & also to use IdleTimeBeforeReset
 function DriverLeft()
 {
     MotionSoundVolume = 0.0;
@@ -1079,7 +1077,7 @@ simulated function PostBeginPlay()
 {
     local byte RandomNumber, CumulativeChance, i;
 
-    super(Vehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
+    super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     if (HasAnim(BeginningIdleAnim))
     {
@@ -1471,7 +1469,7 @@ function TakeEngineFireDamage()
         // Engine fire dies down 30 seconds after engine health hits zero, unless hull has caught fire
         else if (!bOnFire)
         {
-            bEngineOnFire = false; // this will have been called from Timer(), which will now call SetFireEffects() to handle fire & sound effects
+            bEngineOnFire = false;
         }
     }
 }
@@ -1764,7 +1762,7 @@ function DamageTrack(bool bLeftTrack)
     SetDamagedTracks();
 }
 
-// Check to see if something hit a certain Hitpoint
+// New function to check if something hit a certain DH NewVehHitpoints
 function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
 {
     local coords C;
@@ -1920,7 +1918,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // Matt: using RoundType (was P.default.ShellImpactDamage != none && P.default.ShellImpactDamage.default.bArmorStops)
+        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -1957,7 +1955,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
         if (bPenetrationText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "Right turret hit: base armor =" @ URightArmorFactor * 10.0 $ "mm");;
+            Level.Game.Broadcast(self, "Right hull hit: base armor =" @ URightArmorFactor * 10.0 $ "mm");;
         }
 
         // Run a pre-check
@@ -2020,7 +2018,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // Matt: using RoundType (was P.default.ShellImpactDamage != none && P.default.ShellImpactDamage.default.bArmorStops)
+        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -2143,7 +2141,7 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 {
     local float ArmorSlope, CompoundAngle;
 
-//  AOI = Abs(AOI * 0.01745329252); // Matt: now we pass AOI to this function in radians, to save unnecessary processing to and from degrees
+//  AOI = Abs(AOI * 0.01745329252); // now we pass AOI to this function in radians, to save unnecessary processing to & from degrees
     ArmorSlope = Abs(ArmorSlopeDegrees * 0.01745329252); // convert the angle degrees to radians
     CompoundAngle = Acos(Cos(ArmorSlope) * Cos(AOI));
 
@@ -2328,6 +2326,7 @@ simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, flo
     return false;
 }
 
+// Modified to add all the DH vehicle damage stuff
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local Controller InstigatorController;
@@ -2354,7 +2353,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Don't allow your own teammates to destroy vehicles in spawns (and you know some jerks would get off on doing that to their team :))
+    // Don't allow your own teammates to destroy vehicles in spawns (& you know some jerks would get off on doing that to their team :))
     if (!bDriverAlreadyEntered)
     {
         if (InstigatedBy != none)
@@ -2378,7 +2377,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // Modify the damage based on what it should do to the vehicle; overloaded here so tank cannot take any bullet/bash/bayo damage
+    // Modify the damage based on what it should do to the vehicle - overloaded here so tank cannot take any bullet/bash/bayo damage
     if (class<ROWeaponDamageType>(DamageType) != none)
     {
         VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
@@ -2727,14 +2726,14 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     }
 }
 
-// Matt: modified so will pass radius damage on to each VehicleWeaponPawn, as originally lack of vehicle driver caused early exit
+// Modified so will pass radius damage on to each VehicleWeaponPawn, as originally lack of vehicle driver caused early exit
 function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller EventInstigator, class<DamageType> DamageType, float Momentum, vector HitLocation)
 {
     local vector Direction;
     local float  DamageScale, Distance;
     local int    i;
 
-    // Damage the Driver, not if he has collision as whatever is causing the radius damage will hit the Driver by itself
+    // Damage the driver (but not if he has collision as whatever is causing the radius damage will hit the driver by itself)
     if (Driver != none && !Driver.bCollideActors && DriverPositions[DriverPositionIndex].bExposed && EventInstigator != none && !bRemoteControlled)
     {
         Direction = Driver.Location - HitLocation;
@@ -2750,7 +2749,7 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
         }
     }
 
-    // Pass on to each VehicleWeaponPawn, but not if it has collision as whatever is causing the radius damage will hit the VWP by itself
+    // Pass DriverRadiusDamage on to each VehicleWeaponPawn (but not if it has collision as whatever is causing the radius damage will hit the VWP by itself)
     for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (!WeaponPawns[i].bCollideActors)
@@ -3010,14 +3009,13 @@ simulated function DestroyDecoAttachments()
     }
 }
 
+// Modified to randomise explosion damage & radius and to add a DestroyedBurningSound
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
     local vector LinearImpulse, AngularImpulse;
     local float  RandomExplModifier;
 
     RandomExplModifier = FRand();
-
-    // Don't hurt us when we are destroying our own vehicle // borrowed from AB
     HurtRadius(ExplosionDamage * RandomExplModifier, ExplosionRadius * RandomExplModifier, ExplosionDamageType, ExplosionMomentum, Location);
 
     AmbientSound = DestroyedBurningSound;
@@ -3239,7 +3237,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
         }
 
-        if (bDriving && PC == Controller) // no overlays for spectators
+        if (bDriving && PC == Controller)
         {
             ActivateOverlay(true);
         }
@@ -3290,7 +3288,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// Matt: allows debugging exit positions to be toggled for all DH_ROTreadCrafts
+// Allows debugging exit positions to be toggled for all DH_ROTreadCrafts
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
@@ -3308,7 +3306,7 @@ function ServerToggleDebugExits()
     }
 }
 
-// Matt: handy execs during development for testing engine or track damage
+// Handy execs during development for testing engine or track damage
 function exec KillEngine()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
@@ -3350,7 +3348,7 @@ function ServerDamTrack(string Track)
     }
 }
 
-// Matt: removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use DamTrack() exec above for testing
+// Removed damaged track stuff as will no longer work now track damage has been removed from Tick() - can now use DamTrack() exec above for testing
 // Also made it so can only be in single player or in dev mode (shouldn't be doing something like this during a real multi-player game)
 function exec DamageTank()
 {
@@ -3361,7 +3359,7 @@ function exec DamageTank()
     }
 }
 
-// Matt: handy execs during development for testing fire damage & effects
+// Handy execs during development for testing fire damage & effects
 exec function HullFire()
 {
     if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
@@ -3442,10 +3440,10 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
 
     ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
     Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * Float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, Float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
-// Overridden to eliminate "Waiting for additional crewmembers" message // Matt: now only used by bots
+// Modified to eliminate "Waiting for additional crewmembers" message // Matt: now only used by bots
 function bool CheckForCrew()
 {
     return true;

@@ -32,9 +32,7 @@ struct CarHitpoint
 
 var()   array<CarHitpoint>  CarVehHitpoints;   // an array of possible small points that can be hit (index zero is always the driver)
 
-//==============================================================================
-// Empty functions: we don't need for armored cars
-//==============================================================================
+// Empty functions that we don't need for armored cars:
 simulated function UpdateMovementSound();
 simulated function SetupTreads();
 simulated function DestroyTreads();

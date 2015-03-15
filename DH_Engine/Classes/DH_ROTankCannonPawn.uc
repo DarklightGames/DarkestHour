@@ -6,24 +6,24 @@
 class DH_ROTankCannonPawn extends ROTankCannonPawn
     abstract;
 
-// Position stuff
-var()   float   OverlayCenterScale;
-var     int         InitialPositionIndex;    // initial commander position on entering
-var     int         UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
-var()   int         PeriscopePositionIndex;
-var     int         GunsightPositions;       // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
+// General
+var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
-// Gunsight overlay
+// Position stuff
+var     int         InitialPositionIndex;     // initial commander position on entering
+var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
+var()   int         PeriscopePositionIndex;
+var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
+
+// Gunsight or periscope overlay
 var     bool        bShowRangeText;       // show current range setting text
 var     TexRotator  ScopeCenterRotator;
 var()   float       ScopeCenterScale;
 var()   int         CenterRotationFactor;
 var()   float       OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var     float       OverlayCenterScale;
 var()   float       OverlayCorrectionX;   // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var()   float       OverlayCorrectionY;
-
-// Other HUD stuff
-var     texture     AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Damage modelling stuff
 var     bool        bTurretRingDamaged;
@@ -46,7 +46,7 @@ var     float       PoweredMaxRotateThreshold;
 
 // NEW DH CODE: Illuminated sights
 //var   texture     NormalCannonScopeOverlay;
-//var   texture     LitCannonScopeOverlay;
+//var   texture     LitCannonScopeOverlay; // a ClientLightOverlay() server-to-client function was planned
 //var   bool        bOpticsLit;
 //var   bool        bHasLightedOptics;
 
@@ -71,10 +71,10 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientDamageCannonOverlay; // ClientLightOverlay
+        ClientDamageCannonOverlay;
 }
 
-// Overridden to stop the game playing silly buggers with exit positions while moving and breaking my damage code
+// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
 function bool PlaceExitingDriver()
 {
     local int    i, StartIndex;
@@ -94,7 +94,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
+    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
     if (class'DH_ROTankCannonPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
@@ -141,7 +141,7 @@ simulated function PostNetReceive()
 {
     local int i;
 
-    // Player has changed view position
+    // Player has changed position // Matt: TODO - add fix for driver position problems upon replication
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
         if (Driver == none && DriverPositionIndex > 0 && !IsLocallyControlled() && Level.NetMode == NM_Client)
@@ -150,13 +150,14 @@ simulated function PostNetReceive()
         }
         else
         {
+
             LastPositionIndex = SavedPositionIndex;
             SavedPositionIndex = DriverPositionIndex;
             NextViewPoint();
         }
     }
 
-    // Initialize the cannon // Matt: added VehicleBase != none, so we guarantee that VB is available to InitializeCannon
+    // Initialize the cannon (added VehicleBase != none, so we guarantee that VB is available to InitializeCannon)
     if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
     {
         bInitializedVehicleGun = true;
@@ -189,7 +190,7 @@ simulated function PostNetReceive()
     }
 }
 
-// Matt: modified to call InitializeCannon to do any extra set up in the cannon classes
+// Modified to call InitializeCannon to do any extra set up in the cannon classes
 // This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
 function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 {
@@ -221,7 +222,7 @@ simulated function InitializeCannon()
     }
 }
 
-// Matt: new function to toggle between manual/powered turret settings - called from PostNetReceive on vehicle clients, instead of constantly checking in Tick()
+// New function to toggle between manual/powered turret settings - called from PostNetReceive on vehicle clients, instead of constantly checking in Tick()
 simulated function SetManualTurret(bool bManual)
 {
     local DH_ROTankCannon Cannon;
@@ -396,13 +397,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
+// Modified to simply draw the BinocsOverlay, without additional drawing
 simulated function DrawBinocsOverlay(Canvas Canvas)
 {
     local float ScreenRatio;
 
     ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
     Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
+    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * Float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, Float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Recalls that optics are still non-functioning when players jump in and out
@@ -426,7 +428,7 @@ simulated state EnteringVehicle
 
         if (Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
         {
-            Gun.PlayAnim(Gun.BeginningIdleAnim);
+            Gun.PlayAnim(Gun.BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
         WeaponFOV = DriverPositions[InitialPositionIndex].ViewFOV;
@@ -513,7 +515,7 @@ simulated event DrivingStatusChanged()
     }
 }
 
-// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+// Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
 {
     if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
@@ -532,7 +534,7 @@ simulated function PrevWeapon()
     }
 }
 
-// Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
+// Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -546,7 +548,6 @@ function ServerChangeViewPoint(bool bForward)
             {
                 NextViewPoint();
             }
-            // Run the state on the server whenever we're unbuttoning in order to prevent early exit
             else if (Level.NetMode == NM_DedicatedServer)
             {
                 if (DriverPositionIndex == UnbuttonedPositionIndex)
@@ -671,7 +672,7 @@ function bool CanFire()
     return (!IsInState('ViewTransition') && DriverPositionIndex != PeriscopePositionIndex && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
 }
 
-// Modified to use CanFire() & to skip over obsolete RO functionality in ROTankCannonPawn & to optimise what remains
+// Modified to use CanFire() & to skip over obsolete RO functionality in ROTankCannonPawn & optimise what remains
 function Fire(optional float F)
 {
     local ROTankCannon Cannon;
@@ -785,7 +786,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+        DenyEntry(self, 0); // not qualified to operate vehicle
 
         return;
     }
@@ -903,7 +904,7 @@ simulated function FixPCRotation(PlayerController PC)
     PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. cannon pawn's rotation (note Gun.Rotation is effectively same as vehicle base's rotation)
 }
 
-// Matt: re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
+// Re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
 simulated function IncrementRange()
 {
     if (Gun != none)
@@ -920,12 +921,13 @@ simulated function DecrementRange()
     }
 }
 
+// Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
 function bool ResupplyAmmo()
 {
     return DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).ResupplyAmmo();
 }
 
-// Matt: used by HUD to show coaxial MG reload progress, like the cannon reload
+// New function, used by HUD to show coaxial MG reload progress, like the cannon reload
 function float GetAltAmmoReloadState()
 {
     local float ProportionOfReloadRemaining;
@@ -1053,7 +1055,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
         }
 
-        if (bDriving && PC == Controller) // no overlays for spectators
+        if (bDriving && PC == Controller)
         {
             ActivateOverlay(true);
         }
@@ -1119,7 +1121,8 @@ exec function ToggleViewLimit()
         }
     }
 }
-// Matt: allows 'Driver' (commander) debugging to be toggled for all cannon pawns
+
+// Allows 'Driver' (commander) debugging to be toggled for all cannon pawns
 exec function ToggleDriverDebug()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
@@ -1137,7 +1140,7 @@ function ServerToggleDriverDebug()
     }
 }
 
-// Matt: allows debugging exit positions to be toggled for all cannon pawns
+// Allows debugging exit positions to be toggled for all cannon pawns
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())

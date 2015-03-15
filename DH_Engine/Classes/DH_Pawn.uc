@@ -543,7 +543,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
 
     OriginalDamage = damage;
 
-    // If someone else has killed this player , return
+    // If someone else has killed this player, return
     if (bDeleteMe || PointsHit.Length < 1 || Health <= 0)
     {
         return;
@@ -551,7 +551,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
 
     for (i = 0; i < PointsHit.Length; ++i)
     {
-        // If someone else has killed this player , return
+        // If someone else has killed this player, return
         if (bDeleteMe || Health <= 0)
         {
             return;
@@ -627,7 +627,7 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
 
     if (TotalDamage > 0)
     {
-        // If someone else has killed this player , return
+        // If someone else has killed this player, return
         if (bDeleteMe || Health <= 0)
         {
             return;

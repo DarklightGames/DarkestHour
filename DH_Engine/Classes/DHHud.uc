@@ -245,7 +245,7 @@ function DrawCustomBeacon(Canvas C, Pawn P, float ScreenLocX, float ScreenLocY)
 
     C.Font = GetPlayerNameFont(C);
     C.StrLen(PRI.PlayerName, XL, YL);
-    C.SetPos(ScreenLocX - 0.5 * XL , ScreenLocY - YL);
+    C.SetPos(ScreenLocX - 0.5 * XL, ScreenLocY - YL);
     C.DrawText(PRI.PlayerName, true);
 
     C.SetPos(ScreenLocX, ScreenLocY);

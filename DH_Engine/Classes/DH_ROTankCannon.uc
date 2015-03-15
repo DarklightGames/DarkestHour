@@ -8,57 +8,56 @@ class DH_ROTankCannon extends ROTankCannon
 
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
-// Variables for up to three ammo types, plus new MG tracer
-var     byte              MainAmmoChargeExtra[3];   // Matt: changed from int to byte for more efficient replication
-var()   int               InitialTertiaryAmmo;
-var()   class<Projectile> TertiaryProjectileClass;
-var()   class<Projectile> AltTracerProjectileClass; // Matt: replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so the old name was misleading
-var()   int               AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
+// General
+var()   float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
+var()   class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
+var()   byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
 
-// Shot dispersion can be customized by round type
-var()   float       SecondarySpread;
-var()   bool        bUsesSecondarySpread;
-var()   float       TertiarySpread;
-var()   bool        bUsesTertiarySpread;
+// Variables for up to three ammo types, including shot dispersion customized by round type
+var     byte                MainAmmoChargeExtra[3];   // Matt: changed from int to byte for more efficient replication
+var()   int                 InitialTertiaryAmmo;
+var()   class<Projectile>   TertiaryProjectileClass;
 
-// Manual/powered turret stuff
-var()   float       ManualRotationsPerSecond;
-var()   float       PoweredRotationsPerSecond;
+var()   bool                bUsesSecondarySpread;
+var()   float               SecondarySpread;
+var()   bool                bUsesTertiarySpread;
+var()   float               TertiarySpread;
 
-// Stuff for fire effects - Ch!cKeN
+// Armor penetration
+var()   float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
+var()   float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
+var()   float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
+
+var()   bool                bIsAssaultGun;
+var()   float               GunMantletArmorFactor; // used for assault gun mantlet hits
+var()   float               GunMantletSlope;
+
+var()   bool                bHasAddedSideArmor;
+var     bool                bRoundShattered; // tells projectile to show shattered round effects
+
+// Manual/powered turret
+var()   float               ManualRotationsPerSecond;
+var()   float               PoweredRotationsPerSecond;
+
+// Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
+var()   class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
+var     DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
+
+// Fire effects - Ch!cKeN
 var     VehicleDamagedEffect        TurretHatchFireEffect;
 var     class<VehicleDamagedEffect> FireEffectClass;
 var()   name                        FireAttachBone;
 var()   vector                      FireEffectOffset;
 var()   float                       FireEffectScale;
 
-// Armor penetration stuff
-var()   bool    bIsAssaultGun;
-var()   bool    bHasAddedSideArmor;
-var     bool    bRoundShattered;
-
-var()   float   FrontArmorFactor, RightArmorFactor, LeftArmorFactor, RearArmorFactor;
-var()   float   FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
-var()   float   FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
-
-var()   float   MinCommanderHitHeight; // Matt: minimum height above which a projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
-var()   float   GunMantletArmorFactor; // used for assault gun mantlet hits
-var()   float   GunMantletSlope;
-
-// Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
-var()   class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
-var     DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
-
-
-
-// Debugging and calibration stuff
-var     bool        bDrawPenetration;
-var     bool        bDebuggingText;
-var     bool        bPenetrationText;
-var     bool        bLogPenetration;
-var     bool        bDriverDebugging;
-var     config bool bGunFireDebug;
-var     config bool bGunsightSettingMode;
+// Debugging and calibration
+var()   bool                bDrawPenetration;
+var()   bool                bDebuggingText;
+var()   bool                bPenetrationText;
+var()   bool                bLogPenetration;
+var()   bool                bDriverDebugging;
+var()   config bool         bGunFireDebug;
+var()   config bool         bGunsightSettingMode;
 
 replication
 {
@@ -67,8 +66,8 @@ replication
         MainAmmoChargeExtra;
 
     // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bRoundShattered;        // Matt: is set independently on client & server, so shouldn't need replicating - TEST later & plan to remove from replication
+//  reliable if (bNetDirty && Role == ROLE_Authority)
+//      bRoundShattered;        // Matt: removed as is set independently on client & server & so doesn't need replicating
 //      bManualTurret, bOnFire; // Matt: have deprecated both of these
 }
 
@@ -116,7 +115,7 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Matt: new function to start a turret hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
+// New function to start a turret hatch fire effect - all fires now triggered from vehicle base, so don't need cannon's Tick() constantly checking for a fire
 simulated function StartTurretFire()
 {
     if (TurretHatchFireEffect == none && Level.NetMode != NM_DedicatedServer)
@@ -143,7 +142,6 @@ simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
     {
-        // On client, cannon pawn is destroyed if becomes net irrelevant - when it respawns, these values need to be set again or will cause lots of errors
         if (Role < ROLE_Authority)
         {
             SetOwner(CannonPwn);
@@ -284,7 +282,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     else if (HitAngleDegrees >= FrontRightAngle && HitAngleDegrees < RearRightAngle)
     {
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // Matt: using RoundType (was P.default.ShellImpactDamage != none && P.default.ShellImpactDamage.default.bArmorStops)
+        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -384,7 +382,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     else if (HitAngleDegrees >= RearLeftAngle && HitAngleDegrees < FrontLeftAngle)
     {
         // Don't penetrate with HEAT if there is added side armor
-        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // Matt: using RoundType (was P.default.ShellImpactDamage != none && P.default.ShellImpactDamage.default.bArmorStops)
+        if (bHasAddedSideArmor && P.default.RoundType == RT_HEAT) // using RoundType instead of P.default.ShellImpactDamage.default.bArmorStops
         {
             return false;
         }
@@ -507,7 +505,7 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 {
     local float ArmorSlope, CompoundAngle;
 
-//  AOI = Abs(AOI * 0.01745329252); // Matt: we now pass AOI to this function in radians, to save unnecessary processing to & from degrees
+//  AOI = Abs(AOI * 0.01745329252); // we now pass AOI to this function in radians, to save unnecessary processing to & from degrees
     ArmorSlope = Abs(ArmorSlopeDegrees * 0.01745329252); // convert the angle degrees to radians
     CompoundAngle = Acos(Cos(ArmorSlope) * Cos(AOI));
 
@@ -693,9 +691,9 @@ simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, flo
     return false;
 }
 
-// Matt: modified as projectiles now call TakeDamage on VehicleWeapons instead of directly on the vehicle base
-// Allows for different handling of external MG hits (e.g. gun shield wrecked) that won't damage actual vehicle, & can also be used in subclasses for any custom handling of cannon hits
-// Also modified as projectiles that hit the commander now call TakeDamage directly on him
+// Matt: modified as shell's ProcessTouch() now calls TD() on VehicleWeapon instead of directly on vehicle itself, but for a cannon it's counted as a vehicle hit, so we call TD() on vehicle
+// Can also be subclassed for any custom handling of cannon hits
+// Also to avoid calling TakeDamage on Driver, as shell & bullet's ProcessTouch now call it directly on the Driver if he was hit
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     // Fix for suicide death messages
@@ -708,11 +706,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
-
-    // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle so we call TD on that
     else if (VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).VehicleBase != none)
     {
-        if (DamageType.default.bDelayedDamage && InstigatedBy != none) // added bDelayedDamage as otherwise this isn't relevant
+        if (DamageType.default.bDelayedDamage && InstigatedBy != none)
         {
             VehicleWeaponPawn(Owner).VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
         }
@@ -720,16 +716,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         VehicleWeaponPawn(Owner).VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
-    // Removed as projectile's ProcessTouch now call TD directly on Driver if he was hit
-//  if (HitDriver(HitLocation, Momentum))
-//  {
-//      ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-//  }
-
     bRoundShattered = false; // reset for next time
 }
 
-// Returns the name of the various round types as well as a zero-based int specifying which type is the active one
+// Modified to handle DH's extended ammo system
 simulated function int GetRoundsDescription(out array<string> Descriptions)
 {
     local int i;
@@ -759,7 +749,7 @@ simulated function int GetRoundsDescription(out array<string> Descriptions)
     }
 }
 
-// Returns a zero-based int specifying which round type is the pending round
+// Modified to handle DH's extended ammo system
 simulated function int GetPendingRoundIndex()
 {
     if (PendingProjectileClass != none)
@@ -802,6 +792,7 @@ simulated function int GetPendingRoundIndex()
     }
 }
 
+// Modified to handle DH's extended ammo system
 function ToggleRoundType()
 {
     if (PendingProjectileClass == PrimaryProjectileClass)
@@ -854,6 +845,7 @@ function ToggleRoundType()
     }
 }
 
+// Modified to handle DH's extended ammo system
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     local float s;
@@ -1163,7 +1155,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return P;
 }
 
-// Matt: modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
+// Modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 // Also to avoid playing unnecessary shoot animations on a server
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
@@ -1218,6 +1210,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     }
 }
 
+// Modified to handle DH's extended ammo system (coax MG is now mode 3)
 function CeaseFire(Controller C, bool bWasAltFire)
 {
     super(ROVehicleWeapon).CeaseFire(C, bWasAltFire);
@@ -1228,6 +1221,7 @@ function CeaseFire(Controller C, bool bWasAltFire)
     }
 }
 
+// Modified to handle DH's extended ammo system (coax MG is now mode 3)
 simulated function bool HasAmmo(int Mode)
 {
     switch (Mode)
@@ -1284,6 +1278,7 @@ simulated function bool ReadyToFire(bool bAltFire)
     return HasAmmo(Mode);
 }
 
+// Modified to handle DH's extended ammo system
 simulated function int PrimaryAmmoCount()
 {
     if (bMultipleRoundTypes)
@@ -1307,6 +1302,7 @@ simulated function int PrimaryAmmoCount()
     }
 }
 
+// Modified to handle DH's extended ammo system
 simulated function bool ConsumeAmmo(int Mode)
 {
     if (!HasAmmo(Mode))
@@ -1351,7 +1347,7 @@ function bool GiveInitialAmmo()
     return false;
 }
 
-// Matt: modified so only sets timer if the new reload state needs it
+// Modified so only sets timer if the new reload state needs it
 simulated function ClientSetReloadState(ECannonReloadState NewState)
 {
     CannonReloadState = NewState;
@@ -1362,6 +1358,7 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
     }
 }
 
+// Modified to simplify a little, including call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do
 simulated function Timer()
 {
     if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
@@ -1370,7 +1367,6 @@ simulated function Timer()
     }
     else if (CannonReloadState == CR_Empty)
     {
-        // Matt: simplified to call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do (same in other reload stages below)
         PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
         CannonReloadState = CR_ReloadedPart1;
         SetTimer(GetSoundDuration(ReloadSoundOne), false);
@@ -1405,7 +1401,7 @@ simulated function Timer()
     }
 }
 
-// Overridden to remove shake from co-ax MG's
+// Modified to remove shake from coaxial MGs
 simulated function ShakeView(bool bWasAltFire)
 {
     local PlayerController P;
@@ -1536,6 +1532,7 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
     return Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
 }
 
+// Modified to add TertiaryProjectileClass
 simulated function UpdatePrecacheStaticMeshes()
 {
     if (TertiaryProjectileClass != none)
@@ -1557,8 +1554,8 @@ simulated function int GetRange()
     return 0;
 }
 
-// ARMORED BEASTS CODE: functions extended for easy tuning of gunsights in development mode
-// Matt: modified to network optimise by clientside check before sending replicated function to server, & also playing click clientside, not replicating it back
+// Functions extended for easy tuning of gunsights in development mode
+// Modified to network optimise by clientside check before sending replicated function to server, & also playing click clientside, not replicating it back
 // These functions now get called on both client & server, but only progress to server if it's a valid action (see modified LeanLeft & LeanRight execs in DHPlayer)
 simulated function IncrementRange()
 {
@@ -1673,6 +1670,7 @@ function DecreaseAddedPitch()
     }
 }
 
+// Modified to add extra stuff
 simulated function DestroyEffects()
 {
     super.DestroyEffects();
@@ -1683,6 +1681,7 @@ simulated function DestroyEffects()
     }
 }
 
+// Modified to ignore yaw restrictions for commander's periscope of binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers)
 simulated function int LimitYaw(int yaw)
 {
     local DH_ROTankCannonPawn P;
@@ -1707,6 +1706,7 @@ simulated function int LimitYaw(int yaw)
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
+// Modified to use new DH incremental resupply system
 function bool ResupplyAmmo()
 {
     local bool bDidResupply;
@@ -1756,12 +1756,11 @@ defaultproperties
 {
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true
+    AltFireSpread=0.002
     ManualRotationsPerSecond=0.011111
-    PoweredRotationsPerSecond=0.05
+    CannonReloadState=CR_Waiting
     FireAttachBone="com_player"
     FireEffectOffset=(Z=-20.0)
     FireEffectScale=1.0
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
-    CannonReloadState=CR_Waiting
-    AltFireSpread=0.002
 }

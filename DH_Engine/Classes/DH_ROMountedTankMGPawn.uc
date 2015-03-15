@@ -8,21 +8,22 @@ class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var     int     UnbuttonedPositionIndex; // lowest position number where player is unbuttoned
-var     texture VehicleMGReloadTexture;  // used to show reload progress on the HUD, like a tank cannon reload
+var()   int         InitialPositionIndex;     // initial gunner position on entering
+var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
+var()   texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
 
-var()   float   OverlayCenterScale;
-var()   float   OverlayCenterSize;       // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-var()   float   OverlayCorrectionX;
-var()   float   OverlayCorrectionY;
+var()   float       OverlayCenterScale;
+var()   float       OverlayCenterSize;        // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float       OverlayCorrectionX;
+var()   float       OverlayCorrectionY;
 
-var     bool    bDebugExitPositions;
+var     bool        bDebugExitPositions;
 
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerToggleDebugExits;
+        ServerToggleDebugExits; // only during development
 }
 
 // Matt: modified to call InitializeMG when we've received both the replicated Gun & VehicleBase actors (just after vehicle spawns via replication), which has 2 benefits:
@@ -47,7 +48,7 @@ simulated function PostNetReceive()
         }
     }
 
-    // Initialize the MG // Matt: added VehicleBase != none, so we guarantee that VB is available to InitializeMG
+    // Initialize the MG (added VehicleBase != none, so we guarantee that VB is available to InitializeMG)
     if (!bInitializedVehicleGun && Gun != none && VehicleBase != none)
     {
         bInitializedVehicleGun = true;
@@ -86,7 +87,7 @@ simulated function PostNetReceive()
     }
 }
 
-// Matt: modified to call InitializeMG to do any extra set up in the MG classes
+// Modified to call InitializeMG to do any extra set up in the MG classes
 // This is where we do it for standalones or servers (note we can't do it in PostNetBeginPlay because VehicleBase isn't set until this function is called)
 function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 {
@@ -108,7 +109,7 @@ simulated function InitializeMG()
     }
 }
 
-// Matt: modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
+// Modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
 function KDriverEnter(Pawn P)
 {
     local DH_ROMountedTankMG MG;
@@ -214,6 +215,7 @@ simulated event DrivingStatusChanged()
     }
 }
 
+// Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
 function bool PlaceExitingDriver()
 {
     local int    i, StartIndex;
@@ -233,7 +235,7 @@ function bool PlaceExitingDriver()
         return false;
     }
 
-    // Debug exits // Matt: uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
+    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
     if (class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
@@ -373,12 +375,12 @@ function Fire(optional float F)
     super.Fire(F);
 }
 
-// Matt: emptied out as MG has no alt fire mode, so just ensures nothing happens
+// Emptied out as MG has no alt fire mode, so just ensures nothing happens
 function AltFire(optional float F)
 {
 }
 
-// Matt: modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
+// Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
 {
     if (DriverPositionIndex < DriverPositions.Length - 1 && DriverPositionIndex == PendingPositionIndex && !IsInState('ViewTransition') && bMultiPosition)
@@ -472,7 +474,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+        DenyEntry(self, 0); // not qualified to operate vehicle
 
         return;
     }
@@ -604,12 +606,13 @@ simulated function FixPCRotation(PlayerController PC)
     PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. MG pawn's rotation (note Gun.Rotation is effectively same as vehicle base's rotation)
 }
 
+// Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
 function bool ResupplyAmmo()
 {
     return DH_ROMountedTankMG(Gun) != none && DH_ROMountedTankMG(Gun).ResupplyAmmo();
 }
 
-// Matt: used by HUD to show coaxial MG reload progress, like the cannon reload
+// New function, used by HUD to show coaxial MG reload progress, like the cannon reload
 function float GetAmmoReloadState()
 {
     local DH_ROMountedTankMG MG;
@@ -679,7 +682,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
                     DriverPositions[i].ViewPitchUpLimit = 65535;
                     DriverPositions[i].ViewPitchDownLimit = 1;
                 }
-                
+
                 SwitchMesh(DriverPositionIndex);
 
                 PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
@@ -747,7 +750,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
         }
 
-        if (bDriving && PC == Controller) // no overlays for spectators
+        if (bDriving && PC == Controller)
         {
             ActivateOverlay(true);
         }
@@ -814,7 +817,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// Matt: allows debugging exit positions to be toggled for all MG pawns
+// Allows debugging exit positions to be toggled for all MG pawns
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())

@@ -39,7 +39,7 @@ var     float       PointValue;             // used for scoring
 var     bool        bEmittersOn;
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var()   float       ObjectCollisionResistance;
-var     bool        bClientInitialized;     // Matt: clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
+var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Engine stuff
 var     bool        bEngineOff;         // vehicle engine is simply switched off
@@ -88,7 +88,7 @@ replication
 // Modified to spawn any sound or resuppply attachments & so net clients show unoccupied rider positions on the HUD vehicle icon
 simulated function PostBeginPlay()
 {
-    super(Vehicle).PostBeginPlay(); // Matt: skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
+    super(Vehicle).PostBeginPlay(); // skip over Super in ROWheeledVehicle to avoid setting an initial timer, which we no longer use
 
     if (HasAnim(BeginningIdleAnim))
     {
@@ -248,7 +248,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     DHPlayer(PC).QueueHint(40, true);
 }
 
-// Matt: modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
+// Modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
 simulated state EnteringVehicle
 {
     simulated function HandleEnter()
@@ -260,7 +260,7 @@ simulated state EnteringVehicle
 
         if (HasAnim(BeginningIdleAnim))
         {
-            PlayAnim(BeginningIdleAnim);
+            PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
         if (PlayerController(Controller) != none)
@@ -483,7 +483,7 @@ simulated event DrivingStatusChanged()
 // Modified to use fire button to start or stop engine
 simulated function Fire(optional float F)
 {
-    // Matt: added clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
+    // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
     if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
     {
         ServerStartEngine();
@@ -491,11 +491,12 @@ simulated function Fire(optional float F)
     }
 }
 
-// Matt: emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
+// Emptied out to prevent unnecessary replicated function calls to server - vehicles don't use AltFire
 function AltFire(optional float F)
 {
 }
 
+// New function to kill exhaust & wheel dust emitters
 simulated function StopEmitters()
 {
     local int i;
@@ -524,6 +525,7 @@ simulated function StopEmitters()
     bEmittersOn = false;
 }
 
+// New function to spawn exhaust & wheel dust emitters
 simulated function StartEmitters()
 {
     local int    i;
@@ -578,9 +580,9 @@ simulated function StartEmitters()
                 ExhaustPipes[i].ExhaustEffect.UpdateExhaust(0.0); // nil update just sets the lowest setting for an idling engine
             }
         }
-    }
 
-    bEmittersOn = true;
+        bEmittersOn = true;
+    }
 }
 
 // Server side function called to switch engine on/off
@@ -689,18 +691,19 @@ function bool PlaceExitingDriver()
     return false;
 }
 
+// Modified so if we hit a vehicle we use its velocity to calculate damage, & also to factor in an ObjectCollisionResistance for this vehicle
 event TakeImpactDamage(float AccelMag)
 {
     local int Damage;
 
-    if (Vehicle(ImpactInfo.Other) != none)
+    if (Vehicle(ImpactInfo.Other) != none) // collided with another vehicle
     {
         Damage = Int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier());
         TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
     }
-    else
+    else // collided with something else
     {
-        Damage = Int(AccelMag * ImpactDamageModifier()) / ObjectCollisionResistance;
+        Damage = Int(AccelMag * ImpactDamageModifier() / ObjectCollisionResistance);
         TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
     }
 
@@ -716,6 +719,7 @@ event TakeImpactDamage(float AccelMag)
         LastImpactExplosionTime = Level.TimeSeconds;
     }
 }
+
 // Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
 function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
@@ -755,7 +759,8 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     }
 }
 
-function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
+// Modified to kill engine if zero health
+function DamageEngine(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType)
 {
     if (EngineHealth > 0)
     {
@@ -773,7 +778,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Vehicle engine is dead");
+            Level.Game.Broadcast(self, "Engine is dead");
         }
 
         bEngineOff = true;
@@ -879,7 +884,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     }
 }
 
-// Modified to kill extra effects & destroy any decorative attachments
+// Modified to destroy extra attachments & effects
 simulated event DestroyAppearance()
 {
     local int         i;
@@ -969,7 +974,7 @@ simulated function Destroyed()
 
         if (ResupplyDecoAttachment != none)
         {
-            ResupplyDecoAttachment.Destroy(); // TEST - maybe this should happen in DestroyAppearance too? (perhaps with sound attachments too?)
+            ResupplyDecoAttachment.Destroy();
         }
     }
 }
@@ -992,6 +997,8 @@ simulated function PrevWeapon()
         ServerChangeViewPoint(false);
     }
 }
+
+// Modified to prevent moving to another vehicle position while moving between view points
 function ServerChangeDriverPosition(byte F)
 {
     if (IsInState('ViewTransition'))
@@ -1140,7 +1147,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             Driver.bOwnerNoSee = Driver.default.bOwnerNoSee;
         }
 
-        if (bDriving && PC == Controller) // no overlays for spectators
+        if (bDriving && PC == Controller)
         {
             ActivateOverlay(true);
         }
@@ -1197,7 +1204,7 @@ function ServerKillEngine()
     DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
 }
 
-// Overridden to eliminate "Waiting for Additional Crewmembers" message
+// Modified to eliminate "Waiting for additional crewmembers" message // Matt: now only used by bots
 function bool CheckForCrew()
 {
     return true;

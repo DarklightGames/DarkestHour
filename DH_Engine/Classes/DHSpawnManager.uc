@@ -218,7 +218,7 @@ function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vecto
     {
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, CollisionRadius , SP.LocationHints[LocationHintIndices[i]].Location)
+        foreach RadiusActors(class'Pawn', P, CollisionRadius, SP.LocationHints[LocationHintIndices[i]].Location)
         {
             //Found a blocking actor
             bIsBlocked = true;

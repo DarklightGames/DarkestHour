@@ -140,6 +140,7 @@ simulated function Destroyed()
     }
 }
 
+// Modified to add features from DH_ROTreadCraft for treads
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
@@ -202,6 +203,7 @@ simulated function Tick(float DeltaTime)
     }
 }
 
+// Modified to add chance of engine kill & fire starting, to require APCDamageModifier of at least 0.25 & to randomise damage a little
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local Controller InstigatorController;
