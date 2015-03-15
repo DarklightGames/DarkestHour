@@ -82,7 +82,8 @@ simulated function PostBeginPlay()
     {
         if (i >= SPAWN_POINTS_MAX)
         {
-            Warn("Number of DHSpawnPoints exceeds" @ SPAWN_POINTS_MAX @ ", some spawn points will be ignored!");
+            Warn("Number of DHSpawnPoint actors exceeds" @ SPAWN_POINTS_MAX @ ", some spawn points will be ignored!");
+
             break;
         }
 
@@ -90,7 +91,7 @@ simulated function PostBeginPlay()
     }
 }
 
-simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
+simulated function int GetRoleIndex(RORoleInfo RI, int TeamNum)
 {
     local int i;
 
@@ -105,7 +106,7 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
         {
             case AXIS_TEAM_INDEX:
 
-                if (DHAxisRoles[i] != none && DHAxisRoles[i] == ROInf)
+                if (DHAxisRoles[i] != none && DHAxisRoles[i] == RI)
                 {
                     return i;
                 }
@@ -114,7 +115,7 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 
             case ALLIES_TEAM_INDEX:
 
-                if (DHAlliesRoles[i] != none && DHAlliesRoles[i] == ROInf)
+                if (DHAlliesRoles[i] != none && DHAlliesRoles[i] == RI)
                 {
                     return i;
                 }
@@ -133,6 +134,11 @@ simulated function int GetRoleIndex(RORoleInfo ROInf, int TeamNum)
 simulated function bool IsSpawnPointActive(byte SpawnPointIndex)
 {
     return SpawnPointIsActives[SpawnPointIndex] != 0;
+}
+
+simulated function bool IsSpawnPointActive(DHSpawnPoint SP)
+{
+    return IsSpawnPointActive(GetSpawnPointIndex(SP));
 }
 
 function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
@@ -208,6 +214,10 @@ function byte GetSpawnPointIndex(DHSpawnPoint SP)
             return i;
         }
     }
+
+    Error("Spawn point index could not be resolved");
+
+    return 255;
 }
 
 simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
@@ -223,20 +233,20 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
     }
 }
 
-simulated function bool ValidateSpawnPoint(DHSpawnPoint SP, byte TeamIndex)
+simulated function bool IsSpawnPointValid(DHSpawnPoint SP, byte TeamIndex)
 {
-    local int i, index;
+    local int i;
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
     //Is spawn point active
-    index = GetSpawnPointIndex(SP);
-    if (!IsSpawnPointActive(index))
+    if (!IsSpawnPointActive(SP))
     {
         return false; //Not active
     }
 
     //Is spawn point for the correct team (needs to be last in check)
     GetActiveSpawnPointsForTeam(ActiveSpawnPoints, TeamIndex);
+
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
         if (ActiveSpawnPoints[i] == SP)

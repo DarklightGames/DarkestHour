@@ -2096,7 +2096,7 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     }
 
     // Check if SP is valid
-    if (!DHGRI.ValidateSpawnPoint(SP,PRI.Team.TeamIndex))
+    if (!DHGRI.IsSpawnPointValid(SP,PRI.Team.TeamIndex))
     {
         //Temp hack to allow spawning on all maps
         G.RestartPlayer(self);
@@ -2244,7 +2244,7 @@ simulated function CheckToAutoDeploy()
     if (DesiredSpawnPoint != none && Pawn == none)
     {
         //Check if desired spawn is valid
-        bDeployed = GRI.ValidateSpawnPoint(DesiredSpawnPoint, PlayerReplicationInfo.Team.TeamIndex);
+        bDeployed = GRI.IsSpawnPointValid(DesiredSpawnPoint, PlayerReplicationInfo.Team.TeamIndex);
 
         if (bDeployed)
         {
