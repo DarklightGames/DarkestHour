@@ -234,9 +234,9 @@ function bool DrawMapComponents(Canvas C)
 // Actually shows the panel once it's rendered (Needs confirmed and tested)
 function InternalOnPostDraw(Canvas Canvas)
 {
-    bInit = false;
-    OnRendered = none;
-    ShowPanel(true);
+    //bInit = false;
+    //OnRendered = none;
+    //ShowPanel(true);
 }
 
 // Player clicked a spawn point
@@ -247,13 +247,10 @@ function bool SpawnClick(int Index)
         return true;
     }
 
-    if (Index != -1)
+    if (Index != -1 && SpawnPoints[Index] == none)
     {
-        if (SpawnPoints[Index] == none)
-        {
-            Log("No spawn point found! Error!");
-            return true;
-        }
+        Log("No spawn point found! Error!");
+        return true;
     }
 
     // Check if we clicked the desired spawn point
