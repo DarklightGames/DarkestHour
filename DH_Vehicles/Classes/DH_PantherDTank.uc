@@ -208,7 +208,6 @@ defaultproperties
     MaxDesireability=2.1
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
     HealthMax=600.0

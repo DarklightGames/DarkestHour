@@ -186,9 +186,6 @@ defaultproperties
     MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayClass=class'ROVehicles.TigerDriverOverlay'
-    HUDOverlayOffset=(X=3.0)
-    HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
     HealthMax=650.0

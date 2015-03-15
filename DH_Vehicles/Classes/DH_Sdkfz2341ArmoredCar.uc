@@ -199,8 +199,6 @@ defaultproperties
     DriverDamageMult=1.0
     VehicleNameString="Sdkfz 234/1 Armored Car"
     MaxDesireability=0.1
-    HUDOverlayOffset=(X=2.0)
-    HUDOverlayFOV=90.0
     PitchUpLimit=500
     PitchDownLimit=58000
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'

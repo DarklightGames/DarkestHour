@@ -294,5 +294,4 @@ defaultproperties
     TPCamDistance=300.0
     TPCamLookat=(X=-50.0,Y=25.0,Z=0.0)
     TPCamWorldOffset=(Z=120.0)
-    HUDOverlayFOV=45.0
 }

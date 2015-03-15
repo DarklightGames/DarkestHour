@@ -165,8 +165,6 @@ defaultproperties
     DriverDamageMult=1.0
     VehicleNameString="M8 Armored Car"
     MaxDesireability=0.1
-    HUDOverlayOffset=(X=2.0)
-    HUDOverlayFOV=90.0
     PitchUpLimit=500
     PitchDownLimit=58000
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'

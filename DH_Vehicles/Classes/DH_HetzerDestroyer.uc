@@ -180,7 +180,6 @@ defaultproperties
     MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayFOV=85.0
     HealthMax=500.0
     Health=500
     Mesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_body_ext'

@@ -190,8 +190,6 @@ defaultproperties
     DriverDamageMult=1.0
     VehicleNameString="M5 Stuart"
     MaxDesireability=1.9
-    HUDOverlayOffset=(X=5.0)
-    HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
     HealthMax=375.0

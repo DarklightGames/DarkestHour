@@ -217,8 +217,6 @@ defaultproperties
     DriverDamageMult=1.0
     VehicleNameString="M3A1 Halftrack"
     MaxDesireability=1.5
-    HUDOverlayOffset=(X=-1.5)
-    HUDOverlayFOV=90.0
     GroundSpeed=325.0
     PitchUpLimit=500
     PitchDownLimit=49000

@@ -205,9 +205,6 @@ defaultproperties
     MaxDesireability=1.9
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)
-    HUDOverlayClass=none // Matt: was class'ROVehicles.KV1DriverOverlay' but now uses texture overlay for glass vision block (note class now extends DH_ROTreadCraftB)
-    //   HUDOverlayOffset=(X=-1.0)
-    //   HUDOverlayFOV=90.0
     PitchUpLimit=5000
     PitchDownLimit=60000
     HealthMax=525.0

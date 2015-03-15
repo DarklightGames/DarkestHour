@@ -168,8 +168,6 @@ defaultproperties
     TPCamWorldOffset=(Z=250.0)
     DriverDamageMult=1.0
     VehicleNameString="Willys Jeep MB"
-    HUDOverlayOffset=(X=2.0)
-    HUDOverlayFOV=90.0
     GroundSpeed=325.0
     PitchUpLimit=500
     PitchDownLimit=58000
