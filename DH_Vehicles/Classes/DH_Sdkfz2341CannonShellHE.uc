@@ -7,6 +7,7 @@ class DH_Sdkfz2341CannonShellHE extends DH_ROTankCannonShellHE;
 
 defaultproperties
 {
+    bNetTemporary=true // Matt: so is torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
     MechanicalRanges(1)=(Range=100,RangeValue=33.0)
     MechanicalRanges(2)=(Range=200,RangeValue=37.0)
     MechanicalRanges(3)=(Range=300,RangeValue=41.0)
