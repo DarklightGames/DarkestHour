@@ -11,6 +11,6 @@ defaultproperties
     MyVehicleDamage=class'DH_Weapons.DH_GreaseGunVehDamType'
     BallisticCoefficient=0.195
     Speed=16899.0
-    Damage=70.0
+    Damage=60.0
     MyDamageType=class'DH_Weapons.DH_GreaseGunDamType'
 }
