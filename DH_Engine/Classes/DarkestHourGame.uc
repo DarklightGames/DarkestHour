@@ -1549,20 +1549,6 @@ state RoundInPlay
             CheckMineVolumes();
         }
 
-        // Respawn all players
-        /*
-        for (P = Level.ControllerList; P != none; P = P.NextController)
-        {
-            if (!P.bIsPlayer || P.PlayerReplicationInfo.Team == none)
-                continue;
-
-            if (ROPlayer(P) != none && ROPlayer(P).CanRestartPlayer())
-                RestartPlayer(P);
-            else if (ROBot(P) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
-                RestartPlayer(P);
-        }
-        */
-
         // Make the bots find objectives when the round starts
         FindNewObjectives(None);
 
@@ -1687,41 +1673,6 @@ state RoundInPlay
 
         if (NeedPlayers() && AddBot() && (RemainingBots > 0))
             RemainingBots--;
-
-        // Go through both teams and spawn reinforcements if necessary
-        for (i = 0; i < 2; ++i)
-        {
-            /*
-            if (i == ALLIES_TEAM_INDEX)
-                ReinforceInt = LevelInfo.Allies.ReinforcementInterval;
-            else
-                ReinforceInt = LevelInfo.Axis.ReinforcementInterval;
-
-            if (!SpawnLimitReached(i) && ElapsedTime > LastReinforcementTime[i] + ReinforceInt)
-            {
-                for (P = Level.ControllerList; P != none; P = P.NextController)
-                {
-                    if (!P.bIsPlayer || P.Pawn != none || P.PlayerReplicationInfo == none || P.PlayerReplicationInfo.Team == none || P.PlayerReplicationInfo.Team.TeamIndex != i)
-                        continue;
-
-                    if (ROPlayer(P) != none && ROPlayer(P).CanRestartPlayer())
-                        RestartPlayer(P);
-                    else if (ROBot(P) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
-                        RestartPlayer(P);
-
-                    // If spawn limit has now been reached, send a message out
-                    if (SpawnLimitReached(i))
-                    {
-                        SendReinforcementMessage(i, 1);
-                        break;
-                    }
-                }
-
-                LastReinforcementTime[i] = ElapsedTime;
-                ROGameReplicationInfo(GameReplicationInfo).LastReinforcementTime[i] = LastReinforcementTime[i];
-            }
-            */
-        }
 
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
@@ -2004,11 +1955,40 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
+    //TODO: look into improving or rewriting this, as this is garbage looking
+    // This code is reused shit, needs fixed up, but it is basically subtracting reinforcements
+    if (DHC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
+    {
+        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
+
+        // If the Allies have used up 85% of their reinforcements, send them a reinforcements low message
+        if (SpawnCount[ALLIES_TEAM_INDEX] == Int(LevelInfo.Allies.SpawnLimit * 0.85))
+        {
+            SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
+        }
+    }
+    else if (DHC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
+    {
+        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
+
+        // If Axis has used up 85% of their reinforcements, send them a reinforcements low message
+        if (SpawnCount[AXIS_TEAM_INDEX] == Int(LevelInfo.Axis.SpawnLimit * 0.85))
+        {
+            SendReinforcementMessage(AXIS_TEAM_INDEX, 0);
+        }
+    }
+
+    if (DHC.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
+    {
+        DHC.NotifyOfMapInfoChange();
+        DHC.bFirstRoleAndTeamChange = true;
+    }
+
     SpawnManager.SpawnPlayer(DHC, SpawnError);
 
     if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
     {
-        Error("Spawn Error =" @ SpawnError);
+        Warn("Spawn Error =" @ SpawnError);
     }
 }
 

@@ -102,13 +102,9 @@ function PostBeginPlay()
         SpawnPoints[SpawnPoints.Length] = SP;
     }
 
-    Log("Spawn points length = " @ SpawnPoints.Length);
-
     //Update GameReplicationInfo
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
-        Log("ASDASDASDA" @ SpawnPoints[i].bIsInitiallyActive);
-
         GRI.SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
     }
 
@@ -134,6 +130,12 @@ function Reset()
     Vehicles.Length = 0;
 
     super.Reset();
+}
+
+function Timer()
+{
+
+
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)
@@ -265,7 +267,7 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
     }
     else
     {
-        Log("attempting to spawn infantry at SP" @ C.SpawnPointIndex);
+        Log("attempting to spawn infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ C.DesiredSpawnPoint.SpawnPointName);
 
         SpawnInfantry(C, SpawnError);
     }
@@ -293,15 +295,6 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         return none;
     }
 
-    V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
-
-    if (V == none)
-    {
-        SpawnError = SpawnError_Failed;
-
-        return none;
-    }
-
     // Spawn via restartplayer because otherwise the spawn location is blocked by the Vehicle!  This will put the pawn in the black room
     Level.Game.RestartPlayer(C);
 
@@ -310,6 +303,16 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     {
         Warn("Pawn does not exist!!!! NO PLAYER WAS SPAWNED OR SOMETHING!!!!");
         return none;
+    }
+    else
+    {
+        V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
+
+        if (V == none)
+        {
+            SpawnError = SpawnError_Failed;
+            return none;
+        }
     }
 
     if(!V.TryToDrive(C.Pawn))
@@ -325,6 +328,9 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     }
     else
     {
+        V.KDriverLeave(true); // Force leave the vehicle to update the position
+        C.MyLastVehicle = V; // Set controller mylastvehicle to be used for delayed re-entry
+
         //ParentFactory must be set after any calls to Destroy are made so that
         //VehicleDestroyed is not called in the event that TryToDrive fails
         V.ParentFactory = self;
@@ -357,7 +363,12 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
 
     G = DarkestHourGame(Level.Game);
 
-    if (G != none && C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
+    if (G == none)
+    {
+        return none;
+    }
+
+    if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
     {
         G.BaseMutator.PlayerChangedClass(C);
     }
@@ -369,7 +380,7 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
 
     if (C.Pawn == none)
     {
-        DefaultPlayerClass = DarkestHourGame(Level.Game).GetDefaultPlayerClass(C);
+        DefaultPlayerClass = G.GetDefaultPlayerClass(C);
 
         C.Pawn = Spawn(DefaultPlayerClass,,, SpawnLocation, SpawnRotation);
     }
@@ -378,14 +389,14 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     {
         // Likely the spawn function is failing because SpawnLocation is being blocked by another player/vehicle
         // Lets force spawn the player in the black room and then teleport them to SpawnLocation with SpawnRotation
-        Level.Game.RestartPlayer(C);
+        G.RestartPlayer(C);
 
         //Theel need a function to properly teleport a player and return if it fails
     }
 
     if (C.Pawn == none)
     {
-        Log("Couldn't spawn player of type" @ C.PawnClass @ "at" @ SpawnLocation);
+        Warn("Couldn't spawn player of type" @ C.PawnClass @ "at" @ SpawnLocation);
 
         C.GotoState('Dead');
 
@@ -409,7 +420,7 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     C.Pawn.PlayTeleportEffect(true, true);
     C.ClientSetRotation(C.Pawn.Rotation);
 
-    DarkestHourGame(Level.Game).AddDefaultInventory(C.Pawn);
+    G.AddDefaultInventory(C.Pawn);
 
     return C.Pawn;
 }

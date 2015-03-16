@@ -143,10 +143,7 @@ simulated function bool IsSpawnPointActive(DHSpawnPoint SP)
 
 function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 {
-    Log("SetSpawnPointIsActive" @ bIsActive @ byte(bIsActive));
-
     SpawnPointIsActives[SpawnPointIndex] = byte(bIsActive);
-
     SpawnPointsUpdateTime = Level.TimeSeconds;
 }
 
