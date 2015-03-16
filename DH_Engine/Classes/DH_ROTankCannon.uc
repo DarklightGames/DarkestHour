@@ -13,6 +13,7 @@ var     DH_ROTankCannonPawn CannonPawn;               // just a reference to the
 var()   float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 var()   class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
 var()   byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
+var     sound               NoMGAmmoSound;            // 'dry fire' sound when trying to fire empty coaxial MG
 
 // Variables for up to three ammo types, including shot dispersion customized by round type
 var     byte                MainAmmoChargeExtra[3];   // Matt: changed from int to byte for more efficient replication
@@ -1767,6 +1768,7 @@ defaultproperties
     AltFireSpread=0.002
     ManualRotationsPerSecond=0.011111
     CannonReloadState=CR_Waiting
+    NoMGAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireAttachBone="com_player"
     FireEffectOffset=(Z=-20.0)
     FireEffectScale=1.0

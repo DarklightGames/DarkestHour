@@ -726,15 +726,28 @@ function Fire(optional float F)
     super(VehicleWeaponPawn).Fire(F);
 }
 
-// Modified to use CanFire() & to skip over obsolete RO functionality in ROTankCannonPawn
+// Modified to check CanFire(), to skip over obsolete RO functionality in ROTankCannonPawn, & to add dry-fire sound if trying to fire empty MG
 function AltFire(optional float F)
 {
-    if (!CanFire())
+    if (!bHasAltFire || !CanFire() || Gun == none)
     {
         return;
     }
 
-    super(VehicleWeaponPawn).AltFire(F);
+    if (Gun.ReadyToFire(true))
+    {
+        VehicleFire(true);
+        bWeaponIsAltFiring = true;
+
+        if (!bWeaponIsFiring && PlayerController(Controller) != none)
+        {
+            Gun.ClientStartFire(Controller, true);
+        }
+    }
+    else if (Gun.FireCountdown <= Gun.AltFireInterval) // means that coaxial MG isn't reloading (or at least has virtually completed its reload)
+    {
+        PlaySound(Cannon.NoMGAmmoSound, SLOT_None, 1.5, , 25.0, , true);
+    }
 }
 
 // Modified to add clientside checks before sending the function call to the server

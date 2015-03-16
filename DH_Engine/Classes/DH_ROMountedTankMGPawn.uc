@@ -398,15 +398,29 @@ function bool CanFire()
     return true;
 }
 
-// Modified to check if CanFire()
+// Modified to prevent fire based on CanFire() & to add dry-fire effects if trying to fire empty MG
 function Fire(optional float F)
 {
-    if (!CanFire())
+    if (!CanFire() || Gun == none)
     {
         return;
     }
 
-    super.Fire(F);
+    if (Gun.ReadyToFire(false))
+    {
+        VehicleFire(false);
+        bWeaponIsFiring = true;
+
+        if (PlayerController(Controller) != none)
+        {
+            Gun.ClientStartFire(Controller, false);
+        }
+    }
+    else if (MGun != none && !MGun.bReloading)
+    {
+        Gun.ShakeView(false);
+        PlaySound(MGun.NoAmmoSound, SLOT_None, 1.5, , 25.0, , true);
+    }
 }
 
 // Emptied out as MG has no alt fire mode, so just ensures nothing happens

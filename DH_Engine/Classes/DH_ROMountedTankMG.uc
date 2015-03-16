@@ -11,6 +11,7 @@ var  DH_ROMountedTankMGPawn  MGPawn;  // just a reference to the DH MG pawn acto
 var()   class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
 var()   byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
 var     byte    NumMags;              // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
+var     sound   NoAmmoSound;          // 'dry fire' sound when trying to fire empty MG
 
 // Reload stuff
 var     bool    bReloading;           // this MG is currently reloading
@@ -510,6 +511,7 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireAttachBone="mg_pitch"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
