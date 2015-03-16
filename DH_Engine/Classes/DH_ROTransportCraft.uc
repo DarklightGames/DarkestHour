@@ -66,11 +66,23 @@ simulated function SetupTreads()
 // Modified to add treads (from ROTreadCraft)
 simulated function PostBeginPlay()
 {
+    local DarkestHourGame G;
+
     super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetupTreads();
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none && G.SpawnManager != none)
+        {
+            G.SpawnManager.AddSpawnVehicle(self);
+        }
     }
 }
 

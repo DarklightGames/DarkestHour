@@ -71,7 +71,7 @@ var class<LocalMessage>                 VehicleDestroyedMessageClass;
 
 var private byte                        TeamVehicleCounts[2];
 var private array<ROVehicle>            Vehicles;
-var private array<ROVehicle>            SpawnVehicles;
+var private array<Vehicle>              SpawnVehicles;
 var private array<DHSpawnPoint>         SpawnPoints;
 var private DHGameReplicationInfo       GRI;
 var private config bool                 bDebug;
@@ -136,8 +136,6 @@ function Reset()
 
 function Timer()
 {
-
-
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)
@@ -308,12 +306,13 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     }
 
     // This calls old restartplayer (spawn in black room) and avoids reinforcment subtraction (because we will subtract later)
-    G.DeployRestartPlayer(C,false,true);
+    G.DeployRestartPlayer(C, false, true);
 
     // Make sure player has a pawn
     if (C.Pawn == none)
     {
         Warn("Pawn does not exist!!!! NO PLAYER WAS SPAWNED OR SOMETHING!!!!");
+
         return none;
     }
     else
@@ -323,7 +322,17 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         if (V == none)
         {
             SpawnError = SpawnError_Failed;
+
             return none;
+        }
+
+        if (V.IsA('DH_ROWheeledVehicle'))
+        {
+            DH_ROWheeledVehicle(V).ServerStartEngine();
+        }
+        else if (V.IsA('DH_ROTreadCraft'))
+        {
+            DH_ROTreadCraft(V).ServerStartEngine();
         }
     }
 
@@ -336,6 +345,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         C.Pawn.Suicide();
 
         SpawnError = SpawnError_TryToDriveFailed;
+
         return none;
     }
     else
@@ -672,6 +682,9 @@ event VehicleDestroyed(Vehicle V)
             break;
         }
     }
+
+    // Attempt to remove vehicle from spawn vehicles
+    RemoveSpawnVehicle(V);
 }
 
 //==============================================================================
@@ -949,7 +962,7 @@ static function array<int> CreateScrambledArrayIndices(int Length)
 // Spawn Vehicle Functions
 //==============================================================================
 
-function bool AddSpawnVehicle(ROVehicle V)
+function bool AddSpawnVehicle(Vehicle V)
 {
     local int i;
 
@@ -974,7 +987,7 @@ function bool AddSpawnVehicle(ROVehicle V)
     return true;
 }
 
-function RemoveSpawnVehicle(ROVehicle V)
+function RemoveSpawnVehicle(Vehicle V)
 {
     class'DHLib'.static.Erase(SpawnVehicles, V);
 

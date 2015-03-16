@@ -71,6 +71,10 @@ var()   name                        ResupplyDecoAttachBone;
 var     bool        bDebuggingText;
 var     bool        bDebugExitPositions;
 
+// Spawning
+var     bool            bIsSpawnVehicle;
+var     DHSpawnManager  SM;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -109,6 +113,12 @@ simulated function PostBeginPlay()
         if (Level.NetMode == NM_Standalone)
         {
             bDriverAlreadyEntered = true;
+        }
+
+        // Capture the SpawnManager here so we don't have to fish for it later
+        if (Level.Game.IsA('DarkestHourGame'))
+        {
+            SM = DarkestHourGame(Level.Game).SpawnManager;
         }
     }
     else
@@ -597,6 +607,7 @@ function ServerStartEngine()
         if (EngineHealth > 0)
         {
             bEngineOff = !bEngineOff;
+
             SetEngine();
 
             if (bEngineOff)
@@ -609,6 +620,18 @@ function ServerStartEngine()
             else if (StartUpSound != none)
             {
                 PlaySound(StartUpSound, SLOT_None, 1.0);
+            }
+
+            if (bIsSpawnVehicle && SM != none)
+            {
+                if (bEngineOff)
+                {
+                    SM.RemoveSpawnVehicle(self);
+                }
+                else
+                {
+                    SM.AddSpawnVehicle(self);
+                }
             }
         }
         else

@@ -22,7 +22,7 @@ struct SpawnVehicle
     var bool        bIsActive;
     var byte        TeamIndex;
     var vector      Location;
-    var ROVehicle   Vehicle;
+    var Vehicle     Vehicle;
 };
 
 const RADIOS_MAX = 10;
@@ -274,7 +274,7 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
 // Vehicle Pool Functions
 //------------------------------------------------------------------------------
 
-function int AddSpawnVehicle(ROVehicle V)
+function int AddSpawnVehicle(Vehicle V)
 {
     local int i;
 
@@ -311,7 +311,7 @@ function int AddSpawnVehicle(ROVehicle V)
     return -1;
 }
 
-function bool RemoveSpawnVehicle(ROVehicle V)
+function bool RemoveSpawnVehicle(Vehicle V)
 {
     local int i;
 
