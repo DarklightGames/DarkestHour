@@ -1799,21 +1799,21 @@ function ResetMortarTargets()
     }
 }
 
-function DeployRestartPlayer(Controller C, optional bool bUseOldRestart, optional bool bDontUseReinf)
+function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
         super(TeamGame).RestartPlayer(C);
+
+        if (bHandleReinforcements)
+        {
+            HandleReinforcements(C);
+        }
     }
     else
     {
-        DHRestartPlayer(C);
-    }
-
-    if (!bDontUseReinf)
-    {
-        HandleReinforcements(C);
+        DHRestartPlayer(C, bHandleReinforcements); // This will handle reinforcements
     }
 }
 
@@ -1896,7 +1896,7 @@ exec function DebugWinGame(optional int TeamToWin)
     EndRound(TeamToWin);
 }
 
-function DHRestartPlayer(Controller C)
+function DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 {
     local TeamInfo BotTeam, OtherTeam;
     local DHPlayer DHC;
@@ -1955,6 +1955,11 @@ function DHRestartPlayer(Controller C)
     if (!SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex) && GetStateName() == 'RoundInPlay')
     {
         SpawnManager.SpawnPlayer(DHC, SpawnError);
+
+        if (bHandleReinforcements)
+        {
+            HandleReinforcements(C);
+        }
 
         // If we've reached the last reinforcement, lets alert the team
         if (SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex))

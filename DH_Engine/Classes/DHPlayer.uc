@@ -2049,7 +2049,7 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     if (bExploit)
     {
         //Temp hack to allow spawning on all maps
-        G.DeployRestartPlayer(self, true);
+        G.DeployRestartPlayer(self, true, true);
     }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
@@ -2103,7 +2103,7 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     if (DHGRI.IsSpawnPointValid(SP,PRI.Team.TeamIndex))
     {
         SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
-        G.DeployRestartPlayer(self);
+        G.DeployRestartPlayer(self, true);
     }
 
     if (Pawn != none)

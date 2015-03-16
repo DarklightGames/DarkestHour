@@ -306,7 +306,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     }
 
     // This calls old restartplayer (spawn in black room) and avoids reinforcment subtraction (because we will subtract later)
-    G.DeployRestartPlayer(C, true, true);
+    G.DeployRestartPlayer(C,false,true);
 
     // Make sure player has a pawn
     if (C.Pawn == none)
