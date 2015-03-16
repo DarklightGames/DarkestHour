@@ -1161,6 +1161,25 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return P;
 }
 
+// Modified to stop 'phantom' coaxial MG firing effects (muzzle flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button
+// Also to enable MG muzzle flash when hosting a listen server, which the original code misses out
+simulated function OwnerEffects()
+{
+    if (Role < ROLE_Authority && bIsAltFire && CannonPawn != none && !CannonPawn.CanFire())
+    {
+        CannonPawn.ClientVehicleCeaseFire(bIsAltFire); // stops MG flash & tracers
+
+        return;
+    }
+
+    super.OwnerEffects();
+
+    if (Level.NetMode == NM_ListenServer && bIsAltFire && AmbientEffectEmitter != none) // to get MG muzzle flash on listen server
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true);
+    }
+}
+
 // Modified to remove the call to UpdateTracer, now we spawn either a normal bullet OR tracer (see ProjectileFireMode)
 // Also to avoid playing unnecessary shoot animations on a server
 simulated function FlashMuzzleFlash(bool bWasAltFire)

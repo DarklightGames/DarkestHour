@@ -322,6 +322,25 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
+// Modified to stop 'phantom' firing effects (muzzle flash & tracers) from continuing if player has moved to an ineligible firing position while holding fire button down
+// Also to enable muzzle flash when hosting a listen server, which the original code misses out
+simulated function OwnerEffects()
+{
+    if (Role < ROLE_Authority && !MGPawn.CanFire())
+    {
+        MGPawn.ClientVehicleCeaseFire(bIsAltFire); // stops flash & tracers if player unbuttons while holding down fire
+
+        return;
+    }
+
+    super.OwnerEffects();
+
+    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none) // added so we get muzzle flash when hosting a listen server
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true);
+    }
+}
+
 // Modified to handle MG magazines
 function bool GiveInitialAmmo()
 {
