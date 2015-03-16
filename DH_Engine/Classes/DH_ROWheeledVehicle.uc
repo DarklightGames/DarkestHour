@@ -45,7 +45,7 @@ var     bool        bClientInitialized;     // clientside flag that replicated a
 var     bool        bEngineOff;               // vehicle engine is simply switched off
 var     bool        bSavedEngineOff;          // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;       // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
-var     float       IgnitionIntervalDuration; // how frequently the engine can be manually switched on/off
+var     float       IgnitionSwitchInterval;   // how frequently the engine can be manually switched on/off
 
 // New sounds & sound attachment actors
 var()   float               MaxPitchSpeed;
@@ -1256,7 +1256,7 @@ function bool CheckForCrew()
 }
 
 // Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
-simulated function int NumPassengers()
+simulated function int GetPassengerCount()
 {
     local  int  i, num;
 
@@ -1307,5 +1307,5 @@ defaultproperties
     bKeepDriverAuxCollision=true
     HealthMax=175.0
     Health=175
-    IgnitionIntervalDuration=4.0
+    IgnitionSwitchInterval=4.0
 }
