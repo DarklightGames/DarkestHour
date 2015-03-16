@@ -9,6 +9,7 @@ class DH_ROTankCannon extends ROTankCannon
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // General
+var     DH_ROTankCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 var()   float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 var()   class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
 var()   byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
@@ -142,23 +143,29 @@ simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
     {
+        CannonPawn = CannonPwn;
+
         if (Role < ROLE_Authority)
         {
-            SetOwner(CannonPwn);
-            Instigator = CannonPwn;
+            SetOwner(CannonPawn);
+            Instigator = CannonPawn;
         }
 
-        if (DH_ROTreadCraft(CannonPwn.VehicleBase) != none)
+        if (DH_ROTreadCraft(CannonPawn.VehicleBase) != none)
         {
             // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
-            DH_ROTreadCraft(CannonPwn.VehicleBase).CannonTurret = self;
+            DH_ROTreadCraft(CannonPawn.VehicleBase).CannonTurret = self;
 
             // If vehicle is burning, start the turret hatch fire effect
-            if (DH_ROTreadCraft(CannonPwn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            if (DH_ROTreadCraft(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartTurretFire();
             }
         }
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DH_ROTankCannonPawn, so lots of things are not going to work!");
     }
 }
 
@@ -700,20 +707,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        CannonPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
-    else if (VehicleWeaponPawn(Owner) != none && VehicleWeaponPawn(Owner).VehicleBase != none)
+    // Shell's ProcessTouch now calls TD here, but for tank cannon this is counted as hit on vehicle so we call TD on that
+    else if (CannonPawn != none && CannonPawn.VehicleBase != none)
     {
         if (DamageType.default.bDelayedDamage && InstigatedBy != none)
         {
-            VehicleWeaponPawn(Owner).VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
+            CannonPawn.VehicleBase.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
         }
 
-        VehicleWeaponPawn(Owner).VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        CannonPawn.VehicleBase.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 
     bRoundShattered = false; // reset for next time
@@ -905,7 +913,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
         {
             if (!ConsumeAmmo(3))
             {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                CannonPawn.ClientVehicleCeaseFire(bAltFire);
                 HandleReload();
 
                 return false;
@@ -927,7 +935,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 {
                     if (!ConsumeAmmo(0))
                     {
-                        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                        CannonPawn.ClientVehicleCeaseFire(bAltFire);
 
                         return false;
                     }
@@ -947,7 +955,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 {
                     if (!ConsumeAmmo(1))
                     {
-                        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                        CannonPawn.ClientVehicleCeaseFire(bAltFire);
 
                         return false;
                     }
@@ -967,7 +975,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 {
                     if (!ConsumeAmmo(2))
                     {
-                        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                        CannonPawn.ClientVehicleCeaseFire(bAltFire);
 
                         return false;
                     }
@@ -986,7 +994,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             }
             else if (!ConsumeAmmo(0))
             {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                CannonPawn.ClientVehicleCeaseFire(bAltFire);
 
                 return false;
             }
@@ -1042,10 +1050,9 @@ state ProjectileFireMode
 
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
-    local Projectile        P;
-    local VehicleWeaponPawn WeaponPawn;
-    local vector            StartLocation, HitLocation, HitNormal, Extent;
-    local rotator           FireRot;
+    local Projectile P;
+    local vector     StartLocation, HitLocation, HitNormal, Extent;
+    local rotator    FireRot;
 
     // Calculate projectile's starting rotation
     FireRot = WeaponFireRotation;
@@ -1070,12 +1077,11 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     {
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
         Extent.Z = ProjClass.default.CollisionHeight;
-        WeaponPawn = VehicleWeaponPawn(Owner);
 
-        if (WeaponPawn != none && WeaponPawn.VehicleBase != none)
+        if (CannonPawn != none && CannonPawn.VehicleBase != none)
         {
-            if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
-                WeaponFireLocation + vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5), Extent))
+            if (!CannonPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
+                WeaponFireLocation + vector(WeaponFireRotation) * (CannonPawn.VehicleBase.CollisionRadius * 1.5), Extent))
             {
                 StartLocation = HitLocation;
             }
@@ -1159,8 +1165,6 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 // Also to avoid playing unnecessary shoot animations on a server
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
-    local ROVehicleWeaponPawn OwningPawn;
-
     if (Role == ROLE_Authority)
     {
         FiringMode = byte(bWasAltFire);
@@ -1194,9 +1198,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             CannonDustEmitter = Spawn(CannonDustEmitterClass, self, , Base.Location, Base.Rotation);
         }
 
-        OwningPawn = ROVehicleWeaponPawn(Instigator);
-
-        if (OwningPawn != none && OwningPawn.DriverPositions[OwningPawn.DriverPositionIndex].bExposed)
+        if (CannonPawn != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed)
         {
             if (HasAnim(TankShootOpenAnim))
             {
@@ -1361,7 +1363,7 @@ simulated function ClientSetReloadState(ECannonReloadState NewState)
 // Modified to simplify a little, including call PlayOwnedSound for all modes, as calling that on client just plays sound locally, same as PlaySound would do
 simulated function Timer()
 {
-    if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
+    if (CannonPawn == none || CannonPawn.Controller == none)
     {
         SetTimer(0.05, true);
     }
@@ -1469,18 +1471,9 @@ simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
 // Think of this function as asking "is there an exposed commander there & did we actually hit him, not just his collision box?"
 simulated function bool HitDriver(vector HitLocation, vector Momentum)
 {
-    local ROVehicleWeaponPawn PwningPawn;
-
-    PwningPawn = ROVehicleWeaponPawn(Owner);
-
-    // Commander is present & is not buttoned up & we hit commander's collision box & hit one of the hit points representing his head or torso
-    if (PwningPawn != none && PwningPawn.Driver != none && !PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].bExposed &&
-        HitDriverArea(HitLocation, Momentum) && IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1))
-    {
-        return true;
-    }
-
-    return false;
+    // True if commander is present & is not buttoned up & we hit one of the hit points representing his head or torso
+    return CannonPawn != none && CannonPawn.Driver != none && !CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed &&
+        IsPointShot(HitLocation, Normal(Momentum), 1.0, 0) || IsPointShot(HitLocation, Normal(Momentum), 1.0, 1);
 }
 
 // Matt: had to re-state as a simulated function so can be called on net client by HitDriver/HitDriverArea, giving correct clientside effects for projectile hits
@@ -1684,23 +1677,19 @@ simulated function DestroyEffects()
 // Modified to ignore yaw restrictions for commander's periscope of binoculars positions (where bLimitYaw is true, e.g. casemate-style tank destroyers)
 simulated function int LimitYaw(int yaw)
 {
-    local DH_ROTankCannonPawn P;
-
-    P = DH_ROTankCannonPawn(Owner);
-
     if (!bLimitYaw)
     {
         return yaw;
     }
 
-    if (P != none)
+    if (CannonPawn != none)
     {
-        if (P.DriverPositionIndex >= P.PeriscopePositionIndex)
+        if (CannonPawn.DriverPositionIndex >= CannonPawn.PeriscopePositionIndex)
         {
             return yaw;
         }
 
-        return Clamp(yaw, P.DriverPositions[P.DriverPositionIndex].ViewNegativeYawLimit, P.DriverPositions[P.DriverPositionIndex].ViewPositiveYawLimit);
+        return Clamp(yaw, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewNegativeYawLimit, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewPositiveYawLimit);
     }
 
     return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);

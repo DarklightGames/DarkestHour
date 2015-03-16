@@ -8,6 +8,8 @@ class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
+var     DH_ROMountedTankMG  MGun;             // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+
 var()   int         InitialPositionIndex;     // initial gunner position on entering
 var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
 var()   texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
@@ -103,24 +105,28 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeMG()
 {
-    if (DH_ROMountedTankMG(Gun) != none)
+    MGun = DH_ROMountedTankMG(Gun);
+
+    if (MGun != none)
     {
-        DH_ROMountedTankMG(Gun).InitializeMG(self);
+        MGun.InitializeMG(self);
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DH_ROMountedTankMG, so lots of things are not going to work!");
     }
 }
 
 // Modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
 function KDriverEnter(Pawn P)
 {
-    local DH_ROMountedTankMG MG;
     local float PercentageOfReloadDone;
 
-    MG = DH_ROMountedTankMG(Gun);
 
-    if (MG != none && MG.bReloading)
+    if (MGun != none && MGun.bReloading)
     {
-        PercentageOfReloadDone = Byte(100.0 * (Level.TimeSeconds - MG.ReloadStartTime) / MG.ReloadDuration);
-        MG.ClientHandleReload(PercentageOfReloadDone);
+        PercentageOfReloadDone = Byte(100.0 * (Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
+        MGun.ClientHandleReload(PercentageOfReloadDone);
     }
 
     super(VehicleWeaponPawn).KDriverEnter(P); // skip over Super in ROMountedTankMGPawn as it sets rotation we now want to avoid
@@ -609,26 +615,23 @@ simulated function FixPCRotation(PlayerController PC)
 // Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
 function bool ResupplyAmmo()
 {
-    return DH_ROMountedTankMG(Gun) != none && DH_ROMountedTankMG(Gun).ResupplyAmmo();
+    return MGun != none && MGun.ResupplyAmmo();
 }
 
 // New function, used by HUD to show coaxial MG reload progress, like the cannon reload
 function float GetAmmoReloadState()
 {
-    local DH_ROMountedTankMG MG;
     local float ProportionOfReloadRemaining;
 
-    MG = DH_ROMountedTankMG(Gun);
-
-    if (MG != none)
+    if (MGun != none)
     {
-        if (MG.ReadyToFire(false))
+        if (MGun.ReadyToFire(false))
         {
             return 0.0;
         }
-        else if (MG.bReloading)
+        else if (MGun.bReloading)
         {
-            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MG.ReloadStartTime) / MG.ReloadDuration);
+            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
 
             if (ProportionOfReloadRemaining >= 0.75)
             {

@@ -7,6 +7,7 @@ class DH_ROTankCannonPawn extends ROTankCannonPawn
     abstract;
 
 // General
+var     DH_ROTankCannon Cannon;               // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
 var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Position stuff
@@ -207,9 +208,15 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // Using it to reliably initialize the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
 simulated function InitializeCannon()
 {
-    if (DH_ROTankCannon(Gun) != none)
+    Cannon = DH_ROTankCannon(Gun);
+
+    if (Cannon != none)
     {
-        DH_ROTankCannon(Gun).InitializeCannon(self);
+        Cannon.InitializeCannon(self);
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DH_ROTankCannon, so lots of things are not going to work!");
     }
 
     if (DH_ROTreadCraft(VehicleBase) != none)
@@ -225,10 +232,6 @@ simulated function InitializeCannon()
 // New function to toggle between manual/powered turret settings - called from PostNetReceive on vehicle clients, instead of constantly checking in Tick()
 simulated function SetManualTurret(bool bManual)
 {
-    local DH_ROTankCannon Cannon;
-
-    Cannon = DH_ROTankCannon(Gun);
-
     if (bManual || bManualTraverseOnly)
     {
         RotateSound = ManualRotateSound;
@@ -675,16 +678,12 @@ function bool CanFire()
 // Modified to use CanFire() & to skip over obsolete RO functionality in ROTankCannonPawn & optimise what remains
 function Fire(optional float F)
 {
-    local ROTankCannon Cannon;
-
     if (!CanFire())
     {
         return;
     }
 
-    Cannon = ROTankCannon(Gun);
-
-    if (ROTankCannon(Gun) != none)
+    if (Cannon != none)
     {
         if (Cannon.CannonReloadState != CR_ReadyToFire || !Cannon.bClientCanFireCannon)
         {
@@ -924,7 +923,7 @@ simulated function DecrementRange()
 // Modified to use new ResupplyAmmo() in the VehicleWeapon classes, instead of GiveInitialAmmo()
 function bool ResupplyAmmo()
 {
-    return DH_ROTankCannon(Gun) != none && DH_ROTankCannon(Gun).ResupplyAmmo();
+    return Cannon != none && Cannon.ResupplyAmmo();
 }
 
 // New function, used by HUD to show coaxial MG reload progress, like the cannon reload
@@ -932,13 +931,22 @@ function float GetAltAmmoReloadState()
 {
     local float ProportionOfReloadRemaining;
 
-    if (Gun.FireCountdown <= Gun.AltFireInterval)
+    if (Gun == none)
+    {
+        return 1.0;
+    }
+    else if (Gun.FireCountdown <= Gun.AltFireInterval)
     {
         return 0.0;
     }
     else
     {
-        ProportionOfReloadRemaining = Gun.FireCountdown / GetSoundDuration(ROTankCannon(Gun).ReloadSound);
+        if (Cannon == none)
+        {
+            return 1.0;
+        }
+
+        ProportionOfReloadRemaining = Gun.FireCountdown / GetSoundDuration(Cannon.ReloadSound);
 
         if (ProportionOfReloadRemaining >= 0.75)
         {

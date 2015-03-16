@@ -163,20 +163,17 @@ simulated state ViewTransition
 // Modified to better suit the curved magazine of the bren gun
 function float GetAmmoReloadState()
 {
-    local DH_ROMountedTankMG MG;
     local float ProportionOfReloadRemaining;
 
-    MG = DH_ROMountedTankMG(Gun);
-
-    if (MG != none)
+    if (MGun != none)
     {
-        if (MG.ReadyToFire(false))
+        if (MGun.ReadyToFire(false))
         {
             return 0.0;
         }
-        else if (MG.bReloading)
+        else if (MGun.bReloading)
         {
-            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MG.ReloadStartTime) / MG.ReloadDuration);
+            ProportionOfReloadRemaining = 1.0 - ((Level.TimeSeconds - MGun.ReloadStartTime) / MGun.ReloadDuration);
 
             if (ProportionOfReloadRemaining >= 0.75)
             {

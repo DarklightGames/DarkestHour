@@ -6,6 +6,8 @@
 class DH_ROMountedTankMG extends ROMountedTankMG
     abstract;
 
+var  DH_ROMountedTankMGPawn  MGPawn;  // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
+
 var()   class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
 var()   byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
 var     byte    NumMags;              // number of mags carried for this MG // Matt: changed from int to byte for more efficient replication
@@ -83,23 +85,29 @@ simulated function InitializeMG(DH_ROMountedTankMGPawn MGPwn)
 {
     if (MGPwn != none)
     {
+        MGPawn = MGPwn;
+
         if (Role < ROLE_Authority)
         {
-            SetOwner(MGPwn);
-            Instigator = MGPwn;
+            SetOwner(MGPawn);
+            Instigator = MGPawn;
         }
 
-        if (DH_ROTreadCraft(MGPwn.VehicleBase) != none)
+        if (DH_ROTreadCraft(MGPawn.VehicleBase) != none)
         {
             // Set the vehicle's HullMG reference - normally unused but can be useful
-            DH_ROTreadCraft(MGPwn.VehicleBase).HullMG = self;
+            DH_ROTreadCraft(MGPawn.VehicleBase).HullMG = self;
 
             // If vehicle is burning, start the MG hatch fire effect
-            if (DH_ROTreadCraft(MGPwn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            if (DH_ROTreadCraft(MGPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartMGFire();
             }
         }
+    }
+    else
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DH_ROMountedTankMGPawn, so lots of things are not going to work!");
     }
 }
 
@@ -161,8 +169,6 @@ function CeaseFire(Controller C, bool bWasAltFire)
 // Matt: modified to generic function handling HUDOverlay reloads as well as normal reloads, including making client record ReloadStartTime (used for reload progress on HUD ammo icon)
 function HandleReload()
 {
-    local VehicleWeaponPawn MGPawn;
-
     if (NumMags > 0 && !bReloading)
     {
         bReloading = true;
@@ -170,7 +176,6 @@ function HandleReload()
         NetUpdateTime = Level.TimeSeconds - 1.0;
         ReloadStartTime = Level.TimeSeconds;
         ClientHandleReload();
-        MGPawn = VehicleWeaponPawn(Owner);
 
         if (MGPawn == none || MGPawn.HUDOverlay == none || !HasAnim(HUDOverlayReloadAnim)) // don't play sound if there's a HUDOverlay with reload animation, as it plays its own sounds
         {
@@ -186,11 +191,7 @@ function HandleReload()
 // Also plays any HUDOverlay reload animation, starting it from the appropriate point if a reload is already in progress
 simulated function ClientHandleReload(optional byte PercentageDone)
 {
-    local VehicleWeaponPawn MGPawn;
-
     ReloadStartTime = Level.TimeSeconds - (Float(PercentageDone) / 100.0 * ReloadDuration);
-
-    MGPawn = VehicleWeaponPawn(Owner);
 
     if (MGPawn != none && MGPawn.HUDOverlay != none && MGPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
     {
@@ -247,7 +248,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
         {
             if (!ConsumeAmmo(2))
             {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                MGPawn.ClientVehicleCeaseFire(bAltFire);
 
                 return false;
             }
@@ -263,7 +264,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 {
                     if (!ConsumeAmmo(0))
                     {
-                        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                        MGPawn.ClientVehicleCeaseFire(bAltFire);
 
                         return false;
                     }
@@ -272,7 +273,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
                 {
                     if (!ConsumeAmmo(1))
                     {
-                        VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                        MGPawn.ClientVehicleCeaseFire(bAltFire);
 
                         return false;
                     }
@@ -280,7 +281,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
             }
             else if (!ConsumeAmmo(0))
             {
-                VehicleWeaponPawn(Owner).ClientVehicleCeaseFire(bAltFire);
+                MGPawn.ClientVehicleCeaseFire(bAltFire);
                 HandleReload();
 
                 return false;
@@ -321,7 +322,6 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
 }
 
-// Fill the ammo up to the initial ammount
 // Modified to handle MG magazines
 function bool GiveInitialAmmo()
 {
@@ -385,15 +385,12 @@ simulated function int GetNumMags()
 // Modified to make into a generic function to handle single & multi position MGs, without need for overrides in subclasses, & to optimise
 simulated function int LimitYaw(int yaw)
 {
-    local ROVehicleWeaponPawn MGPawn;
-    local int                 VehYaw;
+    local int VehYaw;
 
     if (!bLimitYaw)
     {
         return yaw;
     }
-
-    MGPawn = ROVehicleWeaponPawn(Owner);
 
     if (MGPawn != none)
     {
@@ -425,11 +422,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (DamageType == class'Suicided')
     {
         DamageType = class'ROSuicided';
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
     else if (DamageType == class'ROSuicided')
     {
-        ROVehicleWeaponPawn(Owner).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+        MGPawn.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
     }
 }
 
