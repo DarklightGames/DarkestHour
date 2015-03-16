@@ -136,11 +136,6 @@ simulated function bool IsSpawnPointActive(byte SpawnPointIndex)
     return SpawnPointIsActives[SpawnPointIndex] != 0;
 }
 
-simulated function bool IsSpawnPointActive(DHSpawnPoint SP)
-{
-    return IsSpawnPointActive(GetSpawnPointIndex(SP));
-}
-
 function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 {
     Log("SetSpawnPointIsActive" @ bIsActive @ byte(bIsActive));
@@ -239,7 +234,7 @@ simulated function bool IsSpawnPointValid(DHSpawnPoint SP, byte TeamIndex)
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
     //Is spawn point active
-    if (!IsSpawnPointActive(SP))
+    if (!IsSpawnPointActive(GetSpawnPointIndex(SP)))
     {
         return false; //Not active
     }
