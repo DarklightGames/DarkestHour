@@ -15,6 +15,7 @@ var     int         InitialPositionIndex;     // initial commander position on e
 var     int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
 var()   int         PeriscopePositionIndex;
 var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
+var()   bool        bPlayerCollisionBoxMoves; // commander's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 
 // Gunsight or periscope overlay
 var     bool        bShowRangeRing;       // show range ring (used in German tank sights)
@@ -524,17 +525,6 @@ function DriverDied()
     DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
 }
 
-// Modified to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
-simulated event DrivingStatusChanged()
-{
-    super.DrivingStatusChanged();
-
-    if (!bDriving && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
-    {
-        Gun.PlayAnim(Gun.BeginningIdleAnim);
-    }
-}
-
 // Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid
 simulated function NextWeapon()
 {
@@ -555,6 +545,7 @@ simulated function PrevWeapon()
 }
 
 // Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
+// Server also plays down animation when buttoning up, if player has moving collision box
 function ServerChangeViewPoint(bool bForward)
 {
     if (bForward)
@@ -574,6 +565,10 @@ function ServerChangeViewPoint(bool bForward)
                 {
                     GoToState('ViewTransition');
                 }
+                else if (bPlayerCollisionBoxMoves)
+                {
+                    AnimateTransition();
+                }
             }
         }
     }
@@ -587,6 +582,10 @@ function ServerChangeViewPoint(bool bForward)
             if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
             {
                 NextViewPoint();
+            }
+            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer) // only if player has moving collision box
+            {
+                AnimateTransition();
             }
         }
     }
@@ -683,6 +682,17 @@ simulated state LeavingVehicle
     simulated function HandleExit()
     {
         SwitchMesh(-1); // -1 signifies switch to default external mesh
+    }
+}
+
+// Modified to play idle animation for all net players, so they see closed hatches & any animated collision boxes are re-set (also server if collision is animated)
+simulated event DrivingStatusChanged()
+{
+    super.DrivingStatusChanged();
+
+    if (!bDriving && (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    {
+        Gun.PlayAnim(Gun.BeginningIdleAnim);
     }
 }
 

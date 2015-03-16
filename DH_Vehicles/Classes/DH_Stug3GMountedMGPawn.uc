@@ -22,53 +22,6 @@ simulated state EnteringVehicle // Matt: this is a TEST as an alternative to doi
     }
 }
 
-// Modified to run state 'ViewTransition' on server when buttoning/unbuttoning, so transition anim plays on server & puts player hit detection in correct position
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                if (DriverPositionIndex == UnbuttonedPositionIndex)
-                {
-                    GoToState('ViewTransition');
-                }
-            }
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            // Play the down animation on the server when buttoning up, as loader's collision box & hit points are moved by unbutton/button anims
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                if (LastPositionIndex == UnbuttonedPositionIndex)
-                {
-                    GoToState('ViewTransition');
-                }
-            }
-        }
-    }
-}
-
 // Modified so that unbuttoned player can look around, similar to a cannon pawn
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
@@ -145,6 +98,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
 defaultproperties
 {
+    bPlayerCollisionBoxMoves=true
     FirstPersonGunShakeScale=2.0
     WeaponFOV=72.0
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)

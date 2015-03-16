@@ -55,53 +55,6 @@ simulated function NextWeapon()
     super.NextWeapon();
 }
 
-// Modified to run state 'ViewTransition' on server when buttoning up, so transition down anim plays on server & puts loader's collision box in correct position
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                if (DriverPositionIndex == UnbuttonedPositionIndex)
-                {
-                    GoToState('ViewTransition');
-                }
-            }
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            // Added this section to run the state 'ViewTransition' on the server when buttoning up
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                if (LastPositionIndex == UnbuttonedPositionIndex)
-                {
-                    GoToState('ViewTransition');
-                }
-            }
-        }
-    }
-}
-
 // Modified so if player buttons up & is now on the gun, rotation is set to match the direction MG is facing (after looking around while unbuttoned)
 simulated state ViewTransition
 {
@@ -227,6 +180,7 @@ defaultproperties
     MGOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     FirstPersonGunShakeScale=0.85
     WeaponFOV=41.0
+    bPlayerCollisionBoxMoves=true
     DriverPositions(0)=(ViewFOV=41.0,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionUpAnim="loader_open",DriverTransitionAnim="VT60_com_close",ViewPitchUpLimit=4500,ViewPitchDownLimit=64500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=5.0,Z=8.0),ViewFOV=80.0,PositionMesh=SkeletalMesh'DH_Hetzer_anm_V1.hetzer_mg',TransitionDownAnim="loader_close",DriverTransitionAnim="VT60_com_open",ViewPitchUpLimit=4500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65535,ViewNegativeYawLimit=-65535,bExposed=true)
     bMultiPosition=true

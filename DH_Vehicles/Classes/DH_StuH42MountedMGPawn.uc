@@ -13,45 +13,6 @@ function bool CanFire()
     return DriverPositionIndex < UnbuttonedPositionIndex && !IsInState('ViewTransition');
 }
 
-// Overridden here to force the server to go to state "ViewTransition", used to prevent players exiting before the unbutton anim has finished
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            // Run the state on the server whenever we're unbuttoning in order to prevent early exit
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                if (DriverPositionIndex == UnbuttonedPositionIndex)
-                {
-                    GoToState('ViewTransition');
-                }
-            }
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-        }
-    }
-}
-
 // Modified so if player buttons up & is now on the gun, rotation is set to match the direction MG is facing (after looking around while unbuttoned)
 simulated state ViewTransition
 {

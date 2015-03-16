@@ -12,6 +12,7 @@ var     DH_ROMountedTankMG  MGun;             // just a reference to the DH MG a
 
 var()   int         InitialPositionIndex;     // initial gunner position on entering
 var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
+var()   bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
 var()   texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
 
 var()   name        FirstPersonGunRefBone;      // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
@@ -229,12 +230,12 @@ function DriverDied()
     DriverLeft(); // fix Unreal bug (as done in ROVehicle), as DriverDied should call DriverLeft, the same as KDriverLeave does
 }
 
-// Modified to play idle anim on all net modes, to reset visuals like hatches & any moving collision boxes (was only playing on owning net client, not server or other clients)
+// Modified to play idle animation for all net players, so they see closed hatches & any animated collision boxes are re-set (also server if collision is animated)
 simulated event DrivingStatusChanged()
 {
     super.DrivingStatusChanged();
 
-    if (!bDriving && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
+    if (!bDriving && (Level.NetMode != NM_DedicatedServer || bPlayerCollisionBoxMoves) && Gun != none && Gun.HasAnim(Gun.BeginningIdleAnim))
     {
         Gun.PlayAnim(Gun.BeginningIdleAnim);
     }
@@ -358,7 +359,6 @@ simulated function DrawHUD(Canvas Canvas)
                         HUDOverlay.SetRotation(CameraRotation);
                         Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
                     }
-
                 }
             }
             // Draw gunsight overlay
@@ -430,6 +430,53 @@ simulated function PrevWeapon()
     {
         PendingPositionIndex = DriverPositionIndex -1;
         ServerChangeViewPoint(false);
+    }
+}
+
+// Modified so server goes to state ViewTransition when unbuttoning, preventing player exiting until fully unbuttoned
+// Server also plays down animation when buttoning up, if player has moving collision box
+function ServerChangeViewPoint(bool bForward)
+{
+    if (bForward)
+    {
+        if (DriverPositionIndex < (DriverPositions.Length - 1))
+        {
+            LastPositionIndex = DriverPositionIndex;
+            DriverPositionIndex++;
+
+            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
+            else if (Level.NetMode == NM_DedicatedServer)
+            {
+                if (DriverPositionIndex == UnbuttonedPositionIndex)
+                {
+                    GoToState('ViewTransition');
+                }
+                else if (bPlayerCollisionBoxMoves)
+                {
+                    AnimateTransition();
+                }
+            }
+        }
+    }
+    else
+    {
+        if (DriverPositionIndex > 0)
+        {
+            LastPositionIndex = DriverPositionIndex;
+            DriverPositionIndex--;
+
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            {
+                NextViewPoint();
+            }
+            else if (bPlayerCollisionBoxMoves && Level.NetMode == NM_DedicatedServer) // only if player has moving collision box
+            {
+                AnimateTransition();
+            }
+        }
     }
 }
 

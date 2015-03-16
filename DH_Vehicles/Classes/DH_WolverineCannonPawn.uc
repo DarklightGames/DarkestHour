@@ -5,46 +5,6 @@
 
 class DH_WolverineCannonPawn extends DH_AmericanTankCannonPawn;
 
-// Modified so the server plays a TransitionUp/DownAnim to move the commander's collision box for hit detection
-// AnimateTransition() does this & we don't need to go to state ViewTransition as this is an open vehicle & commander doesn't need to unbutton
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                AnimateTransition();
-            }
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                AnimateTransition();
-            }
-        }
-    }
-}
-
 defaultproperties
 {
     OverlayCenterSize=0.972
@@ -56,6 +16,7 @@ defaultproperties
     WeaponFOV=14.4
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
+    bPlayerCollisionBoxMoves=true
     DriverPositions(0)=(ViewLocation=(X=35.0,Y=-10.0,Z=8.0),ViewFOV=14.4,PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=3641,ViewPitchDownLimit=63351,bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Wolverine_anm.M10_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)

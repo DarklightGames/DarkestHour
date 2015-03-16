@@ -5,46 +5,6 @@
 
 class DH_JacksonCannonPawn extends DH_AmericanTankCannonPawn;
 
-// Modified so the server plays a TransitionUp/DownAnim to move the commander's collision box for hit detection
-// AnimateTransition() does this & we don't need to go to state ViewTransition as this is an open vehicle & commander doesn't need to unbutton
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                AnimateTransition();
-            }
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                AnimateTransition();
-            }
-        }
-    }
-}
-
 defaultproperties
 {
     OverlayCenterSize=0.895
@@ -58,6 +18,7 @@ defaultproperties
     WeaponFOV=24.0
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.IS2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.IS2shell_reload'
+    bPlayerCollisionBoxMoves=true
     DriverPositions(0)=(ViewLocation=(X=12.0,Y=25.0,Z=3.0),ViewFOV=24.0,PositionMesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext',TransitionUpAnim="com_open",DriverTransitionAnim="VSU76_com_close",ViewPitchUpLimit=3641,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext',TransitionDownAnim="com_close",DriverTransitionAnim="VSU76_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)
