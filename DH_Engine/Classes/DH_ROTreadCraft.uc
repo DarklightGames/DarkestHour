@@ -1576,23 +1576,17 @@ simulated function SetFireEffects()
                     if (CannonTurret != none)
                     {
                         bTurretFireNeeded = true;
-//                        TurretHatchFireSpawnTime = Level.TimeSeconds + 0.5 + FRand();
-                        TurretHatchFireSpawnTime = Level.TimeSeconds + (0.5 + FRand()) * DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor; // Matt: TEMP replacing above
+                        TurretHatchFireSpawnTime = Level.TimeSeconds + 2.0 + (FRand() * 3.0); // turret hatch fire starts 2-5 secs after fire starts in engine
                     }
 
                     bDriverHatchFireNeeded = true;
-//                    DriverHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
-                    DriverHatchFireSpawnTime = TurretHatchFireSpawnTime + (0.5 + FRand()) * DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor; // Matt: TEMP replacing above
+                    DriverHatchFireSpawnTime = FMax(TurretHatchFireSpawnTime, Level.TimeSeconds) + 2.0 + (FRand() * 3.0); // driver hatch fire starts 2-5 secs after turret fire
 
                     if (HullMG != none)
                     {
                         bHullMGFireNeeded = true;
-//                        HullMGHatchFireSpawnTime = TurretHatchFireSpawnTime + 0.5 + FRand();
-                        HullMGHatchFireSpawnTime = TurretHatchFireSpawnTime + (0.5 + FRand()) * DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor; // Matt: TEMP replacing above
+                        HullMGHatchFireSpawnTime = DriverHatchFireSpawnTime + 1.0 + (FRand() * 2.0); // MG hatch fire starts 1-3 secs after turret fire
                     }
-
-                    Log(Tag @ "FireFXSpreadSpeedFactor =" @ DHPlayer(Controller).default.FireEffectsSpreadSpeedFactor @ " turret fire in" @ TurretHatchFireSpawnTime - Level.TimeSeconds @
-                        " driver fire in" @ DriverHatchFireSpawnTime - Level.TimeSeconds @ " MG fire in" @ HullMGHatchFireSpawnTime - Level.TimeSeconds); // Matt: TEMP
 
                     SetNextTimer();
                 }
