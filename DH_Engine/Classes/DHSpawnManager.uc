@@ -61,6 +61,7 @@ var localized array<string> SpawnErrorStrings;
 
 const SPAWN_POINTS_MAX = 64;
 const VEHICLE_POOLS_MAX = 32;
+const SPAWN_VEHICLES_MAX = 8;
 
 var(Vehicles) array<VehiclePool>        VehiclePools;
 var(Vehicles) byte                      MaxTeamVehicles[2];
@@ -70,6 +71,7 @@ var class<LocalMessage>                 VehicleDestroyedMessageClass;
 
 var private byte                        TeamVehicleCounts[2];
 var private array<ROVehicle>            Vehicles;
+var private array<ROVehicle>            SpawnVehicles;
 var private array<DHSpawnPoint>         SpawnPoints;
 var private DHGameReplicationInfo       GRI;
 var private config bool                 bDebug;
@@ -938,30 +940,45 @@ static function array<int> CreateScrambledArrayIndices(int Length)
         Indices[i] = i;
     }
 
-    FisherYatesShuffle(Indices);
+    class'DHLib'.static.FisherYatesShuffle(Indices);
 
     return Indices;
 }
 
-static function FisherYatesShuffle(out array<int> _Array)
+//==============================================================================
+// Spawn Vehicle Functions
+//==============================================================================
+
+function bool AddSpawnVehicle(ROVehicle V)
 {
-    local int i, j;
+    local int i;
 
-    for (i = _Array.Length - 1; i >= 0; --i)
+    if (SpawnVehicles.Length >= SPAWN_VEHICLES_MAX)
     {
-        j = Rand(i);
+        Warn(V @ "could not be added to SpawnVehicles, exceeded limit of" @ SPAWN_VEHICLES_MAX);
 
-        Swap(_Array[i], _Array[j]);
+        return false;
     }
+
+    i = GRI.AddSpawnVehicle(V);
+
+    if (i == -1)
+    {
+        Warn(V @ "could not be added to the GRI's SpawnVehicles");
+
+        return false;
+    }
+
+    SpawnVehicles[SpawnVehicles.Length] = V;
+
+    return true;
 }
 
-static function Swap(out int A, out int B)
+function RemoveSpawnVehicle(ROVehicle V)
 {
-    local int temp;
+    class'DHLib'.static.Erase(SpawnVehicles, V);
 
-    temp = A;
-    A = B;
-    B = temp;
+    GRI.RemoveSpawnVehicle(V);
 }
 
 defaultproperties
