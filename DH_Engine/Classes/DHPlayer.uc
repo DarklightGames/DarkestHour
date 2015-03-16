@@ -2035,6 +2035,7 @@ exec function DebugFOV()
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
 }
 
+// Theel: Revise if statements (combine and optimize this function)
 function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional bool bExploit)
 {
     local DHPlayerReplicationInfo PRI;
@@ -2045,16 +2046,10 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
 
     G = DarkestHourGame(Level.Game);
 
-    if (G == none)
-    {
-        Warn("Level.Game is not DHGame????? WTF!");
-        return false;
-    }
-
     if (bExploit)
     {
         //Temp hack to allow spawning on all maps
-        G.RestartPlayer(self);
+        G.DeployRestartPlayer(self, true);
     }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
@@ -2075,8 +2070,6 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
         Log("Failed at team check");
         return false;
     }
-
-    //Warn("=================== SERVER SIDE ATTEMPTING TO DEPLOY PLAYER ===================");
 
     if (PRI == none || DHGRI == none || Pawn != none)
     {
@@ -2105,21 +2098,12 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
         Log("Failed at 4");
         return false;
     }
-    else
-    {
-        //Log("Server Says:" @ string(LastKilledTime + RedeployTime - Level.TimeSeconds) @ "left to spawn");
-    }
 
     // Check if SP is valid
-    if (!DHGRI.IsSpawnPointValid(SP,PRI.Team.TeamIndex))
-    {
-        //Temp hack to allow spawning on all maps
-        G.RestartPlayer(self);
-    }
-    else
+    if (DHGRI.IsSpawnPointValid(SP,PRI.Team.TeamIndex))
     {
         SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
-        G.DHRestartPlayer(self);
+        G.DeployRestartPlayer(self);
     }
 
     if (Pawn != none)

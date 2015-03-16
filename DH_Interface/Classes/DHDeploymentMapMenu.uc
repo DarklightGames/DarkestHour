@@ -12,7 +12,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 
 var localized string                        ReinforcementText;
 
-var     bool                                bReadyToDeploy;
+var     bool                                bReadyToDeploy, bOutOfReinforcements;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
@@ -99,6 +99,16 @@ function Timer()
 
         l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(CurrentTime);
         l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PRI.Team.TeamIndex]);
+
+        if (GRI.DHSpawnCount[PRI.Team.TeamIndex] == 0)
+        {
+            //Inform menu that our team is out of reinforcements and we can't spawn
+            bOutOfReinforcements = true;
+        }
+        else
+        {
+            bOutOfReinforcements = false;
+        }
     }
 }
 
@@ -217,7 +227,7 @@ function bool DrawMapComponents(Canvas C)
     local int i;
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
-    if (myDeployMenu == none)
+    if (myDeployMenu == none || bOutOfReinforcements)
     {
         return false;
     }
@@ -356,6 +366,15 @@ function bool InternalOnClick(GUIComponent Sender)
 function bool DrawDeployTimer(Canvas C)
 {
     local float P;
+
+    if (bOutOfReinforcements)
+    {
+        bReadyToDeploy = false;
+        b_DeployButton.DisableMe();
+        b_DeployButton.Caption = "Your team is out of reinforcements";
+
+        return false; // in case reinforcements are added
+    }
 
     //Handle progress bar values (so they move/advance based on deploy time)
     if (!bReadyToDeploy)

@@ -47,7 +47,6 @@ function PostBeginPlay()
     local ROMineVolume          MV;
     local ROArtilleryTrigger    RAT;
     local SpectatorCam          ViewPoint;
-    local float                 MaxPlayerRatio;
     local int                   i, j, k, m, n, o, p;
     local DHObstacleInfo        DHOI;
 
@@ -266,21 +265,6 @@ function PostBeginPlay()
             DHMortarSpawnAreas[p++] = DHSA;
         }
     }
-
-    // Scale the reinforcement limits based on the server's capacity
-    if (MaxPlayersOverride != 0 && MaxPlayersOverride < MaxPlayers)
-    {
-        MaxPlayerRatio = MaxPlayersOverride / 32.0;
-    }
-    else
-    {
-        MaxPlayersOverride = 0;
-        MaxPlayerRatio = MaxPlayers / 32.0;
-    }
-
-    LevelInfo.Allies.SpawnLimit *= MaxPlayerRatio;
-    LevelInfo.Axis.SpawnLimit *= MaxPlayerRatio;
-    Log("MaxPlayerRatio =" @ MaxPlayerRatio);
 
     // Make sure MaxTeamDifference is an acceptable value
     if (MaxTeamDifference < 1)
@@ -1815,15 +1799,11 @@ function ResetMortarTargets()
     }
 }
 
-// Overridden so we show how many actual individual reinforcements we have - Basnett - January 19th, 2010
-function RestartPlayer(Controller C)
+function DeployRestartPlayer(Controller C, optional bool bUseOldRestart, optional bool bDontUseReinf)
 {
-    local DHPlayer DHC;
-
-    if (DHLevelInfo == none || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
+    if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
-
         super(TeamGame).RestartPlayer(C);
     }
     else
@@ -1831,8 +1811,27 @@ function RestartPlayer(Controller C)
         DHRestartPlayer(C);
     }
 
+    if (!bDontUseReinf)
+    {
+        HandleReinforcements(C);
+    }
+}
+
+// Handle reinforcment checks and balances
+function HandleReinforcements(Controller C)
+{
+    local DHPlayer DHP;
+
+    DHP = DHPlayer(C);
+
+    // Don't subtract / calc reinforcements as the player didn't get a pawn
+    if (DHP == none && DHP.Pawn == none)
+    {
+        return;
+    }
+
     //TODO: look into improving or rewriting this, as this is garbage looking
-    if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
+    if (DHP.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
 
@@ -1842,7 +1841,7 @@ function RestartPlayer(Controller C)
             SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
         }
     }
-    else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
+    else if (DHP.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
 
@@ -1853,12 +1852,10 @@ function RestartPlayer(Controller C)
         }
     }
 
-    DHC = DHPlayer(C);
-
-    if (DHC != none && DHC.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
+    if (DHP.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
     {
-        DHC.NotifyOfMapInfoChange();
-        DHC.bFirstRoleAndTeamChange = true;
+        DHP.NotifyOfMapInfoChange();
+        DHP.bFirstRoleAndTeamChange = true;
     }
 }
 
@@ -1955,36 +1952,16 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
-    //TODO: look into improving or rewriting this, as this is garbage looking
-    // This code is reused shit, needs fixed up, but it is basically subtracting reinforcements
-    if (DHC.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
+    if (!SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex) && GetStateName() == 'RoundInPlay')
     {
-        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
+        SpawnManager.SpawnPlayer(DHC, SpawnError);
 
-        // If the Allies have used up 85% of their reinforcements, send them a reinforcements low message
-        if (SpawnCount[ALLIES_TEAM_INDEX] == Int(LevelInfo.Allies.SpawnLimit * 0.85))
+        // If we've reached the last reinforcement, lets alert the team
+        if (SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex))
         {
-            SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
+            SendReinforcementMessage(C.PlayerReplicationInfo.Team.TeamIndex, 1);
         }
     }
-    else if (DHC.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
-    {
-        DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
-
-        // If Axis has used up 85% of their reinforcements, send them a reinforcements low message
-        if (SpawnCount[AXIS_TEAM_INDEX] == Int(LevelInfo.Axis.SpawnLimit * 0.85))
-        {
-            SendReinforcementMessage(AXIS_TEAM_INDEX, 0);
-        }
-    }
-
-    if (DHC.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
-    {
-        DHC.NotifyOfMapInfoChange();
-        DHC.bFirstRoleAndTeamChange = true;
-    }
-
-    SpawnManager.SpawnPlayer(DHC, SpawnError);
 
     if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
     {

@@ -261,13 +261,20 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
 
     if (C.VehiclePoolIndex != -1)
     {
-        Log("Attempting to spawn vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
+        Log("Attempting to spawn Vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
 
         SpawnVehicle(C, SpawnError);
     }
     else
     {
-        Log("attempting to spawn infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ C.DesiredSpawnPoint.SpawnPointName);
+        if (SpawnPoints[C.SpawnPointIndex] != none)
+        {
+            Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ SpawnPoints[C.SpawnPointIndex].SpawnPointName);
+        }
+        else
+        {
+            Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex);
+        }
 
         SpawnInfantry(C, SpawnError);
     }
@@ -278,8 +285,11 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     local ROVehicle V;
     local vector SpawnLocation;
     local rotator SpawnRotation;
+    local DarkestHourGame G;
 
-    //TODO: need to check desired role etc.
+    G = DarkestHourGame(Level.Game);
+
+    //TODO: need to check desired role etc. Crew role or whatever
 
     SpawnError = SpawnError_Fatal;
 
@@ -295,8 +305,8 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         return none;
     }
 
-    // Spawn via restartplayer because otherwise the spawn location is blocked by the Vehicle!  This will put the pawn in the black room
-    Level.Game.RestartPlayer(C);
+    // This calls old restartplayer (spawn in black room) and avoids reinforcment subtraction (because we will subtract later)
+    G.DeployRestartPlayer(C, true, true);
 
     // Make sure player has a pawn
     if (C.Pawn == none)
@@ -389,7 +399,7 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     {
         // Likely the spawn function is failing because SpawnLocation is being blocked by another player/vehicle
         // Lets force spawn the player in the black room and then teleport them to SpawnLocation with SpawnRotation
-        G.RestartPlayer(C);
+        G.DeployRestartPlayer(C, true);
 
         //Theel need a function to properly teleport a player and return if it fails
     }
