@@ -24,7 +24,7 @@ var array<string>                           LoadoutPanelClass;
 var localized array<string>                 LoadoutPanelCaption;
 var localized array<string>                 LoadoutPanelHint;
 
-var bool                                    bReceivedTeam, bShowingMenuOptions;
+var bool                                    bReceivedTeam, bShowingMenuOptions, bSpawningVehicle;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -101,12 +101,13 @@ function Timer()
 function InitializeMenuOptions()
 {
     local int i;
-    local int t;
-
-    t = arraycount(b_MenuOptions);
 
     for (i = 0; i < arraycount(b_MenuOptions); ++i)
     {
+        if (MenuOptions[i] == "")
+        {
+            continue;
+        }
         b_MenuOptions[i].Caption = MenuOptions[i];
         MenuOptionsContainer.ManageComponent(b_MenuOptions[i]);
     }

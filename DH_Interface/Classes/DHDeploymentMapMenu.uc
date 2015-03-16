@@ -12,7 +12,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 
 var localized string                        ReinforcementText;
 
-var     bool                                bReadyToDeploy, bSpawningVehicle;
+var     bool                                bReadyToDeploy;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
@@ -22,12 +22,15 @@ var     DHSpawnPoint                        SpawnPoints[SPAWN_POINTS_MAX];
 var     ROObjective                         Objectives[OBJECTIVES_MAX];
 var     Material                            ObjectiveIcons[3];
 
-// Actor references - these must be cleared at level change
 var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
 var     DHPlayer                            PC;
 var     DHHud                               HUD;
 var     vector                              NELocation,SWLocation;
+
+//Deploy Menu Access
+var DHDeployMenu                            myDeployMenu;
+var DHRoleSelectPanel                       myRoleMenu;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -48,6 +51,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         return;
     }
 
+    // Assign myDeployMenu
+    myDeployMenu = DHDeployMenu(PageOwner);
+
     // Set the level map image
     i_Background.Image = GRI.MapImage;
 
@@ -58,6 +64,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
         b_SpawnPoints[i].Graphic = none;
+        b_SpawnPoints[i].SetVisibility(false);
         b_SpawnPoints[i].WinWidth=0.0;
         b_SpawnPoints[i].WinHeight=0.0;
     }
@@ -85,15 +92,13 @@ function Timer()
     l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PRI.Team.TeamIndex]);
 }
 
-function ClearSpawnsIcons()
+function ClearSpawnIcon(int i)
 {
-    local int i;
-
-    // Clear spawn points (make hidden)
-    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    if (b_SpawnPoints[i] != none)
     {
         b_SpawnPoints[i].WinWidth=0.0;
         b_SpawnPoints[i].WinHeight=0.0;
+        b_SpawnPoints[i].SetVisibility(false);
     }
 }
 
@@ -174,6 +179,7 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
         }
 
         b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
+        b_SpawnPoints[Index].SetVisibility(true);
         SpawnPoints[Index] = SP;
     }
 }
@@ -201,6 +207,11 @@ function bool DrawMapComponents(Canvas C)
     local int i;
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
+    if (myDeployMenu == none)
+    {
+        return false;
+    }
+
     //Draw objectives
     for (i = 0; i < arraycount(GRI.Objectives); ++i)
     {
@@ -218,13 +229,17 @@ function bool DrawMapComponents(Canvas C)
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
         // Draw infantry or vehicle spawn points
-        if (!bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
+        if (!myDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
         {
             PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
         }
-        else if (bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
+        else if (myDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
         {
             PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
+        }
+        else
+        {
+            ClearSpawnIcon(i);
         }
     }
 
@@ -234,9 +249,15 @@ function bool DrawMapComponents(Canvas C)
 // Actually shows the panel once it's rendered (Needs confirmed and tested)
 function InternalOnPostDraw(Canvas Canvas)
 {
-    //bInit = false;
-    //OnRendered = none;
-    //ShowPanel(true);
+    bInit = false;
+    OnRendered = none;
+    ShowPanel(true);
+
+    // Set myRoleMenu here to make sure it is initialized, though it should always be, do it here just in case
+    if (myDeployMenu != none && myDeployMenu.c_LoadoutArea.TabStack.Length > 0 && myDeployMenu.c_LoadoutArea.TabStack[0].MyPanel != none)
+    {
+        myRoleMenu = DHRoleSelectPanel(myDeployMenu.c_LoadoutArea.TabStack[0].MyPanel);
+    }
 }
 
 // Player clicked a spawn point
@@ -258,15 +279,11 @@ function bool SpawnClick(int Index)
     {
         // We clicked desired spawn point! lets try to spawn
         // Only deploy if we clicked the selected SP and are ready
-        if (bReadyToDeploy && PC.Pawn == none)
+        if (bReadyToDeploy && PC.Pawn == none && myRoleMenu != none)
         {
-            DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
+            myRoleMenu.AttemptRoleApplication();
             PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount);
             Controller.CloseMenu(false); //Close menu as we clicked deploy!
-        }
-        else if (bReadyToDeploy && bSpawningVehicle && PC.Pawn == none)
-        {
-
         }
     }
     else
@@ -284,9 +301,9 @@ function bool InternalOnClick(GUIComponent Sender)
     switch(Sender)
     {
         case b_ExploitSpawn:
-            if (PC.Pawn == none)
+            if (PC.Pawn == none && myRoleMenu != none)
             {
-                DHRoleSelectPanel(DHDeployMenu(PageOwner).c_LoadoutArea.TabStack[0].MyPanel).AttemptRoleApplication();
+                myRoleMenu.AttemptRoleApplication();
                 PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount, true);
                 Controller.CloseMenu(false); //Close menu as we clicked deploy!
             }

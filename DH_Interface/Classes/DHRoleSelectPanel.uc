@@ -44,7 +44,9 @@ var localized string                        UnknownErrorSpectatorMissingReplicat
                                             TeamSwitchErrorPlayingAgainstBots,
                                             TeamSwitchErrorTeamIsFull;
 
-var ROGameReplicationInfo                   GRI;
+var DHGameReplicationInfo                   DHGRI;
+var DHPlayer                                DHP;
+var DHPlayerReplicationInfo                 PRI;
 var RORoleInfo                              currentRole, desiredRole;
 var int                                     currentTeam, desiredTeam;
 var string                                  currentName, desiredName;
@@ -52,11 +54,32 @@ var int                                     currentWeapons[2], desiredWeapons[2]
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
 var bool                                    bRendered;
 
+//Deploy Menu Access
+var DHDeployMenu                            myDeployMenu;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController, MyOwner);
 
-    GRI = ROGameReplicationInfo(PlayerOwner().GameReplicationInfo);
+    DHP = DHPlayer(PlayerOwner());
+    if (DHP != none)
+    {
+        PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+    }
+
+    if (DHP == none || DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) == none)
+    {
+        return;
+    }
+
+    DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    if (DHGRI == none)
+    {
+        return;
+    }
+
+    // Assign myDeployMenu
+    myDeployMenu = DHDeployMenu(PageOwner);
 
     // Roles container
     li_Roles = ROGUIListPlus(lb_Roles.List);
@@ -68,9 +91,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     PrimaryWeaponContainer.ManageComponent(i_MagImages[0]);
     PrimaryWeaponContainer.ManageComponent(nu_PrimaryAmmoMags);
     li_AvailableWeapons[0] = ROGUIListPlus(lb_AvailableWeapons[0].List);
-
-    // Remove secondary mag image
-    //i_MagImages[1] = none;
 
     // Secondary weapon container
     SecondaryWeaponContainer.ManageComponent(i_WeaponImages[1]);
@@ -113,11 +133,10 @@ function ShowPanel(bool bShow)
     super.ShowPanel(bShow);
 
     //We are showing this panel so we want to spawn as infantry
-    if (bShow)
+    if (bShow && myDeployMenu != none)
     {
-        DHDeploymentMapMenu(DHDeployMenu(PageOwner).c_DeploymentMapArea.TabStack[0].MyPanel).bSpawningVehicle = false;
-        DHDeploymentMapMenu(DHDeployMenu(PageOwner).c_DeploymentMapArea.TabStack[0].MyPanel).ClearSpawnsIcons();
-        DHPlayer(PlayerOwner()).ServerChangeSpawn(DHPlayer(PlayerOwner()).SpawnPointIndex, -1);
+        myDeployMenu.bSpawningVehicle = false;
+        DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1);
     }
 }
 
@@ -133,20 +152,14 @@ function bool OnPostDraw(Canvas C)
 
 function GetInitialValues()
 {
-    local ROPlayer player;
-    local ROPlayerReplicationInfo PRI;
-
-    player = ROPlayer(PlayerOwner());
-
     // Get player's current role and team (if any)
-    PRI = ROPlayerReplicationInfo(player.PlayerReplicationInfo);
     if (PRI != none)
     {
         // Get player's current team
-        if (ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage != -5)
+        if (DHP != none && DHP.ForcedTeamSelectOnRoleSelectPage != -5)
         {
-            currentTeam = ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage;
-            ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = -5;
+            currentTeam = DHP.ForcedTeamSelectOnRoleSelectPage;
+            DHP.ForcedTeamSelectOnRoleSelectPage = -5;
         }
         else if (PRI.bOnlySpectator)
         {
@@ -176,15 +189,15 @@ function GetInitialValues()
     {
         currentRole = none;
     }
-    else if (player.CurrentRole != player.DesiredRole)
+    else if (DHP.CurrentRole != DHP.DesiredRole)
     {
         if (currentTeam == AXIS_TEAM_INDEX)
         {
-            currentRole = DHGameReplicationInfo(GRI).DHAxisRoles[player.DesiredRole];
+            currentRole = DHGRI.DHAxisRoles[DHP.DesiredRole];
         }
         else if (currentTeam == ALLIES_TEAM_INDEX)
         {
-            currentRole = DHGameReplicationInfo(GRI).DHAlliesRoles[player.DesiredRole];
+            currentRole = DHGRI.DHAlliesRoles[DHP.DesiredRole];
         }
         else
         {
@@ -201,7 +214,7 @@ function GetInitialValues()
     }
 
     // Get player's current name
-    currentName = player.GetUrlOption("Name");
+    currentName = DHP.GetUrlOption("Name");
 
     // Get player's current weapons
     if (currentRole == none)
@@ -209,15 +222,15 @@ function GetInitialValues()
         currentWeapons[0] = -1;
         currentWeapons[1] = -1;
     }
-    else if (player.CurrentRole != player.DesiredRole)
+    else if (DHP.CurrentRole != DHP.DesiredRole)
     {
-        currentWeapons[0] = player.DesiredPrimary;
-        currentWeapons[1] = player.DesiredSecondary;
+        currentWeapons[0] = DHP.DesiredPrimary;
+        currentWeapons[1] = DHP.DesiredSecondary;
     }
     else
     {
-        currentWeapons[0] = player.PrimaryWeapon;
-        currentWeapons[1] = player.SecondaryWeapon;
+        currentWeapons[0] = DHP.PrimaryWeapon;
+        currentWeapons[1] = DHP.SecondaryWeapon;
     }
 
     // Set desired stuff to be same as current stuff
@@ -232,7 +245,6 @@ function FillRoleList()
 {
     local int i;
     local RORoleInfo role;
-    local DHGameReplicationInfo DHGRI;
 
     li_Roles.Clear();
 
@@ -242,8 +254,6 @@ function FillRoleList()
     {
         return;
     }
-
-    DHGRI = DHGameReplicationInfo(GRI);
 
     for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
     {
@@ -261,7 +271,7 @@ function FillRoleList()
             continue;
         }
 
-        if (ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).bUseNativeRoleNames)
+        if (DHP != none && DHP.bUseNativeRoleNames)
         {
             li_Roles.Add(role.default.AltName, role);
         }
@@ -303,9 +313,6 @@ function AutoPickRole()
 {
     local int i, currentRoleCount;
     local RORoleInfo role;
-    local DHGameReplicationInfo DHGRI;
-
-    DHGRI = DHGameReplicationInfo(GRI);
 
     if (desiredTeam == AXIS_TEAM_INDEX || desiredTeam == ALLIES_TEAM_INDEX)
     {
@@ -328,7 +335,7 @@ function AutoPickRole()
                 continue;
             }
 
-            if (role.GetLimit(GRI.MaxPlayers) == 0) //Pick role with no max
+            if (role.GetLimit(DHGRI.MaxPlayers) == 0) //Pick role with no max
             {
                 ChangeDesiredRole(role);
                 AttemptRoleApplication();
@@ -588,9 +595,6 @@ function UpdateSelectedWeapon(int weaponCategory)
 {
     local int i;
     local class<Inventory> item;
-    local DHPlayer player;
-
-    player = DHPlayer(PlayerOwner());
 
     // Clear current weapon & mag display
     i_WeaponImages[weaponCategory].Image = none;
@@ -620,13 +624,13 @@ function UpdateSelectedWeapon(int weaponCategory)
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
                 //Log("Desired Ammo Amount before:" @ player.DesiredAmmoAmount);
-                nu_PrimaryAmmoMags.Value = string(player.DesiredAmmoAmount);
+                nu_PrimaryAmmoMags.Value = string(DHP.DesiredAmmoAmount);
                 if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MinValue || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
                     nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue); // Will reset value to mid if out of range
                 }
                 nu_PrimaryAmmoMags.CheckValue(); // Hard clamps value to be in range (visually)
-                player.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
+                DHP.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
                 nu_PrimaryAmmoMags.SetVisibility(true);
             }
             else
@@ -657,7 +661,7 @@ function UpdateSelectedWeapon(int weaponCategory)
             desiredWeapons[weaponCategory] = i;
 
             // Update deploy time
-            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
         }
     }
 }
@@ -678,7 +682,7 @@ function Timer()
 
 function int getTeamCount(int index)
 {
-    return class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), index);
+    return class'ROGUITeamSelection'.static.getTeamCountStatic(DHGRI, PlayerOwner(), index);
 }
 
 function UpdateRoleCounts()
@@ -708,7 +712,7 @@ function UpdateRoleCounts()
             bIsCurrent = false;
         }
 
-        if (ROPlayer(PlayerOwner()) != none &&  ROPlayer(PlayerOwner()).bUseNativeRoleNames)
+        if (DHP != none && DHP.bUseNativeRoleNames)
         {
             li_Roles.SetItemAtIndex(i, FormatRoleString(role.AltName, roleLimit, roleCurrentCount, bHasBots, bIsCurrent));
         }
@@ -723,9 +727,6 @@ function UpdateRoleCounts()
 function bool checkIfRoleIsFull(RORoleInfo role, int team, optional out int roleLimit, optional out int roleCount, optional out int roleBotCount)
 {
     local int index;
-    local DHGameReplicationInfo DHGRI;
-
-    DHGRI = DHGameReplicationInfo(GRI);
 
     index = FindRoleIndexInGRI(role, team);
 
@@ -746,7 +747,7 @@ function bool checkIfRoleIsFull(RORoleInfo role, int team, optional out int role
         return false;
     }
 
-    roleLimit = role.GetLimit(GRI.MaxPlayers);
+    roleLimit = role.GetLimit(DHGRI.MaxPlayers);
 
     return (roleCount == roleLimit) && (roleLimit != 0) && !(roleBotCount > 0) && (currentRole != role);
 }
@@ -754,9 +755,6 @@ function bool checkIfRoleIsFull(RORoleInfo role, int team, optional out int role
 function int FindRoleIndexInGRI(RORoleInfo role, int team)
 {
     local int i;
-    local DHGameReplicationInfo DHGRI;
-
-    DHGRI = DHGameReplicationInfo(GRI);
 
     if (team == AXIS_TEAM_INDEX)
     {
@@ -816,10 +814,7 @@ function string FormatRoleString(string roleName, int roleLimit, int roleCount, 
 //This function needs work
 function AttemptRoleApplication(optional bool bDontShowErrors)
 {
-    local DHPlayer player;
     local byte teamIndex, roleIndex, w1, w2;
-
-    player = DHPlayer(PlayerOwner());
 
     //Theel's fast check to see if we even need to attempt role change
     if (currentRole != desiredRole ||
@@ -827,7 +822,7 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
         currentName != desiredName ||
         currentWeapons[0] != desiredWeapons[0] ||
         currentWeapons[1] != desiredWeapons[1] ||
-        nu_PrimaryAmmoMags.Value != string(DHPlayer(PlayerOwner()).DesiredAmmoAmount))
+        nu_PrimaryAmmoMags.Value != string(DHP.DesiredAmmoAmount))
     {
         //Do nothing for now
     }
@@ -836,7 +831,7 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
         return;
     }
 
-    if (player == none)
+    if (DHP == none)
     {
         warn("Unable to cast PlayerOwner() to ROPlayer in ROGUIRoleSelection.AttemptRoleApplication() !");
         return;
@@ -845,8 +840,8 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     // Change player name (no need for confirmation on this)
     if (desiredName != currentName)
     {
-        player.ReplaceText(desiredName, "\"", "");
-        player.ConsoleCommand("SetName"@desiredName);
+        DHP.ReplaceText(desiredName, "\"", "");
+        DHP.ConsoleCommand("SetName"@desiredName);
         currentName = desiredName;
     }
 
@@ -893,10 +888,10 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     //Log("AttemptRoleApplication() Calling ServerChangePlayerInfo!!!                                     Attempt Semi-Success");
 
     // Make sure DesiredAmmoAmount is set
-    DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
+    DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
 
     // Attempt team, role and weapons change
-    player.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
+    DHP.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
 
     // We possibly changed, so lets update the values  THis might be causing bugs on semi-failure
     currentRole = desiredRole;
@@ -950,9 +945,9 @@ function InternalOnChange(GUIComponent Sender)
             break;
 
         case nu_PrimaryAmmoMags:
-            DHPlayer(PlayerOwner()).DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            //Log("Desired Ammo Amount after:" @ DHPlayer(PlayerOwner()).DesiredAmmoAmount);
-            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHPlayer(PlayerOwner()).CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+            DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
+            //Log("Desired Ammo Amount after:" @ DHP.DesiredAmmoAmount);
+            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
             break;
     }
 }
@@ -982,9 +977,9 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             case 0: // All is well!
             case 97:
             case 98:
-                if (ROPlayer(PlayerOwner()) != none)
+                if (DHP != none)
                 {
-                    ROPlayer(PlayerOwner()).PlayerReplicationInfo.bReadyToPlay = true;
+                    DHP.PlayerReplicationInfo.bReadyToPlay = true;
                 }
                 return;
 

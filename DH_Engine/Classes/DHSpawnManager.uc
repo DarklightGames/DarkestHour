@@ -441,7 +441,7 @@ function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
         return SpawnError_BadTeamSpawnPoint;
     }
 
-    if (!GRI.IsSpawnPointActive(C.SpawnPointIndex))
+    if (!GRI.IsSpawnPointIndexActive(C.SpawnPointIndex))
     {
         Error("[DHSM] Spawn point" @ C.SpawnPointIndex @ "is inactive");
 
@@ -581,7 +581,7 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
 
     if (SpawnError != SpawnError_None)
     {
-        //return; Theel Debug attempting to remove need for dry spawn infantry function
+        return;
     }
 
     P = SpawnPawn(C, SpawnLocation, SpawnRotation);
@@ -695,7 +695,7 @@ function ToggleSpawnPointIsActiveByTag(name SpawnPointTag)
 
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
-        SetSpawnPointIsActive(SpawnPointIndices[i], !GRI.IsSpawnPointActive(i));
+        SetSpawnPointIsActive(SpawnPointIndices[i], !GRI.IsSpawnPointIndexActive(i));
     }
 }
 

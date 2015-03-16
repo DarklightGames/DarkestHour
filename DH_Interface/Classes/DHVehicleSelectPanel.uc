@@ -19,6 +19,8 @@ var DHPlayer                                DHP;
 
 var bool                                    bRendered;
 
+//Deploy Menu Access
+var DHDeployMenu                            myDeployMenu;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -35,6 +37,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         return;
     }
+
+    // Assign myDeployMenu
+    myDeployMenu = DHDeployMenu(PageOwner);
 
     // Vehicle pool container
     li_VehiclePools = ROGUIListPlus(lb_VehiclePools.List);
@@ -54,12 +59,10 @@ function ShowPanel(bool bShow)
 {
     super.ShowPanel(bShow);
 
-    //We are showing this panel so we want to spawn as infantry
-    if (bShow)
+    //We are showing this panel so we want to spawn as vehicle
+    if (bShow && myDeployMenu != none)
     {
-        DHDeploymentMapMenu(DHDeployMenu(PageOwner).c_DeploymentMapArea.TabStack[0].MyPanel).bSpawningVehicle = true;
-        DHDeploymentMapMenu(DHDeployMenu(PageOwner).c_DeploymentMapArea.TabStack[0].MyPanel).ClearSpawnsIcons();
-        //DHP.ServerChangeSpawn(DHP., -1); //Theel debug
+        myDeployMenu.bSpawningVehicle = true;
     }
 }
 
@@ -72,12 +75,19 @@ function InitializeVehiclePools()
 {
     local int i;
 
-    //Test DEBUG
-    //DHPlayer(PlayerOwner()).ServerChangeSpawn(-1, 0);
+    if (DHGRI == none)
+    {
+        return;
+    }
 
     for (i = 0; i < arraycount(DHGRI.VehiclePoolIsActives); ++i)
     {
-        if (DHGRI.VehiclePoolVehicleClasses[i] != none && DHGRI.VehiclePoolVehicleClasses[i].default.VehicleTeam != DHP.GetTeamNum())
+        if (DHGRI.VehiclePoolVehicleClasses[i] == none)
+        {
+            continue;
+        }
+
+        if (DHGRI.VehiclePoolVehicleClasses[i].default.VehicleTeam != DHP.GetTeamNum())
         {
             // Do not display those not belonging to player's team
             continue;
@@ -185,98 +195,6 @@ function InternalOnChange(GUIComponent Sender)
             break;
     }
 }
-
-
-/*
-function UpdateVehiclePools()
-{
-    local int i, j;
-    local string S;
-    local DHPlayer C;
-    local DHGameReplicationInfo DHGRI;
-    local bool bIsEnabled;
-
-    C = DHPlayer(PlayerOwner());
-
-    if (C == none || DHPlayerReplicationInfo(C.PlayerReplicationInfo) == none)
-    {
-        return;
-    }
-
-    DHGRI = DHGameReplicationInfo(C.GameReplicationInfo);
-
-    if (DHGRI == none)
-    {
-        return;
-    }
-
-    if (VehiclePoolsUpdateTime < DHGRI.VehiclePoolsUpdateTime)
-    {
-        //the vehicle pools were modified in such a way that requires
-        //us to repopulate the list
-        li_VehiclePools.Clear();
-
-        VehiclePoolIndices.Length = 0;
-
-        for (i = 0; i < arraycount(DHGRI.VehiclePoolIsActives); ++i)
-        {
-            if (DHGRI.VehiclePoolIsActives[i] == 0 ||
-                DHGRI.VehiclePoolVehicleClasses[i].default.VehicleTeam != C.GetTeamNum())
-            {
-                //do not display inactive pools or those not belonging to player's team
-                continue;
-            }
-
-            li_VehiclePools.Add(DHGRI.VehiclePoolVehicleClasses[i].default.VehicleNameString);
-
-            Log("li_VehiclePools.SetExtraAtIndex(" $ li_VehiclePools.ItemCount - 1 $ ") =" @ i);
-
-            li_VehiclePools.SetExtraAtIndex(li_VehiclePools.ItemCount - 1, "" $ i);
-
-            VehiclePoolIndices[VehiclePoolIndices.Length] = i;
-        }
-
-        VehiclePoolsUpdateTime = DHGRI.VehiclePoolsUpdateTime;
-    }
-
-    for (i = 0; i < VehiclePoolIndices.Length; ++i)
-    {
-        j = VehiclePoolIndices[i];
-
-        //build list entry string
-        S = DHGRI.VehiclePoolVehicleClasses[j].default.VehicleNameString;
-
-        if (!DHGRI.IsVehiclePoolInfinite(j))
-        {
-            //show vehicle spawns remaining if pool is not infinite
-            S @= "[" $ DHGRI.VehiclePoolSpawnsRemainings[j] $ "]";
-        }
-
-        if (C.Level.TimeSeconds < DHGRI.VehiclePoolNextAvailableTimes[j])
-        {
-            //show countdown timer
-            S @= "(" $ class'ROHud'.static.GetTimeString(DHGRI.VehiclePoolNextAvailableTimes[j] - C.Level.TimeSeconds) $ ")";
-
-            bIsEnabled = false;
-        }
-
-        if (DHGRI.VehiclePoolSpawnsRemainings[j] == 0)
-        {
-            bIsEnabled = false;
-        }
-
-        li_VehiclePools.SetItemAtIndex(i, S);
-        li_VehiclePools.SetExtraAtIndex(i, "" $ j);
-
-        //TODO: this fucking shit fuction overrides out extra value, figure out a way around it
-        //li_Roles.SetDisabledAtIndex(i, bIsEnabled);
-    }
-}
-*/
-
-
-
-
 
 defaultproperties
 {
