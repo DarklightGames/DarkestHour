@@ -59,8 +59,8 @@ var const byte SpawnPointType_Vehicles;
 
 var localized array<string> SpawnErrorStrings;
 
-const SpawnPointsMax = 64;
-const PoolsMax = 32;
+const SPAWN_POINTS_MAX = 64;
+const VEHICLE_POOLS_MAX = 32;
 
 var(Vehicles) array<VehiclePool>        VehiclePools;
 var(Vehicles) byte                      MaxTeamVehicles[2];
@@ -92,9 +92,9 @@ function PostBeginPlay()
 
     foreach AllActors(class'DHSpawnPoint', SP)
     {
-        if (SpawnPoints.Length >= SpawnPointsMax)
+        if (SpawnPoints.Length >= SPAWN_POINTS_MAX)
         {
-            Warn("DHSpawnPoint count exceeds" @ SpawnPointsMax);
+            Warn("DHSpawnPoint count exceeds" @ SPAWN_POINTS_MAX);
 
             break;
         }
@@ -484,7 +484,7 @@ function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return SpawnError_Fatal;
     }
 
-    if (C.VehiclePoolIndex < 0 || C.VehiclePoolIndex >= PoolsMax || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
+    if (C.VehiclePoolIndex < 0 || C.VehiclePoolIndex >= VEHICLE_POOLS_MAX || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
     {
         Error("[DHSM] Fatal error in DrySpawn (either invalid indices passed in or pool's VehicleClass is none)");
 
