@@ -42,9 +42,10 @@ var()   float       ObjectCollisionResistance;
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 // Engine stuff
-var     bool        bEngineOff;         // vehicle engine is simply switched off
-var     bool        bSavedEngineOff;    // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
-var     float       IgnitionSwitchTime; // records last time the engine was switched on/off - requires 4 second interval to stop people spamming the ignition switch
+var     bool        bEngineOff;               // vehicle engine is simply switched off
+var     bool        bSavedEngineOff;          // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
+var     float       IgnitionSwitchTime;       // records last time the engine was switched on/off - requires interval to stop people spamming the ignition switch
+var     float       IgnitionIntervalDuration; // how frequently the engine can be manually switched on/off
 
 // New sounds & sound attachment actors
 var()   float               MaxPitchSpeed;
@@ -484,7 +485,7 @@ simulated event DrivingStatusChanged()
 simulated function Fire(optional float F)
 {
     // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
     {
         ServerStartEngine();
         IgnitionSwitchTime = Level.TimeSeconds;
@@ -589,7 +590,7 @@ simulated function StartEmitters()
 function ServerStartEngine()
 {
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
     {
         IgnitionSwitchTime = Level.TimeSeconds;
 
@@ -1306,4 +1307,5 @@ defaultproperties
     bKeepDriverAuxCollision=true
     HealthMax=175.0
     Health=175
+    IgnitionIntervalDuration=4.0
 }
