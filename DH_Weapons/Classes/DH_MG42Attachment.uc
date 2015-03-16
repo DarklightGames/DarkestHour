@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MG42Attachment extends DHMGWeaponAttachment;
+class DH_MG42Attachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {

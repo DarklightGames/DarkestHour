@@ -85,24 +85,16 @@ simulated function PostNetReceive()
 // Check the tracer count and determine if we should spawn a tracer round
 simulated function bool ShouldSpawnTracer()
 {
-    NextTracerCounter++;
+    ++NextTracerCounter;
 
-    if (!bUsesTracers)
+    if (!bUsesTracers || ClientTracerClass == none || NextTracerCounter != TracerFrequency)
     {
         return false;
     }
-    else if (NextTracerCounter != TracerFrequency)
-    {
-        return false;
-    }
-    else if (ClientTracerClass != none)
-    {
-        NextTracerCounter = 0; // reset for next tracer spawn
 
-        return true;
-    }
+    NextTracerCounter = 0; // reset for next tracer spawn
 
-    return false;
+    return true;
 }
 
 // Handles unpacking and spawning the correct client side hit effect rounds

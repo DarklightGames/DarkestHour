@@ -47,7 +47,6 @@ function PostBeginPlay()
     local ROMineVolume          MV;
     local ROArtilleryTrigger    RAT;
     local SpectatorCam          ViewPoint;
-    local float                 MaxPlayerRatio;
     local int                   i, j, k, m, n, o, p;
     local DHObstacleInfo        DHOI;
 
@@ -266,21 +265,6 @@ function PostBeginPlay()
             DHMortarSpawnAreas[p++] = DHSA;
         }
     }
-
-    // Scale the reinforcement limits based on the server's capacity
-    if (MaxPlayersOverride != 0 && MaxPlayersOverride < MaxPlayers)
-    {
-        MaxPlayerRatio = MaxPlayersOverride / 32.0;
-    }
-    else
-    {
-        MaxPlayersOverride = 0;
-        MaxPlayerRatio = MaxPlayers / 32.0;
-    }
-
-    LevelInfo.Allies.SpawnLimit *= MaxPlayerRatio;
-    LevelInfo.Axis.SpawnLimit *= MaxPlayerRatio;
-    Log("MaxPlayerRatio =" @ MaxPlayerRatio);
 
     // Make sure MaxTeamDifference is an acceptable value
     if (MaxTeamDifference < 1)
@@ -1549,20 +1533,6 @@ state RoundInPlay
             CheckMineVolumes();
         }
 
-        // Respawn all players
-        /*
-        for (P = Level.ControllerList; P != none; P = P.NextController)
-        {
-            if (!P.bIsPlayer || P.PlayerReplicationInfo.Team == none)
-                continue;
-
-            if (ROPlayer(P) != none && ROPlayer(P).CanRestartPlayer())
-                RestartPlayer(P);
-            else if (ROBot(P) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
-                RestartPlayer(P);
-        }
-        */
-
         // Make the bots find objectives when the round starts
         FindNewObjectives(None);
 
@@ -1687,41 +1657,6 @@ state RoundInPlay
 
         if (NeedPlayers() && AddBot() && (RemainingBots > 0))
             RemainingBots--;
-
-        // Go through both teams and spawn reinforcements if necessary
-        for (i = 0; i < 2; ++i)
-        {
-            /*
-            if (i == ALLIES_TEAM_INDEX)
-                ReinforceInt = LevelInfo.Allies.ReinforcementInterval;
-            else
-                ReinforceInt = LevelInfo.Axis.ReinforcementInterval;
-
-            if (!SpawnLimitReached(i) && ElapsedTime > LastReinforcementTime[i] + ReinforceInt)
-            {
-                for (P = Level.ControllerList; P != none; P = P.NextController)
-                {
-                    if (!P.bIsPlayer || P.Pawn != none || P.PlayerReplicationInfo == none || P.PlayerReplicationInfo.Team == none || P.PlayerReplicationInfo.Team.TeamIndex != i)
-                        continue;
-
-                    if (ROPlayer(P) != none && ROPlayer(P).CanRestartPlayer())
-                        RestartPlayer(P);
-                    else if (ROBot(P) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
-                        RestartPlayer(P);
-
-                    // If spawn limit has now been reached, send a message out
-                    if (SpawnLimitReached(i))
-                    {
-                        SendReinforcementMessage(i, 1);
-                        break;
-                    }
-                }
-
-                LastReinforcementTime[i] = ElapsedTime;
-                ROGameReplicationInfo(GameReplicationInfo).LastReinforcementTime[i] = LastReinforcementTime[i];
-            }
-            */
-        }
 
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
@@ -1864,24 +1799,39 @@ function ResetMortarTargets()
     }
 }
 
-// Overridden so we show how many actual individual reinforcements we have - Basnett - January 19th, 2010
-function RestartPlayer(Controller C)
+function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
-    local DHPlayer DHC;
-
-    if (DHLevelInfo == none || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
+    if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
-
         super(TeamGame).RestartPlayer(C);
+
+        if (bHandleReinforcements)
+        {
+            HandleReinforcements(C);
+        }
     }
     else
     {
-        DHRestartPlayer(C);
+        DHRestartPlayer(C, bHandleReinforcements); // This will handle reinforcements
+    }
+}
+
+// Handle reinforcment checks and balances
+function HandleReinforcements(Controller C)
+{
+    local DHPlayer DHP;
+
+    DHP = DHPlayer(C);
+
+    // Don't subtract / calc reinforcements as the player didn't get a pawn
+    if (DHP == none && DHP.Pawn == none)
+    {
+        return;
     }
 
     //TODO: look into improving or rewriting this, as this is garbage looking
-    if (C.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
+    if (DHP.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
 
@@ -1891,7 +1841,7 @@ function RestartPlayer(Controller C)
             SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
         }
     }
-    else if (C.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
+    else if (DHP.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit - ++SpawnCount[AXIS_TEAM_INDEX];
 
@@ -1902,12 +1852,10 @@ function RestartPlayer(Controller C)
         }
     }
 
-    DHC = DHPlayer(C);
-
-    if (DHC != none && DHC.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
+    if (DHP.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
     {
-        DHC.NotifyOfMapInfoChange();
-        DHC.bFirstRoleAndTeamChange = true;
+        DHP.NotifyOfMapInfoChange();
+        DHP.bFirstRoleAndTeamChange = true;
     }
 }
 
@@ -1948,7 +1896,7 @@ exec function DebugWinGame(optional int TeamToWin)
     EndRound(TeamToWin);
 }
 
-function DHRestartPlayer(Controller C)
+function DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 {
     local TeamInfo BotTeam, OtherTeam;
     local DHPlayer DHC;
@@ -2004,11 +1952,25 @@ function DHRestartPlayer(Controller C)
         return;
     }
 
-    SpawnManager.SpawnPlayer(DHC, SpawnError);
+    if (!SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex) && GetStateName() == 'RoundInPlay')
+    {
+        SpawnManager.SpawnPlayer(DHC, SpawnError);
+
+        if (bHandleReinforcements)
+        {
+            HandleReinforcements(C);
+        }
+
+        // If we've reached the last reinforcement, lets alert the team
+        if (SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex))
+        {
+            SendReinforcementMessage(C.PlayerReplicationInfo.Team.TeamIndex, 1);
+        }
+    }
 
     if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
     {
-        Error("Spawn Error =" @ SpawnError);
+        Warn("Spawn Error =" @ SpawnError);
     }
 }
 

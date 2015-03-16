@@ -59,8 +59,9 @@ var const byte SpawnPointType_Vehicles;
 
 var localized array<string> SpawnErrorStrings;
 
-const SpawnPointsMax = 64;
-const PoolsMax = 32;
+const SPAWN_POINTS_MAX = 64;
+const VEHICLE_POOLS_MAX = 32;
+const SPAWN_VEHICLES_MAX = 8;
 
 var(Vehicles) array<VehiclePool>        VehiclePools;
 var(Vehicles) byte                      MaxTeamVehicles[2];
@@ -70,6 +71,7 @@ var class<LocalMessage>                 VehicleDestroyedMessageClass;
 
 var private byte                        TeamVehicleCounts[2];
 var private array<ROVehicle>            Vehicles;
+var private array<ROVehicle>            SpawnVehicles;
 var private array<DHSpawnPoint>         SpawnPoints;
 var private DHGameReplicationInfo       GRI;
 var private config bool                 bDebug;
@@ -92,9 +94,9 @@ function PostBeginPlay()
 
     foreach AllActors(class'DHSpawnPoint', SP)
     {
-        if (SpawnPoints.Length >= SpawnPointsMax)
+        if (SpawnPoints.Length >= SPAWN_POINTS_MAX)
         {
-            Warn("DHSpawnPoint count exceeds" @ SpawnPointsMax);
+            Warn("DHSpawnPoint count exceeds" @ SPAWN_POINTS_MAX);
 
             break;
         }
@@ -102,13 +104,9 @@ function PostBeginPlay()
         SpawnPoints[SpawnPoints.Length] = SP;
     }
 
-    Log("Spawn points length = " @ SpawnPoints.Length);
-
     //Update GameReplicationInfo
     for (i = 0; i < SpawnPoints.Length; ++i)
     {
-        Log("ASDASDASDA" @ SpawnPoints[i].bIsInitiallyActive);
-
         GRI.SetSpawnPointIsActive(i, SpawnPoints[i].bIsInitiallyActive);
     }
 
@@ -134,6 +132,12 @@ function Reset()
     Vehicles.Length = 0;
 
     super.Reset();
+}
+
+function Timer()
+{
+
+
 }
 
 function UpdatePoolReplicationInfo(byte PoolIndex)
@@ -259,13 +263,20 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
 
     if (C.VehiclePoolIndex != -1)
     {
-        Log("Attempting to spawn vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
+        Log("Attempting to spawn Vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
 
         SpawnVehicle(C, SpawnError);
     }
     else
     {
-        Log("attempting to spawn infantry at SP" @ C.SpawnPointIndex);
+        if (SpawnPoints[C.SpawnPointIndex] != none)
+        {
+            Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ SpawnPoints[C.SpawnPointIndex].SpawnPointName);
+        }
+        else
+        {
+            Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex);
+        }
 
         SpawnInfantry(C, SpawnError);
     }
@@ -276,8 +287,11 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     local ROVehicle V;
     local vector SpawnLocation;
     local rotator SpawnRotation;
+    local DarkestHourGame G;
 
-    //TODO: need to check desired role etc.
+    G = DarkestHourGame(Level.Game);
+
+    //TODO: need to check desired role etc. Crew role or whatever
 
     SpawnError = SpawnError_Fatal;
 
@@ -293,23 +307,24 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         return none;
     }
 
-    V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
-
-    if (V == none)
-    {
-        SpawnError = SpawnError_Failed;
-
-        return none;
-    }
-
-    // Spawn via restartplayer because otherwise the spawn location is blocked by the Vehicle!  This will put the pawn in the black room
-    Level.Game.RestartPlayer(C);
+    // This calls old restartplayer (spawn in black room) and avoids reinforcment subtraction (because we will subtract later)
+    G.DeployRestartPlayer(C,false,true);
 
     // Make sure player has a pawn
     if (C.Pawn == none)
     {
         Warn("Pawn does not exist!!!! NO PLAYER WAS SPAWNED OR SOMETHING!!!!");
         return none;
+    }
+    else
+    {
+        V = Spawn(VehiclePools[C.VehiclePoolIndex].VehicleClass,,, SpawnLocation, SpawnRotation);
+
+        if (V == none)
+        {
+            SpawnError = SpawnError_Failed;
+            return none;
+        }
     }
 
     if(!V.TryToDrive(C.Pawn))
@@ -325,6 +340,9 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     }
     else
     {
+        V.KDriverLeave(true); // Force leave the vehicle to update the position
+        C.MyLastVehicle = V; // Set controller mylastvehicle to be used for delayed re-entry
+
         //ParentFactory must be set after any calls to Destroy are made so that
         //VehicleDestroyed is not called in the event that TryToDrive fails
         V.ParentFactory = self;
@@ -357,7 +375,12 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
 
     G = DarkestHourGame(Level.Game);
 
-    if (G != none && C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
+    if (G == none)
+    {
+        return none;
+    }
+
+    if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
     {
         G.BaseMutator.PlayerChangedClass(C);
     }
@@ -369,7 +392,7 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
 
     if (C.Pawn == none)
     {
-        DefaultPlayerClass = DarkestHourGame(Level.Game).GetDefaultPlayerClass(C);
+        DefaultPlayerClass = G.GetDefaultPlayerClass(C);
 
         C.Pawn = Spawn(DefaultPlayerClass,,, SpawnLocation, SpawnRotation);
     }
@@ -378,14 +401,14 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     {
         // Likely the spawn function is failing because SpawnLocation is being blocked by another player/vehicle
         // Lets force spawn the player in the black room and then teleport them to SpawnLocation with SpawnRotation
-        Level.Game.RestartPlayer(C);
+        G.DeployRestartPlayer(C, true);
 
         //Theel need a function to properly teleport a player and return if it fails
     }
 
     if (C.Pawn == none)
     {
-        Log("Couldn't spawn player of type" @ C.PawnClass @ "at" @ SpawnLocation);
+        Warn("Couldn't spawn player of type" @ C.PawnClass @ "at" @ SpawnLocation);
 
         C.GotoState('Dead');
 
@@ -409,7 +432,7 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     C.Pawn.PlayTeleportEffect(true, true);
     C.ClientSetRotation(C.Pawn.Rotation);
 
-    DarkestHourGame(Level.Game).AddDefaultInventory(C.Pawn);
+    G.AddDefaultInventory(C.Pawn);
 
     return C.Pawn;
 }
@@ -463,7 +486,7 @@ function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return SpawnError_Fatal;
     }
 
-    if (C.VehiclePoolIndex < 0 || C.VehiclePoolIndex >= PoolsMax || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
+    if (C.VehiclePoolIndex < 0 || C.VehiclePoolIndex >= VEHICLE_POOLS_MAX || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
     {
         Error("[DHSM] Fatal error in DrySpawn (either invalid indices passed in or pool's VehicleClass is none)");
 
@@ -917,30 +940,45 @@ static function array<int> CreateScrambledArrayIndices(int Length)
         Indices[i] = i;
     }
 
-    FisherYatesShuffle(Indices);
+    class'DHLib'.static.FisherYatesShuffle(Indices);
 
     return Indices;
 }
 
-static function FisherYatesShuffle(out array<int> _Array)
+//==============================================================================
+// Spawn Vehicle Functions
+//==============================================================================
+
+function bool AddSpawnVehicle(ROVehicle V)
 {
-    local int i, j;
+    local int i;
 
-    for (i = _Array.Length - 1; i >= 0; --i)
+    if (SpawnVehicles.Length >= SPAWN_VEHICLES_MAX)
     {
-        j = Rand(i);
+        Warn(V @ "could not be added to SpawnVehicles, exceeded limit of" @ SPAWN_VEHICLES_MAX);
 
-        Swap(_Array[i], _Array[j]);
+        return false;
     }
+
+    i = GRI.AddSpawnVehicle(V);
+
+    if (i == -1)
+    {
+        Warn(V @ "could not be added to the GRI's SpawnVehicles");
+
+        return false;
+    }
+
+    SpawnVehicles[SpawnVehicles.Length] = V;
+
+    return true;
 }
 
-static function Swap(out int A, out int B)
+function RemoveSpawnVehicle(ROVehicle V)
 {
-    local int temp;
+    class'DHLib'.static.Erase(SpawnVehicles, V);
 
-    temp = A;
-    A = B;
-    B = temp;
+    GRI.RemoveSpawnVehicle(V);
 }
 
 defaultproperties

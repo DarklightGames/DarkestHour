@@ -10,6 +10,44 @@ var()   name    PA_AssistedReloadAnim;
 var()   name    PA_MortarDeployAnim;
 var()   name    WA_MortarDeployAnim;
 
+// SHAME:
+// This is in here because of the laziness of previous developers;
+// The correct solution would be to just fix the ejection port in the model.
+// Unfortunately, we don't have access to these models anymore so we can't
+// fix them.
+// TODO: specify exact rotation for ejection, don't rely on "down" to be correct
+var     bool    bSpawnShellsOutBottom;
+
+simulated function SpawnShells(float Frequency)
+{
+    local   rotator     EjectorRotation;
+    local   vector      SpawnLocation;
+
+    if (ROShellCaseClass != none &&
+        Instigator != none &&
+        !Instigator.IsFirstPerson())
+    {
+        if (default.bSpawnShellsOutBottom)
+        {
+            // TODO: this is technically incorrect, if gravity was up,
+            // the ejection port would still be down.
+            EjectorRotation = rotator(Normal(PhysicsVolume.Gravity));
+        }
+        else
+        {
+            EjectorRotation = GetBoneRotation(ShellEjectionBoneName);
+        }
+
+        SpawnLocation = GetBoneCoords(ShellEjectionBoneName).Origin;
+
+        EjectorRotation.Pitch += Rand(1700);
+        EjectorRotation.Yaw += Rand(1700);
+        EjectorRotation.Roll += Rand(700);
+
+        Spawn(ROShellCaseClass, Instigator,, SpawnLocation, EjectorRotation);
+    }
+}
+
 simulated event ThirdPersonEffects()
 {
     local PlayerController   PC;
@@ -81,6 +119,7 @@ simulated event ThirdPersonEffects()
     if (FlashCount == 0)
     {
         ROPawn(Instigator).StopFiring();
+
         AnimEnd(0);
     }
     else if (FiringMode == 0)
@@ -95,6 +134,7 @@ simulated event ThirdPersonEffects()
 
 defaultproperties
 {
+    bSpawnShellsOutBottom=false
     //for some stupid reason, crouch_boltiron_kar doesn't exist anymore;
     //fall back to non iron-sighted version
     PA_CrouchIronBoltActionAnim=crouch_bolt_kar

@@ -12,7 +12,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 
 var localized string                        ReinforcementText;
 
-var     bool                                bReadyToDeploy;
+var     bool                                bReadyToDeploy, bOutOfReinforcements;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
@@ -87,9 +87,29 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 // Used to update round time and reinforcements
 function Timer()
 {
+    local int CurrentTime;
+
     // Update round time & reinforcement count
-    l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(HUD.CurrentTime);
-    l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PRI.Team.TeamIndex]);
+    if (HUD != none && GRI != none && PRI != none)
+    {
+        if (!GRI.bMatchHasBegun)
+            CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
+        else
+            CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime);
+
+        l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(CurrentTime);
+        l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PRI.Team.TeamIndex]);
+
+        if (GRI.DHSpawnCount[PRI.Team.TeamIndex] == 0)
+        {
+            //Inform menu that our team is out of reinforcements and we can't spawn
+            bOutOfReinforcements = true;
+        }
+        else
+        {
+            bOutOfReinforcements = false;
+        }
+    }
 }
 
 function ClearSpawnIcon(int i)
@@ -207,7 +227,7 @@ function bool DrawMapComponents(Canvas C)
     local int i;
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
-    if (myDeployMenu == none)
+    if (myDeployMenu == none || bOutOfReinforcements)
     {
         return false;
     }
@@ -346,6 +366,15 @@ function bool InternalOnClick(GUIComponent Sender)
 function bool DrawDeployTimer(Canvas C)
 {
     local float P;
+
+    if (bOutOfReinforcements)
+    {
+        bReadyToDeploy = false;
+        b_DeployButton.DisableMe();
+        b_DeployButton.Caption = "Your team is out of reinforcements";
+
+        return false; // in case reinforcements are added
+    }
 
     //Handle progress bar values (so they move/advance based on deploy time)
     if (!bReadyToDeploy)
@@ -534,20 +563,20 @@ defaultproperties
     // Reinforcement Counter
     Begin Object Class=GUILabel Name=ReinforceCounter
         TextAlign=TXTA_Left
-        StyleName="DHLargeText"
-        WinWidth=0.3
-        WinHeight=0.025
+        StyleName="ComboListBox"
+        WinWidth=0.45
+        WinHeight=0.03
         WinLeft=0.0
-        WinTop=0.025
+        WinTop=0.03
     End Object
     l_ReinforcementCount=ReinforceCounter
 
     // Round Time Counter
     Begin Object Class=GUILabel Name=RoundTimeCounter
         TextAlign=TXTA_Left
-        StyleName="DHLargeText"
-        WinWidth=0.3
-        WinHeight=0.025
+        StyleName="ComboListBox"
+        WinWidth=0.45
+        WinHeight=0.03
         WinLeft=0.0
         WinTop=0.0
     End Object

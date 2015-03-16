@@ -38,6 +38,7 @@ var vector  MortarHitLocation;
 
 var int     SpawnPointIndex;
 var int     VehiclePoolIndex;
+var vehicle MyLastVehicle;      // Used for vehicle spawning to remember last vehicle player spawned (only used by server)
 
 var DHHintManager DHHintManager;
 
@@ -60,7 +61,7 @@ replication //THEEL: SpawnPointIndex does not need to be replicated to my knowle
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientHandleDeath;
+        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientHandleDeath, ClientFadeFromBlack;
 }
 
 // Matt: modified to avoid "accessed none" error
@@ -959,6 +960,20 @@ function ServerLoadATAmmo(Pawn Gunner)
 
 state PlayerWalking
 {
+    function Timer()
+    {
+        // Handle check if we should try to enter spawned vehicle
+        if (MyLastVehicle != none && Pawn != none)
+        {
+            ClientFadeFromBlack(4.0);
+
+            if (MyLastVehicle.TryToDrive(Pawn))
+            {
+                MyLastVehicle = none;
+            }
+        }
+    }
+
     // Matt: modified to allow behind view in debug mode
     function ClientSetBehindView(bool B)
     {
@@ -2009,6 +2024,7 @@ exec function DebugFOV()
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
 }
 
+// Theel: Revise if statements (combine and optimize this function)
 function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional bool bExploit)
 {
     local DHPlayerReplicationInfo PRI;
@@ -2019,16 +2035,10 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
 
     G = DarkestHourGame(Level.Game);
 
-    if (G == none)
-    {
-        Warn("Level.Game is not DHGame????? WTF!");
-        return false;
-    }
-
     if (bExploit)
     {
         //Temp hack to allow spawning on all maps
-        G.RestartPlayer(self);
+        G.DeployRestartPlayer(self, true, true);
     }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
@@ -2049,8 +2059,6 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
         Log("Failed at team check");
         return false;
     }
-
-    //Warn("=================== SERVER SIDE ATTEMPTING TO DEPLOY PLAYER ===================");
 
     if (PRI == none || DHGRI == none || Pawn != none)
     {
@@ -2079,21 +2087,12 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
         Log("Failed at 4");
         return false;
     }
-    else
-    {
-        //Log("Server Says:" @ string(LastKilledTime + RedeployTime - Level.TimeSeconds) @ "left to spawn");
-    }
 
     // Check if SP is valid
-    if (!DHGRI.IsSpawnPointValid(SP,PRI.Team.TeamIndex))
-    {
-        //Temp hack to allow spawning on all maps
-        G.RestartPlayer(self);
-    }
-    else
+    if (DHGRI.IsSpawnPointValid(SP,PRI.Team.TeamIndex))
     {
         SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
-        G.DHRestartPlayer(self);
+        G.DeployRestartPlayer(self, true);
     }
 
     if (Pawn != none)
@@ -2104,6 +2103,17 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
         }
 
         RedeployTime = CalculateDeployTime(MagCount); // Calculate and set server/client redeploy time
+
+        if (MyLastVehicle != none && self.IsInState('PlayerWalking'))
+        {
+            SetTimer(1.0, false); // 1 second delay before attempting to drive again
+            ClientFadeFromBlack(0.0, true); // Black out
+        }
+        else
+        {
+            ClientFadeFromBlack(5.0);
+        }
+
         return true;
     }
 }
@@ -2379,6 +2389,12 @@ simulated exec function ROIronSights()
     {
         Pawn.Weapon.ROIronSights();
     }
+}
+
+// Client function to fade from black
+function ClientFadeFromBlack(float time, optional bool bInvertFadeDirection)
+{
+    ROHud(MyHud).FadeToBlack(time, !bInvertFadeDirection);
 }
 
 defaultproperties

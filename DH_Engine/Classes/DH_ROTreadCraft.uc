@@ -82,6 +82,7 @@ var     float       TurretDetonationThreshold; // chance that turret ammo will g
 var     bool        bEngineOff;      // tank engine is simply switched off
 var     bool        bSavedEngineOff; // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
 var     float       IgnitionSwitchTime;
+var     float       IgnitionSwitchInterval;
 var     sound       DamagedStartUpSound;
 var     sound       DamagedShutDownSound;
 
@@ -527,7 +528,7 @@ simulated state EnteringVehicle
 simulated function Fire(optional float F)
 {
     // Clientside checks to prevent unnecessary replicated function call to server if invalid (including clientside time check)
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
     {
         ServerStartEngine();
         IgnitionSwitchTime = Level.TimeSeconds;
@@ -632,7 +633,7 @@ simulated function StartEmitters()
 function ServerStartEngine()
 {
     // Throttle must be zeroed & also a time check so people can't spam the ignition switch
-    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > 4.0)
+    if (Throttle == 0.0 && (Level.TimeSeconds - IgnitionSwitchTime) > IgnitionSwitchInterval)
     {
         IgnitionSwitchTime = Level.TimeSeconds;
 
@@ -3514,4 +3515,5 @@ defaultproperties
     EngineHealth=300
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    IgnitionSwitchInterval=4.0
 }
