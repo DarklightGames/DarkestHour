@@ -3386,49 +3386,58 @@ function ServerEngineFire()
     if (!bEngineOnFire) StartEngineFire(none);
 }
 
+// Modified to add support for periscope overlay & to remove irrelevant stuff about driver weapon crosshair
+// Also to optimise a little, including to omit calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local Actor            ViewActor;
     local vector           CameraLocation;
     local rotator          CameraRotation;
-    local float            SavedOpacity; // to keep players from seeing outside the periscope overlay
+    local Actor            ViewActor;
+    local float            SavedOpacity;
 
     PC = PlayerController(Controller);
 
-    if (PC == none)
+    if (PC != none && !PC.bBehindView)
     {
-        super.RenderOverlays(Canvas);
-
-        return;
-    }
-    else if (!PC.bBehindView)
-    {
-        SavedOpacity = Canvas.ColorModulate.W;
-        Canvas.ColorModulate.W = 1.0;
-
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && HUDOverlay == none && DriverPositionIndex == 0 && !IsInState('ViewTransition'))
+        // Player is in a position where an overlay should be drawn
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
-            DrawPeriscopeOverlay(Canvas);
+            if (HUDOverlay == none)
+            {
+                // Draw periscope overlay
+                if (DriverPositionIndex == 0 && PeriscopeOverlay != none)
+                {
+                    // Save current HUD opacity & then set up for drawing overlays
+                    SavedOpacity = Canvas.ColorModulate.W;
+                    Canvas.ColorModulate.W = 1.0;
+                    Canvas.DrawColor.A = 255;
+                    Canvas.Style = ERenderStyle.STY_Alpha;
+
+                    DrawPeriscopeOverlay(Canvas);
+
+                    Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+                }
+            }
+            // Draw any HUD overlay
+            else if (!Level.IsSoftwareRendering())
+            {
+                CameraRotation = PC.Rotation;
+                SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+                HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+                HUDOverlay.SetRotation(CameraRotation);
+
+                Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+            }
         }
 
-        Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
-        DrawVehicle(Canvas);
-        DrawPassengers(Canvas);
-    }
-
-    if (!PC.bBehindView && HUDOverlay != none && DriverPositions[DriverPositionIndex].bDrawOverlays)
-    {
-        if (!Level.IsSoftwareRendering())
+        // Draw vehicle, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none)
         {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            HUDOverlay.SetRotation(CameraRotation);
-            Canvas.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, self);
         }
     }
-    else
+    else if (HUDOverlay != none)
     {
         ActivateOverlay(false);
     }

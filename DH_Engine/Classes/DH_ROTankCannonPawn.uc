@@ -17,14 +17,18 @@ var()   int         PeriscopePositionIndex;
 var     int         GunsightPositions;        // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
 
 // Gunsight or periscope overlay
+var     bool        bShowRangeRing;       // show range ring (used in German tank sights)
 var     bool        bShowRangeText;       // show current range setting text
 var     TexRotator  ScopeCenterRotator;
 var()   float       ScopeCenterScale;
 var()   int         CenterRotationFactor;
 var()   float       OverlayCenterSize;    // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var     float       OverlayCenterScale;
+var     float       OverlayCenterTexStart;
+var     float       OverlayCenterTexSize;
 var()   float       OverlayCorrectionX;   // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var()   float       OverlayCorrectionY;
+var()   texture     PeriscopeOverlay;
 
 // Damage modelling stuff
 var     bool        bTurretRingDamaged;
@@ -73,6 +77,19 @@ replication
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientDamageCannonOverlay;
+}
+
+// Modified to calculate & set CannonScopeOverlay variables once instead of every DrawHUD
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer && CannonScopeOverlay != none)
+    {
+        OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
+        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(CannonScopeOverlay.USize) / 2.0;
+        OverlayCenterTexSize =  Float(CannonScopeOverlay.USize) * OverlayCenterScale;
+    }
 }
 
 // Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
@@ -965,6 +982,169 @@ function float GetAltAmmoReloadState()
             return 0.25;
         }
     }
+}
+
+// Modified to remove irrelevant stuff about driver weapon crosshair & to optimise
+simulated function DrawHUD(Canvas Canvas)
+{
+    local PlayerController PC;
+    local vector           CameraLocation;
+    local rotator          CameraRotation;
+    local Actor            ViewActor;
+    local float            SavedOpacity, posx, posy, ScreenRatio, XL, YL, MapX, MapY;
+    local int              RotationFactor;
+    local color            SavedColor, WhiteColor;
+
+    PC = PlayerController(Controller);
+
+    if (PC != none && !PC.bBehindView)
+    {
+        // Player is in a position where an overlay should be drawn
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays))
+        {
+            if (HUDOverlay == none)
+            {
+                // Save current HUD opacity & then set up for drawing overlays
+                SavedOpacity = Canvas.ColorModulate.W;
+                Canvas.ColorModulate.W = 1.0;
+                Canvas.DrawColor.A = 255;
+                Canvas.Style = ERenderStyle.STY_Alpha;
+
+                // Draw gunsights
+                if (DriverPositionIndex < GunsightPositions)
+                {
+                    // Debug - draw cross on the center of the screen
+                    if (bShowCenter)
+                    {
+                        posx = Canvas.SizeX / 2.0;
+                        posy = Canvas.SizeY / 2.0;
+                        Canvas.SetPos(0.0, 0.0);
+                        Canvas.DrawVertical(posx - 1.0, posy - 3.0);
+                        Canvas.DrawVertical(posx, posy - 3.0);
+                        Canvas.SetPos(0.0, posy + 3.0);
+                        Canvas.DrawVertical(posx - 1.0, posy - 3.0);
+                        Canvas.DrawVertical(posx, posy - 3.0);
+                        Canvas.SetPos(0.0, 0.0);
+                        Canvas.DrawHorizontal(posy - 1.0, posx - 3.0);
+                        Canvas.DrawHorizontal(posy, posx - 3.0);
+                        Canvas.SetPos(posx + 3.0, 0.0);
+                        Canvas.DrawHorizontal(posy - 1.0, posx - 3.0);
+                        Canvas.DrawHorizontal(posy, posx - 3.0);
+                    }
+
+                    // Draw the gunsight overlays
+                    if (CannonScopeOverlay != none)
+                    {
+                        ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
+                        Canvas.SetPos(0.0, 0.0);
+
+                        Canvas.DrawTile(CannonScopeOverlay, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+                            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+                    }
+
+                    if (CannonScopeCenter != none)
+                    {
+                        if (Gun != none && Gun.ProjectileClass != none)
+                        {
+                            Canvas.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY);
+                        }
+                        else
+                        {
+                            Canvas.SetPos(ScopePositionX * Canvas.ClipY / ScreenRatio / OverlayCenterScale - (Canvas.ClipX / OverlayCenterScale - Canvas.ClipX) / 2.0,
+                                ScopePositionY * Canvas.ClipY / ScreenRatio / OverlayCenterScale - Canvas.ClipY * (1.0 / ScreenRatio / OverlayCenterScale - 1.0) / 2.0);
+                        }
+
+                        Canvas.DrawTile(CannonScopeCenter, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+                            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+                    }
+
+                    Canvas.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * Canvas.ClipY);
+
+                    if (bShowRangeRing && Gun != none)
+                    {
+                        // Draw the range ring
+                        posx = (float(Canvas.SizeX) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
+                        posy = (float(Canvas.SizeY) - float(Canvas.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
+
+                        Canvas.SetPos(OverlayCorrectionX + Posx + (Canvas.SizeY * (1.0 - ScopeCenterScale) * 4.0 / OverlayCenterScale / 3.0 / 2.0),
+                            OverlayCorrectionY + Canvas.SizeY * (1.0 - ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0) / 2.0);
+
+                        if (Gun.CurrentRangeIndex < 20)
+                        {
+                           RotationFactor = Gun.CurrentRangeIndex * CenterRotationFactor;
+                        }
+                        else
+                        {
+                           RotationFactor = (CenterRotationFactor * 20) + (((Gun.CurrentRangeIndex - 20) * 2) * CenterRotationFactor);
+                        }
+
+                        ScopeCenterRotator.Rotation.Yaw = RotationFactor;
+
+                        Canvas.DrawTileScaled(ScopeCenterRotator, Canvas.SizeY / 512.0 * ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0,
+                            Canvas.SizeY / 512.0 * ScopeCenterScale * 4.0 / OverlayCenterScale / 3.0);
+                    }
+
+                    // Draw the range setting
+                    if (bShowRangeText && Gun != none)
+                    {
+                        Canvas.Style = ERenderStyle.STY_Normal;
+                        SavedColor = Canvas.DrawColor;
+                        WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
+                        Canvas.DrawColor = WhiteColor;
+                        MapX = RangePositionX * Canvas.ClipX;
+                        MapY = RangePositionY * Canvas.ClipY;
+                        Canvas.SetPos(MapX, MapY);
+                        Canvas.Font = class'ROHUD'.static.GetSmallMenuFont(Canvas);
+                        Canvas.StrLen(Gun.GetRange() @ RangeText, XL, YL);
+                        Canvas.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+                        Canvas.DrawColor = SavedColor;
+                    }
+                }
+                // Draw periscope overlay
+                else if (DriverPositionIndex == PeriscopePositionIndex)
+                {
+                    DrawPeriscopeOverlay(Canvas);
+                }
+                // Draw binoculars overlay
+                else if (DriverPositionIndex == BinocPositionIndex)
+                {
+                    DrawBinocsOverlay(Canvas);
+                }
+
+                Canvas.ColorModulate.W = SavedOpacity; // reset HUD opacity to original value
+            }
+            // Draw any HUD overlay
+            else if (!Level.IsSoftwareRendering())
+            {
+                CameraRotation = PC.Rotation;
+                SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+                HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+                HUDOverlay.SetRotation(CameraRotation);
+                Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+            }
+        }
+
+        // Draw vehicle, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+        }
+    }
+    else if (HUDOverlay != none)
+    {
+        ActivateOverlay(false);
+    }
+}
+
+simulated function DrawPeriscopeOverlay(Canvas Canvas)
+{
+    local float ScreenRatio;
+
+    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
+    Canvas.SetPos(0.0, 0.0);
+
+    Canvas.DrawTile(PeriscopeOverlay, Canvas.SizeX, Canvas.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,
+        PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes

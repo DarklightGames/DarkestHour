@@ -295,6 +295,20 @@ function AltFire(optional float F)
 {
 }
 
+// Modified to remove everything except drawing basic vehicle HUD info
+simulated function DrawHUD(Canvas Canvas)
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Controller);
+
+    // Draw vehicle, turret, passenger list
+    if (PC != none && !PC.bBehindView && ROHud(PC.myHUD) != none && VehicleBase != none)
+    {
+        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
+    }
+}
+
 // Allows debugging exit positions to be toggled for all rider pawns
 exec function ToggleDebugExits()
 {

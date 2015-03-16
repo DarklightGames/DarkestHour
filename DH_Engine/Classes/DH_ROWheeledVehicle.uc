@@ -1062,6 +1062,50 @@ simulated function SwitchWeapon(byte F)
     ServerChangeDriverPosition(F);
 }
 
+// Modified to remove irrelevant stuff about driver weapon crosshair & to optimise a little
+// Includes omitting calling DrawVehicle (as is just a 1 liner that can be optimised) & DrawPassengers (as is just an empty function)
+simulated function DrawHUD(Canvas C)
+{
+    local PlayerController PC;
+    local vector           CameraLocation;
+    local rotator          CameraRotation;
+    local Actor            ViewActor;
+
+    PC = PlayerController(Controller);
+
+    if (PC != none && !PC.bBehindView)
+    {
+        // Player is in a position where an overlay should be drawn
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
+        {
+            if (HUDOverlay == none)
+            {
+                ActivateOverlay(true);
+            }
+
+            // Draw any HUD overlay
+            if (HUDOverlay != none && !Level.IsSoftwareRendering())
+            {
+                CameraRotation = PC.Rotation;
+                SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+                HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+                HUDOverlay.SetRotation(CameraRotation);
+                C.DrawActor(HUDOverlay, false, true, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
+            }
+        }
+
+        // Draw vehicle, turret, ammo count, passenger list
+        if (PC != none && ROHud(PC.myHUD) != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
+        }
+    }
+    else if (HUDOverlay != none)
+    {
+        ActivateOverlay(false);
+    }
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();

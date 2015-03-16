@@ -14,8 +14,12 @@ var()   int         InitialPositionIndex;     // initial gunner position on ente
 var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
 var()   texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
 
-var()   float       OverlayCenterScale;
+var()   name        FirstPersonGunRefBone;      // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
+var()   float       FirstPersonGunOffsetZScale; // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
+
 var()   float       OverlayCenterSize;        // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
+var()   float       OverlayCenterTexStart;
+var()   float       OverlayCenterTexSize;
 var()   float       OverlayCorrectionX;
 var()   float       OverlayCorrectionY;
 
@@ -114,6 +118,21 @@ simulated function InitializeMG()
     else
     {
         Warn("ERROR:" @ Tag @ "somehow spawned without an owned DH_ROMountedTankMG, so lots of things are not going to work!");
+    }
+}
+
+// Modified to calculate & set texture MGOverlay variables once instead of every DrawHUD
+simulated function PostBeginPlay()
+{
+    local float OverlayCenterScale;
+
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer && MGOverlay != none)
+    {
+        OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
+        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(MGOverlay.USize) / 2.0;
+        OverlayCenterTexSize =  Float(MGOverlay.USize) * OverlayCenterScale;
     }
 }
 
@@ -298,69 +317,78 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
     }
 }
 
+// Modified to optimise & make into generic function to handle all MG types
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local Actor            ViewActor;
-    local vector           CameraLocation, x, y, z;
+    local vector           CameraLocation, GunOffset, x, y, z;
     local rotator          CameraRotation;
-    local float            SavedOpacity, ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
+    local Actor            ViewActor;
+    local float            SavedOpacity, ScreenRatio;
 
     PC = PlayerController(Controller);
 
-    if (PC == none)
+    if (PC != none && !PC.bBehindView)
     {
-        super.RenderOverlays(Canvas);
-
-        return;
-    }
-    else if (!PC.bBehindView)
-    {
-        // Store old opacity and set to 1.0 for map overlay rendering
-        SavedOpacity = Canvas.ColorModulate.W;
-        Canvas.ColorModulate.W = 1.0;
-
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-
-        // Draw reticle
-        ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
-        OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(MGOverlay.USize) / 2.0;
-        OverlayCenterTexSize =  Float(MGOverlay.USize) * OverlayCenterScale;
-
-        Canvas.SetPos(0.0, 0.0);
-        Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-
-        // Reset HudOpacity to original value
-        Canvas.ColorModulate.W = SavedOpacity;
-    }
-
-    if (!PC.bBehindView && HUDOverlay != none)
-    {
-        if (!Level.IsSoftwareRendering())
+        // Player is in a position where an overlay should be drawn
+        if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
         {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            // Draw any HUD overlay
+            if (HUDOverlay != none)
+            {
+                if (!Level.IsSoftwareRendering())
+                {
+                    CameraRotation = PC.Rotation;
+                    SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+                    CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 
-            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-            CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+                    // Make the first person gun appear lower when your sticking your head up
+                    if (FirstPersonGunRefBone != '')
+                    {
+                        GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
+                        GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonGunOffsetZScale));
+                        GunOffset += HUDOverlayOffset;
+                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+                        Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+                    }
+                    else
+                    {
+                        CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
+                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+                        HUDOverlay.SetRotation(CameraRotation);
+                        Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+                    }
 
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            HUDOverlay.SetRotation(CameraRotation);
-            Canvas.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+                }
+            }
+            // Draw gunsight overlay
+            else if (MGOverlay != none)
+            {
+                // Save current HUD opacity & then set up for drawing overlays
+                SavedOpacity = Canvas.ColorModulate.W;
+                Canvas.ColorModulate.W = 1.0;
+                Canvas.DrawColor.A = 255;
+                Canvas.Style = ERenderStyle.STY_Alpha;
+
+                ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
+                Canvas.SetPos(0.0, 0.0);
+
+                Canvas.DrawTile(MGOverlay, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
+                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+
+                Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+            }
+        }
+
+        // Draw vehicle, turret, ammo count, passenger list
+        if (ROHud(PC.myHUD) != none && VehicleBase != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
         }
     }
-    else
+    else if (HUDOverlay != none)
     {
         ActivateOverlay(false);
-    }
-
-    // Draw tank, turret, ammo count, passenger list
-    if (ROHud(PC.myHUD) != none && VehicleBase != none)
-    {
-        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
     }
 }
 

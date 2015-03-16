@@ -201,57 +201,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-// From the StuH, unaltered
-simulated function DrawHUD(Canvas Canvas)
-{
-    local PlayerController PC;
-    local float SavedOpacity;
-    local float ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
-
-    PC = PlayerController(Controller);
-
-    if (PC == none)
-    {
-        super.RenderOverlays(Canvas);
-
-        return;
-    }
-    else if (!PC.bBehindView)
-    {
-        // Store old opacity and set to 1.0 for map overlay rendering
-        SavedOpacity = Canvas.ColorModulate.W;
-        Canvas.ColorModulate.W = 1.0;
-
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
-        {
-            if (DriverPositionIndex == 0)
-            {
-                // Draw reticle
-                ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-                OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-                OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(MGOverlay.USize) / 2.0;
-                OverlayCenterTexSize =  float(MGOverlay.USize) * OverlayCenterScale;
-
-                Canvas.SetPos(0.0, 0.0);
-                Canvas.DrawTile(MGOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-
-                // Reset HudOpacity to original value
-                Canvas.ColorModulate.W = SavedOpacity;
-            }
-        }
-    }
-
-    // Draw tank, turret, ammo count, passenger list
-    if (ROHud(PC.myHUD) != none && VehicleBase != none)
-    {
-        ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
-    }
-}
-
 // Modified to use hetzer's 4 part MG rleoad process
 function float GetAmmoReloadState()
 {

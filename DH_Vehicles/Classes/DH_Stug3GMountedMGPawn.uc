@@ -143,63 +143,20 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-simulated function DrawHUD(Canvas Canvas)
-{
-    local PlayerController PC;
-    local vector  CameraLocation;
-    local rotator CameraRotation;
-    local Actor   ViewActor;
-    local vector  GunOffset;
-
-    PC = PlayerController(Controller);
-
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
-    {
-        if (!Level.IsSoftwareRendering() && DriverPositionIndex > 0)
-        {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-
-            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-            GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-
-            // Make the first person gun appear lower when your sticking your head up
-            GunOffset.Z += (((Gun.GetBoneCoords('firstperson_wep').Origin.Z - CameraLocation.Z) * 3.0));
-            GunOffset += HUDOverlayOffset;
-
-            // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-
-            Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
-        }
-    }
-    else
-    {
-        ActivateOverlay(false);
-    }
-
-    if (PC != none)
-    {
-        // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && VehicleBase != none)
-        {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
-        }
-    }
-}
-
 defaultproperties
 {
     FirstPersonGunShakeScale=2.0
     WeaponFOV=72.0
     DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
-    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
-    DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
+    DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
     bCustomAiming=true
     bHasAltFire=false
     CameraBone="loader_cam"
+    FirstPersonGunRefBone="firstperson_wep"
+    FirstPersonGunOffsetZScale=3.0
     bPCRelativeFPRotation=true
     bDesiredBehindView=false
     DrivePos=(X=16.0,Z=20.0)

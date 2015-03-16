@@ -83,51 +83,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
-simulated function DrawHUD(Canvas Canvas)
-{
-    local PlayerController PC;
-    local vector  CameraLocation;
-    local rotator CameraRotation;
-    local Actor   ViewActor;
-    local vector  GunOffset;
-
-    PC = PlayerController(Controller);
-
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
-    {
-        if (!Level.IsSoftwareRendering())
-        {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-
-            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-            GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-
-            // Make the first person gun appear lower when your sticking your head up
-            GunOffset.Z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 3.0));
-            GunOffset += HUDOverlayOffset;
-
-            // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-
-            Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
-        }
-    }
-    else
-    {
-        ActivateOverlay(false);
-    }
-
-    if (PC != none)
-    {
-        // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && VehicleBase != none)
-        {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
-        }
-    }
-}
-
 // Hack - turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
 // Matt: added this to bren carrier as muzzle flash looked wrong in raised gunner position
 // I don't think it's ideal but it's better than seeing the muzzle flash and it's exactly the same as the other APC MGs
@@ -205,8 +160,8 @@ defaultproperties
     UnbuttonedPositionIndex=0
     FirstPersonGunShakeScale=1.5
     WeaponFOV=60.0
-    DriverPositions(0)=(ViewLocation=(X=10.0),ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
-    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bExposed=true)
+    DriverPositions(0)=(ViewLocation=(X=10.0),ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionUpAnim="com_open",DriverTransitionAnim="VUC_com_close",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_allies_carrier_anm.Bren_mg_int',TransitionDownAnim="com_close",DriverTransitionAnim="VUC_com_open",ViewPitchUpLimit=4000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=7500,ViewNegativeYawLimit=-7500,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_UniCarrierGun'
@@ -214,6 +169,8 @@ defaultproperties
     PositionInArray=0
     bHasAltFire=false
     CameraBone="Camera_com"
+    FirstPersonGunRefBone="1stperson_wep"
+    FirstPersonGunOffsetZScale=3.0
     bDesiredBehindView=false
     DrivePos=(X=-11.0,Y=-4.0,Z=31.0)
     DriveRot=(Yaw=16384)

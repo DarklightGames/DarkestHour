@@ -63,53 +63,67 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraLocation = CameraLocation + PC.ShakeOffset.X * x + PC.ShakeOffset.Y * y + PC.ShakeOffset.Z * z;
 }
 
+// Modified to handle binoculars overlay
 simulated function DrawHUD(Canvas Canvas)
 {
     local PlayerController PC;
-    local vector  CameraLocation;
-    local rotator CameraRotation;
-    local Actor   ViewActor;
-    local vector  GunOffset;
+    local vector           CameraLocation, GunOffset;
+    local rotator          CameraRotation;
+    local Actor            ViewActor;
+    local float            SavedOpacity;
 
     PC = PlayerController(Controller);
 
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
+    if (PC != none && !PC.bBehindView)
     {
-        if (!Level.IsSoftwareRendering() && DriverPositionIndex != BinocsPositionIndex)
-        {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-
-            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-            GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-
-            // Make the first person gun appear lower when your sticking your head up
-            GunOffset.Z += (((Gun.GetBoneCoords('1stperson_wep').Origin.Z - CameraLocation.Z) * 1.0));
-            GunOffset += HUDOverlayOffset;
-
-            // Not sure if we need this, but the HudOverlay might lose network relevancy if its location doesn't get updated - Ramm
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-
-            Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
-        }
-        else
-        {
-            DrawBinocsOverlay(Canvas);
-        }
-    }
-    else
-    {
-        ActivateOverlay(false);
-    }
-
-    if (PC != none)
-    {
-        // Draw tank, turret, ammo count, passenger list
+        // Draw vehicle, turret, ammo count, passenger list
         if (ROHud(PC.myHUD) != none && VehicleBase != none)
         {
             ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
         }
+
+        // Draw binoculars overlay
+        if (DriverPositionIndex == BinocsPositionIndex)
+        {
+            SavedOpacity = Canvas.ColorModulate.W; // save current HUD opacity & then remove opacity
+            Canvas.ColorModulate.W = 1.0;
+            Canvas.DrawColor.A = 255;
+            Canvas.Style = ERenderStyle.STY_Alpha;
+
+            DrawBinocsOverlay(Canvas);
+
+            Canvas.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+        }
+        // Draw HUD overlay (MG)
+        else if (HUDOverlay != none && !Level.IsSoftwareRendering())
+        {
+            CameraRotation = PC.Rotation;
+            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
+            CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
+
+            // Make the first person gun appear lower when your sticking your head up
+            GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
+            GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonGunOffsetZScale));
+            GunOffset += HUDOverlayOffset;
+
+            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
+            Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+        }
     }
+    else if (HUDOverlay != none)
+    {
+        ActivateOverlay(false);
+    }
+}
+
+// New function, same as tank cannon pawn
+simulated function DrawBinocsOverlay(Canvas Canvas)
+{
+    local float ScreenRatio;
+
+    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
+    Canvas.SetPos(0.0, 0.0);
+    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Hack - Turn off the muzzle flash in first person when your head is sticking up since it doesn't look right
@@ -142,15 +156,6 @@ simulated state ViewTransition
     }
 }
 
-simulated function DrawBinocsOverlay(Canvas Canvas)
-{
-    local float ScreenRatio;
-
-    ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
-    Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
-}
-
 defaultproperties
 {
     UnbuttonedPositionIndex=0
@@ -159,15 +164,17 @@ defaultproperties
     FirstPersonGunShakeScale=0.75
     WeaponFOV=60.0
     HudName="Engineer"
-    DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    DriverPositions(0)=(ViewFOV=60.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionUpAnim="com_open",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',TransitionDownAnim="com_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=7500,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun_int',ViewPitchUpLimit=5300,ViewPitchDownLimit=63000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bDrawOverlays=true,bExposed=true)
     bMultiPosition=true
     bMustBeTankCrew=false
     GunClass=class'DH_Vehicles.DH_HigginsBoatGun'
     bCustomAiming=true
     PositionInArray=0
     bHasAltFire=false
+    FirstPersonGunRefBone="1stperson_wep"
+    FirstPersonGunOffsetZScale=1.0
     CameraBone="Camera_com"
     bDesiredBehindView=false
     DrivePos=(Y=-5.0,Z=14.0)
