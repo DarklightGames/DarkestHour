@@ -22,6 +22,25 @@ var bool                                    bRendered;
 //Deploy Menu Access
 var DHDeployMenu                            myDeployMenu;
 
+// Remove this when we add it to library
+static function string GetTimeString(float Time)
+{
+    local string S;
+
+    Time = FMax(0.0, Time);
+
+    S = int(Time / 60) $ ":";
+
+    Time = Time % 60;
+
+    if (Time < 10)
+        S = S $ "0" $ int(Time);
+    else
+        S = S $ int(Time);
+
+    return S;
+}
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController, MyOwner);
@@ -59,7 +78,7 @@ function ShowPanel(bool bShow)
 {
     super.ShowPanel(bShow);
 
-    //We are showing this panel so we want to spawn as vehicle
+    // We are showing this panel so we want to spawn as vehicle
     if (bShow && myDeployMenu != none)
     {
         myDeployMenu.bSpawningVehicle = true;
@@ -105,18 +124,20 @@ function InitializeVehiclePools()
 function UpdateVehiclePools()
 {
     local int i;
+    local float PoolRespawnTime;
 
     for (i = 0; i < VehiclePoolIndices.Length; ++i)
     {
-        li_VehiclePools.SetItemAtIndex(i, FormatPoolString(VehiclePoolIndices[i]));
+        PoolRespawnTime = FMax(0.0, DHGRI.VehiclePoolNextAvailableTimes[i] - DHGRI.ElapsedTime);
+        li_VehiclePools.SetItemAtIndex(i, FormatPoolString(VehiclePoolIndices[i], PoolRespawnTime));
 
         if (DHGRI.VehiclePoolIsActives[VehiclePoolIndices[i]] == 0)
         {
-            li_VehiclePools.SetDisabledAtIndex(i, true);
+            li_VehiclePools.SetDisabledAtIndex(i, true); // Disabled
         }
-        else if (DHGRI.VehiclePoolNextAvailableTimes[VehiclePoolIndices[i]] != 0)
+        else if (PoolRespawnTime > 0.0)
         {
-            li_VehiclePools.SetDisabledAtIndex(i, true);
+            li_VehiclePools.SetDisabledAtIndex(i, true); // Disabled
         }
         else
         {
@@ -126,7 +147,7 @@ function UpdateVehiclePools()
 }
 
 // Eventually this function will properly contruct a string with helpful info to player
-function string FormatPoolString(int i)
+function string FormatPoolString(int i, float PoolRespawnTime)
 {
     local string poolname, add;
 
@@ -160,13 +181,14 @@ function string FormatPoolString(int i)
     }
 
     // Add respawn time
-    if (DHGRI.VehiclePoolNextAvailableTimes[i] == 0)
+    if (PoolRespawnTime <= 0)
     {
         add = add @ "Ready";
     }
     else
     {
-        add = add @ DHGRI.VehiclePoolNextAvailableTimes[i] @ "Before Ready";
+        // Need a format time function
+        add = add @ GetTimeString(PoolRespawnTime) @ "Before Ready";
     }
 
     return poolname $ add;

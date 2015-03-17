@@ -364,7 +364,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
         ++TeamVehicleCounts[V.default.VehicleTeam];
 
         //Update pool properties
-        SetPoolNextAvailableTime(C.VehiclePoolIndex, Level.TimeSeconds + VehiclePools[C.VehiclePoolIndex].RespawnTime);
+        SetPoolNextAvailableTime(C.VehiclePoolIndex, GRI.ElapsedTime + VehiclePools[C.VehiclePoolIndex].RespawnTime);
         SetPoolActiveCount(C.VehiclePoolIndex, VehiclePools[C.VehiclePoolIndex].ActiveCount + 1);
         SetPoolSpawnCount(C.VehiclePoolIndex, VehiclePools[C.VehiclePoolIndex].SpawnCount + 1);
 

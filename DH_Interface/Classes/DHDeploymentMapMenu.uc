@@ -102,7 +102,7 @@ function Timer()
 
         if (GRI.DHSpawnCount[PRI.Team.TeamIndex] == 0)
         {
-            //Inform menu that our team is out of reinforcements and we can't spawn
+            // Inform menu that our team is out of reinforcements and we can't spawn
             bOutOfReinforcements = true;
         }
         else
@@ -288,10 +288,20 @@ function bool SpawnClick(int Index)
         return true;
     }
 
+    // Temp exploit spawn remove later
+    if (Index == -2)
+    {
+        if (DHP.Pawn == none && myRoleMenu != none)
+        {
+            myRoleMenu.AttemptRoleApplication();
+            DHP.ServerAttemptDeployPlayer(DHP.DesiredSpawnPoint, DHP.DesiredAmmoAmount, true);
+            Controller.CloseMenu(false); //Close menu as we clicked deploy!
+        }
+    }
+
     if (Index != -1 && SpawnPoints[Index] == none)
     {
         Warn("No spawn point found! Error!");
-
         return true;
     }
 
@@ -301,7 +311,7 @@ function bool SpawnClick(int Index)
         // Nullify the vehicle index if we aren't spawning a vehicle
         if (!myDeployMenu.bSpawningVehicle)
         {
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, -1);
+            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, DHP.SpawnVehicleIndex);
         }
 
         // We clicked desired spawn point! lets try to spawn
@@ -327,17 +337,11 @@ function bool InternalOnClick(GUIComponent Sender)
 
     switch(Sender)
     {
-        case b_ExploitSpawn:
-            if (DHP.Pawn == none && myRoleMenu != none)
-            {
-                myRoleMenu.AttemptRoleApplication();
-                DHP.ServerAttemptDeployPlayer(DHP.DesiredSpawnPoint, DHP.DesiredAmmoAmount, true);
-                Controller.CloseMenu(false); //Close menu as we clicked deploy!
-            }
-
+        case b_ExploitSpawn: // Remove later
+            SpawnClick(-2);
             break;
 
-        case b_DeployButton: //Below should be a separate function so it can be reused when player clicks a desired spawn point
+        case b_DeployButton:
             if (DHP.DesiredSpawnPoint != none)
             {
                 SpawnClick(-1);
@@ -369,7 +373,6 @@ function bool InternalOnClick(GUIComponent Sender)
     return false;
 }
 
-// This function will require heavy redesign when I make things someone server sided
 function bool DrawDeployTimer(Canvas C)
 {
     local float P;
@@ -383,7 +386,7 @@ function bool DrawDeployTimer(Canvas C)
         return false; // in case reinforcements are added
     }
 
-    //Handle progress bar values (so they move/advance based on deploy time)
+    // Handle progress bar values (so they move/advance based on deploy time)
     if (!bReadyToDeploy)
     {
         P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) / DHP.RedeployTime;
@@ -408,14 +411,12 @@ function bool DrawDeployTimer(Canvas C)
     {
         if (DHP.DesiredSpawnPoint == none)
         {
-            //b_DeployButton.Caption = "Select a spawn point";
-            // Temp hack to make it so you can spawn on maps without spawn points
             b_DeployButton.Caption = "Select a spawn point or Deploy to SpawnArea";
             b_DeployButton.EnableMe();
         }
         else if (DHP.Pawn != none)
         {
-            b_DeployButton.Caption = "Deployed"; //If we have a pawn and progress bar has finished, we are deployed
+            b_DeployButton.Caption = "Deployed"; //If we have a pawn, we are deployed
             b_DeployButton.DisableMe();
         }
         else
