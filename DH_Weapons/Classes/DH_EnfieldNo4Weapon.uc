@@ -5,7 +5,7 @@
 
 class DH_EnfieldNo4Weapon extends DH_BoltActionWeapon;
 
-#exec OBJ LOAD FILE=..\DarkestHour\Animations\DH_EnfieldNo4_1st.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_EnfieldNo4_1st.ukx
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {

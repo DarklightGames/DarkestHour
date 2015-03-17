@@ -5,7 +5,7 @@
 
 class DH_M1GarandWeapon extends DH_SemiAutoWeapon;
 
-#exec OBJ LOAD FILE=..\DarkestHour\Animations\DH_Garand_1st.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Garand_1st.ukx
 
 var bool bIsLastRound;
 

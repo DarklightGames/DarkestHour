@@ -5,7 +5,7 @@
 
 class DH_PIATWeapon extends DH_ProjectileWeapon;
 
-#exec OBJ LOAD FILE=..\DarkestHour\Animations\DH_PIAT_1st.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_PIAT_1st.ukx
 
 var()   int     Ranges[3];         // The angle to launch the projectile at different ranges
 var     int     RangeIndex;        // Current range setting
