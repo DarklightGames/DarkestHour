@@ -24,7 +24,7 @@ var     Material                            ObjectiveIcons[3];
 
 var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
-var     DHPlayer                            PC;
+var     DHPlayer                            DHP;
 var     DHHud                               HUD;
 var     vector                              NELocation,SWLocation;
 
@@ -38,14 +38,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     Super.InitComponent(MyController, MyOwner);
 
-    PC = DHPlayer(PlayerOwner());
-    if (PC == none)
+    DHP = DHPlayer(PlayerOwner());
+    if (DHP == none)
     {
         return;
     }
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-    HUD = DHHud(PC.myHUD);
+    GRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+    HUD = DHHud(DHP.myHUD);
     if (GRI == none || HUD == none || PRI == none)
     {
         return;
@@ -178,7 +178,7 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
 
     if (SP != none && Index >= 0 && Index < arraycount(b_SpawnPoints))
     {
-        if (SP == PC.DesiredSpawnPoint)
+        if (SP == DHP.DesiredSpawnPoint)
         {
             W = 0.075;
             H = 0.035;
@@ -296,21 +296,27 @@ function bool SpawnClick(int Index)
     }
 
     // Check if we clicked the desired spawn point
-    if (Index == -1 || SpawnPoints[Index] == PC.DesiredSpawnPoint)
+    if (Index == -1 || SpawnPoints[Index] == DHP.DesiredSpawnPoint)
     {
+        // Nullify the vehicle index if we aren't spawning a vehicle
+        if (!myDeployMenu.bSpawningVehicle)
+        {
+            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, -1);
+        }
+
         // We clicked desired spawn point! lets try to spawn
         // Only deploy if we clicked the selected SP and are ready
-        if (bReadyToDeploy && PC.Pawn == none && myRoleMenu != none)
+        if (bReadyToDeploy && DHP.Pawn == none && myRoleMenu != none)
         {
             myRoleMenu.AttemptRoleApplication();
-            PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount);
+            DHP.ServerAttemptDeployPlayer(DHP.DesiredSpawnPoint, DHP.DesiredAmmoAmount);
             Controller.CloseMenu(false); //Close menu as we clicked deploy!
         }
     }
     else
     {
         // Set the desired spawn point
-        PC.DesiredSpawnPoint = SpawnPoints[Index];
+        DHP.DesiredSpawnPoint = SpawnPoints[Index];
     }
 }
 
@@ -322,17 +328,17 @@ function bool InternalOnClick(GUIComponent Sender)
     switch(Sender)
     {
         case b_ExploitSpawn:
-            if (PC.Pawn == none && myRoleMenu != none)
+            if (DHP.Pawn == none && myRoleMenu != none)
             {
                 myRoleMenu.AttemptRoleApplication();
-                PC.ServerAttemptDeployPlayer(PC.DesiredSpawnPoint, PC.DesiredAmmoAmount, true);
+                DHP.ServerAttemptDeployPlayer(DHP.DesiredSpawnPoint, DHP.DesiredAmmoAmount, true);
                 Controller.CloseMenu(false); //Close menu as we clicked deploy!
             }
 
             break;
 
         case b_DeployButton: //Below should be a separate function so it can be reused when player clicks a desired spawn point
-            if (PC.DesiredSpawnPoint != none)
+            if (DHP.DesiredSpawnPoint != none)
             {
                 SpawnClick(-1);
             }
@@ -380,7 +386,7 @@ function bool DrawDeployTimer(Canvas C)
     //Handle progress bar values (so they move/advance based on deploy time)
     if (!bReadyToDeploy)
     {
-        P = pb_DeployProgressBar.High * (PC.LastKilledTime + PC.RedeployTime - PC.Level.TimeSeconds) / PC.RedeployTime;
+        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) / DHP.RedeployTime;
         P = pb_DeployProgressBar.High - P;
         pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
 
@@ -393,21 +399,21 @@ function bool DrawDeployTimer(Canvas C)
         else
         {
             //Progress isn't done
-            b_DeployButton.Caption = "Deploy in:" @ int(Ceil(PC.LastKilledTime + PC.RedeployTime - PC.Level.TimeSeconds)) @ "Seconds";
+            b_DeployButton.Caption = "Deploy in:" @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ "Seconds";
             bReadyToDeploy = false;
             b_DeployButton.DisableMe();
         }
     }
     else
     {
-        if (PC.DesiredSpawnPoint == none)
+        if (DHP.DesiredSpawnPoint == none)
         {
             //b_DeployButton.Caption = "Select a spawn point";
             // Temp hack to make it so you can spawn on maps without spawn points
             b_DeployButton.Caption = "Select a spawn point or Deploy to SpawnArea";
             b_DeployButton.EnableMe();
         }
-        else if (PC.Pawn != none)
+        else if (DHP.Pawn != none)
         {
             b_DeployButton.Caption = "Deployed"; //If we have a pawn and progress bar has finished, we are deployed
             b_DeployButton.DisableMe();

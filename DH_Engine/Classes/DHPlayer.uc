@@ -45,7 +45,7 @@ var DHHintManager DHHintManager;
 
 var float   MapVoteTime;
 
-replication //THEEL: SpawnPointIndex does not need to be replicated to my knowledge
+replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
