@@ -83,17 +83,16 @@ function SetBackground()
 
 function SelectTeamSuccessfull()
 {
-    if (selectedTeam != -1)
+    if (ROPlayer(PlayerOwner()) == none || Controller == none)
     {
-        if (ROPlayer(PlayerOwner()) != none)
-        {
-            ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
-        }
-
-        Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
+        return;
     }
 
-    class'DHRoleSelectPanel'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
+    if (selectedTeam != -1)
+    {
+        ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
+        Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
+    }
 
     Controller.RemoveMenu(self);
 }

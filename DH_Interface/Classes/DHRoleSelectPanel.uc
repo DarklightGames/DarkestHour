@@ -135,6 +135,12 @@ function ShowPanel(bool bShow)
     //We are showing this panel so we want to spawn as infantry
     if (bShow && myDeployMenu != none)
     {
+        // Clear DesiredSpawnPoint if it's vehicle
+        if (DHP.DesiredSpawnPoint != none && DHP.DesiredSpawnPoint.Type == ESPT_Vehicles)
+        {
+            DHP.DesiredSpawnPoint = none;
+        }
+
         myDeployMenu.bSpawningVehicle = false;
     }
 }
@@ -354,33 +360,9 @@ function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
 
-    // Inform player that they are changing roles
-    // Theel need a way to let the player know what they are?
-}
+    Log("bRoleIsCrew is being set to:" @ desiredRole.default.bCanBeTankCrew);
 
-// I don't think this function is being used
-function ToggleTeam()
-{
-    if (currentTeam == AXIS_TEAM_INDEX)
-    {
-        ChangeDesiredTeam(1);
-    }
-    else if (currentTeam == ALLIES_TEAM_INDEX)
-    {
-        ChangeDesiredTeam(0);
-    }
-}
-
-// Or this one!
-function ChangeDesiredTeam(int team)
-{
-    desiredTeam = team;
-    desiredRole = none;
-    desiredWeapons[0] = -1;
-    desiredWeapons[1] = -1;
-
-    FillRoleList();
-    AutoPickRole();
+    myDeployMenu.bRoleIsCrew = desiredRole.default.bCanBeTankCrew;
 }
 
 function int FindRoleIndexInList(RORoleInfo newRole)
@@ -899,11 +881,6 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     currentWeapons[0] = desiredWeapons[0];
     currentWeapons[1] = desiredWeapons[1];
     //GetInitialValues(); //gulp lets see if this works and doesn't bug the fuck out
-}
-
-static function CheckNeedForFadeFromBlackEffect(PlayerController controller)
-{
-
 }
 
 function bool InternalOnClick(GUIComponent Sender)

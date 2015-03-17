@@ -24,7 +24,10 @@ var array<string>                           LoadoutPanelClass;
 var localized array<string>                 LoadoutPanelCaption;
 var localized array<string>                 LoadoutPanelHint;
 
-var bool                                    bReceivedTeam, bShowingMenuOptions, bSpawningVehicle;
+var bool                                    bReceivedTeam,
+                                            bShowingMenuOptions,
+                                            bSpawningVehicle,
+                                            bRoleIsCrew;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {

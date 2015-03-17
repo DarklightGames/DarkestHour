@@ -964,14 +964,15 @@ state PlayerWalking
     function Timer()
     {
         // Handle check if we should try to enter spawned vehicle
-        if (MyLastVehicle != none && Pawn != none)
+        if (MyLastVehicle != none)
         {
             ClientFadeFromBlack(4.0);
 
-            if (MyLastVehicle.TryToDrive(Pawn))
+            if (Pawn != none)
             {
-                MyLastVehicle = none;
+                MyLastVehicle.TryToDrive(Pawn);
             }
+            MyLastVehicle = none; // Remove it even if it failed
         }
     }
 
@@ -2468,6 +2469,12 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
                 // Because we switched teams we should reset current role, desired role, etc.
                 DesiredRole = -1;
                 CurrentRole = -1;
+                DesiredAmmoAmount = 0;
+                DesiredSpawnPoint = none;
+                SpawnPointIndex = -1;
+                VehiclePoolIndex = -1;
+                SpawnVehicleIndex = -1;
+                MyLastVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;

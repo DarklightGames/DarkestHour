@@ -221,7 +221,7 @@ function PlaceObjectiveOnMap(ROObjective O, int Index)
     }
 }
 
-//Theel: will eventually want to draw 'deployed' MDVs also
+// Theel: will eventually want to draw 'deployed' MDVs also
 function bool DrawMapComponents(Canvas C)
 {
     local int i;
@@ -313,6 +313,11 @@ function bool SpawnClick(int Index)
         {
             DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, DHP.SpawnVehicleIndex);
         }
+        else if (DHP.VehiclePoolIndex == -1)
+        {
+            Warn("No vehicle pool selected, exiting spawn attempt");
+            return true;
+        }
 
         // We clicked desired spawn point! lets try to spawn
         // Only deploy if we clicked the selected SP and are ready
@@ -377,13 +382,24 @@ function bool DrawDeployTimer(Canvas C)
 {
     local float P;
 
+    // Check for reinforcements
     if (bOutOfReinforcements)
     {
+        pb_DeployProgressBar.Value = pb_DeployProgressBar.Low;
         bReadyToDeploy = false;
         b_DeployButton.DisableMe();
         b_DeployButton.Caption = "Your team is out of reinforcements";
+        return false;
+    }
 
-        return false; // in case reinforcements are added
+    // Check for vehicle pool index if spawning vehicle
+    if (myDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex == -1)
+    {
+        pb_DeployProgressBar.Value = pb_DeployProgressBar.Low;
+        bReadyToDeploy = false;
+        b_DeployButton.DisableMe();
+        b_DeployButton.Caption = "Select a vehicle from the vehicle panel";
+        return false;
     }
 
     // Handle progress bar values (so they move/advance based on deploy time)
@@ -395,13 +411,13 @@ function bool DrawDeployTimer(Canvas C)
 
         if (pb_DeployProgressBar.Value == pb_DeployProgressBar.High)
         {
-            //Progress is done
+            // Progress is done
             bReadyToDeploy = true;
             b_DeployButton.EnableMe();
         }
         else
         {
-            //Progress isn't done
+            // Progress isn't done
             b_DeployButton.Caption = "Deploy in:" @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ "Seconds";
             bReadyToDeploy = false;
             b_DeployButton.DisableMe();
@@ -416,7 +432,7 @@ function bool DrawDeployTimer(Canvas C)
         }
         else if (DHP.Pawn != none)
         {
-            b_DeployButton.Caption = "Deployed"; //If we have a pawn, we are deployed
+            b_DeployButton.Caption = "Deployed"; // If we have a pawn, we are deployed
             b_DeployButton.DisableMe();
         }
         else
