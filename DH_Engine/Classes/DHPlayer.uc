@@ -2411,6 +2411,17 @@ function ClientFadeFromBlack(float time, optional bool bInvertFadeDirection)
     ROHud(MyHud).FadeToBlack(time, !bInvertFadeDirection);
 }
 
+// Modified to allow for faster suiciding, annoying when it doesn't work in MP
+// There might be some unknown problem that having such a low value can cause
+// This might be a temporary function then that will need removed for non dev work
+exec function Suicide()
+{
+    if ((Pawn != None) && (Level.TimeSeconds - Pawn.LastStartTime > 1))
+    {
+        Pawn.Suicide();
+    }
+}
+
 defaultproperties
 {
     // Sway values
@@ -2421,6 +2432,7 @@ defaultproperties
     baseSwayYawAcc=120
     baseSwayPitchAcc=100
 
+    // Other values
     RedeployTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)
