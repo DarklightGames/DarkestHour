@@ -68,11 +68,6 @@ static final function int IndexOf(array<Object> _Array, Object O)
     return -1;
 }
 
-static final function bool Contains(array<Object> _Array, Object O)
-{
-    return IndexOf(_Array, O) >= 0;
-}
-
 static final function int Erase(out array<Object> _Array, Object O)
 {
     local int i;
