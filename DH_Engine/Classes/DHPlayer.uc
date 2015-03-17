@@ -2422,6 +2422,124 @@ exec function Suicide()
     }
 }
 
+// Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
+function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2)
+{
+    // Attempt to change teams
+    if (newTeam != 255)
+    {
+        // Specate
+        if (newTeam == 254)
+        {
+            BecomeSpectator();
+
+            // Check if change was successfull
+            if (!PlayerReplicationInfo.bOnlySpectator)
+            {
+                if (PlayerReplicationInfo == none)
+                    ClientChangePlayerInfoResult(01);
+                else if (Level.Game.NumSpectators >= Level.Game.MaxSpectators)
+                    ClientChangePlayerInfoResult(02);
+                else if (IsInState('GameEnded'))
+                    ClientChangePlayerInfoResult(03);
+                else if (IsInState('RoundEnded'))
+                    ClientChangePlayerInfoResult(04);
+                else
+                    ClientChangePlayerInfoResult(99);
+                return;
+            }
+        }
+        else
+        {
+            if (newTeam == 250) // auto select
+            {
+                if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
+                    BecomeActivePlayer();
+
+                newTeam = ServerAutoSelectAndChangeTeam();
+            }
+            else if (ROTeamGame(Level.Game).PickTeam(newTeam, self) == newTeam)
+            {
+                if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
+                    BecomeActivePlayer();
+
+                ServerChangeTeam(newTeam);
+
+                // Because we switched teams we should reset current role, desired role, etc.
+                DesiredRole = -1;
+                CurrentRole = -1;
+                DesiredPrimary = 0;
+                DesiredSecondary = 0;
+                DesiredGrenade = 0;
+            }
+
+            // Check if change was successfull
+            if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none ||
+                PlayerReplicationInfo.Team.TeamIndex != newTeam)
+            {
+                if (PlayerReplicationInfo == none)
+                    ClientChangePlayerInfoResult(10);
+                else if (Level.Game.bMustJoinBeforeStart)
+                    ClientChangePlayerInfoResult(11);
+                else if (Level.Game.NumPlayers >= Level.Game.MaxPlayers)
+                    ClientChangePlayerInfoResult(12);
+                else if (Level.Game.MaxLives > 0)
+                    ClientChangePlayerInfoResult(13);
+                else if (IsInState('GameEnded'))
+                    ClientChangePlayerInfoResult(14);
+                else if (IsInState('RoundEnded'))
+                    ClientChangePlayerInfoResult(15);
+                else if (Level.Game.bMustJoinBeforeStart && Level.Game.GameReplicationInfo.bMatchHasBegun)
+                    ClientChangePlayerInfoResult(16);
+                else if (ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).PickTeam(newTeam, self) != newTeam)
+                {
+                    if (ROTeamGame(Level.Game).bPlayersVsBots && (Level.NetMode != NM_Standalone))
+                        ClientChangePlayerInfoResult(17);
+                    else
+                        ClientChangePlayerInfoResult(18);
+                }
+                else
+                    ClientChangePlayerInfoResult(99);
+
+                return;
+            }
+        }
+    }
+
+    // Attempt to change role
+    if (newRole != 255)
+    {
+        //log("changing role...");
+        ChangeRole(newRole);
+
+        // Check if change was successfull
+        if (DesiredRole != newRole)
+        {
+            if (ROTeamGame(Level.Game) != none &&
+                PlayerReplicationInfo != none &&
+                PlayerReplicationInfo.Team != none &&
+                ROTeamGame(Level.Game).RoleLimitReached(PlayerReplicationInfo.Team.TeamIndex, newRole))
+            {
+                ClientChangePlayerInfoResult(100);
+            }
+            else
+                ClientChangePlayerInfoResult(199);
+            return;
+        }
+    }
+
+    ChangeWeapons(newWeapon1, newWeapon2, 0);
+
+    // Success!
+    if (newTeam == AXIS_TEAM_INDEX)
+        ClientChangePlayerInfoResult(97); // successfully picked axis team
+    else if (newTeam == ALLIES_TEAM_INDEX)
+        ClientChangePlayerInfoResult(98); // successfully picked allies team
+    else
+        ClientChangePlayerInfoResult(00);
+}
+
+
 defaultproperties
 {
     // Sway values

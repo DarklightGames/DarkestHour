@@ -114,7 +114,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     // Fill roles list
     FillRoleList();
-    if (currentRole == none)
+    if (currentRole == none || DHP.CurrentRole == -1)
     {
         AutoPickRole();
     }
