@@ -5,8 +5,10 @@
 
 class DHGUITeamSelection extends ROGUITeamSelection;
 
-var  automated  BackgroundImage     bg_Background2, bg_Background3;
+var automated BackgroundImage               bg_Background2,
+                                            bg_Background3;
 
+var automated GUIButton                     b_Disconnect;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -94,6 +96,33 @@ function SelectTeamSuccessfull()
     class'DHRoleSelectPanel'.static.CheckNeedForFadeFromBlackEffect(PlayerOwner());
 
     Controller.RemoveMenu(self);
+}
+
+function bool InternalOnClick( GUIComponent Sender )
+{
+    switch (Sender)
+    {
+        case b_AutoSelect:
+            SelectTeam(-2);
+            break;
+
+        case b_Spectate:
+            SelectTeam(-1);
+            break;
+
+        case b_Disconnect:
+            PlayerOwner().ConsoleCommand("DISCONNECT");
+            break;
+
+        case b_TeamSelect[AXIS_TEAM_INDEX]:
+            SelectTeam(AXIS_TEAM_INDEX);
+            break;
+
+        case b_TeamSelect[ALLIES_TEAM_INDEX]:
+            SelectTeam(ALLIES_TEAM_INDEX);
+            break;
+    }
+    return true;
 }
 
 defaultproperties
@@ -188,31 +217,44 @@ defaultproperties
     End Object
     b_TeamSelect(1)=DHGUIButton'DH_Interface.DHGUITeamSelection.JoinTeamButton2'
 
-    Begin Object Class=DHGUIButton Name=Spectate
-        Caption="Spectate"
-        StyleName="DHSmallTextButtonStyle"
-        WinTop=0.92
-        WinLeft=0.55
-        WinWidth=0.25
-        WinHeight=0.05
-        TabOrder=4
-        OnClick=DHGUITeamSelection.InternalOnClick
-        OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
-    End Object
-    b_Spectate=DHGUIButton'DH_Interface.DHGUITeamSelection.Spectate'
-
     Begin Object Class=DHGUIButton Name=AutoSelect
         Caption="Auto-select"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.92
-        WinLeft=0.25
+        WinLeft=0.11875
         WinWidth=0.25
         WinHeight=0.05
         TabOrder=3
         OnClick=DHGUITeamSelection.InternalOnClick
         OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
     End Object
-    b_AutoSelect=DHGUIButton'DH_Interface.DHGUITeamSelection.AutoSelect'
+    b_AutoSelect=AutoSelect
+
+    Begin Object Class=DHGUIButton Name=Spectate
+        Caption="Spectate"
+        StyleName="DHSmallTextButtonStyle"
+        WinTop=0.92
+        WinLeft=0.40
+        WinWidth=0.25
+        WinHeight=0.05
+        TabOrder=4
+        OnClick=DHGUITeamSelection.InternalOnClick
+        OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
+    End Object
+    b_Spectate=Spectate
+
+    Begin Object Class=DHGUIButton Name=Disconnect
+        Caption="Disconnect"
+        StyleName="DHSmallTextButtonStyle"
+        WinTop=0.92
+        WinLeft=0.70
+        WinWidth=0.25
+        WinHeight=0.05
+        TabOrder=5
+        OnClick=DHGUITeamSelection.InternalOnClick
+        OnKeyEvent=DHGUITeamSelection.InternalOnKeyEvent
+    End Object
+    b_Disconnect=Disconnect
 
     Begin Object Class=BackgroundImage Name=PageBackground
         Image=texture'DH_GUI_Tex.Menu.Teamselect'
