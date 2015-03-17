@@ -1502,35 +1502,20 @@ function DrawPlayerNames(Canvas C)
 
                 if (MyDHP != none)
                 {
-                    if (MyDHP.bCanMGResupply)
-                    {
-                        MyDHP.bCanMGResupply = false;
-                    }
+                    MyDHP.bCanMGResupply = false;
+                    MyDHP.bCanATReload = false;
+                    MyDHP.bCanMortarResupply = false;
 
-                    if (MyDHP.bCanATReload)
+                    if (Distance < 14400.0) // 2 meters
                     {
-                        MyDHP.bCanATReload = false;
+                        MyDHP.bCanMortarResupply = true;
+                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                     }
-
-                    if (MyDHP.bCanMortarResupply)
-                    {
-                        MyDHP.bCanMortarResupply = false;
-                    }
-                }
-
-                if (Distance < 14400.0) // 2 meters
-                {
-                    MyDHP.bCanMortarResupply = true;
-                    Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                }
-                else
-                {
-                    if (MyDHP.bCanMortarResupply)
+                    else
                     {
                         MyDHP.bCanMortarResupply = false;
+                        Display = NeedAmmoText;
                     }
-
-                    Display = NeedAmmoText;
                 }
 
                 // Draw text under player's name (need ammo or press x to resupply)
@@ -1564,14 +1549,7 @@ function DrawPlayerNames(Canvas C)
         OtherDHP = DH_Pawn(NamedPlayer);
 
         // Quick check simply to stop error log spam
-        if (OtherDHP != none)
-        {
-            bIsAVehicle = false;
-        }
-        else
-        {
-            bIsAVehicle = true;
-        }
+        bIsAVehicle = (OtherDHP == none);
 
         GetAxes(PlayerOwner.Rotation, X, Y, Z);
         Dir = Normal(NamedPlayer.Location - PawnOwner.Location);
@@ -1596,35 +1574,20 @@ function DrawPlayerNames(Canvas C)
 
                 if (MyDHP != none)
                 {
-                    if (MyDHP.bCanMGResupply)
-                    {
-                        MyDHP.bCanMGResupply = false;
-                    }
+                    MyDHP.bCanMGResupply = false;
+                    MyDHP.bCanATReload = false;
+                    MyDHP.bCanMortarResupply = false;
 
-                    if (MyDHP.bCanATReload)
+                    if (Distance < 14400.0) // 2 meters
                     {
-                        MyDHP.bCanATReload = false;
+                        MyDHP.bCanMortarResupply = true;
+                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                     }
-
-                    if (MyDHP.bCanMortarResupply)
-                    {
-                        MyDHP.bCanMortarResupply = false;
-                    }
-                }
-
-                if (Distance < 14400.0) // 2 meters
-                {
-                    MyDHP.bCanMortarResupply = true;
-                    Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                }
-                else
-                {
-                    if (MyDHP.bCanMortarResupply)
+                    else
                     {
                         MyDHP.bCanMortarResupply = false;
+                        Display = NeedAmmoText;
                     }
-
-                    Display = NeedAmmoText;
                 }
 
                 // Draw text under player's name (need ammo or press x to resupply)
@@ -1650,25 +1613,15 @@ function DrawPlayerNames(Canvas C)
 
                     if (MyDHP != none)
                     {
-                        if (MyDHP.bCanATResupply)
-                        {
-                            MyDHP.bCanATResupply = false;
-                        }
+                        MyDHP.bCanATResupply = false;
+                        MyDHP.bCanATReload = false;
 
-                        if (MyDHP.bCanATReload)
+                        if (Distance < 14400.0) // 2 meters
                         {
-                            MyDHP.bCanATReload = false;
+                            MyDHP.bCanMGResupply = true;
+                            Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                         }
-                    }
-
-                    if (Distance < 14400.0) // 2 meters
-                    {
-                        MyDHP.bCanMGResupply = true;
-                        Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
-                    }
-                    else
-                    {
-                        if (MyDHP.bCanMGResupply)
+                        else
                         {
                             MyDHP.bCanMGResupply = false;
                             Display = NeedAmmoText;
@@ -1684,20 +1637,9 @@ function DrawPlayerNames(Canvas C)
                 {
                     if (MyDHP != none)
                     {
-                        if (MyDHP.bCanMGResupply)
-                        {
-                            MyDHP.bCanMGResupply = false;
-                        }
-
-                        if (MyDHP.bCanATResupply)
-                        {
-                            MyDHP.bCanATResupply = false;
-                        }
-
-                        if (MyDHP.bCanATReload)
-                        {
-                            MyDHP.bCanATReload = false;
-                        }
+                        MyDHP.bCanMGResupply = false;
+                        MyDHP.bCanATResupply = false;
+                        MyDHP.bCanATReload = false;
                     }
 
                     C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
@@ -1726,25 +1668,18 @@ function DrawPlayerNames(Canvas C)
 
                     Distance = VSizeSquared(Loc - PawnOwner.Location);
 
-                    if (MyDHP != none)
-                    {
-                        if (MyDHP.bCanMGResupply)
-                            MyDHP.bCanMGResupply = false;
-                        if (MyDHP.bCanATResupply)
-                            MyDHP.bCanATResupply = false;
-                    }
+                    MyDHP.bCanMGResupply = false;
+                    MyDHP.bCanATResupply = false;
 
                     if (Distance < 14400.0) // 2 meters
                     {
                         MyDHP.bCanATReload = true;
+
                         Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanReloadText, PlayerController(Owner));
                     }
                     else
                     {
-                        if (MyDHP.bCanATReload)
-                        {
-                            MyDHP.bCanATReload = false;
-                        }
+                        MyDHP.bCanATReload = false;
 
                         Display = NeedReloadText;
                     }
@@ -1768,30 +1703,18 @@ function DrawPlayerNames(Canvas C)
 
                     Distance = VSizeSquared(Loc - PawnOwner.Location);
 
-                    if (MyDHP != none)
-                    {
-                        if (MyDHP.bCanMGResupply)
-                        {
-                            MyDHP.bCanMGResupply = false;
-                        }
-
-                        if (MyDHP.bCanATReload)
-                        {
-                            MyDHP.bCanATReload = false;
-                        }
-                    }
+                    MyDHP.bCanMGResupply = false;
+                    MyDHP.bCanATReload = false;
 
                     if (Distance < 14400.0) // 2 meters
                     {
                         MyDHP.bCanATResupply = true;
+
                         Display = class'ROTeamGame'.static.ParseLoadingHintNoColor(CanResupplyText, PlayerController(Owner));
                     }
                     else
                     {
-                        if (MyDHP.bCanATResupply)
-                        {
-                            MyDHP.bCanATResupply = false;
-                        }
+                        MyDHP.bCanATResupply = false;
 
                         Display = NeedAmmoText;
                     }
@@ -1807,20 +1730,9 @@ function DrawPlayerNames(Canvas C)
                     // Draw player name
                     if (MyDHP != none)
                     {
-                        if (MyDHP.bCanMGResupply)
-                        {
-                            MyDHP.bCanMGResupply = false;
-                        }
-
-                        if (MyDHP.bCanATResupply)
-                        {
-                            MyDHP.bCanATResupply = false;
-                        }
-
-                        if (MyDHP.bCanATReload)
-                        {
-                            MyDHP.bCanATReload = false;
-                        }
+                        MyDHP.bCanMGResupply = false;
+                        MyDHP.bCanATResupply = false;
+                        MyDHP.bCanATReload = false;
                     }
 
                     C.TextSize(NamedPlayer.PlayerReplicationInfo.PlayerName, StrX, StrY);
