@@ -7,8 +7,6 @@ class DH_HetzerMountedMG extends DH_ROMountedTankMG;
 
 #exec OBJ LOAD FILE=..\Sounds\inf_weapons_foley.uax
 
-var()   sound   NoAmmoSound;        // 'dry fire' sound when trying to fire MG empty
-
 var()   sound   MGReloadSoundOne;   // 4 part reload functionality based on a tank cannon (and all new variables below)
 var()   sound   MGReloadSoundTwo;
 var()   sound   MGReloadSoundThree;
