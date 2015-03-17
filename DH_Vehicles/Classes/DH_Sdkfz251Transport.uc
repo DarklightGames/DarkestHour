@@ -241,4 +241,5 @@ defaultproperties
     HighDetailOverlayIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    bIsSpawnVehicle=true
 }
