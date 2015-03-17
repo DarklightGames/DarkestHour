@@ -180,9 +180,9 @@ defaultproperties
     ViewShakeRadius=600.0
     ViewShakeOffsetMag=(X=0.5,Z=2.0)
     ViewShakeOffsetFreq=7.0
-	DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter' // reinstate defaults x 3 from ROWheeledVehicle
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter' // reinstate defaults x 3 from ROWheeledVehicle
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
-	DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
     DisintegrationHealth=-10000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
