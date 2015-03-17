@@ -973,7 +973,7 @@ function bool AddSpawnVehicle(Vehicle V)
         return false;
     }
 
-    i = GRI.AddSpawnVehicle(V);
+    i = GRI.AddSpawnVehicle(V, SpawnVehicles.Length);
 
     if (i == -1)
     {
@@ -992,6 +992,11 @@ function RemoveSpawnVehicle(Vehicle V)
     class'DHLib'.static.Erase(SpawnVehicles, V);
 
     GRI.RemoveSpawnVehicle(V);
+}
+
+function int GetSpawnVehicleCount()
+{
+    return SpawnVehicles.Length;
 }
 
 defaultproperties

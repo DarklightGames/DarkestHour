@@ -290,7 +290,8 @@ function bool SpawnClick(int Index)
 
     if (Index != -1 && SpawnPoints[Index] == none)
     {
-        Log("No spawn point found! Error!");
+        Warn("No spawn point found! Error!");
+
         return true;
     }
 

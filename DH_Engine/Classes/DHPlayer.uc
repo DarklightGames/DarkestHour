@@ -37,6 +37,7 @@ var byte    MortarTargetIndex;
 var vector  MortarHitLocation;
 
 var int     SpawnPointIndex;
+var int     SpawnVehicleIndex;
 var int     VehiclePoolIndex;
 var vehicle MyLastVehicle;      // Used for vehicle spawning to remember last vehicle player spawned (only used by server)
 
@@ -48,7 +49,7 @@ replication //THEEL: SpawnPointIndex does not need to be replicated to my knowle
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        RedeployTime, SpawnPointIndex, VehiclePoolIndex;
+        RedeployTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -1942,7 +1943,7 @@ exec function DebugRoundPause()
     DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RoundDuration = 9999999;
 }
 
-function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
+function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex, int SpawnVehicleIndex)
 {
     local DarkestHourGame G;
 
@@ -1955,18 +1956,26 @@ function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex)
 
     if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= G.SpawnManager.GetSpawnPointCount()))
     {
-        Error("Invalid spawn point index");
+        Warn("Invalid spawn point index" @ SpawnPointIndex);
+
         self.SpawnPointIndex = -1; // reset spawn point index to null
     }
 
     if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= G.SpawnManager.GetVehiclePoolCount()))
     {
-        Error("Invalid vehicle pool index");
+        Warn("Invalid vehicle pool index" @ VehiclePoolIndex);
+
         self.VehiclePoolIndex = -1; // reset vehicle pool index to null
+    }
+
+    if (SpawnVehicleIndex != -1 && (SpawnVehicleIndex < 0 || SpawnVehicleIndex >= G.SpawnManager.GetSpawnVehicleCount()))
+    {
+        Warn("Invalid spawn vehicle index" @ SpawnVehicleIndex);
     }
 
     self.SpawnPointIndex = SpawnPointIndex;
     self.VehiclePoolIndex = VehiclePoolIndex;
+    self.SpawnVehicleIndex = SpawnVehicleIndex;
 }
 
 function ServerClearObstacle(int Index)
@@ -2048,6 +2057,7 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     {
         RI = DH_RoleInfo(PRI.RoleInfo);
     }
+
     if (RI != none)
     {
         PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
@@ -2057,27 +2067,29 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     if (PRI.Team == none)
     {
         Log("Failed at team check");
+
         return false;
     }
 
     if (PRI == none || DHGRI == none || Pawn != none)
     {
         Log("Failed at 0");
+
         return false;
     }
 
     // Confirm this player has a role && check if MagCount is valid based on role/weapon
-    if (PRI.RoleInfo != none)
-    {
-        if (PrimaryWep != none && MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags || MagCount <= 0)
-        {
-            Log("Failed at 1 MagCount is:"@MagCount);
-            return false;
-        }
-    }
-    else
+    if (PRI.RoleInfo == none)
     {
         Log("Failed at RoleInfo Check");
+
+        return false;
+    }
+
+    if (PrimaryWep != none && MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags || MagCount <= 0)
+    {
+        Log("Failed at 1 MagCount is:" @ MagCount);
+
         return false;
     }
 
@@ -2085,13 +2097,15 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     if (LastKilledTime + RedeployTime - Level.TimeSeconds > 0)
     {
         Log("Failed at 4");
+
         return false;
     }
 
     // Check if SP is valid
-    if (DHGRI.IsSpawnPointValid(SP,PRI.Team.TeamIndex))
+    if (DHGRI.IsSpawnPointValid(SP, PRI.Team.TeamIndex))
     {
         SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
+
         G.DeployRestartPlayer(self, true);
     }
 
@@ -2264,7 +2278,7 @@ simulated function CheckToAutoDeploy()
     }
 }
 
-//Temp function Theel will be using to get offset coordinates from nearby vehicle to create/adjust vehicle exit positions
+//Temp function to get offset coordinates from nearby vehicle to create/adjust vehicle exit positions
 exec function ExitPosTool()
 {
     local ROVehicle NearbyVeh;
@@ -2303,7 +2317,7 @@ simulated function SwayHandler(float DeltaTime)
         return;
     }
 
-    StaminaFactor = (P.default.Stamina - P.Stamina)/(P.default.Stamina*0.5);
+    StaminaFactor = (P.default.Stamina - P.Stamina) / (P.default.Stamina * 0.5);
     SwayTime += DeltaTime;
 
     if (SwayClearTime >= 0.05)
@@ -2320,10 +2334,10 @@ simulated function SwayHandler(float DeltaTime)
     }
 
     // Get timefactor based on sway curve
-    timeFactor = InterpCurveEval(SwayCurve,SwayTime);
+    timeFactor = InterpCurveEval(SwayCurve, SwayTime);
 
     // Get bobfactor based on bob curve
-    bobFactor = InterpCurveEval(BobCurve,SwayTime);
+    bobFactor = InterpCurveEval(BobCurve, SwayTime);
 
     // Handle timefactor modifier & weapon bob for weapon type
     if (DHWeapon(P.Weapon) != none)

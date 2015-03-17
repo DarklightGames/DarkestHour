@@ -19,6 +19,7 @@ struct MortarTargetInfo
 
 struct SpawnVehicle
 {
+    var byte        Index;
     var bool        bIsActive;
     var byte        TeamIndex;
     var vector      Location;
@@ -274,7 +275,7 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
 // Vehicle Pool Functions
 //------------------------------------------------------------------------------
 
-function int AddSpawnVehicle(Vehicle V)
+function int AddSpawnVehicle(Vehicle V, int Index)
 {
     local int i;
 
@@ -294,6 +295,7 @@ function int AddSpawnVehicle(Vehicle V)
         if (SpawnVehicles[i].Vehicle == none)
         {
             SpawnVehicles[i].bIsActive = true;
+            SpawnVehicles[i].Index = Index;
             SpawnVehicles[i].Location.X = V.Location.X;
             SpawnVehicles[i].Location.Y = V.Location.Y;
             SpawnVehicles[i].Location.Z = V.Rotation.Yaw;
@@ -320,6 +322,7 @@ function bool RemoveSpawnVehicle(Vehicle V)
         if (SpawnVehicles[i].Vehicle == V)
         {
             SpawnVehicles[i].bIsActive = false;
+            SpawnVehicles[i].Index = 255;
             SpawnVehicles[i].Location = vect(0.0, 0.0, 0.0);
             SpawnVehicles[i].TeamIndex = 0;
             SpawnVehicles[i].Vehicle = none;

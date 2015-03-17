@@ -191,7 +191,7 @@ function InternalOnChange(GUIComponent Sender)
             Log("------------------------------------------------------------------");
 
             //Update pool index
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex);
+            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
             break;
     }
 }

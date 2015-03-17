@@ -136,7 +136,7 @@ function ShowPanel(bool bShow)
     if (bShow && myDeployMenu != none)
     {
         myDeployMenu.bSpawningVehicle = false;
-        DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1);
+        DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, -1);    //TODO: why is this being called when the panel is being shown???
     }
 }
 
