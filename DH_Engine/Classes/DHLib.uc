@@ -70,13 +70,23 @@ static final function int IndexOf(array<Object> _Array, Object O)
 
 static final function int Erase(out array<Object> _Array, Object O)
 {
-    local int i;
+    local int i, j;
 
-    i = IndexOf(_Array, O);
+    j = -1;
 
-    if (i >= 0)
+    for (i = 0; i < _Array.Length; ++i)
     {
-        _Array.Remove(i, 1);
+        if (_Array[i] == O)
+        {
+            j = i;
+
+            break;
+        }
+    }
+
+    if (j >= 0)
+    {
+        _Array.Remove(j, 1);
 
         return 1;
     }
