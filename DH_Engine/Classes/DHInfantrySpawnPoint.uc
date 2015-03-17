@@ -5,5 +5,4 @@ class DHInfantrySpawnPoint extends Note;
 
 defaultproperties
 {
-
 }

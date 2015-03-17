@@ -331,8 +331,6 @@ function bool RemoveSpawnVehicle(Vehicle V)
         }
     }
 
-    Warn("RemoveSpawnVehicle failed," @ V @ "does not exist in SpawnVehicles");
-
     return false;
 }
 

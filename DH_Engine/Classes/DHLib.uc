@@ -14,11 +14,20 @@ static final function FisherYatesShuffle(out array<int> _Array)
     {
         j = Rand(i);
 
-        Swap(_Array[i], _Array[j]);
+        ISwap(_Array[i], _Array[j]);
     }
 }
 
-static final function Swap(out int A, out int B)
+static final function Swap(out Object A, out Object B)
+{
+    local Object T;
+
+    T = A;
+    A = B;
+    B = T;
+}
+
+static final function ISwap(out int A, out int B)
 {
     local int T;
 
@@ -38,19 +47,19 @@ static final function FSwap(out float A, out float B)
 
 static final function VSwap(out vector A, out vector B)
 {
-    local float T;
+    FSwap(A.X, B.X);
+    FSwap(A.Y, B.Y);
+    FSwap(A.Z, B.Z);
+}
 
-    T = A.X;
-    A.X = B.X;
-    B.X = T;
+static final function vector VReflect(vector V, vector N)
+{
+    return V - (N * 2.0 * (V dot N));
+}
 
-    T = A.Y;
-    A.Y = B.Y;
-    B.Y = T;
-
-    T = A.Z;
-    A.Z = B.Z;
-    B.Z = T;
+static final function vector VHalf(vector A, vector B)
+{
+    return (A + B) / VSize(A + B);
 }
 
 static final function int IndexOf(array<Object> _Array, Object O)

@@ -254,9 +254,40 @@ function KDriverEnter(Pawn P)
 // Modified to add engine start/stop hint
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    super.ClientKDriverEnter(PC);
+    local DHPlayer P;
 
-    DHPlayer(PC).QueueHint(40, true);
+    P = DHPlayer(PC);
+
+    if (P != none)
+    {
+        P.QueueHint(40, true);
+
+        if (bIsSpawnVehicle)
+        {
+            P.QueueHint(14, true);
+            P.QueueHint(15, true);
+            P.QueueHint(16, true);
+        }
+    }
+
+    super.ClientKDriverEnter(PC);
+}
+
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    local DHPlayer P;
+
+    if (bIsSpawnVehicle && !bEngineOff)
+    {
+        P = DHPlayer(PC);
+
+        if (P != none)
+        {
+            P.QueueHint(17, true);
+        }
+    }
+
+    super.ClientKDriverLeave(PC);
 }
 
 // Modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
@@ -626,11 +657,11 @@ function ServerStartEngine()
             {
                 if (bEngineOff)
                 {
-                    SM.RemoveSpawnVehicle(self);
+                    SM.AddSpawnVehicle(self);
                 }
                 else
                 {
-                    SM.AddSpawnVehicle(self);
+                    SM.RemoveSpawnVehicle(self);
                 }
             }
         }
