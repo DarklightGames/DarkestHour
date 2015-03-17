@@ -409,11 +409,26 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
 
     if (C.Pawn == none)
     {
-        // Likely the spawn function is failing because SpawnLocation is being blocked by another player/vehicle
-        // Lets force spawn the player in the black room and then teleport them to SpawnLocation with SpawnRotation
-        G.DeployRestartPlayer(C, true);
+        // Hard spawning the player at the spawn location failed, most likely because spawn fucntion was blocked
+        // Try again with black room spawn and teleport them to spawn location
+        G.DeployRestartPlayer(C, false, true);
 
-        //Theel need a function to properly teleport a player and return if it fails
+        Warn("Calling DeployRestartPlayer again as old way");
+
+        if (C.Pawn != none)
+        {
+            Warn("Attempting teleport did where get here?");
+
+            if (TeleportPlayer(C, SpawnLocation, SpawnRotation))
+            {
+                return C.Pawn; // Return out as we used old spawn system and don't need to do anything else in this function
+            }
+            else
+            {
+                // Teleport failed, the pawn is still in the black room, lets slay them
+                C.Pawn.Suicide();
+            }
+        }
     }
 
     if (C.Pawn == none)
@@ -445,6 +460,28 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     G.AddDefaultInventory(C.Pawn);
 
     return C.Pawn;
+}
+
+function bool TeleportPlayer(Controller C, vector SpawnLocation, rotator SpawnRotation)
+{
+    if (C == none)
+    {
+        Warn(self @ "Teleport failed no controller passed");
+        return false;
+    }
+
+    if (C.Pawn != none && C.Pawn.SetLocation(SpawnLocation))
+    {
+        C.Pawn.SetRotation(SpawnRotation);
+        C.Pawn.SetViewRotation(SpawnRotation);
+        C.Pawn.ClientSetRotation(SpawnRotation);
+        return true;
+    }
+    else
+    {
+        Warn(self $ " Teleport failed for " $ C.Pawn.GetHumanReadableName());
+        return false;
+    }
 }
 
 function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
