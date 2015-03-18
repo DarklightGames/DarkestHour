@@ -8,6 +8,8 @@ class DHVehicleSelectPanel extends MidGamePanel;
 var automated ROGUIProportionalContainer    CrewPoolsContainer,
                                             NoCrewPoolsContainer;
 
+var automated DHGUIButton                   b_MenuButton;
+
 var automated DHGUIListBox                  lb_CrewVehiclePools,
                                             lb_NoCrewVehiclePools;
 
@@ -47,6 +49,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     // Assign myDeployMenu
     myDeployMenu = DHDeployMenu(PageOwner);
+
+    // Change background from default if team == Axis
+    if (DHP.PlayerReplicationInfo.Team.TeamIndex == Axis_Team_Index)
+    {
+        Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
+    }
 
     // Crew required vehicle pool container
     li_CrewVehiclePools = ROGUIListPlus(lb_CrewVehiclePools.List);
@@ -102,6 +110,13 @@ function ShowPanel(bool bShow)
 function bool OnPostDraw(Canvas C)
 {
     super.OnPostDraw(C);
+
+    // Hack to fix stupid bug that makes no sense
+    if (b_MenuButton.bHasFocus && b_MenuButton.MenuState != MSAT_Watched)
+    {
+        b_MenuButton.LoseFocus(b_MenuButton);
+    }
+
     bRendered = true;
     return true;
 }
@@ -305,6 +320,36 @@ function InternalOnChange(GUIComponent Sender)
     }
 }
 
+//WTF IS THIS DOING?
+function bool InternalOnKeyEvent(out byte Key, out byte State, float delta)
+{
+    if (key == 0x1B)
+    {
+        return true;
+    }
+
+    return super.OnKeyEvent(key, state, delta);
+}
+
+function bool InternalOnClick(GUIComponent Sender)
+{
+    switch (sender)
+    {
+        case b_MenuButton:
+            if (!MyDeployMenu.bShowingMenuOptions)
+            {
+                // Show menu options (hide panels & menu button)
+                MyDeployMenu.bShowingMenuOptions = true;
+                MyDeployMenu.MenuOptionsContainer.SetVisibility(true);
+                MyDeployMenu.c_LoadoutArea.SetVisibility(false);
+                MyDeployMenu.c_DeploymentMapArea.SetVisibility(false);
+            }
+            break;
+    }
+
+    return true;
+}
+
 // Remove this when we add it to library
 static function string GetTimeString(float Time)
 {
@@ -328,6 +373,7 @@ defaultproperties
 {
     Background=Texture'DH_GUI_Tex.Menu.AlliesLoadout_BG'
     OnPostDraw=OnPostDraw
+    OnKeyEvent=InternalOnKeyEvent
     bNeverFocus=true
 
     VehiclePoolsUpdateTime=-1.0
@@ -370,7 +416,7 @@ defaultproperties
         bVisibleWhenEmpty=true
         bSorted=true
         StyleName="DHSmallText"
-        TabOrder=0
+        TabOrder=1
         OnChange=InternalOnChange
         WinWidth=1.0
         WinHeight=1.0
@@ -386,7 +432,7 @@ defaultproperties
         bVisibleWhenEmpty=true
         bSorted=true
         StyleName="DHSmallText"
-        TabOrder=0
+        TabOrder=2
         OnChange=InternalOnChange
         WinWidth=1.0
         WinHeight=1.0
@@ -394,4 +440,18 @@ defaultproperties
         WinTop=0.0
     End Object
     lb_NoCrewVehiclePools=PoolsNoCrewLB
+
+    // Menu button
+    Begin Object Class=DHGUIButton Name=MenuButton
+        Caption="Menu"
+        CaptionAlign=TXTA_Center
+        RenderWeight=6.0
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=0.15
+        WinHeight=0.035
+        WinLeft=0.85
+        WinTop=-0.035
+        OnClick=InternalOnClick
+    End Object
+    b_MenuButton=MenuButton
 }

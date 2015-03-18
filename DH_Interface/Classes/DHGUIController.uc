@@ -163,6 +163,8 @@ defaultproperties
     DefaultStyleNames(78)="DH_Interface.DHStyle_ListSelectionBlack"
     DefaultStyleNames(79)="DH_Interface.DHStyle_SpawnButton"
     DefaultStyleNames(80)="DH_Interface.DHStyle_DeployButton"
+    DefaultStyleNames(81)="DH_Interface.DHStyle_TabButton"
+    DefaultStyleNames(82)="DH_Interface.DHStyle_ListHighlight"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

@@ -551,10 +551,10 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.0
         bAcceptsInput=false
-        OnPreDraw=DHDeploymentMapMenu.PreDrawMap
-        OnDraw=DHDeploymentMapMenu.DrawMapComponents
+        OnPreDraw=PreDrawMap
+        OnDraw=DrawMapComponents
     End Object
-    i_Background=GUIImage'DH_Interface.DHDeploymentMapMenu.BackgroundImage'
+    i_Background=BackgroundImage
 
     // Container for level map image (used for plotting of elements)
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainer_co
@@ -579,7 +579,7 @@ defaultproperties
         WinHeight=0.3
         WinLeft=0.137395
         WinTop=0.010181
-        OnClick=DHDeploymentMapMenu.InternalOnClick
+        OnClick=InternalOnClick
     End Object
     b_DeployButton=DeployButton
 
@@ -593,7 +593,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.05
         WinTop=0.7
-        OnClick=DHDeploymentMapMenu.InternalOnClick
+        OnClick=InternalOnClick
     End Object
     b_ExploitSpawn=TempExploitButton
 
@@ -607,7 +607,7 @@ defaultproperties
         ValueRightWidth=0.0
         BarBack=Texture'InterfaceArt_tex.Menu.GreyDark'
         BarTop=Texture'InterfaceArt_tex.Menu.GreyLight'
-        OnDraw=DHDeploymentMapMenu.DrawDeployTimer
+        OnDraw=DrawDeployTimer
         WinWidth=0.315937
         WinHeight=0.033589
         WinLeft=0.137395
@@ -625,24 +625,24 @@ defaultproperties
         WinWidth=0.0
         WinHeight=0.0
         bTabStop=true
-        OnClick=DHDeploymentMapMenu.InternalOnClick
+        OnClick=InternalOnClick
     End Object
-    b_SpawnPoints(0)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(1)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(2)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(3)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(4)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(5)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(6)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(7)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(8)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(9)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(10)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(11)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(12)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(13)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(14)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
-    b_SpawnPoints(15)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
+    b_SpawnPoints(0)=SpawnPointButton
+    b_SpawnPoints(1)=SpawnPointButton
+    b_SpawnPoints(2)=SpawnPointButton
+    b_SpawnPoints(3)=SpawnPointButton
+    b_SpawnPoints(4)=SpawnPointButton
+    b_SpawnPoints(5)=SpawnPointButton
+    b_SpawnPoints(6)=SpawnPointButton
+    b_SpawnPoints(7)=SpawnPointButton
+    b_SpawnPoints(8)=SpawnPointButton
+    b_SpawnPoints(9)=SpawnPointButton
+    b_SpawnPoints(10)=SpawnPointButton
+    b_SpawnPoints(11)=SpawnPointButton
+    b_SpawnPoints(12)=SpawnPointButton
+    b_SpawnPoints(13)=SpawnPointButton
+    b_SpawnPoints(14)=SpawnPointButton
+    b_SpawnPoints(15)=SpawnPointButton
 
     // Spawn Vehicle Buttons
     Begin Object Class=GUIGFXButton Name=SpawnVehicleButton
@@ -652,7 +652,7 @@ defaultproperties
         WinWidth=0.0
         WinHeight=0.0
         bTabStop=true
-        OnClick=DHDeploymentMapMenu.InternalOnClick
+        OnClick=InternalOnClick
     End Object
     b_SpawnVehicles(0)=SpawnVehicleButton
     b_SpawnVehicles(1)=SpawnVehicleButton
@@ -675,22 +675,22 @@ defaultproperties
         WinHeight=0.0
         bTabStop=true
     End Object
-    b_Objectives(0)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(1)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(2)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(3)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(4)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(5)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(6)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(7)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(8)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(9)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(10)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(11)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(12)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(13)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(14)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
-    b_Objectives(15)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.ObjectiveButton'
+    b_Objectives(0)=ObjectiveButton
+    b_Objectives(1)=ObjectiveButton
+    b_Objectives(2)=ObjectiveButton
+    b_Objectives(3)=ObjectiveButton
+    b_Objectives(4)=ObjectiveButton
+    b_Objectives(5)=ObjectiveButton
+    b_Objectives(6)=ObjectiveButton
+    b_Objectives(7)=ObjectiveButton
+    b_Objectives(8)=ObjectiveButton
+    b_Objectives(9)=ObjectiveButton
+    b_Objectives(10)=ObjectiveButton
+    b_Objectives(11)=ObjectiveButton
+    b_Objectives(12)=ObjectiveButton
+    b_Objectives(13)=ObjectiveButton
+    b_Objectives(14)=ObjectiveButton
+    b_Objectives(15)=ObjectiveButton
 
     // Reinforcement Counter
     Begin Object Class=GUILabel Name=ReinforceCounter

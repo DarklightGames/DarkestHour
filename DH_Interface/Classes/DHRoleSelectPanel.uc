@@ -15,6 +15,8 @@ var automated ROGUIProportionalContainer    RolesContainer,
 
 var automated GUILabel                      l_EstimatedRedeployTime;
 
+var automated DHGUIButton                   b_MenuButton;
+
 var automated GUIImage                      i_WeaponImages[2], i_MagImages[2];
 var automated DHGUIListBox                  lb_Roles, lb_AvailableWeapons[2];
 var automated GUIGFXButton                  b_Equipment[4];
@@ -162,7 +164,6 @@ function bool OnPostDraw(Canvas C)
     super.OnPostDraw(C);
 
     bRendered = true;
-
     return true;
 }
 
@@ -370,8 +371,6 @@ function AutoPickRole()
 function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
-
-    Log("bRoleIsCrew is being set to:" @ desiredRole.default.bCanBeTankCrew);
 
     MyDeployMenu.bRoleIsCrew = desiredRole.default.bCanBeTankCrew;
 }
@@ -898,6 +897,17 @@ function bool InternalOnClick(GUIComponent Sender)
 {
     switch (sender)
     {
+        case b_MenuButton:
+            if (!MyDeployMenu.bShowingMenuOptions)
+            {
+                // Show menu options (hide panels & menu button)
+                MyDeployMenu.bShowingMenuOptions = true;
+                MyDeployMenu.MenuOptionsContainer.SetVisibility(true);
+                MyDeployMenu.c_LoadoutArea.SetVisibility(false);
+                MyDeployMenu.c_DeploymentMapArea.SetVisibility(false);
+            }
+            break;
+
         case lb_AvailableWeapons[0]:
             UpdateSelectedWeapon(0);
             break;
@@ -928,6 +938,14 @@ function InternalOnChange(GUIComponent Sender)
                 RoleSelectReclickTime = 0.0;
                 ChangeDesiredRole(role);
                 AttemptRoleApplication();
+            }
+            else
+            {
+                // We clicked another role, but we tried changing too fast, lets force index back
+                if (role != none && desiredRole != none && desiredRole != role)
+                {
+                    li_Roles.SetIndex(li_Roles.FindItemObject(desiredRole));
+                }
             }
             break;
 
@@ -1172,14 +1190,15 @@ defaultproperties
 
     // Role list box
     Begin Object Class=DHGuiListBox Name=Roles
-        SelectedStyleName="DHListSelectionStyle"
-        OutlineStyleName="ItemOutline"
+        OutlineStyleName="ItemOutline"              // When focused, the outline selection (text background)
+        SectionStyleName="ListSection"              // Not sure
+        SelectedStyleName="DHItemOutline"           // Style for items selected
+        StyleName="DHSmallText"                     // Style for items not selected
         bVisibleWhenEmpty=true
         bSorted=true
         OnCreateComponent=Roles.InternalOnCreateComponent
-        StyleName="DHSmallText"
         TabOrder=0
-        OnChange=DHRoleSelectPanel.InternalOnChange
+        OnChange=InternalOnChange
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
@@ -1230,10 +1249,10 @@ defaultproperties
         WinWidth=0.5
         WinHeight=1.0
         TabOrder=0
-        OnClick=DHRoleSelectPanel.InternalOnClick
+        OnClick=InternalOnClick
     End Object
-    lb_AvailableWeapons(0)=DHGuiListBox'DH_Interface.DHRoleSelectPanel.WeaponListBox'
-    lb_AvailableWeapons(1)=DHGuiListBox'DH_Interface.DHRoleSelectPanel.WeaponListBox'
+    lb_AvailableWeapons(0)=WeaponListBox
+    lb_AvailableWeapons(1)=WeaponListBox
 
     // Primary grenade
     Begin Object Class=GUIGFXButton Name=EquipButton0
@@ -1245,10 +1264,10 @@ defaultproperties
         WinHeight=0.35
         WinLeft=0.0
         WinTop=0.15
-        OnClick=DHRoleSelectPanel.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton0.InternalOnKeyEvent
     End Object
-    b_Equipment(0)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton0'
+    b_Equipment(0)=EquipButton0
 
     // Secondary grenade/satchel
     Begin Object Class=GUIGFXButton Name=EquipButton1
@@ -1260,10 +1279,10 @@ defaultproperties
         WinHeight=0.35
         WinLeft=0.25
         WinTop=0.15
-        OnClick=DHRoleSelectPanel.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton1.InternalOnKeyEvent
     End Object
-    b_Equipment(1)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton1'
+    b_Equipment(1)=EquipButton1
 
     // Third equipment
     Begin Object Class=GUIGFXButton Name=EquipButton2
@@ -1275,10 +1294,10 @@ defaultproperties
         WinHeight=0.35
         WinLeft=0.5
         WinTop=0.15
-        OnClick=DHRoleSelectPanel.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton2.InternalOnKeyEvent
     End Object
-    b_Equipment(2)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton2'
+    b_Equipment(2)=EquipButton2
 
     // Bazooka, Piat, Shrek, Panzerfaust
     Begin Object Class=GUIGFXButton Name=EquipButton3
@@ -1290,14 +1309,14 @@ defaultproperties
         WinHeight=0.5
         WinLeft=0.0
         WinTop=0.5
-        OnClick=DHRoleSelectPanel.InternalOnClick
+        OnClick=InternalOnClick
         OnKeyEvent=EquipButton3.InternalOnKeyEvent
     End Object
-    b_Equipment(3)=GUIGFXButton'DH_Interface.DHRoleSelectPanel.EquipButton3'
+    b_Equipment(3)=EquipButton3
 
     // The primary ammo button
     Begin Object Class=DHGUINumericEdit Name=PrimaryAmmoButton
-        WinWidth=0.15
+        WinWidth=0.175
         WinHeight=0.175
         WinLeft=0.155
         WinTop=0.6625
@@ -1307,4 +1326,18 @@ defaultproperties
         OnChange=InternalOnChange
     End Object
     nu_PrimaryAmmoMags=PrimaryAmmoButton
+
+    // Menu button
+    Begin Object Class=DHGUIButton Name=MenuButton
+        Caption="Menu"
+        CaptionAlign=TXTA_Center
+        RenderWeight=6.0
+        StyleName="DHSmallTextButtonStyle"
+        WinWidth=0.15
+        WinHeight=0.035
+        WinLeft=0.85
+        WinTop=-0.035
+        OnClick=InternalOnClick
+    End Object
+    b_MenuButton=MenuButton
 }
