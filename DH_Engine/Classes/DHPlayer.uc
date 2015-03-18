@@ -8,7 +8,6 @@ class DHPlayer extends ROPlayer;
 var int             RedeployTime;
 var float           LastKilledTime; // The time at which last death occured
 var byte            DesiredAmmoAmount;
-var DHSpawnPoint    DesiredSpawnPoint;
 var bool            bShouldAttemptAutoDeploy;
 
 // DH Sway values
@@ -82,7 +81,9 @@ event ClientReset()
     RedeployTime = default.RedeployTime;
     LastKilledTime = 0;
     DesiredAmmoAmount = 0;
-    DesiredSpawnPoint = none;
+    SpawnPointIndex = -1;
+    SpawnVehicleIndex = -1;
+    VehiclePoolIndex = -1;
     bShouldAttemptAutoDeploy = false;
 
     //Reset camera stuff
@@ -2035,7 +2036,7 @@ exec function DebugFOV()
 }
 
 // Theel: Revise if statements (combine and optimize this function)
-function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional bool bExploit)
+function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
 {
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo DHGRI;
@@ -2103,11 +2104,13 @@ function bool ServerAttemptDeployPlayer(DHSpawnPoint SP, byte MagCount, optional
     }
 
     // Check if SP is valid
-    if (DHGRI.IsSpawnPointValid(SP, PRI.Team.TeamIndex))
+    if (DHGRI.IsSpawnPointIndexValid(SpawnPointIndex, PRI.Team.TeamIndex))
     {
-        SpawnPointIndex = DHGRI.GetSpawnPointIndex(SP);
-
         G.DeployRestartPlayer(self, true);
+    }
+    else
+    {
+        Warn("Spawnpoint index not valid!!!" @ SpawnPointIndex);
     }
 
     if (Pawn != none)
@@ -2228,9 +2231,11 @@ function PawnDied(Pawn P)
     super.PawnDied(P); //Calls super in ROPlayer
 }
 
+
 simulated function ClientHandleDeath()
 {
-    if (DesiredSpawnPoint != none)
+    // Theel: This needs to be a smarter check!
+    if (SpawnPointIndex != -1)
     {
         bShouldAttemptAutoDeploy = true;
     }
@@ -2239,12 +2244,18 @@ simulated function ClientHandleDeath()
 }
 
 // This function is called from DHHud to deploy the player when their deploy time hits zero and they are waiting in the HUD
+// Theel: this function needs to be made smarter
 simulated function CheckToAutoDeploy()
 {
-    local bool bDeployed;
+    local bool bDeployed; // Poor name for variable
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
 
     bShouldAttemptAutoDeploy = false;
 
@@ -2255,20 +2266,20 @@ simulated function CheckToAutoDeploy()
     }
 
     //If we have a desired spawn point set, we won't need to open menu and can send spawn request from here
-    if (DesiredSpawnPoint != none && Pawn == none)
+    if (SpawnPointIndex != -1 && Pawn == none)
     {
         //Check if desired spawn is valid
-        bDeployed = GRI.IsSpawnPointValid(DesiredSpawnPoint, PlayerReplicationInfo.Team.TeamIndex);
+        bDeployed = GRI.IsSpawnPointIndexValid(SpawnPointIndex, PlayerReplicationInfo.Team.TeamIndex);
 
         if (bDeployed)
         {
-            ServerAttemptDeployPlayer(DesiredSpawnPoint, DesiredAmmoAmount);
+            ServerAttemptDeployPlayer(DesiredAmmoAmount);
 
             return;
         }
         else
         {
-            DesiredSpawnPoint = none;
+            SpawnPointIndex = -1;
         }
     }
 
@@ -2470,7 +2481,6 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
                 DesiredRole = -1;
                 CurrentRole = -1;
                 DesiredAmmoAmount = 0;
-                DesiredSpawnPoint = none;
                 SpawnPointIndex = -1;
                 VehiclePoolIndex = -1;
                 SpawnVehicleIndex = -1;

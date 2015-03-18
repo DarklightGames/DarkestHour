@@ -198,19 +198,21 @@ simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoin
     }
 }
 
-simulated function bool IsSpawnPointValid(DHSpawnPoint SP, byte TeamIndex)
+simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex)
 {
     local int i;
     local array<DHSpawnPoint> ActiveSpawnPoints;
+    local DHSpawnPoint SP;
 
-    //Is spawn point active
-    if (!IsSpawnPointActive(SP))
+    // Is spawn point active
+    if (!IsSpawnPointIndexActive(SpawnPointIndex))
     {
         return false; //Not active
     }
 
-    //Is spawn point for the correct team (needs to be last in check)
+    // Is spawn point for the correct team
     GetActiveSpawnPointsForTeam(ActiveSpawnPoints, TeamIndex);
+    SP = GetSpawnPoint(SpawnPointIndex);
 
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {

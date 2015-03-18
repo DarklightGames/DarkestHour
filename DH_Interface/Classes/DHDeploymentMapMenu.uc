@@ -7,6 +7,7 @@ class DHDeploymentMapMenu extends MidGamePanel;
 
 const   OBJECTIVES_MAX =                    16;
 const   SPAWN_POINTS_MAX =                  16;
+const   SPAWN_VEHICLES_MAX =                10;
 
 var automated ROGUIProportionalContainer    MapContainer;
 
@@ -17,8 +18,13 @@ var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
 var     automated GUIProgressBar            pb_DeployProgressBar;
-var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],b_Objectives[OBJECTIVES_MAX];
-var     DHSpawnPoint                        SpawnPoints[SPAWN_POINTS_MAX];
+var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
+                                            b_Objectives[OBJECTIVES_MAX],
+                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX];
+
+var     int                                 SpawnPointIndices[SPAWN_POINTS_MAX];
+var     int                                 SpawnVehicleIndices[SPAWN_VEHICLES_MAX];
+
 var     ROObjective                         Objectives[OBJECTIVES_MAX];
 var     Material                            ObjectiveIcons[3];
 
@@ -29,8 +35,8 @@ var     DHHud                               HUD;
 var     vector                              NELocation,SWLocation;
 
 //Deploy Menu Access
-var DHDeployMenu                            myDeployMenu;
-var DHRoleSelectPanel                       myRoleMenu;
+var DHDeployMenu                            MyDeployMenu;
+var DHRoleSelectPanel                       MyRoleMenu;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -51,8 +57,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         return;
     }
 
-    // Assign myDeployMenu
-    myDeployMenu = DHDeployMenu(PageOwner);
+    // Assign MyDeployMenu
+    MyDeployMenu = DHDeployMenu(PageOwner);
 
     // Set the level map image
     i_Background.Image = GRI.MapImage;
@@ -67,6 +73,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         b_SpawnPoints[i].SetVisibility(false);
         b_SpawnPoints[i].WinWidth=0.0;
         b_SpawnPoints[i].WinHeight=0.0;
+    }
+
+    // Initialize vehicle spawns (make hidden)
+    for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+    {
+        b_SpawnVehicles[i].Graphic = none;
+        b_SpawnVehicles[i].SetVisibility(false);
+        b_SpawnVehicles[i].WinWidth=0.0;
+        b_SpawnVehicles[i].WinHeight=0.0;
     }
 
     // Initialize objective points (make hidden)
@@ -122,6 +137,16 @@ function ClearSpawnIcon(int i)
     }
 }
 
+function ClearVehicleIcon(int i)
+{
+    if (b_SpawnVehicles[i] != none)
+    {
+        b_SpawnVehicles[i].WinWidth=0.0;
+        b_SpawnVehicles[i].WinHeight=0.0;
+        b_SpawnVehicles[i].SetVisibility(false);
+    }
+}
+
 // Make panel uniform (square) and adjust other components accordingly
 function bool PreDrawMap(Canvas C)
 {
@@ -172,18 +197,18 @@ function GetMapCoords(vector Location, out float X, out float Y, float W, float 
 }
 
 //Theel: This function has floating variables
-function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
+function PlaceSpawnPointOnMap(vector Location, int Index, string Title)
 {
     local float X, Y, W, H;
 
-    if (SP != none && Index >= 0 && Index < arraycount(b_SpawnPoints))
+    if (Index >= 0 && Index < arraycount(b_SpawnPoints))
     {
-        if (SP == DHP.DesiredSpawnPoint)
+        if (Index == DHP.SpawnPointIndex)
         {
             W = 0.075;
             H = 0.035;
 
-            GetMapCoords(SP.Location, X, Y, W, H);
+            GetMapCoords(Location, X, Y, W, H);
 
             b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
             b_SpawnPoints[Index].SetFocus(none);
@@ -193,14 +218,44 @@ function PlaceSpawnPointOnMap(DHSpawnPoint SP, int Index)
             W = 0.07;
             H = 0.03;
 
-            GetMapCoords(SP.Location, X, Y, W, H);
+            GetMapCoords(Location, X, Y, W, H);
 
             b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
         }
 
-        b_SpawnPoints[Index].Caption = Caps(Left(SP.SpawnPointName, 2));
+        b_SpawnPoints[Index].Caption = Caps(Left(Title, 2));
         b_SpawnPoints[Index].SetVisibility(true);
-        SpawnPoints[Index] = SP;
+    }
+}
+
+function PlaceVehicleSpawnOnMap(vector Location, int Index)
+{
+    local float X, Y, W, H;
+
+    if (Index >= 0 && Index < arraycount(b_SpawnVehicles))
+    {
+        if (Index == DHP.VehiclePoolIndex)
+        {
+            W = 0.075;
+            H = 0.035;
+
+            GetMapCoords(Location, X, Y, W, H);
+
+            b_SpawnVehicles[Index].SetPosition(X, Y, W, H, true);
+            b_SpawnVehicles[Index].SetFocus(none);
+        }
+        else
+        {
+            W = 0.07;
+            H = 0.03;
+
+            GetMapCoords(Location, X, Y, W, H);
+
+            b_SpawnVehicles[Index].SetPosition(X, Y, W, H, true);
+        }
+
+        b_SpawnVehicles[Index].Caption = string(Index);
+        b_SpawnVehicles[Index].SetVisibility(true);
     }
 }
 
@@ -227,12 +282,12 @@ function bool DrawMapComponents(Canvas C)
     local int i;
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
-    if (myDeployMenu == none || bOutOfReinforcements)
+    if (MyDeployMenu == none || bOutOfReinforcements)
     {
         return false;
     }
 
-    //Draw objectives
+    // Draw objectives
     for (i = 0; i < arraycount(GRI.Objectives); ++i)
     {
         if (GRI.Objectives[i] == none || !GRI.Objectives[i].bActive)
@@ -243,23 +298,44 @@ function bool DrawMapComponents(Canvas C)
         PlaceObjectiveOnMap(GRI.Objectives[i], i);
     }
 
-    //Get Spawn Points for Current Team
+    // Get Spawn Points for Current Team
     GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PRI.Team.TeamIndex);
 
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
         // Draw infantry or vehicle spawn points
-        if (!myDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
+        if (!MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
         {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, ActiveSpawnPoints[i].SpawnPointName);
+            SpawnPointIndices[i] = GRI.GetSpawnPointIndex(ActiveSpawnPoints[i]);
         }
-        else if (myDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
+        else if (MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
         {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i], i);
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, ActiveSpawnPoints[i].SpawnPointName);
+            SpawnPointIndices[i] = GRI.GetSpawnPointIndex(ActiveSpawnPoints[i]);
         }
         else
         {
             ClearSpawnIcon(i);
+        }
+    }
+
+    if (MyDeployMenu.bSpawningVehicle)
+    {
+        return false; // Don't continue to show vehicle spawn points as we are trying to vehicle
+    }
+    // Loop Vehicle Spawn Points
+    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
+    {
+        // Only show active, current team, and if we aren't spawning a vehicle
+        if (GRI.SpawnVehicles[i].bIsActive && GRI.SpawnVehicles[i].TeamIndex == PRI.Team.TeamIndex)
+        {
+            PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i);
+            SpawnVehicleIndices[i] = GRI.SpawnVehicles[i].Index;
+        }
+        else
+        {
+            ClearVehicleIcon(i);
         }
     }
 
@@ -273,66 +349,48 @@ function InternalOnPostDraw(Canvas Canvas)
     OnRendered = none;
     ShowPanel(true);
 
-    // Set myRoleMenu here to make sure it is initialized, though it should always be, do it here just in case
-    if (myDeployMenu != none && myDeployMenu.c_LoadoutArea.TabStack.Length > 0 && myDeployMenu.c_LoadoutArea.TabStack[0].MyPanel != none)
+    // Set MyRoleMenu here to make sure it is initialized, though it should always be, do it here just in case
+    if (MyDeployMenu != none && MyDeployMenu.c_LoadoutArea.TabStack.Length > 0 && MyDeployMenu.c_LoadoutArea.TabStack[0].MyPanel != none)
     {
-        myRoleMenu = DHRoleSelectPanel(myDeployMenu.c_LoadoutArea.TabStack[0].MyPanel);
+        MyRoleMenu = DHRoleSelectPanel(MyDeployMenu.c_LoadoutArea.TabStack[0].MyPanel);
     }
 }
 
-// Player clicked a spawn point
-function bool SpawnClick(int Index)
+// Deploy requested
+function SpawnClick(optional bool bExploit)
 {
-    if (bInit || PRI == none || PRI.bOnlySpectator)
+    if (bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none)
     {
-        return true;
+        return;
     }
 
-    // Temp exploit spawn remove later
-    if (Index == -2)
+    // Exploit spawn!
+    if (bExploit)
     {
-        if (DHP.Pawn == none && myRoleMenu != none)
-        {
-            myRoleMenu.AttemptRoleApplication();
-            DHP.ServerAttemptDeployPlayer(DHP.DesiredSpawnPoint, DHP.DesiredAmmoAmount, true);
-            Controller.CloseMenu(false); //Close menu as we clicked deploy!
-        }
+        MyRoleMenu.AttemptRoleApplication();
+        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
+        Controller.CloseMenu(false); //Close menu as we clicked deploy!
+        return;
     }
 
-    if (Index != -1 && SpawnPoints[Index] == none)
-    {
-        Warn("No spawn point found! Error!");
-        return true;
-    }
+    // Complete spawn request
+    MyRoleMenu.AttemptRoleApplication();
+    DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount);
+    Controller.CloseMenu(false); //Close menu as we clicked deploy!
+}
 
-    // Check if we clicked the desired spawn point
-    if (Index == -1 || SpawnPoints[Index] == DHP.DesiredSpawnPoint)
-    {
-        // Nullify the vehicle index if we aren't spawning a vehicle
-        if (!myDeployMenu.bSpawningVehicle)
-        {
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, DHP.SpawnVehicleIndex);
-        }
-        else if (DHP.VehiclePoolIndex == -1)
-        {
-            Warn("No vehicle pool selected, exiting spawn attempt");
-            return true;
-        }
+function bool ConfirmIndices()
+{
+    // If we have pool selected, but no spawn point = return false
+    if (DHP.VehiclePoolIndex != -1 && DHP.SpawnPointIndex == -1)
+        return false;
 
-        // We clicked desired spawn point! lets try to spawn
-        // Only deploy if we clicked the selected SP and are ready
-        if (bReadyToDeploy && DHP.Pawn == none && myRoleMenu != none)
-        {
-            myRoleMenu.AttemptRoleApplication();
-            DHP.ServerAttemptDeployPlayer(DHP.DesiredSpawnPoint, DHP.DesiredAmmoAmount);
-            Controller.CloseMenu(false); //Close menu as we clicked deploy!
-        }
-    }
-    else
-    {
-        // Set the desired spawn point
-        DHP.DesiredSpawnPoint = SpawnPoints[Index];
-    }
+    // If we have a SpawnVehicle selected, but also one of the others set = return false
+    if (DHP.SpawnVehicleIndex != -1 && (DHP.SpawnPointIndex != -1 || DHP.VehiclePoolIndex != -1))
+        return false;
+
+    // Otherwise return true
+    return true;
 }
 
 function bool InternalOnClick(GUIComponent Sender)
@@ -343,13 +401,13 @@ function bool InternalOnClick(GUIComponent Sender)
     switch(Sender)
     {
         case b_ExploitSpawn: // Remove later
-            SpawnClick(-2);
+            SpawnClick(true);
             break;
 
         case b_DeployButton:
-            if (DHP.DesiredSpawnPoint != none)
+            if (ConfirmIndices())
             {
-                SpawnClick(-1);
+                SpawnClick();
             }
             break;
 
@@ -369,7 +427,36 @@ function bool InternalOnClick(GUIComponent Sender)
             {
                 if (Selected == b_SpawnPoints[i])
                 {
-                    SpawnClick(i);
+                    if (i == DHP.SpawnPointIndex) // Player clicked twice on spawnpoint
+                    {
+                        // Clear spawnvehicle just incase it was set
+                        DHP.ServerChangeSpawn(DHP.SpawnPointIndex,DHP.VehiclePoolIndex,-1);
+                        SpawnClick();
+                    }
+                    else
+                    {
+                        // Set SpawnPoint and clear spawnvehicle point as we clicked a spawn point
+                        DHP.ServerChangeSpawn(SpawnPointIndices[i],DHP.VehiclePoolIndex,-1);
+                    }
+                    break;
+                }
+            }
+
+            for (i = 0; i < arraycount(b_SpawnVehicles); ++i)
+            {
+                if (Selected == b_SpawnVehicles[i])
+                {
+                    if (i == DHP.SpawnVehicleIndex)
+                    {
+                        // Clear pool and spawnpoint just incase either were set
+                        DHP.ServerChangeSpawn(-1,-1,DHP.SpawnVehicleIndex);
+                        SpawnClick();
+                    }
+                    else
+                    {
+                        // Set SpawnVehiclePoint and clear pool & spawnpoint value, as we clicked a spawnvehicle point
+                        DHP.ServerChangeSpawn(-1,-1,SpawnVehicleIndices[i]);
+                    }
                     break;
                 }
             }
@@ -393,7 +480,7 @@ function bool DrawDeployTimer(Canvas C)
     }
 
     // Check for vehicle pool index if spawning vehicle
-    if (myDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex == -1)
+    if (MyDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex == -1)
     {
         pb_DeployProgressBar.Value = pb_DeployProgressBar.Low;
         bReadyToDeploy = false;
@@ -425,7 +512,7 @@ function bool DrawDeployTimer(Canvas C)
     }
     else
     {
-        if (DHP.DesiredSpawnPoint == none)
+        if (DHP.SpawnPointIndex == -1)
         {
             b_DeployButton.Caption = "Select a spawn point or Deploy to SpawnArea";
             b_DeployButton.EnableMe();
@@ -556,6 +643,27 @@ defaultproperties
     b_SpawnPoints(13)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
     b_SpawnPoints(14)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
     b_SpawnPoints(15)=GUIGFXButton'DH_Interface.DHDeploymentMapMenu.SpawnPointButton'
+
+    // Spawn Vehicle Buttons
+    Begin Object Class=GUIGFXButton Name=SpawnVehicleButton
+        Position=ICP_Normal
+        bClientBound=true
+        StyleName="DHSpawnButtonStyle"
+        WinWidth=0.0
+        WinHeight=0.0
+        bTabStop=true
+        OnClick=DHDeploymentMapMenu.InternalOnClick
+    End Object
+    b_SpawnVehicles(0)=SpawnVehicleButton
+    b_SpawnVehicles(1)=SpawnVehicleButton
+    b_SpawnVehicles(2)=SpawnVehicleButton
+    b_SpawnVehicles(3)=SpawnVehicleButton
+    b_SpawnVehicles(4)=SpawnVehicleButton
+    b_SpawnVehicles(5)=SpawnVehicleButton
+    b_SpawnVehicles(6)=SpawnVehicleButton
+    b_SpawnVehicles(7)=SpawnVehicleButton
+    b_SpawnVehicles(8)=SpawnVehicleButton
+    b_SpawnVehicles(9)=SpawnVehicleButton
 
     // Objective buttons
     Begin Object Class=GUIGFXButton Name=ObjectiveButton

@@ -55,7 +55,7 @@ var float                                   SavedMainContainerPos, RoleSelectFoo
 var bool                                    bRendered;
 
 //Deploy Menu Access
-var DHDeployMenu                            myDeployMenu;
+var DHDeployMenu                            MyDeployMenu;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -78,8 +78,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         return;
     }
 
-    // Assign myDeployMenu
-    myDeployMenu = DHDeployMenu(PageOwner);
+    // Assign MyDeployMenu
+    MyDeployMenu = DHDeployMenu(PageOwner);
 
     // Roles container
     li_Roles = ROGUIListPlus(lb_Roles.List);
@@ -130,18 +130,29 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function ShowPanel(bool bShow)
 {
+    local DHSpawnPoint SP;
+
     super.ShowPanel(bShow);
 
-    //We are showing this panel so we want to spawn as infantry
-    if (bShow && myDeployMenu != none)
+    if (bShow && MyDeployMenu != none)
     {
-        // Clear DesiredSpawnPoint if it's vehicle
-        if (DHP.DesiredSpawnPoint != none && DHP.DesiredSpawnPoint.Type == ESPT_Vehicles)
+        MyDeployMenu.bSpawningVehicle = false;
+
+        // Check if SpawnPointIndex is valid
+        if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
         {
-            DHP.DesiredSpawnPoint = none;
+            SP = DHGRI.GetSpawnPoint(DHP.SpawnPointIndex);
         }
 
-        myDeployMenu.bSpawningVehicle = false;
+        // If spawnpoint index is type vehicles, then nullify it
+        if (SP != none && SP.Type == ESPT_Vehicles)
+        {
+            DHP.ServerChangeSpawn(-1, -1, DHP.SpawnVehicleIndex);
+        }
+        else // Just nullify vehicle pool
+        {
+            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, DHP.SpawnVehicleIndex);
+        }
     }
 }
 
@@ -362,7 +373,7 @@ function NotifyDesiredRoleUpdated()
 
     Log("bRoleIsCrew is being set to:" @ desiredRole.default.bCanBeTankCrew);
 
-    myDeployMenu.bRoleIsCrew = desiredRole.default.bCanBeTankCrew;
+    MyDeployMenu.bRoleIsCrew = desiredRole.default.bCanBeTankCrew;
 }
 
 function int FindRoleIndexInList(RORoleInfo newRole)

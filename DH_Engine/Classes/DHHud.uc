@@ -3420,7 +3420,7 @@ exec function ShrinkHUD()
 //Overidden for a simple change to the respawn time and to allow player to handle stuff THeel NEEDS UPDATED
 simulated function DrawSpectatingHud(Canvas C)
 {
-    local ROGameReplicationInfo GRI;
+    local DHGameReplicationInfo GRI;
     local float Time, strX, strY, X, Y, Scale;
     local string S;
     local DHPlayer DHP;
@@ -3433,7 +3433,7 @@ simulated function DrawSpectatingHud(Canvas C)
 
     Scale = C.ClipX / 1600.0;
 
-    GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
     DHP = DHPlayer(PlayerOwner);
 
     if (GRI != none)
@@ -3469,9 +3469,9 @@ simulated function DrawSpectatingHud(Canvas C)
             }
             else
             {
-                if (DHP.DesiredSpawnPoint != none && ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
+                if (DHP.SpawnPointIndex != -1 && ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
                 {
-                    S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(DHP.DesiredSpawnPoint.SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                    S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
                 }
                 else
                 {

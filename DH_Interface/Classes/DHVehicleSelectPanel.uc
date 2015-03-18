@@ -62,6 +62,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function ShowPanel(bool bShow)
 {
+    local DHSpawnPoint SP;
+
     super.ShowPanel(bShow);
 
     // We are showing this panel so we want to spawn as vehicle
@@ -69,10 +71,21 @@ function ShowPanel(bool bShow)
     {
         myDeployMenu.bSpawningVehicle = true;
 
-        // Clear DesiredSpawnPoint if it's infantry
-        if (DHP.DesiredSpawnPoint != none && DHP.DesiredSpawnPoint.Type == ESPT_Infantry)
+        // Check if SpawnPointIndex is valid
+        if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
         {
-            DHP.DesiredSpawnPoint = none;
+            SP = DHGRI.GetSpawnPoint(DHP.SpawnPointIndex);
+        }
+
+        // If spawnpoint index is type infantry, then nullify it and spawnvehicle
+        if (SP != none && SP.Type == ESPT_Infantry)
+        {
+            DHP.ServerChangeSpawn(-1, DHP.VehiclePoolIndex, -1);
+        }
+        else
+        {
+            // Just nullify SpawnVehicleIndex
+            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, DHP.VehiclePoolIndex, -1);
         }
 
         // Only update if we are rendering panel
