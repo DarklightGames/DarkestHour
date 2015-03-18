@@ -2104,13 +2104,18 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
     }
 
     // Check if SP is valid
-    if (DHGRI.IsSpawnPointIndexValid(SpawnPointIndex, PRI.Team.TeamIndex))
+    if (SpawnPointIndex != -1 && DHGRI.IsSpawnPointIndexValid(SpawnPointIndex, PRI.Team.TeamIndex))
+    {
+        G.DeployRestartPlayer(self, true);
+    }
+    else if (SpawnVehicleIndex != -1 && DHGRI.CanSpawnAtVehicle(SpawnVehicleIndex, self))
     {
         G.DeployRestartPlayer(self, true);
     }
     else
     {
-        Warn("Spawnpoint index not valid!!!" @ SpawnPointIndex);
+        // Don't have SpawnPointIndex or SpawnVehicleIndex set
+        Warn("Neither SpawnPointIndex or SpawnVehicleIndex is set!!!");
     }
 
     if (Pawn != none)

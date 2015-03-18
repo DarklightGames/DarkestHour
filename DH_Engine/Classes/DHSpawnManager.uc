@@ -259,23 +259,20 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
         return;
     }
 
-    if (C.VehiclePoolIndex != -1)
+    if (C.VehiclePoolIndex != -1) // Vehicle Pool
     {
         Log("Attempting to spawn Vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
 
         SpawnVehicle(C, SpawnError);
     }
-    else
+    else if (C.SpawnVehicleIndex != -1) // Spawn Vehicle
     {
-        if (SpawnPoints[C.SpawnPointIndex] != none)
-        {
-            Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ SpawnPoints[C.SpawnPointIndex].SpawnPointName);
-        }
-        else
-        {
-            Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex);
-        }
-
+        Log("Attempting to spawn Infantry at SpawnVehicleIndex" @ C.SpawnVehicleIndex);
+        SpawnPlayerAtSpawnVehicle(C, SpawnError);
+    }
+    else if (SpawnPoints[C.SpawnPointIndex] != none) // Spawn point
+    {
+        Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ SpawnPoints[C.SpawnPointIndex].SpawnPointName);
         SpawnInfantry(C, SpawnError);
     }
 }
@@ -378,6 +375,45 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     return V;
 }
 
+function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none)
+    {
+        return none;
+    }
+
+    // Spawn pawn in black room
+    if (C.Pawn == none)
+    {
+        G.DeployRestartPlayer(C, false, true);
+    }
+
+    // Check if we can spawn at the vehicle
+    if (C.Pawn != none && GRI.CanSpawnAtVehicle(C.SpawnVehicleIndex, C))
+    {
+        // Try to drive
+        if (SpawnVehicles[C.SpawnVehicleIndex].TryToDrive(C.Pawn))
+        {
+            SpawnVehicles[C.SpawnVehicleIndex].KDriverLeave(True);
+        }
+        else
+        {
+            //TODO: Need a way to attempt teleportion to the vehicle exit positions instead of just suicide
+            Warn("Cannot drive vehicle");
+            C.Pawn.Suicide();
+        }
+    }
+    else
+    {
+        Warn("Cannot spawn at vehicle");
+        C.Pawn.Suicide();
+    }
+}
+
 function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotation)
 {
     local DarkestHourGame G;
@@ -413,12 +449,8 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
         // Try again with black room spawn and teleport them to spawn location
         G.DeployRestartPlayer(C, false, true);
 
-        Warn("Calling DeployRestartPlayer again as old way");
-
         if (C.Pawn != none)
         {
-            Warn("Attempting teleport did where get here?");
-
             if (TeleportPlayer(C, SpawnLocation, SpawnRotation))
             {
                 return C.Pawn; // Return out as we used old spawn system and don't need to do anything else in this function

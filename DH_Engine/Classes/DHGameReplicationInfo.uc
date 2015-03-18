@@ -204,6 +204,12 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
     local array<DHSpawnPoint> ActiveSpawnPoints;
     local DHSpawnPoint SP;
 
+    // Valid index?
+    if (SpawnPointIndex < 0 || SpawnPointIndex >= SPAWN_POINTS_MAX)
+    {
+        return false; //Not valid index
+    }
+
     // Is spawn point active
     if (!IsSpawnPointIndexActive(SpawnPointIndex))
     {

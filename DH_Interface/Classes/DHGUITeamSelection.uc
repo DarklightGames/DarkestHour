@@ -93,8 +93,10 @@ function SelectTeamSuccessfull()
         ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
         Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
     }
-
-    Controller.RemoveMenu(self);
+    else
+    {
+        Controller.RemoveMenu(self);
+    }
 }
 
 function bool InternalOnClick( GUIComponent Sender )

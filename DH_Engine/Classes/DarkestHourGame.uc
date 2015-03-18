@@ -2052,7 +2052,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     return true;
 }
 
-//Overridden to support one normal kick, then session kick for FF violation
+// Modified to support one normal kick, then session kick for FF violation
 function HandleFFViolation(PlayerController Offender)
 {
     local bool   bSuccess;
