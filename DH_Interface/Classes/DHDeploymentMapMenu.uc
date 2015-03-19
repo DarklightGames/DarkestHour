@@ -5,9 +5,10 @@
 
 class DHDeploymentMapMenu extends MidGamePanel;
 
-const   OBJECTIVES_MAX =                    16;
-const   SPAWN_POINTS_MAX =                  16;
-const   SPAWN_VEHICLES_MAX =                10;
+const   OBJECTIVES_MAX =                    16; // Max objectives total
+const   SPAWN_POINTS_MAX =                  16; // Max spawn points active at once
+const   SPAWN_POINTS_TOTAL =                64; // Max spawn points total (make sure this matches GRI)
+const   SPAWN_VEHICLES_TOTAL =              10; // Max spawn vehicles total (make sure this matches GRI)
 
 var automated ROGUIProportionalContainer    MapContainer;
 
@@ -20,10 +21,10 @@ var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
 var     automated GUIProgressBar            pb_DeployProgressBar;
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
                                             b_Objectives[OBJECTIVES_MAX],
-                                            b_SpawnVehicles[SPAWN_VEHICLES_MAX];
+                                            b_SpawnVehicles[SPAWN_VEHICLES_TOTAL];
 
-var     int                                 SpawnPointIndices[SPAWN_POINTS_MAX];
-var     int                                 SpawnVehicleIndices[SPAWN_VEHICLES_MAX];
+var     int                                 SpawnPointIndices[SPAWN_POINTS_TOTAL];
+var     int                                 SpawnVehicleIndices[SPAWN_VEHICLES_TOTAL];
 
 var     ROObjective                         Objectives[OBJECTIVES_MAX];
 var     Material                            ObjectiveIcons[3];
@@ -127,23 +128,13 @@ function Timer()
     }
 }
 
-function ClearSpawnIcon(int i)
+function ClearIcon(GUIGFXButton IconB)
 {
-    if (b_SpawnPoints[i] != none)
+    if (IconB != none)
     {
-        b_SpawnPoints[i].WinWidth=0.0;
-        b_SpawnPoints[i].WinHeight=0.0;
-        b_SpawnPoints[i].SetVisibility(false);
-    }
-}
-
-function ClearVehicleIcon(int i)
-{
-    if (b_SpawnVehicles[i] != none)
-    {
-        b_SpawnVehicles[i].WinWidth=0.0;
-        b_SpawnVehicles[i].WinHeight=0.0;
-        b_SpawnVehicles[i].SetVisibility(false);
+        IconB.WinWidth=0.0;
+        IconB.WinHeight=0.0;
+        IconB.SetVisibility(false);
     }
 }
 
@@ -279,7 +270,7 @@ function PlaceObjectiveOnMap(ROObjective O, int Index)
 // Theel: will eventually want to draw 'deployed' MDVs also
 function bool DrawMapComponents(Canvas C)
 {
-    local int i;
+    local int i, SpawnPointIndex;
     local array<DHSpawnPoint> ActiveSpawnPoints;
 
     if (MyDeployMenu == none || bOutOfReinforcements)
@@ -303,20 +294,22 @@ function bool DrawMapComponents(Canvas C)
 
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
+        SpawnPointIndex = GRI.GetSpawnPointIndex(ActiveSpawnPoints[i]);
+
         // Draw infantry or vehicle spawn points
         if (!MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
         {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, ActiveSpawnPoints[i].SpawnPointName);
-            SpawnPointIndices[i] = GRI.GetSpawnPointIndex(ActiveSpawnPoints[i]);
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
+            SpawnPointIndices[SpawnPointIndex] = SpawnPointIndex;
         }
         else if (MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
         {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, ActiveSpawnPoints[i].SpawnPointName);
-            SpawnPointIndices[i] = GRI.GetSpawnPointIndex(ActiveSpawnPoints[i]);
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
+            SpawnPointIndices[SpawnPointIndex] = SpawnPointIndex;
         }
         else
         {
-            ClearSpawnIcon(i);
+            ClearIcon(b_SpawnPoints[i]);
         }
     }
 
@@ -335,7 +328,7 @@ function bool DrawMapComponents(Canvas C)
         }
         else
         {
-            ClearVehicleIcon(i);
+            ClearIcon(b_SpawnVehicles[i]);
         }
     }
 
@@ -359,7 +352,7 @@ function InternalOnPostDraw(Canvas Canvas)
 // Deploy requested
 function SpawnClick(optional bool bExploit)
 {
-    if (bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none)
+    if (bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none || !bReadyToDeploy)
     {
         return;
     }
@@ -381,11 +374,19 @@ function SpawnClick(optional bool bExploit)
 
 function bool ConfirmIndices()
 {
-    // If we have pool selected, but no spawn point = return false
+    // If we are trying to spawn vehicle, but no pool selected : return false
+    if (MyDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex == -1)
+        return false;
+
+    // If we are trying to spawn as infantry, but pool is selected : return false
+    if (!MyDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex != -1)
+        return false;
+
+    // If we have pool selected, but no spawn point : return false
     if (DHP.VehiclePoolIndex != -1 && DHP.SpawnPointIndex == -1)
         return false;
 
-    // If we have a SpawnVehicle selected, but also one of the others set = return false
+    // If we have a SpawnVehicle selected, but also one of the others set : return false
     if (DHP.SpawnVehicleIndex != -1 && (DHP.SpawnPointIndex != -1 || DHP.VehiclePoolIndex != -1))
         return false;
 
@@ -405,10 +406,7 @@ function bool InternalOnClick(GUIComponent Sender)
             break;
 
         case b_DeployButton:
-            if (ConfirmIndices())
-            {
-                SpawnClick();
-            }
+            SpawnClick();
             break;
 
         default:
@@ -428,12 +426,12 @@ function bool InternalOnClick(GUIComponent Sender)
                 if (Selected == b_SpawnPoints[i])
                 {
                     //DEBUG
-                    Log("SpawnPointIndices" $ i @ "Is:" @ SpawnPointIndices[i] $ ":" @ "and DHPSpawnPointIndex is:" @ DHP.SpawnPointIndex);
+                    //Log("SpawnPointIndices" $ i @ "Is:" @ SpawnPointIndices[i] $ ":" @ "and DHPSpawnPointIndex is:" @ DHP.SpawnPointIndex);
 
                     if (SpawnPointIndices[i] == DHP.SpawnPointIndex) // Player clicked twice on spawnpoint
                     {
                         // Clear spawnvehicle just incase it was set
-                        if (DHP.Pawn == none) // Avoid server call if we don't have a pawn
+                        if (DHP.Pawn == none) // Avoid server call if we don't have a pawn and are already clicking the same point
                         {
                             DHP.ServerChangeSpawn(DHP.SpawnPointIndex,DHP.VehiclePoolIndex,-1);
                             SpawnClick();
@@ -471,32 +469,15 @@ function bool InternalOnClick(GUIComponent Sender)
     return false;
 }
 
+
+// TODO strings need to be made localized
 function bool DrawDeployTimer(Canvas C)
 {
-    local float P;
+    local float P; // Progress
+    local bool bButtonEnabled, bProgressComplete;
 
-    // Check for reinforcements
-    if (bOutOfReinforcements)
-    {
-        pb_DeployProgressBar.Value = pb_DeployProgressBar.Low;
-        bReadyToDeploy = false;
-        b_DeployButton.DisableMe();
-        b_DeployButton.Caption = "Your team is out of reinforcements";
-        return false;
-    }
-
-    // Check for vehicle pool index if spawning vehicle
-    if (MyDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex == -1)
-    {
-        pb_DeployProgressBar.Value = pb_DeployProgressBar.Low;
-        bReadyToDeploy = false;
-        b_DeployButton.DisableMe();
-        b_DeployButton.Caption = "Select a vehicle from the vehicle panel";
-        return false;
-    }
-
-    // Handle progress bar values (so they move/advance based on deploy time)
-    if (!bReadyToDeploy)
+    // Handle progress bar
+    if (!bOutOfReinforcements)
     {
         P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) / DHP.RedeployTime;
         P = pb_DeployProgressBar.High - P;
@@ -504,36 +485,63 @@ function bool DrawDeployTimer(Canvas C)
 
         if (pb_DeployProgressBar.Value == pb_DeployProgressBar.High)
         {
-            // Progress is done
-            bReadyToDeploy = true;
-            b_DeployButton.EnableMe();
-        }
-        else
-        {
-            // Progress isn't done
-            b_DeployButton.Caption = "Deploy in:" @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ "Seconds";
-            bReadyToDeploy = false;
-            b_DeployButton.DisableMe();
+            // Progress bar is complete
+            bProgressComplete = true;
         }
     }
     else
     {
-        if (DHP.SpawnPointIndex == -1)
-        {
-            b_DeployButton.Caption = "Select a spawn point or Deploy to SpawnArea";
-            b_DeployButton.EnableMe();
-        }
-        else if (DHP.Pawn != none)
-        {
-            b_DeployButton.Caption = "Deployed"; // If we have a pawn, we are deployed
-            b_DeployButton.DisableMe();
-        }
-        else
-        {
-            b_DeployButton.EnableMe();
-            pb_DeployProgressBar.Value = pb_DeployProgressBar.High;
-            b_DeployButton.Caption = "Deploy!";
-        }
+        // Set progress to none
+        pb_DeployProgressBar.Value = pb_DeployProgressBar.Low;
+    }
+
+    // Handle button (enabled/disabled)
+    // TODO Need to see if we are trying to spawn on a spawn vehicle
+    if (bProgressComplete && ConfirmIndices() && DHP.Pawn == none && GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
+    {
+        // Progress is complete, we have legit indices, no pawn, our spawn point is valid, and if we are spawning vehicle have a pool selected
+        b_DeployButton.EnableMe();
+        bButtonEnabled = true;
+    }
+    else
+    {
+        b_DeployButton.DisableMe();
+    }
+
+    // Handle button caption (reverse order of priority)
+    if (!ConfirmIndices())
+    {
+        b_DeployButton.Caption = "Make sure you have a role and/or vehicle selected";
+    }
+    else if (!GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
+    {
+        b_DeployButton.Caption = "Select a spawnpoint or spawnvehicle"; // TODO need support for spawn vehicle
+    }
+    else if (bOutOfReinforcements)
+    {
+        b_DeployButton.Caption = "Your team is out of reinforcements";
+    }
+    else if (!bProgressComplete)
+    {
+        b_DeployButton.Caption = "Deploy in:" @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ "Seconds";
+    }
+    else if (DHP.Pawn != none)
+    {
+        b_DeployButton.Caption = "You are already deployed";
+    }
+    else
+    {
+        b_DeployButton.Caption = "Deploy!";
+    }
+
+    // Set bReadyToDeploy based on button
+    if (bButtonEnabled && bProgressComplete)
+    {
+        bReadyToDeploy = true;
+    }
+    else
+    {
+        bReadyToDeploy = false;
     }
     return false;
 }

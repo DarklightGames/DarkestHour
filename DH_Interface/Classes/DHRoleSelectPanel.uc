@@ -116,7 +116,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     // Fill roles list
     FillRoleList();
-    if (currentRole == none || DHP.CurrentRole == -1)
+    if (currentRole == none || DHP.DesiredRole == -1)
     {
         AutoPickRole();
     }
@@ -540,8 +540,6 @@ function AutoPickWeapons()
 {
     local int i;
 
-    Log("AutoPickWeapons() called");
-
     // If we already had selected a weapon, then re-select it.
     if (currentTeam == desiredTeam && currentRole == desiredRole &&
         desiredWeapons[0] == -5 && desiredWeapons[1] == -5)
@@ -614,7 +612,6 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
-                //Log("Desired Ammo Amount before:" @ player.DesiredAmmoAmount);
                 nu_PrimaryAmmoMags.Value = string(DHP.DesiredAmmoAmount);
                 if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MinValue || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
@@ -876,8 +873,6 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     w1 = desiredWeapons[0];
     w2 = desiredWeapons[1];
 
-    //Log("AttemptRoleApplication() Calling ServerChangePlayerInfo!!!                                     Attempt Semi-Success");
-
     // Make sure DesiredAmmoAmount is set
     DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
 
@@ -951,7 +946,6 @@ function InternalOnChange(GUIComponent Sender)
 
         case nu_PrimaryAmmoMags:
             DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            //Log("Desired Ammo Amount after:" @ DHP.DesiredAmmoAmount);
             l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
             break;
     }

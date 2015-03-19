@@ -81,9 +81,7 @@ event ClientReset()
     RedeployTime = default.RedeployTime;
     LastKilledTime = 0;
     DesiredAmmoAmount = 0;
-    SpawnPointIndex = -1;
-    SpawnVehicleIndex = -1;
-    VehiclePoolIndex = -1;
+    ServerChangeSpawn(-1, -1, -1); // Reset spawns
     bShouldAttemptAutoDeploy = false;
 
     //Reset camera stuff
@@ -2250,6 +2248,7 @@ simulated function ClientHandleDeath()
 
 // This function is called from DHHud to deploy the player when their deploy time hits zero and they are waiting in the HUD
 // Theel: this function needs to be made smarter
+// This function need a lot of work / clean up
 simulated function CheckToAutoDeploy()
 {
     local bool bDeployed; // Poor name for variable
@@ -2284,6 +2283,7 @@ simulated function CheckToAutoDeploy()
         }
         else
         {
+            // Can't change this value like this
             SpawnPointIndex = -1;
         }
     }
@@ -2486,16 +2486,14 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
                 DesiredRole = -1;
                 CurrentRole = -1;
                 DesiredAmmoAmount = 0;
-                SpawnPointIndex = -1;
-                VehiclePoolIndex = -1;
-                SpawnVehicleIndex = -1;
+                ServerChangeSpawn(-1, -1, -1); // Reset spawns
                 MyLastVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;
             }
 
-            // Check if change was successfull
+            // Check if change failed and output results
             if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none ||
                 PlayerReplicationInfo.Team.TeamIndex != newTeam)
             {
@@ -2522,7 +2520,6 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
                 }
                 else
                     ClientChangePlayerInfoResult(99);
-
                 return;
             }
         }

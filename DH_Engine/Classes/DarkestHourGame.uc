@@ -2024,8 +2024,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             P.bWeaponsSelected = false;
 
             // DARKEST HOUR
-            P.SpawnPointIndex = -1;
-            P.VehiclePoolIndex = -1;
+            P.ServerChangeSpawn(-1, -1, -1); // Reset spawns
         }
     }
 
