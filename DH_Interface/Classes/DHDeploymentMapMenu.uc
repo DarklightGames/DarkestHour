@@ -23,7 +23,7 @@ var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
                                             b_Objectives[OBJECTIVES_MAX],
                                             b_SpawnVehicles[SPAWN_VEHICLES_TOTAL];
 
-var     int                                 SpawnPointIndices[SPAWN_POINTS_TOTAL];
+//var     int                                 SpawnPointIndices[SPAWN_POINTS_TOTAL];
 var     int                                 SpawnVehicleIndices[SPAWN_VEHICLES_TOTAL];
 
 var     ROObjective                         Objectives[OBJECTIVES_MAX];
@@ -188,13 +188,13 @@ function GetMapCoords(vector Location, out float X, out float Y, float W, float 
 }
 
 //Theel: This function has floating variables
-function PlaceSpawnPointOnMap(vector Location, int Index, string Title)
+function PlaceSpawnPointOnMap(vector Location, int Index, int SPIndex, string Title)
 {
     local float X, Y, W, H;
 
     if (Index >= 0 && Index < arraycount(b_SpawnPoints))
     {
-        if (Index == DHP.SpawnPointIndex)
+        if (SPIndex == DHP.SpawnPointIndex)
         {
             W = 0.075;
             H = 0.035;
@@ -214,18 +214,19 @@ function PlaceSpawnPointOnMap(vector Location, int Index, string Title)
             b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
         }
 
+        b_SpawnPoints[Index].Tag = SPIndex; // Store the SP Index in the button
         b_SpawnPoints[Index].Caption = Caps(Left(Title, 2));
         b_SpawnPoints[Index].SetVisibility(true);
     }
 }
 
-function PlaceVehicleSpawnOnMap(vector Location, int Index)
+function PlaceVehicleSpawnOnMap(vector Location, int Index, int SpawnVehicleIndex)
 {
     local float X, Y, W, H;
 
     if (Index >= 0 && Index < arraycount(b_SpawnVehicles))
     {
-        if (Index == DHP.VehiclePoolIndex)
+        if (SpawnVehicleIndex == DHP.VehiclePoolIndex)
         {
             W = 0.075;
             H = 0.035;
@@ -245,6 +246,7 @@ function PlaceVehicleSpawnOnMap(vector Location, int Index)
             b_SpawnVehicles[Index].SetPosition(X, Y, W, H, true);
         }
 
+        b_SpawnVehicles[Index].Tag = SpawnVehicleIndex;
         b_SpawnVehicles[Index].Caption = string(Index);
         b_SpawnVehicles[Index].SetVisibility(true);
     }
@@ -299,13 +301,11 @@ function bool DrawMapComponents(Canvas C)
         // Draw infantry or vehicle spawn points
         if (!MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
         {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
-            SpawnPointIndices[SpawnPointIndex] = SpawnPointIndex;
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
         }
         else if (MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
         {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
-            SpawnPointIndices[SpawnPointIndex] = SpawnPointIndex;
+            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
         }
         else
         {
@@ -323,8 +323,7 @@ function bool DrawMapComponents(Canvas C)
         // Only show active, current team, and if we aren't spawning a vehicle
         if (GRI.SpawnVehicles[i].bIsActive && GRI.SpawnVehicles[i].TeamIndex == PRI.Team.TeamIndex)
         {
-            PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i);
-            SpawnVehicleIndices[i] = GRI.SpawnVehicles[i].Index;
+            PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i, GRI.SpawnVehicles[i].Index);
         }
         else
         {
@@ -426,9 +425,9 @@ function bool InternalOnClick(GUIComponent Sender)
                 if (Selected == b_SpawnPoints[i])
                 {
                     //DEBUG
-                    //Log("SpawnPointIndices" $ i @ "Is:" @ SpawnPointIndices[i] $ ":" @ "and DHPSpawnPointIndex is:" @ DHP.SpawnPointIndex);
+                    Log("b_SpawnPoints" $ i @ "Tag:" @ b_SpawnPoints[i].Tag $ ":" @ "and DHPSpawnPointIndex is:" @ DHP.SpawnPointIndex);
 
-                    if (SpawnPointIndices[i] == DHP.SpawnPointIndex) // Player clicked twice on spawnpoint
+                    if (b_SpawnPoints[i].Tag == DHP.SpawnPointIndex) // Player clicked twice on spawnpoint
                     {
                         // Clear spawnvehicle just incase it was set
                         if (DHP.Pawn == none) // Avoid server call if we don't have a pawn and are already clicking the same point
@@ -440,7 +439,7 @@ function bool InternalOnClick(GUIComponent Sender)
                     else
                     {
                         // Set SpawnPoint and clear spawnvehicle point as we clicked a spawn point
-                        DHP.ServerChangeSpawn(SpawnPointIndices[i],DHP.VehiclePoolIndex,-1);
+                        DHP.ServerChangeSpawn(b_SpawnPoints[i].Tag,DHP.VehiclePoolIndex,-1);
                     }
                     break;
                 }
@@ -450,7 +449,7 @@ function bool InternalOnClick(GUIComponent Sender)
             {
                 if (Selected == b_SpawnVehicles[i])
                 {
-                    if (i == DHP.SpawnVehicleIndex)
+                    if (b_SpawnVehicles[i].Tag == DHP.SpawnVehicleIndex)
                     {
                         // Clear pool and spawnpoint just incase either were set
                         DHP.ServerChangeSpawn(-1,-1,DHP.SpawnVehicleIndex);
@@ -459,7 +458,7 @@ function bool InternalOnClick(GUIComponent Sender)
                     else
                     {
                         // Set SpawnVehiclePoint and clear pool & spawnpoint value, as we clicked a spawnvehicle point
-                        DHP.ServerChangeSpawn(-1,-1,SpawnVehicleIndices[i]);
+                        DHP.ServerChangeSpawn(-1,-1,b_SpawnVehicles[i].Tag);
                     }
                     break;
                 }
