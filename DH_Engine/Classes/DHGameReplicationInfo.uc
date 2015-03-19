@@ -168,7 +168,7 @@ function DHSpawnPoint GetSpawnPoint(byte Index)
     return SpawnPoints[Index];
 }
 
-function byte GetSpawnPointIndex(DHSpawnPoint SP)
+simulated function byte GetSpawnPointIndex(DHSpawnPoint SP)
 {
     local int i;
 

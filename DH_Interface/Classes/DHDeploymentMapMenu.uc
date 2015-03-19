@@ -427,11 +427,17 @@ function bool InternalOnClick(GUIComponent Sender)
             {
                 if (Selected == b_SpawnPoints[i])
                 {
-                    if (i == DHP.SpawnPointIndex) // Player clicked twice on spawnpoint
+                    //DEBUG
+                    Log("SpawnPointIndices" $ i @ "Is:" @ SpawnPointIndices[i] $ ":" @ "and DHPSpawnPointIndex is:" @ DHP.SpawnPointIndex);
+
+                    if (SpawnPointIndices[i] == DHP.SpawnPointIndex) // Player clicked twice on spawnpoint
                     {
                         // Clear spawnvehicle just incase it was set
-                        DHP.ServerChangeSpawn(DHP.SpawnPointIndex,DHP.VehiclePoolIndex,-1);
-                        SpawnClick();
+                        if (DHP.Pawn == none) // Avoid server call if we don't have a pawn
+                        {
+                            DHP.ServerChangeSpawn(DHP.SpawnPointIndex,DHP.VehiclePoolIndex,-1);
+                            SpawnClick();
+                        }
                     }
                     else
                     {
