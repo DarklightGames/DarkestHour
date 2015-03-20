@@ -305,7 +305,8 @@ function bool DrawMapComponents(Canvas C)
         SpawnPointIndex = GRI.GetSpawnPointIndex(SP);
 
         // Draw infantry or vehicle spawn points
-        if (MyDeployMenu.Tab == TAB_Role && SP.CanSpawnInfantry())
+        if ((MyDeployMenu.Tab == TAB_Role && SP.CanSpawnInfantry()) ||
+            (MyDeployMenu.Tab == TAB_Vehicle && SP.CanSpawnVehicles()))
         {
             PlaceSpawnPointOnMap(SP.Location, i, SpawnPointIndex, SP.SpawnPointName);
         }
