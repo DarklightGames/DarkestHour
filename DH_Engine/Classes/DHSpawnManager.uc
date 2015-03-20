@@ -263,18 +263,29 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
 
     if (C.VehiclePoolIndex != -1) // Vehicle Pool
     {
-        Log("Attempting to spawn Vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
+        if (bDebug)
+        {
+            Log("Attempting to spawn Vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
+        }
 
         SpawnVehicle(C, SpawnError);
     }
     else if (C.SpawnVehicleIndex != -1) // Spawn Vehicle
     {
-        Log("Attempting to spawn Infantry at SpawnVehicleIndex" @ C.SpawnVehicleIndex);
+        if (bDebug)
+        {
+            Log("Attempting to spawn Infantry at SpawnVehicleIndex" @ C.SpawnVehicleIndex);
+        }
+
         SpawnPlayerAtSpawnVehicle(C, SpawnError);
     }
     else if (SpawnPoints[C.SpawnPointIndex] != none) // Spawn point
     {
-        Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ SpawnPoints[C.SpawnPointIndex].SpawnPointName);
+        if (bDebug)
+        {
+            Log("Attempting to spawn Infantry at SP" @ C.SpawnPointIndex @ "Also known as:" @ SpawnPoints[C.SpawnPointIndex].SpawnPointName);
+        }
+
         SpawnInfantry(C, SpawnError);
     }
 }
@@ -380,10 +391,19 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
 function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 {
     local DarkestHourGame G;
+    local Vehicle V;
+    local int i;
 
     G = DarkestHourGame(Level.Game);
 
     if (G == none)
+    {
+        return none;
+    }
+
+    V = SpawnVehicles[C.SpawnVehicleIndex];
+
+    if (V == none)
     {
         return none;
     }
@@ -395,25 +415,38 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     }
 
     // Check if we can spawn at the vehicle
-    if (C.Pawn != none && GRI.CanSpawnAtVehicle(C.SpawnVehicleIndex, C))
+    if (C.Pawn == none)
     {
-        // Try to drive
-        if (SpawnVehicles[C.SpawnVehicleIndex].TryToDrive(C.Pawn))
+        return none;
+    }
+
+    if (GRI.CanSpawnAtVehicle(C.SpawnVehicleIndex, C))
+    {
+        // Attempt to spawn at exit positions
+        for (i = 0; i < V.ExitPositions.Length; ++i)
         {
-            SpawnVehicles[C.SpawnVehicleIndex].KDriverLeave(True);
+            if (TeleportPlayer(C, V.Location + (V.ExitPositions[i] << V.Rotation), V.Rotation))
+            {
+                return C.Pawn;
+            }
         }
-        else
+
+        // All exit positions were blocked, attempt to just get in the vehicle
+        if (!V.TryToDrive(C.Pawn))
         {
-            //TODO: Need a way to attempt teleportion to the vehicle exit positions instead of just suicide
-            Warn("Cannot drive vehicle");
             C.Pawn.Suicide();
+
+            return none;
         }
     }
     else
     {
         Warn("Cannot spawn at vehicle");
+
         C.Pawn.Suicide();
     }
+
+    return C.Pawn;
 }
 
 function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotation)
