@@ -278,6 +278,7 @@ function bool DrawMapComponents(Canvas C)
 {
     local int i, SpawnPointIndex;
     local array<DHSpawnPoint> ActiveSpawnPoints;
+    local DHSpawnPoint SP;
 
     if (MyDeployMenu == none || bOutOfReinforcements)
     {
@@ -300,16 +301,13 @@ function bool DrawMapComponents(Canvas C)
 
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
-        SpawnPointIndex = GRI.GetSpawnPointIndex(ActiveSpawnPoints[i]);
+        SP = ActiveSpawnPoints[i];
+        SpawnPointIndex = GRI.GetSpawnPointIndex(SP);
 
         // Draw infantry or vehicle spawn points
-        if (!MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Infantry)
+        if (MyDeployMenu.Tab == TAB_Role && SP.CanSpawnInfantry())
         {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
-        }
-        else if (MyDeployMenu.bSpawningVehicle && ActiveSpawnPoints[i].Type == ESPT_Vehicles)
-        {
-            PlaceSpawnPointOnMap(ActiveSpawnPoints[i].Location, i, SpawnPointIndex, ActiveSpawnPoints[i].SpawnPointName);
+            PlaceSpawnPointOnMap(SP.Location, i, SpawnPointIndex, SP.SpawnPointName);
         }
         else
         {
@@ -317,21 +315,20 @@ function bool DrawMapComponents(Canvas C)
         }
     }
 
-    if (MyDeployMenu.bSpawningVehicle)
+    if (MyDeployMenu.Tab != TAB_Vehicle)
     {
-        return false; // Don't continue to show vehicle spawn points as we are trying to vehicle
-    }
-    // Loop Vehicle Spawn Points
-    for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
-    {
-        // Only show active, current team, and if we aren't spawning a vehicle
-        if (GRI.SpawnVehicles[i].bIsActive && GRI.SpawnVehicles[i].TeamIndex == PRI.Team.TeamIndex)
+        // Loop Vehicle Spawn Points
+        for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
         {
-            PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i, GRI.SpawnVehicles[i].Index);
-        }
-        else
-        {
-            ClearIcon(b_SpawnVehicles[i]);
+            // Only show active, current team, and if we aren't spawning a vehicle
+            if (GRI.SpawnVehicles[i].bIsActive && GRI.SpawnVehicles[i].TeamIndex == PRI.Team.TeamIndex)
+            {
+                PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i, GRI.SpawnVehicles[i].Index);
+            }
+            else
+            {
+                ClearIcon(b_SpawnVehicles[i]);
+            }
         }
     }
 
@@ -378,20 +375,28 @@ function SpawnClick(optional bool bExploit)
 function bool ConfirmIndices()
 {
     // If we are trying to spawn vehicle, but no pool selected : return false
-    if (MyDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex == -1)
+    if (MyDeployMenu.Tab == TAB_Vehicle && DHP.VehiclePoolIndex == -1)
+    {
         return false;
+    }
 
     // If we are trying to spawn as infantry, but pool is selected : return false
-    if (!MyDeployMenu.bSpawningVehicle && DHP.VehiclePoolIndex != -1)
+    if (MyDeployMenu.Tab == TAB_Role && DHP.VehiclePoolIndex != -1)
+    {
         return false;
+    }
 
     // If we have pool selected, but no spawn point : return false
     if (DHP.VehiclePoolIndex != -1 && DHP.SpawnPointIndex == -1)
+    {
         return false;
+    }
 
     // If we have a SpawnVehicle selected, but also one of the others set : return false
     if (DHP.SpawnVehicleIndex != -1 && (DHP.SpawnPointIndex != -1 || DHP.VehiclePoolIndex != -1))
+    {
         return false;
+    }
 
     // Otherwise return true
     return true;

@@ -8,7 +8,8 @@ class DHSpawnManager extends SVehicleFactory;
 enum ESpawnPointType
 {
     ESPT_Infantry,
-    ESPT_Vehicles
+    ESPT_Vehicles,
+    ESPT_Both
 };
 
 enum ESpawnPointMethod
@@ -188,7 +189,7 @@ function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator Spawn
     switch (SP.Method)
     {
         case ESPM_Hints:
-            if (!GetSpawnLocation(SP, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnLocation, SpawnRotation))
+            if (!GetSpawnLocation(SP, SP.VehicleLocationHints, VehiclePools[C.VehiclePoolIndex].VehicleClass.default.CollisionRadius * 1.25, SpawnLocation, SpawnRotation))
             {
                 SpawnError = SpawnError_Blocked;
 
@@ -203,7 +204,7 @@ function DrySpawnVehicle(DHPlayer C, out vector SpawnLocation, out rotator Spawn
     SpawnError = SpawnError_None;
 }
 
-function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
+function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHints, float CollisionRadius, out vector SpawnLocation, out rotator SpawnRotation)
 {
     local Pawn P;
     local array<int> LocationHintIndices;
@@ -212,7 +213,7 @@ function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vecto
     local bool bIsBlocked;
 
     //Scramble location hint indices so we don't use the same ones repeatedly
-    LocationHintIndices = CreateScrambledArrayIndices(SP.LocationHints.Length);
+    LocationHintIndices = CreateScrambledArrayIndices(LocationHints.Length);
 
     //Initialize with invalid index
     LocationHintIndex = -1;
@@ -221,7 +222,7 @@ function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vecto
     {
         bIsBlocked = false;
 
-        foreach RadiusActors(class'Pawn', P, CollisionRadius, SP.LocationHints[LocationHintIndices[i]].Location)
+        foreach RadiusActors(class'Pawn', P, CollisionRadius, LocationHints[LocationHintIndices[i]].Location)
         {
             //Found a blocking actor
             bIsBlocked = true;
@@ -241,13 +242,13 @@ function bool GetSpawnLocation(DHSpawnPoint SP, float CollisionRadius, out vecto
     if (LocationHintIndex == -1)
     {
         //No usable location hint found, so use spawn point itself
-        SpawnLocation = SP.Location;
-        SpawnRotation = SP.Rotation;
+        SpawnLocation = Location;
+        SpawnRotation = Rotation;
     }
     else
     {
-        SpawnLocation = SP.LocationHints[LocationHintIndex].Location;
-        SpawnRotation = SP.LocationHints[LocationHintIndex].Rotation;
+        SpawnLocation = LocationHints[LocationHintIndex].Location;
+        SpawnRotation = LocationHints[LocationHintIndex].Rotation;
     }
 
     return true;
@@ -530,7 +531,7 @@ function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
 
     SP = SpawnPoints[C.SpawnPointIndex];
 
-    if (SP == none || SP.Type != SpawnPointType)
+    if (SP == none || (SP.Type != ESPT_Both && SP.Type != SpawnPointType))
     {
         Error("[DHSM] Fatal error, requested spawn point is null or incorrect type");
 
@@ -573,7 +574,7 @@ function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return SpawnError_Fatal;
     }
 
-    if (SP == none || SP.Type != ESPT_Vehicles)
+    if (SP == none || (SP.Type != ESPT_Both && SP.Type != ESPT_Vehicles))
     {
         Error("[DHSM] Fatal error, requested spawn point is null or incorrect type");
 
@@ -649,7 +650,7 @@ function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator Spaw
     switch (SP.Method)
     {
         case ESPM_Hints:
-            if (!GetSpawnLocation(SP, class'DH_Pawn'.default.CollisionRadius, SpawnLocation, SpawnRotation))
+            if (!GetSpawnLocation(SP, Sp.InfantryLocationHints, class'DH_Pawn'.default.CollisionRadius, SpawnLocation, SpawnRotation))
             {
                 SpawnError = SpawnError_Blocked;
 

@@ -138,7 +138,7 @@ function ShowPanel(bool bShow)
 
     if (bShow && MyDeployMenu != none)
     {
-        MyDeployMenu.bSpawningVehicle = false;
+        MyDeployMenu.Tab = TAB_Role;
 
         // Check if SpawnPointIndex is valid
         if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))

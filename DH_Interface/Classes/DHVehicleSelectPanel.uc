@@ -77,7 +77,7 @@ function ShowPanel(bool bShow)
     // We are showing this panel so we want to spawn as vehicle
     if (bShow && myDeployMenu != none)
     {
-        myDeployMenu.bSpawningVehicle = true;
+        myDeployMenu.Tab = TAB_Vehicle;
 
         // Check if SpawnPointIndex is valid
         if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))

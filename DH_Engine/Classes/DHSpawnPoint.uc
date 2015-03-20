@@ -10,7 +10,8 @@ class DHSpawnPoint extends Actor
 enum ESpawnPointType
 {
     ESPT_Infantry,
-    ESPT_Vehicles
+    ESPT_Vehicles,
+    ESPT_Both
 };
 
 enum ESpawnPointMethod
@@ -23,11 +24,13 @@ var() ESpawnPointType Type;
 var() ESpawnPointMethod Method;
 var() bool bIsInitiallyActive;
 var() int TeamIndex;
-var() name LocationHintTag;
+var() name InfantryLocationHintTag;
+var() name VehicleLocationHintTag;
 var() string SpawnPointName;
 var() float SpawnProtectionTime;
 
-var   array<DHLocationHint> LocationHints;
+var   array<DHLocationHint> InfantryLocationHints;
+var   array<DHLocationHint> VehicleLocationHints;
 
 function PostBeginPlay()
 {
@@ -35,13 +38,32 @@ function PostBeginPlay()
 
     foreach AllActors(class'DHLocationHint', LH)
     {
-        if (LH.Tag == LocationHintTag)
+        if (LH.Tag == '')
         {
-            LocationHints[LocationHints.Length] = LH;
+            continue;
+        }
+
+        if (LH.Tag == InfantryLocationHintTag)
+        {
+            InfantryLocationHints[InfantryLocationHints.Length] = LH;
+        }
+        else if (LH.Tag == VehicleLocationHintTag)
+        {
+            VehicleLocationHints[VehicleLocationHints.Length] = LH;
         }
     }
 
     super.PostBeginPlay();
+}
+
+simulated function bool CanSpawnInfantry()
+{
+    return Type == ESPT_Infantry || Type == ESPT_Both;
+}
+
+simulated function bool CanSpawnVehicles()
+{
+    return Type == ESPT_Vehicles || Type == ESPT_Both;
 }
 
 defaultproperties

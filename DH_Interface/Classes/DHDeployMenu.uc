@@ -4,6 +4,12 @@
 //==============================================================================
 class DHDeployMenu extends UT2K4GUIPage;
 
+enum ETab
+{
+    TAB_Role,
+    TAB_Vehicle
+};
+
 var automated ROGUIProportionalContainer    MenuOptionsContainer;
 
 var automated FloatingImage                 i_background;
@@ -25,8 +31,9 @@ var localized array<string>                 LoadoutPanelHint;
 
 var bool                                    bReceivedTeam,
                                             bShowingMenuOptions,
-                                            bSpawningVehicle,
                                             bRoleIsCrew;
+
+var ETab                                    Tab;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
