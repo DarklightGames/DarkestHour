@@ -42,6 +42,7 @@ var DHRoleSelectPanel                       MyRoleMenu;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
+    local rotator R;
 
     Super.InitComponent(MyController, MyOwner);
 
@@ -91,9 +92,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         b_Objectives[i].Graphic = none;
     }
 
+    // Set rotator based on map rotation offset
+    R.Yaw = GRI.OverheadOffset * 182.044444;
+
     // Set the location of the map bounds
-    NELocation = GRI.NorthEastBounds;
-    SWLocation = GRI.SouthWestBounds;
+    NELocation = GRI.NorthEastBounds << R;
+    SWLocation = GRI.SouthWestBounds << R;
 
     // Timer for updating reinforcements & time
     Timer();

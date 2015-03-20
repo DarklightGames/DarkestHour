@@ -60,12 +60,18 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Controller.LCDDrawText("44-45",(100 - (XL / 2)), y, Controller.LCDLargeFont);
     Controller.LCDRepaint();
 
-    //Check if the console isn't matching the DH one
+    // Check if the console isn't matching the DH one
     if (string(PlayerOwner().Player.Console) != "Package.DHConsole")
     {
-        //Init fix config button above others
+        // Init fix config button above others
         sb_MainMenu.ManageComponent(b_FixConfig);
     }
+    else
+    {
+        // Our console class is correct hide button
+        b_FixConfig.SetVisibility(false);
+    }
+
     sb_MainMenu.ManageComponent(b_QuickPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
@@ -151,7 +157,12 @@ function bool ButtonClick(GUIComponent Sender)
             break;
 
         case b_QuickPlay:
-            if (ReclickCycleTime >= default.ReclickCycleTime)
+            if (!Controller.CheckSteam())
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+            }
+            else if (ReclickCycleTime >= default.ReclickCycleTime)
             {
                 //Handle reclick
                 ReclickCycleTime = 0;

@@ -1085,6 +1085,7 @@ defaultproperties
     RoleHasBotsText=" (has bots)"
     CurrentRoleText="Current Role"
     RoleFullText="Full"
+
     SelectEquipmentText="Select an item to view its description."
     RoleIsFullMessageText="The role you selected is full. Select another role from the list and hit continue."
     ChangingRoleMessageText="Please wait while your player information is being updated."

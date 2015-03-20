@@ -29,6 +29,7 @@ struct VehiclePool
     var() name              OnActivatedEvent;           //event to trigger when pool is activated (also gets triggered when initially activated)
     var() name              OnDeactivatedEvent;         //event to trigger when pool is deactivated (does NOT get triggered when initially deactivated)
     var() name              OnDepletedEvent;            //event to trigger when pool has been depleted (SpawnCount meets or exceeds MaxSpawns)
+    var() name              OnDepleteActivatePool;      //vehicle pool to activate when this pool has been depleted (uses pool tag)
     var() name              OnVehicleDestroyedEvent;    //event to trigger when vehicle from this pool is destroyed
     var() name              OnVehicleSpawnedEvent;      //event to trigger when vehicle from this pool is spawned
 
@@ -746,6 +747,11 @@ event VehicleDestroyed(Vehicle V)
             if (VehiclePools[i].OnDepletedEvent != '' && GetPoolSpawnsRemaining(i) == 0)
             {
                 TriggerEvent(VehiclePools[i].OnDepletedEvent, none, none);
+
+                if (VehiclePools[i].OnDepleteActivatePool != '')
+                {
+                    SetPoolIsActiveByTag(VehiclePools[i].OnDepleteActivatePool, true);
+                }
             }
 
             break;
