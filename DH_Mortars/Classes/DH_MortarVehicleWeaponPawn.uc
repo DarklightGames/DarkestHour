@@ -6,10 +6,6 @@
 class DH_MortarVehicleWeaponPawn extends ROTankCannonPawn
     abstract;
 
-const DEG2RAD = 0.0174532925;
-const RAD2DEG = 57.2957795;
-const DEG2UU = 182.04444;
-
 //Animations
 var name DriverIdleAnim;
 var name DriverFiringAnim;
@@ -622,9 +618,9 @@ simulated function DrawHUD(Canvas C)
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
             C.DrawText(DH_MortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
 
-            HUDArrowTexture.Rotation.Yaw = (Elevation + 180.0) * DEG2UU;
-            Loc.X = Cos(Elevation * DEG2RAD) * 256.0;
-            Loc.Y = Sin(Elevation * DEG2RAD) * 256.0;
+            HUDArrowTexture.Rotation.Yaw = class'DHLib'.static.DegreesToUnreal(Elevation + 180.0);
+            Loc.X = Cos(class'DHLib'.static.DegreesToRadians(Elevation)) * 256.0;
+            Loc.Y = Sin(class'DHLib'.static.DegreesToRadians(Elevation)) * 256.0;
 
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
