@@ -394,6 +394,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     local Vehicle V;
     local int i;
     local array<int> ExitPositionIndices;
+    local vector Offset;
 
     G = DarkestHourGame(Level.Game);
 
@@ -421,6 +422,8 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
         return none;
     }
 
+    Offset = C.Pawn.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+
     if (GRI.CanSpawnAtVehicle(C.SpawnVehicleIndex, C))
     {
         ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
@@ -431,7 +434,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
         {
             for (i = 0; i < ExitPositionIndices.Length; ++i)
             {
-                Spawn(class'RODebugTracer',,, V.Location + (V.ExitPositions[ExitPositionIndices[i]] << V.Rotation), V.Rotation);
+                Spawn(class'RODebugTracer',,, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation);
             }
         }
 
