@@ -462,10 +462,22 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             {
                 // No camera change if we're locking rotation
             }
+            else if (ROPwn != none && ROPwn.bIsCrawling)
+            {
+                // TODO: put in a max clamp
+                ViewRotation.Yaw += 10.0 * DeltaTime * aTurn;
+                ViewRotation.Pitch += 10.0 * DeltaTime * aLookUp;
+            }
+            else if (ROPwn != none && ROPwn.bIsSprinting)
+            {
+                // TODO: put in a max clamp
+                ViewRotation.Yaw += 8.0 * DeltaTime * aTurn;
+                ViewRotation.Pitch += 8.0 * DeltaTime * aLookUp;
+            }
             else if (ROPwn != none && ROPwn.bRestingWeapon)
             {
-                ViewRotation.Yaw += 16.0 * DeltaTime * aTurn;
-                ViewRotation.Pitch += 16.0 * DeltaTime * aLookUp;
+                ViewRotation.Yaw += 12.0 * DeltaTime * aTurn;
+                ViewRotation.Pitch += 12.0 * DeltaTime * aLookUp;
             }
             else
             {
