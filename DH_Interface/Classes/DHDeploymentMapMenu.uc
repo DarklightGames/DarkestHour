@@ -353,17 +353,17 @@ function InternalOnPostDraw(Canvas Canvas)
 // Deploy requested
 function SpawnClick(optional bool bExploit)
 {
-    if (bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none || !bReadyToDeploy)
-    {
-        return;
-    }
-
     // Exploit spawn!
-    if (bExploit)
+    if (bExploit && !PRI.bOnlySpectator && DHP.Pawn == none)
     {
         MyRoleMenu.AttemptRoleApplication();
         DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
         Controller.CloseMenu(false); //Close menu as we clicked deploy!
+        return;
+    }
+
+    if (bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none || !bReadyToDeploy)
+    {
         return;
     }
 
