@@ -506,7 +506,7 @@ function bool DrawDeployTimer(Canvas C)
 
     // Handle button (enabled/disabled)
     // TODO Need to see if we are trying to spawn on a spawn vehicle
-    if (bProgressComplete && ConfirmIndices() && DHP.Pawn == none && GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
+    if (bProgressComplete && ConfirmIndices() && DHP.Pawn == none && (GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex) || GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP)))
     {
         // Progress is complete, we have legit indices, no pawn, our spawn point is valid, and if we are spawning vehicle have a pool selected
         b_DeployButton.EnableMe();

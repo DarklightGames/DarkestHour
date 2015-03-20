@@ -30,6 +30,7 @@ simulated function UpdatePrecacheMaterials()
 defaultproperties
 {
     FriendlyResetDistance=6000.0
+    IdleTimeBeforeReset=300.0
     MaxPitchSpeed=350.0
     TreadVelocityScale=80.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
