@@ -6,6 +6,19 @@
 class DHLib extends Object
     abstract;
 
+static final function array<int> CreateIndicesArray(int Length)
+{
+    local int i;
+    local array<int> Indices;
+
+    for (i = 0; i < Length; ++i)
+    {
+        Indices[i] = i;
+    }
+
+    return Indices;
+}
+
 static final function FisherYatesShuffle(out array<int> _Array)
 {
     local int i, j;

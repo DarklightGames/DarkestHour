@@ -393,6 +393,7 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
     local DarkestHourGame G;
     local Vehicle V;
     local int i;
+    local array<int> ExitPositionIndices;
 
     G = DarkestHourGame(Level.Game);
 
@@ -422,10 +423,21 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
 
     if (GRI.CanSpawnAtVehicle(C.SpawnVehicleIndex, C))
     {
+        ExitPositionIndices = class'DHLib'.static.CreateIndicesArray(V.ExitPositions.Length);
+        class'DHLib'.static.FisherYatesShuffle(ExitPositionIndices);
+
         // Attempt to spawn at exit positions
-        for (i = 0; i < V.ExitPositions.Length; ++i)
+        if (bDebug)
         {
-            if (TeleportPlayer(C, V.Location + (V.ExitPositions[i] << V.Rotation), V.Rotation))
+            for (i = 0; i < ExitPositionIndices.Length; ++i)
+            {
+                Spawn(class'RODebugTracer',,, V.Location + (V.ExitPositions[ExitPositionIndices[i]] << V.Rotation), V.Rotation);
+            }
+        }
+
+        for (i = 0; i < ExitPositionIndices.Length; ++i)
+        {
+            if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] << V.Rotation), V.Rotation))
             {
                 return C.Pawn;
             }
