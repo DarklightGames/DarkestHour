@@ -5,40 +5,46 @@
 
 class DHPlayer extends ROPlayer;
 
-var int             RedeployTime;
-var float           LastKilledTime; // The time at which last death occured
-var byte            DesiredAmmoAmount;
-var bool            bShouldAttemptAutoDeploy;
+var int                             RedeployTime;
+var float                           LastKilledTime;             // The time at which last death occured
+var byte                            DesiredAmmoAmount;
+var bool                            bShouldAttemptAutoDeploy;
 
 // DH Sway values
-var() InterpCurve             BobCurve; // The amount of weapon bob to apply based on an input time in ironsights
-var protected float           DHSwayElasticFactor;
-var protected float           DHSwayDampingFactor;
+var protected InterpCurve           BobCurve;                   // The amount of weapon bob to apply based on an input time in ironsights
+var protected float                 DHSwayElasticFactor;
+var protected float                 DHSwayDampingFactor;
 
-var vector  FlinchRotMag;
-var vector  FlinchRotRate;
-var float   FlinchRotTime;
-var vector  FlinchOffsetMag;
-var vector  FlinchOffsetRate;
-var float   FlinchOffsetTime;
+// Rotation clamp values
+var protected float                 DHSprintMaxTurnSpeed;
+var protected float                 DHProneMaxTurnSpeed;
+var protected float                 DHStandardTurnSpeedFactor;
+var protected float                 DHHalfTurnSpeedFactor;
 
-var float   MantleCheckTimer;   // Makes sure client doesn't try to start mantling without the server
-var float   MantleFailTimer;    // Makes sure we don't get stuck floating in an object unable to end a mantle
-var bool    bDidMantle;         // Is the mantle complete?
-var bool    bIsInStateMantling; // Stop the client from exiting state until server has exited to avoid desync
-var bool    bDidCrouchCheck;
-var bool    bWaitingToMantle;
-var bool    bLockJump;
-var bool    bMantleDebug;
-var int     MantleLoopCount;
+var vector                          FlinchRotMag;
+var vector                          FlinchRotRate;
+var float                           FlinchRotTime;
+var vector                          FlinchOffsetMag;
+var vector                          FlinchOffsetRate;
+var float                           FlinchOffsetTime;
 
-var byte    MortarTargetIndex;
-var vector  MortarHitLocation;
+var float                           MantleCheckTimer;           // Makes sure client doesn't try to start mantling without the server
+var float                           MantleFailTimer;            // Makes sure we don't get stuck floating in an object unable to end a mantle
+var bool                            bDidMantle;                 // Is the mantle complete?
+var bool                            bIsInStateMantling;         // Stop the client from exiting state until server has exited to avoid desync
+var bool                            bDidCrouchCheck;
+var bool                            bWaitingToMantle;
+var bool                            bLockJump;
+var bool                            bMantleDebug;
+var int                             MantleLoopCount;
 
-var int     SpawnPointIndex;
-var int     SpawnVehicleIndex;
-var int     VehiclePoolIndex;
-var vehicle MyLastVehicle;      // Used for vehicle spawning to remember last vehicle player spawned (only used by server)
+var byte                            MortarTargetIndex;
+var vector                          MortarHitLocation;
+
+var int                             SpawnPointIndex;
+var int                             SpawnVehicleIndex;
+var int                             VehiclePoolIndex;
+var vehicle                         MyLastVehicle;              // Used for vehicle spawning to remember last vehicle player spawned (only used by server)
 
 var DHHintManager DHHintManager;
 
@@ -416,13 +422,13 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         }
         else if (bFreeCamSwivel == true)
         {
-            CameraSwivel.Yaw += 16.0 * DeltaTime * aTurn;
-            CameraSwivel.Pitch += 16.0 * DeltaTime * aLookUp;
+            CameraSwivel.Yaw += DHHalfTurnSpeedFactor * DeltaTime * aTurn;
+            CameraSwivel.Pitch += DHHalfTurnSpeedFactor * DeltaTime * aLookUp;
         }
         else
         {
-            CameraDeltaRotation.Yaw += 32.0 * DeltaTime * aTurn;
-            CameraDeltaRotation.Pitch += 32.0 * DeltaTime * aLookUp;
+            CameraDeltaRotation.Yaw += DHStandardTurnSpeedFactor * DeltaTime * aTurn;
+            CameraDeltaRotation.Pitch += DHStandardTurnSpeedFactor * DeltaTime * aLookUp;
         }
     }
     else
@@ -464,25 +470,25 @@ function UpdateRotation(float DeltaTime, float maxPitch)
             }
             else if (ROPwn != none && ROPwn.bIsCrawling)
             {
-                // TODO: put in a max clamp
-                ViewRotation.Yaw += 10.0 * DeltaTime * aTurn;
-                ViewRotation.Pitch += 10.0 * DeltaTime * aLookUp;
+                // Clamp the rotational change for prone
+                ViewRotation.Yaw += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aTurn), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
+                ViewRotation.Pitch += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aLookUp), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
             }
             else if (ROPwn != none && ROPwn.bIsSprinting)
             {
-                // TODO: put in a max clamp
-                ViewRotation.Yaw += 8.0 * DeltaTime * aTurn;
-                ViewRotation.Pitch += 8.0 * DeltaTime * aLookUp;
+                // Clamp the rotational change for sprint
+                ViewRotation.Yaw += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aTurn), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
+                ViewRotation.Pitch += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aLookUp), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
             }
             else if (ROPwn != none && ROPwn.bRestingWeapon)
             {
-                ViewRotation.Yaw += 12.0 * DeltaTime * aTurn;
-                ViewRotation.Pitch += 12.0 * DeltaTime * aLookUp;
+                ViewRotation.Yaw += DHHalfTurnSpeedFactor * DeltaTime * aTurn;
+                ViewRotation.Pitch += DHHalfTurnSpeedFactor * DeltaTime * aLookUp;
             }
             else
             {
-                ViewRotation.Yaw += 32.0 * DeltaTime * aTurn;
-                ViewRotation.Pitch += 32.0 * DeltaTime * aLookUp;
+                ViewRotation.Yaw += DHStandardTurnSpeedFactor * DeltaTime * aTurn;
+                ViewRotation.Pitch += DHStandardTurnSpeedFactor * DeltaTime * aLookUp;
             }
 
             if (Pawn != none && Pawn.Weapon != none && ROPwn != none)
@@ -2580,6 +2586,12 @@ defaultproperties
     DHSwayDampingFactor=0.85;
     baseSwayYawAcc=120
     baseSwayPitchAcc=100
+
+    // Max turn speed values
+    DHSprintMaxTurnSpeed=225.0
+    DHProneMaxTurnSpeed=155.0
+    DHStandardTurnSpeedFactor=32.0
+    DHHalfTurnSpeedFactor=16.0
 
     // Other values
     RedeployTime=15
