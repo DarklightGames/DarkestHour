@@ -430,17 +430,9 @@ function Pawn SpawnPlayerAtSpawnVehicle(DHPlayer C, out byte SpawnError)
         class'DHLib'.static.FisherYatesShuffle(ExitPositionIndices);
 
         // Attempt to spawn at exit positions
-        if (bDebug)
-        {
-            for (i = 0; i < ExitPositionIndices.Length; ++i)
-            {
-                Spawn(class'RODebugTracer',,, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation);
-            }
-        }
-
         for (i = 0; i < ExitPositionIndices.Length; ++i)
         {
-            if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] << V.Rotation), V.Rotation))
+            if (TeleportPlayer(C, V.Location + (V.ExitPositions[ExitPositionIndices[i]] >> V.Rotation) + Offset, V.Rotation))
             {
                 return C.Pawn;
             }
