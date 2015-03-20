@@ -43,7 +43,6 @@ defaultproperties
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_Kar98Pickup'
-    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_Kar98Attachment'
     ItemName="Karabiner 98k"
     Mesh=SkeletalMesh'Axis_Kar98_1st.kar98k_mesh'

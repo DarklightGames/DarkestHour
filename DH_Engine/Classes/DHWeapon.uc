@@ -134,5 +134,5 @@ defaultproperties
     PlayerIronsightFOV=60.0
     ScopeDetail=RO_TextureScope
     SwayModifyFactor=1.0
-    BobModifyFactor=0.25
+    BobModifyFactor=0.2
 }

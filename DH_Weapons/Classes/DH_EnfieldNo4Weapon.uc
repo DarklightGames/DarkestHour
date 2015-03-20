@@ -287,7 +287,6 @@ defaultproperties
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_EnfieldNo4Pickup'
-    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4Attachment'
     ItemName="Lee Enfield No.4 Rifle"
     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4'
