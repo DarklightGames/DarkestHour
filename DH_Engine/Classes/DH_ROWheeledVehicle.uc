@@ -73,6 +73,7 @@ var     bool        bDebugExitPositions;
 
 // Spawning
 var     bool            bIsSpawnVehicle;
+var     float           FriendlyResetDistance;
 var     DHSpawnManager  SM;
 
 replication
@@ -862,7 +863,7 @@ event CheckReset()
     }
 
     // Check for friendlies nearby
-    foreach CollidingActors(class'Pawn', P, 4000.0)
+    foreach CollidingActors(class'Pawn', P, FriendlyResetDistance)
     {
         if (P != self && P.Controller != none && P.GetTeamNum() == GetTeamNum()) // traces only work on friendly players nearby
         {
@@ -1332,6 +1333,7 @@ simulated function int GetPassengerCount()
 
 defaultproperties
 {
+    FriendlyResetDistance=4000.0
     ObjectCollisionResistance=1.0
     bEngineOff=true
     bSavedEngineOff=true
