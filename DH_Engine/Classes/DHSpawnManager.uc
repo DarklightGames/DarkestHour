@@ -242,8 +242,8 @@ function bool GetSpawnLocation(DHSpawnPoint SP, array<DHLocationHint> LocationHi
     if (LocationHintIndex == -1)
     {
         //No usable location hint found, so use spawn point itself
-        SpawnLocation = Location;
-        SpawnRotation = Rotation;
+        SpawnLocation = SP.Location;
+        SpawnRotation = SP.Rotation;
     }
     else
     {
