@@ -92,8 +92,8 @@ var bool                bIsCuttingWire;
 var bool                bLockViewRotation;
 var rotator             LockViewRotation;
 
-// Sway
 var float               IronSightBobFactor;
+var float               StanceChangeStaminaDrain; // How much stamina is lost by changing stance
 
 replication
 {
@@ -3893,7 +3893,6 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
     }
 }
 
-//Simulated?
 function SetAmmoPercent(byte AmmoAmount)
 {
     local Inventory Inv;
@@ -4015,8 +4014,87 @@ function CheckBob(float DeltaTime, vector Y)
         FootStepping(0);
 }
 
+// Modified to cause some stamina loss for prone diving
+simulated state DivingToProne
+{
+    // Copied function from ROPawn as I think calling the super is risky
+    simulated function EndState()
+    {
+        local float NewHeight;
+        local name Anim;
+
+        NewHeight = default.CollisionHeight - ProneHeight;
+
+        if (WeaponAttachment != None)
+            Anim = WeaponAttachment.PA_DiveToProneEndAnim;
+        else
+            Anim = DiveToProneEndAnim;
+
+        PlayAnim(DiveToProneEndAnim, 0.0, 0.0, 0);
+        PrePivot = default.PrePivot + (NewHeight * vect(0,0,1));
+
+        // Take stamina away with each dive prone
+        Stamina = FMax(Stamina - JumpStaminaDrain, 0.0);
+    }
+}
+
+// From prone to crouch
+event ProneToCrouch(float HeightAdjust)
+{
+    super.ProneToCrouch(HeightAdjust);
+
+    // Take stamina away with each stance change
+    Stamina = FMax(Stamina - StanceChangeStaminaDrain, 0.0);
+}
+
+// From prone to stand
+event EndProne(float HeightAdjust)
+{
+    super.EndProne(HeightAdjust);
+
+    // Take stamina away with each stance change
+    Stamina = FMax(Stamina - StanceChangeStaminaDrain, 0.0);
+}
+
+// From crouch to stand
+event EndCrouch(float HeightAdjust)
+{
+    super.EndCrouch(HeightAdjust);
+
+    // Take stamina away with each stance change
+    Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2), 0.0);
+}
+
+// From crouch to prone
+event CrouchToProne(float HeightAdjust)
+{
+    super.CrouchToProne(HeightAdjust);
+
+    // Take stamina away with each stance change
+    Stamina = FMax(Stamina - StanceChangeStaminaDrain, 0.0);
+}
+
+// From stand to prone
+event StartProne(float HeightAdjust)
+{
+    super.StartProne(HeightAdjust);
+
+    // Take stamina away with each stance change
+    Stamina = FMax(Stamina - StanceChangeStaminaDrain, 0.0);
+}
+
+// From stand to crouch
+event StartCrouch(float HeightAdjust)
+{
+    super.StartCrouch(HeightAdjust);
+
+    // Take stamina away with each stance change
+    Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2), 0.0);
+}
+
 defaultproperties
 {
+    StanceChangeStaminaDrain=1.5
     MinHurtSpeed=475.0
     DHSoundGroupClass=class'DH_Engine.DH_PawnSoundGroup'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
