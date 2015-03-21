@@ -1466,25 +1466,9 @@ simulated function Timer()
 // Modified to remove shake from coaxial MGs
 simulated function ShakeView(bool bWasAltFire)
 {
-    local PlayerController P;
-
-    if (Instigator == none)
+    if (!bWasAltFire && Instigator != none && PlayerController(Instigator.Controller) != none)
     {
-        return;
-    }
-
-    P = PlayerController(Instigator.Controller);
-
-    if (P != none)
-    {
-        if (bWasAltFire)
-        {
-            //P.WeaponShakeView(AltShakeRotMag, AltShakeRotRate, AltShakeRotTime, AltShakeOffsetMag, AltShakeOffsetRate, AltShakeOffsetTime);
-        }
-        else
-        {
-            P.WeaponShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
-        }
+        PlayerController(Instigator.Controller).WeaponShakeView(ShakeRotMag, ShakeRotRate, ShakeRotTime, ShakeOffsetMag, ShakeOffsetRate, ShakeOffsetTime);
     }
 }
 
