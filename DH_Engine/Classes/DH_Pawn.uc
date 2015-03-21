@@ -4095,6 +4095,7 @@ event StartCrouch(float HeightAdjust)
 defaultproperties
 {
     StanceChangeStaminaDrain=1.5
+    Stamina=30.0
     MinHurtSpeed=475.0
     DHSoundGroupClass=class'DH_Engine.DH_PawnSoundGroup'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
@@ -4133,7 +4134,6 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
     FireDamage=10
     FireDamageClass=class'DH_Engine.DH_BurningDamType'
-    Stamina=25.0
     DeployedPitchUpLimit=7300
     DeployedPitchDownLimit=-7300
     ControllerClass=class'DH_Engine.DHBot'
