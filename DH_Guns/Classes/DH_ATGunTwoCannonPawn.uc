@@ -366,8 +366,7 @@ function float GetAmmoReloadState()
     return 0.0;
 }
 
-// Used to debug where the exit positions are. First type "show sky" in console to turn the sky off (debug lines won't render otherwise.
-// Then hop in the ATCannon and type "DebugExit" and cylinders will appear showing where the exit positions for the player are.
+// New function to debug location of exit positions, which are drawn as cylinders (but will only draw if sky is toggled off)
 exec function DebugExit()
 {
     local int    i;
@@ -381,6 +380,7 @@ exec function DebugExit()
     GetAxes(VehicleBase.Rotation, X, Y, Z);
 
     ClearStayingDebugLines();
+    ConsoleCommand("show sky"); // Matt: toggles off the sky, which is necessary to allow the crucial debug spheres to get drawn (can also be done manually with console command)
 
     for (i = 0; i < ExitPositions.Length; ++i)
     {

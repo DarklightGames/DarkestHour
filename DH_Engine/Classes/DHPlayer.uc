@@ -1840,22 +1840,23 @@ function ServerToggleBehindView()
     }
 }
 
-// Matt: DH version
-// This would be incredibly useful but for some reason the debug spheres are not being drawn & I can't work out why ! Gets as far as calling DrawDebugSphere in Hud's DrawVehiclePointSphere
+// Matt: DH version, but toggling off the sky, which is necessary to allow the crucial debug spheres to get drawn (can also be done manually with console command)
 simulated exec function DriverCollisionDebug()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
     {
+        ConsoleCommand("show sky");
         ROHud(myHUD).bDebugDriverCollision = !ROHud(myHUD).bDebugDriverCollision;
         Log("bDebugDriverCollision =" @ ROHud(myHUD).bDebugDriverCollision);
     }
 }
 
-// Matt: DH version
+// Matt: DH version, but toggling off the sky, which is necessary to allow the crucial debug cylinders to get drawn (can also be done manually with console command)
 simulated exec function PlayerCollisionDebug()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
     {
+        ConsoleCommand("show sky");
         ROHud(myHUD).bDebugPlayerCollision = !ROHud(myHUD).bDebugPlayerCollision;
         Log("bDebugPlayerCollision =" @ ROHud(myHUD).bDebugPlayerCollision);
     }
