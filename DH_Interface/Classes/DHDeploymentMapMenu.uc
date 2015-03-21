@@ -213,7 +213,7 @@ function PlaceVehicleSpawnOnMap(vector Location, int Index, int SpawnVehicleInde
 
     if (Index >= 0 && Index < arraycount(b_SpawnVehicles))
     {
-        if (SpawnVehicleIndex == DHP.VehiclePoolIndex)
+        if (SpawnVehicleIndex == DHP.SpawnVehicleIndex)
         {
             W = 0.075;
             H = 0.035;
@@ -518,12 +518,22 @@ function bool DrawDeployTimer(Canvas C)
     }
 
     // Handle button (enabled/disabled)
-    // TODO Need to see if we are trying to spawn on a spawn vehicle
-    if (bProgressComplete && ConfirmIndices() && DHP.Pawn == none && (GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex) || GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP)))
+    if (!bOutOfReinforcements && ConfirmIndices() && DHP.Pawn == none)
     {
-        // Progress is complete, we have legit indices, no pawn, our spawn point is valid, and if we are spawning vehicle have a pool selected
-        b_DeployButton.EnableMe();
-        bButtonEnabled = true;
+        // We are not out of reinforcements, have legit indices, and no pawn
+        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolValid(DHP))
+        {
+            // We are deploying a vehicle and our vehicle pool index is valid
+            b_DeployButton.EnableMe();
+            bButtonEnabled = true;
+        }
+        else if (MyDeployMenu.Tab == TAB_Role && (GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex) ||
+                                                  GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP)))
+        {
+            // We are deploying infantry and either our spawn point or vehicle spawn point is valid
+            b_DeployButton.EnableMe();
+            bButtonEnabled = true;
+        }
     }
     else
     {

@@ -1799,24 +1799,6 @@ function ResetMortarTargets()
     }
 }
 
-function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
-{
-    if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
-    {
-        SetCharacter(C);
-        super(TeamGame).RestartPlayer(C);
-
-        if (bHandleReinforcements)
-        {
-            HandleReinforcements(C);
-        }
-    }
-    else
-    {
-        DHRestartPlayer(C, bHandleReinforcements); // This will handle reinforcements
-    }
-}
-
 // Handle reinforcment checks and balances
 function HandleReinforcements(Controller C)
 {
@@ -1894,6 +1876,24 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 exec function DebugWinGame(optional int TeamToWin)
 {
     EndRound(TeamToWin);
+}
+
+function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
+{
+    if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
+    {
+        SetCharacter(C);
+        super(TeamGame).RestartPlayer(C);
+
+        if (bHandleReinforcements)
+        {
+            HandleReinforcements(C);
+        }
+    }
+    else
+    {
+        DHRestartPlayer(C, bHandleReinforcements); // This will handle reinforcements
+    }
 }
 
 function DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
@@ -2017,7 +2017,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         {
             P.DesiredRole = -1;
             P.CurrentRole = -1;
-            ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo = none;
+            //ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo = none;
             P.PrimaryWeapon = -1;
             P.SecondaryWeapon = -1;
             P.GrenadeWeapon = -1;

@@ -221,8 +221,6 @@ function HandleExtraWidth(float ExtraWidth)
 {
     local float L, T, W, H;
 
-    Log("Is this being called every tick? WTF?");
-
     if (ExtraWidth >= RequiredExtraWidth)
     {
         // Tell panels to not have menu option buttons

@@ -2066,6 +2066,7 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
     {
         //Temp hack to allow spawning on all maps
         G.DeployRestartPlayer(self, true, true);
+        return true;
     }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
@@ -2076,7 +2077,7 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
         RI = DH_RoleInfo(PRI.RoleInfo);
     }
 
-    if (RI != none)
+    if (RI != none && PrimaryWeapon != -1)
     {
         PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
     }
@@ -2155,6 +2156,8 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
 
         return true;
     }
+
+    return false;
 }
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
@@ -2180,7 +2183,7 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
         RI = DH_RoleInfo(RInfo);
     }
 
-    if (RI != none && WeaponIndex == -1)
+    if (RI != none && (WeaponIndex == -1 || WeaponIndex > arraycount(RI.PrimaryWeapons)) && RI.PrimaryWeapons[PrimaryWeapon].Item != none)
     {
         PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
     }
@@ -2190,41 +2193,43 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
     }
 
     // Make sure everything is set and no access nones
-    if (PRI == none || RI == none || GRI == none || PrimaryWep == none)
+    if (PRI == none || RI == none || GRI == none)
     {
         Warn("Error in Calculating deploy time");
         return 0;
     }
+    else if (PrimaryWep != none)
+    {
+        // If MagCount wasn't passed, lets use desired ammo amount
+        if (MagCount == -1)
+        {
+            MagCount = DesiredAmmoAmount;
+        }
 
-    // If MagCount wasn't passed, lets use desired ammo amount
-    if (MagCount == -1)
-    {
-        MagCount = DesiredAmmoAmount;
-    }
+        // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
+        MinValue = RI.MinStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
+        MidValue = RI.DefaultStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
+        MaxValue = RI.MaxStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
 
-    // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
-    MinValue = RI.MinStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
-    MidValue = RI.DefaultStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
-    MaxValue = RI.MaxStartAmmo * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags / 100;
-
-    // Set AmmoTimeMod based on MagCount
-    if (MagCount == MidValue)
-    {
-        AmmoTimeMod = 0;
-    }
-    else if (MagCount > MidValue)
-    {
-        TD = MaxValue - MidValue;
-        D = MagCount - MidValue;
-        P = D / TD;
-        AmmoTimeMod = int(P * RI.MaxAmmoTimeMod);
-    }
-    else if (MagCount < MidValue)
-    {
-        TD = MidValue - MinValue;
-        D = MidValue - MagCount;
-        P = D / TD;
-        AmmoTimeMod = int(P * RI.MinAmmoTimeMod);
+        // Set AmmoTimeMod based on MagCount
+        if (MagCount == MidValue)
+        {
+            AmmoTimeMod = 0;
+        }
+        else if (MagCount > MidValue)
+        {
+            TD = MaxValue - MidValue;
+            D = MagCount - MidValue;
+            P = D / TD;
+            AmmoTimeMod = int(P * RI.MaxAmmoTimeMod);
+        }
+        else if (MagCount < MidValue)
+        {
+            TD = MidValue - MinValue;
+            D = MidValue - MagCount;
+            P = D / TD;
+            AmmoTimeMod = int(P * RI.MinAmmoTimeMod);
+        }
     }
 
     NewDeployTime = GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod;
@@ -2486,6 +2491,16 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
         }
         else
         {
+
+            if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
+                BecomeActivePlayer();
+
+            if (newTeam == 250) // auto select
+                newTeam = ServerAutoSelectAndChangeTeam();
+            else
+                ServerChangeTeam(newTeam);
+
+            /*
             if (newTeam == 250) // auto select
             {
                 if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
@@ -2510,6 +2525,7 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;
             }
+            */
 
             // Check if change failed and output results
             if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none ||

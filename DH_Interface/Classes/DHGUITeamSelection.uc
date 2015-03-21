@@ -92,6 +92,7 @@ function SelectTeamSuccessfull()
     {
         ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
         Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
+        //Controller.RemoveMenu(self);
     }
     else
     {
@@ -116,10 +117,12 @@ function bool InternalOnClick( GUIComponent Sender )
             break;
 
         case b_TeamSelect[AXIS_TEAM_INDEX]:
+            ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = AXIS_TEAM_INDEX;
             SelectTeam(AXIS_TEAM_INDEX);
             break;
 
         case b_TeamSelect[ALLIES_TEAM_INDEX]:
+            ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = ALLIES_TEAM_INDEX;
             SelectTeam(ALLIES_TEAM_INDEX);
             break;
     }

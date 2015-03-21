@@ -126,6 +126,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set initial counts
     Timer();
     SetTimer(0.1, true);
+
+    Log("Players team is: " $ DHP.PlayerReplicationInfo.Team.TeamIndex);
 }
 
 function ShowPanel(bool bShow)
@@ -174,6 +176,12 @@ function GetInitialValues()
         if (DHP != none && DHP.ForcedTeamSelectOnRoleSelectPage != -5)
         {
             currentTeam = DHP.ForcedTeamSelectOnRoleSelectPage;
+            desiredTeam = DHP.ForcedTeamSelectOnRoleSelectPage;
+            // Force role reset, this stops an exploit allowing you to be on the opposite team with previous team's role
+            currentRole = none;
+            desiredRole = none;
+            DHP.CurrentRole = -1;
+            DHP.DesiredRole = -1;
             DHP.ForcedTeamSelectOnRoleSelectPage = -5;
         }
         else if (PRI.bOnlySpectator)
@@ -203,6 +211,7 @@ function GetInitialValues()
     if (currentTeam == -1)
     {
         currentRole = none;
+        desiredRole = none;
     }
     else if (DHP.CurrentRole != DHP.DesiredRole)
     {

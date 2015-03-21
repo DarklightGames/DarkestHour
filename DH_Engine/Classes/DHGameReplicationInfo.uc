@@ -279,6 +279,18 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
 // Vehicle Pool Functions
 //------------------------------------------------------------------------------
 
+simulated function bool IsVehiclePoolValid(PlayerController PC)
+{
+    // Check if we are a crew if our pool is a crew-based pool
+    if (!ROPlayerReplicationInfo(PC.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && VehiclePoolVehicleClasses[DHPlayer(PC).VehiclePoolIndex].default.bMustBeTankCommander)
+    {
+        return false;
+    }
+    // TODO: Need other checks here like is the pool active? etc.
+
+    return true;
+}
+
 function int AddSpawnVehicle(Vehicle V, int Index)
 {
     local int i;

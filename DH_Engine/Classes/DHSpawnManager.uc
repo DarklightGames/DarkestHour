@@ -55,6 +55,7 @@ var const byte SpawnError_BadTeamSpawnPoint;
 var const byte SpawnError_TryToDriveFailed;
 var const byte SpawnError_BadSpawnType;
 var const byte SpawnError_PawnSpawnFailed;
+var const byte SpawnError_IncorrectRole;
 
 var const byte SpawnPointType_Infantry;
 var const byte SpawnPointType_Vehicles;
@@ -299,7 +300,12 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
 
     G = DarkestHourGame(Level.Game);
 
-    //TODO: need to check desired role etc. Crew role or whatever
+    SpawnError = SpawnError_IncorrectRole;
+
+    if (!ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && VehiclePools[C.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander)
+    {
+        return none;
+    }
 
     SpawnError = SpawnError_Fatal;
 
@@ -1133,6 +1139,7 @@ defaultproperties
     SpawnError_BadTeamSpawnPoint=11
     SpawnError_TryToDriveFailed=12
     SpawnError_BadSpawnType=13
+    SpawnError_IncorrectRole=14
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
     MaxDestroyedVehicles=8

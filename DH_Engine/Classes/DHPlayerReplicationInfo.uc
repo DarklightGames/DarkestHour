@@ -5,7 +5,7 @@
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 
-var DH_RoleInfo     DHRoleInfo;
+var DH_RoleInfo     DHRoleInfo; // Can we remove this? it isn't used or set tmk anywhere, not sure how getRolePortrait would work if we even used it
 
 replication
 {

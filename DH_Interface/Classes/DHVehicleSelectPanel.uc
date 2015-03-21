@@ -17,7 +17,6 @@ var ROGUIListPlus                           li_CrewVehiclePools,
 var float                                   VehiclePoolsUpdateTime; // This variable should be pointless as I only access GRI variables
                                                                     // the variables are only net transfered when they change, not each access request
                                                                     // so there is no need to have a delay, also I can always slow down timer if needed
-var int                                     VehiclePoolIndex;
 var array<int>                              CrewedVehiclePoolIndices,
                                             NonCrewedVehiclePoolIndices;
 
@@ -49,6 +48,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     myDeployMenu = DHDeployMenu(PageOwner);
 
     // Change background from default if team == Axis
+    Log("Players team is: " $ DHP.PlayerReplicationInfo.Team.TeamIndex);
+
     if (DHP.PlayerReplicationInfo.Team.TeamIndex == Axis_Team_Index)
     {
         Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
@@ -163,9 +164,8 @@ function InitializeVehiclePools()
 
 function UpdateVehiclePools()
 {
-    local int i, pi;
+    local int i, PoolIndex;
     local bool bNoPoolSet;
-    local float PoolRespawnTime;
 
     if (DHP.VehiclePoolIndex == -1)
     {
@@ -175,31 +175,24 @@ function UpdateVehiclePools()
     // Loop for crewed vehicles
     for (i = 0; i < CrewedVehiclePoolIndices.Length; ++i)
     {
-        pi = CrewedVehiclePoolIndices[i];
+        PoolIndex = CrewedVehiclePoolIndices[i];
 
-        if (DHGRI.VehiclePoolVehicleClasses[pi].default.bMustBeTankCommander)
+        li_CrewVehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
+
+        if (DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
+            DHGRI.VehiclePoolActiveCounts[PoolIndex] >= DHGRI.VehiclePoolMaxActives[PoolIndex] ||
+            !myDeployMenu.bRoleIsCrew)
         {
-            PoolRespawnTime = FMax(0.0, DHGRI.VehiclePoolNextAvailableTimes[pi] - DHGRI.ElapsedTime);
+            li_CrewVehiclePools.SetDisabledAtIndex(i, true); // Disabled
+        }
+        else
+        {
+            li_CrewVehiclePools.SetDisabledAtIndex(i, false); // Enabled
 
-            li_CrewVehiclePools.SetItemAtIndex(i, FormatPoolString(pi, PoolRespawnTime));
-
-            if (DHGRI.VehiclePoolIsActives[pi] == 0 ||
-                PoolRespawnTime > 0.0 ||
-                DHGRI.VehiclePoolActiveCounts[pi] >= DHGRI.VehiclePoolMaxActives[pi] ||
-                !myDeployMenu.bRoleIsCrew)
+            if (bNoPoolSet)
             {
-                li_CrewVehiclePools.SetDisabledAtIndex(i, true); // Disabled
-            }
-            else
-            {
-                li_CrewVehiclePools.SetDisabledAtIndex(i, false); // Enabled
-
-                if (bNoPoolSet)
-                {
-                    DHP.ServerChangeSpawn(DHP.SpawnPointIndex, i, -1);
-                    VehiclePoolIndex = i;
-                    bNoPoolSet = false;
-                }
+                DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
+                bNoPoolSet = false;
             }
         }
     }
@@ -207,39 +200,40 @@ function UpdateVehiclePools()
     // Loop for non-crewed vehicles
     for (i = 0; i < NonCrewedVehiclePoolIndices.Length; ++i)
     {
-        pi = NonCrewedVehiclePoolIndices[i];
+        PoolIndex = NonCrewedVehiclePoolIndices[i];
 
-        if (!DHGRI.VehiclePoolVehicleClasses[pi].default.bMustBeTankCommander)
+        li_NoCrewVehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
+
+        if (DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
+            DHGRI.VehiclePoolActiveCounts[PoolIndex] >= DHGRI.VehiclePoolMaxActives[PoolIndex])
         {
-            PoolRespawnTime = FMax(0.0, DHGRI.VehiclePoolNextAvailableTimes[pi] - DHGRI.ElapsedTime);
+            li_NoCrewVehiclePools.SetDisabledAtIndex(i, true); // Disabled
+        }
+        else
+        {
+            li_NoCrewVehiclePools.SetDisabledAtIndex(i, false); // Enabled
 
-            li_NoCrewVehiclePools.SetItemAtIndex(i, FormatPoolString(pi, PoolRespawnTime));
-
-            if (DHGRI.VehiclePoolIsActives[pi] == 0 ||
-                PoolRespawnTime > 0.0 ||
-                DHGRI.VehiclePoolActiveCounts[pi] >= DHGRI.VehiclePoolMaxActives[pi])
+            if (bNoPoolSet)
             {
-                li_NoCrewVehiclePools.SetDisabledAtIndex(i, true); // Disabled
-            }
-            else
-            {
-                li_NoCrewVehiclePools.SetDisabledAtIndex(i, false); // Enabled
-
-                if (bNoPoolSet)
-                {
-                    DHP.ServerChangeSpawn(DHP.SpawnPointIndex, i, -1);
-                    VehiclePoolIndex = i;
-                    bNoPoolSet = false;
-                }
+                DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
+                bNoPoolSet = false;
             }
         }
+    }
+
+    if (bNoPoolSet)
+    {
+        // We found no active vehicle pool
+        Warn("No active vehicle pool found");
+        DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, -1);
     }
 }
 
 // Eventually this function will properly contruct a string with helpful info to player
-function string FormatPoolString(int i, float PoolRespawnTime)
+function string FormatPoolString(int i)
 {
     local string poolname, add;
+    local float PoolRespawnTime;
 
     if (DHGRI.VehiclePoolVehicleClasses[i] != none)
     {
@@ -271,6 +265,7 @@ function string FormatPoolString(int i, float PoolRespawnTime)
     }
 
     // Add respawn time
+    PoolRespawnTime = FMax(0.0, DHGRI.VehiclePoolNextAvailableTimes[i] - DHGRI.ElapsedTime);
     if (PoolRespawnTime <= 0)
     {
         add = add @ "Ready";
@@ -281,7 +276,7 @@ function string FormatPoolString(int i, float PoolRespawnTime)
     }
 
     // Add selected text
-    if (VehiclePoolIndex == i)
+    if (DHP.VehiclePoolIndex == i)
     {
         add = add @ "Selected";
     }
@@ -302,7 +297,6 @@ function InternalOnChange(GUIComponent Sender)
     {
         case lb_CrewVehiclePools:
             PoolIndex = CrewedVehiclePoolIndices[lb_CrewVehiclePools.List.Index];
-            VehiclePoolIndex = PoolIndex;
 
             //Update pool index
             DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
@@ -310,7 +304,6 @@ function InternalOnChange(GUIComponent Sender)
 
         case lb_NoCrewVehiclePools:
             PoolIndex = NonCrewedVehiclePoolIndices[lb_NoCrewVehiclePools.List.Index];
-            VehiclePoolIndex = PoolIndex;
 
             //Update pool index
             DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
@@ -368,7 +361,6 @@ defaultproperties
     bNeverFocus=true
 
     VehiclePoolsUpdateTime=-1.0
-    VehiclePoolIndex=-1
 
     // Crew Based Pools Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PoolsContainer_Crew
