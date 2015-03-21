@@ -1834,8 +1834,15 @@ function ServerToggleBehindView()
     {
         if (Vehicle(Pawn) == none || Vehicle(Pawn).bAllowViewChange || class'DH_LevelInfo'.static.DHDebugMode()) // allow vehicles to limit view changes
         {
-            bBehindView = !bBehindView;
-            ClientSetBehindView(bBehindView);
+            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
+            {
+                ClientSetBehindView(!bBehindView);
+            }
+            else
+            {
+                bBehindView = !bBehindView;
+                ClientSetBehindView(bBehindView);
+            }
         }
     }
 }
