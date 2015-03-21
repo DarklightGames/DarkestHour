@@ -107,7 +107,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bCrouchMantle, MantleHeight, bMortarCanBeResupplied;
+        bOnFire,/*bCrouchMantle, MantleHeight,*/ bMortarCanBeResupplied; // Matt TEST: may be possible to remove bCrouchMantle & MantleHeight as seem to be set independently on server & client
 }
 
 simulated function PostBeginPlay()
@@ -2702,7 +2702,9 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
             return false;
         }
         else
+        {
             bCrouchMantle = true;
+        }
     }
     else
     {
