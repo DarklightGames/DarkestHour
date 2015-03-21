@@ -2352,10 +2352,10 @@ simulated function SwayHandler(float DeltaTime)
         return;
     }
 
-    StaminaFactor = (P.default.Stamina - P.Stamina) / (P.default.Stamina * 0.5);
+    StaminaFactor = ((P.default.Stamina - P.Stamina) / P.default.Stamina) * 0.5; //50% stamina factor
     SwayTime += DeltaTime;
 
-    if (SwayClearTime >= 0.05)
+    if (SwayClearTime >= 0.025)
     {
         SwayClearTime = 0.0;
         WeaponSwayYawAcc = RandRange(-baseSwayYawAcc, baseSwayYawAcc);
@@ -2580,12 +2580,12 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
 defaultproperties
 {
     // Sway values
-    SwayCurve=(Points=((InVal=0.0,OutVal=3.5),(InVal=1.0,OutVal=1.25),(InVal=3.0,OutVal=0.125),(InVal=8.0,OutVal=0.5),(InVal=12.0,OutVal=1.1),(InVal=16.0,OutVal=0.125),(InVal=24.0,OutVal=1.25),(InVal=10000000000.0,OutVal=1.33)))
-    BobCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=1.0,OutVal=0.75),(InVal=3.0,OutVal=0.2),(InVal=8.0,OutVal=0.15),(InVal=16.0,OutVal=0.25),(InVal=10000000000.0,OutVal=0.15)))
-    DHSwayElasticFactor=3.0;
-    DHSwayDampingFactor=0.85;
-    baseSwayYawAcc=120
-    baseSwayPitchAcc=100
+    SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.3),(InVal=12.0,OutVal=0.25),(InVal=45.0,OutVal=0.4),(InVal=10000000000.0,OutVal=0.5)))
+    BobCurve=(Points=((InVal=0.0,OutVal=0.8),(InVal=3.0,OutVal=0.2),(InVal=12.0,OutVal=0.15),(InVal=45.0,OutVal=0.2),(InVal=10000000000.0,OutVal=0.25)))
+    DHSwayElasticFactor=8.0;
+    DHSwayDampingFactor=0.51;
+    baseSwayYawAcc=600
+    baseSwayPitchAcc=500
 
     // Max turn speed values
     DHSprintMaxTurnSpeed=225.0

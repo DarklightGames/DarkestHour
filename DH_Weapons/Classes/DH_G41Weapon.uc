@@ -270,7 +270,6 @@ defaultproperties
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_G41Pickup'
-    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_G41Attachment'
     ItemName="Gewehr 41(W)"
     Mesh=SkeletalMesh'Axis_G41_1st.G41_mesh'

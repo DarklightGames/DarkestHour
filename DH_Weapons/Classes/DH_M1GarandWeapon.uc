@@ -136,7 +136,6 @@ defaultproperties
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_M1GarandPickup'
-    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_M1GarandAttachment'
     ItemName="M1 Garand"
     Mesh=SkeletalMesh'DH_Garand_1st.M1_Garand'

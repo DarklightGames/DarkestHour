@@ -62,6 +62,7 @@ simulated event StopFire(int Mode)
 
 defaultproperties
 {
+    BobDamping=1.33
     FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
 }

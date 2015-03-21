@@ -39,7 +39,6 @@ defaultproperties
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_G43Pickup'
-    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_G43Attachment'
     ItemName="Gewehr 43"
     Mesh=SkeletalMesh'Axis_G43_1st.G-43-Mesh'

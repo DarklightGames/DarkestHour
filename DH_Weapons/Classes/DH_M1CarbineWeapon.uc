@@ -40,12 +40,9 @@ defaultproperties
     DisplayFOV=70.0
     bCanRestDeploy=true
     PickupClass=class'DH_Weapons.DH_M1CarbinePickup'
-    BobDamping=1.6
     AttachmentClass=class'DH_Weapons.DH_M1CarbineAttachment'
     ItemName="M1 Carbine"
     Mesh=SkeletalMesh'DH_M1Carbine_1st.M1Carbine'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    SwayModifyFactor=0.9
-    BobModifyFactor=0.1
 }

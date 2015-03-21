@@ -211,9 +211,9 @@ simulated state PostFiring
 
 defaultproperties
 {
-    BobDamping=0.65
+    BobDamping=0.8
     FreeAimRotationSpeed=6.0
     bCanAttachOnBack=true
-    SwayModifyFactor=0.5
-    BobModifyFactor=0.1
+    SwayModifyFactor=0.4
+    BobModifyFactor=0.12
 }
