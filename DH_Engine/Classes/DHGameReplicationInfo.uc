@@ -250,7 +250,7 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
     VehiclePoolsUpdateTime = Level.TimeSeconds;
 }
 
-function SetVehiclePoolSpawnsRemaining(byte PoolIndex, byte SpawnsRemaining)
+function SetVehiclePoolSpawnsRemaining(byte PoolIndex, int SpawnsRemaining)
 {
     VehiclePoolSpawnsRemainings[PoolIndex] = SpawnsRemaining;
 }
@@ -272,7 +272,7 @@ function SetVehiclePoolActiveCount(byte PoolIndex, byte ActiveCount)
 
 function bool IsVehiclePoolInfinite(byte PoolIndex)
 {
-    return VehiclePoolMaxActives[PoolIndex] == 255;
+    return VehiclePoolSpawnsRemainings[PoolIndex] == 255;
 }
 
 //------------------------------------------------------------------------------
