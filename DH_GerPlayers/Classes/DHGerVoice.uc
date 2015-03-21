@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHGerVoice extends DHVoicePack
-    abstract;
+class DHGerVoice extends DHVoicePack;
 
 #exec OBJ LOAD FILE=..\Sounds\voice_ger_infantry.uax
 #exec OBJ LOAD FILE=..\Sounds\voice_ger_vehicle.uax

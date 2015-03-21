@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHUSVoice extends DHVoicePack
-    abstract;
+class DHUSVoice extends DHVoicePack;
 
 #exec OBJ LOAD FILE=..\Sounds\DH_US_Voice_Infantry.uax
 #exec OBJ LOAD FILE=..\Sounds\DH_US_Voice_vehicle.uax

@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHCanadianVoice extends DHVoicePack
-    abstract;
+class DHCanadianVoice extends DHVoicePack;
 
 #exec OBJ LOAD FILE=..\Sounds\DH_US_Voice_Infantry.uax
 #exec OBJ LOAD FILE=..\Sounds\DH_US_Voice_vehicle.uax
