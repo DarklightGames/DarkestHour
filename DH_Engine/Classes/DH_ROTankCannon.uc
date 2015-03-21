@@ -1077,23 +1077,14 @@ state ProjectileFireMode
 {
     function AltFire(Controller C)
     {
-        if (AltFireProjectileClass == none)
+        // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result=0) then it's time to fire a tracer
+        if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % AltFireTracerFrequency == 0.0) && AltTracerProjectileClass != none)
         {
-            Fire(C);
+            SpawnProjectile(AltTracerProjectileClass, true);
         }
-        else
+        else if (AltFireProjectileClass != none)
         {
-            // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result = 0) then it's time to fire a tracer
-            if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % AltFireTracerFrequency == 0.0))
-            {
-                mLastTracerTime = Level.TimeSeconds;
-
-                SpawnProjectile(AltTracerProjectileClass, true);
-            }
-            else
-            {
-                SpawnProjectile(AltFireProjectileClass, true);
-            }
+            SpawnProjectile(AltFireProjectileClass, true);
         }
     }
 }
