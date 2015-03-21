@@ -55,9 +55,13 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Change background from default if team == Axis
     Log("Players team is: " $ DHP.PlayerReplicationInfo.Team.TeamIndex);
 
-    if (DHP.PlayerReplicationInfo.Team.TeamIndex == Axis_Team_Index)
+    if (DHP.GetTeamNum() == Axis_Team_Index)
     {
         Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
+    }
+    else
+    {
+        Background=Texture'DH_GUI_Tex.Menu.AlliesLoadout_BG';
     }
 
     // Crew required vehicle pool container
@@ -134,6 +138,16 @@ function Timer()
     {
         // Team changed, we must re-build the list!
         InitializeVehiclePools();
+
+        // Fix the background
+        if (DHP.GetTeamNum() == Axis_Team_Index)
+        {
+            Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
+        }
+        else
+        {
+            Background=Texture'DH_GUI_Tex.Menu.AlliesLoadout_BG';
+        }
     }
 
     UpdateVehiclePools();
