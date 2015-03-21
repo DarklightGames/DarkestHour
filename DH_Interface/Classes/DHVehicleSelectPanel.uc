@@ -28,11 +28,16 @@ var bool                                    bRendered;
 //Deploy Menu Access
 var DHDeployMenu                            myDeployMenu;
 
+var byte                                    TeamNum;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
+
+    Log(self @ "InitComponent");
 
     DHP = DHPlayer(PlayerOwner());
+
     if (DHP == none || DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) == none)
     {
         return;
@@ -63,7 +68,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     li_NoCrewVehiclePools = ROGUIListPlus(lb_NoCrewVehiclePools.List);
     NoCrewPoolsContainer.ManageComponent(lb_NoCrewVehiclePools);
 
-    // Initial setup of pools (show all pools for your team)
     InitializeVehiclePools();
 }
 
@@ -97,6 +101,7 @@ function ShowPanel(bool bShow)
 
         // Only update if we are rendering panel
         Timer();
+
         SetTimer(0.1, true);
     }
     else
@@ -117,17 +122,32 @@ function bool OnPostDraw(Canvas C)
     }
 
     bRendered = true;
+
     return true;
 }
 
 function Timer()
 {
+    // HACK: checks the saved TeamNum and re-initializes if the team changed.
+    // Would be far better if we had some sort of event system to detect this
+    if (DHP.GetTeamNum() != TeamNum)
+    {
+        // Team changed, we must re-build the list!
+        InitializeVehiclePools();
+    }
+
     UpdateVehiclePools();
 }
 
 function InitializeVehiclePools()
 {
     local int i;
+
+    li_CrewVehiclePools.Clear();
+    li_NoCrewVehiclePools.Clear();
+
+    CrewedVehiclePoolIndices.Length = 0;
+    NonCrewedVehiclePoolIndices.Length = 0;
 
     if (DHGRI == none)
     {
@@ -160,6 +180,8 @@ function InitializeVehiclePools()
             NonCrewedVehiclePoolIndices[NonCrewedVehiclePoolIndices.Length] = i;
         }
     }
+
+    TeamNum = DHP.GetTeamNum();
 }
 
 function UpdateVehiclePools()
@@ -232,56 +254,38 @@ function UpdateVehiclePools()
 // Eventually this function will properly contruct a string with helpful info to player
 function string FormatPoolString(int i)
 {
-    local string poolname, add;
+    local string PoolString;;
     local float PoolRespawnTime;
 
     if (DHGRI.VehiclePoolVehicleClasses[i] != none)
     {
-        poolname = DHGRI.VehiclePoolVehicleClasses[i].default.VehicleNameString;
+        PoolString = DHGRI.VehiclePoolVehicleClasses[i].default.VehicleNameString;
     }
     else
     {
-        return "ERROR";
-    }
-
-    // Add active/max
-    if (DHGRI.VehiclePoolMaxActives[i] == 255)
-    {
-        add = "" @ "No Max";
-    }
-    else
-    {
-        add = " [" $ DHGRI.VehiclePoolActiveCounts[i] $ "/" $ DHGRI.VehiclePoolMaxActives[i] $ "]";
+        PoolString = "ERROR";
     }
 
     // Add how many remaining
-    if (DHGRI.VehiclePoolSpawnsRemainings[i] == 255)
+    if (DHGRI.VehiclePoolSpawnsRemainings[i] != 255)
     {
-        add = add @ "No Limit";
-    }
-    else
-    {
-        add = add @ DHGRI.VehiclePoolSpawnsRemainings[i] @ "Remaining";
+        PoolString @= "[" $ DHGRI.VehiclePoolSpawnsRemainings[i] $ "]";
     }
 
     // Add respawn time
     PoolRespawnTime = FMax(0.0, DHGRI.VehiclePoolNextAvailableTimes[i] - DHGRI.ElapsedTime);
-    if (PoolRespawnTime <= 0)
+
+    if (PoolRespawnTime > 0)
     {
-        add = add @ "Ready";
-    }
-    else
-    {
-        add = add @ GetTimeString(PoolRespawnTime) @ "Before Ready";
+        PoolString @= "(" $ GetTimeString(PoolRespawnTime) $ ")";
     }
 
-    // Add selected text
-    if (DHP.VehiclePoolIndex == i)
+    if (DHGRI.VehiclePoolMaxActives[i] == DHGRI.VehiclePoolActiveCounts[i])
     {
-        add = add @ "Selected";
+        PoolString @= "*MAX*";
     }
 
-    return poolname $ add;
+    return PoolString;
 }
 
 function InternalOnChange(GUIComponent Sender)
@@ -437,4 +441,6 @@ defaultproperties
         OnClick=InternalOnClick
     End Object
     b_MenuButton=MenuButton
+
+    TeamNum=-1
 }
