@@ -1575,7 +1575,7 @@ function AdjustView(float DeltaTime)
 {
     if (FOVAngle != DesiredFOV)
     {
-        FOVAngle -= (10.0 * DeltaTime * (FOVAngle - DesiredFOV)); //TODO: arbitrary number
+        FOVAngle -= (FClamp(10.0 * DeltaTime, 0.0, 1.0) * (FOVAngle - DesiredFOV)); //TODO: arbitrary number
 
         if (Abs(FOVAngle - DesiredFOV) <= 0.0625)
         {
