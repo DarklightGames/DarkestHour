@@ -109,10 +109,10 @@ simulated event DrivingStatusChanged()
     }
 }
 
-// Modified to destroy treads (from ROTreadCraft)
-simulated function Destroyed()
+// Modified to destroy treads
+simulated function DestroyAttachments()
 {
-    super.Destroyed();
+    super.DestroyAttachments();
 
     if (Level.NetMode != NM_DedicatedServer)
     {

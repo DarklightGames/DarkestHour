@@ -2902,60 +2902,53 @@ simulated function SetNextTimer(optional float Now)
     }
 }
 
-// Modified to destroy extra effects & decorative attachments
-simulated function Destroyed()
-{
-    super.Destroyed();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (DriverHatchFireEffect != none)
-        {
-            DriverHatchFireEffect.Destroy();
-        }
-
-        DestroyDecoAttachments();
-    }
-}
-
-// Modified to kill extra effects & destroy any decorative attachments
+// Modified to destroy extra attachments & effects
 simulated event DestroyAppearance()
 {
-    local int         i;
-    local KarmaParams KP;
+    super.DestroyAppearance();
 
-    bDestroyAppearance = true; // for replication
+    Disable('Tick'); // otherwise Tick spams "accessed none" errors for Left/RightTreadPanner & it's inconvenient to check != none in Tick
+    DestroyAttachments();
+}
 
-    // Put brakes on
-    Throttle = 0.0;
-    Steering = 0.0;
-    Rise     = 0.0;
+// Modified to destroy extra attachments & effects
+simulated function Destroyed()
+{
+    super(ROVehicle).Destroyed();
 
-    // Destroy the vehicle weapons
-    if (Role == ROLE_Authority)
-    {
-        for (i = 0; i < WeaponPawns.Length; ++i)
-        {
-            if (WeaponPawns[i] != none)
-            {
-                WeaponPawns[i].Destroy();
-            }
-        }
-    }
+    DestroyAttachments();
+}
 
-    WeaponPawns.Length = 0;
-
-    // Destroy the effects
+// New function to destroy effects & attachments when the vehicle gets destroyed
+simulated function DestroyAttachments()
+{
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (bEmittersOn)
+        DestroyTreads();
+
+        if (LeftTreadSoundAttach != none)
         {
-            StopEmitters();
+            LeftTreadSoundAttach.Destroy();
         }
 
-        if (DamagedEffect != none)
+        if (RightTreadSoundAttach != none)
         {
-            DamagedEffect.Kill();
+            RightTreadSoundAttach.Destroy();
+        }
+
+        if (DamagedTrackLeft != none)
+        {
+            DamagedTrackLeft.Destroy();
+        }
+
+        if (DamagedTrackRight != none)
+        {
+            DamagedTrackRight.Destroy();
+        }
+
+        if (InteriorRumbleSoundAttach != none)
+        {
+            InteriorRumbleSoundAttach.Destroy();
         }
 
         if (DriverHatchFireEffect != none)
@@ -2963,44 +2956,15 @@ simulated event DestroyAppearance()
             DriverHatchFireEffect.Kill();
         }
 
-        DestroyDecoAttachments();
-    }
+        if (Schurzen != none)
+        {
+            Schurzen.Destroy();
+        }
 
-    // Copy linear velocity from actor so it doesn't just stop
-    KP = KarmaParams(KParams);
-
-    if (KP != none)
-    {
-        KP.KStartLinVel = Velocity;
-    }
-
-    // Become the dead vehicle mesh
-    SetPhysics(PHYS_None);
-    KSetBlockKarma(false);
-    SetDrawType(DT_StaticMesh);
-    SetStaticMesh(DestroyedVehicleMesh);
-    KSetBlockKarma(true);
-    SetPhysics(PHYS_Karma);
-    Skins.Length = 0;
-    NetPriority = 2.0;
-}
-
-// New function to destroy decorative attachments when the vehicle gets destroyed (just reduces code repetition as called from more than one place)
-simulated function DestroyDecoAttachments()
-{
-    if (Schurzen != none)
-    {
-        Schurzen.Destroy();
-    }
-
-    if (DamagedTrackLeft != none)
-    {
-        DamagedTrackLeft.Destroy();
-    }
-
-    if (DamagedTrackRight != none)
-    {
-        DamagedTrackRight.Destroy();
+        if (bEmittersOn)
+        {
+            StopEmitters();
+        }
     }
 }
 

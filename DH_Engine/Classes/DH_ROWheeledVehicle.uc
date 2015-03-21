@@ -943,67 +943,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Modified to destroy extra attachments & effects
 simulated event DestroyAppearance()
 {
-    local int         i;
-    local KarmaParams KP;
+    super.DestroyAppearance();
 
-    bDestroyAppearance = true; // for replication
-
-    // Put brakes on
-    Throttle = 0.0;
-    Steering = 0.0;
-    Rise     = 0.0;
-
-    if (Role == ROLE_Authority)
-    {
-        // Destroy any resupply attachment
-        if (ResupplyAttachment != none)
-        {
-            ResupplyAttachment.Destroy();
-        }
-
-        // Destroy the vehicle weapons
-        for (i = 0; i < WeaponPawns.Length; ++i)
-        {
-            if (WeaponPawns[i] != none)
-            {
-                WeaponPawns[i].Destroy();
-            }
-        }
-    }
-
-    WeaponPawns.Length = 0;
-
-    // Destroy the effects
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (bEmittersOn)
-        {
-            StopEmitters();
-        }
-
-        if (DamagedEffect != none)
-        {
-            DamagedEffect.Kill();
-        }
-    }
-
-    // Copy linear velocity from actor so it doesn't just stop
-    KP = KarmaParams(KParams);
-
-    if (KP != none)
-    {
-        KP.KStartLinVel = Velocity;
-    }
-
-    // Become the dead vehicle mesh
-    SetPhysics(PHYS_None);
-    KSetBlockKarma(false);
-    SetDrawType(DT_StaticMesh);
-    SetStaticMesh(DestroyedVehicleMesh);
-    KSetBlockKarma(true);
-    SetPhysics(PHYS_Karma);
-    Skins.Length = 0;
-    NetPriority = 2.0;
+    Disable('Tick'); // otherwise Tick spams "accessed none" errors for Left/RightTreadPanner & it's inconvenient to check != none in Tick
+    DestroyAttachments();
 }
 
 // Modified to destroy extra effects & attachments
@@ -1011,6 +954,12 @@ simulated function Destroyed()
 {
     super.Destroyed();
 
+    DestroyAttachments();
+}
+
+// New function to destroy effects & attachments when the vehicle gets destroyed
+simulated function DestroyAttachments()
+{
     if (ResupplyAttachment != none && Role == ROLE_Authority)
     {
         ResupplyAttachment.Destroy();
@@ -1031,6 +980,11 @@ simulated function Destroyed()
         if (ResupplyDecoAttachment != none)
         {
             ResupplyDecoAttachment.Destroy();
+        }
+
+        if (bEmittersOn)
+        {
+            StopEmitters();
         }
     }
 }

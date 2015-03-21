@@ -135,13 +135,19 @@ simulated function StartMGFire()
     }
 }
 
+// Modified to add extra stuff
 simulated function DestroyEffects()
 {
     super.DestroyEffects();
 
+    if (CollisionMeshActor != none)
+    {
+        CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
+    }
+
     if (HullMGFireEffect != none)
     {
-        HullMGFireEffect.Destroy();
+        HullMGFireEffect.Kill();
     }
 }
 
@@ -497,16 +503,6 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
     Distance = Sqrt(Diff dot Diff);
 
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
-}
-
-simulated function Destroyed()
-{
-    if (CollisionMeshActor != none)
-    {
-        CollisionMeshActor.Destroy();
-    }
-
-    super.Destroyed();
 }
 
 defaultproperties

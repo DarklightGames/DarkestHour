@@ -1712,9 +1712,14 @@ simulated function DestroyEffects()
 {
     super.DestroyEffects();
 
+    if (CollisionMeshActor != none)
+    {
+        CollisionMeshActor.Destroy(); // not actually an effect, but convenient to add here
+    }
+
     if (TurretHatchFireEffect != none)
     {
-        TurretHatchFireEffect.Destroy();
+        TurretHatchFireEffect.Kill();
     }
 }
 
@@ -1773,16 +1778,6 @@ function bool ResupplyAmmo()
     }
 
     return bDidResupply;
-}
-
-simulated function Destroyed()
-{
-    if (CollisionMeshActor != none)
-    {
-        CollisionMeshActor.Destroy();
-    }
-
-    super.Destroyed();
 }
 
 defaultproperties
