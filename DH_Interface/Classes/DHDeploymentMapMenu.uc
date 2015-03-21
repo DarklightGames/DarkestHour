@@ -14,7 +14,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 
 var localized string                        ReinforcementText;
 
-var     bool                                bReadyToDeploy, bOutOfReinforcements;
+var     bool                                bReadyToDeploy, bOutOfReinforcements, bResolutionChanged;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
@@ -142,23 +142,6 @@ function ClearIcon(GUIGFXButton IconB)
     }
 }
 
-// Make panel uniform (square) and adjust other components accordingly
-function bool PreDrawMap(Canvas C)
-{
-    local float ImageHeight, LeftOverSpace;
-
-    ImageHeight = MapContainer.ActualHeight();
-    MenuOwner.SetPosition(MenuOwner.WinLeft, MenuOwner.WinTop, ImageHeight, MenuOwner.WinHeight, true);
-    MapContainer.SetPosition(MapContainer.WinLeft, MapContainer.WinTop, MapContainer.WinWidth, ImageHeight, true);
-
-    LeftOverSpace = 1.0 - MapContainer.WinHeight;
-
-    pb_DeployProgressBar.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, LeftOverSpace, true);
-    b_DeployButton.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, LeftOverSpace, true);
-
-    return false;
-}
-
 function float GetDistance(float A, float B)
 {
     if (A <= 0.0 && B >= 0.0)
@@ -280,6 +263,13 @@ function bool DrawMapComponents(Canvas C)
     local array<DHSpawnPoint> ActiveSpawnPoints;
     local DHSpawnPoint SP;
 
+    // If resolution changed then resetup the menu positions
+    if (bResolutionChanged)
+    {
+        InternalOnPostDraw(C);
+        bResolutionChanged = false;
+    }
+
     if (MyDeployMenu == none || bOutOfReinforcements)
     {
         return false;
@@ -336,9 +326,32 @@ function bool DrawMapComponents(Canvas C)
     return false;
 }
 
-// Actually shows the panel once it's rendered (Needs confirmed and tested)
+// Resolution was changed, lets call OnPostDraw
+event ResolutionChanged(int ResX, int ResY)
+{
+    super.ResolutionChanged(ResX, ResY); // No point in calling the super!
+
+    bResolutionChanged = true;
+}
+
+// Make panel uniform (square) and adjust other components accordingly
+// Other initialization/setup
 function InternalOnPostDraw(Canvas Canvas)
 {
+    local float ImageHeight, ExtraHeight, ExtraWidth;
+
+    ImageHeight = MapContainer.ActualHeight();
+    MenuOwner.SetPosition(MenuOwner.WinLeft, MenuOwner.WinTop, ImageHeight, MenuOwner.WinHeight, true);
+    MapContainer.SetPosition(MapContainer.WinLeft, MapContainer.WinTop, MapContainer.WinWidth, ImageHeight, true);
+
+    ExtraHeight = 1.0 - MapContainer.WinHeight;
+    ExtraWidth = 1.0 - MenuOwner.WinLeft - MenuOwner.WinWidth;
+
+    MyDeployMenu.HandleExtraWidth(ExtraWidth);
+
+    pb_DeployProgressBar.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, ExtraHeight, true);
+    b_DeployButton.SetPosition(MapContainer.WinLeft, MapContainer.WinHeight, MapContainer.WinWidth, ExtraHeight, true);
+
     bInit = false;
     OnRendered = none;
     ShowPanel(true);
@@ -574,7 +587,6 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.0
         bAcceptsInput=false
-        OnPreDraw=PreDrawMap
         OnDraw=DrawMapComponents
     End Object
     i_Background=BackgroundImage

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHRoleSelectPanel extends MidGamePanel
+class DHRoleSelectPanel extends DeployMenuPanel
     config;
 
 const NUM_ROLES = 10;
@@ -14,8 +14,6 @@ var automated ROGUIProportionalContainer    RolesContainer,
                                             EquipContainer;
 
 var automated GUILabel                      l_EstimatedRedeployTime;
-
-var automated DHGUIButton                   b_MenuButton;
 
 var automated GUIImage                      i_WeaponImages[2], i_MagImages[2];
 var automated DHGUIListBox                  lb_Roles, lb_AvailableWeapons[2];
@@ -893,14 +891,7 @@ function bool InternalOnClick(GUIComponent Sender)
     switch (sender)
     {
         case b_MenuButton:
-            if (!MyDeployMenu.bShowingMenuOptions)
-            {
-                // Show menu options (hide panels & menu button)
-                MyDeployMenu.bShowingMenuOptions = true;
-                MyDeployMenu.MenuOptionsContainer.SetVisibility(true);
-                MyDeployMenu.c_LoadoutArea.SetVisibility(false);
-                MyDeployMenu.c_DeploymentMapArea.SetVisibility(false);
-            }
+            MyDeployMenu.HandleMenuButton();
             break;
 
         case lb_AvailableWeapons[0]:

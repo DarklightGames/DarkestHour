@@ -3,12 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleSelectPanel extends MidGamePanel;
+class DHVehicleSelectPanel extends DeployMenuPanel;
 
 var automated ROGUIProportionalContainer    CrewPoolsContainer,
                                             NoCrewPoolsContainer;
-
-var automated DHGUIButton                   b_MenuButton;
 
 var automated DHGUIListBox                  lb_CrewVehiclePools,
                                             lb_NoCrewVehiclePools;
@@ -336,14 +334,7 @@ function bool InternalOnClick(GUIComponent Sender)
     switch (sender)
     {
         case b_MenuButton:
-            if (!MyDeployMenu.bShowingMenuOptions)
-            {
-                // Show menu options (hide panels & menu button)
-                MyDeployMenu.bShowingMenuOptions = true;
-                MyDeployMenu.MenuOptionsContainer.SetVisibility(true);
-                MyDeployMenu.c_LoadoutArea.SetVisibility(false);
-                MyDeployMenu.c_DeploymentMapArea.SetVisibility(false);
-            }
+            MyDeployMenu.HandleMenuButton();
             break;
     }
 

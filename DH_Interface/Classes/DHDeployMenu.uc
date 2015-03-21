@@ -16,10 +16,13 @@ var automated FloatingImage                 i_background;
 
 var automated DHGUIButton                   b_MenuOptions[10];
 
-var localized string                        MenuOptions[10];
+var localized string                        MenuOptions[10], CloseButtonString;
 
 var automated DHDeployTabControl            c_LoadoutArea;
 var automated DHDeployTabControl            c_DeploymentMapArea;
+
+var DeployMenuPanel                         RolePanel;
+var DeployMenuPanel                         VehiclePanel;
 
 var array<string>                           DeploymentPanelClass;
 var localized array<string>                 DeploymentPanelCaption;
@@ -31,7 +34,11 @@ var localized array<string>                 LoadoutPanelHint;
 
 var bool                                    bReceivedTeam,
                                             bShowingMenuOptions,
-                                            bRoleIsCrew;
+                                            bRoleIsCrew,
+                                            bRoomForOptions;
+
+var float                                   PanelMargin;
+var float                                   RequiredExtraWidth;
 
 var ETab                                    Tab;
 
@@ -136,6 +143,10 @@ function HandlePanelInitialization()
         c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
     }
 
+    // Set easy panel access
+    RolePanel = DeployMenuPanel(c_LoadoutArea.TabStack[0].MyPanel);
+    VehiclePanel = DeployMenuPanel(c_LoadoutArea.TabStack[1].MyPanel);
+
     // We have a team now
     bReceivedTeam = true;
 }
@@ -146,7 +157,11 @@ function bool OnClick(GUIComponent Sender)
     {
         // Back to deploy
         case b_MenuOptions[0]:
-            if (bShowingMenuOptions)
+            if (bRoomForOptions && bShowingMenuOptions)
+            {
+                CloseMenu();
+            }
+            else if (bShowingMenuOptions)
             {
                 // Hide menu options (show panels & menu button)
                 bShowingMenuOptions = false;
@@ -202,6 +217,68 @@ function bool OnClick(GUIComponent Sender)
     return false;
 }
 
+function HandleExtraWidth(float ExtraWidth)
+{
+    local float L, T, W, H;
+
+    Log("Is this being called every tick? WTF?");
+
+    if (ExtraWidth >= RequiredExtraWidth)
+    {
+        // Tell panels to not have menu option buttons
+        bRoomForOptions = true;
+        RolePanel.b_MenuButton.SetVisibility(false);
+        VehiclePanel.b_MenuButton.SetVisibility(false);
+
+        // Set the position values
+        L = 1.0 - ExtraWidth + PanelMargin;
+        T = 0.0;
+        W = ExtraWidth - (PanelMargin * 2);
+        H = 1.0;
+
+        // Draw the menu options in the extra space
+        MenuOptionsContainer.SetPosition(L, T, W, H);
+        MenuOptionsContainer.SetVisibility(true);
+        bShowingMenuOptions = true;
+
+        // Change the back button to the close button
+        b_MenuOptions[0].Caption = CloseButtonString;
+    }
+    else
+    {
+        // Tell panels there is no longer room for option buttons
+        bRoomForOptions = false;
+        RolePanel.b_MenuButton.SetVisibility(true);
+        VehiclePanel.b_MenuButton.SetVisibility(true);
+
+        // Set the position values (cant call defaults :C)
+        L = 0.25;
+        T = 0.05;
+        W = 0.5;
+        H = 0.9;
+
+        // Set option container to default
+        MenuOptionsContainer.SetPosition(L, T, W, H);
+        MenuOptionsContainer.SetVisibility(false);
+        bShowingMenuOptions = false;
+
+        // Change the back button to the close button
+        b_MenuOptions[0].Caption = MenuOptions[0];
+    }
+}
+
+function HandleMenuButton()
+{
+    if (!bShowingMenuOptions && !bRoomForOptions)
+    {
+        // Show menu options (hide panels & menu button)
+        bShowingMenuOptions = true;
+        MenuOptionsContainer.SetVisibility(true);
+        c_LoadoutArea.SetVisibility(false);
+        c_DeploymentMapArea.SetVisibility(false);
+    }
+}
+
 function CloseMenu()
 {
     if (Controller != none)
@@ -218,6 +295,9 @@ defaultproperties
     InactiveFadeColor=(B=0,G=0,R=0)
     WinTop=0.0
     WinHeight=1.0
+    PanelMargin=0.005
+    RequiredExtraWidth=0.15
+    CloseButtonString="Close"
 
     // Background
     Begin Object Class=FloatingImage Name=FloatingBackground
@@ -240,7 +320,7 @@ defaultproperties
         BackgroundStyleName="DHHeader"
         WinWidth=0.315
         WinHeight=0.039 //Button height
-        WinLeft=0.005
+        WinLeft=0.005 //PanelMargin
         WinTop=0.0
         RenderWeight=0.49
         TabOrder=1
