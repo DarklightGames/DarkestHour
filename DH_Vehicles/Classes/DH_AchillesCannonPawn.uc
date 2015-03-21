@@ -25,6 +25,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     FireImpulse=(X=-100000.0)
     GunClass=class'DH_Vehicles.DH_AchillesCannon'
+    bHasAltFire=false
     CameraBone="Gun"
     DrivePos=(X=7.0,Y=5.0,Z=-6.0)
     DriveAnim="VSU76_com_idle_close"

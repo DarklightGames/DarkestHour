@@ -24,6 +24,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_turret_ext',ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)
     FireImpulse=(X=-110000.0)
     GunClass=class'DH_Vehicles.DH_JagdtigerCannon'
+    bHasAltFire=false
     CameraBone="Turret_placement1"
     ManualMinRotateThreshold=0.5
     ManualMaxRotateThreshold=3.0

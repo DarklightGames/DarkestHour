@@ -24,6 +24,7 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext',ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)
     FireImpulse=(X=-100000.0)
     GunClass=class'DH_Vehicles.DH_JacksonCannon'
+    bHasAltFire=false
     CameraBone="Gun"
     DrivePos=(X=20.0,Z=10.0)
     DriveAnim="VSU76_com_idle_close"
