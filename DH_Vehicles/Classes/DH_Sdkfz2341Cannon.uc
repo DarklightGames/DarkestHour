@@ -685,8 +685,7 @@ defaultproperties
     FireInterval=0.2
     AltFireInterval=0.05
     FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
-    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
-    bAmbientEmitterAltFireOnly=true
+    EffectEmitterClass=none
     CannonDustEmitterClass=none // Matt: avoids having to override FlashMuzzleFlash function
     FireEffectOffset=(X=20.0,Y=-5.0,Z=20.0)
     FireSoundVolume=512.0

@@ -51,7 +51,6 @@ defaultproperties
     WeaponFireOffset=20.0
     RotationsPerSecond=0.025
     FireInterval=4.0
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'

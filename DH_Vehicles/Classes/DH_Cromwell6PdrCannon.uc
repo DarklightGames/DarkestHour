@@ -73,9 +73,6 @@ defaultproperties
     bAmbientAltFireSound=true
     FireInterval=4.0
     AltFireInterval=0.092
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
-    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
-    bAmbientEmitterAltFireOnly=true
     FireSoundVolume=512.0
     AltFireSoundClass=SoundGroup'Inf_Weapons.dt.dt_fire_loop'
     AltFireSoundScaling=3.0

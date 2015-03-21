@@ -170,6 +170,55 @@ simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
     }
 }
 
+// Modified to use a generic AltFireProjectileClass for MG firing effects, but to only spawn it if the cannon has a coaxial MG
+simulated function InitEffects()
+{
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    if (FlashEmitterClass != none && FlashEmitter == none)
+    {
+        FlashEmitter = Spawn(FlashEmitterClass);
+
+        if (FlashEmitter != none)
+        {
+            FlashEmitter.SetDrawScale(DrawScale);
+
+            if (WeaponFireAttachmentBone != '')
+            {
+                AttachToBone(FlashEmitter, WeaponFireAttachmentBone);
+            }
+            else
+            {
+                FlashEmitter.SetBase(self);
+            }
+
+            FlashEmitter.SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
+        }
+    }
+
+    if (AltFireProjectileClass != none && AmbientEffectEmitterClass != none && AmbientEffectEmitter == none)
+    {
+        AmbientEffectEmitter = Spawn(AmbientEffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
+
+        if (AmbientEffectEmitter != none)
+        {
+            if (WeaponFireAttachmentBone != '')
+            {
+                AttachToBone(AmbientEffectEmitter, WeaponFireAttachmentBone);
+            }
+            else
+            {
+                AmbientEffectEmitter.SetBase(self);
+            }
+
+            AmbientEffectEmitter.SetRelativeLocation(AltFireOffset);
+        }
+    }
+}
+
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
 simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
@@ -1769,6 +1818,9 @@ defaultproperties
     ManualRotationsPerSecond=0.011111
     CannonReloadState=CR_Waiting
     NoMGAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
+    AmbientEffectEmitterClass=class'ROVehicles.TankMGEmitter'
+    bAmbientEmitterAltFireOnly=true
     FireAttachBone="com_player"
     FireEffectOffset=(Z=-20.0)
     FireEffectScale=1.0

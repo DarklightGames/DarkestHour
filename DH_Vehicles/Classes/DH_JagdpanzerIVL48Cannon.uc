@@ -61,7 +61,6 @@ defaultproperties
     GunnerAttachmentBone="Commander_attachment"
     WeaponFireOffset=-80.0
     FireInterval=4.0
-    EffectEmitterClass=class'ROEffects.TankCannonFireEffect'
     FireSoundVolume=512.0
     FireForce="Explosion05"
     ProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
