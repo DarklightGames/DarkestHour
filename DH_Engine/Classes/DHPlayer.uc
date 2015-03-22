@@ -11,6 +11,7 @@ var     byte                    DesiredAmmoAmount;
 var     bool                    bShouldAttemptAutoDeploy;
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
+var     DH_LevelInfo            ClientLevelInfo;
 
 // DH sway values
 var     protected InterpCurve   BobCurve;                   // the amount of weapon bob to apply based on an input time in ironsights
@@ -51,9 +52,6 @@ var     vehicle                 MyLastVehicle;              // used for vehicle 
 // Debug:
 var     bool                    bSkyOff;                    // flags that the sky has been turned off (like "show sky" console command in single player)
 var     SkyZoneInfo             SavedSkyZone;               // saves the original SkyZone for the player's current ZoneInfo, so it can be restored when the sky is turned back on
-
-var DHHintManager               DHHintManager;
-var DH_LevelInfo                ClientLevelInfo;
 
 replication
 {
