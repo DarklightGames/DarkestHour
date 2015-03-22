@@ -5,51 +5,55 @@
 
 class DHPlayer extends ROPlayer;
 
-var int                             RedeployTime;
-var float                           LastKilledTime;             // The time at which last death occured
-var byte                            DesiredAmmoAmount;
-var bool                            bShouldAttemptAutoDeploy;
+var     int                     RedeployTime;
+var     float                   LastKilledTime;             // the time at which last death occured
+var     byte                    DesiredAmmoAmount;
+var     bool                    bShouldAttemptAutoDeploy;
+var     DHHintManager           DHHintManager;
+var     float                   MapVoteTime;
 
-// DH Sway values
-var protected InterpCurve           BobCurve;                   // The amount of weapon bob to apply based on an input time in ironsights
-var protected float                 DHSwayElasticFactor;
-var protected float                 DHSwayDampingFactor;
+// DH sway values
+var     protected InterpCurve   BobCurve;                   // the amount of weapon bob to apply based on an input time in ironsights
+var     protected float         DHSwayElasticFactor;
+var     protected float         DHSwayDampingFactor;
 
 // Rotation clamp values
-var protected float                 DHSprintMaxTurnSpeed;
-var protected float                 DHProneMaxTurnSpeed;
-var protected float                 DHStandardTurnSpeedFactor;
-var protected float                 DHHalfTurnSpeedFactor;
+var     protected float         DHSprintMaxTurnSpeed;
+var     protected float         DHProneMaxTurnSpeed;
+var     protected float         DHStandardTurnSpeedFactor;
+var     protected float         DHHalfTurnSpeedFactor;
 
-var vector                          FlinchRotMag;
-var vector                          FlinchRotRate;
-var float                           FlinchRotTime;
-var vector                          FlinchOffsetMag;
-var vector                          FlinchOffsetRate;
-var float                           FlinchOffsetTime;
+var     vector                  FlinchRotMag;
+var     vector                  FlinchRotRate;
+var     float                   FlinchRotTime;
+var     vector                  FlinchOffsetMag;
+var     vector                  FlinchOffsetRate;
+var     float                   FlinchOffsetTime;
 
-var float                           MantleCheckTimer;           // Makes sure client doesn't try to start mantling without the server
-var float                           MantleFailTimer;            // Makes sure we don't get stuck floating in an object unable to end a mantle
-var bool                            bDidMantle;                 // Is the mantle complete?
-var bool                            bIsInStateMantling;         // Stop the client from exiting state until server has exited to avoid desync
-var bool                            bDidCrouchCheck;
-var bool                            bWaitingToMantle;
-var bool                            bLockJump;
-var bool                            bMantleDebug;
-var int                             MantleLoopCount;
+var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
+var     float                   MantleFailTimer;            // makes sure we don't get stuck floating in an object unable to end a mantle
+var     bool                    bDidMantle;                 // is the mantle complete?
+var     bool                    bIsInStateMantling;         // stop the client from exiting state until server has exited to avoid desync
+var     bool                    bDidCrouchCheck;
+var     bool                    bWaitingToMantle;
+var     bool                    bLockJump;
+var     bool                    bMantleDebug;
+var     int                     MantleLoopCount;
 
-var byte                            MortarTargetIndex;
-var vector                          MortarHitLocation;
+var     byte                    MortarTargetIndex;
+var     vector                  MortarHitLocation;
 
-var int                             SpawnPointIndex;
-var int                             SpawnVehicleIndex;
-var int                             VehiclePoolIndex;
-var vehicle                         MyLastVehicle;              // Used for vehicle spawning to remember last vehicle player spawned (only used by server)
+var     int                     SpawnPointIndex;
+var     int                     SpawnVehicleIndex;
+var     int                     VehiclePoolIndex;
+var     vehicle                 MyLastVehicle;              // used for vehicle spawning to remember last vehicle player spawned (only used by server)
 
-var DHHintManager                   DHHintManager;
-var DH_LevelInfo                    ClientLevelInfo;
+// Debug:
+var     bool                    bSkyOff;                    // flags that the sky has been turned off (like "show sky" console command in single player)
+var     SkyZoneInfo             SavedSkyZone;               // saves the original SkyZone for the player's current ZoneInfo, so it can be restored when the sky is turned back on
 
-var float   MapVoteTime;
+var DHHintManager               DHHintManager;
+var DH_LevelInfo                ClientLevelInfo;
 
 replication
 {
@@ -1862,25 +1866,55 @@ function ServerToggleBehindView()
     }
 }
 
-// Matt: DH version, but toggling off the sky, which is necessary to allow the crucial debug spheres to get drawn (can also be done manually with console command)
-simulated exec function DriverCollisionDebug()
-{
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
-    {
-        ConsoleCommand("show sky");
-        ROHud(myHUD).bDebugDriverCollision = !ROHud(myHUD).bDebugDriverCollision;
-        Log("bDebugDriverCollision =" @ ROHud(myHUD).bDebugDriverCollision);
-    }
-}
-
-// Matt: DH version, but toggling off the sky, which is necessary to allow the crucial debug cylinders to get drawn (can also be done manually with console command)
+// Matt: DH version, including to hide the sky, which is necessary to allow the crucial debug spheres to get drawn
 simulated exec function PlayerCollisionDebug()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
     {
-        ConsoleCommand("show sky");
         ROHud(myHUD).bDebugPlayerCollision = !ROHud(myHUD).bDebugPlayerCollision;
-        Log("bDebugPlayerCollision =" @ ROHud(myHUD).bDebugPlayerCollision);
+        SetSkyOff(ROHud(myHUD).bDebugPlayerCollision);
+    }
+}
+
+// DH version, but only showing the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
+simulated exec function DriverCollisionDebug()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROHud(myHUD) != none)
+    {
+        ROHud(myHUD).bDebugDriverCollision = !ROHud(myHUD).bDebugDriverCollision;
+        SetSkyOff(ROHud(myHUD).bDebugDriverCollision);
+    }
+}
+
+// New exec showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DH_ROTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+simulated exec function VehicleHitPointDebug()
+{
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHUD) != none)
+    {
+        DHHud(myHUD).bDebugVehicleHitPoints = !DHHud(myHUD).bDebugVehicleHitPoints;
+        SetSkyOff(DHHud(myHUD).bDebugVehicleHitPoints);
+    }
+}
+
+// New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off
+// Console command "show sky" toggles the sky on/off, but it only works in single player, so this allows these debug options to work in multiplayer
+simulated function SetSkyOff(bool bHideSky)
+{
+    // Hide the sky
+    if (bHideSky)
+    {
+        if (!bSkyOff)
+        {
+            bSkyOff = true;
+            SavedSkyZone = PlayerReplicationInfo.PlayerZone.SkyZone;
+            PlayerReplicationInfo.PlayerZone.SkyZone = none;
+        }
+    }
+    // Restore the sky, but only if we have no other similar debug functionality enabled
+    else if (bSkyOff && !(ROHud(myHUD) != none && (ROHud(myHUD).bDebugDriverCollision || ROHud(myHUD).bDebugPlayerCollision || (DHHud(myHUD) != none && DHHud(myHUD).bDebugVehicleHitPoints))))
+    {
+        bSkyOff = false;
+        PlayerReplicationInfo.PlayerZone.SkyZone = SavedSkyZone;
     }
 }
 

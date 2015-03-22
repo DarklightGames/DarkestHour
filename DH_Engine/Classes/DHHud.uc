@@ -37,6 +37,8 @@ var  Obituary           DHObituaries[8];
 
 var  const float        VOICE_ICON_DIST_MAX;
 
+var  bool               bDebugVehicleHitPoints; // show vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
+
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
@@ -854,6 +856,12 @@ simulated function DrawHudPassC(Canvas C)
 
     // Slow, for debugging only
     if (bDebugDriverCollision && class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        DrawDriverPointSphere();
+    }
+
+    // Slow, for debugging only
+    if (bDebugVehicleHitPoints && class'DH_LevelInfo'.static.DHDebugMode())
     {
         DrawVehiclePointSphere();
     }
@@ -1743,6 +1751,117 @@ function DrawPlayerNames(Canvas C)
 
                     Display = NamedPlayer.PlayerReplicationInfo.PlayerName;
                     C.DrawTextClipped(Display);
+                }
+            }
+        }
+    }
+}
+
+// Modified to only show the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
+simulated function DrawDriverPointSphere()
+{
+    local ROVehicle       V;
+    local ROVehicleWeapon VW;
+    local Coords          CO;
+    local vector          HeadLoc;
+    local int             i;
+
+    foreach DynamicActors(class'ROVehicle', V)
+    {
+        if (V != none)
+        {
+            for (i = 0; i < V.VehHitpoints.Length; ++i)
+            {
+                if (V.VehHitpoints[i].HitPointType == HP_Driver && V.VehHitpoints[i].PointBone != '')
+                {
+                    CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
+                    HeadLoc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
+                    HeadLoc = HeadLoc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
+                    V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 255, 0);
+                }
+            }
+        }
+    }
+
+    foreach DynamicActors(class'ROVehicleWeapon', VW)
+    {
+        if (VW != none)
+        {
+            for (i = 0; i < VW.VehHitpoints.Length; ++i)
+            {
+                if (VW.VehHitpoints[i].PointBone != '')
+                {
+                    CO = VW.GetBoneCoords(VW.VehHitpoints[i].PointBone);
+                    HeadLoc = CO.Origin + (VW.VehHitpoints[i].PointHeight * VW.VehHitpoints[i].PointScale * CO.XAxis);
+                    HeadLoc = HeadLoc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.Xaxis));
+                    VW.DrawDebugSphere(HeadLoc, VW.VehHitpoints[i].PointRadius * VW.VehHitpoints[i].PointScale, 10, 0, 255, 0);
+                }
+            }
+        }
+    }
+}
+
+// New function showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DH_ROTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+simulated function DrawVehiclePointSphere()
+{
+    local ROVehicle       V;
+    local DH_ROTreadCraft TC;
+    local Coords          CO;
+    local vector          HeadLoc;
+    local int             i;
+
+    foreach DynamicActors(class'ROVehicle', V)
+    {
+        if (V != none)
+        {
+            for (i = 0; i < V.VehHitpoints.Length; ++i)
+            {
+                if (V.VehHitpoints[i].HitPointType != HP_Driver && V.VehHitpoints[i].PointBone != '')
+                {
+                    CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
+                    HeadLoc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
+                    HeadLoc = HeadLoc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
+
+                    if (V.VehHitpoints[i].HitPointType == HP_Engine)
+                    {
+                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 0, 255); // blue
+                    }
+                    else if (V.VehHitpoints[i].HitPointType == HP_AmmoStore)
+                    {
+                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 255, 0, 0); // red
+                    }
+                    else
+                    {
+                        V.DrawDebugSphere(HeadLoc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 200, 200, 200); // gray
+                    }
+                }
+            }
+
+            TC = DH_ROTreadCraft(V);
+
+            if (TC != none)
+            {
+                for (i = 0; i < TC.NewVehHitpoints.Length; ++i)
+                {
+                    if (TC.NewVehHitpoints[i].PointBone != '')
+                    {
+                        CO = TC.GetBoneCoords(TC.NewVehHitpoints[i].PointBone);
+                        HeadLoc = CO.Origin + (TC.NewVehHitpoints[i].PointHeight * TC.NewVehHitpoints[i].PointScale * CO.XAxis);
+                        HeadLoc = HeadLoc + (TC.NewVehHitpoints[i].PointOffset >> TC.Rotation);
+
+                        if (TC.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || TC.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
+                        {
+                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 0); // gold
+                        }
+                        else if (TC.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || TC.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
+                        {
+                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 0, 255); // pink
+                        }
+                        else
+                        {
+                            TC.DrawDebugSphere(HeadLoc, TC.NewVehHitpoints[i].PointRadius * TC.NewVehHitpoints[i].PointScale, 10, 255, 255, 255); // white
+                        }
+                    }
                 }
             }
         }
