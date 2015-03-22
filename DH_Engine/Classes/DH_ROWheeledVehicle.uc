@@ -1116,6 +1116,62 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+// Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties & remove obsolete stuff
+// Also removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
+static function StaticPrecache(LevelInfo L)
+{
+    local int i;
+
+    for (i = 0; i < default.PassengerWeapons.Length; ++i)
+    {
+        if (default.PassengerWeapons[i].WeaponPawnClass != none)
+        {
+            default.PassengerWeapons[i].WeaponPawnClass.static.StaticPrecache(L);
+        }
+    }
+
+    for (i = 0; i < default.Skins.Length; ++i)
+    {
+        if (default.Skins[i] != none)
+        {
+            L.AddPrecacheMaterial(default.Skins[i]);
+        }
+    }
+
+    L.AddPrecacheMaterial(default.VehicleHudImage);
+    L.AddPrecacheMaterial(default.MPHMeterMaterial);
+
+    if (default.HighDetailOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.HighDetailOverlay);
+    }
+
+    if (default.DestroyedVehicleMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.DestroyedVehicleMesh);
+    }
+}
+
+// Modified to removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
+// Also to add extra material properties & remove obsolete stuff
+simulated function UpdatePrecacheMaterials()
+{
+    super(Actor).UpdatePrecacheMaterials(); // pre-caches the Skins array
+
+    Level.AddPrecacheMaterial(VehicleHudImage);
+    Level.AddPrecacheMaterial(MPHMeterMaterial);
+
+    if (HighDetailOverlay != none)
+    {
+        Level.AddPrecacheMaterial(HighDetailOverlay);
+    }
+
+    if (DestroyedVehicleMesh != none)
+    {
+        Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
+    }
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();

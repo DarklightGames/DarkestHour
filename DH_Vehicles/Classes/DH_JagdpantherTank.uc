@@ -9,28 +9,6 @@ class DH_JagdpantherTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdpanther_body_goodwood');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.jagdpanther_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_walls_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_body_int');
-    L.AddPrecacheMaterial(default.SchurzenTexture);
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdpanther_body_goodwood');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.jagdpanther_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_walls_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.jagdpanther_body_int');
-    Level.AddPrecacheMaterial(SchurzenTexture);
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     SchurzenTexture=texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2' // ideally get better matching texture made, but for now this is passable match

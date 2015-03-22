@@ -1170,6 +1170,30 @@ simulated function DrawPeriscopeOverlay(Canvas Canvas)
         PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
 }
 
+// Modified to call same function on VehicleWeapon class so it pre-caches its Skins array (the RO class missed calling the Super to do that), & also to add extra material properties
+static function StaticPrecache(LevelInfo L)
+{
+    L.AddPrecacheMaterial(default.CannonScopeOverlay);
+    L.AddPrecacheMaterial(default.CannonScopeCenter);
+    L.AddPrecacheMaterial(default.BinocsOverlay);
+    L.AddPrecacheMaterial(default.AmmoShellTexture);
+    L.AddPrecacheMaterial(default.AmmoShellReloadTexture);
+    L.AddPrecacheMaterial(default.AltAmmoReloadTexture);
+
+    default.GunClass.static.StaticPrecache(L);
+}
+
+// Modified to add extra material properties
+simulated function UpdatePrecacheMaterials()
+{
+    Level.AddPrecacheMaterial(default.CannonScopeOverlay);
+    Level.AddPrecacheMaterial(default.CannonScopeCenter);
+    Level.AddPrecacheMaterial(default.BinocsOverlay);
+    Level.AddPrecacheMaterial(default.AmmoShellTexture);
+    Level.AddPrecacheMaterial(default.AmmoShellReloadTexture);
+    Level.AddPrecacheMaterial(default.AltAmmoReloadTexture);
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();

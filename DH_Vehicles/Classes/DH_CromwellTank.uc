@@ -8,28 +8,6 @@ class DH_CromwellTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Animations\DH_Cromwell_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Cromwell_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Cromwell_armor_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.treads.Cromwell_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int2');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Cromwell_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.Cromwell_armor_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.treads.Cromwell_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int2');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.int_vehicles.Cromwell_body_int');
-
-    super.UpdatePrecacheMaterials();
-}
-
 // Modified to adjust size/proportions of texture overlay to match driver's glass vision block
 simulated function DrawPeriscopeOverlay(Canvas Canvas)
 {

@@ -223,20 +223,6 @@ function bool PlaceExitingDriver()
     return false;
 }
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
-
-    super.UpdatePrecacheMaterials();
-}
-
 // Modified to replace literal for pan direction, so can be easily subclassed, & to incorporate extra tread sounds that were spawned in PostBeginPlay()
 simulated function SetupTreads()
 {
@@ -3109,6 +3095,78 @@ simulated function int NumPassengers()
     }
 
     return num;
+}
+
+// Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties & remove obsolete stuff
+// Also removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
+static function StaticPrecache(LevelInfo L)
+{
+    local int i;
+
+    for (i = 0; i < default.PassengerWeapons.Length; ++i)
+    {
+        if (default.PassengerWeapons[i].WeaponPawnClass != none)
+        {
+            default.PassengerWeapons[i].WeaponPawnClass.static.StaticPrecache(L);
+        }
+    }
+
+    for (i = 0; i < default.Skins.Length; ++i)
+    {
+        if (default.Skins[i] != none)
+        {
+            L.AddPrecacheMaterial(default.Skins[i]);
+        }
+    }
+
+    L.AddPrecacheMaterial(default.VehicleHudImage);
+    L.AddPrecacheMaterial(default.MPHMeterMaterial);
+    L.AddPrecacheMaterial(default.DamagedTreadPanner);
+    L.AddPrecacheMaterial(default.PeriscopeOverlay);
+    L.AddPrecacheMaterial(default.DamagedPeriscopeOverlay);
+
+    if (default.HighDetailOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.HighDetailOverlay);
+    }
+
+    if (default.SchurzenTexture != none)
+    {
+        L.AddPrecacheMaterial(default.SchurzenTexture);
+    }
+
+    if (default.DestroyedVehicleMesh != none)
+    {
+        L.AddPrecacheStaticMesh(default.DestroyedVehicleMesh);
+    }
+}
+
+// Modified to removes all literal material references, so they aren't repeated again & again - instead they are pre-cached once in DarkestHourGame.PrecacheGameTextures()
+// Also to add extra material properties & remove obsolete stuff
+simulated function UpdatePrecacheMaterials()
+{
+    super(Actor).UpdatePrecacheMaterials(); // pre-caches the Skins array
+
+    Level.AddPrecacheMaterial(VehicleHudImage);
+    Level.AddPrecacheMaterial(MPHMeterMaterial);
+    Level.AddPrecacheMaterial(DamagedTreadPanner);
+    Level.AddPrecacheMaterial(PeriscopeOverlay);
+    Level.AddPrecacheMaterial(DamagedPeriscopeOverlay);
+
+    if (HighDetailOverlay != none)
+    {
+        Level.AddPrecacheMaterial(HighDetailOverlay);
+    }
+
+    if (SchurzenTexture != none)
+    {
+        Level.AddPrecacheMaterial(SchurzenTexture);
+    }
+
+    if (DestroyedVehicleMesh != none)
+    {
+        Level.AddPrecacheStaticMesh(DestroyedVehicleMesh);
+    }
 }
 
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes

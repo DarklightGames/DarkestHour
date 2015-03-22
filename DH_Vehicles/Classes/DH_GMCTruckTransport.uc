@@ -8,20 +8,6 @@ class DH_GMCTruckTransport extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_GMCTruck_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Allied_MilitarySM.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_Allied_MilitarySM.American.GMC');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_Allied_MilitarySM.American.GMC');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     ResupplyAttachmentClass=class'DH_GMCTruckResupplyAttachment'

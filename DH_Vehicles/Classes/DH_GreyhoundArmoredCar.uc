@@ -9,26 +9,6 @@ class DH_GreyhoundArmoredCar extends DH_ArmoredWheeledVehicle;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex4.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3.usx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     bMustBeTankCommander=true

@@ -5,20 +5,6 @@
 
 class DH_PanzerIVHTank_CamoOne extends DH_PanzerIVHTank;
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_armor_camo1');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.PanzerIV_armor_camo1');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     bHasAddedSideArmor=true

@@ -505,6 +505,37 @@ simulated function bool IsPointShot(vector Loc, vector Ray, float AdditionalScal
     return (Distance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale));
 }
 
+// Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties (note the Supers are empty)
+static function StaticPrecache(LevelInfo L)
+{
+    local int i;
+
+    for (i = 0; i < default.Skins.Length; ++i)
+    {
+        L.AddPrecacheMaterial(default.Skins[i]);
+    }
+
+    L.AddPrecacheMaterial(default.hudAltAmmoIcon);
+
+    if (default.HighDetailOverlay != none)
+    {
+        L.AddPrecacheMaterial(default.HighDetailOverlay);
+    }
+}
+
+// Modified to add extra material properties (note the Super in Actor already pre-caches the Skins array)
+simulated function UpdatePrecacheMaterials()
+{
+    super.UpdatePrecacheMaterials();
+
+    Level.AddPrecacheMaterial(hudAltAmmoIcon);
+
+    if (HighDetailOverlay != none)
+    {
+        Level.AddPrecacheMaterial(HighDetailOverlay);
+    }
+}
+
 defaultproperties
 {
     NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'

@@ -9,26 +9,6 @@ class DH_Marder3MDestroyer extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Animations\DH_Marder3M_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.treads.marder_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.treads.marder_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     LeftTreadIndex=3

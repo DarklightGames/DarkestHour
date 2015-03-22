@@ -18,6 +18,11 @@ function SpawnVehicle()
     }
 }
 
+// Matt: emptied out as we call StaticPrecache on the VehicleClass in PostBeginPlay(), so we don't want to do it twice
+simulated function UpdatePrecacheMaterials()
+{
+}
+
 defaultproperties
 {
 }

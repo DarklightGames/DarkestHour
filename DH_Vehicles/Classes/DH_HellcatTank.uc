@@ -9,28 +9,6 @@ class DH_HellcatTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex5.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treads');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex5.treads.hellcat_treads');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     bAllowRiders=true

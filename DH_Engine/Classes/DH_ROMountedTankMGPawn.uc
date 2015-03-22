@@ -746,6 +746,22 @@ function float GetAmmoReloadState()
     }
 }
 
+// Modified to call same function on VehicleWeapon class so it pre-caches its Skins array (the RO class missed calling the Super to do that), & also to add an extra material property
+static function StaticPrecache(LevelInfo L)
+{
+    L.AddPrecacheMaterial(default.MGOverlay);
+    L.AddPrecacheMaterial(default.VehicleMGReloadTexture);
+
+    default.GunClass.static.StaticPrecache(L);
+}
+
+// Modified to add an extra material property
+simulated function UpdatePrecacheMaterials()
+{
+    Level.AddPrecacheMaterial(default.MGOverlay);
+    Level.AddPrecacheMaterial(default.VehicleMGReloadTexture);
+}
+
 // Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();

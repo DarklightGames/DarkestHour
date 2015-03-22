@@ -17,20 +17,6 @@ var     name        RampDownIdleAnim;
 function Fire(optional float F);
 function ServerStartEngine();
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat');
-
-    super.UpdatePrecacheMaterials();
-}
-
 // Matt: modified to avoid playing BeginningIdleAnim because it would make the ramp position reset every time a player entered
 simulated state EnteringVehicle
 {

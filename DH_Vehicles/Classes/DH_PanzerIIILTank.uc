@@ -9,30 +9,6 @@ class DH_PanzerIIILTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2
 
-static function StaticPrecache(LevelInfo L)
-{
-    super(ROTreadCraft).StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.alpha');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.gear_stug');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Panzer3_treads');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.panzer3_int');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.panzer3_int_s');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.alpha');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.gear_stug');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Panzer3_treads');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.panzer3_int');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.panzer3_int_s');
-
-    super(ROTreadCraft).UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     UnbuttonedPositionIndex=3

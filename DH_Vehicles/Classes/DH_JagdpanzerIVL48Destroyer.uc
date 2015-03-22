@@ -10,28 +10,6 @@ class DH_JagdpanzerIVL48Destroyer extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo1');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.panzer4F2_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_armor_camo1');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.panzer4F2_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     NewVehHitpoints(0)=(PointRadius=5.0,PointScale=1.0,PointBone="body",PointOffset=(X=40.0,Y=10.5,Z=65.0),NewHitPointType=NHP_GunOptics)

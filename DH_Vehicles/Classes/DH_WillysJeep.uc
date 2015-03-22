@@ -10,20 +10,6 @@ class DH_WillysJeep extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\Sounds\DH_AlliedVehicleSounds.uax
 #exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     MaxPitchSpeed=250.0

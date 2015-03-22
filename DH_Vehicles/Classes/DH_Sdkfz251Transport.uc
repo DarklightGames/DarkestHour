@@ -7,26 +7,6 @@ class DH_Sdkfz251Transport extends DH_ROTransportCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.halftrack_ext');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Halftrack_treads');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int_s');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.halftrack_ext');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Halftrack_treads');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.halftrack_int_s');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     FriendlyResetDistance=6000.0

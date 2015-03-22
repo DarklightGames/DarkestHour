@@ -11,28 +11,6 @@ class DH_HetzerDestroyer extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\VegetationSMT.utx     // for the bushes added as extra camo
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Hetzer_stc_V1.usx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super(ROTreadCraft).StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_body');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treads');
-    L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_int');
-    L.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.Hetzer_driver_glass');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_body');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Stug3_treads');
-    Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.hetzer_int');
-    Level.AddPrecacheMaterial(Material'DH_Hetzer_tex_V1.Hetzer_driver_glass');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
-
-    super(ROTreadCraft).UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     NewVehHitpoints(0)=(PointRadius=3.2,PointScale=1.0,PointBone="body",PointOffset=(X=29.2,Y=-9.04,Z=58.0),NewHitPointType=NHP_GunOptics)

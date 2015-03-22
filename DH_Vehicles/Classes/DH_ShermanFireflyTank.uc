@@ -9,28 +9,6 @@ class DH_ShermanFireflyTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.Treads.FireFly_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_armor_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_hatch_int');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.Treads.FireFly_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUK_Tex.ext_vehicles.FireFly_armor_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_hatch_int');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     FirstRiderPositionIndex=1

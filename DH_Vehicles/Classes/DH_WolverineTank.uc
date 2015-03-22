@@ -9,26 +9,6 @@ class DH_WolverineTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M10_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int2');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M10_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int2');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M10_body_int');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     bAllowRiders=true
@@ -209,6 +189,8 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
     Skins(2)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
     Skins(3)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(4)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
+    Skins(5)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
     SoundRadius=800.0
     TransientSoundRadius=1500.0
     CollisionRadius=175.0

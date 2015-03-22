@@ -2106,6 +2106,26 @@ function HandleFFViolation(PlayerController Offender)
     }
 }
 
+// Modified to add all literal references to pre-cache material from vehicle classes, so they aren't repeated again & again for every vehicle (most were already in the Super in ROTeamGame)
+static function PrecacheGameTextures(LevelInfo myLevel)
+{
+    super.PrecacheGameTextures(myLevel);
+
+    // From ROWheeledVehicle:
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.fire_16frame');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.DustCloud');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.Dust_KickUp');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.vehiclesparkhead');
+
+    // From ROTreadCraft:
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_dirt');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
+
+    // From DH_ROTreadCraft:
+    myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+}
+
 defaultproperties
 {
     // Default settings based on common used server settings in DH

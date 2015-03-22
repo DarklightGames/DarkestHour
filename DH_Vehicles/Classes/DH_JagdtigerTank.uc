@@ -11,26 +11,6 @@ class DH_JagdtigerTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc2.usx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdtiger_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.Tiger2B_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.Tiger2B_body_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdtiger_skirtdetails');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdtiger_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.treads.Tiger2B_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.Tiger2B_body_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.jagdtiger_skirtdetails');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     bAllowRiders=true

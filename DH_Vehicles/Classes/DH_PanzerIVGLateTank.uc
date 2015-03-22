@@ -10,28 +10,6 @@ class DH_PanzerIVGLateTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex2.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.Panzer4F2_int');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.panzer4F2_treads');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.Panzer4F2_int');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.panzer4F2_treads');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     MaxCriticalSpeed=729.0

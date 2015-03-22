@@ -10,22 +10,6 @@ class DH_KubelwagenCar_WH extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc2.usx
 #exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     MaxPitchSpeed=250.0

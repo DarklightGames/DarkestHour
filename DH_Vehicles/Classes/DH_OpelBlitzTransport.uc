@@ -8,23 +8,6 @@ class DH_OpelBlitzTransport extends DH_ROWheeledVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_OpelBlitz_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
-
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     ResupplyAttachmentClass=class'DH_OpelBlitzResupplyAttachment'

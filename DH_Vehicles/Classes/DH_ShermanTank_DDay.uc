@@ -9,26 +9,6 @@ class DH_ShermanTank_DDay extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_scoop_ext');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.Sherman_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.Sherman_body_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.Sherman_scoop_ext');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     bAllowRiders=false

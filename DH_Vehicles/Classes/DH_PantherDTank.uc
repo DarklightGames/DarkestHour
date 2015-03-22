@@ -7,31 +7,9 @@ class DH_PantherDTank extends DH_ROTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\axis_pantherg_anm.ukx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.pantherg_ext');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.PantherG_treads');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int_s');
-    L.AddPrecacheMaterial(default.SchurzenTexture);
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.pantherg_ext');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.PantherG_treads');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.pantherg_int_s');
-    Level.AddPrecacheMaterial(SchurzenTexture);
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
-    SchurzenTexture=none // Matt: we don't have a schurzen skin for this camo variant, so add here if one gets made
+    SchurzenTexture=none // we don't have a schurzen skin for this camo variant, so add here if one gets made
     SchurzenTypes(0)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenOne',PercentChance=30)   // undamaged schurzen
     SchurzenTypes(1)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenTwo',PercentChance=15)   // missing front panel on right & middle panel on left
     SchurzenTypes(2)=(SchurzenClass=class'DH_Vehicles.DH_PantherDeco_SchurzenThree',PercentChance=10) // with front panels missing on both sides

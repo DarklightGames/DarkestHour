@@ -10,26 +10,6 @@ class DH_UniCarrierTransport extends DH_ROTransportCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\Sounds\Vehicle_EnginesTwo.uax
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    //L.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext');
-    L.AddPrecacheMaterial(Material'allies_vehicles_tex.Treads.T60_treads');
-    L.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int');
-    L.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    //Level.AddPrecacheMaterial(Material'DH_VehiclesUK_tex.ext_vehicles.7thUniversalCarrier_body_ext');
-    Level.AddPrecacheMaterial(Material'allies_vehicles_tex.Treads.T60_treads');
-    Level.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int');
-    Level.AddPrecacheMaterial(Material'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S');
-
-    super.UpdatePrecacheMaterials();
-}
-
 // Overridden to handle the special driver animations for this vehicle
 simulated state ViewTransition
 {

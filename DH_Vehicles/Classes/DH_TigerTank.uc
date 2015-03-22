@@ -9,26 +9,6 @@ class DH_TigerTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.Tiger1_ext');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Tiger1_treads');
-    L.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int_s');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.ext_vehicles.Tiger1_ext');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.Treads.Tiger1_treads');
-    Level.AddPrecacheMaterial(Material'axis_vehicles_tex.int_vehicles.tiger1_int_s');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     bAllowRiders=true

@@ -8,24 +8,6 @@ class DH_StuartTank extends DH_ROTreadCraft;
 #exec OBJ LOAD FILE=..\Animations\DH_Stuart_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.M5_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.ext_vehicles.M5_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.int_vehicles.M5_body_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_Tex.treads.M5_treads');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     LeftTreadIndex=3

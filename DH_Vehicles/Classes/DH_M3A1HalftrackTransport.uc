@@ -9,28 +9,6 @@ class DH_M3A1HalftrackTransport extends DH_ROTransportCraft;
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
-static function StaticPrecache(LevelInfo L)
-{
-    super.StaticPrecache(L);
-
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
-    L.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
-}
-
-simulated function UpdatePrecacheMaterials()
-{
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.treads.M3A1Halftrack_treads');
-    Level.AddPrecacheMaterial(Material'DH_VehiclesUS_tex.ext_vehicles.Green');
-
-    super.UpdatePrecacheMaterials();
-}
-
 defaultproperties
 {
     FriendlyResetDistance=6000.0
