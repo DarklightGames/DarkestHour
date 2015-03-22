@@ -2147,8 +2147,16 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
     // Confirm this player has a role && check if MagCount is valid based on role/weapon
     if (PRI.RoleInfo == none)
     {
-        Log("Failed at RoleInfo Check");
+        Log("Failed at RoleInfo check");
 
+        return false;
+    }
+
+    // Make sure player's team matches the player's role's team
+    if (PRI.RoleInfo.Side != GetTeamNum())
+    {
+        Log("RoleInfoTeam:" @ int(PRI.RoleInfo.Side) @ "PlayerTeam:" @ GetTeamNum());
+        Log("Failed at RoleTeam vs PlayerTeam check");
         return false;
     }
 
@@ -2515,6 +2523,9 @@ exec function Suicide()
     }
 }
 
+exec function SwitchTeam(){} // Disabled
+exec function ChangeTeam( int N ){} // Disabled
+
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2)
 {
@@ -2544,16 +2555,6 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
         }
         else
         {
-
-            if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
-                BecomeActivePlayer();
-
-            if (newTeam == 250) // auto select
-                newTeam = ServerAutoSelectAndChangeTeam();
-            else
-                ServerChangeTeam(newTeam);
-
-            /*
             if (newTeam == 250) // auto select
             {
                 if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
@@ -2578,7 +2579,6 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;
             }
-            */
 
             // Check if change failed and output results
             if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none ||
