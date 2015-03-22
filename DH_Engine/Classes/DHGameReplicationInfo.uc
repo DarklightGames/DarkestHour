@@ -5,9 +5,6 @@
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
-//Theel: TODO
-// functions need sorted
-
 struct MortarTargetInfo
 {
     var vector      Location;
@@ -78,13 +75,15 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        DHSpawnCount, AlliedNationID, DHAxisRoles, DHAlliesRoles,
+        DHSpawnCount, DHAxisRoles, DHAlliesRoles,
         DHAlliesRoleCount, DHAxisRoleCount, DHAlliesRoleBotCount, DHAxisRoleBotCount,
         CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets,
         VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
         VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime,
-        SpawnPointIsActives, SpawnPointsUpdateTime, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
-        SpawnVehicles;
+        SpawnPointIsActives, SpawnPointsUpdateTime, SpawnVehicles;
+
+    reliable if (bNetInitial && (Role == ROLE_Authority))
+        AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
 }
 
 simulated function PostBeginPlay()

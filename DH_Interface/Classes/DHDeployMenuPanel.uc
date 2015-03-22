@@ -51,7 +51,7 @@ function ShowPanel(bool bShow)
     }
     else
     {
-        b_MenuButton.SetVisibility(true); //Not sure this is needed, but just incase
+        b_MenuButton.SetVisibility(true);
     }
 }
 

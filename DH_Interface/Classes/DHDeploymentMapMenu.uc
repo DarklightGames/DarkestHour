@@ -12,12 +12,13 @@ const   SPAWN_VEHICLES_TOTAL =              10; // Max spawn vehicles total (mak
 
 var automated ROGUIProportionalContainer    MapContainer;
 
-var localized string                        ReinforcementText;
+var localized string                        ReinforcementText,
+                                            DeployBarText[10];
 
 var     bool                                bReadyToDeploy, bOutOfReinforcements, bResolutionChanged;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
-var     automated DHGUIButton               b_DeployButton, b_ExploitSpawn;
+var     automated DHGUIButton               b_DeployButton, b_SpawnRoom;
 var     automated GUIProgressBar            pb_DeployProgressBar;
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
                                             b_Objectives[OBJECTIVES_MAX],
@@ -87,6 +88,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     for (i = 0; i < arraycount(b_Objectives); ++i)
     {
         b_Objectives[i].Graphic = none;
+    }
+
+    // Initialize spawn room button
+    if (DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
+    {
+        b_SpawnRoom.SetVisibility(false);
+        b_SpawnRoom.WinWidth=0.0;
+        b_SpawnRoom.WinHeight=0.0;
     }
 
     // Set rotator based on map rotation offset
@@ -360,26 +369,25 @@ function InternalOnPostDraw(Canvas Canvas)
 }
 
 // Deploy requested
-function SpawnClick(optional bool bExploit)
+function SpawnClick()
 {
-    // Exploit spawn!
-    if (bExploit && !PRI.bOnlySpectator && DHP.Pawn == none)
-    {
-        MyRoleMenu.AttemptRoleApplication();
-        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
-        Controller.CloseMenu(false); //Close menu as we clicked deploy!
-        return;
-    }
-
-    if (bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none || !bReadyToDeploy)
+    if (!bReadyToDeploy || bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none)
     {
         return;
     }
 
-    // Complete spawn request
     MyRoleMenu.AttemptRoleApplication();
-    DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount);
-    Controller.CloseMenu(false); //Close menu as we clicked deploy!
+
+    if (DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
+    {
+        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
+    }
+    else
+    {
+        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount);
+    }
+
+    Controller.CloseMenu(false); //Close menu as deploy attempted!
 }
 
 function bool ConfirmIndices()
@@ -419,8 +427,8 @@ function bool InternalOnClick(GUIComponent Sender)
 
     switch(Sender)
     {
-        case b_ExploitSpawn: // Remove later
-            SpawnClick(true);
+        case b_SpawnRoom:
+            SpawnClick();
             break;
 
         case b_DeployButton:
@@ -514,9 +522,9 @@ function bool DrawDeployTimer(Canvas C)
     }
 
     // Handle button (enabled/disabled)
-    if (!bOutOfReinforcements && ConfirmIndices() && DHP.Pawn == none)
+    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (ConfirmIndices() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
     {
-        // We are not out of reinforcements, have legit indices, and no pawn
+        // match started, team not out of reinforcements, have legit indices, and no pawn
         if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolValid(DHP))
         {
             // We are deploying a vehicle and our vehicle pool index is valid
@@ -530,36 +538,50 @@ function bool DrawDeployTimer(Canvas C)
             b_DeployButton.EnableMe();
             bButtonEnabled = true;
         }
+        else if (DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
+        {
+            // We are on a RO spawn room map
+            b_DeployButton.EnableMe();
+            bButtonEnabled = true;
+        }
+        else
+        {
+            b_DeployButton.DisableMe();
+        }
     }
     else
     {
         b_DeployButton.DisableMe();
     }
 
-    // Handle button caption (reverse order of priority)
-    if (!ConfirmIndices())
+    // Handle button caption
+    if (!GRI.bMatchHasBegun)
     {
-        b_DeployButton.Caption = "Make sure you have a role and/or vehicle selected";
+        b_DeployButton.Caption = DeployBarText[6];
     }
-    else if (!GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()) && !GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP))
+    else if (!ConfirmIndices())
     {
-        b_DeployButton.Caption = "Select a spawnpoint or spawnvehicle"; // TODO need support for spawn vehicle
+        b_DeployButton.Caption = DeployBarText[0];
+    }
+    else if (!GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()) && !GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP) && DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
+    {
+        b_DeployButton.Caption = DeployBarText[1];
     }
     else if (bOutOfReinforcements)
     {
-        b_DeployButton.Caption = "Your team is out of reinforcements";
+        b_DeployButton.Caption = DeployBarText[2];
     }
     else if (!bProgressComplete)
     {
-        b_DeployButton.Caption = "Deploy in:" @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ "Seconds";
+        b_DeployButton.Caption = DeployBarText[3] @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ DeployBarText[4];
     }
     else if (DHP.Pawn != none)
     {
-        b_DeployButton.Caption = "You are already deployed";
+        b_DeployButton.Caption = DeployBarText[5];
     }
     else
     {
-        b_DeployButton.Caption = "Deploy!";
+        b_DeployButton.Caption = DeployBarText[7];
     }
 
     // Set bReadyToDeploy based on button
@@ -579,6 +601,17 @@ defaultproperties
     bNeverFocus=true
     OnRendered=DHDeploymentMapMenu.InternalOnPostDraw
     ReinforcementText="Reinforcements Remaining:"
+
+    DeployBarText(0)="Make sure you have a role and/or vehicle selected"
+    DeployBarText(1)="Select a spawnpoint"
+    DeployBarText(2)="Your team is out of reinforcements"
+    DeployBarText(3)="Deploy in:"
+    DeployBarText(4)="seconds"
+    DeployBarText(5)="You are already deployed"
+    DeployBarText(6)="Round not in play"
+    DeployBarText(7)="Deploy!"
+    DeployBarText(8)="Disconnect"
+    DeployBarText(9)=""
 
     //Theel: need a neutral objective icon, as we actually don't have one singled out
     ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
@@ -624,19 +657,19 @@ defaultproperties
     End Object
     b_DeployButton=DeployButton
 
-    // Exploit spawn button
-    Begin Object Class=DHGUIButton Name=TempExploitButton
-        Caption="Exploit Spawn"
+    // Spawn room button
+    Begin Object class=DHGUIButton Name=SpawnRoomButton
+        Caption="Spawn Room"
         CaptionAlign=TXTA_Center
         RenderWeight=5.85
         StyleName="DHSpawnButtonStyle"
-        WinWidth=0.2
-        WinHeight=0.05
-        WinLeft=0.05
-        WinTop=0.7
+        WinWidth=0.3
+        WinHeight=0.1
+        WinLeft=0.35
+        WinTop=0.45
         OnClick=InternalOnClick
     End Object
-    b_ExploitSpawn=TempExploitButton
+    b_SpawnRoom=SpawnRoomButton
 
     // Deploy time progress bar
     Begin Object class=GUIProgressBar Name=DeployTimePB

@@ -46,7 +46,8 @@ var int                             SpawnVehicleIndex;
 var int                             VehiclePoolIndex;
 var vehicle                         MyLastVehicle;              // Used for vehicle spawning to remember last vehicle player spawned (only used by server)
 
-var DHHintManager DHHintManager;
+var DHHintManager                   DHHintManager;
+var DH_LevelInfo                    ClientLevelInfo;
 
 var float   MapVoteTime;
 
@@ -68,6 +69,20 @@ replication
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientHandleDeath, ClientFadeFromBlack;
+}
+
+// Modified to have client setup access to DH_LevelInfo so it can get info from it
+simulated event PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    // Theel TODO make this only run by the client
+    if (true)
+    {
+        // Find DH_LevelInfo and assign it to ClientLevelInfo, so client can access it
+        foreach self.AllActors(class'DH_LevelInfo', ClientLevelInfo)
+            break;
+    }
 }
 
 // Matt: modified to avoid "accessed none" error
@@ -2060,7 +2075,7 @@ exec function DebugFOV()
 }
 
 // Theel: Revise if statements (combine and optimize this function)
-function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
+function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
 {
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo DHGRI;
@@ -2069,14 +2084,6 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
-
-    if (bExploit)
-    {
-        //Temp hack to allow spawning on all maps
-        G.DeployRestartPlayer(self, true, true);
-        return true;
-    }
-
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -2139,8 +2146,14 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
     }
     else
     {
-        // Don't have SpawnPointIndex or SpawnVehicleIndex set
-        Warn("Neither SpawnPointIndex or SpawnVehicleIndex is set!!!");
+        if (bROSpawn)
+        {
+            G.DeployRestartPlayer(self, true, true);
+        }
+        else
+        {
+            Warn("Neither SpawnPointIndex or SpawnVehicleIndex is set!!!");
+        }
     }
 
     if (Pawn != none)
@@ -2159,7 +2172,7 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
         }
         else
         {
-            ClientFadeFromBlack(5.0);
+            ClientFadeFromBlack(3.0);
         }
 
         return true;
@@ -2169,7 +2182,7 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bExploit)
 }
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
-// Pass this function with MagCount = -1 to have the function use Desired variable in this clas
+// Pass this function with MagCount = -1 to have the function use Desired variable in this class
 simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RInfo, optional int WeaponIndex)
 {
     local DHPlayerReplicationInfo PRI;

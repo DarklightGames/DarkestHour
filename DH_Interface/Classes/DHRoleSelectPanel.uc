@@ -30,7 +30,9 @@ var localized string                        NoSelectedRoleText,
                                             RoleIsFullMessageText,
                                             ChangingRoleMessageText,
                                             UnknownErrorMessageText,
-                                            ErrorChangingTeamsMessageText;
+                                            ErrorChangingTeamsMessageText,
+                                            RedeployTimeText,
+                                            SecondsText;
 
 var localized string                        UnknownErrorSpectatorMissingReplicationInfo,
                                             SpectatorErrorTooManySpectators,
@@ -630,7 +632,7 @@ function UpdateSelectedWeapon(int weaponCategory)
             desiredWeapons[weaponCategory] = i;
 
             // Update deploy time
-            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ SecondsText;
         }
     }
 }
@@ -923,7 +925,7 @@ function InternalOnChange(GUIComponent Sender)
 
         case nu_PrimaryAmmoMags:
             DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            l_EstimatedRedeployTime.Caption = "Estimated redeploy time:" @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ "Seconds";
+            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ SecondsText;
             break;
     }
 }
@@ -1062,6 +1064,8 @@ defaultproperties
     RoleHasBotsText=" (has bots)"
     CurrentRoleText="Current Role"
     RoleFullText="Full"
+    RedeployTimeText="Estimated redeploy time:"
+    SecondsText="seconds"
 
     SelectEquipmentText="Select an item to view its description."
     RoleIsFullMessageText="The role you selected is full. Select another role from the list and hit continue."

@@ -612,6 +612,14 @@ function bool HandlePickupQuery(Pickup Item)
     return Temp;
 }
 
+// Override to update hud single bullet count
+function SetNumMags(int M)
+{
+    super.SetNumMags(M);
+
+    CalculateBulletCount();
+}
+
 defaultproperties
 {
     BobModifyFactor=0.05
