@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleSelectPanel extends DeployMenuPanel;
+class DHVehicleSelectPanel extends DHDeployMenuPanel;
 
 var automated ROGUIProportionalContainer    CrewPoolsContainer,
                                             NoCrewPoolsContainer;
@@ -14,19 +14,8 @@ var automated DHGUIListBox                  lb_CrewVehiclePools,
 var ROGUIListPlus                           li_CrewVehiclePools,
                                             li_NoCrewVehiclePools;
 
-var float                                   VehiclePoolsUpdateTime; // This variable should be pointless as I only access GRI variables
-                                                                    // the variables are only net transfered when they change, not each access request
-                                                                    // so there is no need to have a delay, also I can always slow down timer if needed
 var array<int>                              CrewedVehiclePoolIndices,
                                             NonCrewedVehiclePoolIndices;
-
-var DHGameReplicationInfo                   DHGRI;
-var DHPlayer                                DHP;
-
-var bool                                    bRendered;
-
-//Deploy Menu Access
-var DHDeployMenu                            myDeployMenu;
 
 var byte                                    TeamNum;
 
@@ -36,24 +25,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     Log(self @ "InitComponent");
 
-    DHP = DHPlayer(PlayerOwner());
-
-    if (DHP == none || DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) == none)
-    {
-        return;
-    }
-
-    DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
-    if (DHGRI == none)
-    {
-        return;
-    }
-
-    // Assign myDeployMenu
-    myDeployMenu = DHDeployMenu(PageOwner);
-
     // Change background from default if team == Axis
-    Log("Players team is: " $ DHP.PlayerReplicationInfo.Team.TeamIndex);
+    Log("Players team is: " $ DHP.GetTeamNum());
 
     if (DHP.GetTeamNum() == Axis_Team_Index)
     {
@@ -87,7 +60,7 @@ function ShowPanel(bool bShow)
         myDeployMenu.Tab = TAB_Vehicle;
 
         // Check if SpawnPointIndex is valid
-        if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
+        if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()))
         {
             SP = DHGRI.GetSpawnPoint(DHP.SpawnPointIndex);
         }
@@ -114,18 +87,15 @@ function ShowPanel(bool bShow)
     }
 }
 
-// This function informs InternalOnChange not to run until we are done rendering
 function bool OnPostDraw(Canvas C)
 {
     super.OnPostDraw(C);
 
     // Hack to fix stupid bug that makes no sense
-    if (b_MenuButton.bHasFocus && b_MenuButton.MenuState != MSAT_Watched)
+    if (b_MenuButton.bVisible && b_MenuButton.bHasFocus && b_MenuButton.MenuState != MSAT_Watched)
     {
         b_MenuButton.LoseFocus(b_MenuButton);
     }
-
-    bRendered = true;
 
     return true;
 }
@@ -233,6 +203,12 @@ function UpdateVehiclePools()
         }
     }
 
+    // We found no active vehicle pool in the list
+    if (bNoPoolSet)
+    {
+        li_CrewVehiclePools.SetIndex(-1);
+    }
+
     // Loop for non-crewed vehicles
     for (i = 0; i < NonCrewedVehiclePoolIndices.Length; ++i)
     {
@@ -257,12 +233,41 @@ function UpdateVehiclePools()
         }
     }
 
+    // We found no active vehicle pool in the list
     if (bNoPoolSet)
     {
-        // We found no active vehicle pool
-        Warn("No active vehicle pool found");
+        li_NoCrewVehiclePools.SetIndex(-1);
         DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, -1);
+        return;
     }
+
+    // Lets disable the selection of the list that we don't have as active selected pool
+    if (IsSelectedIndexCrewed())
+    {
+        li_NoCrewVehiclePools.SetIndex(-1);
+    }
+    else
+    {
+        li_CrewVehiclePools.SetIndex(-1);
+    }
+}
+
+function bool IsSelectedIndexCrewed()
+{
+    local int i;
+
+    for (i = 0; i < CrewedVehiclePoolIndices.Length; ++i)
+    {
+        if (DHP.VehiclePoolIndex == CrewedVehiclePoolIndices[i])
+        {
+            Log("Current DHP VehiclePoolIndex:" @ DHP.VehiclePoolIndex);
+            Log("CrewedVehiclePoolIndices:" @ i);
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // Eventually this function will properly contruct a string with helpful info to player
@@ -302,33 +307,6 @@ function string FormatPoolString(int i)
     return PoolString;
 }
 
-function InternalOnChange(GUIComponent Sender)
-{
-    local int PoolIndex;
-
-    if (!bRendered)
-    {
-        return;
-    }
-
-    switch (Sender)
-    {
-        case lb_CrewVehiclePools:
-            PoolIndex = CrewedVehiclePoolIndices[lb_CrewVehiclePools.List.Index];
-
-            //Update pool index
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
-            break;
-
-        case lb_NoCrewVehiclePools:
-            PoolIndex = NonCrewedVehiclePoolIndices[lb_NoCrewVehiclePools.List.Index];
-
-            //Update pool index
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
-            break;
-    }
-}
-
 //WTF IS THIS DOING?
 function bool InternalOnKeyEvent(out byte Key, out byte State, float delta)
 {
@@ -342,10 +320,26 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float delta)
 
 function bool InternalOnClick(GUIComponent Sender)
 {
+    local int PoolIndex;
+
     switch (sender)
     {
         case b_MenuButton:
             MyDeployMenu.HandleMenuButton();
+            break;
+
+        case lb_CrewVehiclePools:
+            PoolIndex = CrewedVehiclePoolIndices[lb_CrewVehiclePools.List.Index];
+
+            //Update pool index
+            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
+            break;
+
+        case lb_NoCrewVehiclePools:
+            PoolIndex = NonCrewedVehiclePoolIndices[lb_NoCrewVehiclePools.List.Index];
+
+            //Update pool index
+            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
             break;
     }
 
@@ -377,8 +371,6 @@ defaultproperties
     OnPostDraw=OnPostDraw
     OnKeyEvent=InternalOnKeyEvent
     bNeverFocus=true
-
-    VehiclePoolsUpdateTime=-1.0
 
     // Crew Based Pools Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PoolsContainer_Crew
@@ -412,13 +404,14 @@ defaultproperties
 
     // Vehicle pool list box
     Begin Object Class=DHGuiListBox Name=PoolsCrewLB
-        SelectedStyleName="DHListSelectionStyle"
-        OutlineStyleName="ItemOutline"
+        OutlineStyleName="ItemOutline"              // When focused, the outline selection (text background)
+        SectionStyleName="ListSection"              // Not sure
+        SelectedStyleName="DHItemOutline"           // Style for items selected
+        StyleName="DHSmallText"                     // Style for items not selected
         bVisibleWhenEmpty=true
         bSorted=true
-        StyleName="DHSmallText"
         TabOrder=1
-        OnChange=InternalOnChange
+        OnClick=InternalOnClick
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
@@ -428,13 +421,14 @@ defaultproperties
 
     // None crew vehicle pool list box
     Begin Object Class=DHGuiListBox Name=PoolsNoCrewLB
-        SelectedStyleName="DHListSelectionStyle"
-        OutlineStyleName="ItemOutline"
+        OutlineStyleName="ItemOutline"              // When focused, the outline selection (text background)
+        SectionStyleName="ListSection"              // Not sure
+        SelectedStyleName="DHItemOutline"           // Style for items selected
+        StyleName="DHSmallText"                     // Style for items not selected
         bVisibleWhenEmpty=true
         bSorted=true
-        StyleName="DHSmallText"
         TabOrder=2
-        OnChange=InternalOnChange
+        OnClick=InternalOnClick
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0

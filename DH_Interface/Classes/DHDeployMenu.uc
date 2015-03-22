@@ -21,8 +21,8 @@ var localized string                        MenuOptions[10], CloseButtonString;
 var automated DHDeployTabControl            c_LoadoutArea;
 var automated DHDeployTabControl            c_DeploymentMapArea;
 
-var DeployMenuPanel                         RolePanel;
-var DeployMenuPanel                         VehiclePanel;
+var DHDeployMenuPanel                       RolePanel;
+var DHDeployMenuPanel                       VehiclePanel;
 
 var array<string>                           DeploymentPanelClass;
 var localized array<string>                 DeploymentPanelCaption;
@@ -144,8 +144,8 @@ function HandlePanelInitialization()
     }
 
     // Set easy panel access
-    RolePanel = DeployMenuPanel(c_LoadoutArea.TabStack[0].MyPanel);
-    VehiclePanel = DeployMenuPanel(c_LoadoutArea.TabStack[1].MyPanel);
+    RolePanel = DHDeployMenuPanel(c_LoadoutArea.TabStack[0].MyPanel);
+    VehiclePanel = DHDeployMenuPanel(c_LoadoutArea.TabStack[1].MyPanel);
 
     // We have a team now
     bReceivedTeam = true;

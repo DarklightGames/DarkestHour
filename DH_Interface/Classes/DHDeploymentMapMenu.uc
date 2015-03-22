@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHDeploymentMapMenu extends MidGamePanel;
+class DHDeploymentMapMenu extends MidGamePanel; //Does not extend DHDeployMenuPanel as it will differ from other panels quite a bit
 
 const   OBJECTIVES_MAX =                    16; // Max objectives total
 const   SPAWN_POINTS_MAX =                  16; // Max spawn points active at once
@@ -22,9 +22,6 @@ var     automated GUIProgressBar            pb_DeployProgressBar;
 var     automated GUIGFXButton              b_SpawnPoints[SPAWN_POINTS_MAX],
                                             b_Objectives[OBJECTIVES_MAX],
                                             b_SpawnVehicles[SPAWN_VEHICLES_TOTAL];
-
-//var     int                                 SpawnPointIndices[SPAWN_POINTS_TOTAL];
-var     int                                 SpawnVehicleIndices[SPAWN_VEHICLES_TOTAL];
 
 var     ROObjective                         Objectives[OBJECTIVES_MAX];
 var     Material                            ObjectiveIcons[3];
@@ -110,7 +107,7 @@ function Timer()
     local int CurrentTime;
 
     // Update round time & reinforcement count
-    if (HUD != none && GRI != none && PRI != none)
+    if (HUD != none && GRI != none)
     {
         if (!GRI.bMatchHasBegun)
             CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
@@ -118,9 +115,9 @@ function Timer()
             CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime);
 
         l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(CurrentTime);
-        l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[PRI.Team.TeamIndex]);
+        l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[DHP.GetTeamNum()]);
 
-        if (GRI.DHSpawnCount[PRI.Team.TeamIndex] == 0)
+        if (GRI.DHSpawnCount[DHP.GetTeamNum()] == 0)
         {
             // Inform menu that our team is out of reinforcements and we can't spawn
             bOutOfReinforcements = true;
@@ -266,8 +263,7 @@ function bool DrawMapComponents(Canvas C)
     // If resolution changed then resetup the menu positions
     if (bResolutionChanged)
     {
-        InternalOnPostDraw(C);
-        bResolutionChanged = false;
+        InternalOnPostDraw(C); // Hack must keep drawing as res changed (end user shouldn't realize anything
     }
 
     if (MyDeployMenu == none || bOutOfReinforcements)
@@ -287,7 +283,7 @@ function bool DrawMapComponents(Canvas C)
     }
 
     // Get Spawn Points for Current Team
-    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, PRI.Team.TeamIndex);
+    GRI.GetActiveSpawnPointsForTeam(ActiveSpawnPoints, DHP.GetTeamNum());
 
     for (i = 0; i < ActiveSpawnPoints.Length; ++i)
     {
@@ -312,7 +308,7 @@ function bool DrawMapComponents(Canvas C)
         for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
         {
             // Only show active, current team, and if we aren't spawning a vehicle
-            if (GRI.SpawnVehicles[i].bIsActive && GRI.SpawnVehicles[i].TeamIndex == PRI.Team.TeamIndex)
+            if (GRI.SpawnVehicles[i].bIsActive && GRI.SpawnVehicles[i].TeamIndex == DHP.GetTeamNum())
             {
                 PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i, GRI.SpawnVehicles[i].Index);
             }
@@ -527,7 +523,7 @@ function bool DrawDeployTimer(Canvas C)
             b_DeployButton.EnableMe();
             bButtonEnabled = true;
         }
-        else if (MyDeployMenu.Tab == TAB_Role && (GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex) ||
+        else if (MyDeployMenu.Tab == TAB_Role && (GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()) ||
                                                   GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP)))
         {
             // We are deploying infantry and either our spawn point or vehicle spawn point is valid
@@ -545,7 +541,7 @@ function bool DrawDeployTimer(Canvas C)
     {
         b_DeployButton.Caption = "Make sure you have a role and/or vehicle selected";
     }
-    else if (!GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
+    else if (!GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()) && !GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP))
     {
         b_DeployButton.Caption = "Select a spawnpoint or spawnvehicle"; // TODO need support for spawn vehicle
     }

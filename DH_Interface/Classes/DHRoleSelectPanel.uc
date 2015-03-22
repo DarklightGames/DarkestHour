@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHRoleSelectPanel extends DeployMenuPanel
+class DHRoleSelectPanel extends DHDeployMenuPanel
     config;
 
 const NUM_ROLES = 10;
@@ -44,42 +44,17 @@ var localized string                        UnknownErrorSpectatorMissingReplicat
                                             TeamSwitchErrorPlayingAgainstBots,
                                             TeamSwitchErrorTeamIsFull;
 
-var DHGameReplicationInfo                   DHGRI;
-var DHPlayer                                DHP;
-var DHPlayerReplicationInfo                 PRI;
 var RORoleInfo                              currentRole, desiredRole;
 var int                                     currentTeam, desiredTeam;
 var string                                  currentName, desiredName;
 var int                                     currentWeapons[2], desiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
-var bool                                    bRendered;
-
-//Deploy Menu Access
-var DHDeployMenu                            MyDeployMenu;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController, MyOwner);
 
-    DHP = DHPlayer(PlayerOwner());
-    if (DHP != none)
-    {
-        PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
-    }
-
-    if (DHP == none || DHPlayerReplicationInfo(DHP.PlayerReplicationInfo) == none)
-    {
-        return;
-    }
-
-    DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
-    if (DHGRI == none)
-    {
-        return;
-    }
-
-    // Assign MyDeployMenu
-    MyDeployMenu = DHDeployMenu(PageOwner);
+    Log(self @ "InitComponent");
 
     // Roles container
     li_Roles = ROGUIListPlus(lb_Roles.List);
@@ -127,7 +102,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Timer();
     SetTimer(0.1, true);
 
-    Log("Players team is: " $ DHP.PlayerReplicationInfo.Team.TeamIndex);
+    Log("Players team is: " $ DHP.GetTeamNum());
 }
 
 function ShowPanel(bool bShow)
@@ -141,7 +116,7 @@ function ShowPanel(bool bShow)
         MyDeployMenu.Tab = TAB_Role;
 
         // Check if SpawnPointIndex is valid
-        if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.PlayerReplicationInfo.Team.TeamIndex))
+        if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()))
         {
             SP = DHGRI.GetSpawnPoint(DHP.SpawnPointIndex);
         }
@@ -163,7 +138,6 @@ function bool OnPostDraw(Canvas C)
 {
     super.OnPostDraw(C);
 
-    bRendered = true;
     return true;
 }
 
@@ -190,7 +164,7 @@ function GetInitialValues()
         }
         else if (PRI.Team != none)
         {
-            currentTeam = PRI.Team.TeamIndex;
+            currentTeam = DHP.GetTeamNum();
         }
         else
         {
@@ -930,6 +904,9 @@ function InternalOnChange(GUIComponent Sender)
             role = RORoleInfo(li_Roles.GetObject());
             if (role != none && RoleSelectReclickTime == default.RoleSelectReclickTime)
             {
+                // Because we changed role, lets reset our desired ammo
+                DHP.DesiredAmmoAmount = 0;
+
                 RoleSelectReclickTime = 0.0;
                 ChangeDesiredRole(role);
                 AttemptRoleApplication();
