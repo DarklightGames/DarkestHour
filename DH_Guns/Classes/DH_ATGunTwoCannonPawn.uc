@@ -18,7 +18,9 @@ var()   float   OverlayCenterSize;
 var()   int     OverlayCorrectionX, OverlayCorrectionY; // scope center correction in pixels, as some overlays are off-center by pixel or two
                                                         // (it's in pixels of overlay bitmap, not pixels of screen, so works for every resolution)
 
-var()   bool    bShowCenter; // debugging - shows centering cross in tank sight for testing purposes
+// Debugging:                                                        
+var()   bool    bShowCenter; // shows centering cross in tank sight for testing purposes
+var     bool    bDebugExit;  // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
 
 replication
 {
@@ -366,51 +368,52 @@ function float GetAmmoReloadState()
     return 0.0;
 }
 
-// New function to debug location of exit positions, which are drawn as cylinders (but will only draw if sky is toggled off)
+// New function to debug location of exit positions, which are drawn as green cylinders
 exec function DebugExit()
 {
     local int    i;
     local vector X, Y, Z, TryPlace, ZOffset;
 
-    if (Level.NetMode != NM_Standalone)
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
     {
-        return;
-    }
+        bDebugExit = !bDebugExit;
+        ClearStayingDebugLines();
 
-    GetAxes(VehicleBase.Rotation, X, Y, Z);
-
-    ClearStayingDebugLines();
-    ConsoleCommand("show sky"); // Matt: toggles off the sky, which is necessary to allow the crucial debug spheres to get drawn (can also be done manually with console command)
-
-    for (i = 0; i < ExitPositions.Length; ++i)
-    {
-        if (bRelativeExitPos)
+        if (bDebugExit)
         {
-            if (VehicleBase != none)
+            GetAxes(VehicleBase.Rotation, X, Y, Z);
+
+            for (i = 0; i < ExitPositions.Length; ++i)
             {
-                TryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
-            }
-            else if (Gun != none)
-            {
-                TryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
-            }
-            else
-            {
-                TryPlace = Location + (ExitPositions[i] >> Rotation);
+                if (bRelativeExitPos)
+                {
+                    if (VehicleBase != none)
+                    {
+                        TryPlace = VehicleBase.Location + (ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
+                    }
+                    else if (Gun != none)
+                    {
+                        TryPlace = Gun.Location + (ExitPositions[i] >> Gun.Rotation) + ZOffset;
+                    }
+                    else
+                    {
+                        TryPlace = Location + (ExitPositions[i] >> Rotation);
+                    }
+                }
+                else
+                {
+                    TryPlace = ExitPositions[i];
+                }
+
+                DrawStayingDebugLine(VehicleBase.Location, TryPlace, 0, 255, 0);
+
+                DrawDebugCylinder(TryPlace, X, Y, Z, class'DH_Engine.DH_Pawn'.default.CollisionRadius, class'DH_Engine.DH_Pawn'.default.CollisionHeight, 10, 0, 255, 0);
             }
         }
-        else
-        {
-            TryPlace = ExitPositions[i];
-        }
-
-        DrawStayingDebugLine(VehicleBase.Location, TryPlace, 0, 255, 0);
-
-        DrawDebugCylinder(TryPlace, X, Y, Z, class'ROEngine.ROPawn'.default.CollisionRadius, class'ROEngine.ROPawn'.default.CollisionHeight, 10, 0, 255, 0);
     }
 }
 
-// Draws a debugging cylinder out of wireframe lines
+// Draws a debugging cylinder out of wireframe lines - same as in ROHud but uses DrawStayingDebugLine(), so they stay on the screen
 simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, float Radius, float HalfHeight, int NumSides, byte R, byte G, byte B)
 {
     local float  AngleDelta;
