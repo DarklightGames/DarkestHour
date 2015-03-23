@@ -2658,7 +2658,7 @@ defaultproperties
 
     // Max turn speed values
     DHSprintMaxTurnSpeed=225.0
-    DHProneMaxTurnSpeed=155.0
+    DHProneMaxTurnSpeed=170.0
     DHStandardTurnSpeedFactor=32.0
     DHHalfTurnSpeedFactor=16.0
 
