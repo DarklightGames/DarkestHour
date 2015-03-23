@@ -180,14 +180,19 @@ defaultproperties
     VehicleMass=8.5
     DrivePos=(X=4.0,Y=5.0,Z=-10.0)
     DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(X=5.0,Y=-117.0,Z=10.0)   // driver
-    ExitPositions(1)=(X=9.0,Y=122.0,Z=10.0)    // mg
-    ExitPositions(2)=(X=-266.0,Y=-35.0,Z=10.0) // left rear
-    ExitPositions(3)=(X=-266.0,Y=-35.0,Z=10.0) // left rear
-    ExitPositions(4)=(X=-266.0,Y=-35.0,Z=10.0) // left rear
-    ExitPositions(5)=(X=-266.0,Y=28.0,Z=10.0)  // right rear
-    ExitPositions(6)=(X=-266.0,Y=28.0,Z=10.0)  // right rear
-    ExitPositions(7)=(X=-266.0,Y=28.0,Z=10.0)  // right rear
+
+    ExitPositions(0)=(X=-242.0,Y=0.0,Z=10.0)    // Back 1 Driver
+    ExitPositions(1)=(X=-266.0,Y=28.0,Z=10.0)   // Back 2 MG
+    ExitPositions(2)=(X=-266.0,Y=-35.0,Z=10.0)  // Back 3 Passenger 1
+    ExitPositions(3)=(X=-242.0,Y=0.0,Z=10.0)    // Back 1 Passenger 2
+    ExitPositions(4)=(X=-266.0,Y=-35.0,Z=10.0)  // Back 2 Passenger 3
+    ExitPositions(5)=(X=-266.0,Y=28.0,Z=10.0)   // Back 3 Passenger 4
+    ExitPositions(6)=(X=-242.0,Y=0.0,Z=10.0)    // Back 1 Passenger 5
+    ExitPositions(7)=(X=-266.0,Y=28.0,Z=10.0)   // Back 2 Passenger 6
+    ExitPositions(8)=(X=5.0,Y=-117.0,Z=10.0)    // Left Side Extra
+    ExitPositions(9)=(X=9.0,Y=122.0,Z=10.0)     // Right Side Extra
+    ExitPositions(10)=(X=-107.0,Y=-33.0,Z=116.0)// Top Extra
+
     EntryRadius=375.0
     FPCamPos=(Z=-60.0)
     TPCamDistance=1000.0

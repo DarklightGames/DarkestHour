@@ -2379,17 +2379,20 @@ simulated function CheckToAutoDeploy()
     }
 }
 
-//Temp function to get offset coordinates from nearby vehicle to create/adjust vehicle exit positions
+// Function to get offset coordinates from nearby vehicle(s) to create/adjust vehicle exit positions (Only works in singleplayer)
 exec function ExitPosTool()
 {
     local ROVehicle NearbyVeh;
     local vector Offset;
 
-    foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
+    if (Level.NetMode == NM_Standalone)
     {
-        Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
+        foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
+        {
+            Offset = (Pawn.Location - NearbyVeh.Location) << NearbyVeh.Rotation;
 
-        Log("(X = " $ Round(Offset.X) $ ",Y = " $ Round(Offset.Y) $ ",Z = " $ Round(Offset.Z) $ ")");
+            Log("Vehicle:" @ NearbyVeh.GetHumanReadableName() @ "(X=" $ Round(Offset.X) $ ",Y=" $ Round(Offset.Y) $ ",Z=" $ Round(Offset.Z) $ ")");
+        }
     }
 }
 

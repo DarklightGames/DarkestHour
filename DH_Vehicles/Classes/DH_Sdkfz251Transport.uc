@@ -174,9 +174,19 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RRight_Drive_Wheel'
     VehicleMass=8.5
     DriveAnim="Vhalftrack_driver_idle"
-    ExitPositions(0)=(X=-240.0,Y=-30.0,Z=5.0)
-    ExitPositions(1)=(X=-240.0,Y=30.0,Z=5.0)
-    ExitPositions(2)=(X=-285.0,Y=0.0,Z=5.0)
+
+    ExitPositions(0)=(X=-240.0,Y=-30.0,Z=5.0)   // Back 1 Driver
+    ExitPositions(1)=(X=-240.0,Y=30.0,Z=5.0)    // Back 2 MG
+    ExitPositions(2)=(X=-285.0,Y=0.0,Z=5.0)     // Back 3 Passenger 1
+    ExitPositions(3)=(X=-240.0,Y=-30.0,Z=5.0)   // Back 1 Passenger 2
+    ExitPositions(4)=(X=-240.0,Y=30.0,Z=5.0)    // Back 2 Passenger 3
+    ExitPositions(5)=(X=-285.0,Y=0.0,Z=5.0)     // Back 3 Passenger 4
+    ExitPositions(6)=(X=-240.0,Y=-30.0,Z=5.0)   // Back 1 Passenger 5
+    ExitPositions(7)=(X=-240.0,Y=30.0,Z=5.0)    // Back 2 Passenger 6
+    ExitPositions(8)=(X=-35.0,Y=-125.0,Z=5.0)   // Left Side Extra
+    ExitPositions(9)=(X=-35.0,Y=117.0,Z=5.0)    // Right Side Extra
+    ExitPositions(10)=(X=-111.0,Y=36.0,Z=112.0) // Top Extra
+
     EntryRadius=375.0
     TPCamDistance=1000.0
     CenterSpringForce="SpringONSSRV"
