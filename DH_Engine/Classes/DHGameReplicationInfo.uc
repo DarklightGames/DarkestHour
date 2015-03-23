@@ -280,12 +280,45 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
 
 simulated function bool IsVehiclePoolValid(PlayerController PC)
 {
-    // Check if we are a crew if our pool is a crew-based pool
-    if (!ROPlayerReplicationInfo(PC.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew && VehiclePoolVehicleClasses[DHPlayer(PC).VehiclePoolIndex].default.bMustBeTankCommander)
+    local ROPlayerReplicationInfo PRI;
+    local DHPlayer C;
+    local class<ROVehicle> VehicleClass;
+
+    if (PC == none)
     {
         return false;
     }
-    // TODO: Need other checks here like is the pool active? etc.
+
+    PRI = ROPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none || PRI.RoleInfo == none)
+    {
+        return false;
+    }
+
+    C = DHPlayer(PC);
+
+    if (C == none || C.VehiclePoolIndex < 0 || C.VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    {
+        return false;
+    }
+
+    if (VehiclePoolIsActives[C.VehiclePoolIndex] == 0)
+    {
+        return false;
+    }
+
+    VehicleClass = VehiclePoolVehicleClasses[C.VehiclePoolIndex];
+
+    if (VehicleClass.default.bMustBeTankCommander && !PRI.RoleInfo.bCanBeTankCommander)
+    {
+        return false;
+    }
+
+    if (VehicleClass.default.Team != PC.GetTeamNum())
+    {
+        return false;
+    }
 
     return true;
 }
