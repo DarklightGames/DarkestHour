@@ -329,13 +329,14 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-// Modified to handle dual-magnification optics (DPI < GunsightPositions), & to apply FPCamPos to all positions not just overlay positions
+// Modified so the player's view rotation turns with the turret, if the vehicle has one
+// Also to handle dual-magnification optics (DPI < GunsightPositions), & to apply FPCamPos to all positions not just overlay positions
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
     local vector  x, y, z, VehicleZ, CamViewOffsetWorld;
     local float   CamViewOffsetZAmount;
     local coords  CamBoneCoords;
-    local rotator WeaponAimRot;
+    local rotator WeaponAimRot, ViewRelativeRotation;
     local quat    AQuat, BQuat, CQuat;
 
     GetAxes(CameraRotation, x, y, z);
@@ -358,14 +359,22 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     }
     else if (bPCRelativeFPRotation)
     {
-        // First, rotate the headbob by the PlayerController's rotation (looking around)
-        AQuat = QuatFromRotator(PC.Rotation);
+        ViewRelativeRotation = PC.Rotation;
+
+        // If the vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
+        if (!Cannon.bIsAssaultGun)
+        {
+            ViewRelativeRotation.Yaw += Cannon.CurrentAim.Yaw;
+        }
+
+        // Rotate the headbob by the player's view rotation (looking around)
+        AQuat = QuatFromRotator(ViewRelativeRotation);
         BQuat = QuatFromRotator(HeadRotationOffset - ShiftHalf);
-        CQuat = QuatProduct(AQuat,BQuat);
+        CQuat = QuatProduct(AQuat, BQuat);
 
         // Then, rotate that by the vehicles rotation to get the final rotation
         AQuat = QuatFromRotator(VehicleBase.Rotation);
-        BQuat = QuatProduct(CQuat,AQuat);
+        BQuat = QuatProduct(CQuat, AQuat);
 
         // Finally, make it back into a rotator
         CameraRotation = QuatToRotator(BQuat);
@@ -459,10 +468,9 @@ simulated state EnteringVehicle
     }
 }
 
-// Modified to handle InitialPositionIndex instead of assuming start in position zero, & to match rotation to cannon's aim (also consolidates & optimises the Supers)
+// Modified to handle InitialPositionIndex instead of assuming start in position zero, & to consolidate & optimise the Supers
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-
     if (bMultiPosition)
     {
         Gotostate('EnteringVehicle');
@@ -477,8 +485,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
     StoredVehicleRotation = VehicleBase.Rotation; // Matt: I don't think this is used anywhere & will probably remove from all functions later
 
     super(Vehicle).ClientKDriverEnter(PC);
-
-    MatchRotationToGunAim();
 }
 
 function ServerChangeDriverPos()
@@ -591,14 +597,23 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
+// Modified so when player comes up off the gunsight, they stay facing forward, in the direction of the cannon
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        // Added so when player moves up from gunsight, rotation is set to match the direction cannon is facing (feels more natural to come up from the cannon)
+        // Added so when player moves up from gunsight, view rotation is neutralised so he stays facing same direction as cannon (feels more natural to come up from the gun)
+        // Note an owning net client will update rotation back to server
         if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions)
         {
-            MatchRotationToGunAim();
+            if (bPCRelativeFPRotation)
+            {
+                SetRotation(rot(0, 0, 0));
+            }
+            else
+            {
+                SetRotation(VehicleBase.Rotation);
+            }
         }
 
         StoredVehicleRotation = VehicleBase.Rotation;
@@ -914,33 +929,21 @@ simulated function SwitchMesh(int PositionIndex)
     }
 }
 
-// New function to match rotation to cannon's current aim, either relative or independent to vehicle rotation
-simulated function MatchRotationToGunAim()
-{
-    local rotator NewRotation;
-
-    if (Gun != none)
-    {
-        if (bPCRelativeFPRotation)
-        {
-            NewRotation = Gun.CurrentAim;
-        }
-        else
-        {
-            NewRotation = rotator(vector(Gun.CurrentAim) >> Gun.Rotation); // note Gun.Rotation is effectively same as vehicle base's rotation
-        }
-
-        NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
-
-        SetRotation(NewRotation); // note owning net client will update rotation back to server
-    }
-}
-
-// Modified so if PC's rotation was relative to vehicle (bPCRelativeFPRotation), it gets set to the correct non-relative rotation on exit
+// Modified so if PC's rotation was relative to vehicle (bPCRelativeFPRotation), it gets set to the correct non-relative rotation on exit, including turret rotation
 // Doing this in a more obvious way here avoids the previous workaround in ClientKDriverLeave, which matched the cannon pawn's rotation to the vehicle
 simulated function FixPCRotation(PlayerController PC)
 {
-    PC.SetRotation(rotator(vector(PC.Rotation) >> Gun.Rotation)); // was >> Rotation, i.e. cannon pawn's rotation (note Gun.Rotation is effectively same as vehicle base's rotation)
+    local rotator ViewRelativeRotation;
+
+    ViewRelativeRotation = PC.Rotation;
+
+    // If the vehicle has a turret, add turret's yaw to player's relative rotation
+    if (!Cannon.bIsAssaultGun)
+    {
+        ViewRelativeRotation.Yaw += Cannon.CurrentAim.Yaw;
+    }
+
+    PC.SetRotation(rotator(vector(ViewRelativeRotation) >> VehicleBase.Rotation));
 }
 
 // Re-stated here just to make into simulated functions, so modified LeanLeft & LeanRight exec functions in DHPlayer can call this on the client as a pre-check
