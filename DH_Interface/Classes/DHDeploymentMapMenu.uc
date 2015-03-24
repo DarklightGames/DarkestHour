@@ -616,7 +616,7 @@ defaultproperties
     //Theel: need a neutral objective icon, as we actually don't have one singled out
     ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
     ObjectiveIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
-    ObjectiveIcons(2)=Texture'DH_GUI_Tex.GUI.PlayerIcon'
+    ObjectiveIcons(2)=Texture'DH_GUI_Tex.GUI.NeutralObj'
 
     // Image for level map
     Begin Object Class=GUIImage Name=BackgroundImage

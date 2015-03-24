@@ -4,11 +4,9 @@
 //==============================================================================
 
 class DH_ObjTerritory extends ROObjTerritory
+    hidecategories(Assault,GameObjective,JumpDest,JumpSpot,MothershipHack)
     placeable;
 
-//--------------------------------------
-// Enums & structs
-//--------------------------------------
 enum EObjectiveOperation
 {
     EOO_Activate,
@@ -53,12 +51,11 @@ struct ObjOperationAction
     var() EObjectiveOperation Operation;
 };
 
-//--------------------------------------
-// Variables
-//--------------------------------------
+var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
+var(ROObjective) bool               bOverrideGameObjective;     // Enable this to have bIsInitiallyActive override the GameObjective value (this will eventually be removed)
 var()   bool                        bVehiclesCanCapture;
 var()   bool                        bTankersCanCapture;
-var()   bool                        bUsePostCaptureOperations; // enables below variables to be used for post capture clear check/calls
+var()   bool                        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
 var()   bool                        bDisableWhenAlliesClearObj;
 var()   bool                        bDisableWhenAxisClearObj;
 var()   bool                        bGroupActionsAtDisable;
@@ -116,12 +113,16 @@ var(DH_ContestEndActions)   array<VehiclePoolAction>    AxisContestEndVehiclePoo
 var(DH_ContestEndActions)   array<name>                 AlliesContestEndEvents;
 var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
 
-//--------------------------------------
-// Functions
-//--------------------------------------
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    // Override the GameObjective variable bInitiallyActive with DH
+    if ( Role == Role_Authority && bOverrideGameObjective)
+    {
+        SetActive(bIsInitiallyActive);
+    }
 
     // We need this to be less than 15.  We're embedding the amount of players needed into the front end of the CurrentCapArea byte.
     // If there were 15 people needed to capture point index 15, then CurrentCapArea = 0XFF which is the flag for no capture area.
@@ -136,6 +137,11 @@ function PostBeginPlay()
 function Reset()
 {
     super.Reset();
+
+    if (bOverrideGameObjective)
+    {
+        SetActive(bIsInitiallyActive);
+    }
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
@@ -1006,6 +1012,9 @@ function DisableCapBarsForThisObj()
 
 defaultproperties
 {
+    AttackerDescription="Default"
+    DefenderDescription="Default"
+    bDoNotUseLabelShiftingOnSituationMap=true
     Texture=Texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true
     bTankersCanCapture=true

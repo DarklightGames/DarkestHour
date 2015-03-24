@@ -13,6 +13,8 @@ var(DHHud) SpriteWidget CanCutWireIcon;
 var(DHHud) SpriteWidget VoiceIcon;
 var(DHHud) SpriteWidget MapIconMortarTarget;
 var(DHHud) SpriteWidget MapIconMortarHit;
+var(DHHud) SpriteWidget MapLevelOverlay;
+var(DHHud) TextWidget   MapScaleText;
 
 var  localized string   LegendCarriedArtilleryRadioText;
 
@@ -1998,9 +2000,20 @@ simulated function DrawObjectives(Canvas C)
     // Draw level map
     MapLevelImage.WidgetTexture = DHGRI.MapImage;
 
-    if (MapLevelImage.WidgetTexture != none) // remove this once all maps have overhead
+    if (MapLevelImage.WidgetTexture != none)
     {
+        // Set the texture coords to support the size of the image and not rely on defaultproperties
+        MapLevelImage.TextureCoords.X2 = MapLevelImage.WidgetTexture.MaterialUSize() - 1;
+        MapLevelImage.TextureCoords.Y2 = MapLevelImage.WidgetTexture.MaterialVSize() - 1;
+
         DrawSpriteWidgetClipped(C, MapLevelImage, SubCoords, true);
+    }
+
+    // Draw level map overlay
+    MapLevelOverlay.WidgetTexture = Material'DH_GUI_Tex.GUI.GridOverlay';
+    if( MapLevelOverlay.WidgetTexture != none )
+    {
+        DrawSpriteWidgetClipped(C, MapLevelOverlay, subCoords, true);
     }
 
     // Calculate level map constants
@@ -2559,6 +2572,10 @@ simulated function DrawObjectives(Canvas C)
         PawnRotation = -A.Rotation.Yaw;
     }
 
+    // Draw the map scale indicator
+    MapScaleText.text = "Grid Square: ~" $ string(int(class'DHLib'.static.UnrealToMeters(Abs(DHGRI.NorthEastBounds.X - DHGRI.SouthWestBounds.X)) / 9.0)) $ "m";
+    DrawTextWidgetClipped(C, MapScaleText, subCoords);
+
     // Draw player icon
     if (A != none)
     {
@@ -2616,9 +2633,6 @@ simulated function DrawObjectives(Canvas C)
 
     // Calc legend coords
     GetAbsoluteCoordinatesAlt(MapCoords, MapLegendCoords, SubCoords);
-
-    // Draw legend background
-//  DrawSpriteWidgetClipped(C, MapLegend, SubCoords, true);
 
     // Draw legend title
     DrawTextWidgetClipped(C, MapLegendTitle, SubCoords, XL, YL, YL_one);
@@ -2744,11 +2758,25 @@ simulated function DrawObjectives(Canvas C)
 
         if (DHGRI.Objectives[i].ObjState != OwnerTeam)
         {
-            MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].AttackerDescription;
+            if (DHGRI.Objectives[i].AttackerDescription ~= "Default")
+            {
+                MapObjectivesTexts.Text = ObjCount $ "." @ "Attack" @ DHGRI.Objectives[i].ObjName;
+            }
+            else
+            {
+                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].AttackerDescription;
+            }
         }
         else
         {
-            MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].DefenderDescription;
+            if (DHGRI.Objectives[i].DefenderDescription ~= "Default")
+            {
+                MapObjectivesTexts.Text = ObjCount $ "." @ "Defend" @ DHGRI.Objectives[i].ObjName;
+            }
+            else
+            {
+                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.Objectives[i].DefenderDescription;
+            }
         }
 
         DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
@@ -3697,8 +3725,91 @@ simulated function DrawSpectatingHud(Canvas C)
     DisplayLocalMessages(C);
 }
 
+// Modified to make objective title's smaller on the overview
+function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo levelCoords, SpriteWidget icon, float myMapScale, vector location, vector MapCenter, optional int flashMode, optional string title, optional ROGameReplicationInfo GRI, optional int objective_index)
+{
+    local vector HUDLocation;
+    local float XL, YL, YL_one, OldFontXScale, OldFontYScale;
+    local SpriteWidget myIcon;
+    local FloatBox label_coords;
+
+    // Calculate proper position
+    HUDLocation = location - MapCenter;
+    HUDLocation.Z = 0;
+    HUDLocation = GetAdjustedHudLocation(HUDLocation);
+
+    myIcon = icon;
+
+    myIcon.PosX = HUDLocation.X / myMapScale + 0.5;
+    myIcon.PosY = HUDLocation.Y / myMapScale + 0.5;
+
+    // Bound the values between 0 and 1
+    myIcon.PosX = fmax(0.0, fmin(1.0, myIcon.PosX));
+    myIcon.PosY = fmax(0.0, fmin(1.0, myIcon.PosY));
+
+    // Set flashing texture if needed
+
+    if (flashMode != 0)
+    {
+        if (flashMode == 2)
+            myIcon.WidgetTexture = MapIconsFlash;
+        else if (flashMode == 3)
+            myIcon.WidgetTexture = MapIconsFastFlash;
+        else if (flashMode == 4)
+            myIcon.WidgetTexture = MapIconsAltFlash;
+        else if (flashMode == 5)
+            myIcon.WidgetTexture = MapIconsAltFastFlash;
+
+        //else if (flashMode == 1)
+        //  myIcon.WidgetTexture = icon.WidgetTexture; // not needed
+    }
+
+    // Draw icon!
+    DrawSpriteWidgetClipped(C, myIcon, levelCoords, true, XL, YL, true);
+
+    if (title != "" && !GRI.Objectives[objective_index].bDoNotDisplayTitleOnSituationMap)
+    {
+        // Setup text info
+        MapTexts.text = title;
+        MapTexts.PosX = myIcon.PosX;
+        MapTexts.PosY = myIcon.PosY;
+        MapTexts.Tints[TeamIndex].A = myIcon.Tints[TeamIndex].A;
+        MapTexts.OffsetY = YL * 0.3;
+
+        // Fake render to get desired label pos
+        DrawTextWidgetClipped(C, MapTexts, levelCoords, XL, YL, YL_one, true);
+
+        // Update objective floatbox info with desired coords
+        label_coords.X1 = levelCoords.width * MapTexts.PosX - XL/2;
+        label_coords.Y1 = levelCoords.height * MapTexts.PosY;
+        label_coords.X2 = label_coords.X1 + XL;
+        label_coords.Y2 = label_coords.Y1 + YL;
+
+        // Iterate through objectives list and check if we should offset label
+        UpdateMapIconLabelCoords(label_coords, GRI, objective_index);
+
+        // Update Y offset
+        MapTexts.OffsetY += GRI.Objectives[objective_index].LabelCoords.Y1 - label_coords.Y1;
+
+        // Hack to make the text smaller on the overview for objectives
+        OldFontXScale = C.FontScaleX;
+        OldFontYScale = C.FontScaleY;
+        C.FontScaleX = 0.66;
+        C.FontScaleY = 0.66;
+
+        // Draw text
+        DrawTextWidgetClipped(C, MapTexts, levelCoords);
+
+        C.FontScaleX = OldFontXScale;
+        C.FontScaleY = OldFontYScale;
+    }
+}
+
 defaultproperties
 {
+    MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.00000,ScaleMode=SM_Left,scale=1.000000,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.000000,PosY=0.0375,WrapHeight=1.000000,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
+
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.3,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=128),Tints[1]=(R=255,G=0,B=0,A=128))
     MapIconCarriedRadio=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
