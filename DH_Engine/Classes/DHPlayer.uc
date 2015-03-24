@@ -78,8 +78,8 @@ simulated event PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    // Theel TODO make this only run by the client
-    if (true)
+    // Make this only run by the owning client
+    if (Level.NetMode != NM_DedicatedServer)
     {
         // Find DH_LevelInfo and assign it to ClientLevelInfo, so client can access it
         foreach self.AllActors(class'DH_LevelInfo', ClientLevelInfo)
