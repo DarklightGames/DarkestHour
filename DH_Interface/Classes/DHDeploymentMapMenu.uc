@@ -177,7 +177,7 @@ function GetMapCoords(vector Location, out float X, out float Y, float W, float 
     TDistance = GetDistance(SWLocation.Y, NELocation.Y);
     Distance = GetDistance(SWLocation.Y, Location.Y);
     Distance = FMin(Distance, TDistance);
-    Y = MapContainer.WinHeight - Distance / TDistance * MapContainer.WinHeight - (H / 2); //Because the map is managed by a container, lets form to the container's winheight
+    Y = MapContainer.WinHeight - Distance / TDistance * MapContainer.WinHeight - (H / 2); // Because the map is managed by a container, lets form to the container's winheight
 }
 
 //Theel: This function has floating variables
@@ -187,7 +187,7 @@ function PlaceSpawnPointOnMap(vector Location, int Index, int SPIndex, string Ti
 
     if (Index >= 0 && Index < arraycount(b_SpawnPoints))
     {
-        if (SPIndex == DHP.SpawnPointIndex)
+        if (SPIndex == MyDeployMenu.SpawnPointIndex)
         {
             W = 0.075;
             H = 0.035;
@@ -219,7 +219,7 @@ function PlaceVehicleSpawnOnMap(vector Location, int Index, int SpawnVehicleInde
 
     if (Index >= 0 && Index < arraycount(b_SpawnVehicles))
     {
-        if (SpawnVehicleIndex == DHP.SpawnVehicleIndex)
+        if (SpawnVehicleIndex == MyDeployMenu.SpawnVehicleIndex)
         {
             W = 0.075;
             H = 0.035;
@@ -334,7 +334,7 @@ function bool DrawMapComponents(Canvas C)
 // Resolution was changed, lets call OnPostDraw
 event ResolutionChanged(int ResX, int ResY)
 {
-    super.ResolutionChanged(ResX, ResY); // No point in calling the super!
+    //super.ResolutionChanged(ResX, ResY); // No point in calling the super!
 
     bResolutionChanged = true;
 }
@@ -378,6 +378,12 @@ function SpawnClick()
 
     MyRoleMenu.AttemptRoleApplication();
 
+    // Tell the server our desired points
+    // TODO:
+    // Theel add check here if ServerRequest fails and if it does output error message
+    // Actually this function should not exist and instead AttemptRoleApp can be renamed and repurposed to send the indexes in 1 server call!
+    DHP.ServerChangeSpawn(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex);
+
     if (DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
@@ -393,25 +399,25 @@ function SpawnClick()
 function bool ConfirmIndices()
 {
     // If we are trying to spawn vehicle, but no pool selected : return false
-    if (MyDeployMenu.Tab == TAB_Vehicle && DHP.VehiclePoolIndex == -1)
+    if (MyDeployMenu.Tab == TAB_Vehicle && MyDeployMenu.VehiclePoolIndex == -1)
     {
         return false;
     }
 
     // If we are trying to spawn as infantry, but pool is selected : return false
-    if (MyDeployMenu.Tab == TAB_Role && DHP.VehiclePoolIndex != -1)
+    if (MyDeployMenu.Tab == TAB_Role && MyDeployMenu.VehiclePoolIndex != -1)
     {
         return false;
     }
 
     // If we have pool selected, but no spawn point : return false
-    if (DHP.VehiclePoolIndex != -1 && DHP.SpawnPointIndex == -1)
+    if (MyDeployMenu.VehiclePoolIndex != -1 && MyDeployMenu.SpawnPointIndex == -1)
     {
         return false;
     }
 
     // If we have a SpawnVehicle selected, but also one of the others set : return false
-    if (DHP.SpawnVehicleIndex != -1 && (DHP.SpawnPointIndex != -1 || DHP.VehiclePoolIndex != -1))
+    if (MyDeployMenu.SpawnVehicleIndex != -1 && (MyDeployMenu.SpawnPointIndex != -1 || MyDeployMenu.VehiclePoolIndex != -1))
     {
         return false;
     }
@@ -451,22 +457,19 @@ function bool InternalOnClick(GUIComponent Sender)
             {
                 if (Selected == b_SpawnPoints[i])
                 {
-                    //DEBUG
-                    Log("b_SpawnPoints" $ i @ "Tag:" @ b_SpawnPoints[i].Tag $ ":" @ "and DHPSpawnPointIndex is:" @ DHP.SpawnPointIndex);
-
-                    if (b_SpawnPoints[i].Tag == DHP.SpawnPointIndex) // Player clicked twice on spawnpoint
+                    if (b_SpawnPoints[i].Tag == MyDeployMenu.SpawnPointIndex) // Player clicked twice on spawnpoint
                     {
                         // Clear spawnvehicle just incase it was set
-                        if (DHP.Pawn == none) // Avoid server call if we don't have a pawn and are already clicking the same point
+                        if (DHP.Pawn == none)
                         {
-                            DHP.ServerChangeSpawn(DHP.SpawnPointIndex,DHP.VehiclePoolIndex,-1);
+                            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, -1);
                             SpawnClick();
                         }
                     }
                     else
                     {
                         // Set SpawnPoint and clear spawnvehicle point as we clicked a spawn point
-                        DHP.ServerChangeSpawn(b_SpawnPoints[i].Tag,DHP.VehiclePoolIndex,-1);
+                        MyDeployMenu.ChangeSpawnIndices(b_SpawnPoints[i].Tag, MyDeployMenu.VehiclePoolIndex, -1);
                     }
                     break;
                 }
@@ -476,16 +479,16 @@ function bool InternalOnClick(GUIComponent Sender)
             {
                 if (Selected == b_SpawnVehicles[i])
                 {
-                    if (b_SpawnVehicles[i].Tag == DHP.SpawnVehicleIndex)
+                    if (b_SpawnVehicles[i].Tag == MyDeployMenu.SpawnVehicleIndex)
                     {
                         // Clear pool and spawnpoint just incase either were set
-                        DHP.ServerChangeSpawn(-1,-1,DHP.SpawnVehicleIndex);
+                        MyDeployMenu.ChangeSpawnIndices(-1,-1,MyDeployMenu.SpawnVehicleIndex);
                         SpawnClick();
                     }
                     else
                     {
                         // Set SpawnVehiclePoint and clear pool & spawnpoint value, as we clicked a spawnvehicle point
-                        DHP.ServerChangeSpawn(-1,-1,b_SpawnVehicles[i].Tag);
+                        MyDeployMenu.ChangeSpawnIndices(-1,-1,b_SpawnVehicles[i].Tag);
                     }
                     break;
                 }
@@ -525,14 +528,14 @@ function bool DrawDeployTimer(Canvas C)
     if (GRI.bMatchHasBegun && !bOutOfReinforcements && (ConfirmIndices() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
     {
         // match started, team not out of reinforcements, have legit indices, and no pawn
-        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolValid(DHP))
+        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, DHP))
         {
             // We are deploying a vehicle and our vehicle pool index is valid
             b_DeployButton.EnableMe();
             bButtonEnabled = true;
         }
-        else if (MyDeployMenu.Tab == TAB_Role && (GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()) ||
-                                                  GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP)))
+        else if (MyDeployMenu.Tab == TAB_Role && (GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()) ||
+                                                  GRI.CanSpawnAtVehicle(MyDeployMenu.SpawnVehicleIndex, DHP)))
         {
             // We are deploying infantry and either our spawn point or vehicle spawn point is valid
             b_DeployButton.EnableMe();
@@ -557,19 +560,19 @@ function bool DrawDeployTimer(Canvas C)
     // Handle button caption
     if (!GRI.bMatchHasBegun)
     {
-        b_DeployButton.Caption = DeployBarText[6];
+        b_DeployButton.Caption = DeployBarText[6]; // "Round not in play"
     }
     else if (!ConfirmIndices())
     {
-        b_DeployButton.Caption = DeployBarText[0];
+        b_DeployButton.Caption = DeployBarText[0]; // "Make sure you have a role and/or vehicle selected"
     }
-    else if (!GRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()) && !GRI.CanSpawnAtVehicle(DHP.SpawnVehicleIndex, DHP) && DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
+    else if (!GRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()) && !GRI.CanSpawnAtVehicle(MyDeployMenu.SpawnVehicleIndex, DHP) && DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
     {
-        b_DeployButton.Caption = DeployBarText[1];
+        b_DeployButton.Caption = DeployBarText[1]; // "Select a spawnpoint"
     }
     else if (bOutOfReinforcements)
     {
-        b_DeployButton.Caption = DeployBarText[2];
+        b_DeployButton.Caption = DeployBarText[2]; // "Your team is out of reinforcements"
     }
     else if (!bProgressComplete)
     {
@@ -577,11 +580,11 @@ function bool DrawDeployTimer(Canvas C)
     }
     else if (DHP.Pawn != none)
     {
-        b_DeployButton.Caption = DeployBarText[5];
+        b_DeployButton.Caption = DeployBarText[5]; // "You are already deployed"
     }
     else
     {
-        b_DeployButton.Caption = DeployBarText[7];
+        b_DeployButton.Caption = DeployBarText[7]; // "Deploy!"
     }
 
     // Set bReadyToDeploy based on button
@@ -610,7 +613,7 @@ defaultproperties
     DeployBarText(5)="You are already deployed"
     DeployBarText(6)="Round not in play"
     DeployBarText(7)="Deploy!"
-    DeployBarText(8)="Disconnect"
+    DeployBarText(8)=""
     DeployBarText(9)=""
 
     //Theel: need a neutral objective icon, as we actually don't have one singled out

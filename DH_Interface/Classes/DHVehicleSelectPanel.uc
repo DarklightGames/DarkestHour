@@ -60,20 +60,20 @@ function ShowPanel(bool bShow)
         myDeployMenu.Tab = TAB_Vehicle;
 
         // Check if SpawnPointIndex is valid
-        if (DHGRI.IsSpawnPointIndexValid(DHP.SpawnPointIndex, DHP.GetTeamNum()))
+        if (DHGRI.IsSpawnPointIndexValid(MyDeployMenu.SpawnPointIndex, DHP.GetTeamNum()))
         {
-            SP = DHGRI.GetSpawnPoint(DHP.SpawnPointIndex);
+            SP = DHGRI.GetSpawnPoint(MyDeployMenu.SpawnPointIndex);
         }
 
         // If spawnpoint index is type infantry, then nullify it and spawnvehicle
         if (SP != none && SP.Type == ESPT_Infantry)
         {
-            DHP.ServerChangeSpawn(-1, DHP.VehiclePoolIndex, -1);
+            MyDeployMenu.ChangeSpawnIndices(-1, MyDeployMenu.VehiclePoolIndex, -1);
         }
         else
         {
             // Just nullify SpawnVehicleIndex
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, DHP.VehiclePoolIndex, -1);
+            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, -1);
         }
 
         // Only update if we are rendering panel
@@ -173,7 +173,7 @@ function UpdateVehiclePools()
     local int i, PoolIndex;
     local bool bNoPoolSet;
 
-    if (DHP.VehiclePoolIndex == -1)
+    if (MyDeployMenu.VehiclePoolIndex == -1)
     {
         bNoPoolSet = true;
     }
@@ -197,7 +197,7 @@ function UpdateVehiclePools()
 
             if (bNoPoolSet)
             {
-                DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
+                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
                 bNoPoolSet = false;
             }
         }
@@ -227,7 +227,7 @@ function UpdateVehiclePools()
 
             if (bNoPoolSet)
             {
-                DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
+                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
                 bNoPoolSet = false;
             }
         }
@@ -237,7 +237,7 @@ function UpdateVehiclePools()
     if (bNoPoolSet)
     {
         li_NoCrewVehiclePools.SetIndex(-1);
-        DHP.ServerChangeSpawn(DHP.SpawnPointIndex, -1, -1);
+        MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, -1, -1);
         return;
     }
 
@@ -258,11 +258,8 @@ function bool IsSelectedIndexCrewed()
 
     for (i = 0; i < CrewedVehiclePoolIndices.Length; ++i)
     {
-        if (DHP.VehiclePoolIndex == CrewedVehiclePoolIndices[i])
+        if (MyDeployMenu.VehiclePoolIndex == CrewedVehiclePoolIndices[i])
         {
-            Log("Current DHP VehiclePoolIndex:" @ DHP.VehiclePoolIndex);
-            Log("CrewedVehiclePoolIndices:" @ i);
-
             return true;
         }
     }
@@ -332,14 +329,14 @@ function bool InternalOnClick(GUIComponent Sender)
             PoolIndex = CrewedVehiclePoolIndices[lb_CrewVehiclePools.List.Index];
 
             //Update pool index
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
+            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
             break;
 
         case lb_NoCrewVehiclePools:
             PoolIndex = NonCrewedVehiclePoolIndices[lb_NoCrewVehiclePools.List.Index];
 
             //Update pool index
-            DHP.ServerChangeSpawn(DHP.SpawnPointIndex, PoolIndex, -1);
+            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
             break;
     }
 
