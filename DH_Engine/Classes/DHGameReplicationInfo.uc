@@ -274,11 +274,7 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
     return VehiclePoolSpawnsRemainings[PoolIndex] == 255;
 }
 
-//------------------------------------------------------------------------------
-// Vehicle Pool Functions
-//------------------------------------------------------------------------------
-
-simulated function bool IsVehiclePoolValid(PlayerController PC)
+simulated function bool IsVehiclePoolIndexValid(int VehiclePoolIndex, PlayerController PC)
 {
     local ROPlayerReplicationInfo PRI;
     local DHPlayer C;
@@ -293,35 +289,44 @@ simulated function bool IsVehiclePoolValid(PlayerController PC)
 
     if (PRI == none || PRI.RoleInfo == none)
     {
+        Log("PRI RI check");
         return false;
     }
 
     C = DHPlayer(PC);
 
-    if (C == none || C.VehiclePoolIndex < 0 || C.VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    if (C == none || VehiclePoolIndex < 0 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
     {
+        Log("Index bound check");
         return false;
     }
 
-    if (VehiclePoolIsActives[C.VehiclePoolIndex] == 0)
+    if (VehiclePoolIsActives[VehiclePoolIndex] == 0)
     {
+        Log("Active check");
         return false;
     }
 
-    VehicleClass = VehiclePoolVehicleClasses[C.VehiclePoolIndex];
+    VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
 
-    if (VehicleClass.default.bMustBeTankCommander && !PRI.RoleInfo.bCanBeTankCommander)
+    if (VehicleClass.default.bMustBeTankCommander && !PRI.RoleInfo.bCanBeTankCrew)
     {
+        Log("Tank commander check");
         return false;
     }
 
-    if (VehicleClass.default.Team != PC.GetTeamNum())
+    if (VehicleClass.default.VehicleTeam != PC.GetTeamNum())
     {
+        Log("Failed at team check");
         return false;
     }
 
     return true;
 }
+
+//------------------------------------------------------------------------------
+// Spawn Vehicle Functions
+//------------------------------------------------------------------------------
 
 function int AddSpawnVehicle(Vehicle V, int Index)
 {

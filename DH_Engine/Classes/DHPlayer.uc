@@ -2124,7 +2124,7 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
         RI = DH_RoleInfo(PRI.RoleInfo);
     }
 
-    if (RI != none && PrimaryWeapon != -1)
+    if (RI != none && PrimaryWeapon > 0 && PrimaryWeapon < arraycount(RI.PrimaryWeapons))
     {
         PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
     }
@@ -2144,7 +2144,7 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
         return false;
     }
 
-    // Confirm this player has a role && check if MagCount is valid based on role/weapon
+    // Confirm this player has a role
     if (PRI.RoleInfo == none)
     {
         Log("Failed at RoleInfo check");
@@ -2160,7 +2160,7 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
         return false;
     }
 
-    if (PrimaryWep != none && MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags || MagCount <= 0)
+    if (MagCount != 0 && PrimaryWep != none && MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags)
     {
         Log("Failed at 1 MagCount is:" @ MagCount);
 

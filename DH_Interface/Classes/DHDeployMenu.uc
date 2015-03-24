@@ -32,6 +32,27 @@ var array<string>                           LoadoutPanelClass;
 var localized array<string>                 LoadoutPanelCaption;
 var localized array<string>                 LoadoutPanelHint;
 
+var localized string                        NoSelectedRoleText,
+                                            RoleHasBotsText,
+                                            CurrentRoleText,
+                                            RoleFullText,
+                                            SelectEquipmentText,
+                                            RoleIsFullMessageText,
+                                            ChangingRoleMessageText,
+                                            UnknownErrorMessageText,
+                                            ErrorChangingTeamsMessageText,
+                                            UnknownErrorSpectatorMissingReplicationInfo,
+                                            SpectatorErrorTooManySpectators,
+                                            SpectatorErrorRoundHasEnded,
+                                            UnknownErrorTeamMissingReplicationInfo,
+                                            ErrorTeamMustJoinBeforeStart,
+                                            TeamSwitchErrorTooManyPlayers,
+                                            UnknownErrorTeamMaxLives,
+                                            TeamSwitchErrorRoundHasEnded,
+                                            TeamSwitchErrorGameHasStarted,
+                                            TeamSwitchErrorPlayingAgainstBots,
+                                            TeamSwitchErrorTeamIsFull;
+
 var bool                                    bReceivedTeam,
                                             bShowingMenuOptions,
                                             bRoleIsCrew,
@@ -40,17 +61,36 @@ var bool                                    bReceivedTeam,
 var float                                   PanelMargin;
 var float                                   RequiredExtraWidth;
 
+var DHGameReplicationInfo                   DHGRI;
+var DHPlayer                                DHP;
+
+var int                                     SpawnPointIndex;
+var int                                     VehiclePoolIndex;
+var int                                     SpawnVehicleIndex;
+
 var ETab                                    Tab;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController, MyOwner);
 
+    DHP = DHPlayer(PlayerOwner());
+    if (DHP == none)
+    {
+        return;
+    }
+
+    DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+    if (DHGRI == none)
+    {
+        return;
+    }
+
     // Initialize menu options
     InitializeMenuOptions();
 
     // Check if the player doesn't have a team
-    if (PlayerOwner().PlayerReplicationInfo.Team != none)
+    if (DHP.PlayerReplicationInfo.Team != none)
     {
         // We have a team!
         HandlePanelInitialization();
@@ -62,10 +102,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 
     // Makes this menu not pause in single-player
-    if (PlayerOwner() != none && PlayerOwner().Level.Pauser != none)
+    if (DHP.Level.Pauser != none)
     {
-        PlayerOwner().SetPause(false);
+        DHP.SetPause(false);
     }
+
+    // Gather spawn point indices
+    SpawnPointIndex = DHP.SpawnPointIndex;
+    SpawnVehicleIndex = DHP.SpawnVehicleIndex;
+    VehiclePoolIndex = DHP.VehiclePoolIndex;
 }
 
 function Timer()
@@ -108,15 +153,7 @@ function InitializeMenuOptions()
 function HandlePanelInitialization()
 {
     local int i;
-    local DHPlayer DHP;
     local bool bVehicleTabActive;
-
-    DHP = DHPlayer(PlayerOwner());
-
-    if (DHP == none)
-    {
-        return;
-    }
 
     if (DHP.VehiclePoolIndex != -1)
     {
@@ -277,6 +314,152 @@ function HandleMenuButton()
     }
 }
 
+function ChangeSpawnIndices(int SpawnPointIndex, int VehiclePoolIndex, int SpawnVehicleIndex)
+{
+
+    if (SpawnPointIndex >= 0 && SpawnPointIndex < DHGRI.SPAWN_POINTS_MAX)
+    {
+        self.SpawnPointIndex = SpawnPointIndex;
+    }
+    else
+    {
+        self.SpawnPointIndex = -1;
+    }
+
+    if (VehiclePoolIndex >= 0 && VehiclePoolIndex < arraycount(DHGRI.VehiclePoolVehicleClasses))
+    {
+        self.VehiclePoolIndex = VehiclePoolIndex;
+    }
+    else
+    {
+        self.VehiclePoolIndex = -1;
+    }
+
+    if (SpawnVehicleIndex >= 0 && SpawnVehicleIndex < arraycount(DHGRI.SpawnVehicles))
+    {
+        self.SpawnVehicleIndex = SpawnVehicleIndex;
+    }
+    else
+    {
+        self.SpawnVehicleIndex = -1;
+    }
+
+    //Log("SP: " $ self.SpawnPointIndex @ "VP: " $ self.VehiclePoolIndex @ "SV: " $ self.SpawnVehicleIndex);
+}
+
+function InternalOnMessage(coerce string Msg, float MsgLife)
+{
+    local int result;
+    local string error_msg;
+
+    if (msg == "notify_gui_role_selection_page")
+    {
+        result = int(MsgLife);
+
+        switch (result)
+        {
+            case 0: // All is well!
+            case 97:
+            case 98:
+                if (DHP != none)
+                {
+                    DHP.PlayerReplicationInfo.bReadyToPlay = true;
+                }
+                return;
+
+            default:
+                error_msg = getErrorMessageForId(result);
+                break;
+        }
+
+        if (Controller != none)
+        {
+            Controller.OpenMenu(Controller.QuestionMenuClass);
+            GUIQuestionPage(Controller.TopPage()).SetupQuestion(error_msg, QBTN_Ok, QBTN_Ok);
+        }
+    }
+}
+
+static function string getErrorMessageForId(int id)
+{
+    local string error_msg;
+    switch (id)
+    {
+        // TEAM CHANGE ERROR
+        case 01: // Couldn't switch to spectator: no player replication info
+            error_msg = default.UnknownErrorMessageText $ default.UnknownErrorSpectatorMissingReplicationInfo;
+            break;
+
+        case 02: // Couldn't switch to spectator: out of spectator slots
+            error_msg = default.SpectatorErrorTooManySpectators;
+            break;
+
+        case 03: // Couldn't switch to spectator: game has ended
+        case 04: // Couldn't switch to spectator: round has ended
+            error_msg = default.SpectatorErrorRoundHasEnded;
+            break;
+
+        case 10: // Couldn't switch teams: no player replication info
+            error_msg = default.UnknownErrorMessageText $ default.UnknownErrorTeamMissingReplicationInfo;
+            break;
+
+        case 11: // Couldn't switch teams: must join team before game start
+            error_msg = default.ErrorTeamMustJoinBeforeStart;
+            break;
+
+        case 12: // Couldn't switch teams: too many active players
+            error_msg = default.TeamSwitchErrorTooManyPlayers;
+            break;
+
+        case 13: // Couldn't switch teams: MaxLives > 0 (wtf is this)
+            error_msg = default.UnknownErrorMessageText $ default.UnknownErrorTeamMaxLives;
+            break;
+
+        case 14: // Couldn't switch teams: game has ended
+        case 15: // Couldn't switch teams: round has ended
+            error_msg = default.TeamSwitchErrorRoundHasEnded;
+            break;
+
+        case 16: // Couldn't switch teams: server rules disallow team changes after game has started
+            error_msg = default.TeamSwitchErrorGameHasStarted;
+            break;
+
+        case 17: // Couldn't switch teams: playing game against bots
+            error_msg = default.TeamSwitchErrorPlayingAgainstBots;
+            break;
+
+        case 18: // Couldn't switch teams: team is full
+            error_msg = default.TeamSwitchErrorTeamIsFull;
+            break;
+
+        case 99: // Couldn't change teams: unknown reason
+            error_msg = default.ErrorChangingTeamsMessageText;
+            break;
+        // ROLE CHANGE ERROR
+        case 100: // Couldn't change roles (role is full)
+            error_msg = default.RoleIsFullMessageText;
+            break;
+
+        case 199: // Couldn't change roles (unknown error)
+            error_msg = default.UnknownErrorMessageText;
+            break;
+
+        default:
+            error_msg = default.UnknownErrorMessageText $ " (id = " $ id $ ")";
+    }
+
+    return error_msg;
+}
+
+function OnClose(optional bool bCancelled)
+{
+    // Attempt to update server with new information if any
+    if (SpawnPointIndex != DHP.SpawnPointIndex || VehiclePoolIndex != DHP.VehiclePoolIndex || SpawnVehicleIndex != DHP.SpawnVehicleIndex)
+    {
+        DHP.ServerChangeSpawn(SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex);
+    }
+}
+
 function CloseMenu()
 {
     if (Controller != none)
@@ -287,6 +470,7 @@ function CloseMenu()
 
 defaultproperties
 {
+    OnMessage=InternalOnMessage
     bRenderWorld=True
     bAllowedAsLast=True
     BackgroundColor=(B=0,G=125,R=0)
@@ -295,7 +479,29 @@ defaultproperties
     WinHeight=1.0
     PanelMargin=0.005
     RequiredExtraWidth=0.15
+
+    //Strings!
     CloseButtonString="Close"
+    NoSelectedRoleText="Select a role from the role list."
+    RoleHasBotsText=" (has bots)"
+    CurrentRoleText="Current Role"
+    RoleFullText="Full"
+    SelectEquipmentText="Select an item to view its description."
+    RoleIsFullMessageText="The role you selected is full. Select another role from the list and hit continue."
+    ChangingRoleMessageText="Please wait while your player information is being updated."
+    UnknownErrorMessageText="An unknown error occured when updating player information. Please wait a bit and retry."
+    ErrorChangingTeamsMessageText="An error occured when changing teams. Please retry in a few moments or select another team."
+    UnknownErrorSpectatorMissingReplicationInfo=" (Spectator switch error: player has no replication info.)"
+    SpectatorErrorTooManySpectators="Cannot switch to Spectating mode: too many spectators on server."
+    SpectatorErrorRoundHasEnded="Cannot switch to Spectating mode: round has ended."
+    UnknownErrorTeamMissingReplicationInfo=" (Team switch error: player has no replication info.)"
+    ErrorTeamMustJoinBeforeStart="Cannot switch teams: must join team before game starts."
+    TeamSwitchErrorTooManyPlayers="Cannot switch teams: too many active players in game."
+    UnknownErrorTeamMaxLives=" (Team switch error: MaxLives > 0)"
+    TeamSwitchErrorRoundHasEnded="Cannot switch teams: round has ended."
+    TeamSwitchErrorGameHasStarted="Cannot switch teams: server rules disallow team changes after game has started."
+    TeamSwitchErrorPlayingAgainstBots="Cannot switch teams: server rules ask for bots on one team and players on the other."
+    TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
 
     // Background
     Begin Object Class=FloatingImage Name=FloatingBackground
