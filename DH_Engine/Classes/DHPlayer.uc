@@ -66,7 +66,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerAttemptDeployPlayer, ServerSetPlayerInfo; /*ServerChangeSpawn,*/
+        ServerLeaveBody, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerAttemptDeployPlayer, ServerSetPlayerInfo;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -104,7 +104,9 @@ event ClientReset()
     RedeployTime = default.RedeployTime;
     LastKilledTime = 0;
     DesiredAmmoAmount = 0;
-    //ServerChangeSpawn(-1, -1, -1); // Reset spawns Theel Debug Need alt
+    SpawnPointIndex = -1; // Reseting these here may be pointless! Theel Debug
+    SpawnVehicleIndex = -1;
+    VehiclePoolIndex = -1;
     bShouldAttemptAutoDeploy = false;
 
     //Reset camera stuff
@@ -2016,43 +2018,6 @@ exec function DebugRoundPause()
     DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RoundDuration = 9999999;
 }
 
-/*
-function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex, int SpawnVehicleIndex)
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G == none || G.SpawnManager == none)
-    {
-        return;
-    }
-
-    if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= G.SpawnManager.GetSpawnPointCount()))
-    {
-        Warn("Invalid spawn point index" @ SpawnPointIndex);
-
-        self.SpawnPointIndex = -1; // reset spawn point index to null
-    }
-
-    if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= G.SpawnManager.GetVehiclePoolCount()))
-    {
-        Warn("Invalid vehicle pool index" @ VehiclePoolIndex);
-
-        self.VehiclePoolIndex = -1; // reset vehicle pool index to null
-    }
-
-    if (SpawnVehicleIndex != -1 && (SpawnVehicleIndex < 0 || SpawnVehicleIndex >= G.SpawnManager.GetSpawnVehicleCount()))
-    {
-        Warn("Invalid spawn vehicle index" @ SpawnVehicleIndex);
-    }
-
-    self.SpawnPointIndex = SpawnPointIndex;
-    self.VehiclePoolIndex = VehiclePoolIndex;
-    self.SpawnVehicleIndex = SpawnVehicleIndex;
-}
-*/
-
 function ServerClearObstacle(int Index)
 {
     local DarkestHourGame G;
@@ -2097,7 +2062,7 @@ function ServerDoLog(string LogMessage)
     }
 }
 
-//Theel: Keep this function as it's used as a control to show communication page allowing fast muting of players
+// Keep this function as it's used as a control to show communication page allowing fast muting of players
 exec function CommunicationMenu()
 {
     ClientReplaceMenu("ROInterface.ROCommunicationPage");
@@ -2616,7 +2581,9 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
                 DesiredRole = -1;
                 CurrentRole = -1;
                 DesiredAmmoAmount = 0;
-                //ServerChangeSpawn(-1, -1, -1); // Reset spawns Theel Debug need alt TODO
+                SpawnPointIndex = -1;
+                SpawnVehicleIndex = -1;
+                VehiclePoolIndex = -1;
                 MyLastVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;

@@ -59,7 +59,8 @@ var localized string                        NoSelectedRoleText,
 var bool                                    bReceivedTeam,
                                             bShowingMenuOptions,
                                             bRoleIsCrew,
-                                            bRoomForOptions;
+                                            bRoomForOptions,
+                                            bAttemptDeploy;
 
 var float                                   PanelMargin;
 var float                                   RequiredExtraWidth;
@@ -364,7 +365,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             case 0: // All is well!
             case 97:
             case 98:
-                if (DHP != none)
+                if (DHP != none && bAttemptDeploy)
                 {
                     DHP.PlayerReplicationInfo.bReadyToPlay = true;
 
@@ -447,15 +448,15 @@ static function string getErrorMessageForId(int id)
             error_msg = default.TeamSwitchErrorTeamIsFull;
             break;
 
-        case 19: // Couldn't switch teams: team is full
+        case 19: // Spawn point invalid at index
             error_msg = default.SpawnPointInvalid;
             break;
 
-        case 20: // Couldn't switch teams: team is full
+        case 20: // Vehicle pool index not valid
             error_msg = default.VehiclePoolInvalid;
             break;
 
-        case 21: // Couldn't switch teams: team is full
+        case 21: // Spawn vehicle index not valid
             error_msg = default.SpawnVehicleInvalid;
             break;
 

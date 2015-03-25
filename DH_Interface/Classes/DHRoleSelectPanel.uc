@@ -27,7 +27,6 @@ var localized string                        RedeployTimeText,
 
 var RORoleInfo                              currentRole, desiredRole;
 var int                                     currentTeam, desiredTeam;
-var string                                  currentName, desiredName;
 var int                                     currentWeapons[2], desiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
 
@@ -192,9 +191,6 @@ function GetInitialValues()
         currentRole = none;
     }
 
-    // Get player's current name
-    currentName = DHP.GetUrlOption("Name");
-
     // Get player's current weapons
     if (currentRole == none)
     {
@@ -215,7 +211,6 @@ function GetInitialValues()
     // Set desired stuff to be same as current stuff
     desiredTeam = currentTeam;
     desiredRole = currentRole;
-    desiredName = currentName;
     desiredWeapons[0] = -5; // these values tell the AutoPickWeapon() function
     desiredWeapons[1] = -5; // to use the currentWeapon[] value instead
 }
@@ -317,7 +312,7 @@ function AutoPickRole()
             if (role.GetLimit(DHGRI.MaxPlayers) == 0) //Pick role with no max
             {
                 ChangeDesiredRole(role);
-                //AttemptDeployApplication();
+                //AttemptDeployApplication(false);
                 return;
             }
         }
@@ -762,37 +757,13 @@ function string FormatRoleString(string roleName, int roleLimit, int roleCount, 
 }
 
 //This function needs work
-function AttemptDeployApplication(optional bool bDontShowErrors)
+function AttemptDeployApplication(bool bAttemptDeploy, optional bool bDontShowErrors)
 {
     local byte teamIndex, roleIndex, w1, w2;
-
-    //Theel's fast check to see if we even need to attempt role change
-    /*
-    if (currentRole != desiredRole ||
-        currentTeam != desiredTeam ||
-        currentName != desiredName ||
-        currentWeapons[0] != desiredWeapons[0] ||
-        currentWeapons[1] != desiredWeapons[1] ||
-        nu_PrimaryAmmoMags.Value != string(DHP.DesiredAmmoAmount))
-    {
-        //Do nothing for now
-    }
-    else
-    {
-        return;
-    }*/
 
     if (DHP == none)
     {
         return;
-    }
-
-    // Change player name (no need for confirmation on this)
-    if (desiredName != currentName)
-    {
-        DHP.ReplaceText(desiredName, "\"", "");
-        DHP.ConsoleCommand("SetName"@desiredName);
-        currentName = desiredName;
     }
 
     // Get desired team info
@@ -838,13 +809,15 @@ function AttemptDeployApplication(optional bool bDontShowErrors)
     // Make sure DesiredAmmoAmount is set
     DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
 
+    // Tell menu to deploy or not
+    MyDeployMenu.bAttemptDeploy = bAttemptDeploy;
+
     // Attempt team, role, weapons change, and spawn indices change
     DHP.ServerSetPlayerInfo(teamIndex, roleIndex, w1, w2, MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex);
 
     // We possibly changed, so lets update the values  THis might be causing bugs on semi-failure
     //currentRole = desiredRole;
     //currentTeam = desiredTeam;
-    //currentName = desiredName;
     //currentWeapons[0] = desiredWeapons[0];
     //currentWeapons[1] = desiredWeapons[1];
     //GetInitialValues(); //gulp lets see if this works and doesn't bug the fuck out

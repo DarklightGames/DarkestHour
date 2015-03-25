@@ -376,7 +376,7 @@ function SpawnClick()
         return;
     }
 
-    MyRoleMenu.AttemptDeployApplication();
+    MyRoleMenu.AttemptDeployApplication(true);
 }
 
 function bool ConfirmIndices()
@@ -511,7 +511,7 @@ function bool DrawDeployTimer(Canvas C)
     if (GRI.bMatchHasBegun && !bOutOfReinforcements && (ConfirmIndices() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
     {
         // match started, team not out of reinforcements, have legit indices, and no pawn
-        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, DHP))
+        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, MyRoleMenu.desiredRole))
         {
             // We are deploying a vehicle and our vehicle pool index is valid
             b_DeployButton.EnableMe();

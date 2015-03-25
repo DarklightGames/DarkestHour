@@ -274,28 +274,17 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
     return VehiclePoolSpawnsRemainings[PoolIndex] == 255;
 }
 
-simulated function bool IsVehiclePoolIndexValid(int VehiclePoolIndex, PlayerController PC)
+simulated function bool IsVehiclePoolIndexValid(int VehiclePoolIndex, RORoleInfo RI)
 {
-    local ROPlayerReplicationInfo PRI;
-    local DHPlayer C;
     local class<ROVehicle> VehicleClass;
 
-    if (PC == none)
+    if (RI == none)
     {
+        Log("RI check");
         return false;
     }
 
-    PRI = ROPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    if (PRI == none || PRI.RoleInfo == none)
-    {
-        Log("PRI RI check");
-        return false;
-    }
-
-    C = DHPlayer(PC);
-
-    if (C == none || VehiclePoolIndex < 0 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    if (VehiclePoolIndex < 0 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
     {
         Log("Index bound check");
         return false;
@@ -309,13 +298,13 @@ simulated function bool IsVehiclePoolIndexValid(int VehiclePoolIndex, PlayerCont
 
     VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
 
-    if (VehicleClass.default.bMustBeTankCommander && !PRI.RoleInfo.bCanBeTankCrew)
+    if (VehicleClass.default.bMustBeTankCommander && !RI.bCanBeTankCrew)
     {
         Log("Tank commander check");
         return false;
     }
 
-    if (VehicleClass.default.VehicleTeam != PC.GetTeamNum())
+    if (VehicleClass.default.VehicleTeam != RI.Side)
     {
         Log("Failed at team check");
         return false;
