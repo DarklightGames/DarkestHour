@@ -120,6 +120,14 @@ function PostBeginPlay()
         UpdatePoolReplicationInfo(i);
     }
 
+    for (i = 0; i < VehiclePools.Length; ++i)
+    {
+        if (VehiclesPools[i] != none && VehiclePools[i].VehicleClass != none)
+        {
+            VehiclePools[i].VehicleClass.static.StaticPrecache(Level);
+        }
+    }
+
     //TODO: verify uniqueness of VehicleClass in VehiclePools
 }
 
