@@ -2017,14 +2017,15 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         {
             P.DesiredRole = -1;
             P.CurrentRole = -1;
-            //ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo = none;
             P.PrimaryWeapon = -1;
             P.SecondaryWeapon = -1;
             P.GrenadeWeapon = -1;
             P.bWeaponsSelected = false;
 
             // DARKEST HOUR
-            P.ServerChangeSpawn(-1, -1, -1); // Reset spawns
+            P.SpawnPointIndex = -1;
+            P.SpawnVehicleIndex = -1;
+            P.VehiclePoolIndex = -1;
         }
     }
 

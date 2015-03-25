@@ -56,6 +56,7 @@ var const byte SpawnError_TryToDriveFailed;
 var const byte SpawnError_BadSpawnType;
 var const byte SpawnError_PawnSpawnFailed;
 var const byte SpawnError_IncorrectRole;
+var const byte SpawnError_SpawnPointsDontMatch;
 
 var const byte SpawnPointType_Infantry;
 var const byte SpawnPointType_Vehicles;
@@ -275,7 +276,7 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
     {
         if (bDebug)
         {
-            Log("Attempting to spawn Vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex);
+            Log("Attempting to spawn Vehicle at VP Index:" @ C.VehiclePoolIndex @ "SP:" @ C.SpawnPointIndex @ "(" $ VehiclePools[C.VehiclePoolIndex].VehicleClass.default.VehicleNameString $ ")" @ "SP.IsActive:" @ GRI.IsSpawnPointActive(GRI.GetSpawnPoint(C.SpawnPointIndex)));
         }
 
         SpawnVehicle(C, SpawnError);
@@ -581,7 +582,7 @@ function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
 
     if (C.SpawnPointIndex < 0 || C.SpawnPointIndex >= SpawnPoints.Length)
     {
-        Error("[DHSM] Fatal error in DrySpawnInfantry (either invalid indices passed in or pool's VehicleClass is none)");
+        Warn("[DHSM] Fatal error in DrySpawnInfantry (either invalid indices passed in or pool's VehicleClass is none)");
 
         return SpawnError_Fatal;
     }
@@ -590,28 +591,30 @@ function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
 
     if (SP == none || (SP.Type != ESPT_Both && SP.Type != SpawnPointType))
     {
-        Error("[DHSM] Fatal error, requested spawn point is null or incorrect type");
+        Warn("[DHSM] Fatal error, requested spawn point is null or incorrect type");
 
         return SpawnError_Fatal;
     }
 
     if (C.GetTeamNum() != SP.TeamIndex)
     {
-        Error("[DHSM] Spawn point team index (" $ SP.TeamIndex $ ") does not match player's (" $ C.GetTeamNum() $ ")");
+        Warn("[DHSM] Spawn point team index (" $ SP.TeamIndex $ ") does not match player's (" $ C.GetTeamNum() $ ")");
 
         return SpawnError_BadTeamSpawnPoint;
     }
 
     if (!GRI.IsSpawnPointIndexActive(C.SpawnPointIndex))
     {
-        Error("[DHSM] Spawn point" @ C.SpawnPointIndex @ "is inactive");
+        Warn("[DHSM] Spawn point" @ C.SpawnPointIndex @ "is inactive");
 
         return SpawnError_SpawnInactive;
     }
 
-    if (SP.Type != SpawnPointType)
+    if (SP.Type != ESPT_Both && SP.Type != SpawnPointType)
     {
-        return SpawnError_SpawnInactive;
+        Warn("Spawnpoint types do not match");
+
+        return SpawnError_SpawnPointsDontMatch;
     }
 
     return SpawnError_None;
@@ -1075,6 +1078,7 @@ static function string GetSpawnErrorString(int SpawnError)
         case default.SpawnError_BadTeamPool:
         case default.SpawnError_BadTeamSpawnPoint:
         case default.SpawnError_TryToDriveFailed:
+        case default.SpawnError_SpawnPointsDontMatch:
             return "ERROR";
     }
 }
@@ -1139,6 +1143,7 @@ defaultproperties
     SpawnError_TryToDriveFailed=12
     SpawnError_BadSpawnType=13
     SpawnError_IncorrectRole=14
+    SpawnError_SpawnPointsDontMatch=15
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
     MaxDestroyedVehicles=8

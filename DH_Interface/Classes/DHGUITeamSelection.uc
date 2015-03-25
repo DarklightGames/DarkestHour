@@ -10,25 +10,32 @@ var automated BackgroundImage               bg_Background2,
 
 var automated GUIButton                     b_Disconnect;
 
+var DHPlayer                                DHP;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
 
     super(UT2K4GUIPage).InitComponent(MyController, MyOwner);
 
-    if (PlayerOwner() != none)
+    DHP = DHPlayer(PlayerOwner());
+
+    if (DHP == none)
     {
-        GRI = ROGameReplicationInfo(PlayerOwner().GameReplicationInfo);
-
-        if (GRI != none) // Matt: restated function & modified to avoid "accessed none" errors for GRI
-        {
-            loadBriefing();
-
-            // Set initial values
-            l_TeamBriefing[0].SetContent(GRI.UnitName[AXIS_TEAM_INDEX] $ "||" $ Briefing[AXIS_TEAM_INDEX]);
-            l_TeamBriefing[1].SetContent(GRI.UnitName[ALLIES_TEAM_INDEX] $ "||" $ Briefing[ALLIES_TEAM_INDEX]);
-        }
+        return;
     }
+
+    GRI = ROGameReplicationInfo(DHP.GameReplicationInfo);
+
+    if (GRI != none) // Matt: restated function & modified to avoid "accessed none" errors for GRI
+    {
+        loadBriefing();
+
+        // Set initial values
+        l_TeamBriefing[0].SetContent(GRI.UnitName[AXIS_TEAM_INDEX] $ "||" $ Briefing[AXIS_TEAM_INDEX]);
+        l_TeamBriefing[1].SetContent(GRI.UnitName[ALLIES_TEAM_INDEX] $ "||" $ Briefing[ALLIES_TEAM_INDEX]);
+    }
+
 
     for (i = 0; i < 2; ++i)
     {
@@ -83,16 +90,15 @@ function SetBackground()
 
 function SelectTeamSuccessfull()
 {
-    if (ROPlayer(PlayerOwner()) == none || Controller == none)
+    if (DHP == none || Controller == none)
     {
         return;
     }
 
     if (selectedTeam != -1)
     {
-        ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = selectedTeam;
+        DHP.ForcedTeamSelectOnRoleSelectPage = selectedTeam;
         Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
-        //Controller.RemoveMenu(self);
     }
     else
     {
@@ -117,16 +123,42 @@ function bool InternalOnClick( GUIComponent Sender )
             break;
 
         case b_TeamSelect[AXIS_TEAM_INDEX]:
-            ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = AXIS_TEAM_INDEX;
+            if (DHP.PlayerReplicationInfo.Team.TeamIndex == 1)
+            {
+                DHP.bSwapedTeams = true;
+            }
             SelectTeam(AXIS_TEAM_INDEX);
             break;
 
         case b_TeamSelect[ALLIES_TEAM_INDEX]:
-            ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage = ALLIES_TEAM_INDEX;
+            if (DHP.PlayerReplicationInfo.Team.TeamIndex == 0)
+            {
+                DHP.bSwapedTeams = true;
+            }
             SelectTeam(ALLIES_TEAM_INDEX);
             break;
     }
     return true;
+}
+
+function SelectTeam(int Team)
+{
+    selectedTeam = Team;
+
+    SetButtonsState(true);
+
+    if (Team == -1) // Spectate
+    {
+        DHP.ServerSetPlayerInfo(254, 255, 0, 0, -1, -1, -1);
+    }
+    else if (Team == -2) // Auto-select
+    {
+        DHP.ServerSetPlayerInfo(250, 255, 0, 0, -1, -1, -1);
+    }
+    else // Allies or Axis
+    {
+        DHP.ServerSetPlayerInfo(Team, 255, 0, 0, -1, -1, -1);
+    }
 }
 
 defaultproperties

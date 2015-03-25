@@ -376,24 +376,7 @@ function SpawnClick()
         return;
     }
 
-    MyRoleMenu.AttemptRoleApplication();
-
-    // Tell the server our desired points
-    // TODO:
-    // Theel add check here if ServerRequest fails and if it does output error message
-    // Actually this function should not exist and instead AttemptRoleApp can be renamed and repurposed to send the indexes in 1 server call!
-    DHP.ServerChangeSpawn(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex);
-
-    if (DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
-    {
-        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
-    }
-    else
-    {
-        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount);
-    }
-
-    Controller.CloseMenu(false); //Close menu as deploy attempted!
+    MyRoleMenu.AttemptDeployApplication(true);
 }
 
 function bool ConfirmIndices()
@@ -528,7 +511,7 @@ function bool DrawDeployTimer(Canvas C)
     if (GRI.bMatchHasBegun && !bOutOfReinforcements && (ConfirmIndices() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
     {
         // match started, team not out of reinforcements, have legit indices, and no pawn
-        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, DHP))
+        if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, MyRoleMenu.desiredRole))
         {
             // We are deploying a vehicle and our vehicle pool index is valid
             b_DeployButton.EnableMe();
