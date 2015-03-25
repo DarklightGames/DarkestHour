@@ -112,9 +112,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 
     // Gather spawn point indices
-    SpawnPointIndex = DHP.SpawnPointIndex;
-    SpawnVehicleIndex = DHP.SpawnVehicleIndex;
-    VehiclePoolIndex = DHP.VehiclePoolIndex;
+    if (!DHP.bSwapedTeams)
+    {
+        SpawnPointIndex = DHP.SpawnPointIndex;
+        SpawnVehicleIndex = DHP.SpawnVehicleIndex;
+        VehiclePoolIndex = DHP.VehiclePoolIndex;
+    }
+    else
+    {
+        DHP.bSwapedTeams = false;
+    }
 }
 
 function Timer()

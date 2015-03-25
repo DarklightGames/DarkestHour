@@ -9,6 +9,7 @@ var     int                     RedeployTime;
 var     float                   LastKilledTime;             // the time at which last death occured
 var     byte                    DesiredAmmoAmount;
 var     bool                    bShouldAttemptAutoDeploy;
+var     bool                    bSwapedTeams;
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
@@ -73,6 +74,8 @@ replication
         ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientHandleDeath, ClientFadeFromBlack;
 }
 
+function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2) {} // No longer used
+
 // Modified to have client setup access to DH_LevelInfo so it can get info from it
 simulated event PostBeginPlay()
 {
@@ -100,13 +103,11 @@ event ClientReset()
             A.Reset();
         }
     }
+
     //Reset deploy stuff
     RedeployTime = default.RedeployTime;
     LastKilledTime = 0;
     DesiredAmmoAmount = 0;
-    SpawnPointIndex = -1; // Reseting these here may be pointless! Theel Debug
-    SpawnVehicleIndex = -1;
-    VehiclePoolIndex = -1;
     bShouldAttemptAutoDeploy = false;
 
     //Reset camera stuff
