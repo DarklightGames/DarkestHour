@@ -410,7 +410,10 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     DHGame = DarkesthourGame(Level.Game);
     VM = DHGame.SpawnManager;
 
-    // I think we need some type of check here if DHGame == none and/or VM Theel Debug
+    if (DHGame == none || VM == none)
+    {
+        return;
+    }
 
     CurrentCapProgress = 0.0;
     bAlliesContesting = false; // set to false as the objective was captured
@@ -966,7 +969,7 @@ function Timer()
     UpdateCompressedCapProgress();
 }
 
-// Theel: Overridden to correctly turn off capture bars for DH objective areas
+// Modified to correctly turn off capture bars for DH objective areas
 function DisableCapBarsForThisObj()
 {
     local Pawn                aPawn;

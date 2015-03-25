@@ -5,7 +5,7 @@
 
 class DH_ActorReset extends DH_LevelActors;
 
-var()   name                ActorToReset;  //Theel & Basnett
+var()   name                ActorToReset;
 var     actor               ActorReference;
 
 function PostBeginPlay()

@@ -3725,12 +3725,6 @@ function DropWeaponInventory(vector TossVel)
         Inv = Inv.Inventory;
     }
 
-    /* Theel Remove this before release
-    if (Level.Game != none)
-    {
-        Level.Game.Broadcast(self, InventoryList.Length);
-    }*/
-
     for (i = 0; i < InventoryList.Length; ++i)
     {
         W = Weapon(InventoryList[i]);
@@ -3901,17 +3895,18 @@ function SetAmmoPercent(byte AmmoAmount)
     local DH_ProjectileWeapon Wep;
     local int i;
 
-    //Cycle inventory and change ammo on needed items
+    // Cycle inventory and change ammo on needed items
     for (Inv = Inventory;Inv!=none;Inv = Inv.Inventory)
     {
         Wep = DH_ProjectileWeapon(Inv);
 
-        //Theel: Only change primary weapon (for now)
+        // Only change primary weapon
         if (Wep != none && Wep.InventoryGroup == 1)
         {
             Wep.SetNumMags(AmmoAmount);
         }
-        //Some odd prevention measure that exists in other things like this
+
+        // Some odd prevention measure that exists in other things like this
         i++;
         if (i>500)
             break;
