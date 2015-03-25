@@ -128,7 +128,7 @@ defaultproperties
     bHasAltFire=false
     CameraBone="Camera_com"
     FirstPersonGunRefBone="1stperson_wep"
-    FirstPersonGunOffsetZScale=1.0
+    FirstPersonOffsetZScale=1.0
     bDesiredBehindView=false
     DrivePos=(Y=-5.0,Z=14.0)
     DriveRot=(Yaw=16384)

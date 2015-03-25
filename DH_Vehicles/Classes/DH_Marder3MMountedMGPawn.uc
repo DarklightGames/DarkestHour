@@ -67,7 +67,7 @@ defaultproperties
     bHasAltFire=false
     CameraBone="loader_cam"
     FirstPersonGunRefBone="firstperson_wep"
-    FirstPersonGunOffsetZScale=1.0
+    FirstPersonOffsetZScale=1.0
     bPCRelativeFPRotation=true
     bAllowViewChange=true
     DrivePos=(X=7.0,Z=-22.0)

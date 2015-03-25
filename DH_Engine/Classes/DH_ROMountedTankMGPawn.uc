@@ -10,13 +10,14 @@ class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
 
 var     DH_ROMountedTankMG  MGun;             // just a reference to the DH MG actor, for convenience & to avoid lots of casts
 
-var()   int         InitialPositionIndex;     // initial gunner position on entering
+var()   int         InitialPositionIndex;     // initial player position on entering
 var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
 var()   bool        bPlayerCollisionBoxMoves; // player's collision box moves with animations (e.g. raised/lowered on unbuttoning/buttoning), so we need to play anims on server
+
 var()   texture     VehicleMGReloadTexture;   // used to show reload progress on the HUD, like a tank cannon reload
 
-var()   name        FirstPersonGunRefBone;      // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
-var()   float       FirstPersonGunOffsetZScale; // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
+var()   name        FirstPersonGunRefBone;    // static gun bone used as reference point to adjust 1st person view HUDOverlay offset, if gunner can raise his head above sights
+var()   float       FirstPersonOffsetZScale;  // used with HUDOverlay to scale how much lower the 1st person gun appears when player raises his head above it
 
 var()   float       OverlayCenterSize;        // size of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
 var()   float       OverlayCenterTexStart;
@@ -40,7 +41,7 @@ simulated function PostNetReceive()
 {
     local int i;
 
-    // Gunner has changed position
+    // Player has changed position
     if (DriverPositionIndex != SavedPositionIndex && Gun != none && bMultiPosition)
     {
         if (Driver == none && DriverPositionIndex > 0 && !IsLocallyControlled() && Level.NetMode == NM_Client)
@@ -347,7 +348,7 @@ simulated function DrawHUD(Canvas Canvas)
                     if (FirstPersonGunRefBone != '')
                     {
                         GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-                        GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonGunOffsetZScale));
+                        GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonOffsetZScale));
                         GunOffset += HUDOverlayOffset;
                         HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                         Canvas.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);

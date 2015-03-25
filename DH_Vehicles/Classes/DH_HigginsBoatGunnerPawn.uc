@@ -103,7 +103,7 @@ simulated function DrawHUD(Canvas Canvas)
 
             // Make the first person gun appear lower when your sticking your head up
             GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-            GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonGunOffsetZScale));
+            GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonOffsetZScale));
             GunOffset += HUDOverlayOffset;
 
             HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
@@ -174,7 +174,7 @@ defaultproperties
     PositionInArray=0
     bHasAltFire=false
     FirstPersonGunRefBone="1stperson_wep"
-    FirstPersonGunOffsetZScale=1.0
+    FirstPersonOffsetZScale=1.0
     CameraBone="Camera_com"
     bDesiredBehindView=false
     DrivePos=(Y=-5.0,Z=14.0)
