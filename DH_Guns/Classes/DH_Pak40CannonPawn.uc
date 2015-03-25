@@ -7,6 +7,7 @@ class DH_Pak40CannonPawn extends DH_ATGunTwoCannonPawn;
 
 defaultproperties
 {
+    bShowRangeText=true
     OverlayCenterSize=0.57
     CannonScopeOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     BinocPositionIndex=2

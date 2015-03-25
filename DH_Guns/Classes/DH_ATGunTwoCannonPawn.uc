@@ -3,209 +3,33 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATGunTwoCannonPawn extends AssaultGunCannonPawn
+class DH_ATGunTwoCannonPawn extends DH_ROTankCannonPawn
     abstract;
 
-// Note to future developers:
-//     RAMM created a new class to hold many of these functions called ATGunCannonPawn for the MapPack.
-//     I would have extended from that but ATGunCannonPawn itself extends from RussianTankCannonPawn.
-//     I needed to create this class because of the optic pattern used.  There is no line to move on certain AT-Guns.
-//     So, I copied ATGunCannonPawn and called it ATGunTwoCannonPawn.  This then extends from AssaultGunCannonPawn.
-//     Ramm also improved the original AT-Gun code by better handling the player exit for the fixed AT-Gun.
+var     bool    bDebugExit; // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
 
-var()   float   OverlayCenterScale;  // scale of the gunsight overlay, 1.0 means full screen width, 0.5 means half screen width
-var()   float   OverlayCenterSize;
-var()   int     OverlayCorrectionX, OverlayCorrectionY; // scope center correction in pixels, as some overlays are off-center by pixel or two
-                                                        // (it's in pixels of overlay bitmap, not pixels of screen, so works for every resolution)
-
-// Debugging:                                                        
-var()   bool    bShowCenter; // shows centering cross in tank sight for testing purposes
-var     bool    bDebugExit;  // records that exit positions are being drawn by DebugExit(), so can be toggled on/off
-
-replication
+// Emptied out so we just use plain RO rotate/pitch sounds & ignore DH_ROTankCannonPawn's manual/powered sounds
+simulated function SetManualTurret(bool bManual)
 {
-    // Functions a client can call on the server
-    reliable if (Role < ROLE_Authority)
-        ServerToggleExtraRoundType;
 }
 
-simulated exec function SwitchFireMode()
+// Emptied out as can't switch positions in an AT gun
+simulated function SwitchWeapon(byte F)
 {
-    if (Gun != none && DH_ATGunCannon(Gun) != none && DH_ATGunCannon(Gun).bMultipleRoundTypes)
-    {
-        if (Controller != none && ROPlayer(Controller) != none)
-        {
-            ROPlayer(Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
-        }
-
-        ServerToggleExtraRoundType();
-    }
 }
 
-function ServerToggleExtraRoundType()
+// Emptied out as AT gun has no alt fire mode, so just ensures nothing happens
+function AltFire(optional float F)
 {
-    if (Gun != none && DH_ATGunCannon(Gun) != none)
-    {
-        DH_ATGunCannon(Gun).ToggleRoundType();
-    }
 }
 
-simulated function DrawHUD(Canvas Canvas)
+// Modified to avoid turret damage checks in DH_ROTankCannonPawn, just for processing efficiency as this function is called many times per second
+function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    local PlayerController PC;
-    local vector  CameraLocation;
-    local rotator CameraRotation;
-    local Actor   ViewActor;
-    local float   SavedOpacity, XL, YL, MapX, MapY, ScreenRatio, OverlayCenterTexStart, OverlayCenterTexSize;
-    local color   SavedColor, WhiteColor;
-
-    PC = PlayerController(Controller);
-
-    if (PC == none)
-    {
-        super.RenderOverlays(Canvas);
-
-        return;
-    }
-    else if (!PC.bBehindView)
-    {
-        // Store old opacity and set to 1.0 for map overlay rendering
-        SavedOpacity = Canvas.ColorModulate.W;
-        Canvas.ColorModulate.W = 1.0;
-
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
-        {
-            if (DriverPositionIndex == 0)
-            {
-                // Calculate reticle drawing position (& position to draw black bars at) and draw reticle
-                ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
-                OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-                OverlayCenterTexStart = (1.0 - OverlayCenterScale) * Float(CannonScopeOverlay.USize) / 2.0;
-                OverlayCenterTexSize =  Float(CannonScopeOverlay.USize) * OverlayCenterScale;
-
-                Canvas.SetPos(0.0, 0.0);
-                Canvas.DrawTile(CannonScopeOverlay , Canvas.SizeX , Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0 , OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-
-                // Draw the range setting
-                if (Gun != none)
-                {
-                    Canvas.Style = ERenderStyle.STY_Normal;
-
-                    SavedColor = Canvas.DrawColor;
-                    WhiteColor =  class'Canvas'.Static.MakeColor(255, 255, 255, 175);
-                    Canvas.DrawColor = WhiteColor;
-
-                    MapX = RangePositionX * Canvas.ClipX;
-                    MapY = RangePositionY * Canvas.ClipY;
-
-                    Canvas.SetPos(MapX,MapY);
-                    Canvas.Font = class'ROHUD'.Static.GetSmallMenuFont(Canvas);
-
-                    Canvas.StrLen(Gun.GetRange() @ RangeText, XL, YL);
-                    Canvas.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY+YL);
-
-                    Canvas.DrawColor = SavedColor;
-                }
-            }
-            else
-            {
-                DrawBinocsOverlay(Canvas);
-            }
-        }
-
-        // Reset HudOpacity to original value
-        Canvas.ColorModulate.W = SavedOpacity;
-
-        // Draw tank, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none && VehicleBase != none)
-        {
-            ROHud(PC.myHUD).DrawVehicleIcon(Canvas, VehicleBase, self);
-        }
-    }
-
-    // Zap the lame crosshair - Ramm
-    if (IsLocallyControlled() && Gun != none && Gun.bCorrectAim && Gun.bShowAimCrosshair)
-    {
-        Canvas.DrawColor = CrosshairColor;
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
-        Canvas.SetPos(Canvas.SizeX * 0.5-CrosshairX, Canvas.SizeY * 0.5-CrosshairY);
-        Canvas.DrawTile(CrosshairTexture, CrosshairX * 2.0, CrosshairY * 2.0, 0.0, 0.0, CrosshairTexture.USize, CrosshairTexture.VSize);
-    }
-
-    if (PC != none && !PC.bBehindView && HUDOverlay != none)
-    {
-        if (!Level.IsSoftwareRendering())
-        {
-            CameraRotation = PC.Rotation;
-            SpecialCalcFirstPersonView(PC, ViewActor, CameraLocation, CameraRotation);
-            HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-            HUDOverlay.SetRotation(CameraRotation);
-            Canvas.DrawActor(HUDOverlay, false, false, FClamp(HUDOverlayFOV * (PC.DesiredFOV / PC.DefaultFOV), 1.0, 170.0));
-        }
-    }
-    else
-    {
-        ActivateOverlay(false);
-    }
+    super(ROTankCannonPawn).HandleTurretRotation(DeltaTime, YawChange, PitchChange);
 }
 
-// Overridden because the animation needs to play on the server for this vehicle for the gunner's hit detection
-function ServerChangeViewPoint(bool bForward)
-{
-    if (bForward)
-    {
-        if (DriverPositionIndex < (DriverPositions.Length - 1))
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex++;
-
-            if (Level.NetMode == NM_Standalone  || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                AnimateTransition();
-            }
-        }
-    }
-    else
-    {
-        if (DriverPositionIndex > 0)
-        {
-            LastPositionIndex = DriverPositionIndex;
-            DriverPositionIndex--;
-
-            if (Level.NetMode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                NextViewPoint();
-            }
-            else if (Level.NetMode == NM_DedicatedServer)
-            {
-                AnimateTransition();
-            }
-        }
-     }
-}
-
-// Overridden to set exit rotation to be the same as when they were in the vehicle - looks a bit silly otherwise
-simulated function ClientKDriverLeave(PlayerController PC)
-{
-    local rotator NewRot;
-
-    NewRot = VehicleBase.Rotation;
-    NewRot.Pitch = LimitPitch(NewRot.Pitch);
-    SetRotation(NewRot);
-
-    super.ClientKDriverLeave(PC);
-}
-
-// Overridden to handle vehicle exiting better for fixed AT Cannons
+// Overridden to handle vehicle exiting better for fixed AT guns
 function bool PlaceExitingDriver()
 {
     local int    i;
@@ -345,16 +169,12 @@ event bool KDriverLeave(bool bForceLeave)
     return bSuperDriverLeave;
 }
 
-// 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
+// Modified to use 3 part reload for AT gun, instead of 4 part reload in tank cannon
 function float GetAmmoReloadState()
 {
-    local ROTankCannon Cannon;
-
-    Cannon = ROTankCannon(gun);
-
-    if (Cannon != none)
+    if (ROTankCannon(Gun) != none)
     {
-        switch (Cannon.CannonReloadState)
+        switch (ROTankCannon(Gun).CannonReloadState)
         {
             case CR_ReadyToFire:    return 0.0;
             case CR_Waiting:
@@ -435,68 +255,17 @@ simulated function DrawDebugCylinder(vector Base, vector X, vector Y, vector Z, 
     }
 }
 
-// AB CODE
-simulated function DrawBinocsOverlay(Canvas Canvas)
-{
-    local float ScreenRatio;
-
-    ScreenRatio = Float(Canvas.SizeY) / Float(Canvas.SizeX);
-    Canvas.SetPos(0.0, 0.0);
-    Canvas.DrawTile(BinocsOverlay, Canvas.SizeX, Canvas.SizeY, 0.0 , (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
-}
-
-// New function, checked by Fire() so we prevent firing while moving between view points or when on binoculars
-function bool CanFire()
-{
-    return (!IsInState('ViewTransition') && DriverPositionIndex != BinocPositionIndex) || ROPlayer(Controller) == none;
-}
-
-// Modified to skip over obsolete RO functionality in ROTankCannonPawn & to optimise what remains
-function Fire(optional float F)
-{
-    local ROTankCannon Cannon;
-
-    if (!CanFire())
-    {
-        return;
-    }
-
-    Cannon = ROTankCannon(Gun);
-
-    if (ROTankCannon(Gun) != none)
-    {
-        if (Cannon.CannonReloadState != CR_ReadyToFire || !Cannon.bClientCanFireCannon)
-        {
-            if (Cannon.CannonReloadState == CR_Waiting && ROPlayer(Controller) != none && ROPlayer(Controller).bManualTankShellReloading)
-            {
-                Cannon.ServerManualReload();
-            }
-
-            return;
-        }
-    }
-
-    super(VehicleWeaponPawn).Fire(F);
-}
-
-// Matt: emptied out as AT gun has no alt fire mode, so just ensures nothing happens
-function AltFire(optional float F)
-{
-}
-
-
 defaultproperties
 {
+    bShowRangeText=false
     OverlayCenterSize=1.0
+    UnbuttonedPositionIndex=0
     BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
     HudName="Gunner"
     bMustBeTankCrew=false
     FireImpulse=(X=-1000.0)
     bHasFireImpulse=false
     bHasAltFire=false
-    bPCRelativeFPRotation=true
-    bDesiredBehindView=false
-    DriveAnim="crouch_idle_binoc"
     RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'

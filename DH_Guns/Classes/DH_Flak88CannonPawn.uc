@@ -7,6 +7,7 @@ class DH_Flak88CannonPawn extends DH_ATGunTwoCannonPawn;
 
 defaultproperties
 {
+    bShowRangeText=true
     OverlayCenterSize=0.961
     OverlayCorrectionX=-3
     CannonScopeOverlay=texture'DH_VehicleOptics_tex.Artillery.Flak36_sight_background'
