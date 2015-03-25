@@ -11,7 +11,7 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
     SecondarySpread=0.0012
     ManualRotationsPerSecond=0.025
-    bIsAssaultGun=true
+    bHasTurret=false
     GunMantletArmorFactor=8.0
     GunMantletSlope=40.0
     ReloadSoundOne=sound'Vehicle_reloads.Reloads.STUG_III_reload_01'

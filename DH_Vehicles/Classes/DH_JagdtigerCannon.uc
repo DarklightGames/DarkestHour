@@ -9,7 +9,7 @@ defaultproperties
 {
     SecondarySpread=0.00129
     ManualRotationsPerSecond=0.01
-    bIsAssaultGun=true
+    bHasTurret=false
     GunMantletArmorFactor=10.0
     GunMantletSlope=40.0
     ReloadSoundOne=sound'Vehicle_reloads.Reloads.Tiger_reload_01'

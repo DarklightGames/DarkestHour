@@ -9,7 +9,7 @@ defaultproperties
 {
     SecondarySpread=0.00135
     ManualRotationsPerSecond=0.02
-    bIsAssaultGun=true
+    bHasTurret=false
     GunMantletArmorFactor=10.0
     GunMantletSlope=35.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'

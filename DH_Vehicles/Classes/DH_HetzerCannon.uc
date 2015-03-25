@@ -11,7 +11,7 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
     SecondarySpread=0.00127
     ManualRotationsPerSecond=0.025
-    bIsAssaultGun=true
+    bHasTurret=false
     GunMantletArmorFactor=6.0
     GunMantletSlope=40.0
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01'
