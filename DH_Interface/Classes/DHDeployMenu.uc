@@ -51,7 +51,10 @@ var localized string                        NoSelectedRoleText,
                                             TeamSwitchErrorRoundHasEnded,
                                             TeamSwitchErrorGameHasStarted,
                                             TeamSwitchErrorPlayingAgainstBots,
-                                            TeamSwitchErrorTeamIsFull;
+                                            TeamSwitchErrorTeamIsFull,
+                                            SpawnPointInvalid,
+                                            VehiclePoolInvalid,
+                                            SpawnVehicleInvalid;
 
 var bool                                    bReceivedTeam,
                                             bShowingMenuOptions,
@@ -364,6 +367,18 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 if (DHP != none)
                 {
                     DHP.PlayerReplicationInfo.bReadyToPlay = true;
+
+                    // This should go in the area that gets called if everything is fine
+                    if (DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
+                    {
+                        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
+                    }
+                    else
+                    {
+                        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount);
+                    }
+
+                    CloseMenu(); // Close menu as deploying
                 }
                 return;
 
@@ -432,6 +447,18 @@ static function string getErrorMessageForId(int id)
             error_msg = default.TeamSwitchErrorTeamIsFull;
             break;
 
+        case 19: // Couldn't switch teams: team is full
+            error_msg = default.SpawnPointInvalid;
+            break;
+
+        case 20: // Couldn't switch teams: team is full
+            error_msg = default.VehiclePoolInvalid;
+            break;
+
+        case 21: // Couldn't switch teams: team is full
+            error_msg = default.SpawnVehicleInvalid;
+            break;
+
         case 99: // Couldn't change teams: unknown reason
             error_msg = default.ErrorChangingTeamsMessageText;
             break;
@@ -453,11 +480,13 @@ static function string getErrorMessageForId(int id)
 
 function OnClose(optional bool bCancelled)
 {
+/*
     // Attempt to update server with new information if any
     if (SpawnPointIndex != DHP.SpawnPointIndex || VehiclePoolIndex != DHP.VehiclePoolIndex || SpawnVehicleIndex != DHP.SpawnVehicleIndex)
     {
         DHP.ServerChangeSpawn(SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex);
     }
+*/
 }
 
 function CloseMenu()
@@ -470,6 +499,10 @@ function CloseMenu()
 
 defaultproperties
 {
+    SpawnPointIndex=-1
+    VehiclePoolIndex=-1
+    SpawnVehicleIndex=-1
+
     OnMessage=InternalOnMessage
     bRenderWorld=True
     bAllowedAsLast=True
@@ -502,6 +535,9 @@ defaultproperties
     TeamSwitchErrorGameHasStarted="Cannot switch teams: server rules disallow team changes after game has started."
     TeamSwitchErrorPlayingAgainstBots="Cannot switch teams: server rules ask for bots on one team and players on the other."
     TeamSwitchErrorTeamIsFull="Cannot switch teams: the selected team is full."
+    SpawnPointInvalid="Invalid spawn point."
+    VehiclePoolInvalid="Invalid vehicle pool."
+    SpawnVehicleInvalid="Invalid deploy vehicle."
 
     // Background
     Begin Object Class=FloatingImage Name=FloatingBackground

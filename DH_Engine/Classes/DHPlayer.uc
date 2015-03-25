@@ -66,7 +66,7 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerChangeSpawn, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerAttemptDeployPlayer;
+        ServerLeaveBody, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerAttemptDeployPlayer, ServerSetPlayerInfo; /*ServerChangeSpawn,*/
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -104,7 +104,7 @@ event ClientReset()
     RedeployTime = default.RedeployTime;
     LastKilledTime = 0;
     DesiredAmmoAmount = 0;
-    ServerChangeSpawn(-1, -1, -1); // Reset spawns
+    //ServerChangeSpawn(-1, -1, -1); // Reset spawns Theel Debug Need alt
     bShouldAttemptAutoDeploy = false;
 
     //Reset camera stuff
@@ -2016,6 +2016,7 @@ exec function DebugRoundPause()
     DHGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RoundDuration = 9999999;
 }
 
+/*
 function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex, int SpawnVehicleIndex)
 {
     local DarkestHourGame G;
@@ -2050,6 +2051,7 @@ function ServerChangeSpawn(int SpawnPointIndex, int VehiclePoolIndex, int SpawnV
     self.VehiclePoolIndex = VehiclePoolIndex;
     self.SpawnVehicleIndex = SpawnVehicleIndex;
 }
+*/
 
 function ServerClearObstacle(int Index)
 {
@@ -2530,8 +2532,46 @@ exec function SwitchTeam(){} // Disabled
 exec function ChangeTeam( int N ){} // Disabled
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
-function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2)
+function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, int SpawnPointIndex, int VehiclePoolIndex, int SpawnVehicleIndex)
 {
+    local DarkestHourGame DHG;
+
+    // Get and check DH Game
+    DHG = DarkestHourGame(Level.Game);
+
+    if (DHG == none || DHG.SpawnManager == none)
+    {
+        return;
+    }
+
+    if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount()))
+    {
+        Warn("Invalid spawn point index" @ SpawnPointIndex);
+        ClientChangePlayerInfoResult(19);
+        self.SpawnPointIndex = -1; // reset spawn point index to null
+        return;
+    }
+
+    if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount()))
+    {
+        Warn("Invalid vehicle pool index" @ VehiclePoolIndex);
+        ClientChangePlayerInfoResult(20);
+        self.VehiclePoolIndex = -1; // reset vehicle pool index to null
+        //return;
+    }
+
+    if (SpawnVehicleIndex != -1 && (SpawnVehicleIndex < 0 || SpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount()))
+    {
+        Warn("Invalid spawn vehicle index" @ SpawnVehicleIndex);
+        ClientChangePlayerInfoResult(21);
+        self.SpawnVehicleIndex = -1; // reset spawn vehicle index to null
+        //return;
+    }
+
+    self.SpawnPointIndex = SpawnPointIndex;
+    self.VehiclePoolIndex = VehiclePoolIndex;
+    self.SpawnVehicleIndex = SpawnVehicleIndex;
+
     // Attempt to change teams
     if (newTeam != 255)
     {
@@ -2576,7 +2616,7 @@ function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byt
                 DesiredRole = -1;
                 CurrentRole = -1;
                 DesiredAmmoAmount = 0;
-                ServerChangeSpawn(-1, -1, -1); // Reset spawns
+                //ServerChangeSpawn(-1, -1, -1); // Reset spawns Theel Debug need alt TODO
                 MyLastVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;

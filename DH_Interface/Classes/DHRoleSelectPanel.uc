@@ -317,7 +317,7 @@ function AutoPickRole()
             if (role.GetLimit(DHGRI.MaxPlayers) == 0) //Pick role with no max
             {
                 ChangeDesiredRole(role);
-                AttemptRoleApplication();
+                //AttemptDeployApplication();
                 return;
             }
         }
@@ -762,11 +762,12 @@ function string FormatRoleString(string roleName, int roleLimit, int roleCount, 
 }
 
 //This function needs work
-function AttemptRoleApplication(optional bool bDontShowErrors)
+function AttemptDeployApplication(optional bool bDontShowErrors)
 {
     local byte teamIndex, roleIndex, w1, w2;
 
     //Theel's fast check to see if we even need to attempt role change
+    /*
     if (currentRole != desiredRole ||
         currentTeam != desiredTeam ||
         currentName != desiredName ||
@@ -779,11 +780,10 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     else
     {
         return;
-    }
+    }*/
 
     if (DHP == none)
     {
-        warn("Unable to cast PlayerOwner() to ROPlayer in ROGUIRoleSelection.AttemptRoleApplication() !");
         return;
     }
 
@@ -838,15 +838,15 @@ function AttemptRoleApplication(optional bool bDontShowErrors)
     // Make sure DesiredAmmoAmount is set
     DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
 
-    // Attempt team, role and weapons change
-    DHP.ServerChangePlayerInfo(teamIndex, roleIndex, w1, w2);
+    // Attempt team, role, weapons change, and spawn indices change
+    DHP.ServerSetPlayerInfo(teamIndex, roleIndex, w1, w2, MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex);
 
     // We possibly changed, so lets update the values  THis might be causing bugs on semi-failure
-    currentRole = desiredRole;
-    currentTeam = desiredTeam;
-    currentName = desiredName;
-    currentWeapons[0] = desiredWeapons[0];
-    currentWeapons[1] = desiredWeapons[1];
+    //currentRole = desiredRole;
+    //currentTeam = desiredTeam;
+    //currentName = desiredName;
+    //currentWeapons[0] = desiredWeapons[0];
+    //currentWeapons[1] = desiredWeapons[1];
     //GetInitialValues(); //gulp lets see if this works and doesn't bug the fuck out
 }
 
@@ -890,7 +890,7 @@ function InternalOnChange(GUIComponent Sender)
 
                 RoleSelectReclickTime = 0.0;
                 ChangeDesiredRole(role);
-                AttemptRoleApplication();
+                //AttemptDeployApplication();
             }
             else
             {
@@ -924,7 +924,7 @@ event Closed(GUIComponent Sender, bool bCancelled)
 {
     super.Closed(Sender, bCancelled);
 
-    AttemptRoleApplication(true);
+    //AttemptDeployApplication(true);
 }
 
 defaultproperties

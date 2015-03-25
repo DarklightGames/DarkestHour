@@ -154,7 +154,7 @@ function UpdateRoleEquipment()
                 equipmentDescriptions[count] = desiredRole.Grenades[i].Item.default.ItemName $ "||" $ WeaponAttach.default.menuDescription;
                 l_EquipmentDescription.bVisible = true;
             }
- 
+
             count++;
         }
     }
@@ -179,7 +179,7 @@ function UpdateRoleEquipment()
             if (WeaponAttach != none)
             {
                 // Force AT weapon to go in slot #4
-                if (desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerFaustWeapon" || desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_BazookaWeapon" || 
+                if (desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerFaustWeapon" || desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_BazookaWeapon" ||
                     desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerschreckWeapon" || desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PIATWeapon")
                 {
                     temp = count;
