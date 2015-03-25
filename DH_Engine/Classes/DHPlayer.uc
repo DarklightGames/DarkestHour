@@ -1474,8 +1474,7 @@ ignores SeePlayer, HearNoise, Bump;
             {
                 if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) // check for water jump
                 {
-                    // Below is the only line this function changes. Theel: Reverted back as there is major bug where you can get under terrain
-                    // Once we figure out how to fix that bug, this should be commented out again.
+                    // TODO: Fix jump out of water issue
                     Pawn.Velocity.Z = FMax(Pawn.JumpZ, 420.0) + 2.0 * Pawn.CollisionRadius; // set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
@@ -2074,7 +2073,7 @@ exec function DebugFOV()
     Level.Game.Broadcast(self, "FOV:" @ FovAngle);
 }
 
-// Theel: Revise if statements (combine and optimize this function)
+// Theel TODO: Revise if statements (combine and optimize this function)
 function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
 {
     local DHPlayerReplicationInfo PRI;

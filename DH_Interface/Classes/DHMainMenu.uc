@@ -306,7 +306,7 @@ event Timer()
 
     if (MyLink != none && bAttemptQuickPlay)
     {
-        Log("Finding Quick Play IP:" @ MyLink.IsConnected()); // Theel Debug
+        //Log("Finding Quick Play IP:" @ MyLink.IsConnected());
 
         if (bAttemptQuickPlay)
         {

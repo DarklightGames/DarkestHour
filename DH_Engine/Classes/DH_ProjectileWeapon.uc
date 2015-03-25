@@ -2586,7 +2586,6 @@ simulated function Destroyed()
 }
 
 // Overridden to support notifying the barrels that we have fired
-// Theel: I think this should be done somewhere else (perhaps fire?) (Doing it here causes odd sound after changeing to fresh barrel)
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     local float       SoundModifier;

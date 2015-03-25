@@ -58,8 +58,6 @@ simulated function PostNetReceive()
 
     if (Role == ROLE_Authority && Elevation != NewElevation)
     {
-        // Theel remove at release Level.Game.Broadcast(self, "PostNetReceive" @ Elevation @ NewElevation);
-
         Elevation = NewElevation;
     }
 }

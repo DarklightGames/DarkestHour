@@ -5,14 +5,14 @@
 
 class DH_ObjectiveCaptureActor extends DH_LevelActors;
 
-var()   int             ObjectiveToModify; //Objective number to modify
-var()   ROSideIndex     TeamToCap; //Theel & Basnett
+var()   int             ObjectiveToModify;
+var()   ROSideIndex     TeamToCap;
 
 function Trigger(Actor Other, Pawn EventInstigator)
 {
     local ROTeamGame ROTeamGame;
 
-    ROTeamGame = ROTeamGame(Level.Game); //Get Game Info
+    ROTeamGame = ROTeamGame(Level.Game);
 
     if (TeamToCap == NEUTRAL)
         ROTeamGame.Objectives[ObjectiveToModify].ObjState = OBJ_Neutral;

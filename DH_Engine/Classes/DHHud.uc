@@ -3564,7 +3564,8 @@ exec function ShrinkHUD()
     }
 }
 
-//Overidden for a simple change to the respawn time and to allow player to handle stuff THeel NEEDS UPDATED
+// Modified to allow for autodeployment when dead/spectating
+// Todo: Update auto-deploy system to support different spawning types, etc.
 simulated function DrawSpectatingHud(Canvas C)
 {
     local DHGameReplicationInfo GRI;
@@ -3879,12 +3880,10 @@ defaultproperties
     VOICE_ICON_DIST_MAX = 2624.672119
     TeamMessagePrefix="*TEAM* "
 
-//"Will deploy as" ROLE "at" SPAWNPOINTNAME "in" @ GetTimeString(Time) @ "Press escape to change";
     RedeployText(0)="Will deploy as"
     RedeployText(1)="at"
     RedeployText(2)="in"
     RedeployText(3)="| Press escape to change |"
     RedeployText(4)="Ready to deploy! Hit escape and select a spawn point" //Theel: escape is variable
-    //RedeployText(5)=""
     ReinforcementText="Redeploy in: "
 }

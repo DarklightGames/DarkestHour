@@ -536,7 +536,6 @@ function int FindIndexInWeaponsList(int index, GUIList list)
     return -1;
 }
 
-//Theel fix this function, strange if/else embedding
 function UpdateSelectedWeapon(int weaponCategory)
 {
     local int i;
@@ -617,7 +616,7 @@ function Timer()
     UpdateRoleCounts();
     if (RoleSelectReclickTime < default.RoleSelectReclickTime)
     {
-        RoleSelectReclickTime += 0.1; //Theel this shouldn't be a floating number it is reused
+        RoleSelectReclickTime += 0.1;
     }
     else
     {

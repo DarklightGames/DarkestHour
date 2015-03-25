@@ -31,7 +31,13 @@ var     DHGameReplicationInfo               GRI;
 var     DHPlayerReplicationInfo             PRI;
 var     DHPlayer                            DHP;
 var     DHHud                               HUD;
-var     vector                              NELocation,SWLocation;
+var     vector                              NELocation,
+                                            SWLocation,
+                                            SPSelectedSize,
+                                            SPSize,
+                                            ObjSize,
+                                            SVSize,
+                                            SVSelectedSize;
 
 //Deploy Menu Access
 var DHDeployMenu                            MyDeployMenu;
@@ -160,8 +166,8 @@ function float GetDistance(float A, float B)
     }
 }
 
-//Theel: This function is still slightly buggy and needs to support rotation and variables renamed
-//Object location, sets map X, Y, based on image size W&H
+// This function still needs to support levels with odd rotated NE and SW and "rotatation"
+// Object location, sets map X, Y, based on image size W&H
 function GetMapCoords(vector Location, out float X, out float Y, float W, float H)
 {
     local float TDistance;
@@ -180,31 +186,24 @@ function GetMapCoords(vector Location, out float X, out float Y, float W, float 
     Y = MapContainer.WinHeight - Distance / TDistance * MapContainer.WinHeight - (H / 2); // Because the map is managed by a container, lets form to the container's winheight
 }
 
-//Theel: This function has floating variables
 function PlaceSpawnPointOnMap(vector Location, int Index, int SPIndex, string Title)
 {
-    local float X, Y, W, H;
+    local float X, Y;
 
     if (Index >= 0 && Index < arraycount(b_SpawnPoints))
     {
-        if (SPIndex == MyDeployMenu.SpawnPointIndex)
+        if (SPIndex == MyDeployMenu.SpawnPointIndex) // Selected SP
         {
-            W = 0.075;
-            H = 0.035;
+            GetMapCoords(Location, X, Y, SPSelectedSize.X, SPSelectedSize.Y);
 
-            GetMapCoords(Location, X, Y, W, H);
-
-            b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
+            b_SpawnPoints[Index].SetPosition(X, Y, SPSelectedSize.X, SPSelectedSize.Y, true);
             b_SpawnPoints[Index].SetFocus(none);
         }
-        else
+        else // Unselected SP
         {
-            W = 0.07;
-            H = 0.03;
+            GetMapCoords(Location, X, Y, SPSize.X, SPSize.Y);
 
-            GetMapCoords(Location, X, Y, W, H);
-
-            b_SpawnPoints[Index].SetPosition(X, Y, W, H, true);
+            b_SpawnPoints[Index].SetPosition(X, Y, SPSize.X, SPSize.Y, true);
         }
 
         b_SpawnPoints[Index].Tag = SPIndex; // Store the SP Index in the button
@@ -245,16 +244,15 @@ function PlaceVehicleSpawnOnMap(vector Location, int Index, int SpawnVehicleInde
     }
 }
 
-//Theel: This function has floating variables
 function PlaceObjectiveOnMap(ROObjective O, int Index)
 {
     local float X, Y;
 
     if (O != none && Index >= 0 && Index < arraycount(b_Objectives))
     {
-        GetMapCoords(O.Location, X, Y, 0.04, 0.04);
+        GetMapCoords(O.Location, X, Y, ObjSize.X, ObjSize.X);
 
-        b_Objectives[Index].SetPosition(X, Y, 0.04, 0.04, true);
+        b_Objectives[Index].SetPosition(X, Y, ObjSize.X, ObjSize.X, true);
         b_Objectives[Index].Graphic = ObjectiveIcons[int(GRI.Objectives[Index].ObjState)];
         b_Objectives[Index].Caption = O.ObjectiveName;
 
@@ -262,7 +260,6 @@ function PlaceObjectiveOnMap(ROObjective O, int Index)
     }
 }
 
-// Theel: will eventually want to draw 'deployed' MDVs also
 function bool DrawMapComponents(Canvas C)
 {
     local int i, SpawnPointIndex;
@@ -311,6 +308,7 @@ function bool DrawMapComponents(Canvas C)
         }
     }
 
+    // Deploy vehicles (Spawn Vehicles)
     if (MyDeployMenu.Tab != TAB_Vehicle)
     {
         // Loop Vehicle Spawn Points
@@ -599,7 +597,12 @@ defaultproperties
     DeployBarText(8)=""
     DeployBarText(9)=""
 
-    //Theel: need a neutral objective icon, as we actually don't have one singled out
+    SPSelectedSize=(X=0.075,Y=0.035)
+    SPSize=(X=0.07,Y=0.03)
+    ObjSize=(X=0.04,Y=0.04)
+    //SVSize=
+    //SVSelectedSize=
+
     ObjectiveIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
     ObjectiveIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
     ObjectiveIcons(2)=Texture'DH_GUI_Tex.GUI.NeutralObj'
