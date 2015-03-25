@@ -169,7 +169,6 @@ simulated function PostNetReceive()
         }
         else
         {
-
             LastPositionIndex = SavedPositionIndex;
             SavedPositionIndex = DriverPositionIndex;
             NextViewPoint();
@@ -362,7 +361,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         ViewRelativeRotation = PC.Rotation;
 
         // If the vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
-        if (!Cannon.bIsAssaultGun)
+        if (Cannon.bHasTurret)
         {
             ViewRelativeRotation.Yaw += Cannon.CurrentAim.Yaw;
         }
@@ -938,7 +937,7 @@ simulated function FixPCRotation(PlayerController PC)
     ViewRelativeRotation = PC.Rotation;
 
     // If the vehicle has a turret, add turret's yaw to player's relative rotation
-    if (!Cannon.bIsAssaultGun)
+    if (Cannon.bHasTurret)
     {
         ViewRelativeRotation.Yaw += Cannon.CurrentAim.Yaw;
     }

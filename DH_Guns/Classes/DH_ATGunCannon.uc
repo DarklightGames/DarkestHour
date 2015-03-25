@@ -109,6 +109,7 @@ simulated function int LimitYaw(int yaw)
 
 defaultproperties
 {
+    bHasTurret=false
     FrontArmorFactor=1.0
     RightArmorFactor=0.8
     LeftArmorFactor=0.8

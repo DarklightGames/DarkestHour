@@ -30,12 +30,12 @@ var()   float               FrontArmorFactor, RightArmorFactor, LeftArmorFactor,
 var()   float               FrontArmorSlope, RightArmorSlope, LeftArmorSlope, RearArmorSlope;
 var()   float               FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle;
 
-var()   bool                bIsAssaultGun;
-var()   float               GunMantletArmorFactor; // used for assault gun mantlet hits
+var()   bool                bHasTurret;            // this cannon is in a fully rotating turret
+var()   float               GunMantletArmorFactor; // used for mantlet hits for casemate-style vehicles without a turret
 var()   float               GunMantletSlope;
 
-var()   bool                bHasAddedSideArmor;
-var     bool                bRoundShattered; // tells projectile to show shattered round effects
+var()   bool                bHasAddedSideArmor;    // has side skirts that will make a hit by a HEAT projectile ineffective
+var     bool                bRoundShattered;       // tells projectile to show shattered round effects
 
 // Manual/powered turret
 var()   float               ManualRotationsPerSecond;
@@ -227,7 +227,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
     local vector  LocDir, HitDir, X, Y, Z;
     local rotator AimRot;
 
-    if (bIsAssaultGun)
+    if (!bHasTurret)
     {
         return CheckPenetration(P, GunMantletArmorFactor, GunMantletSlope, PenetrationNumber);
     }
@@ -1816,6 +1816,7 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
+    bHasTurret=true
     bUsesSecondarySpread=true
     bUsesTertiarySpread=true
     AltFireSpread=0.002
