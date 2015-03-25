@@ -112,7 +112,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 
     // Gather spawn point indices
-    if (!DHP.bSwapedTeams)
+    if (!DHP.bSwappedTeams)
     {
         SpawnPointIndex = DHP.SpawnPointIndex;
         SpawnVehicleIndex = DHP.SpawnVehicleIndex;
@@ -120,7 +120,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
     else
     {
-        DHP.bSwapedTeams = false;
+        DHP.bSwappedTeams = false;
     }
 }
 

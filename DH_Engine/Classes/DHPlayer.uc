@@ -9,7 +9,7 @@ var     int                     RedeployTime;
 var     float                   LastKilledTime;             // the time at which last death occured
 var     byte                    DesiredAmmoAmount;
 var     bool                    bShouldAttemptAutoDeploy;
-var     bool                    bSwapedTeams;
+var     bool                    bSwappedTeams;
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
@@ -2504,38 +2504,40 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     // Get and check DH Game
     DHG = DarkestHourGame(Level.Game);
 
-    if (DHG == none || DHG.SpawnManager == none)
+    if (DHG.DHLevelInfo.SpawnMode != ESM_RedOrchestra && (DHG == none || DHG.SpawnManager == none))
     {
         return;
     }
-
-    if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount()))
+    else
     {
-        Warn("Invalid spawn point index" @ SpawnPointIndex);
-        ClientChangePlayerInfoResult(19);
-        self.SpawnPointIndex = -1; // reset spawn point index to null
-        return;
-    }
+        if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount()))
+        {
+            Warn("Invalid spawn point index" @ SpawnPointIndex);
+            ClientChangePlayerInfoResult(19);
+            self.SpawnPointIndex = -1; // reset spawn point index to null
+            return;
+        }
 
-    if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount()))
-    {
-        Warn("Invalid vehicle pool index" @ VehiclePoolIndex);
-        ClientChangePlayerInfoResult(20);
-        self.VehiclePoolIndex = -1; // reset vehicle pool index to null
-        //return;
-    }
+        if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount()))
+        {
+            Warn("Invalid vehicle pool index" @ VehiclePoolIndex);
+            ClientChangePlayerInfoResult(20);
+            self.VehiclePoolIndex = -1; // reset vehicle pool index to null
+            //return;
+        }
 
-    if (SpawnVehicleIndex != -1 && (SpawnVehicleIndex < 0 || SpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount()))
-    {
-        Warn("Invalid spawn vehicle index" @ SpawnVehicleIndex);
-        ClientChangePlayerInfoResult(21);
-        self.SpawnVehicleIndex = -1; // reset spawn vehicle index to null
-        //return;
-    }
+        if (SpawnVehicleIndex != -1 && (SpawnVehicleIndex < 0 || SpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount()))
+        {
+            Warn("Invalid spawn vehicle index" @ SpawnVehicleIndex);
+            ClientChangePlayerInfoResult(21);
+            self.SpawnVehicleIndex = -1; // reset spawn vehicle index to null
+            //return;
+        }
 
-    self.SpawnPointIndex = SpawnPointIndex;
-    self.VehiclePoolIndex = VehiclePoolIndex;
-    self.SpawnVehicleIndex = SpawnVehicleIndex;
+        self.SpawnPointIndex = SpawnPointIndex;
+        self.VehiclePoolIndex = VehiclePoolIndex;
+        self.SpawnVehicleIndex = SpawnVehicleIndex;
+    }
 
     // Attempt to change teams
     if (newTeam != 255)

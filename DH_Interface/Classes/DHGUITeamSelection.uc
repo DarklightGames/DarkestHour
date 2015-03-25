@@ -125,7 +125,7 @@ function bool InternalOnClick( GUIComponent Sender )
         case b_TeamSelect[AXIS_TEAM_INDEX]:
             if (DHP.PlayerReplicationInfo.Team.TeamIndex == 1)
             {
-                DHP.bSwapedTeams = true;
+                DHP.bSwappedTeams = true;
             }
             SelectTeam(AXIS_TEAM_INDEX);
             break;
@@ -133,7 +133,7 @@ function bool InternalOnClick( GUIComponent Sender )
         case b_TeamSelect[ALLIES_TEAM_INDEX]:
             if (DHP.PlayerReplicationInfo.Team.TeamIndex == 0)
             {
-                DHP.bSwapedTeams = true;
+                DHP.bSwappedTeams = true;
             }
             SelectTeam(ALLIES_TEAM_INDEX);
             break;
