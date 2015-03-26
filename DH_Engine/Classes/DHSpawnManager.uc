@@ -805,9 +805,12 @@ event VehicleDestroyed(Vehicle V)
                 TriggerEvent(VehiclePools[i].OnVehicleDestroyedEvent, none, none);
             }
 
-            if (VehiclePools[i].OnDepletedEvent != '' && GetPoolSpawnsRemaining(i) == 0)
+            if (GetPoolSpawnsRemaining(i) <= 0)
             {
-                TriggerEvent(VehiclePools[i].OnDepletedEvent, none, none);
+                if (VehiclePools[i].OnDepletedEvent != '')
+                {
+                    TriggerEvent(VehiclePools[i].OnDepletedEvent, none, none);
+                }
 
                 if (VehiclePools[i].OnDepleteActivatePool != '')
                 {
