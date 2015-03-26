@@ -325,37 +325,36 @@ function HandleMenuButton()
     }
 }
 
-function ChangeSpawnIndices(int SpawnPointIndex, int VehiclePoolIndex, int SpawnVehicleIndex)
+function ChangeSpawnIndices(int NewSpawnPointIndex, int NewVehiclePoolIndex, int NewSpawnVehicleIndex)
 {
-
-    if (SpawnPointIndex >= 0 && SpawnPointIndex < DHGRI.SPAWN_POINTS_MAX)
+    if (NewSpawnPointIndex >= 0 && NewSpawnPointIndex < DHGRI.SPAWN_POINTS_MAX)
     {
-        self.SpawnPointIndex = SpawnPointIndex;
+        SpawnPointIndex = NewSpawnPointIndex;
     }
     else
     {
-        self.SpawnPointIndex = -1;
+        SpawnPointIndex = default.SpawnPointIndex;
     }
 
-    if (VehiclePoolIndex >= 0 && VehiclePoolIndex < arraycount(DHGRI.VehiclePoolVehicleClasses))
+    if (NewVehiclePoolIndex >= 0 && NewVehiclePoolIndex < arraycount(DHGRI.VehiclePoolVehicleClasses))
     {
-        self.VehiclePoolIndex = VehiclePoolIndex;
+        VehiclePoolIndex = NewVehiclePoolIndex;
     }
     else
     {
-        self.VehiclePoolIndex = -1;
+        VehiclePoolIndex = default.VehiclePoolIndex;
     }
 
-    if (SpawnVehicleIndex >= 0 && SpawnVehicleIndex < arraycount(DHGRI.SpawnVehicles))
+    if (NewSpawnVehicleIndex >= 0 && NewSpawnVehicleIndex < arraycount(DHGRI.SpawnVehicles))
     {
-        self.SpawnVehicleIndex = SpawnVehicleIndex;
+        SpawnVehicleIndex = NewSpawnVehicleIndex;
     }
     else
     {
-        self.SpawnVehicleIndex = -1;
+        SpawnVehicleIndex = default.SpawnVehicleIndex;
     }
 
-    //Log("SP: " $ self.SpawnPointIndex @ "VP: " $ self.VehiclePoolIndex @ "SV: " $ self.SpawnVehicleIndex);
+    //Log("SP: " $ SpawnPointIndex @ "VP: " $ VehiclePoolIndex @ "SV: " $ SpawnVehicleIndex);
 }
 
 function InternalOnMessage(coerce string Msg, float MsgLife)

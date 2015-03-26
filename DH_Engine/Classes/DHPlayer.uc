@@ -58,7 +58,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        RedeployTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex;
+        RedeployTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex; // Matt TEST - these vars can be bytes for more efficient replication (use 255 instead of -1 as default value for index)
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -2335,7 +2335,7 @@ simulated function CheckToAutoDeploy()
         else
         {
             // Can't change this value like this
-            SpawnPointIndex = -1;
+            SpawnPointIndex = default.SpawnPointIndex;
         }
     }
 
@@ -2497,69 +2497,86 @@ exec function SwitchTeam(){} // Disabled
 exec function ChangeTeam( int N ){} // Disabled
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
-function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, int SpawnPointIndex, int VehiclePoolIndex, int SpawnVehicleIndex)
+function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, int NewSpawnPointIndex, int NewVehiclePoolIndex, int NewSpawnVehicleIndex)
 {
     local DarkestHourGame DHG;
 
-    // Get and check DH Game
     DHG = DarkestHourGame(Level.Game);
 
-    if (DHG.DHLevelInfo.SpawnMode != ESM_RedOrchestra && (DHG == none || DHG.SpawnManager == none))
+    // This map uses the DH deploy system, not an RO spawn room
+    if (DHG != none && DHG.DHLevelInfo != none && DHG.DHLevelInfo.SpawnMode != ESM_RedOrchestra)
     {
-        return;
-    }
-    else
-    {
-        if (SpawnPointIndex != -1 && (SpawnPointIndex < 0 || SpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount()))
+        // We need a SpawnManager !
+        if (DHG.SpawnManager == none)
         {
-            Warn("Invalid spawn point index" @ SpawnPointIndex);
-            ClientChangePlayerInfoResult(19);
-            self.SpawnPointIndex = -1; // reset spawn point index to null
             return;
         }
 
-        if (VehiclePoolIndex != -1 && (VehiclePoolIndex < 0 || VehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount()))
+        // Invalid SpawnPointIndex - exit function
+        if (NewSpawnPointIndex < -1 || NewSpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount()) // -1 is the 'do nothing' passed value of SpawnPointIndex, which is acceptable
         {
-            Warn("Invalid vehicle pool index" @ VehiclePoolIndex);
+            Warn("Invalid spawn point index" @ NewSpawnPointIndex);
+            ClientChangePlayerInfoResult(19);
+            SpawnPointIndex = default.SpawnPointIndex; // reset spawn point index to null
+
+            return;
+        }
+
+        // Invalid VehiclePoolIndex
+        if (NewVehiclePoolIndex < -1 && NewVehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount())
+        {
+            Warn("Invalid vehicle pool index" @ NewVehiclePoolIndex);
             ClientChangePlayerInfoResult(20);
-            self.VehiclePoolIndex = -1; // reset vehicle pool index to null
+            VehiclePoolIndex = default.VehiclePoolIndex; // reset vehicle pool index to null
             //return;
         }
 
-        if (SpawnVehicleIndex != -1 && (SpawnVehicleIndex < 0 || SpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount()))
+        // Invalid SpawnVehicleIndex
+        if (NewSpawnVehicleIndex < -1 || NewSpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount())
         {
-            Warn("Invalid spawn vehicle index" @ SpawnVehicleIndex);
+            Warn("Invalid spawn vehicle index" @ NewSpawnVehicleIndex);
             ClientChangePlayerInfoResult(21);
-            self.SpawnVehicleIndex = -1; // reset spawn vehicle index to null
+            SpawnVehicleIndex = default.SpawnVehicleIndex; // reset spawn vehicle index to null
             //return;
         }
 
-        self.SpawnPointIndex = SpawnPointIndex;
-        self.VehiclePoolIndex = VehiclePoolIndex;
-        self.SpawnVehicleIndex = SpawnVehicleIndex;
+        SpawnPointIndex = NewSpawnPointIndex;
+        VehiclePoolIndex = NewVehiclePoolIndex;
+        SpawnVehicleIndex = NewSpawnVehicleIndex;
     }
 
     // Attempt to change teams
     if (newTeam != 255)
     {
-        // Specate
+        // Spectate
         if (newTeam == 254)
         {
             BecomeSpectator();
 
-            // Check if change was successfull
-            if (!PlayerReplicationInfo.bOnlySpectator)
+            // Check if change was successful
+            if (PlayerReplicationInfo == none || !PlayerReplicationInfo.bOnlySpectator)
             {
                 if (PlayerReplicationInfo == none)
+                {
                     ClientChangePlayerInfoResult(01);
+                }
                 else if (Level.Game.NumSpectators >= Level.Game.MaxSpectators)
+                {
                     ClientChangePlayerInfoResult(02);
+                }
                 else if (IsInState('GameEnded'))
+                {
                     ClientChangePlayerInfoResult(03);
+                }
                 else if (IsInState('RoundEnded'))
+                {
                     ClientChangePlayerInfoResult(04);
+                }
                 else
+                {
                     ClientChangePlayerInfoResult(99);
+                }
+
                 return;
             }
         }
@@ -2568,14 +2585,18 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
             if (newTeam == 250) // auto select
             {
                 if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
+                {
                     BecomeActivePlayer();
+                }
 
                 newTeam = ServerAutoSelectAndChangeTeam();
             }
             else if (ROTeamGame(Level.Game).PickTeam(newTeam, self) == newTeam)
             {
                 if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator)
+                {
                     BecomeActivePlayer();
+                }
 
                 ServerChangeTeam(newTeam);
 
@@ -2583,9 +2604,9 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
                 DesiredRole = -1;
                 CurrentRole = -1;
                 DesiredAmmoAmount = 0;
-                SpawnPointIndex = -1;
-                SpawnVehicleIndex = -1;
-                VehiclePoolIndex = -1;
+                SpawnPointIndex = default.SpawnPointIndex;
+                SpawnVehicleIndex = default.SpawnVehicleIndex;
+                VehiclePoolIndex = default.VehiclePoolIndex;
                 MyLastVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
@@ -2593,32 +2614,52 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
             }
 
             // Check if change failed and output results
-            if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none ||
-                PlayerReplicationInfo.Team.TeamIndex != newTeam)
+            if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none || PlayerReplicationInfo.Team.TeamIndex != newTeam)
             {
                 if (PlayerReplicationInfo == none)
+                {
                     ClientChangePlayerInfoResult(10);
+                }
                 else if (Level.Game.bMustJoinBeforeStart)
+                {
                     ClientChangePlayerInfoResult(11);
+                }
                 else if (Level.Game.NumPlayers >= Level.Game.MaxPlayers)
+                {
                     ClientChangePlayerInfoResult(12);
+                }
                 else if (Level.Game.MaxLives > 0)
+                {
                     ClientChangePlayerInfoResult(13);
+                }
                 else if (IsInState('GameEnded'))
+                {
                     ClientChangePlayerInfoResult(14);
+                }
                 else if (IsInState('RoundEnded'))
+                {
                     ClientChangePlayerInfoResult(15);
+                }
                 else if (Level.Game.bMustJoinBeforeStart && Level.Game.GameReplicationInfo.bMatchHasBegun)
+                {
                     ClientChangePlayerInfoResult(16);
+                }
                 else if (ROTeamGame(Level.Game) != none && ROTeamGame(Level.Game).PickTeam(newTeam, self) != newTeam)
                 {
-                    if (ROTeamGame(Level.Game).bPlayersVsBots && (Level.NetMode != NM_Standalone))
+                    if (ROTeamGame(Level.Game).bPlayersVsBots && Level.NetMode != NM_Standalone)
+                    {
                         ClientChangePlayerInfoResult(17);
+                    }
                     else
+                    {
                         ClientChangePlayerInfoResult(18);
+                    }
                 }
                 else
+                {
                     ClientChangePlayerInfoResult(99);
+                }
+
                 return;
             }
         }
@@ -2627,21 +2668,21 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     // Attempt to change role
     if (newRole != 255)
     {
-        //log("changing role...");
         ChangeRole(newRole);
 
-        // Check if change was successfull
+        // Check if change was successful
         if (DesiredRole != newRole)
         {
-            if (ROTeamGame(Level.Game) != none &&
-                PlayerReplicationInfo != none &&
-                PlayerReplicationInfo.Team != none &&
+            if (ROTeamGame(Level.Game) != none && PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none &&
                 ROTeamGame(Level.Game).RoleLimitReached(PlayerReplicationInfo.Team.TeamIndex, newRole))
             {
                 ClientChangePlayerInfoResult(100);
             }
             else
+            {
                 ClientChangePlayerInfoResult(199);
+            }
+
             return;
         }
     }
@@ -2650,13 +2691,18 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
 
     // Success!
     if (newTeam == AXIS_TEAM_INDEX)
+    {
         ClientChangePlayerInfoResult(97); // successfully picked axis team
+    }
     else if (newTeam == ALLIES_TEAM_INDEX)
+    {
         ClientChangePlayerInfoResult(98); // successfully picked allies team
+    }
     else
+    {
         ClientChangePlayerInfoResult(00);
+    }
 }
-
 
 defaultproperties
 {
