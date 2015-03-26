@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_OrangeSmokeEffect extends Emitter;
+class DH_OrangeSmokeEffect extends DH_SmokeEffectBase;
 
 simulated function PostBeginPlay()
 {
@@ -34,14 +34,10 @@ simulated function Timer()
     }
 }
 
-// Modified so in single player this effect is removed if the ResetGame option is used (note this won't work on a net client as Reset is only called on the server)
-simulated function Reset()
-{
-    Destroy();
-}
-
 defaultproperties
 {
+    LifeSpan=50.0
+
     Begin Object Class=SpriteEmitter Name=SpriteEmitter0
         FadeOut=true
         FadeIn=true
@@ -73,12 +69,4 @@ defaultproperties
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.05,Max=0.05),Z=(Min=0.1,Max=0.1))
     End Object
     Emitters(0)=SpriteEmitter'DH_Effects.DH_OrangeSmokeEffect.SpriteEmitter0'
-    AutoDestroy=true
-    bNoDelete=false
-    bNetTemporary=true
-    RemoteRole=ROLE_SimulatedProxy
-    LifeSpan=50.0
-    Style=STY_Masked
-    bHardAttach=true
-    bDirectional=true
 }

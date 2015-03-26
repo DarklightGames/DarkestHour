@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SmokeShellEffect extends DH_SmokeEffectBase;
+class DH_SmokeGrenadeEffect extends DH_SmokeEffectBase;
 
 defaultproperties
 {
@@ -25,8 +25,8 @@ defaultproperties
         MaxParticles=30
         SpinsPerSecondRange=(X=(Min=0.05,Max=0.05))
         StartSpinRange=(X=(Min=-0.5,Max=0.5))
-        SizeScale(1)=(RelativeTime=2.0,RelativeSize=6.0)
-        StartSizeRange=(X=(Min=100.0,Max=100.0),Y=(Min=100.0,Max=100.0),Z=(Min=75.0,Max=75.0))
+        SizeScale(1)=(RelativeTime=1.0,RelativeSize=3.0)
+        StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
         InitialParticlesPerSecond=4.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke'
@@ -34,7 +34,7 @@ defaultproperties
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=15.0,Max=50.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
     End Object
-    Emitters(0)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter0'
+    Emitters(0)=SpriteEmitter'SpriteEmitter0'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter1
         FadeOut=true
@@ -55,10 +55,10 @@ defaultproperties
         StartLocationRange=(X=(Min=-200.0,Max=200.0),Y=(Min=-200.0,Max=200.0),Z=(Min=200.0,Max=300.0))
         SpinsPerSecondRange=(X=(Min=0.003,Max=0.004))
         StartSpinRange=(X=(Min=0.05,Max=0.05))
-        SizeScale(0)=(RelativeSize=0.5)
-        SizeScale(1)=(RelativeTime=0.56,RelativeSize=1.5)
-        SizeScale(2)=(RelativeTime=1.74,RelativeSize=2.0)
-        StartSizeRange=(X=(Min=600.0,Max=800.0),Y=(Min=600.0,Max=800.0),Z=(Min=400.0,Max=500.0))
+        SizeScale(0)=(RelativeSize=0.25)
+        SizeScale(1)=(RelativeTime=0.28,RelativeSize=0.75)
+        SizeScale(2)=(RelativeTime=0.87,RelativeSize=1.0)
+        StartSizeRange=(X=(Min=300.0,Max=400.0),Y=(Min=300.0,Max=400.0),Z=(Min=300.0,Max=400.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke'
@@ -67,7 +67,7 @@ defaultproperties
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
         VelocityLossRange=(X=(Min=0.5,Max=0.5),Y=(Min=0.5,Max=0.5))
     End Object
-    Emitters(1)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter1'
+    Emitters(1)=SpriteEmitter'SpriteEmitter1'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter2
         FadeOut=true
@@ -82,15 +82,15 @@ defaultproperties
         ColorScale(0)=(Color=(B=128,G=128,R=128,A=255))
         ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
         Opacity=0.8
-        FadeOutStartTime=50.400002
+        FadeOutStartTime=50.4
         FadeInEndTime=4.8
         StartLocationRange=(X=(Min=-350.0,Max=350.0),Y=(Min=-350.0,Max=350.0),Z=(Max=100.0))
         SpinsPerSecondRange=(X=(Min=0.003,Max=0.004))
         StartSpinRange=(X=(Min=-0.05,Max=0.05))
-        SizeScale(0)=(RelativeSize=1.5)
-        SizeScale(1)=(RelativeTime=1.0,RelativeSize=1.8)
-        SizeScale(2)=(RelativeTime=1.74,RelativeSize=2.0)
-        StartSizeRange=(X=(Min=600.0,Max=800.0),Y=(Min=600.0,Max=800.0),Z=(Min=400.0,Max=500.0))
+        SizeScale(0)=(RelativeSize=0.75)
+        SizeScale(1)=(RelativeTime=0.5,RelativeSize=0.9)
+        SizeScale(2)=(RelativeTime=0.87,RelativeSize=1.0)
+        StartSizeRange=(X=(Min=300.0,Max=400.0),Y=(Min=300.0,Max=400.0),Z=(Min=300.0,Max=400.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke'
@@ -99,7 +99,7 @@ defaultproperties
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
         VelocityLossRange=(X=(Min=0.5,Max=0.5),Y=(Min=0.5,Max=0.5))
     End Object
-    Emitters(2)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter2'
+    Emitters(2)=SpriteEmitter'SpriteEmitter2'
 
     Begin Object Class=SpriteEmitter Name=SpriteEmitter3
         FadeOut=true
@@ -120,8 +120,8 @@ defaultproperties
         StartLocationRange=(X=(Min=-300.0,Max=300.0),Y=(Min=-300.0,Max=300.0),Z=(Min=25.0,Max=25.0))
         SpinsPerSecondRange=(X=(Min=0.025,Max=0.05))
         StartSpinRange=(X=(Min=-0.5,Max=0.5))
-        SizeScale(0)=(RelativeTime=2.0,RelativeSize=6.0)
-        StartSizeRange=(X=(Min=100.0,Max=100.0),Y=(Min=100.0,Max=100.0),Z=(Min=75.0,Max=100.0))
+        SizeScale(0)=(RelativeTime=1.0,RelativeSize=3.0)
+        StartSizeRange=(X=(Min=50.0,Max=100.0),Y=(Min=50.0,Max=100.0),Z=(Min=50.0,Max=100.0))
         InitialParticlesPerSecond=1.5
         DrawStyle=PTDS_AlphaBlend
         Texture=texture'Effects_Tex.Smoke.grenadesmoke_fill'
@@ -131,5 +131,5 @@ defaultproperties
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0))
         VelocityLossRange=(X=(Min=0.15,Max=0.15),Y=(Min=0.15,Max=0.15),Z=(Min=0.1,Max=0.1))
     End Object
-    Emitters(3)=SpriteEmitter'DH_Effects.DH_SmokeShellEffect.SpriteEmitter3'
+    Emitters(3)=SpriteEmitter'SpriteEmitter3'
 }

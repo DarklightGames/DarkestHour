@@ -75,7 +75,7 @@ defaultproperties
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
     Damage=0.0
     DamageRadius=0.0
-    SmokeEmitterClass=class'ROEffects.GrenadeSmokeEffect'
+    SmokeEmitterClass=class'DH_Effects.DH_SmokeGrenadeEffect'
     SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
     SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SmokeSoundDuration=33.0
