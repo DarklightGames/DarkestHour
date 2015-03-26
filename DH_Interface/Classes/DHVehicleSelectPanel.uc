@@ -326,18 +326,19 @@ function bool InternalOnClick(GUIComponent Sender)
             break;
 
         case lb_CrewVehiclePools:
-            PoolIndex = CrewedVehiclePoolIndices[lb_CrewVehiclePools.List.Index];
-
-            //Update pool index
-            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
-            break;
-
+            if (lb_CrewVehiclePools.List.Index >= 0 && lb_CrewVehiclePools.List.Index < CrewedVehiclePoolIndices.Length)
+            {
+                PoolIndex = CrewedVehiclePoolIndices[lb_CrewVehiclePools.List.Index];
+                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1); // update pool index
+                break;
+            }
         case lb_NoCrewVehiclePools:
-            PoolIndex = NonCrewedVehiclePoolIndices[lb_NoCrewVehiclePools.List.Index];
-
-            //Update pool index
-            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
-            break;
+            if (lb_NoCrewVehiclePools.List.Index >= 0 && lb_NoCrewVehiclePools.List.Index < NonCrewedVehiclePoolIndices.Length)
+            {
+                PoolIndex = NonCrewedVehiclePoolIndices[lb_NoCrewVehiclePools.List.Index];
+                MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1); // update pool index
+                break;
+            }
     }
 
     return true;

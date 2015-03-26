@@ -298,6 +298,12 @@ simulated function bool IsVehiclePoolIndexValid(int VehiclePoolIndex, RORoleInfo
 
     VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
 
+    if (VehicleClass == none)
+    {
+        Log("Failed at VehicleClass check");
+        return false;
+    }
+
     if (VehicleClass.default.bMustBeTankCommander && !RI.bCanBeTankCrew)
     {
         Log("Tank commander check");
