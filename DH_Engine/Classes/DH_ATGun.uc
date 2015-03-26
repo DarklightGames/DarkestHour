@@ -315,5 +315,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Guns.DH_ATGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Engine.DH_ATGun.KParams0'
 }
