@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannonShellAPDS extends DH_ROTankCannonShell;
-
+class DH_ROTankCannonShellAPDS extends DH_ROTankCannonShell
+    abstract;
 
 defaultproperties
 {

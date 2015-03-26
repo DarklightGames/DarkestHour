@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannonShellHEAT extends DH_ROTankCannonShell;
+class DH_ROTankCannonShellHEAT extends DH_ROTankCannonShell
+    abstract;
 
 // Penetration:
 var bool  bInHitWall;

@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannonShellHE extends DH_ROTankCannonShell;
-
+class DH_ROTankCannonShellHE extends DH_ROTankCannonShell
+    abstract;
 
 // Modified to add different effects if didn't penetrate armor & to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)

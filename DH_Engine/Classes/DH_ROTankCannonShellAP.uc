@@ -6,8 +6,8 @@
 // (with no armor-piercing cap or ballistic cap)
 //==============================================================================
 
-class DH_ROTankCannonShellAP extends DH_ROTankCannonShell;
-
+class DH_ROTankCannonShellAP extends DH_ROTankCannonShell
+    abstract;
 
 defaultproperties
 {

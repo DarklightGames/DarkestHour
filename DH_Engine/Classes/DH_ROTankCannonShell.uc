@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannonShell extends DH_ROAntiVehicleProjectile;
+class DH_ROTankCannonShell extends DH_ROAntiVehicleProjectile
+    abstract;
 
 var     array<sound>        ExplosionSound;       // sound of the round exploding (array for random selection)
 var     float               ExplosionSoundVolume; // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)

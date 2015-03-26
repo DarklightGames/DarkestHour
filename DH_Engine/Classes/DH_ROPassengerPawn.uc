@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROPassengerPawn extends ROPassengerPawn;
+class DH_ROPassengerPawn extends ROPassengerPawn
+    abstract;
 
 /*
 Matt UK, November 2014 - added new system to avoid rider pawns needing to exist on net clients unless rider position is occupied

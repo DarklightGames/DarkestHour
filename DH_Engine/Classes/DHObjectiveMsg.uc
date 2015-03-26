@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHObjectiveMsg extends ROObjectiveMsg;
+class DHObjectiveMsg extends ROObjectiveMsg
+    abstract;
 
 defaultproperties
 {
