@@ -59,6 +59,8 @@ var byte                VehiclePoolActiveCounts[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolSpawnsRemainings[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolMaxActives[VEHICLE_POOLS_MAX];
 
+var byte                MaxTeamVehicles[2];
+
 const SPAWN_POINTS_MAX = 64;
 
 var DHSpawnPoint        SpawnPoints[SPAWN_POINTS_MAX];
@@ -80,7 +82,7 @@ replication
         CarriedAlliedRadios, CarriedAxisRadios, AlliedMortarTargets, GermanMortarTargets,
         VehiclePoolVehicleClasses, VehiclePoolIsActives, VehiclePoolNextAvailableTimes, VehiclePoolActiveCounts,
         VehiclePoolSpawnsRemainings, VehiclePoolMaxActives, VehiclePoolsUpdateTime,
-        SpawnPointIsActives, SpawnPointsUpdateTime, SpawnVehicles;
+        SpawnPointIsActives, SpawnPointsUpdateTime, SpawnVehicles, MaxTeamVehicles;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;

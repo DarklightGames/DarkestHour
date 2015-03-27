@@ -155,3 +155,152 @@ static final function float UnrealToMeters(coerce float Unreal)
 {
     return Unreal * 0.01656945917285259809119830328738;
 }
+
+static final function string GetNumberString(int N, int Precision)
+{
+    local string NumberString;
+
+    NumberString = string(N);
+
+    N = Precision - Len(NumberString);
+
+    while (N-- > 0)
+    {
+        NumberString = "0" $ NumberString;
+    }
+
+    return NumberString;
+}
+
+static final function string GetDurationString(int Seconds, string Format)
+{
+    local int TotalYears;
+    local int TotalDays;
+    local int TotalHours;
+    local int TotalMinutes;
+    local int TotalSeconds;
+    local int Years;
+    local int Days;
+    local int Hours;
+    local int Minutes;
+    local int i;
+    local int Precision;
+    local int N;
+    local string Token, S;
+    local bool bIsOptional;
+
+    const SECONDS_PER_YEAR = 31536000;
+    const SECONDS_PER_DAY = 86400;
+    const SECONDS_PER_HOUR = 3600;
+    const SECONDS_PER_MINUTE = 60;
+
+    TotalYears = Seconds / SECONDS_PER_YEAR;
+    TotalDays = Seconds / SECONDS_PER_DAY;
+    TotalHours = Seconds / SECONDS_PER_HOUR;
+    TotalMinutes = Seconds / SECONDS_PER_MINUTE;
+
+    Years = Seconds / SECONDS_PER_YEAR;
+    Seconds = Seconds % SECONDS_PER_YEAR;
+
+    Days = Seconds / SECONDS_PER_DAY;
+    Seconds = Seconds % SECONDS_PER_DAY;
+
+    Hours = Seconds / SECONDS_PER_HOUR;
+    Seconds = Seconds % SECONDS_PER_HOUR;
+
+    Minutes = Seconds / SECONDS_PER_MINUTE;
+    Seconds = Seconds % SECONDS_PER_MINUTE;
+
+    while (i < Len(Format))
+    {
+        Token = Mid(Format, i++, 1);
+
+        if (Token == "\\")
+        {
+            if (i < Len(Format) - 1)
+            {
+                S $= Mid(Format, i++, 1);
+
+                continue;
+            }
+        }
+        else if (Token == "[")
+        {
+            bIsOptional = true;
+
+            continue;
+        }
+        else if (Token == "]")
+        {
+            bIsOptional = false;
+
+            continue;
+        }
+        else if (Token == "Y")
+        {
+            N = TotalYears;
+        }
+        else if (Token == "H")
+        {
+            N = TotalHours;
+        }
+        else if (Token == "M")
+        {
+            N = TotalMinutes;
+        }
+        else if (Token == "S")
+        {
+            N = TotalSeconds;
+        }
+        else if (Token == "y")
+        {
+            N = Years;
+        }
+        else if (Token == "d")
+        {
+            N = Days;
+        }
+        else if (Token == "h")
+        {
+            N = Hours;
+        }
+        else if (Token == "m")
+        {
+            N = Minutes;
+        }
+        else if (Token == "s")
+        {
+            N = Seconds;
+        }
+        else
+        {
+            if (!bIsOptional || N > 0)
+            {
+                S $= Token;
+            }
+
+            continue;
+        }
+
+        Precision = 1;
+
+        // accumulate identical tokens to get the precision
+        while (i < Len(Format))
+        {
+            if (Token != Mid(Format, i, 1))
+            {
+                break;
+            }
+
+            ++i;
+            ++Precision;
+        }
+
+        if (!bIsOptional || N > 0)
+        {
+            S $= GetNumberString(N, Precision);
+        }
+    }
+
+    return S;
+}

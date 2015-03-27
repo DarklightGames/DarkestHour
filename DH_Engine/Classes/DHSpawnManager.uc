@@ -69,7 +69,6 @@ const SPAWN_VEHICLES_MAX = 8;
 
 var(Vehicles) array<VehiclePool>        VehiclePools;
 var(Vehicles) byte                      MaxTeamVehicles[2];
-var(Vehicles) byte                      MaxDestroyedVehicles;
 
 var class<LocalMessage>                 VehicleDestroyedMessageClass;
 
@@ -82,8 +81,9 @@ var private config bool                 bDebug;
 
 function PostBeginPlay()
 {
-    local byte i;
+    local int i, j;
     local DHSpawnPoint SP;
+    local bool bIsVehiclePoolValid;
 
     super.PostBeginPlay();
 
@@ -116,20 +116,46 @@ function PostBeginPlay()
 
     for (i = 0; i < VehiclePools.Length; ++i)
     {
+        if (VehiclePools[i].VehicleClass == none)
+        {
+            VehiclePools.Remove(i--, 1);
+
+            continue;
+        }
+
+        bIsVehiclePoolValid = true;
+
+        // Vehicle pools must have a unique VehicleClass
+        for (j = i - 1; j >= 0; --j)
+        {
+            Log("" $ i @ j);
+
+            if (VehiclePools[i].VehicleClass == VehiclePools[j].VehicleClass)
+            {
+                // Vehicle class already exists, mark as non-unique
+                bIsVehiclePoolValid = false;
+            }
+        }
+
+        if (!bIsVehiclePoolValid)
+        {
+            Warn("VehiclePools[" $ i $ "].VehicleClass (" $ VehiclePools[i].VehicleClass $ ") is not unique and will be removed!");
+
+            // Remove VehiclePool from the list
+            VehiclePools.Remove(i--, 1);
+
+            continue;
+        }
+
         SetPoolIsActive(i, VehiclePools[i].bIsInitiallyActive);
 
         UpdatePoolReplicationInfo(i);
     }
 
-    for (i = 0; i < VehiclePools.Length; ++i)
+    for (i = 0; i < arraycount(GRI.MaxTeamVehicles); ++i)
     {
-        if (VehiclePools[i].VehicleClass != none)
-        {
-            VehiclePools[i].VehicleClass.static.StaticPrecache(Level);
-        }
+        GRI.MaxTeamVehicles[i] = MaxTeamVehicles[i];
     }
-
-    //TODO: verify uniqueness of VehicleClass in VehiclePools
 }
 
 function Reset()
@@ -388,6 +414,8 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
 
         //Increment team vehicle count
         ++TeamVehicleCounts[V.default.VehicleTeam];
+
+        --GRI.MaxTeamVehicles[V.default.VehicleTeam];
 
         //Update pool properties
         SetPoolNextAvailableTime(C.VehiclePoolIndex, GRI.ElapsedTime + VehiclePools[C.VehiclePoolIndex].RespawnTime);
@@ -776,7 +804,9 @@ event VehicleDestroyed(Vehicle V)
             Vehicles.Remove(i, 1);
 
             //Decrement team vehicle count
-            --TeamVehicleCounts[ROVehicle(V).default.VehicleTeam];
+            --TeamVehicleCounts[Vehicles[i].VehicleTeam];
+
+            ++GRI.MaxTeamVehicles[Vehicles[i].VehicleTeam];
 
             break;
         }
@@ -1149,7 +1179,6 @@ defaultproperties
     SpawnError_SpawnPointsDontMatch=15
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
-    MaxDestroyedVehicles=8
     VehicleDestroyedMessageClass=class'DHVehicleDestroyedMessage'
     bDebug=true
     SpawnPointType_Infantry=0

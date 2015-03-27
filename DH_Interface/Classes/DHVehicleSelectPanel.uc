@@ -185,19 +185,22 @@ function UpdateVehiclePools()
 
         li_CrewVehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
 
-        if (DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
+        if (DHGRI.MaxTeamVehicles[DHP.GetTeamNum()] <= 0 ||
+            DHGRI.VehiclePoolSpawnsRemainings[PoolIndex] <= 0 ||
+            DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
             DHGRI.VehiclePoolActiveCounts[PoolIndex] >= DHGRI.VehiclePoolMaxActives[PoolIndex] ||
             !myDeployMenu.bRoleIsCrew)
         {
-            li_CrewVehiclePools.SetDisabledAtIndex(i, true); // Disabled
+            li_CrewVehiclePools.SetDisabledAtIndex(i, true);
         }
         else
         {
-            li_CrewVehiclePools.SetDisabledAtIndex(i, false); // Enabled
+            li_CrewVehiclePools.SetDisabledAtIndex(i, false);
 
             if (bNoPoolSet)
             {
                 MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
+
                 bNoPoolSet = false;
             }
         }
@@ -216,18 +219,21 @@ function UpdateVehiclePools()
 
         li_NoCrewVehiclePools.SetItemAtIndex(i, FormatPoolString(PoolIndex));
 
-        if (DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
+        if (DHGRI.MaxTeamVehicles[DHP.GetTeamNum()] <= 0 ||
+            DHGRI.VehiclePoolSpawnsRemainings[PoolIndex] <= 0 ||
+            DHGRI.VehiclePoolIsActives[PoolIndex] == 0 ||
             DHGRI.VehiclePoolActiveCounts[PoolIndex] >= DHGRI.VehiclePoolMaxActives[PoolIndex])
         {
-            li_NoCrewVehiclePools.SetDisabledAtIndex(i, true); // Disabled
+            li_NoCrewVehiclePools.SetDisabledAtIndex(i, true);
         }
         else
         {
-            li_NoCrewVehiclePools.SetDisabledAtIndex(i, false); // Enabled
+            li_NoCrewVehiclePools.SetDisabledAtIndex(i, false);
 
             if (bNoPoolSet)
             {
                 MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, PoolIndex, -1);
+
                 bNoPoolSet = false;
             }
         }
@@ -237,7 +243,9 @@ function UpdateVehiclePools()
     if (bNoPoolSet)
     {
         li_NoCrewVehiclePools.SetIndex(-1);
+
         MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, -1, -1);
+
         return;
     }
 
@@ -282,22 +290,24 @@ function string FormatPoolString(int i)
         PoolString = "ERROR";
     }
 
-    // Add how many remaining
+    // Remaining spawns (if not infinite)
     if (DHGRI.VehiclePoolSpawnsRemainings[i] != 255)
     {
         PoolString @= "[" $ DHGRI.VehiclePoolSpawnsRemainings[i] $ "]";
     }
 
-    // Add respawn time
+    // Respawn time
     PoolRespawnTime = FMax(0.0, DHGRI.VehiclePoolNextAvailableTimes[i] - DHGRI.ElapsedTime);
 
     if (PoolRespawnTime > 0)
     {
-        PoolString @= "(" $ GetTimeString(PoolRespawnTime) $ ")";
+        PoolString @= "(" $ class'DHLib'.static.GetDurationString(PoolRespawnTime, "m:ss") $ ")";
     }
 
-    if (DHGRI.VehiclePoolMaxActives[i] == DHGRI.VehiclePoolActiveCounts[i])
+    if (DHGRI.MaxTeamVehicles[DHGRI.VehiclePoolVehicleClasses[i].default.VehicleTeam] <= 0 ||
+        DHGRI.VehiclePoolMaxActives[i] == DHGRI.VehiclePoolActiveCounts[i])
     {
+        // Indicate either pool or team max has been reached
         PoolString @= "*MAX*";
     }
 
@@ -342,25 +352,6 @@ function bool InternalOnClick(GUIComponent Sender)
     }
 
     return true;
-}
-
-// Remove this when we add it to library
-static function string GetTimeString(float Time)
-{
-    local string S;
-
-    Time = FMax(0.0, Time);
-
-    S = int(Time / 60) $ ":";
-
-    Time = Time % 60;
-
-    if (Time < 10)
-        S = S $ "0" $ int(Time);
-    else
-        S = S $ int(Time);
-
-    return S;
 }
 
 defaultproperties
