@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WSSSemiAuto_Snow extends Note;
+class DH_WSSSemiAuto_Snow extends DHDeprecated;
 
 defaultproperties
 {

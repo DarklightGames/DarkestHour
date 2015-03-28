@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FJ45SemiAuto extends DHDeprecated;
+class DHDeprecated extends Note
+    notplaceable;
 
 defaultproperties
 {
-    Text="Deprecated role."
+    Text="This actor is deprecated and should be removed."
 }

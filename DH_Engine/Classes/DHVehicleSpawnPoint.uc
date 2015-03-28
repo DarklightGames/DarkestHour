@@ -1,7 +1,7 @@
 //-----------------------------------------------------------
 // Remove this class
 //-----------------------------------------------------------
-class DHVehicleSpawnPoint extends Note;
+class DHVehicleSpawnPoint extends DHDeprecated;
 
 defaultproperties
 {

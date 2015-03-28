@@ -3,4 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MobileTeleporter extends Note;
+class DH_MobileTeleporter extends DHDeprecated;

@@ -2,7 +2,7 @@
 // REMOVE THIS LATER
 //==============================================================================
 
-class DHLocationHintInfantry extends Note
+class DHLocationHintInfantry extends DHDeprecated
     placeable;
 
 defaultproperties

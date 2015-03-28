@@ -896,4 +896,5 @@ defaultproperties
     InventoryGroup=5
     BobDamping=1.6
     FillAmmoMagCount=1
+    Ranges(0)=0
 }

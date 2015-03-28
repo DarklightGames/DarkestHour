@@ -1,7 +1,7 @@
 //-----------------------------------------------------------
 // Remove this class
 //-----------------------------------------------------------
-class DHInfantrySpawnPoint extends Note;
+class DHInfantrySpawnPoint extends DHDeprecated;
 
 defaultproperties
 {

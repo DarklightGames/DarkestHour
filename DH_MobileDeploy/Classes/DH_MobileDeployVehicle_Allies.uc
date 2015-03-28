@@ -3,4 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MobileDeployVehicle_Allies extends Note;
+class DH_MobileDeployVehicle_Allies extends DHDeprecated;

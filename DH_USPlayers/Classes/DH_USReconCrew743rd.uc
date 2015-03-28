@@ -3,4 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_USReconCrew743rd extends Note;
+class DH_USReconCrew743rd extends DHDeprecated;

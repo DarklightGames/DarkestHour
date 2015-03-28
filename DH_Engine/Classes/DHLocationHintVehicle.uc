@@ -2,7 +2,7 @@
 // REMOVE THIS LATER
 //==============================================================================
 
-class DHLocationHintVehicle extends Note
+class DHLocationHintVehicle extends DHDeprecated
     placeable;
 
 defaultproperties

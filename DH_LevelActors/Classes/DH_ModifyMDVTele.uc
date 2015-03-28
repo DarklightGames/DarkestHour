@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ModifyMDVTele extends Note
+class DH_ModifyMDVTele extends DHDeprecated
     placeable;
 
 defaultproperties

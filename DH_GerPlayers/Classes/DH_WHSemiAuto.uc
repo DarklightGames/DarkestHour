@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WHSemiAuto extends Note;
+class DH_WHSemiAuto extends DHDeprecated;
 
 defaultproperties
 {

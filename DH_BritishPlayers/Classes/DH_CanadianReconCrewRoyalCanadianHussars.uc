@@ -3,4 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_CanadianReconCrewRoyalCanadianHussars extends Note;
+class DH_CanadianReconCrewRoyalCanadianHussars extends DHDeprecated;
