@@ -571,11 +571,6 @@ function bool ResupplyAmmo()
     return true;
 }
 
-function bool bIsATWeapon()
-{
-    return true;
-}
-
 defaultproperties
 {
     Ranges(0)=85
