@@ -298,7 +298,7 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
         return;
     }
 
-    if (C.VehiclePoolIndex != -1) // Vehicle Pool
+    if (C.VehiclePoolIndex != 255) // Vehicle Pool
     {
         if (bDebug)
         {
@@ -307,7 +307,7 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
 
         SpawnVehicle(C, SpawnError);
     }
-    else if (C.SpawnVehicleIndex != -1) // Spawn Vehicle
+    else if (C.SpawnVehicleIndex != 255) // Spawn Vehicle
     {
         if (bDebug)
         {
@@ -608,7 +608,7 @@ function byte GetSpawnPointError(DHPlayer C, ESpawnPointType SpawnPointType)
 {
     local DHSpawnPoint SP;
 
-    if (C.SpawnPointIndex < 0 || C.SpawnPointIndex >= SpawnPoints.Length)
+    if (C.SpawnPointIndex >= SpawnPoints.Length)
     {
         Warn("[DHSM] Fatal error in DrySpawnInfantry (either invalid indices passed in or pool's VehicleClass is none)");
 
@@ -655,7 +655,7 @@ function byte GetVehiclePoolError(DHPlayer C, DHSpawnPoint SP)
         return SpawnError_Fatal;
     }
 
-    if (C.VehiclePoolIndex < 0 || C.VehiclePoolIndex >= VEHICLE_POOLS_MAX || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
+    if (C.VehiclePoolIndex >= VEHICLE_POOLS_MAX || VehiclePools[C.VehiclePoolIndex].VehicleClass == none)
     {
         Warn("[DHSM] Fatal error in DrySpawn (either invalid indices passed in or pool's VehicleClass is none)");
 
@@ -873,7 +873,7 @@ private function GetSpawnPointIndicesByTag(name SpawnPointTag, out array<byte> S
     }
 }
 
-private function SetSpawnPointIsActive(int SpawnPointIndex, bool bIsActive)
+private function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 {
     GRI.SetSpawnPointIsActive(SpawnPointIndex, bIsActive);
 }

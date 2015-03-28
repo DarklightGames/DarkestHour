@@ -104,11 +104,11 @@ function ShowPanel(bool bShow)
         // If spawnpoint index is type vehicles, then nullify it
         if (SP != none && SP.Type == ESPT_Vehicles)
         {
-            MyDeployMenu.ChangeSpawnIndices(-1, -1, MyDeployMenu.SpawnVehicleIndex);
+            MyDeployMenu.ChangeSpawnIndices(255, 255, MyDeployMenu.SpawnVehicleIndex);
         }
         else // Just nullify vehicle pool
         {
-            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, -1, MyDeployMenu.SpawnVehicleIndex);
+            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, 255, MyDeployMenu.SpawnVehicleIndex);
         }
     }
 }

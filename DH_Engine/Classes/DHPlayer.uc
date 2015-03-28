@@ -45,9 +45,9 @@ var     int                     MantleLoopCount;
 var     byte                    MortarTargetIndex;
 var     vector                  MortarHitLocation;
 
-var     int                     SpawnPointIndex;
-var     int                     SpawnVehicleIndex;
-var     int                     VehiclePoolIndex;
+var     byte                    SpawnPointIndex;
+var     byte                    SpawnVehicleIndex;
+var     byte                    VehiclePoolIndex;
 var     vehicle                 MyLastVehicle;              // used for vehicle spawning to remember last vehicle player spawned (only used by server)
 
 // Debug:
@@ -58,7 +58,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        RedeployTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex; // Matt TEST - these vars can be bytes for more efficient replication (use 255 instead of -1 as default value for index)
+        RedeployTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -2143,11 +2143,11 @@ function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
     }
 
     // Check if SP is valid
-    if (SpawnPointIndex != -1 && DHGRI.IsSpawnPointIndexValid(SpawnPointIndex, PRI.Team.TeamIndex))
+    if (DHGRI.IsSpawnPointIndexValid(SpawnPointIndex, PRI.Team.TeamIndex))
     {
         G.DeployRestartPlayer(self, true);
     }
-    else if (SpawnVehicleIndex != -1 && DHGRI.CanSpawnAtVehicle(SpawnVehicleIndex, self))
+    else if (DHGRI.CanSpawnAtVehicle(SpawnVehicleIndex, self))
     {
         G.DeployRestartPlayer(self, true);
     }
@@ -2289,7 +2289,7 @@ function PawnDied(Pawn P)
 simulated function ClientHandleDeath()
 {
     // Theel: This needs to be a smarter check!
-    if (SpawnPointIndex != -1)
+    if (SpawnPointIndex != 255)
     {
         bShouldAttemptAutoDeploy = true;
     }
@@ -2321,7 +2321,7 @@ simulated function CheckToAutoDeploy()
     }
 
     //If we have a desired spawn point set, we won't need to open menu and can send spawn request from here
-    if (SpawnPointIndex != -1 && Pawn == none)
+    if (SpawnPointIndex != 255 && Pawn == none)
     {
         //Check if desired spawn is valid
         bDeployed = GRI.IsSpawnPointIndexValid(SpawnPointIndex, PlayerReplicationInfo.Team.TeamIndex);
@@ -2335,7 +2335,7 @@ simulated function CheckToAutoDeploy()
         else
         {
             // Can't change this value like this
-            SpawnPointIndex = default.SpawnPointIndex;
+            SpawnPointIndex = 255;
         }
     }
 
@@ -2497,7 +2497,7 @@ exec function SwitchTeam(){} // Disabled
 exec function ChangeTeam( int N ){} // Disabled
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
-function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, int NewSpawnPointIndex, int NewVehiclePoolIndex, int NewSpawnVehicleIndex)
+function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex)
 {
     local DarkestHourGame DHG;
 
@@ -2513,30 +2513,30 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         }
 
         // Invalid SpawnPointIndex - exit function
-        if (NewSpawnPointIndex < -1 || NewSpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount()) // -1 is the 'do nothing' passed value of SpawnPointIndex, which is acceptable
+        if (NewSpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount() && NewSpawnPointIndex != 255) // 255 is the 'do nothing' passed value of SpawnPointIndex, which is acceptable
         {
             Warn("Invalid spawn point index" @ NewSpawnPointIndex);
             ClientChangePlayerInfoResult(19);
-            SpawnPointIndex = default.SpawnPointIndex; // reset spawn point index to null
+            SpawnPointIndex = 255; // reset spawn point index to null
 
             return;
         }
 
         // Invalid VehiclePoolIndex
-        if (NewVehiclePoolIndex < -1 && NewVehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount())
+        if (NewVehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount() && NewVehiclePoolIndex != 255)
         {
             Warn("Invalid vehicle pool index" @ NewVehiclePoolIndex);
             ClientChangePlayerInfoResult(20);
-            VehiclePoolIndex = default.VehiclePoolIndex; // reset vehicle pool index to null
+            VehiclePoolIndex = 255; // reset vehicle pool index to null
             //return;
         }
 
         // Invalid SpawnVehicleIndex
-        if (NewSpawnVehicleIndex < -1 || NewSpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount())
+        if (NewSpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount() && NewSpawnVehicleIndex != 255)
         {
             Warn("Invalid spawn vehicle index" @ NewSpawnVehicleIndex);
             ClientChangePlayerInfoResult(21);
-            SpawnVehicleIndex = default.SpawnVehicleIndex; // reset spawn vehicle index to null
+            SpawnVehicleIndex = 255; // reset spawn vehicle index to null
             //return;
         }
 
@@ -2604,9 +2604,9 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
                 DesiredRole = -1;
                 CurrentRole = -1;
                 DesiredAmmoAmount = 0;
-                SpawnPointIndex = default.SpawnPointIndex;
-                SpawnVehicleIndex = default.SpawnVehicleIndex;
-                VehiclePoolIndex = default.VehiclePoolIndex;
+                SpawnPointIndex = 255;
+                SpawnVehicleIndex = 255;
+                VehiclePoolIndex = 255;
                 MyLastVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
@@ -2735,6 +2735,6 @@ defaultproperties
     DefaultFOV=90.0
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     PawnClass=class'DH_Engine.DH_Pawn'
-    SpawnPointIndex=-1
-    VehiclePoolIndex=-1
+    SpawnPointIndex=255
+    VehiclePoolIndex=255
 }

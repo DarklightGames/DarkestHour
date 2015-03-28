@@ -2023,9 +2023,9 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
             P.bWeaponsSelected = false;
 
             // DARKEST HOUR
-            P.SpawnPointIndex = P.default.SpawnPointIndex;
-            P.SpawnVehicleIndex = P.default.SpawnVehicleIndex;
-            P.VehiclePoolIndex = P.default.VehiclePoolIndex;
+            P.SpawnPointIndex = 255;
+            P.SpawnVehicleIndex = 255;
+            P.VehiclePoolIndex = 255;
         }
     }
 

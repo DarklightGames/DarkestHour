@@ -186,7 +186,7 @@ function GetMapCoords(vector Location, out float X, out float Y, float W, float 
     Y = MapContainer.WinHeight - Distance / TDistance * MapContainer.WinHeight - (H / 2); // Because the map is managed by a container, lets form to the container's winheight
 }
 
-function PlaceSpawnPointOnMap(vector Location, int Index, int SPIndex, string Title)
+function PlaceSpawnPointOnMap(vector Location, int Index, byte SPIndex, string Title)
 {
     local float X, Y;
 
@@ -262,9 +262,10 @@ function PlaceObjectiveOnMap(ROObjective O, int Index)
 
 function bool DrawMapComponents(Canvas C)
 {
-    local int i, SpawnPointIndex;
     local array<DHSpawnPoint> ActiveSpawnPoints;
-    local DHSpawnPoint SP;
+    local DHSpawnPoint        SP;
+    local byte                SpawnPointIndex;
+    local int                 i;
 
     // If resolution changed then resetup the menu positions
     if (bResolutionChanged)
@@ -380,25 +381,25 @@ function SpawnClick()
 function bool ConfirmIndices()
 {
     // If we are trying to spawn vehicle, but no pool selected : return false
-    if (MyDeployMenu.Tab == TAB_Vehicle && MyDeployMenu.VehiclePoolIndex == -1)
+    if (MyDeployMenu.Tab == TAB_Vehicle && MyDeployMenu.VehiclePoolIndex == 255)
     {
         return false;
     }
 
     // If we are trying to spawn as infantry, but pool is selected : return false
-    if (MyDeployMenu.Tab == TAB_Role && MyDeployMenu.VehiclePoolIndex != -1)
+    if (MyDeployMenu.Tab == TAB_Role && MyDeployMenu.VehiclePoolIndex != 255)
     {
         return false;
     }
 
     // If we have pool selected, but no spawn point : return false
-    if (MyDeployMenu.VehiclePoolIndex != -1 && MyDeployMenu.SpawnPointIndex == -1)
+    if (MyDeployMenu.VehiclePoolIndex != 255 && MyDeployMenu.SpawnPointIndex == 255)
     {
         return false;
     }
 
     // If we have a SpawnVehicle selected, but also one of the others set : return false
-    if (MyDeployMenu.SpawnVehicleIndex != -1 && (MyDeployMenu.SpawnPointIndex != -1 || MyDeployMenu.VehiclePoolIndex != -1))
+    if (MyDeployMenu.SpawnVehicleIndex != 255 && (MyDeployMenu.SpawnPointIndex != 255 || MyDeployMenu.VehiclePoolIndex != 255))
     {
         return false;
     }
@@ -440,17 +441,17 @@ function bool InternalOnClick(GUIComponent Sender)
                 {
                     if (b_SpawnPoints[i].Tag == MyDeployMenu.SpawnPointIndex) // Player clicked twice on spawnpoint
                     {
-                        // Clear spawnvehicle just incase it was set
+                        // Clear spawnvehicle just in case it was set
                         if (DHP.Pawn == none)
                         {
-                            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, -1);
+                            MyDeployMenu.ChangeSpawnIndices(MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, 255);
                             SpawnClick();
                         }
                     }
                     else
                     {
                         // Set SpawnPoint and clear spawnvehicle point as we clicked a spawn point
-                        MyDeployMenu.ChangeSpawnIndices(b_SpawnPoints[i].Tag, MyDeployMenu.VehiclePoolIndex, -1);
+                        MyDeployMenu.ChangeSpawnIndices(b_SpawnPoints[i].Tag, MyDeployMenu.VehiclePoolIndex, 255);
                     }
                     break;
                 }
@@ -463,13 +464,13 @@ function bool InternalOnClick(GUIComponent Sender)
                     if (b_SpawnVehicles[i].Tag == MyDeployMenu.SpawnVehicleIndex)
                     {
                         // Clear pool and spawnpoint just incase either were set
-                        MyDeployMenu.ChangeSpawnIndices(-1,-1,MyDeployMenu.SpawnVehicleIndex);
+                        MyDeployMenu.ChangeSpawnIndices(255, 255, MyDeployMenu.SpawnVehicleIndex);
                         SpawnClick();
                     }
                     else
                     {
                         // Set SpawnVehiclePoint and clear pool & spawnpoint value, as we clicked a spawnvehicle point
-                        MyDeployMenu.ChangeSpawnIndices(-1,-1,b_SpawnVehicles[i].Tag);
+                        MyDeployMenu.ChangeSpawnIndices(255, 255, b_SpawnVehicles[i].Tag);
                     }
                     break;
                 }

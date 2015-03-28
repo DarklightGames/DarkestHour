@@ -68,9 +68,9 @@ var float                                   RequiredExtraWidth;
 var DHGameReplicationInfo                   DHGRI;
 var DHPlayer                                DHP;
 
-var int                                     SpawnPointIndex;
-var int                                     VehiclePoolIndex;
-var int                                     SpawnVehicleIndex;
+var byte                                    SpawnPointIndex;
+var byte                                    VehiclePoolIndex;
+var byte                                    SpawnVehicleIndex;
 
 var ETab                                    Tab;
 
@@ -166,7 +166,7 @@ function HandlePanelInitialization()
     local int i;
     local bool bVehicleTabActive;
 
-    if (DHP.VehiclePoolIndex != -1)
+    if (DHP.VehiclePoolIndex != 255)
     {
         bVehicleTabActive = true;
     }
@@ -325,33 +325,33 @@ function HandleMenuButton()
     }
 }
 
-function ChangeSpawnIndices(int NewSpawnPointIndex, int NewVehiclePoolIndex, int NewSpawnVehicleIndex)
+function ChangeSpawnIndices(byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex)
 {
-    if (NewSpawnPointIndex >= 0 && NewSpawnPointIndex < DHGRI.SPAWN_POINTS_MAX)
+    if (NewSpawnPointIndex < DHGRI.SPAWN_POINTS_MAX)
     {
         SpawnPointIndex = NewSpawnPointIndex;
     }
     else
     {
-        SpawnPointIndex = default.SpawnPointIndex;
+        SpawnPointIndex = 255;
     }
 
-    if (NewVehiclePoolIndex >= 0 && NewVehiclePoolIndex < arraycount(DHGRI.VehiclePoolVehicleClasses))
+    if (NewVehiclePoolIndex < arraycount(DHGRI.VehiclePoolVehicleClasses))
     {
         VehiclePoolIndex = NewVehiclePoolIndex;
     }
     else
     {
-        VehiclePoolIndex = default.VehiclePoolIndex;
+        VehiclePoolIndex = 255;
     }
 
-    if (NewSpawnVehicleIndex >= 0 && NewSpawnVehicleIndex < arraycount(DHGRI.SpawnVehicles))
+    if (NewSpawnVehicleIndex < arraycount(DHGRI.SpawnVehicles))
     {
         SpawnVehicleIndex = NewSpawnVehicleIndex;
     }
     else
     {
-        SpawnVehicleIndex = default.SpawnVehicleIndex;
+        SpawnVehicleIndex = 255;
     }
 
     //Log("SP: " $ SpawnPointIndex @ "VP: " $ VehiclePoolIndex @ "SV: " $ SpawnVehicleIndex);
@@ -506,9 +506,9 @@ function CloseMenu()
 
 defaultproperties
 {
-    SpawnPointIndex=-1
-    VehiclePoolIndex=-1
-    SpawnVehicleIndex=-1
+    SpawnPointIndex=255
+    VehiclePoolIndex=-255
+    SpawnVehicleIndex=255
 
     OnMessage=InternalOnMessage
     bRenderWorld=True

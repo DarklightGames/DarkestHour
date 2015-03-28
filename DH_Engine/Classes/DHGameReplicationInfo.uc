@@ -204,7 +204,7 @@ simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIn
     local DHSpawnPoint SP;
 
     // Valid index?
-    if (SpawnPointIndex < 0 || SpawnPointIndex >= SPAWN_POINTS_MAX)
+    if (SpawnPointIndex >= SPAWN_POINTS_MAX)
     {
         return false; //Not valid index
     }
@@ -276,7 +276,7 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
     return VehiclePoolSpawnsRemainings[PoolIndex] == 255;
 }
 
-simulated function bool IsVehiclePoolIndexValid(int VehiclePoolIndex, RORoleInfo RI)
+simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInfo RI)
 {
     local class<ROVehicle> VehicleClass;
 
@@ -286,9 +286,13 @@ simulated function bool IsVehiclePoolIndexValid(int VehiclePoolIndex, RORoleInfo
         return false;
     }
 
-    if (VehiclePoolIndex < 0 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    if (VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
     {
-        Log("Index bound check");
+        if (VehiclePoolIndex != 255)
+        {
+            Log("Index bound check");
+        }
+
         return false;
     }
 
@@ -387,10 +391,7 @@ function bool RemoveSpawnVehicle(Vehicle V)
 simulated function bool CanSpawnAtVehicle(byte Index, PlayerController PC)
 {
     //TODO: add contested check here
-    if (Index < 0 ||
-        Index >= arraycount(SpawnVehicles) ||
-        !SpawnVehicles[Index].bIsActive ||
-        SpawnVehicles[Index].TeamIndex != PC.GetTeamNum())
+    if (Index >= arraycount(SpawnVehicles) || !SpawnVehicles[Index].bIsActive || SpawnVehicles[Index].TeamIndex != PC.GetTeamNum())
     {
         return false;
     }

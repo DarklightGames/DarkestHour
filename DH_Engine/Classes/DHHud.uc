@@ -3617,7 +3617,7 @@ simulated function DrawSpectatingHud(Canvas C)
             }
             else
             {
-                if (DHP.SpawnPointIndex != -1 && ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
+                if (DHP.SpawnPointIndex != 255 && ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
                 {
                     S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
                 }
