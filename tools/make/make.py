@@ -123,8 +123,10 @@ def main():
 				print 'error: failed to delete file ' + package + ' (do you have the game or editor running?)'
 				sys.exit(1)
 
+	os.chdir(ro_sys_dir)
+
 	# run ucc make
-	proc = subprocess.Popen([os.path.join(ro_sys_dir, 'ucc'), 'make', '-mod=' + args.mod])
+	proc = subprocess.Popen(['ucc', 'make', '-mod=' + args.mod])
 	proc.communicate()
 
 	# move compiled packages to mod directory
