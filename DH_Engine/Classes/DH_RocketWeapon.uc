@@ -6,9 +6,9 @@
 class DH_RocketWeapon extends DH_SemiAutoWeapon
     abstract;
 
-var()   int                     Ranges[3];                      // The angle to launch the projectile at different ranges
+var     array<int>              Ranges;                         // The angle to launch the projectile at different ranges
 var     int                     RangeIndex;                     // Current range setting
-var     name                    IronIdleAnims[3];               // Iron idle animation for different range settings
+var     array<name>             IronIdleAnims;                  // Iron idle animation for different range settings
 var     name                    AssistedMagEmptyReloadAnim;     // 1st person animation for assisted empty reload
 var     name                    AssistedMagPartialReloadAnim;   // 1st person animation for assisted partial reload
 var     int                     NumMagsToResupply;              // Number of ammo mags to add when this weapon has been resupplied
@@ -50,18 +50,18 @@ simulated exec function Deploy()
 // switch the rocket aiming ranges
 simulated function CycleRange()
 {
-    if (RangeIndex < 2)
+    local DH_ProjectileFire F;
+
+    RangeIndex = ++RangeIndex % Ranges.Length;
+
+    F = DH_ProjectileFire(FireMode[0]);
+
+    if (F != none)
     {
-        RangeIndex++;
-    }
-    else
-    {
-        RangeIndex = 0;
+        F.AddedPitch = Ranges[RangeIndex];
     }
 
-    DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
-
-    if (Instigator.IsLocallyControlled())
+    if (Instigator != none && Instigator.IsLocallyControlled())
     {
         PlayIdle();
     }
@@ -75,9 +75,16 @@ simulated function CycleRange()
 // Switch the rocket aiming ranges on the server
 function ServerSetRange(int NewIndex)
 {
+    local DH_ProjectileFire F;
+
     RangeIndex = NewIndex;
 
-    DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+    F = DH_ProjectileFire(FireMode[0]);
+
+    if (F != none)
+    {
+        F.AddedPitch = Ranges[RangeIndex];
+    }
 }
 
 //==============================================================================
@@ -175,7 +182,7 @@ simulated state RaisingWeapon
 
         SetTimer(GetAnimDuration(Anim, SelectAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
         {
             FireMode[Mode].bIsFiring = false;
             FireMode[Mode].HoldTime = 0.0;
@@ -225,7 +232,7 @@ simulated state LoweringWeapon
         {
             if (Instigator.IsLocallyControlled())
             {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+                for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
                 {
                     if (FireMode[Mode].bIsFiring)
                     {
@@ -248,7 +255,7 @@ simulated state LoweringWeapon
 
         SetTimer(GetAnimDuration(Anim, PutDownAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
         {
             FireMode[Mode].bServerDelayStartFire = false;
             FireMode[Mode].bServerDelayStopFire = false;
@@ -267,7 +274,6 @@ function UpdateResupplyStatus()
 
     if (P == none || P.Weapon != self)
     {
-        // P is none or weapon is not currently equipped
         return;
     }
 
@@ -275,29 +281,29 @@ function UpdateResupplyStatus()
     bHasAmmo = CurrentMagCount > 0;
     bHasFullAmmo = CurrentMagCount >= MaxNumPrimaryMags - 1;
 
-    if (bHasAmmo && !bIsLoaded)
-    {
-        P.bWeaponNeedsResupply = false;
-        P.bWeaponNeedsReload = true;
-    }
-    else if (!bHasFullAmmo)
-    {
-        P.bWeaponNeedsResupply = true;
-        P.bWeaponNeedsReload = false;
-    }
-    else
-    {
-        P.bWeaponNeedsResupply = false;
-        P.bWeaponNeedsReload = false;
-    }
+    P.bWeaponNeedsReload = bHasAmmo && !bIsLoaded;
+    P.bWeaponNeedsResupply = !bHasFullAmmo;
+
+    Log("P.bWeaponNeedsResupply" @ P.bWeaponNeedsResupply);
+    Log("P.bWeaponNeedsReload" @ P.bWeaponNeedsReload);
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
+    local DH_Pawn P;
+
     super.BringUp(PrevWeapon);
 
     if (Role == ROLE_Authority)
     {
+        P = DH_Pawn(Instigator);
+
+        if (P != none)
+        {
+            P.bWeaponCanBeReloaded = true;
+            P.bWeaponCanBeResupplied = true;
+        }
+
         UpdateResupplyStatus();
     }
 }
@@ -306,41 +312,62 @@ simulated function bool PutDown()
 {
     local DH_Pawn P;
 
-    return super.PutDown();
-
     P = DH_Pawn(Instigator);
 
     if (P != none)
     {
-        P.bWeaponCanBeResupplied = false;
-        P.bWeaponNeedsResupply = false;
         P.bWeaponCanBeReloaded = false;
+        P.bWeaponCanBeResupplied = false;
+
         P.bWeaponNeedsReload = false;
+        P.bWeaponNeedsResupply = false;
     }
+
+    return super.PutDown();
 }
 
 simulated function Fire(float F)
 {
-    if (Instigator.bIsCrawling)
-    {
-        WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 0);
+    local PlayerController PC;
+    local DH_ProjectileFire PF;
 
-        return;
+    if (Instigator != none)
+    {
+        PC = PlayerController(Instigator.Controller);
     }
-    else if (bUsingSights)
-    {
-        DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
-        if (Role < ROLE_Authority)
+    if (Instigator != none && Instigator.bIsCrawling)
+    {
+        // Cannot be prone while firing
+        if (PC != none)
         {
-            ServerSetRange(RangeIndex);
+            WarningMessageClass.static.ClientReceive(PC, 0);
         }
-    }
-    else
-    {
-        WarningMessageClass.static.ClientReceive(PlayerController(Instigator.Controller), 2);
 
         return;
+    }
+
+    if (!bUsingSights)
+    {
+        // Must be sighted to fire
+        if (PC != none)
+        {
+            WarningMessageClass.static.ClientReceive(PC, 2);
+        }
+
+        return;
+    }
+
+    PF = DH_ProjectileFire(FireMode[0]);
+
+    if (PF != none)
+    {
+        PF.AddedPitch = Ranges[RangeIndex];
+    }
+
+    if (Role < ROLE_Authority)
+    {
+        ServerSetRange(RangeIndex);
     }
 
     super.Fire(F);
@@ -361,17 +388,13 @@ simulated function PostFire()
 //==============================================================================
 simulated function OutOfAmmo()
 {
-    if (!HasAmmo())
-    {
-        if (DHWeaponAttachment(ThirdPersonActor) != none)
-        {
-            DHWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
-        }
-    }
+    local DHWeaponAttachment WA;
 
-    if (!Instigator.IsLocallyControlled() || HasAmmo())
+    WA = DHWeaponAttachment(ThirdPersonActor);
+
+    if (WA != none && !HasAmmo())
     {
-        return;
+        WA.bOutOfAmmo = true;
     }
 }
 
@@ -380,9 +403,19 @@ simulated function OutOfAmmo()
 //==============================================================================
 simulated function bool AllowReload()
 {
-    if (Instigator.bIsCrawling)
+    local PlayerController PC;
+
+    if (Instigator != none)
     {
-        PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 4);
+        PC = PlayerController(Instigator.Controller);
+    }
+
+    if (Instigator != none && Instigator.bIsCrawling)
+    {
+        if (PC != none)
+        {
+            PC.ReceiveLocalizedMessage(WarningMessageClass, 4);
+        }
 
         return false;
     }
@@ -414,7 +447,7 @@ Begin:
             ZoomOut(false);
         }
 
-        if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+        if (Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
         {
             if (bPlayerFOVZooms)
             {
@@ -427,7 +460,7 @@ Begin:
 
     // Sometimes the client will get switched out of ironsight mode before
     // getting to the reload function. This should catch that.
-    if (Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
+    if (Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
         if (DisplayFOV != default.DisplayFOV)
         {
@@ -440,7 +473,10 @@ Begin:
         }
     }
 
-    DH_Pawn(Instigator).bWeaponNeedsReload = false;
+    if (Instigator != none && Instigator.IsA('DH_Pawn'))
+    {
+        DH_Pawn(Instigator).bWeaponNeedsReload = false;
+    }
 }
 
 simulated function ClientDoAssistedReload(optional int NumRounds)
@@ -452,9 +488,16 @@ simulated state AssistedReloading extends Reloading
 {
     simulated function BeginState()
     {
+        local DH_Pawn P;
+
         if (Role == ROLE_Authority)
         {
-            DH_Pawn(Instigator).HandleAssistedReload();
+            P = DH_Pawn(Instigator);
+
+            if (P != none)
+            {
+                P.HandleAssistedReload();
+            }
         }
 
         PlayAssistedReload();
@@ -547,7 +590,7 @@ function PerformReload()
         return;
     }
 
-    CurrentMagIndex++;
+    ++CurrentMagIndex;
 
     if (CurrentMagIndex > PrimaryAmmoArray.Length - 1)
     {
@@ -586,11 +629,12 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
     InitialAmount = FireMode[0].AmmoClass.default.InitialAmount;
 
-    super.GiveTo(Other,Pickup);
+    super.GiveTo(Other, Pickup);
 
     if (CurrentMagCount > 0)
     {
         bJustSpawned = true;
+
         AmmoCharge[0] = 0;
     }
 
@@ -605,15 +649,22 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 function DropFrom(vector StartLocation)
 {
+    local DH_Pawn P;
+
     if (!bCanThrow)
     {
         return;
     }
 
-    ROPawn(Instigator).bWeaponCanBeResupplied = false;
-    ROPawn(Instigator).bWeaponNeedsResupply = false;
-    DH_Pawn(Instigator).bWeaponCanBeReloaded = false;
-    DH_Pawn(Instigator).bWeaponNeedsReload = false;
+    P = DH_Pawn(Instigator);
+
+    if (P != none)
+    {
+        P.bWeaponCanBeResupplied = false;
+        P.bWeaponNeedsResupply = false;
+        P.bWeaponCanBeReloaded = false;
+        P.bWeaponNeedsReload = false;
+    }
 
     super.DropFrom(StartLocation);
 }
@@ -622,14 +673,17 @@ simulated function Destroyed()
 {
     local DH_Pawn P;
 
-    P = DH_Pawn(Instigator);
-
-    if (Role == ROLE_Authority && P != none)
+    if (Role == ROLE_Authority)
     {
-        P.bWeaponCanBeResupplied = false;
-        P.bWeaponNeedsResupply = false;
-        P.bWeaponCanBeReloaded = false;
-        P.bWeaponNeedsReload = false;
+        P = DH_Pawn(Instigator);
+
+        if (P != none)
+        {
+            P.bWeaponCanBeResupplied = false;
+            P.bWeaponNeedsResupply = false;
+            P.bWeaponCanBeReloaded = false;
+            P.bWeaponNeedsReload = false;
+        }
     }
 
     super.Destroyed();
@@ -648,9 +702,9 @@ function bool HandlePickupQuery(Pickup Item)
     if (bNoAmmoInstances)
     {
         // Handle ammo pickups
-        for (i = 0; i < 2; ++i)
+        for (i = 0; i < arraycount(AmmoClass); ++i)
         {
-            if (item.inventorytype == AmmoClass[i] && AmmoClass[i] != none)
+            if (AmmoClass[i] != none && Item.InventoryType == AmmoClass[i])
             {
                 if ((AmmoAmount(0) <= 0 && PrimaryAmmoArray.Length < MaxNumPrimaryMags) || PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1)
                 {
@@ -659,22 +713,20 @@ function bool HandlePickupQuery(Pickup Item)
                     {
                         for (j = 0; j < ROMultiMagAmmoPickup(Item).AmmoMags.Length; ++j)
                         {
-                            if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-                            {
-                                PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];
-
-                                bAddedMags = true;
-                            }
-                            else
+                            if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
                             {
                                 break;
                             }
+
+                            PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];
+
+                            bAddedMags = true;
                         }
                     }
                     // Handle standard/old style ammo pickups
                     else
                     {
-                        PrimaryAmmoArray[PrimaryAmmoArray.Length] = Min(MaxAmmo(i), Ammo(item).AmmoAmount);
+                        PrimaryAmmoArray[PrimaryAmmoArray.Length] = Min(MaxAmmo(i), Ammo(Item).AmmoAmount);
 
                         bAddedMags = true;
                     }
@@ -691,8 +743,8 @@ function bool HandlePickupQuery(Pickup Item)
                     NetUpdateTime = Level.TimeSeconds - 1;
                 }
 
-                item.AnnouncePickup(Pawn(Owner));
-                item.SetRespawn();
+                Item.AnnouncePickup(Pawn(Owner));
+                Item.SetRespawn();
 
                 UpdateResupplyStatus();
 
@@ -702,7 +754,8 @@ function bool HandlePickupQuery(Pickup Item)
     }
 
     // Drop current weapon and pickup the one on the ground
-    if (Instigator.Weapon != none &&
+    if (Instigator != none &&
+        Instigator.Weapon != none &&
         Instigator.Weapon.InventoryGroup == InventoryGroup &&
         Item.InventoryType.default.InventoryGroup == InventoryGroup &&
         Instigator.CanThrowWeapon())
@@ -713,7 +766,7 @@ function bool HandlePickupQuery(Pickup Item)
     }
 
     // Avoid multiple weapons in the same slot
-    if (Item.InventoryType.default.InventoryGroup == InventoryGroup)
+    if (Item != none && Item.InventoryType.default.InventoryGroup == InventoryGroup)
     {
         return true;
     }
@@ -728,28 +781,30 @@ function bool HandlePickupQuery(Pickup Item)
 
 function bool AssistedReload()
 {
-    local bool bReloadAllowed;
+    local PlayerController PC;
 
-    if (bUsingSights && AmmoAmount(0) == 0 && CurrentMagCount > 0)
+    if (!bUsingSights || AmmoAmount(0) != 0 || CurrentMagCount <= 0)
     {
-        bReloadAllowed = true;
-    }
+        if (Instigator != none)
+        {
+            PC = PlayerController(Instigator.Controller);
 
-    if (bReloadAllowed)
-    {
-        NetUpdateTime = Level.TimeSeconds - 1;
-
-        GotoState('AssistedReloading');
-        ClientDoAssistedReload();
-
-        return true;
-    }
-    else
-    {
-        PlayerController(Instigator.Controller).ReceiveLocalizedMessage(WarningMessageClass, 3);
+            if (PC != none)
+            {
+                PC.ReceiveLocalizedMessage(WarningMessageClass, 3);
+            }
+        }
 
         return false;
     }
+
+    NetUpdateTime = Level.TimeSeconds - 1;
+
+    GotoState('AssistedReloading');
+
+    ClientDoAssistedReload();
+
+    return true;
 }
 
 //==============================================================================
@@ -758,28 +813,35 @@ function bool AssistedReload()
 function bool ResupplyAmmo()
 {
     local int i;
+    local DH_Pawn P;
 
-    if (CurrentMagCount < MaxNumPrimaryMags - 1 && AmmoAmount(0) == 0)
+    if (CurrentMagCount >= MaxNumPrimaryMags - 1 || AmmoAmount(0) != 0)
     {
-        for (i = NumMagsToResupply; i > 0; i--)
-        {
-            if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
-            {
-                PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
-            }
-        }
-
-        CurrentMagCount = PrimaryAmmoArray.Length - 1;
-        NetUpdateTime = Level.TimeSeconds - 1;
-        ROPawn(Instigator).bWeaponNeedsResupply = false;
-        DH_Pawn(Instigator).bWeaponNeedsReload = true;
-
-        AssistedReload();
-
-        return true;
+        return false;
     }
 
-    return false;
+    for (i = 0; i < NumMagsToResupply; ++i)
+    {
+        if (PrimaryAmmoArray.Length < MaxNumPrimaryMags)
+        {
+            PrimaryAmmoArray[PrimaryAmmoArray.Length] = FireMode[0].AmmoClass.default.InitialAmount;
+        }
+    }
+
+    CurrentMagCount = PrimaryAmmoArray.Length - 1;
+    NetUpdateTime = Level.TimeSeconds - 1;
+
+    P = DH_Pawn(Instigator);
+
+    if (P != none)
+    {
+        P.bWeaponNeedsResupply = false;
+        P.bWeaponNeedsReload = true;
+    }
+
+    AssistedReload();
+
+    return true;
 }
 
 function bool IsATWeapon()
