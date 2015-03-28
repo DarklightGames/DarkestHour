@@ -19,7 +19,9 @@ event Trigger(Actor Other, Pawn EventInstigator)
 {
     //No recursive calls, please.
     if (EventInstigator == self)
+    {
         return;
+    }
 
     GotoState('Activated');
 }
@@ -35,7 +37,9 @@ Begin:
     }
 
     if (bFireOnce)
+    {
         Destroy();
+    }
 
     GotoState('');
 }
