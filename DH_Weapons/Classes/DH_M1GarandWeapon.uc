@@ -25,11 +25,18 @@ simulated function bool WasLastRound()
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
+    local DHPlayer P;
+
     super.BringUp(PrevWeapon);
 
-    if (Instigator != none && Instigator.Controller != none && DHPlayer(Instigator.Controller) != none)
+    if (Instigator != none)
     {
-        DHPlayer(Instigator.Controller).QueueHint(4, true);
+        P = DHPlayer(Instigator.Controller);
+
+        if (P != none)
+        {
+            P.QueueHint(4, true);
+        }
     }
 }
 

@@ -596,16 +596,16 @@ simulated state RaisingWeapon
 {
     simulated function BeginState()
     {
-        local ROPlayer player;
+        local ROPlayer P;
 
         super.BeginState();
 
         // Hint check
-        player = ROPlayer(Instigator.Controller);
+        P = ROPlayer(Instigator.Controller);
 
-        if (player != none)
+        if (P != none)
         {
-            player.CheckForHint(12);
+            P.CheckForHint(12);
         }
     }
 }
@@ -637,7 +637,7 @@ function float GetAIRating()
 
     Dist = VSize(B.Enemy.Location - Instigator.Location);
 
-    if (Dist > 400.0 && dist < 6000.0)
+    if (Dist > 400.0 && Dist < 6000.0)
     {
         return FMin(2.0, Result + (6000.0 - Dist) * 0.0001);
     }

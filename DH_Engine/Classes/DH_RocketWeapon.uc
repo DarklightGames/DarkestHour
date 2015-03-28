@@ -111,7 +111,7 @@ simulated state RaisingWeapon
 {
     simulated function BeginState()
     {
-        local int Mode;
+        local int i;
         local name Anim;
 
         if (PrimaryAmmoArray.Length > 1)
@@ -182,13 +182,13 @@ simulated state RaisingWeapon
 
         SetTimer(GetAnimDuration(Anim, SelectAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
+        for (i = 0; i < arraycount(FireMode); ++i)
         {
-            FireMode[Mode].bIsFiring = false;
-            FireMode[Mode].HoldTime = 0.0;
-            FireMode[Mode].bServerDelayStartFire = false;
-            FireMode[Mode].bServerDelayStopFire = false;
-            FireMode[Mode].bInstantStop = false;
+            FireMode[i].bIsFiring = false;
+            FireMode[i].HoldTime = 0.0;
+            FireMode[i].bServerDelayStartFire = false;
+            FireMode[i].bServerDelayStopFire = false;
+            FireMode[i].bInstantStop = false;
         }
     }
 }
@@ -202,7 +202,7 @@ simulated state LoweringWeapon
 {
     simulated function BeginState()
     {
-        local int Mode;
+        local int i;
         local name Anim;
 
         super.BeginState();
@@ -211,7 +211,8 @@ simulated state LoweringWeapon
         {
             PrimaryAmmoArray.Insert(CurrentMagIndex, 1);
             PrimaryAmmoArray[CurrentMagIndex] = FireMode[0].AmmoClass.default.InitialAmount;
-            CurrentMagCount++;
+
+            ++CurrentMagCount;
 
             if (Instigator.IsLocallyControlled())
             {
@@ -232,11 +233,11 @@ simulated state LoweringWeapon
         {
             if (Instigator.IsLocallyControlled())
             {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
+                for (i = 0; i < arraycount(FireMode); ++i)
                 {
-                    if (FireMode[Mode].bIsFiring)
+                    if (FireMode[i].bIsFiring)
                     {
-                        ClientStopFire(Mode);
+                        ClientStopFire(i);
                     }
                 }
 
@@ -255,10 +256,10 @@ simulated state LoweringWeapon
 
         SetTimer(GetAnimDuration(Anim, PutDownAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; ++Mode)
+        for (i = 0; i < arraycount(FireMode); ++i)
         {
-            FireMode[Mode].bServerDelayStartFire = false;
-            FireMode[Mode].bServerDelayStopFire = false;
+            FireMode[i].bServerDelayStartFire = false;
+            FireMode[i].bServerDelayStopFire = false;
         }
     }
 }
