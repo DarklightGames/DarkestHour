@@ -26,12 +26,46 @@ var globalconfig bool   bDebugROBallistics; // if true, set bDebugBallistics to 
 
 simulated function PostBeginPlay()
 {
+    local vector HitNormal;
+    local Actor TraceHitActor;
+    local float TraceRadius;
+
     if (bDebugROBallistics)
     {
         bDebugBallistics = true;
     }
 
-    super.PostBeginPlay();
+    Velocity = vector(Rotation) * Speed;
+    BCInverse = 1 / BallisticCoefficient;
+
+    if (Role == ROLE_Authority &&
+        Instigator != none &&
+        Instigator.HeadVolume != none &&
+        Instigator.HeadVolume.bWaterVolume)
+    {
+        Velocity *= 0.5;
+    }
+
+    if (bDebugBallistics)
+    {
+        FlightTime = 0;
+
+        TraceRadius = 5.0;
+
+        if (Instigator != none)
+        {
+            TraceRadius += Instigator.CollisionRadius;
+        }
+
+        TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355 * vector(Rotation), Location + TraceRadius * vector(Rotation), true);
+
+        if (TraceHitActor.IsA('ROBulletWhipAttachment'))
+        {
+            TraceHitActor = Trace(TraceHitLoc, HitNormal, Location + 65355 * vector(Rotation), TraceHitLoc + 5 * vector(Rotation), true);
+        }
+
+        Log("Debug Tracing TraceHitActor =" @ TraceHitActor);
+    }
 
     OrigLoc = Location;
 }
