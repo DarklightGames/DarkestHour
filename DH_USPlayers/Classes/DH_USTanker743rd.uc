@@ -16,6 +16,7 @@ defaultproperties
     Models(1)="US_743rdT2"
     Models(2)="US_743rdT3"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',Amount=3)
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet'
     Headgear(1)=class'DH_USPlayers.DH_USTankerHat'
