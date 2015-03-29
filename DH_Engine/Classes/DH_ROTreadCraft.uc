@@ -984,24 +984,22 @@ function bool TryToDrive(Pawn P)
 
             return false;
         }
+
         // Don't allow non-TeamLocked vehicle to be stolen if it already has an enemy occupant
-        else
+        if (Driver != none && P.GetTeamNum() != Driver.GetTeamNum())
         {
-            if (Driver != none && P.GetTeamNum() != Driver.GetTeamNum())
+            DenyEntry(P, 1); // can't use enemy vehicle
+
+            return false;
+        }
+
+        for (i = 0; i < WeaponPawns.Length; ++i)
+        {
+            if (WeaponPawns[i].Driver != none && P.GetTeamNum() != WeaponPawns[i].Driver.GetTeamNum())
             {
                 DenyEntry(P, 1); // can't use enemy vehicle
 
                 return false;
-            }
-
-            for (i = 0; i < WeaponPawns.Length; ++i)
-            {
-                if (WeaponPawns[i].Driver != none && P.GetTeamNum() != WeaponPawns[i].Driver.GetTeamNum())
-                {
-                    DenyEntry(P, 1); // can't use enemy vehicle
-
-                    return false;
-                }
             }
         }
     }

@@ -189,30 +189,32 @@ function Timer()
     }
 }
 
-// Modified to use VehicleBase.VehicleTeam for team check
+// Modified to fix bug where you couldn't switch between rider positions if a tanker hadn't yet entered the tank, & to remove obsolete stuff & duplication from the Supers
 function bool TryToDrive(Pawn P)
 {
     if (VehicleBase != none && P != none)
     {
-        if (P.GetTeamNum() != VehicleBase.VehicleTeam)
+        // Trying to enter a vehicle that isn't on our team
+        if (P.GetTeamNum() != VehicleBase.VehicleTeam) // VehicleTeam reliably gives the team, even if vehicle hasn't yet been entered
         {
             if (VehicleBase.Driver == none)
             {
                 return VehicleBase.TryToDrive(P);
             }
 
-            DenyEntry(P, 1);
+            DenyEntry(P, 1); // can't use enemy vehicle
 
             return false;
         }
 
+        // Bot tries to enter the VehicleBase if it has no driver
         if (VehicleBase.Driver == none && !P.IsHumanControlled())
         {
             return VehicleBase.TryToDrive(P);
         }
     }
 
-    return super(Vehicle).TryToDrive(P);
+    return super(Vehicle).TryToDrive(P); // the Supers in ROVehicleWeaponPawn & VehicleWeaponPawn contain lots of duplication
 }
 
 // Modified to add clientside checks before sending the function call to the server

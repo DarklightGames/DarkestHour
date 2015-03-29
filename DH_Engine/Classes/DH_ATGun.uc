@@ -96,80 +96,52 @@ simulated function Tick(float DeltaTime)
     super(ROWheeledVehicle).Tick(DeltaTime);
 }
 
+// Modified to remove restriction on entering while crouched, to allow human to kick bot off a gun, & to remove stuff not relevant to an AT gun 
 function bool TryToDrive(Pawn P)
 {
-    local int x;
-
-    if (DH_Pawn(P).bOnFire)
+    // Trying to enter a gun that isn't on our team
+    if (P != none && P.GetTeamNum() != VehicleTeam)
     {
-        return false;
-    }
-
-    // Don't allow vehicle to be stolen when somebody is in a turret
-    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
-    {
-        for (x = 0; x < WeaponPawns.Length; ++x)
+        // Deny entry to TeamLocked enemy gun or non-TeamLocked gun that already has an enemy occupant
+        if (bTeamLocked || (Driver != none && P.GetTeamNum() != Driver.GetTeamNum()) || (WeaponPawns[0].Driver != none && P.GetTeamNum() != WeaponPawns[0].Driver.GetTeamNum()))
         {
-            if (WeaponPawns[x].Driver != none)
-            {
-                DenyEntry(P, 2);
-
-                return false;
-            }
-        }
-    }
-
-    // Removed "P.bIsCrouched" to allow players to connect while crouched
-    if (bNonHumanControl || P.Controller == none || Driver != none || P.DrivenVehicle != none || !P.Controller.bIsPlayer || P.IsA('Vehicle') || Health <= 0 || !Level.Game.CanEnterVehicle(self, P))
-    {
-        return false;
-    }
-
-    // Check vehicle locking
-    if (bTeamLocked && P.GetTeamNum() != VehicleTeam)
-    {
-        DenyEntry(P, 1);
-
-        return false;
-    }
-    else
-    {
-        // At this point we know the pawn is not a tanker, so let's see if they can use the gun
-        if (bEnterringUnlocks && bTeamLocked)
-        {
-            bTeamLocked = false;
-        }
-
-        // The gun is manned and it is a human - deny entry
-        if (WeaponPawns[0].Driver != none && WeaponPawns[0].IsHumanControlled())
-        {
-            DenyEntry(P, 3);
+            DenyEntry(P, 1); // can't use enemy gun
 
             return false;
         }
-        // The gun is manned by a bot and the requesting pawn is human controlled - kick the bot off the gun
-        else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && p.IsHumanControlled())
-        {
-            WeaponPawns[0].KDriverLeave(true);
-            KDriverEnter(P);
+    }
 
-            return true;
-        }
-        // The gun is manned by a bot and a bot is trying to use it - deny entry
-        else if (WeaponPawns[0].Driver != none && !WeaponPawns[0].IsHumanControlled() && !p.IsHumanControlled())
+    // Deny entry if gun has 'driver' or is dead, or if player on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Driver != none || Health <= 0 || P == none || (DH_Pawn(P) != none && DH_Pawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
+        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
+    {
+        return false;
+    }
+
+    // The gun is already manned
+    if (WeaponPawns[0].Driver != none)
+    {
+        // Deny entry if gun is already manned by a human, or a bot is trying to man a gun already occupied by another bot
+        if (WeaponPawns[0].IsHumanControlled() || !P.IsHumanControlled())
         {
-            DenyEntry(P, 3);
+            DenyEntry(P, 3); // gun is crewed
 
             return false;
         }
-        // The gun is unmanned, so let who ever is there first can use it
-        else
-        {
-            KDriverEnter(P);
 
-            return true;
-        }
+        // A human player wants to enter a gun manned by a bot, so kick the bot off the gun
+        WeaponPawns[0].KDriverLeave(true);
     }
+
+    // Passed all checks, so allow player to man the gun
+    if (bEnterringUnlocks && bTeamLocked)
+    {
+        bTeamLocked = false;
+    }
+
+    KDriverEnter(P);
+
+    return true;
 }
 
 // Modified to use a different AT cannon message class

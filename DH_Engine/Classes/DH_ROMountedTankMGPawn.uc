@@ -138,6 +138,34 @@ simulated function PostBeginPlay()
     }
 }
 
+// Modified to remove obsolete stuff & duplication from the Supers, & to use the vehicle's VehicleTeam to determine the team
+function bool TryToDrive(Pawn P)
+{
+    if (VehicleBase != none && P != none)
+    {
+        // Trying to enter a vehicle that isn't on our team
+        if (P.GetTeamNum() != VehicleBase.VehicleTeam) // VehicleTeam reliably gives the team, even if vehicle hasn't yet been entered
+        {
+            if (VehicleBase.Driver == none)
+            {
+                return VehicleBase.TryToDrive(P);
+            }
+
+            DenyEntry(P, 1); // can't use enemy vehicle
+
+            return false;
+        }
+
+        // Bot tries to enter the VehicleBase if it has no driver
+        if (VehicleBase.Driver == none && !P.IsHumanControlled())
+        {
+            return VehicleBase.TryToDrive(P);
+        }
+    }
+
+    return super(Vehicle).TryToDrive(P); // the Supers in ROVehicleWeaponPawn & VehicleWeaponPawn contain lots of duplication
+}
+
 // Modified so that if MG is reloading when player enters, we pass the reload start time (indirectly), so client can calculate reload progress to display on HUD
 function KDriverEnter(Pawn P)
 {

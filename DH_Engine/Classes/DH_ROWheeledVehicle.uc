@@ -335,14 +335,30 @@ function bool TryToDrive(Pawn P)
         P.ClientMessage("Vehicle Health:" @ Health $ ", EngineHealth:" @ EngineHealth);
     }
 
-    // Don't allow vehicle to be stolen when somebody is in a turret
-    if (!bTeamLocked && P.GetTeamNum() != VehicleTeam)
+    // Trying to enter a vehicle that isn't on our team
+    if (P != none && P.GetTeamNum() != VehicleTeam)
     {
+        // Deny entry to TeamLocked enemy vehicle
+        if (bTeamLocked)
+        {
+            DenyEntry(P, 1); // can't use enemy vehicle
+
+            return false;
+        }
+
+        // Don't allow non-TeamLocked vehicle to be stolen if it already has an enemy occupant
+        if (Driver != none && P.GetTeamNum() != Driver.GetTeamNum())
+        {
+            DenyEntry(P, 1); // can't use enemy vehicle
+
+            return false;
+        }
+
         for (i = 0; i < WeaponPawns.Length; ++i)
         {
-            if (WeaponPawns[i].Driver != none)
+            if (WeaponPawns[i].Driver != none && P.GetTeamNum() != WeaponPawns[i].Driver.GetTeamNum())
             {
-                DenyEntry(P, 2); // cannot enter
+                DenyEntry(P, 1); // can't use enemy vehicle
 
                 return false;
             }
@@ -353,14 +369,6 @@ function bool TryToDrive(Pawn P)
     if (Driver != none || Health <= 0 || P == none || P.bIsCrouched || (DH_Pawn(P) != none && DH_Pawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
     {
-        return false;
-    }
-
-    // Deny entry to enemy vehicle that is team locked
-    if (bTeamLocked && (P.GetTeamNum() != VehicleTeam))
-    {
-        DenyEntry(P, 1); // can't use enemy vehicle
-
         return false;
     }
 
