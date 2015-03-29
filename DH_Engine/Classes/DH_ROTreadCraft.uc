@@ -3077,22 +3077,22 @@ simulated function UpdateTurretReferences()
 // Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
 simulated function int NumPassengers()
 {
-    local  int  i, num;
+    local int i, Num;
 
     if (Driver != none)
     {
-        num = 1;
+        Num = 1;
     }
 
     for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
         {
-            num++;
+            ++Num;
         }
     }
 
-    return num;
+    return Num;
 }
 
 // Modified to include Skins array (so no need to add manually in each subclass) & to add extra material properties & remove obsolete stuff
