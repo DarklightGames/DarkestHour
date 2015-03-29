@@ -7,6 +7,7 @@ class DH_Flak88Cannon extends DH_ATGunCannon;
 
 defaultproperties
 {
+    bHasTurret=true // Matt: not a turret, but this is an easy way of making the player's view turn with the rotating gun
     SecondarySpread=0.00125
     ReloadSoundOne=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01'
     ReloadSoundTwo=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03'
