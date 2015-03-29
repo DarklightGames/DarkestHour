@@ -3,8 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PegasusGunCannon extends DH_Flak88Cannon;
-
-defaultproperties
-{
-}
+class DH_PegasusGunCannon extends DHDeprecated;

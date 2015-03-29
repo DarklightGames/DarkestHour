@@ -3,9 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PegasusGunFactory extends DH_Flak88Factory;
-
-defaultproperties
-{
-    VehicleClass=class'DH_Guns.DH_PegasusGun'
-}
+class DH_PegasusGunFactory extends DHDeprecated;

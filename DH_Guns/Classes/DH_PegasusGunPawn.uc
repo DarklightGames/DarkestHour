@@ -3,9 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PegasusGunPawn extends DH_Flak88CannonPawn;
-
-defaultproperties
-{
-    GunClass=class'DH_Guns.DH_PegasusGunCannon'
-}
+class DH_PegasusGunPawn extends DHDeprecated;
