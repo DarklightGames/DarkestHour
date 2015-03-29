@@ -466,7 +466,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             continue;
         }
 
-        if (!bTankersCanCapture && RI.bCanBeTankCrew))
+        if (!bTankersCanCapture && RI.bCanBeTankCrew)
         {
             continue;
         }
