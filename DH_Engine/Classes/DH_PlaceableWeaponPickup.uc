@@ -21,26 +21,24 @@ simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
-    if (WeaponType != none)
-    {
-        if (Level.NetMode != NM_DedicatedServer && StaticMesh == default.StaticMesh && WeaponType.default.PickupClass != none)
-        {
-            SetStaticMesh(WeaponType.default.PickupClass.default.StaticMesh);
-
-            if (DrawScale == 1.0 && WeaponType.default.PickupClass.default.DrawScale != 1.0)
-            {
-                SetDrawScale(WeaponType.default.PickupClass.default.DrawScale);
-            }
-        }
-
-        if (InventoryType == none && class<Weapon>(WeaponType) != none && class<Weapon>(WeaponType).default.FireModeClass[0] != none)
-        {
-            InventoryType = class<Weapon>(WeaponType).default.FireModeClass[0].default.AmmoClass;
-        }
-    }
-    else if (Role == ROLE_Authority)
+    if (WeaponType == none && Role == ROLE_Authority)
     {
         Error(self @ "self-destructing as no WeaponType has been set");
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && StaticMesh == default.StaticMesh && WeaponType.default.PickupClass != none)
+    {
+        SetStaticMesh(WeaponType.default.PickupClass.default.StaticMesh);
+
+        if (DrawScale == 1.0 && WeaponType.default.PickupClass.default.DrawScale != 1.0)
+        {
+            SetDrawScale(WeaponType.default.PickupClass.default.DrawScale);
+        }
+    }
+
+    if (InventoryType == none && class<Weapon>(WeaponType) != none && class<Weapon>(WeaponType).default.FireModeClass[0] != none)
+    {
+        InventoryType = class<Weapon>(WeaponType).default.FireModeClass[0].default.AmmoClass;
     }
 }
 
@@ -186,6 +184,16 @@ function Reset()
     super(Pickup).Reset();
 }
 
+simulated function StaticPrecache(LevelInfo L)
+{
+    if (WeaponType != none &&
+        WeaponType.default.PickupClass != none &&
+        WeaponType.default.PickupClass.default.StaticMesh)
+    {
+        L.AddPrecacheStaticMesh(WeaponType.default.PickupClass.default.StaticMesh);
+    }
+}
+
 defaultproperties
 {
     AmmoAmount=1
@@ -194,7 +202,7 @@ defaultproperties
     TouchMessage="Pick up: %w"
     MessageClass=class'DHWeaponPickupMessage' // new message classes that are passed the weapon class & use it to lookup the weapon name (for touch or pickup screen messages)
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
-    PickupSound=Sound'Inf_Weapons_Foley.WeaponPickup'
+    PickupSound=sound'Inf_Weapons_Foley.WeaponPickup'
     PickupForce="AssaultRiflePickup"
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.satchel' // just to make sure we see the pickup in the editor - in game the StaticMesh will be set based on WeaponType
