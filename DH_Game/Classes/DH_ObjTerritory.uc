@@ -466,7 +466,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             continue;
         }
 
-        if (!bTankersCanCapture && (RI.bCanBeTankCrew || RI.bCanBeTankCommander))
+        if (!bTankersCanCapture && RI.bCanBeTankCrew))
         {
             continue;
         }
@@ -589,7 +589,7 @@ function Timer()
 
             if (Pawn != none && Pawn.Health > 0 && WithinArea(Pawn))
             {
-                if ((!bTankersCanCapture && RI != none && (RI.bCanBeTankCrew || RI.bCanBeTankCommander)) || (!bVehiclesCanCapture && (ROVeh != none || VehWepPawn != none)))
+                if ((!bTankersCanCapture && RI != none && RI.bCanBeTankCrew) || (!bVehiclesCanCapture && (ROVeh != none || VehWepPawn != none)))
                 {
                     Pawn = none;
                     continue;
