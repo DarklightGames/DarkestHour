@@ -1331,22 +1331,22 @@ function bool CheckForCrew()
 // Modified to add WeaponPawns != none check to avoid "accessed none" errors, now rider pawns won't exist on client unless occupied
 simulated function int GetPassengerCount()
 {
-    local  int  i, num;
+    local int i, Num;
 
     if (Driver != none)
     {
-        num = 1;
+        Num = 1;
     }
 
     for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
         {
-            num++;
+            ++Num;
         }
     }
 
-    return num;
+    return Num;
 }
 
 defaultproperties
