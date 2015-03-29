@@ -3,8 +3,4 @@
 // Darklight Games (c) 2008-2014
 //==============================================================================
 
-class DHArtilleryTriggerBritMap extends DHArtilleryTrigger;
-
-defaultproperties
-{
-}
+class DHArtilleryTriggerBritMap extends DHDeprecated;
