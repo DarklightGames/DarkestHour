@@ -162,7 +162,7 @@ event bool KDriverLeave(bool bForceLeave)
     }
     else
     {
-        C.Pawn.ReceiveLocalizedMessage(class'DH_ATCannonMessage', 5);
+        C.Pawn.ReceiveLocalizedMessage(class'DH_ATCannonMessage', 4); // no exit can be found
         bSuperDriverLeave = false;
     }
 

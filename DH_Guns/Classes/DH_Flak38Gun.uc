@@ -9,11 +9,6 @@ class DH_Flak38Gun extends DH_ATGun;
 #exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Flak38_tex.utx
 
-function DenyEntry(Pawn P, int MessageNum)
-{
-    P.ReceiveLocalizedMessage(class'DH_AAGunMessage', MessageNum);
-}
-
 defaultproperties
 {
     VehicleHudTurret=TexRotator'DH_Flakvierling38_tex.flak.flakv38_turret_rot'

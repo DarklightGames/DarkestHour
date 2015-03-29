@@ -7,7 +7,6 @@ class DH_ATCannonMessage extends ROVehicleMessage
     abstract;
 
 var(Messages) localized string GunManned;
-var(Messages) localized string CannotUse;
 var(Messages) localized string NoExit;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -23,16 +22,17 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 3:
             return default.GunManned;
         case 4:
-            return default.CannotUse;
-        default:
             return default.NoExit;
+        default:
+            return "";
     }
 }
 
 defaultproperties
 {
+    NotQualified="You are not qualified to operate this gun"
+    VehicleIsEnemy="Cannot use an enemy gun"
+    CannotEnter="Cannot use this gun"
     GunManned="The gun is fully crewed"
-    CannotUse="Cannot use this gun"
-    NoExit="No exit location can be found for this AT gun"
-    VehicleIsEnemy="Cannot use an enemy AT gun"
+    NoExit="No exit location can be found"
 }
