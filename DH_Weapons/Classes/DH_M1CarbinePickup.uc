@@ -13,4 +13,5 @@ defaultproperties
     PrePivot=(Z=3.0)
     CollisionRadius=25.0
     CollisionHeight=3.0
+    DrawScale=0.9
 }
