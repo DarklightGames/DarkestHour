@@ -29,9 +29,9 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
     if ( (ExistingPanel!=None) || (NewPanelClass != None) )
     {
         if (ExistingPanel != None)
-            NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,True));
+            NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,true));
         else if (NewPanelClass != None)
-            NewTabPanel = GUITabPanel(AddComponent(PanelClass,True));
+            NewTabPanel = GUITabPanel(AddComponent(PanelClass,true));
 
         if (NewTabPanel == None)
         {
@@ -55,7 +55,7 @@ function GUITabPanel AddTab(string InCaption, string PanelClass, optional GUITab
             NewTabPanel.MyButton = NewTabButton;
             if (!bDrawTabAbove)
             {
-                NewTabPanel.MyButton.bBoundToParent = False;
+                NewTabPanel.MyButton.bBoundToParent = false;
                 NewTabPanel.MyButton.Style = Controller.GetStyle("FlippedTabButton",NewTabPanel.FontScale);
             }
         }
@@ -94,9 +94,9 @@ function GUITabPanel InsertTab(int Pos, string Caption, string PanelClass, optio
     if ( ExistingPanel != None || NewPanelClass != None)
     {
         if (ExistingPanel != None)
-            NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,True));
+            NewTabPanel = GUITabPanel(AppendComponent(ExistingPanel,true));
         else if (NewPanelClass != None)
-            NewTabPanel = GUITabPanel(AddComponent(PanelClass,True));
+            NewTabPanel = GUITabPanel(AddComponent(PanelClass,true));
 
         if (NewTabPanel == None)
         {

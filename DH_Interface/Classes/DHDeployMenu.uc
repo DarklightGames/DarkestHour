@@ -511,8 +511,8 @@ defaultproperties
     SpawnVehicleIndex=255
 
     OnMessage=InternalOnMessage
-    bRenderWorld=True
-    bAllowedAsLast=True
+    bRenderWorld=true
+    bAllowedAsLast=true
     BackgroundColor=(B=0,G=125,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
     WinTop=0.0
