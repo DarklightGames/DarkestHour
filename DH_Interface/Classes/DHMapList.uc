@@ -6,14 +6,19 @@
 class DHMapList extends MapList
     config;
 
-function ClearMapsArray()
+static function bool IsMapOfficial(string S)
 {
-    Maps.Remove(0, Maps.Length);
-}
+    local int i;
 
-function AddNewStringElement(string new_element_to_load, int index)
-{
-    Maps[index] = new_element_to_load;
+    for (i = 0; i < default.Maps.Length; ++i)
+    {
+        if (S ~= default.Maps[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 defaultproperties
@@ -31,20 +36,24 @@ defaultproperties
     Maps(10)="DH-Foy"
     Maps(11)="DH-Ginkel_Heath"
     Maps(12)="DH-Gran"
-    Maps(13)="DH-Hill_108"
-    Maps(14)="DH-Hill_400"
-    Maps(15)="DH-Hurtgenwald"
-    Maps(16)="DH-Juno_Beach"
-    Maps(17)="DH-Kommerscheidt"
-    Maps(18)="DH-La_Chapelle"
-    Maps(19)="DH-La_Monderie"
-    Maps(20)="DH-Lutremange"
-    Maps(21)="DH-Poteau_Ambush"
-    Maps(22)="DH-Raids"
-    Maps(23)="DH-Simonskall"
-    Maps(24)="DH-Stoumont"
-    Maps(25)="DH-Vieux"
-    Maps(26)="DH-Vieux_Recon"
-    Maps(27)="DH-Wacht_am_Rhein"
-    Maps(29)="DH-Noville"
+    Maps(13)="DH-Hells_Highway"
+    Maps(14)="DH-Hill_108"
+    Maps(15)="DH-Hill_400"
+    Maps(16)="DH-Hurtgenwald"
+    Maps(17)="DH-Juno_Beach"
+    Maps(18)="DH-Kommerscheidt"
+    Maps(19)="DH-La_Chapelle"
+    Maps(20)="DH-La_Gleize"
+    Maps(21)="DH-La_Monderie"
+    Maps(22)="DH-Lutremange"
+    Maps(23)="DH-Noville"
+    Maps(24)="DH-Poteau_Ambush"
+    Maps(25)="DH-Raids"
+    Maps(26)="DH-Simonskall"
+    Maps(27)="DH-Stavelot"
+    Maps(28)="DH-Stoumont"
+    Maps(29)="DH-Targnon"
+    Maps(30)="DH-Vieux"
+    Maps(31)="DH-Vieux_Recon"
+    Maps(32)="DH-Wacht_am_Rhein"
 }
