@@ -184,13 +184,13 @@ function Reset()
     super(Pickup).Reset();
 }
 
-simulated function StaticPrecache(LevelInfo L)
+static function StaticPrecache(LevelInfo L)
 {
-    if (WeaponType != none &&
-        WeaponType.default.PickupClass != none &&
-        WeaponType.default.PickupClass.default.StaticMesh)
+    if (default.WeaponType != none &&
+        default.WeaponType.default.PickupClass != none &&
+        default.WeaponType.default.PickupClass.default.StaticMesh != none)
     {
-        L.AddPrecacheStaticMesh(WeaponType.default.PickupClass.default.StaticMesh);
+        L.AddPrecacheStaticMesh(default.WeaponType.default.PickupClass.default.StaticMesh);
     }
 }
 
