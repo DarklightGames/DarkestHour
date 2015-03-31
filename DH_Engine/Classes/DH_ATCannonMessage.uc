@@ -6,8 +6,8 @@
 class DH_ATCannonMessage extends ROVehicleMessage
     abstract;
 
-var(Messages) localized string GunManned;
-var(Messages) localized string NoExit;
+var localized string GunManned;
+var localized string NoExit;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

@@ -6,14 +6,14 @@
 class DH_VehicleMessage extends ROVehicleMessage
     abstract;
 
-var(Messages) localized string CannotRide;
-var(Messages) localized string VehicleFull;
-var(Messages) localized string OpenHatch;
-var(Messages) localized string ExitCommandersHatch;
-var(Messages) localized string ExitDriverOrComHatch;
-var(Messages) localized string ExitCommandersOrMGHatch;
-var(Messages) localized string OverSpeed;
-var(Messages) localized string VehicleBurning;
+var localized string CannotRide;
+var localized string VehicleFull;
+var localized string OpenHatch;
+var localized string ExitCommandersHatch;
+var localized string ExitDriverOrComHatch;
+var localized string ExitCommandersOrMGHatch;
+var localized string OverSpeed;
+var localized string VehicleBurning;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

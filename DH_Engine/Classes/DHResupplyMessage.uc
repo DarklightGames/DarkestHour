@@ -6,23 +6,32 @@
 class DHResupplyMessage extends ROCriticalMessage
     abstract;
 
-var localized string  ResuppliedMortar;
-var localized string  ResuppliedNoOperator;
-var localized string  BeenResupplied;
+var localized string ResuppliedMortar;
+var localized string ResuppliedNoOperator;
+var localized string BeenResupplied;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
+    local string S;
+
     switch (Switch)
     {
         case 0:
-            return default.ResuppliedNoOperator;
+            S = default.ResuppliedNoOperator;
         case 1:
-            return default.ResuppliedMortar @ RelatedPRI_1.PlayerName;
+            S = default.ResuppliedMortar;
         case 2:
-            return default.BeenResupplied @ RelatedPRI_1.PlayerName;
+            S = default.BeenResupplied;
         default:
-            return default.ResuppliedNoOperator;
+            S = default.ResuppliedNoOperator;
     }
+
+    if (RelatedPRI_1 != none)
+    {
+        S = Repl(S, "{0}", RelatedPRI_1.PlayerName);
+    }
+
+    return S;
 }
 
 static function int getIconID(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -46,9 +55,9 @@ static function int getIconID(optional int Switch, optional PlayerReplicationInf
 
 defaultproperties
 {
-    ResuppliedMortar="Successfully resupplied"
-    ResuppliedNoOperator="Successfully resupplied mortar."
-    BeenResupplied="You have received ammo from"
+    ResuppliedMortar="You have resupplied {0}"
+    ResuppliedNoOperator="You have resupplied a friendly mortar"
+    BeenResupplied="You have received ammo from {0}"
     iconID=4
     altIconID=5
 }

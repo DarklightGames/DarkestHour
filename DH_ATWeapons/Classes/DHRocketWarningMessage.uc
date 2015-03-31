@@ -8,11 +8,11 @@ class DHRocketWarningMessage extends ROCriticalMessage
 
 var class<Inventory> WeaponClass;
 
-var(Messages) localized string NoProneFire;
-var(Messages) localized string NeedSupport;
-var(Messages) localized string NoHipFire;
-var(Messages) localized string NotInIS;
-var(Messages) localized string NoProneReload;
+var localized string NoProneFire;
+var localized string NeedSupport;
+var localized string NoHipFire;
+var localized string NotInIS;
+var localized string NoProneReload;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -37,14 +37,19 @@ static function string GetString(optional int Switch, optional PlayerReplication
             break;
     }
 
-    return Repl(S, "%w", default.WeaponClass.default.ItemName);
+    if (default.WeaponClass != none)
+    {
+        S = Repl(S, "{0}", default.WeaponClass.default.ItemName);
+    }
+
+    return S;
 }
 
 defaultproperties
 {
-    NoProneFire="You cannot fire the %w while prone"
-    NeedSupport="You must be crouched or weapon rested to fire the %w"
-    NoHipFire="You cannot fire the %w from the hip"
-    NotInIS="You must shoulder the %w for an assisted reload"
-    NoProneReload="You cannot reload the %w while prone"
+    NoProneFire="You cannot fire the {0} while prone"
+    NeedSupport="You must be crouched or weapon rested to fire the {0}"
+    NoHipFire="You cannot fire the {0} from the hip"
+    NotInIS="You must shoulder the {0} for an assisted reload"
+    NoProneReload="You cannot reload the {0} while prone"
 }

@@ -26,7 +26,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
             S = default.LoadedGunner;
     }
 
-    S = Repl(S, "{0}", RelatedPRI_1.PlayerName);
+    if (RelatedPRI_1 != none)
+    {
+        S = Repl(S, "{0}", RelatedPRI_1.PlayerName);
+    }
 
     return S;
 }

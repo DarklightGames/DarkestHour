@@ -6,9 +6,9 @@
 class DH_PIATWarningMsg extends ROCriticalMessage
     abstract;
 
-var(Messages) localized string NoHipFire;
-var(Messages) localized string ReloadWarning;
-var(Messages) localized string NeedSupport;
+var localized string NoHipFire;
+var localized string ReloadWarning;
+var localized string NeedSupport;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {

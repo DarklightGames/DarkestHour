@@ -17,27 +17,36 @@ var localized string NoTargetToCancel;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
+    local string S;
+
     switch (Switch)
     {
         case 0:
-            return default.TargetInvalid;
+            S = default.TargetInvalid;
         case 1:
-            return default.NoMortarOperators;
+            S = default.NoMortarOperators;
         case 2:
-            return RelatedPRI_1.PlayerName @ default.TargetMarked;
+            S = default.TargetMarked;
         case 3:
-            return RelatedPRI_1.PlayerName @ default.TargetCancelled;
+            S = default.TargetCancelled;
         case 4:
-            return default.CannotMarkTargetYet;
+            S = default.CannotMarkTargetYet;
         case 5:
-            return default.CannotCancelTargetYet;
+            S = default.CannotCancelTargetYet;
         case 6:
-            return default.TooManyMortarTargets;
+            S = default.TooManyMortarTargets;
         case 7:
-            return default.NoTargetToCancel;
+            S = default.NoTargetToCancel;
         default:
             return default.TargetInvalid;
     }
+
+    if (RelatedPRI_1 != none)
+    {
+        S = Repl(S, "{0}", RelatedPRI_1.PlayerName);
+    }
+
+    return S;
 }
 
 static function int getIconID(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -50,8 +59,6 @@ static function int getIconID(optional int Switch, optional PlayerReplicationInf
             return 11;
         case 2:     // TargetMarked
             return 3;
-//      case 3:     //TargetCancelled
-//          return 3;
         case 4:     // CannotMarkTargetYet
             return 11;
         default:
@@ -61,12 +68,12 @@ static function int getIconID(optional int Switch, optional PlayerReplicationInf
 
 defaultproperties
 {
-    TargetInvalid="Invalid mortar target."
-    NoMortarOperators="There are no mortar operators available."
-    TargetMarked="has marked a mortar target."
-    TargetCancelled="has cancelled a mortar target marker."
-    CannotMarkTargetYet="You cannot mark another mortar target marker yet."
-    CannotCancelTargetYet="You cannot cancel your mortar target yet."
-    TooManyMortarTargets="There are too many active mortar targets."
-    NoTargetToCancel="You have no mortar target to cancel."
+    TargetInvalid="Invalid mortar target"
+    NoMortarOperators="There are no mortar operators available"
+    TargetMarked="{0} has marked a mortar target"
+    TargetCancelled="{0} has cancelled a mortar target marker"
+    CannotMarkTargetYet="You cannot mark another mortar target marker yet"
+    CannotCancelTargetYet="You cannot cancel your mortar target yet"
+    TooManyMortarTargets="There are too many active mortar targets"
+    NoTargetToCancel="You have no mortar target to cancel"
 }

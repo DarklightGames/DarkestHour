@@ -6,7 +6,7 @@
 class DHVehicleSayMessage extends DHLocalMessage
     abstract;
 
-var Color           VehicleMessageColor;
+var color VehicleMessageColor;
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {

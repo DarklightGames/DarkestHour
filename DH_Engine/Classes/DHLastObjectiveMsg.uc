@@ -6,8 +6,8 @@
 class DHLastObjectiveMsg extends ROCriticalMessage
     abstract;
 
-var(Messages) localized string AboutToWin;
-var(Messages) localized string AboutToLose;
+var localized string AboutToWin;
+var localized string AboutToLose;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -22,7 +22,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
         default:
             return "INVALID MESSAGE TYPE:" @ Switch;
     }
-
 }
 
 static function int getIconID(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
