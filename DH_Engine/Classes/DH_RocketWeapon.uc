@@ -342,7 +342,7 @@ simulated function Fire(float F)
         // Cannot be prone while firing
         if (PC != none)
         {
-            WarningMessageClass.static.ClientReceive(PC, 0);
+            WarningMessageClass.static.ClientReceive(PC, 0,,, self);
         }
 
         return;
@@ -353,7 +353,7 @@ simulated function Fire(float F)
         // Must be sighted to fire
         if (PC != none)
         {
-            WarningMessageClass.static.ClientReceive(PC, 2);
+            WarningMessageClass.static.ClientReceive(PC, 2,,, self);
         }
 
         return;

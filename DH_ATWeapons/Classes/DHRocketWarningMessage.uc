@@ -6,8 +6,6 @@
 class DHRocketWarningMessage extends ROCriticalMessage
     abstract;
 
-var class<Inventory> WeaponClass;
-
 var localized string NoProneFire;
 var localized string NeedSupport;
 var localized string NoHipFire;
@@ -17,6 +15,7 @@ var localized string NoProneReload;
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local string S;
+    local Inventory I;
 
     switch (Switch)
     {
@@ -37,9 +36,11 @@ static function string GetString(optional int Switch, optional PlayerReplication
             break;
     }
 
-    if (default.WeaponClass != none)
+    I = Inventory(OptionalObject);
+
+    if (I != none)
     {
-        S = Repl(S, "{0}", default.WeaponClass.default.ItemName);
+        S = Repl(S, "{0}", I.default.ItemName);
     }
 
     return S;
