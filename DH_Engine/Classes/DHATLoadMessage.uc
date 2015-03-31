@@ -6,23 +6,29 @@
 class DHATLoadMessage extends ROCriticalMessage
     abstract;
 
-var localized string        LoadedGunner;
-var localized string        BeenLoaded;
-var localized string        UnLoaded;
+var localized string LoadedGunner;
+var localized string BeenLoaded;
+var localized string UnLoaded;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
+    local string S;
+
     switch (Switch)
     {
         case 0:
-            return default.LoadedGunner $ RelatedPRI_1.PlayerName;
+            S = default.LoadedGunner;
         case 1:
-            return default.BeenLoaded $ RelatedPRI_1.PlayerName;
+            S = default.BeenLoaded;
         case 2:
-            return default.UnLoaded;
+            S = default.UnLoaded;
         default:
-            return default.LoadedGunner;
+            S = default.LoadedGunner;
     }
+
+    S = Repl(S, "{0}", RelatedPRI_1.PlayerName);
+
+    return S;
 }
 
 static function int getIconID(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -46,8 +52,8 @@ static function int getIconID(optional int Switch, optional PlayerReplicationInf
 
 defaultproperties
 {
-    LoadedGunner="Successfully reloaded "
-    BeenLoaded="You have been reloaded by "
+    LoadedGunner="You have reloaded {0}"
+    BeenLoaded="You have been reloaded by {0}"
     UnLoaded="Rocket has been unloaded"
     iconID=4
     altIconID=5

@@ -12,12 +12,6 @@ enum EOwningTeam
     OWNER_Neutral,
 };
 
-var()   EOwningTeam     Team;            //Team this volume resupplies
-var()   float           UpdateTime;      //How often this thing needs to do it's business
-var()   bool            bUsesSpawnAreas; // Activated/Deactivated based on a spawn area associated with a tag
-
-var     bool            bActive;         // Whether this ammo resupply volume is active
-
 enum EResupplyType
 {
     RT_Players,
@@ -26,7 +20,12 @@ enum EResupplyType
     RT_Mortars
 };
 
-var()   EResupplyType       ResupplyType; //Who this volume will resupply
+var()   EOwningTeam     Team;            //Team this volume resupplies
+var()   float           UpdateTime;      //How often this thing needs to do it's business
+var()   bool            bUsesSpawnAreas; //Activated/Deactivated based on a spawn area associated with a tag
+var()   EResupplyType   ResupplyType;    //Who this volume will resupply
+
+var     bool            bActive;         // Whether this ammo resupply volume is active
 
 function PostBeginPlay()
 {
@@ -37,77 +36,80 @@ function PostBeginPlay()
         bActive = true;
     }
 
-    SetTimer(1.0, true);
+    if (Role == ROLE_Authority)
+    {
+        SetTimer(1.0, true);
+    }
 }
 
 function Timer()
 {
-    local Pawn recvr;
-    local inventory recvr_inv;
-    local ROWeapon recvr_weapon;
+    local Pawn P;
+    local Inventory I;
+    local ROWeapon W;
     local bool bResupplied;
-    local DH_Pawn P;
+    local DH_Pawn DHP;
     local Vehicle V;
-    local DH_RoleInfo DHRI;
+    local DH_RoleInfo RI;
 
-    if (Role < ROLE_Authority || !bActive)
+    if (!bActive)
     {
         return;
     }
 
-    foreach TouchingActors(class'Pawn', recvr)
+    foreach TouchingActors(class'Pawn', P)
     {
         bResupplied = false;
 
-        if ((Team != OWNER_Neutral && recvr.GetTeamNum() != Team) || Level.TimeSeconds - recvr.LastResupplyTime < UpdateTime)
+        if ((Team != OWNER_Neutral && P.GetTeamNum() != Team) || Level.TimeSeconds - P.LastResupplyTime < UpdateTime)
         {
             continue;
         }
 
-        P = DH_Pawn(recvr);
-        V = Vehicle(recvr);
+        DHP = DH_Pawn(P);
 
-        if (P != none)
+        if (DHP != none)
         {
-            DHRI = P.GetRoleInfo();
+            RI = DHP.GetRoleInfo();
         }
 
         if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
         {
             //Resupply weapons
-            for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+            for (I = P.Inventory; I != none; I = I.Inventory)
             {
-                recvr_weapon = ROWeapon(recvr_inv);
+                W = ROWeapon(I);
 
-                //Don't allow resupplying of enemy weapons
-                if (recvr_weapon.IsGrenade())
+                if (W == none || W.IsGrenade())
                 {
                     continue;
                 }
 
-                if (recvr_weapon != none && recvr_weapon.FillAmmo())
+                if (W != none && W.FillAmmo())
                 {
                     bResupplied = true;
                 }
             }
 
-            if (DHRI != none)
+            if (RI != none)
             {
-                if (!P.bHasMGAmmo && DHRI.bCarriesMGAmmo)
+                if (!DHP.bHasMGAmmo && RI.bCarriesMGAmmo)
                 {
-                    P.bHasMGAmmo = true;
+                    DHP.bHasMGAmmo = true;
 
                     bResupplied = true;
                 }
 
-                if (!P.bHasATAmmo && DHRI.bCarriesATAmmo)
+                if (!DHP.bHasATAmmo && RI.bCarriesATAmmo)
                 {
-                    P.bHasATAmmo = true;
+                    DHP.bHasATAmmo = true;
 
                     bResupplied = true;
                 }
             }
         }
+
+        V = Vehicle(P);
 
         if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
         {
@@ -119,18 +121,18 @@ function Timer()
         }
 
         //Mortar specific resupplying.
-        if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && DHRI != none)
+        if (P != none && (ResupplyType == RT_Mortars || ResupplyType == RT_All) && RI != none)
         {
-            if (DHRI.bCanUseMortars)
+            if (RI.bCanUseMortars)
             {
-                P.FillMortarAmmunition();
+                DHP.FillMortarAmmunition();
 
                 bResupplied = true;
             }
 
-            if (!P.bHasMortarAmmo && DHRI.bCarriesMortarAmmo)
+            if (!DHP.bHasMortarAmmo && RI.bCarriesMortarAmmo)
             {
-                P.bHasMortarAmmo = true;
+                DHP.bHasMortarAmmo = true;
 
                 bResupplied = true;
             }
@@ -139,15 +141,15 @@ function Timer()
         //Play sound if applicable
         if (bResupplied)
         {
-            recvr.LastResupplyTime = Level.TimeSeconds;
-            recvr.ClientResupplied();
+            P.LastResupplyTime = Level.TimeSeconds;
+            P.ClientResupplied();
         }
     }
 }
 
 event Touch(Actor Other)
 {
-    local ROPawn ROP;
+    local ROPawn P;
     local Vehicle V;
 
     if (!bActive)
@@ -155,17 +157,17 @@ event Touch(Actor Other)
         return;
     }
 
-    ROP = ROPawn(Other);
+    P = ROPawn(Other);
     V = Vehicle(Other);
 
-    if (ROP != none)
+    if (P != none)
     {
         if (Team == OWNER_Neutral ||
-           (ROP.PlayerReplicationInfo != none && ROP.PlayerReplicationInfo.Team != none
-           && ((ROP.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && Team == OWNER_Axis) ||
-               (ROP.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && Team == OWNER_Allies))))
+           (P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none
+           && ((P.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX && Team == OWNER_Axis) ||
+               (P.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX && Team == OWNER_Allies))))
         {
-            ROP.bTouchingResupply = true;
+            P.bTouchingResupply = true;
         }
     }
 
@@ -182,15 +184,15 @@ event Touch(Actor Other)
 
 event UnTouch(Actor Other)
 {
-    local ROPawn ROP;
+    local ROPawn P;
     local Vehicle V;
 
-    ROP = ROPawn(Other);
+    P = ROPawn(Other);
     V = Vehicle(Other);
 
-    if (ROP != none)
+    if (P != none)
     {
-        ROP.bTouchingResupply = false;
+        P.bTouchingResupply = false;
     }
 
     if (V != none)
