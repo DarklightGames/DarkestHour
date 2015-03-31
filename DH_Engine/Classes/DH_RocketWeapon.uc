@@ -705,52 +705,54 @@ function bool HandlePickupQuery(Pickup Item)
         // Handle ammo pickups
         for (i = 0; i < arraycount(AmmoClass); ++i)
         {
-            if (AmmoClass[i] != none && Item.InventoryType == AmmoClass[i])
+            if (AmmoClass[i] == none || Item.InventoryType != AmmoClass[i])
             {
-                if ((AmmoAmount(0) <= 0 && PrimaryAmmoArray.Length < MaxNumPrimaryMags) || PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1)
+                continue;
+            }
+
+            if ((AmmoAmount(0) <= 0 && PrimaryAmmoArray.Length < MaxNumPrimaryMags) || PrimaryAmmoArray.Length < MaxNumPrimaryMags - 1)
+            {
+                // Handle multi mag ammo type pickups
+                if (ROMultiMagAmmoPickup(Item) != none)
                 {
-                    // Handle multi mag ammo type pickups
-                    if (ROMultiMagAmmoPickup(Item) != none)
+                    for (j = 0; j < ROMultiMagAmmoPickup(Item).AmmoMags.Length; ++j)
                     {
-                        for (j = 0; j < ROMultiMagAmmoPickup(Item).AmmoMags.Length; ++j)
+                        if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
                         {
-                            if (PrimaryAmmoArray.Length >= MaxNumPrimaryMags)
-                            {
-                                break;
-                            }
-
-                            PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];
-
-                            bAddedMags = true;
+                            break;
                         }
-                    }
-                    // Handle standard/old style ammo pickups
-                    else
-                    {
-                        PrimaryAmmoArray[PrimaryAmmoArray.Length] = Min(MaxAmmo(i), Ammo(Item).AmmoAmount);
+
+                        PrimaryAmmoArray[PrimaryAmmoArray.Length] = ROMultiMagAmmoPickup(Item).AmmoMags[j];
 
                         bAddedMags = true;
                     }
                 }
+                // Handle standard/old style ammo pickups
                 else
                 {
-                    return true;
+                    PrimaryAmmoArray[PrimaryAmmoArray.Length] = Min(MaxAmmo(i), Ammo(Item).AmmoAmount);
+
+                    bAddedMags = true;
                 }
-
-                // If we added mags, update the mag count and force a net update
-                if (bAddedMags)
-                {
-                    CurrentMagCount = PrimaryAmmoArray.Length - 1;
-                    NetUpdateTime = Level.TimeSeconds - 1;
-                }
-
-                Item.AnnouncePickup(Pawn(Owner));
-                Item.SetRespawn();
-
-                UpdateResupplyStatus();
-
+            }
+            else
+            {
                 return true;
             }
+
+            // If we added mags, update the mag count and force a net update
+            if (bAddedMags)
+            {
+                CurrentMagCount = PrimaryAmmoArray.Length - 1;
+                NetUpdateTime = Level.TimeSeconds - 1;
+            }
+
+            Item.AnnouncePickup(Pawn(Owner));
+            Item.SetRespawn();
+
+            UpdateResupplyStatus();
+
+            return true;
         }
     }
 
