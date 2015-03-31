@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_EnfieldNo4ScopedPickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {

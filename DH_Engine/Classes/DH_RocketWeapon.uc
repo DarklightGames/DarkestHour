@@ -899,4 +899,5 @@ defaultproperties
     BobDamping=1.6
     FillAmmoMagCount=1
     Ranges(0)=0
+    WarningMessageClass=class'DH_Engine.DHRocketWarningMessage'
 }

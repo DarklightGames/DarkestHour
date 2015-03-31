@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SatchelCharge10lb10sPickup extends DHOneShotWeaponPickup; // Matt: originally extended SatchelCharge10lb10sPickup, which extended ROOneShotWeaponPickup
+class DH_SatchelCharge10lb10sPickup extends DHOneShotWeaponPickup
+    notplaceable;
 
 defaultproperties
 {

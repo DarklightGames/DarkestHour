@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_M1GarandPickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {

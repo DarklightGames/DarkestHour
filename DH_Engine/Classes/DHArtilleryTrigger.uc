@@ -7,6 +7,7 @@ class DHArtilleryTrigger extends ROArtilleryTrigger;
 
 var()   bool        bShouldShowOnSituationMap;
 var()   float       TriggerDelay;
+
 var     float       TriggerTime;
 var     DH_Pawn     Carrier;
 var     SoundGroup  CommonwealthRequestSound;

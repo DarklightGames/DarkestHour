@@ -11,7 +11,6 @@ var class<Emitter> ExplodeDirtEffectClass;
 var class<Emitter> ExplodeSnowEffectClass;
 var class<Emitter> ExplodeMidAirEffectClass;
 
-
 // Modified to optimise
 simulated function Tick(float DeltaTime)
 {
@@ -22,6 +21,7 @@ simulated function Tick(float DeltaTime)
         if (FuzeLengthTimer <= 0.0)
         {
             bAlreadyExploded = true;
+
             Explode(Location, vect(0.0, 0.0, 1.0));
         }
     }

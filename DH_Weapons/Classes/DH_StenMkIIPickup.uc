@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_StenMkIIPickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {

@@ -3,17 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerFaustPickup extends DHOneShotWeaponPickup; // Matt: originally extended PanzerFaustPickup
-
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.Panzerfaust');
-    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Ammo.Warhead3rd');
-    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Ammo.Warhead1st');
-    L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.Panzerfaust_world');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.Grenades.Panzerfaust_S');
-    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.panzerfaust_ammo');
-}
+class DH_PanzerFaustPickup extends DHOneShotWeaponPickup
+    notplaceable;
 
 defaultproperties
 {

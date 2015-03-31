@@ -4,16 +4,7 @@
 //==============================================================================
 
 class DH_P08LugerPickup extends DHWeaponPickup
-   notplaceable;
-
-static function StaticPrecache(LevelInfo L)
-{
-    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.Weapons.luger');
-    L.AddPrecacheStaticMesh(StaticMesh'WeaponPickupSM.pouches.pistolpouch');
-    L.AddPrecacheMaterial(Material'Weapons3rd_tex.German.luger_world');
-    L.AddPrecacheMaterial(Material'Weapons1st_tex.Pistols.luger_s');
-    L.AddPrecacheMaterial(Material'InterfaceArt_tex.HUD.luger_ammo');
-}
+    notplaceable;
 
 defaultproperties
 {

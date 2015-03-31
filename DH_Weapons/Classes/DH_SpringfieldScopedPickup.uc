@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_SpringfieldScopedPickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {

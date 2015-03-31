@@ -9,17 +9,25 @@ class DHVoicePack extends ROVoicePack
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
     local vector MyLocation;
+    local Controller C;
 
-    if (Controller(PackOwner).Pawn == none)
+    C = Controller(PackOwner);
+
+    if (C == none)
+    {
+        return;
+    }
+
+    if (C.Pawn == none)
     {
         MyLocation = PackOwner.Location;
     }
     else
     {
-        MyLocation = Controller(PackOwner).Pawn.Location;
+        MyLocation = C.Pawn.Location;
     }
 
-    Controller(PackOwner).SendVoiceMessage(Controller(PackOwner).PlayerReplicationInfo, SquadLeader, Type, Index, 'GLOBAL', Controller(PackOwner).Pawn, MyLocation);
+    C.SendVoiceMessage(C.PlayerReplicationInfo, SquadLeader, Type, Index, 'GLOBAL', C.Pawn, MyLocation);
 }
 
 defaultproperties
@@ -27,5 +35,5 @@ defaultproperties
     ShoutRadius=1024.0
     WhisperRadius=128.0
     bUseLocationalVoice=true
+    EnemyAbbrevAxis(3)="Pioneer"
 }
-

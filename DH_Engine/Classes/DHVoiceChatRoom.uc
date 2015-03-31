@@ -18,4 +18,3 @@ function RemoveMember(PlayerReplicationInfo PRI)
 defaultproperties
 {
 }
-

@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_RedSmokePickup extends DHOneShotWeaponPickup;
+class DH_RedSmokePickup extends DHOneShotWeaponPickup
+    notplaceable;
 
 defaultproperties
 {

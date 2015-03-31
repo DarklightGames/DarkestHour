@@ -18,5 +18,4 @@ defaultproperties
     ItemName="Raketenpanzerbüchse 54"
     Mesh=SkeletalMesh'DH_Panzerschreck_1st.Panzerschreck'
     FillAmmoMagCount=1
-    WarningMessageClass=class'DH_ATWeapons.DH_PanzerschreckWarningMsg'
 }

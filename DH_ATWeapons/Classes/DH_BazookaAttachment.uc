@@ -6,6 +6,7 @@
 class DH_BazookaAttachment extends DHWeaponAttachment;
 
 var()   name            ExhaustBoneName;
+
 var     class<Emitter>  mExhFlashClass;
 var     Emitter         mExhFlash3rd;
 

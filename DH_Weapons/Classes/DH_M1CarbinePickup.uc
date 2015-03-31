@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_M1CarbinePickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {

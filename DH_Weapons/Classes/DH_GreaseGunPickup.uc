@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_GreaseGunPickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {

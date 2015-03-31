@@ -19,5 +19,4 @@ defaultproperties
     ItemName="M1A1 Bazooka"
     Mesh=SkeletalMesh'DH_Bazooka_1st.Bazooka'
     FillAmmoMagCount=1
-    WarningMessageClass=class'DH_ATWeapons.DH_BazookaWarningMsg'
 }

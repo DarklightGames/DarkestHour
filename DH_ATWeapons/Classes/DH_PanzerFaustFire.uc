@@ -6,41 +6,43 @@
 // Matt: originally extended ROProjectileFire, but this is the only DH weapon to do so - the minor changes in DH_ProjectileFire won't affect a faust, so changed to DH version for uniformity
 class DH_PanzerFaustFire extends DH_ProjectileFire;
 
-var     float                 ExhaustDamage;           // damage caused by exhaust (back blast)
-var     float                 ExhaustDamageRadius;     // radius for damage caused by exhaust
-var     float                 ExhaustMomentumTransfer; // momentum from exhaust to inflict on players
-var     class<DamageType>     ExhaustDamageType;       // damage type for exhaust
+var float               ExhaustDamage;           // damage caused by exhaust (back blast)
+var float               ExhaustDamageRadius;     // radius for damage caused by exhaust
+var float               ExhaustMomentumTransfer; // momentum from exhaust to inflict on players
+var class<DamageType>   ExhaustDamageType;       // damage type for exhaust
 
-var     name        FireIronAnimOne;   // iron fire animation for range setting one
-var     name        FireIronAnimTwo;   // iron fire animation for range setting two
-var     name        FireIronAnimThree; // iron fire animation for range setting three
-
+var array<name>         FireIronAnims;
 
 event ModeDoFire()
 {
     local rotator WeapRot;
-    local vector  WeapLoc, HitLoc, HitNorm, FlameDir, FlameReflectDir;
-    local float   FlameLen;
-    local Actor   Other;
+    local vector WeapLoc, HitLoc, HitNorm, FlameDir, FlameReflectDir;
+    local float FlameLen;
+    local Actor Other;
     local RODestroyableStaticMesh DestroMesh;
+    local RORocketWeapon RW;
 
-    if (Level.NetMode != NM_DedicatedServer && RORocketWeapon(Owner) != none && RORocketWeapon(Owner).RocketAttachment != none)
+    RW = RORocketWeapon(Owner);
+
+    if (Level.NetMode != NM_DedicatedServer &&
+        RW != none &&
+        RW.RocketAttachment != none)
     {
-        RORocketWeapon(Owner).RocketAttachment.Destroy();
+        RW.RocketAttachment.Destroy();
     }
 
     super.ModeDoFire();
 
-    WeapLoc = Weapon.ThirdPersonActor.Location; // get the location of the panzerfaust
-    WeapRot = Weapon.ThirdPersonActor.Rotation; // get the rotation of the panzerfaust
-    FlameDir = vector(WeapRot); // set direction of exhaust
+    WeapLoc = Weapon.ThirdPersonActor.Location;
+    WeapRot = Weapon.ThirdPersonActor.Rotation;
+    FlameDir = vector(WeapRot);
 
     Other = Trace(HitLoc, HitNorm, WeapLoc - (FlameDir * 300.0), WeapLoc, false);
     DestroMesh = RODestroyableStaticMesh(Other);
 
     // Check if the firer is too close to an object and if so, simulate exhaust spreading out along, and reflecting from, the wall
     // Do not reflect off players or breakable objects like windows
-    if (Other != none && DH_Pawn(Other) == none && DestroMesh == none)
+    if (Other != none && DestroMesh == none && DH_Pawn(Other) == none)
     {
         FlameLen = VSize(HitLoc - WeapLoc); // exhaust stream length when it hit an object
         FlameReflectDir = 2.0 * (HitNorm * FlameDir) * HitNorm - FlameDir; // vector back towards firer from hit object
@@ -75,59 +77,44 @@ event ModeDoFire()
 
 function PlayFiring()
 {
-	local name Anim;
+    if (Weapon.Mesh != none)
+    {
+        if (FireCount > 0)
+        {
+            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+            {
+                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
+            }
+            else
+            {
+                if (Weapon.HasAnim(FireLoopAnim))
+                {
+                    Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
+                }
+                else
+                {
+                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+                }
+            }
+        }
+        else
+        {
+            if (Weapon.bUsingSights)
+            {
+                Weapon.PlayAnim(FireIronAnims[DH_PanzerFaustWeapon(Weapon).RangeIndex], FireAnimRate, FireTweenTime);
+            }
+            else
+            {
+                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+            }
+        }
+    }
 
-	if (Weapon.Mesh != none)
-	{
-		if (FireCount > 0)
-		{
-			if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
-			{
-			 	Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-			}
-			else
-			{
-				if (Weapon.HasAnim(FireLoopAnim))
-				{
-					Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
-				}
-				else
-				{
-					Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-				}
-			}
-		}
-		else
-		{
-			if (Weapon.bUsingSights)
-			{
-				switch (DH_PanzerFaustWeapon(Weapon).RangeIndex)
-				{
-					case 0:
-						Anim = FireIronAnimOne;
-						break;
-					case 1:
-						Anim = FireIronAnimTwo;
-						break;
-					case 2:
-						Anim = FireIronAnimThree;
-						break;
-				}
-
-			 	Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
-			}
-			else
-			{
-				Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-			}
-		}
-	}
-
-	Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume, , , , false);
+    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
 
     ClientPlayForceFeedback(FireForce);
 
-    FireCount++;
+    ++FireCount;
 }
 
 defaultproperties
@@ -136,9 +123,9 @@ defaultproperties
     ExhaustDamageRadius=50.0
     ExhaustMomentumTransfer=100.0
     ExhaustDamageType=class'DH_ATWeapons.DH_PanzerfaustExhaustDamType'
-    FireIronAnimOne="shoot30"
-    FireIronAnimTwo="shoot"
-    FireIronAnimThree="shoot90"
+    FireIronAnims(0)="shoot30"
+    FireIronAnims(1)="shoot"
+    FireIronAnims(2)="shoot90"
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-25.0)
     bUsePreLaunchTrace=false

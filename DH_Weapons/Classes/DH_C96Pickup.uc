@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_C96Pickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {

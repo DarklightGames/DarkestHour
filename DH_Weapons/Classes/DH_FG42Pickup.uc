@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_FG42Pickup extends DHWeaponPickup
-   notplaceable;
+    notplaceable;
 
 defaultproperties
 {
