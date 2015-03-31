@@ -894,7 +894,7 @@ function TossMortarAmmo(DH_Pawn P)
             // Send notification message to gunner & remove resupply request
             if (DHPlayer(P.Controller) != none)
             {
-                DHPlayer(P.Controller).ReceiveLocalizedMessage(class'ROResupplyMessage', 1, Controller.PlayerReplicationInfo);
+                DHPlayer(P.Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
 
                 if (ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo) != none)
                     ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RemoveMGResupplyRequestFor(P.Controller.PlayerReplicationInfo);
@@ -903,7 +903,7 @@ function TossMortarAmmo(DH_Pawn P)
             // Send notification message to supplier
             if (PlayerController(Controller) != none)
             {
-                PlayerController(Controller).ReceiveLocalizedMessage(class'ROResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
+                PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
             }
 
             DarkestHourGame(Level.Game).ScoreMortarResupply(Controller, P.Controller);
@@ -915,34 +915,60 @@ function TossMortarAmmo(DH_Pawn P)
 
 function TossMortarVehicleAmmo(DH_MortarVehicle V)
 {
-    if (bHasMortarAmmo && V != none && ResupplyMortarVehicleWeapon(V))
+    local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
+    local PlayerController Recipient;
+    local PlayerController PC;
+
+    if (V == none || Controller == none || !bHasMortarAmmo)
     {
-        bHasMortarAmmo = false;
+        return;
+    }
 
-        if (DarkestHourGame(Level.Game) != none && Controller != none)
+    if (!ResupplyMortarVehicleWeapon(V))
+    {
+        return;
+    }
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none)
+    {
+        return;
+    }
+
+    if (V.WeaponPawns.Length > 0 && V.WeaponPawns[0] != none && V.WeaponPawns[0].Controller != none)
+    {
+        Recipient = PlayerController(V.WeaponPawns[0].Controller);
+    }
+
+    // Send notification message to gunner & remove resupply request
+    if (Recipient != none)
+    {
+        if (Controller.PlayerReplicationInfo != none)
         {
-            // Send notification message to gunner & remove resupply request
-            if (V.WeaponPawns[0].Controller != none && DHPlayer(V.WeaponPawns[0].Controller) != none)
-            {
-                DHPlayer(V.WeaponPawns[0].Controller).ReceiveLocalizedMessage(class'ROResupplyMessage', 1, Controller.PlayerReplicationInfo);
-
-                if (ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo) != none)
-                {
-                    ROGameReplicationInfo(DarkestHourGame(Level.Game).GameReplicationInfo).RemoveMGResupplyRequestFor(V.PlayerReplicationInfo);
-                }
-            }
-
-            // Send notification message to supplier
-            if (PlayerController(Controller) != none)
-            {
-                PlayerController(Controller).ReceiveLocalizedMessage(class'ROResupplyMessage', 0, V.Controller.PlayerReplicationInfo);
-            }
-
-            DarkestHourGame(Level.Game).ScoreMortarResupply(Controller, V.WeaponPawns[0].Controller);
+            Recipient.ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            GRI.RemoveMGResupplyRequestFor(Recipient.PlayerReplicationInfo);
+        }
+
+        PC = PlayerController(Controller);
+
+        // Send notification message to supplier
+        if (PC != none)
+        {
+            PC.ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);
+        }
     }
+
+    G.ScoreMortarResupply(Controller, Recipient);
+
+    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function bool ResupplyMortarVehicleWeapon(DH_MortarVehicle V)
