@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsSquadLeader=true
     MyName="Squad Leader"
-    AltName="UnterscharfÃ¼hrer"
+    AltName="Unterscharführer"
     Article="a "
     PluralName="Squad Leaders"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_SqL'

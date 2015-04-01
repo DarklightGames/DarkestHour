@@ -8,7 +8,7 @@ class DH_12thSSFireteamLeader extends DH_12thSS;
 defaultproperties
 {
     MyName="Fireteam Leader"
-    AltName="RottenfÃ¼hrer"
+    AltName="Rottenführer"
     Article="a "
     PluralName="Fireteam Leaders"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_Semi'

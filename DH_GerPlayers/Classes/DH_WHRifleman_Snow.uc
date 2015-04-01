@@ -8,7 +8,7 @@ class DH_WHRifleman_Snow extends DH_HeerSnow;
 defaultproperties
 {
     MyName="Rifleman"
-    AltName="SchÃ¼tze"
+    AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Schutze'

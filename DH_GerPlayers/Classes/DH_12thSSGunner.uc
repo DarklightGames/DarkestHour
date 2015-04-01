@@ -8,7 +8,7 @@ class DH_12thSSGunner extends DH_12thSS;
 defaultproperties
 {
     MyName="Machine-Gunner"
-    AltName="MaschinengewehrschÃ¼tze"
+    AltName="Maschinengewehrschütze"
     Article="a "
     PluralName="Machine-Gunners"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MG'

@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsArtilleryOfficer=true
     MyName="Officer"
-    AltName="ZugfÃ¼hrer"
+    AltName="Zugführer"
     Article="a "
     PluralName="Officers"
     MenuImage=texture'DHGermanCharactersTex.Icons.Zugfuhrer'

@@ -10,7 +10,7 @@ defaultproperties
     bCanUseMortars=true
     bCarriesMortarAmmo=false
     MyName="Mortar Operator"
-    AltName="WerferschÃ¼tze"
+    AltName="Werferschütze"
     Article="a "
     PluralName="Mortar Operators"
     MenuImage=texture'DHGermanCharactersTex.Icons.WSS_MortarOperator'

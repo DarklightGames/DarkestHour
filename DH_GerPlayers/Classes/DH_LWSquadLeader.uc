@@ -9,7 +9,7 @@ defaultproperties
 {
     bIsSquadLeader=true
     MyName="Squad Leader"
-    AltName="GruppenfÃ¼hrer"
+    AltName="Gruppenführer"
     Article="a "
     PluralName="Squad Leaders"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Gruppenfuhrer'
