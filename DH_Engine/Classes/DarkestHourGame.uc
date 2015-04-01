@@ -982,7 +982,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
 
 function BroadcastLastObjectiveMessage(int Team_that_is_about_to_win)
 {
-    BroadcastLocalizedMessage(class'DHLastObjectiveMsg', Team_that_is_about_to_win);
+    BroadcastLocalizedMessage(class'DHLastObjectiveMessage', Team_that_is_about_to_win);
 }
 
 function AddDefaultInventory(Pawn aPawn)
@@ -1555,13 +1555,13 @@ state RoundInPlay
         {
             case AXIS_TEAM_INDEX:
                 Teams[AXIS_TEAM_INDEX].Score += 1.0;
-                BroadcastLocalizedMessage(class'DHRoundOverMsg', 0,,, DHLevelInfo);
+                BroadcastLocalizedMessage(class'DHRoundOverMessage', 0,,, DHLevelInfo);
                 TeamScoreEvent(AXIS_TEAM_INDEX, 1, "team_victory");
                 break;
 
             case ALLIES_TEAM_INDEX:
                 Teams[ALLIES_TEAM_INDEX].Score += 1.0;
-                BroadcastLocalizedMessage(class'DHRoundOverMsg', 1,,, DHLevelInfo);
+                BroadcastLocalizedMessage(class'DHRoundOverMessage', 1,,, DHLevelInfo);
                 TeamScoreEvent(ALLIES_TEAM_INDEX, 1, "team_victory");
                 break;
 

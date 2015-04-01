@@ -607,7 +607,7 @@ defaultproperties
     bCanRestDeploy=true
     PickupClass=class'DH_ATWeapons.DH_PIATPickup'
     BobDamping=1.6
-    WarningMessageClass=class'DH_PIATWarningMsg'
+    WarningMessageClass=class'DH_PIATWarningMessage'
     AttachmentClass=class'DH_ATWeapons.DH_PIATAttachment'
     RocketAttachmentClass=class'DH_PIATAmmoRound'
     ItemName="PIAT"

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PIATWarningMsg extends ROCriticalMessage
+class DH_PIATWarningMessage extends ROCriticalMessage
     abstract;
 
 var localized string NoHipFire;

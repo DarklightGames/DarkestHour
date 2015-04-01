@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHRoundOverMsg extends RORoundOverMsg
+class DHRoundOverMessage extends RORoundOverMsg
     abstract;
 
 // Overridden to support varying victory music

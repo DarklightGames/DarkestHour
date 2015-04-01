@@ -15,7 +15,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         Level.Game.ScoreObjective(CompletePRI, 10);
     }
 
-    BroadcastLocalizedMessage(class'DHObjectiveMsg', Team + 2, none, none, self);
+    BroadcastLocalizedMessage(class'DHObjectiveMessage', Team + 2, none, none, self);
 }
 
 defaultproperties
