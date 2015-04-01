@@ -5,7 +5,7 @@
 
 class DHSpawnPoint extends Actor
     hidecategories(Lighting,LightColor,Karma,Force,Sound)
-    placeable;
+    abstract;
 
 enum ESpawnPointType
 {
@@ -23,11 +23,11 @@ enum ESpawnPointMethod
 var() ESpawnPointType Type;
 var() ESpawnPointMethod Method;
 var() bool bIsInitiallyActive;
-var() int TeamIndex;
 var() name InfantryLocationHintTag;
 var() name VehicleLocationHintTag;
 var() string SpawnPointName;
 var() float SpawnProtectionTime;
+var int TeamIndex;
 
 var   array<DHLocationHint> InfantryLocationHints;
 var   array<DHLocationHint> VehicleLocationHints;
