@@ -3,4 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHInfantrySpawnPointAllies extends DHDeprecated;
+class DHInfantrySpawnPointAllies extends DHSpawnPoint
+    placeable;
+
+defaultproperties
+{
+    TeamIndex=1
+    Texture=texture'DHEngine_Tex.Allies_Infantry'
+}
