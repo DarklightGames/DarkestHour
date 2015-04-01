@@ -18,12 +18,16 @@ static function string GetString(optional int Switch, optional PlayerReplication
     {
         case 0:
             S = default.ResuppliedNoOperator;
+            break;
         case 1:
             S = default.ResuppliedMortar;
+            break;
         case 2:
             S = default.BeenResupplied;
+            break;
         default:
             S = default.ResuppliedNoOperator;
+            break;
     }
 
     if (RelatedPRI_1 != none)
