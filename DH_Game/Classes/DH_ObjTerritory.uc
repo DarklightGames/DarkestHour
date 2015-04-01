@@ -1015,8 +1015,6 @@ function DisableCapBarsForThisObj()
 
 defaultproperties
 {
-    AttackerDescription="Default"
-    DefenderDescription="Default"
     bDoNotUseLabelShiftingOnSituationMap=true
     Texture=Texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true

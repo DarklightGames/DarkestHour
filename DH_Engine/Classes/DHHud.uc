@@ -2758,7 +2758,7 @@ simulated function DrawObjectives(Canvas C)
 
         if (DHGRI.Objectives[i].ObjState != OwnerTeam)
         {
-            if (DHGRI.Objectives[i].AttackerDescription ~= "Default")
+            if (DHGRI.Objectives[i].AttackerDescription == "")
             {
                 MapObjectivesTexts.Text = ObjCount $ "." @ "Attack" @ DHGRI.Objectives[i].ObjName;
             }
@@ -2769,7 +2769,7 @@ simulated function DrawObjectives(Canvas C)
         }
         else
         {
-            if (DHGRI.Objectives[i].DefenderDescription ~= "Default")
+            if (DHGRI.Objectives[i].DefenderDescription == "")
             {
                 MapObjectivesTexts.Text = ObjCount $ "." @ "Defend" @ DHGRI.Objectives[i].ObjName;
             }
