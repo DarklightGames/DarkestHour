@@ -4,9 +4,9 @@
 //==============================================================================
 
 class DH_ATGunCannon extends DH_ROTankCannon
-    config(xGunsightDebugging)
     abstract;
 
+// Modified to use 3 part reload instead of usual 4 part
 simulated function Timer()
 {
     if (VehicleWeaponPawn(Owner) == none || VehicleWeaponPawn(Owner).Controller == none)
@@ -43,7 +43,7 @@ simulated function Timer()
     }
 }
 
-// Matt: added to replace deprecated 'should penetrate' functions below
+// AT gun will always be penetrated by a shell
 simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
@@ -69,53 +69,20 @@ simulated function bool BelowDriverAngle(vector loc, vector ray)
 // Limit the left and right movement of the gun
 simulated function int LimitYaw(int yaw)
 {
-    local int NewYaw;
-    local ROVehicleWeaponPawn PwningPawn;
-
-    PwningPawn = ROVehicleWeaponPawn(Owner);
-
     if (!bLimitYaw)
     {
         return yaw;
     }
 
-    NewYaw = yaw;
-
-    if (PwningPawn != none)
+    if (CannonPawn != none)
     {
-        if (yaw > PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit)
-        {
-            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewPositiveYawLimit;
-        }
-        else if (yaw < PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit)
-        {
-            NewYaw = PwningPawn.DriverPositions[PwningPawn.DriverPositionIndex].ViewNegativeYawLimit;
-        }
-    }
-    else
-    {
-        if (yaw > MaxPositiveYaw)
-        {
-            NewYaw = MaxPositiveYaw;
-        }
-        else if (yaw < MaxNegativeYaw)
-        {
-            NewYaw = MaxNegativeYaw;
-        }
+        return Clamp(yaw, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewNegativeYawLimit, CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].ViewPositiveYawLimit);
     }
 
-    return NewYaw;
+    return Clamp(yaw, MaxNegativeYaw, MaxPositiveYaw);
 }
 
 defaultproperties
 {
     bHasTurret=false
-    FrontArmorFactor=1.0
-    RightArmorFactor=0.8
-    LeftArmorFactor=0.8
-    RearArmorFactor=1.0
-    FrontLeftAngle=332.0
-    FrontRightAngle=28.0
-    RearRightAngle=162.0
-    RearLeftAngle=198.0
 }
