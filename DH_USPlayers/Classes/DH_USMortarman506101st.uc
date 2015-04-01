@@ -18,8 +18,8 @@ defaultproperties
     Models(1)="US_506101AB2"
     Models(2)="US_506101AB3"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"
     GivenItems(1)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'

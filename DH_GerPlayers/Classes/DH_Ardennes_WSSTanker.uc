@@ -20,9 +20,9 @@ defaultproperties
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6)
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_C96Weapon',Amount=3)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_C96Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     Headgear(0)=class'DH_GerPlayers.DH_WSSHatPanzerA'
     Headgear(1)=class'DH_GerPlayers.DH_WSSHatPanzerB'
     PrimaryWeaponType=WT_SMG

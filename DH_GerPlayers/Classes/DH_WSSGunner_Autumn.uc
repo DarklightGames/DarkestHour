@@ -20,10 +20,10 @@ defaultproperties
     Models(5)="SSA_6"
     bIsGunner=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon',Amount=6)
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MG34Weapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MG34Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
+    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     bCarriesMGAmmo=false
     PrimaryWeaponType=WT_LMG

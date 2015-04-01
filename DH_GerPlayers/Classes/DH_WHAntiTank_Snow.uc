@@ -21,8 +21,8 @@ defaultproperties
     Models(4)="WHS_5"
     Models(5)="WHS_6"
     SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
     GivenItems(0)="DH_ATWeapons.DH_PanzerschreckWeapon"
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnow'

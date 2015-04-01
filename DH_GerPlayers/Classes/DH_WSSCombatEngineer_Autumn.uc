@@ -19,9 +19,9 @@ defaultproperties
     Models(4)="SSA_5"
     Models(5)="SSA_6"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
-    Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
+    Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetNoCover'
     PrimaryWeaponType=WT_SMG

@@ -17,8 +17,8 @@ defaultproperties
     Models(1)="PBI_Of2"
     Models(2)="PBI_Of3"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
     PrimaryWeaponType=WT_SMG

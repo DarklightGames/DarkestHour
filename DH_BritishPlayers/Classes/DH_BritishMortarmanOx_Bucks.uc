@@ -21,8 +21,8 @@ defaultproperties
     Models(4)="para5"
     Models(5)="para6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"
     GivenItems(1)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'

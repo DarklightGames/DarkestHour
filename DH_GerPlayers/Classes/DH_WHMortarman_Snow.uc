@@ -21,7 +21,7 @@ defaultproperties
     Models(4)="WHS_5"
     Models(5)="WHS_6"
     SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
     GivenItems(1)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'

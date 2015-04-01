@@ -20,9 +20,9 @@ defaultproperties
     Models(5)="12SS_6"
     bIsGunner=true
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon',Amount=6)
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MG34Weapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MG34Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
     bCarriesMGAmmo=false

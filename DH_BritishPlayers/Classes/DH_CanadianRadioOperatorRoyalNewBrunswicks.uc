@@ -16,7 +16,7 @@ defaultproperties
     Models(1)="RNB_Rad2"
     Models(2)="RNB_Rad3"
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     GivenItems(0)="DH_Equipment.DH_USRadioItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'

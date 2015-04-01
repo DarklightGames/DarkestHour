@@ -21,7 +21,7 @@ defaultproperties
     Models(4)="Hamp_5"
     Models(5)="Hamp_6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     GivenItems(0)="DH_Mortars.DH_M2MortarWeapon"
     GivenItems(1)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'

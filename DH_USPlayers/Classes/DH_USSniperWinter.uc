@@ -18,8 +18,8 @@ defaultproperties
     Models(3)="US_WinterInf4"
     Models(4)="US_WinterInf5"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',Amount=18,AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
     PrimaryWeaponType=WT_Sniper

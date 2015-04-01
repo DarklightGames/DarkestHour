@@ -15,9 +15,9 @@ defaultproperties
     Models(0)="WH_C7"
     Models(1)="WH_C8"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
+    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
     PrimaryWeaponType=WT_Sniper

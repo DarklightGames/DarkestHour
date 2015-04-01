@@ -19,9 +19,9 @@ defaultproperties
     Models(4)="para5"
     Models(5)="para6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmet1'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishParaHelmet2'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishParaHelmet1'

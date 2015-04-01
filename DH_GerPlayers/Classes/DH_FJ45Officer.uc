@@ -19,9 +19,9 @@ defaultproperties
     Models(3)="FJO454"
     Models(4)="FJO455"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
+    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'

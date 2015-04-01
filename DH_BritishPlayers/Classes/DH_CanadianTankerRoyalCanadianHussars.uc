@@ -16,8 +16,8 @@ defaultproperties
     Models(1)="Can_Tanker2"
     Models(2)="Can_Tanker3"
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Headgear(0)=class'DH_BritishPlayers.DH_CanadianTankerBeret'
     PrimaryWeaponType=WT_SMG
     bEnhancedAutomaticControl=true

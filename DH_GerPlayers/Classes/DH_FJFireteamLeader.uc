@@ -18,12 +18,12 @@ defaultproperties
     Models(3)="FJ4"
     Models(4)="FJ5"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_FG42Weapon',Amount=8)
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_G41Weapon',Amount=9,AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon',Amount=1)
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon',Amount=2)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_FG42Weapon')
+    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_G41Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
+    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'

@@ -38,8 +38,8 @@ defaultproperties
     Models(3)="FJ454"
     Models(4)="FJ455"
     SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',Amount=18,AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
     GivenItems(1)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'

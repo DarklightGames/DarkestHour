@@ -19,9 +19,9 @@ defaultproperties
     Models(4)="Hamp_5"
     Models(5)="Hamp_6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon',Amount=18)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon',Amount=1)
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'

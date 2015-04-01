@@ -20,8 +20,8 @@ defaultproperties
     Models(4)="RNB_5"
     Models(5)="RNB_6"
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon',Amount=6)
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     GivenItems(0)="DH_Engine.DH_BinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'

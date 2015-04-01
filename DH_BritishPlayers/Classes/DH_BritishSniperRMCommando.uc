@@ -19,9 +19,9 @@ defaultproperties
     Models(4)="RMC5"
     Models(5)="RMC6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon',Amount=18)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'

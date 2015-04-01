@@ -20,7 +20,7 @@ defaultproperties
     Models(5)="RNB_6"
     bIsGunner=true
     SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BrenWeapon',Amount=6)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BrenWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'

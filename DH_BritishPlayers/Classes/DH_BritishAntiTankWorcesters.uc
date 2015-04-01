@@ -21,9 +21,9 @@ defaultproperties
     Models(4)="Wor_5"
     Models(5)="Wor_6"
     SleeveTexture=texture'DHBritishCharactersTex.Sleeves.brit_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon',Amount=6)
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=1)
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
+    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
     GivenItems(0)="DH_ATWeapons.DH_PIATWeapon"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'

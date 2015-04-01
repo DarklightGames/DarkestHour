@@ -19,8 +19,8 @@ defaultproperties
     Models(4)="US_WinterInf5"
     bIsGunner=true
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon',Amount=6)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon',Amount=1)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon')
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
     bCarriesMGAmmo=false
