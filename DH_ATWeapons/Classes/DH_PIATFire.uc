@@ -5,9 +5,7 @@
 
 class DH_PIATFire extends DH_ProjectileFire;
 
-var     name        FireIronAnimOne;   // iron fire animation for range setting one
-var     name        FireIronAnimTwo;   // iron fire animation for range setting two
-var     name        FireIronAnimThree; // iron fire animation for range setting three
+var array<name> FireIronAnims;
 
 event ModeDoFire()
 {
@@ -34,8 +32,6 @@ event ModeDoFire()
 
 function PlayFiring()
 {
-    local name Anim;
-
     if (Weapon.Mesh != none)
     {
         if (FireCount > 0)
@@ -60,19 +56,7 @@ function PlayFiring()
         {
             if (Weapon.bUsingSights)
             {
-                switch (DH_PIATWeapon(Weapon).RangeIndex)
-                {
-                    case 0:
-                        Anim = FireIronAnimOne;
-                        break;
-                    case 1:
-                        Anim = FireIronAnimTwo;
-                        break;
-                    case 2:
-                        Anim = FireIronAnimThree;
-                        break;
-                }
-                Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
+                Weapon.PlayAnim(FireIronAnims[DH_PIATWeapon(Weapon).RangeIndex], FireAnimRate, FireTweenTime);
             }
             else
             {
@@ -94,9 +78,9 @@ simulated function InitEffects()
 
 defaultproperties
 {
-    FireIronAnimOne="iron_shoot"
-    FireIronAnimTwo="iron_shootMid"
-    FireIronAnimThree="iron_shootFar"
+    FireIronAnims(0)="iron_shoot"
+    FireIronAnims(1)="iron_shootMid"
+    FireIronAnims(2)="iron_shootFar"
     ProjSpawnOffset=(X=25.0)
     FAProjSpawnOffset=(X=-25.0)
     bUsePreLaunchTrace=false

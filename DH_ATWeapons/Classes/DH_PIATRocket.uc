@@ -5,23 +5,6 @@
 
 class DH_PIATRocket extends DH_RocketProj;
 
-/*
-simulated function PostBeginPlay() // Matt: removed as unnecessary - SmokeTrail & Corona are only spawned in the Super if bHasTracer, which is false for PIAT
-{
-    super.PostBeginPlay();
-
-    if (SmokeTrail != none)
-    {
-        SmokeTrail.HandleOwnerDestroyed();
-    }
-
-    if (Corona != none)
-    {
-        Corona.Destroyed();
-    }
-}
-*/
-
 defaultproperties
 {
     StraightFlightTime=0.5
