@@ -44,7 +44,7 @@ var             float       BlurScaleIronsight;
 
 function float MaxRange()
 {
-    return 25000.0; // about 300 meters
+    return 25000.0; // about 415 meters
 }
 
 function DoFireEffect()

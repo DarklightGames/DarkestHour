@@ -70,7 +70,7 @@ function float SuggestDefenseStyle()
 
 function float MaxRange()
 {
-    return 1000.0; // about 150 meters
+    return 9000.0; // about 150 meters
 }
 
 // Overridden to prevent auto weapons from playing fireend anims while looping
