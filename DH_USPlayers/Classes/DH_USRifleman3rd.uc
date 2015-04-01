@@ -18,8 +18,8 @@ defaultproperties
     Models(3)="US_3Inf4"
     Models(4)="US_3Inf5"
     SleeveTexture=texture'DHUSCharactersTex.Sleeves.US_sleeves'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',Amount=6,AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon',Amount=2)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
+    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
     PrimaryWeaponType=WT_SemiAuto

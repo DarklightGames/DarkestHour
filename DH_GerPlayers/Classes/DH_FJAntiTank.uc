@@ -10,7 +10,7 @@ defaultproperties
     bIsATGunner=true
     bCarriesATAmmo=false
     MyName="Tank Hunter"
-    AltName="Panzerj√§ger"
+    AltName="Panzerj‰ger"
     Article="a "
     PluralName="Tank Hunters"
     MenuImage=texture'DHGermanCharactersTex.Icons.FJ_AT'
