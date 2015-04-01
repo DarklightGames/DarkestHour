@@ -8,7 +8,7 @@ class DH_WHAssault extends DH_Heer;
 defaultproperties
 {
     MyName="Assault Trooper"
-    AltName="Sto√ütruppe"
+    AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
     MenuImage=texture'InterfaceArt_tex.SelectMenus.Stosstruppe'
