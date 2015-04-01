@@ -847,7 +847,7 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
             // Send notification message to gunner & remove resupply request
             if (DHPlayer(Gunner.Controller) != none)
             {
-                DHPlayer(Gunner.Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 2, Controller.PlayerReplicationInfo);
+                DHPlayer(Gunner.Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
 
                 if (Gunner.Controller != none && Gunner.Controller.PlayerReplicationInfo != none && DarkestHourGame(Level.Game).GameReplicationInfo != none)
                 {
@@ -858,14 +858,7 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
             // Send notification message to supplier
             if (PlayerController(Controller) != none)
             {
-                if (Gunner.Controller == none)
-                {
-                    PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 0);
-                }
-                else
-                {
-                    PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 1, Gunner.Controller.PlayerReplicationInfo);
-                }
+                PlayerController(Controller).ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Gunner.Controller.PlayerReplicationInfo);
             }
 
             // Score point
@@ -930,6 +923,8 @@ function TossMortarVehicleAmmo(DH_MortarVehicle V)
         return;
     }
 
+    bHasMortarAmmo = false;
+
     G = DarkestHourGame(Level.Game);
 
     if (G == none)
@@ -956,13 +951,20 @@ function TossMortarVehicleAmmo(DH_MortarVehicle V)
         {
             GRI.RemoveMGResupplyRequestFor(Recipient.PlayerReplicationInfo);
         }
+    }
 
-        PC = PlayerController(Controller);
+    PC = PlayerController(Controller);
 
-        // Send notification message to supplier
-        if (PC != none)
+    // Send notification message to supplier
+    if (PC != none)
+    {
+        if (Recipient != none)
         {
             PC.ReceiveLocalizedMessage(class'DHResupplyMessage', 0, Recipient.PlayerReplicationInfo);
+        }
+        else
+        {
+            PC.ReceiveLocalizedMessage(class'DHResupplyMessage', 2);
         }
     }
 
