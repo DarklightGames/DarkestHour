@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_12thSSSemiAuto extends DHDeprecated;
-
-defaultproperties
-{
-    Text="Deprecated role."
-}

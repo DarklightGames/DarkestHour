@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_WSSSemiAuto_Autumn extends DHDeprecated;
-
-defaultproperties
-{
-    Text="Deprecated role."
-}

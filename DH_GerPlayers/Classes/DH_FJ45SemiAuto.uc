@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_FJ45SemiAuto extends DHDeprecated;
-
-defaultproperties
-{
-    Text="Deprecated role."
-}

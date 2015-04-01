@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_WSSSemiAuto_Snow extends DHDeprecated;
-
-defaultproperties
-{
-    Text="Deprecated role."
-}

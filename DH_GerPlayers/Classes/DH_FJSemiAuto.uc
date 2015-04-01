@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_FJSemiAuto extends DHDeprecated;
-
-defaultproperties
-{
-    Text="Deprecated role."
-}

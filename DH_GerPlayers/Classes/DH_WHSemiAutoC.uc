@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_WHSemiAutoC extends DHDeprecated;
-
-defaultproperties
-{
-    Text="Deprecated role."
-}

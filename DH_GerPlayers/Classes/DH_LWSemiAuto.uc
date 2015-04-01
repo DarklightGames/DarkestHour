@@ -4,8 +4,3 @@
 //==============================================================================
 
 class DH_LWSemiAuto extends DHDeprecated;
-
-defaultproperties
-{
-    Text="Deprecated role."
-}
