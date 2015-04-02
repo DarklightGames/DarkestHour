@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackGunPawn extends DH_ROMountedTankMGPawn;
+class DH_M3A1HalftrackGunPawn extends DHMountedTankMGPawn;
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {

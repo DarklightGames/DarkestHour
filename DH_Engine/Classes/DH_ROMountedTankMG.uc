@@ -6,7 +6,7 @@
 class DH_ROMountedTankMG extends ROMountedTankMG
     abstract;
 
-var  DH_ROMountedTankMGPawn  MGPawn;  // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
+var  DHMountedTankMGPawn  MGPawn;  // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts
 
 var()   class<Projectile>    TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
 var()   byte    TracerFrequency;      // how often a tracer is loaded in (as in: 1 in the value of TracerFrequency)
@@ -82,7 +82,7 @@ simulated function PostBeginPlay()
 
 // Matt: new function to do any extra set up in the MG classes (called from MG pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeMG(DH_ROMountedTankMGPawn MGPwn)
+simulated function InitializeMG(DHMountedTankMGPawn MGPwn)
 {
     if (MGPwn != none)
     {
@@ -108,7 +108,7 @@ simulated function InitializeMG(DH_ROMountedTankMGPawn MGPwn)
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DH_ROMountedTankMGPawn, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHMountedTankMGPawn, so lots of things are not going to work!");
     }
 }
 

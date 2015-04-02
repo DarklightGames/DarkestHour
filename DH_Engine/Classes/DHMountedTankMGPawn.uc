@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
+class DHMountedTankMGPawn extends ROMountedTankMGPawn
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
@@ -291,7 +291,7 @@ function bool PlaceExitingDriver()
     }
 
     // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
-    if (class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions)
+    if (class'DHMountedTankMGPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
         {
@@ -967,8 +967,8 @@ function ServerToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions = !class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions;
-        Log("DH_ROMountedTankMGPawn.bDebugExitPositions =" @ class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions);
+        class'DHMountedTankMGPawn'.default.bDebugExitPositions = !class'DHMountedTankMGPawn'.default.bDebugExitPositions;
+        Log("DHMountedTankMGPawn.bDebugExitPositions =" @ class'DHMountedTankMGPawn'.default.bDebugExitPositions);
     }
 }
 

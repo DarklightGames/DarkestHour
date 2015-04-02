@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Tiger2BMountedMGPawn extends DH_ROMountedTankMGPawn;
+class DH_Tiger2BMountedMGPawn extends DHMountedTankMGPawn;
 
 defaultproperties
 {

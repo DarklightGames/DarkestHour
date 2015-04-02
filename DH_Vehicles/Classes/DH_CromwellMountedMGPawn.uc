@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_CromwellMountedMGPawn extends DH_ROMountedTankMGPawn;
+class DH_CromwellMountedMGPawn extends DHMountedTankMGPawn;
 
 defaultproperties
 {

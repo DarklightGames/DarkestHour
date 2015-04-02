@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanMountedMGPawn_M4A176W extends DH_ROMountedTankMGPawn;
+class DH_ShermanMountedMGPawn_M4A176W extends DHMountedTankMGPawn;
 
 defaultproperties
 {

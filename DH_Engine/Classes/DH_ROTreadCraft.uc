@@ -3010,7 +3010,7 @@ function ServerChangeDriverPosition(byte F)
 // New function to check if player can exit, displaying an "unbutton the hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
-    local DH_ROMountedTankMGPawn MGPawn;
+    local DHMountedTankMGPawn MGPawn;
 
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
@@ -3022,7 +3022,7 @@ simulated function bool CanExit()
         {
             if (HullMG != none)
             {
-                MGPawn = DH_ROMountedTankMGPawn(HullMG.Owner);
+                MGPawn = DHMountedTankMGPawn(HullMG.Owner);
             }
 
             if (MGPawn != none && MGPawn.DriverPositions.Length > MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
