@@ -7,7 +7,7 @@ class DHTankCannonPawn extends ROTankCannonPawn
     abstract;
 
 // General
-var     DHTankCannon Cannon;               // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
+var     DHTankCannon    Cannon;               // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
 var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Position stuff
