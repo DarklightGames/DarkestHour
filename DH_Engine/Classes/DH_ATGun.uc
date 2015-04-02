@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATGun extends DH_ROTreadCraft
+class DH_ATGun extends DHTreadCraft
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
@@ -39,7 +39,7 @@ simulated function SetNextTimer(optional float Now);
 //function EnteredResupply();
 //function LeftResupply();
 
-// Modified as nearly everything in DH_ROTreadCraft is irrelevant to AT gun
+// Modified as nearly everything in DHTreadCraft is irrelevant to AT gun
 simulated function PostBeginPlay()
 {
     super(Vehicle).PostBeginPlay();
@@ -50,7 +50,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified as everything in DH_ROTreadCraft is irrelevant to AT gun
+// Modified as everything in DHTreadCraft is irrelevant to AT gun
 simulated function PostNetBeginPlay()
 {
     super(ROVehicle).PostNetBeginPlay();

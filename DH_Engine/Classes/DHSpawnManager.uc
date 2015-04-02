@@ -378,13 +378,13 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
             return none;
         }
 
-        if (V.IsA('DH_ROWheeledVehicle'))
+        if (V.IsA('DHWheeledVehicle'))
         {
-            DH_ROWheeledVehicle(V).ServerStartEngine();
+            DHWheeledVehicle(V).ServerStartEngine();
         }
-        else if (V.IsA('DH_ROTreadCraft'))
+        else if (V.IsA('DHTreadCraft'))
         {
-            DH_ROTreadCraft(V).ServerStartEngine();
+            DHTreadCraft(V).ServerStartEngine();
         }
     }
 

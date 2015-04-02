@@ -152,13 +152,13 @@ simulated function InitializeCannon(DHTankCannonPawn CannonPwn)
             Instigator = CannonPawn;
         }
 
-        if (DH_ROTreadCraft(CannonPawn.VehicleBase) != none)
+        if (DHTreadCraft(CannonPawn.VehicleBase) != none)
         {
             // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
-            DH_ROTreadCraft(CannonPawn.VehicleBase).CannonTurret = self;
+            DHTreadCraft(CannonPawn.VehicleBase).CannonTurret = self;
 
             // If vehicle is burning, start the turret hatch fire effect
-            if (DH_ROTreadCraft(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            if (DHTreadCraft(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartTurretFire();
             }
@@ -543,16 +543,16 @@ simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float
 
         if (!bRoundShattered)
         {
-            DH_ROTreadCraft(Base).bProjectilePenetrated = true;
-            DH_ROTreadCraft(Base).bWasTurretHit = true;
-            DH_ROTreadCraft(Base).bWasHEATRound = (P.default.RoundType == RT_HEAT); // Matt: would be much better to flag bIsHeatRound in DamageType, but would need new DH_WeaponDamageType class
+            DHTreadCraft(Base).bProjectilePenetrated = true;
+            DHTreadCraft(Base).bWasTurretHit = true;
+            DHTreadCraft(Base).bWasHEATRound = (P.default.RoundType == RT_HEAT); // Matt: would be much better to flag bIsHeatRound in DamageType, but would need new DH_WeaponDamageType class
 
             return true;
         }
     }
 
-    DH_ROTreadCraft(Base).bProjectilePenetrated = false;
-    DH_ROTreadCraft(Base).bWasTurretHit = false;
+    DHTreadCraft(Base).bProjectilePenetrated = false;
+    DHTreadCraft(Base).bWasTurretHit = false;
 
     return false;
 }

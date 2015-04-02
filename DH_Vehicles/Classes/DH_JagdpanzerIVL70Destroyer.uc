@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdpanzerIVL70Destroyer extends DH_ROTreadCraft;
+class DH_JagdpanzerIVL70Destroyer extends DHTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Jagdpanzer4_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex4.utx

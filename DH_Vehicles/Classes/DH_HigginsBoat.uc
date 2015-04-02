@@ -123,7 +123,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
 }
 
 // Overridden for ramp (sets InitialPositionIndex to match current DriverPositionIndex, which dictates ramp up/down position, so next player who enters won't reset ramp position)
-// Also removes vehicle momentum added in DH_ROWheeledVehicle, as it can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
+// Also removes vehicle momentum added in DHWheeledVehicle, as it can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
 function bool KDriverLeave(bool bForceLeave)
 {
     InitialPositionIndex = DriverPositionIndex;

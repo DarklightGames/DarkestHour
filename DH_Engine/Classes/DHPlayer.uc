@@ -1886,7 +1886,7 @@ simulated exec function DriverCollisionDebug()
     }
 }
 
-// New exec showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DH_ROTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+// New exec showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DHTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
 simulated exec function VehicleHitPointDebug()
 {
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHHud(myHUD) != none)

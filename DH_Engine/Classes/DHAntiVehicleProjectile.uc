@@ -355,7 +355,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHTreadCraft') && !DHTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
@@ -466,10 +466,10 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
                 DHTankCannon(HitActor).bRoundShattered = false; // reset for next hit
             }
         }
-        else if (DH_ROTreadCraft(HitActor) != none && DH_ROTreadCraft(HitActor).bRoundShattered)
+        else if (DHTreadCraft(HitActor) != none && DHTreadCraft(HitActor).bRoundShattered)
         {
             bShattered = true;
-            DH_ROTreadCraft(HitActor).bRoundShattered = false; // reset for next hit
+            DHTreadCraft(HitActor).bRoundShattered = false; // reset for next hit
         }
 
         if (bShattered)

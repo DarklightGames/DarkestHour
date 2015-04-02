@@ -628,7 +628,7 @@ simulated function bool CanExit()
         }
         else
         {
-            if (DH_ROTreadCraft(VehicleBase) != none && DH_ROTreadCraft(VehicleBase).DriverPositions.Length > DH_ROTreadCraft(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
+            if (DHTreadCraft(VehicleBase) != none && DHTreadCraft(VehicleBase).DriverPositions.Length > DHTreadCraft(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
             {
                 ReceiveLocalizedMessage(class'DH_VehicleMessage', 10); // must exit through driver's or commander's hatch
             }
@@ -647,9 +647,9 @@ simulated function bool CanExit()
 // New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
 simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 {
-    local DH_ROTreadCraft TreadCraft;
+    local DHTreadCraft TreadCraft;
 
-    TreadCraft = DH_ROTreadCraft(VehicleBase);
+    TreadCraft = DHTreadCraft(VehicleBase);
 
     return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
         ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();

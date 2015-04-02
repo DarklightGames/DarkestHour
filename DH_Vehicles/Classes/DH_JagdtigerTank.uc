@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdtigerTank extends DH_ROTreadCraft;
+class DH_JagdtigerTank extends DHTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Jagdtiger_anm.ukx
 #exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax

@@ -236,9 +236,9 @@ simulated function InitializeCannon()
         Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHTankCannon, so lots of things are not going to work!");
     }
 
-    if (DH_ROTreadCraft(VehicleBase) != none)
+    if (DHTreadCraft(VehicleBase) != none)
     {
-        SetManualTurret(DH_ROTreadCraft(VehicleBase).bEngineOff);
+        SetManualTurret(DHTreadCraft(VehicleBase).bEngineOff);
     }
     else
     {
@@ -902,9 +902,9 @@ simulated function bool CanExit()
 // New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
 simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 {
-    local DH_ROTreadCraft TreadCraft;
+    local DHTreadCraft TreadCraft;
 
-    TreadCraft = DH_ROTreadCraft(VehicleBase);
+    TreadCraft = DHTreadCraft(VehicleBase);
 
     return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
         ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();

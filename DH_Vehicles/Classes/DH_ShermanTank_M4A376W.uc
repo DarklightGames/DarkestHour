@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanTank_M4A376W extends DH_ROTreadCraft;
+class DH_ShermanTank_M4A376W extends DHTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A3E2_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx

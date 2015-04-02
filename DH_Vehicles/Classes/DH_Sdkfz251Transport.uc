@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251Transport extends DH_ROTransportCraft;
+class DH_Sdkfz251Transport extends DHTransportCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sdkfz251Halftrack_anm.ukx
 

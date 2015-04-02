@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PantherDTank extends DH_ROTreadCraft;
+class DH_PantherDTank extends DHTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\axis_pantherg_anm.ukx
 

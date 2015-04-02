@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTreadCraft extends ROTreadCraft
+class DHTreadCraft extends ROTreadCraft
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
@@ -193,8 +193,8 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
-    if (class'DH_ROTreadCraft'.default.bDebugExitPositions)
+    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all DHTreadCrafts
+    if (class'DHTreadCraft'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositions.Length; ++i)
         {
@@ -3303,7 +3303,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// Allows debugging exit positions to be toggled for all DH_ROTreadCrafts
+// Allows debugging exit positions to be toggled for all DHTreadCrafts
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
@@ -3316,8 +3316,8 @@ function ServerToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DH_ROTreadCraft'.default.bDebugExitPositions = !class'DH_ROTreadCraft'.default.bDebugExitPositions;
-        Log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
+        class'DHTreadCraft'.default.bDebugExitPositions = !class'DHTreadCraft'.default.bDebugExitPositions;
+        Log("DHTreadCraft.bDebugExitPositions =" @ class'DHTreadCraft'.default.bDebugExitPositions);
     }
 }
 

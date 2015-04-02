@@ -1803,11 +1803,11 @@ simulated function DrawDriverPointSphere()
     }
 }
 
-// New function showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DH_ROTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
+// New function showing vehicle special hit points for engine (blue) & ammo stores (red), plus a DHTreadCraft's extra hit points (gold for gun traverse/pivot, pink for periscopes)
 simulated function DrawVehiclePointSphere()
 {
     local ROVehicle       V;
-    local DH_ROTreadCraft TC;
+    local DHTreadCraft TC;
     local Coords          CO;
     local vector          HeadLoc;
     local int             i;
@@ -1839,7 +1839,7 @@ simulated function DrawVehiclePointSphere()
                 }
             }
 
-            TC = DH_ROTreadCraft(V);
+            TC = DHTreadCraft(V);
 
             if (TC != none)
             {
@@ -3514,13 +3514,13 @@ exec function GrowHUD()
 {
     if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
     {
-        if (PawnOwner.IsA('DH_ROTreadCraft'))
+        if (PawnOwner.IsA('DHTreadCraft'))
         {
-            DH_ROTreadCraft(PawnOwner).GrowHUD();
+            DHTreadCraft(PawnOwner).GrowHUD();
         }
-        else if (PawnOwner.IsA('DH_ROWheeledVehicle'))
+        else if (PawnOwner.IsA('DHWheeledVehicle'))
         {
-            DH_ROWheeledVehicle(PawnOwner).GrowHUD();
+            DHWheeledVehicle(PawnOwner).GrowHUD();
         }
         else if (PawnOwner.IsA('DHTankCannonPawn'))
         {
@@ -3541,13 +3541,13 @@ exec function ShrinkHUD()
 {
     if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
     {
-        if (PawnOwner.IsA('DH_ROTreadCraft'))
+        if (PawnOwner.IsA('DHTreadCraft'))
         {
-            DH_ROTreadCraft(PawnOwner).ShrinkHUD();
+            DHTreadCraft(PawnOwner).ShrinkHUD();
         }
-        else if (PawnOwner.IsA('DH_ROWheeledVehicle'))
+        else if (PawnOwner.IsA('DHWheeledVehicle'))
         {
-            DH_ROWheeledVehicle(PawnOwner).ShrinkHUD();
+            DHWheeledVehicle(PawnOwner).ShrinkHUD();
         }
         else if (PawnOwner.IsA('DHTankCannonPawn'))
         {

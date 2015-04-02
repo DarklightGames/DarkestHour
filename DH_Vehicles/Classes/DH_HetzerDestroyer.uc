@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HetzerDestroyer extends DH_ROTreadCraft;
+class DH_HetzerDestroyer extends DHTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Hetzer_anm_V1.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Hetzer_tex_V1.utx
