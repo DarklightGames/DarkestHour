@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Cromwell6PdrCannonShell extends DH_ROTankCannonShell;
+class DH_Cromwell6PdrCannonShell extends DHTankCannonShell;
 
 defaultproperties
 {

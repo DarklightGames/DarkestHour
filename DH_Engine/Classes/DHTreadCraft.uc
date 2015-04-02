@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTreadCraft extends ROTreadCraft
+class DHTreadCraft extends ROTreadCraft
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
@@ -193,8 +193,8 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.CollisionHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all DH_ROTreadCrafts
-    if (class'DH_ROTreadCraft'.default.bDebugExitPositions)
+    // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all DHTreadCrafts
+    if (class'DHTreadCraft'.default.bDebugExitPositions)
     {
         for (i = 0; i < ExitPositions.Length; ++i)
         {
@@ -1676,9 +1676,9 @@ simulated function SetEngine()
         }
     }
 
-    if (CannonTurret != none && DH_ROTankCannonPawn(CannonTurret.Owner) != none)
+    if (CannonTurret != none && DHTankCannonPawn(CannonTurret.Owner) != none)
     {
-        DH_ROTankCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
+        DHTankCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
     }
 }
 
@@ -1793,7 +1793,7 @@ function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int 
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
     local float   HitAngleDegrees, Side, InAngle, InAngleDegrees;
     local vector  LocDir, HitDir, X, Y, Z;
@@ -2058,7 +2058,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
 // Matt: new generic function to handle penetration calcs for any shell type
 // Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
-simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
+simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
 {
     local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
 
@@ -2128,7 +2128,7 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 }
 
 // Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
-simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
+simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
     local float CompoundExp, CompoundAngleFixed;
     local float RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
@@ -2200,7 +2200,7 @@ simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectil
 }
 
 // Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
-simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
+simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
 {
     // after Bird & Livingston:
     if (P.default.RoundType == RT_AP) // from Darkest Orchestra
@@ -2265,7 +2265,7 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
 }
 
 // Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
-simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
+simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
 {
     if (P.default.RoundType == RT_HVAP)
     {
@@ -2459,7 +2459,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Optics hit");
                 }
 
-                DH_ROTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
+                DHTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
             }
             else if (NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
             {
@@ -2471,7 +2471,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Turret ring hit");
                 }
 
-                DH_ROTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
+                DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
             }
             else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch && bProjectilePenetrated == true) // useful for assault guns
             {
@@ -2480,7 +2480,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Gun pivot hit");
                 }
 
-                DH_ROTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
+                DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
             }
         }
     }
@@ -2530,14 +2530,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Optics destroyed");
                     }
 
-                    DH_ROTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
+                    DHTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
                 }
 
                 if (FRand() < Damage/GunDamageChance)
                 {
                     if (bDebuggingText)
                     Level.Game.Broadcast(self, "Gun Pivot Damaged");
-                    DH_ROTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
+                    DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
                 }
 
                 if (FRand() < Damage/TraverseDamageChance)
@@ -2547,7 +2547,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Traverse Damaged");
                     }
 
-                    DH_ROTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
+                    DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
                 }
             }
 
@@ -2807,9 +2807,9 @@ simulated function Timer()
         {
             bTurretFireNeeded = false;
 
-            if (DH_ROTankCannon(CannonTurret) != none)
+            if (DHTankCannon(CannonTurret) != none)
             {
-                DH_ROTankCannon(CannonTurret).StartTurretFire();
+                DHTankCannon(CannonTurret).StartTurretFire();
             }
         }
 
@@ -2817,9 +2817,9 @@ simulated function Timer()
         {
             bHullMGFireNeeded = false;
 
-            if (DH_ROMountedTankMG(HullMG) != none)
+            if (DHMountedTankMG(HullMG) != none)
             {
-                DH_ROMountedTankMG(HullMG).StartMGFire();
+                DHMountedTankMG(HullMG).StartMGFire();
             }
         }
     }
@@ -3010,7 +3010,7 @@ function ServerChangeDriverPosition(byte F)
 // New function to check if player can exit, displaying an "unbutton the hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
-    local DH_ROMountedTankMGPawn MGPawn;
+    local DHMountedTankMGPawn MGPawn;
 
     if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
     {
@@ -3022,7 +3022,7 @@ simulated function bool CanExit()
         {
             if (HullMG != none)
             {
-                MGPawn = DH_ROMountedTankMGPawn(HullMG.Owner);
+                MGPawn = DHMountedTankMGPawn(HullMG.Owner);
             }
 
             if (MGPawn != none && MGPawn.DriverPositions.Length > MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
@@ -3303,7 +3303,7 @@ exec function ToggleViewLimit()
     }
 }
 
-// Allows debugging exit positions to be toggled for all DH_ROTreadCrafts
+// Allows debugging exit positions to be toggled for all DHTreadCrafts
 exec function ToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
@@ -3316,8 +3316,8 @@ function ServerToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DH_ROTreadCraft'.default.bDebugExitPositions = !class'DH_ROTreadCraft'.default.bDebugExitPositions;
-        Log("DH_ROTreadCraft.bDebugExitPositions =" @ class'DH_ROTreadCraft'.default.bDebugExitPositions);
+        class'DHTreadCraft'.default.bDebugExitPositions = !class'DHTreadCraft'.default.bDebugExitPositions;
+        Log("DHTreadCraft.bDebugExitPositions =" @ class'DHTreadCraft'.default.bDebugExitPositions);
     }
 }
 

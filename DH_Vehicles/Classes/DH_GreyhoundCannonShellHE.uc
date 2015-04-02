@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreyhoundCannonShellHE extends DH_ROTankCannonShellHE;
+class DH_GreyhoundCannonShellHE extends DHTankCannonShellHE;
 
 defaultproperties
 {

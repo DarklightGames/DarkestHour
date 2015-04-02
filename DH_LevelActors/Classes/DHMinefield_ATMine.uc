@@ -26,7 +26,7 @@ singular function Touch(Actor Other)
         // Hurt the vehicle itself
         Other.TakeDamage(Damage, none, Location, Location, MyDamageType);
 
-        if (DH_ROTreadCraft(Other) != none)
+        if (DHTreadCraft(Other) != none)
         {
             // Lets possibly de-track the vehicle (80% chance)
             RandomNum = Rand(100);
@@ -35,11 +35,11 @@ singular function Touch(Actor Other)
             {
                 if (vector(Other.Rotation) dot Normal(Location - Other.Location) > 0.0)
                 {
-                    DH_ROTreadCraft(Other).DamageTrack(true);
+                    DHTreadCraft(Other).DamageTrack(true);
                 }
                 else
                 {
-                    DH_ROTreadCraft(Other).DamageTrack(false);
+                    DHTreadCraft(Other).DamageTrack(false);
                 }
             }
         }

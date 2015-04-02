@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierGunPawn extends DH_ROMountedTankMGPawn; // Matt: originally extended ROMountedTankMGPawn
+class DH_UniCarrierGunPawn extends DHMountedTankMGPawn; // Matt: originally extended ROMountedTankMGPawn
 
 // Overridden to give players the same momentum as their vehicle had when exiting - adds a little height kick to allow for hacked in damage system
 function bool KDriverLeave(bool bForceLeave)

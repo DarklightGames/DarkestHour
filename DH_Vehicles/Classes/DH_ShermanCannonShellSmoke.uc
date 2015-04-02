@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonShellSmoke extends DH_ROTankCannonShellSmoke;
+class DH_ShermanCannonShellSmoke extends DHTankCannonShellSmoke;
 
 defaultproperties
 {

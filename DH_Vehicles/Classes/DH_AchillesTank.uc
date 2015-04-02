@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AchillesTank extends DH_ROTreadCraft;
+class DH_AchillesTank extends DHTreadCraft;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx

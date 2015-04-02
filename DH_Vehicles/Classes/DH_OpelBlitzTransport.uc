@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_OpelBlitzTransport extends DH_ROWheeledVehicle;
+class DH_OpelBlitzTransport extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_OpelBlitz_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Tiger2BMountedMG extends DH_ROMountedTankMG;
+class DH_Tiger2BMountedMG extends DHMountedTankMG;
 
 defaultproperties
 {

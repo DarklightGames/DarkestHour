@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HetzerMountedMG extends DH_ROMountedTankMG;
+class DH_HetzerMountedMG extends DHMountedTankMG;
 
 #exec OBJ LOAD FILE=..\Sounds\inf_weapons_foley.uax
 

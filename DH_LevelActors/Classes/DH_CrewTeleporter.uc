@@ -39,7 +39,7 @@ simulated function PostTouch(actor Other)
                     break;
             }
 
-        i = rand(i);
+        i = Rand(i);
         if (Dest[i] != none)
         {
             // Teleport the actor into the other teleporter.

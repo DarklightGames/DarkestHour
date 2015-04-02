@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WillysJeep extends DH_ROWheeledVehicle;
+class DH_WillysJeep extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_WillysJeep_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx

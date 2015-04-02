@@ -17,19 +17,23 @@ replication
 //Override to allow for grenades to drop with spread (so they aren't inside eachother)
 function DropFrom(vector StartLocation)
 {
-    local int m, i;
+    local int i;
     local Pickup Pickup;
     local rotator R;
 
     if (!bCanThrow)
+    {
         return;
+    }
 
     ClientWeaponThrown();
 
-    for (m = 0; m < NUM_FIRE_MODES; m++)
+    for (i = 0; i < arraycount(FireMode); ++i)
     {
-        if (FireMode[m].bIsFiring)
-            StopFire(m);
+        if (FireMode[i].bIsFiring)
+        {
+            StopFire(i);
+        }
     }
 
     if (Instigator != none)
@@ -44,10 +48,10 @@ function DropFrom(vector StartLocation)
     }
     else
     {
-        for (i = 0; i<AmmoAmount(0); ++i)
+        for (i = 0; i < AmmoAmount(0); ++i)
         {
-            R.Yaw = rand(65536);
-            Pickup = Spawn(PickupClass,,, StartLocation,R);
+            R.Yaw = Rand(65536);
+            Pickup = Spawn(PickupClass,,, StartLocation, R);
 
             if (Pickup != none)
             {
@@ -86,17 +90,17 @@ simulated state StartMantle extends Busy
 
     simulated function BeginState()
     {
-        local int Mode;
+        local int i;
 
         if (ClientState == WS_BringUp || ClientState == WS_ReadyToFire)
         {
             if (Instigator.IsLocallyControlled())
             {
-                for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+                for (i = 0; i < arraycount(FireMode); ++i)
                 {
-                    if (FireMode[Mode].bIsFiring)
+                    if (FireMode[i].bIsFiring)
                     {
-                        ClientStopFire(Mode);
+                        ClientStopFire(i);
                     }
                 }
 
@@ -115,10 +119,10 @@ simulated state StartMantle extends Busy
 
         SetTimer(GetAnimDuration(PutDownAnim, PutDownAnimRate), false);
 
-        for (Mode = 0; Mode < NUM_FIRE_MODES; Mode++)
+        for (i = 0; i < arraycount(FireMode); ++i)
         {
-            FireMode[Mode].bServerDelayStartFire = false;
-            FireMode[Mode].bServerDelayStopFire = false;
+            FireMode[i].bServerDelayStartFire = false;
+            FireMode[i].bServerDelayStopFire = false;
         }
     }
 

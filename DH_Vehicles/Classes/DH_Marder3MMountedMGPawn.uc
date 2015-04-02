@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Marder3MMountedMGPawn extends DH_ROMountedTankMGPawn;
+class DH_Marder3MMountedMGPawn extends DHMountedTankMGPawn;
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {

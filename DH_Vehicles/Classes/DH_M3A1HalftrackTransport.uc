@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackTransport extends DH_ROTransportCraft;
+class DH_M3A1HalftrackTransport extends DHTransportCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M3A1Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx

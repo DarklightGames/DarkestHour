@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanMountedMG_M4A176W extends DH_ROMountedTankMG;
+class DH_ShermanMountedMG_M4A176W extends DHMountedTankMG;
 
 defaultproperties
 {

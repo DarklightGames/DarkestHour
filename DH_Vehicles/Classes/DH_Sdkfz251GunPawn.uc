@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz251GunPawn extends DH_ROMountedTankMGPawn;
+class DH_Sdkfz251GunPawn extends DHMountedTankMGPawn;
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {

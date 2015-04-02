@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StuH42MountedMGPawn extends DH_ROMountedTankMGPawn;
+class DH_StuH42MountedMGPawn extends DHMountedTankMGPawn;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 

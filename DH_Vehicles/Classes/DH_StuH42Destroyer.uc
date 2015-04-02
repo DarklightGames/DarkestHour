@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StuH42Destroyer extends DH_ROTreadCraft;
+class DH_StuH42Destroyer extends DHTreadCraft;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Stug3G_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx

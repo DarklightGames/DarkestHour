@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Marder3MMountedMG extends DH_ROMountedTankMG; // Matt: was ROVehicleWeapon
+class DH_Marder3MMountedMG extends DHMountedTankMG; // Matt: was ROVehicleWeapon
 
 defaultproperties
 {

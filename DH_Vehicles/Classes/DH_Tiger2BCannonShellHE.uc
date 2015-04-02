@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Tiger2BCannonShellHE extends DH_ROTankCannonShellHE;
+class DH_Tiger2BCannonShellHE extends DHTankCannonShellHE;
 
 defaultproperties
 {

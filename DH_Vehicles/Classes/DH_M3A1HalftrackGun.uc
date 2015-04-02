@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M3A1HalftrackGun extends DH_ROMountedTankMG; // Matt: was ROVehicleWeapon
+class DH_M3A1HalftrackGun extends DHMountedTankMG; // Matt: was ROVehicleWeapon
 
 defaultproperties
 {

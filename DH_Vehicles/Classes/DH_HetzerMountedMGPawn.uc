@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HetzerMountedMGPawn extends DH_ROMountedTankMGPawn;
+class DH_HetzerMountedMGPawn extends DHMountedTankMGPawn;
 
 // Can't fire unless buttoned up & controlling the remote MG
 function bool CanFire()

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Pak43CannonShellHE extends DH_ROTankCannonShellHE;
+class DH_Pak43CannonShellHE extends DHTankCannonShellHE;
 
 defaultproperties
 {

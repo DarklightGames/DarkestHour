@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannonShellSmoke extends DH_ROTankCannonShellHE
+class DHTankCannonShellSmoke extends DHTankCannonShellHE
     abstract;
 
 var  class<Emitter> SmokeEmitterClass;

@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannonPawn extends ROTankCannonPawn
+class DHTankCannonPawn extends ROTankCannonPawn
     abstract;
 
 // General
-var     DH_ROTankCannon Cannon;               // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
+var     DHTankCannon    Cannon;               // just a reference to the DH cannon actor, for convenience & to avoid lots of casts
 var     texture         AltAmmoReloadTexture; // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Position stuff
@@ -114,7 +114,7 @@ function bool PlaceExitingDriver()
     }
 
     // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
-    if (class'DH_ROTankCannonPawn'.default.bDebugExitPositions)
+    if (class'DHTankCannonPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
         {
@@ -225,7 +225,7 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // Using it to reliably initialize the manual/powered turret settings when vehicle spawns, knowing we'll have relevant actors
 simulated function InitializeCannon()
 {
-    Cannon = DH_ROTankCannon(Gun);
+    Cannon = DHTankCannon(Gun);
 
     if (Cannon != none)
     {
@@ -233,12 +233,12 @@ simulated function InitializeCannon()
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DH_ROTankCannon, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHTankCannon, so lots of things are not going to work!");
     }
 
-    if (DH_ROTreadCraft(VehicleBase) != none)
+    if (DHTreadCraft(VehicleBase) != none)
     {
-        SetManualTurret(DH_ROTreadCraft(VehicleBase).bEngineOff);
+        SetManualTurret(DHTreadCraft(VehicleBase).bEngineOff);
     }
     else
     {
@@ -902,9 +902,9 @@ simulated function bool CanExit()
 // New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
 simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 {
-    local DH_ROTreadCraft TreadCraft;
+    local DHTreadCraft TreadCraft;
 
-    TreadCraft = DH_ROTreadCraft(VehicleBase);
+    TreadCraft = DHTreadCraft(VehicleBase);
 
     return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
         ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
@@ -1400,8 +1400,8 @@ function ServerToggleDriverDebug()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DH_ROTankCannon'.default.bDriverDebugging = !class'DH_ROTankCannon'.default.bDriverDebugging;
-        Log("DH_ROTankCannon.bDriverDebugging =" @ class'DH_ROTankCannon'.default.bDriverDebugging);
+        class'DHTankCannon'.default.bDriverDebugging = !class'DHTankCannon'.default.bDriverDebugging;
+        Log("DHTankCannon.bDriverDebugging =" @ class'DHTankCannon'.default.bDriverDebugging);
     }
 }
 
@@ -1418,8 +1418,8 @@ function ServerToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DH_ROTankCannonPawn'.default.bDebugExitPositions = !class'DH_ROTankCannonPawn'.default.bDebugExitPositions;
-        Log("DH_ROTankCannonPawn.bDebugExitPositions =" @ class'DH_ROTankCannonPawn'.default.bDebugExitPositions);
+        class'DHTankCannonPawn'.default.bDebugExitPositions = !class'DHTankCannonPawn'.default.bDebugExitPositions;
+        Log("DHTankCannonPawn.bDebugExitPositions =" @ class'DHTankCannonPawn'.default.bDebugExitPositions);
     }
 }
 

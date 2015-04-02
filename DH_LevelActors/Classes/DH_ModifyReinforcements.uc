@@ -142,7 +142,7 @@ function int AddRespawnsRandomly()
     //Go through the local proper PC dead list and respawn them
     for (i = 0; i < lDeadPCList.Length; ++i)
     {
-        RandomNum = rand(lDeadPCList.Length);
+        RandomNum = Rand(lDeadPCList.Length);
         ROGame.RestartPlayer(lDeadPCList[randomnum]);
         lDeadPCList.Remove(randomnum, 1);
 

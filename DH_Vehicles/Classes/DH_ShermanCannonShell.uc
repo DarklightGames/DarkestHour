@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonShell extends DH_ROTankCannonShell;
+class DH_ShermanCannonShell extends DHTankCannonShell;
 
 defaultproperties
 {

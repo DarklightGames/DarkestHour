@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATGunCannon extends DH_ROTankCannon
+class DH_ATGunCannon extends DHTankCannon
     abstract;
 
 // Modified to use 3 part reload instead of usual 4 part
@@ -44,7 +44,7 @@ simulated function Timer()
 }
 
 // AT gun will always be penetrated by a shell
-simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }

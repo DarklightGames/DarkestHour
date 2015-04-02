@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_KubelwagenCar_WH extends DH_ROWheeledVehicle;
+class DH_KubelwagenCar_WH extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Kubelwagen_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx

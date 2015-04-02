@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WillysJeepPassengerOne extends DH_ROPassengerPawn;
+class DH_WillysJeepPassengerOne extends DHPassengerPawn;
 
 defaultproperties
 {

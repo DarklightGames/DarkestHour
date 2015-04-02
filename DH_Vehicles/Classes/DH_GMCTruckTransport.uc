@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GMCTruckTransport extends DH_ROWheeledVehicle;
+class DH_GMCTruckTransport extends DHWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_GMCTruck_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Allied_MilitarySM.utx

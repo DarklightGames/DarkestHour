@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIIINCannon extends DH_ROTankCannon;
+class DH_PanzerIIINCannon extends DHTankCannon;
 
 // Vars for canister shot:
 var    int          CSpread;     // Spread for canister shot

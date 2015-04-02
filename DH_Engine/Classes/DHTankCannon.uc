@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannon extends ROTankCannon
+class DHTankCannon extends ROTankCannon
     abstract;
 
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // General
-var     DH_ROTankCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     DHTankCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 var()   float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 var()   class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
 var()   byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
@@ -140,7 +140,7 @@ simulated function StartTurretFire()
 
 // Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
+simulated function InitializeCannon(DHTankCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
     {
@@ -152,13 +152,13 @@ simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
             Instigator = CannonPawn;
         }
 
-        if (DH_ROTreadCraft(CannonPawn.VehicleBase) != none)
+        if (DHTreadCraft(CannonPawn.VehicleBase) != none)
         {
             // Set the vehicle's CannonTurret reference - normally only used clientside in HUD, but can be useful elsewhere, including on server
-            DH_ROTreadCraft(CannonPawn.VehicleBase).CannonTurret = self;
+            DHTreadCraft(CannonPawn.VehicleBase).CannonTurret = self;
 
             // If vehicle is burning, start the turret hatch fire effect
-            if (DH_ROTreadCraft(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
+            if (DHTreadCraft(CannonPawn.VehicleBase).bOnFire && Level.NetMode != NM_DedicatedServer)
             {
                 StartTurretFire();
             }
@@ -166,7 +166,7 @@ simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DH_ROTankCannonPawn, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHTankCannonPawn, so lots of things are not going to work!");
     }
 }
 
@@ -221,7 +221,7 @@ simulated function InitEffects()
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
     local float   WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
     local vector  LocDir, HitDir, X, Y, Z;
@@ -500,7 +500,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
 // Matt: new generic function to handle penetration calcs for any shell type
 // Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
-simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
+simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
 {
     local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
 
@@ -543,16 +543,16 @@ simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, fl
 
         if (!bRoundShattered)
         {
-            DH_ROTreadCraft(Base).bProjectilePenetrated = true;
-            DH_ROTreadCraft(Base).bWasTurretHit = true;
-            DH_ROTreadCraft(Base).bWasHEATRound = (P.default.RoundType == RT_HEAT); // Matt: would be much better to flag bIsHeatRound in DamageType, but would need new DH_WeaponDamageType class
+            DHTreadCraft(Base).bProjectilePenetrated = true;
+            DHTreadCraft(Base).bWasTurretHit = true;
+            DHTreadCraft(Base).bWasHEATRound = (P.default.RoundType == RT_HEAT); // Matt: would be much better to flag bIsHeatRound in DamageType, but would need new DH_WeaponDamageType class
 
             return true;
         }
     }
 
-    DH_ROTreadCraft(Base).bProjectilePenetrated = false;
-    DH_ROTreadCraft(Base).bWasTurretHit = false;
+    DHTreadCraft(Base).bProjectilePenetrated = false;
+    DHTreadCraft(Base).bWasTurretHit = false;
 
     return false;
 }
@@ -570,7 +570,7 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 }
 
 // Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
-simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
+simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
     local float CompoundExp, CompoundAngleFixed;
     local float RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
@@ -642,7 +642,7 @@ simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectil
 }
 
 // Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
-simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
+simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
 {
     // after Bird & Livingston:
     if (P.default.RoundType == RT_AP) // from Darkest Orchestra
@@ -707,7 +707,7 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
 }
 
 // Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
-simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
+simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
 {
     if (P.default.RoundType == RT_HVAP)
     {

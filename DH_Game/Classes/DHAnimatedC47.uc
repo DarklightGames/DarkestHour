@@ -8,7 +8,6 @@ class DHAnimatedC47 extends Actor
 
 var(InitialAnimation) name AnimName;
 var(InitialAnimation) float AnimRate;
-var() bool bExactProjectileCollision;       // nonzero extent projectiles should shrink to zero when hitting this actor
 
 simulated function PostBeginPlay()
 {
@@ -21,7 +20,6 @@ defaultproperties
 {
     AnimName="c47_in_flight"
     AnimRate=1.0
-    bExactProjectileCollision=true
     DrawType=DT_Mesh
     CullDistance=16000.0
     bUseDynamicLights=true

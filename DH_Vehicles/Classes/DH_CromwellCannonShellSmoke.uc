@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_CromwellCannonShellSmoke extends DH_ROTankCannonShellSmoke;
+class DH_CromwellCannonShellSmoke extends DHTankCannonShellSmoke;
 
 defaultproperties
 {

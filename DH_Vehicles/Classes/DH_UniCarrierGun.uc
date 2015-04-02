@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_UniCarrierGun extends DH_ROMountedTankMG; // Matt: was UniCarrierGun
+class DH_UniCarrierGun extends DHMountedTankMG; // Matt: was UniCarrierGun
 
 defaultproperties
 {

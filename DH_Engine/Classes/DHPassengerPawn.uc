@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROPassengerPawn extends ROPassengerPawn
+class DHPassengerPawn extends ROPassengerPawn
     abstract;
 
 /*
@@ -64,7 +64,7 @@ function bool PlaceExitingDriver()
     }
 
     // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
-    if (class'DH_ROPassengerPawn'.default.bDebugExitPositions)
+    if (class'DHPassengerPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
         {
@@ -325,8 +325,8 @@ function ServerToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DH_ROPassengerPawn'.default.bDebugExitPositions = !class'DH_ROPassengerPawn'.default.bDebugExitPositions;
-        Log("DH_ROPassengerPawn.bDebugExitPositions =" @ class'DH_ROPassengerPawn'.default.bDebugExitPositions);
+        class'DHPassengerPawn'.default.bDebugExitPositions = !class'DHPassengerPawn'.default.bDebugExitPositions;
+        Log("DHPassengerPawn.bDebugExitPositions =" @ class'DHPassengerPawn'.default.bDebugExitPositions);
     }
 }
 

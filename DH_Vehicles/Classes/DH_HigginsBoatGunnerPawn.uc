@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HigginsBoatGunnerPawn extends DH_ROMountedTankMGPawn;
+class DH_HigginsBoatGunnerPawn extends DHMountedTankMGPawn;
 
 var     texture     BinocsOverlay;
 var     int         BinocsPositionIndex;

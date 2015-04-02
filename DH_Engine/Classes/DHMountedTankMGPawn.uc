@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROMountedTankMGPawn extends ROMountedTankMGPawn
+class DHMountedTankMGPawn extends ROMountedTankMGPawn
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var     DH_ROMountedTankMG  MGun;             // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+var     DHMountedTankMG  MGun;             // just a reference to the DH MG actor, for convenience & to avoid lots of casts
 
 var()   int         InitialPositionIndex;     // initial player position on entering
 var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
@@ -111,7 +111,7 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeMG()
 {
-    MGun = DH_ROMountedTankMG(Gun);
+    MGun = DHMountedTankMG(Gun);
 
     if (MGun != none)
     {
@@ -119,7 +119,7 @@ simulated function InitializeMG()
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DH_ROMountedTankMG, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHMountedTankMG, so lots of things are not going to work!");
     }
 }
 
@@ -291,7 +291,7 @@ function bool PlaceExitingDriver()
     }
 
     // Debug exits - uses abstract class default, allowing bDebugExitPositions to be toggled for all MG pawns
-    if (class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions)
+    if (class'DHMountedTankMGPawn'.default.bDebugExitPositions)
     {
         for (i = 0; i < VehicleBase.ExitPositions.Length; ++i)
         {
@@ -628,7 +628,7 @@ simulated function bool CanExit()
         }
         else
         {
-            if (DH_ROTreadCraft(VehicleBase) != none && DH_ROTreadCraft(VehicleBase).DriverPositions.Length > DH_ROTreadCraft(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
+            if (DHTreadCraft(VehicleBase) != none && DHTreadCraft(VehicleBase).DriverPositions.Length > DHTreadCraft(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
             {
                 ReceiveLocalizedMessage(class'DH_VehicleMessage', 10); // must exit through driver's or commander's hatch
             }
@@ -647,9 +647,9 @@ simulated function bool CanExit()
 // New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
 simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
 {
-    local DH_ROTreadCraft TreadCraft;
+    local DHTreadCraft TreadCraft;
 
-    TreadCraft = DH_ROTreadCraft(VehicleBase);
+    TreadCraft = DHTreadCraft(VehicleBase);
 
     return TreadCraft != none && TreadCraft.bMustUnbuttonToSwitchToRider && TreadCraft.bAllowRiders &&
         ChosenWeaponPawnIndex >= TreadCraft.FirstRiderPositionIndex && ChosenWeaponPawnIndex < TreadCraft.PassengerWeapons.Length && !CanExit();
@@ -967,8 +967,8 @@ function ServerToggleDebugExits()
 {
     if (class'DH_LevelInfo'.static.DHDebugMode())
     {
-        class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions = !class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions;
-        Log("DH_ROMountedTankMGPawn.bDebugExitPositions =" @ class'DH_ROMountedTankMGPawn'.default.bDebugExitPositions);
+        class'DHMountedTankMGPawn'.default.bDebugExitPositions = !class'DHMountedTankMGPawn'.default.bDebugExitPositions;
+        Log("DHMountedTankMGPawn.bDebugExitPositions =" @ class'DHMountedTankMGPawn'.default.bDebugExitPositions);
     }
 }
 

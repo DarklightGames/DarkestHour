@@ -2123,7 +2123,7 @@ static function PrecacheGameTextures(LevelInfo myLevel)
     myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
     myLevel.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
 
-    // From DH_ROTreadCraft:
+    // From DHTreadCraft:
     myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 }
 

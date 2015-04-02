@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROAntiVehicleProjectile extends ROAntiVehicleProjectile
+class DHAntiVehicleProjectile extends ROAntiVehicleProjectile
     config(DH_Penetration) // Matt: added (like DH_Bullet) so bDebugBallistics can be set easily in a config file
     abstract;
 
@@ -260,7 +260,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
+        if (HitVehicleWeapon.IsA('DHTankCannon') && !DHTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -355,7 +355,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DH_ROTreadCraft') && !DH_ROTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHTreadCraft') && !DHTreadCraft(Wall).DHShouldPenetrate(Class, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
@@ -457,18 +457,19 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
     // Round may shatter on vehicle armor
     else if (bShatterProne)
     {
-        if (DH_ROTankCannon(HitActor) != none)
+        if (
+        (HitActor) != none)
         {
-            if (DH_ROTankCannon(HitActor).bRoundShattered)
+            if (DHTankCannon(HitActor).bRoundShattered)
             {
                 bShattered = true;
-                DH_ROTankCannon(HitActor).bRoundShattered = false; // reset for next hit
+                DHTankCannon(HitActor).bRoundShattered = false; // reset for next hit
             }
         }
-        else if (DH_ROTreadCraft(HitActor) != none && DH_ROTreadCraft(HitActor).bRoundShattered)
+        else if (DHTreadCraft(HitActor) != none && DHTreadCraft(HitActor).bRoundShattered)
         {
             bShattered = true;
-            DH_ROTreadCraft(HitActor).bRoundShattered = false; // reset for next hit
+            DHTreadCraft(HitActor).bRoundShattered = false; // reset for next hit
         }
 
         if (bShattered)
@@ -582,7 +583,7 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
         }
     }
 
-    super(DH_ROAntiVehicleProjectile).Explode(HitLocation, HitNormal);
+    super(DHAntiVehicleProjectile).Explode(HitLocation, HitNormal);
 }
 
 simulated function DoShakeEffect()

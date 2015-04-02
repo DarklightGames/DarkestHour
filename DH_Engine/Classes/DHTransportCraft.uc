@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTransportCraft extends DH_ROWheeledVehicle
+class DHTransportCraft extends DHWheeledVehicle
     abstract;
 
 var()   float               MaxCriticalSpeed; // if vehicle goes over max speed, it forces player to pull back on throttle
@@ -25,7 +25,7 @@ var()   array<name>         LeftWheelBones, RightWheelBones; // for animation on
 var     rotator             LeftWheelRot, RightWheelRot;     // keep track of the wheel rotational speed for animation
 var()   int                 WheelRotationScale;
 
-// From DH_ROTreadCraft & ROTreadCraft (combines SetupTreads & some PostBeginPlay)
+// From DHTreadCraft & ROTreadCraft (combines SetupTreads & some PostBeginPlay)
 simulated function SetupTreads()
 {
     LeftTreadPanner = VariableTexPanner(Level.ObjectPool.AllocateObject(class'VariableTexPanner'));
@@ -140,7 +140,7 @@ simulated function DestroyAttachments()
     }
 }
 
-// Modified to add features from DH_ROTreadCraft for treads
+// Modified to add features from DHTreadCraft for treads
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;

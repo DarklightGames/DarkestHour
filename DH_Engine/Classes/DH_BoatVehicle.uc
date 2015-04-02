@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BoatVehicle extends DH_ROWheeledVehicle // Matt: originally extended ROWheeledVehicle
+class DH_BoatVehicle extends DHWheeledVehicle // Matt: originally extended ROWheeledVehicle
     abstract;
 
 var()   name                DriverCameraBoneName;
@@ -46,7 +46,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Skip over the Super in DH_ROWheeledVehicle to avoid an engine hint
+// Skip over the Super in DHWheeledVehicle to avoid an engine hint
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super(ROWheeledVehicle).ClientKDriverEnter(PC);
