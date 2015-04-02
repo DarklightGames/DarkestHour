@@ -59,7 +59,7 @@ event Trigger(Actor Other, Pawn EventInstigator)
     }
     if (TeleReference != none)
     {
-        RandomNum = rand(NewURLs.Length);
+        RandomNum = Rand(NewURLs.Length);
         if (NewURLs[RandomNum] != "")
             TeleReference.URL = NewURLs[RandomNum];
 
