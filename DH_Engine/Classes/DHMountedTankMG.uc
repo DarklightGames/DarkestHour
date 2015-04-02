@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROMountedTankMG extends ROMountedTankMG
+class DHMountedTankMG extends ROMountedTankMG
     abstract;
 
 var  DHMountedTankMGPawn  MGPawn;  // just a reference to the DH MG pawn actor, for convenience & to avoid lots of casts

@@ -2817,9 +2817,9 @@ simulated function Timer()
         {
             bHullMGFireNeeded = false;
 
-            if (DH_ROMountedTankMG(HullMG) != none)
+            if (DHMountedTankMG(HullMG) != none)
             {
-                DH_ROMountedTankMG(HullMG).StartMGFire();
+                DHMountedTankMG(HullMG).StartMGFire();
             }
         }
     }

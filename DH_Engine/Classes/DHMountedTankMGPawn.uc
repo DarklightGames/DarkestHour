@@ -8,7 +8,7 @@ class DHMountedTankMGPawn extends ROMountedTankMGPawn
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 
-var     DH_ROMountedTankMG  MGun;             // just a reference to the DH MG actor, for convenience & to avoid lots of casts
+var     DHMountedTankMG  MGun;             // just a reference to the DH MG actor, for convenience & to avoid lots of casts
 
 var()   int         InitialPositionIndex;     // initial player position on entering
 var()   int         UnbuttonedPositionIndex;  // lowest position number where player is unbuttoned
@@ -111,7 +111,7 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
 simulated function InitializeMG()
 {
-    MGun = DH_ROMountedTankMG(Gun);
+    MGun = DHMountedTankMG(Gun);
 
     if (MGun != none)
     {
@@ -119,7 +119,7 @@ simulated function InitializeMG()
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DH_ROMountedTankMG, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHMountedTankMG, so lots of things are not going to work!");
     }
 }
 

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HigginsBoatGun extends DH_ROMountedTankMG; // Matt: was ROVehicleWeapon
+class DH_HigginsBoatGun extends DHMountedTankMG; // Matt: was ROVehicleWeapon
 
 defaultproperties
 {
