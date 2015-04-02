@@ -8,10 +8,11 @@ class DH_Flak38Cannon extends DH_Sdkfz2341Cannon;
 #exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Flak38_tex.utx
 
-var name                    SightBone;
-var name                    TraverseWheelBone;
-var name                    ElevationWheelBone;
+var     name   SightBone;
+var     name   TraverseWheelBone;
+var     name   ElevationWheelBone;
 
+// Modified to animate sights & aiming wheels
 simulated function Tick(float DeltaTime)
 {
     local rotator SightRotation;
@@ -34,8 +35,6 @@ simulated function Tick(float DeltaTime)
 // Modified to play shoot open or closed firing animation based on DriverPositionIndex, as all DriverPositionsan are always bExposed in an AT gun
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
-    local ROVehicleWeaponPawn OwningPawn;
-
     if (Role == ROLE_Authority)
     {
         FiringMode = byte(bWasAltFire);
@@ -54,9 +53,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             FlashEmitter.Trigger(self, Instigator);
         }
 
-        OwningPawn = ROVehicleWeaponPawn(Instigator);
-
-        if (OwningPawn != none && OwningPawn.DriverPositionIndex >= 2)
+        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= 2)
         {
             if (HasAnim(TankShootOpenAnim))
             {
@@ -70,13 +67,22 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     }
 }
 
-// Added from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon, which will run armor checks
+// Added the following functions from DH_ATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DH_ROTankCannon:
 simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }
 
-// Modified as there aren't any angles that are below the driver angle for an AT gun
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+{
+    return super(ROVehicleWeapon).HitDriverArea(HitLocation, Momentum);
+}
+
+simulated function bool HitDriver(vector HitLocation, vector Momentum)
+{
+    return super(ROVehicleWeapon).HitDriver(HitLocation, Momentum);
+}
+
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
     return false;

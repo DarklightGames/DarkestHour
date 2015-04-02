@@ -23,6 +23,7 @@ replication
         bSecondGunPairFiring; // Matt: replicate when actor replicates to net client, but after that the client should be able to keep track itself
 }
 
+// Modified to animate sights & aiming wheels
 simulated function Tick(float DeltaTime)
 {
     local rotator SightRotation;
@@ -42,6 +43,7 @@ simulated function Tick(float DeltaTime)
     SetBoneRotation(TraverseWheelBone, TraverseWheelRotation, 1);
 }
 
+// Modified to remove handling of mixed mag (instead is handled in SpawnProjectile() as that now fires two projectiles), to toggle bSecondGunPairFiring & to remove AltFire
 state ProjectileFireMode
 {
     function Fire(Controller C)
@@ -56,6 +58,7 @@ state ProjectileFireMode
     }
 }
 
+// Modified to fire two projectiles from a pair of alternating barrels & to handle alternating AP/HE rounds if a mixed mag is loaded
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local vector     BarrelLocation[2], StartLocation, HitLocation, HitNormal, Extent;
@@ -117,31 +120,13 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 
             FlashMuzzleFlash(bAltFire);
 
-            // Play firing noise
-            if (bAltFire)
+            if (bAmbientFireSound)
             {
-                if (bAmbientAltFireSound)
-                {
-                    AmbientSound = AltFireSoundClass;
-                    SoundVolume = AltFireSoundVolume;
-                    SoundRadius = AltFireSoundRadius;
-                    AmbientSoundScaling = AltFireSoundScaling;
-                }
-                else
-                {
-                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
-                }
+                AmbientSound = FireSoundClass;
             }
             else
             {
-                if (bAmbientFireSound)
-                {
-                    AmbientSound = FireSoundClass;
-                }
-                else
-                {
-                    PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-                }
+                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
             }
         }
     }
@@ -149,6 +134,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return P;
 }
 
+// New function to get the location & rotation of barrel that is firing
 simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLocation, out rotator BarrelRotation)
 {
     local coords BarrelBoneCoords;
@@ -160,13 +146,13 @@ simulated function GetBarrelLocationAndRotation(int Index, out vector BarrelLoca
     }
 
     BarrelBoneCoords = GetBoneCoords(BarrelBones[Index]);
-
     CurrentFireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) + (DualFireOffset * vect(0.0, 1.0, 0.0));
 
     BarrelRotation = rotator(vector(CurrentAim) >> Rotation);
     BarrelLocation = BarrelBoneCoords.Origin + (CurrentFireOffset >> BarrelRotation);
 }
 
+// Modified to get WeaponFireLocation for the barrel that is currently firing
 simulated function CalcWeaponFire(bool bWasAltFire)
 {
     local coords WeaponBoneCoords;
@@ -174,34 +160,19 @@ simulated function CalcWeaponFire(bool bWasAltFire)
 
     // Calculate fire offset in world space
     WeaponBoneCoords = GetBoneCoords(BarrelBones[BarrelBoneIndex++]);
-
     BarrelBoneIndex = Clamp(BarrelBoneIndex, 0, 3);
-
-    if (bWasAltFire)
-    {
-        CurrentFireOffset = AltFireOffset + (WeaponFireOffset * vect(1.0, 0.0, 0.0));
-    }
-    else
-    {
-        CurrentFireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) + (DualFireOffset * vect(0.0, 1.0, 0.0));
-    }
+    CurrentFireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) + (DualFireOffset * vect(0.0, 1.0, 0.0));
 
     // Calculate rotation of the gun
     WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
 
     // Calculate exact fire location
     WeaponFireLocation = WeaponBoneCoords.Origin + (CurrentFireOffset >> WeaponFireRotation);
-
-    // Adjust fire rotation taking dual offset into account
-    if (bDualIndependantTargeting)
-    {
-        WeaponFireRotation = rotator(CurrentHitLocation - WeaponFireLocation);
-    }
 }
 
+// Modified to handle fire effects & animations from alternating pairs of barrels
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
-    local ROVehicleWeaponPawn OwningPawn;
     local int FireAnimationIndex;
 
     if (Role == ROLE_Authority)
@@ -242,9 +213,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             }
         }
 
-        OwningPawn = ROVehicleWeaponPawn(Instigator);
-
-        if (OwningPawn != none && OwningPawn.DriverPositionIndex >= 2)
+        if (CannonPawn != none && CannonPawn.DriverPositionIndex >= 2)
         {
             FireAnimationIndex = int(bSecondGunPairFiring) + 2;
         }
@@ -265,6 +234,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     }
 }
 
+// Modified to handle four barrels
 simulated function InitEffects()
 {
     local int i;
@@ -280,21 +250,28 @@ simulated function InitEffects()
         {
             FlashEmitters[i] = Spawn(FlashEmitterClass);
             FlashEmitters[i].SetDrawScale(DrawScale);
-
             AttachToBone(FlashEmitters[i], BarrelBones[i]);
-
             FlashEmitters[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
         }
     }
 }
 
-// Added from DH_ATGunCannon, as parent 234/1 cannon now extends DH_ROTankCannon, which will run armor checks
+// Added the following functions from DH_ATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DH_ROTankCannon:
 simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }
 
-// Modified as there aren't any angles that are below the driver angle for an AT gun
+simulated function bool HitDriverArea(vector HitLocation, vector Momentum)
+{
+    return super(ROVehicleWeapon).HitDriverArea(HitLocation, Momentum);
+}
+
+simulated function bool HitDriver(vector HitLocation, vector Momentum)
+{
+    return super(ROVehicleWeapon).HitDriver(HitLocation, Momentum);
+}
+
 simulated function bool BelowDriverAngle(vector loc, vector ray)
 {
     return false;
