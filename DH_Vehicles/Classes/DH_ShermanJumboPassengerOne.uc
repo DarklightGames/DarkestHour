@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanJumboPassengerOne extends DH_ROPassengerPawn;
+class DH_ShermanJumboPassengerOne extends DHPassengerPawn;
 
 defaultproperties
 {

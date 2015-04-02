@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WolverinePassengerOne extends DH_ROPassengerPawn;
+class DH_WolverinePassengerOne extends DHPassengerPawn;
 
 defaultproperties
 {

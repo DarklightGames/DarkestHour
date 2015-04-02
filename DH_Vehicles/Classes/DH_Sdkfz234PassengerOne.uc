@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz234PassengerOne extends DH_ROPassengerPawn;
+class DH_Sdkfz234PassengerOne extends DHPassengerPawn;
 
 defaultproperties
 {

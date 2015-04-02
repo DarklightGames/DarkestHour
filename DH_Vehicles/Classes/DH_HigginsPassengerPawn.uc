@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HigginsPassengerPawn extends DH_ROPassengerPawn; // Matt: originally extended ROPassengerPawn
+class DH_HigginsPassengerPawn extends DHPassengerPawn;
 
 defaultproperties
 {
