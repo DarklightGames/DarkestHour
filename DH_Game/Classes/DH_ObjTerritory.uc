@@ -155,6 +155,11 @@ function DoSpawnPointAction(SpawnPointAction SPA)
 
     VM = DarkestHourGame(Level.Game).SpawnManager;
 
+    if (VM == none)
+    {
+        return;
+    }
+
     switch (SPA.Operation)
     {
         case ESPO_Enable:
@@ -177,6 +182,11 @@ function DoVehiclePoolAction(VehiclePoolAction VPA)
     local DHSpawnManager VM;
 
     VM = DarkestHourGame(Level.Game).SpawnManager;
+
+    if (VM == none)
+    {
+        return;
+    }
 
     switch (VPA.Operation)
     {
@@ -400,7 +410,6 @@ function HandleGroupActions(int Team)
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
     local DarkesthourGame         DHGame;
-    local DHSpawnManager          VM;
     local DHPlayerReplicationInfo PRI;
     local DH_RoleInfo             RI;
     local Controller              C;
@@ -408,9 +417,8 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     local int                     i;
 
     DHGame = DarkesthourGame(Level.Game);
-    VM = DHGame.SpawnManager;
 
-    if (DHGame == none || VM == none)
+    if (DHGame == none)
     {
         return;
     }
