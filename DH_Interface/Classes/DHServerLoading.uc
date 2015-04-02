@@ -27,12 +27,11 @@ simulated event Init()
     // Calls the base background and text functions (should be after we get the mapRecord)
     super.Init();
 
-    // Draws VAC icon if bVACSecured
-    //if (bVACSecured)
-    //{
+    if (bVACSecured)
+    {
         DrawOpImage(Operations[4]).Image = VACIcon;
         DrawOpText(Operations[5]).Text = VACSecuredText;
-    //}
+    }
 }
 
 simulated function SetText()
@@ -122,11 +121,10 @@ simulated function SetImage()
 
     DrawOpImage(Operations[0]).Image = M;
 
-    M = Material(DynamicLoadObject("myLevel.GUI.LoadingScreen", class'Material'));
+    M = Material(DynamicLoadObject(MapName $ ".GUI.LoadingScreen", class'Material'));
 
-    if (!M.Validated)
+    if (M == none)
     {
-        // mat must have failed to create from ExtraInfo string
         M = DLOTexture(Backgrounds[0]);
     }
 
@@ -141,12 +139,14 @@ simulated function SetImage()
         DrawOpText(Operations[7]).Text = CommunityMapText;
     }
 
-    // Draw the background loading screen
     DrawOpImage(Operations[0]).Image = M;
 }
 
 defaultproperties
 {
+    vacSecuredText="Server is VAC Secured"
+    vacIcon=Texture'InterfaceArt_tex.ServerIcons.VAC_protected'
+
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
     OfficialMapText="Official Map"
@@ -176,7 +176,7 @@ defaultproperties
         Lft=0.735
         Height=0.05
         Width=0.32
-        Justification=2
+        Justification=0
         VertAlign=1
         FontName="ROInterface.fntROMainMenu"
     End Object
