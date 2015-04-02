@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1CarbineAmmo extends DH_Ammunition;
+class DH_M1CarbineAmmo extends DHAmmunition;
 
 defaultproperties
 {

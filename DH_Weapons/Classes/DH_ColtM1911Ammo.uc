@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ColtM1911Ammo extends DH_Ammunition;
+class DH_ColtM1911Ammo extends DHAmmunition;
 
 defaultproperties
 {

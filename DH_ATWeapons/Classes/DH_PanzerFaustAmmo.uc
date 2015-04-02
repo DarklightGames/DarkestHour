@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerFaustAmmo extends DH_Ammunition;
+class DH_PanzerFaustAmmo extends DHAmmunition;
 
 defaultproperties
 {

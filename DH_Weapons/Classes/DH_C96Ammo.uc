@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_C96Ammo extends DH_Ammunition;
+class DH_C96Ammo extends DHAmmunition;
 
 defaultproperties
 {

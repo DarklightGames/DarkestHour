@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StenMkIIAmmo extends DH_Ammunition;
+class DH_StenMkIIAmmo extends DHAmmunition;
 
 defaultproperties
 {

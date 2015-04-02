@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PIATAmmo extends DH_Ammunition;
+class DH_PIATAmmo extends DHAmmunition;
 
 defaultproperties
 {

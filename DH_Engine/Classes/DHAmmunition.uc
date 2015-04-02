@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Ammunition extends ROAmmunition
+class DHAmmunition extends ROAmmunition
     abstract;
 
 defaultproperties

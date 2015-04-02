@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_EnfieldNo4ScopedAmmo extends DH_Ammunition;
+class DH_EnfieldNo4ScopedAmmo extends DHAmmunition;
 
 defaultproperties
 {
