@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannonShellHE extends DH_ROTankCannonShell
+class DHTankCannonShellHE extends DHTankCannonShell
     abstract;
 
 // Modified to add different effects if didn't penetrate armor & to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)

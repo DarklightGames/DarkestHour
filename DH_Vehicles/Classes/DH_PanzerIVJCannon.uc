@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIVJCannon extends DH_ROTankCannon;
+class DH_PanzerIVJCannon extends DHTankCannon;
 
 defaultproperties
 {

@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROTankCannon extends ROTankCannon
+class DHTankCannon extends ROTankCannon
     abstract;
 
 #exec OBJ LOAD FILE=..\sounds\DH_Vehicle_Reloads.uax
 
 // General
-var     DH_ROTankCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
+var     DHTankCannonPawn CannonPawn;               // just a reference to the DH cannon pawn actor, for convenience & to avoid lots of casts
 var()   float               MinCommanderHitHeight;    // minimum height above which projectile must have hit commander's collision box (hit location offset, relative to mesh origin)
 var()   class<Projectile>   AltTracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just client-only effect (old name was misleading)
 var()   byte                AltFireTracerFrequency;   // how often a tracer is loaded in (as in: 1 in the value of AltFireTracerFrequency)
@@ -140,7 +140,7 @@ simulated function StartTurretFire()
 
 // Matt: new function to do any extra set up in the cannon classes (called from cannon pawn) - can be subclassed to do any vehicle specific setup
 // Crucially, we know that we have VehicleBase & Gun when this function gets called, so we can reliably do stuff that needs those actors
-simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
+simulated function InitializeCannon(DHTankCannonPawn CannonPwn)
 {
     if (CannonPwn != none)
     {
@@ -166,7 +166,7 @@ simulated function InitializeCannon(DH_ROTankCannonPawn CannonPwn)
     }
     else
     {
-        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DH_ROTankCannonPawn, so lots of things are not going to work!");
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owning DHTankCannonPawn, so lots of things are not going to work!");
     }
 }
 

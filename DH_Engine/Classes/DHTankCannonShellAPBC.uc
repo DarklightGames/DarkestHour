@@ -2,15 +2,15 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
-// Base class for solid shot armor-piercing shells
-// (with no armor-piercing cap or ballistic cap)
+// Base class for APBC armor-piercing shells
+// (with ballistic cap but no armor-piercing cap)
 //==============================================================================
 
-class DH_ROTankCannonShellAP extends DH_ROTankCannonShell
+class DHTankCannonShellAPBC extends DHTankCannonShell
     abstract;
 
 defaultproperties
 {
-    RoundType=RT_AP
+    RoundType=RT_APBC
     bShatterProne=true
 }

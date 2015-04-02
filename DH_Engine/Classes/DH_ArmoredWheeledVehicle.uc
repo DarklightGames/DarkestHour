@@ -244,7 +244,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Gun Pivot Damaged");
                     }
 
-                    DH_ROTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
+                    DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
                 }
 
                 if (FRand() < Damage / 1250)
@@ -254,7 +254,7 @@ function TakeDamage(int Damage, Pawn instigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Traverse Damaged");
                     }
 
-                    DH_ROTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
+                    DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
                 }
             }
         }

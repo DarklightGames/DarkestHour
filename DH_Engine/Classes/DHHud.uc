@@ -1099,13 +1099,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
                         // Draw coaxial gun reload state icon (if needed) // Matt: to show reload progress in red, like a tank cannon reload
-                        if (DH_ROTankCannonPawn(Passenger) != none)
+                        if (DHTankCannonPawn(Passenger) != none)
                         {
-                            ProportionOfReloadRemaining = DH_ROTankCannonPawn(Passenger).GetAltAmmoReloadState();
+                            ProportionOfReloadRemaining = DHTankCannonPawn(Passenger).GetAltAmmoReloadState();
 
                             if (ProportionOfReloadRemaining > 0.0)
                             {
-                                VehicleAltAmmoReloadIcon.WidgetTexture = DH_ROTankCannonPawn(Passenger).AltAmmoReloadTexture;
+                                VehicleAltAmmoReloadIcon.WidgetTexture = DHTankCannonPawn(Passenger).AltAmmoReloadTexture;
                                 VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                                 DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
                             }
@@ -3522,9 +3522,9 @@ exec function GrowHUD()
         {
             DH_ROWheeledVehicle(PawnOwner).GrowHUD();
         }
-        else if (PawnOwner.IsA('DH_ROTankCannonPawn'))
+        else if (PawnOwner.IsA('DHTankCannonPawn'))
         {
-            DH_ROTankCannonPawn(PawnOwner).GrowHUD();
+            DHTankCannonPawn(PawnOwner).GrowHUD();
         }
         else if (PawnOwner.IsA('DHMountedTankMGPawn'))
         {
@@ -3549,9 +3549,9 @@ exec function ShrinkHUD()
         {
             DH_ROWheeledVehicle(PawnOwner).ShrinkHUD();
         }
-        else if (PawnOwner.IsA('DH_ROTankCannonPawn'))
+        else if (PawnOwner.IsA('DHTankCannonPawn'))
         {
-            DH_ROTankCannonPawn(PawnOwner).ShrinkHUD();
+            DHTankCannonPawn(PawnOwner).ShrinkHUD();
         }
         else if (PawnOwner.IsA('DHMountedTankMGPawn'))
         {

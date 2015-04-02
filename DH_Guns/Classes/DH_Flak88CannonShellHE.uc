@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak88CannonShellHE extends DH_ROTankCannonShellHE;
+class DH_Flak88CannonShellHE extends DHTankCannonShellHE;
 
 defaultproperties
 {

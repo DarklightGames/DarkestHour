@@ -260,7 +260,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
-        if (HitVehicleWeapon.IsA('DH_ROTankCannon') && !DH_ROTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
+        if (HitVehicleWeapon.IsA('DHTankCannon') && !DHTankCannon(HitVehicleWeapon).DHShouldPenetrate(Class, HitLocation, Normal(Velocity), GetPenetration(LaunchLocation - HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -457,12 +457,13 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
     // Round may shatter on vehicle armor
     else if (bShatterProne)
     {
-        if (DH_ROTankCannon(HitActor) != none)
+        if (
+        (HitActor) != none)
         {
-            if (DH_ROTankCannon(HitActor).bRoundShattered)
+            if (DHTankCannon(HitActor).bRoundShattered)
             {
                 bShattered = true;
-                DH_ROTankCannon(HitActor).bRoundShattered = false; // reset for next hit
+                DHTankCannon(HitActor).bRoundShattered = false; // reset for next hit
             }
         }
         else if (DH_ROTreadCraft(HitActor) != none && DH_ROTreadCraft(HitActor).bRoundShattered)

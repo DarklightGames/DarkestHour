@@ -1676,9 +1676,9 @@ simulated function SetEngine()
         }
     }
 
-    if (CannonTurret != none && DH_ROTankCannonPawn(CannonTurret.Owner) != none)
+    if (CannonTurret != none && DHTankCannonPawn(CannonTurret.Owner) != none)
     {
-        DH_ROTankCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
+        DHTankCannonPawn(CannonTurret.Owner).SetManualTurret(bEngineOff);
     }
 }
 
@@ -2459,7 +2459,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Optics hit");
                 }
 
-                DH_ROTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
+                DHTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
             }
             else if (NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
             {
@@ -2471,7 +2471,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Turret ring hit");
                 }
 
-                DH_ROTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
+                DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
             }
             else if (NewVehHitpoints[i].NewHitPointType == NHP_GunPitch && bProjectilePenetrated == true) // useful for assault guns
             {
@@ -2480,7 +2480,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     Level.Game.Broadcast(self, "Gun pivot hit");
                 }
 
-                DH_ROTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
+                DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
             }
         }
     }
@@ -2530,14 +2530,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Optics destroyed");
                     }
 
-                    DH_ROTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
+                    DHTankCannonPawn(WeaponPawns[0]).DamageCannonOverlay();
                 }
 
                 if (FRand() < Damage/GunDamageChance)
                 {
                     if (bDebuggingText)
                     Level.Game.Broadcast(self, "Gun Pivot Damaged");
-                    DH_ROTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
+                    DHTankCannonPawn(WeaponPawns[0]).bGunPivotDamaged = true;
                 }
 
                 if (FRand() < Damage/TraverseDamageChance)
@@ -2547,7 +2547,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         Level.Game.Broadcast(self, "Traverse Damaged");
                     }
 
-                    DH_ROTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
+                    DHTankCannonPawn(WeaponPawns[0]).bTurretRingDamaged = true;
                 }
             }
 
@@ -2807,9 +2807,9 @@ simulated function Timer()
         {
             bTurretFireNeeded = false;
 
-            if (DH_ROTankCannon(CannonTurret) != none)
+            if (DHTankCannon(CannonTurret) != none)
             {
-                DH_ROTankCannon(CannonTurret).StartTurretFire();
+                DHTankCannon(CannonTurret).StartTurretFire();
             }
         }
 

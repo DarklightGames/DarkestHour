@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2341Cannon extends DH_ROTankCannon;
+class DH_Sdkfz2341Cannon extends DHTankCannon;
 
 var()   byte    NumMags; // Matt: changed all Mags variables from int to byte for more efficient replication
 var()   byte    NumSecMags;

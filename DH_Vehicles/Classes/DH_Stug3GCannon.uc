@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GCannon extends DH_ROTankCannon;
+class DH_Stug3GCannon extends DHTankCannon;
 
 defaultproperties
 {

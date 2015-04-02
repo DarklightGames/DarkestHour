@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanFireFlyCannonShellAPDS extends DH_ROTankCannonShellAPDS;
+class DH_ShermanFireFlyCannonShellAPDS extends DHTankCannonShellAPDS;
 
 defaultproperties
 {

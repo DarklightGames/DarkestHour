@@ -5,7 +5,7 @@
 
 // Matt: this class is deprecated, as functions that used to use HVAPlarge now use RoundType = HVAP and simply lookup the projectile's default ShellDiameter
 // But retained as legacy so that classes that extend from here & aren't edited will not break
-class DH_ROTankCannonShellHVAP90 extends DH_ROTankCannonShellHVAP
+class DHTankCannonShellHVAP90 extends DHTankCannonShellHVAP
     abstract;
 
 defaultproperties
