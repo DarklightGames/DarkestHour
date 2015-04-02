@@ -221,7 +221,7 @@ simulated function InitEffects()
 
 // Matt: new generic function to handle 'should penetrate' calcs for any shell type
 // Replaces DHShouldPenetrateAPC, DHShouldPenetrateAPDS, DHShouldPenetrateHVAP, DHShouldPenetrateHVAPLarge, DHShouldPenetrateHEAT (also DO's DHShouldPenetrateAP & DHShouldPenetrateAPBC)
-simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
     local float   WeaponRotationDegrees, HitAngleDegrees, Side, InAngle, InAngleDegrees;
     local vector  LocDir, HitDir, X, Y, Z;
@@ -500,7 +500,7 @@ simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, v
 
 // Matt: new generic function to handle penetration calcs for any shell type
 // Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT (also Darkest Orchestra's PenetrationAP & PenetrationAPBC)
-simulated function bool CheckPenetration(class<DH_ROAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
+simulated function bool CheckPenetration(class<DHAntiVehicleProjectile> P, float ArmorFactor, float CompoundAngle, float PenetrationNumber)
 {
     local float CompoundAngleDegrees, OverMatchFactor, SlopeMultiplier, EffectiveArmor, PenetrationRatio;
 
@@ -570,7 +570,7 @@ simulated function float GetCompoundAngle(float AOI, float ArmorSlopeDegrees)
 }
 
 // Matt: new generic function to work with generic DHShouldPenetrate & CheckPenetration functions
-simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
+simulated function float GetArmorSlopeMultiplier(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, optional float OverMatchFactor)
 {
     local float CompoundExp, CompoundAngleFixed;
     local float RoundedDownAngleDegrees, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, SlopeMultiplierGap;
@@ -642,7 +642,7 @@ simulated function float GetArmorSlopeMultiplier(class<DH_ROAntiVehicleProjectil
 }
 
 // Matt: new generic function to work with new GetArmorSlopeMultiplier for APC shells (also handles Darkest Orchestra's AP & APBC shells)
-simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
+simulated function float ArmorSlopeTable(class<DHAntiVehicleProjectile> P, float CompoundAngleDegrees, float OverMatchFactor)
 {
     // after Bird & Livingston:
     if (P.default.RoundType == RT_AP) // from Darkest Orchestra
@@ -707,7 +707,7 @@ simulated function float ArmorSlopeTable(class<DH_ROAntiVehicleProjectile> P, fl
 }
 
 // Matt: new generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
-simulated function bool CheckIfShatters(class<DH_ROAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
+simulated function bool CheckIfShatters(class<DHAntiVehicleProjectile> P, float PenetrationRatio, optional float OverMatchFactor)
 {
     if (P.default.RoundType == RT_HVAP)
     {

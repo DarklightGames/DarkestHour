@@ -41,7 +41,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
         bHitWorldObject = true;
     }
 
-    // From here is the standard function from DH_ROAntiVehicleProjectile
+    // From here is the standard function from DHAntiVehicleProjectile
     if ((Wall.Base != none && Wall.Base == Instigator) || SavedHitActor == Wall || Wall.bDeleteMe)
     {
         return;
@@ -96,7 +96,7 @@ simulated singular function HitWall(vector HitNormal, Actor Wall)
     }
 
     Explode(Location + ExploWallOut * HitNormal, HitNormal);
-    // End of the standard function from DH_ROAntiVehicleProjectile // Matt: TEST - should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
+    // End of the standard function from DHAntiVehicleProjectile // Matt: TEST - should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
 
     bInHitWall = true;
 
@@ -187,7 +187,7 @@ simulated function WorldPenetrationExplode(vector HitLocation, vector HitNormal)
             bDidPenetrationExplosionFX = true;
         }
 
-        super(DH_ROAntiVehicleProjectile).Explode(HitLocation, HitNormal);
+        super(DHAntiVehicleProjectile).Explode(HitLocation, HitNormal);
     }
 }
 

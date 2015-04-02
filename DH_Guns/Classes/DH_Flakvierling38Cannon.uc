@@ -257,7 +257,7 @@ simulated function InitEffects()
 }
 
 // Added the following functions from DH_ATGunCannon, as parent Sd.Kfz.234/1 armoured car cannon extends DH_ROTankCannon:
-simulated function bool DHShouldPenetrate(class<DH_ROAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
+simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vector HitLocation, vector HitRotation, float PenetrationNumber)
 {
    return true;
 }

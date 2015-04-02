@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ROAntiVehicleProjectile extends ROAntiVehicleProjectile
+class DHAntiVehicleProjectile extends ROAntiVehicleProjectile
     config(DH_Penetration) // Matt: added (like DH_Bullet) so bDebugBallistics can be set easily in a config file
     abstract;
 
@@ -582,7 +582,7 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
         }
     }
 
-    super(DH_ROAntiVehicleProjectile).Explode(HitLocation, HitNormal);
+    super(DHAntiVehicleProjectile).Explode(HitLocation, HitNormal);
 }
 
 simulated function DoShakeEffect()

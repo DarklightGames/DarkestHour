@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-// Matt: originally extended DH_ROAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that
+// Matt: originally extended DHAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that
 class DH_RocketProj extends DH_ROTankCannonShellHEAT
     abstract;
 
@@ -32,7 +32,7 @@ simulated function PostBeginPlay()
         Velocity = 0.6 * Velocity;
     }
 
-    super(DH_ROAntiVehicleProjectile).PostBeginPlay();
+    super(DHAntiVehicleProjectile).PostBeginPlay();
 
     SetTimer(StraightFlightTime, false); // Matt: added so we can cut off the rocket engine effects when out of propellant, instead of using Tick
 }
