@@ -472,16 +472,18 @@ function bool InternalOnClick(GUIComponent Sender)
                         // Set SpawnVehiclePoint and clear pool & spawnpoint value, as we clicked a spawnvehicle point
                         MyDeployMenu.ChangeSpawnIndices(255, 255, b_SpawnVehicles[i].Tag);
                     }
+
                     break;
                 }
             }
+
             break;
     }
+
     return false;
 }
 
 
-// TODO strings need to be made localized
 function bool DrawDeployTimer(Canvas C)
 {
     local float P; // Progress
@@ -578,6 +580,7 @@ function bool DrawDeployTimer(Canvas C)
     {
         bReadyToDeploy = false;
     }
+
     return false;
 }
 
