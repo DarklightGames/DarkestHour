@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FG42Ammo extends DH_Ammunition;
+class DH_FG42Ammo extends DHAmmunition;
 
 defaultproperties
 {

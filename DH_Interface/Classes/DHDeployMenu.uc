@@ -76,15 +76,17 @@ var ETab                                    Tab;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
     DHP = DHPlayer(PlayerOwner());
+
     if (DHP == none)
     {
         return;
     }
 
     DHGRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
+
     if (DHGRI == none)
     {
         return;
@@ -102,7 +104,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     else
     {
         // Have timer search for team if we didn't get one
-        SetTimer(0.1,true);
+        SetTimer(0.1, true);
     }
 
     // Makes this menu not pause in single-player
@@ -154,6 +156,7 @@ function InitializeMenuOptions()
         {
             continue;
         }
+
         b_MenuOptions[i].Caption = MenuOptions[i];
         MenuOptionsContainer.ManageComponent(b_MenuOptions[i]);
     }
@@ -172,7 +175,7 @@ function HandlePanelInitialization()
     }
 
     // Initialize loadout panels
-    for (i = 0;i<LoadoutPanelClass.Length;++i)
+    for (i = 0; i < LoadoutPanelClass.Length; ++i)
     {
         // Check if we have a vehicle pool index set and are dealing with role panel
         if (bVehicleTabActive && i == 1)
@@ -186,7 +189,7 @@ function HandlePanelInitialization()
     }
 
     // Initialize deployment panel(s)
-    for (i = 0;i<DeploymentPanelClass.Length;++i)
+    for (i = 0; i < DeploymentPanelClass.Length; ++i)
     {
         c_DeploymentMapArea.AddTab(DeploymentPanelCaption[i],DeploymentPanelClass[i],,DeploymentPanelHint[i]);
     }
@@ -353,8 +356,6 @@ function ChangeSpawnIndices(byte NewSpawnPointIndex, byte NewVehiclePoolIndex, b
     {
         SpawnVehicleIndex = 255;
     }
-
-    //Log("SP: " $ SpawnPointIndex @ "VP: " $ VehiclePoolIndex @ "SV: " $ SpawnVehicleIndex);
 }
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
@@ -405,19 +406,20 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 static function string getErrorMessageForId(int id)
 {
     local string error_msg;
+
     switch (id)
     {
         // TEAM CHANGE ERROR
-        case 01: // Couldn't switch to spectator: no player replication info
+        case 1: // Couldn't switch to spectator: no player replication info
             error_msg = default.UnknownErrorMessageText $ default.UnknownErrorSpectatorMissingReplicationInfo;
             break;
 
-        case 02: // Couldn't switch to spectator: out of spectator slots
+        case 2: // Couldn't switch to spectator: out of spectator slots
             error_msg = default.SpectatorErrorTooManySpectators;
             break;
 
-        case 03: // Couldn't switch to spectator: game has ended
-        case 04: // Couldn't switch to spectator: round has ended
+        case 3: // Couldn't switch to spectator: game has ended
+        case 4: // Couldn't switch to spectator: round has ended
             error_msg = default.SpectatorErrorRoundHasEnded;
             break;
 
@@ -487,13 +489,6 @@ static function string getErrorMessageForId(int id)
 
 function OnClose(optional bool bCancelled)
 {
-/*
-    // Attempt to update server with new information if any
-    if (SpawnPointIndex != DHP.SpawnPointIndex || VehiclePoolIndex != DHP.VehiclePoolIndex || SpawnVehicleIndex != DHP.SpawnVehicleIndex)
-    {
-        DHP.ServerChangeSpawn(SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex);
-    }
-*/
 }
 
 function CloseMenu()

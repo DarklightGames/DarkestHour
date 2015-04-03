@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BrenAmmo extends DH_Ammunition;
+class DH_BrenAmmo extends DHAmmunition;
 
 defaultproperties
 {

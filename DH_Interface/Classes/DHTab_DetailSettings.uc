@@ -5,38 +5,469 @@
 
 class DHTab_DetailSettings extends ROTab_DetailSettings;
 
+function SetupPositions()
+{
+    super.SetupPositions();
+
+    sb_Section2.UnmanageComponent(co_ScopeDetail);
+}
+
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    super.InitComponent(MyController, MyOwner);
+
+    RemoveComponent(co_ScopeDetail);
+}
+
 //Overrided to remove extra options for scope detail
-function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Ar)
+function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Options)
 {
     local int i;
 
-    Ar.Remove(0, Ar.Length);
+    Options.Remove(0, Options.Length);
+
     if (Combo == none)
+    {
         return;
+    }
 
     switch (Combo)
     {
         case co_GlobalDetails:
             for (i = 0; i < arraycount(DetailOptions); ++i)
             {
-                Ar.Length = Ar.Length + 1;
-                Ar[i].Item = DetailOptions[i];
+                Options.Length = Options.Length + 1;
+                Options[i].Item = DetailOptions[i];
             }
-            break;
-
-        case co_ScopeDetail:
-            Ar.Length = Ar.Length + 1;
-            Ar[i].Item = ScopeLevels[0];
             break;
     }
 
-    if (Ar.Length == 0)
-        GetComboOptions(Combo, Ar);
+    if (Options.Length == 0)
+    {
+        GetComboOptions(Combo, Options);
+    }
+}
+
+function InternalOnLoadINI(GUIComponent Sender, string s)
+{
+    local PlayerController PC;
+    local string tempStr;
+    local bool a, b;
+
+    PC = PlayerOwner();
+
+    switch (Sender)
+    {
+        case co_GlobalDetails:
+            iGlobalDetails = class'ROPlayer'.default.GlobalDetailLevel;
+            iGlobalDetailsD = iGlobalDetails;
+            co_GlobalDetails.SilentSetIndex(iGlobalDetails);
+            ch_Advanced.SetComponentValue(iGlobalDetailsD == MAX_DETAIL_OPTIONS, true);
+            break;
+
+        case ch_MotionBlur:
+            bMotionBlur =  bool(PC.ConsoleCommand("get ROEngine.ROPlayer bUseBlurEffect"));
+            bMotionBlurD = bMotionBlur;
+            ch_MotionBlur.SetComponentValue(bMotionBlur,true);
+            break;
+
+        case ch_HDR:
+            bHDR = bool(PC.ConsoleCommand("get ini:Engine.Engine.ViewportManager Bloom"));
+            bHDRD = bHDR;
+            ch_HDR.SetComponentValue(bHDR,true);
+            break;
+
+        case ch_Advanced:
+            break; // value is set by co_GlobalDetails
+
+        // copied from UT2K4Tab_DetailSettings
+        case co_Shadows:
+            tempStr = GetNativeClassName("Engine.Engine.RenderDevice");
+
+            // No render-to-texture on anything but Direct3D.
+            if ((tempStr == "D3DDrv.D3DRenderDevice") ||
+                (tempStr == "D3D9Drv.D3D9RenderDevice"))
+            {
+                a = bool(PC.ConsoleCommand("get ROEngine.ROPawn bPlayerShadows"));
+                b = bool(PC.ConsoleCommand("get ROEngine.ROPawn bBlobShadow"));
+
+                if (b)
+                    iShadow = 1;
+                else if (a)
+                    iShadow = 2;
+                else
+                    iShadow = 0;
+            }
+            else
+            {
+                b = bool(PC.ConsoleCommand("get ROEngine.ROPawn bBlobShadow"));
+                if (b)
+                    iShadow = 1;
+                else
+                    iShadow = 0;
+            }
+
+            iShadowD = iShadow;
+            co_Shadows.SilentSetIndex(iShadow);
+            break;
+
+        default:
+            super(UT2K4Tab_DetailSettings).InternalOnLoadINI(sender, s);
+    }
+
+    // Post-super checks
+    switch (Sender)
+    {
+        case co_RenderDevice:
+            DisableHDRControlIfNeeded();
+
+            // Disable control if card doesn't support hdr
+            if (ROPlayer(PlayerOwner()) != none)
+                if (!ROPlayer(PlayerOwner()).PostFX_IsBloomCapable())
+                    ch_HDR.DisableMe();
+
+            break;
+    }
+}
+
+function InternalOnChange(GUIComponent Sender)
+{
+    local bool bGoingUp;
+    local int i;
+
+    super(UT2K4Tab_DetailSettings).InternalOnChange(Sender);
+
+    if (bIgnoreChange)
+        return;
+
+    switch (Sender)
+    {
+        // These changes are saved together on SaveSettings
+        case co_GlobalDetails:
+            i = co_GlobalDetails.GetIndex();
+            bGoingUp = i > iGlobalDetails && i != iGlobalDetailsD && (i != MAX_DETAIL_OPTIONS - 1);
+            iGlobalDetails = i;
+            //ch_Advanced.SetComponentValue(i == MAX_DETAIL_OPTIONS, true);
+            UpdateGlobalDetails();
+            break;
+
+        case ch_MotionBlur:
+            bMotionBlur = ch_MotionBlur.IsChecked();
+            bGoingUp = bMotionBlur && bMotionBlur != bMotionBlurD;
+            break;
+
+        case ch_HDR:
+            bHDR = ch_HDR.IsChecked();
+            bGoingUp = bHDR && bHDR != bHDRD;
+            break;
+
+        case ch_Advanced:
+            if (ch_Advanced.IsChecked())
+            {
+                iGlobalDetails = MAX_DETAIL_OPTIONS - 1;
+                co_GlobalDetails.SilentSetIndex(iGlobalDetails);
+            }
+            UpdateGlobalDetailsVisibility();
+            break;
+    }
+
+    if (bGoingUp)
+        ShowPerformanceWarning();
+}
+
+function UpdateGlobalDetails()
+{
+    local PlayerController PC;
+    PC = PlayerOwner();
+
+    UpdateGlobalDetailsVisibility();
+
+    if (iGlobalDetails == MAX_DETAIL_OPTIONS - 1)
+        return; // do not change settings if we picked custom
+
+    bShowPerfWarning = false;
+
+    switch (iGlobalDetails)
+    {
+        case 0: // Lowest
+            co_Texture.SetIndex(0);         // Range = 0 - 8
+            co_Char.SetIndex(0);            // Range = 0 - 8
+            co_World.SetIndex(0);           // Range = 0 - 2
+            co_Physics.setindex(0);         // Range = 0 - 2
+            co_Decal.setindex(0);           // Range = 0 - 2
+            co_Shadows.setindex(0);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.setindex(0);         // Range = 0 - 3
+            co_MultiSamples.setindex(0);
+            co_Anisotropy.setindex(0);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            ch_Decals.SetComponentValue(false, false);
+            ch_DynLight.SetComponentValue(false, false);
+            ch_Coronas.SetComponentValue(false, false);
+            ch_Textures.SetComponentValue(false, false);
+            ch_Projectors.SetComponentValue(false, false);
+            ch_DecoLayers.SetComponentValue(false, false);
+            ch_Trilinear.SetComponentValue(false, false);
+            ch_Weather.SetComponentValue(false, false);
+            ch_DecoLayers.SetComponentValue(false, false);
+            ch_MotionBlur.SetComponentValue(true, false);
+            sl_DistanceLOD.SetComponentValue(0.25, false); // Range = 0.0 - 1.0
+            ch_HDR.SetComponentValue(false, false);
+            break;
+
+        case 1: // Low
+            co_Texture.SetIndex(3);         // Range = 0 - 8
+            co_Char.SetIndex(3);            // Range = 0 - 8
+            co_World.SetIndex(0);           // Range = 0 - 2
+            co_Physics.setindex(0);         // Range = 0 - 2
+            co_Decal.setindex(1);           // Range = 0 - 2
+            co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.setindex(1);         // Range = 0 - 3
+            co_MultiSamples.setindex(0);
+
+            if (AnisotropyModes.Length>1)
+                 co_Anisotropy.SetIndex(1);
+            else
+                 co_Anisotropy.setindex(0);
+
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            ch_Decals.SetComponentValue(true, false);
+            ch_DynLight.SetComponentValue(false, false);
+            ch_Coronas.SetComponentValue(true, false);
+            ch_Textures.SetComponentValue(false, false);
+            ch_Projectors.SetComponentValue(true, false);
+            ch_DecoLayers.SetComponentValue(true, false);
+            ch_Trilinear.SetComponentValue(false, false);
+            ch_Weather.SetComponentValue(true, false);
+            ch_MotionBlur.SetComponentValue(true, false);
+            sl_DistanceLOD.SetComponentValue(0.50, false); // Range = 0.0 - 1.0
+            ch_HDR.SetComponentValue(false, false);
+            break;
+
+        case 2: // Medium
+            co_Texture.SetIndex(5);         // Range = 0 - 8
+            co_Char.SetIndex(5);            // Range = 0 - 8
+            co_World.SetIndex(1);           // Range = 0 - 2
+            co_Physics.setindex(1);         // Range = 0 - 2
+            co_Decal.setindex(1);           // Range = 0 - 2
+            co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.setindex(2);         // Range = 0 - 3
+            co_MultiSamples.setindex(0);
+
+            if (AnisotropyModes.Length>2)
+                 co_Anisotropy.setindex(2);
+            else if (AnisotropyModes.Length>1)
+                 co_Anisotropy.SetIndex(1);
+            else
+                 co_Anisotropy.setindex(0);
+
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            ch_Decals.SetComponentValue(true, false);
+            ch_DynLight.SetComponentValue(true, false);
+            ch_Coronas.SetComponentValue(true, false);
+            ch_Textures.SetComponentValue(true, false);
+            ch_Projectors.SetComponentValue(true, false);
+            ch_DecoLayers.SetComponentValue(true, false);
+            ch_Trilinear.SetComponentValue(false, false);
+            ch_Weather.SetComponentValue(true, false);
+            ch_MotionBlur.SetComponentValue(true, false);
+            sl_DistanceLOD.SetComponentValue(0.75, false); // Range = 0.0 - 1.0
+            ch_HDR.SetComponentValue(false, false);
+            break;
+
+        case 3: // High
+            co_Texture.SetIndex(6);         // Range = 0 - 8
+            co_Char.SetIndex(6);            // Range = 0 - 8
+            co_World.SetIndex(2);           // Range = 0 - 2
+            co_Physics.setindex(1);         // Range = 0 - 2
+            co_Decal.setindex(2);           // Range = 0 - 2
+            co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.setindex(2);         // Range = 0 - 3
+            co_MultiSamples.setindex(0);
+
+            if (MultiSampleModes.Length>1)
+                 co_MultiSamples.setindex(1);
+            else
+                 co_MultiSamples.setindex(0);
+
+            if (AnisotropyModes.Length>3)
+                 co_Anisotropy.setindex(3);
+            else if (AnisotropyModes.Length>2)
+                 co_Anisotropy.setindex(2);
+            else if (AnisotropyModes.Length>1)
+                 co_Anisotropy.SetIndex(1);
+            else
+                 co_Anisotropy.setindex(0);
+
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            ch_Decals.SetComponentValue(true, false);
+            ch_DynLight.SetComponentValue(true, false);
+            ch_Coronas.SetComponentValue(true, false);
+            ch_Textures.SetComponentValue(true, false);
+            ch_Projectors.SetComponentValue(true, false);
+            ch_DecoLayers.SetComponentValue(true, false);
+            ch_Trilinear.SetComponentValue(false, false);
+            ch_Weather.SetComponentValue(true, false);
+            ch_MotionBlur.SetComponentValue(true, false);
+            sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            ch_HDR.SetComponentValue(true, false);
+            break;
+
+        case 4: // Higher
+            co_Texture.SetIndex(7);         // Range = 0 - 8
+            co_Char.SetIndex(7);            // Range = 0 - 8
+            co_World.SetIndex(2);           // Range = 0 - 2
+            co_Physics.setindex(1);         // Range = 0 - 2
+            co_Decal.setindex(2);           // Range = 0 - 2
+            co_Shadows.setindex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.setindex(2);         // Range = 0 - 3
+
+            if (MultiSampleModes.Length>2)
+                 co_MultiSamples.setindex(2);
+            else if (MultiSampleModes.Length>1)
+                 co_MultiSamples.setindex(1);
+            else
+                 co_MultiSamples.setindex(0);
+
+            if (AnisotropyModes.Length>3)
+                 co_Anisotropy.setindex(3);
+            else if (AnisotropyModes.Length>2)
+                 co_Anisotropy.SetIndex(2);
+            else if (AnisotropyModes.Length>1)
+                 co_Anisotropy.SetIndex(1);
+            else
+                 co_Anisotropy.setindex(0);
+
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(true,false);
+            ch_Decals.SetComponentValue(true, false);
+            ch_DynLight.SetComponentValue(true, false);
+            ch_Coronas.SetComponentValue(true, false);
+            ch_Textures.SetComponentValue(true, false);
+            ch_Projectors.SetComponentValue(true, false);
+            ch_DecoLayers.SetComponentValue(true, false);
+            ch_Trilinear.SetComponentValue(false, false);
+            ch_Weather.SetComponentValue(true, false);
+            ch_MotionBlur.SetComponentValue(true, false);
+            sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            ch_HDR.SetComponentValue(true, false);
+            break;
+
+        case 5: // Highest
+            co_Texture.SetIndex(8);         // Range = 0 - 8
+            co_Char.SetIndex(8);            // Range = 0 - 8
+            co_World.SetIndex(2);           // Range = 0 - 2
+            co_Physics.setindex(2);         // Range = 0 - 2
+            co_Decal.setindex(2);           // Range = 0 - 2
+            co_Shadows.setindex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.setindex(3);         // Range = 0 - 3
+
+            if (
+                  (
+                      (true==bool(PC.ConsoleCommand("ISNVIDIAGPU")))
+                       && (false==bool(PC.ConsoleCommand("SUPPORTEDMULTISAMPLE 4"))
+                  )
+                   || (false==bool(PC.ConsoleCommand("ISNVIDIAGPU"))))
+                   && (MultiSampleModes.Length>3)
+              )
+                 co_MultiSamples.setindex(3);
+            else if (MultiSampleModes.Length>2)
+                 co_MultiSamples.setindex(2);
+            else if (MultiSampleModes.Length>1)
+                 co_MultiSamples.setindex(1);
+            else
+                 co_MultiSamples.setindex(0);
+
+            co_Anisotropy.setindex(AnisotropyModes.Length-1);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(true,false);
+            ch_Decals.SetComponentValue(true, false);
+            ch_DynLight.SetComponentValue(true, false);
+            ch_Coronas.SetComponentValue(true, false);
+            ch_Textures.SetComponentValue(true, false);
+            ch_Projectors.SetComponentValue(true, false);
+            ch_DecoLayers.SetComponentValue(true, false);
+            ch_Trilinear.SetComponentValue(true, false);
+            ch_Weather.SetComponentValue(true, false);
+            ch_MotionBlur.SetComponentValue(true, false);
+            sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            ch_HDR.SetComponentValue(true, false);
+            break;
+    }
+
+    bShowPerfWarning = true;
+}
+
+function SaveSettings()
+{
+    local PlayerController PC;
+    local bool bSavePlayerConfig;
+
+    super(UT2K4Tab_DetailSettings).SaveSettings();
+
+    PC = PlayerOwner();
+
+    if (bMotionBlur != bMotionBlurD)
+    {
+        class'ROEngine.ROPlayer'.default.bUseBlurEffect = bMotionBlur;
+        bSavePlayerConfig = true;
+
+        if (ROPlayer(PC) != none)
+            ROPlayer(PC).bUseBlurEffect = bMotionBlur;
+
+        bMotionBlurD = bMotionBlur;
+    }
+
+    if (bHDR != bHDRD)
+    {
+        PC.ConsoleCommand("set ini:Engine.Engine.ViewportManager Bloom"@bHDR);
+
+        if (ROPlayer(PC) != none)
+        {
+            ROPlayer(PC).PostFX_SetActive(0, bHDR);
+        }
+
+        bHDRD = bHDR;
+    }
+
+    if (iGlobalDetails != iGlobalDetailsD)
+    {
+        class'ROEngine.ROPlayer'.default.GlobalDetailLevel = iGlobalDetails;
+        bSavePlayerConfig = true;
+
+        iGlobalDetailsD = iGlobalDetails;
+    }
+
+    if (iShadow != iShadowD)
+    {
+        if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
+        {
+            ROPawn(PC.Pawn).bBlobShadow = iShadow == 1;
+            ROPawn(PC.Pawn).bPlayerShadows = iShadow > 0;
+        }
+
+        class'ROPawn'.default.bBlobShadow = iShadow == 1;
+        class'ROPawn'.default.bPlayerShadows = iShadow > 0;
+        iShadowD = iShadow;
+
+        if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
+            ROPawn(PC.Pawn).SaveConfig();
+        else
+            class'ROPawn'.static.StaticSaveConfig();
+
+        UpdateShadows(iShadow == 1, iShadow > 0);
+    }
+
+    if (class'Vehicle'.default.bVehicleShadows != (iShadow > 0))
+    {
+        class'Vehicle'.default.bVehicleShadows = iShadow > 0;
+        class'Vehicle'.static.StaticSaveConfig();
+        UpdateVehicleShadows(iShadow > 0);
+    }
+
+    if (bSavePlayerConfig)
+       class'ROEngine.ROPlayer'.static.StaticSaveConfig();
 }
 
 defaultproperties
 {
-    ScopeLevels(0)="Textured"
     DisplayModes(0)=(Width=1280,Height=720)
     DisplayModes(1)=(Width=1024,Height=768)
     DisplayModes(2)=(Width=1280,Height=768)
@@ -69,21 +500,6 @@ defaultproperties
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
     co_GlobalDetails=DHmoComboBox'DH_Interface.DHTab_DetailSettings.GlobalDetails'
-    Begin Object Class=DHmoComboBox Name=ScopeDetail
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.65
-        Caption="Scope Detail"
-        OnCreateComponent=ScopeDetail.InternalOnCreateComponent
-        IniOption="@Internal"
-        IniDefault="Textured"
-        WinTop=0.063021
-        WinLeft=0.55
-        WinWidth=0.4
-        TabOrder=9
-        OnChange=DHTab_DetailSettings.InternalOnChange
-        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
-    End Object
-    co_ScopeDetail=DHmoComboBox'DH_Interface.DHTab_DetailSettings.ScopeDetail'
     Begin Object Class=DHmoCheckBox Name=HDRCheckbox
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94

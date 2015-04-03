@@ -378,7 +378,7 @@ function SpawnClick()
     MyRoleMenu.AttemptDeployApplication(true);
 }
 
-function bool ConfirmIndices()
+function bool IndicesAreValid()
 {
     // If we are trying to spawn vehicle, but no pool selected : return false
     if (MyDeployMenu.Tab == TAB_Vehicle && MyDeployMenu.VehiclePoolIndex == 255)
@@ -472,16 +472,18 @@ function bool InternalOnClick(GUIComponent Sender)
                         // Set SpawnVehiclePoint and clear pool & spawnpoint value, as we clicked a spawnvehicle point
                         MyDeployMenu.ChangeSpawnIndices(255, 255, b_SpawnVehicles[i].Tag);
                     }
+
                     break;
                 }
             }
+
             break;
     }
+
     return false;
 }
 
 
-// TODO strings need to be made localized
 function bool DrawDeployTimer(Canvas C)
 {
     local float P; // Progress
@@ -507,7 +509,7 @@ function bool DrawDeployTimer(Canvas C)
     }
 
     // Handle button (enabled/disabled)
-    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (ConfirmIndices() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
+    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (IndicesAreValid() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
     {
         // match started, team not out of reinforcements, have legit indices, and no pawn
         if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, MyRoleMenu.desiredRole))
@@ -544,7 +546,7 @@ function bool DrawDeployTimer(Canvas C)
     {
         b_DeployButton.Caption = DeployBarText[6]; // "Round not in play"
     }
-    else if (!ConfirmIndices())
+    else if (!AreIndicesValid())
     {
         b_DeployButton.Caption = DeployBarText[0]; // "Make sure you have a role and/or vehicle selected"
     }
@@ -578,6 +580,7 @@ function bool DrawDeployTimer(Canvas C)
     {
         bReadyToDeploy = false;
     }
+
     return false;
 }
 
