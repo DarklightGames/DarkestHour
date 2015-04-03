@@ -3,10 +3,4 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHLocationHintInfantryAxis extends DHLocationHint
-    placeable;
-
-defaultproperties
-{
-    Texture=texture'DHEngine_Tex.Axis_LocationHint'
-}
+class DHLocationHintInfantryAxis extends DHDeprecated;

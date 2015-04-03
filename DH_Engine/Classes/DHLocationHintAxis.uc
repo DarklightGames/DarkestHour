@@ -2,5 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2015
 //==============================================================================
+class DHLocationHintAxis extends DHLocationHint
+    placeable;
 
-class DHLocationHintVehicleAllies extends DHDeprecated;
+defaultproperties
+{
+    Texture=texture'DHEngine_Tex.Axis_LocationHint'
+}
