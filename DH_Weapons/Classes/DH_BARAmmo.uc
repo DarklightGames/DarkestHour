@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BARAmmo extends DH_Ammunition;
+class DH_BARAmmo extends DHAmmunition;
 
 defaultproperties
 {
