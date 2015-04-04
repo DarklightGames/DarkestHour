@@ -7,6 +7,14 @@ class DHWireCuttersItem extends DHWeapon;
 
 var name        CutAnim;
 var DHObstacle  ObstacleBeingCut;
+var float       CutDistance;
+
+var enum ECuttingState
+{
+    CS_None,
+    CS_Cutting,
+    CS_P
+} CuttingState;
 
 function bool FillAmmo()
 {
@@ -68,6 +76,8 @@ simulated state Cutting
 
         // TODO: swap this out with variable
         PlayAnim(CutAnim);
+
+        SetTimer(ObstacleBeingCut.GetCutDuration(), false);
     }
 
     simulated function EndState()
@@ -82,9 +92,27 @@ simulated state Cutting
         }
     }
 
-    simulated function AnimEnd(int Channel)
+    simulated function Timer()
     {
         local DHPlayer P;
+
+        if (Instigator != none)
+        {
+            P = DHPlayer(Instigator.Controller);
+        }
+
+        if (P != none)
+        {
+            P.ServerClearObstacle(ObstacleBeingCut.Index);
+        }
+
+        GotoState('');
+
+        PlayAnim('cutEnd', 1.0, 0.2);
+    }
+
+    simulated function AnimEnd(int Channel)
+    {
         local name SeqName;
         local float AnimRate, AnimFrame;
 
@@ -107,22 +135,9 @@ simulated state Cutting
                 PlayAnim('cutHout');
                 break;
             case 'cutHout':
-                PlayAnim('cutEnd');
-
-                if (Instigator != none)
-                {
-                    P = DHPlayer(Instigator.Controller);
-
-                    if (P != none && ObstacleBeingCut != none)
-                    {
-                        // Tell server to clear obstacle
-                        P.ServerClearObstacle(ObstacleBeingCut.Index);
-                    }
-
-                    // Get out of cutting state
-                    GotoState('');
-                }
-
+                PlayAnim('cutVin');
+                break;
+            default:
                 break;
         }
     }
@@ -142,7 +157,7 @@ simulated function Fire(float F)
     }
 
     TraceStart = Instigator.Location;
-    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * 100.0; // TODO: adjust this value
+    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * CutDistance; // TODO: adjust this value
 
     foreach TraceActors(class'DHObstacle', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
@@ -196,4 +211,6 @@ defaultproperties
     SprintStartAnim=sprintStart
     SprintLoopAnim=sprintMiddle
     SprintEndAnim=sprintEnd
+    CutDistance=100.0
+    CuttingState=CS_None
 }

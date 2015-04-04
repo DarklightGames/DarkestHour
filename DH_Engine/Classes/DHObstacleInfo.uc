@@ -16,6 +16,7 @@ struct Type
     var()   bool                    bCanBeCut;
     var()   bool                    bCanBeMantled;
     var()   bool                    bCanBeCrushed;
+    var()   float                   CutDuration;
 };
 
 var()   array<Type>         Types;

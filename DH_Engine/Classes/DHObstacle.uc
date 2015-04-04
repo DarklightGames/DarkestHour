@@ -28,14 +28,14 @@ struct UncompressedPosition
     var float ScaleZ;
 };
 
-var()       float                   SpawnClearedChance;
+var() float         SpawnClearedChance;
 
-var config  bool                    bDebug;
+var byte            TypeIndex;
+var int             Index;
+var config bool     bDebug;
 
-var byte                            TypeIndex;
-var int                             Index;
-var private UncompressedPosition    UP;
 var private DHObstacleInfo          Info;
+var private UncompressedPosition    UP;
 
 replication
 {
@@ -80,6 +80,7 @@ simulated function PostNetBeginPlay()
     if (Info == none)
     {
         Destroy();
+
         return;
     }
 
@@ -230,6 +231,11 @@ simulated function bool CanBeCrushed()
 simulated function sound GetClearSound()
 {
     return Info.Types[TypeIndex].ClearSound;
+}
+
+simulated function float GetCutDuration()
+{
+    return Info.Types[TypeIndex].CutDuration;
 }
 
 simulated function class<Emitter> GetClearEmitterClass()
