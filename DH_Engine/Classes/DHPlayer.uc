@@ -48,7 +48,7 @@ var     vector                  MortarHitLocation;
 var     byte                    SpawnPointIndex;
 var     byte                    SpawnVehicleIndex;
 var     byte                    VehiclePoolIndex;
-var     vehicle                 MyLastVehicle;              // used for vehicle spawning to remember last vehicle player spawned (only used by server)
+var     Vehicle                 MyLastVehicle;              // used for vehicle spawning to remember last vehicle player spawned (only used by server)
 
 // Debug:
 var     bool                    bSkyOff;                    // flags that the sky has been turned off (like "show sky" console command in single player)
@@ -2487,14 +2487,14 @@ function ClientFadeFromBlack(float time, optional bool bInvertFadeDirection)
 // This might be a temporary function then that will need removed for non dev work
 exec function Suicide()
 {
-    if ((Pawn != None) && (Level.TimeSeconds - Pawn.LastStartTime > 1))
+    if (Pawn != none && Level.TimeSeconds - Pawn.LastStartTime > 1)
     {
         Pawn.Suicide();
     }
 }
 
-exec function SwitchTeam(){} // Disabled
-exec function ChangeTeam( int N ){} // Disabled
+exec function SwitchTeam() { }
+exec function ChangeTeam(int N) { } // Disabled
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
 function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex)
@@ -2700,7 +2700,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     }
     else
     {
-        ClientChangePlayerInfoResult(00);
+        ClientChangePlayerInfoResult(0);
     }
 }
 
