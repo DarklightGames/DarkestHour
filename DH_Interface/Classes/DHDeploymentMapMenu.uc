@@ -48,16 +48,19 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     local int i;
     local rotator R;
 
-    Super.InitComponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
     DHP = DHPlayer(PlayerOwner());
+
     if (DHP == none)
     {
         return;
     }
+
     GRI = DHGameReplicationInfo(DHP.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
     HUD = DHHud(DHP.myHUD);
+
     if (GRI == none || HUD == none || PRI == none)
     {
         return;
@@ -100,8 +103,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     if (DHP.ClientLevelInfo.SpawnMode == ESM_DarkestHour)
     {
         b_SpawnRoom.SetVisibility(false);
-        b_SpawnRoom.WinWidth=0.0;
-        b_SpawnRoom.WinHeight=0.0;
+        b_SpawnRoom.WinWidth = 0.0;
+        b_SpawnRoom.WinHeight = 0.0;
     }
 
     // Set rotator based on map rotation offset
@@ -125,22 +128,19 @@ function Timer()
     if (HUD != none && GRI != none)
     {
         if (!GRI.bMatchHasBegun)
+        {
             CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
+        }
         else
+        {
             CurrentTime = FMax(0.0, GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime);
+        }
 
         l_RoundTime.Caption = HUD.default.TimeRemainingText $ HUD.GetTimeString(CurrentTime);
         l_ReinforcementCount.Caption = default.ReinforcementText @ string(GRI.DHSpawnCount[DHP.GetTeamNum()]);
 
-        if (GRI.DHSpawnCount[DHP.GetTeamNum()] == 0)
-        {
-            // Inform menu that our team is out of reinforcements and we can't spawn
-            bOutOfReinforcements = true;
-        }
-        else
-        {
-            bOutOfReinforcements = false;
-        }
+        // Inform menu that our team is out of reinforcements and we can't spawn
+        bOutOfReinforcements = GRI.DHSpawnCount[DHP.GetTeamNum()] == 0;
     }
 }
 
@@ -148,9 +148,9 @@ function ClearIcon(GUIGFXButton IconB)
 {
     if (IconB != none)
     {
-        IconB.WinWidth=0.0;
-        IconB.WinHeight=0.0;
         IconB.SetVisibility(false);
+        IconB.WinWidth = 0.0;
+        IconB.WinHeight = 0.0;
     }
 }
 
@@ -378,7 +378,7 @@ function SpawnClick()
     MyRoleMenu.AttemptDeployApplication(true);
 }
 
-function bool IndicesAreValid()
+function bool AreIndicesValid()
 {
     // If we are trying to spawn vehicle, but no pool selected : return false
     if (MyDeployMenu.Tab == TAB_Vehicle && MyDeployMenu.VehiclePoolIndex == 255)
@@ -509,7 +509,7 @@ function bool DrawDeployTimer(Canvas C)
     }
 
     // Handle button (enabled/disabled)
-    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (IndicesAreValid() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
+    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (AreIndicesValid() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
     {
         // match started, team not out of reinforcements, have legit indices, and no pawn
         if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, MyRoleMenu.desiredRole))
@@ -572,14 +572,7 @@ function bool DrawDeployTimer(Canvas C)
     }
 
     // Set bReadyToDeploy based on button
-    if (bButtonEnabled && bProgressComplete)
-    {
-        bReadyToDeploy = true;
-    }
-    else
-    {
-        bReadyToDeploy = false;
-    }
+    bReadyToDeploy = bButtonEnabled && bProgressComplete;
 
     return false;
 }

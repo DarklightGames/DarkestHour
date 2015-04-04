@@ -128,17 +128,21 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function Timer()
 {
+    local ROPlayer C;
+
+    C = ROPlayer(PlayerOwner());
+
     // Leave timer loop if we found a team
     if (bReceivedTeam)
     {
         SetTimer(0.0, false);
     }
 
-    if (!bReceivedTeam && ROPlayer(PlayerOwner()) != none && ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage != -5)
+    if (!bReceivedTeam && C != none && C.ForcedTeamSelectOnRoleSelectPage != -5)
     {
-        ROPlayer(PlayerOwner()).ServerChangePlayerInfo(ROPlayer(PlayerOwner()).ForcedTeamSelectOnRoleSelectPage, 255, 0, 0);
+        C.ServerChangePlayerInfo(C.ForcedTeamSelectOnRoleSelectPage, 255, 0, 0);
 
-        if (PlayerOwner().PlayerReplicationInfo.Team != none)
+        if (C.PlayerReplicationInfo.Team != none)
         {
             // Initialize loadout panels
             HandlePanelInitialization();
@@ -158,6 +162,7 @@ function InitializeMenuOptions()
         }
 
         b_MenuOptions[i].Caption = MenuOptions[i];
+
         MenuOptionsContainer.ManageComponent(b_MenuOptions[i]);
     }
 
@@ -360,14 +365,14 @@ function ChangeSpawnIndices(byte NewSpawnPointIndex, byte NewVehiclePoolIndex, b
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
-    local int result;
+    local int Result;
     local string error_msg;
 
-    if (msg == "notify_gui_role_selection_page")
+    if (Msg == "notify_gui_role_selection_page")
     {
-        result = int(MsgLife);
+        Result = int(MsgLife);
 
-        switch (result)
+        switch (Result)
         {
             case 0: // All is well!
             case 97:
@@ -388,6 +393,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
                     CloseMenu(); // Close menu as deploying
                 }
+
                 return;
 
             default:
