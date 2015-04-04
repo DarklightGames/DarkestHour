@@ -129,7 +129,6 @@ event ClientReset()
 // Calculate free-aim and process recoil
 simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 {
-    // Try to move these to class variables so they aren't created every tick
     local rotator NewPlayerRotation;
     local int     YawAdjust;
     local int     PitchAdjust;
@@ -401,7 +400,6 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     local DH_Pawn   ROPwn;
     local ROWeapon  ROWeap;
 
-    // Lets avoid casting 20 times every tick - Ramm
     ROPwn = DH_Pawn(Pawn);
 
     if (Pawn != none)
