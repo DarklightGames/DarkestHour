@@ -6,13 +6,13 @@
 class DHLocalMessage extends LocalMessage
     abstract;
 
-var()   color       GermanColour;
-var()   color       USColour;
-var()   color       BritishColour;
-var()   color       CanadianColour;
+var color GermanColour;
+var color USColour;
+var color BritishColour;
+var color CanadianColour;
 
-var localized   string  MessagePrefix;
-var localized   string  SpecPrefix;
+var localized string MessagePrefix;
+var localized string SpecPrefix;
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
 {
