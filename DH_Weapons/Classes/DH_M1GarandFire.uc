@@ -109,14 +109,8 @@ function PlayFiring()   // overridden to make last round eject clip & add audibl
 
 defaultproperties
 {
-    PctStandIronRecoil=0.4
-    PctCrouchRecoil=0.85
-    PctCrouchIronRecoil=0.3
-    PctProneRecoil=0.75
-    PctProneIronRecoil=0.25
-    PctLeanPenalty=1.15
-    maxVerticalRecoilAngle=2500
-    maxHorizontalRecoilAngle=500
+    maxVerticalRecoilAngle=1700
+    maxHorizontalRecoilAngle=200
     FirePingSounds(0)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing01'
     FirePingSounds(1)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing02'
     FirePingSounds(2)=SoundGroup'DH_WeaponSounds.M1Garand.garand_firePing03'
@@ -140,7 +134,7 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=200.0)
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
-    ShakeOffsetMag=(X=4.0,Y=1.0,Z=4.0)
+    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=1.0
     ProjectileClass=class'DH_Weapons.DH_M1GarandBullet'
@@ -149,7 +143,7 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSVT'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     aimerror=800.0
-    Spread=100.0
+    Spread=75.0
     HipSpreadModifier=6.5
     SpreadStyle=SS_Random
 }
