@@ -71,9 +71,6 @@ simulated function PostBeginPlay()
             // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the MG
             AttachToBone(CollisionMeshActor, YawBone);
 
-            // Attach col mesh actor to our yaw bone, so the col mesh will rotate with the MG
-            AttachToBone(CollisionMeshActor, YawBone);
-
             // The col mesh actor will be positioned on the yaw bone, so we want to reposition it to align with the MG
             SetRelativeLocation(Location - GetBoneCoords(YawBone).Origin);
         }
@@ -203,7 +200,7 @@ simulated function ClientHandleReload(optional byte PercentageDone)
     if (MGPawn != none && MGPawn.HUDOverlay != none && MGPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
     {
         MGPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
-		MGPawn.HUDOverlay.SetAnimFrame(Float(PercentageDone)); // move reload animation to appropriate point
+        MGPawn.HUDOverlay.SetAnimFrame(Float(PercentageDone)); // move reload animation to appropriate point
     }
 }
 
