@@ -2412,7 +2412,7 @@ simulated function SwayHandler(float DeltaTime)
     if (DHWeapon(P.Weapon) != none)
     {
         timeFactor *= DHWeapon(P.Weapon).SwayModifyFactor;
-        P.IronSightBobFactor = bobFactor * DHWeapon(P.Weapon).BobModifyFactor;
+        //P.IronSightBobFactor = bobFactor * DHWeapon(P.Weapon).BobModifyFactor;
     }
 
     // Add modifiers to sway for time in iron sights and stamina

@@ -25,6 +25,9 @@ var bool bChuteDeleted;
 var bool bHatShotOff;
 var float MinHurtSpeed;                 // When a moving player lands, if they're moving faster than this speed they'll take damage
 
+var float  IronsightBobTime;
+var vector IronsightBob;
+
 var(Sounds) class<DH_PawnSoundGroup> DHSoundGroupClass;
 
 // Radioman
@@ -92,8 +95,12 @@ var bool                bIsCuttingWire;
 var bool                bLockViewRotation;
 var rotator             LockViewRotation;
 
-var float               IronSightBobFactor;
 var float               StanceChangeStaminaDrain; // How much stamina is lost by changing stance
+
+
+var float IronsightBobAmplitude;
+var float IronsightBobFrequency;
+var float IronsightBobDecay;
 
 replication
 {
@@ -3941,6 +3948,44 @@ function SetAmmoPercent(byte AmmoAmount)
     }
 }
 
+simulated function float BobFunction(float T, float Amplitude, float Frequency, float Decay)
+{
+    return Amplitude * ((Sin(Frequency * T)) / (Frequency ** ((Decay / Frequency) * T)));
+}
+
+simulated exec function BobAmplitude(optional float F)
+{
+    if (F == 0)
+    {
+        Level.Game.Broadcast(self, "IronsightBobAmplitude" @ IronsightBobAmplitude);
+        return;
+    }
+
+    IronsightBobAmplitude = F;
+}
+
+simulated exec function BobFrequency(optional float F)
+{
+    if (F == 0)
+    {
+        Level.Game.Broadcast(self, "IronsightBobFrequency" @ IronsightBobFrequency);
+        return;
+    }
+
+    IronsightBobFrequency = F;
+}
+
+simulated exec function BobDecay(optional float F)
+{
+    if (F == 0)
+    {
+        Level.Game.Broadcast(self, "IronsightBobDecay" @ IronsightBobDecay);
+        return;
+    }
+
+    IronsightBobDecay = F;
+}
+
 // Overriden to add some inital weapon bobbing when first iron sighting
 function CheckBob(float DeltaTime, vector Y)
 {
@@ -3955,88 +4000,111 @@ function CheckBob(float DeltaTime, vector Y)
     BobModifier = 1.0;
 
     // Modify the amount of bob based on the movement state
-    if( bIsSprinting )
+    if (bIsSprinting)
     {
         BobModifier = 1.75;
     }
-    else if( bIsCrawling && !bIronSights)
+    else if (bIsCrawling && !bIronSights)
     {
         BobModifier = 2.5;
     }
-    else if( bIsCrouched && !bIronSights)
+    else if (bIsCrouched && !bIronSights)
     {
         BobModifier = 2.5;
     }
 
-    if (Physics == PHYS_Walking )
+    if (Physics == PHYS_Walking)
     {
         Speed2D = VSize(Velocity);
 
-        // Bob in iron sights based on IronSightBobFactor
-        if (Speed2D == 0.0 && bIronSights)
+        if (bIronSights)
         {
-            Speed2D = GroundSpeed * IronSightBobFactor;
+            IronsightBobTime += DeltaTime;
+
+            IronsightBob.Y = BobFunction(IronsightBobTime, IronsightBobAmplitude, IronsightBobFrequency, IronsightBobDecay);
+            IronsightBob.Z = BobFunction(IronsightBobTime + 0.125, IronsightBobAmplitude, IronsightBobFrequency, IronsightBobDecay);
+        }
+        else
+        {
+            IronsightBobTime = 0.0;
+            IronsightBob = vect(0, 0, 0);
         }
 
-        if( bIsCrawling && !bIronSights )
+        if (bIsCrawling && !bIronSights)
         {
-            BobTime += DeltaTime * ((0.3 + 0.7 * Speed2D/(GroundSpeed*PronePct))/2);
+            BobTime += DeltaTime * ((0.3 + 0.7 * Speed2D / (GroundSpeed * PronePct)) / 2);
         }
-        else if( bIsSprinting )
+        else if (bIsSprinting)
         {
-            if ( Speed2D < 10 )
+            if (Speed2D < 10)
+            {
                 BobTime += 0.2 * DeltaTime;
+            }
             else
             {
-                if ( bIsCrouched )
+                if (bIsCrouched)
                 {
-                    BobTime += DeltaTime * (0.3 + 0.7 * Speed2D/((GroundSpeed*CrouchedSprintPct)/1.25));
+                    BobTime += DeltaTime * (0.3 + 0.7 * Speed2D / ((GroundSpeed * CrouchedSprintPct) / 1.25));
                 }
                 else
                 {
-                    BobTime += DeltaTime * (0.3 + 0.7 * Speed2D/((GroundSpeed*SprintPct)/1.25));
+                    BobTime += DeltaTime * (0.3 + 0.7 * Speed2D / ((GroundSpeed * SprintPct) / 1.25));
                 }
             }
         }
         else
         {
-            if ( Speed2D < 10 )
+            if (Speed2D < 10)
+            {
                 BobTime += 0.2 * DeltaTime;
+            }
             else
-                BobTime += DeltaTime * (0.3 + 0.7 * Speed2D/GroundSpeed);
+            {
+                BobTime += DeltaTime * (0.3 + 0.7 * Speed2D / GroundSpeed);
+            }
         }
-        WalkBob = Y * (Bob * BobModifier) * Speed2D * sin(8 * BobTime);
-        AppliedBob = AppliedBob * (1 - FMin(1, 16 * deltatime));
+
+        WalkBob = Y * (Bob * BobModifier) * Speed2D * Sin(8 * BobTime);
+        AppliedBob = AppliedBob * (1 - FMin(1, 16 * DeltaTime));
         WalkBob.Z = AppliedBob;
-        if ( Speed2D > 10 )
-            WalkBob.Z = WalkBob.Z + 0.75 * (Bob * BobModifier) * Speed2D * sin(16 * BobTime);
-        if ( LandBob > 0.01 )
+
+        if (Speed2D > 10)
         {
-            AppliedBob += FMin(1, 16 * deltatime) * LandBob;
+            WalkBob.Z = WalkBob.Z + 0.75 * (Bob * BobModifier) * Speed2D * Sin(16 * BobTime);
+        }
+
+        if (LandBob > 0.01)
+        {
+            AppliedBob += FMin(1, 16 * DeltaTime) * LandBob;
             LandBob *= (1 - 8*Deltatime);
         }
     }
-    else if ( Physics == PHYS_Swimming )
+    else if (Physics == PHYS_Swimming)
     {
         Speed2D = Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y);
-        WalkBob = Y * Bob *  0.5 * Speed2D * sin(4.0 * Level.TimeSeconds);
-        WalkBob.Z = Bob * 1.5 * Speed2D * sin(8.0 * Level.TimeSeconds);
+        WalkBob = Y * Bob *  0.5 * Speed2D * Sin(4.0 * Level.TimeSeconds);
+        WalkBob.Z = Bob * 1.5 * Speed2D * Sin(8.0 * Level.TimeSeconds);
     }
     else
     {
         BobTime = 0;
-        WalkBob = WalkBob * (1 - FMin(1, 8 * deltatime));
+        WalkBob = WalkBob * (1 - FMin(1, 8 * DeltaTime));
     }
 
-    if ( (Physics != PHYS_Walking) || (VSize(Velocity) < 10)
-        || ((PlayerController(Controller) != None) && PlayerController(Controller).bBehindView) )
+    if (Physics != PHYS_Walking || VSize(Velocity) < 10 ||
+        (PlayerController(Controller) != none &&
+         PlayerController(Controller).bBehindView))
+    {
         return;
+    }
 
-    m = int(0.5 * Pi + 9.0 * OldBobTime/Pi);
-    n = int(0.5 * Pi + 9.0 * BobTime/Pi);
+    m = int(0.5 * Pi + 9.0 * OldBobTime / Pi);
+    n = int(0.5 * Pi + 9.0 * BobTime / Pi);
 
-    if ( (m != n) && !bIsCrawling)
+    if (m != n && !bIsCrawling)
+    {
         FootStepping(0);
+    }
 }
 
 // Modified to cause some stamina loss for prone diving
@@ -4117,6 +4185,27 @@ event StartCrouch(float HeightAdjust)
     Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2), 0.0);
 }
 
+simulated function vector CalcZoomedDrawOffset(Inventory Inv)
+{
+    local vector DrawOffset;
+
+    if (Controller == none)
+    {
+        return (Inv.PlayerViewOffset >> Rotation) + BaseEyeHeight * vect(0, 0, 1);
+    }
+
+    DrawOffset = 0.9 / Weapon.DisplayFOV * 100 * ZoomedModifiedPlayerViewOffset(Inv);
+
+    if (IsLocallyControlled())
+    {
+        DrawOffset += IronsightBob;
+        DrawOffset += ZoomedWeaponBob(Inv.BobDamping);
+        DrawOffset += ZoomedCameraShake();
+    }
+
+    return DrawOffset;
+}
+
 defaultproperties
 {
     StanceChangeStaminaDrain=1.5
@@ -4181,4 +4270,7 @@ defaultproperties
     AirStillAnim="jump_mid_nade"
     TakeoffStillAnim="jump_takeoff_nade"
     MaxFallSpeed=700.0
+    IronsightBobAmplitude=4.0
+    IronsightBobFrequency=4.0
+    IronsightBobDecay=6.0
 }
