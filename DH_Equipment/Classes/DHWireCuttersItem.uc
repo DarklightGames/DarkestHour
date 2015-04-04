@@ -9,13 +9,6 @@ var name        CutAnim;
 var DHObstacle  ObstacleBeingCut;
 var float       CutDistance;
 
-var enum ECuttingState
-{
-    CS_None,
-    CS_Cutting,
-    CS_P
-} CuttingState;
-
 function bool FillAmmo()
 {
     return false;
@@ -74,7 +67,6 @@ simulated state Cutting
             P.SetIsCuttingWire(true);
         }
 
-        // TODO: swap this out with variable
         PlayAnim(CutAnim);
 
         SetTimer(ObstacleBeingCut.GetCutDuration(), false);
@@ -106,9 +98,9 @@ simulated state Cutting
             P.ServerClearObstacle(ObstacleBeingCut.Index);
         }
 
-        GotoState('');
-
         PlayAnim('cutEnd', 1.0, 0.2);
+
+        GotoState('');
     }
 
     simulated function AnimEnd(int Channel)
@@ -157,7 +149,7 @@ simulated function Fire(float F)
     }
 
     TraceStart = Instigator.Location;
-    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * CutDistance; // TODO: adjust this value
+    TraceEnd = TraceStart + vector(Instigator.Controller.Rotation) * CutDistance;
 
     foreach TraceActors(class'DHObstacle', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
