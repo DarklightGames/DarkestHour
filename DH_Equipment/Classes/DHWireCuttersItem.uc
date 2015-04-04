@@ -204,5 +204,4 @@ defaultproperties
     SprintLoopAnim=sprintMiddle
     SprintEndAnim=sprintEnd
     CutDistance=100.0
-    CuttingState=CS_None
 }
