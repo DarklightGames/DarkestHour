@@ -215,7 +215,7 @@ function PostBeginPlay()
         if (RAT.TeamCanUse == AT_Axis || RAT.TeamCanUse == AT_Both)
         {
             DHGRI.AxisRadios[i] = RAT;
-            i++;
+            ++i;
         }
     }
 
@@ -224,7 +224,7 @@ function PostBeginPlay()
         if (RAT.TeamCanUse == AT_Allies || RAT.TeamCanUse == AT_Both)
         {
             DHGRI.AlliedRadios[j] = RAT;
-            j++;
+            ++j;
         }
     }
 
@@ -600,7 +600,6 @@ function Bot SpawnBot(optional string botName)
 
     NewBot = DHBot(Spawn(Chosen.PawnClass.default.ControllerClass));
 
-
     if (NewBot != none)
     {
         InitializeBot(NewBot,BotTeam,Chosen);
@@ -624,11 +623,11 @@ function Bot SpawnBot(optional string botName)
         // Increment the RoleCounter for the new role
         if (BotTeam.TeamIndex == AXIS_TEAM_INDEX)
         {
-            DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[NewBot.CurrentRole]++;
+            ++DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[NewBot.CurrentRole];
         }
         else if (BotTeam.TeamIndex == ALLIES_TEAM_INDEX)
         {
-            DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[NewBot.CurrentRole]++;
+            ++DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[NewBot.CurrentRole];
         }
 
         // Tone down the "gamey" bot parameters
@@ -636,7 +635,7 @@ function Bot SpawnBot(optional string botName)
         NewBot.TranslocUse = 0.0;
 
         // Set the bots favorite weapon to thier primary weapon
-        NewBot.FavoriteWeapon=class<ROWeapon>(RI.PrimaryWeapons[0].Item);
+        NewBot.FavoriteWeapon = class<ROWeapon>(RI.PrimaryWeapons[0].Item);
 
         // Tweak the bots abilities and characteristics based on their role
         switch (RI.PrimaryWeaponType)
@@ -707,7 +706,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
             if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || (GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG) ||
                 (GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD))
             {
-                Count++;
+                ++Count;
 
                 if (Count > 10)
                 {
@@ -717,7 +716,7 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
                 }
                 else
                 {
-                    MyRole++;
+                    ++MyRole;
 
                     if ((BotTeamNum == 0 && MyRole >= arraycount(DHAxisRoles)) || (BotTeamNum == 1 && MyRole >= arraycount(DHAxisRoles)))
                     {
@@ -857,16 +856,14 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     {
         return 0;
     }
-    else
-    {
-        return super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
+
+    return super.ReduceDamage(Damage, Injured, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
 // Stop the game from automatically trimming longer names
 event PlayerController Login(string Portal, string Options, out string Error)
 {
-    local string           InName;
+    local string InName;
     local PlayerController NewPlayer;
 
     InName = Left(ParseOption (Options, "Name"), 32);
@@ -903,13 +900,13 @@ function ChangeName(Controller Other, string S, bool bNameChange)
         if (TotalEpic < 21)
         {
             S = EpicNames[EpicOffset % 21];
-            EpicOffset++;
-            TotalEpic++;
+            ++EpicOffset;
+            ++TotalEpic;
         }
         else
         {
             S = NamePrefixes[NameNumber%10] $ "CliffyB" $ NameSuffixes[NameNumber % 10];
-            NameNumber++;
+            ++NameNumber;
         }
     }
 
@@ -928,12 +925,12 @@ function ChangeName(Controller Other, string S, bool bNameChange)
                 if (Other.PlayerReplicationInfo.bIsFemale)
                 {
                     S = FemaleBackupNames[FemaleBackupNameOffset % 32];
-                    FemaleBackupNameOffset++;
+                    ++FemaleBackupNameOffset;
                 }
                 else
                 {
                     S = MaleBackupNames[MaleBackupNameOffset % 32];
-                    MaleBackupNameOffset++;
+                    ++MaleBackupNameOffset;
                 }
 
                 for (P = Level.ControllerList; P != none; P = P.NextController)
@@ -941,7 +938,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
                     if (P.bIsPlayer && P.PlayerReplicationInfo.PlayerName ~= S)
                     {
                         S = NamePrefixes[NameNumber % 10] $ S $ NameSuffixes[NameNumber % 10];
-                        NameNumber++;
+                        ++NameNumber;
                         break;
                     }
                 }
@@ -950,7 +947,7 @@ function ChangeName(Controller Other, string S, bool bNameChange)
             }
 
             S = NamePrefixes[NameNumber % 10] $ S $ NameSuffixes[NameNumber % 10];
-            NameNumber++;
+            ++NameNumber;
             break;
         }
     }
@@ -1014,7 +1011,7 @@ function AddRole(RORoleInfo NewRole)
 
         DHAlliesRoles[AlliesRoleIndex] = DHRI;
         DHGRI.DHAlliesRoles[AlliesRoleIndex] = DHRI;
-        AlliesRoleIndex++;
+        ++AlliesRoleIndex;
     }
     else
     {
@@ -1026,7 +1023,7 @@ function AddRole(RORoleInfo NewRole)
 
         DHAxisRoles[AxisRoleIndex] = DHRI;
         DHGRI.DHAxisRoles[AxisRoleIndex] = DHRI;
-        AxisRoleIndex++;
+        ++AxisRoleIndex;
     }
 }
 
@@ -1092,6 +1089,7 @@ function bool HumanWantsRole(int Team, int Num)
             if (ROBot(C) != none && ROBot(C).CurrentRole == Num)
             {
                 BotHasRole = ROBot(C);
+
                 break;
             }
         }
@@ -1105,13 +1103,13 @@ function bool HumanWantsRole(int Team, int Num)
 
         if (Team == AXIS_TEAM_INDEX)
         {
-            DHGRI.DHAxisRoleCount[Num] --;
-            DHGRI.DHAxisRoleBotCount[Num] --;
+            --DHGRI.DHAxisRoleCount[Num];
+            --DHGRI.DHAxisRoleBotCount[Num];
         }
         else if (Team == ALLIES_TEAM_INDEX)
         {
-            DHGRI.DHAlliesRoleCount[Num] --;
-            DHGRI.DHAlliesRoleBotCount[Num] --;
+            --DHGRI.DHAlliesRoleCount[Num];
+            --DHGRI.DHAlliesRoleBotCount[Num];
         }
 
         return true;
@@ -1167,7 +1165,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
             if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
                 || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
             {
-                Count++;
+                ++Count;
 
                 if (Count > arraycount(DHAxisRoles))
                 {
@@ -1177,7 +1175,7 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
                 }
                 else
                 {
-                    MyRole++;
+                    ++MyRole;
 
                     if (MyRole >= arraycount(DHAxisRoles))
                     {
@@ -1280,7 +1278,6 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     {
         MrRoboto = ROBot(aPlayer);
     }
-
 
     if (Playa != none)
     {
@@ -1465,6 +1462,7 @@ state RoundInPlay
         GRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
         GRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
         GRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
+
         for (i = 0; i < arraycount(GRI.AxisRallyPoints); ++i)
         {
             GRI.AlliedRallyPoints[i].OfficerPRI = none;
@@ -1488,6 +1486,7 @@ state RoundInPlay
             GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 1;
             GRI.SpawnCount[AXIS_TEAM_INDEX] = 100;
         }
+
         if (!SpawnLimitReached(ALLIES_TEAM_INDEX))
         {
             GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 1;
@@ -1496,6 +1495,7 @@ state RoundInPlay
 
         // Reset all controllers
         P = Level.ControllerList;
+
         while (P != none)
         {
             NextC = P.NextController;
@@ -1503,7 +1503,10 @@ state RoundInPlay
             if (P.PlayerReplicationInfo == none || !P.PlayerReplicationInfo.bOnlySpectator)
             {
                 if (PlayerController(P) != none)
+                {
                     PlayerController(P).ClientReset();
+                }
+
                 P.Reset();
             }
 
@@ -1514,7 +1517,9 @@ state RoundInPlay
         foreach AllActors(class'Actor', A)
         {
             if (!A.IsA('Controller') && !A.IsA('ROVehicleFactory'))
+            {
                 A.Reset();
+            }
         }
 
         // Reset ALL ROVehicleFactorys - must reset these after vehicles, otherwise the vehicles that get spawned by the vehicle factories get destroyed instantly as they are reset
@@ -1534,7 +1539,7 @@ state RoundInPlay
         }
 
         // Make the bots find objectives when the round starts
-        FindNewObjectives(None);
+        FindNewObjectives(none);
 
         // Notify players that the map has been updated
         NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, none, true);
@@ -1655,8 +1660,10 @@ state RoundInPlay
 
         GRI = ROGameReplicationInfo(GameReplicationInfo);
 
-        if (NeedPlayers() && AddBot() && (RemainingBots > 0))
+        if (NeedPlayers() && AddBot() && RemainingBots > 0)
+        {
             RemainingBots--;
+        }
 
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
@@ -1665,11 +1672,11 @@ state RoundInPlay
 
             if ((GRI.TotalStrikes[i] < GRI.ArtilleryStrikeLimit[i]) && ElapsedTime > GRI.LastArtyStrikeTime[i] + ArtilleryStrikeInt)
             {
-                    GRI.bArtilleryAvailable[i] = 1;
+                GRI.bArtilleryAvailable[i] = 1;
             }
             else
             {
-                    GRI.bArtilleryAvailable[i] = 0;
+                GRI.bArtilleryAvailable[i] = 0;
             }
         }
 
@@ -1677,11 +1684,17 @@ state RoundInPlay
         if (ElapsedTime > RoundStartTime + RoundDuration)
         {
             if (LevelInfo.DefendingSide == SIDE_Axis)
+            {
                 EndRound(AXIS_TEAM_INDEX);
+            }
             else if (LevelInfo.DefendingSide == SIDE_Allies)
+            {
                 EndRound(ALLIES_TEAM_INDEX);
+            }
             else
+            {
                 ChooseWinner();
+            }
         }
     }
 
@@ -1883,6 +1896,7 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
+
         super(TeamGame).RestartPlayer(C);
 
         if (bHandleReinforcements)
