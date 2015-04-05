@@ -53,7 +53,7 @@ defaultproperties
     RightWheelBones(6)="Wheel_R_7"
     RightWheelBones(7)="Wheel_R_8"
     RightWheelBones(8)="Wheel_R_9"
-    WheelRotationScale=2000
+    WheelRotationScale=700
     TreadHitMinAngle=1.15
     FrontLeftAngle=332.0
     RearLeftAngle=208.0
