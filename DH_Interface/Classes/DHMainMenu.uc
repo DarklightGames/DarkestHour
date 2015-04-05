@@ -464,7 +464,7 @@ defaultproperties
 
     // Menu variables
     Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=texture'DH_GUI_Tex.Menu.MainBackGround'
+        Image=material'DH_GUI_Tex.MainMenu.BackGround'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
