@@ -2481,7 +2481,7 @@ simulated function DrawObjectives(Canvas C)
         {
             Widget.Tints[0] = GrayColor;
             Widget.Tints[1] = GrayColor;
-            Widget.Tints[0].A = 125;
+            Widget.Tints[0].A = 50;
             Widget.Tints[1].A = 125;
         }
         else
