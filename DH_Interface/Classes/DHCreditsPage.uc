@@ -5,13 +5,11 @@
 
 class DHCreditsPage extends LargeWindow;
 
-const NUM_CREDIT_LINES = 120;
-
 var automated GUIButton b_Close;
 
 var automated GUIScrollTextBox lb_credits;
 
-var localized string credit_lines[NUM_CREDIT_LINES];
+var localized array<string> CreditLines;
 
 function AddSystemMenu()
 {
@@ -33,17 +31,19 @@ function AddSystemMenu()
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    local string text;
     local int i;
+    local string CreditsContent;
 
     super.InitComponent(MyController, MyOwner);
 
     class'DHInterfaceUtil'.static.SetROStyle(MyController, Controls);
 
-    for (i = 0; i < NUM_CREDIT_LINES; ++i)
-        text $= credit_lines[i] $ "|";
+    for (i = 0; i < CreditLines.Length; ++i)
+    {
+        CreditsContent $= CreditLines[i] $ "|";
+    }
 
-    lb_credits.SetContent(text);
+    lb_credits.SetContent(CreditsContent);
 }
 
 function bool InternalOnClick(GUIComponent Sender)
@@ -89,99 +89,7 @@ defaultproperties
         bScaleToParent=true
     End Object
     lb_credits=DHGUIScrollTextBox'DH_Interface.DHCreditsPage.CreditText'
-    credit_lines(0)="DARKEST HOUR - EUROPE '44-'45"
-    credit_lines(2)="Project Lead:"
-    credit_lines(4)="Exocet"
-    credit_lines(6)="Code:"
-    credit_lines(8)="PsYcH0_Ch!cKeN"
-    credit_lines(9)="Fennich_FJR6"
-    credit_lines(10)="TT33"
-    credit_lines(11)="Shurek"
-    credit_lines(12)="Teufelhund"
-    credit_lines(13)="Colin Basnett"
-    credit_lines(15)="Models:"
-    credit_lines(17)="Apekop"
-    credit_lines(18)="Coyote Ninja"
-    credit_lines(19)="Diablo"
-    credit_lines(20)="Garisson"
-    credit_lines(21)="Maharzan"
-    credit_lines(22)="Nights2o06"
-    credit_lines(23)="ScubaSteve"
-    credit_lines(24)="Silence14"
-    credit_lines(25)="Tman"
-    credit_lines(26)="2_k"
-    credit_lines(27)="FooBar"
-    credit_lines(28)="RustIronCrowe"
-    credit_lines(29)="DmitriB"
-    credit_lines(30)="Captain Obvious"
-    credit_lines(32)="Textures:"
-    credit_lines(34)="Protector"
-    credit_lines(35)="Aeneas2020"
-    credit_lines(36)="Blacklabel"
-    credit_lines(37)="Fennich_FJR6"
-    credit_lines(38)="FooBar"
-    credit_lines(39)="CYoung"
-    credit_lines(40)="Captain Obvious"
-    credit_lines(42)="Art:"
-    credit_lines(44)="Der Landser"
-    credit_lines(45)="Protector"
-    credit_lines(46)="Aeneas2020"
-    credit_lines(47)="Fennich_FJR6"
-    credit_lines(49)="Animations:"
-    credit_lines(51)="Exocet"
-    credit_lines(52)="Mike Munk (TWI)"
-    credit_lines(53)="TT33"
-    credit_lines(54)="Razorneck"
-    credit_lines(56)="Map Design:"
-    credit_lines(58)="Exocet"
-    credit_lines(59)="SchutzeSepp"
-    credit_lines(60)="Nestor Makhno"
-    credit_lines(61)="Razorneck"
-    credit_lines(62)="602RAF_Puff"
-    credit_lines(63)="Drecks"
-    credit_lines(64)="FlashPanHunter"
-    credit_lines(65)="Jeff Duquette"
-    credit_lines(66)="Sichartshofen"
-    credit_lines(67)="BOH-rekrut"
-    credit_lines(68)="Theel"
-    credit_lines(69)="Jorg Biermann"
-    credit_lines(71)="Sound:"
-    credit_lines(73)="Fennich_FJR6"
-    credit_lines(74)="Blitzkreig"
-    credit_lines(75)="Wiseq"
-    credit_lines(76)="Boone"
-    credit_lines(77)="Demonizer"
-    credit_lines(78)="PsYcH0_Ch!cKeN"
-    credit_lines(79)="Shurek"
-    credit_lines(80)="602RAF_Puff"
-    credit_lines(81)="engineer"
-    credit_lines(82)="pillam"
-    credit_lines(84)="Historical Research:"
-    credit_lines(86)="101.SS Keltisch WereWolf"
-    credit_lines(87)="Del"
-    credit_lines(88)="Abshire"
-    credit_lines(89)="Lt. Stephenson"
-    credit_lines(90)="Alan Wilson (TWI)"
-    credit_lines(92)="Public Relations:"
-    credit_lines(94)="PsYcH0_Ch!cKeN"
-    credit_lines(95)="Nestor Makhno"
-    credit_lines(96)="Wilson [29th ID]"
-    credit_lines(97)="RustIronCrowe"
-    credit_lines(98)="Colin Basnett"
-    credit_lines(100)="Other Contributors:"
-    credit_lines(102)="After-Hourz Gaming Network"
-    credit_lines(103)="All the lads from Splat"
-    credit_lines(104)="The Wild Bunch"
-    credit_lines(105)="Schneller"
-    credit_lines(106)="Beppo and the lads from Sentry Studios"
-    credit_lines(107)="Amizaur for vehicle optics code and German vehicle gun sights"
-    credit_lines(108)="Thommy-L (Fatal Error) for getting the test team's act together this last release"
-    credit_lines(110)="Special Thanks:"
-    credit_lines(112)="A huge thanks goes out to all the former members of the Dark-Light Games team. Without their years of hard work, we would never have made it to this point. We're eternally grateful."
-    credit_lines(113)="All of our testers over the years, especially this last release.  You've helped create a (mostly) bug free experience!"
-    credit_lines(114)="Alan, John, Dayle & all the guys at Tripwire Interactive for their assistance, support, and of course for the game that we all love so much."
-    credit_lines(115)="Our faithful community who has stuck by us over the years and continue to offer support and ideas for the betterment of the game."
-    credit_lines(116)="And to everyone else who has contributed to this mod over the past four years that we may have missed, thank you!"
+
     Begin Object Class=DHGUIHeader Name=TitleBar
         StyleName="DHLargeText"
         WinTop=0.02
@@ -209,6 +117,116 @@ defaultproperties
         RenderWeight=0.000003
     End Object
     i_FrameBG=FloatingImage'DH_Interface.DHCreditsPage.FloatingFrameBackground'
+
+    CreditLines(0)="DARKEST HOUR: EUROPE '44-'45"
+    CreditLines(1)=""
+    CreditLines(2)="Project Leads:"
+    CreditLines(3)=""
+    CreditLines(4)="Colin Basnett"
+    CreditLines(5)="Theel"
+    CreditLines(6)="Exocet"
+    CreditLines(7)=""
+    CreditLines(8)="Code:"
+    CreditLines(9)=""
+    CreditLines(10)="Colin Basnett"
+    CreditLines(11)="Matt UK"
+    CreditLines(12)="Theel"
+    CreditLines(13)="Shurek"
+    CreditLines(14)="TT33"
+    CreditLines(15)="PsYcH0_Ch!cKeN"
+    CreditLines(16)="Teufelhund"
+    CreditLines(17)="Fennich_FJR6"
+    CreditLines(18)=""
+    CreditLines(19)="Models:"
+    CreditLines(20)=""
+    CreditLines(21)="RustIronCrowe"
+    CreditLines(22)="Apekop"
+    CreditLines(23)="Coyote Ninja"
+    CreditLines(24)="Diablo"
+    CreditLines(25)="Garisson"
+    CreditLines(26)="Maharzan"
+    CreditLines(27)="Nights2o06"
+    CreditLines(28)="ScubaSteve"
+    CreditLines(29)="Silence14"
+    CreditLines(30)="Tman"
+    CreditLines(31)="2_k"
+    CreditLines(32)="FooBar"
+    CreditLines(33)="DmitriB"
+    CreditLines(34)="Captain Obvious"
+    CreditLines(35)="piotrlukasik"
+    CreditLines(36)=""
+    CreditLines(37)="Textures:"
+    CreditLines(38)=""
+    CreditLines(39)="Protector"
+    CreditLines(40)="Aeneas2020"
+    CreditLines(41)="Blacklabel"
+    CreditLines(42)="Fennich_FJR6"
+    CreditLines(43)="FooBar"
+    CreditLines(44)="CYoung"
+    CreditLines(45)="Captain Obvious"
+    CreditLines(46)="piotrlukasik"
+    CreditLines(47)=""
+    CreditLines(48)="Art:"
+    CreditLines(49)=""
+    CreditLines(50)="Der Landser"
+    CreditLines(51)="Protector"
+    CreditLines(52)="Aeneas2020"
+    CreditLines(53)="Fennich_FJR6"
+    CreditLines(54)=""
+    CreditLines(55)="Animations:"
+    CreditLines(56)=""
+    CreditLines(57)="Exocet"
+    CreditLines(58)="Mike Munk (TWI)"
+    CreditLines(59)="TT33"
+    CreditLines(60)="Razorneck"
+    CreditLines(61)=""
+    CreditLines(62)="Level Design:"
+    CreditLines(63)=""
+    CreditLines(64)="Theel"
+    CreditLines(65)="SchutzeSepp"
+    CreditLines(66)="Razorneck"
+    CreditLines(67)="BOH-rekrut"
+    CreditLines(68)="Jorg Biermann"
+    CreditLines(69)="Exocet"
+    CreditLines(70)="Nestor Makhno"
+    CreditLines(71)="602RAF_Puff"
+    CreditLines(72)="Drecks"
+    CreditLines(73)="FlashPanHunter"
+    CreditLines(74)="Jeff Duquette"
+    CreditLines(75)="Sichartshofen"
+    CreditLines(76)=""
+    CreditLines(77)="Sound:"
+    CreditLines(78)=""
+    CreditLines(79)="Fennich_FJR6"
+    CreditLines(80)="Blitzkreig"
+    CreditLines(81)="Wiseq"
+    CreditLines(82)="Boone"
+    CreditLines(83)="Demonizer"
+    CreditLines(84)="PsYcH0_Ch!cKeN"
+    CreditLines(85)="Shurek"
+    CreditLines(86)="602RAF_Puff"
+    CreditLines(87)="engineer"
+    CreditLines(88)="pillam"
+    CreditLines(89)=""
+    CreditLines(90)="Other Contributors:"
+    CreditLines(91)=""
+    CreditLines(92)="After-Hourz Gaming Network"
+    CreditLines(93)="All the lads from Splat"
+    CreditLines(94)="The Wild Bunch"
+    CreditLines(95)="Schneller"
+    CreditLines(96)="Beppo and the lads from Sentry Studios"
+    CreditLines(97)="Amizaur for vehicle optics code and German vehicle gun sights"
+    CreditLines(98)="Thommy-L (Fatal Error) for getting the test team's act together this last release"
+    CreditLines(99)="Carpathian Crosses Team"
+    CreditLines(100)=""
+    CreditLines(101)="Special Thanks:"
+    CreditLines(102)=""
+    CreditLines(103)="A huge thanks goes out to all the former members of the Darklight Games team. Without their years of hard work, we would never have made it to this point. We're eternally grateful."
+    CreditLines(104)="All of our testers over the years. You've helped create a (mostly) bug free experience!"
+    CreditLines(105)="Alan, John, Dayle & all the guys at Tripwire Interactive for their assistance, support, and of course for the game that we all love so much."
+    CreditLines(106)="Our faithful community who has stuck by us over the years and continue to offer support and ideas for the betterment of the game."
+    CreditLines(107)="And to everyone else who has contributed to this mod over the years that we may have missed, thank you!"
+
     bRequire640x480=false
     WinTop=0.1
     WinLeft=0.1
