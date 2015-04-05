@@ -15,7 +15,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 var localized string                        ReinforcementText,
                                             DeployBarText[10];
 
-var     bool                                bReadyToDeploy, bOutOfReinforcements, bResolutionChanged;
+var     bool                                bReadyToDeploy, bDeployWhenReady, bOutOfReinforcements, bResolutionChanged;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_SpawnRoom;
@@ -370,6 +370,15 @@ function InternalOnPostDraw(Canvas Canvas)
 // Deploy requested
 function SpawnClick()
 {
+    if (bDeployWhenReady)
+    {
+        // Close menu as user wants to auto deploy on count down while spectating
+        // Dont need to worry about calling Application, because the menu is closing and will check for any changes and apply if needed
+        DHP.bShouldAttemptAutoDeploy = true;
+        MyDeployMenu.CloseMenu();
+        return;
+    }
+
     if (!bReadyToDeploy || bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none)
     {
         return;
@@ -378,6 +387,7 @@ function SpawnClick()
     MyRoleMenu.AttemptDeployApplication(true);
 }
 
+// TODO: replace this function and other checks with the one from DHGRI
 function bool AreIndicesValid()
 {
     // If we are trying to spawn vehicle, but no pool selected : return false
@@ -561,6 +571,7 @@ function bool DrawDeployTimer(Canvas C)
     else if (!bProgressComplete)
     {
         b_DeployButton.Caption = DeployBarText[3] @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ DeployBarText[4];
+        bDeployWhenReady = true;
     }
     else if (DHP.Pawn != none)
     {
@@ -571,8 +582,11 @@ function bool DrawDeployTimer(Canvas C)
         b_DeployButton.Caption = DeployBarText[7]; // "Deploy!"
     }
 
-    // Set bReadyToDeploy based on button
-    bReadyToDeploy = bButtonEnabled && bProgressComplete;
+    if (bButtonEnabled && bProgressComplete)
+    {
+        bReadyToDeploy = true;
+        bDeployWhenReady = false;
+    }
 
     return false;
 }
@@ -587,7 +601,7 @@ defaultproperties
     DeployBarText(1)="Select a spawnpoint"
     DeployBarText(2)="Your team is out of reinforcements"
     DeployBarText(3)="Deploy in:"
-    DeployBarText(4)="seconds"
+    DeployBarText(4)="seconds | Close & Deploy When Ready"
     DeployBarText(5)="You are already deployed"
     DeployBarText(6)="Round not in play"
     DeployBarText(7)="Deploy!"

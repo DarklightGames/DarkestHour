@@ -2270,77 +2270,62 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
 
 function PawnDied(Pawn P)
 {
-    //Make sure the pawn that died is our pawn, not some random other pawn
+    // Make sure the pawn that died is our pawn, not some random other pawn
     if (P != Pawn)
     {
         return;
     }
 
-    LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
+    LastKilledTime = Level.TimeSeconds; // Server sets killed time based on it's level time
 
-    ClientHandleDeath(); //Tells client to set his last killed time, that he can't spawn yet, and to autodeploy if has desired spawn
+    ClientHandleDeath();
 
     super.PawnDied(P); //Calls super in ROPlayer
 }
 
-
 simulated function ClientHandleDeath()
 {
-    // Theel: This needs to be a smarter check!
-    if (SpawnPointIndex != 255)
-    {
-        bShouldAttemptAutoDeploy = true;
-    }
-
-    LastKilledTime = Level.TimeSeconds; // We don't pass a time, because we want client to set the time not the server!
+    bShouldAttemptAutoDeploy = true;
+    LastKilledTime = Level.TimeSeconds; // Clients sets his killed time based on level time
 }
 
-// This function is called from DHHud to deploy the player when their deploy time hits zero and they are waiting in the HUD
-// Theel: this function needs to be made smarter
-// This function need a lot of work / clean up
-simulated function CheckToAutoDeploy()
+// This function is called from DHHud to deploy the player when their deploy time hits zero
+simulated function AttemptAutoDeploy()
 {
-    local bool bDeployed; // Poor name for variable
-    local DHGameReplicationInfo GRI;
+    local DHGameReplicationInfo   DHGRI;
+    local DH_RoleInfo             RI;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI == none)
-    {
-        return;
-    }
-
+    // Attempted, don't keep trying
     bShouldAttemptAutoDeploy = false;
 
-    //If player is in a menu, don't try to deploy
+    // if player is in a menu, don't try to deploy
     if (GUIController(Player.GUIController).ActivePage != none)
     {
         return;
     }
 
-    //If we have a desired spawn point set, we won't need to open menu and can send spawn request from here
-    if (SpawnPointIndex != 255 && Pawn == none)
+    // Check if our indices are not valid
+    if (!DHGRI.AreIndicesValid(self))
     {
-        //Check if desired spawn is valid
-        bDeployed = GRI.IsSpawnPointIndexValid(SpawnPointIndex, PlayerReplicationInfo.Team.TeamIndex);
-
-        if (bDeployed)
+        // Open deploy menu if no menu is currently open as player doesn't have valid indices
+        if (GUIController(Player.GUIController).ActivePage == none)
         {
-            ServerAttemptDeployPlayer(DesiredAmmoAmount);
+            ClientReplaceMenu("DH_Interface.DHDeployMenu");
+        }
 
-            return;
-        }
-        else
-        {
-            // Can't change this value like this
-            SpawnPointIndex = 255;
-        }
+        return;
     }
 
-    //Open deploy menu if no menu is currently open and player doesn't have a valid spawn point selected
-    if (!bDeployed && GUIController(Player.GUIController).ActivePage == none)
+    // Determine how we should attempt deployment and do so
+    if (ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
-        ClientReplaceMenu("DH_Interface.DHDeployMenu");
+        ServerAttemptDeployPlayer(DesiredAmmoAmount, true);
+    }
+    else
+    {
+        ServerAttemptDeployPlayer(DesiredAmmoAmount);
     }
 }
 

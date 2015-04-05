@@ -25,9 +25,9 @@ var ROGUIListPlus                           li_Roles, li_AvailableWeapons[2];
 var localized string                        RedeployTimeText,
                                             SecondsText;
 
-var RORoleInfo                              currentRole, desiredRole;
-var int                                     currentTeam, desiredTeam;
-var int                                     currentWeapons[2], desiredWeapons[2];
+var RORoleInfo                              CurrentRole, DesiredRole;
+var int                                     CurrentTeam, DesiredTeam;
+var int                                     CurrentWeapons[2], DesiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -62,20 +62,20 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     GetInitialValues();
 
     // Change background from default if team == Axis
-    if (currentTeam == Axis_Team_Index)
+    if (CurrentTeam == Axis_Team_Index)
     {
         Background=Texture'DH_GUI_Tex.Menu.AxisLoadout_BG';
     }
 
     // Fill roles list
     FillRoleList();
-    if (currentRole == none || DHP.DesiredRole == -1)
+    if (CurrentRole == none || DHP.DesiredRole == -1)
     {
         AutoPickRole();
     }
     else
     {
-        ChangeDesiredRole(currentRole);
+        ChangeDesiredRole(CurrentRole);
     }
 
     // Set initial counts
@@ -129,129 +129,129 @@ function GetInitialValues()
         // Get player's current team
         if (DHP != none && DHP.ForcedTeamSelectOnRoleSelectPage != -5)
         {
-            currentTeam = DHP.ForcedTeamSelectOnRoleSelectPage;
-            desiredTeam = DHP.ForcedTeamSelectOnRoleSelectPage;
+            CurrentTeam = DHP.ForcedTeamSelectOnRoleSelectPage;
+            DesiredTeam = DHP.ForcedTeamSelectOnRoleSelectPage;
             // Force role reset, this stops an exploit allowing you to be on the opposite team with previous team's role
-            currentRole = none;
-            desiredRole = none;
+            CurrentRole = none;
+            DesiredRole = none;
             DHP.CurrentRole = -1;
             DHP.DesiredRole = -1;
             DHP.ForcedTeamSelectOnRoleSelectPage = -5;
         }
         else if (PRI.bOnlySpectator)
         {
-            currentTeam = -1;
+            CurrentTeam = -1;
         }
         else if (PRI.Team != none)
         {
-            currentTeam = DHP.GetTeamNum();
+            CurrentTeam = DHP.GetTeamNum();
         }
         else
         {
-            currentTeam = -1;
+            CurrentTeam = -1;
         }
 
-        if (currentTeam != AXIS_TEAM_INDEX && currentTeam != ALLIES_TEAM_INDEX)
+        if (CurrentTeam != AXIS_TEAM_INDEX && CurrentTeam != ALLIES_TEAM_INDEX)
         {
-            currentTeam = -1;
+            CurrentTeam = -1;
         }
     }
     else
     {
-        currentTeam = -1;
+        CurrentTeam = -1;
     }
 
     // Get player's current/desired role
-    if (currentTeam == -1)
+    if (CurrentTeam == -1)
     {
-        currentRole = none;
-        desiredRole = none;
+        CurrentRole = none;
+        DesiredRole = none;
     }
     else if (DHP.CurrentRole != DHP.DesiredRole)
     {
-        if (currentTeam == AXIS_TEAM_INDEX)
+        if (CurrentTeam == AXIS_TEAM_INDEX)
         {
-            currentRole = DHGRI.DHAxisRoles[DHP.DesiredRole];
+            CurrentRole = DHGRI.DHAxisRoles[DHP.DesiredRole];
         }
-        else if (currentTeam == ALLIES_TEAM_INDEX)
+        else if (CurrentTeam == ALLIES_TEAM_INDEX)
         {
-            currentRole = DHGRI.DHAlliesRoles[DHP.DesiredRole];
+            CurrentRole = DHGRI.DHAlliesRoles[DHP.DesiredRole];
         }
         else
         {
-            currentRole = none;
+            CurrentRole = none;
         }
     }
     else if (PRI.RoleInfo != none)
     {
-        currentRole = PRI.RoleInfo;
+        CurrentRole = PRI.RoleInfo;
     }
     else
     {
-        currentRole = none;
+        CurrentRole = none;
     }
 
     // Get player's current weapons
-    if (currentRole == none)
+    if (CurrentRole == none)
     {
-        currentWeapons[0] = -1;
-        currentWeapons[1] = -1;
+        CurrentWeapons[0] = -1;
+        CurrentWeapons[1] = -1;
     }
     else if (DHP.CurrentRole != DHP.DesiredRole)
     {
-        currentWeapons[0] = DHP.DesiredPrimary;
-        currentWeapons[1] = DHP.DesiredSecondary;
+        CurrentWeapons[0] = DHP.DesiredPrimary;
+        CurrentWeapons[1] = DHP.DesiredSecondary;
     }
     else
     {
-        currentWeapons[0] = DHP.PrimaryWeapon;
-        currentWeapons[1] = DHP.SecondaryWeapon;
+        CurrentWeapons[0] = DHP.PrimaryWeapon;
+        CurrentWeapons[1] = DHP.SecondaryWeapon;
     }
 
     // Set desired stuff to be same as current stuff
-    desiredTeam = currentTeam;
-    desiredRole = currentRole;
-    desiredWeapons[0] = -5; // these values tell the AutoPickWeapon() function
-    desiredWeapons[1] = -5; // to use the currentWeapon[] value instead
+    DesiredTeam = CurrentTeam;
+    DesiredRole = CurrentRole;
+    DesiredWeapons[0] = -5; // these values tell the AutoPickWeapon() function
+    DesiredWeapons[1] = -5; // to use the currentWeapon[] value instead
 }
 
 function FillRoleList()
 {
     local int i;
-    local RORoleInfo role;
+    local RORoleInfo Role;
 
     li_Roles.Clear();
 
     ChangeDesiredRole(none);
 
-    if (desiredTeam != AXIS_TEAM_INDEX && desiredTeam != ALLIES_TEAM_INDEX)
+    if (DesiredTeam != AXIS_TEAM_INDEX && DesiredTeam != ALLIES_TEAM_INDEX)
     {
         return;
     }
 
     for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
     {
-        if (desiredTeam == AXIS_TEAM_INDEX)
+        if (DesiredTeam == AXIS_TEAM_INDEX)
         {
-            role = DHGRI.DHAxisRoles[i];
+            Role = DHGRI.DHAxisRoles[i];
         }
         else
         {
-            role = DHGRI.DHAlliesRoles[i];
+            Role = DHGRI.DHAlliesRoles[i];
         }
 
-        if (role == none)
+        if (Role == none)
         {
             continue;
         }
 
         if (DHP != none && DHP.bUseNativeRoleNames)
         {
-            li_Roles.Add(role.default.AltName, role);
+            li_Roles.Add(Role.default.AltName, Role);
         }
         else
         {
-            li_Roles.Add(role.default.MyName, role);
+            li_Roles.Add(Role.default.MyName, Role);
         }
     }
 
@@ -260,13 +260,13 @@ function FillRoleList()
 
 function ChangeDesiredRole(RORoleInfo newRole)
 {
-    local int roleIndex;
+    local int RoleIndex;
 
     // Don't change role if we already have correct role selected
-    if (newRole == desiredRole && desiredTeam != -1)
+    if (newRole == DesiredRole && DesiredTeam != -1)
         return;
 
-    desiredRole = newRole;
+    DesiredRole = newRole;
 
     if (newRole == none)
     {
@@ -274,10 +274,10 @@ function ChangeDesiredRole(RORoleInfo newRole)
     }
     else
     {
-        roleIndex = FindRoleIndexInList(newRole);
-        if (roleIndex != -1)
+        RoleIndex = FindRoleIndexInList(newRole);
+        if (RoleIndex != -1)
         {
-            li_Roles.SetIndex(roleIndex);
+            li_Roles.SetIndex(RoleIndex);
             NotifyDesiredRoleUpdated();
         }
     }
@@ -285,34 +285,33 @@ function ChangeDesiredRole(RORoleInfo newRole)
 
 function AutoPickRole()
 {
-    local int i, currentRoleCount;
-    local RORoleInfo role;
+    local int i, CurrentRoleCount;
+    local RORoleInfo Role;
 
-    if (desiredTeam == AXIS_TEAM_INDEX || desiredTeam == ALLIES_TEAM_INDEX)
+    if (DesiredTeam == AXIS_TEAM_INDEX || DesiredTeam == ALLIES_TEAM_INDEX)
     {
-        // Pick the first non-full role
+        // Pick the first non-full Role
         for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
         {
-            if (desiredTeam == AXIS_TEAM_INDEX)
+            if (DesiredTeam == AXIS_TEAM_INDEX)
             {
-                role = DHGRI.DHAxisRoles[i];
-                currentRoleCount = DHGRI.DHAxisRoleCount[i];
+                Role = DHGRI.DHAxisRoles[i];
+                CurrentRoleCount = DHGRI.DHAxisRoleCount[i];
             }
             else
             {
-                role = DHGRI.DHAlliesRoles[i];
-                currentRoleCount = DHGRI.DHAlliesRoleCount[i];
+                Role = DHGRI.DHAlliesRoles[i];
+                CurrentRoleCount = DHGRI.DHAlliesRoleCount[i];
             }
 
-            if (role == none)
+            if (Role == none)
             {
                 continue;
             }
 
-            if (role.GetLimit(DHGRI.MaxPlayers) == 0) //Pick role with no max
+            if (Role.GetLimit(DHGRI.MaxPlayers) == 0) //Pick role with no max
             {
-                ChangeDesiredRole(role);
-                //AttemptDeployApplication(false);
+                ChangeDesiredRole(Role);
                 return;
             }
         }
@@ -329,7 +328,7 @@ function NotifyDesiredRoleUpdated()
 {
     UpdateWeaponsInfo();
 
-    MyDeployMenu.bRoleIsCrew = desiredRole.default.bCanBeTankCrew;
+    MyDeployMenu.bRoleIsCrew = DesiredRole.default.bCanBeTankCrew;
 }
 
 function int FindRoleIndexInList(RORoleInfo newRole)
@@ -360,22 +359,22 @@ function UpdateWeaponsInfo()
     i_WeaponImages[1].Image = none;
     i_MagImages[0].Image = none;
 
-    if (desiredRole != none)
+    if (DesiredRole != none)
     {
         // Update available primary weapons list
-        for (i = 0; i < arraycount(desiredRole.PrimaryWeapons); ++i)
+        for (i = 0; i < arraycount(DesiredRole.PrimaryWeapons); ++i)
         {
-            if (desiredRole.PrimaryWeapons[i].item != none)
+            if (DesiredRole.PrimaryWeapons[i].item != none)
             {
-                li_AvailableWeapons[0].Add(desiredRole.PrimaryWeapons[i].Item.default.ItemName,, string(i));
+                li_AvailableWeapons[0].Add(DesiredRole.PrimaryWeapons[i].Item.default.ItemName,, string(i));
             }
         }
         // Update available secondary weapons list
-        for (i = 0; i < arraycount(desiredRole.SecondaryWeapons); ++i)
+        for (i = 0; i < arraycount(DesiredRole.SecondaryWeapons); ++i)
         {
-            if (desiredRole.SecondaryWeapons[i].item != none)
+            if (DesiredRole.SecondaryWeapons[i].item != none)
             {
-                li_AvailableWeapons[1].Add(desiredRole.SecondaryWeapons[i].Item.default.ItemName,, string(i));
+                li_AvailableWeapons[1].Add(DesiredRole.SecondaryWeapons[i].Item.default.ItemName,, string(i));
             }
         }
         // Update equipment
@@ -408,11 +407,11 @@ function UpdateRoleEquipment()
     temp = -1;
 
     // Add grenades if needed
-    for (i = 0; i < arraycount(desiredRole.Grenades); ++i)
+    for (i = 0; i < arraycount(DesiredRole.Grenades); ++i)
     {
-        if (desiredRole.Grenades[i].Item != none)
+        if (DesiredRole.Grenades[i].Item != none)
         {
-            WeaponAttach = class<ROWeaponAttachment>(desiredRole.Grenades[i].Item.default.AttachmentClass);
+            WeaponAttach = class<ROWeaponAttachment>(DesiredRole.Grenades[i].Item.default.AttachmentClass);
 
             if (WeaponAttach != none)
             {
@@ -428,11 +427,11 @@ function UpdateRoleEquipment()
     }
 
     // Parse GivenItems array
-    for (i = 0; i < desiredRole.GivenItems.Length; ++i)
+    for (i = 0; i < DesiredRole.GivenItems.Length; ++i)
     {
-        if (desiredRole.GivenItems[i] != "")
+        if (DesiredRole.GivenItems[i] != "")
         {
-            w = class<Weapon>(DynamicLoadObject(desiredRole.GivenItems[i], class'class'));
+            w = class<Weapon>(DynamicLoadObject(DesiredRole.GivenItems[i], class'class'));
 
             if (w != none)
             {
@@ -440,15 +439,15 @@ function UpdateRoleEquipment()
             }
             else
             {
-                pu = class<Powerups>(DynamicLoadObject(desiredRole.GivenItems[i], class'class'));
+                pu = class<Powerups>(DynamicLoadObject(DesiredRole.GivenItems[i], class'class'));
                 WeaponAttach = class<ROWeaponAttachment>(pu.default.AttachmentClass);
             }
 
             if (WeaponAttach != none)
             {
                 // Force AT weapon to go in slot #4
-                if (desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerFaustWeapon" || desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_BazookaWeapon" ||
-                    desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerschreckWeapon" || desiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PIATWeapon")
+                if (DesiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerFaustWeapon" || DesiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_BazookaWeapon" ||
+                    DesiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PanzerschreckWeapon" || DesiredRole.GivenItems[i] ~= "DH_ATWeapons.DH_PIATWeapon")
                 {
                     temp = count;
                     count = 3;
@@ -471,7 +470,7 @@ function UpdateRoleEquipment()
             }
 
             // This check needs to be done here because DH_ParachuteItem has no attachment
-            if (desiredRole.GivenItems[i] ~= "DH_Equipment.DH_ParachuteItem")
+            if (DesiredRole.GivenItems[i] ~= "DH_Equipment.DH_ParachuteItem")
             {
                 bHideItem = true;
             }
@@ -498,15 +497,15 @@ function AutoPickWeapons()
     local int i;
 
     // If we already had selected a weapon, then re-select it.
-    if (currentTeam == desiredTeam && currentRole == desiredRole &&
-        desiredWeapons[0] == -5 && desiredWeapons[1] == -5)
+    if (CurrentTeam == DesiredTeam && CurrentRole == DesiredRole &&
+        DesiredWeapons[0] == -5 && DesiredWeapons[1] == -5)
     {
         for (i = 0; i < 2; ++i)
         {
-            desiredWeapons[i] = currentWeapons[i];
+            DesiredWeapons[i] = CurrentWeapons[i];
 
             if (li_AvailableWeapons[i].ItemCount != 0)
-                li_AvailableWeapons[i].SetIndex(FindIndexInWeaponsList(desiredWeapons[i], li_AvailableWeapons[i]));
+                li_AvailableWeapons[i].SetIndex(FindIndexInWeaponsList(DesiredWeapons[i], li_AvailableWeapons[i]));
 
             UpdateSelectedWeapon(i);
         }
@@ -519,7 +518,7 @@ function AutoPickWeapons()
             if (li_AvailableWeapons[i].ItemCount != 0)
                 li_AvailableWeapons[i].SetIndex(0);
 
-            desiredWeapons[i] = int(li_AvailableWeapons[i].GetExtraAtIndex(0));
+            DesiredWeapons[i] = int(li_AvailableWeapons[i].GetExtraAtIndex(0));
 
             UpdateSelectedWeapon(i);
         }
@@ -539,7 +538,7 @@ function int FindIndexInWeaponsList(int index, GUIList list)
 function UpdateSelectedWeapon(int weaponCategory)
 {
     local int i;
-    local class<Inventory> item;
+    local class<Inventory> Item;
 
     // Clear current weapon & mag display
     i_WeaponImages[weaponCategory].Image = none;
@@ -548,24 +547,24 @@ function UpdateSelectedWeapon(int weaponCategory)
         i_MagImages[weaponCategory].Image = none;
     }
 
-    if (desiredRole != none)
+    if (DesiredRole != none)
     {
         i = int(li_AvailableWeapons[weaponCategory].GetExtra());
 
         if (weaponCategory == 0)
         {
-            item = desiredRole.PrimaryWeapons[i].Item;
+            Item = DesiredRole.PrimaryWeapons[i].Item;
 
             // Set min/max/mid for ammo button on primary weapon
-            if (item != none)
+            if (Item != none)
             {
-                nu_PrimaryAmmoMags.MinValue = DH_RoleInfo(desiredRole).MinStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MinValue = DH_RoleInfo(DesiredRole).MinStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
                 if (nu_PrimaryAmmoMags.MinValue < 1)
                 {
                     nu_PrimaryAmmoMags.MinValue = 1;
                 }
-                nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(desiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
-                nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(desiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(DesiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(DesiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
                 nu_PrimaryAmmoMags.Value = string(DHP.DesiredAmmoAmount);
@@ -584,28 +583,28 @@ function UpdateSelectedWeapon(int weaponCategory)
         }
         else
         {
-            item = desiredRole.SecondaryWeapons[i].Item;
+            Item = DesiredRole.SecondaryWeapons[i].Item;
         }
 
-        if (item != none)
+        if (Item != none)
         {
-            if (class<ROWeaponAttachment>(item.default.AttachmentClass) != none)
+            if (class<ROWeaponAttachment>(Item.default.AttachmentClass) != none)
             {
-                i_WeaponImages[weaponCategory].Image = class<ROWeaponAttachment>(item.default.AttachmentClass).default.menuImage;
+                i_WeaponImages[weaponCategory].Image = class<ROWeaponAttachment>(Item.default.AttachmentClass).default.menuImage;
             }
 
-            if (class<Weapon>(item) != none &&
-                class<Weapon>(item).default.FireModeClass[0] != none &&
-                class<Weapon>(item).default.FireModeClass[0].default.AmmoClass != none &&
+            if (class<Weapon>(Item) != none &&
+                class<Weapon>(Item).default.FireModeClass[0] != none &&
+                class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass != none &&
                 weaponCategory == 0)
             {
-                i_MagImages[weaponCategory].Image = class<Weapon>(item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
+                i_MagImages[weaponCategory].Image = class<Weapon>(Item).default.FireModeClass[0].default.AmmoClass.default.IconMaterial;
             }
 
-            desiredWeapons[weaponCategory] = i;
+            DesiredWeapons[weaponCategory] = i;
 
             // Update deploy time
-            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ SecondsText;
+            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,DesiredRole,DesiredWeapons[0]) @ SecondsText;
         }
     }
 }
@@ -631,23 +630,23 @@ function int getTeamCount(int index)
 
 function UpdateRoleCounts()
 {
-    local int i, roleLimit, roleCurrentCount, roleBotCount;
-    local RORoleInfo role;
+    local int i, RoleLimit, RoleCurrentCount, RoleBotCount;
+    local RORoleInfo Role;
     local bool bHasBots, bIsFull, bIsCurrent;
 
-    if (desiredTeam != AXIS_TEAM_INDEX && desiredTeam != ALLIES_TEAM_INDEX)
+    if (DesiredTeam != AXIS_TEAM_INDEX && DesiredTeam != ALLIES_TEAM_INDEX)
         return;
 
     for (i = 0; i < li_Roles.ItemCount; ++i)
     {
-        role = RORoleInfo(li_Roles.GetObjectAtIndex(i));
-        if (role == none)
+        Role = RORoleInfo(li_Roles.GetObjectAtIndex(i));
+        if (Role == none)
             continue;
 
-        bIsFull = checkIfRoleIsFull(role, desiredTeam, roleLimit, roleCurrentCount, roleBotCount);
-        bHasBots = (roleBotCount > 0);
+        bIsFull = CheckIfRoleIsFull(Role, DesiredTeam, RoleLimit, RoleCurrentCount, RoleBotCount);
+        bHasBots = (RoleBotCount > 0);
 
-        if (role == currentRole)
+        if (Role == CurrentRole)
         {
             bIsCurrent = true;
         }
@@ -658,63 +657,63 @@ function UpdateRoleCounts()
 
         if (DHP != none && DHP.bUseNativeRoleNames)
         {
-            li_Roles.SetItemAtIndex(i, FormatRoleString(role.AltName, roleLimit, roleCurrentCount, bHasBots, bIsCurrent));
+            li_Roles.SetItemAtIndex(i, FormatRoleString(Role.AltName, RoleLimit, RoleCurrentCount, bHasBots, bIsCurrent));
         }
         else
         {
-            li_Roles.SetItemAtIndex(i, FormatRoleString(role.MyName, roleLimit, roleCurrentCount, bHasBots, bIsCurrent));
+            li_Roles.SetItemAtIndex(i, FormatRoleString(Role.MyName, RoleLimit, RoleCurrentCount, bHasBots, bIsCurrent));
         }
         li_Roles.SetDisabledAtIndex(i, bIsFull);
     }
 }
 
-function bool checkIfRoleIsFull(RORoleInfo role, int team, optional out int roleLimit, optional out int roleCount, optional out int roleBotCount)
+function bool CheckIfRoleIsFull(RORoleInfo Role, int Team, optional out int RoleLimit, optional out int RoleCount, optional out int RoleBotCount)
 {
     local int index;
 
-    index = FindRoleIndexInGRI(role, team);
+    index = FindRoleIndexInGRI(Role, Team);
 
-    if (team == AXIS_TEAM_INDEX)
+    if (Team == AXIS_TEAM_INDEX)
     {
-        roleCount = DHGRI.DHAxisRoleCount[index];
-        roleBotCount = DHGRI.DHAxisRoleBotCount[index];
+        RoleCount = DHGRI.DHAxisRoleCount[index];
+        RoleBotCount = DHGRI.DHAxisRoleBotCount[index];
     }
-    else if (team == ALLIES_TEAM_INDEX)
+    else if (Team == ALLIES_TEAM_INDEX)
     {
-        roleCount = DHGRI.DHAlliesRoleCount[index];
-        roleBotCount = DHGRI.DHAlliesRoleBotCount[index];
+        RoleCount = DHGRI.DHAlliesRoleCount[index];
+        RoleBotCount = DHGRI.DHAlliesRoleBotCount[index];
     }
     else
     {
-        warn("Invalid team used when calling checkIfRoleIsFull():" @ team);
+        warn("Invalid Team used when calling CheckIfRoleIsFull():" @ Team);
 
         return false;
     }
 
-    roleLimit = role.GetLimit(DHGRI.MaxPlayers);
+    RoleLimit = Role.GetLimit(DHGRI.MaxPlayers);
 
-    return (roleCount == roleLimit) && (roleLimit != 0) && !(roleBotCount > 0) && (currentRole != role);
+    return (RoleCount == RoleLimit) && (RoleLimit != 0) && !(RoleBotCount > 0) && (CurrentRole != Role);
 }
 
-function int FindRoleIndexInGRI(RORoleInfo role, int team)
+function int FindRoleIndexInGRI(RORoleInfo Role, int Team)
 {
     local int i;
 
-    if (team == AXIS_TEAM_INDEX)
+    if (Team == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(DHGRI.DHAxisRoles); ++i)
         {
-            if (DHGRI.DHAxisRoles[i] == role)
+            if (DHGRI.DHAxisRoles[i] == Role)
             {
                 return i;
             }
         }
     }
-    else if (team == ALLIES_TEAM_INDEX)
+    else if (Team == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(DHGRI.DHAlliesRoles); ++i)
         {
-            if (DHGRI.DHAlliesRoles[i] == role)
+            if (DHGRI.DHAlliesRoles[i] == Role)
             {
                 return i;
             }
@@ -726,20 +725,20 @@ function int FindRoleIndexInGRI(RORoleInfo role, int team)
     }
 }
 
-function string FormatRoleString(string roleName, int roleLimit, int roleCount, bool bHasBots, optional bool bIsCurrentRole)
+function string FormatRoleString(string RoleName, int RoleLimit, int RoleCount, bool bHasBots, optional bool bIsCurrentRole)
 {
     local string s;
 
-    if (roleLimit == 0)
+    if (RoleLimit == 0)
     {
-        s = roleName $ " [" $ roleCount $ "]";
+        s = RoleName $ " [" $ RoleCount $ "]";
     }
     else
     {
-        if (roleCount == roleLimit && !bHasBots)
-            s = roleName $ " [" $ MyDeployMenu.RoleFullText $ "]";
+        if (RoleCount == RoleLimit && !bHasBots)
+            s = RoleName $ " [" $ MyDeployMenu.RoleFullText $ "]";
         else
-            s = roleName $ " [" $ roleCount $ "/" $ roleLimit $ "]";
+            s = RoleName $ " [" $ RoleCount $ "/" $ RoleLimit $ "]";
     }
 
     if (bIsCurrentRole)
@@ -755,10 +754,28 @@ function string FormatRoleString(string roleName, int roleLimit, int roleCount, 
     return s;
 }
 
-//This function needs work
+function bool IsApplicationChanged()
+{
+    // Check values for changes
+    if (CurrentRole != DesiredRole ||
+        CurrentTeam != DesiredTeam ||
+        CurrentWeapons[0] != DesiredWeapons[0] ||
+        CurrentWeapons[1] != DesiredWeapons[1] ||
+        nu_PrimaryAmmoMags.Value != string(DHP.DesiredAmmoAmount) ||
+        MyDeployMenu.SpawnPointIndex != DHP.SpawnPointIndex ||
+        MyDeployMenu.VehiclePoolIndex != DHP.VehiclePoolIndex ||
+        MyDeployMenu.SpawnVehicleIndex != DHP.SpawnVehicleIndex)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// TODO: clean up function && optimize if possible
 function AttemptDeployApplication(bool bAttemptDeploy, optional bool bDontShowErrors)
 {
-    local byte teamIndex, roleIndex, w1, w2;
+    local byte TeamIndex, RoleIndex, w1, w2;
 
     if (DHP == none)
     {
@@ -766,44 +783,44 @@ function AttemptDeployApplication(bool bAttemptDeploy, optional bool bDontShowEr
     }
 
     // Get desired team info
-    if (desiredTeam == currentTeam)
+    if (DesiredTeam == CurrentTeam)
     {
-        teamIndex = 255;    // No change
+        TeamIndex = 255;    // No change
     }
     else
     {
-        if (desiredTeam == -1)
-            teamIndex = 254; // spectator
+        if (DesiredTeam == -1)
+            TeamIndex = 254; // spectator
         else
-            teamIndex = desiredTeam;
+            TeamIndex = DesiredTeam;
     }
 
-    // Get role switch info
-    if (teamIndex == 254 || (teamIndex == 255 && desiredTeam == -1))
-        roleIndex = 255; // no role switch if we're spectating
-    else if (desiredRole == none)
+    // Get Role switch info
+    if (TeamIndex == 254 || (TeamIndex == 255 && DesiredTeam == -1))
+        RoleIndex = 255; // no role switch if we're spectating
+    else if (DesiredRole == none)
     {
         warn("No role selected, using role #0");
-        roleIndex = 0; // force role of 0 if we havn't picked a role (should never happen)
+        RoleIndex = 0; // force role of 0 if we havn't picked a role (should never happen)
     }
-    else if (desiredRole == currentRole && desiredTeam == currentTeam)
+    else if (DesiredRole == CurrentRole && DesiredTeam == CurrentTeam)
     {
-        roleIndex = 255; // No change
+        RoleIndex = 255; // No change
     }
     else
     {
-        if (checkIfRoleIsFull(desiredRole, desiredTeam) && Controller != none && !bDontShowErrors)
+        if (CheckIfRoleIsFull(DesiredRole, DesiredTeam) && Controller != none && !bDontShowErrors)
         {
             Controller.OpenMenu(Controller.QuestionMenuClass);
             GUIQuestionPage(Controller.TopPage()).SetupQuestion(MyDeployMenu.RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
             return;
         }
-        roleIndex = FindRoleIndexInGRI(RORoleInfo(li_Roles.GetObject()), desiredTeam);
+        RoleIndex = FindRoleIndexInGRI(RORoleInfo(li_Roles.GetObject()), DesiredTeam);
     }
 
     // Get weapons info
-    w1 = desiredWeapons[0];
-    w2 = desiredWeapons[1];
+    w1 = DesiredWeapons[0];
+    w2 = DesiredWeapons[1];
 
     // Make sure DesiredAmmoAmount is set
     DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
@@ -812,14 +829,7 @@ function AttemptDeployApplication(bool bAttemptDeploy, optional bool bDontShowEr
     MyDeployMenu.bAttemptDeploy = bAttemptDeploy;
 
     // Attempt team, role, weapons change, and spawn indices change
-    DHP.ServerSetPlayerInfo(teamIndex, roleIndex, w1, w2, MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex);
-
-    // We possibly changed, so lets update the values  THis might be causing bugs on semi-failure
-    //currentRole = desiredRole;
-    //currentTeam = desiredTeam;
-    //currentWeapons[0] = desiredWeapons[0];
-    //currentWeapons[1] = desiredWeapons[1];
-    //GetInitialValues(); //gulp lets see if this works and doesn't bug the fuck out
+    DHP.ServerSetPlayerInfo(TeamIndex, RoleIndex, w1, w2, MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex);
 }
 
 function bool InternalOnClick(GUIComponent Sender)
@@ -844,7 +854,7 @@ function bool InternalOnClick(GUIComponent Sender)
 
 function InternalOnChange(GUIComponent Sender)
 {
-    local RORoleInfo role;
+    local RORoleInfo Role;
 
     if (!bRendered)
     {
@@ -854,29 +864,28 @@ function InternalOnChange(GUIComponent Sender)
     switch (Sender)
     {
         case lb_Roles:
-            role = RORoleInfo(li_Roles.GetObject());
-            if (role != none && RoleSelectReclickTime == default.RoleSelectReclickTime)
+            Role = RORoleInfo(li_Roles.GetObject());
+            if (Role != none && RoleSelectReclickTime == default.RoleSelectReclickTime)
             {
                 // Because we changed role, lets reset our desired ammo
                 DHP.DesiredAmmoAmount = 0;
 
                 RoleSelectReclickTime = 0.0;
-                ChangeDesiredRole(role);
-                //AttemptDeployApplication();
+                ChangeDesiredRole(Role);
             }
             else
             {
                 // We clicked another role, but we tried changing too fast, lets force index back
-                if (role != none && desiredRole != none && desiredRole != role)
+                if (Role != none && DesiredRole != none && DesiredRole != Role)
                 {
-                    li_Roles.SetIndex(li_Roles.FindItemObject(desiredRole));
+                    li_Roles.SetIndex(li_Roles.FindItemObject(DesiredRole));
                 }
             }
             break;
 
         case nu_PrimaryAmmoMags:
             DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,desiredRole,desiredWeapons[0]) @ SecondsText;
+            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,DesiredRole,DesiredWeapons[0]) @ SecondsText;
             break;
     }
 }
@@ -890,13 +899,6 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float delta)
     }
 
     return super.OnKeyEvent(key, state, delta);
-}
-
-event Closed(GUIComponent Sender, bool bCancelled)
-{
-    super.Closed(Sender, bCancelled);
-
-    //AttemptDeployApplication(true);
 }
 
 defaultproperties

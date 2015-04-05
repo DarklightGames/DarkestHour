@@ -21,7 +21,7 @@ var localized string                        MenuOptions[10], CloseButtonString;
 var automated DHDeployTabControl            c_LoadoutArea;
 var automated DHDeployTabControl            c_DeploymentMapArea;
 
-var DHDeployMenuPanel                       RolePanel;
+var DHRoleSelectPanel                       RolePanel;
 var DHDeployMenuPanel                       VehiclePanel;
 
 var array<string>                           DeploymentPanelClass;
@@ -200,7 +200,7 @@ function HandlePanelInitialization()
     }
 
     // Set easy panel access
-    RolePanel = DHDeployMenuPanel(c_LoadoutArea.TabStack[0].MyPanel);
+    RolePanel = DHRoleSelectPanel(c_LoadoutArea.TabStack[0].MyPanel);
     VehiclePanel = DHDeployMenuPanel(c_LoadoutArea.TabStack[1].MyPanel);
 
     // We have a team now
@@ -495,6 +495,12 @@ static function string getErrorMessageForId(int id)
 
 function OnClose(optional bool bCancelled)
 {
+    // Check to see if user changed anything and if so attempt application
+    if (RolePanel.IsApplicationChanged())
+    {
+        //Log("=== Application Changed, attempting application submission ===");
+        RolePanel.AttemptDeployApplication(false, true); // Request application without deployment or errors
+    }
 }
 
 function CloseMenu()

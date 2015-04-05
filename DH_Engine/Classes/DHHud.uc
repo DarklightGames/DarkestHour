@@ -20,7 +20,7 @@ var  localized string   LegendCarriedArtilleryRadioText;
 
 var  localized string   NeedReloadText;
 var  localized string   CanReloadText;
-var  localized string   RedeployText[5];
+var  localized string   RedeployText[6];
 
 var  globalconfig int   PlayerNameFontSize; // the size of the name you see when you mouseover a player
 var  globalconfig bool  bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -3612,14 +3612,29 @@ simulated function DrawSpectatingHud(Canvas C)
                 S = "Ready to deploy! Hit escape and select a spawn point";
                 if (DHP.bShouldAttemptAutoDeploy)
                 {
-                    DHP.CheckToAutoDeploy();
+                    DHP.AttemptAutoDeploy();
                 }
             }
             else
             {
-                if (DHP.SpawnPointIndex != 255 && ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
+                if (ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
                 {
-                    S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                    if (DHP.VehiclePoolIndex != 255 && DHP.SpawnPointIndex != 255)
+                    {
+                        // Vehicle pool at SP
+                        S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[5] @ GRI.GetVehiclePoolIndexName(DHP.VehiclePoolIndex) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                    }
+                    else if (DHP.SpawnPointIndex != 255)
+                    {
+                        // Infantry at SP
+                        S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                    }
+                    else if (DHP.SpawnVehicleIndex != 255)
+                    {
+                        // Spawn vehicle
+                        // TODO: make spawn vehicle string
+                        S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
+                    }
                 }
                 else
                 {
@@ -3885,5 +3900,6 @@ defaultproperties
     RedeployText(2)="in"
     RedeployText(3)="| Press escape to change |"
     RedeployText(4)="Ready to deploy! Hit escape and select a spawn point" //Theel: escape is variable
+    RedeployText(5)="driving a"
     ReinforcementText="Redeploy in: "
 }
