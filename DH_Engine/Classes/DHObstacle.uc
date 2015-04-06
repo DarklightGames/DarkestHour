@@ -248,6 +248,24 @@ simulated function class<Emitter> GetClearEmitterClass()
     return none;
 }
 
+simulated function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    local DarkestHourGame G;
+
+    if (Role == ROLE_Authority &&
+        Info.Types[TypeIndex].bCanBeDestroyedByExplosives &&
+        !DamageType.default.bLocationalHit &&
+        Damage >= Info.Types[TypeIndex].ExplosionDamageThreshold)
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none && G.ObstacleManager != none)
+        {
+            G.ObstacleManager.SetCleared(self, true);
+        }
+    }
+}
+
 defaultproperties
 {
     bBlockPlayers=true
