@@ -3993,6 +3993,8 @@ function CheckBob(float DeltaTime, vector Y)
     local float OldBobTime;
     local int m,n;
     local float BobModifier;
+    local float IronsightBobDecayModifier;
+    local float IronsightBobAmplitudeModifier;
 
     OldBobTime = BobTime;
 
@@ -4019,10 +4021,26 @@ function CheckBob(float DeltaTime, vector Y)
 
         if (bIronSights)
         {
+            if (bIsCrawling)
+            {
+                IronsightBobAmplitudeModifier = 0.5;
+                IronsightBobDecayModifier = 1.5;
+            }
+            else if (bIsCrouched)
+            {
+                IronsightBobAmplitudeModifier = 0.75;
+                IronsightBobDecayModifier = 1.25;
+            }
+            else
+            {
+                IronsightBobAmplitudeModifier = 1.0;
+                IronsightBobDecayModifier = 1.0;
+            }
+
             IronsightBobTime += DeltaTime;
 
-            IronsightBob.Y = BobFunction(IronsightBobTime, IronsightBobAmplitude, IronsightBobFrequency, IronsightBobDecay);
-            IronsightBob.Z = BobFunction(IronsightBobTime + 0.125, IronsightBobAmplitude, IronsightBobFrequency, IronsightBobDecay);
+            IronsightBob.Y = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequency, IronsightBobDecay * IronsightBobDecayModifier);
+            IronsightBob.Z = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequency, IronsightBobDecay * IronsightBobDecayModifier);
         }
         else
         {
