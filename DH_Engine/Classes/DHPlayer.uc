@@ -2293,7 +2293,6 @@ simulated function ClientHandleDeath()
 simulated function AttemptAutoDeploy()
 {
     local DHGameReplicationInfo   DHGRI;
-    local DH_RoleInfo             RI;
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
 
