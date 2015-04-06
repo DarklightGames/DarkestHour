@@ -73,8 +73,9 @@ def main():
     packages_to_compile = []
     package_crcs = dict()
 
-    with open('.packagecrcs', 'r') as f:
-        package_crcs = json.load(f)
+    if os.path.isfile('.packagecrcs'):
+        with open('.packagecrcs', 'r') as f:
+            package_crcs = json.load(f)
 
     for package in packages:
         ro_sys_package_path = os.path.join(ro_sys_dir, package + '.u')
