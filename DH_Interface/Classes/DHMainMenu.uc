@@ -451,7 +451,7 @@ function HttpParse(out string Page)
 defaultproperties
 {
     // IP variables
-    WaitString="Join Test Server"
+    WaitString="Quick Play"
     ConnectingString="Connecting - Press Esc to Cancel"
     GetQuickPlayAddr="darkesthourgame.com"
     GetRequest="GET /quickplayip.php HTTP/1.1" //CAREFUL! quickplayip.php needs to be lowercase
@@ -500,7 +500,7 @@ defaultproperties
 
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
-        Caption="Join Test Server"
+        Caption="Quick Play"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
