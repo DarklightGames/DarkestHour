@@ -117,7 +117,10 @@ simulated function PostNetBeginPlay()
         S.Y = UP.ScaleY;
         S.Z = UP.ScaleZ;
         SetDrawScale3D(S);
+    }
 
+    if (Level.NetMode != NM_DedicatedServer)
+    {
         bPlayEffects = true;
     }
 }
