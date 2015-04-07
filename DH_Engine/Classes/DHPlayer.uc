@@ -20,6 +20,8 @@ var     protected float         DHSprintMaxTurnSpeed;
 var     protected float         DHProneMaxTurnSpeed;
 var     protected float         DHStandardTurnSpeedFactor;
 var     protected float         DHHalfTurnSpeedFactor;
+var globalconfig float          DHISTurnSpeedFactor;        // 0.0 to 1.0
+var globalconfig float          DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
 var     vector                  FlinchRotMag;
 var     vector                  FlinchRotRate;
@@ -80,6 +82,12 @@ replication
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2) { } // No longer used
+
+// Modified to bypass more RO shit design
+event InitInputSystem()
+{
+    super(UnrealPlayer).InitInputSystem();
+}
 
 // Modified to have client setup access to DH_LevelInfo so it can get info from it
 simulated event PostBeginPlay()
@@ -403,6 +411,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
     local ROVehicle ROVeh;
     local DH_Pawn   ROPwn;
     local ROWeapon  ROWeap;
+    local float     TurnSpeedFactor;
 
     ROPwn = DH_Pawn(Pawn);
 
@@ -472,51 +481,54 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 
         DesiredRotation = ViewRotation; // save old rotation
 
-        if (bTurnToNearest != 0)
+        TurnTarget = none;
+        bRotateToDesired = false;
+        bSetTurnRot = false;
+
+        // Begin handling turning speed
+        TurnSpeedFactor = DHStandardTurnSpeedFactor;
+
+        if (ROPwn != none)
         {
-            TurnTowardNearestEnemy();
+            if (ROPwn.bIsCrawling || ROPwn.bIsSprinting || ROPwn.bRestingWeapon)
+            {
+                TurnSpeedFactor = DHHalfTurnSpeedFactor;
+            }
         }
-        else if (bTurn180 != 0)
+
+        // if sniper scope or binoc
+        if ((ROWeap != none && ROWeap.bPlayerViewIsZoomed) ||
+            (ROWeap.IsA('BinocularsItem') && ROWeap.bPlayerViewIsZoomed))
+
         {
-            TurnAround();
+            TurnSpeedFactor *= DHScopeTurnSpeedFactor;
+        }
+        else if (ROPwn != none && ROPwn.bIronSights)
+        {
+            TurnSpeedFactor *= DHISTurnSpeedFactor;
+        }
+
+        // Handle viewrotation
+        if (ROPwn != none && ROPwn.bIsCrawling)
+        {
+            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
+            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
+        }
+        else if (ROPwn != none && ROPwn.bIsSprinting)
+        {
+            ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
+            ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
         }
         else
         {
-            TurnTarget = none;
-            bRotateToDesired = false;
-            bSetTurnRot = false;
+            ViewRotation.Yaw += TurnSpeedFactor * DeltaTime * aTurn;
+            ViewRotation.Pitch += TurnSpeedFactor * DeltaTime * aLookUp;
+        }
 
-            if (bHudLocksPlayerRotation)
-            {
-                // No camera change if we're locking rotation
-            }
-            else if (ROPwn != none && ROPwn.bIsCrawling)
-            {
-                // Clamp the rotational change for prone
-                ViewRotation.Yaw += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aTurn), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
-                ViewRotation.Pitch += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aLookUp), -DHProneMaxTurnSpeed, DHProneMaxTurnSpeed);
-            }
-            else if (ROPwn != none && ROPwn.bIsSprinting)
-            {
-                // Clamp the rotational change for sprint
-                ViewRotation.Yaw += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aTurn), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
-                ViewRotation.Pitch += FClamp((DHHalfTurnSpeedFactor * DeltaTime * aLookUp), -DHSprintMaxTurnSpeed, DHSprintMaxTurnSpeed);
-            }
-            else if (ROPwn != none && ROPwn.bRestingWeapon)
-            {
-                ViewRotation.Yaw += DHHalfTurnSpeedFactor * DeltaTime * aTurn;
-                ViewRotation.Pitch += DHHalfTurnSpeedFactor * DeltaTime * aLookUp;
-            }
-            else
-            {
-                ViewRotation.Yaw += DHStandardTurnSpeedFactor * DeltaTime * aTurn;
-                ViewRotation.Pitch += DHStandardTurnSpeedFactor * DeltaTime * aLookUp;
-            }
 
-            if (Pawn != none && Pawn.Weapon != none && ROPwn != none)
-            {
-                ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
-            }
+        if (Pawn != none && Pawn.Weapon != none && ROPwn != none)
+        {
+            ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
         }
 
         if (ROPwn != none)
@@ -2560,6 +2572,8 @@ defaultproperties
     DHProneMaxTurnSpeed=170.0
     DHStandardTurnSpeedFactor=32.0
     DHHalfTurnSpeedFactor=16.0
+    DHISTurnSpeedFactor=0.5
+    DHScopeTurnSpeedFactor=0.33
 
     // Other values
     SpawnTime=15
@@ -2575,6 +2589,7 @@ defaultproperties
     DesiredFOV=90.0
     DefaultFOV=90.0
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
+    InputClass=class'DH_Engine.DHPlayerInput'
     PawnClass=class'DH_Engine.DH_Pawn'
     SpawnPointIndex=255
     VehiclePoolIndex=255
