@@ -261,7 +261,6 @@ function bool OnClick(GUIComponent Sender)
         // Suicide
         case b_MenuOptions[7]:
             PlayerOwner().ConsoleCommand("SUICIDE");
-            CloseMenu();
             break;
 
         // Disconnect
@@ -270,6 +269,7 @@ function bool OnClick(GUIComponent Sender)
             CloseMenu();
             break;
     }
+
     return false;
 }
 
@@ -366,7 +366,7 @@ function ChangeSpawnIndices(byte NewSpawnPointIndex, byte NewVehiclePoolIndex, b
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
     local int Result;
-    local string error_msg;
+    local string ErrorMessage;
 
     if (Msg == "notify_gui_role_selection_page")
     {
@@ -377,34 +377,18 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             case 0: // All is well!
             case 97:
             case 98:
-                if (DHP != none && bAttemptDeploy)
-                {
-                    DHP.PlayerReplicationInfo.bReadyToPlay = true;
-
-                    // This should go in the area that gets called if everything is fine
-                    if (DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
-                    {
-                        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount, true);
-                    }
-                    else
-                    {
-                        DHP.ServerAttemptDeployPlayer(DHP.DesiredAmmoAmount);
-                    }
-
-                    CloseMenu(); // Close menu as deploying
-                }
-
+                CloseMenu();
                 return;
 
             default:
-                error_msg = getErrorMessageForId(result);
+                ErrorMessage = getErrorMessageForId(result);
                 break;
         }
 
         if (Controller != none)
         {
             Controller.OpenMenu(Controller.QuestionMenuClass);
-            GUIQuestionPage(Controller.TopPage()).SetupQuestion(error_msg, QBTN_Ok, QBTN_Ok);
+            GUIQuestionPage(Controller.TopPage()).SetupQuestion(ErrorMessage, QBTN_Ok, QBTN_Ok);
         }
     }
 }
@@ -495,11 +479,29 @@ static function string getErrorMessageForId(int id)
 
 function OnClose(optional bool bCancelled)
 {
-    // Check to see if user changed anything and if so attempt application
-    if (RolePanel.IsApplicationChanged())
+    local DHPlayer P;
+
+    super.OnClose(bCancelled);
+
+    P = DHPlayer(PlayerOwner());
+
+    if (P != none)
     {
-        //Log("=== Application Changed, attempting application submission ===");
-        RolePanel.AttemptDeployApplication(false, true); // Request application without deployment or errors
+        P.bIsInSpawnMenu = false;
+    }
+}
+
+function OnOpen()
+{
+    local DHPlayer P;
+
+    super.OnOpen();
+
+    P = DHPlayer(PlayerOwner());
+
+    if (P != none)
+    {
+        P.bIsInSpawnMenu = true;
     }
 }
 

@@ -3603,17 +3603,17 @@ simulated function DrawSpectatingHud(Canvas C)
         C.SetPos(X, Y);
         C.DrawTextClipped(S);
 
-        if (GRI.bMatchHasBegun && DHP != none && DHP.CanRestartPlayer()
-            && PlayerOwner.PlayerReplicationInfo.Team != none && GRI.bReinforcementsComing[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] == 1)
+        if (GRI.bMatchHasBegun &&
+            DHP != none &&
+            /*DHP.CanRestartPlayer() &&*/
+            PlayerOwner.PlayerReplicationInfo.Team != none &&
+            GRI.bReinforcementsComing[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] == 1)
         {
-            Time = DHP.LastKilledTime + DHP.RedeployTime - Level.TimeSeconds;// Level.TimeSeconds;
+            Time = DHP.LastKilledTime + DHP.SpawnTime - Level.TimeSeconds;
+
             if (Time <= 0.0)
             {
                 S = "Ready to deploy! Hit escape and select a spawn point";
-                if (DHP.bShouldAttemptAutoDeploy)
-                {
-                    DHP.AttemptAutoDeploy();
-                }
             }
             else
             {

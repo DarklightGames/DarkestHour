@@ -3924,14 +3924,14 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
     }
 }
 
-function SetAmmoPercent(byte AmmoAmount)
+function SetAmmoAmount(byte AmmoAmount)
 {
     local Inventory Inv;
     local DH_ProjectileWeapon Wep;
     local int i;
 
     // Cycle inventory and change ammo on needed items
-    for (Inv = Inventory;Inv!=none;Inv = Inv.Inventory)
+    for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
     {
         Wep = DH_ProjectileWeapon(Inv);
 
@@ -3943,8 +3943,11 @@ function SetAmmoPercent(byte AmmoAmount)
 
         // Some odd prevention measure that exists in other things like this
         i++;
-        if (i>500)
+
+        if (i > 500)
+        {
             break;
+        }
     }
 }
 

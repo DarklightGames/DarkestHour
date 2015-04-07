@@ -1450,11 +1450,6 @@ state RoundInPlay
         SpawnCount[AXIS_TEAM_INDEX] = 0;
         SpawnCount[ALLIES_TEAM_INDEX] = 0;
 
-        LastReinforcementTime[AXIS_TEAM_INDEX] = ElapsedTime;
-        LastReinforcementTime[ALLIES_TEAM_INDEX] = ElapsedTime;
-        GRI.LastReinforcementTime[AXIS_TEAM_INDEX] = LastReinforcementTime[AXIS_TEAM_INDEX];
-        GRI.LastReinforcementTime[ALLIES_TEAM_INDEX] = LastReinforcementTime[ALLIES_TEAM_INDEX];
-
         // Arty
         GRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
         GRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
@@ -1651,9 +1646,22 @@ state RoundInPlay
         }
     }
 
+    function EndState()
+    {
+        local Pawn P;
+
+        super.EndState();
+
+        foreach DynamicActors(class'Pawn', P)
+        {
+            P.StopWeaponFiring();
+        }
+    }
+
     function Timer()
     {
         local int i, ArtilleryStrikeInt;
+        local Controller P;
         local ROGameReplicationInfo GRI;
 
         global.Timer();
@@ -1663,6 +1671,43 @@ state RoundInPlay
         if (NeedPlayers() && AddBot() && RemainingBots > 0)
         {
             RemainingBots--;
+        }
+
+        // Go through both teams and spawn reinforcements if necessary
+        for (i = 0; i < 2; ++i)
+        {
+            if (!SpawnLimitReached(i))
+            {
+                for (P = Level.ControllerList; P != none; P = P.NextController)
+                {
+                    if (!P.bIsPlayer ||
+                        P.Pawn != none ||
+                        P.PlayerReplicationInfo == none ||
+                        P.PlayerReplicationInfo.Team == none ||
+                        P.PlayerReplicationInfo.Team.TeamIndex != i)
+                    {
+                        continue;
+                    }
+
+                    if (ROPlayer(P) != none &&
+                        ROPlayer(P).CanRestartPlayer())
+                    {
+                        RestartPlayer(P);
+                    }
+                    else if (ROBot(P) != none &&
+                             ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none)
+                    {
+                        RestartPlayer(P);
+                    }
+
+                    // If spawn limit has now been reached, send a message out
+                    if (SpawnLimitReached(i))
+                    {
+                        SendReinforcementMessage(i, 1);
+                        break;
+                    }
+                }
+            }
         }
 
         // Go through both teams and update artillery availability
@@ -1695,18 +1740,6 @@ state RoundInPlay
             {
                 ChooseWinner();
             }
-        }
-    }
-
-    function EndState()
-    {
-        local Pawn P;
-
-        super.EndState();
-
-        foreach DynamicActors(class'Pawn', P)
-        {
-            P.StopWeaponFiring();
         }
     }
 }
@@ -1830,7 +1863,7 @@ function HandleReinforcements(Controller C)
     {
         DHGameReplicationInfo(GameReplicationInfo).DHSpawnCount[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit - ++SpawnCount[ALLIES_TEAM_INDEX];
 
-        // If the Allies have used up 85% of their reinforcements, send them a reinforcements low message
+        // if the Allies have used up 85% of their reinforcements, send them a reinforcements low message
         if (SpawnCount[ALLIES_TEAM_INDEX] == Int(LevelInfo.Allies.SpawnLimit * 0.85))
         {
             SendReinforcementMessage(ALLIES_TEAM_INDEX, 0);
@@ -1891,8 +1924,15 @@ exec function DebugWinGame(optional int TeamToWin)
     EndRound(TeamToWin);
 }
 
+function RestartPlayer(Controller C)
+{
+    DeployRestartPlayer(C, true, false);
+}
+
 function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 {
+    local byte SpawnError;
+
     if (bUseOldRestart || DHLevelInfo.SpawnMode == ESM_RedOrchestra)
     {
         SetCharacter(C);
@@ -1906,11 +1946,19 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
     }
     else
     {
-        DHRestartPlayer(C, bHandleReinforcements); // This will handle reinforcements
+        SpawnError = DHRestartPlayer(C, bHandleReinforcements);
+
+        if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
+        {
+            //TODO: this is being called for bots as well, suppress this
+            //Log(SpawnError);
+            //COLIN
+            //TODO: send message to client that spawn failed and put them into the deploy menu with an error!!!
+        }
     }
 }
 
-function DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
+function byte DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 {
     local TeamInfo BotTeam, OtherTeam;
     local DHPlayer DHC;
@@ -1920,10 +1968,12 @@ function DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 
     if (DHC == none)
     {
-        return;
+        return class'DHSpawnManager'.default.SpawnError_Fatal;
     }
 
-    if ((!bPlayersVsBots || (Level.NetMode == NM_Standalone)) && bBalanceTeams && (Bot(C) != none) && (!bCustomBots || (Level.NetMode != NM_Standalone)))
+    if ((!bPlayersVsBots || (Level.NetMode == NM_Standalone)) &&
+        bBalanceTeams && Bot(C) != none &&
+        (!bCustomBots || (Level.NetMode != NM_Standalone)))
     {
         BotTeam = C.PlayerReplicationInfo.Team;
 
@@ -1940,33 +1990,33 @@ function DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
         {
             C.Destroy();
 
-            return;
+            return class'DHSpawnManager'.default.SpawnError_Fatal;
         }
     }
 
     if (bMustJoinBeforeStart && (UnrealPlayer(C) != none) && UnrealPlayer(C).bLatecomer)
     {
-        return;
+        return class'DHSpawnManager'.default.SpawnError_Fatal;
     }
 
     if (C.PlayerReplicationInfo.bOutOfLives)
     {
-        return;
+        return class'DHSpawnManager'.default.SpawnError_Fatal;
     }
 
     if (C.IsA('Bot') && TooManyBots(C))
     {
         C.Destroy();
 
-        return;
+        return class'DHSpawnManager'.default.SpawnError_Fatal;
     }
 
     if (bRestartLevel && Level.NetMode != NM_DedicatedServer && Level.NetMode != NM_ListenServer)
     {
-        return;
+        return class'DHSpawnManager'.default.SpawnError_Fatal;
     }
 
-    if (!SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex) && GetStateName() == 'RoundInPlay')
+    if (!SpawnLimitReached(C.PlayerReplicationInfo.Team.TeamIndex) && IsInState('RoundInPlay'))
     {
         SpawnManager.SpawnPlayer(DHC, SpawnError);
 
@@ -1984,7 +2034,7 @@ function DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 
     if (SpawnError != class'DHSpawnManager'.default.SpawnError_None)
     {
-        Warn("Spawn Error =" @ SpawnError);
+        //Warn("Spawn Error =" @ SpawnError);
     }
 }
 
@@ -2164,12 +2214,12 @@ defaultproperties
     bShowTimeOnScoreboard=true
 
     // Strings/hints
-    ROHints(1)="You can 'cook' an Allied Mk II grenade by pressing the opposite fire button while holding the grenade back."
+    ROHints(1)="You can 'cook' a Mk II grenade by pressing %FIRE3% while holding the grenade back."
     ROHints(13)="You cannot change the 30 Cal barrel, be careful not to overheat!"
-    ROHints(17)="Once you've fired the Bazooka or Panzerschreck get to fresh cover FAST, as the smoke of your backblast will reveal your location. Return fire almost certainly follow!"
+    ROHints(17)="Once you've fired the Bazooka or Panzerschreck get to fresh cover FAST, as the smoke of your backblast will reveal your location. Return fire will almost certainly follow!"
     ROHints(18)="Do not stand directly behind rocket weapons when they're firing; you can sustain serious injury from the exhaust!"
     ROHints(19)="AT soldiers should always take a friend with them for ammo supplies, faster reloads and protection."
-    ROHints(20)="AT weapons will be automatically unloaded if you change to another weapon. It is a good idea to stick with a team-mate to speed up reloading when needed."
+    ROHints(20)="AT weapons will be automatically unloaded if you change to another weapon. It is a good idea to stick with a teammate to speed up reloading when needed."
     RussianNames(0)="Colin Basnett"
     RussianNames(1)="Graham Merrit"
     RussianNames(2)="Ian Campbell"

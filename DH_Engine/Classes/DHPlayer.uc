@@ -5,10 +5,6 @@
 
 class DHPlayer extends ROPlayer;
 
-var     int                     RedeployTime;
-var     float                   LastKilledTime;             // the time at which last death occured
-var     byte                    DesiredAmmoAmount;
-var     bool                    bShouldAttemptAutoDeploy;
 var     bool                    bSwappedTeams;
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
@@ -45,20 +41,25 @@ var     int                     MantleLoopCount;
 var     byte                    MortarTargetIndex;
 var     vector                  MortarHitLocation;
 
-var     byte                    SpawnPointIndex;
-var     byte                    SpawnVehicleIndex;
-var     byte                    VehiclePoolIndex;
-var     Vehicle                 MyLastVehicle;              // used for vehicle spawning to remember last vehicle player spawned (only used by server)
-
 // Debug:
 var     bool                    bSkyOff;                    // flags that the sky has been turned off (like "show sky" console command in single player)
 var     SkyZoneInfo             SavedSkyZone;               // saves the original SkyZone for the player's current ZoneInfo, so it can be restored when the sky is turned back on
+
+// Spawning
+var     byte                    SpawnPointIndex;
+var     byte                    SpawnVehicleIndex;
+var     byte                    VehiclePoolIndex;
+var     byte                    SpawnAmmoAmount;
+var     Vehicle                 SpawnVehicle;               // used for vehicle spawning to remember last vehicle player spawned (only used by server)
+var     bool                    bIsInSpawnMenu;             // player is in spawn menu and should not be auto-spawned
+var     int                     SpawnTime;                  // the amount of time it will take the player to respawn from LastKilledTime
+var     float                   LastKilledTime;             // the time at which last death occured
 
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        RedeployTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex;
+        SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex, SpawnAmmoAmount, LastKilledTime;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -67,14 +68,18 @@ replication
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerThrowATAmmo, ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSaveMortarTarget, ServerCancelMortarTarget,
-        ServerLeaveBody, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerAttemptDeployPlayer, ServerSetPlayerInfo;
+        ServerLeaveBody, ServerClearObstacle, ServerDebugObstacles, ServerDoLog, ServerSetPlayerInfo;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientHandleDeath, ClientFadeFromBlack;
+        ClientProne, ClientToggleDuck, ClientConsoleCommand, ClientFadeFromBlack;
+
+    // Variables the owning client will replicate to the server
+    reliable if (bNetOwner && bNetDirty && Role < ROLE_Authority)   //TODO: verify need for bNetOwner check
+        bIsInSpawnMenu;
 }
 
-function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2) {} // No longer used
+function ServerChangePlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2) { } // No longer used
 
 // Modified to have client setup access to DH_LevelInfo so it can get info from it
 simulated event PostBeginPlay()
@@ -105,10 +110,9 @@ event ClientReset()
     }
 
     //Reset deploy stuff
-    RedeployTime = default.RedeployTime;
+    SpawnTime = default.SpawnTime;
     LastKilledTime = 0;
-    DesiredAmmoAmount = 0;
-    bShouldAttemptAutoDeploy = false;
+    SpawnAmmoAmount = 0;
 
     //Reset camera stuff
     bBehindView = false;
@@ -999,15 +1003,16 @@ state PlayerWalking
     function Timer()
     {
         // Handle check if we should try to enter spawned vehicle
-        if (MyLastVehicle != none)
+        if (SpawnVehicle != none)
         {
             ClientFadeFromBlack(4.0);
 
             if (Pawn != none)
             {
-                MyLastVehicle.TryToDrive(Pawn);
+                SpawnVehicle.TryToDrive(Pawn);
             }
-            MyLastVehicle = none; // Remove it even if it failed
+
+            SpawnVehicle = none; // Remove it even if it failed
         }
     }
 
@@ -1709,12 +1714,21 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if (!HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons())
+    else if (bIsInSpawnMenu || !HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons() || !HasSelectedSpawn())
+    {
+        return false;
+    }
+    else if (Level.TimeSeconds < LastKilledTime + SpawnTime)
     {
         return false;
     }
 
     return true;
+}
+
+function bool HasSelectedSpawn()
+{
+    return SpawnPointIndex != 255 || SpawnVehicleIndex != 255;
 }
 
 // Modified incase this ever gets called, make it open the deploy menu instead of old RoleMenu
@@ -2066,129 +2080,9 @@ exec function CommunicationMenu()
     ClientReplaceMenu("ROInterface.ROCommunicationPage");
 }
 
-exec function DebugFOV()
-{
-    Level.Game.Broadcast(self, "FOV:" @ FovAngle);
-}
-
-// Theel TODO: Revise if statements (combine and optimize this function)
-function bool ServerAttemptDeployPlayer(byte MagCount, optional bool bROSpawn)
-{
-    local DHPlayerReplicationInfo PRI;
-    local DHGameReplicationInfo DHGRI;
-    local DH_RoleInfo RI;
-    local class<Inventory> PrimaryWep;
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (PRI != none)
-    {
-        RI = DH_RoleInfo(PRI.RoleInfo);
-    }
-
-    if (RI != none && PrimaryWeapon > 0 && PrimaryWeapon < arraycount(RI.PrimaryWeapons))
-    {
-        PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
-    }
-
-    // Check if the player is on Axis / Allies and not spectator or something
-    if (PRI.Team == none)
-    {
-        Log("Failed at team check");
-
-        return false;
-    }
-
-    if (PRI == none || DHGRI == none || Pawn != none)
-    {
-        Log("Failed at 0");
-
-        return false;
-    }
-
-    // Confirm this player has a role
-    if (PRI.RoleInfo == none)
-    {
-        Log("Failed at RoleInfo check");
-
-        return false;
-    }
-
-    // Make sure player's team matches the player's role's team
-    if (PRI.RoleInfo.Side != GetTeamNum())
-    {
-        Log("RoleInfoTeam:" @ int(PRI.RoleInfo.Side) @ "PlayerTeam:" @ GetTeamNum());
-        Log("Failed at RoleTeam vs PlayerTeam check");
-        return false;
-    }
-
-    if (MagCount != 0 && PrimaryWep != none && MagCount > class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags)
-    {
-        Log("Failed at 1 MagCount is:" @ MagCount);
-
-        return false;
-    }
-
-    // Check if player is ready to deploy
-    if (LastKilledTime + RedeployTime - Level.TimeSeconds > 0)
-    {
-        Log("Failed at 4");
-
-        return false;
-    }
-
-    // Check if SP is valid
-    if (DHGRI.IsSpawnPointIndexValid(SpawnPointIndex, PRI.Team.TeamIndex))
-    {
-        G.DeployRestartPlayer(self, true);
-    }
-    else if (DHGRI.CanSpawnAtVehicle(SpawnVehicleIndex, self))
-    {
-        G.DeployRestartPlayer(self, true);
-    }
-    else
-    {
-        if (bROSpawn)
-        {
-            G.DeployRestartPlayer(self, true, true);
-        }
-        else
-        {
-            Warn("Neither SpawnPointIndex or SpawnVehicleIndex is set!!!");
-        }
-    }
-
-    if (Pawn != none)
-    {
-        if (MagCount != 0 && DH_Pawn(Pawn) != none)
-        {
-            DH_Pawn(Pawn).SetAmmoPercent(MagCount);
-        }
-
-        RedeployTime = CalculateDeployTime(MagCount); // Calculate and set server/client redeploy time
-
-        if (MyLastVehicle != none && self.IsInState('PlayerWalking'))
-        {
-            SetTimer(1.0, false); // 1 second delay before attempting to drive again
-            ClientFadeFromBlack(0.0, true); // Black out
-        }
-        else
-        {
-            ClientFadeFromBlack(3.0);
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
 // Pass this function with MagCount = -1 to have the function use Desired variable in this class
-simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RInfo, optional int WeaponIndex)
+simulated function int GetSpawnTime(int MagCount, optional RORoleInfo RInfo, optional int WeaponIndex)
 {
     local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo   GRI;
@@ -2229,7 +2123,7 @@ simulated function int CalculateDeployTime(int MagCount, optional RORoleInfo RIn
         // If MagCount wasn't passed, lets use desired ammo amount
         if (MagCount == -1)
         {
-            MagCount = DesiredAmmoAmount;
+            MagCount = SpawnAmmoAmount;
         }
 
         // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
@@ -2278,54 +2172,7 @@ function PawnDied(Pawn P)
 
     LastKilledTime = Level.TimeSeconds; // Server sets killed time based on it's level time
 
-    ClientHandleDeath();
-
     super.PawnDied(P); //Calls super in ROPlayer
-}
-
-simulated function ClientHandleDeath()
-{
-    bShouldAttemptAutoDeploy = true;
-    LastKilledTime = Level.TimeSeconds; // Clients sets his killed time based on level time
-}
-
-// This function is called from DHHud to deploy the player when their deploy time hits zero
-simulated function AttemptAutoDeploy()
-{
-    local DHGameReplicationInfo   DHGRI;
-
-    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    // Attempted, don't keep trying
-    bShouldAttemptAutoDeploy = false;
-
-    // if player is in a menu, don't try to deploy
-    if (GUIController(Player.GUIController).ActivePage != none)
-    {
-        return;
-    }
-
-    // Check if our indices are not valid
-    if (!DHGRI.AreIndicesValid(self))
-    {
-        // Open deploy menu if no menu is currently open as player doesn't have valid indices
-        if (GUIController(Player.GUIController).ActivePage == none)
-        {
-            ClientReplaceMenu("DH_Interface.DHDeployMenu");
-        }
-
-        return;
-    }
-
-    // Determine how we should attempt deployment and do so
-    if (ClientLevelInfo.SpawnMode == ESM_RedOrchestra)
-    {
-        ServerAttemptDeployPlayer(DesiredAmmoAmount, true);
-    }
-    else
-    {
-        ServerAttemptDeployPlayer(DesiredAmmoAmount);
-    }
 }
 
 // Function to get offset coordinates from nearby vehicle(s) to create/adjust vehicle exit positions (Only works in singleplayer)
@@ -2365,7 +2212,7 @@ simulated function SwayHandler(float DeltaTime)
 
     P = DH_Pawn(Pawn);
 
-    if (P == None )
+    if (P == none)
     {
         return;
     }
@@ -2452,7 +2299,7 @@ simulated function SwayHandler(float DeltaTime)
 // Modified to not allow IronSighting when transitioning to/from prone
 simulated exec function ROIronSights()
 {
-    if( Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
+    if (Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
     {
         Pawn.Weapon.ROIronSights();
     }
@@ -2476,17 +2323,18 @@ exec function Suicide()
 }
 
 exec function SwitchTeam() { }
-exec function ChangeTeam(int N) { } // Disabled
+exec function ChangeTeam(int N) { }
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
-function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex)
+function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex, byte NewSpawnAmmoCount)
 {
     local DarkestHourGame DHG;
+    local RORoleInfo RI;
 
     DHG = DarkestHourGame(Level.Game);
 
     // This map uses the DH deploy system, not an RO spawn room
-    if (DHG != none && DHG.DHLevelInfo != none && DHG.DHLevelInfo.SpawnMode != ESM_RedOrchestra)
+    if (DHG != none && DHG.DHLevelInfo != none && DHG.DHLevelInfo.SpawnMode == ESM_DarkestHour)
     {
         // We need a SpawnManager !
         if (DHG.SpawnManager == none)
@@ -2494,10 +2342,13 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
             return;
         }
 
+        // COLIN: these need to be performing much more thorough checks
+        // create a method in the spawn manager to verify these indices
+        // so we only need to have it in one place
+
         // Invalid SpawnPointIndex - exit function
         if (NewSpawnPointIndex >= DHG.SpawnManager.GetSpawnPointCount() && NewSpawnPointIndex != 255) // 255 is the 'do nothing' passed value of SpawnPointIndex, which is acceptable
         {
-            Warn("Invalid spawn point index" @ NewSpawnPointIndex);
             ClientChangePlayerInfoResult(19);
             SpawnPointIndex = 255; // reset spawn point index to null
 
@@ -2507,7 +2358,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         // Invalid VehiclePoolIndex
         if (NewVehiclePoolIndex >= DHG.SpawnManager.GetVehiclePoolCount() && NewVehiclePoolIndex != 255)
         {
-            Warn("Invalid vehicle pool index" @ NewVehiclePoolIndex);
             ClientChangePlayerInfoResult(20);
             VehiclePoolIndex = 255; // reset vehicle pool index to null
             //return;
@@ -2516,7 +2366,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         // Invalid SpawnVehicleIndex
         if (NewSpawnVehicleIndex >= DHG.SpawnManager.GetSpawnVehicleCount() && NewSpawnVehicleIndex != 255)
         {
-            Warn("Invalid spawn vehicle index" @ NewSpawnVehicleIndex);
             ClientChangePlayerInfoResult(21);
             SpawnVehicleIndex = 255; // reset spawn vehicle index to null
             //return;
@@ -2585,11 +2434,11 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
                 // Because we switched teams we should reset current role, desired role, etc.
                 DesiredRole = -1;
                 CurrentRole = -1;
-                DesiredAmmoAmount = 0;
+                SpawnAmmoAmount = 0;
                 SpawnPointIndex = 255;
                 SpawnVehicleIndex = 255;
                 VehiclePoolIndex = 255;
-                MyLastVehicle = none;
+                SpawnVehicle = none;
                 DesiredPrimary = 0;
                 DesiredSecondary = 0;
                 DesiredGrenade = 0;
@@ -2655,7 +2504,9 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
         // Check if change was successful
         if (DesiredRole != newRole)
         {
-            if (ROTeamGame(Level.Game) != none && PlayerReplicationInfo != none && PlayerReplicationInfo.Team != none &&
+            if (ROTeamGame(Level.Game) != none &&
+                PlayerReplicationInfo != none &&
+                PlayerReplicationInfo.Team != none &&
                 ROTeamGame(Level.Game).RoleLimitReached(PlayerReplicationInfo.Team.TeamIndex, newRole))
             {
                 ClientChangePlayerInfoResult(100);
@@ -2670,6 +2521,14 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     }
 
     ChangeWeapons(newWeapon1, newWeapon2, 0);
+
+    NewSpawnAmmoCount = Max(NewSpawnAmmoCount, 1);
+
+    Log("NewSpawnAmmoCount" @ NewSpawnAmmoCount);
+
+    RI = DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole);
+
+    SpawnTime = GetSpawnTime(NewSpawnAmmoCount, RI, newWeapon1);
 
     // Success!
     if (newTeam == AXIS_TEAM_INDEX)
@@ -2703,7 +2562,7 @@ defaultproperties
     DHHalfTurnSpeedFactor=16.0
 
     // Other values
-    RedeployTime=15
+    SpawnTime=15
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
     FlinchRotRate=(X=1000.0,Y=0.0,Z=1000.0)
     FlinchRotTime=1.0
