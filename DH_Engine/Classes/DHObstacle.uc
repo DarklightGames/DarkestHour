@@ -165,7 +165,7 @@ simulated state Cleared
             //TODO: this is super quiet for some reason
             if (GetClearSound() != none)
             {
-                PlayOwnedSound(GetClearSound(), SLOT_None);
+                PlayOwnedSound(GetClearSound(),SLOT_None,255.0);
             }
 
             if (GetClearEmitterClass() != none)
