@@ -15,7 +15,7 @@ var automated ROGUIProportionalContainer    MapContainer;
 var localized string                        ReinforcementText,
                                             DeployBarText[10];
 
-var     bool                                bReadyToDeploy, bDeployWhenReady, bOutOfReinforcements, bResolutionChanged;
+var     bool                                bReadyToDeploy, bOutOfReinforcements, bResolutionChanged;
 var     automated GUILabel                  l_ReinforcementCount, l_RoundTime;
 var     automated GUIImage                  i_Background;
 var     automated DHGUIButton               b_DeployButton, b_SpawnRoom;
@@ -370,21 +370,7 @@ function InternalOnPostDraw(Canvas Canvas)
 // Deploy requested
 function SpawnClick()
 {
-    if (bDeployWhenReady)
-    {
-        // Close menu as user wants to auto deploy on count down while spectating
-        // Dont need to worry about calling Application, because the menu is closing and will check for any changes and apply if needed
-        DHP.bShouldAttemptAutoDeploy = true;
-        MyDeployMenu.CloseMenu();
-        return;
-    }
-
-    if (!bReadyToDeploy || bInit || PRI == none || PRI.bOnlySpectator || DHP.Pawn != none || MyRoleMenu == none)
-    {
-        return;
-    }
-
-    MyRoleMenu.AttemptDeployApplication(true);
+    MyRoleMenu.AttemptDeployApplication();
 }
 
 // TODO: replace this function and other checks with the one from DHGRI
@@ -463,6 +449,7 @@ function bool InternalOnClick(GUIComponent Sender)
                         // Set SpawnPoint and clear spawnvehicle point as we clicked a spawn point
                         MyDeployMenu.ChangeSpawnIndices(b_SpawnPoints[i].Tag, MyDeployMenu.VehiclePoolIndex, 255);
                     }
+
                     break;
                 }
             }
@@ -502,7 +489,7 @@ function bool DrawDeployTimer(Canvas C)
     // Handle progress bar
     if (!bOutOfReinforcements)
     {
-        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds) / DHP.RedeployTime;
+        P = pb_DeployProgressBar.High * (DHP.LastKilledTime + DHP.SpawnTime - DHP.Level.TimeSeconds) / DHP.SpawnTime;
         P = pb_DeployProgressBar.High - P;
         pb_DeployProgressBar.Value = FClamp(P, pb_DeployProgressBar.Low, pb_DeployProgressBar.High);
 
@@ -519,7 +506,7 @@ function bool DrawDeployTimer(Canvas C)
     }
 
     // Handle button (enabled/disabled)
-    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (AreIndicesValid() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra) && DHP.Pawn == none)
+    if (GRI.bMatchHasBegun && !bOutOfReinforcements && (AreIndicesValid() || DHP.ClientLevelInfo.SpawnMode == ESM_RedOrchestra))
     {
         // match started, team not out of reinforcements, have legit indices, and no pawn
         if (MyDeployMenu.Tab == TAB_Vehicle && GRI.IsVehiclePoolIndexValid(MyDeployMenu.VehiclePoolIndex, MyRoleMenu.desiredRole))
@@ -570,12 +557,7 @@ function bool DrawDeployTimer(Canvas C)
     }
     else if (!bProgressComplete)
     {
-        b_DeployButton.Caption = DeployBarText[3] @ int(Ceil(DHP.LastKilledTime + DHP.RedeployTime - DHP.Level.TimeSeconds)) @ DeployBarText[4];
-        bDeployWhenReady = true;
-    }
-    else if (DHP.Pawn != none)
-    {
-        b_DeployButton.Caption = DeployBarText[5]; // "You are already deployed"
+        b_DeployButton.Caption = DeployBarText[3] @ int(Ceil(DHP.LastKilledTime + DHP.SpawnTime - DHP.Level.TimeSeconds)) @ DeployBarText[4];
     }
     else
     {
@@ -585,7 +567,6 @@ function bool DrawDeployTimer(Canvas C)
     if (bButtonEnabled && bProgressComplete)
     {
         bReadyToDeploy = true;
-        bDeployWhenReady = false;
     }
 
     return false;

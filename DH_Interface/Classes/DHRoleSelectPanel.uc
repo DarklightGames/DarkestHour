@@ -13,7 +13,7 @@ var automated ROGUIProportionalContainer    RolesContainer,
                                             SecondaryWeaponContainer,
                                             EquipContainer;
 
-var automated GUILabel                      l_EstimatedRedeployTime;
+var automated GUILabel                      l_EstimatedSpawnTime;
 
 var automated GUIImage                      i_WeaponImages[2], i_MagImages[2];
 var automated DHGUIListBox                  lb_Roles, lb_AvailableWeapons[2];
@@ -22,13 +22,13 @@ var automated DHGUINumericEdit              nu_PrimaryAmmoMags;
 
 var ROGUIListPlus                           li_Roles, li_AvailableWeapons[2];
 
-var localized string                        RedeployTimeText,
+var localized string                        SpawnTimeText,
                                             SecondsText;
 
 var RORoleInfo                              CurrentRole, DesiredRole;
 var int                                     CurrentTeam, DesiredTeam;
 var int                                     CurrentWeapons[2], DesiredWeapons[2];
-var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop, RoleSelectReclickTime;
+var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -567,13 +567,13 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(DesiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
-                nu_PrimaryAmmoMags.Value = string(DHP.DesiredAmmoAmount);
+                nu_PrimaryAmmoMags.Value = string(DHP.SpawnAmmoAmount);
                 if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MinValue || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
                     nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue); // Will reset value to mid if out of range
                 }
                 nu_PrimaryAmmoMags.CheckValue(); // Hard clamps value to be in range (visually)
-                DHP.DesiredAmmoAmount = int(nu_PrimaryAmmoMags.Value);
+                DHP.SpawnAmmoAmount = int(nu_PrimaryAmmoMags.Value);
                 nu_PrimaryAmmoMags.SetVisibility(true);
             }
             else
@@ -604,7 +604,7 @@ function UpdateSelectedWeapon(int weaponCategory)
             DesiredWeapons[weaponCategory] = i;
 
             // Update deploy time
-            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,DesiredRole,DesiredWeapons[0]) @ SecondsText;
+            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(-1, DesiredRole, DesiredWeapons[0]) @ SecondsText;
         }
     }
 }
@@ -613,14 +613,6 @@ function UpdateSelectedWeapon(int weaponCategory)
 function Timer()
 {
     UpdateRoleCounts();
-    if (RoleSelectReclickTime < default.RoleSelectReclickTime)
-    {
-        RoleSelectReclickTime += 0.1;
-    }
-    else
-    {
-        RoleSelectReclickTime = default.RoleSelectReclickTime;
-    }
 }
 
 function int getTeamCount(int index)
@@ -761,7 +753,7 @@ function bool IsApplicationChanged()
         CurrentTeam != DesiredTeam ||
         CurrentWeapons[0] != DesiredWeapons[0] ||
         CurrentWeapons[1] != DesiredWeapons[1] ||
-        nu_PrimaryAmmoMags.Value != string(DHP.DesiredAmmoAmount) ||
+        nu_PrimaryAmmoMags.Value != string(DHP.SpawnAmmoAmount) ||
         MyDeployMenu.SpawnPointIndex != DHP.SpawnPointIndex ||
         MyDeployMenu.VehiclePoolIndex != DHP.VehiclePoolIndex ||
         MyDeployMenu.SpawnVehicleIndex != DHP.SpawnVehicleIndex)
@@ -773,7 +765,7 @@ function bool IsApplicationChanged()
 }
 
 // TODO: clean up function && optimize if possible
-function AttemptDeployApplication(bool bAttemptDeploy, optional bool bDontShowErrors)
+function AttemptDeployApplication()
 {
     local byte TeamIndex, RoleIndex, w1, w2;
 
@@ -809,7 +801,7 @@ function AttemptDeployApplication(bool bAttemptDeploy, optional bool bDontShowEr
     }
     else
     {
-        if (CheckIfRoleIsFull(DesiredRole, DesiredTeam) && Controller != none && !bDontShowErrors)
+        if (CheckIfRoleIsFull(DesiredRole, DesiredTeam) && Controller != none)
         {
             Controller.OpenMenu(Controller.QuestionMenuClass);
             GUIQuestionPage(Controller.TopPage()).SetupQuestion(MyDeployMenu.RoleIsFullMessageText, QBTN_Ok, QBTN_Ok);
@@ -822,14 +814,8 @@ function AttemptDeployApplication(bool bAttemptDeploy, optional bool bDontShowEr
     w1 = DesiredWeapons[0];
     w2 = DesiredWeapons[1];
 
-    // Make sure DesiredAmmoAmount is set
-    DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-
-    // Tell menu to deploy or not
-    MyDeployMenu.bAttemptDeploy = bAttemptDeploy;
-
     // Attempt team, role, weapons change, and spawn indices change
-    DHP.ServerSetPlayerInfo(TeamIndex, RoleIndex, w1, w2, MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex);
+    DHP.ServerSetPlayerInfo(TeamIndex, RoleIndex, w1, w2, MyDeployMenu.SpawnPointIndex, MyDeployMenu.VehiclePoolIndex, MyDeployMenu.SpawnVehicleIndex, byte(nu_PrimaryAmmoMags.Value));
 }
 
 function bool InternalOnClick(GUIComponent Sender)
@@ -865,12 +851,12 @@ function InternalOnChange(GUIComponent Sender)
     {
         case lb_Roles:
             Role = RORoleInfo(li_Roles.GetObject());
-            if (Role != none && RoleSelectReclickTime == default.RoleSelectReclickTime)
+
+            if (Role != none)
             {
                 // Because we changed role, lets reset our desired ammo
-                DHP.DesiredAmmoAmount = 0;
+                DHP.SpawnAmmoAmount = 0;
 
-                RoleSelectReclickTime = 0.0;
                 ChangeDesiredRole(Role);
             }
             else
@@ -884,8 +870,8 @@ function InternalOnChange(GUIComponent Sender)
             break;
 
         case nu_PrimaryAmmoMags:
-            DHP.DesiredAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            l_EstimatedRedeployTime.Caption = RedeployTimeText @ DHP.CalculateDeployTime(-1,DesiredRole,DesiredWeapons[0]) @ SecondsText;
+            DHP.SpawnAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
+            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(-1, DesiredRole,DesiredWeapons[0]) @ SecondsText;
             break;
     }
 }
@@ -907,14 +893,13 @@ defaultproperties
     OnPostDraw=OnPostDraw
     OnKeyEvent=InternalOnKeyEvent
     bNeverFocus=true
-    RoleSelectReclickTime=1.0
-    RedeployTimeText="Estimated redeploy time:"
+    SpawnTimeText="Estimated redeploy time:"
     SecondsText="seconds"
 
     RoleSelectFooterButtonsWinTop=0.946667
 
     // Estimated deploy time label
-    Begin Object Class=GUILabel Name=EstimatedRedeployTime
+    Begin Object Class=GUILabel Name=EstimatedSpawnTime
         Caption="Estimated Redeploy Time:"
         TextAlign=TXTA_Center
         StyleName="DHLargeText"
@@ -923,7 +908,7 @@ defaultproperties
         WinLeft=0.0
         WinTop=0.43
     End Object
-    l_EstimatedRedeployTime=EstimatedRedeployTime
+    l_EstimatedSpawnTime=EstimatedSpawnTime
 
     // Primary Container
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=PrimaryWeaponContainer_inst

@@ -403,7 +403,7 @@ function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
     else
     {
         V.KDriverLeave(true); // Force leave the vehicle to update the position
-        C.MyLastVehicle = V; // Set controller mylastvehicle to be used for delayed re-entry
+        C.SpawnVehicle = V; // Set controller SpawnVehicle to be used for delayed re-entry
 
         //ParentFactory must be set after any calls to Destroy are made so that
         //VehicleDestroyed is not called in the event that TryToDrive fails
@@ -533,7 +533,7 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     {
         // Hard spawning the player at the spawn location failed, most likely because spawn fucntion was blocked
         // Try again with black room spawn and teleport them to spawn location
-        G.DeployRestartPlayer(C, false, true);
+        G.RestartPlayer(C);
 
         if (C.Pawn != none)
         {
@@ -758,7 +758,7 @@ function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator Spaw
 
 function SpawnInfantry(DHPlayer C, out byte SpawnError)
 {
-    local Pawn P;
+    local DH_Pawn P;
     local vector SpawnLocation;
     local rotator SpawnRotation;
 
@@ -776,7 +776,7 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
         return;
     }
 
-    P = SpawnPawn(C, SpawnLocation, SpawnRotation);
+    P = DH_Pawn(SpawnPawn(C, SpawnLocation, SpawnRotation));
 
     if (P == none)
     {
@@ -784,6 +784,8 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
 
         return;
     }
+
+    P.SetAmmoAmount(C.SpawnAmmoAmount);
 
     SpawnError = SpawnError_None;
 }
