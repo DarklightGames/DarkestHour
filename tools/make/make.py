@@ -131,14 +131,17 @@ def main():
 
     # delete packages marked for compiling
     for package in packages_to_compile:
-        package_path = os.path.join(mod_sys_dir, package)
+        package_dirs = [ro_sys_dir, mod_sys_dir]
 
-        if os.path.isfile(package_path):
-            try:
-                os.remove(package_path)
-            except:
-                print 'error: failed to delete file ' + package + ' (do you have the game or editor running?)'
-                sys.exit(1)
+        for package_dir in package_dirs:
+            package_path = os.path.join(package_dir, package)
+
+            if os.path.isfile(package_path):
+                try:
+                    os.remove(package_path)
+                except:
+                    print 'error: failed to delete file ' + package + ' (do you have the game or editor running?)'
+                    sys.exit(1)
 
     os.chdir(ro_sys_dir)
 
