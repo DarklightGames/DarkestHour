@@ -5,6 +5,52 @@
 
 class DHTab_Input extends ROTab_Input;
 
+var automated DHmoNumericEdit           nu_MousePollRate;
+
+var float                               MouseSamplingTime;
+
+event InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    super.Initcomponent(MyController, MyOwner);
+
+    i_BG3.ManageComponent(nu_MousePollRate);
+}
+
+function ShowPanel(bool bShow)
+{
+    local PlayerController PC;
+    local int PollRate;
+
+    super.ShowPanel(bShow);
+
+    if (bShow)
+    {
+        PC = PlayerOwner();
+
+        MouseSamplingTime = float(PC.ConsoleCommand("get Engine.PlayerInput MouseSamplingTime"));
+        PollRate = Round(1 / MouseSamplingTime);
+
+        nu_MousePollRate.SetValue(PollRate);
+    }
+}
+
+function PollRateChange(GUIComponent Sender)
+{
+    local PlayerController PC;
+    local string SampleRateString;
+
+    if (Sender == nu_MousePollRate && nu_MousePollRate.GetValue() >= nu_MousePollRate.MinValue)
+    {
+        PC = PlayerOwner();
+
+        SampleRateString = string(10000000.0 / float(nu_MousePollRate.GetValue()));
+        SampleRateString = Left(SampleRateString, InStr(SampleRateString, "."));
+        SampleRateString = "0.00" $ SampleRateString;
+
+        PC.ConsoleCommand("set Engine.PlayerInput MouseSamplingTime" @ SampleRateString);
+    }
+}
+
 defaultproperties
 {
     Begin Object Class=DHGUISectionBackground Name=InputBK1
@@ -16,6 +62,7 @@ defaultproperties
         OnPreDraw=InputBK1.InternalPreDraw
     End Object
     i_BG1=DHGUISectionBackground'DH_Interface.DHTab_Input.InputBK1'
+
     Begin Object Class=DHGUISectionBackground Name=InputBK3
         Caption="Fine Tuning"
         WinTop=0.22
@@ -25,6 +72,7 @@ defaultproperties
         OnPreDraw=InputBK3.InternalPreDraw
     End Object
     i_BG3=DHGUISectionBackground'DH_Interface.DHTab_Input.InputBK3'
+
     Begin Object Class=DHmoCheckBox Name=InputAutoSlope
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -40,6 +88,7 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     ch_AutoSlope=DHmoCheckBox'DH_Interface.DHTab_Input.InputAutoSlope'
+
     Begin Object Class=DHmoCheckBox Name=InputInvertMouse
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -55,6 +104,7 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     ch_InvertMouse=DHmoCheckBox'DH_Interface.DHTab_Input.InputInvertMouse'
+
     Begin Object Class=DHmoCheckBox Name=InputMouseSmoothing
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -70,6 +120,7 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     ch_MouseSmoothing=DHmoCheckBox'DH_Interface.DHTab_Input.InputMouseSmoothing'
+
     Begin Object Class=DHmoCheckBox Name=InputUseJoystick
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -85,6 +136,7 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     ch_Joystick=DHmoCheckBox'DH_Interface.DHTab_Input.InputUseJoystick'
+
     Begin Object Class=DHmoCheckBox Name=InputMouseLag
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -101,8 +153,9 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     ch_MouseLag=DHmoCheckBox'DH_Interface.DHTab_Input.InputMouseLag'
-    Begin Object Class=DHmoFloatEdit Name=InputMouseSensitivity
-        MinValue=0.25
+
+    Begin Object class=DHmoFloatEdit Name=InputMouseSensitivity
+        MinValue=0.01
         MaxValue=25.0
         Step=0.25
         ComponentJustification=TXTA_Left
@@ -119,6 +172,7 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     fl_Sensitivity=DHmoFloatEdit'DH_Interface.DHTab_Input.InputMouseSensitivity'
+
     Begin Object Class=DHmoFloatEdit Name=InputMenuSensitivity
         MinValue=1.0
         MaxValue=6.0
@@ -137,6 +191,7 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     fl_MenuSensitivity=DHmoFloatEdit'DH_Interface.DHTab_Input.InputMenuSensitivity'
+
     Begin Object Class=DHmoFloatEdit Name=InputMouseAccel
         MinValue=0.0
         MaxValue=100.0
@@ -155,6 +210,7 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     fl_MouseAccel=DHmoFloatEdit'DH_Interface.DHTab_Input.InputMouseAccel'
+
     Begin Object Class=DHmoFloatEdit Name=InputMouseSmoothStr
         MinValue=0.0
         MaxValue=1.0
@@ -173,4 +229,22 @@ defaultproperties
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     fl_SmoothingStrength=DHmoFloatEdit'DH_Interface.DHTab_Input.InputMouseSmoothStr'
+
+    Begin Object class=DHmoNumericEdit Name=InputMousePollRate
+        MinValue=120
+        MaxValue=1000
+        Step=100
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.725
+        Caption="Mouse Polling Rate"
+        OnCreateComponent=InputMousePollRate.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinTop=0.324167
+        WinLeft=0.502344
+        WinWidth=0.421875
+        WinHeight=0.045352
+        TabOrder=10
+        OnChange=PollRateChange
+    End Object
+    nu_MousePollRate=InputMousePollRate
 }

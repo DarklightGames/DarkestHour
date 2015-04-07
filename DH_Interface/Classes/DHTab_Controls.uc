@@ -12,8 +12,8 @@ struct ControlProfileBinds
 };
 
 var automated moComboBox            co_ControlProfiles;
-var localized string                ControlProfiles[7];
-var() ControlProfileBinds           ControlProfileBindings[7];
+var localized string                ControlProfiles[6];
+var() ControlProfileBinds           ControlProfileBindings[6];
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -91,9 +91,8 @@ defaultproperties
     ControlProfiles(1)="Defaults (Reset)"
     ControlProfiles(2)="Revised Classic"
     ControlProfiles(3)="Contemporary"
-    ControlProfiles(4)="Neutral"
-    ControlProfiles(5)="Factory"
-    ControlProfiles(6)="Portside"
+    ControlProfiles(4)="Formal"
+    ControlProfiles(5)="Express"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
@@ -154,18 +153,16 @@ defaultproperties
     PanelCaption="Controls"
 
     //****************
-    //Profile Bindings
+    // Profile Bindings
     //****************
-    //Default (With DH fixes)
-    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals"),KeyValues=("ShowScores","CommunicationMenu","ShowVoteMenu","CommunicationMenu","",""))
-    //Revised Classic
+    // default (With DH fixes)
+    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","",""))
+    // Revised Classic
     ControlProfileBindings(2)=(KeyNames=("RightMouse","MiddleMouse"),KeyValues=("ROIronSights","AltFire"))
-    //Contemporary
+    // Contemporary
     ControlProfileBindings(3)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
-    //Neutral
-    ControlProfileBindings(4)=(KeyNames=("",""),KeyValues=("",""))
-    //Factory
-    ControlProfileBindings(5)=(KeyNames=("",""),KeyValues=("",""))
-    //Portside
-    ControlProfileBindings(6)=(KeyNames=("V","Z","G","H","T","Y","U","I","CapsLock","RightMouse","MiddleMouse","Alt","",""),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","Walking","ROIronSights","AltFire","ShowObjectives","",""))
+    // Formal
+    ControlProfileBindings(4)=(KeyNames=("Tab","F1","RightMouse","MiddleMouse"),KeyValues=("VoiceTalk","ShowScores","ROIronSights","AltFire"))
+    // Express
+    ControlProfileBindings(5)=(KeyNames=("V","Z","G","H","T","Y","U","I","N","M","J","K","L","Semicolon","SingleQuote","CapsLock","RightMouse","MiddleMouse","Ctrl","Alt","Comma","Period","Backslash","Slash","Backspace","MouseWheelDown","MouseWheelUp","MouseX","MouseY","LeftBracket","RightBracket"),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","speech ALERT 0","ShowObjectives","speech SUPPORT 2","teamsay /np","speech ACK 3","speech ACK 2","speech ALERT 3","Walking","ROIronSights","AltFire","SpeechMenuToggle","","","","speech ALERT 2","","","","","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","",""))
 }
