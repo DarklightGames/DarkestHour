@@ -10,11 +10,13 @@ const MAX_OBSTACLES = 1024;
 const BITFIELD_LENGTH = 128;
 const OBSTACLE_TYPE_INDEX_INVALID = 255;
 
-var byte                Bitfield[BITFIELD_LENGTH];
-var byte                SavedBitfield[BITFIELD_LENGTH];
-var DHObstacleInfo      Info;
+var byte            Bitfield[BITFIELD_LENGTH];
 
-var config bool         bDebug;
+var byte            SavedBitfield[BITFIELD_LENGTH];
+var DHObstacleInfo  Info;
+var bool            bPlayEffects;
+
+var config bool     bDebug;
 
 replication
 {
@@ -142,6 +144,13 @@ simulated function GetBitfieldIndexAndMask(int Index, out int ByteIndex, out byt
 {
     ByteIndex = Index / 8;
     Mask = (1 << (Index % 8));
+}
+
+simulated event PostNetBeginPlay()
+{
+    default.bPlayEffects = true;
+
+    super.PostNetBeginPlay();
 }
 
 simulated event PostNetReceive()

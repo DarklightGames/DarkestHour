@@ -34,6 +34,8 @@ var byte            TypeIndex;
 var int             Index;
 var config bool     bDebug;
 
+var bool            bPlayEffects;
+
 var private DHObstacleInfo          Info;
 var private UncompressedPosition    UP;
 
@@ -115,6 +117,8 @@ simulated function PostNetBeginPlay()
         S.Y = UP.ScaleY;
         S.Z = UP.ScaleZ;
         SetDrawScale3D(S);
+
+        bPlayEffects = true;
     }
 }
 
@@ -160,12 +164,11 @@ simulated state Cleared
 {
     simulated function BeginState()
     {
-        if (Level.NetMode != NM_DedicatedServer)
+        if (Level.NetMode != NM_DedicatedServer && class'DHObstacleManager'.default.bPlayEffects && bPlayEffects)
         {
-            //TODO: this is super quiet for some reason
             if (GetClearSound() != none)
             {
-                PlayOwnedSound(GetClearSound(),SLOT_None,255.0);
+                PlayOwnedSound(GetClearSound(), SLOT_None, 255.0);
             }
 
             if (GetClearEmitterClass() != none)
