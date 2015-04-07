@@ -73,9 +73,13 @@ def main():
     packages_to_compile = []
     package_crcs = dict()
 
-    if os.path.isfile('.packagecrcs'):
-        with open('.packagecrcs', 'r') as f:
+    manifest_filename = '{0}.manifest'.format(args.mod)
+
+    try:
+        with open(manifest_filename, 'r') as f:
             package_crcs = json.load(f)
+    except:
+        pass
 
     for package in packages:
         ro_sys_package_path = os.path.join(ro_sys_dir, package + '.u')
@@ -122,8 +126,11 @@ def main():
 
         package_crcs[package] = package_crc
 
-    with open('.packagecrcs', 'w') as f:
-        json.dump(package_crcs, f)
+    try:
+        with open(manifest_filename, 'w') as f:
+            json.dump(package_crcs, f)
+    except:
+        print 'could not write mod make manifest'
 
     if len(packages_to_compile) == 0:
         print "no packages to compile"
