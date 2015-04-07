@@ -20,7 +20,7 @@ var  localized string   LegendCarriedArtilleryRadioText;
 
 var  localized string   NeedReloadText;
 var  localized string   CanReloadText;
-var  localized string   RedeployText[6];
+var  localized string   RedeployText[6];    //TODO: arrays are unwieldly
 
 var  globalconfig int   PlayerNameFontSize; // the size of the name you see when you mouseover a player
 var  globalconfig bool  bSimpleColours;     // for colourblind setting, i.e. red and blue only
@@ -3569,28 +3569,41 @@ exec function ShrinkHUD()
 simulated function DrawSpectatingHud(Canvas C)
 {
     local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
     local float Time, strX, strY, X, Y, Scale;
     local string S;
-    local DHPlayer DHP;
+    local DHPlayer PC;
     local float SmallH, NameWidth;
     local float XL;
+    local DHSpawnPoint SP;
+    local class<Vehicle> SVC;
 
     // Draw fade effects
     C.Style = ERenderStyle.STY_Alpha;
+
     DrawFadeEffect(C);
 
-    Scale = C.ClipX / 1600.0;
+    scale = C.ClipX / 1600.0;
 
-    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
-    DHP = DHPlayer(PlayerOwner);
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    }
 
     if (GRI != none)
     {
         // Update round timer
         if (!GRI.bMatchHasBegun)
+        {
             CurrentTime = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
+        }
         else
+        {
             CurrentTime = GRI.RoundStartTime + GRI.RoundDuration - GRI.ElapsedTime;
+        }
 
         S = default.TimeRemainingText $ GetTimeString(CurrentTime);
 
@@ -3603,55 +3616,83 @@ simulated function DrawSpectatingHud(Canvas C)
         C.SetPos(X, Y);
         C.DrawTextClipped(S);
 
-        if (GRI.bMatchHasBegun &&
-            DHP != none &&
-            /*DHP.CanRestartPlayer() &&*/
-            PlayerOwner.PlayerReplicationInfo.Team != none &&
-            GRI.bReinforcementsComing[PlayerOwner.PlayerReplicationInfo.Team.TeamIndex] == 1)
-        {
-            Time = DHP.LastKilledTime + DHP.SpawnTime - Level.TimeSeconds;
+        S = "";
 
-            if (Time <= 0.0)
+        if (PRI == none || PRI.Team == none || PRI.bIsSpectator)
+        {
+            // Press ESC to join a team
+            S = default.RedeployText[4];
+        }
+        else if (GRI.bMatchHasBegun &&
+                 GRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
+        {
+            Time = Max(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds, 0);
+
+            if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
             {
-                S = "Ready to deploy! Hit escape and select a spawn point";
+                //You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change
+                S = default.RedeployText[1];
+                S = Repl(S, "{3}", GRI.GetVehiclePoolClass(PC.VehiclePoolIndex).default.VehicleNameString);
+                S = Repl(S, "{1}", GRI.GetSpawnPoint(PC.SpawnPointIndex).SpawnPointName);
             }
-            else
+            else if (PC.SpawnPointIndex != 255)
             {
-                if (ROPlayerReplicationInfo(DHP.PlayerReplicationInfo) != none)
+                SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
+
+                if (SP != none)
                 {
-                    if (DHP.VehiclePoolIndex != 255 && DHP.SpawnPointIndex != 255)
-                    {
-                        // Vehicle pool at SP
-                        S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[5] @ GRI.GetVehiclePoolIndexName(DHP.VehiclePoolIndex) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
-                    }
-                    else if (DHP.SpawnPointIndex != 255)
-                    {
-                        // Infantry at SP
-                        S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
-                    }
-                    else if (DHP.SpawnVehicleIndex != 255)
-                    {
-                        // Spawn vehicle
-                        // TODO: make spawn vehicle string
-                        S = RedeployText[0] @ ROPlayerReplicationInfo(DHP.PlayerReplicationInfo).RoleInfo.MyName @ RedeployText[1] @ Caps(Left(GRI.GetSpawnPoint(DHP.SpawnPointIndex).SpawnPointName,2)) @ RedeployText[2] @ GetTimeString(Time) @ RedeployText[3];
-                    }
+                    //You will deploy as a {0} at {1} in {2} | Press ESC to change
+                    S = Repl(default.RedeployText[0], "{1}", SP.SpawnPointName);
                 }
                 else
                 {
-                    S = "Hit escape and select a spawn point";
+                    //Press ESC to select a spawn point
+                    S = default.RedeployText[3];
                 }
             }
+            else if (PC.SpawnVehicleIndex != 255)
+            {
+                SVC = GRI.GetSpawnVehicleClass(PC.SpawnVehicleIndex);
 
-            Y += 4 * Scale + strY;
-            //C.TextSize(S, strX, strY);
-            C.SetPos(X, Y);
-            C.DrawTextClipped(S);
+                if (SVC != none)
+                {
+                    //You will deploy as a {0} at a {1} in {2} | Press ESC to change
+                    S = Repl(default.RedeployText[5], "{1}", SVC.default.VehicleNameString);
+                }
+                else
+                {
+                    //Press ESC to select a spawn point
+                    S = default.RedeployText[3];
+                }
+            }
+            else
+            {
+                //Press ESC to select a spawn point
+                S = default.RedeployText[3];
+            }
+
+            if (PC.bUseNativeRoleNames)
+            {
+                S = Repl(S, "{0}", PRI.RoleInfo.AltName);
+            }
+            else
+            {
+                S = Repl(S, "{0}", PRI.RoleInfo.MyName);
+            }
+
+            S = Repl(S, "{2}", GetTimeString(Time));
         }
+
+        Y += 4 * scale + strY;
+
+        C.SetPos(X, Y);
+        C.DrawTextClipped(S);
     }
 
     if (PlayerOwner.ViewTarget != PlayerOwner.Pawn && PawnOwner != none && PawnOwner.PlayerReplicationInfo != none)
     {
         S = ViewingText $ PawnOwner.PlayerReplicationInfo.PlayerName;
+
         C.DrawColor = WhiteColor;
         C.Font = GetConsoleFont(C);
         C.TextSize(S, strX, strY);
@@ -3660,9 +3701,9 @@ simulated function DrawSpectatingHud(Canvas C)
     }
 
     // Rough spectate hud stuff. TODO: Refine this so its not so plane
-    if (DHP != none)
+    if (PC != none)
     {
-        S = DHP.GetSpecModeDescription();
+        S = PC.GetSpecModeDescription();
         C.DrawColor = WhiteColor;
         C.Font = GetLargeMenuFont(C);
 
@@ -3895,11 +3936,11 @@ defaultproperties
     VOICE_ICON_DIST_MAX = 2624.672119
     TeamMessagePrefix="*TEAM* "
 
-    RedeployText(0)="Will deploy as"
-    RedeployText(1)="at"
-    RedeployText(2)="in"
-    RedeployText(3)="| Press escape to change |"
-    RedeployText(4)="Ready to deploy! Hit escape and select a spawn point" //Theel: escape is variable
-    RedeployText(5)="driving a"
+    RedeployText(0)="You will deploy as a {0} at {1} in {2} | Press ESC to change"
+    RedeployText(1)="You will deploy as a {0} driving a {3} at {1} in {2} | Press ESC to change"
+    RedeployText(3)="Press ESC to select a spawn point"
+    RedeployText(4)="Press ESC to join a team"
+    RedeployText(5)="You will deploy as a {0} at a {1} in {2} | Press ESC to change"
+
     ReinforcementText="Redeploy in: "
 }

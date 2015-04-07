@@ -1149,7 +1149,17 @@ function bool AddSpawnVehicle(Vehicle V)
 
 function RemoveSpawnVehicle(Vehicle V)
 {
-    class'DHLib'.static.Erase(SpawnVehicles, V);
+    local int i;
+
+    for (i = 0; i < SpawnVehicles.Length; ++i)
+    {
+        if (SpawnVehicles[i] == V)
+        {
+            SpawnVehicles.Remove(i, 1);
+
+            break;
+        }
+    }
 
     GRI.RemoveSpawnVehicle(V);
 }

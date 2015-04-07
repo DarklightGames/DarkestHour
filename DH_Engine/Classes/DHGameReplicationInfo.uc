@@ -16,11 +16,12 @@ struct MortarTargetInfo
 
 struct SpawnVehicle
 {
-    var byte        Index;
-    var bool        bIsActive;
-    var byte        TeamIndex;
-    var vector      Location;
-    var Vehicle     Vehicle;
+    var byte            Index;
+    var bool            bIsActive;
+    var byte            TeamIndex;
+    var vector          Location;
+    var class<Vehicle>  VehicleClass;
+    var Vehicle         Vehicle;
 };
 
 const RADIOS_MAX = 10;
@@ -160,8 +161,24 @@ simulated function bool IsSpawnPointActive(DHSpawnPoint SP)
 
 function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
 {
+    local Controller C;
+    local DHPlayer PC;
+
     SpawnPointIsActives[SpawnPointIndex] = byte(bIsActive);
     SpawnPointsUpdateTime = Level.TimeSeconds;
+
+    if (!bIsActive)
+    {
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            PC = DHPlayer(C);
+
+            if (PC != none && PC.SpawnPointIndex == SpawnPointIndex)
+            {
+                PC.SpawnPointIndex = 255;
+            }
+        }
+    }
 }
 
 simulated function DHSpawnPoint GetSpawnPoint(byte Index)
@@ -253,6 +270,9 @@ function SetVehiclePoolVehicleClass(byte VehiclePoolIndex, class<ROVehicle> Vehi
 
 function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
 {
+    local Controller C;
+    local DHPlayer PC;
+
     if (bIsActive)
     {
         VehiclePoolIsActives[VehiclePoolIndex] = 1;
@@ -260,6 +280,16 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
     else
     {
         VehiclePoolIsActives[VehiclePoolIndex] = 0;
+
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            PC = DHPlayer(C);
+
+            if (PC != none && PC.VehiclePoolIndex == VehiclePoolIndex)
+            {
+                PC.VehiclePoolIndex = 255;
+            }
+        }
     }
 
     VehiclePoolsUpdateTime = Level.TimeSeconds;
@@ -290,14 +320,14 @@ function bool IsVehiclePoolInfinite(byte PoolIndex)
     return VehiclePoolSpawnsRemainings[PoolIndex] == 255;
 }
 
-simulated function string GetVehiclePoolIndexName(byte VehiclePoolIndex)
+simulated function class<ROVehicle> GetVehiclePoolClass(byte VehiclePoolIndex)
 {
-    if (VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    if (VehiclePoolIndex >= 0 && VehiclePoolIndex < arraycount(VehiclePoolVehicleClasses))
     {
-        return "";
+        return VehiclePoolVehicleClasses[VehiclePoolIndex];
     }
 
-    return VehiclePoolVehicleClasses[VehiclePoolIndex].default.VehicleNameString;
+    return none;
 }
 
 simulated function bool IsVehiclePoolIndexValid(byte VehiclePoolIndex, RORoleInfo RI)
@@ -378,6 +408,7 @@ function int AddSpawnVehicle(Vehicle V, int Index)
             SpawnVehicles[i].Location.Y = V.Location.Y;
             SpawnVehicles[i].Location.Z = V.Rotation.Yaw;
             SpawnVehicles[i].TeamIndex = V.GetTeamNum();
+            SpawnVehicles[i].VehicleClass = V.Class;
             SpawnVehicles[i].Vehicle = V;
 
             // Vehicle was successfully added, return index in
@@ -394,6 +425,8 @@ function int AddSpawnVehicle(Vehicle V, int Index)
 function bool RemoveSpawnVehicle(Vehicle V)
 {
     local int i;
+    local Controller C;
+    local DHPlayer PC;
 
     for (i = 0; i < arraycount(SpawnVehicles); ++i)
     {
@@ -403,13 +436,34 @@ function bool RemoveSpawnVehicle(Vehicle V)
             SpawnVehicles[i].Index = 255;
             SpawnVehicles[i].Location = vect(0.0, 0.0, 0.0);
             SpawnVehicles[i].TeamIndex = 0;
+            SpawnVehicles[i].VehicleClass = none;
             SpawnVehicles[i].Vehicle = none;
+
+            for (C = Level.ControllerList; C != none; C = C.NextController)
+            {
+                PC = DHPlayer(C);
+
+                if (PC != none && PC.SpawnVehicleIndex == i)
+                {
+                    PC.SpawnVehicleIndex = 255;
+                }
+            }
 
             return true;
         }
     }
 
     return false;
+}
+
+simulated function class<Vehicle> GetSpawnVehicleClass(int SpawnVehicleIndex)
+{
+    if (SpawnVehicleIndex >= 0 && SpawnVehicleIndex < arraycount(SpawnVehicles))
+    {
+        return SpawnVehicles[SpawnVehicleIndex].VehicleClass;
+    }
+
+    return none;
 }
 
 simulated function bool CanSpawnAtVehicle(byte Index, PlayerController PC)
