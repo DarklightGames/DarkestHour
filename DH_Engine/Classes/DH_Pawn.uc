@@ -1080,10 +1080,8 @@ function HandleStamina(float DeltaTime)
     }
     else
     {
-        // Walking
-        if (bIsSprinting)
+        if (bIsSprinting || bIsMantling)
         {
-            // Use more stamina when crouch sprinting
             if (bIsCrouched)
             {
                 Stamina = FMax(0.0, Stamina - (DeltaTime * 1.25));
@@ -1093,37 +1091,27 @@ function HandleStamina(float DeltaTime)
                 Stamina = FMax(0.0, Stamina - DeltaTime);
             }
         }
+        else if (bIsMantling && (Physics == PHYS_RootMotion || Physics == PHYS_Flying))
+        {
+            Stamina = FMax(0.0, Stamina - DeltaTime * 1.15);
+        }
         else
         {
-            if (bIsMantling)
+            if (Stamina < default.Stamina && !bIsWalking && !bIsCrouched && VSizeSquared(Velocity) > 0.0)
             {
-                if ((Physics == PHYS_RootMotion || Physics == PHYS_Flying) && Stamina > 0.0)
-                {
-                    Stamina = FMax(0.0, Stamina - DeltaTime * 1.5);
-                }
-                else if (Stamina < 0.0)
-                {
-                    Stamina = 0.0;
-                }
+                Stamina = FMin(default.Stamina, Stamina + (DeltaTime * SlowStaminaRecoveryRate));
             }
             else
             {
-                if (Stamina < default.Stamina && !bIsWalking && !bIsCrouched && VSizeSquared(Velocity) > 0.0)
+                if (bIsCrouched)
                 {
-                    Stamina = FMin(default.Stamina, Stamina + (DeltaTime * SlowStaminaRecoveryRate));
+                    Stamina = FMin(default.Stamina, Stamina + (DeltaTime * CrouchStaminaRecoveryRate));
                 }
                 else
                 {
-                    if (bIsCrouched)
-                    {
-                        Stamina = FMin(default.Stamina, Stamina + (DeltaTime * CrouchStaminaRecoveryRate));
-                    }
-                    else
-                    {
-                        Stamina = FMin(default.Stamina, Stamina + (DeltaTime * StaminaRecoveryRate));
-                    }
-                 }
-            }
+                    Stamina = FMin(default.Stamina, Stamina + (DeltaTime * StaminaRecoveryRate));
+                }
+             }
         }
     }
 
