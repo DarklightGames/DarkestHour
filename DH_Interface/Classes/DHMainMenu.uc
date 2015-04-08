@@ -8,10 +8,11 @@ class DHMainMenu extends UT2K4GUIPage;
 var()   config string           MenuSong;
 
 var automated       FloatingImage           i_background;
-var automated       GUIButton               b_FixConfig, b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
+var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Help, b_Host, b_Quit;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion;
 var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back;
 var automated       GUILabel                l_Version;
+var automated       GUIImage                i_DHTextLogo;
 
 var     ROBufferedTCPLink       MyLink;
 
@@ -20,7 +21,6 @@ var     string                  LinkClassName;
 var     string                  GetRequest;
 var     string                  GetResponse;
 var     string                  GetQuickPlayAddr;
-var     string                  VersionString;
 var     string                  WebsiteURL;
 
 var     localized string        WaitString;
@@ -59,18 +59,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     Controller.LCDStrLen("44-45", Controller.LCDLargeFont, xl, yl);
     Controller.LCDDrawText("44-45",(100 - (XL / 2)), y, Controller.LCDLargeFont);
     Controller.LCDRepaint();
-
-    // Check if the console isn't matching the DH one
-    if (string(PlayerOwner().Player.Console) != "Package.DHConsole")
-    {
-        // Init fix config button above others
-        sb_MainMenu.ManageComponent(b_FixConfig);
-    }
-    else
-    {
-        // Our console class is correct hide button
-        b_FixConfig.SetVisibility(false);
-    }
 
     sb_MainMenu.ManageComponent(b_QuickPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
@@ -150,12 +138,6 @@ function bool ButtonClick(GUIComponent Sender)
 
     switch (sender)
     {
-        case b_FixConfig:
-            Profile("FixConfig");
-            PlayerOwner().ConsoleCommand("start " @ FixConfigURL);
-            Profile("FixConfig");
-            break;
-
         case b_QuickPlay:
             if (!Controller.CheckSteam())
             {
@@ -272,7 +254,6 @@ function bool ButtonClick(GUIComponent Sender)
 
 event Opened(GUIComponent Sender)
 {
-    l_Version.Caption $= VersionString;
     sb_ShowVersion.SetVisibility(true);
 
     if (bDebugging)
@@ -484,20 +465,6 @@ defaultproperties
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
 
-    Begin Object class=GUIButton Name=FixConfigButton
-        CaptionAlign=TXTA_Left
-        Caption="Fix Config (redirects to web)"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonStyle"
-        TabOrder=0
-        bFocusOnWatch=true
-        OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=FixConfigButton.InternalOnKeyEvent
-    End Object
-    b_FixConfig=GUIButton'DH_Interface.DHMainMenu.FixConfigButton'
-
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
         Caption="Quick Play"
@@ -676,24 +643,38 @@ defaultproperties
     b_Back=GUIButton'DH_Interface.DHMainMenu.BackButton'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
-        WinTop=0.97
-        WinLeft=0.01
-        WinWidth=0.23
-        WinHeight=0.05
+		WinWidth=0.261250
+		WinHeight=0.026563
+		WinLeft=0.712799
+		WinTop=0.185657
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
 
-    Begin Object Class=GUILabel Name=VersionNum
-        StyleName="DHSmallText"
-        Caption="Version: "
-        WinTop=0.0
-        WinLeft=0.0
-        WinWidth=0.202128
-        WinHeight=0.04
+    Begin Object class=GUILabel Name=VersionNum
+        StyleName="DHBlackText"
+        Caption="Version: 6.0"
+        TextAlign=TXTA_Right
+        WinWidth=1.0
+		WinHeight=1.0
+		WinLeft=0.0
+		WinTop=0.0
         RenderWeight=20.700001
     End Object
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
+
+    Begin Object class=GUIImage Name=LogoImage
+        Image=texture'DH_GUI_Tex.Menu.DHTextLogo'
+        ImageColor=(R=255,G=255,B=255,A=255)
+        ImageRenderStyle=MSTY_Alpha
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_BottomRight
+        WinWidth=0.867656
+		WinHeight=0.197539
+		WinLeft=0.130391
+		WinTop=0.0
+    End Object
+    i_DHTextLogo=LogoImage
 
     FixConfigURL="http://www.darkesthourgame.com/fixconfig"
     ManualURL="http://www.darkesthourgame.com"
@@ -701,7 +682,6 @@ defaultproperties
     SteamMustBeRunningText="Steam must be running and you must have an active internet connection to play multiplayer"
     SinglePlayerDisabledText="Practice mode is only available in the full version."
     MenuSong="DH_Menu_Music"
-    VersionString="6.0"
     BackgroundColor=(B=0,G=0,R=0)
     InactiveFadeColor=(B=0,G=0,R=0)
     OnOpen=InternalOnOpen

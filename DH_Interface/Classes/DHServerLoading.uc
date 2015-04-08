@@ -9,11 +9,11 @@ class DHServerLoading extends UT2K4ServerLoading;
 
 var localized string DeployingText;
 var localized string AuthorText;
-var localized string VACSecuredText;
 var localized string OfficialMapText;
 var localized string CommunityMapText;
 var localized string UnspecifiedText;
 
+var Material DHTextLogo;
 var Material VACIcon;
 var Material OfficialMapIcon;
 var Material CommunityMapIcon;
@@ -29,8 +29,7 @@ simulated event Init()
 
     if (bVACSecured)
     {
-        DrawOpImage(Operations[4]).Image = VACIcon;
-        DrawOpText(Operations[5]).Text = VACSecuredText;
+        DrawOpImage(Operations[9]).Image = VACIcon;
     }
 }
 
@@ -50,9 +49,8 @@ simulated function SetText()
         Author = default.UnspecifiedText;
     }
 
-    DrawOpText(Operations[8]).Text = Repl(AuthorText, "{0}", Author, false);
-    DrawOpText(Operations[2]).Text = Repl(DeployingText, "{0}", Map, false);
-    DrawOpText(Operations[1]).Text = "";
+    DrawOpText(Operations[7]).Text = Repl(AuthorText, "{0}", Author, false);
+    DrawOpText(Operations[4]).Text = Repl(DeployingText, "{0}", Map, false);
 }
 
 simulated function string AddSpaces(string S)
@@ -130,13 +128,13 @@ simulated function SetImage()
 
     if (class'DHMapList'.static.IsMapOfficial(LoadingMapRecord.MapName))
     {
-        DrawOpImage(Operations[6]).Image = OfficialMapIcon;
-        DrawOpText(Operations[7]).Text = OfficialMapText;
+        DrawOpImage(Operations[5]).Image = OfficialMapIcon;
+        DrawOpText(Operations[6]).Text = OfficialMapText;
     }
     else
     {
-        DrawOpImage(Operations[6]).Image = CommunityMapIcon;
-        DrawOpText(Operations[7]).Text = CommunityMapText;
+        DrawOpImage(Operations[5]).Image = CommunityMapIcon;
+        DrawOpText(Operations[6]).Text = CommunityMapText;
     }
 
     DrawOpImage(Operations[0]).Image = M;
@@ -144,8 +142,7 @@ simulated function SetImage()
 
 defaultproperties
 {
-    vacSecuredText="Server is VAC Secured"
-    vacIcon=Texture'InterfaceArt_tex.ServerIcons.VAC_protected'
+    vacIcon=texture'InterfaceArt_tex.ServerIcons.VAC_protected'
 
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
@@ -153,23 +150,66 @@ defaultproperties
     OfficialMapIcon=texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CommunityMapText="Community Map"
     CommunityMapIcon=texture'DH_GUI_Tex.Menu.CommunityMapLogo'
+    DHTextLogo=texture'DH_GUI_Tex.Menu.DHTextLogo'
 
     // The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreens.LoadingScreenDHDefault"
-    Operations(2)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpMapname'
-    Operations(4)=DrawOpImage'ROInterface.ROServerLoading.OpVACImg'
-    Operations(5)=RODrawOpShadowedText'ROInterface.ROServerLoading.OpVACText'
+
+    Begin Object class=DrawOpImage Name=OpTopBorder
+        Image=texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        ImageStyle=0
+        Top=0.0
+        Lft=0.0
+        Width=1.0
+        Height=0.09
+        DrawColor=(R=255,B=255,G=255,A=255)
+    End Object
+    Operations(1)=OpTopBorder
+
+    Begin Object class=DrawOpImage Name=OpBottomBorder
+        Image=texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        ImageStyle=0
+        Top=0.91
+        Lft=0.0
+        Width=1.0
+        Height=0.09
+        DrawColor=(R=255,B=255,G=255,A=255)
+    End Object
+    Operations(2)=OpBottomBorder
+
+    Begin Object class=DrawOpImage Name=OpDHTextLogoImg
+        Image=texture'DH_GUI_Tex.Menu.DHTextLogo'
+        ImageStyle=0
+        Top=0.1
+        Lft=0.0
+        Width=0.4
+        Height=0.15
+        DrawColor=(R=255,B=255,G=255,A=255)
+    End Object
+    Operations(3)=OpDHTextLogoImg
+
+    Begin Object class=DrawOpText Name=OpLoading
+        Top=0.93
+        Lft=0.05
+        Height=0.05
+        Width=0.9
+        Justification=0
+        FontName="ROInterface.fntROMainMenu""
+        bWrapText=False
+    End Object
+    Operations(4)=OpLoading
 
     Begin Object class=DrawOpImage Name=OpConstitutionImg
-        Top=0.015
+        ImageStyle=0
+        Top=0.01
         Lft=0.685
-        Width=0.045
-        Height=0.066
+        Width=0.05
+        Height=0.07
         DrawColor=(R=255,B=255,G=255,A=255)
         SubXL=128
         SubYL=128
     End Object
-    Operations(6)=OpConstitutionImg
+    Operations(5)=OpConstitutionImg
 
     Begin Object class=RODrawOpShadowedText Name=OpConstitutionText
         Top=0.02
@@ -180,7 +220,7 @@ defaultproperties
         VertAlign=1
         FontName="ROInterface.fntROMainMenu"
     End Object
-    Operations(7)=OpConstitutionText
+    Operations(6)=OpConstitutionText
 
     Begin Object class=RODrawOpShadowedText Name=OpMapAuthorText
         Top=0.02
@@ -191,5 +231,16 @@ defaultproperties
         VertAlign=1
         FontName="ROInterface.fntROMainMenu"
     End Object
-    Operations(8)=OpMapAuthorText
+    Operations(7)=OpMapAuthorText
+
+    Begin Object Class=DrawOpImage Name=OpVACImg
+        Top=0.895
+        Lft=0.45
+        Width=0.05
+        Height=0.066
+        DrawColor=(R=255,B=255,G=255,A=255)
+        SubXL=128
+        SubYL=128
+    End Object
+    Operations(8)=OpVACImg
 }
