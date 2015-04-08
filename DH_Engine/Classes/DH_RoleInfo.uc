@@ -13,7 +13,7 @@ var     bool    bIsSquadLeader;
 var     bool    bIsMortarObserver;
 var     bool    bIsArtilleryOfficer;
 
-var()   float   DefaultStartAmmo;    // % of ammo role will default to (0.0 to 100.0)
+var()   float   DefaultStartAmmoPercent;    // % of ammo role will default to (0.0 to 100.0)
 var()   float   MinStartAmmo;        // min % of ammo role can use (0.0 to 100.0)
 var()   float   MaxStartAmmo;        // max % of ammo role can use (0.0 to 100.0)
 
@@ -63,7 +63,7 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-    DefaultStartAmmo=70.0
+    DefaultStartAmmoPercent=70.0
     MinStartAmmo=30.0
     MaxStartAmmo=100.0
     DeployTimeMod=0
