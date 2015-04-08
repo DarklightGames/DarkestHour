@@ -167,16 +167,24 @@ simulated state Cleared
 {
     simulated function BeginState()
     {
-        if (Level.NetMode != NM_DedicatedServer && class'DHObstacleManager'.default.bPlayEffects && bPlayEffects)
+        local sound ClearSound;
+        local class<Emitter> ClearEmitterClass;
+
+        if (Level.NetMode != NM_DedicatedServer &&
+            class'DHObstacleManager'.default.bPlayEffects &&
+            bPlayEffects)
         {
-            if (GetClearSound() != none)
+            ClearSound = GetClearSound();
+            ClearEmitterClass = GetClearEmitterClass();
+
+            if (ClearSound != none)
             {
-                PlayOwnedSound(GetClearSound(), SLOT_None, 255.0);
+                PlayOwnedSound(ClearSound, SLOT_None, 255.0);
             }
 
-            if (GetClearEmitterClass() != none)
+            if (ClearEmitterClass != none)
             {
-                Spawn(GetClearEmitterClass(), none, '', Location, Rotation);
+                Spawn(ClearEmitterClass, none, '', Location, Rotation);
             }
         }
 
