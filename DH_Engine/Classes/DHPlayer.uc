@@ -420,7 +420,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         ROWeap = ROWeapon(Pawn.Weapon);
     }
 
-    if (bSway && Pawn != none && !Pawn.bBipodDeployed && Pawn.Weapon != none && Pawn.Weapon.bCanSway && Pawn.Weapon.bUsingSights && !ROWeap.bWaitingToBolt)
+    if (bSway && Pawn != none && !Pawn.bBipodDeployed && Pawn.Weapon != none && Pawn.Weapon.bCanSway && Pawn.Weapon.bUsingSights && ROWeap != none && !ROWeap.bWaitingToBolt)
     {
         SwayHandler(DeltaTime);
     }
@@ -2094,26 +2094,16 @@ exec function CommunicationMenu()
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
 // Pass this function with MagCount = -1 to have the function use Desired variable in this class
-simulated function int GetSpawnTime(int MagCount, optional RORoleInfo RInfo, optional int WeaponIndex)
+simulated function int GetSpawnTime(int MagCount, optional DH_RoleInfo RI, optional int WeaponIndex)
 {
-    local DHPlayerReplicationInfo PRI;
     local DHGameReplicationInfo   GRI;
-    local DH_RoleInfo             RI;
+    local DHPlayerReplicationInfo PRI;
     local class<Inventory>        PrimaryWep;
     local int MinValue, MidValue, MaxValue, AmmoTimeMod, NewDeployTime;
     local float TD, D, P;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (PRI != none && RInfo == none)
-    {
-        RI = DH_RoleInfo(PRI.RoleInfo);
-    }
-    else
-    {
-        RI = DH_RoleInfo(RInfo);
-    }
 
     if (RI != none && (WeaponIndex == -1 || WeaponIndex > arraycount(RI.PrimaryWeapons)) && RI.PrimaryWeapons[PrimaryWeapon].Item != none)
     {
@@ -2128,6 +2118,7 @@ simulated function int GetSpawnTime(int MagCount, optional RORoleInfo RInfo, opt
     if (PRI == none || RI == none || GRI == none)
     {
         Warn("Error in Calculating deploy time");
+
         return 0;
     }
     else if (PrimaryWep != none)
@@ -2341,7 +2332,7 @@ exec function ChangeTeam(int N) { }
 function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex, byte NewSpawnAmmoCount)
 {
     local DarkestHourGame DHG;
-    local RORoleInfo RI;
+    local DH_RoleInfo RI;
 
     DHG = DarkestHourGame(Level.Game);
 
@@ -2457,7 +2448,9 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
             }
 
             // Check if change failed and output results
-            if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none || PlayerReplicationInfo.Team.TeamIndex != newTeam)
+            if (PlayerReplicationInfo == none ||
+                PlayerReplicationInfo.Team == none ||
+                PlayerReplicationInfo.Team.TeamIndex != newTeam)
             {
                 if (PlayerReplicationInfo == none)
                 {
@@ -2536,9 +2529,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
 
     NewSpawnAmmoCount = Max(NewSpawnAmmoCount, 1);
 
-    Log("NewSpawnAmmoCount" @ NewSpawnAmmoCount);
-
-    RI = DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole);
+    RI = DH_RoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
 
     SpawnTime = GetSpawnTime(NewSpawnAmmoCount, RI, newWeapon1);
 

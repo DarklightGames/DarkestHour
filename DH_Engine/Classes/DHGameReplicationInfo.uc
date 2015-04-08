@@ -17,7 +17,6 @@ struct MortarTargetInfo
 struct SpawnVehicle
 {
     var byte            Index;
-    var bool            bIsActive;
     var byte            TeamIndex;
     var vector          Location;
     var class<Vehicle>  VehicleClass;
@@ -198,7 +197,7 @@ simulated function byte GetSpawnPointIndex(DHSpawnPoint SP)
         }
     }
 
-    Error("Spawn point index could not be resolved");
+    Warn("Spawn point index could not be resolved");
 
     return 255;
 }
@@ -402,7 +401,6 @@ function int AddSpawnVehicle(Vehicle V, int Index)
     {
         if (SpawnVehicles[i].Vehicle == none)
         {
-            SpawnVehicles[i].bIsActive = true;
             SpawnVehicles[i].Index = Index;
             SpawnVehicles[i].Location.X = V.Location.X;
             SpawnVehicles[i].Location.Y = V.Location.Y;
@@ -432,7 +430,6 @@ function bool RemoveSpawnVehicle(Vehicle V)
     {
         if (SpawnVehicles[i].Vehicle == V)
         {
-            SpawnVehicles[i].bIsActive = false;
             SpawnVehicles[i].Index = 255;
             SpawnVehicles[i].Location = vect(0.0, 0.0, 0.0);
             SpawnVehicles[i].TeamIndex = 0;
@@ -469,7 +466,9 @@ simulated function class<Vehicle> GetSpawnVehicleClass(int SpawnVehicleIndex)
 simulated function bool CanSpawnAtVehicle(byte Index, PlayerController PC)
 {
     //TODO: add contested check here
-    if (Index >= arraycount(SpawnVehicles) || !SpawnVehicles[Index].bIsActive || SpawnVehicles[Index].TeamIndex != PC.GetTeamNum())
+    if (Index >= arraycount(SpawnVehicles) ||
+        SpawnVehicles[Index].VehicleClass == none ||
+        SpawnVehicles[Index].TeamIndex != PC.GetTeamNum())
     {
         return false;
     }

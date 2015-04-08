@@ -25,7 +25,7 @@ var ROGUIListPlus                           li_Roles, li_AvailableWeapons[2];
 var localized string                        SpawnTimeText,
                                             SecondsText;
 
-var RORoleInfo                              CurrentRole, DesiredRole;
+var DH_RoleInfo                             CurrentRole, DesiredRole;
 var int                                     CurrentTeam, DesiredTeam;
 var int                                     CurrentWeapons[2], DesiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop;
@@ -182,13 +182,9 @@ function GetInitialValues()
             CurrentRole = none;
         }
     }
-    else if (PRI.RoleInfo != none)
+    else if (PRI != none)
     {
-        CurrentRole = PRI.RoleInfo;
-    }
-    else
-    {
-        CurrentRole = none;
+        CurrentRole = DH_RoleInfo(PRI.RoleInfo);
     }
 
     // Get player's current weapons
@@ -264,9 +260,11 @@ function ChangeDesiredRole(RORoleInfo newRole)
 
     // Don't change role if we already have correct role selected
     if (newRole == DesiredRole && DesiredTeam != -1)
+    {
         return;
+    }
 
-    DesiredRole = newRole;
+    DesiredRole = DH_RoleInfo(newRole);
 
     if (newRole == none)
     {
@@ -558,13 +556,11 @@ function UpdateSelectedWeapon(int weaponCategory)
             // Set min/max/mid for ammo button on primary weapon
             if (Item != none)
             {
-                nu_PrimaryAmmoMags.MinValue = DH_RoleInfo(DesiredRole).MinStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
-                if (nu_PrimaryAmmoMags.MinValue < 1)
-                {
-                    nu_PrimaryAmmoMags.MinValue = 1;
-                }
-                nu_PrimaryAmmoMags.MidValue = DH_RoleInfo(DesiredRole).DefaultStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
-                nu_PrimaryAmmoMags.MaxValue = DH_RoleInfo(DesiredRole).MaxStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MinValue = DesiredRole.MinStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MinValue = FMax(1, nu_PrimaryAmmoMags.MinValue);
+
+                nu_PrimaryAmmoMags.MidValue = DesiredRole.DefaultStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MaxValue = DesiredRole.MaxStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
                 nu_PrimaryAmmoMags.Value = string(DHP.SpawnAmmoAmount);
@@ -871,7 +867,7 @@ function InternalOnChange(GUIComponent Sender)
 
         case nu_PrimaryAmmoMags:
             DHP.SpawnAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(-1, DesiredRole,DesiredWeapons[0]) @ SecondsText;
+            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(-1, DesiredRole, DesiredWeapons[0]) @ SecondsText;
             break;
     }
 }

@@ -186,11 +186,11 @@ function GetMapCoords(vector Location, out float X, out float Y, float W, float 
     Y = MapContainer.WinHeight - Distance / TDistance * MapContainer.WinHeight - (H / 2); // Because the map is managed by a container, lets form to the container's winheight
 }
 
-function PlaceSpawnPointOnMap(vector Location, int Index, byte SPIndex, string Title)
+function PlaceSpawnPointOnMap(vector Location, byte Index, byte SPIndex, string Title)
 {
     local float X, Y;
 
-    if (Index >= 0 && Index < arraycount(b_SpawnPoints))
+    if (Index < arraycount(b_SpawnPoints))
     {
         if (SPIndex == MyDeployMenu.SpawnPointIndex) // Selected SP
         {
@@ -212,11 +212,12 @@ function PlaceSpawnPointOnMap(vector Location, int Index, byte SPIndex, string T
     }
 }
 
-function PlaceVehicleSpawnOnMap(vector Location, int Index, int SpawnVehicleIndex)
+function PlaceVehicleSpawnOnMap(vector Location, byte Index, int SpawnVehicleIndex)
 {
     local float X, Y, W, H;
+    local TexRotator TR;
 
-    if (Index >= 0 && Index < arraycount(b_SpawnVehicles))
+    if (Index < arraycount(b_SpawnVehicles))
     {
         if (SpawnVehicleIndex == MyDeployMenu.SpawnVehicleIndex)
         {
@@ -241,14 +242,22 @@ function PlaceVehicleSpawnOnMap(vector Location, int Index, int SpawnVehicleInde
         b_SpawnVehicles[Index].Tag = SpawnVehicleIndex;
         b_SpawnVehicles[Index].Caption = string(Index);
         b_SpawnVehicles[Index].SetVisibility(true);
+
+        TR = TexRotator(b_SpawnVehicles[Index].Graphic);
+
+        if (TR != none)
+        {
+            //TODO: verify correctness and take map rotation into consideration
+            TR.Rotation.Roll = Location.Z;
+        }
     }
 }
 
-function PlaceObjectiveOnMap(ROObjective O, int Index)
+function PlaceObjectiveOnMap(ROObjective O, byte Index)
 {
     local float X, Y;
 
-    if (O != none && Index >= 0 && Index < arraycount(b_Objectives))
+    if (O != none && Index < arraycount(b_Objectives))
     {
         GetMapCoords(O.Location, X, Y, ObjSize.X, ObjSize.X);
 
@@ -316,7 +325,7 @@ function bool DrawMapComponents(Canvas C)
         for (i = 0; i < arraycount(GRI.SpawnVehicles); ++i)
         {
             // Only show active, current team, and if we aren't spawning a vehicle
-            if (GRI.SpawnVehicles[i].bIsActive && GRI.SpawnVehicles[i].TeamIndex == DHP.GetTeamNum())
+            if (GRI.SpawnVehicles[i].VehicleClass != none && GRI.SpawnVehicles[i].TeamIndex == DHP.GetTeamNum())
             {
                 PlaceVehicleSpawnOnMap(GRI.SpawnVehicles[i].Location, i, GRI.SpawnVehicles[i].Index);
             }
