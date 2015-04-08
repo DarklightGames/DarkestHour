@@ -37,6 +37,7 @@ defaultproperties
         bStandardized=false
     End Object
     ch_Standard=DHmoCheckBox'DH_Interface.DHBrowser_Footer.OnlyStandardCheckBox'
+
     Begin Object Class=GUITitleBar Name=BrowserStatus
         bUseTextHeight=false
         Justification=TXTA_Right
@@ -49,6 +50,7 @@ defaultproperties
         bScaleToParent=true
     End Object
     t_StatusBar=GUITitleBar'DH_Interface.DHBrowser_Footer.BrowserStatus'
+
     Begin Object Class=GUIButton Name=BrowserJoin
         Caption="JOIN"
         StyleName="DHSmallTextButtonStyle"
@@ -63,6 +65,7 @@ defaultproperties
         OnKeyEvent=BrowserJoin.InternalOnKeyEvent
     End Object
     b_Join=GUIButton'DH_Interface.DHBrowser_Footer.BrowserJoin'
+
     Begin Object Class=GUIButton Name=BrowserSpec
         Caption="SPECTATE"
         StyleName="DHSmallTextButtonStyle"
@@ -77,8 +80,9 @@ defaultproperties
         OnKeyEvent=BrowserSpec.InternalOnKeyEvent
     End Object
     b_Spectate=GUIButton'DH_Interface.DHBrowser_Footer.BrowserSpec'
-    Begin Object Class=GUIButton Name=BrowserBack
-        Caption="BACK"
+
+    Begin Object class=GUIButton Name=BrowserMain
+        Caption="MAIN"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinHeight=0.036482
@@ -86,11 +90,12 @@ defaultproperties
         TabOrder=4
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick
-        OnKeyEvent=BrowserBack.InternalOnKeyEvent
+        OnKeyEvent=BrowserMain.InternalOnKeyEvent
     End Object
-    b_Back=GUIButton'DH_Interface.DHBrowser_Footer.BrowserBack'
-    Begin Object class=GUIButton Name=BrowserMain
-        Caption="MAIN"
+    b_Main=GUIButton'DH_Interface.DHBrowser_Footer.BrowserMain'
+
+    Begin Object Class=GUIButton Name=BrowserBack
+        Caption="BACK"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
         WinHeight=0.036482
@@ -98,10 +103,11 @@ defaultproperties
         TabOrder=5
         bBoundToParent=true
         OnClick=DHBrowser_Footer.InternalOnClick
-        OnKeyEvent=BrowserMain.InternalOnKeyEvent
+        OnKeyEvent=BrowserBack.InternalOnKeyEvent
     End Object
-    b_Main=GUIButton'DH_Interface.DHBrowser_Footer.BrowserMain'
-    Begin Object Class=GUIButton Name=BrowserRefresh
+    b_Back=GUIButton'DH_Interface.DHBrowser_Footer.BrowserBack'
+
+    Begin Object class=GUIButton Name=BrowserRefresh
         Caption="REFRESH"
         StyleName="DHSmallTextButtonStyle"
         WinTop=0.5
@@ -115,6 +121,7 @@ defaultproperties
         OnKeyEvent=BrowserRefresh.InternalOnKeyEvent
     End Object
     b_Refresh=GUIButton'DH_Interface.DHBrowser_Footer.BrowserRefresh'
+
     Begin Object Class=GUIButton Name=BrowserFilter
         Caption="FILTERS"
         bAutoSize=true
