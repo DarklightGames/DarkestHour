@@ -14,8 +14,8 @@ var     bool    bIsMortarObserver;
 var     bool    bIsArtilleryOfficer;
 
 var()   float   DefaultStartAmmoPercent;    // % of ammo role will default to (0.0 to 100.0)
-var()   float   MinStartAmmo;        // min % of ammo role can use (0.0 to 100.0)
-var()   float   MaxStartAmmo;        // max % of ammo role can use (0.0 to 100.0)
+var()   float   MinStartAmmoPercent;        // min % of ammo role can use (0.0 to 100.0)
+var()   float   MaxStartAmmoPercent;        // max % of ammo role can use (0.0 to 100.0)
 
 var()   int     DeployTimeMod;       // role modification to team's base deploy time (in seconds)
 var()   int     MinAmmoTimeMod;      // mod for selecting the least ammo (in seconds)
@@ -39,14 +39,14 @@ function PostBeginPlay()
 function class<ROHeadgear> GetHeadgear()
 {
     local int           i;
-    local float         r, ProbabilitySum;
+    local float         R, ProbabilitySum;
 
     if (Headgear.Length == 1)
     {
         return Headgear[0];
     }
 
-    r = FRand();
+    R = FRand();
 
     for (i = 0; i < Headgear.Length; ++i)
     {
@@ -63,9 +63,9 @@ function class<ROHeadgear> GetHeadgear()
 
 defaultproperties
 {
-    DefaultStartAmmoPercent=70.0
-    MinStartAmmo=30.0
-    MaxStartAmmo=100.0
+    DefaultStartAmmoPercent=0.7
+    MinStartAmmoPercent=0.3
+    MaxStartAmmoPercent=1.0
     DeployTimeMod=0
     MinAmmoTimeMod=-5
     MaxAmmoTimeMod=25

@@ -556,21 +556,24 @@ function UpdateSelectedWeapon(int weaponCategory)
             // Set min/max/mid for ammo button on primary weapon
             if (Item != none)
             {
-                nu_PrimaryAmmoMags.MinValue = DesiredRole.MinStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
-                nu_PrimaryAmmoMags.MinValue = FMax(1, nu_PrimaryAmmoMags.MinValue);
+                nu_PrimaryAmmoMags.MinValue = DesiredRole.MinStartAmmoPercent * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags;
+                nu_PrimaryAmmoMags.MinValue = Max(1, nu_PrimaryAmmoMags.MinValue);
 
-                nu_PrimaryAmmoMags.MidValue = DesiredRole.DefaultStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
-                nu_PrimaryAmmoMags.MaxValue = DesiredRole.MaxStartAmmo * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags / 100;
+                nu_PrimaryAmmoMags.MidValue = DesiredRole.DefaultStartAmmoPercent * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags;
+                nu_PrimaryAmmoMags.MaxValue = DesiredRole.MaxStartAmmoPercent * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
                 nu_PrimaryAmmoMags.Value = string(DHP.SpawnAmmoAmount);
+
                 if (int(nu_PrimaryAmmoMags.Value) < nu_PrimaryAmmoMags.MinValue || int(nu_PrimaryAmmoMags.Value) > nu_PrimaryAmmoMags.MaxValue)
                 {
                     nu_PrimaryAmmoMags.Value = string(nu_PrimaryAmmoMags.MidValue); // Will reset value to mid if out of range
                 }
+
                 nu_PrimaryAmmoMags.CheckValue(); // Hard clamps value to be in range (visually)
-                DHP.SpawnAmmoAmount = int(nu_PrimaryAmmoMags.Value);
                 nu_PrimaryAmmoMags.SetVisibility(true);
+
+                DHP.SpawnAmmoAmount = int(nu_PrimaryAmmoMags.Value);
             }
             else
             {
