@@ -261,6 +261,7 @@ function bool OnClick(GUIComponent Sender)
         // Suicide
         case b_MenuOptions[7]:
             PlayerOwner().ConsoleCommand("SUICIDE");
+            CloseMenu();
             break;
 
         // Disconnect
