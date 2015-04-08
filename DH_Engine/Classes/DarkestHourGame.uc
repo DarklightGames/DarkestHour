@@ -2270,4 +2270,5 @@ defaultproperties
     VotingHandlerType="DH_Engine.DHVotingHandler"
     DecoTextName="DH_Engine.DarkestHourGame"
     ObstacleManagerClass=class'DH_Engine.DHObstacleManager'
+    GameMessageClass=class'DH_Engine.DHGameMessage'
 }
