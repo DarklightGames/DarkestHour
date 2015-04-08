@@ -497,9 +497,8 @@ function UpdateRotation(float DeltaTime, float maxPitch)
         }
 
         // if sniper scope or binoc
-        if ((ROWeap != none && ROWeap.bPlayerViewIsZoomed) ||
-            (ROWeap.IsA('BinocularsItem') && ROWeap.bPlayerViewIsZoomed))
-
+        if (ROWeap != none &&
+            (ROWeap.bPlayerViewIsZoomed || (ROWeap.IsA('BinocularsItem') && ROWeap.bPlayerViewIsZoomed)))
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor;
         }
@@ -2527,10 +2526,11 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
 
     ChangeWeapons(newWeapon1, newWeapon2, 0);
 
-
     NewSpawnAmmoCount = Max(NewSpawnAmmoCount, 1);
 
     RI = DH_RoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
+
+    Log("SpawnTime" @ NewSpawnAmmoCount @ SpawnTime);
 
     SpawnTime = GetSpawnTime(NewSpawnAmmoCount, RI, newWeapon1);
 
