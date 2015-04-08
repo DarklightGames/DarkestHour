@@ -2094,7 +2094,7 @@ exec function CommunicationMenu()
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
 // Pass this function with MagCount = -1 to have the function use Desired variable in this class
-simulated function int GetSpawnTime(int MagCount, optional DH_RoleInfo RI, optional int WeaponIndex)
+simulated function int GetSpawnTime(byte MagCount, optional DH_RoleInfo RI, optional int WeaponIndex)
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
@@ -2124,7 +2124,7 @@ simulated function int GetSpawnTime(int MagCount, optional DH_RoleInfo RI, optio
     else if (PrimaryWep != none)
     {
         // If MagCount wasn't passed, lets use desired ammo amount
-        if (MagCount == -1)
+        if (MagCount == 255)
         {
             MagCount = SpawnAmmoAmount;
         }
@@ -2526,6 +2526,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     }
 
     ChangeWeapons(newWeapon1, newWeapon2, 0);
+
 
     NewSpawnAmmoCount = Max(NewSpawnAmmoCount, 1);
 
