@@ -409,7 +409,7 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 {
     local rotator   NewRotation, ViewRotation;
     local ROVehicle ROVeh;
-    local DHPawn   ROPwn;
+    local DHPawn    ROPwn;
     local ROWeapon  ROWeap;
     local float     TurnSpeedFactor;
 
@@ -586,7 +586,7 @@ function ServerSaveArtilleryPosition()
     local ROVolumeTest RVT;
     local rotator      AimRot;
     local bool         bFoundARadio;
-    local DH_RoleInfo  RI;
+    local DHRoleInfo   RI;
 
     if (DHPawn(Pawn) == none)
     {
@@ -818,7 +818,7 @@ function ServerSaveMortarTarget()
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
-    local DHPawn      P;
+    local DHPawn       P;
     local Actor        HitActor;
     local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
     local ROVolumeTest VT;
@@ -1126,7 +1126,7 @@ state PlayerWalking
         local eDoubleClickDir DoubleClickMove;
         local rotator         OldRotation, ViewRotation;
         local bool            bSaveJump;
-        local DHPawn         P;
+        local DHPawn          P;
 
         P = DHPawn(Pawn);
 
@@ -1348,7 +1348,7 @@ state Mantling
         local vector          NewAccel;
         local eDoubleClickDir DoubleClickMove;
         local rotator         OldRotation, ViewRotation;
-        local DHPawn         DHP;
+        local DHPawn          DHP;
 
         DHP = DHPawn(Pawn);
 
@@ -1539,10 +1539,10 @@ function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int Reque
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo DH_PRI;
-    local DH_RoleInfo             RI;
+    local DHRoleInfo              RI;
 
     DH_PRI = DHPlayerReplicationInfo(PRI);
-    RI = DH_RoleInfo(DH_PRI.RoleInfo);
+    RI = DHRoleInfo(DH_PRI.RoleInfo);
 
     if (DH_PRI == none || RI == none)
     {
@@ -2093,7 +2093,7 @@ exec function CommunicationMenu()
 
 // This function returns the redeploy time of this player with it's current role, weapon, ammo, equipement, etc.
 // Pass this function with MagCount = -1 to have the function use Desired variable in this class
-simulated function int GetSpawnTime(byte MagCount, optional DH_RoleInfo RI, optional int WeaponIndex)
+simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optional int WeaponIndex)
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
@@ -2331,7 +2331,7 @@ exec function ChangeTeam(int N) { }
 function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte newWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex, byte NewSpawnAmmoCount)
 {
     local DarkestHourGame DHG;
-    local DH_RoleInfo RI;
+    local DHRoleInfo RI;
 
     DHG = DarkestHourGame(Level.Game);
 
@@ -2528,7 +2528,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
 
     NewSpawnAmmoCount = Max(NewSpawnAmmoCount, 1);
 
-    RI = DH_RoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
+    RI = DHRoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
 
     Log("SpawnTime" @ NewSpawnAmmoCount @ SpawnTime);
 

@@ -5,12 +5,17 @@
 
 class DHBroadcastHandler extends ROBroadcastHandler;
 
-event AllowBroadcastLocalized(Actor Sender, class<LocalMessage> Message, optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+event AllowBroadcastLocalized(
+    Actor Sender,
+    class<LocalMessage> Message,
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject)
 {
     local Controller       C;
     local PlayerController P;
-    local DH_RoleInfo      RI;
+    local DHRoleInfo       RI;
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
@@ -91,7 +96,7 @@ event AllowBroadcastLocalized(Actor Sender, class<LocalMessage> Message, optiona
                 continue;
             }
 
-            RI = DH_RoleInfo(DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo);
+            RI = DHRoleInfo(DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo);
 
             // Only show these messages to people involved with the mortars
             if (P.GetTeamNum() == RelatedPRI_1.Team.TeamIndex && RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars))

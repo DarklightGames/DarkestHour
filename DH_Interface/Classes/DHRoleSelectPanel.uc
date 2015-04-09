@@ -25,7 +25,7 @@ var ROGUIListPlus                           li_Roles, li_AvailableWeapons[2];
 var localized string                        SpawnTimeText,
                                             SecondsText;
 
-var DH_RoleInfo                             CurrentRole, DesiredRole;
+var DHRoleInfo                              CurrentRole, DesiredRole;
 var int                                     CurrentTeam, DesiredTeam;
 var int                                     CurrentWeapons[2], DesiredWeapons[2];
 var float                                   SavedMainContainerPos, RoleSelectFooterButtonsWinTop;
@@ -184,7 +184,7 @@ function GetInitialValues()
     }
     else if (PRI != none)
     {
-        CurrentRole = DH_RoleInfo(PRI.RoleInfo);
+        CurrentRole = DHRoleInfo(PRI.RoleInfo);
     }
 
     // Get player's current weapons
@@ -264,7 +264,7 @@ function ChangeDesiredRole(RORoleInfo newRole)
         return;
     }
 
-    DesiredRole = DH_RoleInfo(newRole);
+    DesiredRole = DHRoleInfo(newRole);
 
     if (newRole == none)
     {

@@ -48,11 +48,11 @@ function bool TryToDrive(Pawn P)
 {
     local DHPawn DHP;
     local DHPlayerReplicationInfo PRI;
-    local DH_RoleInfo RI;
+    local DHRoleInfo RI;
 
     DHP = DHPawn(P);
     PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
-    RI = DH_RoleInfo(PRI.RoleInfo);
+    RI = DHRoleInfo(PRI.RoleInfo);
 
     if (DHP == none || PRI == none || RI == none || !RI.bCanUseMortars)
     {

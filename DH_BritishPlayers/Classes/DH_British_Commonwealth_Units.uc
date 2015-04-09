@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_British_Commonwealth_Units extends DH_RoleInfo
+class DH_British_Commonwealth_Units extends DHRoleInfo
     abstract;
 
 defaultproperties

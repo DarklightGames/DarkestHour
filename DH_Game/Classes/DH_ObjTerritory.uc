@@ -411,7 +411,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
     local DarkesthourGame         DHGame;
     local DHPlayerReplicationInfo PRI;
-    local DH_RoleInfo             RI;
+    local DHRoleInfo              RI;
     local Controller              C;
     local Pawn                    P;
     local int                     i;
@@ -467,7 +467,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         }
 
         PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
-        RI = DH_RoleInfo(PRI.RoleInfo);
+        RI = DHRoleInfo(PRI.RoleInfo);
 
         if (!C.bIsPlayer || P == none || !WithinArea(P) || C.PlayerReplicationInfo.Team == none || C.PlayerReplicationInfo.Team.TeamIndex != Team)
         {
@@ -563,10 +563,10 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 function Timer()
 {
     local ROPlayerReplicationInfo PRI;
-    local DH_RoleInfo             RI;
+    local DHRoleInfo              RI;
     local Controller              FirstCapturer, C;
     local Pawn                    Pawn;
-    local DHPawn                 P;
+    local DHPawn                  P;
     local ROVehicle               ROVeh;
     local ROVehicleWeaponPawn     VehWepPawn;
     local float                   OldCapProgress, LeaderBonus[2], Rate[2];
@@ -593,7 +593,7 @@ function Timer()
             VehWepPawn = ROVehicleWeaponPawn(C.Pawn);
 
             PRI = ROPlayerReplicationInfo(C.PlayerReplicationInfo);
-            RI = DH_RoleInfo(PRI.RoleInfo);
+            RI = DHRoleInfo(PRI.RoleInfo);
 
             if (Pawn != none && Pawn.Health > 0 && WithinArea(Pawn))
             {

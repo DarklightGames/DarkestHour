@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_German_Units extends DH_RoleInfo
+class DH_German_Units extends DHRoleInfo
     abstract;
 
 defaultproperties

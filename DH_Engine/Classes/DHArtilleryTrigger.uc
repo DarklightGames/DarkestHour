@@ -9,7 +9,7 @@ var()   bool        bShouldShowOnSituationMap;
 var()   float       TriggerDelay;
 
 var     float       TriggerTime;
-var     DHPawn     Carrier;
+var     DHPawn      Carrier;
 var     SoundGroup  CommonwealthRequestSound;
 var     SoundGroup  CommonwealthConfirmSound;
 var     SoundGroup  CommonwealthDenySound;
@@ -19,7 +19,7 @@ function UsedBy(Pawn user)
     local DHPlayer DHPC;
     local ROVolumeTest VolumeTest;
     local DHPlayerReplicationInfo PRI;
-    local DH_RoleInfo RI;
+    local DHRoleInfo RI;
     local bool bIsInNoArtyVolume;
     local DarkestHourGame DHG;
 
@@ -138,7 +138,7 @@ function Touch(Actor Other)
 {
     local DHPlayerReplicationInfo PRI;
     local Pawn P;
-    local DH_RoleInfo RI;
+    local DHRoleInfo RI;
 
     P = Pawn(Other);
 
@@ -154,7 +154,7 @@ function Touch(Actor Other)
         return;
     }
 
-    RI = DH_RoleInfo(PRI.RoleInfo);
+    RI = DHRoleInfo(PRI.RoleInfo);
 
     if (RI != none && RI.bIsArtilleryOfficer && ApprovePlayerTeam(P.GetTeamNum()))
     {

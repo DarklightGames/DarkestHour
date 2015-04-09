@@ -34,8 +34,8 @@ var int                 AxisVictoryMusicIndex;
 
 const ROLES_MAX = 16;
 
-var DH_RoleInfo         DHAxisRoles[ROLES_MAX];
-var DH_RoleInfo         DHAlliesRoles[ROLES_MAX];
+var DHRoleInfo          DHAxisRoles[ROLES_MAX];
+var DHRoleInfo          DHAlliesRoles[ROLES_MAX];
 
 var byte                DHAlliesRoleBotCount[ROLES_MAX];
 var byte                DHAlliesRoleCount[ROLES_MAX];

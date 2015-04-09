@@ -208,7 +208,7 @@ function PossessedBy(Controller C)
 {
     local array<class<ROAmmoPouch> > AmmoClasses;
     local int i, Prim, Sec, Gren;
-    local DH_RoleInfo DHRI;
+    local DHRoleInfo DHRI;
 
     super(Pawn).PossessedBy(C);
 
@@ -3768,7 +3768,7 @@ function DropWeaponInventory(vector TossVel)
 
 function bool ResupplyMortarAmmunition()
 {
-    local DH_RoleInfo RI;
+    local DHRoleInfo RI;
 
     RI = GetRoleInfo();
 
@@ -3839,16 +3839,16 @@ function CheckIfMortarCanBeResupplied()
 
 simulated function bool CanUseMortars()
 {
-    local DH_RoleInfo RI;
+    local DHRoleInfo RI;
 
     RI = GetRoleInfo();
 
     return RI != none && RI.bCanUseMortars;
 }
 
-simulated function DH_RoleInfo GetRoleInfo()
+simulated function DHRoleInfo GetRoleInfo()
 {
-    local DH_RoleInfo             RI;
+    local DHRoleInfo              RI;
     local DHPlayerReplicationInfo PRI;
 
     if (PlayerReplicationInfo == none)
@@ -3863,7 +3863,7 @@ simulated function DH_RoleInfo GetRoleInfo()
         return none;
     }
 
-    RI = DH_RoleInfo(PRI.RoleInfo);
+    RI = DHRoleInfo(PRI.RoleInfo);
 
     return RI;
 }

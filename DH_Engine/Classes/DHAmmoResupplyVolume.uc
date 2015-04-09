@@ -50,7 +50,7 @@ function Timer()
     local bool bResupplied;
     local DHPawn DHP;
     local Vehicle V;
-    local DH_RoleInfo RI;
+    local DHRoleInfo RI;
 
     if (!bActive)
     {

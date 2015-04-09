@@ -87,7 +87,7 @@ function Timer()
 //  local bool bEnemyGrenadeFound, bEnemySmokeFound; // not used
     local DHPawn P;
     local Vehicle V;
-    local DH_RoleInfo DHRI;
+    local DHRoleInfo DHRI;
 
     ProcessActorLeave();
 

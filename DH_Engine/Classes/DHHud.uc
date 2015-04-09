@@ -1462,7 +1462,7 @@ function DrawPlayerNames(Canvas C)
     local float            StrX, StrY, Distance;
     local string           Display;
     local bool             bIsAVehicle;
-    local DHPawn          MyDHP, OtherDHP;
+    local DHPawn           MyDHP, OtherDHP;
     local DH_MortarVehicle Mortar;
 
     if (PawnOwner == none || PawnOwner.Controller == none)
@@ -1896,8 +1896,8 @@ simulated function DrawObjectives(Canvas C)
     local int           Pos;
     // AT Gun
     local bool          bShowATGun;
-    local DHPawn       DHP;
-    local DH_RoleInfo   RI;
+    local DHPawn        DHP;
+    local DHRoleInfo    RI;
 
     if (PlayerOwner.Pawn != none)
     {
@@ -1933,7 +1933,7 @@ simulated function DrawObjectives(Canvas C)
     // Get Role info
     if (PRI.RoleInfo != none)
     {
-        RI = DH_RoleInfo(PRI.RoleInfo);
+        RI = DHRoleInfo(PRI.RoleInfo);
     }
 
     // Get player team - if none, we won't draw team-specific information on the map
@@ -2979,7 +2979,7 @@ simulated function UpdateHud()
 
 simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
 {
-    local DHPawn               DHP;
+    local DHPawn                DHP;
     local ROVehicleWeaponPawn   ROVWP;
     local ROVehicle             ROV;
     local DHGameReplicationInfo GRI;
@@ -3188,7 +3188,7 @@ function DisplayMessages(Canvas C)
 simulated function DrawCaptureBar(Canvas Canvas)
 {
     local ROGameReplicationInfo GRI;
-    local DHPawn               P;
+    local DHPawn                P;
     local ROVehicle             Veh;
     local ROVehicleWeaponPawn   WpnPwn;
     local int    Team;

@@ -167,7 +167,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local bool               bHitWhipAttachment, bHitVehicleDriver;
     local ROVehicleWeapon    HitVehicleWeapon;
     local ROVehicleHitEffect VehEffect;
-    local DHPawn            HitPawn;
+    local DHPawn             HitPawn;
     local vector             TempHitLocation, HitNormal;
     local array<int>         HitPoints;
     local float              BulletDistance;

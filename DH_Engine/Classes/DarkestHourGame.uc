@@ -12,8 +12,8 @@ var     DHAmmoResupplyVolume        DHResupplyAreas[10];
 var     array<DHSpawnArea>          DHMortarSpawnAreas;
 var     DHSpawnArea                 DHCurrentMortarSpawnArea[2];
 
-var     DH_RoleInfo                 DHAxisRoles[16];
-var     DH_RoleInfo                 DHAlliesRoles[16];
+var     DHRoleInfo                  DHAxisRoles[16];
+var     DHRoleInfo                  DHAlliesRoles[16];
 
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
@@ -473,7 +473,7 @@ function CheckTankCrewSpawnAreas()
 function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
 {
     local PlayerStart P;
-    local DH_RoleInfo DHRI;
+    local DHRoleInfo DHRI;
     local float       Score, NextDist;
     local Controller  OtherPlayer;
 
@@ -484,7 +484,7 @@ function float RatePlayerStart(NavigationPoint N, byte Team, Controller Player)
         return -10000000.0;
     }
 
-    DHRI = DH_RoleInfo(DHPlayerReplicationInfo(Player.PlayerReplicationInfo).RoleInfo);
+    DHRI = DHRoleInfo(DHPlayerReplicationInfo(Player.PlayerReplicationInfo).RoleInfo);
 
     if (LevelInfo.bUseSpawnAreas && CurrentSpawnArea[Team] != none)
     {
@@ -996,10 +996,10 @@ function AddDefaultInventory(Pawn aPawn)
 function AddRole(RORoleInfo NewRole)
 {
     local DHGameReplicationInfo DHGRI;
-    local DH_RoleInfo           DHRI;
+    local DHRoleInfo            DHRI;
 
     DHGRI = DHGameReplicationInfo(GameReplicationInfo);
-    DHRI = DH_RoleInfo(NewRole);
+    DHRI = DHRoleInfo(NewRole);
 
     if (NewRole.Side == SIDE_Allies)
     {
@@ -1404,7 +1404,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     }
 }
 
-function bool RoleExists(byte TeamID, DH_RoleInfo RI)
+function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
     local int i;
 
