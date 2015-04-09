@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreyhoundArmoredCar extends DH_ArmoredWheeledVehicle;
+class DH_GreyhoundArmoredCar extends DHArmoredWheeledVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Greyhound_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex4.utx

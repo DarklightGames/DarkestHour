@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ArmoredWheeledVehicle extends DHTreadCraft
+class DHArmoredWheeledVehicle extends DHTreadCraft
     abstract;
 
 enum ECarHitPointType
