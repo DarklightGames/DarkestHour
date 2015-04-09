@@ -26,7 +26,7 @@ function Timer()
         return;
     }
 
-    RVT = Spawn(class'ROVolumeTest', self, , OriginalArtyLocation);
+    RVT = Spawn(class'ROVolumeTest', self,, OriginalArtyLocation);
 
     // If the place this arty is falling has become a NoArtyVolume after the strike was called, cancel the strike
     if (RVT != none && RVT.IsInNoArtyVolume())
@@ -69,7 +69,7 @@ function Timer()
            AimVec.Y *= -1;
         }
 
-        LastSpawnedShell = Spawn(class'DHArtilleryShell', InstigatorController, , Location + AimVec, rotator(PhysicsVolume.Gravity));
+        LastSpawnedShell = Spawn(class'DHArtilleryShell', InstigatorController,, Location + AimVec, rotator(PhysicsVolume.Gravity));
 
         SpawnCounter++;
         SetTimer(FRand() * 1.5, false);

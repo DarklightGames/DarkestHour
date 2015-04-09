@@ -139,13 +139,13 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
             }
         }
 
-        Spawn(ClientTracerClass, , , Start, ProjectileDir);
+        Spawn(ClientTracerClass,,, Start, ProjectileDir);
     }
     else
     {
         Int2Rot(SavedDualShot.FirstShot.ShotRotation, R);
 
-        Spawn(ClientProjectileClass, , , SavedDualShot.FirstShot.ShotLocation, R);
+        Spawn(ClientProjectileClass,,, SavedDualShot.FirstShot.ShotLocation, R);
     }
 
     // Second shot
@@ -184,13 +184,13 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
                 }
             }
 
-            Spawn(ClientTracerClass, , , Start, ProjectileDir);
+            Spawn(ClientTracerClass,,, Start, ProjectileDir);
         }
         else
         {
             Int2Rot(SavedDualShot.Secondshot.ShotRotation, R);
 
-            Spawn(ClientProjectileClass, , , SavedDualShot.Secondshot.ShotLocation, R);
+            Spawn(ClientProjectileClass,,, SavedDualShot.Secondshot.ShotLocation, R);
         }
     }
 

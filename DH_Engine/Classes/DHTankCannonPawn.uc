@@ -788,7 +788,7 @@ function AltFire(optional float F)
     }
     else if (Gun.FireCountdown <= Gun.AltFireInterval) // means that coaxial MG isn't reloading (or at least has virtually completed its reload)
     {
-        PlaySound(Cannon.NoMGAmmoSound, SLOT_None, 1.5, , 25.0, , true);
+        PlaySound(Cannon.NoMGAmmoSound, SLOT_None, 1.5,, 25.0,, true);
     }
 }
 

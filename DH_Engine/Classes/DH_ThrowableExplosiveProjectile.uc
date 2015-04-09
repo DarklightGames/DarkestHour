@@ -340,7 +340,7 @@ simulated function Destroyed()
 
     WeaponLight();
 
-    PlaySound(ExplosionSound[Rand(3)], , 5.0, , ExplosionSoundRadius, 1.0, true);
+    PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true);
 
     Start = Location + 32.0 * vect(0.0, 0.0, 1.0);
 
@@ -348,7 +348,7 @@ simulated function Destroyed()
     {
         for (i = 0; i < ShrapnelCount; ++i)
         {
-            Spawn(class'ROShrapnelChunk', , '', Start);
+            Spawn(class'ROShrapnelChunk',, '', Start);
         }
     }
 
@@ -359,7 +359,7 @@ simulated function Destroyed()
         // If the projectile is still moving we'll need to spawn a different explosion effect
         if (Physics == PHYS_Falling)
         {
-            Spawn(ExplodeMidAirEffectClass, , , Start, rotator(vect(0.0, 0.0, 1.0)));
+            Spawn(ExplodeMidAirEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
         }
         // If the projectile has stopped and is on the ground we'll spawn a ground explosion effect and spawn some dirt flying out
         else if (Physics == PHYS_None)
@@ -368,13 +368,13 @@ simulated function Destroyed()
 
             if (ST == EST_Snow || ST == EST_Ice)
             {
-                Spawn(ExplodeSnowEffectClass, , , Start, rotator(vect(0.0, 0.0, 1.0)));
-                Spawn(ExplosionDecalSnow, self, , Location, rotator(-vect(0.0, 0.0, 1.0)));
+                Spawn(ExplodeSnowEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecalSnow, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
             }
             else
             {
-                Spawn(ExplodeDirtEffectClass, , , Start, rotator(vect(0.0, 0.0, 1.0)));
-                Spawn(ExplosionDecal, self, , Location, rotator(-vect(0.0, 0.0, 1.0)));
+                Spawn(ExplodeDirtEffectClass,,, Start, rotator(vect(0.0, 0.0, 1.0)));
+                Spawn(ExplosionDecal, self,, Location, rotator(-vect(0.0, 0.0, 1.0)));
             }
         }
     }
@@ -388,7 +388,7 @@ simulated function GetHitSurfaceType(out ESurfaceTypes ST, vector HitNormal)
     local vector   HitLoc, HitNorm;
     local Material HitMat;
 
-    Trace(HitLoc, HitNorm, Location - (HitNormal * 16.0), Location, false, , HitMat);
+    Trace(HitLoc, HitNorm, Location - (HitNormal * 16.0), Location, false,, HitMat);
 
     if (HitMat == none)
     {

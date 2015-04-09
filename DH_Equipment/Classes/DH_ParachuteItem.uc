@@ -5,10 +5,10 @@
 
 class DH_ParachuteItem extends DHWeapon;
 
-var   bool             bUsedParachute;
+var bool    bUsedParachute;
 
-var     name    DeployChuteAnim;
-var     name    UndeployChuteAnim;
+var name    DeployChuteAnim;
+var name    UndeployChuteAnim;
 
 //=============================================================================
 // Functions overridden because parachutes don't shoot
@@ -98,7 +98,7 @@ simulated state RaisingWeapon
 
         if (ClientState == WS_Hidden)
         {
-            PlayOwnedSound(SelectSound, SLOT_Interact, , , , , false);
+            PlayOwnedSound(SelectSound, SLOT_Interact,,,,, false);
 
             if (Instigator.IsLocallyControlled())
             {

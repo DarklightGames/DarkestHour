@@ -361,7 +361,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
             if (RocketAttachment == none)
             {
                 RocketLoc = GetBoneCoords('Warhead').Origin;
-                RocketAttachment = Spawn(class'ROFPAmmoRound',self, , RocketLoc);
+                RocketAttachment = Spawn(class'ROFPAmmoRound',self,, RocketLoc);
                 AttachToBone(RocketAttachment, 'Warhead');
             }
         }

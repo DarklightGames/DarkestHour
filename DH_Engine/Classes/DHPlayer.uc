@@ -707,7 +707,7 @@ function ServerArtyStrike()
     SpawnLocation = SavedArtilleryCoords;
     SpawnLocation.Z = GRI.NorthEastBounds.Z;
 
-    Spawner = Spawn(class'DH_ArtillerySpawner', self, , SpawnLocation, rotator(PhysicsVolume.Gravity));
+    Spawner = Spawn(class'DH_ArtillerySpawner', self,, SpawnLocation, rotator(PhysicsVolume.Gravity));
 
     if (Spawner == none)
     {

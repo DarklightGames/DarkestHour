@@ -109,7 +109,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             StartLocation = BarrelLocation[i] + vector(BarrelRotation[i]) * (ProjClass.default.CollisionRadius * 1.1);
         }
 
-        P = Spawn(ProjClass, none, , StartLocation, FireRot);
+        P = Spawn(ProjClass, none,, StartLocation, FireRot);
 
         if (P != none)
         {

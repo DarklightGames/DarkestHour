@@ -37,9 +37,9 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        SmokeEmitter = Spawn(SmokeEmitterClass, self, , Location, rotator(vect(0.0, 0.0, 1.0)));
+        SmokeEmitter = Spawn(SmokeEmitterClass, self,, Location, rotator(vect(0.0, 0.0, 1.0)));
         SmokeEmitter.SetBase(self); // base the emitter on the grenade so if it bursts in mid-air the smoke emission travels with the grenade
-        PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5, , 200.0);
+        PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
         AmbientSound = SmokeLoopSound;
         SetTimer(SmokeSoundDuration, false);  // to switch off smoke sound when it stops discharging
         LifeSpan = SmokeSoundDuration + 10.0; // this actor will persist as long as the smoke sound, then stay inert on ground for an extra 10 secs & then auto-destroy

@@ -25,8 +25,8 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            Spawn(SmokeEmitterClass, self, , HitLocation, rotator(-HitNormal));
-            PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5, , 200.0);
+            Spawn(SmokeEmitterClass, self,, HitLocation, rotator(-HitNormal));
+            PlaySound(SmokeIgniteSound, SLOT_NONE, 1.5,, 200.0);
             AmbientSound = SmokeLoopSound;
             AmbientVolumeScale = 1.0; // overriding defaults for shells, which are intended for their in-flight 'whistle' - this (& radius) match smoke grenade sounds
             SoundRadius = 200.0;

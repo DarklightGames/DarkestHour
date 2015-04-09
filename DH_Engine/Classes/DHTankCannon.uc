@@ -299,7 +299,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self, , HitLocation, rotator(HitRotation));
+            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
             Log("We hit the front of the vehicle");
         }
 
@@ -353,7 +353,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self, , HitLocation, rotator(HitRotation));
+            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
             Log("We hit the right side of the vehicle");
         }
 
@@ -400,7 +400,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self, , HitLocation, rotator(HitRotation));
+            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
             Log ("We hit the back of the vehicle");
         }
 
@@ -453,7 +453,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self, , HitLocation, rotator(HitRotation));
+            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
             Log("We hit the left side of the vehicle");
         }
 
@@ -1154,7 +1154,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     }
 
     // Now spawn the projectile
-    P = Spawn(ProjClass, none, , StartLocation, FireRot);
+    P = Spawn(ProjClass, none,, StartLocation, FireRot);
 
     // If pending round type is different, switch round type
     if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
@@ -1183,7 +1183,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             }
             else
             {
-                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0, , AltFireSoundRadius, , false);
+                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
             }
         }
         else
@@ -1194,7 +1194,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             }
             else
             {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0, , FireSoundRadius, , false);
+                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
             }
         }
     }
@@ -1250,12 +1250,12 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 
         if (EffectEmitterClass != none && EffectIsRelevant(Location, false))
         {
-            EffectEmitter = Spawn(EffectEmitterClass, self, , WeaponFireLocation, WeaponFireRotation);
+            EffectEmitter = Spawn(EffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
         }
 
         if (CannonDustEmitterClass != none && EffectIsRelevant(Location, false))
         {
-            CannonDustEmitter = Spawn(CannonDustEmitterClass, self, , Base.Location, Base.Rotation);
+            CannonDustEmitter = Spawn(CannonDustEmitterClass, self,, Base.Location, Base.Rotation);
         }
 
         if (CannonPawn != none && CannonPawn.DriverPositions[CannonPawn.DriverPositionIndex].bExposed)
@@ -1429,25 +1429,25 @@ simulated function Timer()
     }
     else if (CannonReloadState == CR_Empty)
     {
-        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
+        PlayOwnedSound(ReloadSoundOne, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart1;
         SetTimer(GetSoundDuration(ReloadSoundOne), false);
     }
     else if (CannonReloadState == CR_ReloadedPart1)
     {
-        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
+        PlayOwnedSound(ReloadSoundTwo, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart2;
         SetTimer(GetSoundDuration(ReloadSoundTwo), false);
     }
     else if (CannonReloadState == CR_ReloadedPart2)
     {
-        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
+        PlayOwnedSound(ReloadSoundThree, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart3;
         SetTimer(GetSoundDuration(ReloadSoundThree), false);
     }
     else if (CannonReloadState == CR_ReloadedPart3)
     {
-        PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0, , 150.0, , false);
+        PlayOwnedSound(ReloadSoundFour, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
         CannonReloadState = CR_ReloadedPart4;
         SetTimer(GetSoundDuration(ReloadSoundFour), false);
     }

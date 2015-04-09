@@ -377,7 +377,7 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         RocketLoc = GetBoneCoords('Warhead').Origin;
-        RocketAttachment = Spawn(RocketAttachmentClass, self, , RocketLoc);
+        RocketAttachment = Spawn(RocketAttachmentClass, self,, RocketLoc);
         AttachToBone(RocketAttachment, 'Warhead');
     }
 }
@@ -418,7 +418,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
             if (RocketAttachment == none)
             {
                 RocketLoc = GetBoneCoords('Warhead').Origin;
-                RocketAttachment = Spawn(RocketAttachmentClass, self, , RocketLoc);
+                RocketAttachment = Spawn(RocketAttachmentClass, self,, RocketLoc);
                 AttachToBone(RocketAttachment, 'Warhead');
             }
         }
@@ -454,7 +454,7 @@ simulated function SpawnBomb()
     if (Level.NetMode != NM_DedicatedServer)
     {
        ProjectileLocation = GetBoneCoords('Warhead').Origin;
-       RocketAttachment = Spawn(RocketAttachmentClass, self, , ProjectileLocation);
+       RocketAttachment = Spawn(RocketAttachmentClass, self,, ProjectileLocation);
        AttachToBone(RocketAttachment, 'Warhead');
     }
 }

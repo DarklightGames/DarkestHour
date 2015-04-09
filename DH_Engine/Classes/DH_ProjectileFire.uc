@@ -237,7 +237,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
         WeapAttach = DHWeaponAttachment(Weapon.ThirdPersonActor);
 
         // Do precision hit point pre-launch trace to see if we hit a player or something else
-        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start, , 0);  // WhizType was 1, set to 0 to prevent sound triggering
+        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound triggering
 
         // This is a bit of a hack, but it prevents bots from killing other players in most instances
         if (!Instigator.IsHumanControlled() && Pawn(Other) != none && Instigator.Controller.SameTeamAs(Pawn(Other).Controller))
@@ -312,7 +312,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
     }
 
 //  if (ProjectileClass != none)
-//      SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir); // Matt: replaced by below
+//      SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir); // Matt: replaced by below
 
     if (Level.NetMode == NM_Standalone && bUsesTracers && TracerProjectileClass != none)
     {
@@ -332,7 +332,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                     }
                 }
 
-                SpawnedProjectile = Spawn(TracerProjectileClass, , , Start, Dir);
+                SpawnedProjectile = Spawn(TracerProjectileClass,,, Start, Dir);
 
                 if (SpawnedProjectile != none)
                 {
@@ -345,7 +345,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
 
     if (!bSpawnedTracer && ProjectileClass != none) // Matt: added so we spawn bullet OR tracer, not both
     {
-        SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir);
+        SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir);
     }
 
     return SpawnedProjectile;
@@ -388,7 +388,7 @@ function PlayFiring()
 
     if (FireSounds.Length > 0)
     {
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume, , , , false);
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
     }
 
     ClientPlayForceFeedback(FireForce);

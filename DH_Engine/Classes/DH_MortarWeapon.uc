@@ -175,7 +175,7 @@ simulated function bool CanDeploy()
 
     P = DHPawn(Instigator);
 
-    VolumeTest = Spawn(class'ROVolumeTest',, , P.Location);
+    VolumeTest = Spawn(class'ROVolumeTest',,, P.Location);
 
     if (VolumeTest.IsInNoArtyVolume())
     {

@@ -295,7 +295,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         // We hit a soldier ... potentially - first we need to run a HitPointTrace to make sure we actually hit part of his body, not just his collision area
         if (Other.IsA('ROPawn'))
         {
-            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation, , 0);
+            Other = HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * Normal(Velocity)), HitPoints, HitLocation,, 0);
 
             // We hit one of the body's hit points, so register a hit on the soldier
             if (Other != none)
@@ -550,10 +550,10 @@ simulated function DHDeflect(vector HitLocation, vector HitNormal, Actor Wall)
         {
             if (EffectIsRelevant(HitLocation, false))
             {
-                Spawn(ShellDeflectEffectClass, , , HitLocation + (HitNormal * 16.0), rotator(HitNormal));
+                Spawn(ShellDeflectEffectClass,,, HitLocation + (HitNormal * 16.0), rotator(HitNormal));
             }
 
-            PlaySound(VehicleDeflectSound, , 5.5 * TransientSoundVolume);
+            PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
         }
     }
 }
@@ -572,14 +572,14 @@ simulated function ShatterExplode(vector HitLocation, vector HitNormal)
 
         if (!bDidExplosionFX)
         {
-            PlaySound(ShatterVehicleHitSound, , 5.5 * TransientSoundVolume);
+            PlaySound(ShatterVehicleHitSound,, 5.5 * TransientSoundVolume);
 
             if (EffectIsRelevant(Location, false))
             {
-                Spawn(ShellShatterEffectClass, , , HitLocation + HitNormal * 16.0, rotator(HitNormal));
+                Spawn(ShellShatterEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
             }
 
-            PlaySound(ShatterSound[Rand(4)], , 5.5 * TransientSoundVolume);
+            PlaySound(ShatterSound[Rand(4)],, 5.5 * TransientSoundVolume);
         }
     }
 
@@ -654,8 +654,8 @@ simulated function CheckForSplash(vector SplashLocation)
         if (FluidSurfaceInfo(HitActor) != none || (PhysicsVolume(HitActor) != none && PhysicsVolume(HitActor).bWaterVolume))
         {
             bDidWaterHitFX = true;
-            Spawn(ShellHitWaterEffectClass, , , HitLocation, rot(16384, 0, 0));
-            PlaySound(WaterHitSound, , 5.5 * TransientSoundVolume);
+            Spawn(ShellHitWaterEffectClass,,, HitLocation, rot(16384, 0, 0));
+            PlaySound(WaterHitSound,, 5.5 * TransientSoundVolume);
         }
     }
 }

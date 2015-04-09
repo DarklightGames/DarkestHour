@@ -97,7 +97,7 @@ simulated function PostNetBeginPlay()
         AmbientGlow = 254;
         LightCone = 16;
 
-        TracerEffect = Spawn(TracerEffectClass, self, , (Location + Normal(Velocity) * TracerPullback));
+        TracerEffect = Spawn(TracerEffectClass, self,, (Location + Normal(Velocity) * TracerPullback));
     }
 
     super.PostNetBeginPlay();
@@ -221,7 +221,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
         }
         else if (Level.NetMode != NM_DedicatedServer)
         {
-            VehEffect = Spawn(class'ROVehicleHitEffect', , , HitLocation, rotator(Normal(Velocity)));
+            VehEffect = Spawn(class'ROVehicleHitEffect',,, HitLocation, rotator(Normal(Velocity)));
             VehEffect.InitHitEffects(HitLocation, Normal(-Velocity));
 
             if (bIsTracerBullet)
@@ -304,7 +304,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
         }
 
-        Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation, , WhizType);
+        Other = Instigator.HitPointTrace(TempHitLocation, HitNormal, HitLocation + (65535.0 * X), HitPoints, HitLocation,, WhizType);
 
         if (!bHasDeflected)
         {
@@ -464,12 +464,12 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         if (ROVehicle(Wall) != none)
         {
-            VehEffect = Spawn(class'ROVehicleHitEffect', , , Location, rotator(-HitNormal));
+            VehEffect = Spawn(class'ROVehicleHitEffect',,, Location, rotator(-HitNormal));
             VehEffect.InitHitEffects(Location, HitNormal);
         }
         else if (ImpactEffect != none)
         {
-            Spawn(ImpactEffect, , , Location, rotator(-HitNormal));
+            Spawn(ImpactEffect,,, Location, rotator(-HitNormal));
         }
     }
 

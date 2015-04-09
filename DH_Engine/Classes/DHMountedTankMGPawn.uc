@@ -448,7 +448,7 @@ function Fire(optional float F)
     else if (MGun != none && !MGun.bReloading)
     {
         Gun.ShakeView(false);
-        PlaySound(MGun.NoAmmoSound, SLOT_None, 1.5, , 25.0, , true);
+        PlaySound(MGun.NoAmmoSound, SLOT_None, 1.5,, 25.0,, true);
     }
 }
 

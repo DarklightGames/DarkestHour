@@ -16,11 +16,11 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
     // Effects if failed to penetrate vehicle
     if (bFailedToPenetrateArmor)
     {
-        PlaySound(VehicleDeflectSound, , 5.5 * TransientSoundVolume);
+        PlaySound(VehicleDeflectSound,, 5.5 * TransientSoundVolume);
 
         if (EffectIsRelevant(HitLocation, false))
         {
-            Spawn(ShellDeflectEffectClass, , , HitLocation + HitNormal * 16.0, rotator(HitNormal));
+            Spawn(ShellDeflectEffectClass,,, HitLocation + HitNormal * 16.0, rotator(HitNormal));
         }
     }
     // Otherwise the normal explosion effects

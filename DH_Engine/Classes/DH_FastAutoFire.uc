@@ -359,7 +359,7 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
         WeapAttach =   DHWeaponAttachment(Weapon.ThirdPersonActor);
 
         // Do precision hit point pre-launch trace to see if we hit a player or something else
-        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start, , 0);  // WhizType was 1, set to 0 to prevent sound trigger
+        Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,, 0);  // WhizType was 1, set to 0 to prevent sound trigger
 
         if (Other != none && Other != Instigator && Other.Base != Instigator)
         {
@@ -413,7 +413,7 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
 
     if (ProjectileClass != none)
     {
-        SpawnedProjectile = Spawn(ProjectileClass, , , Start, Dir);
+        SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir);
 
         if (DH_Bullet(SpawnedProjectile) != none) // Matt: added to disable bullet replication, so actor won't be replicated to clients (the only difference in server bullet)
         {

@@ -225,7 +225,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         Trace(TraceHitLocation, HitNormal, WeaponFireLocation + 65355.0 * vector(WeaponFireRotation), WeaponFireLocation, false);
     }
 
-    P = Spawn(ProjClass, none, , StartLocation, FireRot);
+    P = Spawn(ProjClass, none,, StartLocation, FireRot);
 
     // Swap to the next round type after firing // note this 'if' is removed & is the only change in this override
 //  if (PendingProjectileClass != none && ProjClass == ProjectileClass && ProjectileClass != PendingProjectileClass)
@@ -254,7 +254,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             }
             else
             {
-                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume/255.0, , AltFireSoundRadius,, false);
+                PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume/255.0,, AltFireSoundRadius,, false);
             }
         }
         else
@@ -265,7 +265,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
             }
             else
             {
-                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0, , FireSoundRadius,, false);
+                PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
             }
         }
     }
@@ -365,7 +365,7 @@ simulated event OwnerEffects()
 
             if (!bAmbientAltFireSound)
             {
-                PlaySound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0, , AltFireSoundRadius, , false);
+                PlaySound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
             }
             else
             {
@@ -376,7 +376,7 @@ simulated event OwnerEffects()
         }
         else if (!bAmbientFireSound)
         {
-            PlaySound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0, , FireSoundRadius, , false);
+            PlaySound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
         }
     }
 }

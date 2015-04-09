@@ -198,7 +198,7 @@ simulated function CheckWall(vector HitNormal, vector X)
     local ESurfaceTypes HitSurfaceType;
     local vector        TempHitLocation, TempHitNormal;
 
-    Trace(TempHitLocation, TempHitNormal, Location, Location + X * 16.0, false, , HitMaterial);
+    Trace(TempHitLocation, TempHitNormal, Location, Location + X * 16.0, false,, HitMaterial);
 
     if (HitMaterial != none)
     {
