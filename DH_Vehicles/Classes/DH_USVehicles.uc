@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_USVehicles extends DH_VehicleFactory
+class DH_USVehicles extends DHVehicleFactory
     abstract;
 
 defaultproperties

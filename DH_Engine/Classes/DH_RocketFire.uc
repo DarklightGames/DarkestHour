@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_RocketFire extends DH_ProjectileFire;
+class DH_RocketFire extends DH_ProjectileFire
+    abstract;
 
 var array<name>         FireIronAnims;
 

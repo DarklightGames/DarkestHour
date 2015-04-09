@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PistolFire extends DH_ProjectileFire;
+class DH_PistolFire extends DH_ProjectileFire
+    abstract;
 
-var         name        FireLastAnim;           // anim for weapon firing last shot
-var         name        FireIronLastAnim;       // anim for weapon firing last shot
+var name FireLastAnim;      // anim for weapon firing last shot
+var name FireIronLastAnim;  // anim for weapon firing last shot
 
 function PlayFiring()
 {

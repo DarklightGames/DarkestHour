@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATCannonFactoryBase extends DH_VehicleFactory
+class DH_ATCannonFactoryBase extends DHVehicleFactory
     abstract;
 
 var()   bool    bUseRandomizer;            // whether or not to use the randomization system

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_VehicleFactory extends ROVehicleFactory
+class DHVehicleFactory extends ROVehicleFactory
     abstract;
 
 var() name FactoryDepletedEvent;
