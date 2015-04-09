@@ -1094,7 +1094,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+        ReceiveLocalizedMessage(class'DHVehicleMessage', 0); // not qualified to operate vehicle
 
         return;
     }

@@ -624,17 +624,17 @@ simulated function bool CanExit()
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+            ReceiveLocalizedMessage(class'DHVehicleMessage', 4); // must unbutton the hatch
         }
         else
         {
             if (DHTreadCraft(VehicleBase) != none && DHTreadCraft(VehicleBase).DriverPositions.Length > DHTreadCraft(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
             {
-                ReceiveLocalizedMessage(class'DH_VehicleMessage', 10); // must exit through driver's or commander's hatch
+                ReceiveLocalizedMessage(class'DHVehicleMessage', 10); // must exit through driver's or commander's hatch
             }
             else
             {
-                ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch
+                ReceiveLocalizedMessage(class'DHVehicleMessage', 5); // must exit through commander's hatch
             }
         }
 

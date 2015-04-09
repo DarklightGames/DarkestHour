@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_VehicleMessage extends ROVehicleMessage
+class DHVehicleMessage extends ROVehicleMessage
     abstract;
 
 var localized string CannotRide;

@@ -782,7 +782,7 @@ simulated function SwitchWeapon(byte F)
     if (bMustBeTankerToSwitch && (Controller == none || ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) == none ||
         ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo == none || !ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
     {
-        ReceiveLocalizedMessage(class'DH_VehicleMessage', 0); // not qualified to operate vehicle
+        ReceiveLocalizedMessage(class'DHVehicleMessage', 0); // not qualified to operate vehicle
 
         return;
     }
@@ -3038,7 +3038,7 @@ simulated function bool CanExit()
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            ReceiveLocalizedMessage(class'DH_VehicleMessage', 4); // must unbutton the hatch
+            ReceiveLocalizedMessage(class'DHVehicleMessage', 4); // must unbutton the hatch
         }
         else
         {
@@ -3049,11 +3049,11 @@ simulated function bool CanExit()
 
             if (MGPawn != none && MGPawn.DriverPositions.Length > MGPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
             {
-                ReceiveLocalizedMessage(class'DH_VehicleMessage', 11); // must exit through commander's or MG hatch
+                ReceiveLocalizedMessage(class'DHVehicleMessage', 11); // must exit through commander's or MG hatch
             }
             else
             {
-                ReceiveLocalizedMessage(class'DH_VehicleMessage', 5); // must exit through commander's hatch
+                ReceiveLocalizedMessage(class'DHVehicleMessage', 5); // must exit through commander's hatch
             }
         }
 
