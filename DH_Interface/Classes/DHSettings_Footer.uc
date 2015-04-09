@@ -16,12 +16,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function bool InternalOnClick(GUIComponent Sender)
 {
-    if (Sender==b_Back)
-            SettingsPage.BackButtonClicked();
+    if (Sender == b_Back)
+    {
+        SettingsPage.BackButtonClicked();
+    }
+    else if (Sender==b_Defaults)
+    {
+        SettingsPage.DefaultsButtonClicked();
+    }
 
-        else if (Sender==b_Defaults)
-            SettingsPage.DefaultsButtonClicked();
-        return true;
+    return true;
 }
 
 defaultproperties

@@ -11,7 +11,7 @@ var automated moFloatEdit               fl_ScopedFactor;
 
 event InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    super.Initcomponent(MyController, MyOwner);
+    super.InitComponent(MyController, MyOwner);
 
     i_BG3.ManageComponent(nu_MousePollRate);
     i_BG3.ManageComponent(fl_IronSightFactor);
@@ -62,6 +62,17 @@ function OnInputChange(GUIComponent Sender)
     {
         PC.ConsoleCommand("set DH_Engine.DHPlayer DHScopeTurnSpeedFactor" @ fl_ScopedFactor.GetValue());
     }
+}
+
+function ResetClicked()
+{
+    class'PlayerInput'.static.ResetConfig("MouseSamplingTime");
+    class'DHPlayer'.static.ResetConfig("DHISTurnSpeedFactor");
+    class'DHPlayer'.static.ResetConfig("DHScopeTurnSpeedFactor");
+
+    ShowPanel(true);
+
+    super.ResetClicked();
 }
 
 defaultproperties
