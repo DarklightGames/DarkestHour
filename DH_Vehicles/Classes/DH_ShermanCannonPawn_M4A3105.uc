@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanCannonPawn_M4A3105 extends DH_AmericanTankCannonPawn;
+class DH_ShermanCannonPawn_M4A3105 extends DHAmericanTankCannonPawn;
 
 defaultproperties
 {

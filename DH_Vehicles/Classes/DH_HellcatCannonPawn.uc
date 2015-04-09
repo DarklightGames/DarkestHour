@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HellcatCannonPawn extends DH_AmericanTankCannonPawn;
+class DH_HellcatCannonPawn extends DHAmericanTankCannonPawn;
 
 defaultproperties
 {
