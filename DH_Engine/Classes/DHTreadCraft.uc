@@ -48,6 +48,11 @@ var     bool        bEmittersOn;            // dust & exhaust emitters are activ
 var     float       DriverTraceDistSquared; // CheckReset() variable // Matt: changed to a squared value, as VSizeSquared is more efficient than VSize
 var     bool        bClientInitialized;     // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                             // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
+
+var     bool        bCrushedAnObject;       // Value set when the vehicle crushes something
+var     float       LastCrushedTime;
+var     float       ObjectCrushStallTime;
+
 // Positions
 var()   int         UnbuttonedPositionIndex;
 var()   int         FirstRiderPositionIndex;
@@ -1309,6 +1314,23 @@ simulated function Tick(float DeltaTime)
     }
 
     super(ROWheeledVehicle).Tick(DeltaTime);
+
+    // If we crushed an object, apply break and clamp throttle (server only)
+    if (bCrushedAnObject)
+    {
+        if (Controller.IsA('ROPlayer'))
+        {
+            ROPlayer(Controller).bPressedJump = true;
+        }
+
+        Throttle = FClamp(Throttle, -0.1, 0.1);
+
+        // if our crush stall time is over, we are no longer crushing
+        if (LastCrushedTime + ObjectCrushStallTime < Level.TimeSeconds)
+        {
+            bCrushedAnObject = false;
+        }
+    }
 
     if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
     {
@@ -2674,7 +2696,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
         EngineHealth -= Damage;
     }
 
-    // If engine health drops below a certain level, slow the tank way down // Matt: won't have any effect setting this here - will move elsewhere later
+    // if engine health drops below a certain level, slow the tank way down // Matt: won't have any effect setting this here - will move elsewhere later
     if (EngineHealth > 0 && EngineHealth <= (default.EngineHealth * 0.5))
     {
         Throttle = FClamp(Throttle, -0.5, 0.5);
@@ -3473,8 +3495,35 @@ function bool CheckForCrew()
     return true;
 }
 
+// Informs tick that we crushed an object and it should apply break and affect server throttle
+simulated function ObjectCrushed(float ReductionTime)
+{
+    ObjectCrushStallTime = ReductionTime;
+    LastCrushedTime = Level.TimeSeconds;
+    bCrushedAnObject = true;
+}
+
+// Modified to add an impact effect for running someone over (will slow vehicle down)
+// This will get called if we couldn't move a pawn out of the way
+function bool EncroachingOn(Actor Other)
+{
+    if ( Other == None || Other == Instigator || Other.Role != ROLE_Authority || (!Other.bCollideActors && !Other.bBlockActors)
+         || VSize(Velocity) < 10 )
+        return false;
+
+    // If its a non-vehicle pawn, do lots of damage.
+    if( (Pawn(Other) != None) && (Vehicle(Other) == None) )
+    {
+        Other.TakeDamage(10000, Instigator, Other.Location, Velocity * Other.Mass, CrushedDamageType);
+        ObjectCrushed(2.0);
+
+        return false;
+    }
+}
+
 defaultproperties
 {
+    ObjectCrushStallTime=1.0
     bEnterringUnlocks=false
     UnbuttonedPositionIndex=2
     bAllowRiders=true

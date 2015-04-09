@@ -29,6 +29,7 @@ struct UncompressedPosition
 };
 
 var() float         SpawnClearedChance;
+var() float         VelocityReductionTimeOnCrush;      // How much to slow the vehicle down that crushes this obstacle 0.0 for none, 8 for very strong
 
 var byte            TypeIndex;
 var int             Index;
@@ -156,6 +157,15 @@ simulated state Intact
             if (G != none && G.ObstacleManager != none)
             {
                 G.ObstacleManager.SetCleared(self, true);
+            }
+
+            if (DHTreadCraft(Other) != none)
+            {
+                DHTreadCraft(Other).ObjectCrushed(VelocityReductionTimeOnCrush);
+            }
+            else if (DHWheeledVehicle(Other) != none)
+            {
+                DHWheeledVehicle(Other).ObjectCrushed(VelocityReductionTimeOnCrush);
             }
         }
 
@@ -301,6 +311,7 @@ defaultproperties
     RemoteRole=ROLE_None
     bCompressedPosition=false
     SpawnClearedChance=0.0
+    VelocityReductionTimeOnCrush=1.0
     TypeIndex=255
     bDebug=false
 }
