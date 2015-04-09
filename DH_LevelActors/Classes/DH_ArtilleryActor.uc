@@ -112,7 +112,7 @@ state Activated
                     FallOffset.Y *= -1.0;
                 }
 
-                Spawn(class'DH_ArtilleryShell', , , ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity)); // Matt: was class ROArtilleryShell
+                Spawn(class'DHArtilleryShell', , , ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity)); // Matt: was class ROArtilleryShell
             }
             else
             {
@@ -133,7 +133,7 @@ state Activated
                 }
 
                 // Spawn the artillery round with the random offset
-                Spawn(class'DH_ArtilleryShell', , , Location + FallOffset, rotator(PhysicsVolume.Gravity)); // Matt: was class ROArtilleryShell
+                Spawn(class'DHArtilleryShell', , , Location + FallOffset, rotator(PhysicsVolume.Gravity)); // Matt: was class ROArtilleryShell
             }
         }
 

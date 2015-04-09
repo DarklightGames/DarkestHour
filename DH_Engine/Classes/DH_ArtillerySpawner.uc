@@ -5,7 +5,7 @@
 
 class DH_ArtillerySpawner extends ROArtillerySpawner;
 
-// Matt: modified to spawn DH_ArtilleryShell instead of RO version
+// Matt: modified to spawn DHArtilleryShell instead of RO version
 function Timer()
 {
     local vector       AimVec;
@@ -69,7 +69,7 @@ function Timer()
            AimVec.Y *= -1;
         }
 
-        LastSpawnedShell = Spawn(class'DH_ArtilleryShell', InstigatorController, , Location + AimVec, rotator(PhysicsVolume.Gravity));
+        LastSpawnedShell = Spawn(class'DHArtilleryShell', InstigatorController, , Location + AimVec, rotator(PhysicsVolume.Gravity));
 
         SpawnCounter++;
         SetTimer(FRand() * 1.5, false);
