@@ -100,7 +100,7 @@ state RangedAttack
                         break;
                     }
 
-                    if (DH_Pawn(Enemy) != none && V.bIsApc && ROVehicleWeaponPawn(V.WeaponPawns[i]).bIsMountedTankMG)
+                    if (DHPawn(Enemy) != none && V.bIsApc && ROVehicleWeaponPawn(V.WeaponPawns[i]).bIsMountedTankMG)
                     {
                         V.KDriverLeave(true);
                         V.WeaponPawns[i].KDriverEnter(P);
@@ -123,18 +123,18 @@ function Possess(Pawn aPawn)
 {
     super.Possess(aPawn);
 
-    if (DH_Pawn(aPawn) != none)
+    if (DHPawn(aPawn) != none)
     {
-        DH_Pawn(aPawn).Setup(PawnSetupRecord);
+        DHPawn(aPawn).Setup(PawnSetupRecord);
     }
 }
 
 // Overridden to allow for setting the correct DH-specific pawn class
 function SetPawnClass(string inClass, string inCharacter)
 {
-    local class<DH_Pawn> pClass;
+    local class<DHPawn> pClass;
 
-    pClass = class<DH_Pawn>(DynamicLoadObject(inClass, class'class'));
+    pClass = class<DHPawn>(DynamicLoadObject(inClass, class'class'));
 
     if (pClass != none)
     {
@@ -166,5 +166,5 @@ Begin:
 defaultproperties
 {
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
-    PawnClass=class'DH_Engine.DH_Pawn'
+    PawnClass=class'DH_Engine.DHPawn'
 }

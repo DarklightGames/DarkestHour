@@ -122,12 +122,12 @@ simulated function bool Accept(actor Incoming, Actor Source)
         }
     }
 
-    DH_Pawn(Incoming).TeleSpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
+    DHPawn(Incoming).TeleSpawnProtEnds = Level.TimeSeconds + SpawnProtectionTime;
 
-    if (Role == ROLE_Authority && bResetStamina && DH_Pawn(Incoming) != none)
+    if (Role == ROLE_Authority && bResetStamina && DHPawn(Incoming) != none)
     {
-        DH_Pawn(Incoming).Stamina = DH_Pawn(Incoming).default.Stamina;
-        DH_Pawn(Incoming).ClientForceStaminaUpdate(DH_Pawn(Incoming).default.Stamina);
+        DHPawn(Incoming).Stamina = DHPawn(Incoming).default.Stamina;
+        DHPawn(Incoming).ClientForceStaminaUpdate(DHPawn(Incoming).default.Stamina);
     }
 
     return true;

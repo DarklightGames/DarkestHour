@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WaffenSSPawn extends DH_Pawn;
+class DH_WaffenSSPawn extends DHPawn;
 
 defaultproperties
 {

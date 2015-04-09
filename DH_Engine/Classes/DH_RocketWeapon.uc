@@ -266,12 +266,12 @@ simulated state LoweringWeapon
 
 function UpdateResupplyStatus()
 {
-    local DH_Pawn P;
+    local DHPawn P;
     local bool bIsLoaded;
     local bool bHasAmmo;
     local bool bHasFullAmmo;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     if (P == none || P.Weapon != self)
     {
@@ -291,13 +291,13 @@ function UpdateResupplyStatus()
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DH_Pawn P;
+    local DHPawn P;
 
     super.BringUp(PrevWeapon);
 
     if (Role == ROLE_Authority)
     {
-        P = DH_Pawn(Instigator);
+        P = DHPawn(Instigator);
 
         if (P != none)
         {
@@ -311,9 +311,9 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 simulated function bool PutDown()
 {
-    local DH_Pawn P;
+    local DHPawn P;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     if (P != none)
     {
@@ -474,9 +474,9 @@ Begin:
         }
     }
 
-    if (Instigator != none && Instigator.IsA('DH_Pawn'))
+    if (Instigator != none && Instigator.IsA('DHPawn'))
     {
-        DH_Pawn(Instigator).bWeaponNeedsReload = false;
+        DHPawn(Instigator).bWeaponNeedsReload = false;
     }
 }
 
@@ -489,11 +489,11 @@ simulated state AssistedReloading extends Reloading
 {
     simulated function BeginState()
     {
-        local DH_Pawn P;
+        local DHPawn P;
 
         if (Role == ROLE_Authority)
         {
-            P = DH_Pawn(Instigator);
+            P = DHPawn(Instigator);
 
             if (P != none)
             {
@@ -506,7 +506,7 @@ simulated state AssistedReloading extends Reloading
 
 // Overridden to avoid taking player out of sights
 Begin:
-    DH_Pawn(Instigator).bWeaponNeedsReload = false;
+    DHPawn(Instigator).bWeaponNeedsReload = false;
 }
 
 //==============================================================================
@@ -650,14 +650,14 @@ function GiveTo(Pawn Other, optional Pickup Pickup)
 
 function DropFrom(vector StartLocation)
 {
-    local DH_Pawn P;
+    local DHPawn P;
 
     if (!bCanThrow)
     {
         return;
     }
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     if (P != none)
     {
@@ -672,11 +672,11 @@ function DropFrom(vector StartLocation)
 
 simulated function Destroyed()
 {
-    local DH_Pawn P;
+    local DHPawn P;
 
     if (Role == ROLE_Authority)
     {
-        P = DH_Pawn(Instigator);
+        P = DHPawn(Instigator);
 
         if (P != none)
         {
@@ -816,7 +816,7 @@ function bool AssistedReload()
 function bool ResupplyAmmo()
 {
     local int i;
-    local DH_Pawn P;
+    local DHPawn P;
 
     if (CurrentMagCount >= MaxNumPrimaryMags - 1 || AmmoAmount(0) != 0)
     {
@@ -834,7 +834,7 @@ function bool ResupplyAmmo()
     CurrentMagCount = PrimaryAmmoArray.Length - 1;
     NetUpdateTime = Level.TimeSeconds - 1;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     if (P != none)
     {

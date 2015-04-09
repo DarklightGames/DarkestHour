@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_CanadianPawn extends DH_Pawn;
+class DH_CanadianPawn extends DHPawn;
 
 defaultproperties
 {

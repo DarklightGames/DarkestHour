@@ -13,9 +13,9 @@ var name                        AttachBoneName;
 
 simulated function PreBeginPlay()
 {
-    local DH_Pawn DHP;
+    local DHPawn DHP;
 
-    DHP = DH_Pawn(Instigator);
+    DHP = DHPawn(Instigator);
 
     if (DHP == none || DHP.CarriedRadioTrigger != none)
     {
@@ -46,7 +46,7 @@ function AttachToPawn(Pawn P)
     local int i;
     local DarkestHourGame DHG;
     local DHGameReplicationInfo GRI;
-    local DH_Pawn DHP;
+    local DHPawn DHP;
 
     DHG = DarkestHourGame(Level.Game);
 
@@ -56,7 +56,7 @@ function AttachToPawn(Pawn P)
     }
 
     GRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
-    DHP = DH_Pawn(P);
+    DHP = DHPawn(P);
 
     if (GRI == none || DHP == none)
     {

@@ -138,7 +138,7 @@ simulated state LoweringWeapon
 
 simulated function Fire(float F)
 {
-    local DH_Pawn     P;
+    local DHPawn     P;
     local DHPlayer    C;
     local DH_RoleInfo RI;
 
@@ -147,7 +147,7 @@ simulated function Fire(float F)
        return;
     }
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
     C = DHPlayer(Instigator.Controller);
 
     if (P == none || C == none)
@@ -174,14 +174,14 @@ simulated function Fire(float F)
 
 simulated function AltFire(float F)
 {
-    local DH_Pawn P;
+    local DHPawn P;
 
     if (Instigator == none || !Instigator.IsLocallyControlled())
     {
         return;
     }
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     if (P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver)
     {
@@ -191,7 +191,7 @@ simulated function AltFire(float F)
 
 simulated function BringUp(optional Weapon PrevWeapon)
 {
-    local DH_Pawn  P;
+    local DHPawn  P;
     local DHPlayer C;
 
     super.BringUp(PrevWeapon);
@@ -201,7 +201,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
         return;
     }
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
     C = DHPlayer(Instigator.Controller);
 
     if (C != none && P != none && P.GetRoleInfo() != none && P.GetRoleInfo().bIsMortarObserver)

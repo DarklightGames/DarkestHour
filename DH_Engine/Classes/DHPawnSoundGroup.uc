@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PawnSoundGroup extends ROPawnSoundGroup
+class DHPawnSoundGroup extends ROPawnSoundGroup
     abstract;
 
 var() sound         BurningPainSoundGroup;

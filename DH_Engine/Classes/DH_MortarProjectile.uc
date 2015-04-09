@@ -177,7 +177,7 @@ simulated singular function Touch(Actor Other)
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     // This is to prevent jerks from walking in front of the mortar and blowing us up
-    if (DH_Pawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0)
+    if (DHPawn(Other) != none && VSizeSquared(OrigLoc - HitLocation) < 16384.0)
     {
         return;
     }

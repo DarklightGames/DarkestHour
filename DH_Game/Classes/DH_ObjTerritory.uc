@@ -444,7 +444,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // Give players points for helping with the capture
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        P = DH_Pawn(C.Pawn);
+        P = DHPawn(C.Pawn);
 
         if (P == none)
         {
@@ -566,7 +566,7 @@ function Timer()
     local DH_RoleInfo             RI;
     local Controller              FirstCapturer, C;
     local Pawn                    Pawn;
-    local DH_Pawn                 P;
+    local DHPawn                 P;
     local ROVehicle               ROVeh;
     local ROVehicleWeaponPawn     VehWepPawn;
     local float                   OldCapProgress, LeaderBonus[2], Rate[2];
@@ -588,7 +588,7 @@ function Timer()
         if (C.bIsPlayer && C.PlayerReplicationInfo.Team != none && ((ROPlayer(C) != none && ROPlayer(C).GetRoleInfo() != none) || ROBot(C) != none))
         {
             Pawn = C.Pawn;
-            P = DH_Pawn(C.Pawn);
+            P = DHPawn(C.Pawn);
             ROVeh = ROVehicle(C.Pawn);
             VehWepPawn = ROVehicleWeaponPawn(C.Pawn);
 
@@ -827,7 +827,7 @@ function Timer()
     // Go through and update capture bars
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        P = DH_Pawn(C.Pawn);
+        P = DHPawn(C.Pawn);
         ROVeh = ROVehicle(C.Pawn);
         VehWepPawn = ROVehicleWeaponPawn(C.Pawn);
 

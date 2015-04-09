@@ -93,7 +93,7 @@ simulated state RaisingWeapon
         if (Instigator.Physics == PHYS_Falling)
         {
             bUsedParachute = true;
-            DH_Pawn(Instigator).Stamina = DH_Pawn(Instigator).default.Stamina;
+            DHPawn(Instigator).Stamina = DHPawn(Instigator).default.Stamina;
         }
 
         if (ClientState == WS_Hidden)

@@ -851,8 +851,8 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
         Injured != none &&
         InstigatedBy != Injured &&
         Injured.PlayerReplicationInfo != none &&
-        DH_Pawn(Injured) != none &&
-        DH_Pawn(Injured).TeleSpawnProtected())
+        DHPawn(Injured) != none &&
+        DHPawn(Injured).TeleSpawnProtected())
     {
         return 0;
     }
@@ -984,9 +984,9 @@ function BroadcastLastObjectiveMessage(int Team_that_is_about_to_win)
 
 function AddDefaultInventory(Pawn aPawn)
 {
-    if (DH_Pawn(aPawn) != none)
+    if (DHPawn(aPawn) != none)
     {
-        DH_Pawn(aPawn).AddDefaultInventory();
+        DHPawn(aPawn).AddDefaultInventory();
     }
 
     SetPlayerDefaults(aPawn);
@@ -2259,7 +2259,7 @@ defaultproperties
 
     // Class references
     LoginMenuClass="DH_Interface.DHPlayerSetupPage"
-    DefaultPlayerClassName="DH_Engine.DH_Pawn"
+    DefaultPlayerClassName="DH_Engine.DHPawn"
     ScoreBoardType="DH_Interface.DHScoreBoard"
     HUDType="DH_Engine.DHHud"
     MapListType="DH_Interface.DHMapList"

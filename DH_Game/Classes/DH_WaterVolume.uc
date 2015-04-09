@@ -39,11 +39,11 @@ function PostBeginPlay()
 simulated event Touch(Actor Other)
 {
     local int i;
-    local DH_Pawn P;
+    local DHPawn P;
 
     super.Touch(Other);
 
-    P = DH_Pawn(Other);
+    P = DHPawn(Other);
 
     //Handle Pawns on Fire!
     if (P != none && P.bOnFire)

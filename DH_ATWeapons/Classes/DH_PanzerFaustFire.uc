@@ -42,7 +42,7 @@ event ModeDoFire()
 
     // Check if the firer is too close to an object and if so, simulate exhaust spreading out along, and reflecting from, the wall
     // Do not reflect off players or breakable objects like windows
-    if (Other != none && DestroMesh == none && DH_Pawn(Other) == none)
+    if (Other != none && DestroMesh == none && DHPawn(Other) == none)
     {
         FlameLen = VSize(HitLoc - WeapLoc); // exhaust stream length when it hit an object
         FlameReflectDir = 2.0 * (HitNorm * FlameDir) * HitNorm - FlameDir; // vector back towards firer from hit object

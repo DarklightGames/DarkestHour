@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Pawn extends ROPawn
+class DHPawn extends ROPawn
     config(User);
 
 #exec OBJ LOAD FILE=ProjectileSounds.uax
@@ -28,7 +28,7 @@ var float MinHurtSpeed;                 // When a moving player lands, if they'r
 var float  IronsightBobTime;
 var vector IronsightBob;
 
-var(Sounds) class<DH_PawnSoundGroup> DHSoundGroupClass;
+var(Sounds) class<DHPawnSoundGroup> DHSoundGroupClass;
 
 // Radioman
 var ROArtilleryTrigger  CarriedRadioTrigger; // For storing the trigger on a radioman each spawn, for the purpose of deleting it on death
@@ -883,7 +883,7 @@ function TossAmmo(Pawn Gunner, optional bool bIsATWeapon)
     }
 }
 
-function TossMortarAmmo(DH_Pawn P)
+function TossMortarAmmo(DHPawn P)
 {
     if (bHasMortarAmmo && P != none && P.ResupplyMortarAmmunition())
     {
@@ -4220,7 +4220,7 @@ defaultproperties
     StanceChangeStaminaDrain=1.5
     Stamina=30.0
     MinHurtSpeed=475.0
-    DHSoundGroupClass=class'DH_Engine.DH_PawnSoundGroup'
+    DHSoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     HelmetHitSounds(0)=SoundGroup'DH_ProjectileSounds.Bullets.Helmet_Hit'
     PlayerHitSounds(0)=SoundGroup'ProjectileSounds.Bullets.Impact_Player'
     MantleAnim_40C="mantle_crouch_40"

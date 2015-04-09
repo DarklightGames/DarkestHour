@@ -6,7 +6,7 @@
 class DH_MortarVehicle extends ROVehicle
     abstract;
 
-var DH_Pawn OwningPawn;
+var DHPawn OwningPawn;
 var bool    bCanBeResupplied;
 var int     PlayerResupplyAmounts[2];
 
@@ -18,7 +18,7 @@ replication
         bCanBeResupplied;
 }
 
-//GotoState called from DH_Pawn.Died to let us know the owner is dead and we should destroy ourselves.
+//GotoState called from DHPawn.Died to let us know the owner is dead and we should destroy ourselves.
 simulated state PendingDestroy
 {
 Begin:
@@ -46,11 +46,11 @@ function PlayerResupply()
 
 function bool TryToDrive(Pawn P)
 {
-    local DH_Pawn DHP;
+    local DHPawn DHP;
     local DHPlayerReplicationInfo PRI;
     local DH_RoleInfo RI;
 
-    DHP = DH_Pawn(P);
+    DHP = DHPawn(P);
     PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
     RI = DH_RoleInfo(PRI.RoleInfo);
 
@@ -91,7 +91,7 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-simulated function SetMortarOwner(DH_Pawn P)
+simulated function SetMortarOwner(DHPawn P)
 {
     if (OwningPawn != none && OwningPawn != P)  //New owner
     {

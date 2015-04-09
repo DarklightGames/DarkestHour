@@ -52,10 +52,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 // Modified from ROGrenadeProjectile to allow players to dive on grenades to save teammates
 function BlowUp(vector HitLocation)
 {
-    local DH_Pawn DHP;
+    local DHPawn DHP;
 
     // Check for any players so close that they must be on top of the grenade
-    foreach RadiusActors(class'DH_Pawn', DHP, 5.0)
+    foreach RadiusActors(class'DHPawn', DHP, 5.0)
     {
         // Make sure player is actually lying on the grenade, not just standing over it
         if (DHP.bIsCrawling)

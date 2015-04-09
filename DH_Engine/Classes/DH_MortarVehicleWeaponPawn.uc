@@ -199,9 +199,9 @@ simulated state Busy
                     DHPlayer(P.Controller).ClientToggleDuck();
                 }
 
-                if (DH_Pawn(P) != none)
+                if (DHPawn(P) != none)
                 {
-                    DH_Pawn(P).CheckIfMortarCanBeResupplied();
+                    DHPawn(P).CheckIfMortarCanBeResupplied();
                 }
             }
         }
@@ -440,9 +440,9 @@ function bool KDriverLeave(bool bForceLeave)
             DHPlayer(P.Controller).ClientToggleDuck();
         }
 
-        if (DH_Pawn(P) != none)
+        if (DHPawn(P) != none)
         {
-            DH_Pawn(P).CheckIfMortarCanBeResupplied();
+            DHPawn(P).CheckIfMortarCanBeResupplied();
         }
     }
 
@@ -791,10 +791,10 @@ function KDriverEnter(Pawn P)
 // This transfers the ammunition to the weapon upon entering the mortar
 function DriverEnterTransferAmmunition(Pawn P)
 {
-    local DH_Pawn DHP;
+    local DHPawn DHP;
     local DH_MortarVehicleWeapon DHMVW;
 
-    DHP = DH_Pawn(P);
+    DHP = DHPawn(P);
     DHMVW = DH_MortarVehicleWeapon(Gun);
 
     if (DHP != none && DHMVW != none)
@@ -824,10 +824,10 @@ function CheckCanBeResupplied()
 // This transfers the ammunition to the player upon exiting the mortar
 function DriverLeaveAmmunitionTransfer(Pawn P)
 {
-    local DH_Pawn DHP;
+    local DHPawn DHP;
     local DH_MortarVehicleWeapon G;
 
-    DHP = DH_Pawn(P);
+    DHP = DHPawn(P);
     G = DH_MortarVehicleWeapon(Gun);
 
     if (DHP != none && G != none)

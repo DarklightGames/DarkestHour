@@ -58,9 +58,9 @@ simulated state Cutting
 
     simulated function BeginState()
     {
-        local DH_Pawn P;
+        local DHPawn P;
 
-        P = DH_Pawn(Instigator);
+        P = DHPawn(Instigator);
 
         if (P != none)
         {
@@ -74,9 +74,9 @@ simulated state Cutting
 
     simulated function EndState()
     {
-        local DH_Pawn P;
+        local DHPawn P;
 
-        P = DH_Pawn(Instigator);
+        P = DHPawn(Instigator);
 
         if (P != none)
         {

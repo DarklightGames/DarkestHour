@@ -738,7 +738,7 @@ function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator Spaw
     switch (SP.Method)
     {
         case ESPM_Hints:
-            if (!GetSpawnLocation(SP, Sp.InfantryLocationHints, class'DH_Pawn'.default.CollisionRadius, SpawnLocation, SpawnRotation))
+            if (!GetSpawnLocation(SP, Sp.InfantryLocationHints, class'DHPawn'.default.CollisionRadius, SpawnLocation, SpawnRotation))
             {
                 SpawnError = SpawnError_Blocked;
 
@@ -758,7 +758,7 @@ function DrySpawnInfantry(DHPlayer C, out vector SpawnLocation, out rotator Spaw
 
 function SpawnInfantry(DHPlayer C, out byte SpawnError)
 {
-    local DH_Pawn P;
+    local DHPawn P;
     local vector SpawnLocation;
     local rotator SpawnRotation;
 
@@ -776,7 +776,7 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
         return;
     }
 
-    P = DH_Pawn(SpawnPawn(C, SpawnLocation, SpawnRotation));
+    P = DHPawn(SpawnPawn(C, SpawnLocation, SpawnRotation));
 
     if (P == none)
     {

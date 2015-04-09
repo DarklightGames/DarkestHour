@@ -267,7 +267,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                 }
                 else
                 {
-                    HitPawn = DH_Pawn(Other);
+                    HitPawn = DHPawn(Other);
 
                     if (HitPawn != none)
                     {

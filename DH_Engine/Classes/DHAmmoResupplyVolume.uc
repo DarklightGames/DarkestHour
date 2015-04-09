@@ -48,7 +48,7 @@ function Timer()
     local Inventory I;
     local ROWeapon W;
     local bool bResupplied;
-    local DH_Pawn DHP;
+    local DHPawn DHP;
     local Vehicle V;
     local DH_RoleInfo RI;
 
@@ -66,7 +66,7 @@ function Timer()
             continue;
         }
 
-        DHP = DH_Pawn(P);
+        DHP = DHPawn(P);
 
         if (DHP != none)
         {

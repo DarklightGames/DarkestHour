@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FJBandolierPawn extends DH_Pawn;
+class DH_FJBandolierPawn extends DHPawn;
 
 defaultproperties
 {

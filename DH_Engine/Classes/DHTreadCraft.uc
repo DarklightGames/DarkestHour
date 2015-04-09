@@ -1010,7 +1010,7 @@ function bool TryToDrive(Pawn P)
     }
 
     // Deny entry if vehicle has driver or is dead, or if player is crouching or on fire or reloading a weapon (plus several very obscure other reasons)
-    if (Driver != none || Health <= 0 || P == none || P.bIsCrouched || (DH_Pawn(P) != none && DH_Pawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
+    if (Driver != none || Health <= 0 || P == none || P.bIsCrouched || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
     {
         return false;

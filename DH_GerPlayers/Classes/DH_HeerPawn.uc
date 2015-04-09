@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HeerPawn extends DH_Pawn;
+class DH_HeerPawn extends DHPawn;
 
 defaultproperties
 {

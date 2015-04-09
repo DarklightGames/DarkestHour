@@ -167,7 +167,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local bool               bHitWhipAttachment, bHitVehicleDriver;
     local ROVehicleWeapon    HitVehicleWeapon;
     local ROVehicleHitEffect VehEffect;
-    local DH_Pawn            HitPawn;
+    local DHPawn            HitPawn;
     local vector             TempHitLocation, HitNormal;
     local array<int>         HitPoints;
     local float              BulletDistance;
@@ -292,8 +292,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             BulletDistance = VSize(Location - OrigLoc) / 60.352; // calculate distance travelled by bullet in metres
 
             // If it's FF at close range, we won't suppress, so send a different WT through
-            if (BulletDistance < 10.0 && Instigator.Controller != none && Other != none && DH_Pawn(Other.Base) != none &&
-                DH_Pawn(Other.Base).Controller != none && Instigator.Controller.SameTeamAs(DH_Pawn(Other.Base).Controller))
+            if (BulletDistance < 10.0 && Instigator.Controller != none && Other != none && DHPawn(Other.Base) != none &&
+                DHPawn(Other.Base).Controller != none && Instigator.Controller.SameTeamAs(DHPawn(Other.Base).Controller))
             {
                 WhizType = 3;
             }
@@ -321,7 +321,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
         }
 
-        HitPawn = DH_Pawn(Other);
+        HitPawn = DHPawn(Other);
 
         if (HitPawn == none)
         {

@@ -70,9 +70,9 @@ simulated function bool WeaponAllowMantle()
 
 simulated event AnimEnd(int Channel)
 {
-    local DH_Pawn P;
+    local DHPawn P;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     //-----------------------------------------------------------------------
     //If the deploy animation ended, then let's let the server know about it.
@@ -105,10 +105,10 @@ simulated exec function Deploy()
 //Client side attempt to deploy.
 simulated function ClientDeploy()
 {
-    local DH_Pawn P;
+    local DHPawn P;
     local rotator R;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     if (IsBusy() || !CanDeploy() || P == none)
     {
@@ -140,9 +140,9 @@ simulated function ServerDeployEnd()
     local DH_MortarVehicle V;
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
     local rotator SpawnRotation;
-    local DH_Pawn P;
+    local DHPawn P;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     TraceStart = P.Location + vect(0.0, 0.0, 1.0) * P.CollisionHeight;
     TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);
@@ -166,14 +166,14 @@ simulated function ServerDeployEnd()
 
 simulated function bool CanDeploy()
 {
-    local DH_Pawn P;
+    local DHPawn P;
     local Actor HitActor;
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
     local Material Material;
     local rotator TraceRotation;
     local ROVolumeTest VolumeTest;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     VolumeTest = Spawn(class'ROVolumeTest',, , P.Location);
 
@@ -317,9 +317,9 @@ simulated function bool IsMortarWeapon()
 
 function bool ResupplyAmmo()
 {
-    local DH_Pawn P;
+    local DHPawn P;
 
-    P = DH_Pawn(Instigator);
+    P = DHPawn(Instigator);
 
     if (P == none)
     {
@@ -333,8 +333,8 @@ function bool FillAmmo()
 {
     //------------------------------------------------
     //Give the ammunition to the pawn, not the weapon.
-    DH_Pawn(Instigator).MortarHEAmmo = HighExplosiveMaximum;
-    DH_Pawn(Instigator).MortarSmokeAmmo = SmokeMaximum;
+    DHPawn(Instigator).MortarHEAmmo = HighExplosiveMaximum;
+    DHPawn(Instigator).MortarSmokeAmmo = SmokeMaximum;
 
     return true;
 }

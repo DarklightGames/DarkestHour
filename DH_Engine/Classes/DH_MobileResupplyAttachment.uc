@@ -70,8 +70,8 @@ function ProcessActorLeave()
 
         if (!bFound)
         {
-            if (DH_Pawn(R) != none)
-                DH_Pawn(R).bTouchingResupply = false;
+            if (DHPawn(R) != none)
+                DHPawn(R).bTouchingResupply = false;
             else if (Vehicle(R) != none)
                 Vehicle(R).LeftResupply();
         }
@@ -85,7 +85,7 @@ function Timer()
     local ROWeapon recvr_weapon;
     local bool bResupplied;
 //  local bool bEnemyGrenadeFound, bEnemySmokeFound; // not used
-    local DH_Pawn P;
+    local DHPawn P;
     local Vehicle V;
     local DH_RoleInfo DHRI;
 
@@ -102,7 +102,7 @@ function Timer()
         if (Team==OWNER_Neutral || recvr.GetTeamNum()==Team)
         {
             bResupplied = false;
-            P = DH_Pawn(recvr);
+            P = DHPawn(recvr);
             V = Vehicle(recvr);
 
             if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
@@ -210,8 +210,8 @@ event Destroyed()
 
         P = ResupplyActors[i];
 
-        if (DH_Pawn(P) != none)
-            DH_Pawn(P).bTouchingResupply = false;
+        if (DHPawn(P) != none)
+            DHPawn(P).bTouchingResupply = false;
         else if (Vehicle(P) != none)
             Vehicle(P).LeftResupply();
     }

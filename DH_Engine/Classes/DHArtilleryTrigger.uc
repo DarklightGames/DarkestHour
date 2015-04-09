@@ -9,7 +9,7 @@ var()   bool        bShouldShowOnSituationMap;
 var()   float       TriggerDelay;
 
 var     float       TriggerTime;
-var     DH_Pawn     Carrier;
+var     DHPawn     Carrier;
 var     SoundGroup  CommonwealthRequestSound;
 var     SoundGroup  CommonwealthConfirmSound;
 var     SoundGroup  CommonwealthDenySound;
@@ -50,12 +50,12 @@ function UsedBy(Pawn user)
 
     PRI = DHPlayerReplicationInfo(DHPC.PlayerReplicationInfo);
 
-    if (DH_Pawn(user) == none)
+    if (DHPawn(user) == none)
     {
         return;
     }
 
-    RI = DH_Pawn(user).GetRoleInfo();
+    RI = DHPawn(user).GetRoleInfo();
 
     // Don't let non-commanders call in arty
     if (PRI == none || RI == none || !RI.bIsArtilleryOfficer)

@@ -569,14 +569,14 @@ simulated function DrawHudPassC(Canvas C)
         DrawSpriteWidget(C, MGDeployIcon);
     }
 
-    if (PawnOwner != none && DH_Pawn(PawnOwner) != none)
+    if (PawnOwner != none && DHPawn(PawnOwner) != none)
     {
-        if (DH_Pawn(PawnOwner).bCanMantle)
+        if (DHPawn(PawnOwner).bCanMantle)
         {
             // Show Mantling icon if an object can be climbed
             DrawSpriteWidget(C, CanMantleIcon);
         }
-        else if (DH_Pawn(PawnOwner).bCanCutWire)
+        else if (DHPawn(PawnOwner).bCanCutWire)
         {
             DrawSpriteWidget(C, CanCutWireIcon);
         }
@@ -1462,7 +1462,7 @@ function DrawPlayerNames(Canvas C)
     local float            StrX, StrY, Distance;
     local string           Display;
     local bool             bIsAVehicle;
-    local DH_Pawn          MyDHP, OtherDHP;
+    local DHPawn          MyDHP, OtherDHP;
     local DH_MortarVehicle Mortar;
 
     if (PawnOwner == none || PawnOwner.Controller == none)
@@ -1479,9 +1479,9 @@ function DrawPlayerNames(Canvas C)
     HitActor = Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true);
 
     // CHECK FOR MORTAR - Basnett 2011
-    if (HitActor != none && DH_Pawn(PawnOwner) != none && DH_MortarVehicle(HitActor) != none)
+    if (HitActor != none && DHPawn(PawnOwner) != none && DH_MortarVehicle(HitActor) != none)
     {
-        MyDHP = DH_Pawn(PawnOwner);
+        MyDHP = DHPawn(PawnOwner);
 
         Mortar = DH_MortarVehicle(HitActor);
 
@@ -1555,8 +1555,8 @@ function DrawPlayerNames(Canvas C)
 
     if (NamedPlayer != none && NamedPlayer.PlayerReplicationInfo != none && Level.TimeSeconds - NameTime < 1.0)
     {
-        MyDHP = DH_Pawn(PawnOwner);
-        OtherDHP = DH_Pawn(NamedPlayer);
+        MyDHP = DHPawn(PawnOwner);
+        OtherDHP = DHPawn(NamedPlayer);
 
         // Quick check simply to stop error log spam
         bIsAVehicle = (OtherDHP == none);
@@ -1896,12 +1896,12 @@ simulated function DrawObjectives(Canvas C)
     local int           Pos;
     // AT Gun
     local bool          bShowATGun;
-    local DH_Pawn       DHP;
+    local DHPawn       DHP;
     local DH_RoleInfo   RI;
 
     if (PlayerOwner.Pawn != none)
     {
-        DHP = DH_Pawn(PlayerOwner.Pawn);
+        DHP = DHPawn(PlayerOwner.Pawn);
     }
 
     DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
@@ -2142,7 +2142,7 @@ simulated function DrawObjectives(Canvas C)
         }
         else if (NetDebugMode == ND_PlayersOnly)
         {
-            foreach DynamicActors(class'DH_Pawn', DHP)
+            foreach DynamicActors(class'DHPawn', DHP)
             {
                 Widget = MapIconTeam[DHP.GetTeamNum()];
                 Widget.TextureScale = 0.04f;
@@ -2979,7 +2979,7 @@ simulated function UpdateHud()
 
 simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
 {
-    local DH_Pawn               DHP;
+    local DHPawn               DHP;
     local ROVehicleWeaponPawn   ROVWP;
     local ROVehicle             ROV;
     local DHGameReplicationInfo GRI;
@@ -2991,7 +2991,7 @@ simulated function DrawVoiceIcon(Canvas C, PlayerReplicationInfo PRI)
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    foreach RadiusActors(class'DH_Pawn', DHP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location) // 100 feet
+    foreach RadiusActors(class'DHPawn', DHP, VOICE_ICON_DIST_MAX, PlayerOwner.Pawn.Location) // 100 feet
     {
         if (DHP.Health <= 0 || DHP.PlayerReplicationInfo != PRI)
         {
@@ -3188,7 +3188,7 @@ function DisplayMessages(Canvas C)
 simulated function DrawCaptureBar(Canvas Canvas)
 {
     local ROGameReplicationInfo GRI;
-    local DH_Pawn               P;
+    local DHPawn               P;
     local ROVehicle             Veh;
     local ROVehicleWeaponPawn   WpnPwn;
     local int    Team;
@@ -3210,7 +3210,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     }
 
     // Get capture info from associated pawn
-    P = DH_Pawn(PawnOwner);
+    P = DHPawn(PawnOwner);
 
     if (P != none)
     {

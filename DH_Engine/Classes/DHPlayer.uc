@@ -409,11 +409,11 @@ function UpdateRotation(float DeltaTime, float maxPitch)
 {
     local rotator   NewRotation, ViewRotation;
     local ROVehicle ROVeh;
-    local DH_Pawn   ROPwn;
+    local DHPawn   ROPwn;
     local ROWeapon  ROWeap;
     local float     TurnSpeedFactor;
 
-    ROPwn = DH_Pawn(Pawn);
+    ROPwn = DHPawn(Pawn);
 
     if (Pawn != none)
     {
@@ -588,13 +588,13 @@ function ServerSaveArtilleryPosition()
     local bool         bFoundARadio;
     local DH_RoleInfo  RI;
 
-    if (DH_Pawn(Pawn) == none)
+    if (DHPawn(Pawn) == none)
     {
         return;
     }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-    RI = DH_Pawn(Pawn).GetRoleInfo();
+    RI = DHPawn(Pawn).GetRoleInfo();
 
     if (PRI == none || PRI.RoleInfo == none || RI == none || !RI.bIsArtilleryOfficer)
     {
@@ -818,7 +818,7 @@ function ServerSaveMortarTarget()
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
-    local DH_Pawn      P;
+    local DHPawn      P;
     local Actor        HitActor;
     local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
     local ROVolumeTest VT;
@@ -826,7 +826,7 @@ function ServerSaveMortarTarget()
     local bool         bMortarsAvailable, bMortarTargetMarked;
 
     TeamIndex = GetTeamNum();
-    P = DH_Pawn(Pawn);
+    P = DHPawn(Pawn);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
@@ -956,26 +956,26 @@ function ServerSaveMortarTarget()
 // Overridden to handle separate MG and AT resupply as well as assisted AT loading
 exec function ThrowMGAmmo()
 {
-    if (DH_Pawn(Pawn) == none)
+    if (DHPawn(Pawn) == none)
     {
         return;
     }
 
     if (DHHud(myHud).NamedPlayer != none)
     {
-        if (DH_Pawn(Pawn).bCanATReload)
+        if (DHPawn(Pawn).bCanATReload)
         {
             ServerLoadATAmmo(DHHud(myHud).NamedPlayer);
         }
-        else if (DH_Pawn(Pawn).bCanATResupply && DH_Pawn(Pawn).bHasATAmmo)
+        else if (DHPawn(Pawn).bCanATResupply && DHPawn(Pawn).bHasATAmmo)
         {
             ServerThrowATAmmo(DHHud(myHud).NamedPlayer);
         }
-        else if (DH_Pawn(Pawn).bCanMGResupply && (DH_Pawn(Pawn).bHasMGAmmo))
+        else if (DHPawn(Pawn).bCanMGResupply && (DHPawn(Pawn).bHasMGAmmo))
         {
             ServerThrowMGAmmo(DHHud(myHud).NamedPlayer);
         }
-        else if (DH_Pawn(Pawn).bCanMortarResupply && (DH_Pawn(Pawn).bHasMortarAmmo))
+        else if (DHPawn(Pawn).bCanMortarResupply && (DHPawn(Pawn).bHasMortarAmmo))
         {
             ServerThrowMortarAmmo(DHHud(myHud).NamedPlayer);
         }
@@ -984,29 +984,29 @@ exec function ThrowMGAmmo()
 
 function ServerThrowMGAmmo(Pawn Gunner)
 {
-    DH_Pawn(Pawn).TossAmmo(Gunner);
+    DHPawn(Pawn).TossAmmo(Gunner);
 }
 
 function ServerThrowATAmmo(Pawn Gunner)
 {
-    DH_Pawn(Pawn).TossAmmo(Gunner, true);
+    DHPawn(Pawn).TossAmmo(Gunner, true);
 }
 
 function ServerThrowMortarAmmo(Pawn Gunner)
 {
     if (DH_MortarVehicle(Gunner) != none)
     {
-        DH_Pawn(Pawn).TossMortarVehicleAmmo(DH_MortarVehicle(Gunner));
+        DHPawn(Pawn).TossMortarVehicleAmmo(DH_MortarVehicle(Gunner));
     }
-    else if (DH_Pawn(Gunner) != none)
+    else if (DHPawn(Gunner) != none)
     {
-        DH_Pawn(Pawn).TossMortarAmmo(DH_Pawn(Gunner));
+        DHPawn(Pawn).TossMortarAmmo(DHPawn(Gunner));
     }
 }
 
 function ServerLoadATAmmo(Pawn Gunner)
 {
-    DH_Pawn(Pawn).LoadWeapon(Gunner);
+    DHPawn(Pawn).LoadWeapon(Gunner);
 }
 
 state PlayerWalking
@@ -1044,9 +1044,9 @@ state PlayerWalking
     function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
     {
         local vector  OldAccel;
-        local DH_Pawn P;
+        local DHPawn P;
 
-        P = DH_Pawn(Pawn);
+        P = DHPawn(Pawn);
 
         if (P == none)
         {
@@ -1067,7 +1067,7 @@ state PlayerWalking
         if (Role < ROLE_Authority && bWaitingToMantle && Level.TimeSeconds > MantleFailTimer)
         {
             bWaitingToMantle = false;
-            DH_Pawn(Pawn).ClientMantleFail();
+            DHPawn(Pawn).ClientMantleFail();
         }
 
         if (bPressedJump && !bWaitingToMantle)
@@ -1126,9 +1126,9 @@ state PlayerWalking
         local eDoubleClickDir DoubleClickMove;
         local rotator         OldRotation, ViewRotation;
         local bool            bSaveJump;
-        local DH_Pawn         P;
+        local DHPawn         P;
 
-        P = DH_Pawn(Pawn);
+        P = DHPawn(Pawn);
 
         if (P == none)
         {
@@ -1262,13 +1262,13 @@ state Mantling
 
     function Timer()
     {
-        local DH_Pawn DHP;
+        local DHPawn DHP;
 
-        DHP = DH_Pawn(Pawn);
+        DHP = DHPawn(Pawn);
 
         if (DHP.Physics == PHYS_Walking)
         {
-            // This is just in case we fall further than expected and are unable to set crouch in DH_Pawn.ResetRootBone()
+            // This is just in case we fall further than expected and are unable to set crouch in DHPawn.ResetRootBone()
             if (!bDidCrouchCheck && DHP.bCrouchMantle)
             {
                 DHP.DoMantleCrouch();
@@ -1311,9 +1311,9 @@ state Mantling
 
     function ProcessMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
     {
-        local DH_Pawn DHP;
+        local DHPawn DHP;
 
-        DHP = DH_Pawn(Pawn);
+        DHP = DHPawn(Pawn);
 
         if (bPressedJump && !bLockJump)
         {
@@ -1348,9 +1348,9 @@ state Mantling
         local vector          NewAccel;
         local eDoubleClickDir DoubleClickMove;
         local rotator         OldRotation, ViewRotation;
-        local DH_Pawn         DHP;
+        local DHPawn         DHP;
 
-        DHP = DH_Pawn(Pawn);
+        DHP = DHPawn(Pawn);
 
         ViewRotation = Rotation;
 
@@ -1402,13 +1402,13 @@ state Mantling
         }
 
         // If the client has failed the mantle check conditions but server has not, this should force it to bypass the start conditions & resync with the server
-        if (Role < ROLE_Authority && !DH_Pawn(Pawn).bIsMantling)
+        if (Role < ROLE_Authority && !DHPawn(Pawn).bIsMantling)
         {
-            DH_Pawn(Pawn).CanMantle(true, true);
+            DHPawn(Pawn).CanMantle(true, true);
         }
 
         bSprint = 0;
-        DH_Pawn(Pawn).PreMantle();
+        DHPawn(Pawn).PreMantle();
 
         if (bLockJump)
         {
@@ -1438,9 +1438,9 @@ state Mantling
         bDidCrouchCheck = false;
         bLockJump = false;
 
-        if (DH_Pawn(Pawn).bIsMantling)
+        if (DHPawn(Pawn).bIsMantling)
         {
-            DH_Pawn(Pawn).CancelMantle();
+            DHPawn(Pawn).CancelMantle();
         }
 
         if (bMantleDebug && Pawn.IsLocallyControlled())
@@ -2210,9 +2210,9 @@ simulated function SwayHandler(float DeltaTime)
     local float timeFactor;
     local float bobFactor;
     local float staminaFactor;
-    local DH_Pawn P;
+    local DHPawn P;
 
-    P = DH_Pawn(Pawn);
+    P = DHPawn(Pawn);
 
     if (P == none)
     {
@@ -2582,7 +2582,7 @@ defaultproperties
     DefaultFOV=90.0
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     InputClass=class'DH_Engine.DHPlayerInput'
-    PawnClass=class'DH_Engine.DH_Pawn'
+    PawnClass=class'DH_Engine.DHPawn'
     SpawnPointIndex=255
     VehiclePoolIndex=255
 }

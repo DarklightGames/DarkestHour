@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_LuftwaffeFlakPawn extends DH_Pawn;
+class DH_LuftwaffeFlakPawn extends DHPawn;
 
 defaultproperties
 {

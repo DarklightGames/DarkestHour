@@ -53,9 +53,9 @@ function Touch(Actor Other)
             SetTimer(RepeatTriggerTime, false);
         }
 
-        if (DH_Pawn(Other.Instigator) != none)
+        if (DHPawn(Other.Instigator) != none)
         {
-            DH_Pawn(Other.Instigator).GiveChute();
+            DHPawn(Other.Instigator).GiveChute();
         }
     }
 }
