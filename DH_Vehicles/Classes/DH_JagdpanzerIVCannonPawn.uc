@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_JagdpanzerIVCannonPawn extends DH_AssaultGunCannonPawn
+class DH_JagdpanzerIVCannonPawn extends DHAssaultGunCannonPawn
     abstract;
 
 defaultproperties

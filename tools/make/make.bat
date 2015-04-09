@@ -1,4 +1,5 @@
 @echo off
-cd %~dp0
+pushd %~dp0
 make.py -mod DarkestHourDev
+popd
 pause

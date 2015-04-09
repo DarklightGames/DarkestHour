@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Stug3GCannonPawn extends DH_AssaultGunCannonPawn;
+class DH_Stug3GCannonPawn extends DHAssaultGunCannonPawn;
 
 defaultproperties
 {
