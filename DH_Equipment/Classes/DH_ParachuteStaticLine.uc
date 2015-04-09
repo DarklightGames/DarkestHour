@@ -10,86 +10,87 @@ class DH_ParachuteStaticLine extends Weapon;
 
 var     bool    bChuteDeployed;
 
-
 // No ammo for this weapon
-function bool FillAmmo(){return false;}
-function bool ResupplyAmmo(){return false;}
-simulated function bool IsFiring(){return false;}
+function bool FillAmmo() { return false; }
+function bool ResupplyAmmo() { return false; }
+simulated function bool IsFiring() { return false; }
 
 // Matt: modified to stop most stuff happening on a net client, to avoid "accessed none" errors, & to play an appropriate landing sound based on the surface we land on
 simulated function Tick(float DeltaTime)
 {
-    if (Instigator != none)
+    if (Instigator == none)
     {
-        if (!bChuteDeployed)
+        return;
+    }
+
+    if (!bChuteDeployed)
+    {
+        // If player is falling then deploy parachute
+        if (Instigator.Physics == PHYS_Falling && Instigator.Velocity.Z < -1.0 * Instigator.MaxFallSpeed)
         {
-            // If player is falling then deploy parachute
-            if (Instigator.Physics == PHYS_Falling && Instigator.Velocity.Z < -1.0 * Instigator.MaxFallSpeed)
+            bChuteDeployed = true;
+
+            Instigator.Controller.bCrawl = 0;
+            Instigator.ShouldProne(false);
+            Instigator.Switchweapon(12);
+
+            if (Role == ROLE_Authority)
             {
-                bChuteDeployed = true;
-
-                Instigator.Controller.bCrawl = 0;
-                Instigator.ShouldProne(false);
-                Instigator.Switchweapon(12);
-
-                if (Role == ROLE_Authority)
+                if (ROPawn(Instigator) != none)
                 {
-                    if (ROPawn(Instigator) != none)
-                    {
-                        ROPawn(Instigator).Stamina = 0.0; // this is set back to default in DH_ParachuteItem.RaisingWeapon so that any sprinting is forcibly stopped, allowing a weaponswap
-                    }
-
-                    AttachChute(Instigator);
-                    Instigator.PlaySound(sound'DH_SundrySounds.Parachute.ParachuteDeploy', SLOT_Misc, 512.0, true, 128.0);
-                    Instigator.AirControl = 1.0;
-                    Instigator.AccelRate = 60.0;
-                    Instigator.Velocity.Z = -400.0;
+                    ROPawn(Instigator).Stamina = 0.0; // this is set back to default in DH_ParachuteItem.RaisingWeapon so that any sprinting is forcibly stopped, allowing a weaponswap
                 }
+
+                AttachChute(Instigator);
+                Instigator.PlaySound(sound'DH_SundrySounds.Parachute.ParachuteDeploy', SLOT_Misc, 512.0, true, 128.0);
+                Instigator.AirControl = 1.0;
+                Instigator.AccelRate = 60.0;
+                Instigator.Velocity.Z = -400.0;
+            }
+        }
+    }
+    else
+    {
+        if (Instigator.Physics == PHYS_Falling)
+        {
+            if (Role == ROLE_Authority)
+            {
+                Instigator.Velocity.Z = -400.0;
             }
         }
         else
         {
-            if (Instigator.Physics == PHYS_Falling)
+            if (Role == ROLE_Authority)
             {
-                if (Role == ROLE_Authority)
+                Instigator.AccelRate = Instigator.default.AccelRate;
+                Instigator.AirControl = Instigator.default.AirControl;
+
+                // Matt: use GetSound function to get a landing sound appropriate to the surface we landed on
+                if (ROPawn(Instigator) != none)
                 {
-                    Instigator.Velocity.Z = -400.0;
+                    Instigator.PlaySound(ROPawn(Instigator).GetSound(EST_Land), SLOT_Misc, 512.0, true, 128.0);
                 }
-            }
-            else
-            {
-                if (Role == ROLE_Authority)
+                else
                 {
-                    Instigator.AccelRate = Instigator.default.AccelRate;
-                    Instigator.AirControl = Instigator.default.AirControl;
+                    Instigator.PlaySound(SoundGroup'Inf_Player.footsteps.LandGrass', SLOT_Misc, 512.0, true, 128.0); // fallback
+                }
 
-                    // Matt: use GetSound function to get a landing sound appropriate to the surface we landed on
-                    if (ROPawn(Instigator) != none)
-                    {
-                        Instigator.PlaySound(ROPawn(Instigator).GetSound(EST_Land), SLOT_Misc, 512.0, true, 128.0);
-                    }
-                    else
-                    {
-                        Instigator.PlaySound(SoundGroup'Inf_Player.footsteps.LandGrass', SLOT_Misc, 512.0, true, 128.0); // fallback
-                    }
+                RemoveChute(Instigator);
 
+                // Make 100% sure that the chute is gone, as it occasionally isn't being removed the first time
+                if (ThirdPersonActor != none)
+                {
                     RemoveChute(Instigator);
-
-                    // Make 100% sure that the chute is gone, as it occasionally isn't being removed the first time
-                    if (ThirdPersonActor != none)
-                    {
-                        RemoveChute(Instigator);
-                    }
                 }
-
-                if (Level.NetMode != NM_DedicatedServer)
-                {
-                    Instigator.Controller.ClientSwitchToBestWeapon();
-                }
-
-                Instigator.DeleteInventory(self);
-                Destroy(); // Matt: moved further down to avoid errors
             }
+
+            if (Level.NetMode != NM_DedicatedServer)
+            {
+                Instigator.Controller.ClientSwitchToBestWeapon();
+            }
+
+            Instigator.DeleteInventory(self);
+            Destroy(); // Matt: moved further down to avoid errors
         }
     }
 }
