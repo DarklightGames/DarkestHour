@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BoltActionWeapon extends DH_ProjectileWeapon
+class DH_BoltActionWeapon extends DHProjectileWeapon
     abstract;
 
 // Overridden because we don't want to allow reloading unless the weapon is out of ammo

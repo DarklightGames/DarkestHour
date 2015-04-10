@@ -2143,9 +2143,9 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
         }
 
         // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
-        MinValue = RI.MinStartAmmoPercent * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
-        MidValue = RI.DefaultStartAmmoPercent * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
-        MaxValue = RI.MaxStartAmmoPercent * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
+        MinValue = RI.MinStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
+        MidValue = RI.DefaultStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
+        MaxValue = RI.MaxStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
 
         // Set AmmoTimeMod based on MagCount
         if (MagCount == MidValue)

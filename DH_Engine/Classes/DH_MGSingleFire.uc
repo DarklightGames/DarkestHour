@@ -11,9 +11,9 @@ var()       float           PctHipMGPenalty;    // The amount of recoil to add w
 // Overridden to support our hip firing mode
 function PlayFireEnd()
 {
-    local DH_ProjectileWeapon RPW;
+    local DHProjectileWeapon RPW;
 
-    RPW = DH_ProjectileWeapon(Weapon);
+    RPW = DHProjectileWeapon(Weapon);
 
     if (RPW.HasAnim(FireEndAnim) && !Instigator.bBipodDeployed)
     {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PIATWeapon extends DH_ProjectileWeapon;
+class DH_PIATWeapon extends DHProjectileWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_PIAT_1st.ukx
 

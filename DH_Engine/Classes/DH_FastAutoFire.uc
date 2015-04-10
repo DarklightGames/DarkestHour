@@ -190,9 +190,9 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
 // Plays the animation at the end of firing the weapon
 function PlayFireEnd()
 {
-    local DH_ProjectileWeapon RPW;
+    local DHProjectileWeapon RPW;
 
-    RPW = DH_ProjectileWeapon(Weapon);
+    RPW = DHProjectileWeapon(Weapon);
 
     if (RPW.HasAnim(FireEndAnim) && !RPW.bUsingSights && !Instigator.bBipodDeployed)
     {
@@ -256,11 +256,11 @@ state FireLoop
 {
     function BeginState()
     {
-        local DH_ProjectileWeapon RPW;
+        local DHProjectileWeapon RPW;
 
         NextFireTime = Level.TimeSeconds - 0.1; // fire now!
 
-        RPW = DH_ProjectileWeapon(Weapon);
+        RPW = DHProjectileWeapon(Weapon);
 
         if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
         {

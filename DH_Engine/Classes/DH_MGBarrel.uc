@@ -34,12 +34,12 @@ simulated function Destroyed()
     // if the barrel is destroyed and is steaming, de-activate the steam effect
     if (bBarrelSteaming)
     {
-        DH_ProjectileWeapon(Owner).ToggleBarrelSteam(false);
+        DHProjectileWeapon(Owner).ToggleBarrelSteam(false);
     }
 
     if (bBarrelDamaged)
     {
-        DH_ProjectileWeapon(Owner).bBarrelDamaged = false;
+        DHProjectileWeapon(Owner).bBarrelDamaged = false;
     }
 
     super.Destroyed();
@@ -74,7 +74,7 @@ function WeaponFired()
     {
         bBarrelSteaming = true;
 
-        DH_ProjectileWeapon(Owner).ToggleBarrelSteam(bBarrelSteaming);
+        DHProjectileWeapon(Owner).ToggleBarrelSteam(bBarrelSteaming);
     }
 
     if (Temperature > FailureTemperature)
@@ -88,9 +88,9 @@ function WeaponFired()
 // Will update this barrel and the weapons's barrel status
 function UpdateBarrelStatus()
 {
-    local DH_ProjectileWeapon W;
+    local DHProjectileWeapon W;
 
-    W = DH_ProjectileWeapon(Owner);
+    W = DHProjectileWeapon(Owner);
 
     if (W == none)
     {
@@ -137,13 +137,13 @@ state BarrelInUse
         // if the barrel is being put on and is steaming, turn on the steam emitter
         if (bBarrelSteaming)
         {
-            DH_ProjectileWeapon(Owner).ToggleBarrelSteam(true);
+            DHProjectileWeapon(Owner).ToggleBarrelSteam(true);
         }
 
         // if the barrel is being put on and is damaged, set the weapon to have a damaged barrel
         if (bBarrelDamaged)
         {
-            DH_ProjectileWeapon(Owner).bBarrelDamaged = true;
+            DHProjectileWeapon(Owner).bBarrelDamaged = true;
         }
 
         SetTimer(BarrelTimerRate, true);
@@ -155,7 +155,7 @@ state BarrelInUse
     //------------------------------------------------------------------------------
     function Timer()
     {
-        local DH_ProjectileWeapon W;
+        local DHProjectileWeapon W;
 
         // make sure this is done on the authority
         // if temp is at the level temp, don't bother with anything else
@@ -164,7 +164,7 @@ state BarrelInUse
             return;
         }
 
-        W = DH_ProjectileWeapon(Owner);
+        W = DHProjectileWeapon(Owner);
 
         if (W == none)
         {
@@ -210,7 +210,7 @@ state BarrelOff
         // emitter
         if (bBarrelSteaming)
         {
-            DH_ProjectileWeapon(Owner).ToggleBarrelSteam(false);
+            DHProjectileWeapon(Owner).ToggleBarrelSteam(false);
         }
 
         SetTimer(BarrelTimerRate, true);

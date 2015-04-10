@@ -31,11 +31,11 @@ state FireLoop
 {
     function BeginState()
     {
-        local DH_ProjectileWeapon RPW;
+        local DHProjectileWeapon RPW;
 
         NextFireTime = Level.TimeSeconds - 0.1; //fire now!
 
-        RPW = DH_ProjectileWeapon(Weapon);
+        RPW = DHProjectileWeapon(Weapon);
 
         if (!Instigator.bBipodDeployed)
             weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
@@ -49,9 +49,9 @@ state FireLoop
 // Overridden to support our hip firing mode
 function PlayFireEnd()
 {
-    local DH_ProjectileWeapon RPW;
+    local DHProjectileWeapon RPW;
 
-    RPW = DH_ProjectileWeapon(Weapon);
+    RPW = DHProjectileWeapon(Weapon);
 
     if (RPW.HasAnim(FireEndAnim) && !Instigator.bBipodDeployed)
         RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);

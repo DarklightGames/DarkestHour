@@ -1052,9 +1052,9 @@ simulated function SetWeaponAttachment(ROWeaponAttachment NewAtt)
         return;
     }
 
-    if (DH_ProjectileWeapon(Weapon) != none)
+    if (DHProjectileWeapon(Weapon) != none)
     {
-        WeaponAttachment.bBayonetAttached = DH_ProjectileWeapon(Weapon).bBayonetMounted;
+        WeaponAttachment.bBayonetAttached = DHProjectileWeapon(Weapon).bBayonetMounted;
     }
 
     WeaponAttachment.AnimEnd(0);
@@ -3915,13 +3915,13 @@ simulated function SetIsCuttingWire(bool bIsCuttingWire)
 function SetAmmoAmount(byte AmmoAmount)
 {
     local Inventory Inv;
-    local DH_ProjectileWeapon Wep;
+    local DHProjectileWeapon Wep;
     local int i;
 
     // Cycle inventory and change ammo on needed items
     for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
     {
-        Wep = DH_ProjectileWeapon(Inv);
+        Wep = DHProjectileWeapon(Inv);
 
         // Only change primary weapon
         if (Wep != none && Wep.InventoryGroup == 1)

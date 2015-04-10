@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BipodWeapon extends DH_ProjectileWeapon
+class DH_BipodWeapon extends DHProjectileWeapon
     abstract;
 
 // Animations for bipod mounted weapon hipped and deployed states

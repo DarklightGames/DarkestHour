@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SniperWeapon extends DH_ProjectileWeapon
+class DH_SniperWeapon extends DHProjectileWeapon
     abstract;
 
 #exec OBJ LOAD FILE=Weapons1st_tex.utx

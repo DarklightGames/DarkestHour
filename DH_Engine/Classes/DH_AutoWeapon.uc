@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AutoWeapon extends DH_ProjectileWeapon
+class DH_AutoWeapon extends DHProjectileWeapon
     abstract;
 
 simulated function ZoomIn(bool bAnimateTransition)

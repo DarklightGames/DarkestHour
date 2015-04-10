@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ProjectileWeapon extends DHWeapon
+class DHProjectileWeapon extends DHWeapon
     abstract;
 
 // Animations

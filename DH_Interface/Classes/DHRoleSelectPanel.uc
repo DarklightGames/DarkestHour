@@ -556,11 +556,11 @@ function UpdateSelectedWeapon(int weaponCategory)
             // Set min/max/mid for ammo button on primary weapon
             if (Item != none)
             {
-                nu_PrimaryAmmoMags.MinValue = DesiredRole.MinStartAmmoPercent * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags;
+                nu_PrimaryAmmoMags.MinValue = DesiredRole.MinStartAmmoPercent * class<DHProjectileWeapon>(Item).default.MaxNumPrimaryMags;
                 nu_PrimaryAmmoMags.MinValue = Max(1, nu_PrimaryAmmoMags.MinValue);
 
-                nu_PrimaryAmmoMags.MidValue = DesiredRole.DefaultStartAmmoPercent * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags;
-                nu_PrimaryAmmoMags.MaxValue = DesiredRole.MaxStartAmmoPercent * class<DH_ProjectileWeapon>(Item).default.MaxNumPrimaryMags;
+                nu_PrimaryAmmoMags.MidValue = DesiredRole.DefaultStartAmmoPercent * class<DHProjectileWeapon>(Item).default.MaxNumPrimaryMags;
+                nu_PrimaryAmmoMags.MaxValue = DesiredRole.MaxStartAmmoPercent * class<DHProjectileWeapon>(Item).default.MaxNumPrimaryMags;
 
                 // Set value to desired, if desired is out of range, set desired to clamped value
                 nu_PrimaryAmmoMags.Value = string(DHP.SpawnAmmoAmount);

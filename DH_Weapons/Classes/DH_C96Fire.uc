@@ -19,13 +19,13 @@ state FireLoop
 {
     function BeginState()
     {
-        local DH_ProjectileWeapon RPW;
+        local DHProjectileWeapon RPW;
 
         if (ROWeapon(Weapon).UsingAutoFire())
         {
             NextFireTime = Level.TimeSeconds - 0.1; // fire now!
 
-            RPW = DH_ProjectileWeapon(Weapon);
+            RPW = DHProjectileWeapon(Weapon);
 
             if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
             {

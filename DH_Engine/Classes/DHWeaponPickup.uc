@@ -19,9 +19,9 @@ var     int         LoadedMagazineIndex;
 function InitDroppedPickupFor(Inventory Inv)
 {
     local int i;
-    local DH_ProjectileWeapon W;
+    local DHProjectileWeapon W;
 
-    W = DH_ProjectileWeapon(Inv);
+    W = DHProjectileWeapon(Inv);
 
     super.InitDroppedPickupFor(Inv);
 
