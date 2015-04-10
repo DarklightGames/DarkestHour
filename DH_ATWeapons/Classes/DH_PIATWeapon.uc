@@ -70,7 +70,7 @@ simulated function CycleRange()
         RangeIndex = 0;
     }
 
-    DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+    DHProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
     if (Instigator.IsLocallyControlled())
     {
@@ -90,11 +90,11 @@ function ServerSetRange(int NewIndex)
 
     if (bUsingSights)
     {
-        DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+        DHProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
     }
     else
     {
-        DH_ProjectileFire(FireMode[0]).AddedPitch = 0;
+        DHProjectileFire(FireMode[0]).AddedPitch = 0;
     }
 }
 
@@ -348,7 +348,7 @@ simulated function Fire(float F)
             return;
         }
 
-        DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+        DHProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
         if (Role < ROLE_Authority)
         {
@@ -357,7 +357,7 @@ simulated function Fire(float F)
     }
     else
     {
-        DH_ProjectileFire(FireMode[0]).AddedPitch = 0;
+        DHProjectileFire(FireMode[0]).AddedPitch = 0;
 
         if (Role < ROLE_Authority)
         {

@@ -50,11 +50,11 @@ simulated exec function Deploy()
 // switch the rocket aiming ranges
 simulated function CycleRange()
 {
-    local DH_ProjectileFire F;
+    local DHProjectileFire F;
 
     RangeIndex = ++RangeIndex % Ranges.Length;
 
-    F = DH_ProjectileFire(FireMode[0]);
+    F = DHProjectileFire(FireMode[0]);
 
     if (F != none)
     {
@@ -75,11 +75,11 @@ simulated function CycleRange()
 // Switch the rocket aiming ranges on the server
 function ServerSetRange(int NewIndex)
 {
-    local DH_ProjectileFire F;
+    local DHProjectileFire F;
 
     RangeIndex = NewIndex;
 
-    F = DH_ProjectileFire(FireMode[0]);
+    F = DHProjectileFire(FireMode[0]);
 
     if (F != none)
     {
@@ -330,7 +330,7 @@ simulated function bool PutDown()
 simulated function Fire(float F)
 {
     local PlayerController PC;
-    local DH_ProjectileFire PF;
+    local DHProjectileFire PF;
 
     if (Instigator != none)
     {
@@ -359,7 +359,7 @@ simulated function Fire(float F)
         return;
     }
 
-    PF = DH_ProjectileFire(FireMode[0]);
+    PF = DHProjectileFire(FireMode[0]);
 
     if (PF != none)
     {

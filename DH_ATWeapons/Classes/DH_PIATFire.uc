@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PIATFire extends DH_ProjectileFire;
+class DH_PIATFire extends DHProjectileFire;
 
 var array<name> FireIronAnims;
 

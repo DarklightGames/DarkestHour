@@ -200,7 +200,7 @@ simulated state PostFiring
 
         if (bUsingSights)
         {
-            SetTimer(GetAnimDuration(DH_ProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
+            SetTimer(GetAnimDuration(DHProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
         }
         else
         {

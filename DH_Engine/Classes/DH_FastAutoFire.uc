@@ -133,7 +133,7 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
 {
     if (Level.NetMode == NM_Standalone)
     {
-        super(DH_ProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
+        super(DHProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
 
         return;
     }

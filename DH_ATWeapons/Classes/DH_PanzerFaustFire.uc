@@ -3,8 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-// Matt: originally extended ROProjectileFire, but this is the only DH weapon to do so - the minor changes in DH_ProjectileFire won't affect a faust, so changed to DH version for uniformity
-class DH_PanzerFaustFire extends DH_ProjectileFire;
+// Matt: originally extended ROProjectileFire, but this is the only DH weapon to do so - the minor changes in DHProjectileFire won't affect a faust, so changed to DH version for uniformity
+class DH_PanzerFaustFire extends DHProjectileFire;
 
 var float               ExhaustDamage;           // damage caused by exhaust (back blast)
 var float               ExhaustDamageRadius;     // radius for damage caused by exhaust

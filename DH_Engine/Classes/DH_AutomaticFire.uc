@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AutomaticFire extends DH_ProjectileFire
+class DH_AutomaticFire extends DHProjectileFire
     abstract;
 
 // Overridden to make the player stop firing when they switch to from ironsights

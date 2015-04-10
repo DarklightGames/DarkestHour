@@ -41,7 +41,7 @@ simulated function CycleRange()
         RangeIndex = 0;
     }
 
-    DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+    DHProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 
     if (Instigator.IsLocallyControlled())
     {
@@ -59,7 +59,7 @@ function ServerSetRange(int NewIndex)
 {
     RangeIndex = NewIndex;
 
-    DH_ProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
+    DHProjectileFire(FireMode[0]).AddedPitch = Ranges[RangeIndex];
 }
 
 // Overridden to play the animations for different ranges // Matt: simplified to use IronIdleAnims array instead of IronIdleAnimOne, IronIdleAnimTwo & IronIdleAnimThree

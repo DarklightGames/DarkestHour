@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ProjectileFire extends ROWeaponFire;
+class DHProjectileFire extends ROWeaponFire;
 
 var()           int         ProjPerFire;                // How many projectiles are spawn each fire, set to 1
 var()           vector      ProjSpawnOffset;            // +x forward, +y right, +z up
 var()           vector      FAProjSpawnOffset;          // ProjSpawnOffset for free-aim mode +x forward, +y right, +z up
 
-var(DH_ProjectileFire) int  AddedPitch;                 // Additional pitch to add to firing calculations. Primarily used for rockect launchers
+var(DHProjectileFire) int  AddedPitch;                 // Additional pitch to add to firing calculations. Primarily used for rockect launchers
 
 var             bool        bUsePreLaunchTrace;         // Use the pre-projectile spawn trace to see if anything close is hit before launching projectile. Saves CPU and Net usuage
 var             float       PreLaunchTraceDistance;     // How long of a pre launch trace to use. Shorter for SMGs and pistols, longer for rifles and MGs.
