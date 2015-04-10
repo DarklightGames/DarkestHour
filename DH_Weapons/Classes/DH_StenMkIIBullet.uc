@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StenMkIIBullet extends DH_Bullet;
+class DH_StenMkIIBullet extends DHBullet;
 
 defaultproperties
 {

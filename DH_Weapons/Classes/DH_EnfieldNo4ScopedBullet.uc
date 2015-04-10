@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_EnfieldNo4ScopedBullet extends DH_Bullet;
+class DH_EnfieldNo4ScopedBullet extends DHBullet;
 
 defaultproperties
 {

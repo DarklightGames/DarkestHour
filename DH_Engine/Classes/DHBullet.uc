@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Bullet extends ROBullet
+class DHBullet extends ROBullet
     config(DH_Penetration)
     abstract;
 
@@ -565,8 +565,8 @@ simulated function Destroyed()
 defaultproperties
 {
     WhizType=1
-    ImpactEffect=class'DH_Effects.DH_BulletHitEffect'
-    WhizSoundEffect=class'DH_Effects.DH_BulletWhiz'
+    ImpactEffect=class'DH_Effects.DHBulletHitEffect'
+    WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
 
     // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0

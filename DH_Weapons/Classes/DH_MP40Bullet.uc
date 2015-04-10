@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MP40Bullet extends DH_Bullet;
+class DH_MP40Bullet extends DHBullet;
 
 defaultproperties
 {

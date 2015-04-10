@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1CarbineBullet extends DH_Bullet;
+class DH_M1CarbineBullet extends DHBullet;
 
 defaultproperties
 {

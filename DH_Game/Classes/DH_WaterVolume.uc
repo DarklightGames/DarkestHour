@@ -74,7 +74,7 @@ simulated event Touch(Actor Other)
     {
         if (Other.IsA('ROBallisticProjectile') && !Level.bDropDetail && Level.DetailMode != DM_Low)
         {
-            //DH_BulletSplashEffect, DH_50CalSplashEffect, DH_BigExplosiveSplashEffect, and DH_ExplosiveSplashEffect
+            //DHBulletSplashEffect, DH_50CalSplashEffect, DH_BigExplosiveSplashEffect, and DH_ExplosiveSplashEffect
 
             if (Other.IsA('ROAntiVehicleProjectile'))
             {
@@ -88,7 +88,7 @@ simulated event Touch(Actor Other)
             if (Other.IsA('ROBullet'))
             {
                 //Use this one as final
-                EntryActor = class'DH_BulletSplashEffect';
+                EntryActor = class'DHBulletSplashEffect';
 
                 //Testing
                 //EntryActor = class'DH_ExplosiveSplashEffect';
@@ -107,7 +107,7 @@ defaultproperties
     PawnEntryActorName=""
     ExitSoundName=""
     EntrySoundName=""
-    EntryActor="DH_BulletSplashEffect"
+    EntryActor="DHBulletSplashEffect"
     bDistanceFog=true
     DistanceFogColor=(R=0,G=0,B=0,A=0)
     DistanceFogStart=0.0

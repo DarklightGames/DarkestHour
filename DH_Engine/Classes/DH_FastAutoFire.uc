@@ -415,9 +415,9 @@ function Projectile SpawnProjectile(vector Start, Rotator Dir)
     {
         SpawnedProjectile = Spawn(ProjectileClass,,, Start, Dir);
 
-        if (DH_Bullet(SpawnedProjectile) != none) // Matt: added to disable bullet replication, so actor won't be replicated to clients (the only difference in server bullet)
+        if (DHBullet(SpawnedProjectile) != none) // Matt: added to disable bullet replication, so actor won't be replicated to clients (the only difference in server bullet)
         {
-            DH_Bullet(SpawnedProjectile).SetAsServerBullet();
+            DHBullet(SpawnedProjectile).SetAsServerBullet();
         }
     }
 

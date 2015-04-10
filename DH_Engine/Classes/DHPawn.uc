@@ -137,7 +137,7 @@ simulated function PostBeginPlay()
 
     if (AuxCollisionCylinder == none)
     {
-        AuxCollisionCylinder = Spawn(class'DH_BulletWhipAttachment', self);
+        AuxCollisionCylinder = Spawn(class'DHBulletWhipAttachment', self);
         AttachToBone(AuxCollisionCylinder, 'spine');
     }
 
@@ -401,11 +401,11 @@ simulated event HandleSnapSound(int WhizType)
     {
         if (WhizType == 1)
         {
-            Spawn(class'DH_BulletSnap',,, mWhizSoundLocation); // supersonic rounds
+            Spawn(class'DHBulletSnap',,, mWhizSoundLocation); // supersonic rounds
         }
         else
         {
-            Spawn(class'DH_BulletWhiz',,, mWhizSoundLocation); // subsonic rounds
+            Spawn(class'DHBulletWhiz',,, mWhizSoundLocation); // subsonic rounds
         }
 
         // Anything above WhizType of 2 is a friendly bullet at very close range, so don't suppress

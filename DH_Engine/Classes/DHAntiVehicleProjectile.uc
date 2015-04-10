@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DHAntiVehicleProjectile extends ROAntiVehicleProjectile
-    config(DH_Penetration) // Matt: added (like DH_Bullet) so bDebugBallistics can be set easily in a config file
+    config(DH_Penetration) // Matt: added (like DHBullet) so bDebugBallistics can be set easily in a config file
     abstract;
 
 enum ERoundType
@@ -53,7 +53,7 @@ var   float          PenetrationMag;   // different for AP and HE shells and can
 
 // Debugging code - set to false on release
 var              bool  bDebuggingText;
-var globalconfig bool  bDebugROBallistics; // sets bDebugBallistics to true for getting the arrow pointers // Matt: added from DH_Bullet so bDebugBallistics can be set in a config file
+var globalconfig bool  bDebugROBallistics; // sets bDebugBallistics to true for getting the arrow pointers // Matt: added from DHBullet so bDebugBallistics can be set in a config file
 
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here, & also to add bDebugROBallistics

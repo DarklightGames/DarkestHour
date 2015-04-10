@@ -263,7 +263,7 @@ function projectile SpawnProjectile(vector Start, Rotator Dir)
                 if (Other.IsA('ROVehicle'))
                 {
                     Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
-                        ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), class<DH_Bullet>(ProjectileClass).default.MyVehicleDamage);
+                        ProjectileClass.default.MomentumTransfer * Normal(ProjectileDir), class<DHBullet>(ProjectileClass).default.MyVehicleDamage);
                 }
                 else
                 {

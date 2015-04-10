@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BesaVehicleBullet extends DH_Bullet;
+class DH_BesaVehicleBullet extends DHBullet;
 
 defaultproperties
 {

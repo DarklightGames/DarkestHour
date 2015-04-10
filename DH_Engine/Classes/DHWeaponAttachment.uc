@@ -89,7 +89,7 @@ simulated event ThirdPersonEffects()
                 }
                 else
                 {
-                    Spawn(class'DH_BulletHitEffect',,, mHitLocation, rotator(-mHitNormal));
+                    Spawn(class'DHBulletHitEffect',,, mHitLocation, rotator(-mHitNormal));
                     CheckForSplash();
                 }
             }

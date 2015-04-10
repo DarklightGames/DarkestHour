@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Kar98ScopedBullet extends DH_Bullet;
+class DH_Kar98ScopedBullet extends DHBullet;
 
 defaultproperties
 {

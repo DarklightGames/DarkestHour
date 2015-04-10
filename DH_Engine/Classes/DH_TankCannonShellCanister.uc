@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_TankCannonShellCanister extends DH_Bullet
+class DH_TankCannonShellCanister extends DHBullet
     abstract;
 
 defaultproperties

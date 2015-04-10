@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BulletSnap extends ROBulletWhiz;
+class DHBulletSnap extends ROBulletWhiz;
 
 #exec OBJ LOAD FILE=DH_ProjectileSounds.uax
 

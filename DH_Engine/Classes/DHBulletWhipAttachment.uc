@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BulletWhipAttachment extends ROBulletWhipAttachment;
+class DHBulletWhipAttachment extends ROBulletWhipAttachment;
 
 defaultproperties
 {

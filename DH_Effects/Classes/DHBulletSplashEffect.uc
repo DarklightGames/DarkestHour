@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BulletSplashEffect extends emitter;
+class DHBulletSplashEffect extends emitter;
 
 defaultproperties
 {

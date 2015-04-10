@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_STG44Bullet extends DH_Bullet;
+class DH_STG44Bullet extends DHBullet;
 
 defaultproperties
 {

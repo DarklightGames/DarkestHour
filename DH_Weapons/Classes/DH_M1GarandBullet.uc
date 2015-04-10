@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1GarandBullet extends DH_Bullet;
+class DH_M1GarandBullet extends DHBullet;
 
 defaultproperties
 {

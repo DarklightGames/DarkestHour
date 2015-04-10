@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BulletHitEffect extends ROBulletHitEffect;
+class DHBulletHitEffect extends ROBulletHitEffect;
 
 simulated function PostNetBeginPlay()
 {

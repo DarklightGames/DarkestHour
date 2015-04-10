@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MG42VehicleBullet extends DH_Bullet;
+class DH_MG42VehicleBullet extends DHBullet;
 
 defaultproperties
 {

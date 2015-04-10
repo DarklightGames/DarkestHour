@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_C96Bullet extends DH_Bullet;
+class DH_C96Bullet extends DHBullet;
 
 defaultproperties
 {
