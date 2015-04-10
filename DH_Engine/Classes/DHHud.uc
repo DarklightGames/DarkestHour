@@ -3564,8 +3564,7 @@ exec function ShrinkHUD()
     }
 }
 
-// Modified to allow for autodeployment when dead/spectating
-// Todo: Update auto-deploy system to support different spawning types, etc.
+// Modified to show respawn time for deploy system
 simulated function DrawSpectatingHud(Canvas C)
 {
     local DHGameReplicationInfo GRI;
@@ -3626,7 +3625,7 @@ simulated function DrawSpectatingHud(Canvas C)
         else if (GRI.bMatchHasBegun &&
                  GRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            Time = Max(PC.LastKilledTime + PC.SpawnTime - Level.TimeSeconds, 0);
+            Time = Max(PC.LastKilledTime + PC.SpawnTime - GRI.ElapsedTime, 0);
 
             if (PC.VehiclePoolIndex != 255 && PC.SpawnPointIndex != 255)
             {

@@ -573,7 +573,6 @@ function UpdateSelectedWeapon(int weaponCategory)
                 nu_PrimaryAmmoMags.CheckValue(); // Hard clamps value to be in range (visually)
                 nu_PrimaryAmmoMags.SetVisibility(true);
 
-                DHP.SpawnAmmoAmount = int(nu_PrimaryAmmoMags.Value);
             }
             else
             {
@@ -603,7 +602,7 @@ function UpdateSelectedWeapon(int weaponCategory)
             DesiredWeapons[weaponCategory] = i;
 
             // Update deploy time
-            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(-1, DesiredRole, DesiredWeapons[0]) @ SecondsText;
+            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(byte(nu_PrimaryAmmoMags.Value), DesiredRole, DesiredWeapons[0]) @ SecondsText;
         }
     }
 }
@@ -854,7 +853,7 @@ function InternalOnChange(GUIComponent Sender)
             if (Role != none)
             {
                 // Because we changed role, lets reset our desired ammo
-                DHP.SpawnAmmoAmount = 0;
+                nu_PrimaryAmmoMags.Value = string(0);
 
                 ChangeDesiredRole(Role);
             }
@@ -869,8 +868,7 @@ function InternalOnChange(GUIComponent Sender)
             break;
 
         case nu_PrimaryAmmoMags:
-            DHP.SpawnAmmoAmount = byte(nu_PrimaryAmmoMags.Value);
-            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(-1, DesiredRole, DesiredWeapons[0]) @ SecondsText;
+            l_EstimatedSpawnTime.Caption = SpawnTimeText @ DHP.GetSpawnTime(byte(nu_PrimaryAmmoMags.Value), DesiredRole, DesiredWeapons[0]) @ SecondsText;
             break;
     }
 }

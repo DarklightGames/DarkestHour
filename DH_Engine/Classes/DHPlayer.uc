@@ -1721,6 +1721,15 @@ simulated function QueueHint(byte HintIndex, bool bForceNext)
 // Modified to avoid "accessed none" errors
 function bool CanRestartPlayer()
 {
+    local DHGameReplicationInfo DHGRI;
+
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (DHGRI == none)
+    {
+        return false;
+    }
+
     if ((PlayerReplicationInfo != none && PlayerReplicationInfo.bOnlySpectator) || !bCanRespawn)
     {
         return false;
@@ -1729,7 +1738,7 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if (Level.TimeSeconds < LastKilledTime + SpawnTime)
+    else if (DHGRI.ElapsedTime < LastKilledTime + SpawnTime)
     {
         return false;
     }
@@ -2127,6 +2136,11 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
         {
             MagCount = SpawnAmmoAmount;
         }
+        else if (MagCount >= 1 && MagCount <= class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags)
+        {
+            // MagCount was passed, so lets update SpawnAmmoAmount if the value is valid
+            SpawnAmmoAmount = MagCount;
+        }
 
         // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
         MinValue = RI.MinStartAmmoPercent * class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
@@ -2166,13 +2180,17 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
 
 function PawnDied(Pawn P)
 {
-    // Make sure the pawn that died is our pawn, not some random other pawn
-    if (P != Pawn)
+    local DHGameReplicationInfo DHGRI;
+
+    DHGRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    // Make sure the pawn that died is our pawn, not some random other pawn and GRI check
+    if (P != Pawn || DHGRI == none)
     {
         return;
     }
 
-    LastKilledTime = Level.TimeSeconds; // Server sets killed time based on it's level time
+    LastKilledTime = DHGRI.ElapsedTime; // Server sets killed time based on GRI elapsed
 
     super.PawnDied(P); //Calls super in ROPlayer
 }

@@ -325,6 +325,22 @@ function SpawnPlayer(DHPlayer C, out byte SpawnError)
 
         SpawnInfantry(C, SpawnError);
     }
+
+    // We have a pawn so lets edit ammo and fade from black
+    if (DHPawn(C.Pawn) != none)
+    {
+        DHPawn(C.Pawn).SetAmmoAmount(C.SpawnAmmoAmount);
+
+        if (C.VehiclePoolIndex != 255) // Vehicle spawn
+        {
+            C.ClientFadeFromBlack(0.0, true); // Black out, the fade will start when the pawn is put back into the vehicle
+            C.SetTimer(1.0, false); // Tell the player to check after 1 second to re enter the vehicle and fade from black
+        }
+        else
+        {
+            C.ClientFadeFromBlack(2.0);
+        }
+    }
 }
 
 function ROVehicle SpawnVehicle(DHPlayer C, out byte SpawnError)
@@ -784,8 +800,6 @@ function SpawnInfantry(DHPlayer C, out byte SpawnError)
 
         return;
     }
-
-    P.SetAmmoAmount(C.SpawnAmmoAmount);
 
     SpawnError = SpawnError_None;
 }
