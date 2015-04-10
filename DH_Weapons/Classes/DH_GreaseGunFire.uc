@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreaseGunFire extends DH_AutomaticFire;
+class DH_GreaseGunFire extends DHAutomaticFire;
 
 defaultproperties
 {

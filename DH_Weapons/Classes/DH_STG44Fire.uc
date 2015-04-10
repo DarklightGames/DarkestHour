@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_STG44Fire extends DH_AutomaticFire;
+class DH_STG44Fire extends DHAutomaticFire;
 
 defaultproperties
 {

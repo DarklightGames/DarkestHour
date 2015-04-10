@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ThompsonFire extends DH_AutomaticFire;
+class DH_ThompsonFire extends DHAutomaticFire;
 
 defaultproperties
 {

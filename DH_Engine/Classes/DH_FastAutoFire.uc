@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FastAutoFire extends DH_AutomaticFire;
+class DH_FastAutoFire extends DHAutomaticFire;
 
 // internal class vars
 var     float                   LastCalcTime;           // Internal var used to calculate when to replicate the dual shots

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FG42Fire extends DH_AutomaticFire;
+class DH_FG42Fire extends DHAutomaticFire;
 
 var(FireAnims)  name        SightUpFireIronAnim;
 var(FireAnims)  name        SightUpFireIronLoopAnim;

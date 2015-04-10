@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StenMkIIFire extends DH_AutomaticFire;
+class DH_StenMkIIFire extends DHAutomaticFire;
 
 defaultproperties
 {

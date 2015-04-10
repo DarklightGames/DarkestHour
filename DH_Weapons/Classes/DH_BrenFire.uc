@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BrenFire extends DH_AutomaticFire;
+class DH_BrenFire extends DHAutomaticFire;
 
 var(FireAnims)  name        BipodDeployFireAnim;
 var(FireAnims)  name        BipodDeployFireLoopAnim;

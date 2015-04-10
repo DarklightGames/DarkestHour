@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MP40Fire extends DH_AutomaticFire;
+class DH_MP40Fire extends DHAutomaticFire;
 
 defaultproperties
 {
