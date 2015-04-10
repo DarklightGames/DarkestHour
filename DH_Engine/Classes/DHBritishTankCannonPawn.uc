@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BritishTankCannonPawn extends DHTankCannonPawn
+class DHBritishTankCannonPawn extends DHTankCannonPawn
     abstract;
 
 defaultproperties

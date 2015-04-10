@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ShermanFireFlyCannonPawn extends DH_BritishTankCannonPawn;
+class DH_ShermanFireFlyCannonPawn extends DHBritishTankCannonPawn;
 
 defaultproperties
 {
