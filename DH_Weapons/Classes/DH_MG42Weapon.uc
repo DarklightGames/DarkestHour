@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MG42Weapon extends DH_MGbase;
+class DH_MG42Weapon extends DHMGWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg42_1st.ukx
 

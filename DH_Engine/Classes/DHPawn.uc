@@ -314,6 +314,10 @@ function PossessedBy(Controller C)
             }
         }
     }
+    else
+    {
+
+    }
 
     // Send the info to the client now to make sure RoleInfo is replicated quickly
     NetUpdateTime = Level.TimeSeconds - 1.0;

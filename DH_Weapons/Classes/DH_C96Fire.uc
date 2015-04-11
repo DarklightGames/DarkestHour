@@ -151,7 +151,7 @@ state FireLoop
         super.ModeTick(dt);
 
         // WeaponTODO: See how to properly reimplement this
-        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
+        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHMGWeapon(Weapon) != none && DHMGWeapon(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
         {
             GotoState('');
 

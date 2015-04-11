@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MG34Weapon extends DH_MGbase;
+class DH_MG34Weapon extends DHMGWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx
 

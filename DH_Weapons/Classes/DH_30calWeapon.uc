@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_30calWeapon extends DH_MGbase;
+class DH_30calWeapon extends DHMGWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_30Cal_1st.ukx
 

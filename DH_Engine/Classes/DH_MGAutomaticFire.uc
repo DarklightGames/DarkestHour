@@ -7,13 +7,13 @@ class DH_MGAutomaticFire extends DH_FastAutoFire
     abstract;
 
 var()       float           PctHipMGPenalty;    // The amount of recoil to add when the player firing an MG from the hip
-var         DH_MGbase       MGWeapon;
+var         DHMGWeapon       MGWeapon;
 
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    MGWeapon = DH_MGbase(Weapon);
+    MGWeapon = DHMGWeapon(Weapon);
 }
 
 event ModeDoFire()
@@ -198,7 +198,7 @@ function DoFireEffect()
 
     CalcSpreadModifiers();
 
-    if ((DH_MGBase(Owner) != none) && DH_MGBase(Owner).bBarrelDamaged)
+    if ((DHMGWeapon(Owner) != none) && DHMGWeapon(Owner).bBarrelDamaged)
     {
         AppliedSpread = 4 * Spread;
     }

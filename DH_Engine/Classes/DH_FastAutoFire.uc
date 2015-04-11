@@ -84,7 +84,7 @@ function DoFireEffect()
 
     CalcSpreadModifiers();
 
-    if (DH_MGBase(Owner) != none && DH_MGBase(Owner).bBarrelDamaged)
+    if (DHMGWeapon(Owner) != none && DHMGWeapon(Owner).bBarrelDamaged)
     {
         AppliedSpread = 4.0 * Spread;
     }
@@ -318,7 +318,7 @@ state FireLoop
         super(WeaponFire).ModeTick(dt);
 
         // WeaponTODO: See how to properly reimplement this
-        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DH_MGBase(Weapon) != none && DH_MGBase(Weapon).bBarrelFailed)) // stopped firing, magazine empty or barrel overheat
+        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHMGWeapon(Weapon) != none && DHMGWeapon(Weapon).bBarrelFailed)) // stopped firing, magazine empty or barrel overheat
         {
             GotoState('');
 

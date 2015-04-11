@@ -106,7 +106,7 @@ function DoFireEffect()
 
     CalcSpreadModifiers();
 
-    if (DH_MGBase(Owner) != none && DH_MGBase(Owner).bBarrelDamaged)
+    if (DHMGWeapon(Owner) != none && DHMGWeapon(Owner).bBarrelDamaged)
     {
         AppliedSpread = 4.0 * Spread;
     }

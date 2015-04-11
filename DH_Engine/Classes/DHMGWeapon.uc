@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MGbase extends DH_BipodWeapon
+class DHMGWeapon extends DH_BipodWeapon
     abstract;
 
 // MG Resupplying
