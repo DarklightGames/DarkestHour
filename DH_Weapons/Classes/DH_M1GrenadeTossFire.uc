@@ -3,15 +3,15 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1GrenadeTossFire extends DH_GrenadeFire;
+class DH_M1GrenadeTossFire extends DHGrenadeFire;
 
 defaultproperties
 {
     AmmoClass=class'DH_Weapons.DH_M1GrenadeAmmo'
     ProjectileClass=class'DH_Weapons.DH_M1GrenadeProjectile'
 
-    AddedFuseTime=0.0           // undoing DH_GrenadeFire
-    bPullAnimCompensation=false // undoing DH_GrenadeFire
+    AddedFuseTime=0.0           // undoing DHGrenadeFire
+    bPullAnimCompensation=false // undoing DHGrenadeFire
     MinimumThrowSpeed=100.0
     MaximumThrowSpeed=500.0
     SpeedFromHoldingPerSec=800.0

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GrenadeProjectile_Smoke extends DH_GrenadeProjectile
+class DHGrenadeProjectile_Smoke extends DHGrenadeProjectile
     abstract;
 
 var  class<Emitter> SmokeEmitterClass;

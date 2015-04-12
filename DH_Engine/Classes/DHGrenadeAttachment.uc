@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GrenadeAttachment extends DHWeaponAttachment
+class DHGrenadeAttachment extends DHWeaponAttachment
     abstract;
 
 simulated event ThirdPersonEffects()

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1GrenadeProjectile extends DH_GrenadeProjectile;
+class DH_M1GrenadeProjectile extends DHGrenadeProjectile;
 
 defaultproperties
 {

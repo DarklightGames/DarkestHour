@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_USSmokeGrenadeProjectile extends DH_GrenadeProjectile_Smoke;
+class DH_USSmokeGrenadeProjectile extends DHGrenadeProjectile_Smoke;
 
 defaultproperties
 {

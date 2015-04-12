@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GrenadeProjectile extends DHThrowableExplosiveProjectile // incorporating ROGrenadeProjectile
+class DHGrenadeProjectile extends DHThrowableExplosiveProjectile // incorporating ROGrenadeProjectile
     abstract;
 
 var bool bIsStickGrenade; // if true then the grenade's spin, when thrown, will be tumbling end over end

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_NebelGranate39Projectile extends DH_GrenadeProjectile_Smoke;
+class DH_NebelGranate39Projectile extends DHGrenadeProjectile_Smoke;
 
 defaultproperties
 {

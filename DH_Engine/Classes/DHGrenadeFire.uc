@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GrenadeFire extends ROThrownExplosiveFire;
+class DHGrenadeFire extends ROThrownExplosiveFire;
 
 var bool bIsSmokeGrenade;
-
 
 event ModeTick(float dt)
 {
