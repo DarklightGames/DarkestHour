@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HigginsBoat extends DH_BoatVehicle;
+class DH_HigginsBoat extends DHBoatVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx

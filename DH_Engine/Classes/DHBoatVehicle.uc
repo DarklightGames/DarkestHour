@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BoatVehicle extends DHWheeledVehicle // Matt: originally extended ROWheeledVehicle
+class DHBoatVehicle extends DHWheeledVehicle // Matt: originally extended ROWheeledVehicle
     abstract;
 
 var()   name                DriverCameraBoneName;
