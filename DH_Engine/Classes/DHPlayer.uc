@@ -1169,9 +1169,9 @@ state PlayerWalking
             if (Pawn.bBipodDeployed && NewAccel != vect(0.0, 0.0, 0.0) && Pawn.Weapon != none)
             {
 //              ROBipodWeapon(Pawn.Weapon).ForceUndeploy(); // Matt: replaced by if/else below so it actually works with DH weapons
-                if (DH_BipodWeapon(Pawn.Weapon) != none)
+                if (DHBipodWeapon(Pawn.Weapon) != none)
                 {
-                    DH_BipodWeapon(Pawn.Weapon).ForceUndeploy();
+                    DHBipodWeapon(Pawn.Weapon).ForceUndeploy();
                 }
                 else if (DHBipodAutoWeapon(Pawn.Weapon) != none)
                 {
