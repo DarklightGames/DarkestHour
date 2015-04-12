@@ -709,7 +709,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     ActualDamage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    if (ActualDamage > 0 && DamageType.Name == 'Fell' || DamageType.Name == 'DH_ExitMovingVehicleDamType')
+    if (ActualDamage > 0 && DamageType.Name == 'Fell' || DamageType.Name == 'DHExitMovingVehicleDamageType')
     {
         if (!bIsCrawling && !bIsCrouched && DHPlayer(Controller) != none)
         {
@@ -2175,7 +2175,7 @@ function TakeFallingDamage()
 
                     if (TotalSpeed > MinHurtSpeed)
                     {
-                        TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0.0, 0.0, 0.0), class'DH_ExitMovingVehicleDamType');
+                        TakeDamage((TotalSpeed - MinHurtSpeed) * 0.4, none, Location, vect(0.0, 0.0, 0.0), class'DHExitMovingVehicleDamageType');
                         UpdateDamageList(254); // damaged the legs
                     }
                 }
