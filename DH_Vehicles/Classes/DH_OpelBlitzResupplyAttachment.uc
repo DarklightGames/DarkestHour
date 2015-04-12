@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_OpelBlitzResupplyAttachment extends DH_MobileResupplyAttachment;
+class DH_OpelBlitzResupplyAttachment extends DHMobileResupplyAttachment;
 
 defaultproperties
 {

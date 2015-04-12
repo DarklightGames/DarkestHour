@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MobileResupplyAttachment extends RODummyAttachment
+class DHMobileResupplyAttachment extends RODummyAttachment
     abstract;
 
 //Hack in AmmoResupplyVolume code
