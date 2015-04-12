@@ -303,5 +303,5 @@ defaultproperties
 {
     AttachmentClass=class'DH_Engine.DHBinocularsAttachment'
     bCanThrow=true
-    PickupClass=class'DH_Engine.DH_BinocularsPickup'
+    PickupClass=class'DH_Engine.DHBinocularsPickup'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BinocularsPickup extends DHWeaponPickup
+class DHBinocularsPickup extends DHWeaponPickup
     notplaceable;
 
 defaultproperties
