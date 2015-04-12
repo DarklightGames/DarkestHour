@@ -197,7 +197,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
     foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
+        if (DHVehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
         }
@@ -308,7 +308,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         LastTouched = none;
 
         // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
+        if (DHVehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
         }

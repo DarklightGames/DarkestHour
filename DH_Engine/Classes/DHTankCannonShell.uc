@@ -258,7 +258,7 @@ defaultproperties
 {
     bHasTracer=true
     TracerEffect=class'DH_Effects.DH_RedTankShellTracerBig'
-    ShellImpactDamage=class'DH_TankShellImpactDamage'
+    ShellImpactDamage=class'DHTankShellImpactDamage'
     ImpactDamage=400
     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
     DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'

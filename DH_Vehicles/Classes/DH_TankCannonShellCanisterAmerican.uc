@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_TankCannonShellCanisterAmerican extends DH_TankCannonShellCanister;
+class DH_TankCannonShellCanisterAmerican extends DHTankCannonShellCanister;
 
 defaultproperties
 {

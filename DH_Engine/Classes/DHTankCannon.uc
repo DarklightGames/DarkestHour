@@ -42,8 +42,8 @@ var()   float               ManualRotationsPerSecond;
 var()   float               PoweredRotationsPerSecond;
 
 // Turret collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon, like a tank turret)
-var()   class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
-var     DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
+var()   class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
+var     DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;
 
 // Fire effects - Ch!cKeN
 var     VehicleDamagedEffect        TurretHatchFireEffect;

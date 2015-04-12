@@ -11,7 +11,7 @@ singular function Touch(Actor Other)
 {
     local int RandomNum;
 
-    if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
+    if (DHVehicleWeaponCollisionMeshActor(Other) != none)
     {
         Other = Other.Owner;
     }
@@ -73,10 +73,10 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
     foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
+        if (DHVehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
-            Log(Tag @ "HurtRadius: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
+            Log(Tag @ "HurtRadius: hit a DHVehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
         }
 
         // don't let blast damage affect fluid - VisibleCollisingActors doesn't really work for them - jag
@@ -115,10 +115,10 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
         LastTouched = none;
 
         // If hit collision mesh actor then switch to actual VehicleWeapon
-        if (DH_VehicleWeaponCollisionMeshActor(Victims) != none)
+        if (DHVehicleWeaponCollisionMeshActor(Victims) != none)
         {
             Victims = Victims.Owner;
-            Log(Tag @ "HurtRadius part II: hit a DH_VehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
+            Log(Tag @ "HurtRadius part II: hit a DHVehicleWeaponCollisionMeshActor, so switched hit actor to" @ Victims.Tag); // TEMP
         }
 
         dir = Victims.Location - HitLocation;

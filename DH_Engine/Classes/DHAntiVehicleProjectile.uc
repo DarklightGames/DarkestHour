@@ -157,7 +157,7 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    if (DH_VehicleWeaponCollisionMeshActor(Other) != none)
+    if (DHVehicleWeaponCollisionMeshActor(Other) != none)
     {
         Other = Other.Owner;
     }

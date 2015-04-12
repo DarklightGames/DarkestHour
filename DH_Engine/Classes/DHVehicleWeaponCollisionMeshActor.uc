@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_VehicleWeaponCollisionMeshActor extends Actor;
+class DHVehicleWeaponCollisionMeshActor extends Actor;
 
 /**
 Matt, Nov 2014: this actor is a way of getting a collision static mesh to work on a VehicleWeapon (generally a turret, but maybe an exposed MG or a gun shield)
@@ -34,7 +34,7 @@ To set up a VW col mesh actor the process is:
 1. Import a generic 1 bone mesh into the WV's animation file & name it something like MyVehicle_TurretCollision.
 2. Copy mesh properties of the actual VW mesh & paste onto collision skeletal mesh, so new mesh has same collision boxes (enable view collision in editor to see this).
 3. Assign the col static mesh to the new collision skeletal mesh.
-4. Create new col mesh actor class that extends DH_VehicleWeaponCollisionMeshActor, named something like DH_MyVehicleTurretCollisionMesh.
+4. Create new col mesh actor class that extends DHVehicleWeaponCollisionMeshActor, named something like DH_MyVehicleTurretCollisionMesh.
 5. In col mesh actor class just add in default props: Mesh = SkeletalMesh'DH_MyVehicle_anm_WIP.MyVehicle_TurretCollision'.
 6. in WV class just add in default props: CollisionMeshActorClass = class'DH_MyVehicleTurretCollisionMesh'
 
@@ -45,7 +45,7 @@ When modelling a new VW col mesh, e.g. a tank turret:
 - A col static mesh only 'sculpts' collision primitives (boxes or spheres), so to be effective it must exist within a col primitive.
 - So parts of a col mesh outside of col primitives have no effect, and parts of col primitive outside of col mesh have no effect.
 - So some mesh geometry is necessary where there is a col box for a player character like a commander, otherwise he can't be hit.
-- Player geometry can either be modelled to roughly fit player (which effectively makes player's HitPoints in VW class redundant), 
+- Player geometry can either be modelled to roughly fit player (which effectively makes player's HitPoints in VW class redundant),
   or can just add a simple box shape to match player's col box (which then still relies on player's HitPoints for accurate hit detection).
 */
 
@@ -61,7 +61,7 @@ simulated function PostBeginPlay()
     }
     else
     {
-        Warn("DH_VehicleWeaponCollisionMeshActor somehow spawned without owning VehicleWeapon: destroying" @ Tag);
+        Warn("DHVehicleWeaponCollisionMeshActor somehow spawned without owning VehicleWeapon: destroying" @ Tag);
         Destroy();
     }
 }

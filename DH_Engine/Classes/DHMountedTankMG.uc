@@ -21,8 +21,8 @@ var     float   ReloadStartTime;      // records the level time the reload start
 var()   name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
 
 // MG collision static mesh (Matt: new col mesh actor allows us to use a col static mesh with a VehicleWeapon)
-var class<DH_VehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
-var DH_VehicleWeaponCollisionMeshActor        CollisionMeshActor;
+var class<DHVehicleWeaponCollisionMeshActor> CollisionMeshActorClass; // specify a valid class in default props & the col static mesh will automatically be used
+var DHVehicleWeaponCollisionMeshActor        CollisionMeshActor;
 
 // Stuff for fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HullMGFireEffect;
