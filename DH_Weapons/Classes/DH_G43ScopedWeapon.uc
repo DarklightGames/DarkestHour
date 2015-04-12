@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_G43ScopedWeapon extends DH_SniperWeapon;
+class DH_G43ScopedWeapon extends DHSniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_G43_1st.ukx
 

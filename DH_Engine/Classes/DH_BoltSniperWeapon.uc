@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BoltSniperWeapon extends DH_SniperWeapon
+class DH_BoltSniperWeapon extends DHSniperWeapon
     abstract;
 
 var         name        PreReloadAnim;          // anim for opening the bolt
