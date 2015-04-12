@@ -11,7 +11,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 {
     if (class<Inventory>(OptionalObject) != none)
     {
-        return Repl(class'DH_PlaceableWeaponPickup'.default.PickupMessage, "%w", class<Inventory>(OptionalObject).default.ItemName);
+        return Repl(class'DHPlaceableWeaponPickup'.default.PickupMessage, "%w", class<Inventory>(OptionalObject).default.ItemName);
     }
 
     return super.GetString(Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject); // fallback

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PlaceableWeaponPickup extends ROPlaceableAmmoPickup;
+class DHPlaceableWeaponPickup extends ROPlaceableAmmoPickup;
 
 var()   class<Inventory>    WeaponType; // the pickup weapon class - either specify in weapon-specific subclass, or leveller can place this generic class & set weapon in editor
 
