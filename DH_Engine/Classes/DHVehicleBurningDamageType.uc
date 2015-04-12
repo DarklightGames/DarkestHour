@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DHVehicleBurningDamType extends ROWeaponDamageType
+class DHVehicleBurningDamageType extends ROWeaponDamageType
     abstract;
 
 defaultproperties
