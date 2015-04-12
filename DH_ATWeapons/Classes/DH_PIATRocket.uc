@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PIATRocket extends DH_RocketProj;
+class DH_PIATRocket extends DHRocketProjectile;
 
 defaultproperties
 {

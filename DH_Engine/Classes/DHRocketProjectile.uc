@@ -4,7 +4,7 @@
 //==============================================================================
 
 // Matt: originally extended DHAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that
-class DH_RocketProj extends DHTankCannonShellHEAT
+class DHRocketProjectile extends DHTankCannonShellHEAT
     abstract;
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
