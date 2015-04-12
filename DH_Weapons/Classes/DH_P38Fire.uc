@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_P38Fire extends DH_PistolFire;
+class DH_P38Fire extends DHPistolFire;
 
 defaultproperties
 {

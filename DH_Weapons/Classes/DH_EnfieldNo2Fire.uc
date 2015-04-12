@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_EnfieldNo2Fire extends DH_PistolFire;
+class DH_EnfieldNo2Fire extends DHPistolFire;
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ColtM1911Fire extends DH_PistolFire;
+class DH_ColtM1911Fire extends DHPistolFire;
 
 defaultproperties
 {
