@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SpringfieldScopedFire extends DH_BoltFire;
+class DH_SpringfieldScopedFire extends DHBoltFire;
 
 defaultproperties
 {

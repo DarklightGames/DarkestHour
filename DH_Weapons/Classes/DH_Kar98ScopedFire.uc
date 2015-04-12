@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Kar98ScopedFire extends DH_BoltFire;
+class DH_Kar98ScopedFire extends DHBoltFire;
 
 defaultproperties
 {

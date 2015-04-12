@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BoltFire extends DHProjectileFire
+class DHBoltFire extends DHProjectileFire
     abstract;
 
 // Overridden to support our recoil system
