@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PistolWeapon extends DHProjectileWeapon
+class DHPistolWeapon extends DHProjectileWeapon
     abstract;
 
 // Overridden so we don't play idle empty anims after a reload

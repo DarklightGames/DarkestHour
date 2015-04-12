@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_P08LugerWeapon extends DH_PistolWeapon;
+class DH_P08LugerWeapon extends DHPistolWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Luger_1st.ukx
 

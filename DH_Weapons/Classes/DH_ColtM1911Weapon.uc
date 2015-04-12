@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ColtM1911Weapon extends DH_PistolWeapon;
+class DH_ColtM1911Weapon extends DHPistolWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Colt1911_1st.ukx
 

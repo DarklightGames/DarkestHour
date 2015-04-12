@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_P38Weapon extends DH_PistolWeapon;
+class DH_P38Weapon extends DHPistolWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_P38_1st.ukx
 
