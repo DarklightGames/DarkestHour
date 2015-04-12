@@ -103,7 +103,7 @@ simulated function PostNetBeginPlay()
     super.PostNetBeginPlay();
 }
 
-// Matt: called by DH_FastAutoFire's SpawnProjectile function to set this as a server bullet, meaning it won't be replicated as a separate client bullet will be spawned on client
+// Matt: called by DHFastAutoFire's SpawnProjectile function to set this as a server bullet, meaning it won't be replicated as a separate client bullet will be spawned on client
 // RemoteRole = none was the only change in DH_ServerBullet that had any effect, so simply doing this means server bullet classes can be deprecated
 function SetAsServerBullet()
 {
