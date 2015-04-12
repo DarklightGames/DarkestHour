@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_C96Weapon extends DH_FastAutoWeapon;
+class DH_C96Weapon extends DHFastAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_C96_1st.ukx
 
