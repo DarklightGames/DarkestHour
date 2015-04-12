@@ -301,7 +301,7 @@ simulated function bool CanThrow()
 
 defaultproperties
 {
-    AttachmentClass=class'DH_Engine.DH_BinocularsAttachment'
+    AttachmentClass=class'DH_Engine.DHBinocularsAttachment'
     bCanThrow=true
     PickupClass=class'DH_Engine.DH_BinocularsPickup'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BinocularsAttachment extends DHWeaponAttachment;
+class DHBinocularsAttachment extends DHWeaponAttachment;
 
 simulated event ThirdPersonEffects()
 {
