@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ThrowableExplosiveProjectile extends ROThrowableExplosiveProjectile
+class DHThrowableExplosiveProjectile extends ROThrowableExplosiveProjectile
     abstract;
 
 var float          ExplosionSoundRadius;
