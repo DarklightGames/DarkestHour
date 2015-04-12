@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GermanTankCannonShell extends DHTankCannonShell
+class DHGermanTankCannonShell extends DHTankCannonShell
     abstract;
 
 defaultproperties
