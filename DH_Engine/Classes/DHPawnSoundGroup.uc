@@ -14,7 +14,7 @@ static function Sound GetHitSound(optional class<DamageType> DamageType)
     if (DamageType.Name == 'Fell')
         return default.FallingPainSoundGroup;
 
-    if (DamageType.Name == 'DH_BurningDamType')
+    if (DamageType.Name == 'DHBurningDamType')
         return default.BurningPainSoundGroup;
 
     //Otherwise, return a wounding pain sound

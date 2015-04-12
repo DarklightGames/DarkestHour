@@ -41,7 +41,7 @@ defaultproperties
 {
     FireDamageAmount=1
     DamagePerSec=45
-    FireDamageType=class'DH_Engine.DH_BurningDamType'
+    FireDamageType=class'DH_Engine.DHBurningDamType'
     DamageType=class'FellLava'
     bPainCausing=true
     bWaterVolume=false

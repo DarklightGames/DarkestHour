@@ -720,7 +720,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         SetLimping(FMin(ActualDamage / 5.0, 10.0));
     }
-    else if (DamageType.Name == 'DH_BurningDamType') // || (DamageType.Name == 'DH_Whatever') // This is for later - Ch!cken
+    else if (DamageType.Name == 'DHBurningDamType') // || (DamageType.Name == 'DH_Whatever') // This is for later - Ch!cken
     {
         if (ActualDamage <= 0 && bOnFire)
         {
@@ -1224,7 +1224,7 @@ state Dying
                     LifeSpan += 0.2;
                 }
             }
-            else if (DamageType.Name == 'DH_BurningDamType')
+            else if (DamageType.Name == 'DHBurningDamType')
             {
                 if (!bOnFire)
                 {
@@ -4260,7 +4260,7 @@ defaultproperties
     CharredOverlayMaterial=Combiner'DH_FX_Tex.Fire.PlayerCharredOverlay'
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
     FireDamage=10
-    FireDamageClass=class'DH_Engine.DH_BurningDamType'
+    FireDamageClass=class'DH_Engine.DHBurningDamType'
     DeployedPitchUpLimit=7300
     DeployedPitchDownLimit=-7300
     ControllerClass=class'DH_Engine.DHBot'
