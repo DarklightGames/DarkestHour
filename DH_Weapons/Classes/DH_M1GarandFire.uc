@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1GarandFire extends DH_SemiAutoFire;
+class DH_M1GarandFire extends DHSemiAutoFire;
 
 var()           array<sound>    FirePingSounds;     // An array of the last round firing sound with ping
 var(FireAnims)  name            FireLastAnim;       //last round animation

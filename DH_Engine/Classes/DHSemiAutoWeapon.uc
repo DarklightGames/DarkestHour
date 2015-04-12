@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SemiAutoWeapon extends DHProjectileWeapon
+class DHSemiAutoWeapon extends DHProjectileWeapon
     abstract;
 
 // Overridden to prevent the exploit of freezing your animations after firing

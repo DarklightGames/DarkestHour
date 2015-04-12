@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1CarbineWeapon extends DH_SemiAutoWeapon;
+class DH_M1CarbineWeapon extends DHSemiAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M1Carbine_1st.ukx
 

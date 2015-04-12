@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1GarandWeapon extends DH_SemiAutoWeapon;
+class DH_M1GarandWeapon extends DHSemiAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Garand_1st.ukx
 

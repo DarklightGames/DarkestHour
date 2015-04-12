@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SemiAutoFire extends DHProjectileFire
+class DHSemiAutoFire extends DHProjectileFire
     abstract;
 
 defaultproperties

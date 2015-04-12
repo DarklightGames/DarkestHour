@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_G41Fire extends DH_SemiAutoFire;
+class DH_G41Fire extends DHSemiAutoFire;
 
 defaultproperties
 {

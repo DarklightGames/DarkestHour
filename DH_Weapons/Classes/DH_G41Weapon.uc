@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_G41Weapon extends DH_SemiAutoWeapon;
+class DH_G41Weapon extends DHSemiAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_G41_1st.ukx
 

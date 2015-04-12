@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M1CarbineFire extends DH_SemiAutoFire;
+class DH_M1CarbineFire extends DHSemiAutoFire;
 
 defaultproperties
 {
