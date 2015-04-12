@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BritishTankerBeret extends DH_Headgear;
+class DH_BritishTankerBeret extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {

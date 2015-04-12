@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FJHelmet2 extends DH_Headgear;
+class DH_FJHelmet2 extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {

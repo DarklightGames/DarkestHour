@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BritishParaHelmet2 extends DH_Headgear;
+class DH_BritishParaHelmet2 extends DHHeadgear;
 
 defaultproperties
 {

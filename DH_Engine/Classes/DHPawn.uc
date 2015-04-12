@@ -536,9 +536,9 @@ simulated function ProcessHitFX()
 
         if (HitFX[SimHitFXTicker].Bone == 'head' && Headgear != none)
         {
-            if (DH_Headgear(HeadGear).bIsHelmet)
+            if (DHHeadgear(HeadGear).bIsHelmet)
             {
-                DH_Headgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
+                DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_none, 100.0);
             }
 
             HelmetShotOff(HitFX[SimHitFxTicker].rotDir);

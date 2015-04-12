@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BritishAirborneBeretOx_Bucks extends DH_Headgear;
+class DH_BritishAirborneBeretOx_Bucks extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {

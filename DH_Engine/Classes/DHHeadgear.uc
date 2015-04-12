@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Headgear extends ROHeadgear
+class DHHeadgear extends ROHeadgear
     abstract;
 
 var bool bIsHelmet;

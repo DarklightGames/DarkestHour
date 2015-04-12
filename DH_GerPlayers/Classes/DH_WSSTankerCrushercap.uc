@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_WSSTankerCrushercap extends DH_Headgear;
+class DH_WSSTankerCrushercap extends DHHeadgear;
 
 #exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
 

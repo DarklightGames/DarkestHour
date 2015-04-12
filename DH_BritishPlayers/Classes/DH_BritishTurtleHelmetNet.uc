@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BritishTurtleHelmetNet extends DH_Headgear;
+class DH_BritishTurtleHelmetNet extends DHHeadgear;
 
 defaultproperties
 {

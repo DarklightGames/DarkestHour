@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_HeerHelmetSnow extends DH_Headgear;
+class DH_HeerHelmetSnow extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {

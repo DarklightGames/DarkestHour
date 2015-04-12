@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_LWOfficercap extends DH_Headgear;
+class DH_LWOfficercap extends DHHeadgear;
 
 #exec OBJ LOAD FILE=..\Textures\DHGermanCharactersTex.utx
 

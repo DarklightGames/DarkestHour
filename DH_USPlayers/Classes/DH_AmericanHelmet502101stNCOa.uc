@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AmericanHelmet502101stNCOa extends DH_Headgear;
+class DH_AmericanHelmet502101stNCOa extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {

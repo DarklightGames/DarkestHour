@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BritishInfantryBeretHampshires extends DH_Headgear;
+class DH_BritishInfantryBeretHampshires extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {

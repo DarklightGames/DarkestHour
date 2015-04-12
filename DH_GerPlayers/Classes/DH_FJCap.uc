@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FJCap extends DH_Headgear;
+class DH_FJCap extends DHHeadgear;
 
 // Current cap doesn't fit new FJ model, so this is temporarily displaying as a grey helmet instead
 
