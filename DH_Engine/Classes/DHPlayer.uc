@@ -2136,7 +2136,7 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
         {
             MagCount = SpawnAmmoAmount;
         }
-        else if (MagCount >= 1 && MagCount <= class<DH_ProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags)
+        else if (MagCount >= 1 && MagCount <= class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags)
         {
             // MagCount was passed, so lets update SpawnAmmoAmount if the value is valid
             SpawnAmmoAmount = MagCount;
