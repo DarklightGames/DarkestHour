@@ -9,7 +9,7 @@ class DH_TankCannonShellCanister extends DHBullet
 defaultproperties
 {
     WhizType=2
-    MyVehicleDamage=class'DH_Engine.DH_CanisterShotVehDamType'
+    MyVehicleDamage=class'DH_Engine.DHCanisterShotVehicleDamageType'
     BallisticCoefficient=4.0
     Speed=45988.0
     Damage=120.0
