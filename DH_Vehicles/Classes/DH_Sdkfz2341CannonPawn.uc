@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Sdkfz2341CannonPawn extends DH_GermanTankCannonPawn;
+class DH_Sdkfz2341CannonPawn extends DHGermanTankCannonPawn;
 
 // 1.0 = 0% reloaded, 0.0 = 100% reloaded (e.g. finished reloading)
 function float GetAmmoReloadState()

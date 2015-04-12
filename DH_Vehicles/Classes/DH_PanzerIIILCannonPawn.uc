@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerIIILCannonPawn extends DH_GermanTankCannonPawn;
+class DH_PanzerIIILCannonPawn extends DHGermanTankCannonPawn;
 
 defaultproperties
 {
