@@ -754,7 +754,7 @@ function bool PlaceExitingDriver()
         {
             ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
 
-            Spawn(class'DH_DebugTracer',,, ExitPosition);
+            Spawn(class'DHDebugTracer',,, ExitPosition);
         }
     }
 

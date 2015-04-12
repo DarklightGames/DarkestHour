@@ -120,7 +120,7 @@ function bool PlaceExitingDriver()
         {
             ExitPosition = VehicleBase.Location + (VehicleBase.ExitPositions[i] >> VehicleBase.Rotation) + ZOffset;
 
-            Spawn(class'DH_DebugTracer',,, ExitPosition);
+            Spawn(class'DHDebugTracer',,, ExitPosition);
         }
     }
 

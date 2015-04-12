@@ -299,7 +299,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
             Log("We hit the front of the vehicle");
         }
 
@@ -353,7 +353,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
             Log("We hit the right side of the vehicle");
         }
 
@@ -400,7 +400,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-X), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
             Log ("We hit the back of the vehicle");
         }
 
@@ -453,7 +453,7 @@ simulated function bool DHShouldPenetrate(class<DHAntiVehicleProjectile> P, vect
             ClearStayingDebugLines();
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(Y), 0, 255, 0);
             DrawStayingDebugLine(HitLocation, HitLocation + 2000.0 * Normal(-HitRotation), 255, 255, 0);
-            Spawn(class'DH_DebugTracer', self,, HitLocation, rotator(HitRotation));
+            Spawn(class'DHDebugTracer', self,, HitLocation, rotator(HitRotation));
             Log("We hit the left side of the vehicle");
         }
 

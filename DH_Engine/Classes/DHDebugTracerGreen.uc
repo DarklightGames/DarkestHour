@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_DebugTracerGreen extends DH_DebugTracer;
+class DHDebugTracerGreen extends DHDebugTracer;
 
 defaultproperties
 {

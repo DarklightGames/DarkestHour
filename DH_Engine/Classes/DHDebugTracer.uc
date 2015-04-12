@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_DebugTracer extends RODebugTracer;
+class DHDebugTracer extends RODebugTracer;
 
 var bool bTimerDestroys;
 
