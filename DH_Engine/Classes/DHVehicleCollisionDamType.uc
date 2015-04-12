@@ -3,17 +3,17 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_VehicleCrushedDamType extends ROWeaponDamageType
+class DHVehicleCollisionDamageType extends ROWeaponDamageType
     abstract;
 
 defaultproperties
 {
     HUDIcon=texture'InterfaceArt_tex.deathicons.mine'
-    APCDamageModifier=1.0
-    VehicleDamageModifier=1.0
+    APCDamageModifier=0.2
+    VehicleDamageModifier=0.5
     TreadDamageModifier=0.75
     bCauseViewJarring=true
-    DeathString="%o was crushed by %k's tank."
+    DeathString="%o collided with %k's vehicle."
     FemaleSuicide="%o was killed in a vehicle crash."
     MaleSuicide="%o was killed in a vehicle crash."
     bLocationalHit=false

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_VehicleCollisionDamType extends ROWeaponDamageType
+class DHVehicleCollisionDamageType extends ROWeaponDamageType
     abstract;
 
 defaultproperties
@@ -25,4 +25,4 @@ defaultproperties
     KDeathUpKick=30.0
     KDeadLinZVelScale=0.005
     KDeadAngVelScale=0.0036
-}
+}a

@@ -785,12 +785,12 @@ event TakeImpactDamage(float AccelMag)
     if (Vehicle(ImpactInfo.Other) != none) // collided with another vehicle
     {
         Damage = Int(VSize(ImpactInfo.Other.Velocity) * 20.0 * ImpactDamageModifier());
-        TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
+        TakeDamage(Damage, Vehicle(ImpactInfo.Other), ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
     }
     else // collided with something else
     {
         Damage = Int(AccelMag * ImpactDamageModifier() / ObjectCollisionResistance);
-        TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DH_VehicleCollisionDamType');
+        TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
     }
 
     // FIXME - scale sound volume to damage amount
