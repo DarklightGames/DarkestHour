@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_17PounderGunCannon extends DH_ATGunCannon;
+class DH_17PounderGunCannon extends DHATGunCannon;
 
 defaultproperties
 {

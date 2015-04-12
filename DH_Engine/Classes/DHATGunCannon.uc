@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATGunCannon extends DHTankCannon
+class DHATGunCannon extends DHTankCannon
     abstract;
 
 // Modified to use 3 part reload instead of usual 4 part

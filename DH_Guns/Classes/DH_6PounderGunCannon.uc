@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_6PounderGunCannon extends DH_ATGunCannon;
+class DH_6PounderGunCannon extends DHATGunCannon;
 
 #exec OBJ LOAD FILE=..\Sounds\DH_ArtillerySounds.uax
 

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak88Cannon extends DH_ATGunCannon;
+class DH_Flak88Cannon extends DHATGunCannon;
 
 defaultproperties
 {
