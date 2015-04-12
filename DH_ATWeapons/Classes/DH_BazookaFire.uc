@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BazookaFire extends DH_RocketFire;
+class DH_BazookaFire extends DHRocketFire;
 
 defaultproperties
 {
