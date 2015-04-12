@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MG42Barrel extends DH_MGBarrel;
+class DH_MG42Barrel extends DHWeaponBarrel;
 
 defaultproperties
 {

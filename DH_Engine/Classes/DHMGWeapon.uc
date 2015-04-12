@@ -198,7 +198,7 @@ simulated function Destroyed()
 simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {
     local int i;
-    local DH_MGBarrel Barrel;
+    local DHWeaponBarrel Barrel;
 
     super.DisplayDebug(Canvas, YL, YPos);
 

@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MGBarrel extends Actor;
+class DHWeaponBarrel extends Actor
+    notplaceable;
 
 var     float       Temperature;           // current barrel temp
 var     float       DH_MGSteamTemp,              // temp barrel begins to steam

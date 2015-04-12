@@ -68,8 +68,8 @@ var     byte                BarrelIndex;            // barrel being used
 var     byte                RemainingBarrels;       // number of barrels still left, INCLUDES the active barrel
 var     byte                InitialBarrels;         // barrels initially given
 
-var     class<DH_MGBarrel>  BarrelClass;            // barrel type we use now
-var     array<DH_MGBarrel>  Barrels;                // The array of carried MG barrels for this weapon
+var     class<DHWeaponBarrel>  BarrelClass;            // barrel type we use now
+var     array<DHWeaponBarrel>  Barrels;                // The array of carried MG barrels for this weapon
 
 // Barrel steam info
 var     class<Emitter>      ROBarrelSteamEmitterClass;
@@ -2497,7 +2497,7 @@ simulated function SpawnBarrelSteamEmitter()
 function GiveBarrels(optional Pickup Pickup)
 {
     local int            i;
-    local DH_MGBarrel    TempBarrel, TempBarrel2;
+    local DHWeaponBarrel    TempBarrel, TempBarrel2;
     local DHWeaponPickup P;
 
     if (BarrelClass == none || Role != ROLE_Authority)
@@ -2589,7 +2589,7 @@ simulated function Destroyed()
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)
 {
     local float       SoundModifier;
-    local DH_MGBarrel B;
+    local DHWeaponBarrel B;
 
     if (BarrelIndex >= 0 && BarrelIndex < Barrels.Length)
     {
