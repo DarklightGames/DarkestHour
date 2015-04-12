@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak88Factory extends DH_ATCannonFactoryBase;
+class DH_Flak88Factory extends DHATGunFactory;
 
 defaultproperties
 {

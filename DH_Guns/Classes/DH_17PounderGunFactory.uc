@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_17PounderGunFactory extends DH_ATCannonFactoryBase;
+class DH_17PounderGunFactory extends DHATGunFactory;
 
 defaultproperties
 {

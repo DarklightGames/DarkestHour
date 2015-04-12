@@ -9,8 +9,8 @@ class DH_ATGun extends DHTreadCraft
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
-var  DH_ATCannonFactoryBase   DHParentFactory;
-var  ROVehicleFactory         ROParentFactory;
+var  DHATGunFactory     DHParentFactory;
+var  ROVehicleFactory   ROParentFactory;
 
 // The following functions are empty functions, as AT guns have no treads, engine, movement, fire (burning), resupply or self-destruct if empty:
 simulated function PostNetReceive();
@@ -96,7 +96,7 @@ simulated function Tick(float DeltaTime)
     super(ROWheeledVehicle).Tick(DeltaTime);
 }
 
-// Modified to remove restriction on entering while crouched, to allow human to kick bot off a gun, & to remove stuff not relevant to an AT gun 
+// Modified to remove restriction on entering while crouched, to allow human to kick bot off a gun, & to remove stuff not relevant to an AT gun
 function bool TryToDrive(Pawn P)
 {
     // Trying to enter a gun that isn't on our team

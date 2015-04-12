@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flakvierling38Factory extends DH_ATCannonFactoryBase;
+class DH_Flakvierling38Factory extends DHATGunFactory;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Flakvierling38_anm.ukx
 

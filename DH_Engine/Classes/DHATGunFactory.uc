@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATCannonFactoryBase extends DHVehicleFactory
+class DHATGunFactory extends DHVehicleFactory
     abstract;
 
 var()   bool    bUseRandomizer;            // whether or not to use the randomization system
@@ -35,9 +35,9 @@ simulated event PostBeginPlay()
 //===========================================================================================================================================================
 function EvaluateRandom()
 {
-    local array<DH_ATCannonFactoryBase> GunFactories;
-    local DH_ATCannonFactoryBase        GunFactory;
-    local int   MaxToSpawn, TotalActive, i;
+    local array<DHATGunFactory> GunFactories;
+    local DHATGunFactory GunFactory;
+    local int MaxToSpawn, TotalActive, i;
     local float RandFactor;
 
     if (bRandomEvaluated || !bUseRandomizer)
@@ -55,7 +55,7 @@ function EvaluateRandom()
     }
 
     // Build an array of all of the AT Gun factories with matching group tags
-    foreach DynamicActors(class'DH_ATCannonFactoryBase', GunFactory)
+    foreach DynamicActors(class'DHATGunFactory', GunFactory)
     {
         // Must have a group tag set
         if (GunFactory.GroupTag == "" && GunFactory.bUseRandomizer)
@@ -131,8 +131,8 @@ function EvaluateRandom()
 // Activates the stored randomly chosen AT Guns - had to separate this out due to needed to delay activation if bUsesSpawnAreas was true
 function ProcessRandomActivation()
 {
-    local array<DH_ATCannonFactoryBase> GunFactories;
-    local DH_ATCannonFactoryBase        GunFactory;
+    local array<DHATGunFactory> GunFactories;
+    local DHATGunFactory GunFactory;
     local int TempTeam, i, j;
 
     if (!bMasterFactory)
@@ -141,7 +141,7 @@ function ProcessRandomActivation()
     }
 
     // Build an array of all of the AT Gun factories with matching group tags
-    foreach DynamicActors(class'DH_ATCannonFactoryBase', GunFactory)
+    foreach DynamicActors(class'DHATGunFactory', GunFactory)
     {
         // Must have a group tag set
         if (GunFactory.GroupTag == "")

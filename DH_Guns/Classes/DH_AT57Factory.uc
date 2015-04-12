@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_AT57Factory extends DH_ATCannonFactoryBase;
+class DH_AT57Factory extends DHATGunFactory;
 
 defaultproperties
 {
