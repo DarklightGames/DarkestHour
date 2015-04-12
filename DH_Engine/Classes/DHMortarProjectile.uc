@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarProjectile extends ROBallisticProjectile
+class DHMortarProjectile extends ROBallisticProjectile
     abstract;
 
 const UU2M = 0.01904762;

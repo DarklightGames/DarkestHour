@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarProjectileHE extends DH_MortarProjectile
+class DHMortarProjectileHE extends DHMortarProjectile
     abstract;
 
 // Sounds

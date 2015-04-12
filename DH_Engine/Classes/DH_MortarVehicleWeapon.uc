@@ -120,14 +120,14 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     else
         P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
 
-    if (DH_MortarProjectile(P) != none && Pawn(Owner) != none)
+    if (DHMortarProjectile(P) != none && Pawn(Owner) != none)
     {
-        DH_MortarProjectile(P).DamageInstigator = PlayerController(Pawn(Owner).Controller);
+        DHMortarProjectile(P).DamageInstigator = PlayerController(Pawn(Owner).Controller);
 
         if (bDebug)
         {
-            DH_MortarProjectile(P).DebugForward = DebugForward;
-            DH_MortarProjectile(P).DebugRight = DebugRight;
+            DHMortarProjectile(P).DebugForward = DebugForward;
+            DHMortarProjectile(P).DebugRight = DebugRight;
         }
     }
 

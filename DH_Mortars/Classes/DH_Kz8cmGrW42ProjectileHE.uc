@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Kz8cmGrW42ProjectileHE extends DH_MortarProjectileHE;
+class DH_Kz8cmGrW42ProjectileHE extends DHMortarProjectileHE;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Mortars_stc.usx
 #exec OBJ LOAD FILE=..\Textures\DH_Mortars_tex.utx

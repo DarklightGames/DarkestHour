@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M2MortarProjectileSmoke extends DH_MortarProjectileSmoke;
+class DH_M2MortarProjectileSmoke extends DHMortarProjectileSmoke;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Mortars_stc.usx
 
