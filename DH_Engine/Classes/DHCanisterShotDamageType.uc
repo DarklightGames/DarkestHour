@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_CanisterShotDamType extends DHWeaponProjectileDamageType
+class DHCanisterShotDamageType extends DHWeaponProjectileDamageType
     abstract;
 
 defaultproperties

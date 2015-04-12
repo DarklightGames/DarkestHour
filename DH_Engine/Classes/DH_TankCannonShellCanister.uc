@@ -13,5 +13,5 @@ defaultproperties
     BallisticCoefficient=4.0
     Speed=45988.0
     Damage=120.0
-    MyDamageType=class'DH_Engine.DH_CanisterShotDamType'
+    MyDamageType=class'DH_Engine.DHCanisterShotDamageType'
 }
