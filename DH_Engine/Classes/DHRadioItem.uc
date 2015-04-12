@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_RadioItem extends DHWeapon
+class DHRadioItem extends DHWeapon
     abstract;
 
 var class<DHArtilleryTrigger>   ArtilleryTriggerClass;

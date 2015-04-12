@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_USRadioItem extends DH_RadioItem;
+class DH_USRadioItem extends DHRadioItem;
 
 defaultproperties
 {
