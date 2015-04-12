@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_EnfieldNo4ScopedWeapon extends DH_BoltSniperWeapon;
+class DH_EnfieldNo4ScopedWeapon extends DHBoltSniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_EnfieldNo4_1st.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Scopeshaders.utx

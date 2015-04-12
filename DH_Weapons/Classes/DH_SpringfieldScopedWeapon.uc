@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_SpringfieldScopedWeapon extends DH_BoltSniperWeapon;
+class DH_SpringfieldScopedWeapon extends DHBoltSniperWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Springfield_1st.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Scopeshaders.utx
