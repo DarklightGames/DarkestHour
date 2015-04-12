@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BazookaWeapon extends DH_RocketWeapon;
+class DH_BazookaWeapon extends DHRocketWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Bazooka_1st.ukx
 

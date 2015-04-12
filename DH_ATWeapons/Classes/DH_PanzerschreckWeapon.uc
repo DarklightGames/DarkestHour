@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PanzerschreckWeapon extends DH_RocketWeapon;
+class DH_PanzerschreckWeapon extends DHRocketWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Panzerschreck_1st.ukx
 

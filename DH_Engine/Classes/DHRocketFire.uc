@@ -13,13 +13,13 @@ var float               ExhaustDamageRadius;
 var float               ExhaustMomentumTransfer;
 var class<DamageType>   ExhaustDamageType;
 
-var DH_RocketWeapon     RocketWeapon;
+var DHRocketWeapon      RocketWeapon;
 
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    RocketWeapon = DH_RocketWeapon(Weapon);
+    RocketWeapon = DHRocketWeapon(Weapon);
 }
 
 event ModeDoFire()

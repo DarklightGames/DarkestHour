@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_RocketWeapon extends DHSemiAutoWeapon
+class DHRocketWeapon extends DHSemiAutoWeapon
     abstract;
 
 var     array<int>              Ranges;                         // The angle to launch the projectile at different ranges
