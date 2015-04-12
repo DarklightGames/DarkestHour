@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATCannonMessage extends ROVehicleMessage
+class DHATCannonMessage extends ROVehicleMessage
     abstract;
 
 var localized string GunManned;

@@ -147,7 +147,7 @@ function bool TryToDrive(Pawn P)
 // Modified to use a different AT cannon message class
 function DenyEntry(Pawn P, int MessageNum)
 {
-    P.ReceiveLocalizedMessage(class'DH_ATCannonMessage', MessageNum);
+    P.ReceiveLocalizedMessage(class'DHATCannonMessage', MessageNum);
 }
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
