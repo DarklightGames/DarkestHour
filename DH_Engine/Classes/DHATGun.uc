@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATGun extends DHTreadCraft
+class DHATGun extends DHTreadCraft
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
@@ -287,5 +287,5 @@ defaultproperties
         KFriction=0.5
         KImpactThreshold=700.0
     End Object
-    KParams=KarmaParamsRBFull'DH_Engine.DH_ATGun.KParams0'
+    KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
 }

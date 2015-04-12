@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak38Gun extends DH_ATGun;
+class DH_Flak38Gun extends DHATGun;
 
 //#exec OBJ LOAD FILE=..\StaticMeshes\DH_Flak38_stc.usx
 #exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx

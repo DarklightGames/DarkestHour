@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak88Gun extends DH_ATGun;
+class DH_Flak88Gun extends DHATGun;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Flak88_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\MilitaryAxisSMT.utx

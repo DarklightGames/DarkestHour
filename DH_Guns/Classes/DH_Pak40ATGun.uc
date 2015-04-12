@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Pak40ATGun extends DH_ATGun;
+class DH_Pak40ATGun extends DHATGun;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Pak40_anm.ukx
 

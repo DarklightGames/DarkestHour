@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_17PounderGun extends DH_ATGun;
+class DH_17PounderGun extends DHATGun;
 
 #exec OBJ LOAD FILE=..\Animations\DH_17PounderGun_anm.ukx
 
