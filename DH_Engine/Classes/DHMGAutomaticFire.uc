@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MGAutomaticFire extends DHFastAutoFire
+class DHMGAutomaticFire extends DHFastAutoFire
     abstract;
 
 var()       float           PctHipMGPenalty;    // The amount of recoil to add when the player firing an MG from the hip
