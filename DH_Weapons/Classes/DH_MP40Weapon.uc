@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MP40Weapon extends DH_AutoWeapon;
+class DH_MP40Weapon extends DHAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mp40_1st.ukx
 

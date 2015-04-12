@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BipodAutoWeapon extends DH_AutoWeapon
+class DH_BipodAutoWeapon extends DHAutoWeapon
     abstract;
 
 var     name    SightUpIronBringUp;

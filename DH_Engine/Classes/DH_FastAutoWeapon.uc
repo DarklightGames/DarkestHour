@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FastAutoWeapon extends DH_AutoWeapon
+class DH_FastAutoWeapon extends DHAutoWeapon
     abstract;
 
 // Tells bot whether to charge or back off while using this weapon

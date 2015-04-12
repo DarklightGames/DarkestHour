@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ThompsonWeapon extends DH_AutoWeapon;
+class DH_ThompsonWeapon extends DHAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Thompson_1st.ukx
 

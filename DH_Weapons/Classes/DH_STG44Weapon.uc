@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_STG44Weapon extends DH_AutoWeapon;
+class DH_STG44Weapon extends DHAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Stg44_1st.ukx
 

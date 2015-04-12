@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_GreaseGunWeapon extends DH_AutoWeapon;
+class DH_GreaseGunWeapon extends DHAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M3GreaseGun_1st.ukx
 

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_StenMkIIWeapon extends DH_AutoWeapon;
+class DH_StenMkIIWeapon extends DHAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Sten_1st.ukx
 
