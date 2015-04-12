@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_50CalDecorationAttachment extends DH_VehicleDecoAttachment;
+class DH_50CalDecorationAttachment extends DHVehicleDecoAttachment;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Weapons3rd_anm.ukx
 

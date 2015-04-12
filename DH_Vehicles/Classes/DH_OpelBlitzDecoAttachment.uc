@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_OpelBlitzDecoAttachment extends DH_VehicleDecoAttachment;
+class DH_OpelBlitzDecoAttachment extends DHVehicleDecoAttachment;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Military_stc
 

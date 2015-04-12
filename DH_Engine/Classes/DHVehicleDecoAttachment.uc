@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_VehicleDecoAttachment extends RODummyAttachment
+class DHVehicleDecoAttachment extends RODummyAttachment
     abstract;
 
 simulated function PostBeginPlay()

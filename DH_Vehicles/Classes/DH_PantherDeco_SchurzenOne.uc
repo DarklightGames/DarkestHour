@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_PantherDeco_SchurzenOne extends DH_VehicleDecoAttachment;
+class DH_PantherDeco_SchurzenOne extends DHVehicleDecoAttachment;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_VehicleDecoGE_stc.usx
 
