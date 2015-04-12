@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_FG42Weapon extends DH_BipodAutoWeapon;
+class DH_FG42Weapon extends DHBipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Fallschirmgewehr42_1st.ukx
 

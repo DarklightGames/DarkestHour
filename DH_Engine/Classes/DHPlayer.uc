@@ -1173,9 +1173,9 @@ state PlayerWalking
                 {
                     DH_BipodWeapon(Pawn.Weapon).ForceUndeploy();
                 }
-                else if (DH_BipodAutoWeapon(Pawn.Weapon) != none)
+                else if (DHBipodAutoWeapon(Pawn.Weapon) != none)
                 {
-                    DH_BipodAutoWeapon(Pawn.Weapon).ForceUndeploy();
+                    DHBipodAutoWeapon(Pawn.Weapon).ForceUndeploy();
                 }
             }
 

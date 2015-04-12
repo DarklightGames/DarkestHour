@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BARWeapon extends DH_BipodAutoWeapon;
+class DH_BARWeapon extends DHBipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_BAR_1st.ukx
 

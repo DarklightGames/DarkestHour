@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_BrenWeapon extends DH_BipodAutoWeapon;
+class DH_BrenWeapon extends DHBipodAutoWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Bren_1st.ukx
 
