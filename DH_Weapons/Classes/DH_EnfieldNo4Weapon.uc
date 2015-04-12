@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_EnfieldNo4Weapon extends DH_BoltActionWeapon;
+class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_EnfieldNo4_1st.ukx
 

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Kar98Weapon extends DH_BoltActionWeapon;
+class DH_Kar98Weapon extends DHBoltActionWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Kar98_1st.ukx
 
