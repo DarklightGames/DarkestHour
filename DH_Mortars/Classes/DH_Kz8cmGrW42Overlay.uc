@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Kz8cmGrW42Overlay extends DH_MortarOverlay;
+class DH_Kz8cmGrW42Overlay extends DHMortarOverlay;
 
 #exec OBJ LOAD FILE=../Animations/DH_Mortars_1st.ukx
 

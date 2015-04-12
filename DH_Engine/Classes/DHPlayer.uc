@@ -754,7 +754,7 @@ function ServerCancelMortarTarget()
     // Null target index - no target to cancel
     if (MortarTargetIndex == 255)
     {
-        ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 7);
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 7);
 
         return;
     }
@@ -774,7 +774,7 @@ function ServerCancelMortarTarget()
         if (Level.TimeSeconds - GRI.GermanMortarTargets[MortarTargetIndex].Time < 15)
         {
             // You cannot cancel your mortar target yet
-            ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 5);
+            ReceiveLocalizedMessage(class'DHMortarTargetMessage', 5);
 
             return;
         }
@@ -790,7 +790,7 @@ function ServerCancelMortarTarget()
         if (Level.TimeSeconds - GRI.AlliedMortarTargets[MortarTargetIndex].Time < 15)
         {
             // You cannot cancel your mortar target yet
-            ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 5);
+            ReceiveLocalizedMessage(class'DHMortarTargetMessage', 5);
 
             return;
         }
@@ -805,12 +805,12 @@ function ServerCancelMortarTarget()
     if (bTargetCancelled)
     {
         // [DH]Basnett has cancelled a mortar target
-        Level.Game.BroadcastLocalizedMessage(class'DH_MortarTargetMessage', 3, PRI);
+        Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 3, PRI);
     }
     else
     {
         // You have no mortar target to cancel
-        ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 7);
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 7);
     }
 }
 
@@ -840,7 +840,7 @@ function ServerSaveMortarTarget()
     if ((VT != none && VT.IsInNoArtyVolume()) || HitActor == none)
     {
         // Invalid mortar target
-        ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 0);
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 0);
         VT.Destroy();
 
         return;
@@ -856,7 +856,7 @@ function ServerSaveMortarTarget()
             if (GRI.GermanMortarTargets[i].Controller == self && GRI.GermanMortarTargets[i].Time != 0.0 && Level.TimeSeconds - GRI.GermanMortarTargets[i].Time < 15.0)
             {
                 // You cannot mark another mortar target yet
-                ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 4);
+                ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
 
                 return;
             }
@@ -879,7 +879,7 @@ function ServerSaveMortarTarget()
         {
             if (GRI.AlliedMortarTargets[i].Controller == self && GRI.AlliedMortarTargets[i].Time != 0.0 && Level.TimeSeconds - GRI.AlliedMortarTargets[i].Time < 15.0)
             {
-                ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 4);
+                ReceiveLocalizedMessage(class'DHMortarTargetMessage', 4);
 
                 return;
             }
@@ -898,7 +898,7 @@ function ServerSaveMortarTarget()
     if (!bMortarsAvailable)
     {
         // No mortar operators available
-        ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 1);
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 1);
 
         return;
     }
@@ -944,12 +944,12 @@ function ServerSaveMortarTarget()
     if (bMortarTargetMarked)
     {
         // [DH]Basnett has marked a mortar target
-        Level.Game.BroadcastLocalizedMessage(class'DH_MortarTargetMessage', 2, PlayerReplicationInfo,,);
+        Level.Game.BroadcastLocalizedMessage(class'DHMortarTargetMessage', 2, PlayerReplicationInfo,,);
     }
     else
     {
         // There are too many active mortar targets
-        ReceiveLocalizedMessage(class'DH_MortarTargetMessage', 6);
+        ReceiveLocalizedMessage(class'DHMortarTargetMessage', 6);
     }
 }
 
@@ -994,9 +994,9 @@ function ServerThrowATAmmo(Pawn Gunner)
 
 function ServerThrowMortarAmmo(Pawn Gunner)
 {
-    if (DH_MortarVehicle(Gunner) != none)
+    if (DHMortarVehicle(Gunner) != none)
     {
-        DHPawn(Pawn).TossMortarVehicleAmmo(DH_MortarVehicle(Gunner));
+        DHPawn(Pawn).TossMortarVehicleAmmo(DHMortarVehicle(Gunner));
     }
     else if (DHPawn(Gunner) != none)
     {

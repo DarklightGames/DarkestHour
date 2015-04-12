@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Kz8cmGrW42Weapon extends DH_MortarWeapon;
+class DH_Kz8cmGrW42Weapon extends DHMortarWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Mortars_1st.ukx
 

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarOverlay extends VehicleHUDOverlay
+class DHMortarOverlay extends VehicleHUDOverlay
     abstract;
 
 defaultproperties

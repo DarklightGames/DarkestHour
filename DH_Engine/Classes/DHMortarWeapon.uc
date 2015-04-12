@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarWeapon extends DHWeapon
+class DHMortarWeapon extends DHWeapon
     abstract;
 
 replication
@@ -23,7 +23,7 @@ var name DeployAnimation;
 var() float DeployRadius;
 var() float DeployAngleMaximum;
 
-var() class<DH_MortarVehicle> VehicleClass;
+var() class<DHMortarVehicle> VehicleClass;
 
 var int HighExplosiveMaximum;
 var int HighExplosiveResupplyCount;
@@ -137,7 +137,7 @@ simulated function ServerDeployBegin()
 
 simulated function ServerDeployEnd()
 {
-    local DH_MortarVehicle V;
+    local DHMortarVehicle V;
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
     local rotator SpawnRotation;
     local DHPawn P;
@@ -179,7 +179,7 @@ simulated function bool CanDeploy()
 
     if (VolumeTest.IsInNoArtyVolume())
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 11);
+        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 11);
         VolumeTest.Destroy();
         return false;
     }
@@ -199,7 +199,7 @@ simulated function bool CanDeploy()
     //Check that we're not in water
     if (Instigator.PhysicsVolume.bWaterVolume)
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 7);
+        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 7);
         return false;
     }
 
@@ -207,7 +207,7 @@ simulated function bool CanDeploy()
     //Check that we're crouching.
     if (!P.bIsCrouched)
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 1);
+        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 1);
         return false;
     }
 
@@ -215,7 +215,7 @@ simulated function bool CanDeploy()
     //Check that we're not moving
     if (P.Velocity != vect(0.0, 0.0, 0.0))
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 3);
+        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 3);
         return false;
     }
 
@@ -223,7 +223,7 @@ simulated function bool CanDeploy()
     //Check that we're not leaning
     if (P.bLeaningLeft || P.bLeaningRight)
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 6);
+        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 6);
         return false;
     }
 
@@ -238,7 +238,7 @@ simulated function bool CanDeploy()
     //Check that our surface exists and it is static
     if (HitActor == none || !HitActor.bStatic)
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
         return false;
     }
 
@@ -246,7 +246,7 @@ simulated function bool CanDeploy()
     //Check that the surface angle is less than our deploy angle maximum
     if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
     {
-        Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
         return false;
     }
 
@@ -266,7 +266,7 @@ simulated function bool CanDeploy()
         {
             //--------------------------
             //Not enough toom to deploy.
-            Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 5);
+            Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 5);
             return false;
         }
 
@@ -283,7 +283,7 @@ simulated function bool CanDeploy()
         {
             //------------------------------
             //Cannot deploy on this surface.
-            Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+            Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
             return false;
         }
         //------------------------------------------------------------------
@@ -292,7 +292,7 @@ simulated function bool CanDeploy()
         {
             //------------------------------
             //Cannot deploy on this surface.
-            Instigator.ReceiveLocalizedMessage(class'DH_MortarMessage', 4);
+            Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
             return false;
         }
     }
@@ -343,8 +343,8 @@ defaultproperties
 {
     DeployRadius=32.0
     DeployAngleMaximum=0.349066
-    FireModeClass(0)=class'DH_Engine.DH_MortarWeaponFire'
-    FireModeClass(1)=class'DH_Engine.DH_MortarWeaponFire'
+    FireModeClass(0)=class'DH_Engine.DHMortarWeaponFire'
+    FireModeClass(1)=class'DH_Engine.DHMortarWeaponFire'
     AIRating=1.0
     CurrentRating=1.0
     bCanThrow=false

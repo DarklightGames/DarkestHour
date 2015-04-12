@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarVehicleWeapon extends ROTankCannon;
+class DHMortarVehicleWeapon extends ROTankCannon;
 
 const RAD2DEG = 57.29577951;
 const DEG2RAD = 0.01745329;
@@ -179,10 +179,10 @@ state ProjectileFireMode
                 MainAmmoCharge[GetPendingRoundIndex()]--;
 
                 //Shake view here, (proper timing and all)
-                DH_MortarVehicleWeaponPawn(Instigator).ClientShakeView();
+                DHMortarVehicleWeaponPawn(Instigator).ClientShakeView();
 
                 // We fired one off, so we are now eligible for resupply.
-                DH_MortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = true;
+                DHMortarVehicle(VehicleWeaponPawn(Instigator).VehicleBase).bCanBeResupplied = true;
             }
         }
     }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarAttachment extends DHWeaponAttachment
+class DHMortarAttachment extends DHWeaponAttachment
     abstract;
 
 defaultproperties

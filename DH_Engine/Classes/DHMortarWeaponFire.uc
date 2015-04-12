@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarWeaponFire extends ROWeaponFire;
+class DHMortarWeaponFire extends ROWeaponFire;
 
 simulated function EjectShell() { return; }
 simulated function bool AllowFire() { return true; }

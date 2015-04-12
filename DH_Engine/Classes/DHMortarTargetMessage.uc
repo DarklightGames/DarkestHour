@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarTargetMessage extends ROCriticalMessage
+class DHMortarTargetMessage extends ROCriticalMessage
     abstract;
 
 var localized string TargetInvalid;

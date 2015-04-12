@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Kz8cmGrW42DamageType extends DH_MortarDamageType;
+class DH_Kz8cmGrW42DamageType extends DHMortarDamageType;
 
 defaultproperties
 {

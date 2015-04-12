@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarVehicle extends ROVehicle
+class DHMortarVehicle extends ROVehicle
     abstract;
 
-var DHPawn OwningPawn;
+var DHPawn  OwningPawn;
 var bool    bCanBeResupplied;
 var int     PlayerResupplyAmounts[2];
 
@@ -56,7 +56,7 @@ function bool TryToDrive(Pawn P)
 
     if (DHP == none || PRI == none || RI == none || !RI.bCanUseMortars)
     {
-        P.ReceiveLocalizedMessage(class'DH_MortarMessage', 8);
+        P.ReceiveLocalizedMessage(class'DHMortarMessage', 8);
         return false;
     }
 
@@ -67,17 +67,17 @@ function bool TryToDrive(Pawn P)
 
     if (WeaponPawns[0].Driver != none)
     {
-        P.ReceiveLocalizedMessage(class'DH_MortarMessage', 9);
+        P.ReceiveLocalizedMessage(class'DHMortarMessage', 9);
         return false;
     }
 
     if (VehicleTeam != P.GetTeamNum())
     {
-        P.ReceiveLocalizedMessage(class'DH_MortarMessage', 10);
+        P.ReceiveLocalizedMessage(class'DHMortarMessage', 10);
         return false;
     }
 
-    if (bEnteredOnce && DHP.Weapon != none && DHP.Weapon.IsA('DH_MortarWeapon'))
+    if (bEnteredOnce && DHP.Weapon != none && DHP.Weapon.IsA('DHMortarWeapon'))
     {
         return false;
     }

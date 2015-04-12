@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarMessage extends ROCriticalMessage
+class DHMortarMessage extends ROCriticalMessage
     abstract;
 
 var localized string MustCrouch;

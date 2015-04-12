@@ -3548,7 +3548,7 @@ defaultproperties
     EngineFireHEATChance=0.85
     HullFireChance=0.25
     HullFireHEATChance=0.5
-    VehicleBurningDamType=class'DH_VehicleBurningDamType'
+    VehicleBurningDamType=class'DHVehicleBurningDamType'
     PlayerFireDamagePer2Secs=15.0
     bFirstHit=true
     FireDetonationChance=0.07

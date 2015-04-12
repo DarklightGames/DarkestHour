@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MortarVehicleWeaponPawn extends ROTankCannonPawn
+class DHMortarVehicleWeaponPawn extends ROTankCannonPawn
     abstract;
 
 //Animations
@@ -32,7 +32,7 @@ var float OverlayKnobTurnAnimRate;
 var name GunIdleAnim;
 var name GunFiringAnim;
 
-var class<DH_MortarWeapon> WeaponClass;
+var class<DHMortarWeapon> WeaponClass;
 
 var bool bTraversing;
 
@@ -153,9 +153,9 @@ simulated function ClientKDriverLeave(PlayerController PC)
 
     super.ClientKDriverLeave(PC);
 
-    DH_MortarVehicleWeapon(Gun).ClientReplicateElevation(DH_MortarVehicleWeapon(Gun).Elevation);
+    DHMortarVehicleWeapon(Gun).ClientReplicateElevation(DHMortarVehicleWeapon(Gun).Elevation);
 
-    PCRot = Gun.GetBoneRotation(DH_MortarVehicleWeapon(Gun).MuzzleBoneName);
+    PCRot = Gun.GetBoneRotation(DHMortarVehicleWeapon(Gun).MuzzleBoneName);
     PCRot.Pitch = 0;
     PCRot.Roll = 0;
     PC.Pawn.SetRotation(PCRot);
@@ -219,7 +219,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
+        if (DHMortarVehicleWeapon(Gun) != none && DHMortarVehicleWeapon(Gun).HasPendingAmmo())
         {
             GotoState('Firing');
         }
@@ -247,11 +247,11 @@ simulated state Idle
 
             if (PitchChange < 0.0)
             {
-                DH_MortarVehicleWeapon(Gun).Elevate();
+                DHMortarVehicleWeapon(Gun).Elevate();
             }
             else
             {
-                DH_MortarVehicleWeapon(Gun).Depress();
+                DHMortarVehicleWeapon(Gun).Depress();
             }
         }
         else if (YawChange != 0.0)
@@ -294,7 +294,7 @@ Begin:
         ClientMessage("Missing animation: " @ DriverUnflinchAnim);
     }
 
-    if (bPendingFire && DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
+    if (bPendingFire && DHMortarVehicleWeapon(Gun) != none && DHMortarVehicleWeapon(Gun).HasPendingAmmo())
     {
         GotoState('Firing');
     }
@@ -330,7 +330,7 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (DH_MortarVehicleWeapon(Gun) != none && DH_MortarVehicleWeapon(Gun).HasPendingAmmo())
+        if (DHMortarVehicleWeapon(Gun) != none && DHMortarVehicleWeapon(Gun).HasPendingAmmo())
         {
             GotoState('KnobRaisedToFire');
         }
@@ -390,7 +390,7 @@ Begin:
 simulated state Firing extends Busy
 {
 Begin:
-    DH_MortarVehicleWeapon(Gun).ClientReplicateElevation(DH_MortarVehicleWeapon(Gun).Elevation);
+    DHMortarVehicleWeapon(Gun).ClientReplicateElevation(DHMortarVehicleWeapon(Gun).Elevation);
     PlayOverlayAnimation(OverlayFiringAnim, false, 1.0);
 
     if (Level.NetMode == NM_Standalone) //TODO: Remove, single-player testing?
@@ -466,7 +466,7 @@ simulated function PlayOverlayAnimation(name OverlayAnimation, bool bLoop, float
 
 simulated function ServerUndeploy()
 {
-    local DH_MortarWeapon  W;
+    local DHMortarWeapon W;
     local PlayerController PC;
 
     PC = PlayerController(Controller);
@@ -507,9 +507,9 @@ simulated function DrawHUD(Canvas C)
 
         if (!Level.IsSoftwareRendering())
         {
-            if (DH_MortarVehicleWeapon(Gun) != none)
+            if (DHMortarVehicleWeapon(Gun) != none)
             {
-                Elevation = DH_MortarVehicleWeapon(Gun).Elevation;
+                Elevation = DHMortarVehicleWeapon(Gun).Elevation;
             }
 
             Traverse = Gun.CurrentAim.Yaw;
@@ -559,11 +559,11 @@ simulated function DrawHUD(Canvas C)
             // Draw rounds
             C.SetPos(256.0 * HUDScale, C.SizeY - (256.0 * HUDScale));
 
-            PendingRoundIndex = DH_MortarVehicleWeapon(Gun).GetPendingRoundIndex();
+            PendingRoundIndex = DHMortarVehicleWeapon(Gun).GetPendingRoundIndex();
 
             C.SetDrawColor(0, 0, 0, 255);
             C.SetPos(HUDScale * 10.0, C.SizeY - (HUDScale * 94.0));
-            C.DrawText(DH_MortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
+            C.DrawText(DHMortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
 
             if (Gun.HasAmmo(PendingRoundIndex))
             {
@@ -616,7 +616,7 @@ simulated function DrawHUD(Canvas C)
 
             C.SetDrawColor(255, 255, 255, 255);
             C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-            C.DrawText(DH_MortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
+            C.DrawText(DHMortarVehicleWeapon(Gun).PendingProjectileClass.default.Tag);
 
             HUDArrowTexture.Rotation.Yaw = class'DHLib'.static.DegreesToUnreal(Elevation + 180.0);
             Loc.X = Cos(class'DHLib'.static.DegreesToRadians(Elevation)) * 256.0;
@@ -771,7 +771,7 @@ function bool ResupplyAmmo()
 
     if (bResupplySuccessful)
     {
-        DH_MortarVehicle(VehicleBase).bCanBeResupplied = false;
+        DHMortarVehicle(VehicleBase).bCanBeResupplied = false;
     }
 
     return bResupplySuccessful;
@@ -792,10 +792,10 @@ function KDriverEnter(Pawn P)
 function DriverEnterTransferAmmunition(Pawn P)
 {
     local DHPawn DHP;
-    local DH_MortarVehicleWeapon DHMVW;
+    local DHMortarVehicleWeapon DHMVW;
 
     DHP = DHPawn(P);
-    DHMVW = DH_MortarVehicleWeapon(Gun);
+    DHMVW = DHMortarVehicleWeapon(Gun);
 
     if (DHP != none && DHMVW != none)
     {
@@ -813,11 +813,11 @@ function CheckCanBeResupplied()
 {
     if (Gun.MainAmmoCharge[0] < GunClass.default.InitialPrimaryAmmo || Gun.MainAmmoCharge[1] < GunClass.default.InitialSecondaryAmmo)
     {
-        DH_MortarVehicle(VehicleBase).bCanBeResupplied = true;
+        DHMortarVehicle(VehicleBase).bCanBeResupplied = true;
     }
     else
     {
-        DH_MortarVehicle(VehicleBase).bCanBeResupplied = false;
+        DHMortarVehicle(VehicleBase).bCanBeResupplied = false;
     }
 }
 
@@ -825,10 +825,10 @@ function CheckCanBeResupplied()
 function DriverLeaveAmmunitionTransfer(Pawn P)
 {
     local DHPawn DHP;
-    local DH_MortarVehicleWeapon G;
+    local DHMortarVehicleWeapon G;
 
     DHP = DHPawn(P);
-    G = DH_MortarVehicleWeapon(Gun);
+    G = DHMortarVehicleWeapon(Gun);
 
     if (DHP != none && G != none)
     {
@@ -837,9 +837,9 @@ function DriverLeaveAmmunitionTransfer(Pawn P)
         G.MainAmmoCharge[0] = 0;
         G.MainAmmoCharge[1] = 0;
 
-        if (DH_MortarVehicle(VehicleBase) != none)
+        if (DHMortarVehicle(VehicleBase) != none)
         {
-            DH_MortarVehicle(VehicleBase).bCanBeResupplied = true;
+            DHMortarVehicle(VehicleBase).bCanBeResupplied = true;
         }
 
         VehicleBase.PlayerReplicationInfo = none; // reset back to none

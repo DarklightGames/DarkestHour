@@ -917,7 +917,7 @@ function TossMortarAmmo(DHPawn P)
     }
 }
 
-function TossMortarVehicleAmmo(DH_MortarVehicle V)
+function TossMortarVehicleAmmo(DHMortarVehicle V)
 {
     local DarkestHourGame G;
     local DHGameReplicationInfo GRI;
@@ -984,7 +984,7 @@ function TossMortarVehicleAmmo(DH_MortarVehicle V)
     PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
-function bool ResupplyMortarVehicleWeapon(DH_MortarVehicle V)
+function bool ResupplyMortarVehicleWeapon(DHMortarVehicle V)
 {
     local VehicleWeapon VW;
 

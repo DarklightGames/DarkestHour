@@ -1463,7 +1463,7 @@ function DrawPlayerNames(Canvas C)
     local string           Display;
     local bool             bIsAVehicle;
     local DHPawn           MyDHP, OtherDHP;
-    local DH_MortarVehicle Mortar;
+    local DHMortarVehicle  Mortar;
 
     if (PawnOwner == none || PawnOwner.Controller == none)
     {
@@ -1479,11 +1479,11 @@ function DrawPlayerNames(Canvas C)
     HitActor = Trace(HitLocation, HitNormal, ViewPos + 1600.0 * vector(PawnOwner.Controller.Rotation), ViewPos, true);
 
     // CHECK FOR MORTAR - Basnett 2011
-    if (HitActor != none && DHPawn(PawnOwner) != none && DH_MortarVehicle(HitActor) != none)
+    if (HitActor != none && DHPawn(PawnOwner) != none && DHMortarVehicle(HitActor) != none)
     {
         MyDHP = DHPawn(PawnOwner);
 
-        Mortar = DH_MortarVehicle(HitActor);
+        Mortar = DHMortarVehicle(HitActor);
 
         if (Mortar != none && Mortar.VehicleTeam == MyDHP.GetTeamNum())
         {

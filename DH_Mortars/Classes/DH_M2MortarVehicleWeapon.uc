@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M2MortarVehicleWeapon extends DH_MortarVehicleWeapon;
+class DH_M2MortarVehicleWeapon extends DHMortarVehicleWeapon;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Mortars_3rd.ukx
 

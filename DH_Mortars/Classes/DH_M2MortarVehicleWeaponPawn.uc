@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M2MortarVehicleWeaponPawn extends DH_MortarVehicleWeaponPawn;
+class DH_M2MortarVehicleWeaponPawn extends DHMortarVehicleWeaponPawn;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Mortars_3rd.ukx
 

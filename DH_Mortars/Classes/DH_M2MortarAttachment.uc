@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_M2MortarAttachment extends DH_MortarAttachment;
+class DH_M2MortarAttachment extends DHMortarAttachment;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Mortars_tex.utx
 

@@ -88,7 +88,7 @@ event AllowBroadcastLocalized(
             }
         }
 
-        else if (class<DH_MortarTargetMessage>(Message) != none)
+        else if (class<DHMortarTargetMessage>(Message) != none)
         {
             if (P.Pawn == none || P.Pawn.PlayerReplicationInfo == none || DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo) == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo == none)
