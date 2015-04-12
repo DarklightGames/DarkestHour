@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_ATGunTwoCannonPawn extends DHTankCannonPawn
+class DHATGunTwoCannonPawn extends DHTankCannonPawn
     abstract;
 
 var     bool    bDebugExit; // records that exit positions are being drawn by DebugExit(), so can be toggled on/off

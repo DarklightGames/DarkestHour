@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_Flak38CannonPawn extends DH_ATGunTwoCannonPawn;
+class DH_Flak38CannonPawn extends DHATGunTwoCannonPawn;
 
 #exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Flak38_tex.utx
