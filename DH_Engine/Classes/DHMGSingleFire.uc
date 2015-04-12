@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MGSingleFire extends DHProjectileFire
+class DHMGSingleFire extends DHProjectileFire
     abstract;
 
 var()       float           PctHipMGPenalty;    // The amount of recoil to add when the player firing an MG from the hip

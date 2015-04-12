@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DH_MG34SemiAutoFire extends DH_MGSingleFire;
+class DH_MG34SemiAutoFire extends DHMGSingleFire;
 
 defaultproperties
 {
