@@ -22,8 +22,6 @@ simulated function bool AllowFire()
         return false;
     }
 
-    Log(O);
-
     if (Instigator == none ||
         Instigator.IsProneTransitioning() ||
         Instigator.Velocity != vect(0.0, 0.0, 0.0))
