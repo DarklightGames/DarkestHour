@@ -217,6 +217,130 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     TallyVotes(false);
 }
 
+// Overriden to fix accessed none errors. The logic of the function itself is a
+// fucking nightmare and whoever wrote it is a criminal.
+function GetDefaultMap(out int mapidx, out int gameidx)
+{
+    local int i, x, y, r, p, GCIdx;
+    local array<string> PrefixList;
+    local bool bLoop;
+
+    if (MapCount <= 0)
+    {
+        return;
+    }
+
+    // set the default gametype
+    if (bDefaultToCurrentGameType)
+    {
+        GCIdx = CurrentGameConfig;
+    }
+    else
+    {
+        GCIdx = DefaultGameConfig;
+    }
+
+    // Parse Prefix list for default game type
+    PrefixList.Length = 0;
+    p = Split(GameConfig[GCIdx].Prefix, ",", PrefixList);
+
+    if (PrefixList.Length == 0)
+    {
+        gameidx = GCIdx;
+        mapidx = 0;
+        return;
+    }
+
+    // choose a map at random, check if it is enabled and the prefix is in the prefix list
+    r = 0;
+
+    bLoop = True;
+
+    while(bLoop)
+    {
+        i = Rand(MapCount);
+
+        if (MapList[i].bEnabled)
+        {
+            for(x = 0; x < PrefixList.Length; ++x)
+            {
+                if (Left(MapList[i].MapName, Len(PrefixList[x])) ~= PrefixList[x])
+                {
+                    bLoop = false;
+
+                    break;
+                }
+            }
+        }
+
+        if (bLoop && r++ > 100)
+        {
+            // give up after 100 unsuccessful attempts.
+            // find the first map that matches up to default gametype
+            for (i = 0; i < MapCount; ++i)
+            {
+                if (MapList[i].bEnabled)
+                {
+                    for(x = 0; x < PrefixList.Length; ++x)
+                    {
+                        if (Left(MapList[i].MapName, Len(PrefixList[x])) ~= PrefixList[x])
+                        {
+                            // ding ding ding, found one
+                            bLoop = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (bLoop) // still didnt find any, then find the first enabled map and find its gameconfig
+            {
+                for(i = 0; i < MapCount; ++i)
+                {
+                    if (MapList[i].bEnabled)
+                    {
+                        // find prefix in GameConfigs
+                        for(y = 0; y < GameConfig.Length; ++y)
+                        {
+                            // Parse Prefix list for game type
+                            PrefixList.Length = 0;
+                            p = Split(GameConfig[y].Prefix, ",", PrefixList);
+
+                            if (PrefixList.Length > 0)
+                            {
+                                for(x = 0; x < PrefixList.Length; ++x)
+                                {
+                                    if (Left(MapList[i].MapName, Len(PrefixList[x])) ~= PrefixList[x])
+                                    {
+                                        // ding ding ding, found one
+                                        GCIdx = y;
+                                        bLoop = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!bLoop)
+                            {
+                                break;
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            break;
+        }
+    }
+
+    gameidx = GCIdx;
+    mapidx = i;
+
+    log("Default Map Chosen = " $ MapList[mapidx].MapName $ "(" $ GameConfig[gameidx].Acronym $ ")",'MapVoteDebug');
+}
+
 defaultproperties
 {
     MapVoteIntervalDuration=5.0
