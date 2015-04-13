@@ -280,7 +280,7 @@ defaultproperties
     Damage=100.0
     DamageRadius=5.0
     MomentumTransfer=10000.0
-    MyDamageType=class'DH_TankShellAPExplosionDamage'
+    MyDamageType=class'DHTankShellAPExplosionDamage'
     ExplosionDecal=class'ROEffects.TankAPMarkDirt'
     ExplosionDecalSnow=class'ROEffects.TankAPMarkSnow'
     DrawType=DT_StaticMesh
