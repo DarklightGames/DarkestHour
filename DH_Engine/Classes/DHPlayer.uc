@@ -2567,6 +2567,18 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     }
 }
 
+// Overriden to fix accessed none errors
+function EndZoom()
+{
+    if (myHUD != none && DesiredFOV != DefaultFOV)
+    {
+        myHUD.FadeZoom();
+    }
+
+    bZooming = false;
+    DesiredFOV = DefaultFOV;
+}
+
 defaultproperties
 {
     // Sway values
