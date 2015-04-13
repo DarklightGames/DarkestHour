@@ -1204,7 +1204,7 @@ defaultproperties
     MaxTeamVehicles(0)=32
     MaxTeamVehicles(1)=32
     VehicleDestroyedMessageClass=class'DHVehicleDestroyedMessage'
-    bDebug=true
+    bDebug=false
     SpawnPointType_Infantry=0
     SpawnPointType_Vehicles=1
 }
