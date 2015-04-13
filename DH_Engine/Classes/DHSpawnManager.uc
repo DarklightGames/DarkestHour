@@ -128,8 +128,6 @@ function PostBeginPlay()
         // Vehicle pools must have a unique VehicleClass
         for (j = i - 1; j >= 0; --j)
         {
-            Log("" $ i @ j);
-
             if (VehiclePools[i].VehicleClass == VehiclePools[j].VehicleClass)
             {
                 // Vehicle class already exists, mark as non-unique
