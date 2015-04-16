@@ -814,13 +814,13 @@ event VehicleDestroyed(Vehicle V)
     {
         if (V == Vehicles[i])
         {
+            //Decrement team vehicle count
+            --TeamVehicleCounts[Vehicles[i].VehicleTeam];
+
+            ++GRI.MaxTeamVehicles[Vehicles[i].VehicleTeam];
+
             //Remove vehicle from vehicles array
             Vehicles.Remove(i, 1);
-
-            //Decrement team vehicle count
-            --TeamVehicleCounts[V.VehicleTeam];
-
-            ++GRI.MaxTeamVehicles[V.VehicleTeam];
 
             break;
         }
