@@ -818,9 +818,9 @@ event VehicleDestroyed(Vehicle V)
             Vehicles.Remove(i, 1);
 
             //Decrement team vehicle count
-            --TeamVehicleCounts[Vehicles[i].VehicleTeam];
+            --TeamVehicleCounts[V.VehicleTeam];
 
-            ++GRI.MaxTeamVehicles[Vehicles[i].VehicleTeam];
+            ++GRI.MaxTeamVehicles[V.VehicleTeam];
 
             break;
         }
