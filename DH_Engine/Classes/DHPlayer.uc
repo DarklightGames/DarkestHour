@@ -2065,16 +2065,13 @@ function ServerClearObstacle(int Index)
 
 exec function DebugObstacles(optional int Option)
 {
-    local DarkestHourGame G;
+    local DHObstacleInfo OI;
 
-    G = DarkestHourGame(Level.Game);
-
-    if (Level.NetMode != NM_DedicatedServer &&
-        G != none &&
-        G.ObstacleManager != none &&
-        G.ObstacleManager.Info != none)
+    foreach AllActors(class'DHObstacleInfo', OI)
     {
-         Log("Client DebugObstacles" @ G.ObstacleManager.Info.Obstacles.Length);
+        Log("DHObstacleInfo.Obstacles.Length =" @ OI.Obstacles.Length);
+
+        break;
     }
 
     ServerDebugObstacles(Option);
