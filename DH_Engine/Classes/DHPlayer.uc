@@ -1537,39 +1537,40 @@ simulated function ResetSwayAfterBolt()
 // Called server-side by SendVoiceMessage()
 function AttemptToAddHelpRequest(PlayerReplicationInfo PRI, int ObjID, int RequestType, optional vector RequestLocation)
 {
-    local DHGameReplicationInfo   GRI;
-    local DHPlayerReplicationInfo DH_PRI;
-    local DHRoleInfo              RI;
+    local DHGameReplicationInfo     GRI;
+    local DHRoleInfo                RI;
+    local DarkestHourGame           G;
+    local DHPlayerReplicationInfo   DHPRI;
 
-    DH_PRI = DHPlayerReplicationInfo(PRI);
-    RI = DHRoleInfo(DH_PRI.RoleInfo);
+    DHPRI = DHPlayerReplicationInfo(PRI);
 
-    if (DH_PRI == none || RI == none)
+    if (DHPRI == none)
     {
         return;
     }
 
+    RI = DHRoleInfo(DHPRI.RoleInfo);
+
     // Check if caller is a leader
-    if (!RI.bIsSquadLeader)
+    if (RI == none || !RI.bIsSquadLeader || RequestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars))
     {
         // If not, check if we're a MG requesting ammo
         // Basnett, added mortar operators requesting resupply.
-        if (RequestType != 3 || (!RI.bIsGunner && !RI.bCanUseMortars)) // && !DH_PRI.DHRoleInfo.bIsATGunner)
-        {
-            return;
-        }
+        return;
     }
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI != none)
+    if (GRI != none && PRI != none && PRI.bIsSpectator && PRI.Team != none)
     {
         GRI.AddHelpRequest(PRI, ObjID, RequestType, RequestLocation);
 
-        // Notify team members to check their map
-        if (DH_PRI.Team != none)
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
         {
-            DarkestHourGame(Level.Game).NotifyPlayersOfMapInfoChange(DH_PRI.Team.TeamIndex, self);
+            // Notify team members to check their map
+            G.NotifyPlayersOfMapInfoChange(PRI.Team.TeamIndex, self);
         }
     }
 }
