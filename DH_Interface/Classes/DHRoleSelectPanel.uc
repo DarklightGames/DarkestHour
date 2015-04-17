@@ -193,15 +193,10 @@ function GetInitialValues()
         CurrentWeapons[0] = -1;
         CurrentWeapons[1] = -1;
     }
-    else if (DHP.CurrentRole != DHP.DesiredRole)
-    {
-        CurrentWeapons[0] = DHP.DesiredPrimary;
-        CurrentWeapons[1] = DHP.DesiredSecondary;
-    }
     else
     {
-        CurrentWeapons[0] = DHP.PrimaryWeapon;
-        CurrentWeapons[1] = DHP.SecondaryWeapon;
+        CurrentWeapons[0] = DHP.DHPrimaryWeapon;
+        CurrentWeapons[1] = DHP.DHSecondaryWeapon;
     }
 
     // Set desired stuff to be same as current stuff

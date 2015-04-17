@@ -57,11 +57,14 @@ var     bool                    bIsInSpawnMenu;             // player is in spaw
 var     int                     SpawnTime;                  // the amount of time it will take the player to respawn from LastKilledTime
 var     float                   LastKilledTime;             // the time at which last death occured
 
+var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
+var     int                     DHSecondaryWeapon;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex, SpawnAmmoAmount, LastKilledTime;
+        SpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex, SpawnAmmoAmount, LastKilledTime, DHPrimaryWeapon, DHSecondaryWeapon;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -2625,4 +2628,7 @@ defaultproperties
     PawnClass=class'DH_Engine.DHPawn'
     SpawnPointIndex=255
     VehiclePoolIndex=255
+
+    DHPrimaryWeapon=-1
+    DHSecondaryWeapon=-1
 }
