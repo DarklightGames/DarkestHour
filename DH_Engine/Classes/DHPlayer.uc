@@ -2581,6 +2581,16 @@ function EndZoom()
     DesiredFOV = DefaultFOV;
 }
 
+function Reset()
+{
+    super.Reset();
+
+    SpawnPointIndex = -1;
+    SpawnVehicleIndex = -1;
+    VehiclePoolIndex = -1;
+    LastKilledTime = 0;
+}
+
 defaultproperties
 {
     // Sway values
