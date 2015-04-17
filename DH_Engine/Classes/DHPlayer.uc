@@ -2119,46 +2119,44 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
 {
     local DHGameReplicationInfo   GRI;
     local DHPlayerReplicationInfo PRI;
-    local class<Inventory>        PrimaryWep;
-    local int MinValue, MidValue, MaxValue, AmmoTimeMod, NewDeployTime;
+    local class<DHProjectileWeapon> PrimaryWeaponClass;
+    local int MinValue, MidValue, MaxValue, AmmoTimeMod;
     local float TD, D, P;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (RI != none && (WeaponIndex == -1 || WeaponIndex > arraycount(RI.PrimaryWeapons)) && RI.PrimaryWeapons[PrimaryWeapon].Item != none)
+    if (RI == none || PRI == none || GRI == none)
     {
-        PrimaryWep = RI.PrimaryWeapons[PrimaryWeapon].Item;
-    }
-    else if (RI != none && RI.PrimaryWeapons[WeaponIndex].Item != none)
-    {
-        PrimaryWep = RI.PrimaryWeapons[WeaponIndex].Item;
-    }
-
-    // Make sure everything is set and no access nones
-    if (PRI == none || RI == none || GRI == none)
-    {
-        Warn("Error in Calculating deploy time");
-
         return 0;
     }
-    else if (PrimaryWep != none)
+
+    if (WeaponIndex < 0 || WeaponIndex > arraycount(RI.PrimaryWeapons))
+    {
+        PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[PrimaryWeapon].Item);
+    }
+    else
+    {
+        PrimaryWeaponClass = class<DHProjectileWeapon>(RI.PrimaryWeapons[WeaponIndex].Item);
+    }
+
+    if (PrimaryWeaponClass != none)
     {
         // If MagCount wasn't passed, lets use desired ammo amount
         if (MagCount == 255)
         {
             MagCount = SpawnAmmoAmount;
         }
-        else if (MagCount >= 1 && MagCount <= class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags)
+        else if (MagCount >= 1 && MagCount <= PrimaryWeaponClass.default.MaxNumPrimaryMags)
         {
             // MagCount was passed, so lets update SpawnAmmoAmount if the value is valid
             SpawnAmmoAmount = MagCount;
         }
 
         // Calculate the min,mid,max for determining how to adjust AmmoTimeMod
-        MinValue = RI.MinStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
-        MidValue = RI.DefaultStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
-        MaxValue = RI.MaxStartAmmoPercent * class<DHProjectileWeapon>(PrimaryWep).default.MaxNumPrimaryMags;
+        MinValue = RI.MinStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+        MidValue = RI.DefaultStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
+        MaxValue = RI.MaxStartAmmoPercent * PrimaryWeaponClass.default.MaxNumPrimaryMags;
 
         // Set AmmoTimeMod based on MagCount
         if (MagCount == MidValue)
@@ -2181,14 +2179,7 @@ simulated function int GetSpawnTime(byte MagCount, optional DHRoleInfo RI, optio
         }
     }
 
-    NewDeployTime = GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod;
-
-    if (NewDeployTime < 0)
-    {
-        NewDeployTime = 0;
-    }
-
-    return NewDeployTime;
+    return FMax(0, GRI.ReinforcementInterval[PRI.Team.TeamIndex] + RI.DeployTimeMod + AmmoTimeMod);
 }
 
 function PawnDied(Pawn P)
@@ -2560,8 +2551,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte newWeapon1, byte n
     NewSpawnAmmoCount = Max(NewSpawnAmmoCount, 1);
 
     RI = DHRoleInfo(DHG.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
-
-    Log("SpawnTime" @ NewSpawnAmmoCount @ SpawnTime);
 
     SpawnTime = GetSpawnTime(NewSpawnAmmoCount, RI, newWeapon1);
 
