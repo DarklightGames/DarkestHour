@@ -79,8 +79,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     // Set initial counts
     Timer();
     SetTimer(0.1, true);
-
-    Log("Players team is: " $ DHP.GetTeamNum());
 }
 
 function ShowPanel(bool bShow)
