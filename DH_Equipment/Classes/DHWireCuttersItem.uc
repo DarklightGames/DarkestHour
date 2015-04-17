@@ -99,8 +99,6 @@ simulated state Cutting
         }
 
         PlayAnim('cutEnd', 1.0, 0.2);
-
-        GotoState('');
     }
 
     simulated function AnimEnd(int Channel)
@@ -129,8 +127,21 @@ simulated state Cutting
             case 'cutHout':
                 PlayAnim('cutVin');
                 break;
+            case 'cutEnd':
+                GotoState('');
+                break;
             default:
                 break;
+        }
+    }
+
+    simulated function Tick(float DeltaTime)
+    {
+        super.Tick(DeltaTime);
+
+        if (ObstacleBeingCut == none || ObstacleBeingCut.IsCleared())
+        {
+            PlayAnim('cutEnd', 1.0, 0.2);
         }
     }
 }
