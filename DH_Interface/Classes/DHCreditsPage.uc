@@ -6,8 +6,7 @@
 class DHCreditsPage extends LargeWindow;
 
 var automated GUIButton b_Close;
-
-var automated GUIScrollTextBox lb_credits;
+var automated GUIScrollTextBox lb_Credits;
 
 var localized array<string> CreditLines;
 
@@ -32,7 +31,7 @@ function AddSystemMenu()
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
-    local string CreditsContent;
+    local string S;
 
     super.InitComponent(MyController, MyOwner);
 
@@ -40,26 +39,28 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     for (i = 0; i < CreditLines.Length; ++i)
     {
-        CreditsContent $= CreditLines[i] $ "|";
+        S $= CreditLines[i] $ "|";
     }
 
-    lb_credits.SetContent(CreditsContent);
+    lb_Credits.SetContent(S);
 }
 
 function bool InternalOnClick(GUIComponent Sender)
 {
-    //if (Sender==Controls[1])
-    if (Sender == b_close)
+    if (Sender == b_Close)
     {
         Controller.CloseMenu();
     }
+
     return true;
 }
 
 function bool ButtonClick(GUIComponent Sender)
 {
-    if (Sender == b_close)
+    if (Sender == b_Close)
+    {
         Controller.CloseMenu();
+    }
 
     return true;
 }
@@ -88,7 +89,7 @@ defaultproperties
         bBoundToParent=true
         bScaleToParent=true
     End Object
-    lb_credits=DHGUIScrollTextBox'DH_Interface.DHCreditsPage.CreditText'
+    lb_Credits=DHGUIScrollTextBox'DH_Interface.DHCreditsPage.CreditText'
 
     Begin Object Class=DHGUIHeader Name=TitleBar
         StyleName="DHLargeText"
