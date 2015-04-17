@@ -34,8 +34,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     Super.InitComponent(MyController, MyOwner);
 
-    Log(self @ "InitComponent");
-
     // Roles container
     li_Roles = ROGUIListPlus(lb_Roles.List);
     RolesContainer.ManageComponent(lb_Roles);

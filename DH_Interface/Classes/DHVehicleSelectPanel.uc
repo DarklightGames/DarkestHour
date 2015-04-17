@@ -23,8 +23,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
-    Log(self @ "InitComponent");
-
     // Change background from default if team == Axis
     Log("Players team is: " $ DHP.GetTeamNum());
 
