@@ -547,7 +547,9 @@ function Pawn SpawnPawn(Controller C, vector SpawnLocation, rotator SpawnRotatio
     {
         // Hard spawning the player at the spawn location failed, most likely because spawn fucntion was blocked
         // Try again with black room spawn and teleport them to spawn location
-        G.RestartPlayer(C);
+        G.DeployRestartPlayer(C, false, true);
+
+        //DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, optional bool bUseOldRestart)
 
         if (C.Pawn != none)
         {
