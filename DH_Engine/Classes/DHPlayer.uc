@@ -1423,6 +1423,8 @@ state Mantling
 
     function EndState()
     {
+        local DHPawn P;
+
         if (bMantleDebug)
         {
             if (Role == ROLE_Authority)
@@ -1441,12 +1443,14 @@ state Mantling
         bDidCrouchCheck = false;
         bLockJump = false;
 
-        if (DHPawn(Pawn).bIsMantling)
+        P = DHPawn(Pawn);
+
+        if (P != none && P.bIsMantling)
         {
-            DHPawn(Pawn).CancelMantle();
+            P.CancelMantle();
         }
 
-        if (bMantleDebug && Pawn.IsLocallyControlled())
+        if (bMantleDebug && Pawn != none && Pawn.IsLocallyControlled())
         {
             ClientMessage("------------- End Mantle Debug -------------");
             Log("------------- End Mantle Debug -------------");
