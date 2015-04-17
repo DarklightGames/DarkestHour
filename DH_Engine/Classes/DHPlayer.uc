@@ -274,15 +274,9 @@ exec function PlayerMenu(optional int Tab)
     bPendingMapDisplay = false;
 
     // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
-    if (!bWeaponsSelected)
-    {
-        ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-    }
-    else if (PlayerReplicationInfo.Team == none)
-    {
-        ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-    }
-    else if (PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex == 254)
+    if (!bWeaponsSelected ||
+        PlayerReplicationInfo.Team == none ||
+        PlayerReplicationInfo.Team.TeamIndex == 254)
     {
         ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
     }
@@ -296,7 +290,17 @@ exec function PlayerMenu(optional int Tab)
 function ShowMidGameMenu(bool bPause)
 {
     if (Level.NetMode != NM_DedicatedServer)
+    {
         StopForceFeedback();
+    }
+
+    Log("bWeaponsSelected" @ bWeaponsSelected);
+    Log("PlayerReplicationInfo.Team" @ PlayerReplicationInfo.Team);
+
+    if (PlayerReplicationInfo.Team != none)
+    {
+        Log("PlayerReplicationInfo.Team.TeamIndex" @ PlayerReplicationInfo.Team.TeamIndex);
+    }
 
     // Open correct menu
     if (bDemoOwner)
@@ -306,21 +310,15 @@ function ShowMidGameMenu(bool bPause)
     else
     {
         // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
-        if (!bWeaponsSelected)
-        {
-            ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-        }
-        else if (PlayerReplicationInfo.Team == none)
-        {
-            ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
-        }
-        else if (PlayerReplicationInfo.Team != none && PlayerReplicationInfo.Team.TeamIndex == 254)
+        if (!bWeaponsSelected ||
+            PlayerReplicationInfo.Team == none ||
+            PlayerReplicationInfo.Team.TeamIndex == 254)
         {
             ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
         }
         else
         {
-            ClientOpenMenu(ROMidGameMenuClass);
+            ClientReplaceMenu(ROMidGameMenuClass);
         }
     }
 }
